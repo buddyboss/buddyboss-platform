@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Activity Schedule Classes
+ * BuddyBoss Activity Schedule Classes.
  *
  * @package BuddyBoss\Activity
  * @since BuddyBoss [BBVERSION]
@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 	/**
 	 * BuddyBoss Activity Schedule.
-	 *
 	 * Handles schedule posts.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -111,14 +110,14 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			$metas = bb_activity_get_metadata( $activity_id );
 
 			// Published the media.
-			if ( ! empty( $metas['bp_media_ids'][0] ) ) {
+			if ( bp_is_active( 'media' ) && ! empty( $metas['bp_media_ids'][0] ) ) {
 				$media_ids = explode( ",", $metas['bp_media_ids'][0] );
 				foreach ( $media_ids as $media_id ) {
-					$media = new BP_Media( $media_id );
+					$media         = new BP_Media( $media_id );
 					$media->status = bb_media_get_published_status();
 					$media->save();
 
-					// Also update the individual videos activity.
+					// Also update the individual medias activity.
 					if ( count( $media_ids ) > 1 ) {
 						$media_activity         = new BP_Activity_Activity( $media->activity_id );
 						$media_activity->status = bb_get_activity_published_status();
@@ -128,10 +127,10 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			}
 
 			// Published the video.
-			if ( ! empty( $metas['bp_video_ids'][0] ) ) {
+			if ( bp_is_active( 'video' ) && ! empty( $metas['bp_video_ids'][0] ) ) {
 				$video_ids = explode( ",", $metas['bp_video_ids'][0] );
 				foreach ( $video_ids as $video_id ) {
-					$video = new BP_Video( $video_id );
+					$video         = new BP_Video( $video_id );
 					$video->status = bb_video_get_published_status();
 					$video->save();
 
@@ -145,10 +144,10 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			}
 
 			// Published the document.
-			if ( ! empty( $metas['bp_document_ids'][0] ) ) {
+			if ( bp_is_active( 'document' ) && ! empty( $metas['bp_document_ids'][0] ) ) {
 				$document_ids = explode( ",", $metas['bp_document_ids'][0] );
 				foreach ( $document_ids as $document_id ) {
-					$document = new BP_Document( $document_id );
+					$document         = new BP_Document( $document_id );
 					$document->status = bb_document_get_published_status();
 					$document->save();
 

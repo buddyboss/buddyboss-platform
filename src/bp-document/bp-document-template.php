@@ -2530,26 +2530,3 @@ function bp_get_document_link( $document_id ) {
 	 */
 	return apply_filters( 'bp_get_document_link', $url, $document_id );
 }
-
-
-/**
- * Return the published status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_document_get_published_status() {
-	return buddypress()->document->published_status;
-}
-
-/**
- * Return the scheduled status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_document_get_scheduled_status() {
-	return buddypress()->document->scheduled_status;
-}

@@ -3799,14 +3799,15 @@ function bb_activity_init_activity_schedule() {
 	}
 	new BB_Activity_Schedule();
 }
+
 add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
 
 /**
  * Action to delete scheduled activity cron event.
  *
- * @param array $activities Array of activities.
+ * @since BuddyBoss [BBVERSION]
  *
- * @since [BBVERSION]
+ * @param array $activities Array of activities.
  */
 function bb_activity_delete_scheduled_cron_events( $activities ) {
 	if ( ! empty( $activities ) ) {

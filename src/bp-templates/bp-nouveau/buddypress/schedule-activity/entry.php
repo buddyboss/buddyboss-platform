@@ -1,17 +1,17 @@
 <?php
 /**
- * The template for BuddyBoss - Activity Feed (Single Item)
+ * The template for BuddyBoss - schedule Activity Feed.
  *
  * This template is used by activity-loop.php and AJAX functions to show
  * each activity.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/schedule-activity/entry.php.
  *
- * @since   BuddyPress 3.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
-bp_nouveau_activity_hook( 'before', 'entry' );
+bp_nouveau_activity_hook( 'before', 'schedule_entry' );
 
 $activity_id    = bp_get_activity_id();
 $activity_metas = bb_activity_get_metadata( $activity_id );
@@ -33,7 +33,7 @@ if ( ! empty( $link_embed ) ) {
 $activity_date_recorded = bp_get_activity_date_recorded();
 
 // Convert GMT time to local time based on WordPress settings.
-$local_time_wp = get_date_from_gmt( $activity_date_recorded, 'Y-m-d H:i:s' );
+$local_time_wp = get_date_from_gmt( $activity_date_recorded );
 
 // Get the date and time formats set in WordPress settings.
 $date_format = get_option( 'date_format' );
@@ -42,12 +42,12 @@ $time_format = get_option( 'time_format' );
 // Format the local time according to the WordPress settings.
 $formatted_local_time_wp = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
 
-$scheduled_date_data[ 'local_date_time' ] = $formatted_local_time_wp;
-$scheduled_date_data[ 'date_raw' ]        = get_date_from_gmt( $activity_date_recorded, 'Y-m-d' );
-$scheduled_date_data[ 'date' ]            = get_date_from_gmt( $activity_date_recorded, $date_format );
-$scheduled_date_data[ 'time' ]            = get_date_from_gmt( $activity_date_recorded, 'g:i' );
-$scheduled_date_data[ 'meridiem' ]        = get_date_from_gmt( $activity_date_recorded, 'a' );
-$scheduled_date_string                    = wp_json_encode( $scheduled_date_data );
+$scheduled_date_data['local_date_time'] = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
+$scheduled_date_data['date_raw']        = get_date_from_gmt( $activity_date_recorded, 'Y-m-d' );
+$scheduled_date_data['date']            = get_date_from_gmt( $activity_date_recorded, $date_format );
+$scheduled_date_data['time']            = get_date_from_gmt( $activity_date_recorded, 'g:i' );
+$scheduled_date_data['meridiem']        = get_date_from_gmt( $activity_date_recorded, 'a' );
+$scheduled_date_string                  = wp_json_encode( $scheduled_date_data );
 
 ?>
 
@@ -58,7 +58,7 @@ $scheduled_date_string                    = wp_json_encode( $scheduled_date_data
 	data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>"
 	data-bp-activity="<?php ( function_exists( 'bp_nouveau_edit_activity_data' ) ) ? bp_nouveau_edit_activity_data() : ''; ?>"
 	data-link-preview='<?php echo $link_preview_string; ?>'
-	data-link-url='<?php echo $link_url; ?>'
+	data-link-url='<?php echo esc_url( $link_url ); ?>'
 	data-bb-scheduled-time='<?php echo esc_attr( $scheduled_date_string ); ?>'>
 
 	<div class="bb-activity-schedule-actions">
@@ -81,18 +81,6 @@ $scheduled_date_string                    = wp_json_encode( $scheduled_date_data
 				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss' ) ?></span>
 				<a href="javascript: void(0);">
 					<?php
-					$activity_date_recorded = bp_get_activity_date_recorded();
-
-					// Convert GMT time to local time based on WordPress settings.
-					$local_time_wp = get_date_from_gmt( $activity_date_recorded, 'Y-m-d H:i:s' );
-
-					// Get the date and time formats set in WordPress settings.
-					$date_format = get_option( 'date_format' );
-					$time_format = get_option( 'time_format' );
-
-					// Format the local time according to the WordPress settings.
-					$formatted_local_time_wp = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
-
 					printf(
 						'<span class="time-since">%1$s</span>',
 						$formatted_local_time_wp,
@@ -139,4 +127,4 @@ $scheduled_date_string                    = wp_json_encode( $scheduled_date_data
 </li>
 
 <?php
-bp_nouveau_activity_hook( 'after', 'entry' );
+bp_nouveau_activity_hook( 'after', 'schedule_entry' );

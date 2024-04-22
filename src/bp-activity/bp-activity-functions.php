@@ -7237,11 +7237,12 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param array $args Array of Arguments.
+ *
  * @return bool true if user can post schedule posts, otherwise false.
  */
 function bb_can_user_schedule_activity( $args = array() ) {
-	$retval = false;
-	$r      = bp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'user_id'  => bp_loggedin_user_id(),
@@ -7250,6 +7251,7 @@ function bb_can_user_schedule_activity( $args = array() ) {
 		)
 	);
 
+	$retval = false;
 	if (
 		bp_is_active( 'groups' ) &&
 		(
@@ -7268,5 +7270,54 @@ function bb_can_user_schedule_activity( $args = array() ) {
 		$retval = true;
 	}
 
+	/**
+	 * Filters whether user can schedule activity posts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool  $retval Return value for schedule post.
+	 * @param array $args   Array of Arguments.
+	 */
 	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
+}
+
+/**
+ * Return the activity published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_activity_published_status() {
+	return buddypress()->activity->published_status;
+}
+
+/**
+ * Return the activity scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_get_activity_scheduled_status() {
+	return buddypress()->activity->scheduled_status;
+}
+
+/**
+ * Checks member permission to create a scheduled activity or not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Is member has access to create schedule activity or not.
+ */
+function bb_member_access_to_create_scheduled_activity() {
+
+	/**
+	 * Filters whether member has access to create schedule activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Value for schedule activity.
+	 */
+	return (bool) apply_filters( 'bb_member_access_to_create_scheduled_activity', true );
 }

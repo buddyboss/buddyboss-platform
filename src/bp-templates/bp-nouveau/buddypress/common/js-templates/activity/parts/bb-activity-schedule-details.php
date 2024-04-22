@@ -1,11 +1,11 @@
 <?php
 /**
- * The template for displaying activity post case heading
+ * The template for displaying schedule activity post case heading.
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-schedule-details.php.
  *
- * @since   BuddyBoss 1.8.6
- * @version 1.8.6
+ * @since   BuddyBoss [BBVERSION]
+ * @version 1.0.0
  */
 
 ?>
