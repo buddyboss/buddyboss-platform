@@ -4100,7 +4100,7 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		'activity_media'
 	);
 
-	if ( bb_get_activity_scheduled_status() === $activity->status ) {
+	if ( bp_is_active( 'activity' ) && bb_get_activity_scheduled_status() === $activity->status ) {
 		$media_args['status'] = bb_media_get_scheduled_status();
 	}
 

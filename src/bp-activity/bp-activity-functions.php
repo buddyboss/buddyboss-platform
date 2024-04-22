@@ -7186,22 +7186,3 @@ function bb_get_activity_published_status() {
 function bb_get_activity_scheduled_status() {
 	return buddypress()->activity->scheduled_status;
 }
-
-/**
- * Checks member permission to create a scheduled activity or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool Is member has access to create schedule activity or not.
- */
-function bb_member_access_to_create_scheduled_activity() {
-
-	/**
-	 * Filters whether member has access to create schedule activity.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Value for schedule activity.
-	 */
-	return (bool) apply_filters( 'bb_member_access_to_create_scheduled_activity', true );
-}

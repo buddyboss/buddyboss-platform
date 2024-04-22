@@ -3508,26 +3508,38 @@ function bb_update_to_2_5_80() {
 function bb_update_to_2_5_91() {
 	global $wpdb;
 
-	$bp = buddypress();
+	// Check if the 'bp_activity' table exists.
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->base_prefix}bp_activity'" );
+	if ( $table_exists ) {
 
-	// Add 'status' column in 'bp_activity' table.
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'status'" ); //phpcs:ignore
-
-	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->activity->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
+		// Add 'status' column in 'bp_activity' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$wpdb->base_prefix}bp_activity' AND column_name = 'status'" ); //phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_activity ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
+		}
 	}
 
-	// Add 'status' column in 'bp_media' table.
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->media->table_name}' AND column_name = 'status'" ); //phpcs:ignore
+	// Check if the 'bp_media' table exists.
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->base_prefix}bp_media'" );
+	if ( $table_exists ) {
 
-	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->media->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		// Add 'status' column in 'bp_media' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$wpdb->base_prefix}bp_media' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_media ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
 	}
 
-	// Add 'status' column in 'bp_document' table.
-	$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->document->table_name}' AND column_name = 'status'" ); //phpcs:ignore
+	// Check if the 'bp_document' table exists.
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->base_prefix}bp_document'" );
+	if ( $table_exists ) {
 
-	if ( empty( $row ) ) {
-		$wpdb->query( "ALTER TABLE {$bp->document->table_name} ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		// Add 'status' column in 'bp_document' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$wpdb->base_prefix}bp_document' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
 	}
 }
