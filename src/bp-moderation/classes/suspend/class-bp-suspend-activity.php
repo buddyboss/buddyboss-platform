@@ -80,6 +80,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			'per_page'         => 0,
 			'fields'           => 'ids',
 			'show_hidden'      => true,
+			'status'           => array( 'published', 'scheduled' ),
 			'filter'           => array(
 				'user_id' => $member_id,
 			),

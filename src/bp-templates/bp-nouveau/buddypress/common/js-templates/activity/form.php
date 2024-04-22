@@ -37,6 +37,8 @@ $template_parts = apply_filters(
 		'parts/bp-activity-post-form-privacy',
 		'parts/bp-activity-edit-postin',
 		'parts/bp-activity-post-privacy-stage-footer',
+		'parts/bb-activity-schedule-post',
+		'parts/bb-activity-schedule-details',
 	)
 );
 

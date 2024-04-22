@@ -119,6 +119,9 @@ add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
 add_action( 'bp_activity_after_delete', 'bb_activity_delete_link_review_attachment', 10, 1 );
 
+// Delete scheduled activity cron event.
+add_action( 'bp_activity_after_delete', 'bb_activity_delete_scheduled_cron_events', 10, 1 );
+
 /* Actions *******************************************************************/
 
 // At-name filter.
@@ -559,6 +562,11 @@ function bp_activity_at_name_filter_updates( $activity ) {
 function bp_activity_at_name_send_emails( $activity ) {
 	// Are mentions disabled?
 	if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
+		return;
+	}
+
+	// Avoid sending notification if the activity is not published.
+	if ( bb_get_activity_published_status() !== $activity->status ) {
 		return;
 	}
 
@@ -1908,6 +1916,9 @@ function bp_activity_media_add( $media ) {
 
 			if ( $activity_id ) {
 
+				// Support for schedule activity medias only on activity.
+				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status();
+
 				// save media activity id in media.
 				$media->activity_id = $activity_id;
 				$media->save();
@@ -1925,6 +1936,7 @@ function bp_activity_media_add( $media ) {
 					if ( empty( $bp_new_activity_comment ) ) {
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $parent_activity_id;
+						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
 						$media_activity->save();
 					}
 
@@ -1944,6 +1956,9 @@ function bp_activity_media_add( $media ) {
 
 				// save media activity id in media.
 				$media->activity_id = $parent_activity_id;
+
+				// Support for schedule activity medias only on activity.
+				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status();
 				$media->save();
 
 				// save parent activity id in attachment meta.
@@ -1971,7 +1986,6 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 	}
 
 	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
 		$added_media_ids = $media_ids;
 		$content         = false;
 
@@ -2316,6 +2330,9 @@ function bp_activity_document_add( $document ) {
 
 			if ( $activity_id ) {
 
+				// Support for schedule activity documents only on activity.
+				$document->status = 'comment' !== $document->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_document_get_scheduled_status() : bb_document_get_published_status();
+
 				// save document activity id in document.
 				$document->activity_id = $activity_id;
 				$document->save();
@@ -2333,6 +2350,7 @@ function bp_activity_document_add( $document ) {
 					if ( empty( $bp_new_activity_comment ) ) {
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $parent_activity_id;
+						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
 						$document_activity->save();
 					}
 
@@ -2352,6 +2370,9 @@ function bp_activity_document_add( $document ) {
 
 				// save document activity id in document.
 				$document->activity_id = $parent_activity_id;
+
+				// Support for schedule activity documents only on activity.
+				$document->status = 'comment' !== $document->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_document_get_scheduled_status() : bb_document_get_published_status();
 				$document->save();
 
 				// save parent activity id in attachment meta.
@@ -3002,6 +3023,9 @@ function bp_activity_video_add( $video ) {
 
 			if ( $activity_id ) {
 
+				// Support for schedule activity videos only on activity.
+				$video->status = 'comment' !== $video->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_video_get_scheduled_status() : bb_video_get_published_status();
+
 				// save video activity id in video.
 				$video->activity_id = $activity_id;
 				$video->save();
@@ -3019,6 +3043,7 @@ function bp_activity_video_add( $video ) {
 					if ( empty( $bp_new_activity_comment ) ) {
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $parent_activity_id;
+						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
 						$video_activity->save();
 					}
 
@@ -3038,6 +3063,9 @@ function bp_activity_video_add( $video ) {
 
 				// save video activity id in video.
 				$video->activity_id = $parent_activity_id;
+
+				// Support for schedule activity videos only on activity.
+				$video->status = 'comment' !== $video->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_video_get_scheduled_status() : bb_video_get_published_status();
 				$video->save();
 
 				// save parent activity id in attachment meta.
@@ -3477,7 +3505,8 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 	if (
 		empty( $activity ) ||
 		'activity' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}
@@ -3756,4 +3785,32 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Load the class to schedule the activity post.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_init_activity_schedule() {
+	BB_Activity_Schedule::instance();
+}
+
+add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
+
+/**
+ * Action to delete scheduled activity cron event.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $activities Array of activities.
+ */
+function bb_activity_delete_scheduled_cron_events( $activities ) {
+	if ( ! empty( $activities ) ) {
+		foreach ( $activities as $activity ) {
+			if ( bb_get_activity_scheduled_status() === $activity->status ) {
+				wp_clear_scheduled_hook( 'bb_activity_publish', array( (int) $activity->id ) );
+			}
+		}
+	}
 }
