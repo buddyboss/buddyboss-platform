@@ -715,12 +715,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$privacy_check = bb_check_activity_privacy_for_reaction(
+			$privacy_check = bb_validate_activity_privacy(
 				array(
-					'action'        => 'add',
-					'activity_id'   => $r['item_id'],
-					'activity_type' => $r['item_type'],
-					'user_id'       => (int) $r['user_id'],
+					'action'          => 'add',
+					'activity_id'     => $r['item_id'],
+					'activity_type'   => $r['item_type'],
+					'user_id'         => (int) $r['user_id'],
+					'validate_action' => 'reaction',
 				)
 			);
 		
@@ -834,12 +835,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$privacy_check = bb_check_activity_privacy_for_reaction(
+			$privacy_check = bb_validate_activity_privacy(
 				array(
-					'action'        => 'remove',
-					'activity_id'   => $get->item_id,
-					'activity_type' => $get->item_type,
-					'user_id'       => $get->user_id,
+					'action'          => 'remove',
+					'activity_id'     => $get->item_id,
+					'activity_type'   => $get->item_type,
+					'user_id'         => $get->user_id,
+					'validate_action' => 'reaction',
 				)
 			);
 		
@@ -906,12 +908,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
-			$privacy_check = bb_check_activity_privacy_for_reaction(
+			$privacy_check = bb_validate_activity_privacy(
 				array(
-					'action'        => 'remove',
-					'activity_id'   => $r['item_id'],
-					'activity_type' => $r['item_type'],
-					'user_id'       => (int) $r['user_id'],
+					'action'          => 'remove',
+					'activity_id'     => $r['item_id'],
+					'activity_type'   => $r['item_type'],
+					'user_id'         => (int) $r['user_id'],
+					'validate_action' => 'reaction',
 				)
 			);
 		
