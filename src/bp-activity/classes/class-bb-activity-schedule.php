@@ -111,7 +111,7 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 
 			// Published the media.
 			if ( bp_is_active( 'media' ) && ! empty( $metas['bp_media_ids'][0] ) ) {
-				$media_ids = explode( ",", $metas['bp_media_ids'][0] );
+				$media_ids = explode( ',', $metas['bp_media_ids'][0] );
 				foreach ( $media_ids as $media_id ) {
 					$media         = new BP_Media( $media_id );
 					$media->status = bb_media_get_published_status();
@@ -128,7 +128,7 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 
 			// Published the video.
 			if ( bp_is_active( 'video' ) && ! empty( $metas['bp_video_ids'][0] ) ) {
-				$video_ids = explode( ",", $metas['bp_video_ids'][0] );
+				$video_ids = explode( ',', $metas['bp_video_ids'][0] );
 				foreach ( $video_ids as $video_id ) {
 					$video         = new BP_Video( $video_id );
 					$video->status = bb_video_get_published_status();
@@ -145,7 +145,7 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 
 			// Published the document.
 			if ( bp_is_active( 'document' ) && ! empty( $metas['bp_document_ids'][0] ) ) {
-				$document_ids = explode( ",", $metas['bp_document_ids'][0] );
+				$document_ids = explode( ',', $metas['bp_document_ids'][0] );
 				foreach ( $document_ids as $document_id ) {
 					$document         = new BP_Document( $document_id );
 					$document->status = bb_document_get_published_status();
