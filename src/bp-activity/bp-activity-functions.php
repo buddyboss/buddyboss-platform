@@ -989,19 +989,6 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$privacy_check = bb_check_activity_privacy_for_favorite(
-		array(
-			'action'      => 'add',
-			'activity_id' => $activity_id,
-			'user_id'     => (int) $user_id,
-		)
-	);
-
-	// Bail if activity privacy restrict.
-	if ( is_wp_error( $privacy_check ) ) {
-		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
-	}
-
 	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
@@ -1112,19 +1099,6 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
-	}
-
-	$privacy_check = bb_check_activity_privacy_for_favorite(
-		array(
-			'action'      => 'remove',
-			'activity_id' => $activity_id,
-			'user_id'     => (int) $user_id,
-		)
-	);
-
-	// Bail if activity privacy restrict.
-	if ( is_wp_error( $privacy_check ) ) {
-		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
 	}
 
 	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
@@ -7121,63 +7095,13 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 }
 
 /**
- * Check Activity Privacy for Favorite.
- *
- * @since [BBVERSION]
- *
- * @param array $args Array for argument.
- *
- * @return WP_Error|bool Boolen on success, WP_Error on failure.
- */
-function bb_check_activity_privacy_for_favorite( $args ) {
-	$activity = new BP_Activity_Activity( $args['activity_id'] );
-
-	if ( ! empty( $activity->privacy ) && ! empty( $args['user_id'] ) ) {
-		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
-			if ( 'remove' === $args['action'] ) {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, You cannot remove your favorites on "Only Me" activity.', 'buddyboss' )
-				);
-			} else {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, You cannot add favorites on "Only Me" activity.', 'buddyboss' )
-				);
-			}
-		} elseif (
-			'friends' === $activity->privacy &&
-			$activity->user_id !== $args['user_id'] &&
-			(
-				! bp_is_active( 'friends' ) ||
-				! friends_check_friendship( $activity->user_id, $args['user_id'] )
-			)
-		) {
-			if ( 'remove' === $args['action'] ) {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, please establish a friendship with the author of the activity to remove your favorites.', 'buddyboss' )
-				);
-			} else {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, please establish a friendship with the author of the activity to add a favorites.', 'buddyboss' )
-				);
-			}
-		}
-	}
-
-	return true;
-}
-
-/**
  * Check Activity Privacy for Comment.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $args Array for argument.
  *
- * @return WP_Error|bool Boolen on success, WP_Error on failure.
+ * @return WP_Error|bool Boolean on success, WP_Error on failure.
  */
 function bb_check_activity_privacy_for_comment( $args ) {
 	$activity = new BP_Activity_Activity( $args['activity_id'] );
@@ -7203,22 +7127,26 @@ function bb_check_activity_privacy_for_comment( $args ) {
 /**
  * Check Activity Privacy for Reaction.
  *
- * @since [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $args Array for argument.
  *
- * @return WP_Error|bool Boolen on success, WP_Error on failure.
+ * @return WP_Error|bool Boolean on success, WP_Error on failure.
  */
 function bb_check_activity_privacy_for_reaction( $args ) {
 	$activity = new BP_Activity_Activity( $args['activity_id'] );
 
-	if ( 
-		! empty( $activity->privacy ) && 
-		! empty( $args['user_id'] ) && 
-		in_array( $args['activity_type'], array( 'activity', 'activity_comment' ) ) 
+	if (
+		! empty( $activity->privacy ) &&
+		! empty( $args['user_id'] ) &&
+		in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 	) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
-			return new WP_Error( 'error', __( 'Sorry, You cannot add reactions on "Only Me" activity.', 'buddyboss' ) );
+			if ( 'add' === $args['action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot add reactions on "Only Me" activity.', 'buddyboss' ) );
+			} else {
+				return new WP_Error( 'error', __( 'Sorry, You cannot remove reactions on "Only Me" activity.', 'buddyboss' ) );
+			}
 		} elseif (
 			'friends' === $activity->privacy &&
 			$activity->user_id !== $args['user_id'] &&
@@ -7227,7 +7155,11 @@ function bb_check_activity_privacy_for_reaction( $args ) {
 				! friends_check_friendship( $activity->user_id, $args['user_id'] )
 			)
 		) {
-			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a reaction.', 'buddyboss' ) );
+			if ( 'add' === $args['action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a reaction.', 'buddyboss' ) );
+			} else {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to remove a reaction.', 'buddyboss' ) );
+			}
 		}
 	}
 

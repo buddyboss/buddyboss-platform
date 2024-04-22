@@ -717,9 +717,10 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$privacy_check = bb_check_activity_privacy_for_reaction(
 				array(
-					'activity_id' => $r['item_id'],
+					'action'        => 'add',
+					'activity_id'   => $r['item_id'],
 					'activity_type' => $r['item_type'],
-					'user_id'     => (int) $r['user_id'],
+					'user_id'       => (int) $r['user_id'],
 				)
 			);
 		
@@ -833,6 +834,20 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
+			$privacy_check = bb_check_activity_privacy_for_reaction(
+				array(
+					'action'        => 'remove',
+					'activity_id'   => $get->item_id,
+					'activity_type' => $get->item_type,
+					'user_id'       => $get->user_id,
+				)
+			);
+		
+			// Bail if activity privacy restrict.
+			if ( is_wp_error( $privacy_check ) ) {
+				return false;
+			}
+
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$deleted = $wpdb->delete(
 				self::$user_reaction_table,
@@ -889,6 +904,20 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			if ( true === self::$status ) { // Use self::$status to check.
 				return false;
+			}
+
+			$privacy_check = bb_check_activity_privacy_for_reaction(
+				array(
+					'action'        => 'remove',
+					'activity_id'   => $r['item_id'],
+					'activity_type' => $r['item_type'],
+					'user_id'       => (int) $r['user_id'],
+				)
+			);
+		
+			// Bail if activity privacy restrict.
+			if ( is_wp_error( $privacy_check ) ) {
+				return ( 'wp_error' === $r['error_type'] ) ? $privacy_check : false;
 			}
 
 			/**
