@@ -1956,7 +1956,7 @@ function bp_activity_media_add( $media ) {
 
 				// save media activity id in media.
 				$media->activity_id = $parent_activity_id;
-				
+
 				// Support for schedule activity medias only on activity.
 				$media->status = 'comment' !== $media->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? bb_media_get_scheduled_status() : bb_media_get_published_status();
 				$media->save();
@@ -3793,11 +3793,7 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_activity_init_activity_schedule() {
-
-	if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-activity/classes/class-bb-activity-schedule.php';
-	}
-	new BB_Activity_Schedule();
+	BB_Activity_Schedule::instance();
 }
 
 add_action( 'bp_init', 'bb_activity_init_activity_schedule' );

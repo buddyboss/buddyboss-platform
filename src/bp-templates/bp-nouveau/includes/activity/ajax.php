@@ -820,6 +820,21 @@ function bp_nouveau_ajax_post_update() {
 
 			// Convert to MySQL datetime format
 			$schedule_date_time = get_gmt_from_date( $activity_datetime );
+
+			// Get current GMT timestamp.
+			$current_timestamp = gmdate('U');
+
+			// Add 1 hour to the timestamp (in seconds)
+			$next_hour_timestamp = $current_timestamp + 3600;
+			$scheduled_timestamp = strtotime( $schedule_date_time );
+
+			if ( $scheduled_timestamp < $next_hour_timestamp) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+					)
+				);
+			}
 		}
 	}
 
