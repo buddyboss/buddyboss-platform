@@ -1808,6 +1808,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-schedule-post_
   font-size: 20px;
   color: #333;
   opacity: 0.4;
+  pointer-events: none;
 }
 
 body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-content .input-field > input {
