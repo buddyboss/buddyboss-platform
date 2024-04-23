@@ -989,19 +989,6 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$privacy_check = bb_check_activity_privacy_for_favorite(
-		array(
-			'action'      => 'add',
-			'activity_id' => $activity_id,
-			'user_id'     => (int) $user_id,
-		)
-	);
-
-	// Bail if activity privacy restrict.
-	if ( is_wp_error( $privacy_check ) ) {
-		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
-	}
-
 	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
@@ -1112,19 +1099,6 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 				esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' )
 			);
 		}
-	}
-
-	$privacy_check = bb_check_activity_privacy_for_favorite(
-		array(
-			'action'      => 'remove',
-			'activity_id' => $activity_id,
-			'user_id'     => (int) $user_id,
-		)
-	);
-
-	// Bail if activity privacy restrict.
-	if ( is_wp_error( $privacy_check ) ) {
-		return ( 'bool' === $r['error_type'] ) ? false : $privacy_check;
 	}
 
 	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
@@ -3013,10 +2987,11 @@ function bp_activity_new_comment( $args = '' ) {
 	// Get the parent activity.
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	$privacy_check = bb_check_activity_privacy_for_comment(
+	$privacy_check = bb_validate_activity_privacy(
 		array(
-			'activity_id' => $activity_id,
-			'user_id'     => (int) $r['user_id'],
+			'activity_id'     => $activity_id,
+			'user_id'         => (int) $r['user_id'],
+			'validate_action' => 'new_comment',
 		)
 	);
 
@@ -7133,191 +7108,50 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 }
 
 /**
- * Check Activity Privacy for Favorite.
- *
- * @since [BBVERSION]
- *
- * @param array $args Array for argument.
- *
- * @return WP_Error|bool Boolen on success, WP_Error on failure.
- */
-function bb_check_activity_privacy_for_favorite( $args ) {
-	$activity = new BP_Activity_Activity( $args['activity_id'] );
-
-	if ( ! empty( $activity->privacy ) && ! empty( $args['user_id'] ) ) {
-		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
-			if ( 'remove' === $args['action'] ) {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, You cannot remove your favorites on "Only Me" activity.', 'buddyboss' )
-				);
-			} else {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, You cannot add favorites on "Only Me" activity.', 'buddyboss' )
-				);
-			}
-		} elseif (
-			'friends' === $activity->privacy &&
-			(
-				! bp_is_active( 'friends' ) ||
-				! friends_check_friendship( $activity->user_id, $args['user_id'] )
-			)
-		) {
-			if ( 'remove' === $args['action'] ) {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, please establish a friendship with the author of the activity to remove your favorites.', 'buddyboss' )
-				);
-			} else {
-				return new WP_Error(
-					'error',
-					esc_html__( 'Sorry, please establish a friendship with the author of the activity to add a favorites.', 'buddyboss' )
-				);
-			}
-		}
-	}
-
-	return true;
-}
-
-/**
- * Check Activity Privacy for Comment.
- *
- * @since [BBVERSION]
- *
- * @param array $args Array for argument.
- *
- * @return WP_Error|bool Boolen on success, WP_Error on failure.
- */
-function bb_check_activity_privacy_for_comment( $args ) {
-	$activity = new BP_Activity_Activity( $args['activity_id'] );
-
-	if ( ! empty( $activity->privacy ) && ! empty( $args['user_id'] ) ) {
-		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
-			return new WP_Error( 'error', __( 'Sorry, You cannot add comments on "Only Me" activity.', 'buddyboss' ) );
-		} elseif (
-			'friends' === $activity->privacy &&
-			(
-				! bp_is_active( 'friends' ) ||
-				! friends_check_friendship( $activity->user_id, $args['user_id'] )
-			)
-		) {
-			return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
-		}
-	}
-
-	return true;
-}
-
-/**
- * Check whether activity schedule posts are enabled.
+ * Function to validate activity privacy.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
+ * @param array $args Array for argument.
  *
- * @return bool true if activity schedule posts are enabled, otherwise false.
+ * @return WP_Error|bool Boolean on success, WP_Error on failure.
  */
-function bb_is_enabled_activity_schedule_posts( $default = false ) {
+function bb_validate_activity_privacy( $args ) {
+	$activity = new BP_Activity_Activity( $args['activity_id'] );
 
-	/**
-	 * Filters whether activity schedule posts are enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Whether activity schedule posts are enabled.
-	 */
-	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
-}
-
-/**
- * Check whether user can schedule activity or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $args Array of Arguments.
- *
- * @return bool true if user can post schedule posts, otherwise false.
- */
-function bb_can_user_schedule_activity( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'user_id'  => bp_loggedin_user_id(),
-			'object'   => '',
-			'group_id' => 0,
-		)
-	);
-
-	$retval = false;
 	if (
-		bp_is_active( 'groups' ) &&
-		(
-			'group' === $r['object'] ||
-			bp_is_group()
-		) &&
-		bp_user_can( $r['user_id'], 'administrator' )
+		! empty( $activity->privacy ) &&
+		! empty( $args['user_id'] )
 	) {
-		$group_id = 'group' === $r['object'] && ! empty( $r['group_id'] ) ? $r['group_id'] : bp_get_current_group_id();
-		$is_admin = groups_is_user_admin( $r['user_id'], $group_id );
-		$is_mod   = groups_is_user_mod( $r['user_id'], $group_id );
-		if ( $is_admin || $is_mod ) {
-			$retval = true;
+		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
+			if ( 'new_comment' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss' ) );
+			}
+			if (
+				'reaction' === $args['validate_action'] &&
+				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
+			) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss' ) );
+			}
+		} elseif (
+			'friends' === $activity->privacy &&
+			$activity->user_id !== $args['user_id'] &&
+			(
+				! bp_is_active( 'friends' ) ||
+				! friends_check_friendship( $activity->user_id, $args['user_id'] )
+			)
+		) {
+			if ( 'new_comment' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
+			}
+			if (
+				'reaction' === $args['validate_action'] &&
+				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
+			) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss' ) );
+			}
 		}
-	} elseif ( bp_user_can( $r['user_id'], 'administrator' ) ) {
-		$retval = true;
 	}
 
-	/**
-	 * Filters whether user can schedule activity posts.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool  $retval Return value for schedule post.
-	 * @param array $args   Array of Arguments.
-	 */
-	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
-}
-
-/**
- * Return the activity published status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_activity_published_status() {
-	return buddypress()->activity->published_status;
-}
-
-/**
- * Return the activity scheduled status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_activity_scheduled_status() {
-	return buddypress()->activity->scheduled_status;
-}
-
-/**
- * Checks member permission to create a scheduled activity or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool Is member has access to create schedule activity or not.
- */
-function bb_member_access_to_create_scheduled_activity() {
-
-	/**
-	 * Filters whether member has access to create schedule activity.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Value for schedule activity.
-	 */
-	return (bool) apply_filters( 'bb_member_access_to_create_scheduled_activity', true );
+	return true;
 }
