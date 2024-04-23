@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.4.3
 Requires PHP: 5.6.20
-Stable tag: 2.5.90
+Stable tag: 2.5.91
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.5.91 =
+* Enhancement: Activity - Made small UI adjustments to the new activity pop-up modal
 
 = 2.5.90 =
 * Bug: Activity - Creating a new post was highlighting the recent media file button that was used in a previous post
