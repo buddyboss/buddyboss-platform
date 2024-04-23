@@ -637,7 +637,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'<p>%s<span class="bb-group-name"></span>?</p>',
 				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
 			),
-			'wpTime'                     => current_time( 'c' ),
+			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 		);
 
