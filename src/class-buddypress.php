@@ -720,7 +720,6 @@ class BuddyPress {
 			'BB_Background_Updater'                        => 'core',
 			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
-			'BB_Activity_Schedule'                         => 'activity',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',

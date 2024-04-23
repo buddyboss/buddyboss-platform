@@ -240,7 +240,7 @@ class BP_Media {
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_media_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save', array( $this->date_created, &$this ) );
-		$this->status        = apply_filters_ref_array( 'bp_media_status_before_save', array( $this->status, &$this ) );
+		$this->status        = apply_filters_ref_array( 'bb_media_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current media item gets saved.
