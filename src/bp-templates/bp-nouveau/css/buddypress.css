@@ -30916,6 +30916,7 @@ span.icons:before {
   z-index: 1099;
 }
 
+.activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
 .acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification {
   z-index: 999999;
 }
