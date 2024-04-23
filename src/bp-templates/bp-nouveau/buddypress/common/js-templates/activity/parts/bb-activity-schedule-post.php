@@ -57,7 +57,7 @@
 
 										<label><?php echo esc_html__( 'Date', 'buddyboss' ); ?></label>
 										<div class="input-field">
-											<input type="text" name="bb-schedule-activity-date-field" class="bb-schedule-activity-date-field" placeholder="dd/mm/yy" value="{{data.activity_schedule_date_raw ? data.activity_schedule_date_raw : ''}}">
+											<input type="text" name="bb-schedule-activity-date-field" class="bb-schedule-activity-date-field" placeholder="yy/mm/dd" value="{{data.activity_schedule_date_raw ? data.activity_schedule_date_raw : ''}}">
 											<i class="bb-icon-f bb-icon-calendar"></i>
 										</div>
 
