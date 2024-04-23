@@ -1494,7 +1494,10 @@ function bb_group_remove_suspended_user( $user_id ) {
 		return;
 	}
 	// Remove user when suspended.
-	if ( function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user_id ) ) {
+	if (
+		function_exists( 'bp_moderation_is_user_suspended' ) &&
+		bp_moderation_is_user_suspended( $user_id )
+	) {
 		$group_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = %d AND is_banned = %d AND is_admin = %d ORDER BY date_modified ASC",
@@ -1536,8 +1539,8 @@ function bb_group_remove_suspended_user( $user_id ) {
 				} else {
 					$suspended_users = array(
 						'admin' => array(
-							$user_id
-						)
+							$user_id,
+						),
 					);
 				}
 
