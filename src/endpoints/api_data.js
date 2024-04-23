@@ -732,6 +732,46 @@ define({ "api": [
   },
   {
     "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/notification",
+    "title": "Activity notification",
+    "name": "ToggleBBNotificationTurnOnOff",
+    "group": "Activity",
+    "description": "<p>Make activity notification on/off</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "Any loggedin user"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "mute",
+              "unmute"
+            ],
+            "optional": true,
+            "field": "mute_action",
+            "description": "<p>mute or unmute activity notification.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
     "url": "/wp-json/buddyboss/v1/activity/:id",
     "title": "Update activity",
     "name": "UpdateBBActivity",
@@ -878,6 +918,46 @@ define({ "api": [
             "optional": true,
             "field": "media_gif",
             "description": "<p>Save gif data into activity when Media component is enable. param(url,mp4)</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-activity/classes/class-bp-rest-activity-endpoint.php",
+    "groupTitle": "Activity"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/activity/:id/close-comments",
+    "title": "Activity close comments",
+    "name": "UpdateBBActivityCloseComments",
+    "group": "Activity",
+    "description": "<p>Make activity close_comments/unclose_comments</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "Administrator or the Group Admin/Moderator or post author."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the activity</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "close_comments",
+              "unclose_comments"
+            ],
+            "optional": true,
+            "field": "comments_action",
+            "description": "<p>Close or Unclose comments.</p>"
           }
         ]
       }

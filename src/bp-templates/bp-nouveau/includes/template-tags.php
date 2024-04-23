@@ -161,7 +161,7 @@ function bp_nouveau_has_dismiss_button() {
 }
 
 /**
- * Ouptut the dismiss type.
+ * Output the dismiss type.
  *
  * $type is used to set the data-attr for the button.
  * 'clear' is tested for & used to remove cookies, if set, in buddypress-nouveau.js.
@@ -400,6 +400,11 @@ function bp_nouveau_pagination( $position ) {
 	if ( 'subgroups' === $pagination_type ) {
 		$pagination_type = 'groups';
 	}
+
+	// Set default values.
+	$page_arg  = '';
+	$pag_count = '';
+	$pag_links = '';
 
 	switch ( $pagination_type ) {
 		case 'blogs':

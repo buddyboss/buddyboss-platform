@@ -7,6 +7,8 @@
  * @since   BuddyBoss 1.7.0
  * @version 1.7.0
  */
+
+$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 
 <div class="bb-video-container bb-media-container group-video">
@@ -40,8 +42,16 @@
 			bp_nouveau_group_hook( 'before', 'video_content' );
 			bp_get_template_part( 'video/actions' );
 			?>
-			<div id="video-stream" class="video" data-bp-list="video">
-				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-video-loading' ); ?></div>
+			<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<?php
+				if ( $is_send_ajax_request ) {
+					echo '<div id="bp-ajax-loader">';
+					bp_nouveau_user_feedback( 'group-video-loading' );
+					echo '</div>';
+				} else {
+					bp_get_template_part( 'video/video-loop' );
+				}
+				?>
 			</div><!-- .media -->
 			<?php
 			bp_nouveau_group_hook( 'after', 'video_content' );

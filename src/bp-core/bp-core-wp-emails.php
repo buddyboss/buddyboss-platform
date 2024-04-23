@@ -178,7 +178,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
 									</div>
 								</td>
 							</tr>
@@ -469,7 +469,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
 									</div>
 								</td>
 							</tr>
