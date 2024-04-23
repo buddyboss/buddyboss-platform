@@ -4753,6 +4753,7 @@ body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .a
   max-width: 95%;
   width: 700px;
   position: relative;
+  box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 }
 
 .bb-activity-model-wrapper .activity-modal {
@@ -4992,6 +4993,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 
 .acomments-view-more i {
   font-size: 20px;
+}
+
+.acomments-view-more:not(.loading):not(.acomments-view-more--hide) {
+  display: inline-block;
 }
 
 .buddypress-wrap .activity-comments ul .acomments-view-more--hide {
