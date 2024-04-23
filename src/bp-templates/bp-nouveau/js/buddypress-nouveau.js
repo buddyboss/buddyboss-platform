@@ -206,7 +206,7 @@ window.bp = window.bp || {};
 			this.querystring = this.getLinkParams();
 
 			// Get Server Time Difference on load.
-			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - Date.now();
+			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - new Date().getTime();
 		},
 
 		/**
