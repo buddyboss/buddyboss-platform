@@ -5167,7 +5167,7 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 		'activity_document'
 	);
 
-	if ( bb_get_activity_scheduled_status() === $activity->status ) {
+	if ( bp_is_active( 'activity' ) && bb_get_activity_scheduled_status() === $activity->status ) {
 		$document_args['status'] = bb_document_get_scheduled_status();
 	}
 

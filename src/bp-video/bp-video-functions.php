@@ -4520,7 +4520,7 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		'activity_video'
 	);
 
-	if ( bb_get_activity_scheduled_status() === $activity->status ) {
+	if ( bp_is_active( 'activity' ) && bb_get_activity_scheduled_status() === $activity->status ) {
 		$video_args['status'] = bb_video_get_scheduled_status();
 	}
 

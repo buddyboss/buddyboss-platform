@@ -1936,7 +1936,7 @@ class BP_Document {
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
 		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
-		$this->status        = apply_filters_ref_array( 'bp_document_status_before_save', array( $this->status, &$this ) );
+		$this->status        = apply_filters_ref_array( 'bb_document_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.
