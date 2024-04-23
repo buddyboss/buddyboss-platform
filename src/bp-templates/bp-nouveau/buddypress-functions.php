@@ -638,7 +638,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
 			),
 			'wpTime'                     => current_time( 'c' ),
-			'wpTimezone'                 => get_option( 'timezone_string' ),
+			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 		);
 
 		// If the Object/Item nav are in the sidebar.
