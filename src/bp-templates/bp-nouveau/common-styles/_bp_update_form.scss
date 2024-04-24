@@ -514,7 +514,14 @@
 	}
 
 	.bb-action-popup .bb-model-footer {
+		display: flex;
+		justify-content: space-between;
 		background-color: transparent;
+
+		> div {
+			display: flex;
+			align-items: center;
+		}
 
 		.button {
 			padding: 6px 15px;
@@ -532,7 +539,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 150px;
+		min-height: 300px;
 
 		[class*="bb-icon"] {
 			font-size: 20px;
@@ -604,9 +611,19 @@
 		}
 	}
 
-	.bb-schedule-posts_modal .bb-action-popup-content {
-		background-color: $light-grey;
-		border-radius: 0 0 4px 4px;
+	.bb-schedule-posts_modal {
+
+		.modal-wrapper {
+			max-width: 815px;
+			overflow: auto;
+			max-height: calc(100vh - 20px);
+		}
+
+		.bb-action-popup-content {
+			background-color: $light-grey;
+			border-radius: 0 0 4px 4px;
+			min-height: 340px;
+		}
 	}
 
 	.bb-schedule-posts_modal .activity-list {

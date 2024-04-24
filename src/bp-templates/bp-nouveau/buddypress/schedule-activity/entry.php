@@ -40,9 +40,9 @@ $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
 
 // Format the local time according to the WordPress settings.
-$formatted_local_time_wp = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
+$formatted_local_time_wp = trim( date_i18n( $date_format . ' \a\t ' . $time_format, strtotime( $local_time_wp ) ), ' at ' ) ;
 
-$scheduled_date_data['local_date_time'] = date_i18n( $date_format . ' ' . $time_format, strtotime( $local_time_wp ) );
+$scheduled_date_data['local_date_time'] = $formatted_local_time_wp;
 $scheduled_date_data['date_raw']        = get_date_from_gmt( $activity_date_recorded, 'Y-m-d' );
 $scheduled_date_data['date']            = get_date_from_gmt( $activity_date_recorded, $date_format );
 $scheduled_date_data['time']            = get_date_from_gmt( $activity_date_recorded, 'g:i' );

@@ -3507,7 +3507,6 @@ function bb_update_to_2_5_80() {
  * @return void
  */
 function bb_update_to_2_6_00() {
-
 	global $wpdb;
 
 	// Check if the 'bp_activity' table exists.

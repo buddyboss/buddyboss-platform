@@ -1883,7 +1883,14 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer {
+  display: flex;
+  justify-content: space-between;
   background-color: transparent;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer > div {
+  display: flex;
+  align-items: center;
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer .button {
@@ -1901,7 +1908,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 150px;
+  min-height: 300px;
 }
 
 .bb-schedule-post_dropdown_section .schedule-posts-placeholder_loader [class*="bb-icon"] {
@@ -1961,9 +1968,16 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   background-color: transparent;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .modal-wrapper {
+  max-width: 815px;
+  overflow: auto;
+  max-height: calc(100vh - 20px);
+}
+
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .bb-action-popup-content {
   background-color: #eaeaea;
   border-radius: 0 0 4px 4px;
+  min-height: 340px;
 }
 
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head {
@@ -31125,6 +31139,7 @@ span.icons:before {
   z-index: 1099;
 }
 
+.activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
 .acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification {
   z-index: 999999;
 }
