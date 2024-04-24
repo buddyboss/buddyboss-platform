@@ -862,7 +862,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				array(
 					'label'              => array(
 						'singular' => __( 'Group', 'buddyboss' ),
-						'plural'   => __( 'Groups', 'buddyboss' ),
+						'plural'   => bb_get_component_label( 'Groups' ),
 					),
 					'subscription_type'  => 'group',
 					'items_callback'     => array( $this, 'bb_render_subscribed_groups' ),

@@ -997,7 +997,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				if ( bp_is_active( 'groups' ) ) {
 					$item_activity['children'][] = array(
 						'ID'    => 'groups',
-						'title' => __( 'Groups', 'buddyboss' ),
+						'title' => bb_get_component_label( 'Groups' ),
 						'url'   => esc_url( trailingslashit( $activity_link . 'groups' ) ),
 						'count' => '',
 					);
@@ -1125,7 +1125,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_groups = array(
 				'ID'       => 'groups',
-				'title'    => __( 'Groups', 'buddyboss' ),
+				'title'    => bb_get_component_label( 'Groups' ),
 				'url'      => esc_url( $groups_link ),
 				'count'    => bp_core_number_format( $count ),
 				'children' => array(

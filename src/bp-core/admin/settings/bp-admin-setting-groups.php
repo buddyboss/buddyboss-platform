@@ -21,7 +21,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	 * Initialize class.
 	 */
 	public function initialize() {
-		$this->tab_label = __( 'Groups', 'buddyboss' );
+		$this->tab_label = bb_get_component_label( 'Groups' );
 		$this->tab_name  = 'bp-groups';
 		$this->tab_order = 20;
 

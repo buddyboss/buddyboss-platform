@@ -24,7 +24,7 @@ final class BP_Group_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Group_Export();
-			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss' ) );
+			$instance->setup( 'bp_groups', bb_get_component_label( 'Groups' ) );
 		}
 
 		return $instance;
@@ -54,7 +54,7 @@ final class BP_Group_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_groups';
-			$group_label = __( 'Groups', 'buddyboss' );
+			$group_label = bb_get_component_label( 'Groups' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 			$avatar      = false;
 			$cover_photo = false;

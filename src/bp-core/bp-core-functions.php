@@ -789,8 +789,8 @@ function bp_core_add_page_mappings( $components, $existing = 'keep', $map_regist
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'        => __( 'News Feed', 'buddyboss' ),
-		'groups'          => __( 'Groups', 'buddyboss' ),
+		'activity'        => bb_get_component_label( 'News Feed' ),
+		'groups'          => bb_get_component_label( 'Groups' ),
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
@@ -9755,4 +9755,32 @@ function bb_mention_add_user_dynamic_link( $content ) {
 	};
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
+}
+
+/**
+ * Utility function to get a field label.
+ *
+ * Retrieves the label associated with a given field.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $field The field label to retrieve. Should be lowercase and contain underscores instead of spaces.
+ * @return string The field label. Returns an empty string if none is found.
+ */
+function bb_get_component_label( $field = null ) {
+	return BB_Component_Label::get_label( $field );
+}
+
+/**
+ * Utility function to retrieve a lowercase field label.
+ *
+ * Retrieves the label associated with a given field in lowercase.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $field The field label to retrieve. Should be lowercase and contain underscores instead of spaces.
+ * @return string The lowercase field label. Returns an empty string if none is found.
+ */
+function bb_get_component_label_lower( $field = null ) {
+	return BB_Component_Label::label_to_lower( $field );
 }

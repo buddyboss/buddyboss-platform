@@ -569,14 +569,14 @@ class BP_Groups_Component extends BP_Component {
 		// Only grab count if we're on a user page.
 		if ( bp_is_user() ) {
 			$class     = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
-			$nav_name  = __( 'Groups', 'buddyboss' );
+			$nav_name  = bb_get_component_label( 'Groups' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
 				bp_get_total_group_count_for_user()
 			);
 		} else {
-			$nav_name = __( 'Groups', 'buddyboss' );
+			$nav_name = bb_get_component_label( 'Groups' );
 		}
 
 		$slug = bp_get_groups_slug();
@@ -1027,7 +1027,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Pending group invites.
 			$count   = groups_get_invite_count_for_user();
-			$title   = __( 'Groups', 'buddyboss' );
+			$title   = bb_get_component_label( 'Groups' );
 			$pending = __( 'No Pending Invites', 'buddyboss' );
 
 			if ( ! empty( $count ) ) {
