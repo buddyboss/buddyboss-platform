@@ -121,6 +121,9 @@ window.bp = window.bp || {};
 				'click',
 				'.bb-view-scheduled-posts',
 				function() {
+					// Let closing modal know that we are opening view schedule posts modal from outside.
+					bp.Nouveau.SchedulePostView = true;
+
 					// Show post form modal.
 					jQuery( '.activity-update-form .activity-form:not(.focus-in) #whats-new' ).trigger( 'focus' );
 
@@ -4950,6 +4953,12 @@ window.bp = window.bp || {};
 				schedulePostModal.find( '.bb-action-popup-content' ).removeClass( 'has-content has-no-content' );
 				schedulePostModal.find( '.bb-action-popup-content .schedule-posts-content' ).removeAttr( 'style' ).html( '' );
 				schedulePostModal.hide();
+
+				// Hide post form if user came to only view schedules posts from outside.
+				if( bp.Nouveau.SchedulePostView ) {
+					$( '#activity-header .bb-model-close-button').trigger( 'click' );
+					bp.Nouveau.SchedulePostView = false;
+				}
 			},
 
 			displayScheduleButton: function ( event ) {

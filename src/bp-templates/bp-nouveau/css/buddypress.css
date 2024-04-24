@@ -1908,7 +1908,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 150px;
+  min-height: 300px;
 }
 
 .bb-schedule-post_dropdown_section .schedule-posts-placeholder_loader [class*="bb-icon"] {
@@ -1968,9 +1968,16 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   background-color: transparent;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .modal-wrapper {
+  max-width: 815px;
+  overflow: auto;
+  max-height: calc(100vh - 20px);
+}
+
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .bb-action-popup-content {
   background-color: #eaeaea;
   border-radius: 0 0 4px 4px;
+  min-height: 340px;
 }
 
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head {
