@@ -491,10 +491,6 @@ function bp_version_updater() {
 			bb_update_to_2_5_91();
 		}
 
-		if ( $raw_db_version < 21101 ) {
-			bb_update_to_2_6_00();
-		}
-
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3546,18 +3542,8 @@ function bb_update_to_2_5_91() {
 			$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
 		}
 	}
-}
 
-/**
- * Purge the existing old cache to implement the new 30 days cache expiry system.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_6_00() {
-
-	// Purge all the cache for API.
+	// Purge the existing old cache to implement the new 30 days cache expiry system.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
