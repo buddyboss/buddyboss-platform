@@ -1883,7 +1883,14 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer {
+  display: flex;
+  justify-content: space-between;
   background-color: transparent;
+}
+
+.bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer > div {
+  display: flex;
+  align-items: center;
 }
 
 .bb-schedule-post_dropdown_section .bb-action-popup .bb-model-footer .button {

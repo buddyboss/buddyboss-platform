@@ -514,7 +514,14 @@
 	}
 
 	.bb-action-popup .bb-model-footer {
+		display: flex;
+		justify-content: space-between;
 		background-color: transparent;
+
+		> div {
+			display: flex;
+			align-items: center;
+		}
 
 		.button {
 			padding: 6px 15px;

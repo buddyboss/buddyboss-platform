@@ -4858,6 +4858,7 @@ window.bp = window.bp || {};
 				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
 				'click .bb-activity-schedule_edit': 'editScheduledPost',
 				'click .bb-activity-schedule_delete': 'deleteScheduledPost',
+				'click .bb-schedule-activity-clear': 'clearScheduledPost',
 			},
 
 			initialize: function () {
@@ -5087,6 +5088,19 @@ window.bp = window.bp || {};
 					);
 				}
 
+			},
+
+			clearScheduledPost: function ( event ) {
+				event.preventDefault();
+
+				// Reset the schedule data and close form.
+				this.model.set( 'edit_activity', false );
+				this.model.set( 'activity_action_type', null );
+				this.model.set( 'activity_schedule_date_raw', null );
+				this.model.set( 'activity_schedule_date', null );
+				this.model.set( 'activity_schedule_time', null );
+				this.model.set( 'activity_schedule_meridiem', null );
+				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			}
 		}
 	);
