@@ -373,7 +373,7 @@ function bp_search_items() {
 	// other buddypress components
 	$bp_components = array(
 		'groups'   => __( 'Groups', 'buddyboss' ),
-		'activity' => __( 'Activity', 'buddyboss' ),
+		'activity' => bb_get_component_label( 'activity' ),
 		'messages' => __( 'Messages', 'buddyboss' ),
 		/*
 		 should we search notifications as well?

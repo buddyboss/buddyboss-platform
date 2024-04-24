@@ -134,7 +134,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		return array(
 			'content'      => $activity->content,
-			'title'        => __( 'Activity', 'buddyboss' ),
+			'title'        => bb_get_component_label( 'activity' ),
 			'author_name'  => bp_core_get_user_displayname( $activity->user_id ),
 			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
 

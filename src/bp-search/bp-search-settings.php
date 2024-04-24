@@ -949,7 +949,7 @@ function bp_search_settings_callback_activity() {
 		<?php checked( bp_is_search_activity_enable( true ) ); ?>
 	/>
 	<label for="bp_search_activity">
-		<?php esc_html_e( 'Activity', 'buddyboss' ); ?>
+		<?php echo esc_html( bb_get_component_label( 'activity' ) ); ?>
 	</label>
 	<?php
 }

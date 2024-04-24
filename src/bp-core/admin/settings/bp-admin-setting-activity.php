@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'Activity', 'buddyboss' );
+		$this->tab_label = bb_get_component_label( 'activity' );
 		$this->tab_name  = 'bp-activity';
 		$this->tab_order = 40;
 	}

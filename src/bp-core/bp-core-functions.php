@@ -9756,3 +9756,33 @@ function bb_mention_add_user_dynamic_link( $content ) {
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
 }
+
+/**
+ * Utility function to get a field label.
+ *
+ * Retrieves the label associated with a given field.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $field The field label to retrieve. Should be lowercase and contain underscores instead of spaces.
+ *
+ * @return string The field label. Returns an empty string if none is found.
+ */
+function bb_get_component_label( $field = null ) {
+	return BB_Component_Label::get_label( $field );
+}
+
+/**
+ * Utility function to retrieve a lowercase field label.
+ *
+ * Retrieves the label associated with a given field in lowercase.
+ *
+ * @since [BBVERSION]
+ *
+ * @param string $field The field label to retrieve. Should be lowercase and contain underscores instead of spaces.
+ *
+ * @return string The lowercase field label. Returns an empty string if none is found.
+ */
+function bb_get_component_label_lower( $field = null ) {
+	return BB_Component_Label::label_to_lower( $field );
+}
