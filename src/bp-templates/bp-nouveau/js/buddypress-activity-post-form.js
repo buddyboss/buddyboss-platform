@@ -134,6 +134,9 @@ window.bp = window.bp || {};
 				'click',
 				'.bb-view-scheduled-posts',
 				function() {
+					// Let closing modal know that we are opening view schedule posts modal from outside.
+					bp.Nouveau.SchedulePostView = true;
+
 					// Show post form modal.
 					jQuery( '.activity-update-form .activity-form:not(.focus-in) #whats-new' ).trigger( 'focus' );
 
@@ -5167,6 +5170,7 @@ window.bp = window.bp || {};
 				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
 				'click .bb-activity-schedule_edit': 'editScheduledPost',
 				'click .bb-activity-schedule_delete': 'deleteScheduledPost',
+				'click .bb-schedule-activity-clear': 'clearScheduledPost',
 			},
 
 			initialize: function () {
@@ -5258,6 +5262,12 @@ window.bp = window.bp || {};
 				schedulePostModal.find( '.bb-action-popup-content' ).removeClass( 'has-content has-no-content' );
 				schedulePostModal.find( '.bb-action-popup-content .schedule-posts-content' ).removeAttr( 'style' ).html( '' );
 				schedulePostModal.hide();
+
+				// Hide post form if user came to only view schedules posts from outside.
+				if( bp.Nouveau.SchedulePostView ) {
+					$( '#activity-header .bb-model-close-button').trigger( 'click' );
+					bp.Nouveau.SchedulePostView = false;
+				}
 			},
 
 			displayScheduleButton: function ( event ) {
@@ -5396,6 +5406,19 @@ window.bp = window.bp || {};
 					);
 				}
 
+			},
+
+			clearScheduledPost: function ( event ) {
+				event.preventDefault();
+
+				// Reset the schedule data and close form.
+				this.model.set( 'edit_activity', false );
+				this.model.set( 'activity_action_type', null );
+				this.model.set( 'activity_schedule_date_raw', null );
+				this.model.set( 'activity_schedule_date', null );
+				this.model.set( 'activity_schedule_time', null );
+				this.model.set( 'activity_schedule_meridiem', null );
+				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			}
 		}
 	);

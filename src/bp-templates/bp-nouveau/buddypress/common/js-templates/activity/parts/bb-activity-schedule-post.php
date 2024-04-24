@@ -87,8 +87,15 @@
 									</div>
 
 									<footer class="bb-model-footer">
-										<a href="#" class="button button-outline bb-schedule-activity-cancel"><?php echo esc_html__( 'Back', 'buddyboss' ); ?></a>
-										<a class="button bb-schedule-activity" href="#" disabled><?php echo esc_html__( 'Next', 'buddyboss' ); ?></a>
+										<div>
+											<# if ( true === data.edit_activity || 'scheduled' === data.activity_action_type ) { #>
+												<a href="#" class="bb-schedule-activity-clear"><?php echo esc_html__( 'Clear Schedule', 'buddyboss' ); ?></a>
+											<# } #>
+										</div>
+										<div>
+											<a href="#" class="button button-outline bb-schedule-activity-cancel"><?php echo esc_html__( 'Back', 'buddyboss' ); ?></a>
+											<a class="button bb-schedule-activity" href="#" disabled><?php echo esc_html__( 'Next', 'buddyboss' ); ?></a>
+										</div>
 									</footer>
 								</div>
 							</div>
