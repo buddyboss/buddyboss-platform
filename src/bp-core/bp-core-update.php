@@ -487,8 +487,8 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
-		if ( $raw_db_version < 21091 ) {
-			bb_update_to_2_5_91();
+		if ( $raw_db_version < 21101 ) {
+			bb_update_to_2_6_00();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3500,12 +3500,13 @@ function bb_update_to_2_5_80() {
 
 /**
  * Create a new column in database tables.
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_update_to_2_5_91() {
+function bb_update_to_2_6_00() {
 	global $wpdb;
 
 	// Check if the 'bp_activity' table exists.
@@ -3543,7 +3544,7 @@ function bb_update_to_2_5_91() {
 		}
 	}
 
-	// Purge the existing old cache to implement the new 30 days cache expiry system.
+	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
