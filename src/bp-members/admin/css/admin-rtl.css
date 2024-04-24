@@ -345,6 +345,10 @@ div#community-profile-page p.not-activated {
 	border: 1px solid #eee;
 }
 
+.bb_admin_repeater_group .repeater_group_outer:first-child {
+	margin-top: 20px;
+}
+
 .profile-edit.bb_admin_repeater_group {
 	display: inline-block;
 	width: 100%;
