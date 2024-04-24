@@ -3542,4 +3542,9 @@ function bb_update_to_2_5_91() {
 			$wpdb->query( "ALTER TABLE {$wpdb->base_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
 		}
 	}
+
+	// Purge the existing old cache to implement the new 30 days cache expiry system.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
 }
