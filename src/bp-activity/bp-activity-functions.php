@@ -2976,6 +2976,19 @@ function bp_activity_new_comment( $args = '' ) {
 	// Get the parent activity.
 	$activity = new BP_Activity_Activity( $activity_id );
 
+	$privacy_check = bb_validate_activity_privacy(
+		array(
+			'activity_id'     => $activity_id,
+			'user_id'         => (int) $r['user_id'],
+			'validate_action' => 'new_comment',
+		)
+	);
+
+	// Bail if activity privacy restrict.
+	if ( is_wp_error( $privacy_check ) ) {
+		return $privacy_check;
+	}
+
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
 		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
@@ -7080,4 +7093,53 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 	}
 
 	return $is_muted;
+}
+
+/**
+ * Function to validate activity privacy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Array for argument.
+ *
+ * @return WP_Error|bool Boolean on success, WP_Error on failure.
+ */
+function bb_validate_activity_privacy( $args ) {
+	$activity = new BP_Activity_Activity( $args['activity_id'] );
+
+	if (
+		! empty( $activity->privacy ) &&
+		! empty( $args['user_id'] )
+	) {
+		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
+			if ( 'new_comment' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss' ) );
+			}
+			if (
+				'reaction' === $args['validate_action'] &&
+				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
+			) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss' ) );
+			}
+		} elseif (
+			'friends' === $activity->privacy &&
+			$activity->user_id !== $args['user_id'] &&
+			(
+				! bp_is_active( 'friends' ) ||
+				! friends_check_friendship( $activity->user_id, $args['user_id'] )
+			)
+		) {
+			if ( 'new_comment' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to add a comment.', 'buddyboss' ) );
+			}
+			if (
+				'reaction' === $args['validate_action'] &&
+				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
+			) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss' ) );
+			}
+		}
+	}
+
+	return true;
 }
