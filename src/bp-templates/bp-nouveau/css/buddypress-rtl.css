@@ -1923,6 +1923,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   justify-content: center;
   min-height: 210px;
   margin: 30px 0;
+  text-align: center;
 }
 
 .bb-schedule-post_dropdown_section .schedule-posts-placeholder.is_open {
@@ -2015,6 +2016,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .media-action_more,
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .document-detail-wrap,
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-open-video-theatre,
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-video-elem,
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-open-media-theatre,
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-open-document-theatre {
   pointer-events: none;

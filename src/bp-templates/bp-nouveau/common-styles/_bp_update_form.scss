@@ -554,6 +554,7 @@
 		justify-content: center;
 		min-height: 210px;
 		margin: 30px 0;
+		text-align: center;
 
 		&.is_open {
 			display: flex;
@@ -666,6 +667,7 @@
 		.media-action_more,
 		.document-detail-wrap,
 		.bb-open-video-theatre,
+		.bb-activity-video-elem,
 		.bb-open-media-theatre,
 		.bb-open-document-theatre {
 			pointer-events: none;
