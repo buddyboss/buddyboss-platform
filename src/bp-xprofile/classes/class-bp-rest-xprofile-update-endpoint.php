@@ -221,12 +221,22 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		if ( empty( $errors ) ) {
 			$response['updated'] = true;
 		} else {
+			// $validation_errors = array_column( $errors, 'message', 'field_id' );
+			// return new WP_Error(
+			// 	'bp_rest_user_cannot_update_xprofile_field_data',
+			// 	__( 'Cannot update XProfile field data.', 'buddyboss' ),
+			// 	array(
+			// 		'status' => 400,
+			// 		'data'   => $validation_errors,
+			// 	)
+			// );
+
+			$validation_errors = reset( array_column( $errors, 'message', 'field_id' ) );
 			return new WP_Error(
 				'bp_rest_user_cannot_update_xprofile_field_data',
-				__( 'Cannot update XProfile field data.', 'buddyboss' ),
+				is_array( $validation_errors ) ? reset( $validation_errors ) : $validation_errors,
 				array(
 					'status' => 400,
-					'data'   => $errors,
 				)
 			);
 		}
