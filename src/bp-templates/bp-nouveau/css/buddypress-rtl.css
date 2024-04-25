@@ -5089,6 +5089,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
 .bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a > * {
   -webkit-touch-callout: none !important;
+  -webkit-user-drag: none;
 }
 
 .bb-is-mobile.bb-reactions-mode.activity * {
