@@ -537,7 +537,7 @@ add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 function bp_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-		$buttons['member_block'] = __( 'Block', 'buddyboss' );
+		$buttons['member_block'] = bb_get_component_label( 'block' );
 	}
 
 	if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) {

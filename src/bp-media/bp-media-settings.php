@@ -501,19 +501,19 @@ function bp_media_settings_callback_group_media_support() {
 		$string_array = array();
 
 		if ( bp_is_active( 'groups' ) ) {
-			$string_array[] = __( 'groups', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'groups' );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$string_array[] = __( 'activity posts', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'activity_posts' );
 		}
 
 		if ( true === bp_disable_group_messages() ) {
-			$string_array[] = __( 'messages', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'messages' );
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			$string_array[] = __( 'forums', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'forums' );
 		}
 
 		$last_string    = array_pop( $string_array );
@@ -712,19 +712,19 @@ function bp_media_settings_callback_groups_emoji_support() {
 	$string_array = array();
 
 	if ( bp_is_active( 'groups' ) ) {
-		$string_array[] = __( 'groups', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'groups' );
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
-		$string_array[] = __( 'activity posts', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'activity_posts' );
 	}
 
 	if ( true === bp_disable_group_messages() ) {
-		$string_array[] = __( 'messages', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'messages' );
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
-		$string_array[] = __( 'forums', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'forums' );
 	}
 
 	$last_string    = array_pop( $string_array );
@@ -937,19 +937,19 @@ function bp_media_settings_callback_groups_gif_support() {
 	$string_array = array();
 
 	if ( bp_is_active( 'groups' ) ) {
-		$string_array[] = __( 'groups', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'groups' );
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
-		$string_array[] = __( 'activity posts', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'activity_posts' );
 	}
 
 	if ( true === bp_disable_group_messages() ) {
-		$string_array[] = __( 'messages', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'messages' );
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
-		$string_array[] = __( 'forums', 'buddyboss' );
+		$string_array[] = bb_get_component_label_lower( 'forums' );
 	}
 
 	$last_string    = array_pop( $string_array );
@@ -1141,19 +1141,19 @@ function bp_media_settings_callback_group_document_support() {
 		$string_array = array();
 
 		if ( bp_is_active( 'groups' ) ) {
-			$string_array[] = __( 'groups', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'groups' );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$string_array[] = __( 'activity posts', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'activity_posts' );
 		}
 
 		if ( true === bp_disable_group_messages() ) {
-			$string_array[] = __( 'messages', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'messages' );
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			$string_array[] = __( 'forums', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'forums' );
 		}
 
 		$last_string    = array_pop( $string_array );

@@ -98,7 +98,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
-		$this->add_section( 'bb_activity_comments', __( 'Activity Comments', 'buddyboss' ), '', array( $this, 'bb_admin_activity_comments_settings_tutorial' ), sprintf(
+		$this->add_section( 'bb_activity_comments', bb_get_component_label( 'activity_comments' ), '', array( $this, 'bb_admin_activity_comments_settings_tutorial' ), sprintf(
 				wp_kses_post(
 					__( 'WordPress post and custom post types will inherit from your WordPress %s settings.', 'buddyboss' )
 				),

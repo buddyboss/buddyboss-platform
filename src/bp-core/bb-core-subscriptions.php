@@ -596,8 +596,8 @@ function bb_get_subscriptions_types( $singular = false ) {
 		}
 	} else {
 		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
-			$types['forum'] = ( $singular ? __( 'Forum', 'buddyboss' ) : __( 'Forums', 'buddyboss' ) );
-			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) );
+			$types['forum'] = ( $singular ? bb_get_component_label( 'forum' ) : bb_get_component_label( 'forums' ) );
+			$types['topic'] = ( $singular ? bb_get_component_label( 'discussion' ) : bb_get_component_label( 'discussions' ) );
 		}
 	}
 

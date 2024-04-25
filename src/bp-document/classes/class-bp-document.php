@@ -701,11 +701,11 @@ class BP_Document {
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
 				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
-					$visibility = esc_html__( 'Connections', 'buddyboss' );
+					$visibility = esc_html( bb_get_component_label( 'connections' ) );
 				} elseif ( 'message' === $document->privacy ) {
-					$visibility = esc_html__( 'Message', 'buddyboss' );
+					$visibility = esc_html( bb_get_component_label( 'message' ) );
 				} elseif ( 'forums' === $document->privacy ) {
-					$visibility = esc_html__( 'Forums', 'buddyboss' );
+					$visibility = esc_html( bb_get_component_label( 'forums' ) );
 				} else {
 					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? ucfirst( $document_privacy[ $document->privacy ] ) : '';
 				}

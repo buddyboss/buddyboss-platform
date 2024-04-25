@@ -248,7 +248,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		$button_text          = __( 'Block', 'buddyboss' );
+		$button_text          = bb_get_component_label( 'block' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
 	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
 		$button_text          = __( 'Report Member', 'buddyboss' );

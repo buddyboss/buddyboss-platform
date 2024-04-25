@@ -66,19 +66,19 @@ function bp_video_settings_callback_group_video_support() {
 		$string_array = array();
 
 		if ( bp_is_active( 'groups' ) ) {
-			$string_array[] = __( 'groups', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'groups' );
 		}
 
 		if ( bp_is_active( 'activity' ) ) {
-			$string_array[] = __( 'activity posts', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'activity_posts' );
 		}
 
 		if ( true === bp_disable_group_messages() ) {
-			$string_array[] = __( 'messages', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'messages' );
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			$string_array[] = __( 'forums', 'buddyboss' );
+			$string_array[] = bb_get_component_label_lower( 'forums' );
 		}
 
 		$last_string    = array_pop( $string_array );

@@ -984,7 +984,7 @@ function bp_search_settings_callback_activity_comments() {
 		<?php checked( bp_is_search_activity_comments_enable( true ) ); ?>
 	/>
 	<label for="bp_search_activity_comments">
-		<?php esc_html_e( 'Activity Comments', 'buddyboss' ); ?>
+		<?php echo esc_html( bb_get_component_label( 'activity_comments' ) ); ?>
 	</label>
 	<?php
 }

@@ -234,7 +234,7 @@ function bp_core_get_forums_admin_tabs( $active_tab = '' ) {
 
 	$tabs[] = array(
 		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ),
-		'name'  => __( 'Discussions', 'buddyboss' ),
+		'name'  => bb_get_component_label( 'discussions' ),
 		'class' => 'bp-discussions',
 	);
 
@@ -290,7 +290,7 @@ function bp_discussions_admin_discussions_listing_add_tab() {
 	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( bb_get_component_label( 'discussions' ) ); ?></h2>
 		</div>
 		<?php
 	}

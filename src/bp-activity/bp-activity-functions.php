@@ -1626,7 +1626,7 @@ function bp_activity_register_activity_actions() {
 		'activity_comment',
 		__( 'Replied to a status update', 'buddyboss' ),
 		'bp_activity_format_activity_action_activity_comment',
-		__( 'Activity Comments', 'buddyboss' )
+		bb_get_component_label( 'activity_comments' ),
 	);
 
 	/**
