@@ -55,7 +55,7 @@ final class BP_Friendship_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_friends';
-			$group_label = __( 'Connections', 'buddyboss' );
+			$group_label = bb_get_component_label( 'connections' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			if ( $item->initiator_user_id == $user->ID ) {

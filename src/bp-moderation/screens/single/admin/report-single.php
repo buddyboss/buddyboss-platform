@@ -153,13 +153,13 @@ $admins            = array_map(
 											<strong class="report-header_number">
 												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html__( 'Block', 'buddyboss' ) : esc_html__( 'Blocks', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count ) ? esc_html( bb_get_component_label( 'block' ) ) : esc_html( bb_get_component_label( 'blocks' ) ); ?>
 										</div>
 										<div class="report-header_content">
 											<strong class="report-header_number">
 												<?php echo esc_html( bp_core_number_format( $moderation_request_data->count_report ) ); ?>
 											</strong>
-											<?php echo ( 1 === $moderation_request_data->count_report ) ? esc_html__( 'Report', 'buddyboss' ) : esc_html__( 'Reports', 'buddyboss' ); ?>
+											<?php echo ( 1 === $moderation_request_data->count_report ) ? esc_html( bb_get_component_label( 'report' ) ) : esc_html( bb_get_component_label( 'reports' ) ); ?>
 										</div>
 										<div class="report-header_action">
 											<?php

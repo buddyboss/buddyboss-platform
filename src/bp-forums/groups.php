@@ -50,7 +50,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Component Name
 			$this->name          = __( 'Forum', 'buddyboss' );
-			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
+			$this->nav_item_name = bb_get_component_label( 'discussions' );
 
 			// Component slugs (hardcoded to match Forums 1.x functionality)
 			$this->slug       = urlencode( get_option( '_bbp_forum_slug', 'forum' ) );

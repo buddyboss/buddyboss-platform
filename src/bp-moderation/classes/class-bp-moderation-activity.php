@@ -117,7 +117,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = bb_get_component_label( 'activity' );
 
 		return $content_types;
 	}

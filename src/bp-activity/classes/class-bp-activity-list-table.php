@@ -413,7 +413,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			array(
 				'cb'       => '<input name type="checkbox" />',
 				'author'   => __( 'Author', 'buddyboss' ),
-				'comment'  => __( 'Activity', 'buddyboss' ),
+				'comment'  => bb_get_component_label( 'activity' ),
 				'action'   => __( 'Action', 'buddyboss' ),
 				'response' => __( 'In Response To', 'buddyboss' ),
 			)

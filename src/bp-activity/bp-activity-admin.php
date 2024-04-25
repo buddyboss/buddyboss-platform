@@ -32,8 +32,8 @@ function bp_activity_add_admin_menu() {
 	// Add our screen.
 	$hook = add_submenu_page(
 		'buddyboss-platform',
-		__( 'Activity', 'buddyboss' ),
-		__( 'Activity', 'buddyboss' ),
+		bb_get_component_label( 'activity' ),
+		bb_get_component_label( 'activity' ),
 		'bp_moderate',
 		'bp-activity',
 		'bp_activity_admin'
@@ -288,7 +288,7 @@ function bp_activity_admin_load() {
 		$bp_activity_list_table = new BP_Activity_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => __( 'Activity', 'buddyboss' ) ) );
+		add_screen_option( 'per_page', array( 'label' => bb_get_component_label( 'activity' ) ) );
 
 		// Help panel - overview text.
 		get_current_screen()->add_help_tab(
@@ -1104,7 +1104,7 @@ function bp_activity_admin_index() {
 			<?php if ( ! empty( $_REQUEST['aid'] ) ) : ?>
 				<?php printf( __( 'Activity related to ID #%s', 'buddyboss' ), bp_core_number_format( (int) $_REQUEST['aid'] ) ); ?>
 			<?php else : ?>
-				<?php _e( 'Activity', 'buddyboss' ); ?>
+				<?php echo bb_get_component_label( 'activity' ); ?>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $_REQUEST['s'] ) ) : ?>

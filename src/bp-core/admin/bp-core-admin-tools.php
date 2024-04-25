@@ -81,7 +81,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-friends]"
 												   id="import-friends"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
-											<?php _e( 'Connections', 'buddyboss' ); ?>
+											<?php echo bb_get_component_label( 'connections' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>

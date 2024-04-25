@@ -373,7 +373,7 @@ function bp_search_items() {
 	// other buddypress components
 	$bp_components = array(
 		'groups'   => __( 'Groups', 'buddyboss' ),
-		'activity' => __( 'Activity', 'buddyboss' ),
+		'activity' => bb_get_component_label( 'activity' ),
 		'messages' => __( 'Messages', 'buddyboss' ),
 		/*
 		 should we search notifications as well?
@@ -386,7 +386,7 @@ function bp_search_items() {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss' );
+				$items['activity_comment'] = bb_get_component_label( 'activity_comments' );
 			}
 		}
 	}

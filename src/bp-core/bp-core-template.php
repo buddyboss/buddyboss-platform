@@ -558,15 +558,15 @@ function bp_search_form_type_select() {
 	$options = array();
 
 	if ( bp_is_active( 'xprofile' ) ) {
-		$options['members'] = __( 'Members', 'buddyboss' );
+		$options['members'] = bb_get_component_label( 'members' );
 	}
 
 	if ( bp_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss' );
+		$options['groups'] = bb_get_component_label( 'groups' );
 	}
 
 	if ( bp_is_active( 'blogs' ) && is_multisite() ) {
-		$options['blogs'] = __( 'Blogs', 'buddyboss' );
+		$options['blogs'] = bb_get_component_label( 'blogs' );
 	}
 
 	$options['posts'] = __( 'Posts', 'buddyboss' );

@@ -259,7 +259,7 @@ function bbp_admin_get_settings_fields() {
 
 				// Replies per page setting
 				'_bbp_topics_per_page'  => array(
-					'title'             => __( 'Discussions', 'buddyboss' ),
+					'title'             => bb_get_component_label( 'discussions' ),
 					'callback'          => 'bbp_admin_setting_callback_topics_per_page',
 					'sanitize_callback' => 'intval',
 					'args'              => array(),

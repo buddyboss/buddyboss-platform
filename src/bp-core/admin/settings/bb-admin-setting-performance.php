@@ -52,7 +52,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 
 
 		if ( bp_is_active( 'activity' ) ) {
-			$this->add_section( 'bb_performance_activity', __( 'Activity', 'buddyboss' ), '', 'bb_admin_performance_activity_setting_tutorial' );
+			$this->add_section( 'bb_performance_activity', bb_get_component_label( 'activity' ), '', 'bb_admin_performance_activity_setting_tutorial' );
 			$this->add_field( 'bb_load_activity_per_request', __( 'Activity loading', 'buddyboss' ), 'bb_admin_performance_setting_activity_callback', 'intval' );
 		}
 

@@ -234,7 +234,7 @@ function bp_core_register_common_scripts() {
 		'smileys_people'    => __( 'Smileys & People', 'buddyboss' ),
 		'animals_nature'    => __( 'Animals & Nature', 'buddyboss' ),
 		'food_drink'        => __( 'Food & Drink', 'buddyboss' ),
-		'activity'          => __( 'Activity', 'buddyboss' ),
+		'activity'          => bb_get_component_label( 'activity' ),
 		'travel_places'     => __( 'Travel & Places', 'buddyboss' ),
 		'objects'           => __( 'Objects', 'buddyboss' ),
 		'symbols'           => __( 'Symbols', 'buddyboss' ),

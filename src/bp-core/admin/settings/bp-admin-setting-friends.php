@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'Connections', 'buddyboss' );
+		$this->tab_label = bb_get_component_label( 'connections' );
 		$this->tab_name  = 'bp-friends';
 		$this->tab_order = 60;
 	}
