@@ -1923,6 +1923,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   justify-content: center;
   min-height: 210px;
   margin: 30px 0;
+  text-align: center;
 }
 
 .bb-schedule-post_dropdown_section .schedule-posts-placeholder.is_open {
