@@ -2033,6 +2033,7 @@
 		.ac-emotions_list .ac-emotion_item a > *,
 		.generic-button a > * {
 			-webkit-touch-callout: none !important;
+			-webkit-user-drag: none;
 		}
 	}
 
