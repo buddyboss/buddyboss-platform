@@ -221,7 +221,14 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		if ( empty( $errors ) ) {
 			$response['updated'] = true;
 		} else {
-			$response['updated'] = $errors;
+			return new WP_Error(
+				'bp_rest_user_cannot_update_xprofile_field_data',
+				__( 'Cannot update XProfile field data.', 'buddyboss' ),
+				array(
+					'status' => 400,
+					'data'   => $errors,
+				)
+			);
 		}
 
 		$retval = array();
