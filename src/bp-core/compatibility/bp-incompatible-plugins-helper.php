@@ -39,7 +39,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Rank Math SEO
 	 */
-	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
+	if ( class_exists( 'RankMath' ) && interface_exists( 'RankMath\Paper\IPaper' ) && ! is_admin() ) {
 		require buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
 	}
 
