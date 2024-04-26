@@ -9,12 +9,17 @@
  */
 
 bp_nouveau_before_loop();
+$args = array(
+	'sort' => 'ASC',
+);
+
+if ( isset( $_POST['status'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$args['status'] = sanitize_text_field( $_POST['status'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+}
+
 $activity_schedule_args = bp_parse_args(
 	bp_ajax_querystring( 'activity' ),
-	array(
-		'status'  => sanitize_text_field( $_POST['status'] ),
-		'sort'    => 'ASC',
-	),
+	$args,
 	'activity_schedule_args'
 );
 
@@ -22,7 +27,7 @@ $activity_schedule_args['user_id'] = bp_loggedin_user_id();
 $activity_schedule_args['scope']   = '';
 if ( bp_has_activities( $activity_schedule_args ) ) :
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		?>
 		<ul class="activity-list item-list bp-list">
 		<?php
@@ -41,7 +46,7 @@ if ( bp_has_activities( $activity_schedule_args ) ) :
 		<?php
 	endif;
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		?>
 		</ul>
 		<?php
