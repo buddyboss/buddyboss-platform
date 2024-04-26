@@ -612,6 +612,11 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 				$bp_document = new BP_Document( $document['document_id'] );
 
 				if ( ! empty( $bp_document->id ) ) {
+
+					if ( bp_is_active( 'activity' ) ) {
+						$obj_activity = new BP_Activity_Activity( $bp_document->activity_id );
+					}
+
 					$document_id = bp_document_add(
 						array(
 							'id'            => $bp_document->id,
@@ -627,7 +632,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
 							'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : $bp_document->date_created,
-							'status'        => $bp_document->status,
+							'status'        => ! empty( $obj_activity ) && function_exists( 'bb_get_activity_published_status' ) && bb_get_activity_published_status() === $obj_activity->status ? bb_document_get_published_status() : $bp_document->status,
 						)
 					);
 
