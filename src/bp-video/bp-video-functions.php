@@ -715,6 +715,11 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 				$bp_video = new BP_Video( $video['video_id'] );
 
 				if ( ! empty( $bp_video->id ) ) {
+
+					if ( bp_is_active( 'activity' ) ) {
+						$obj_activity = new BP_Activity_Activity( $bp_video->activity_id );
+					}
+
 					$video_id = bp_video_add(
 						array(
 							'id'            => $bp_video->id,
@@ -729,7 +734,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 							'date_created'  => ! empty( $video['date_created'] ) ? $video['date_created'] : $bp_video->date_created,
-							'status'        => $bp_video->status,
+							'status'        => ! empty( $obj_activity ) && function_exists( 'bb_get_activity_published_status' ) && bb_get_activity_published_status() === $obj_activity->status ? bb_video_get_published_status() : $bp_video->status,
 						)
 					);
 				}

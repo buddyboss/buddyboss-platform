@@ -594,6 +594,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 				$bp_media = new BP_Media( $media['media_id'] );
 
 				if ( ! empty( $bp_media->id ) ) {
+
+					if ( bp_is_active( 'activity' ) ) {
+						$obj_activity = new BP_Activity_Activity( $bp_media->activity_id );
+					}
+
 					$media_id = bp_media_add(
 						array(
 							'id'            => $bp_media->id,
@@ -608,7 +613,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'privacy'       => $bp_media->privacy,
 							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
 							'date_created'  => ! empty( $media['date_created'] ) ? $media['date_created'] : $bp_media->date_created,
-							'status'        => $bp_media->status,
+							'status'        => ! empty( $obj_activity ) && function_exists( 'bb_get_activity_published_status' ) && bb_get_activity_published_status() === $obj_activity->status ? bb_media_get_published_status() : $bp_media->status,
 						)
 					);
 				}
