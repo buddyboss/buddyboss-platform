@@ -2141,6 +2141,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 						$media_activity                    = new BP_Activity_Activity( $activity_id );
 						$media_activity->secondary_item_id = $bp_activity_post_update_id;
+						$media_activity->status            = 'comment' !== $media_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
 						$media_activity->save();
 
 						// update activity meta to tell it is media activity.
@@ -2556,6 +2557,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 						$document_activity                    = new BP_Activity_Activity( $activity_id );
 						$document_activity->secondary_item_id = $bp_activity_post_update_id;
+						$document_activity->status            = 'comment' !== $document_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
 						$document_activity->save();
 
 						// update activity meta to tell it is document activity.
@@ -3250,6 +3252,7 @@ function bp_activity_edit_update_video( $video_ids ) {
 
 						$video_activity                    = new BP_Activity_Activity( $activity_id );
 						$video_activity->secondary_item_id = $bp_activity_post_update_id;
+						$video_activity->status            = 'comment' !== $video_activity->privacy && isset( $_POST['activity_action_type'] ) && bb_get_activity_scheduled_status() === $_POST['activity_action_type'] ? $_POST['activity_action_type'] : bb_get_activity_published_status();
 						$video_activity->save();
 
 						// update activity meta to tell it is video activity.
