@@ -195,6 +195,8 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
+add_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_filter', 999 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3813,4 +3815,23 @@ function bb_activity_delete_scheduled_cron_events( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Filter to check platform pro enabled for scheduled posts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $value Schedule posts setting value.
+ * 
+ * @return bool $value Filtered schedule posts setting value.
+ */
+function bb_is_enabled_activity_schedule_posts_filter( $value ) {
+
+	// Return false if platform pro is disabled.
+	if ( ! function_exists( 'bb_platform_pro' ) ) {
+		$value = false;
+	}
+
+	return $value;
 }
