@@ -995,7 +995,7 @@ function bp_nouveau_ajax_post_update() {
 			 *
 			 * @since BuddyPress 3.0.0
 			 *
-			 * @param string/bool $is_private Privacy status for the update.
+			 * @param bool $is_private Privacy status for the update.
 			 */
 			'is_private'              => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
 			'is_directory'            => bp_is_activity_directory(),
@@ -1598,8 +1598,10 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
+	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'scheduled_post_nonce' ) ) {
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'scheduled_post_nonce' ) ) {
 		wp_send_json_error( $response );
 	}
 

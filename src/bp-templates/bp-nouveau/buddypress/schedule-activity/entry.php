@@ -40,7 +40,7 @@ $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
 
 // Format the local time according to the WordPress settings.
-$formatted_local_time_wp = trim( date_i18n( $date_format . ' \a\t ' . $time_format, strtotime( $local_time_wp ) ), ' at ' ) ;
+$formatted_local_time_wp = trim( date_i18n( $date_format . ' \a\t ' . $time_format, strtotime( $local_time_wp ) ), ' at ' );
 
 $scheduled_date_data['local_date_time'] = $formatted_local_time_wp;
 $scheduled_date_data['date_raw']        = get_date_from_gmt( $activity_date_recorded, 'Y-m-d' );
@@ -78,7 +78,7 @@ $scheduled_date_string                  = wp_json_encode( $scheduled_date_data )
 		<div class="activity-header">
 			<?php bp_activity_action(); ?>
 			<p class="activity-date">
-				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss' ) ?></span>
+				<span class="schedule-text"><?php esc_html_e( 'Schedule for:', 'buddyboss' ); ?></span>
 				<a href="javascript: void(0);">
 					<?php
 					printf(
@@ -106,7 +106,8 @@ $scheduled_date_string                  = wp_json_encode( $scheduled_date_data )
 
 	<div class="activity-content <?php ( function_exists( 'bp_activity_entry_css_class' ) ) ? bp_activity_entry_css_class() : ''; ?>">
 		<?php
-		if ( bp_nouveau_activity_has_content() ) : ?>
+		if ( bp_nouveau_activity_has_content() ) :
+			?>
 			<div class="activity-inner <?php echo ( function_exists( 'bp_activity_has_content' ) && empty( bp_activity_has_content() ) ) ? esc_attr( 'bb-empty-content' ) : esc_attr( '' ); ?>">
 				<?php
 					bp_nouveau_activity_content();
