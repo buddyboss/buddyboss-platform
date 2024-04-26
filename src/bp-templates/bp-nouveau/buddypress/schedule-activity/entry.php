@@ -108,7 +108,7 @@ $scheduled_date_string                  = wp_json_encode( $scheduled_date_data )
 		<?php
 		if ( bp_nouveau_activity_has_content() ) :
 			?>
-			<div class="activity-inner <?php echo ( function_exists( 'bp_activity_has_content' ) && empty( bp_activity_has_content() ) ) ? esc_attr( 'bb-empty-content' ) : esc_attr( '' ); ?>">
+			<div class="activity-inner <?php echo ( function_exists( 'bp_activity_has_content' ) && empty( bp_activity_has_content() ) ) ? esc_attr( 'bb-empty-content' ) : ''; ?>">
 				<?php
 					bp_nouveau_activity_content();
 
