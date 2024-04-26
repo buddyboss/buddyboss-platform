@@ -612,13 +612,13 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 				'column'  => 'description',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			)
+			),
 		);
 	}
 
 	$retval = array(
 		'relation' => 'OR',
-		$args
+		$args,
 	);
 
 	return $retval;
@@ -718,7 +718,7 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 				'column'  => 'description',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			)
+			),
 		);
 	}
 
@@ -1523,8 +1523,17 @@ function bb_group_remove_suspended_user( $user_id ) {
 					);
 
 					if ( ! empty( $admin ) ) {
+						if ( bp_is_active( 'messages' ) ) {
+							remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						}
+						add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+
 						groups_join_group( $group_id, $admin[0] );
 
+						remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+						if ( bp_is_active( 'messages' ) ) {
+							add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						}
 						$member = new BP_Groups_Member( $admin[0], $group_id );
 						$member->promote( 'admin' );
 					}
@@ -1591,8 +1600,18 @@ function bb_group_add_unsuspended_user( $user_id ) {
 					// Remove that user from meta.
 					unset( $group_meta['admin'][ $result_index ] );
 
+					if ( bp_is_active( 'messages' ) ) {
+						remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					}
+					add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+
 					// Join this user in the group.
 					groups_join_group( $group['group_id'], $user_id );
+
+					remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+					if ( bp_is_active( 'messages' ) ) {
+						add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					}
 
 					// Promoted to admin.
 					$member = new BP_Groups_Member( $user_id, $group['group_id'] );
@@ -1604,4 +1623,17 @@ function bb_group_add_unsuspended_user( $user_id ) {
 			}
 		}
 	}
+}
+
+/**
+ * Function will not allow to record group activity when group organizer
+ * unsuspend where group have only one organizer.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Return false.
+ */
+function bb_group_join_groups_record_activity_unsuspend_users() {
+
+	return false;
 }
