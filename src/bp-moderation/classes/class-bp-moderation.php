@@ -1129,7 +1129,12 @@ class BP_Moderation {
 				$this->count += 1;
 			}
 
-			if ( ! empty( $threshold ) && $this->count >= $threshold && ( $this->user_report !== 1) && empty( $this->hide_sitewide ) ) {
+			if (
+				! empty( $threshold ) &&
+				$this->count >= $threshold &&
+				1 !== $this->user_report &&
+				empty( $this->hide_sitewide )
+			) {
 				error_log('Am here 2: ' . $threshold . ' ' . $this->user_report );
 				$this->hide_sitewide = 1;
 				$auto_hide           = true;
