@@ -1139,7 +1139,13 @@ class BP_Moderation {
 				$this->hide_sitewide = 1;
 				$auto_hide           = true;
 			}
-			if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( ! empty( $user_threshold ) && ( $this->user_report === 1) && $this->count_report >= $user_threshold ) && empty( $this->hide_sitewide ) ) {
+			if (
+				BP_Moderation_Members::$moderation_type === $this->item_type &&
+				! empty( $user_threshold ) &&
+				$this->count_report >= $user_threshold &&
+				1 === $this->user_report &&
+				empty( $this->hide_sitewide )
+			) {
 				error_log('Am here 3: ' . $user_threshold . ' ' . $this->user_report );
 				$this->hide_sitewide = 1;
 				$auto_hide           = true;
