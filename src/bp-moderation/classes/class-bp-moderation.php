@@ -1135,7 +1135,6 @@ class BP_Moderation {
 				1 !== $this->user_report &&
 				empty( $this->hide_sitewide )
 			) {
-				error_log('Am here 2: ' . $threshold . ' ' . $this->user_report );
 				$this->hide_sitewide = 1;
 				$auto_hide           = true;
 			}
@@ -1146,7 +1145,6 @@ class BP_Moderation {
 				1 === $this->user_report &&
 				empty( $this->hide_sitewide )
 			) {
-				error_log('Am here 3: ' . $user_threshold . ' ' . $this->user_report );
 				$this->hide_sitewide = 1;
 				$auto_hide           = true;
 			}
