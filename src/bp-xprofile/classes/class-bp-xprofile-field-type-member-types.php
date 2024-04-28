@@ -162,9 +162,16 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 
 		$html = '';
 
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			$new_post_selected = (int) $_POST[ 'field_' . $this->field_obj->id ];
-			$post_selected     = ( $post_selected != $new_post_selected ) ? $new_post_selected : $post_selected;
+		if ( wp_doing_ajax() ){
+			if ( ! empty( $_GET['post'][ 'field_' . $this->field_obj->id ] ) ) {
+				$new_post_selected = (int) $_GET['post'][ 'field_' . $this->field_obj->id ];
+				$post_selected     = ( $post_selected != $new_post_selected ) ? $new_post_selected : $post_selected;
+			}			
+		} else {
+			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+				$new_post_selected = (int) $_POST[ 'field_' . $this->field_obj->id ];
+				$post_selected     = ( $post_selected != $new_post_selected ) ? $new_post_selected : $post_selected;
+			}
 		}
 
 		// Add Profile Type selected if users have previously added profile type in his/her account.
