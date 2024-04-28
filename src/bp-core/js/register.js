@@ -46,6 +46,7 @@ jQuery( document ).ready( function() {
 		var data = {
 			'action'  : 'xprofile_get_field',
 			'_wpnonce': BP_Register.nonce,
+			'post'    : registrationData.postData,
 			'fields'  : getExistingFields,
 			'fixedIds': fixedIds,
 			'type'	  : getSelectedValue
