@@ -1,5 +1,5 @@
 /* jshint devel: true */
-/* global BP_Register */
+/* global BP_Register, registrationData */
 
 jQuery( document ).ready( function() {
 
