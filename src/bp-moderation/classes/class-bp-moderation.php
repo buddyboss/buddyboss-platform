@@ -1128,15 +1128,25 @@ class BP_Moderation {
 			} else {
 				$this->count += 1;
 			}
-			if ( ! empty( $threshold ) || ! empty( $user_threshold ) ) {
-				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
-					$this->hide_sitewide = 1;
-					$auto_hide           = true;
-				}
-				if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( ! empty( $user_threshold ) && $this->count_report >= $user_threshold ) && empty( $this->hide_sitewide ) ) {
-					$this->hide_sitewide = 1;
-					$auto_hide           = true;
-				}
+
+			if (
+				! empty( $threshold ) &&
+				$this->count >= $threshold &&
+				1 !== $this->user_report &&
+				empty( $this->hide_sitewide )
+			) {
+				$this->hide_sitewide = 1;
+				$auto_hide           = true;
+			}
+			if (
+				BP_Moderation_Members::$moderation_type === $this->item_type &&
+				! empty( $user_threshold ) &&
+				$this->count_report >= $user_threshold &&
+				1 === $this->user_report &&
+				empty( $this->hide_sitewide )
+			) {
+				$this->hide_sitewide = 1;
+				$auto_hide           = true;
 			}
 		}
 
