@@ -688,10 +688,18 @@ function bp_get_the_profile_field_edit_value() {
 	}
 
 	// Was a new value posted? If so, use it instead.
-	if ( isset( $_POST[ 'field_' . $field->id ] ) ) {
+	if ( wp_doing_ajax() ){
+		if ( isset( $_GET['post'][ 'field_' . $field->id ] ) ) {
 
-		// This is sanitized via the filter below (based on the field type)
-		$field->data->value = $_POST[ 'field_' . $field->id ];
+			// This is sanitized via the filter below (based on the field type)
+			$field->data->value = $_GET['post'][ 'field_' . $field->id ];
+		}
+	} else {
+		if ( isset( $_POST[ 'field_' . $field->id ] ) ) {
+
+			// This is sanitized via the filter below (based on the field type)
+			$field->data->value = $_POST[ 'field_' . $field->id ];
+		}
 	}
 
 	/**
