@@ -5092,7 +5092,7 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   -webkit-user-drag: none;
 }
 
-.bb-is-mobile.activity * {
+.bb-is-mobile.bb-reactions-mode.activity * {
   -webkit-user-select: none;
   user-select: none;
 }

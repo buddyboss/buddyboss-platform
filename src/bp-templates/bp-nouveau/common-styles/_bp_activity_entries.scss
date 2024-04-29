@@ -1848,6 +1848,9 @@
 			-webkit-user-drag: none;
 		}
 	}
+}
+
+.bb-is-mobile.bb-reactions-mode {
 
 	&.activity * {
 		-webkit-user-select: none; // To prevent IOS to show context menu on long press
