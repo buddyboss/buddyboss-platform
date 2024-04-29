@@ -4691,11 +4691,11 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .activity-list .emojionearea .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
-  right: 82px;
+  right: 143px;
 }
 
 .activity-list .emojionearea-button.active + .emojionearea-picker-position-top {
-  right: -80px;
+  right: -140px;
 }
 
 .activity-list .gif-media-search-dropdown {
