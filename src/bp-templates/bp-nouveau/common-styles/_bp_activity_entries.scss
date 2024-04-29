@@ -2024,7 +2024,7 @@
 }
 
 // Prevent callout popup on long press on ios devices
-.bb-is-mobile.bb-reactions-mode {
+.bb-is-mobile {
 
 	.bp-generic-meta {
 
@@ -2036,6 +2036,9 @@
 			-webkit-user-drag: none;
 		}
 	}
+}
+
+.bb-is-mobile.bb-reactions-mode {
 
 	&.activity * {
 		-webkit-user-select: none; // To prevent IOS to show context menu on long press
