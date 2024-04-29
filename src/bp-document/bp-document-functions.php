@@ -4401,6 +4401,9 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			 */
 			$attachment_url = apply_filters( 'bb_document_after_get_preview_url_symlink', $attachment_url, $document );
 
+			// Added support for CDN URL.
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
 		} elseif ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && ! bb_enable_symlinks() ) {
 
 			$file          = image_get_intermediate_size( $attachment_id, $size );
@@ -4488,6 +4491,10 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				bp_document_create_symlinks( $document, '' );
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+
+			// Added support for CDN URL.
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
 		} elseif ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && ! bb_enable_symlinks() ) {
 			$passed_attachment_id = $attachment_id;
 			$document_id          = 'forbidden_' . $document_id;

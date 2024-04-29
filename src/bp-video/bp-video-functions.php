@@ -3941,6 +3941,9 @@ function bb_video_get_symlink( $video, $generate = true ) {
 
 			$attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 
+			// Added support for CDN URL.
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
 			/**
 			 * Filter for the after thumb symlink generate.
 			 *
@@ -4464,6 +4467,9 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 			 * @since BuddyBoss 1.7.0.1
 			 */
 			$attachment_url = apply_filters( 'bb_video_after_get_attachment_symlink', $attachment_url, $video );
+
+			// Added support for CDN URL.
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 		}
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );
@@ -4609,7 +4615,7 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
  * @return int
  */
 function bb_video_get_activity_comment_max_thumb_length() {
-	return (int) apply_filters( 'bb_video_get_activity_comment_max_thumb_length', 2 ); 
+	return (int) apply_filters( 'bb_video_get_activity_comment_max_thumb_length', 2 );
 }
 
 /**
@@ -4620,5 +4626,5 @@ function bb_video_get_activity_comment_max_thumb_length() {
  * @return int
  */
 function bb_video_get_activity_max_thumb_length() {
-	return (int) apply_filters( 'bb_video_get_activity_max_thumb_length', 3 ); 
+	return (int) apply_filters( 'bb_video_get_activity_max_thumb_length', 3 );
 }

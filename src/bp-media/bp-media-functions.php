@@ -3431,6 +3431,9 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 
 				$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
+				// Added support for CDN URL.
+				$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
 				/**
 				 * Filter for the after thumb symlink generate.
 				 *
@@ -4194,7 +4197,7 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
  * @return int
  */
 function bb_media_get_activity_comment_max_thumb_length() {
-	return (int) apply_filters( 'bb_media_get_activity_comment_max_thumb_length', 2 ); 
+	return (int) apply_filters( 'bb_media_get_activity_comment_max_thumb_length', 2 );
 }
 
 /**
@@ -4205,5 +4208,5 @@ function bb_media_get_activity_comment_max_thumb_length() {
  * @return int
  */
 function bb_media_get_activity_max_thumb_length() {
-	return (int) apply_filters( 'bb_media_get_activity_max_thumb_length', 5 ); 
+	return (int) apply_filters( 'bb_media_get_activity_max_thumb_length', 5 );
 }
