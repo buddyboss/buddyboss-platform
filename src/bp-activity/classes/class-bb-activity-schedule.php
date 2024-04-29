@@ -109,55 +109,22 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 
 			$metas = bb_activity_get_metadata( $activity_id );
 
-			// Published the media.
-			if ( bp_is_active( 'media' ) && ! empty( $metas['bp_media_ids'][0] ) ) {
+			// Publish the media.
+			if ( ! empty( $metas['bp_media_ids'][0] ) ) {
 				$media_ids = explode( ',', $metas['bp_media_ids'][0] );
-				foreach ( $media_ids as $media_id ) {
-					$media         = new BP_Media( $media_id );
-					$media->status = bb_media_get_published_status();
-					$media->save();
-
-					// Also update the individual medias activity.
-					if ( count( $media_ids ) > 1 ) {
-						$media_activity         = new BP_Activity_Activity( $media->activity_id );
-						$media_activity->status = bb_get_activity_published_status();
-						$media_activity->save();
-					}
-				}
+				$this->bb_publish_schedule_activity_medias_and_documents( $media_ids, 'media' );
 			}
 
-			// Published the video.
-			if ( bp_is_active( 'video' ) && ! empty( $metas['bp_video_ids'][0] ) ) {
+			// Publish the video.
+			if ( ! empty( $metas['bp_video_ids'][0] ) ) {
 				$video_ids = explode( ',', $metas['bp_video_ids'][0] );
-				foreach ( $video_ids as $video_id ) {
-					$video         = new BP_Video( $video_id );
-					$video->status = bb_video_get_published_status();
-					$video->save();
-
-					// Also update the individual videos activity.
-					if ( count( $video_ids ) > 0 ) {
-						$video_activity         = new BP_Activity_Activity( $video->activity_id );
-						$video_activity->status = bb_get_activity_published_status();
-						$video_activity->save();
-					}
-				}
+				$this->bb_publish_schedule_activity_medias_and_documents( $video_ids, 'video' );
 			}
 
-			// Published the document.
-			if ( bp_is_active( 'document' ) && ! empty( $metas['bp_document_ids'][0] ) ) {
+			// Publish the document.
+			if ( ! empty( $metas['bp_document_ids'][0] ) ) {
 				$document_ids = explode( ',', $metas['bp_document_ids'][0] );
-				foreach ( $document_ids as $document_id ) {
-					$document         = new BP_Document( $document_id );
-					$document->status = bb_document_get_published_status();
-					$document->save();
-
-					// Also update the individual documents activity.
-					if ( count( $document_ids ) > 0 ) {
-						$document_activity         = new BP_Activity_Activity( $document->activity_id );
-						$document_activity->status = bb_get_activity_published_status();
-						$document_activity->save();
-					}
-				}
+				$this->bb_publish_schedule_activity_medias_and_documents( $document_ids, 'document' );
 			}
 
 			// Send mentioned notifications.
@@ -171,6 +138,42 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			}
 
 			bb_activity_send_email_to_following_post( $activity->content, $activity->user_id, $activity_id );
+		}
+
+		/**
+		 * Publish scheduled activity media and individual media activities.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $media_ids media/video/document Ids.
+		 * @param string $media_type Media type : 'media', 'video', 'document'.
+		 */
+		public function bb_publish_schedule_activity_medias_and_documents( $media_ids, $media_type = 'media' ) {
+			global $wpdb;
+
+			if ( ! empty( $media_ids ) ) {
+				$bp_prefix  = bp_core_get_table_prefix();
+				$table_name = "{$bp_prefix}bp_media";
+				if ( 'document' === $media_type ) {
+					$table_name = "{$bp_prefix}bp_document";
+				}
+
+				// Check table exists.
+				$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" );
+				if ( $table_exists ) {
+					foreach ( $media_ids as $media_id ) {
+						$wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET status = 'published' WHERE id = %d", $media_id ) );
+
+						// Also update the individual medias/videos/document activity.
+						if ( count( $media_ids ) > 1 ) {
+							$media_activity_id      = $wpdb->get_var( $wpdb->prepare( "SELECT activity_id FROM {$table_name} WHERE id = %d", $media_id ) );
+							$media_activity         = new BP_Activity_Activity( $media_activity_id );
+							$media_activity->status = bb_get_activity_published_status();
+							$media_activity->save();
+						}
+					}
+				}
+			}
 		}
 	}
 }
