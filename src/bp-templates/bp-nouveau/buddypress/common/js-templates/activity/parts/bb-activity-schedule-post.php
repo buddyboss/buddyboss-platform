@@ -57,23 +57,23 @@
 
 										<label><?php echo esc_html__( 'Date', 'buddyboss' ); ?></label>
 										<div class="input-field">
-											<input type="text" name="bb-schedule-activity-date-field" class="bb-schedule-activity-date-field" placeholder="yy/mm/dd" value="{{data.activity_schedule_date_raw ? data.activity_schedule_date_raw : ''}}">
+											<input type="text" name="bb-schedule-activity-date-field" class="bb-schedule-activity-date-field" placeholder="yyyy-mm-dd" value="{{data.activity_schedule_date_raw ? data.activity_schedule_date_raw : ''}}">
 											<i class="bb-icon-f bb-icon-calendar"></i>
 										</div>
 
 										<label><?php echo esc_html__( 'Time', 'buddyboss' ); ?></label>
 										<div class="input-field-inline">
 											<div class="input-field bb-schedule-activity-time-wrap">
-												<input type="text" name="bb-schedule-activity-time-field" class="bb-schedule-activity-time-field" placeholder="hh/mm" value="{{data.activity_schedule_time ? data.activity_schedule_time : ''}}">
+												<input type="text" name="bb-schedule-activity-time-field" class="bb-schedule-activity-time-field" placeholder="hh:mm" value="{{data.activity_schedule_time ? data.activity_schedule_time : ''}}">
 												<i class="bb-icon-f bb-icon-clock"></i>
 											</div>
 											<div class="input-field bb-schedule-activity-meridian-wrap">
 												<label for="bb-schedule-activity-meridian-am">
-													<input type="radio" value="am" id="bb-schedule-activity-meridian-am" name="bb-schedule-activity-meridian">
+													<input type="radio" value="am" id="bb-schedule-activity-meridian-am" name="bb-schedule-activity-meridian" <# if ( data.activity_schedule_meridiem == 'am' ) { #> checked <# } #>>
 													<span class="bb-time-meridian"><?php echo esc_html__( 'AM', 'buddyboss' ); ?></span>
 												</label>
 												<label for="bb-schedule-activity-meridian-pm">
-													<input type="radio" value="pm" id="bb-schedule-activity-meridian-pm" name="bb-schedule-activity-meridian" checked="checked">
+													<input type="radio" value="pm" id="bb-schedule-activity-meridian-pm" name="bb-schedule-activity-meridian" <# if ( data.activity_schedule_meridiem == 'pm' || data.activity_schedule_meridiem == undefined ) { #> checked <# } #>>
 													<span class="bb-time-meridian"><?php echo esc_html__( 'PM', 'buddyboss' ); ?></span>
 												</label>
 											</div>
