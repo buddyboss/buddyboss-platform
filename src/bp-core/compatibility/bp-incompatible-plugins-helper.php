@@ -48,7 +48,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Elementor
 	 */
-	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
+	if ( class_exists( '\Elementor\Plugin' ) ) {
 		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
 	}
 
@@ -57,7 +57,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Co-Authors Plus
 	 */
-	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
+	if ( class_exists( 'CoAuthors_Plus' ) ) {
 		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus', 100, 2 );
 	}
 
@@ -66,7 +66,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support MemberPress + BuddyPress Integration
 	 */
-	if ( in_array( 'memberpress-buddypress/main.php', $bp_plugins ) ) {
+	if ( class_exists( 'MpBuddyPress' ) ) {
 		/**
 		 * This action is use when admin bar is Enable
 		 */
@@ -99,7 +99,7 @@ function bp_helper_plugins_loaded_callback() {
 		remove_filter( 'wp_privacy_personal_data_email_content', array( &$WishListMemberInstance, 'privacy_personal_data_email' ), 10 );
 	}
 
-	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
+	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
 
 		/**
 		 * Function to exclude group type post to prevent group role overriding.
@@ -121,7 +121,7 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
 
-	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
+	if ( class_exists( 'GeoDirectory' ) ) {
 
 		/**
 		 * Function to deregister some scripts and styles from bp component pages
@@ -183,7 +183,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support The Events Calendar.
 	 */
-	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
+	if ( class_exists( 'Tribe__Events__Main' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
 	}
 
@@ -226,7 +226,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Memberpress
 	 */
-	if ( in_array( 'memberpress/memberpress.php', $bp_plugins ) ) {
+	if ( class_exists( 'MeprAppCtrl' ) ) {
 		add_filter( 'mepr_design_style_handle_prefixes', function ( $allowed_handle_prefixes ) {
 			$allowed_handle_prefixes[] = 'admin-bar';
 			$allowed_handle_prefixes[] = 'bp-';
