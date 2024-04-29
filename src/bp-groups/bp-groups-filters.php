@@ -1509,18 +1509,18 @@ function bb_group_remove_suspended_user( $user_id ) {
 		);
 
 		if ( ! empty( $group_ids ) ) {
+			$admin = get_users(
+				array(
+					'blog_id' => bp_get_root_blog_id(),
+					'fields'  => 'id',
+					'number'  => 1,
+					'orderby' => 'ID',
+					'role'    => 'administrator',
+					'exclude' => array( $user_id ),
+				)
+			);
 			foreach ( $group_ids as $group_id ) {
 				if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
-					$admin = get_users(
-						array(
-							'blog_id' => bp_get_root_blog_id(),
-							'fields'  => 'id',
-							'number'  => 1,
-							'orderby' => 'ID',
-							'role'    => 'administrator',
-							'exclude' => array( $user_id ),
-						)
-					);
 
 					if ( ! empty( $admin ) ) {
 						if ( bp_is_active( 'messages' ) ) {
@@ -1634,6 +1634,5 @@ function bb_group_add_unsuspended_user( $user_id ) {
  * @return bool Return false.
  */
 function bb_group_join_groups_record_activity_unsuspend_users() {
-
 	return false;
 }
