@@ -829,21 +829,21 @@ function bp_nouveau_ajax_post_update() {
 			$scheduled_timestamp = strtotime( $schedule_date_time );
 
 			if ( empty( $activity_id ) && $scheduled_timestamp < $next_hour_timestamp ) {
-				// wp_send_json_error(
-				// 	array(
-				// 		'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
-				// 	)
-				// );
+				wp_send_json_error(
+					array(
+						'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+					)
+				);
 			} elseif( ! empty( $activity_id ) ) {
 
 				// Check if the scheduled time is changed.
 				$obj_activity = new BP_Activity_Activity( $activity_id );
 				if ( strtotime( $obj_activity->date_recorded ) !== $scheduled_timestamp && $scheduled_timestamp < $next_hour_timestamp ) {
-					// wp_send_json_error(
-					// 	array(
-					// 		'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
-					// 	)
-					// );
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						)
+					);
 				}
 			}
 		}
