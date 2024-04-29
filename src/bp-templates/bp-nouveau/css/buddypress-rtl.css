@@ -1985,6 +1985,15 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   margin-left: 55px;
 }
 
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head a.view.activity-time-since {
+  display: none;
+}
+
+.bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bp-activity-head .activity-date {
+  display: inline-block;
+  margin-top: 0;
+}
+
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions {
   position: absolute;
   left: 15px;
@@ -1995,6 +2004,7 @@ body:not(.buddyboss-theme) .bb-schedule-post_dropdown_section .bb-action-popup-c
   font-size: 16px;
   margin: 0 10px 0 0;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .bb-schedule-post_dropdown_section .bb-schedule-posts_modal .activity-list .bb-activity-schedule-actions .bb-activity-schedule-action i {
