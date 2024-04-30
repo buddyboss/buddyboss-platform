@@ -149,6 +149,10 @@
 				&:empty {
 					min-height: 1em;
 				}
+
+				a {
+					word-break: break-all;
+				}
 			}
 
 			.bb-activity-video-wrap,
