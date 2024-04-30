@@ -95,7 +95,7 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			$activities = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT id FROM {$bp_prefix}bp_activity
-					 WHERE status = %s AND date_recorded <= %s",
+					 WHERE type='activity_update' AND privacy NOT IN ( 'media', 'video', 'document' ) AND status = %s AND date_recorded <= %s",
 					$scheduled_status, $current_time
 				)
 			);
@@ -117,7 +117,7 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 					// Publish the media.
 					if ( ! empty( $metas['bp_media_ids'][0] ) ) {
 						$media_ids = explode( ',', $metas['bp_media_ids'][0] );
-						$this->bb_publish_schedule_activity_medias_and_documents( $media_ids, 'media' );
+						$this->bb_publish_schedule_activity_medias_and_documents( $media_ids );
 					}
 
 					// Publish the video.
@@ -148,35 +148,35 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 		}
 
 		/**
-		 * Publish scheduled activity media and individual media activities.
+		 * Publish scheduled activity media/video/document and their individual activities.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array  $media_ids media/video/document Ids.
-		 * @param string $media_type Media type : 'media', 'video', 'document'.
+		 * @param array  $ids  Ids of media/video/document.
+		 * @param string $type Media type : 'media', 'video', 'document'.
 		 */
-		public function bb_publish_schedule_activity_medias_and_documents( $media_ids, $media_type = 'media' ) {
+		public function bb_publish_schedule_activity_medias_and_documents( $ids, $type = 'media' ) {
 			global $wpdb;
 
-			if ( ! empty( $media_ids ) ) {
+			if ( ! empty( $ids ) ) {
 				$bp_prefix  = bp_core_get_table_prefix();
 				$table_name = "{$bp_prefix}bp_media";
-				if ( 'document' === $media_type ) {
+				if ( 'document' === $type ) {
 					$table_name = "{$bp_prefix}bp_document";
 				}
 
 				// Check table exists.
 				$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" );
 				if ( $table_exists ) {
-					foreach ( $media_ids as $media_id ) {
-						$wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET status = 'published' WHERE id = %d", $media_id ) );
+					foreach ( $ids as $id ) {
+						$wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET status = 'published' WHERE id = %d", $id ) );
 
 						// Also update the individual medias/videos/document activity.
-						if ( count( $media_ids ) > 1 ) {
-							$media_activity_id      = $wpdb->get_var( $wpdb->prepare( "SELECT activity_id FROM {$table_name} WHERE id = %d", $media_id ) );
-							$media_activity         = new BP_Activity_Activity( $media_activity_id );
-							$media_activity->status = bb_get_activity_published_status();
-							$media_activity->save();
+						if ( count( $ids ) > 1 ) {
+							$activity_id      = $wpdb->get_var( $wpdb->prepare( "SELECT activity_id FROM {$table_name} WHERE id = %d", $id ) );
+							$activity         = new BP_Activity_Activity( $activity_id );
+							$activity->status = bb_get_activity_published_status();
+							$activity->save();
 						}
 					}
 				}
