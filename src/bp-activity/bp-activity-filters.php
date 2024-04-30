@@ -119,9 +119,6 @@ add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
 add_action( 'bp_activity_after_delete', 'bb_activity_delete_link_review_attachment', 10, 1 );
 
-// Delete scheduled activity cron event.
-add_action( 'bp_activity_after_delete', 'bb_activity_delete_scheduled_cron_events', 10, 1 );
-
 /* Actions *******************************************************************/
 
 // At-name filter.
@@ -3802,23 +3799,6 @@ function bb_activity_init_activity_schedule() {
 }
 
 add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
-
-/**
- * Action to delete scheduled activity cron event.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $activities Array of activities.
- */
-function bb_activity_delete_scheduled_cron_events( $activities ) {
-	if ( ! empty( $activities ) ) {
-		foreach ( $activities as $activity ) {
-			if ( bb_get_activity_scheduled_status() === $activity->status ) {
-				wp_clear_scheduled_hook( 'bb_activity_publish', array( (int) $activity->id ) );
-			}
-		}
-	}
-}
 
 /**
  * Filter to check platform pro enabled for scheduled posts.
