@@ -603,7 +603,7 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
  */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_load_presence_api_mu_plugin( false );
 	}
 }
 
