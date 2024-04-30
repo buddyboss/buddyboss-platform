@@ -2248,7 +2248,10 @@ function bp_activity_post_update( $args = '' ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
 
 		if ( ! empty( $activity->id ) ) {
-			$bp_activity_edit = true;
+
+			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+				$bp_activity_edit = true;
+			}
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
@@ -2278,11 +2281,14 @@ function bp_activity_post_update( $args = '' ) {
 				)
 			);
 
-			/**
-			 * Addition from the BuddyBoss
-			 * Add meta to ensure that this activity has been edited.
-			 */
-			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+
+				/**
+				 * Addition from the BuddyBoss
+				 * Add meta to ensure that this activity has been edited.
+				 */
+				bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			}
 
 		}
 	} else {
