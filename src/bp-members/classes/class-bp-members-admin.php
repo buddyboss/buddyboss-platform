@@ -769,7 +769,16 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				 * @param string $js URL to the JavaScript admin file to load.
 				 */
 				$js = apply_filters( 'bp_members_admin_js', $js );
-				wp_enqueue_script( 'bp-members-js', $js, array( 'jquery' ), bp_get_version(), true );
+				wp_enqueue_script( 'bp-members-js', $js, array( 'jquery', 'jquery-ui-sortable' ), bp_get_version(), true );
+
+				wp_localize_script(
+					'bp-members-js',
+					'BB_Member_Admin',
+					array(
+						'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+						'empty_field'        => __( 'New Field', 'buddyboss' ),
+					)
+				);
 			}
 
 			/**
