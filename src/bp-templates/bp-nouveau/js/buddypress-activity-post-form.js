@@ -2860,6 +2860,8 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.listenTo( this.model, 'change', this.render );
 				this.listenTo( this.model, 'destroy', this.remove );
+
+				window.addEventListener( 'resize', this.render.bind( this ) );
 			},
 
 			render: function () {
