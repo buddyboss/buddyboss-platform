@@ -348,7 +348,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 124801, // @todo: update when release.
+							'article' => 127431,
 						),
 						'admin.php'
 					)
