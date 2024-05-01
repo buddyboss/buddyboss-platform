@@ -274,6 +274,16 @@ function bp_helper_plugins_loaded_callback() {
 			return $is_prepend;
 		}, 10, 3 );
 	}
+
+	/**
+	 * Include compatible file when the plugin is activated.
+	 * Support CDN Enabler.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-cdn-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
