@@ -7116,7 +7116,7 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 /**
  * Function to validate activity privacy.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.00
  *
  * @param array $args Array for argument.
  *
