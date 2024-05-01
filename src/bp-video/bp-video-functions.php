@@ -4470,6 +4470,17 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 			$attachment_url   = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 
 			/**
+			 * Filters the attachment URL.
+			 * Added support for CDN URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
+			/**
 			 * Filter for the after thumb symlink generate.
 			 *
 			 * @param string $attachment_url Attachment URL.
@@ -4478,16 +4489,6 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 			 * @since BuddyBoss 1.7.0.1
 			 */
 			$attachment_url = apply_filters( 'bb_video_after_get_attachment_symlink', $attachment_url, $video );
-
-			/**
-			 * Filters the attachment URL.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param string $attachment_url URL for the given attachment.
-			 * @param int    $attachment_id  Attachment post ID.
-			 */
-			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 		}
 	} else {
 		$attachment_url = wp_get_attachment_url( $attachment_id );

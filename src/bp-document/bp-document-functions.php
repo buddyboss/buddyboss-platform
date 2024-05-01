@@ -4394,6 +4394,17 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			}
 
 			/**
+			 * Filters the attachment URL.
+			 * Added support for CDN URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
+			/**
 			 * Filter for the after thumb symlink generate.
 			 *
 			 * @param string $attachment_url Attachment URL.
@@ -4402,16 +4413,6 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			 * @since BuddyBoss 1.7.0.1
 			 */
 			$attachment_url = apply_filters( 'bb_document_after_get_preview_url_symlink', $attachment_url, $document );
-
-			/**
-			 * Filters the attachment URL.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param string $attachment_url URL for the given attachment.
-			 * @param int    $attachment_id  Attachment post ID.
-			 */
-			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 
 		} elseif ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && ! bb_enable_symlinks() ) {
 
