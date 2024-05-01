@@ -3501,6 +3501,7 @@ function bb_update_to_2_5_80() {
 /**
  * Create a new column in database tables.
  * Purge the existing old cache to implement the new 30 days cache expiry system.
+ * Remove symlinks of media, documents and videos.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -3551,5 +3552,54 @@ function bb_update_to_2_6_00() {
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	if ( function_exists( 'bp_media_symlink_path' ) ) {
+		$media_symlinks_path = bp_media_symlink_path();
+		bb_remove_symlinks( $media_symlinks_path );
+	}
+
+	if ( function_exists( 'bp_document_symlink_path' ) ) {
+		$document_symlinks_path = bp_document_symlink_path();
+		bb_remove_symlinks( $document_symlinks_path );
+	}
+
+	if ( function_exists( 'bb_video_symlink_path' ) ) {
+		$video_symlinks_path = bb_video_symlink_path();
+		bb_remove_symlinks( $video_symlinks_path );
+	}
+}
+
+/**
+ * Remove from the directory symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $folder_path The folder path.
+ *
+ * @return void
+ */
+function bb_remove_symlinks( $folder_path ) {
+	// Open the folder.
+	if ( $handle = opendir( $folder_path ) ) {
+		// Loop through the folder contents.
+		while ( false !== ( $entry = readdir( $handle ) ) ) {
+
+			// Skip ., .. and index.html.
+			if ( '.' === $entry || '..' === $entry || 'index.html' === $entry ) {
+				continue;
+			}
+
+			// Full path to the entry.
+			$entry_path = $folder_path . '/' . $entry;
+
+			// Check if the entry is a symlink.
+			if ( is_link( $entry_path ) ) {
+				// Delete the symlink.
+				unlink( $entry_path );
+			}
+		}
+		// Close the folder handle
+		closedir( $handle );
 	}
 }
