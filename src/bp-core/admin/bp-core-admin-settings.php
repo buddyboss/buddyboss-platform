@@ -3679,7 +3679,7 @@ function bb_admin_performance_general_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 127197, // @todo update when release.
+						'article' => 127427,
 					),
 					'admin.php'
 				)
@@ -3706,7 +3706,7 @@ function bb_admin_performance_activity_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 127197, // @todo update when release.
+						'article' => 127427,
 					),
 					'admin.php'
 				)
