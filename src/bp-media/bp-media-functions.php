@@ -3350,16 +3350,18 @@ function bp_media_delete_symlinks( $media ) {
 	$output_file_src   = get_attached_file( $attachment_id );
 	$symlink_extension = file_exists( $output_file_src ) ? pathinfo( $output_file_src, PATHINFO_EXTENSION ) : '';
 
-	foreach ( $all_attachments as $attachment_path ) {
-		// Delete symlink without an extension.
-		if ( file_exists( $attachment_path ) ) {
-			unlink( $attachment_path );
-		}
+	if ( ! empty( $all_attachments ) ) {
+		foreach ( $all_attachments as $attachment_path ) {
+			// Delete symlink without an extension.
+			if ( file_exists( $attachment_path ) ) {
+				unlink( $attachment_path );
+			}
 
-		// Delete symlink with an extension.
-		$attachment_path = ! empty( $symlink_extension ) ? $attachment_path . '.' . $symlink_extension : $attachment_path;
-		if ( file_exists( $attachment_path ) ) {
-			unlink( $attachment_path );
+			// Delete symlink with an extension.
+			$attachment_path = ! empty( $symlink_extension ) ? $attachment_path . '.' . $symlink_extension : $attachment_path;
+			if ( file_exists( $attachment_path ) ) {
+				unlink( $attachment_path );
+			}
 		}
 	}
 
@@ -3431,7 +3433,14 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 
 				$attachment_url = bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory );
 
-				// Added support for CDN URL.
+				/**
+				 * Filters the attachment URL.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $attachment_url URL for the given attachment.
+				 * @param int    $attachment_id  Attachment post ID.
+				 */
 				$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 
 				/**

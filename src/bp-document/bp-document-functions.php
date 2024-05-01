@@ -3980,27 +3980,27 @@ function bp_document_delete_symlinks( $document ) {
 
 	$all_attachments = array();
 
-	$privacy         = $old_document->privacy;
+	$privacy                = $old_document->privacy;
 	$medium_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
-		$group_object    = groups_get_group( $old_document->group_id );
-		$group_status    = bp_get_group_status( $group_object );
+		$group_object           = groups_get_group( $old_document->group_id );
+		$group_status           = bp_get_group_status( $group_object );
 		$medium_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'medium' );
 	}
 	$all_attachments[] = $medium_attachment_path;
 
 	$large_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
-		$group_object    = groups_get_group( $old_document->group_id );
-		$group_status    = bp_get_group_status( $group_object );
+		$group_object          = groups_get_group( $old_document->group_id );
+		$group_status          = bp_get_group_status( $group_object );
 		$large_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'large' );
 	}
 	$all_attachments[] = $large_attachment_path;
 
 	$full_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
-		$group_object    = groups_get_group( $old_document->group_id );
-		$group_status    = bp_get_group_status( $group_object );
+		$group_object         = groups_get_group( $old_document->group_id );
+		$group_status         = bp_get_group_status( $group_object );
 		$full_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'full' );
 	}
 	$all_attachments[] = $full_attachment_path;
@@ -4046,16 +4046,18 @@ function bp_document_delete_symlinks( $document ) {
 		$symlink_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
 	}
 
-	foreach ( $all_attachments as $attachment_path ) {
-		// Delete symlink without an extension.
-		if ( file_exists( $attachment_path ) ) {
-			unlink( $attachment_path );
-		}
+	if ( ! empty( $all_attachments ) ) {
+		foreach ( $all_attachments as $attachment_path ) {
+			// Delete symlink without an extension.
+			if ( file_exists( $attachment_path ) ) {
+				unlink( $attachment_path );
+			}
 
-		// Delete symlink with an extension.
-		$attachment_path = $attachment_path . '.' . $symlink_extension;
-		if ( file_exists( $attachment_path ) ) {
-			unlink( $attachment_path );
+			// Delete symlink with an extension.
+			$attachment_path = $attachment_path . '.' . $symlink_extension;
+			if ( file_exists( $attachment_path ) ) {
+				unlink( $attachment_path );
+			}
 		}
 	}
 }
@@ -4401,7 +4403,14 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			 */
 			$attachment_url = apply_filters( 'bb_document_after_get_preview_url_symlink', $attachment_url, $document );
 
-			// Added support for CDN URL.
+			/**
+			 * Filters the attachment URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
 			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 
 		} elseif ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && ! bb_enable_symlinks() ) {
@@ -4492,7 +4501,14 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 
-			// Added support for CDN URL.
+			/**
+			 * Filters the attachment URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
 			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 
 		} elseif ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && ! bb_enable_symlinks() ) {

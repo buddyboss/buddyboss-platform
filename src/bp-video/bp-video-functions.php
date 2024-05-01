@@ -3628,17 +3628,19 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 	$preview_attached_file  = get_attached_file( $delete_thumb_id );
 	$preview_file_extension = ! empty( $preview_attached_file ) ? pathinfo( $preview_attached_file, PATHINFO_EXTENSION ) : '';
 
-	foreach ( array_unique( $all_attachments ) as $attachment ) {
-		$preview_attachment = ! empty( $preview_file_extension ) ? $attachment . '.' . $preview_file_extension : $attachment;
+	if ( ! empty( $all_attachments ) ) {
+		foreach ( array_unique( $all_attachments ) as $attachment ) {
+			$preview_attachment = ! empty( $preview_file_extension ) ? $attachment . '.' . $preview_file_extension : $attachment;
 
-		// Delete the symlink if video preview file exists.
-		if ( file_exists( $preview_attachment ) || is_link( $preview_attachment ) ) {
-			unlink( $preview_attachment );
-		}
+			// Delete the symlink if video preview file exists.
+			if ( file_exists( $preview_attachment ) || is_link( $preview_attachment ) ) {
+				unlink( $preview_attachment );
+			}
 
-		// Delete the symlink if video/preview file exists.
-		if ( file_exists( $attachment ) || is_link( $attachment ) ) {
-			unlink( $attachment );
+			// Delete the symlink if video/preview file exists.
+			if ( file_exists( $attachment ) || is_link( $attachment ) ) {
+				unlink( $attachment );
+			}
 		}
 	}
 }
@@ -3802,23 +3804,25 @@ function bb_video_delete_symlinks( $video ) {
 	// Get a video preview file extension.
 	$preview_file_extension = ! empty( $preview_attached_file ) ? pathinfo( $preview_attached_file, PATHINFO_EXTENSION ) : '';
 
-	foreach ( array_unique( $all_attachments ) as $attachment ) {
-		$video_attachment   = ! empty( $video_file_extension ) ? $attachment . '.' . $video_file_extension : $attachment;
-		$preview_attachment = ! empty( $preview_file_extension ) ? $attachment . '.' . $preview_file_extension : $attachment;
+	if ( ! empty( $all_attachments ) ) {
+		foreach ( array_unique( $all_attachments ) as $attachment ) {
+			$video_attachment   = ! empty( $video_file_extension ) ? $attachment . '.' . $video_file_extension : $attachment;
+			$preview_attachment = ! empty( $preview_file_extension ) ? $attachment . '.' . $preview_file_extension : $attachment;
 
-		// Delete the symlink if video file exists.
-		if ( file_exists( $video_attachment ) ) {
-			unlink( $video_attachment );
-		}
+			// Delete the symlink if video file exists.
+			if ( file_exists( $video_attachment ) ) {
+				unlink( $video_attachment );
+			}
 
-		// Delete the symlink if video preview file exists.
-		if ( file_exists( $preview_attachment ) ) {
-			unlink( $preview_attachment );
-		}
+			// Delete the symlink if video preview file exists.
+			if ( file_exists( $preview_attachment ) ) {
+				unlink( $preview_attachment );
+			}
 
-		// Delete the symlink if video/preview file exists.
-		if ( file_exists( $attachment ) ) {
-			unlink( $attachment );
+			// Delete the symlink if video/preview file exists.
+			if ( file_exists( $attachment ) ) {
+				unlink( $attachment );
+			}
 		}
 	}
 }
@@ -3941,7 +3945,14 @@ function bb_video_get_symlink( $video, $generate = true ) {
 
 			$attachment_url = bb_core_symlink_absolute_path( $attachment_path, $upload_directory );
 
-			// Added support for CDN URL.
+			/**
+			 * Filters the attachment URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
 			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 
 			/**
@@ -4468,7 +4479,14 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 			 */
 			$attachment_url = apply_filters( 'bb_video_after_get_attachment_symlink', $attachment_url, $video );
 
-			// Added support for CDN URL.
+			/**
+			 * Filters the attachment URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
 			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 		}
 	} else {
