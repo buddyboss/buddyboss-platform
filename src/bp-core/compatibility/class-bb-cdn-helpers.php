@@ -1,6 +1,13 @@
 <?php
+/**
+ * Helper class for the CDN.
+ *
+ * @package BuddyBoss
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -15,12 +22,16 @@ class BB_CDN_Helpers {
 	/**
 	 * The single instance of the class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var self
 	 */
 	private static $instance = null;
 
 	/**
 	 * BB_CDN_Helpers constructor.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		$this->compatibility_init();
@@ -29,6 +40,8 @@ class BB_CDN_Helpers {
 	/**
 	 * Get the instance of this class.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * 
 	 * @return Controller|null
 	 */
 	public static function instance() {
@@ -43,6 +56,8 @@ class BB_CDN_Helpers {
 
 	/**
 	 * Register the compatibility hooks for the plugin.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function compatibility_init() {
 		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_template_ajax_content_add_cdn' ), 10, 1 );
