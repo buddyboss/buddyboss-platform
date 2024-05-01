@@ -310,7 +310,9 @@ class BP_Activity_Activity {
 
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
+
 			$prev_activity_status = self::bb_get_activity_status( $this->id );
+
 			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
@@ -2385,7 +2387,13 @@ class BP_Activity_Activity {
 		global $wpdb;
 
 		$bp        = buddypress();
-		$status    = $wpdb->get_var( $wpdb->prepare( "SELECT `status` FROM {$bp->activity->table_name} WHERE id = %d", $activity_id ) );
+		$cache_key = 'bb_get_activity_status_' . $activity_id;
+		$status    = wp_cache_get( $cache_key, 'bp_activity' );
+
+		if ( false === $status ) {
+			$status = $wpdb->get_var( $wpdb->prepare( "SELECT `status` FROM {$bp->activity->table_name} WHERE id = %d", $activity_id ) );
+			wp_cache_set( $cache_key, $status, 'bp_activity' );
+		}
 
 		return $status;
 	}
