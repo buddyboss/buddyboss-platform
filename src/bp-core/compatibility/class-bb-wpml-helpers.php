@@ -230,7 +230,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Remove WPML post__in filter to allow parent translated post as well if the post is not translatable.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.00
 		 *
 		 * @param WP_Query $q Query for parsing WP QUERY.
 		 *
@@ -247,7 +247,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Add fix for WPML post count issue in Global Search.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.00
 		 *
 		 * @param string $sql_query String of the SQL query to filter.
 		 * @param array  $args      Arguments of the filter to get the post_type.

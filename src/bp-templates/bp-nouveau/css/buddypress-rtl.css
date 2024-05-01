@@ -5301,7 +5301,7 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .activity-list .emojionearea .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
-  left: 143px;
+  left: 142px;
 }
 
 .activity-list .emojionearea-button.active + .emojionearea-picker-position-top {
@@ -27679,7 +27679,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {

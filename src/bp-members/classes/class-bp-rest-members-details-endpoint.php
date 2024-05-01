@@ -320,13 +320,22 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 				$request->set_param( 'user_nav', $navs );
 
+				$show_for_displayed_user = $nav['show_for_displayed_user'];
+				if (
+					'shop' === $id &&
+					! empty( $logged_user_id ) &&
+					(int) $logged_user_id === (int) $current_user_id
+				) {
+					$show_for_displayed_user = true;
+				}
+
 				$tab = array(
 					'id'                      => ( 'activity' === $id ? 'activities' : $id ), // Needs this slug to suppport: hide_in_app in app.
 					'title'                   => $name,
 					'default'                 => false,
 					'link'                    => $link,
 					'count'                   => ( $this->bp_rest_nav_has_count( $nav ) ? $this->bp_rest_get_nav_count( $nav ) : '' ),
-					'show_for_displayed_user' => $nav['show_for_displayed_user'],
+					'show_for_displayed_user' => $show_for_displayed_user,
 					'children'                => array(),
 				);
 
