@@ -762,7 +762,7 @@ add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button'
  * Output button to add repeater field set.
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.00
  * Introduce new param $args as array.
  *
  * @param array $args Array of arguments.
@@ -837,7 +837,7 @@ add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_ht
  * Open wrapper of repeater set - on edit profile screen
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.00
  * Introduce new param $args as array.
  * @global type $first_xpfield_in_repeater
  *
@@ -1053,7 +1053,7 @@ function bb_xprofile_top_most_template_field_id( $field_id ) {
 /**
  * Adds a repeater set for admin screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.00
  */
 function bb_admin_xprofile_add_repeater_set() {
 	check_ajax_referer( 'bb_admin_xprofile_add_repeater_set', '_wpnonce' );
@@ -1205,7 +1205,7 @@ add_action( 'wp_ajax_bb_admin_xprofile_add_repeater_set', 'bb_admin_xprofile_add
 /**
  * Function to save repeater data in the admin screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.00
  *
  * @param int   $user_id          ID for the user whose profile is being saved.
  * @param array $posted_field_ids Array of field IDs that were edited.
