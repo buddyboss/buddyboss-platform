@@ -3554,14 +3554,20 @@ function bb_update_to_2_6_00() {
 		BuddyBoss\Performance\Cache::instance()->purge_all();
 	}
 
-	$media_symlinks_path = bp_media_symlink_path();
-	bb_remove_symlinks( $media_symlinks_path );
+	if ( function_exists( 'bp_media_symlink_path' ) ) {
+		$media_symlinks_path = bp_media_symlink_path();
+		bb_remove_symlinks( $media_symlinks_path );
+	}
 
-	$document_symlinks_path = bp_document_symlink_path();
-	bb_remove_symlinks( $document_symlinks_path );
+	if ( function_exists( 'bp_document_symlink_path' ) ) {
+		$document_symlinks_path = bp_document_symlink_path();
+		bb_remove_symlinks( $document_symlinks_path );
+	}
 
-	$video_symlinks_path = bb_video_symlink_path();
-	bb_remove_symlinks( $video_symlinks_path );
+	if ( function_exists( 'bb_video_symlink_path' ) ) {
+		$video_symlinks_path = bb_video_symlink_path();
+		bb_remove_symlinks( $video_symlinks_path );
+	}
 }
 
 /**
