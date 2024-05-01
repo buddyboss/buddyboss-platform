@@ -17,7 +17,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support for LearnDash & bbPress Integration
 	 */
-	if ( in_array( 'learndash-bbpress/learndash-bbpress.php', $bp_plugins ) ) {
+	if ( class_exists( 'Learndash_BBPress' ) ) {
 
 			/**
 			 * Remove bbPress Integration admin init hook action
@@ -26,7 +26,7 @@ function bp_helper_plugins_loaded_callback() {
 			 */
 			remove_action( 'admin_init', 'wdm_activation_dependency_check' );
 
-		if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+		if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 			deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
 
 			add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
@@ -83,7 +83,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support WPML Multilingual CMS
 	 */
-	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
+	if ( class_exists( 'SitePress' ) && class_exists( 'WPML_Fix_Links_In_Display_As_Translated_Content' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
@@ -92,7 +92,7 @@ function bp_helper_plugins_loaded_callback() {
      *
 	 * @since BuddyBoss 1.5.4
 	 */
-	if ( in_array( 'wishlist-member/wpm.php', $bp_plugins ) ) {
+	if ( class_exists( 'WishListMember' ) ) {
 		global $WishListMemberInstance;
 		remove_filter( 'user_request_action_email_content', array( &$WishListMemberInstance, 'privacy_user_request_email' ), 10 );
 		remove_filter( 'user_request_action_email_subject', array( &$WishListMemberInstance, 'privacy_user_request_email_subject' ), 10 );
@@ -242,7 +242,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * @since BuddyBoss 2.5.60
 	 */
-	if ( in_array( 'instructor-role/instructor.php', $bp_plugins ) ) {
+	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
 		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
 			$post_types = array();
 
@@ -546,7 +546,7 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
 function bp_core_learndash_bbpress_notices() {
 	global $bp_plugins;
 
-	if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+	if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 		$links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
 		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
