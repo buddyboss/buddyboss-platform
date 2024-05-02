@@ -60,20 +60,13 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array|object $activity The activity object or array.
-		 *
-		 * @return bool
 		 */
 		public function bb_register_schedule_activity( $activity ) {
 			if ( empty( $activity->id ) || in_array( $activity->privacy, array( 'media', 'video', 'document') ) || bb_get_activity_scheduled_status() !== $activity->status ) {
-				return false;
+				return;
 			}
 
-			if ( ! wp_next_scheduled( 'bb_activity_publish' ) ) {
-				wp_schedule_event( time(), 'bb_schedule_1min', 'bb_activity_publish' );
-				return true;
-			}
-
-			return false;
+			bb_create_activity_schedule_cron_event();
 		}
 
 		/**
