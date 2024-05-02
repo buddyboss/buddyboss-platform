@@ -732,8 +732,16 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
 	}
 
+	/**
+	 * Apply filter to modified value to record group activity for group join.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Allow record activity.
+	 */
+	$allow_record_activity = (bool) apply_filters( 'bb_group_join_groups_record_activity', true );
 	// Record this in activity feeds.
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bp_is_active( 'activity' ) && true === $allow_record_activity ) {
 		groups_record_activity(
 			array(
 				'type'    => 'joined_group',
