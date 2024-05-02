@@ -6114,6 +6114,8 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
+
+	bb_create_activity_schedule_cron_event();
 }
 
 /**
@@ -7191,4 +7193,18 @@ function bb_get_activity_published_status() {
  */
 function bb_get_activity_scheduled_status() {
 	return buddypress()->activity->scheduled_status;
+}
+
+/**
+ * Create activity schedule cron event if not exits.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_create_activity_schedule_cron_event() {
+
+	if ( class_exists( 'BB_Activity_Schedule' ) ) {
+		if ( ! wp_next_scheduled( 'bb_activity_publish' ) ) {
+			wp_schedule_event( time(), 'bb_schedule_1min', 'bb_activity_publish' );
+		}
+	}
 }
