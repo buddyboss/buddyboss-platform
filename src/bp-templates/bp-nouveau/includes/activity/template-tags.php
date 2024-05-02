@@ -281,12 +281,15 @@ function bp_nouveau_activity_state() {
 			?>
 			<?php
 			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
-			$activity_state_class            = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
+			if ( $comment_count > 0 ) {
+				$activity_state_comment_class['has-comments'] = 'has-comments';
+			}
+			$activity_state_class = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
 			?>
 			<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
 				<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
 					<?php
-					if ( $comment_count > 1 ) {
+					if ( $comment_count > 1 || 0 === $comment_count ) {
 						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
 					} else {
 						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
@@ -749,7 +752,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 				_n( 'View %d reply', 'View %d replies', $comment->all_child_count, 'buddyboss' ),
 				absint( $comment->all_child_count )
 			);
-			echo "<li class='acomments-view-more'><i class='bb-icon-l bb-icon-corner-right'></i>". esc_html( $link_text ) ."</li>";
+			echo "<li class='acomments-view-more' data-child-count='" . esc_attr( $comment->all_child_count ) . "'><i class='bb-icon-l bb-icon-corner-right'></i>" . esc_html( $link_text ) . "</li>";
 
 			$skip_children_loop = true;
 		}
