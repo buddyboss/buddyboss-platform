@@ -441,7 +441,7 @@ function bp_core_update_group_fields_id_in_db() {
 				foreach ( $results as $result ) {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
-						add_site_option( 'bp-xprofile-firstname-field-id', $id );
+						update_site_option( 'bp-xprofile-firstname-field-id', $id );
 						$count ++;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
@@ -459,7 +459,7 @@ function bp_core_update_group_fields_id_in_db() {
 				foreach ( $results as $result ) {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
-						add_site_option( 'bp-xprofile-lastname-field-id', $id );
+						update_site_option( 'bp-xprofile-lastname-field-id', $id );
 						$count ++;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
@@ -477,7 +477,7 @@ function bp_core_update_group_fields_id_in_db() {
 				foreach ( $results as $result ) {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
-						add_site_option( 'bp-xprofile-nickname-field-id', $id );
+						update_site_option( 'bp-xprofile-nickname-field-id', $id );
 						$count ++;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
@@ -486,7 +486,7 @@ function bp_core_update_group_fields_id_in_db() {
 			}
 		}
 
-		add_site_option( 'bp-xprofile-field-ids-updated', 1 );
+		update_site_option( 'bp-xprofile-field-ids-updated', 1 );
 	}
 }
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
