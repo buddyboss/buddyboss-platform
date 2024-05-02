@@ -7196,7 +7196,7 @@ function bb_get_activity_scheduled_status() {
 }
 
 /**
- * Create activity schedule cron event if not exits.
+ * Create activity schedule cron event if not exists.
  *
  * @since BuddyBoss [BBVERSION]
  */
