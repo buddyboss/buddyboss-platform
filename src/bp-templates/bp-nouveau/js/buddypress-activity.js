@@ -1096,6 +1096,8 @@ window.bp = window.bp || {};
 								if ( comments_text.length ) {
 									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
 									comments_text.text( label.replace( '%d', comment_count ) );
+								} else {
+									comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
 								}
 
 								// Update the show all count.
@@ -1643,6 +1645,8 @@ window.bp = window.bp || {};
 									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
 									comments_text.text( label.replace( '%d', comment_count || 1 ) );
 								}
+
+								comment_count_span.parent( ':not( .has-comments )' ).addClass( 'has-comments' );
 
 								// Increment the 'Show all x comments' string, if present.
 								show_all_a = $( activity_item ).find( '.show-all a' );
