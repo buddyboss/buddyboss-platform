@@ -886,6 +886,9 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+
+			// Show Emoji Picker when pressing Win + . in Windows system.
+			$( document ).on( 'keydown', this.showWinEmojiPicker );
 		},
 
 		/**
@@ -4307,6 +4310,18 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
+		},
+
+		/**
+		 *  Show Emoji Picker when pressing Win + . in Windows system.
+		 */
+		showWinEmojiPicker: function(e) {
+			if ( navigator.userAgent.indexOf('Win') !== -1 && e.key === '.' && e.metaKey ) {
+				e.preventDefault();
+				if( $( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).length > 0 ) {
+					$( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).closest( 'form' ).find( '.post-emoji .emojionearea-button' ).trigger( 'click' );
+				}
+			}
 		}
 	};
 
