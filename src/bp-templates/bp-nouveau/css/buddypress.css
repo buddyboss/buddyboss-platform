@@ -5529,11 +5529,12 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   max-height: 280px;
 }
 
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a > * {
+.bb-is-mobile .bp-generic-meta .generic-button a,
+.bb-is-mobile .bp-generic-meta .generic-button a img,
+.bb-is-mobile .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
+.bb-is-mobile .bp-generic-meta .generic-button a > * {
   -webkit-touch-callout: none !important;
+  -webkit-user-drag: none;
 }
 
 .bb-is-mobile.bb-reactions-mode.activity * {
