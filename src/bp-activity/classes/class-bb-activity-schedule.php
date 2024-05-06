@@ -54,13 +54,8 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 			add_action( 'bb_activity_publish', array( $this, 'bb_check_and_publish_scheduled_activity' ) );
 			
 			// Check if the schedule event transient exists.
-			if ( get_transient( '_bp_activation_schedule_cron' ) ) {
-
-				// Delete transient.
-				delete_transient( '_bp_activation_schedule_cron' );
-
-				// Check and register the activity schedule cron if not exists.
-				add_action( 'wp_loaded', 'bb_create_activity_schedule_cron_event' );
+			if ( get_transient( '_bp_activation_redirect' ) ) {
+				bb_create_activity_schedule_cron_event();
 			}
 		}
 

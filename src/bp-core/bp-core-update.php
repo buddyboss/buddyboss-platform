@@ -1205,8 +1205,6 @@ function bp_add_activation_redirect() {
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
 
-	// Add the transient for activity schedule cron.
-	set_transient( '_bp_activation_schedule_cron', true, 30 );
 }
 
 /**
