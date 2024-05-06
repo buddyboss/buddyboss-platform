@@ -145,6 +145,10 @@
 
 .activity-post-user-name-container {
 
+	h5 {
+		margin: 0;
+	}
+
 	.activity-post-user-name {
 		line-height: 1;
 	}
@@ -164,7 +168,8 @@
 	background-color: #fff;
 
 	#whats-new-privacy-stage,
-	#bp-activity-privacy-point {
+	#bp-activity-privacy-point,
+	#activity-schedule-section {
 		display: none;
 	}
 }
@@ -182,6 +187,34 @@
 		.bb-icon-chevron-down {
 			font-size: 12px;
 			margin-left: 5px;
+		}
+	}
+
+	#activity-schedule-section {
+		display: flex;
+		margin: auto;
+		margin-right: 0;
+		font-size: 13px;
+
+		[class*="bb-icon"] {
+			font-size: 16px;
+			margin-right: 3px;
+		}
+
+		.activity-post-schedule-details {
+			display: flex;
+			align-items: center;
+			line-height: 1.2;
+
+			strong {
+				font-weight: 600;
+				margin-right: 5px;
+			}
+
+			.activity-post-meridiem {
+				margin-left: 3px;
+				text-transform: uppercase;
+			}
 		}
 	}
 }
@@ -254,6 +287,7 @@
 
 	#discard-draft-activity {
 		display: block;
+		padding: 0 8px 0 0;
 	}
 }
 
@@ -264,6 +298,403 @@
 	line-height: 1 !important;
 	text-decoration: none !important;
 	color: inherit !important;
+}
+
+.bb-schedule-post_dropdown_section {
+	margin-right: 8px;
+	position: relative;
+
+	.bb-schedule-post_dropdown_button {
+		background-color: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 5px 7px;
+		border: 1px solid $primary-grey;
+		border-radius: 7px;
+
+		i {
+			font-size: 24px;
+			color: $light-text;
+			line-height: 1.1;
+
+			&:before {
+				margin: 0;
+			}
+
+			&.bb-icon-caret-down {
+				font-size: 13px;
+			}
+		}
+
+		&.is_scheduled {
+
+			body:not(.buddyboss-theme) & {
+				background-color: $primary-grey;
+				text-decoration: none;
+				padding: 0 7px;
+			}
+
+			> i {
+				display: none;
+			}
+
+			&:after {
+				content: "\e803";
+				font-size: 24px;
+				font-family: 'bb-icons';/* stylelint-disable-line */
+				font-weight: 300;
+				color: $black;
+			}
+		}
+	}
+
+	.bb-schedule-post_dropdown_list {
+		display: none;
+		position: absolute;
+		top: 100%;
+		right: 0;
+		padding: 8px;
+		border-radius: 8px;
+		background-color: $white;
+		box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+
+		&.is_open {
+			display: block;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+			min-width: 200px;
+		}
+
+		li {
+			list-style: none;
+
+			> a {
+				padding: 8px 15px;
+				border-radius: 6px;
+				font-size: 13px;
+				color: $dark-grey;
+				display: flex;
+				align-items: center;
+				text-decoration: none;
+
+				&:hover {
+					background-color: $light-grey;
+				}
+
+				> i {
+					font-size: 20px;
+					color: $light-text-plus;
+					margin-right: 8px;
+				}
+			}
+		}
+	}
+
+	.bb-schedule-post_modal .modal-wrapper {
+		max-width: 400px;
+	}
+
+	.bb-action-popup .bb-model-header {
+
+		.activity-form.focus-in & {
+			margin: -20px -30px 0;
+			background-color: transparent;
+		}
+
+		.bb-model-close-button > span[class*="bb-icon"] {
+			opacity: 0.4;
+		}
+	}
+
+	.bb-action-popup-content {
+
+		p.schedule-date {
+			font-size: 13px;
+			margin-bottom: 10px;
+		}
+
+		label {
+			font-weight: 500;
+			margin-bottom: 10px;
+		}
+
+		.input-field {
+			position: relative;
+			margin-bottom: 20px;
+
+			[class*="bb-icon"] {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				right: 12px;
+				font-size: 20px;
+				color: $black;
+				opacity: 0.4;
+				pointer-events: none;
+			}
+		}
+
+		body:not(.buddyboss-theme) & {
+
+			.input-field > input {
+				height: 40px;
+				padding: 0 12px;
+				border-radius: 5px;
+				border: 1px solid $primary-grey;
+				box-sizing: border-box;
+			}
+
+			.bb-schedule-activity-meridian-wrap label input {
+				width: auto;
+			}
+
+			.bb-view-all-scheduled-posts {
+				text-decoration: none;
+			}
+
+			.bb-view-all-scheduled-posts {
+				font-size: 14px;
+			}
+		}
+
+		.bb-schedule-activity-time-wrap {
+			flex: 1 1 auto;
+		}
+
+		.bb-schedule-activity-meridian-wrap {
+			position: relative;
+			margin: 0 0 20px 10px;
+			flex: 0 0 auto;
+			display: flex;
+		}
+
+		.input-field-inline {
+			display: flex;
+
+			.bb-schedule-activity-meridian-wrap label {
+				margin: 0 4px;
+				font-size: 15px;
+				font-weight: 400;
+				color: $light-grey;
+				letter-spacing: -0.22px;
+				cursor: pointer;
+
+				input {
+					position: absolute;
+					opacity: 0;
+
+					&:checked + span {
+						background: $blue;
+						border-color: $blue;
+						color: $white;
+					}
+				}
+
+				span {
+					background: $white;
+					border: 1px solid $bp-border-color;
+					border-radius: 50%;
+					width: 42px;
+					height: 42px;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					font-size: 14px;
+					font-weight: 500;
+					color: $light-grey;
+					letter-spacing: -0.24px;
+					line-height: 24px;
+				}
+			}
+		}
+	}
+
+	.bb-action-popup .bb-model-footer {
+		display: flex;
+		justify-content: space-between;
+		background-color: transparent;
+
+		> div {
+			display: flex;
+			align-items: center;
+		}
+
+		.button {
+			padding: 6px 15px;
+			min-width: auto;
+
+			&[disabled] {
+				opacity: 0.6;
+				cursor: default;
+				pointer-events: none;
+			}
+		}
+	}
+
+	.schedule-posts-placeholder_loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 300px;
+
+		[class*="bb-icon"] {
+			font-size: 20px;
+			line-height: 1;
+		}
+	}
+
+	.schedule-posts-placeholder {
+		display: none;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-height: 210px;
+		margin: 30px 0;
+		text-align: center;
+
+		&.is_open {
+			display: flex;
+		}
+
+		> [class*="bb-icon"] {
+			color: $black;
+			font-size: 72px;
+			opacity: 0.4;
+		}
+
+		h2 {
+			font-size: 24px;
+			margin-bottom: 5px;
+
+			body.buddypress & {
+				margin-bottom: 5px;
+			}
+		}
+
+		p {
+			color: $dark-grey;
+		}
+	}
+
+	.bb-action-popup-content {
+
+		&.has-no-content {
+
+			.schedule-posts-content,
+			.schedule-posts-placeholder_loader {
+				display: none !important;
+			}
+
+			.schedule-posts-placeholder {
+				display: flex;
+			}
+		}
+
+		&.has-content {
+
+			.schedule-posts-placeholder,
+			.schedule-posts-placeholder_loader {
+				display: none;
+			}
+		}
+
+		body:not(.buddyboss-theme) & {
+
+			.schedule-posts-content > .activity-list {
+				padding: 0;
+				margin: 20px 0;
+				background-color: transparent;
+			}
+		}
+	}
+
+	.bb-schedule-posts_modal {
+
+		.modal-wrapper {
+			max-width: 815px;
+			overflow: auto;
+			max-height: calc(100vh - 20px);
+		}
+
+		.bb-action-popup-content {
+			background-color: $light-grey;
+			border-radius: 0 0 4px 4px;
+			min-height: 340px;
+		}
+	}
+
+	.bb-schedule-posts_modal .activity-list {
+
+		.bp-activity-head {
+			margin-right: 55px;
+
+			a.view.activity-time-since {
+				display: none;
+			}
+
+			.activity-date {
+				display: inline-block;
+				margin-top: 0;
+			}
+		}
+
+		.bb-activity-schedule-actions {
+			position: absolute;
+			right: 15px;
+			top: 25px;
+
+			.bb-activity-schedule-action {
+				font-size: 16px;
+				margin: 0 0 0 10px;
+				cursor: pointer;
+				text-decoration: none;
+
+				i {
+					color: $black;
+					opacity: 0.4;
+				}
+			}
+		}
+
+		.activity-date {
+
+			.schedule-text {
+				font-size: 13px;
+				font-weight: 400;
+			}
+
+			.time-since {
+				font-size: 13px;
+				font-weight: 400;
+			}
+		}
+
+		.item-action_more,
+		.media-action_more,
+		.document-detail-wrap,
+		.bb-open-video-theatre,
+		.bb-activity-video-elem,
+		.bb-open-media-theatre,
+		.bb-open-document-theatre {
+			pointer-events: none;
+		}
+
+		.item-action_more,
+		.media-action-wrap,
+		.document-action-wrap {
+			display: none;
+		}
+	}
+
+}
+
+.bb-schedule-activity-time-picker.xdsoft_datetimepicker,
+.bb-schedule-activity-date-wrap.xdsoft_datetimepicker {
+	z-index: 999999;
 }
 
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
@@ -400,6 +831,10 @@
 		position: relative;
 		display: inline-block;
 		width: 100%;
+
+		&.hide-schedule-button #bb-schedule-posts {
+			display: none;
+		}
 	}
 
 	#whats-new-form.bottom-notice {
@@ -545,6 +980,9 @@
 		padding: 16px;
 
 		img {
+			max-width: 45px;
+			height: auto;
+			border-radius: 50%;
 			box-shadow: none;
 			display: inline-block;
 			margin-right: 15px;
@@ -604,12 +1042,38 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
-	@media screen and (max-width: 480px) {
+	@media screen and (max-width: 580px) {
 
-		.has-draft .whats-new-form-footer {
+		.whats-new-form-footer {
 			flex-direction: column;
 			align-items: center;
 			padding-top: $pad-med;
+		}
+
+		.activity-form.focus-in #activity-form-submit-wrapper {
+			padding: 0 15px;
+		}
+
+		#whats-new-form.activity-form.has-draft #discard-draft-activity {
+			padding: 0 10px 0 5px;
+		}
+
+		.bb-schedule-post_dropdown_section .bb-schedule-post_dropdown_list {
+			right: initial;
+			left: 0;
+		}
+
+		.activity-form.focus-in .whats-new-form-header #user-status-huddle {
+			flex-wrap: wrap;
+
+			.activity-post-name-status {
+				max-width: 50%;
+			}
+
+			#activity-schedule-section {
+				margin-top: 15px;
+				width: 100%;
+			}
 		}
 
 	}
@@ -1019,6 +1483,7 @@
 .activity-update-form {
 
 	#activity-header h3 {
+		font-size: 20px;
 		margin: 0;
 	}
 
