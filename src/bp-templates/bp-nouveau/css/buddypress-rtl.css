@@ -9406,7 +9406,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   pointer-events: none;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 405px) {
   .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
   .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
   .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
@@ -9442,7 +9442,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   margin-left: 5px;
 }
 
-@media screen and (min-width: 1024px), screen and (max-width: 450px) {
+@media screen and (min-width: 1024px) {
   .bb-media-model-container .threaded-level-3 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
   .bb-media-model-container .threaded-level-3 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-submit-wrap,
   .bb-media-model-container .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
@@ -9452,6 +9452,27 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   .bb-media-model-container .threaded-level-3 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar,
   .bb-media-model-container .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
     position: static;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-submit-wrap,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-submit-wrap {
+    float: right;
+  }
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    position: static;
+  }
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    flex-flow: wrap;
+  }
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+    margin-left: 2px;
   }
 }
 
