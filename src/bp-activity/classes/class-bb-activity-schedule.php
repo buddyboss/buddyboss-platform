@@ -52,6 +52,11 @@ if ( ! class_exists( 'BB_Activity_Schedule' ) ) {
 		public function __construct() {
 			add_action( 'bp_activity_after_save', array( $this, 'bb_register_schedule_activity' ), 999, 1 );
 			add_action( 'bb_activity_publish', array( $this, 'bb_check_and_publish_scheduled_activity' ) );
+			
+			// Check if the activation transient exists.
+			if ( get_transient( '_bp_activation_redirect' ) ) {
+				bb_create_activity_schedule_cron_event();
+			}
 		}
 
 		/**
