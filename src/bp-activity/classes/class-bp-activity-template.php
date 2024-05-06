@@ -203,10 +203,8 @@ class BP_Activity_Template {
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
 			'pin_type'          => '',
-			'status'            => bb_get_activity_published_status(),
 		);
 		$r        = bp_parse_args( $args, $defaults );
-
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
@@ -235,7 +233,6 @@ class BP_Activity_Template {
 					'spam'              => $spam,
 					'scope'             => $scope,
 					'update_meta_cache' => $update_meta_cache,
-					'status'            => $status,
 				)
 			);
 
@@ -262,7 +259,6 @@ class BP_Activity_Template {
 					'spam'              => $spam,
 					'update_meta_cache' => $update_meta_cache,
 					'pin_type'          => $pin_type,
-					'status'            => $status,
 				)
 			);
 

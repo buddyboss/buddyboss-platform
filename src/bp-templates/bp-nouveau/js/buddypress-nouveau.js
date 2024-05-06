@@ -140,9 +140,6 @@ window.bp = window.bp || {};
 					bp_icon_type = 'check';
 				} else if ( bp_msg_type === 'warning' ) {
 					bp_icon_type = 'exclamation-triangle';
-				} else if ( bp_msg_type === 'delete' ) {
-					bp_icon_type = 'trash';
-					bp_msg_type = 'error';
 				} else {
 					bp_icon_type = 'info';
 				}
@@ -204,9 +201,6 @@ window.bp = window.bp || {};
 
 			// An object containing each query var.
 			this.querystring = this.getLinkParams();
-
-			// Get Server Time Difference on load.
-			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - new Date().getTime();
 		},
 
 		/**
@@ -362,7 +356,7 @@ window.bp = window.bp || {};
 		 */
 		ajax: function ( post_data, object, button ) {
 
-			if ( this.ajax_request && typeof button === 'undefined' && post_data.status !== 'scheduled') {
+			if ( this.ajax_request && typeof button === 'undefined' ) {
 				this.ajax_request.abort();
 			}
 
@@ -599,15 +593,6 @@ window.bp = window.bp || {};
 				function ( response ) {
 					if ( false === response.success || _.isUndefined( response.data ) ) {
 						return;
-					}
-
-					// Control the scheduled posts layout view.
-					if( data.status === 'scheduled' ) {
-						if( $( response.data.contents ).hasClass( 'bp-feedback' ) ) {
-							$( data.target ).parent().addClass( 'has-no-content' );
-						} else {
-							$( data.target ).parent().addClass( 'has-content' );
-						}
 					}
 
 					if ( !_.isUndefined( response.data.layout ) ) {
@@ -4253,7 +4238,7 @@ window.bp = window.bp || {};
 					);
 					self.render( self.options );
 				}
-			},
+			}
 		},
 
 		/**
@@ -4322,27 +4307,6 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
-		},
-
-		/**
-		 *  Get current Server Time
-		 */
-		bbServerTime: function() {
-
-			var localTime = new Date();
-			var currentServerTime = new Date( localTime.getTime() + bp.Nouveau.bbServerTimeDiff );
-
-			// Extract date, year, and time components
-			var date = currentServerTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-			var year = currentServerTime.getFullYear();
-			var time = currentServerTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-			return {
-				currentServerTime: currentServerTime,
-				date: date,
-				year: year,
-				time: time
-			};
 		}
 	};
 

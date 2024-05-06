@@ -18,11 +18,7 @@
 				<?php esc_html_e( 'Select a group', 'buddyboss' ); ?>
 			<# } else { #>
 				<# if ( data.edit_activity === true ) {  #>
-					<# if ( data.activity_action_type === 'scheduled' ) {  #>
-						<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss' ); ?>
-					<# } else { #>
-						<?php esc_html_e( 'Edit post', 'buddyboss' ); ?>
-					<# } #>
+					<?php esc_html_e( 'Edit post', 'buddyboss' ); ?>
 				<# } else { #>
 					<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
 				<# } #>

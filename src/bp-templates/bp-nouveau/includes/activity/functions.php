@@ -64,8 +64,6 @@ function bp_nouveau_activity_enqueue_scripts() {
 	// Enqueue activity form parts and js required for single activity.
 
 	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
-		wp_enqueue_style( 'jquery-datetimepicker' );
-		wp_enqueue_script( 'jquery-datetimepicker' );
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 		bp_get_template_part( 'common/js-templates/activity/form' );
 	}
@@ -98,17 +96,16 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_params = array(
-		'user_id'              => bp_loggedin_user_id(),
-		'object'               => 'user',
-		'backcompat'           => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'           => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'post_draft_nonce'     => wp_create_nonce( 'post_draft_activity' ),
-		'scheduled_post_nonce' => wp_create_nonce( 'scheduled_post_nonce' ),
-		'excluded_hosts'       => array(),
-		'user_can_post'        => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit'     => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'displayed_user_id'    => bp_displayed_user_id(),
-		'errors'               => array(
+		'user_id'           => bp_loggedin_user_id(),
+		'object'            => 'user',
+		'backcompat'        => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'        => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'post_draft_nonce'  => wp_create_nonce( 'post_draft_activity' ),
+		'excluded_hosts'    => array(),
+		'user_can_post'     => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit'  => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'displayed_user_id' => bp_displayed_user_id(),
+		'errors'            => array(
 			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
@@ -240,39 +237,28 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
-		'whatsnewPlaceholder'      => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
-		'whatsnewLabel'            => esc_html__( 'Post what\'s new', 'buddyboss' ),
-		'whatsnewpostinLabel'      => esc_html__( 'Post in', 'buddyboss' ),
-		'postUpdateButton'         => esc_html__( 'Post', 'buddyboss' ),
-		'updatePostButton'         => esc_html__( 'Update Post', 'buddyboss' ),
-		'cancelButton'             => esc_html__( 'Cancel', 'buddyboss' ),
-		'commentLabel'             => esc_html__( '%d Comment', 'buddyboss' ),
-		'commentsLabel'            => esc_html__( '%d Comments', 'buddyboss' ),
-		'loadingMore'              => esc_html__( 'Loading...', 'buddyboss' ),
-		'discardButton'            => esc_html__( 'Discard Draft', 'buddyboss' ),
-		'pinPost'                  => esc_html__( 'Pin to Feed', 'buddyboss' ),
-		'unpinPost'                => esc_html__( 'Unpin from Feed', 'buddyboss' ),
-		'pinGroupPost'             => esc_html__( 'Pin to Group', 'buddyboss' ),
-		'unpinGroupPost'           => esc_html__( 'Unpin from Group', 'buddyboss' ),
-		'pinPostError'             => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'reactionAjaxError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'closeComments'            => esc_html__( 'Turn off commenting', 'buddyboss' ),
-		'uncloseComments'          => esc_html__( 'Turn on commenting', 'buddyboss' ),
-		'closeCommentsError'       => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'commentPostError'	       => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
-		'muteNotification'         => esc_html__( 'Turn off notifications', 'buddyboss' ),
-		'unmuteNotification'       => esc_html__( 'Turn on notifications', 'buddyboss' ),
-		'schedulePostButton'       => esc_html__( 'Schedule', 'buddyboss' ),
-		'confirmDeletePost'        => esc_html__( 'Are you sure you want to delete that permanently?', 'buddyboss' ),
-		'scheduleWarning'          => esc_html__( 'Schedule Outdated', 'buddyboss' ),
-		'successDeletionTitle'     => esc_html__( 'Scheduled Post Deleted', 'buddyboss' ),
-		'successDeletionDesc'      => esc_html__( 'Your scheduled post has been deleted.', 'buddyboss' ),
-		'successScheduleTitle'     => esc_html__( 'Successfully Scheduled Post', 'buddyboss' ),
-		'successScheduleDesc'      => esc_html__( 'Your post has been scheduled.', 'buddyboss' ),
-		'viewSchedulePosts'        => esc_html__( 'View all posts', 'buddyboss' ),
-		'EditSuccessScheduleTitle' => esc_html__( 'Successfully Updated Post', 'buddyboss' ),
-		'EditSuccessScheduleDesc'  => esc_html__( 'Your post schedule has been updated.', 'buddyboss' ),
-		'EditViewSchedulePost'     => esc_html__( 'View now', 'buddyboss' ),
+		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
+		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
+		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
+		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
+		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
+		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
+		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
+		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
+		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
+		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'commentPostError'	  => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
