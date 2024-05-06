@@ -33,7 +33,10 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v2
         with:
-          composer-options: "--ignore-platform-reqs"
+          composer-options: "--ignore-platform-reqs --no-scripts"
+
+      - name: Run Check standards
+        run: vendor/bin/phpcs -i
 
       - name: Run PHPCompatibilityWP
         run: vendor/bin/phpcs --standard=PHPCompatibilityWP --extensions=php --error-severity=1 --warning-severity=6 --runtime-set testVersion ${{ matrix.php }} .
