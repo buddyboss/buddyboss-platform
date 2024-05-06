@@ -1759,14 +1759,12 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			'content'       => false,
-			'user_id'       => bp_loggedin_user_id(),
-			'group_id'      => 0,
-			'privacy'       => 'public',
-			'error_type'    => 'bool',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
+			'id'         => false,
+			'content'    => false,
+			'user_id'    => bp_loggedin_user_id(),
+			'group_id'   => 0,
+			'privacy'    => 'public',
+			'error_type' => 'bool',
 		),
 		'groups_post_update'
 	);
@@ -1813,17 +1811,14 @@ function groups_post_update( $args = '' ) {
 
 	$activity_id = groups_record_activity(
 		array(
-			'id'            => $id,
-			'user_id'       => $user_id,
-			'action'        => $action,
-			'content'       => $content_filtered,
-			'type'          => 'activity_update',
-			'item_id'       => $group_id,
-			'privacy'       => $privacy,
-			'error_type'    => $error_type,
-			'status'        => $status,
-			'recorded_time' => $recorded_time,
-
+			'id'         => $id,
+			'user_id'    => $user_id,
+			'action'     => $action,
+			'content'    => $content_filtered,
+			'type'       => 'activity_update',
+			'item_id'    => $group_id,
+			'privacy'    => $privacy,
+			'error_type' => $error_type,
 		)
 	);
 

@@ -208,7 +208,6 @@ function bp_has_media( $args = '' ) {
 
 		// Searching.
 			'search_terms' => $search_terms_default,
-			'status'       => bb_media_get_published_status(),  
 		),
 		'has_media'
 	);

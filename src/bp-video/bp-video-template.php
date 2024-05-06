@@ -201,7 +201,6 @@ function bp_has_video( $args = '' ) {
 
 			// Searching.
 			'search_terms' => $search_terms_default,
-			'status'       => bb_video_get_published_status(),
 		),
 		'has_video'
 	);

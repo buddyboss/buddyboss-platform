@@ -1922,7 +1922,6 @@ function bp_activity_get( $args = '' ) {
 			 */
 			'filter'            => array(),
 			'pin_type'          => '',
-			'status'            => bb_get_activity_published_status(),
 		),
 		'activity_get'
 	);
@@ -1950,7 +1949,6 @@ function bp_activity_get( $args = '' ) {
 			'count_total'       => $r['count_total'],
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
-			'status'            => $r['status'],
 		)
 	);
 
@@ -1996,7 +1994,6 @@ function bp_activity_get_specific( $args = '' ) {
 			'spam'              => 'ham_only', // Retrieve items marked as spam.
 			'scope'             => false, // Retrieve items marked as spam.
 			'update_meta_cache' => true,
-			'status'            => bb_get_activity_published_status(),
 		),
 		'activity_get_specific'
 	);
@@ -2013,7 +2010,6 @@ function bp_activity_get_specific( $args = '' ) {
 		'spam'              => $r['spam'],
 		'scope'             => $r['scope'],
 		'update_meta_cache' => $r['update_meta_cache'],
-		'status'            => $r['status'],
 	);
 
 	/**
@@ -2074,20 +2070,19 @@ function bp_activity_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
-			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
-			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
-			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
-			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
-			'primary_link'      => '',                                 // Optional: The primary URL for this item in RSS feeds (defaults to activity permalink).
-			'user_id'           => bp_loggedin_user_id(),              // Optional: The user to record the activity for, can be false if this activity is not for a user.
-			'item_id'           => false,                              // Optional: The ID of the specific item being recorded, e.g. a blog_id.
-			'secondary_item_id' => false,                              // Optional: A second ID used to further filter e.g. a comment_id.
-			'recorded_time'     => bp_core_current_time(),             // The GMT time that this activity was recorded.
-			'hide_sitewide'     => false,                              // Should this be hidden on the sitewide activity feed?
-			'is_spam'           => false,                              // Is this activity item to be marked as spam?
-			'privacy'           => 'public',                           // privacy of the activity.
-			'status'            => bb_get_activity_published_status(), // status of the activity.
+			'id'                => false,                  // Pass an existing activity ID to update an existing entry.
+			'action'            => '',                     // The activity action - e.g. "Jon Doe posted an update"
+			'content'           => '',                     // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
+			'component'         => false,                  // The name/ID of the component e.g. groups, profile, mycomponent.
+			'type'              => false,                  // The activity type e.g. activity_update, profile_updated.
+			'primary_link'      => '',                     // Optional: The primary URL for this item in RSS feeds (defaults to activity permalink).
+			'user_id'           => bp_loggedin_user_id(),  // Optional: The user to record the activity for, can be false if this activity is not for a user.
+			'item_id'           => false,                  // Optional: The ID of the specific item being recorded, e.g. a blog_id.
+			'secondary_item_id' => false,                  // Optional: A second ID used to further filter e.g. a comment_id.
+			'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
+			'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
+			'is_spam'           => false,                  // Is this activity item to be marked as spam?
+			'privacy'           => 'public',               // privacy of the activity
 			'error_type'        => 'bool',
 		),
 		'activity_add'
@@ -2111,12 +2106,11 @@ function bp_activity_add( $args = '' ) {
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
-	$activity->date_recorded     = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : $activity->date_recorded;
+	$activity->date_recorded     = empty( $r['id'] ) ? $r['recorded_time'] : $activity->date_recorded;
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
-	$activity->status            = $r['status'];
 	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : '';
 
 	$save = $activity->save();
@@ -2203,8 +2197,6 @@ function bp_activity_post_update( $args = '' ) {
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
 			'error_type'    => 'bool',
 		)
 	);
@@ -2248,10 +2240,7 @@ function bp_activity_post_update( $args = '' ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
 
 		if ( ! empty( $activity->id ) ) {
-
-			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
-				$bp_activity_edit = true;
-			}
+			$bp_activity_edit = true;
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
@@ -2272,23 +2261,19 @@ function bp_activity_post_update( $args = '' ) {
 					'user_id'           => $activity->user_id,
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
-					'recorded_time'     => ! empty( $r['recorded_time'] ) ? $r['recorded_time'] : $activity->date_recorded,
+					'recorded_time'     => $activity->date_recorded,
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
-					'status'            => $r['status'],
 					'error_type'        => $r['error_type'],
 				)
 			);
 
-			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
-
-				/**
-				 * Addition from the BuddyBoss
-				 * Add meta to ensure that this activity has been edited.
-				 */
-				bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
-			}
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
 
 		}
 	} else {
@@ -2302,8 +2287,6 @@ function bp_activity_post_update( $args = '' ) {
 				'type'          => $r['type'],
 				'hide_sitewide' => $r['hide_sitewide'],
 				'privacy'       => $r['privacy'],
-				'recorded_time' => $r['recorded_time'],
-				'status'        => $r['status'],
 				'error_type'    => $r['error_type'],
 			)
 		);
@@ -4100,7 +4083,7 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	$email_type   = 'activity-at-message';
 	$group_name   = '';
 	$message_link = bp_activity_get_permalink( $activity_id );
-	$poster_name  = bp_core_get_user_displayname( $activity->user_id, $receiver_user_id );
+	$poster_name  = bp_core_get_user_displayname( $activity->user_id, $receiver_user_id );		
 
 	remove_filter( 'bp_get_activity_content_body', 'convert_smilies' );
 	remove_filter( 'bp_get_activity_content_body', 'wpautop' );
@@ -5474,6 +5457,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	if ( false === $edit_data ) {
 		// Get activity metas.
 		$activity_metas = bb_activity_get_metadata( $activity_id );
+
 		$can_edit_privacy        = true;
 		$album_id                = 0;
 		$folder_id               = 0;
@@ -5524,8 +5508,6 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'privacy'               => $activity->privacy,
 			'group_avatar'          => $group_avatar,
 			'link_image_index_save' => $link_image_index_save,
-			'date_recorded'         => $activity->date_recorded,
-			'status'                => $activity->status,
 		);
 
 		// Set meta data to cache.
@@ -6127,8 +6109,6 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
-
-	bb_create_activity_schedule_cron_event();
 }
 
 /**
@@ -7162,111 +7142,4 @@ function bb_validate_activity_privacy( $args ) {
 	}
 
 	return true;
-}
-
-/**
- * Check whether activity schedule posts are enabled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
- *
- * @return bool true if activity schedule posts are enabled, otherwise false.
- */
-function bb_is_enabled_activity_schedule_posts( $default = false ) {
-
-	/**
-	 * Filters whether activity schedule posts are enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $value Whether activity schedule posts are enabled.
-	 */
-	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
-}
-
-/**
- * Check whether user can schedule activity or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $args Array of Arguments.
- *
- * @return bool true if user can post schedule posts, otherwise false.
- */
-function bb_can_user_schedule_activity( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'user_id'  => bp_loggedin_user_id(),
-			'object'   => '',
-			'group_id' => 0,
-		)
-	);
-
-	$retval = false;
-	if (
-		bp_is_active( 'groups' ) &&
-		(
-			'group' === $r['object'] ||
-			bp_is_group()
-		) &&
-		bp_user_can( $r['user_id'], 'administrator' )
-	) {
-		$group_id = 'group' === $r['object'] && ! empty( $r['group_id'] ) ? $r['group_id'] : bp_get_current_group_id();
-		$is_admin = groups_is_user_admin( $r['user_id'], $group_id );
-		$is_mod   = groups_is_user_mod( $r['user_id'], $group_id );
-		if ( $is_admin || $is_mod ) {
-			$retval = true;
-		}
-	} elseif ( bp_user_can( $r['user_id'], 'administrator' ) ) {
-		$retval = true;
-	}
-
-	/**
-	 * Filters whether user can schedule activity posts.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool  $retval Return value for schedule post.
-	 * @param array $args   Array of Arguments.
-	 */
-	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
-}
-
-/**
- * Return the activity published status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_activity_published_status() {
-	return buddypress()->activity->published_status;
-}
-
-/**
- * Return the activity scheduled status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_get_activity_scheduled_status() {
-	return buddypress()->activity->scheduled_status;
-}
-
-/**
- * Create activity schedule cron event if not exists.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_create_activity_schedule_cron_event() {
-
-	if ( class_exists( 'BB_Activity_Schedule' ) ) {
-		if ( ! wp_next_scheduled( 'bb_activity_publish' ) ) {
-			wp_schedule_event( time(), 'bb_schedule_1min', 'bb_activity_publish' );
-		}
-	}
 }

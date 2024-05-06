@@ -156,7 +156,6 @@ class BP_Document_Template {
 			'meta_query_folder'   => false,
 			'meta_query'          => false,
 			'moderation_query'    => true,
-			'status'              => bb_document_get_published_status(),
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -185,7 +184,6 @@ class BP_Document_Template {
 					'meta_query'       => $meta_query,
 					'privacy'          => $privacy,
 					'moderation_query' => $moderation_query,
-					'status'           => $status,
 				)
 			);
 
@@ -210,7 +208,6 @@ class BP_Document_Template {
 					'user_directory'      => $user_directory,
 					'meta_query_document' => $meta_query_document,
 					'meta_query_folder'   => $meta_query_folder,
-					'status'              => $status,
 				)
 			);
 		}
