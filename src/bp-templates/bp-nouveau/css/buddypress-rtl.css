@@ -5136,11 +5136,11 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .activity-list .emojionearea .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
-  left: 82px;
+  left: 143px;
 }
 
 .activity-list .emojionearea-button.active + .emojionearea-picker-position-top {
-  left: -80px;
+  left: -140px;
 }
 
 .activity-list .gif-media-search-dropdown {
