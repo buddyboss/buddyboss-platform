@@ -5143,6 +5143,15 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
   right: -140px;
 }
 
+@media screen and (max-width: 540px) {
+  .activity-list .post-elements-buttons-item.post-emoji:first-child .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after, .activity-list .post-elements-buttons-item.post-emoji:nth-child(2) .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
+    right: 192px;
+  }
+  .activity-list .post-elements-buttons-item.post-emoji:first-child .emojionearea-button.active + .emojionearea-picker-position-top, .activity-list .post-elements-buttons-item.post-emoji:nth-child(2) .emojionearea-button.active + .emojionearea-picker-position-top {
+    right: -190px;
+  }
+}
+
 .activity-list .gif-media-search-dropdown {
   top: initial;
   bottom: 35px;
