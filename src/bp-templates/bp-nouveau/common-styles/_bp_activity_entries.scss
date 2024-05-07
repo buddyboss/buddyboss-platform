@@ -1545,6 +1545,28 @@
 		right: -140px;
 	}
 
+	@media screen and (max-width: 540px) {
+
+		.post-elements-buttons-item.post-emoji {
+
+			&:first-child,
+			&:nth-child(2) {
+
+				.emojionearea-picker.emojionearea-picker-position-top {
+
+					.emojionearea-wrapper:after {
+						right: 192px;
+					}
+				}
+
+				.emojionearea-button.active + .emojionearea-picker-position-top {
+					right: -190px;
+				}
+
+			}
+		}
+	}
+
 	.gif-media-search-dropdown {
 		top: initial;
 		bottom: 35px;
