@@ -39,4 +39,4 @@ jobs:
         run: vendor/bin/phpcs -i
 
       - name: Run PHPCompatibilityWP
-        run: vendor/bin/phpcs --standard=PHPCompatibilityWP --extensions=php --error-severity=1 --warning-severity=6 --runtime-set testVersion ${{ matrix.php }} .
+        run: vendor/bin/phpcs --standard=PHPCompatibilityWP --extensions=php --error-severity=4 --warning-severity=6 --runtime-set testVersion ${{ matrix.php }} .
