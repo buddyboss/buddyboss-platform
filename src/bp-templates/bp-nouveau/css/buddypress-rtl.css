@@ -5217,6 +5217,14 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   display: flex;
 }
 
+.activity-header--group .activity-post-author > p {
+  display: inline;
+}
+
+.activity-header--group .activity-post-author > p .view.activity-time-since {
+  display: none;
+}
+
 .activity-group-avatar {
   display: inline-block;
   position: relative;
