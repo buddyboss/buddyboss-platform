@@ -11,7 +11,7 @@
 ?>
 <script type="text/html" id="tmpl-activity-schedule-post">
 	<?php
-	if ( bp_is_active( 'activity' ) && bb_is_enabled_activity_schedule_posts() && bb_can_user_schedule_activity() ) :
+	if ( bp_is_active( 'activity' ) && bb_is_enabled_activity_schedule_posts() && function_exists( 'bb_can_user_schedule_activity' ) && bb_can_user_schedule_activity() ) :
 		?>
 		<# if ( false === data.edit_activity || 'scheduled' === data.activity_action_type ) { #>
 		<div class="bb-schedule-post_dropdown_section">
