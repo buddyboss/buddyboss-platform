@@ -13,7 +13,7 @@
 		"social network"
 	],
 	"homepage": "https://buddypress.org",
-	"license": "GPL-2.0+",
+	"license": "GPL-2.0-or-later",
 	"authors": [ {
 		"name": "BuddyPress Community",
 		"homepage": "https://buddypress.org/about/"
@@ -29,7 +29,7 @@
 	"require": {
 		"composer/installers": "~1.0",
 		"php": ">=5.3.0",
-		"phpunit/phpunit": "6.1.0",
+		"phpunit/phpunit": "6.1.*",
 		"php-ffmpeg/php-ffmpeg": "^0.16.0",
 		"maennchen/zipstream-php": "^2.1"
 	},
