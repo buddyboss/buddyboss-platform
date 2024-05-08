@@ -6127,10 +6127,6 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
-
-	if ( bp_is_active( 'activity' ) && class_exists( 'BB_Schedule_Posts' ) ) {
-		BB_Schedule_Posts::bb_create_activity_schedule_cron_event();
-	}
 }
 
 /**
