@@ -3687,7 +3687,10 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseAvatar( { model: this.model } ) );
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
-				this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
+
+				if( bp.Views.PostScheduleTime !== undefined ) {
+					this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
+				}
 
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
 				setTimeout(
@@ -4838,7 +4841,10 @@ window.bp = window.bp || {};
 						value: BP_Nouveau.activity.strings.discardButton
 					}
 				));
-				this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+
+				if( bp.Views.activitySchedulePost !== undefined ) {
+					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+				}
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
