@@ -87,13 +87,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow scopes/tabs.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
-		// remove_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_filter', 999 );
-
 		$args          = array();
 		$args['class'] = esc_attr( $pro_class );
 		$this->add_field( '_bb_enable_activity_schedule_posts', __( 'Schedule posts', 'buddyboss' ) . bb_get_pro_label_notice(), array( $this, 'bb_admin_setting_callback_enable_activity_schedule_posts' ), 'intval', $args );
-
-		// add_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_filter', 999 );
 
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
@@ -377,10 +373,31 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
-		?>
-		<input id="_bb_enable_activity_schedule_posts" name="_bb_enable_activity_schedule_posts" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_schedule_posts() ); ?> />
-		<label for="_bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow site owners and moderators to schedule their posts', 'buddyboss' ); ?></label>
-		<?php
+
+		if (
+			function_exists( 'bb_platform_pro' ) &&
+			version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+		) {
+			?>
+			<p class="description notification-information bb-lab-notice">
+				<?php 
+				echo sprintf(
+					wp_kses_post(
+						/* translators: BuddyBoss Pro purchase link */
+						__( 'Please update %1$s to version %2$s to use schedule posts on your site.', 'buddyboss' )
+					),
+					'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>',
+					esc_html( bb_pro_schedule_posts_version() )
+				);
+				?>
+			</p>
+			<?php
+		} else {
+			?>
+			<input id="_bb_enable_activity_schedule_posts" name="_bb_enable_activity_schedule_posts" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_schedule_posts() ); ?> />
+			<label for="_bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow site owners and moderators to schedule their posts', 'buddyboss' ); ?></label>
+			<?php
+		}
 	}
 }
 
