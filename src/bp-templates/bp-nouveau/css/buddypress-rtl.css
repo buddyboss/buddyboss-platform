@@ -8460,6 +8460,11 @@ span.dashicons.dashicons-admin-file:before {
   min-height: 1em;
 }
 
+.buddypress-wrap .activity-comments .acomment-content p a,
+.bb-media-model-wrapper .activity-comments .acomment-content p a {
+  word-break: break-all;
+}
+
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-video-wrap,
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-media-wrap,
 .bb-media-model-wrapper .activity-comments .acomment-content .bb-activity-video-wrap,
