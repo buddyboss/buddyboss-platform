@@ -3697,7 +3697,7 @@ window.bp = window.bp || {};
 				totalProgress = 0;
 			if ( dropzone.files.length == 1 ) {
 				$( dropzone.element ).addClass( 'dz-single-view' );
-				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
+				message = BP_Nouveau.video.i18n_strings.uploading + ' <strong>' + dropzone.files[0].name + '</strong>';
 				progress = dropzone.files[0].upload.progress;
 			} else {
 				$( dropzone.element ).removeClass( 'dz-single-view' );
@@ -3706,7 +3706,7 @@ window.bp = window.bp || {};
 					totalProgress += file.upload.progress;
 				});
 				progress = totalProgress / dropzone.files.length;
-				message = 'Uploading <strong>' + dropzone.files.length + ' files</strong>';
+				message = BP_Nouveau.video.i18n_strings.uploading + ' <strong>' + dropzone.files.length + ' files</strong>';
 			}
 
 			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
