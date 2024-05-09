@@ -4800,7 +4800,7 @@ window.bp = window.bp || {};
 				}
 
 				if( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
-					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
+					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity.strings.schedulePostButton ? BP_Nouveau.activity.strings.schedulePostButton : '';
 				} else {
 					this.submit.el.value = buttomText;
 				}
@@ -5544,22 +5544,24 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if ( 'scheduled' === data.activity_action_type ) {
-							var title = BP_Nouveau.activity.strings.EditSuccessScheduleTitle;
-							var desc = BP_Nouveau.activity.strings.EditSuccessScheduleDesc;
-							var LinkText = BP_Nouveau.activity.strings.EditViewSchedulePost;
+							var title = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleTitle ? BP_Nouveau.activity.strings.EditSuccessScheduleTitle : '';
+							var desc = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleDesc ? BP_Nouveau.activity.strings.EditSuccessScheduleDesc : '';
+							var LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.EditViewSchedulePost ? BP_Nouveau.activity.strings.EditViewSchedulePost : '';
 
 							if ( ! data.edit_activity ) { // It's a new scheduled post.
-								title = BP_Nouveau.activity.strings.successScheduleTitle;
-								desc = BP_Nouveau.activity.strings.successScheduleDesc;
-								LinkText = BP_Nouveau.activity.strings.viewSchedulePosts;
+								title = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleTitle ? BP_Nouveau.activity.strings.successScheduleTitle : '';
+								desc = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleDesc ? BP_Nouveau.activity.strings.successScheduleDesc : '';
+								LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.viewSchedulePosts ? BP_Nouveau.activity.strings.viewSchedulePosts : '';
 							}
 
-							Backbone.trigger( 'triggerToastMessage',
-								title,
-								'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
-								'success',
-								null,
-								true );
+							if ( '' !== title && '' !== desc && '' !== LinkText ) {
+								Backbone.trigger( 'triggerToastMessage',
+									title,
+									'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
+									'success',
+									null,
+									true );
+							}
 						}
 
 						// Display a successful feedback if the activity is not consistent with the displayed stream.
