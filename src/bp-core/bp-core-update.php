@@ -1200,7 +1200,6 @@ function bp_add_activation_redirect() {
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
-
 }
 
 /**
