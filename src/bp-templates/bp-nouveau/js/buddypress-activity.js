@@ -112,9 +112,6 @@ window.bp = window.bp || {};
 
 			// Flag to track activity pin updates
 			this.activityPinHasUpdates = false;
-
-			// Page number for scheduled activities.
-			this.scheduled_current_page = 1;
 		},
 
 		/**
@@ -139,7 +136,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'activityModalOpened', function( event, data ) {
 				var activityId = data.activityId;
-		
+
 				$( document ).on( 'click', function( event ) {
 					if (
 						$( '#activity-modal:visible' ).length > 0 &&
@@ -211,11 +208,6 @@ window.bp = window.bp || {};
 					});
 				}, 1000 );
 			}
-
-			$( '#buddypress' ).on( 'click', '.bb-view-schedule-posts, .bb-view-all-scheduled-posts', this, this.showSchedulePosts );
-
-			// Loadmore for schedule posts.
-			$( '#buddypress' ).on( 'click', '#bb-schedule-posts_modal li.load-more', this.loadMoreScheduledActivities.bind( this ) );
 		},
 
 		/**
@@ -4072,100 +4064,7 @@ window.bp = window.bp || {};
 					},
 				}
 			);
-		},
-		/**
-		 * Show scheduled activities.
-		 */
-		showSchedulePosts: function () {
-			var object = 'activity';
-
-			bp.Nouveau.Activity.scheduled_current_page = 1;
-
-			if ( $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
-				var queryData = {
-					object: object,
-					status: 'scheduled',
-					target: '#buddypress .bb-action-popup-content .schedule-posts-content',
-					template: 'schedule_activity',
-				};
-
-				if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
-					queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
-				} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
-					queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
-				}
-
-				// Populate the object list.
-				bp.Nouveau.objectRequest( queryData );
-			}
-		},
-		/**
-		 * Load more scheduled activities.
-		 */
-		loadMoreScheduledActivities: function( event ) {
-			event.preventDefault();
-			var object = 'activity',
-				targetEl = $( event.currentTarget ),
-				self = this,
-				page = ( Number( self.scheduled_current_page ) * 1 ) + 1;
-
-			if ( page > 0 && $( '#buddypress .bb-action-popup-content .schedule-posts-content' ).length ) {
-				if ( targetEl.hasClass( 'bb-page-item-deleted' ) ) {
-					targetEl.removeClass( 'bb-page-item-deleted' );
-					page = page - 1;
-				}
-				targetEl.find( 'a' ).first().addClass( 'loading' );
-				$( '#buddypress #bb-schedule-posts_modal ul.bp-list li.activity-item' ).addClass( 'bb-pre-listed-page-item' );
-				var queryData = {
-					object: object,
-					status: 'scheduled',
-					target: '#buddypress #bb-schedule-posts_modal .schedule-posts-content ul.bp-list',
-					method : 'append',
-					template: 'schedule_activity',
-					page: page,
-				};
-
-				if ( page === 1 ) {
-					queryData.method = 'reset';
-					queryData.target = '#buddypress #bb-schedule-posts_modal .schedule-posts-content';
-				}
-
-				if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
-					queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
-				} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
-					queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
-				}
-
-				// Populate the object list.
-				bp.Nouveau.objectRequest( queryData ).done(
-					function( response ) {
-						if ( true === response.success ) {
-							if ( 'undefined' !== typeof response.data.contents && '' !== response.data.contents ) {
-								var activities = $.parseHTML( response.data.contents );
-								$.each(
-									activities,
-									function( a, activity ){
-										if ( 'LI' === activity.nodeName && $( activity ).hasClass( 'activity-item' ) ) {
-											if ( $( '#' + $( activity ).prop( 'id' ) + '.bb-pre-listed-page-item' ).length ) {
-												$( '#' + $( activity ).prop( 'id' ) + '.bb-pre-listed-page-item' ).remove();
-											}
-										}
-
-									}
-								);
-							}
-							targetEl.remove();
-
-							// Update the current page.
-							self.scheduled_current_page = page;
-
-							// Replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							jQuery( window ).scroll();
-						}
-					}
-				);
-			}
-		},
+		}
 
 	};
 

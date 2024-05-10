@@ -129,28 +129,6 @@ window.bp = window.bp || {};
 				Backbone.trigger( 'onError', '<div>' + errorMessage + '</div>' );
 			} );
 
-			// View scheduled posts modal.
-			$( document ).on(
-				'click',
-				'.bb-view-scheduled-posts',
-				function() {
-					// Let closing modal know that we are opening view schedule posts modal from outside.
-					bp.Nouveau.SchedulePostView = true;
-
-					// Show post form modal.
-					jQuery( '.activity-update-form .activity-form:not(.focus-in) #whats-new' ).trigger( 'focus' );
-
-					// Open view schedule posts modal.
-					setTimeout( function() {
-						$( '.activity-form .bb-schedule-post_dropdown_button' ).trigger( 'click' );
-
-						setTimeout( function() {
-							$( '.activity-form .bb-view-schedule-posts' ).trigger( 'click' );
-						}, 0 );
-					}, 0 );
-				}
-			);
-
 			Backbone.trigger( 'mediaprivacy' );
 		},
 
@@ -4014,7 +3992,10 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseAvatar( { model: this.model } ) );
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
-				this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
+
+				if( bp.Views.PostScheduleTime !== undefined ) {
+					this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
+				}
 
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
 				setTimeout(
@@ -4324,23 +4305,6 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
 			}
-		}
-	);
-
-	bp.Views.PostScheduleTime = bp.View.extend(
-		{
-			tagName: 'div',
-			id: 'activity-schedule-section',
-			template: bp.template( 'activity-schedule-details' ),
-
-			initialize: function () {
-				this.model.on( 'change', this.render, this );
-			},
-
-			render: function () {
-				this.$el.html( this.template( this.model.attributes ) );
-				return this;
-			},
 		}
 	);
 
@@ -5141,284 +5105,10 @@ window.bp = window.bp || {};
 				}
 
 				if( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
-					this.submit.el.value = BP_Nouveau.activity.strings.schedulePostButton;
+					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity.strings.schedulePostButton ? BP_Nouveau.activity.strings.schedulePostButton : '';
 				} else {
 					this.submit.el.value = buttomText;
 				}
-			}
-		}
-	);
-
-	bp.Views.activitySchedulePost = bp.View.extend(
-		{
-			tagName: 'div',
-			id: 'bb-schedule-posts',
-			className: 'bb-schedule-posts',
-			template: bp.template( 'activity-schedule-post' ),
-
-			events: {
-				'click .bb-schedule-post_dropdown_button': 'displayOptions',
-				'click .bb-schedule-post_action': 'displayScheduleForm',
-				'click .bb-view-schedule-posts': 'displaySchedulePosts',
-				'click .bb-view-all-scheduled-posts': 'displaySchedulePosts',
-				'click #bb-schedule-posts_modal .bb-close-action-popup': 'closeSchedulePosts',
-				'click .bb-schedule-activity-cancel': 'cancelSchedulePost',
-				'click .bb-model-close-button': 'cancelSchedulePost',
-				'click .bb-schedule-activity': 'displayScheduleButton',
-				'change .bb-schedule-activity-meridian-wrap input': 'validateScheduleTime',
-				'change .bb-schedule-activity-date-field': 'validateScheduleTime',
-				'change .bb-schedule-activity-time-field': 'validateScheduleTime',
-				'click .bb-activity-schedule_edit': 'editScheduledPost',
-				'click .bb-activity-schedule_delete': 'deleteScheduledPost',
-				'click .bb-schedule-activity-clear': 'clearScheduledPost',
-			},
-
-			initialize: function () {
-				this.model.on( 'change:activity_action_type change:activity_schedule_date_raw change:activity_schedule_date change:activity_schedule_time change:activity_schedule_meridiem', this.render, this );
-			},
-
-			render: function () {
-				this.$el.html( this.template( this.model.attributes ) );
-				return this;
-			},
-
-			displayOptions: function ( event ) {
-				event.preventDefault();
-				var target = $( event.target );
-				if ( target.hasClass( 'is_scheduled' ) && target.closest( '.activity-form' ).hasClass( 'bp-activity-edit' ) ) {
-					target.closest( '.bb-schedule-posts' ).find( '.bb-schedule-post_action' ).trigger( 'click' );
-				} else {
-					target.closest( '.bb-schedule-post_dropdown_section' ).find( '.bb-schedule-post_dropdown_list' ).toggleClass( 'is_open' );
-				}
-			},
-
-			cancelSchedulePost: function ( event ) {
-				event.preventDefault();
-				var schedulePost = $( event.target ).closest( '#bb-schedule-post_form_modal' );
-				schedulePost.hide();
-			},
-
-			displayScheduleForm: function ( event ) {
-				event.preventDefault();
-				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
-				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
-				schedulePost.find( '.bb-schedule-post_modal #bb-schedule-post_form_modal' ).show();
-				if ( 'undefined' !== typeof jQuery.fn.datetimepicker ) {
-					var currentDate = new Date();
-					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-date-field' ).datetimepicker( {
-						format: 'Y-m-d',
-						timepicker: false,
-						mask: false,
-						minDate: 0,
-						maxDate: new Date( currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 90 ),
-						yearStart: currentDate.getFullYear(),
-						defaultDate: currentDate,
-						scrollMonth: false,
-						scrollTime: false,
-						scrollInput: false,
-						className: 'bb-schedule-activity-date-wrap',
-					} );
-
-					$( '.bb-schedule-post_dropdown_section .bb-schedule-activity-time-field' ).datetimepicker( {
-						datepicker: false,
-						format: 'h:i',
-						formatTime: 'h:i',
-						hours12: true,
-						step: 5,
-						className: 'bb-schedule-activity-time-picker',
-					} );
-				}
-
-				if ( $( '.bb-server-date' ).length ) {
-					$( '.bb-server-date' ).text( bp.Nouveau.bbServerTime().date );
-				}
-
-				if ( $( '.bb-server-year' ).length ) {
-					$( '.bb-server-year' ).text( bp.Nouveau.bbServerTime().year );
-				}
-
-				if ( $( '.bb-server-time' ).length ) {
-					$( '.bb-server-time' ).text( bp.Nouveau.bbServerTime().time );
-				}
-			},
-
-			displaySchedulePosts: function ( event ) {
-				event.preventDefault();
-				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
-				schedulePost.find( '.bb-schedule-post_dropdown_list' ).removeClass( 'is_open' );
-				schedulePost.find( '#bb-schedule-post_form_modal' ).hide();
-				schedulePost.find( '#bb-schedule-posts_modal' ).show();
-				schedulePost.find( '#bb-schedule-posts_modal .bb-action-popup-content:not(.bb-scrolling)' ).on( 'scroll', function () {
-					// replace dummy image with original image by faking scroll event.
-					$( window ).scroll();
-					$( this ).addClass( 'bb-scrolling' );
-				} );
-
-			},
-
-			closeSchedulePosts: function ( event ) {
-				event.preventDefault();
-				var schedulePostModal = $( event.target ).closest( '#bb-schedule-posts_modal' );
-				schedulePostModal.find( '.bb-action-popup-content' ).removeClass( 'has-content has-no-content' );
-				schedulePostModal.find( '.bb-action-popup-content .schedule-posts-content' ).removeAttr( 'style' ).html( '' );
-				schedulePostModal.hide();
-
-				// Hide post form if user came to only view schedules posts from outside.
-				if( bp.Nouveau.SchedulePostView ) {
-					$( '#activity-header .bb-model-close-button').trigger( 'click' );
-					bp.Nouveau.SchedulePostView = false;
-				}
-			},
-
-			displayScheduleButton: function ( event ) {
-				event.preventDefault();
-				var schedulePost = $( event.target ).closest( '.bb-schedule-posts' );
-				var schedulePost_time = schedulePost.find( '.bb-schedule-activity-time-field' ).val();
-				var schedulePost_date_raw = schedulePost.find( '.bb-schedule-activity-date-field' ).val();
-				var schedulePost_meridian = schedulePost.find( 'input[name="bb-schedule-activity-meridian"]:checked' ).val();
-
-				var UserDate = new Date( schedulePost_date_raw );
-				var monthName = UserDate.toLocaleString( 'en-us', { month: 'short' } );
-				var dateNumber = UserDate.getDate();
-				var schedulePost_date = monthName + ' ' + dateNumber;
-
-				// Check if time has passed and trigger warning and revert to normal post button.
-				var activity_schedule_datetime = schedulePost_date_raw + ' ' + schedulePost_time + ' ' + schedulePost_meridian;
-				var activity_schedule_date     = new Date( activity_schedule_datetime );
-				var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
-				if ( current_date > activity_schedule_date ) {
-					Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
-					// Clear Feedback after 3 sec.
-					setTimeout( function () {
-						Backbone.trigger( 'cleanFeedBack' );
-					}, 3000 );
-				} else {
-					this.model.set( 'activity_action_type', 'scheduled' );
-					this.model.set( 'activity_schedule_date_raw', schedulePost_date_raw );
-					this.model.set( 'activity_schedule_date', schedulePost_date );
-					this.model.set( 'activity_schedule_time', schedulePost_time );
-					this.model.set( 'activity_schedule_meridiem', schedulePost_meridian );
-					Backbone.trigger( 'cleanFeedBack' );
-				}
-				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
-			},
-
-			validateScheduleTime: function () {
-				if ( '' !== $( '.bb-schedule-activity-date-field' ).val() && '' !== $( '.bb-schedule-activity-time-field' ).val() ) {
-					$( '.bb-schedule-activity' ).removeAttr( 'disabled' );
-				} else {
-					$( '.bb-schedule-activity' ).attr( 'disabled', 'disabled' );
-				}
-			},
-
-			editScheduledPost: function ( event ) {
-				event.preventDefault();
-
-				var activity = $( event.target ).closest( 'li.activity-item' );
-				var target   = $( event.target );
-
-				// Edit the activity.
-				if ( target.parent().hasClass( 'bb-activity-schedule_edit' ) ) {
-					// Stop event propagation.
-					event.preventDefault();
-					var activity_data        = activity.data( 'bp-activity' );
-					var activity_URL_preview = activity.data( 'link-url' ) !== '' ? activity.data( 'link-url' ) : null;
-
-					// Set the activity schedule data.
-					if ( 'scheduled' === activity_data.status ) {
-						var activity_schedule_data = activity.data( 'bb-scheduled-time' );
-						activity_data.activity_schedule_date_raw = activity_schedule_data.date_raw;
-						activity_data.activity_schedule_date = activity_schedule_data.date;
-						activity_data.activity_schedule_time = activity_schedule_data.time;
-						activity_data.activity_schedule_meridiem = activity_schedule_data.meridiem;
-					}
-
-					if ( 'undefined' !== typeof activity_data ) {
-						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
-
-						// Check if it's a Group activity.
-						if ( target.closest( 'li' ).hasClass( 'groups' ) ) {
-							$( '#bp-nouveau-activity-form' ).addClass( 'group-activity' );
-						} else {
-							$( '#bp-nouveau-activity-form' ).removeClass( 'group-activity' );
-						}
-
-						// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
-						if ( 'undefined' !== typeof bp.Nouveau.Media && 'undefined' !== typeof bp.Nouveau.Media.Theatre && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
-							$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
-							$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
-						}
-					}
-				}
-			},
-
-			deleteScheduledPost: function ( event ) {
-				event.preventDefault();
-				var confirm_deletion = confirm( BP_Nouveau.activity.strings.confirmDeletePost );
-				var target           = $( event.target ).parent();
-				var activity         = $( event.target ).closest( 'li.activity-item' );
-				var activity_id      = activity.data( 'bp-activity-id' );
-				var schedule_posts   = $( event.target ).closest( '.schedule-posts-content' );
-
-				// Deleting or spamming.
-				if ( confirm_deletion && target.hasClass( 'bb-activity-schedule_delete' ) ) {
-					var li_parent;
-
-					target.addClass( 'loading' );
-
-					var ajaxData = {
-						action      : 'delete_scheduled_activity',
-						'id'        : activity_id,
-						'_wpnonce'  : BP_Nouveau.activity.params.scheduled_post_nonce,
-						'is_single' : target.closest( '[data-bp-single]' ).length
-					};
-
-					// Set defaults parent li to activity container.
-					li_parent = activity;
-					bp.ajax.post( ajaxData ).done(
-						function () {
-							target.removeClass( 'loading' );
-							$( li_parent ).remove();
-
-							if ( 0 === schedule_posts.find( 'li' ).length ) {
-								schedule_posts.closest( '.bb-action-popup-content' ).addClass( 'has-no-content' ).removeClass( 'has-content' );
-							}
-
-							$( document ).trigger(
-								'bb_trigger_toast_message',
-								[
-									BP_Nouveau.activity.strings.successDeletionTitle,
-									'<div>' + BP_Nouveau.activity.strings.successDeletionDesc + '</div>',
-									'delete',
-									null,
-									true
-								]
-							);
-
-							$( '#buddypress #bb-schedule-posts_modal .load-more' ).addClass( 'bb-page-item-deleted' );
-						}
-					).fail(
-						function ( response ) {
-							target.removeClass( 'loading' );
-							li_parent.prepend( response.feedback );
-							li_parent.find( '.bp-feedback' ).hide().fadeIn( 300 );
-						}
-					);
-				}
-
-			},
-
-			clearScheduledPost: function ( event ) {
-				event.preventDefault();
-
-				// Reset the schedule data and close form.
-				this.model.set( 'edit_activity', false );
-				this.model.set( 'activity_action_type', null );
-				this.model.set( 'activity_schedule_date_raw', null );
-				this.model.set( 'activity_schedule_date', null );
-				this.model.set( 'activity_schedule_time', null );
-				this.model.set( 'activity_schedule_meridiem', null );
-				$( event.target ).closest( '#bb-schedule-post_form_modal' ).hide();
 			}
 		}
 	);
@@ -5456,7 +5146,10 @@ window.bp = window.bp || {};
 						value: BP_Nouveau.activity.strings.discardButton
 					}
 				));
-				this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+
+				if( bp.Views.activitySchedulePost !== undefined ) {
+					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+				}
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
@@ -6157,22 +5850,24 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if ( 'scheduled' === data.activity_action_type ) {
-							var title = BP_Nouveau.activity.strings.EditSuccessScheduleTitle;
-							var desc = BP_Nouveau.activity.strings.EditSuccessScheduleDesc;
-							var LinkText = BP_Nouveau.activity.strings.EditViewSchedulePost;
+							var title = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleTitle ? BP_Nouveau.activity.strings.EditSuccessScheduleTitle : '';
+							var desc = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleDesc ? BP_Nouveau.activity.strings.EditSuccessScheduleDesc : '';
+							var LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.EditViewSchedulePost ? BP_Nouveau.activity.strings.EditViewSchedulePost : '';
 
 							if ( ! data.edit_activity ) { // It's a new scheduled post.
-								title = BP_Nouveau.activity.strings.successScheduleTitle;
-								desc = BP_Nouveau.activity.strings.successScheduleDesc;
-								LinkText = BP_Nouveau.activity.strings.viewSchedulePosts;
+								title = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleTitle ? BP_Nouveau.activity.strings.successScheduleTitle : '';
+								desc = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleDesc ? BP_Nouveau.activity.strings.successScheduleDesc : '';
+								LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.viewSchedulePosts ? BP_Nouveau.activity.strings.viewSchedulePosts : '';
 							}
 
-							Backbone.trigger( 'triggerToastMessage',
-								title,
-								'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
-								'success',
-								null,
-								true );
+							if ( '' !== title && '' !== desc && '' !== LinkText ) {
+								Backbone.trigger( 'triggerToastMessage',
+									title,
+									'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
+									'success',
+									null,
+									true );
+							}
 						}
 
 						// Display a successful feedback if the activity is not consistent with the displayed stream.

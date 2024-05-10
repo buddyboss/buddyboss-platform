@@ -4688,3 +4688,25 @@ function bb_video_get_published_status() {
 function bb_video_get_scheduled_status() {
 	return buddypress()->video->scheduled_status;
 }
+
+/**
+ * Return the video published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_video_get_published_status() {
+	return buddypress()->video->published_status;
+}
+
+/**
+ * Return the video scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_video_get_scheduled_status() {
+	return buddypress()->video->scheduled_status;
+}
