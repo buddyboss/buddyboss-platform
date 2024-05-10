@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, bbSchedulePostsVars */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone */
 /* @version 3.1.0 */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
@@ -386,7 +386,7 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
-			if( bbSchedulePostsVars.activity_schedule_enabled ) {
+			if( 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.activity_schedule_enabled && BP_Nouveau.activity_schedule.strings.activity_schedule_enabled ) {
 				if( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
 
 					// Set Schedule post data.
@@ -404,7 +404,7 @@ window.bp = window.bp || {};
 						var activity_schedule_date = new Date( activity_schedule_datetime );
 						var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
 						if ( current_date > activity_schedule_date ) {
-							Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+							Backbone.trigger( 'onError', 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.scheduleWarning ? BP_Nouveau.activity_schedule.strings.scheduleWarning : '', 'warning' );
 						}
 					}
 				} else if( activity_data.status === 'published' ) {
@@ -4802,7 +4802,7 @@ window.bp = window.bp || {};
 				}
 
 				if( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
-					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity.strings.schedulePostButton ? BP_Nouveau.activity.strings.schedulePostButton : '';
+					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.schedulePostButton ? BP_Nouveau.activity_schedule.strings.schedulePostButton : '';
 				} else {
 					this.submit.el.value = buttomText;
 				}
@@ -5546,14 +5546,14 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if ( 'scheduled' === data.activity_action_type ) {
-							var title = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleTitle ? BP_Nouveau.activity.strings.EditSuccessScheduleTitle : '';
-							var desc = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleDesc ? BP_Nouveau.activity.strings.EditSuccessScheduleDesc : '';
-							var LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.EditViewSchedulePost ? BP_Nouveau.activity.strings.EditViewSchedulePost : '';
+							var title = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
+							var desc = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
+							var LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.EditViewSchedulePost ? BP_Nouveau.activity_schedule.strings.EditViewSchedulePost : '';
 
 							if ( ! data.edit_activity ) { // It's a new scheduled post.
-								title = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleTitle ? BP_Nouveau.activity.strings.successScheduleTitle : '';
-								desc = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleDesc ? BP_Nouveau.activity.strings.successScheduleDesc : '';
-								LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.viewSchedulePosts ? BP_Nouveau.activity.strings.viewSchedulePosts : '';
+								title = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.successScheduleTitle ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
+								desc = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.successScheduleDesc ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
+								LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule.strings.viewSchedulePosts ? BP_Nouveau.activity_schedule.strings.viewSchedulePosts : '';
 							}
 
 							if ( '' !== title && '' !== desc && '' !== LinkText ) {
