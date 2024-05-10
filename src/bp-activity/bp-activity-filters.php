@@ -3788,14 +3788,3 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 
 	return http_build_query( $querystring );
 }
-
-/**
- * Load the class to schedule the activity post.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_activity_init_activity_schedule() {
-	BB_Activity_Schedule::instance();
-}
-
-add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
