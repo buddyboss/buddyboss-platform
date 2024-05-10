@@ -4260,25 +4260,3 @@ function bb_media_get_published_status() {
 function bb_media_get_scheduled_status() {
 	return buddypress()->media->scheduled_status;
 }
-
-/**
- * Return the media published status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_media_get_published_status() {
-	return buddypress()->media->published_status;
-}
-
-/**
- * Return the media scheduled status.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string
- */
-function bb_media_get_scheduled_status() {
-	return buddypress()->media->scheduled_status;
-}
