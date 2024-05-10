@@ -1588,6 +1588,16 @@ function bp_document_extension( $attachment_id ) {
 		$extension = ( isset( $file['extension'] ) ) ? $file['extension'] : '';
 	}
 
+	if ( '' === $extension ) {
+		// Get the extension by making a request to the file and get the content type.
+		$get = wp_remote_get( $file_url );
+		if ( ! is_wp_error( $get ) && isset( $get['headers']['content-type'] ) ) {
+			$content_type = $get['headers']['content-type'];
+			// Now get only extension from content type using php without function.
+			$extension = substr( strrchr( $content_type, '/' ), 1 );
+		}
+	}
+
 	return strtok( $extension, '?' );
 
 }
@@ -2632,7 +2642,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
-		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
+		$size_data       = image_get_intermediate_size( $attachment_document_id, $size );
 		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
 		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
 			@unlink( $attachment_path );
