@@ -1550,8 +1550,8 @@
 
 		.post-elements-buttons-item.post-emoji {
 
-			&:first-child,
-			&:nth-child(2) {
+			&[data-nth-child="1"],
+			&[data-nth-child="2"] {
 
 				.emojionearea-picker.emojionearea-picker-position-top {
 
