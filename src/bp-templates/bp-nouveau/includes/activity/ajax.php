@@ -866,7 +866,13 @@ function bp_nouveau_ajax_post_update() {
 				)
 			);
 		}
-		if ( $is_scheduled && ! bb_can_user_schedule_activity() ) {
+		if (
+			$is_scheduled &&
+			(
+				! function_exists( 'bb_can_user_schedule_activity' ) ||
+				! bb_can_user_schedule_activity()
+			)
+		) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You don\'t have access to schedule the activity.', 'buddyboss' ),
@@ -903,10 +909,13 @@ function bp_nouveau_ajax_post_update() {
 
 			if (
 				$is_scheduled &&
-				! bb_can_user_schedule_activity(
-					array(
-						'object'   => 'group',
-						'group_id' => $item_id,
+				(
+					! function_exists( 'bb_can_user_schedule_activity' ) ||
+					! bb_can_user_schedule_activity(
+						array(
+							'object'   => 'group',
+							'group_id' => $item_id,
+						)
 					)
 				)
 			) {

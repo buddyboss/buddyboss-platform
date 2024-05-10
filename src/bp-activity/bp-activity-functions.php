@@ -6127,8 +6127,6 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
-
-	bb_create_activity_schedule_cron_event();
 }
 
 /**
@@ -7169,12 +7167,9 @@ function bb_validate_activity_privacy( $args ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: false.
- *
  * @return bool true if activity schedule posts are enabled, otherwise false.
  */
-function bb_is_enabled_activity_schedule_posts( $default = false ) {
+function bb_is_enabled_activity_schedule_posts() {
 
 	/**
 	 * Filters whether activity schedule posts are enabled.
@@ -7183,56 +7178,7 @@ function bb_is_enabled_activity_schedule_posts( $default = false ) {
 	 *
 	 * @param bool $value Whether activity schedule posts are enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', (bool) bp_get_option( '_bb_enable_activity_schedule_posts', $default ) );
-}
-
-/**
- * Check whether user can schedule activity or not.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $args Array of Arguments.
- *
- * @return bool true if user can post schedule posts, otherwise false.
- */
-function bb_can_user_schedule_activity( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'user_id'  => bp_loggedin_user_id(),
-			'object'   => '',
-			'group_id' => 0,
-		)
-	);
-
-	$retval = false;
-	if (
-		bp_is_active( 'groups' ) &&
-		(
-			'group' === $r['object'] ||
-			bp_is_group()
-		) &&
-		bp_user_can( $r['user_id'], 'administrator' )
-	) {
-		$group_id = 'group' === $r['object'] && ! empty( $r['group_id'] ) ? $r['group_id'] : bp_get_current_group_id();
-		$is_admin = groups_is_user_admin( $r['user_id'], $group_id );
-		$is_mod   = groups_is_user_mod( $r['user_id'], $group_id );
-		if ( $is_admin || $is_mod ) {
-			$retval = true;
-		}
-	} elseif ( bp_user_can( $r['user_id'], 'administrator' ) ) {
-		$retval = true;
-	}
-
-	/**
-	 * Filters whether user can schedule activity posts.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool  $retval Return value for schedule post.
-	 * @param array $args   Array of Arguments.
-	 */
-	return apply_filters( 'bb_can_user_schedule_activity', $retval, $args );
+	return (bool) apply_filters( 'bb_is_enabled_activity_schedule_posts', false );
 }
 
 /**
@@ -7255,18 +7201,4 @@ function bb_get_activity_published_status() {
  */
 function bb_get_activity_scheduled_status() {
 	return buddypress()->activity->scheduled_status;
-}
-
-/**
- * Create activity schedule cron event if not exits.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_create_activity_schedule_cron_event() {
-
-	if ( class_exists( 'BB_Activity_Schedule' ) ) {
-		if ( ! wp_next_scheduled( 'bb_activity_publish' ) ) {
-			wp_schedule_event( time(), 'bb_schedule_1min', 'bb_activity_publish' );
-		}
-	}
 }
