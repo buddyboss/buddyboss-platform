@@ -3799,22 +3799,3 @@ function bb_activity_init_activity_schedule() {
 }
 
 add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
-
-/**
- * Filter to check platform pro enabled for scheduled posts.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $value Schedule posts setting value.
- * 
- * @return bool $value Filtered schedule posts setting value.
- */
-function bb_is_enabled_activity_schedule_posts_filter( $value ) {
-
-	// Return false if platform pro is disabled.
-	if ( ! function_exists( 'bb_platform_pro' ) ) {
-		$value = false;
-	}
-
-	return $value;
-}
