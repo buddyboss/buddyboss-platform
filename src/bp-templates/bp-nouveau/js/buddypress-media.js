@@ -313,7 +313,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bp-media-create-popup-album-submit', this.submitCreateAlbumInPopup.bind( this ) );
 
 			// Activity More Option Dropdown if Activity component is deactivated.
-			if ( typeof bp.Nouveau.Activity === 'undefined' ) {
+			if ( 'undefined' === typeof bp.Nouveau.Activity ) {
 				$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 			}
 			// Group Messages.
