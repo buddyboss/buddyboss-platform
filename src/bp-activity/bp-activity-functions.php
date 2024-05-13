@@ -7204,9 +7204,11 @@ function bb_get_activity_scheduled_status() {
 }
 
 /**
- * Update the activity media scheduled status to publish on clearing schedule.
+ * Update the activity media scheduled status to published on clearing schedule.
  *
  * @since BuddyBoss [BBVERSION]
+ * 
+ * @param array $media_ids Array for media ids.
  */
 function bb_activity_edit_update_media_status( $media_ids ) {
 	global $bp_activity_edit, $bp_activity_post_update_id;
@@ -7219,17 +7221,22 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 		) &&
 		! empty( $media_ids ) &&
 		! empty( $bp_activity_post_update_id ) &&
+		function_exists( 'bb_get_activity_scheduled_status' ) &&
 		function_exists( 'bb_get_activity_published_status' ) &&
+		function_exists( 'bb_media_get_scheduled_status' ) &&
 		function_exists( 'bb_media_get_published_status' ) &&
 		empty( $_POST['activity_action_type'] ) &&
 		bb_is_enabled_activity_schedule_posts()
 	) {
 		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
-		if ( 'activity_comment' !== $main_activity->type && bb_get_activity_scheduled_status() !== $main_activity->status ) {
+		if (
+			'comment' !== $main_activity->privacy &&
+			'activity_comment' !== $main_activity->type &&
+			bb_get_activity_scheduled_status() !== $main_activity->status
+		) {
 			foreach( $media_ids as $media_id ) {
 				$media = new BP_Media( $media_id );
 				if (
-					'comment' !== $main_activity->privacy &&
 					bb_media_get_scheduled_status() === $media->status &&
 					! empty( $media->id ) && ! empty( $media->activity_id ) 
 				) {
@@ -7240,6 +7247,108 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 					if ( ! empty( $media_activity->id ) ) {
 						$media_activity->status = bb_get_activity_published_status();
 						$media_activity->save();
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Update the activity video scheduled status to published on clearing schedule.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param array $video_ids Array for video ids.
+ */
+function bb_activity_edit_update_video_status( $video_ids ) {
+	global $bp_activity_edit, $bp_activity_post_update_id;
+
+	if (
+		bp_is_active( 'video' ) &&
+		(
+			true === $bp_activity_edit ||
+			! empty( $_POST['edit'] )
+		) &&
+		! empty( $video_ids ) &&
+		! empty( $bp_activity_post_update_id ) &&
+		function_exists( 'bb_get_activity_scheduled_status' ) &&
+		function_exists( 'bb_get_activity_published_status' ) &&
+		function_exists( 'bb_video_get_scheduled_status' ) &&
+		function_exists( 'bb_video_get_published_status' ) &&
+		empty( $_POST['activity_action_type'] ) &&
+		bb_is_enabled_activity_schedule_posts()
+	) {
+		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
+		if (
+			'comment' !== $main_activity->privacy &&
+			'activity_comment' !== $main_activity->type &&
+			bb_get_activity_scheduled_status() !== $main_activity->status
+		) {
+			foreach( $video_ids as $video_id ) {
+				$video = new BP_Video( $video_id );
+				if (
+					bb_video_get_scheduled_status() === $video->status &&
+					! empty( $video->id ) && ! empty( $video->activity_id ) 
+				) {
+					$video->status = bb_video_get_published_status();
+					$video->save();
+
+					$video_activity = new BP_Activity_Activity( $video->activity_id );
+					if ( ! empty( $video_activity->id ) ) {
+						$video_activity->status = bb_get_activity_published_status();
+						$video_activity->save();
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Update the activity document scheduled status to published on clearing schedule.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @param array $document_ids Array for document ids.
+ */
+function bb_activity_edit_update_document_status( $document_ids ) {
+	global $bp_activity_edit, $bp_activity_post_update_id;
+
+	if (
+		bp_is_active( 'document' ) &&
+		(
+			true === $bp_activity_edit ||
+			! empty( $_POST['edit'] )
+		) &&
+		! empty( $document_ids ) &&
+		! empty( $bp_activity_post_update_id ) &&
+		function_exists( 'bb_get_activity_scheduled_status' ) &&
+		function_exists( 'bb_get_activity_published_status' ) &&
+		function_exists( 'bb_document_get_scheduled_status' ) &&
+		function_exists( 'bb_document_get_published_status' ) &&
+		empty( $_POST['activity_action_type'] ) &&
+		bb_is_enabled_activity_schedule_posts()
+	) {
+		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
+		if ( 
+			'comment' !== $main_activity->privacy &&
+			'activity_comment' !== $main_activity->type &&
+			bb_get_activity_scheduled_status() !== $main_activity->status
+		) {
+			foreach( $document_ids as $document_id ) {
+				$document = new BP_Document( $document_id );
+				if (
+					bb_document_get_scheduled_status() === $document->status &&
+					! empty( $document->id ) && ! empty( $document->activity_id ) 
+				) {
+					$document->status = bb_document_get_published_status();
+					$document->save();
+
+					$document_activity = new BP_Activity_Activity( $document->activity_id );
+					if ( ! empty( $document_activity->id ) ) {
+						$document_activity->status = bb_get_activity_published_status();
+						$document_activity->save();
 					}
 				}
 			}
