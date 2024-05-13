@@ -141,7 +141,8 @@ window.bp = window.bp || {};
 					if (
 						$( '#activity-modal:visible' ).length > 0 &&
 						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
-						! $( event.target ).closest( '#activity-modal' ).length
+						! $( event.target ).closest( '#activity-modal' ).length &&
+						! $( event.target ).closest( '.gif-media-search-dropdown-standalone' ).length
 					) {
 						this.closeActivity( event );
 						this.activitySyncOnModalClose( event, activityId );
