@@ -47,4 +47,9 @@
 			</div>
 		</div>
 	<?php endif; ?>
+	<div class="post-elements-buttons-item post-poll">
+		<a href="#" id="activity-poll-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Add Poll', 'buddyboss' ); ?>">
+			<i class="bb-icon-l bb-icon-poll"></i>
+		</a>
+	</div>
 </script>
