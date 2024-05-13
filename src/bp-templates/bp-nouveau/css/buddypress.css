@@ -8798,7 +8798,7 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
 
 @media screen and (max-width: 400px) {
   form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
-    margin-right: 3px;
+    margin-right: 1px;
   }
 }
 
@@ -9014,6 +9014,47 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 }
 
 @media screen and (max-width: 405px) {
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap {
+    float: left;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap {
+    margin-left: 5px;
+  }
+  #buddypress body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel, #buddypress
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel, #buddypress
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel {
+    margin-left: 10px;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar {
+    position: static;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-textarea,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-textarea,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-textarea {
+    padding: 0 5px;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-content,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-content {
+    padding-right: 0;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+    margin-right: 0;
+  }
+  .buddypress-wrap .activity-comments.threaded-level-4 ul > li > ul > li > ul > li > ul > li .acomment_inner .acomment-content_block, .buddypress-wrap .activity-comments.threaded-level-5 ul > li > ul > li > ul > li > ul > li .acomment_inner .acomment-content_block, .buddypress-wrap .activity-comments.threaded-level-6 ul > li > ul > li > ul > li > ul > li .acomment_inner .acomment-content_block {
+    min-width: 140px;
+  }
   .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
   .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
   .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
