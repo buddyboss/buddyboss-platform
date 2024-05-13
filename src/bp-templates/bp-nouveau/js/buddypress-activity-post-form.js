@@ -438,28 +438,30 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
-			if( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
+			if ( 'undefined' !== typeof BP_Nouveau.activity_schedule && BP_Nouveau.activity_schedule.strings.activity_schedule_enabled ) {
+				if ( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
 
-				// Set Schedule post data.
-				self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
-				self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
-				self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
-				self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+					// Set Schedule post data.
+					self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
+					self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
+					self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
+					self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
 
-				if( 'scheduled' === activity_data.status ) {
-					self.postForm.model.set( 'activity_action_type', activity_data.status );
-				} else {
-					self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
-					// Check if time has passed and trigger warning.
-					var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
-					var activity_schedule_date = new Date( activity_schedule_datetime );
-					var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
-					if ( current_date > activity_schedule_date ) {
-						Backbone.trigger( 'onError', BP_Nouveau.activity.strings.scheduleWarning, 'warning' );
+					if ( 'scheduled' === activity_data.status ) {
+						self.postForm.model.set( 'activity_action_type', activity_data.status );
+					} else {
+						self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
+						// Check if time has passed and trigger warning.
+						var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
+						var activity_schedule_date = new Date( activity_schedule_datetime );
+						var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+						if ( current_date > activity_schedule_date ) {
+							Backbone.trigger( 'onError', 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.scheduleWarning : '', 'warning' );
+						}
 					}
+				} else if ( 'published' === activity_data.status ) {
+					self.postForm.$el.addClass( 'hide-schedule-button' );
 				}
-			} else if( activity_data.status === 'published' ) {
-				self.postForm.$el.addClass( 'hide-schedule-button' );
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
@@ -3993,7 +3995,7 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
 
-				if( bp.Views.PostScheduleTime !== undefined ) {
+				if ( undefined !== bp.Views.PostScheduleTime ) {
 					this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
 				}
 
@@ -5046,7 +5048,7 @@ window.bp = window.bp || {};
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
-				if( 'scheduled' === this.model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
+				if ( 'scheduled' === this.model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
@@ -5104,8 +5106,8 @@ window.bp = window.bp || {};
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
 
-				if( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
-					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity.strings.schedulePostButton ? BP_Nouveau.activity.strings.schedulePostButton : '';
+				if ( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
+					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.schedulePostButton : '';
 				} else {
 					this.submit.el.value = buttomText;
 				}
@@ -5145,7 +5147,7 @@ window.bp = window.bp || {};
 						name: 'discard-draft-activity',
 						value: BP_Nouveau.activity.strings.discardButton
 					}
-				));
+				) );
 
 				if( bp.Views.activitySchedulePost !== undefined ) {
 					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
@@ -5191,7 +5193,7 @@ window.bp = window.bp || {};
 				this.listenTo(Backbone, 'onError', this.onError);
 				this.listenTo(Backbone, 'cleanFeedBack', this.cleanFeedback);
 
-				this.listenTo(Backbone, 'triggerToastMessage', this.triggerToastMessage);
+				this.listenTo( Backbone, 'triggerToastMessage', this.triggerToastMessage );
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
@@ -5850,14 +5852,14 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if ( 'scheduled' === data.activity_action_type ) {
-							var title = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleTitle ? BP_Nouveau.activity.strings.EditSuccessScheduleTitle : '';
-							var desc = 'undefined' !== typeof BP_Nouveau.activity.strings.EditSuccessScheduleDesc ? BP_Nouveau.activity.strings.EditSuccessScheduleDesc : '';
-							var LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.EditViewSchedulePost ? BP_Nouveau.activity.strings.EditViewSchedulePost : '';
+							var title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
+							var desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
+							var LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditViewSchedulePost : '';
 
 							if ( ! data.edit_activity ) { // It's a new scheduled post.
-								title = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleTitle ? BP_Nouveau.activity.strings.successScheduleTitle : '';
-								desc = 'undefined' !== typeof BP_Nouveau.activity.strings.successScheduleDesc ? BP_Nouveau.activity.strings.successScheduleDesc : '';
-								LinkText = 'undefined' !== typeof BP_Nouveau.activity.strings.viewSchedulePosts ? BP_Nouveau.activity.strings.viewSchedulePosts : '';
+								title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
+								desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
+								LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.viewSchedulePosts : '';
 							}
 
 							if ( '' !== title && '' !== desc && '' !== LinkText ) {
@@ -5884,7 +5886,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-form' ).addClass( 'bottom-notice' );
 
 							// Edit activity.
-						} else if ( edit && data.activity_action_type !== 'scheduled' && $( '#activity-' + response.id ).length ) {
+						} else if ( edit && 'scheduled' !== data.activity_action_type && $( '#activity-' + response.id ).length ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
 
 							// Extract value of data-bp-activity

@@ -7202,3 +7202,47 @@ function bb_get_activity_published_status() {
 function bb_get_activity_scheduled_status() {
 	return buddypress()->activity->scheduled_status;
 }
+
+/**
+ * Update the activity media scheduled status to publish on clearing schedule.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_edit_update_media_status( $media_ids ) {
+	global $bp_activity_edit, $bp_activity_post_update_id;
+
+	if (
+		bp_is_active( 'media' ) &&
+		(
+			true === $bp_activity_edit ||
+			! empty( $_POST['edit'] )
+		) &&
+		! empty( $media_ids ) &&
+		! empty( $bp_activity_post_update_id ) &&
+		function_exists( 'bb_get_activity_published_status' ) &&
+		function_exists( 'bb_media_get_published_status' ) &&
+		empty( $_POST['activity_action_type'] ) &&
+		bb_is_enabled_activity_schedule_posts()
+	) {
+		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
+		if ( 'activity_comment' !== $main_activity->type && bb_get_activity_scheduled_status() !== $main_activity->status ) {
+			foreach( $media_ids as $media_id ) {
+				$media = new BP_Media( $media_id );
+				if (
+					'comment' !== $main_activity->privacy &&
+					bb_media_get_scheduled_status() === $media->status &&
+					! empty( $media->id ) && ! empty( $media->activity_id ) 
+				) {
+					$media->status = bb_media_get_published_status();
+					$media->save();
+
+					$media_activity = new BP_Activity_Activity( $media->activity_id );
+					if ( ! empty( $media_activity->id ) ) {
+						$media_activity->status = bb_get_activity_published_status();
+						$media_activity->save();
+					}
+				}
+			}
+		}
+	}
+}

@@ -2193,6 +2193,8 @@ function bp_activity_edit_update_media( $media_ids ) {
 				}
 			}
 		}
+
+		bb_activity_edit_update_media_status( $media_ids );
 	}
 
 	return $media_ids;
