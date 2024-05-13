@@ -118,8 +118,8 @@ function bp_nouveau_ajax_object_template_loader() {
 			$template_part = 'members/single/notifications/notifications-loop.php';
 			break;
 
-		case 'schedule_activity':
-			$template_part = 'schedule-activity/schedule-activity-loop.php';
+		case 'activity_schedule':
+			$template_part = 'activity-schedule/activity-schedule-loop.php';
 			break;
 
 		default:

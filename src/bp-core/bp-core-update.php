@@ -487,10 +487,6 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
-		if ( $raw_db_version < 21101 ) {
-			bb_update_to_2_6_00();
-		}
-
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -1204,7 +1200,6 @@ function bp_add_activation_redirect() {
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
-
 }
 
 /**
@@ -3497,59 +3492,4 @@ function bb_update_to_2_5_80() {
 	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
 	bp_update_option( 'bb_ajax_request_page_load', 2 );
 	bp_update_option( 'bb_load_activity_per_request', 10 );
-}
-
-/**
- * Create a new column in database tables.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_2_6_00() {
-	global $wpdb;
-	$bp_prefix = bp_core_get_table_prefix();
-
-	// Check if the 'bp_activity' table exists.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
-	if ( $table_exists ) {
-
-		// Add 'status' column in 'bp_activity' table.
-		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_activity' AND column_name = 'status'" ); //phpcs:ignore
-		if ( empty( $row ) ) {
-			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
-		}
-	}
-
-	// Check if the 'bp_media' table exists.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_media'" );
-	if ( $table_exists ) {
-
-		// Add 'status' column in 'bp_media' table.
-		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_media' AND column_name = 'status'" ); //phpcs:ignore
-
-		if ( empty( $row ) ) {
-			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_media ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
-		}
-	}
-
-	// Check if the 'bp_document' table exists.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_document'" );
-	if ( $table_exists ) {
-
-		// Add 'status' column in 'bp_document' table.
-		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_document' AND column_name = 'status'" ); //phpcs:ignore
-
-		if ( empty( $row ) ) {
-			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
-		}
-	}
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
 }
