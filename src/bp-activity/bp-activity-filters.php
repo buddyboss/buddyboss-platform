@@ -2611,6 +2611,8 @@ function bp_activity_edit_update_document( $document_ids ) {
 				}
 			}
 		}
+
+		bb_activity_edit_update_document_status( $document_ids );
 	}
 
 	return $document_ids;
@@ -3306,6 +3308,8 @@ function bp_activity_edit_update_video( $video_ids ) {
 				}
 			}
 		}
+
+		bb_activity_edit_update_video_status( $video_ids );
 	}
 
 	return $video_ids;
