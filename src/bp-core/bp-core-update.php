@@ -3499,6 +3499,7 @@ function bb_update_to_2_5_80() {
 }
 
 /**
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
  * Remove symlinks of media, documents and videos.
  *
  * @since BuddyBoss [BBVERSION]
@@ -3506,6 +3507,11 @@ function bb_update_to_2_5_80() {
  * @return void
  */
 function bb_update_to_2_6_10() {
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	if ( function_exists( 'bp_media_symlink_path' ) ) {
 		$media_symlinks_path = bp_media_symlink_path();
 		bb_remove_symlinks( $media_symlinks_path );
@@ -3551,7 +3557,7 @@ function bb_remove_symlinks( $folder_path ) {
 				unlink( $entry_path );
 			}
 		}
-		// Close the folder handle
+		// Close the folder handle.
 		closedir( $handle );
 	}
 }
