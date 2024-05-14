@@ -4695,11 +4695,20 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .activity-list .emojionearea .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
-  right: 82px;
+  right: 142px;
 }
 
 .activity-list .emojionearea-button.active + .emojionearea-picker-position-top {
-  right: -80px;
+  right: -140px;
+}
+
+@media screen and (max-width: 540px) {
+  .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="1"] .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after, .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="2"] .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
+    right: 192px;
+  }
+  .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="1"] .emojionearea-button.active + .emojionearea-picker-position-top, .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="2"] .emojionearea-button.active + .emojionearea-picker-position-top {
+    right: -190px;
+  }
 }
 
 .activity-list .gif-media-search-dropdown {
@@ -5088,11 +5097,12 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   max-height: 280px;
 }
 
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a,
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a img,
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
-.bb-is-mobile.bb-reactions-mode .bp-generic-meta .generic-button a > * {
+.bb-is-mobile .bp-generic-meta .generic-button a,
+.bb-is-mobile .bp-generic-meta .generic-button a img,
+.bb-is-mobile .bp-generic-meta .ac-emotions_list .ac-emotion_item a > *,
+.bb-is-mobile .bp-generic-meta .generic-button a > * {
   -webkit-touch-callout: none !important;
+  -webkit-user-drag: none;
 }
 
 .bb-is-mobile.bb-reactions-mode.activity * {
@@ -8707,7 +8717,7 @@ form.ac-form .ac-reply-content .ac-submit-wrap {
 
 @media screen and (max-width: 400px) {
   form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
-    margin-right: 3px;
+    margin-right: 1px;
   }
 }
 
@@ -8922,7 +8932,48 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   pointer-events: none;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 405px) {
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap {
+    float: left;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap {
+    margin-left: 5px;
+  }
+  #buddypress body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel, #buddypress
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel, #buddypress
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel {
+    margin-left: 10px;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-textarea .ac-reply-toolbar {
+    position: static;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-textarea,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-textarea,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-textarea {
+    padding: 0 5px;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-content,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-content {
+    padding-right: 0;
+  }
+  body:not(.acomments-modal-open) .activity-item .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
+  body:not(.acomments-modal-open) .activity-item .threaded-level-6 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+    margin-right: 0;
+  }
+  .buddypress-wrap .activity-comments.threaded-level-4 ul > li > ul > li > ul > li > ul > li .acomment_inner .acomment-content_block, .buddypress-wrap .activity-comments.threaded-level-5 ul > li > ul > li > ul > li > ul > li .acomment_inner .acomment-content_block, .buddypress-wrap .activity-comments.threaded-level-6 ul > li > ul > li > ul > li > ul > li .acomment_inner .acomment-content_block {
+    min-width: 140px;
+  }
   .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
   .activity-modal .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-submit-wrap,
   .activity-modal .threaded-level-5 ul > li > ul > li > ul > li form.ac-form .ac-reply-cancel,
@@ -8958,7 +9009,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   margin-right: 5px;
 }
 
-@media screen and (min-width: 1024px), screen and (max-width: 450px) {
+@media screen and (min-width: 1024px) {
   .bb-media-model-container .threaded-level-3 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
   .bb-media-model-container .threaded-level-3 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-submit-wrap,
   .bb-media-model-container .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
@@ -8968,6 +9019,27 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   .bb-media-model-container .threaded-level-3 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar,
   .bb-media-model-container .threaded-level-4 ul > li > ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
     position: static;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-submit-wrap,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-reply-cancel,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-submit-wrap {
+    float: left;
+  }
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    position: static;
+  }
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+    flex-flow: wrap;
+  }
+  .bb-media-model-container .threaded-level-3 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item,
+  .bb-media-model-container .threaded-level-4 ul > li > ul > li form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+    margin-right: 2px;
   }
 }
 
@@ -13065,7 +13137,7 @@ input#send-to-input {
   padding: 10px 10px 10px 0;
   min-width: 30px;
   border: 0;
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
