@@ -3529,7 +3529,7 @@ function bb_update_to_2_6_10() {
 		bb_remove_symlinks( $video_symlinks_path );
 	}
 
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->prefix;
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// Check if the 'bp_activity' table exists.
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
