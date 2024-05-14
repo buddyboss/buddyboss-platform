@@ -2256,10 +2256,10 @@ class BP_Activity_Activity {
 		if ( 'activity' === $activity->component && 0 === $activity->item_id && 0 === $activity->secondary_item_id ) {
 			// Condition for activity feed comments.
 			$all_child_count_condition = "a.item_id = $comment_id";
-		} else if (
+		} elseif (
 			'activity' === $activity->component &&
 			'activity_update' === $activity->type &&
-			in_array( $activity->privacy, [ 'media', 'video', 'document' ] ) && 
+			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
 			0 === $activity->item_id &&
 			0 !== $activity->secondary_item_id
 		) {
@@ -2277,13 +2277,15 @@ class BP_Activity_Activity {
 		}
 
 		// Select conditions.
-		$select_sql = 'SELECT SUM( CASE WHEN ( ' . $all_child_count_condition . ' ) THEN 1 ELSE 0 END ) AS all_child_count,
-					SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+		$select_sql = 'SELECT
+			COUNT(*) AS all_child_count,
+			SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
 
 		$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
 
 		// Where conditions.
 		$where_conditions           = array();
+		$where_conditions[]         = $all_child_count_condition;
 		$where_conditions['a.type'] = "a.type = 'activity_comment'";
 
 		if ( ! empty( $args['spam'] ) ) {
