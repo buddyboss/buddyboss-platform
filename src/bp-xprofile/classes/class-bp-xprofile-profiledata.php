@@ -244,15 +244,15 @@ class BP_XProfile_ProfileData {
 		do_action_ref_array( 'xprofile_data_before_save', array( $this ) );
 
 		if ( $this->is_valid_field() ) {
+			$table = bp_core_get_table_prefix() . 'bp_xprofile_data';
 			if ( $this->exists() && strlen( trim( $this->value ) ) ) {
-				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_data} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
+				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
 
 			} elseif ( $this->exists() && empty( $this->value ) ) {
 				// Data removed, delete the entry.
 				$result = $this->delete();
 
 			} else {
-				$table    = bp_core_get_table_prefix() . 'bp_xprofile_data';
 				$result   = $wpdb->query( $wpdb->prepare( "INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated ) );
 				$this->id = $wpdb->insert_id;
 			}
