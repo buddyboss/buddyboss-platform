@@ -160,8 +160,12 @@ function bp_core_screen_signup() {
 							</div>',
 							__( 'This is a required field.', 'buddyboss' )
 						);
-					} else {                    // Validate xprofile
+					} else {
+						// Validate xprofile.
 						if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) {
+							if ( is_array( $message ) ) {
+								$message = implode( '<br>', $message ) . '</br>';
+							}
 							$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
 								'<div class="bp-messages bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
