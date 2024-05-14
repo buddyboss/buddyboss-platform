@@ -4018,6 +4018,9 @@ window.bp = window.bp || {};
 		},
 
 		initializeEmojioneArea: function ( isModal, parentSelector, activityId ) {
+			if( ! $.fn.emojioneArea ) {
+				return;
+			}
 			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
 				{
 					standalone: true,
