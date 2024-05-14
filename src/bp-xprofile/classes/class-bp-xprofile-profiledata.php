@@ -517,7 +517,7 @@ class BP_XProfile_ProfileData {
 		// Prime caches.
 		if ( ! empty( $uncached_ids ) ) {
 			$uncached_ids_sql = implode( ',', $uncached_ids );
-			$table            = $bp->profile->table_name_data;
+			$table            = bp_core_get_table_prefix() . 'bp_xprofile_data';
 			$queried_data     = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, field_id, value, last_updated FROM {$table} WHERE field_id = %d AND user_id IN ({$uncached_ids_sql})", $field_id ) );
 
 			// Rekey.
