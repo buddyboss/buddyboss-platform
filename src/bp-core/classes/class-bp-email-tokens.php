@@ -2621,7 +2621,7 @@ class BP_Email_Tokens {
 			$media_wrap_style    = 'padding: 15px 0; width:100%; max-width: 250px; height: 200px;';
 			$video_wrap_style    = 'padding: 15px 0; width: 250px;';
 			$document_wrap_style = 'padding: 15px 0 15px 0;';
-			$media_elem_style    = 'width: 100%: max-width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;';
+			$media_elem_style    = 'width: 100%; max-width: 250px; vertical-align: top; height: 200px; overflow: hidden;padding:0;';
 
 			$is_mentioned = false;
 			if ( 'mentioned' === $type ) {
