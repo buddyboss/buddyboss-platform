@@ -3149,14 +3149,20 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_activity_remove_lazyload( $content, $activity, $preview = false ) {
 
+		$activity_item_id = $activity->item_id;
+
+		if ( 'groups' === $activity->component ) {
+			$activity_item_id = $activity->secondary_item_id;
+		}
+		
 		// Generate link preview for the forums.
 		if (
 			bp_is_active( 'forums' ) &&
 			in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) &&
-			! empty( $activity->item_id ) &&
+			! empty( $activity_item_id ) &&
 			true === $preview
 		) {
-			$post_id    = $activity->item_id;
+			$post_id    = $activity_item_id;
 			$link_embed = get_post_meta( $post_id, '_link_embed', true );
 			if ( ! empty( $link_embed ) ) {
 				if ( bbp_is_reply( $post_id ) ) {
