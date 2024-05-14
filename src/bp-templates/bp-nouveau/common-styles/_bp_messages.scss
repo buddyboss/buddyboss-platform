@@ -1107,7 +1107,7 @@ input#send-to-input {
 				padding: 10px 10px 10px 0;
 				min-width: 30px;
 				border: 0;
-				background-color: transparent;
+				background-color: transparent !important;
 
 				&.medium-editor-button-active {
 					background: none transparent;
