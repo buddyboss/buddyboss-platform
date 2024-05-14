@@ -341,7 +341,7 @@ form.ac-form {
 			.ac-textarea .ac-reply-toolbar {
 
 				.post-elements-buttons-item {
-					margin-right: 3px;
+					margin-right: 1px;
 				}
 			}
 		}
@@ -579,7 +579,71 @@ form.ac-form {
 	}
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 405px) {
+
+	body:not(.acomments-modal-open) {
+
+		.activity-item {
+
+			.threaded-level-4,
+			.threaded-level-5,
+			.threaded-level-6 {
+
+				ul > li > ul > li > ul > li {
+
+					form.ac-form {
+
+						.ac-reply-cancel,
+						.ac-submit-wrap {
+							float: left;
+						}
+
+						.ac-submit-wrap {
+							margin-left: 5px;
+						}
+
+						.ac-reply-cancel {
+
+							#buddypress & {
+								margin-left: 10px;
+							}
+						}
+
+						.ac-textarea .ac-reply-toolbar {
+							position: static;
+						}
+
+						.ac-textarea {
+							padding: 0 5px;
+						}
+
+						.ac-reply-content {
+							padding-right: 0;
+
+							.ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+								margin-right: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.buddypress-wrap .activity-comments {
+
+		&.threaded-level-4,
+		&.threaded-level-5,
+		&.threaded-level-6 {
+
+			ul > li > ul > li > ul > li > ul > li {
+
+				.acomment_inner .acomment-content_block {
+					min-width: 140px;
+				}
+			}
+		}
+	}
 
 	.activity-modal {
 
@@ -647,7 +711,7 @@ form.ac-form {
 
 				.ac-reply-content {
 
-					@media screen and (min-width: 1024px), screen and (max-width: 450px) {
+					@media screen and (min-width: 1024px) {
 
 						.ac-reply-cancel,
 						.ac-submit-wrap {
@@ -656,6 +720,35 @@ form.ac-form {
 
 						.ac-textarea .ac-reply-toolbar {
 							position: static;
+						}
+					}
+				}
+			}
+		}
+
+		ul > li > ul > li {
+
+			form.ac-form {
+
+				.ac-reply-content {
+
+					@media screen and (max-width: 450px) {
+
+						.ac-reply-cancel,
+						.ac-submit-wrap {
+							float: left;
+						}
+
+						.ac-textarea .ac-reply-toolbar {
+							position: static;
+						}
+
+						.ac-textarea .ac-reply-toolbar {
+							flex-flow: wrap;
+						}
+
+						.ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+							margin-right: 2px;
 						}
 					}
 				}
