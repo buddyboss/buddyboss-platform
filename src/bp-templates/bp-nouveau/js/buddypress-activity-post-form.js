@@ -4790,6 +4790,10 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
+				// Add BB Poll View
+				// Poll_TODO: Add condition to check if poll is enabled
+				this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
