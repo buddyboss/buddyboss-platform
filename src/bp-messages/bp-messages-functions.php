@@ -940,8 +940,6 @@ function messages_notification_new_message( $raw_args = array() ) {
 		return;
 	}
 
-	$sender_name = bp_core_get_user_displayname( $sender_id );
-
 	if ( ! isset( $message ) ) {
 		$message = '';
 	}
@@ -958,6 +956,8 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
+
+		$sender_name = bp_core_get_user_displayname( $sender_id, $recipient->user_id );
 
 		if ( $sender_id == $recipient->user_id || false === bb_is_notification_enabled( $recipient->user_id, $type_key ) ) {
 			continue;
@@ -2015,7 +2015,7 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 
 		if ( in_array( $email_type, array( 'messages-unread', 'group-message-email' ), true ) ) {
 			$messages    = current( $messages );
-			$sender_name = bp_core_get_user_displayname( $messages['sender_id'] );
+			$sender_name = bp_core_get_user_displayname( $messages['sender_id'], $recipients_id );
 
 			$tokens['message_id']  = $messages['message_id'];
 			$tokens['usermessage'] = stripslashes( $messages['message'] );
