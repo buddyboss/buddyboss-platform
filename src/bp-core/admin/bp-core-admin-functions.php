@@ -3393,6 +3393,8 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		return $retval[ $type ];
 	}
 
+	$bb_pro_notice = '';
+
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',

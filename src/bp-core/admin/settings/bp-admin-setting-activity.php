@@ -90,7 +90,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$args          = array();
 		$args['class'] = esc_attr( $pro_class );
 
-		$this->add_field( '_bb_enable_activity_schedule_posts', __( 'Schedule posts', 'buddyboss' ) . bb_get_pro_label_notice( 'schedule_posts' ), array( $this, 'bb_admin_setting_callback_enable_activity_schedule_posts' ), 'intval', $args );
+		$schedule_posts_pro_notice = bb_get_pro_label_notice( 'schedule_posts' );
+		$schedule_posts_field_name = empty( $schedule_posts_pro_notice ) ? '_bb_enable_activity_schedule_posts' : '';
+		$this->add_field( $schedule_posts_field_name, __( 'Schedule posts', 'buddyboss' ) . $schedule_posts_pro_notice, array( $this, 'bb_admin_setting_callback_enable_activity_schedule_posts' ), 'intval', $args );
 
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
@@ -374,7 +376,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
-		echo $notice = bb_get_pro_label_notice( 'schedule_posts' );
+		$notice = bb_get_pro_label_notice( 'schedule_posts' );
 		?>
 			<input id="bb_enable_activity_schedule_posts" name="<?php echo empty( $notice ) ? '_bb_enable_activity_schedule_posts' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( bb_is_enabled_activity_schedule_posts(), true, false ) : ''; ?> />
 			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow site owners and moderators to schedule their posts', 'buddyboss' ); ?></label>
