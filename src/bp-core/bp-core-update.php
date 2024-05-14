@@ -487,8 +487,8 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
-		if ( $raw_db_version < 21091 ) {
-			bb_update_to_2_6_0();
+		if ( $raw_db_version < 21111 ) {
+			bb_update_to_2_6_10();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3505,7 +3505,7 @@ function bb_update_to_2_5_80() {
  *
  * @return void
  */
-function bb_update_to_2_6_0() {
+function bb_update_to_2_6_10() {
 	if ( function_exists( 'bp_media_symlink_path' ) ) {
 		$media_symlinks_path = bp_media_symlink_path();
 		bb_remove_symlinks( $media_symlinks_path );
