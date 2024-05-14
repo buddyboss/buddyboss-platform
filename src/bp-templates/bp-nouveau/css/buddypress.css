@@ -4695,11 +4695,20 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 }
 
 .activity-list .emojionearea .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
-  right: 82px;
+  right: 142px;
 }
 
 .activity-list .emojionearea-button.active + .emojionearea-picker-position-top {
-  right: -80px;
+  right: -140px;
+}
+
+@media screen and (max-width: 540px) {
+  .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="1"] .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after, .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="2"] .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
+    right: 192px;
+  }
+  .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="1"] .emojionearea-button.active + .emojionearea-picker-position-top, .activity-list .post-elements-buttons-item.post-emoji[data-nth-child="2"] .emojionearea-button.active + .emojionearea-picker-position-top {
+    right: -190px;
+  }
 }
 
 .activity-list .gif-media-search-dropdown {
