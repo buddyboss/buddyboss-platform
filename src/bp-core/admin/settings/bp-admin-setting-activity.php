@@ -378,7 +378,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Allow schedule activity posts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 */
 	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
 		$notice = bb_get_pro_label_notice( 'schedule_posts' );

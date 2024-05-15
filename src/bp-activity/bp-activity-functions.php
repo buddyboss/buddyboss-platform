@@ -7165,7 +7165,7 @@ function bb_validate_activity_privacy( $args ) {
 /**
  * Check whether activity schedule posts are enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return bool true if activity schedule posts are enabled, otherwise false.
  */
@@ -7174,7 +7174,7 @@ function bb_is_enabled_activity_schedule_posts() {
 	/**
 	 * Filters whether activity schedule posts are enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param bool $value Whether activity schedule posts are enabled.
 	 */
@@ -7184,7 +7184,7 @@ function bb_is_enabled_activity_schedule_posts() {
 /**
  * Return the activity published status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
@@ -7195,7 +7195,7 @@ function bb_get_activity_published_status() {
 /**
  * Return the activity scheduled status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
@@ -7206,7 +7206,7 @@ function bb_get_activity_scheduled_status() {
 /**
  * Update the activity media scheduled status to published on clearing schedule.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param array $media_ids Array for media ids.
  */
@@ -7257,7 +7257,7 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 /**
  * Update the activity video scheduled status to published on clearing schedule.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param array $video_ids Array for video ids.
  */
@@ -7308,7 +7308,7 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 /**
  * Update the activity document scheduled status to published on clearing schedule.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param array $document_ids Array for document ids.
  */

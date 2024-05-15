@@ -510,7 +510,7 @@ class Cache {
 	/**
 	 * Returns the cache expiry time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @return int Cache expiry in seconds.
 	 */
@@ -521,7 +521,7 @@ class Cache {
 		/**
 		 * Filters the cache expiry time.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.10
 		 *
 		 * @param int $cache_expiry Expiry time for cache.
 		 */
@@ -531,7 +531,7 @@ class Cache {
 	/**
 	 * Purges expired cache via background job.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @return void
 	 */
@@ -552,7 +552,7 @@ class Cache {
 	/**
 	 * Schedule performance cache purge cron event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @return void
 	 */
@@ -574,7 +574,7 @@ class Cache {
 	/**
 	 * Re-Schedule event to clear the cron for cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param string $option    Name of the option to update.
 	 * @param mixed  $old_value The old option value.

@@ -3502,7 +3502,7 @@ function bb_update_to_2_5_80() {
  * Purge the existing old cache to implement the new 30 days cache expiry system.
  * Remove symlinks of media, documents and videos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return void
  */
@@ -3573,7 +3573,7 @@ function bb_update_to_2_6_10() {
 /**
  * Remove from the directory symlinks of media, documents and videos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param string $folder_path The folder path.
  *

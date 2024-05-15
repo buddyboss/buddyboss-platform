@@ -161,7 +161,7 @@ class BP_Activity_Activity {
 	/**
 	 * Status of the current item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @var string
 	 */
@@ -2372,7 +2372,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get activity status by id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param int $activity_id Activity Id.
 	 *

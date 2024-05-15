@@ -3451,7 +3451,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				/**
 				 * Filters the attachment URL.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 2.6.10
 				 *
 				 * @param string $attachment_url URL for the given attachment.
 				 * @param int    $attachment_id  Attachment post ID.
@@ -4245,7 +4245,7 @@ function bb_media_get_activity_max_thumb_length() {
 /**
  * Return the media published status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
@@ -4256,7 +4256,7 @@ function bb_media_get_published_status() {
 /**
  * Return the media scheduled status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */

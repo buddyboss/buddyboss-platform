@@ -9760,7 +9760,7 @@ function bb_mention_add_user_dynamic_link( $content ) {
 /**
  * Function to return the minimum pro version to show notice.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
