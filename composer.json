@@ -55,8 +55,8 @@
 			"rm -rf temp",
 			"mkdir temp",
 			"mv vendor temp/",
-			"mv scoped_vendor vendor/",
-			"cp -r scoped_vendor/include/Library/Composer/Src/* include/Library/Composer",
+			"mv scoped_vendor/vendor vendor/",
+			"cp -r scoped_vendor/includes/Library/Composer/Src/* includes/Library/Composer",
 			"rm -rf scoped_vendor",
 			"composer dumpautoload --optimize"
 		]
