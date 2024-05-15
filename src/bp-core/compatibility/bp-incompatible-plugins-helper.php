@@ -279,7 +279,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Include compatible file when the plugin is activated.
 	 * Support CDN Enabler.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 */
 	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-cdn-helpers.php';

@@ -262,6 +262,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+		/* translators: %s = user name */
 		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
 	}
 

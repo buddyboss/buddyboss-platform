@@ -7165,7 +7165,7 @@ function bb_validate_activity_privacy( $args ) {
 /**
  * Check whether activity schedule posts are enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return bool true if activity schedule posts are enabled, otherwise false.
  */
@@ -7174,7 +7174,7 @@ function bb_is_enabled_activity_schedule_posts() {
 	/**
 	 * Filters whether activity schedule posts are enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param bool $value Whether activity schedule posts are enabled.
 	 */
@@ -7184,7 +7184,7 @@ function bb_is_enabled_activity_schedule_posts() {
 /**
  * Return the activity published status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
@@ -7195,7 +7195,7 @@ function bb_get_activity_published_status() {
 /**
  * Return the activity scheduled status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
@@ -7206,8 +7206,8 @@ function bb_get_activity_scheduled_status() {
 /**
  * Update the activity media scheduled status to published on clearing schedule.
  *
- * @since BuddyBoss [BBVERSION]
- * 
+ * @since BuddyBoss 2.6.10
+ *
  * @param array $media_ids Array for media ids.
  */
 function bb_activity_edit_update_media_status( $media_ids ) {
@@ -7217,7 +7217,7 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 		bp_is_active( 'media' ) &&
 		(
 			true === $bp_activity_edit ||
-			! empty( $_POST['edit'] )
+			! empty( $_POST['edit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) &&
 		! empty( $media_ids ) &&
 		! empty( $bp_activity_post_update_id ) &&
@@ -7225,7 +7225,7 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 		function_exists( 'bb_get_activity_published_status' ) &&
 		function_exists( 'bb_media_get_scheduled_status' ) &&
 		function_exists( 'bb_media_get_published_status' ) &&
-		empty( $_POST['activity_action_type'] ) &&
+		empty( $_POST['activity_action_type'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		bb_is_enabled_activity_schedule_posts()
 	) {
 		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
@@ -7234,11 +7234,11 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 			'activity_comment' !== $main_activity->type &&
 			bb_get_activity_scheduled_status() !== $main_activity->status
 		) {
-			foreach( $media_ids as $media_id ) {
+			foreach ( $media_ids as $media_id ) {
 				$media = new BP_Media( $media_id );
 				if (
 					bb_media_get_scheduled_status() === $media->status &&
-					! empty( $media->id ) && ! empty( $media->activity_id ) 
+					! empty( $media->id ) && ! empty( $media->activity_id )
 				) {
 					$media->status = bb_media_get_published_status();
 					$media->save();
@@ -7257,8 +7257,8 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 /**
  * Update the activity video scheduled status to published on clearing schedule.
  *
- * @since BuddyBoss [BBVERSION]
- * 
+ * @since BuddyBoss 2.6.10
+ *
  * @param array $video_ids Array for video ids.
  */
 function bb_activity_edit_update_video_status( $video_ids ) {
@@ -7268,7 +7268,7 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 		bp_is_active( 'video' ) &&
 		(
 			true === $bp_activity_edit ||
-			! empty( $_POST['edit'] )
+			! empty( $_POST['edit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) &&
 		! empty( $video_ids ) &&
 		! empty( $bp_activity_post_update_id ) &&
@@ -7276,7 +7276,7 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 		function_exists( 'bb_get_activity_published_status' ) &&
 		function_exists( 'bb_video_get_scheduled_status' ) &&
 		function_exists( 'bb_video_get_published_status' ) &&
-		empty( $_POST['activity_action_type'] ) &&
+		empty( $_POST['activity_action_type'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		bb_is_enabled_activity_schedule_posts()
 	) {
 		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
@@ -7285,11 +7285,11 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 			'activity_comment' !== $main_activity->type &&
 			bb_get_activity_scheduled_status() !== $main_activity->status
 		) {
-			foreach( $video_ids as $video_id ) {
+			foreach ( $video_ids as $video_id ) {
 				$video = new BP_Video( $video_id );
 				if (
 					bb_video_get_scheduled_status() === $video->status &&
-					! empty( $video->id ) && ! empty( $video->activity_id ) 
+					! empty( $video->id ) && ! empty( $video->activity_id )
 				) {
 					$video->status = bb_video_get_published_status();
 					$video->save();
@@ -7308,8 +7308,8 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 /**
  * Update the activity document scheduled status to published on clearing schedule.
  *
- * @since BuddyBoss [BBVERSION]
- * 
+ * @since BuddyBoss 2.6.10
+ *
  * @param array $document_ids Array for document ids.
  */
 function bb_activity_edit_update_document_status( $document_ids ) {
@@ -7319,7 +7319,7 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 		bp_is_active( 'document' ) &&
 		(
 			true === $bp_activity_edit ||
-			! empty( $_POST['edit'] )
+			! empty( $_POST['edit'] ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) &&
 		! empty( $document_ids ) &&
 		! empty( $bp_activity_post_update_id ) &&
@@ -7327,20 +7327,20 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 		function_exists( 'bb_get_activity_published_status' ) &&
 		function_exists( 'bb_document_get_scheduled_status' ) &&
 		function_exists( 'bb_document_get_published_status' ) &&
-		empty( $_POST['activity_action_type'] ) &&
+		empty( $_POST['activity_action_type'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		bb_is_enabled_activity_schedule_posts()
 	) {
 		$main_activity = new BP_Activity_Activity( $bp_activity_post_update_id );
-		if ( 
+		if (
 			'comment' !== $main_activity->privacy &&
 			'activity_comment' !== $main_activity->type &&
 			bb_get_activity_scheduled_status() !== $main_activity->status
 		) {
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 				if (
 					bb_document_get_scheduled_status() === $document->status &&
-					! empty( $document->id ) && ! empty( $document->activity_id ) 
+					! empty( $document->id ) && ! empty( $document->activity_id )
 				) {
 					$document->status = bb_document_get_published_status();
 					$document->save();

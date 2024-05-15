@@ -161,7 +161,7 @@ class BP_Document {
 	/**
 	 * Status of the current document item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @var string
 	 */

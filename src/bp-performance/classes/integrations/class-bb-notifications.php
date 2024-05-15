@@ -88,9 +88,12 @@ class BB_Notifications extends Integration_Abstract {
 
 		if ( $cache_bb_notifications ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/notifications',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 				),
@@ -99,7 +102,7 @@ class BB_Notifications extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/notifications/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);

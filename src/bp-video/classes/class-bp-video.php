@@ -147,7 +147,7 @@ class BP_Video {
 	/**
 	 * Status of the current video item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @var string
 	 */
