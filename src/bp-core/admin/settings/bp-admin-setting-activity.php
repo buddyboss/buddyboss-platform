@@ -64,6 +64,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
+
+		$pro_class = bb_get_pro_fields_class( 'schedule_posts' );
+
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
 		// Allow Activity edit setting.
@@ -84,13 +87,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow scopes/tabs.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
+		$args          = array();
+		$args['class'] = esc_attr( $pro_class );
+
+		$schedule_posts_pro_notice = bb_get_pro_label_notice( 'schedule_posts' );
+		$schedule_posts_field_name = empty( $schedule_posts_pro_notice ) ? '_bb_enable_activity_schedule_posts' : '';
+		$this->add_field( $schedule_posts_field_name, __( 'Schedule posts', 'buddyboss' ) . $schedule_posts_pro_notice, array( $this, 'bb_admin_setting_callback_enable_activity_schedule_posts' ), 'intval', $args );
+
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
 
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 
-		// Relevant Activity Feeds
+		// Relevant Activity Feeds.
 		$this->add_field( '_bp_enable_relevant_feed', __( 'Relevant Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
 
 		// Allow subscriptions setting.
@@ -98,7 +108,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
-		$this->add_section( 'bb_activity_comments', __( 'Activity Comments', 'buddyboss' ), '', array( $this, 'bb_admin_activity_comments_settings_tutorial' ), sprintf(
+		$this->add_section(
+			'bb_activity_comments',
+			__( 'Activity Comments', 'buddyboss' ),
+			'',
+			array( $this, 'bb_admin_activity_comments_settings_tutorial' ),
+			sprintf(
 				wp_kses_post(
 					__( 'WordPress post and custom post types will inherit from your WordPress %s settings.', 'buddyboss' )
 				),
@@ -357,6 +372,19 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
+		<?php
+	}
+
+	/**
+	 * Allow schedule activity posts.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 */
+	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
+		$notice = bb_get_pro_label_notice( 'schedule_posts' );
+		?>
+			<input id="bb_enable_activity_schedule_posts" name="<?php echo empty( $notice ) ? '_bb_enable_activity_schedule_posts' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( bb_is_enabled_activity_schedule_posts(), true, false ) : ''; ?> />
+			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow site owners and moderators to schedule their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
