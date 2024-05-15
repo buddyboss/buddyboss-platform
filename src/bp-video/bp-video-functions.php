@@ -974,7 +974,18 @@ function bp_video_background_create_thumbnail( $video ) {
 	$error = '';
 	global $bp_background_updater;
 
-	if ( ! ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) ) {
+	if (
+		! (
+			(
+				class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ||
+				class_exists( 'FFMpeg\FFMpeg' )
+			) &&
+			(
+				class_exists( 'BuddyBossPlatform\FFMpeg\Coordinate\TimeCode' ) ||
+				class_exists( 'FFMpeg\Coordinate\TimeCode' )
+			)
+		)
+	) {
 		return;
 	} elseif ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
@@ -1067,7 +1078,7 @@ function bp_video_background_create_thumbnail( $video ) {
 					$file_name    = $image_name . '.jpg';
 					$thumb_ffmpeg = bb_video_check_is_ffmpeg_binary();
 					$video_thumb  = $thumb_ffmpeg->ffmpeg->open( get_attached_file( $video_attachment_id ) );
-					$thumb_frame  = $video_thumb->frame( FFMpeg\Coordinate\TimeCode::fromSeconds( $second ) );
+					$thumb_frame  = $video_thumb->frame( \BuddyBoss\Library\Composer::instance()->ffmpeg_instance()->timecode_from_seconds( $second ) );
 
 					$error = '';
 					try {

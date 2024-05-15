@@ -36,10 +36,10 @@ class FFMpeg
 
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
-	 * 
+	 *
 	 * @since [BBVERSION]
-	 * 
-	 * @param \FFMpeg\Driver\FFProbeDriver        $ffprobe.
+	 *
+	 * @param \FFMpeg\Driver\FFProbeDriver $ffprobe.
 	 * @param \Doctrine\Common\Cache\Cache $cache.
 	 *
 	 * @return \FFMpeg\FFProbe
@@ -53,9 +53,9 @@ class FFMpeg
 	 *
 	 * @since [BBVERSION]
 	 *
-	* @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
-	 * @param \Psr\Log\LoggerInterface                          $logger
-	 * @param \FFMpeg\FFProbe                                   $probe
+	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
+	 * @param \Psr\Log\LoggerInterface                           $logger
+	 * @param \FFMpeg\FFProbe                                    $probe
 	 *
 	 * @return \FFMpeg\FFMpeg
 	 */
@@ -76,5 +76,18 @@ class FFMpeg
 	 */
 	function ffprobe_create( $configuration = array(), $logger = null, $cache = null ) {
 		return \FFMpeg\FFProbe::create( $configuration, $logger, $cache = null );
+	}
+
+	/**
+	 * Create timecode from number of seconds From Scoped Vendor
+	 * 
+	 * @since [BBVERSION]
+	 *
+	 * @param float $seconds Seconds value.
+	 *
+	 * @return \FFMpeg\Coordinate\TimeCode
+	 */
+	function timecode_from_seconds( $seconds ) {
+		return \FFMpeg\Coordinate\TimeCode::fromSeconds( $seconds );
 	}
 }
