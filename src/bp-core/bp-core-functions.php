@@ -9765,5 +9765,5 @@ function bb_mention_add_user_dynamic_link( $content ) {
  * @return string
  */
 function bb_pro_schedule_posts_version() {
-	return '2.5.20'; // @todo: update when release.
+	return '2.5.20';
 }
