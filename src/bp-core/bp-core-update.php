@@ -487,8 +487,8 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
-		if ( $raw_db_version < 21101 ) {
-			bb_update_to_2_6_00();
+		if ( $raw_db_version < 21111 ) {
+			bb_update_to_2_6_10();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3499,17 +3499,37 @@ function bb_update_to_2_5_80() {
 }
 
 /**
- * Create a new column in database tables.
  * Purge the existing old cache to implement the new 30 days cache expiry system.
  * Remove symlinks of media, documents and videos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return void
  */
-function bb_update_to_2_6_00() {
+function bb_update_to_2_6_10() {
 	global $wpdb;
-	$bp_prefix = bp_core_get_table_prefix();
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	if ( function_exists( 'bp_media_symlink_path' ) ) {
+		$media_symlinks_path = bp_media_symlink_path();
+		bb_remove_symlinks( $media_symlinks_path );
+	}
+
+	if ( function_exists( 'bp_document_symlink_path' ) ) {
+		$document_symlinks_path = bp_document_symlink_path();
+		bb_remove_symlinks( $document_symlinks_path );
+	}
+
+	if ( function_exists( 'bb_video_symlink_path' ) ) {
+		$video_symlinks_path = bb_video_symlink_path();
+		bb_remove_symlinks( $video_symlinks_path );
+	}
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// Check if the 'bp_activity' table exists.
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -3548,32 +3568,12 @@ function bb_update_to_2_6_00() {
 			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
 		}
 	}
-
-	// Purge all the cache for API.
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_all();
-	}
-
-	if ( function_exists( 'bp_media_symlink_path' ) ) {
-		$media_symlinks_path = bp_media_symlink_path();
-		bb_remove_symlinks( $media_symlinks_path );
-	}
-
-	if ( function_exists( 'bp_document_symlink_path' ) ) {
-		$document_symlinks_path = bp_document_symlink_path();
-		bb_remove_symlinks( $document_symlinks_path );
-	}
-
-	if ( function_exists( 'bb_video_symlink_path' ) ) {
-		$video_symlinks_path = bb_video_symlink_path();
-		bb_remove_symlinks( $video_symlinks_path );
-	}
 }
 
 /**
  * Remove from the directory symlinks of media, documents and videos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param string $folder_path The folder path.
  *
@@ -3599,7 +3599,7 @@ function bb_remove_symlinks( $folder_path ) {
 				unlink( $entry_path );
 			}
 		}
-		// Close the folder handle
+		// Close the folder handle.
 		closedir( $handle );
 	}
 }

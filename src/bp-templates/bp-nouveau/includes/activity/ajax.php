@@ -1590,7 +1590,7 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 /**
  * Deletes the scheduled Activity item received via a POST request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return void JSON reply.
  */
