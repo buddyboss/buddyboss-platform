@@ -874,7 +874,7 @@ function bp_video_preview_image_by_js( $video ) {
  */
 function bp_video_add_generate_thumb_background_process( $video_id ) {
 
-	if ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ) {
+	if ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		global $bb_background_updater;
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 
@@ -974,9 +974,9 @@ function bp_video_background_create_thumbnail( $video ) {
 	$error = '';
 	global $bp_background_updater;
 
-	if ( ! class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ) {
+	if ( ! ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) ) {
 		return;
-	} elseif ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ) {
+	} elseif ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
 			return;
@@ -3245,9 +3245,9 @@ function bp_video_get_report_link( $args = array() ) {
  */
 function bb_video_is_ffmpeg_installed() {
 
-	if ( ! class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ) {
+	if ( ! ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) ) {
 		return false;
-	} elseif ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ) {
+	} elseif ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			return false;
@@ -4089,10 +4089,10 @@ function bb_video_check_is_ffmpeg_binary() {
 		'error'  => null,
 	);
 
-	if ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ) {
+	if ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		try {
 			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-				$retval['ffmpeg'] = BuddyBossPlatform\FFMpeg\FFMpeg::create(
+				$retval['ffmpeg'] = \BuddyBoss\Library\Composer::instance()->ffmpeg_instance()->ffmpeg_create(
 					array(
 						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
 						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
@@ -4102,7 +4102,7 @@ function bb_video_check_is_ffmpeg_binary() {
 				);
 
 			} else {
-				$retval['ffmpeg'] = BuddyBossPlatform\FFMpeg\FFMpeg::create();
+				$retval['ffmpeg'] = \BuddyBoss\Library\Composer::instance()->ffmpeg_instance()->ffmpeg_create();
 			}
 		} catch ( Exception $e ) {
 			$retval['error'] = $e->getMessage();
@@ -4128,10 +4128,19 @@ function bb_video_check_is_ffprobe_binary() {
 		'error'  => null,
 	);
 
-	if ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) && class_exists( 'BuddyBossPlatform\FFMpeg\FFProbe' ) ) {
+	if (
+		(
+			class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ||
+			class_exists( 'FFMpeg\FFMpeg' )
+		) &&
+		( 
+			class_exists( 'BuddyBossPlatform\FFMpeg\FFProbe' ) ||
+			class_exists( 'FFMpeg\FFProbe' )
+		)
+	) {
 		try {
 			if ( defined( 'BB_FFMPEG_BINARY_PATH' ) && defined( 'BB_FFPROBE_BINARY_PATH' ) ) {
-				$retval['ffprob'] = BuddyBossPlatform\FFMpeg\FFProbe::create(
+				$retval['ffprob'] = \BuddyBoss\Library\Composer::instance()->ffmpeg_instance()->ffprobe_create(
 					array(
 						'ffmpeg.binaries'  => BB_FFMPEG_BINARY_PATH,
 						'ffprobe.binaries' => BB_FFPROBE_BINARY_PATH,
@@ -4141,7 +4150,7 @@ function bb_video_check_is_ffprobe_binary() {
 				);
 
 			} else {
-				$retval['ffprob'] = BuddyBossPlatform\FFMpeg\FFProbe::create();
+				$retval['ffprob'] = \BuddyBoss\Library\Composer::instance()->ffmpeg_instance()->ffprobe_create();
 			}
 		} catch ( Exception $e ) {
 			$retval['error'] = $e->getMessage();
