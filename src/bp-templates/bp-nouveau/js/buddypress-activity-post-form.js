@@ -2576,7 +2576,7 @@ window.bp = window.bp || {};
 				var tool_box_comment = this.$el.parents( '.bp-ac-form-container' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
 				}
@@ -2759,15 +2759,19 @@ window.bp = window.bp || {};
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
 				}
 
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
-				whatNewScroll.stop().animate({
-					scrollTop: whatNewScroll[0].scrollHeight
-				}, 300);
+				if ( whatNewScroll.length > 0 ) {
+					whatNewScroll.stop().animate( {
+						scrollTop: whatNewScroll[0].scrollHeight
+					}, 300 );
+				}
+
+				e.stopPropagation();
 			},
 
 			// Add a single GifDataItem to the list by creating a view for it, and

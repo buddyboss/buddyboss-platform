@@ -24,14 +24,19 @@ function bp_search_override_wp_native_results( $template ) {
 
 	if ( bp_search_is_search() ) { // if search page.
 
-		$live_template = locate_template(
-			array(
-				'buddyboss-global-search.php',
-				'page.php',
-				'single.php',
-				'index.php',
-			)
+		$live_template_names = array(
+			'buddyboss-global-search.php',
+			'page.php',
+			'single.php',
+			'index.php',
 		);
+		
+		// Add support for Twenty Twenty Two theme, as that's the only block theme having the index.php file.
+		if ( 'twentytwentytwo' === get_template() ) {
+			array_pop( $live_template_names );
+		}
+
+		$live_template = locate_template( $live_template_names );
 
 		if ( '' != $live_template ) {
 			return $live_template;

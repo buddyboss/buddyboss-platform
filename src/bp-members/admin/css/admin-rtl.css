@@ -125,7 +125,7 @@ div#community-profile-page p.not-activated {
 }
 
 .bp-profile-field .description {  /* description also sits in the right side column */
-	margin: 10px 200px 12px 0;
+	margin: 0 200px 12px 0;
 	text-align: right;
 }
 
@@ -233,8 +233,13 @@ div#community-profile-page p.not-activated {
 	width: 192px;
 }
 
+#your-profile .bp-profile-field > fieldset > legend {
+	min-height: 50px;
+}
+
 #your-profile .field_type_socialnetworks fieldset > legend {
 	float: none;
+	min-height: auto;
 }
 
 .field_type_socialnetworks fieldset .editfield {
@@ -246,6 +251,10 @@ div#community-profile-page p.not-activated {
 	margin-top: 10px;
 }
 
+.bp-profile-field select {
+	min-width: 230px;
+}
+
 @media screen and (max-width: 782px) {
 
 	#your-profile .bp-profile-field legend {
@@ -253,6 +262,10 @@ div#community-profile-page p.not-activated {
 		clear: right;
 		display: block;
 		margin-bottom: 12px;
+	}
+
+	#your-profile .bp-profile-field > fieldset > legend {
+		min-height: auto;
 	}
 
 	#your-profile .field_type_multiselectbox select {
@@ -322,4 +335,86 @@ div#community-profile-page p.not-activated {
 	.field-visibility-settings {
 		margin-right: 0;
 	}
+}
+
+.bb_admin_repeater_group .repeater_group_outer {
+	margin: 0 0 15px;
+	padding: 15px;
+	cursor: move;
+	background: #f2f4f5;
+	border: 1px solid #eee;
+}
+
+.bb_admin_repeater_group .repeater_group_outer:first-child {
+	margin-top: 20px;
+}
+
+.profile-edit.bb_admin_repeater_group {
+	display: inline-block;
+	width: 100%;
+}
+
+.profile-edit .field-visibility-settings fieldset > .radio {
+	clear: both;
+}
+
+.profile-edit .field-visibility-settings .bp-radio-wrap input {
+	margin-right: 0;
+}
+
+.profile-edit .field-visibility-settings .bp-radio-wrap label {
+	margin-bottom: 0;
+}
+
+.profile-edit .field-visibility-settings .field-visibility-settings-close {
+	margin-top: 15px;
+}
+
+.bb_admin_repeater_group .repeater_group_outer .repeater_tools {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.bb_admin_repeater_group .repeater_group_outer .repeater_tools a {
+	align-items: center;
+	display: flex;
+}
+
+.bb_admin_repeater_group .repeater_group_outer .repeater_set_title {
+	flex: 1;
+	min-width: 0;
+}
+
+.bb_admin_repeater_group .repeater_group_outer .repeater_set_title_empty {
+	color: #ccc;
+}
+
+.bb_admin_repeater_group .repeater_group_outer .repeater_set_edit {
+	margin-right: auto;
+	margin-left: 5px;
+}
+
+.bb_admin_repeater_group #btn_add_repeater_set {
+	float: right;
+	height: 32px;
+	margin-left: 10px
+}
+
+.bb_admin_repeater_group #btn_add_repeater_set .dashicons {
+	font: normal normal normal 18px/1 bb-icons
+}
+
+.bb_admin_repeater_group #btn_add_repeater_set .dashicons:before {
+	content: "\eef9"
+}
+
+.bb_admin_repeater_group .field-visibility-settings-open {
+	display: block;
+}
+
+.bb_admin_repeater_group .repeater_group_inner {
+	border-top: 1px solid #eee;
+	display: none;
+	margin: 10px -15px;
+	padding: 10px 15px
 }
