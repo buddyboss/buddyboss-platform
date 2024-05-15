@@ -1490,7 +1490,7 @@ function bb_group_activity_pinpost_confirmation_modal_template() {
 /**
  * Remove suspended user and assign site admin as group organizer only when a single group organizer.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param int $user_id User id.
  *
@@ -1571,7 +1571,7 @@ function bb_group_remove_suspended_user( $user_id ) {
 /**
  * Re-assign user when unsuspend to the group only when a single group organizer.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param int $user_id User id.
  *
@@ -1637,7 +1637,7 @@ function bb_group_add_unsuspended_user( $user_id ) {
  * Function will not allow to record group activity when group organizer
  * unsuspend where group have only one organizer.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return bool Return false.
  */

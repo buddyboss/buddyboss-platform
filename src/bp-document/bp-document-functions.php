@@ -4414,7 +4414,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			 * Filters the attachment URL.
 			 * Added support for CDN URL.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.6.10
 			 *
 			 * @param string $attachment_url URL for the given attachment.
 			 * @param int    $attachment_id  Attachment post ID.
@@ -4522,7 +4522,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			/**
 			 * Filters the attachment URL.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.6.10
 			 *
 			 * @param string $attachment_url URL for the given attachment.
 			 * @param int    $attachment_id  Attachment post ID.
@@ -5274,7 +5274,7 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 /**
  * Return the document published status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */
@@ -5285,7 +5285,7 @@ function bb_document_get_published_status() {
 /**
  * Return the document scheduled status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return string
  */

@@ -3499,13 +3499,21 @@ function bb_update_to_2_5_80() {
 }
 
 /**
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
  * Remove symlinks of media, documents and videos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return void
  */
 function bb_update_to_2_6_10() {
+	global $wpdb;
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
 	if ( function_exists( 'bp_media_symlink_path' ) ) {
 		$media_symlinks_path = bp_media_symlink_path();
 		bb_remove_symlinks( $media_symlinks_path );
@@ -3520,12 +3528,52 @@ function bb_update_to_2_6_10() {
 		$video_symlinks_path = bb_video_symlink_path();
 		bb_remove_symlinks( $video_symlinks_path );
 	}
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_activity' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_activity' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_activity' AND column_name = 'status'" ); //phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
+		}
+	}
+
+	// Check if the 'bp_media' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_media'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_media' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_media' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_media ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
+	}
+
+	// Check if the 'bp_document' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_document'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_document' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_document' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
+	}
 }
 
 /**
  * Remove from the directory symlinks of media, documents and videos.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param string $folder_path The folder path.
  *

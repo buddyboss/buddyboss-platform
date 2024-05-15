@@ -261,9 +261,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
 	);
 
-    if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
-    }
+	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+		/* translators: %s = user name */
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+	}
 
 	if ( bp_is_group() ) {
 		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );

@@ -147,7 +147,7 @@ class BP_Media {
 	/**
 	 * Status of the current media item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @var string
 	 */

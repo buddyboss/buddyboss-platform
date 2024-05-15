@@ -735,7 +735,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 	/**
 	 * Apply filter to modified value to record group activity for group join.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param bool $value Allow record activity.
 	 */

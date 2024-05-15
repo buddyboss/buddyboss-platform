@@ -161,7 +161,7 @@ class BP_Activity_Activity {
 	/**
 	 * Status of the current item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @var string
 	 */
@@ -2372,7 +2372,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get activity status by id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param int $activity_id Activity Id.
 	 *
@@ -2391,6 +2391,7 @@ class BP_Activity_Activity {
 		$status    = wp_cache_get( $cache_key, 'bp_activity' );
 
 		if ( false === $status ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$status = $wpdb->get_var( $wpdb->prepare( "SELECT `status` FROM {$bp->activity->table_name} WHERE id = %d", $activity_id ) );
 			wp_cache_set( $cache_key, $status, 'bp_activity' );
 		}
