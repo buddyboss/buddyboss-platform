@@ -386,6 +386,32 @@ window.bp = window.bp || {};
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
 
+			if ( 'undefined' !== typeof BP_Nouveau.activity_schedule && BP_Nouveau.activity_schedule.strings.activity_schedule_enabled ) {
+				if ( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
+
+					// Set Schedule post data.
+					self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
+					self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
+					self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
+					self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+
+					if ( 'scheduled' === activity_data.status ) {
+						self.postForm.model.set( 'activity_action_type', activity_data.status );
+					} else {
+						self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
+						// Check if time has passed and trigger warning.
+						var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
+						var activity_schedule_date = new Date( activity_schedule_datetime );
+						var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+						if ( current_date > activity_schedule_date ) {
+							Backbone.trigger( 'onError', 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.scheduleWarning : '', 'warning' );
+						}
+					}
+				} else if ( 'published' === activity_data.status ) {
+					self.postForm.$el.addClass( 'hide-schedule-button' );
+				}
+			}
+
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -951,7 +977,7 @@ window.bp = window.bp || {};
 				self.postForm.$el.serializeArray(),
 				function( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -1114,7 +1140,12 @@ window.bp = window.bp || {};
 				'link_description',
 				'link_image',
 				'link_title',
-				'link_url'
+				'link_url',
+				'activity_action_type',
+				'activity_schedule_date_raw',
+				'activity_schedule_date',
+				'activity_schedule_time',
+				'activity_schedule_meridiem'
 			];
 
 			_.each(
@@ -3659,10 +3690,14 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
 
+				if ( undefined !== bp.Views.PostScheduleTime ) {
+					this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
+				}
+
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
 				setTimeout(
 					function () {
-						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status, .activity-singular #activity-schedule-section' ).wrapAll( '<div class="activity-post-name-status" />' );
 					},
 					1000
 				);
@@ -4707,6 +4742,11 @@ window.bp = window.bp || {};
 				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
+
+				if ( 'scheduled' === this.model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
 				this.submit = new bp.Views.ActivityInput(
 					{
 						model: this.model,
@@ -4718,21 +4758,11 @@ window.bp = window.bp || {};
 					}
 				);
 
-				this.discard = new bp.Views.ActivityInput(
-					{
-						model: this.model,
-						type: 'button',
-						id: 'discard-draft-activity',
-						className: 'button outline',
-						name: 'discard-draft-activity',
-						value: BP_Nouveau.activity.strings.discardButton
-					}
-				);
-
-				this.views.set( [ this.submit, this.reset, this.discard ] );
+				this.views.set( [ this.submit, this.reset ] );
 
 				this.model.on( 'change:object', this.updateDisplay, this );
 				this.model.on( 'change:posting', this.updateStatus, this );
+				this.model.on( 'change:activity_action_type', this.updateSubmitLabel, this );
 			},
 
 			updateDisplay: function ( model ) {
@@ -4763,6 +4793,19 @@ window.bp = window.bp || {};
 
 					this.submit.el.classList.remove( 'loading' );
 				}
+			},
+
+			updateSubmitLabel: function ( model ) {
+				var buttomText = BP_Nouveau.activity.strings.postUpdateButton;
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
+				if ( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
+					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.schedulePostButton : '';
+				} else {
+					this.submit.el.value = buttomText;
+				}
 			}
 		}
 	);
@@ -4790,6 +4833,20 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
+				this.views.add( new bp.Views.ActivityInput(
+					{
+						model: this.model,
+						type: 'button',
+						id: 'discard-draft-activity',
+						className: 'button outline',
+						name: 'discard-draft-activity',
+						value: BP_Nouveau.activity.strings.discardButton
+					}
+				) );
+
+				if( bp.Views.activitySchedulePost !== undefined ) {
+					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+				}
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
@@ -4830,6 +4887,8 @@ window.bp = window.bp || {};
 
 				this.listenTo(Backbone, 'onError', this.onError);
 				this.listenTo(Backbone, 'cleanFeedBack', this.cleanFeedback);
+
+				this.listenTo( Backbone, 'triggerToastMessage', this.triggerToastMessage );
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
@@ -5137,7 +5196,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
-				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' );
+				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
 					bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
@@ -5194,6 +5253,10 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+			},
+
+			triggerToastMessage: function ( title, message, type, url, autoHide ) {
+				$( document ).trigger( 'bb_trigger_toast_message', [ title, message, type, url, autoHide ] );
 			},
 
 			displayFeedback: function ( model ) {
@@ -5481,7 +5544,29 @@ window.bp = window.bp || {};
 						// Reset the form.
 						self.resetForm();
 
-						// Display a successful feedback if the acticity is not consistent with the displayed stream.
+						// Trigger Toast message if it is a scheduled post.
+						if ( 'scheduled' === data.activity_action_type ) {
+							var title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
+							var desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
+							var LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditViewSchedulePost : '';
+
+							if ( ! data.edit_activity ) { // It's a new scheduled post.
+								title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
+								desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
+								LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.viewSchedulePosts : '';
+							}
+
+							if ( '' !== title && '' !== desc && '' !== LinkText ) {
+								Backbone.trigger( 'triggerToastMessage',
+									title,
+									'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
+									'success',
+									null,
+									true );
+							}
+						}
+
+						// Display a successful feedback if the activity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
 
 							self.views.add(
@@ -5495,7 +5580,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-form' ).addClass( 'bottom-notice' );
 
 							// Edit activity.
-						} else if ( edit ) {
+						} else if ( edit && 'scheduled' !== data.activity_action_type && $( '#activity-' + response.id ).length ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
 
 							// Extract value of data-bp-activity
@@ -5513,8 +5598,6 @@ window.bp = window.bp || {};
 
 							// Update the content property with the decoded content
 							parsed_data_bp_activity.content = decoded_content;
-
-							console.log(parsed_data_bp_activity.privacy + '--xxx--' + JSON.stringify(parsed_data_bp_activity, null, 2));
 
 							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
 							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );

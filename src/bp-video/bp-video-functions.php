@@ -472,6 +472,7 @@ function bp_video_get( $args = '' ) {
 			'in'               => false,        // Comma-separated list of IDs to include.
 			'moderation_query' => true,         // Filter to include moderation query.
 			'count_total'      => false,        // Whether to count the total number of items in the query.
+			'status'           => bb_video_get_published_status(),  // Status of the Video scheduled, published.
 		),
 		'video_get'
 	);
@@ -495,6 +496,7 @@ function bp_video_get( $args = '' ) {
 			'count_total'      => $r['count_total'],
 			'fields'           => $r['fields'],
 			'moderation_query' => $r['moderation_query'],
+			'status'           => $r['status'],
 		)
 	);
 
@@ -539,6 +541,7 @@ function bp_video_get_specific( $args = '' ) {
 			'album_id'         => false,      // Album ID.
 			'user_id'          => false,      // User ID.
 			'moderation_query' => true,
+			'status'           => bb_video_get_published_status(),
 		),
 		'video_get_specific'
 	);
@@ -554,6 +557,7 @@ function bp_video_get_specific( $args = '' ) {
 		'album_id'         => $r['album_id'],
 		'user_id'          => $r['user_id'],
 		'moderation_query' => $r['moderation_query'],
+		'status'           => $r['status'],
 	);
 
 	/**
@@ -613,6 +617,7 @@ function bp_video_add( $args = '' ) {
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this video was recorded.
 			'error_type'    => 'bool',
+			'status'        => bb_video_get_published_status(), // Status of video.
 		),
 		'video_add'
 	);
@@ -632,6 +637,7 @@ function bp_video_add( $args = '' ) {
 	$video->menu_order    = $r['menu_order'];
 	$video->date_created  = $r['date_created'];
 	$video->error_type    = $r['error_type'];
+	$video->status        = $r['status'];
 
 	// groups document always have privacy to `grouponly`.
 	if ( ! empty( $video->privacy ) && ( in_array( $video->privacy, array( 'forums', 'message' ), true ) ) ) {
@@ -709,6 +715,11 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 				$bp_video = new BP_Video( $video['video_id'] );
 
 				if ( ! empty( $bp_video->id ) ) {
+
+					if ( bp_is_active( 'activity' ) ) {
+						$obj_activity = new BP_Activity_Activity( $bp_video->activity_id );
+					}
+
 					$video_id = bp_video_add(
 						array(
 							'id'            => $bp_video->id,
@@ -722,7 +733,8 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'message_id'    => ! empty( $bp_video->message_id ) ? $bp_video->message_id : ( ! empty( $video['message_id'] ) ? $video['message_id'] : 0 ),
 							'privacy'       => $bp_video->privacy,
 							'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
-							'date_created'  => $bp_video->date_created,
+							'date_created'  => ! empty( $video['date_created'] ) ? $video['date_created'] : $bp_video->date_created,
+							'status'        => ! empty( $obj_activity ) && function_exists( 'bb_get_activity_published_status' ) && bb_get_activity_published_status() === $obj_activity->status ? bb_video_get_published_status() : $bp_video->status,
 						)
 					);
 				}
@@ -737,6 +749,8 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,
 						'menu_order'    => ! empty( $video['menu_order'] ) ? $video['menu_order'] : false,
 						'privacy'       => ! empty( $video['privacy'] ) && in_array( $video['privacy'], array_merge( array_keys( bp_video_get_visibility_levels() ), array( 'message' ) ), true ) ? $video['privacy'] : $privacy,
+						'status'        => ! empty( $video['status'] ) ? $video['status'] : bb_video_get_published_status(),
+						'date_created'  => ! empty( $video['date_created'] ) ? $video['date_created'] : bp_core_current_time(),
 					)
 				);
 
@@ -1201,6 +1215,7 @@ function bp_video_delete( $args = '', $from = false ) {
 			'group_id'      => false,
 			'privacy'       => false,
 			'date_created'  => false,
+			'status'        => false,
 		)
 	);
 
@@ -4554,6 +4569,10 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		'activity_video'
 	);
 
+	if ( bp_is_active( 'activity' ) && bb_get_activity_scheduled_status() === $activity->status ) {
+		$video_args['status'] = bb_video_get_scheduled_status();
+	}
+
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 		if ( bp_is_group_video_support_enabled() ) {
 			$video_args['privacy'] = array( 'grouponly' );
@@ -4646,4 +4665,26 @@ function bb_video_get_activity_comment_max_thumb_length() {
  */
 function bb_video_get_activity_max_thumb_length() {
 	return (int) apply_filters( 'bb_video_get_activity_max_thumb_length', 3 );
+}
+
+/**
+ * Return the video published status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_video_get_published_status() {
+	return buddypress()->video->published_status;
+}
+
+/**
+ * Return the video scheduled status.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_video_get_scheduled_status() {
+	return buddypress()->video->scheduled_status;
 }
