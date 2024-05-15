@@ -227,6 +227,12 @@ function bp_nouveau_ajax_video_upload() {
 	// Upload file.
 	$result = bp_video_upload();
 
+	if ( 'in_progress' === $result ) {
+		$response['feedback']    = __( 'Video is being processed. Please wait.', 'buddyboss' );
+		$response['in_progress'] = true;
+		wp_send_json_success( $response );
+	}
+
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
 		wp_send_json_error( $response, $result->get_error_code() );
@@ -1284,7 +1290,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );
 	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
-	$avatar           = bp_core_fetch_avatar(
+	$avatar = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
 			'object'  => 'user',
