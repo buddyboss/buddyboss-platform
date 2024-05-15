@@ -51,11 +51,12 @@
 		"scoper": [
 			"rm -rf vendor",
 			"composer install --no-dev",
-			"php-scoper add-prefix vendor --output-dir=scoped_vendor --prefix BuddyBossPlatform",
+			"php-scoper add-prefix vendor includes/Library/Composer/Src --output-dir=scoped_vendor --prefix BuddyBossPlatform",
 			"rm -rf temp",
 			"mkdir temp",
 			"mv vendor temp/",
 			"mv scoped_vendor vendor/",
+			"cp -r scoped_vendor/include/Library/Composer/Src/* include/Library/Composer",
 			"rm -rf scoped_vendor",
 			"composer dumpautoload --optimize"
 		]
@@ -66,5 +67,10 @@
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
+	},
+	"autoload": {
+		"classmap": [
+			"includes/"
+		]
 	}
 }

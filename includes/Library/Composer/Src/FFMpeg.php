@@ -1,0 +1,80 @@
+<?php
+
+namespace BuddyBoss\Library\Composer;
+
+class FFMpeg
+{
+	private static $instance;
+
+	/**
+	 * Get the instance of the class.
+	 *
+	 * @return FFMpeg
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) ) {
+			$class          = __CLASS__;
+			self::$instance = new $class();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * This Function Is Used To Get Instance From Scoped Vendor
+	 *
+	 * @since [BBVERSION]
+	 *
+	 * @param \FFMpeg\Driver\FFMpegDriver $ffmpeg.
+	 * @param \FFMpeg\FFProbe             $ffprobe.
+	 *
+	 * @return \FFMpeg\FFMpeg
+	 */
+	function ffmpeg( $ffmpeg, $ffprobe ) {
+		return new \FFMpeg\FFMpeg( $ffmpeg, $ffprobe );
+	}
+
+	/**
+	 * This Function Is Used To Get Instance From Scoped Vendor
+	 * 
+	 * @since [BBVERSION]
+	 * 
+	 * @param \FFMpeg\Driver\FFProbeDriver        $ffprobe.
+	 * @param \Doctrine\Common\Cache\Cache $cache.
+	 *
+	 * @return \FFMpeg\FFProbe
+	 */
+	function ffprobe( $ffprobe, $cache ) {
+		return new \FFMpeg\FFProbe( $ffprobe, $cache );
+	}
+
+	/**
+	 * Creates an FFMpeg.
+	 *
+	 * @since [BBVERSION]
+	 *
+	* @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
+	 * @param \Psr\Log\LoggerInterface                          $logger
+	 * @param \FFMpeg\FFProbe                                   $probe
+	 *
+	 * @return \FFMpeg\FFMpeg
+	 */
+	function ffmpeg_create( $configuration = array(), $logger = null, $probe = null ) {
+		return \FFMpeg\FFMpeg::create( $configuration, $logger, $probe );
+	}
+
+	 /**
+	 * Creates an FFProbe.
+	 *
+	 * @since [BBVERSION]
+	 *
+	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
+	 * @param \Psr\Log\LoggerInterface                           $logger
+	 * @param \Doctrine\Common\Cache\Cache                       $cache
+	 *
+	 * @return \FFMpeg\FFProbe
+	 */
+	function ffprobe_create( $configuration = array(), $logger = null, $cache = null ) {
+		return \FFMpeg\FFProbe::create( $configuration, $logger, $cache = null );
+	}
+}
