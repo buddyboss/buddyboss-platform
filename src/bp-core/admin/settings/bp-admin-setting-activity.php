@@ -381,13 +381,17 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 2.6.10
 	 */
 	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
-		remove_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_admin_only', 1000 );
+		if ( function_exists( 'bb_is_enabled_activity_schedule_posts_admin_only' ) ) {
+			remove_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_admin_only', 1000 );
+		}
 		$notice = bb_get_pro_label_notice( 'schedule_posts' );
 		?>
 			<input id="bb_enable_activity_schedule_posts" name="<?php echo empty( $notice ) ? '_bb_enable_activity_schedule_posts' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( bb_is_enabled_activity_schedule_posts(), true, false ) : ''; ?> />
 			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow Group Organisers and Moderators to schedule their posts', 'buddyboss' ); ?></label>
 		<?php
-		add_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_admin_only', 1000 );
+		if ( function_exists( 'bb_is_enabled_activity_schedule_posts_admin_only' ) ) {
+			add_filter( 'bb_is_enabled_activity_schedule_posts', 'bb_is_enabled_activity_schedule_posts_admin_only', 1000 );
+		}
 	}
 }
 
