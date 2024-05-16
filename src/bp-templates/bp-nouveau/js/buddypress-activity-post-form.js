@@ -1145,7 +1145,12 @@ window.bp = window.bp || {};
 				'activity_schedule_date_raw',
 				'activity_schedule_date',
 				'activity_schedule_time',
-				'activity_schedule_meridiem'
+				'activity_schedule_meridiem',
+				'activity_poll_title',
+				'activity_poll_options',
+				'activity_poll_allow_multiple_answer',
+				'activity_poll_allow_new_option',
+				'activity_poll_duration'
 			];
 
 			_.each(
@@ -4834,8 +4839,9 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
 				// Add BB Poll View
-				// Poll_TODO: Add condition to check if poll is enabled
-				this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+				if( bp.Views.activityPollForm !== undefined ) {
+					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+				}
 
 				this.views.add( new bp.Views.ActivityInput(
 					{
