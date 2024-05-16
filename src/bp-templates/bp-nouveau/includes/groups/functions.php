@@ -482,15 +482,14 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'group_video'    => ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
 
-	$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $item->id );
-	$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $item->id );
-	if ( $is_admin || $is_mod ) {
-		if ( bp_current_user_can( 'administrator' ) ) {
-			$args['allow_schedule'] = 'enabled';
-		} elseif (
-			function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
-			bb_is_enabled_activity_schedule_posts()
-		) {
+	if (
+		function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
+		bb_is_enabled_activity_schedule_posts() &&
+		! bp_current_user_can( 'administrator' )
+	) {
+		$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $item->id );
+		$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $item->id );
+		if ( $is_admin || $is_mod ) {
 			$args['allow_schedule'] = 'enabled';
 		}
 	}
