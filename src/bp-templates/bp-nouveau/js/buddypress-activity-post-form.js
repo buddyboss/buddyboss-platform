@@ -4591,6 +4591,11 @@ window.bp = window.bp || {};
 					this.views.add( this.activityLinkPreview );
 				}
 
+				if ( ! _.isUndefined( bp.Views.activityPollView ) ) {
+					this.activityPollView = new bp.Views.activityPollView( { model: this.model } );
+					this.views.add( this.activityPollView );
+				}
+
 				if ( ! _.isUndefined( window.Dropzone ) ) {
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
