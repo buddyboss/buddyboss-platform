@@ -3900,10 +3900,11 @@ window.bp = window.bp || {};
 						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 					}
 
-					// Check schedule post is allowed in this group or not
+					// Check schedule post is allowed in this group or not.
 					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
-					if( schedule_allowed === 'enabled' ) {
+					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
 						whats_new_form.find( '#bb-schedule-posts' ).show();
+						Backbone.trigger( 'cleanFeedBack' );
 					} else {
 						// Reset the schedule data and close form.
 						// this.model.set( 'activity_action_type', null );
@@ -3913,7 +3914,7 @@ window.bp = window.bp || {};
 						// this.model.set( 'activity_schedule_meridiem', null );
 						// whats_new_form.find( '#bb-schedule-posts' ).hide();
 
-						// Show Warning message
+						// Show Warning message.
 						Backbone.trigger( 'onError', 'Your are not allowed to make a schedule post in this group.', 'error' );
 
 					}
