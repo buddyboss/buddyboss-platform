@@ -3899,6 +3899,24 @@ window.bp = window.bp || {};
 					if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 					}
+
+					// Check schedule post is allowed in this group or not
+					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
+					if( schedule_allowed === 'enabled' ) {
+						whats_new_form.find( '#bb-schedule-posts' ).show();
+					} else {
+						// Reset the schedule data and close form.
+						// this.model.set( 'activity_action_type', null );
+						// this.model.set( 'activity_schedule_date_raw', null );
+						// this.model.set( 'activity_schedule_date', null );
+						// this.model.set( 'activity_schedule_time', null );
+						// this.model.set( 'activity_schedule_meridiem', null );
+						// whats_new_form.find( '#bb-schedule-posts' ).hide();
+
+						// Show Warning message
+						Backbone.trigger( 'onError', 'Your are not allowed to make a schedule post in this group.', 'error' );
+
+					}
 				} else {
 					var privacy       = this.model.attributes.privacy;
 					var privacy_label = whats_new_form.find( '#' + privacy ).data( 'title' );
