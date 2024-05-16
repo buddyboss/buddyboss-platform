@@ -3905,7 +3905,7 @@ window.bp = window.bp || {};
 					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
 						whats_new_form.find( '#bb-schedule-posts' ).show();
 						Backbone.trigger( 'cleanFeedBack' );
-					} else {
+					} else if( this.model.attributes.activity_action_type === 'scheduled' ) {
 						// Reset the schedule data.
 						this.model.set( 'activity_action_type', null );
 						this.model.set( 'activity_schedule_date_raw', null );
@@ -3916,6 +3916,8 @@ window.bp = window.bp || {};
 
 						// Show Warning message.
 						Backbone.trigger( 'onError', BP_Nouveau.activity_schedule.strings.notAllowScheduleWarning, 'error' );
+					} else {
+						whats_new_form.find( '#bb-schedule-posts' ).hide();
 					}
 				} else {
 					whats_new_form.find( '#bb-schedule-posts' ).show();
