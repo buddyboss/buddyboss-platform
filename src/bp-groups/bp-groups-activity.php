@@ -469,7 +469,10 @@ function groups_record_activity( $args = '' ) {
 		$activity = new BP_Activity_Activity( $args['id'] );
 
 		if ( ! empty( $activity->id ) ) {
-			$bp_activity_edit = true;
+
+			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+				$bp_activity_edit = true;
+			}
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $args['error_type'] ) {
@@ -489,18 +492,22 @@ function groups_record_activity( $args = '' ) {
 				'user_id'           => $activity->user_id,
 				'item_id'           => ! empty( $args['item_id'] ) ? $args['item_id'] : $activity->item_id,
 				'secondary_item_id' => $activity->secondary_item_id,
-				'recorded_time'     => $activity->date_recorded,
+				'recorded_time'     => ! empty( $args['recorded_time'] ) ? $args['recorded_time'] : $activity->date_recorded,
 				'hide_sitewide'     => $activity->hide_sitewide,
 				'is_spam'           => $activity->is_spam,
 				'privacy'           => $activity->privacy,
 				'error_type'        => ! empty( $args['error_type'] ) ? $args['error_type'] : $activity->error_type,
+				'status'            => ! empty( $args['status'] ) ? $args['status'] : bb_get_activity_published_status(),
 			);
 
-			/**
-			 * Addition from the BuddyBoss
-			 * Add meta to ensure that this activity has been edited.
-			 */
-			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+
+				/**
+				 * Addition from the BuddyBoss
+				 * Add meta to ensure that this activity has been edited.
+				 */
+				bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			}
 
 		}
 	}
@@ -521,6 +528,7 @@ function groups_record_activity( $args = '' ) {
 			'hide_sitewide'     => $hide_sitewide,
 			'privacy'           => 'public',
 			'error_type'        => 'bool',
+			'status'            => bb_get_activity_published_status(),
 		),
 		'groups_record_activity'
 	);

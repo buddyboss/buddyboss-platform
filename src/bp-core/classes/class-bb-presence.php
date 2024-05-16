@@ -374,8 +374,12 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_check_native_presence_load_directly( $bypass = false ) {
-			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
-			if ( ! empty( $bb_check_native_presence_load_directly ) && ! $bypass ) {
+			$bb_check_native_presence_load_directly = get_site_option( 'bb_check_native_presence_load_directly', 0 );
+			if (
+				0 !== $bb_check_native_presence_load_directly &&
+				$bb_check_native_presence_load_directly + WEEK_IN_SECONDS > microtime( true ) &&
+				! $bypass
+			) {
 				return;
 			}
 
@@ -399,7 +403,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				update_option( 'bb_use_core_native_presence', false );
 			}
 
-			set_transient( 'bb_check_native_presence_load_directly', 'true', WEEK_IN_SECONDS );
+			update_site_option( 'bb_check_native_presence_load_directly', microtime( true ) );
 		}
 
 		/**

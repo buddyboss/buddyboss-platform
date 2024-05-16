@@ -1885,6 +1885,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
+		$value = new BP_Activity_Activity( $activity_id );
+
 		$activity_metas = bb_activity_get_metadata( $activity_id );
 
 		$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
@@ -1907,6 +1909,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				'video_ids' => $video_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
+				'status'    => function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $value->status ? bb_video_get_scheduled_status() : bb_video_get_published_status(),
 			)
 		);
 
