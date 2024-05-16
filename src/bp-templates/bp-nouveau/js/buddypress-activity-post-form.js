@@ -382,6 +382,18 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+
+			// Show Hide Schedule post button according to group privacy.
+			if( 'group' === activity_data.privacy ) {
+				var schedule_allowed = $( '#whats-new-form' ).find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
+
+				if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
+					$( '#whats-new-form' ).find( '#bb-schedule-posts' ).show();
+				} else {
+					$( '#whats-new-form' ).find( '#bb-schedule-posts' ).hide();
+				}
+			}
+
 			// Set link image index and confirm image index.
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
