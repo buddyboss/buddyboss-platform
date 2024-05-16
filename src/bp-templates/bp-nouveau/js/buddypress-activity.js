@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities.
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
 			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
@@ -343,7 +343,7 @@ window.bp = window.bp || {};
 			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );
 
 			// Update the Load Newest li if it already exists.
-			if ( $( '#buddypress [data-bp-list="activity"] li' ).first().hasClass( 'load-newest' ) ) {
+			if ( $( '#buddypress [data-bp-list="activity"]' ).first().hasClass( 'load-newest' ) ) {
 				var newest_link = $( '#buddypress [data-bp-list="activity"] .load-newest a' ).html();
 				$( '#buddypress [data-bp-list="activity"] .load-newest a' ).html( newest_link.replace( /([0-9]+)/, newest_activities_count ) );
 
@@ -482,7 +482,7 @@ window.bp = window.bp || {};
 						page                : next_page,
 						method              : 'append',
 						exclude_just_posted : this.just_posted.join( ',' ),
-						target              : '#buddypress [data-bp-list] ul.bp-list'
+						target              : '#buddypress [data-bp-list]:not( #bb-schedule-posts_modal [data-bp-list="activity"] ) ul.bp-list'
 					}
 				).done(
 					function( response ) {
@@ -807,7 +807,6 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		activityActions: function( event ) {
-
 			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
 				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
 				activity_state             = activity_item.find( '.activity-state' ),
@@ -4018,6 +4017,9 @@ window.bp = window.bp || {};
 		},
 
 		initializeEmojioneArea: function ( isModal, parentSelector, activityId ) {
+			if( ! $.fn.emojioneArea ) {
+				return;
+			}
 			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
 				{
 					standalone: true,
@@ -4062,7 +4064,7 @@ window.bp = window.bp || {};
 					},
 				}
 			);
-		},
+		}
 
 	};
 

@@ -29,6 +29,7 @@
 		width: 100%;
 		z-index: 1099;
 
+		.activity-modal-open &,
 		.acomments-modal-open & {
 			z-index: 999999;
 		}
