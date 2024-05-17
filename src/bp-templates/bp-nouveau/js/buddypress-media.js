@@ -386,7 +386,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Media.reply_topic_allow_delete_media = true;
 			}
 
-			// Display download button for media/document/video if activity component is disabled.
+			// Display download button for media/document/video.
 			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 		},
 
