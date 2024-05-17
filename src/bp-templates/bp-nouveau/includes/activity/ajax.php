@@ -921,7 +921,7 @@ function bp_nouveau_ajax_post_update() {
 			) {
 				wp_send_json_error(
 					array(
-						'message' => __( 'You don\'t have permission to schedule activity in perticular group.', 'buddyboss' ),
+						'message' => __( 'You don\'t have permission to schedule activity in particular group.', 'buddyboss' ),
 					)
 				);
 			}

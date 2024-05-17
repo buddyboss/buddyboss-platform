@@ -3426,7 +3426,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} elseif( ! function_exists( 'bb_platform_pro' ) ) {
+	} elseif( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),

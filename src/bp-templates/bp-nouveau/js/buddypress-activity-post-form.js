@@ -382,6 +382,18 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+
+			// Show Hide Schedule post button according to group privacy.
+			if ( 'group' === activity_data.privacy ) {
+				var schedule_allowed = $( '#whats-new-form' ).find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
+
+				if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
+					$( '#whats-new-form' ).find( '#bb-schedule-posts' ).show();
+				} else {
+					$( '#whats-new-form' ).find( '#bb-schedule-posts' ).hide();
+				}
+			}
+
 			// Set link image index and confirm image index.
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
@@ -3899,7 +3911,30 @@ window.bp = window.bp || {};
 					if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 					}
+
+					// Check schedule post is allowed in this group or not.
+					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
+					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
+						whats_new_form.find( '#bb-schedule-posts' ).show();
+						Backbone.trigger( 'cleanFeedBack' );
+					} else if ( 'scheduled' === this.model.attributes.activity_action_type ) {
+						// Reset the schedule data.
+						this.model.set( 'activity_action_type', null );
+						this.model.set( 'activity_schedule_date_raw', null );
+						this.model.set( 'activity_schedule_date', null );
+						this.model.set( 'activity_schedule_time', null );
+						this.model.set( 'activity_schedule_meridiem', null );
+						whats_new_form.find( '#bb-schedule-posts' ).hide();
+
+						// Show Warning message.
+						Backbone.trigger( 'onError', BP_Nouveau.activity_schedule.strings.notAllowScheduleWarning, 'error' );
+					} else {
+						whats_new_form.find( '#bb-schedule-posts' ).hide();
+					}
 				} else {
+					whats_new_form.find( '#bb-schedule-posts' ).show();
+					Backbone.trigger( 'cleanFeedBack' );
+
 					var privacy       = this.model.attributes.privacy;
 					var privacy_label = whats_new_form.find( '#' + privacy ).data( 'title' );
 					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
