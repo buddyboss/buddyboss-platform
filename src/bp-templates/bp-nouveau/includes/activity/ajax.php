@@ -844,7 +844,7 @@ function bp_nouveau_ajax_post_update() {
 				if ( $scheduled_timestamp > $three_months_ago_timestamp ) {
 					wp_send_json_error(
 						array(
-							'message' => __( 'The selected date should not be more than three months in the future.', 'buddyboss' ),
+							'message' => __( 'Please set a schedule date between next three months.', 'buddyboss' ),
 						)
 					);
 				}
