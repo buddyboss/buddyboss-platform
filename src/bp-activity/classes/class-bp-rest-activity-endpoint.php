@@ -263,6 +263,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'update_meta_cache' => true,
 			'filter'            => array(),
 			'pin_type'          => $request['pin_type'],
+			'status'            => ( ! empty( $request['activity_status'] ) ? $request['activity_status'] : bb_get_activity_published_status() ),
 		);
 
 		if ( empty( $args['display_comments'] ) || 'false' === $args['display_comments'] ) {
@@ -704,6 +705,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'activity_ids'     => array( $activity_id ),
 				'display_comments' => 'stream',
+				'status'           => isset( $prepared_activity->status ) ? $prepared_activity->status : bb_get_activity_published_status(),
 			)
 		);
 
@@ -717,7 +719,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $prepared_activity->id ) ) {
 			remove_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
-		bp_activity_at_name_send_emails( $activity );
+
+		if ( bb_get_activity_scheduled_status() !== $prepared_activity->status ) {
+			bp_activity_at_name_send_emails( $activity );
+		}
+
 		if ( empty( $prepared_activity->id ) ) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
@@ -802,9 +808,80 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$component = $request->get_param( 'component' );
 
 				// The current user can create an activity.
-				$retval = true;
+				$retval          = true;
+				$activity_status = ! empty( $request->get_param( 'activity_status' ) ) ? $request->get_param( 'activity_status' ) : false;
+				$activity_date   = ! empty( $request->get_param( 'date' ) ) ? $request->get_param( 'date' ) : false;
 
-				if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! is_null( $item_id ) ) {
+				if (
+					bb_get_activity_scheduled_status() === $activity_status &&
+					(
+						! function_exists( 'bb_platform_pro' ) ||
+						! function_exists( 'bb_can_user_schedule_activity' )
+					)
+				) {
+					return new WP_Error(
+						'bp_rest_user_cannot_create_activity',
+						__( 'Platform pro plugin is either older version or not active.', 'buddyboss' ),
+						array(
+							'status' => 403,
+						)
+					);
+				} elseif (
+					bb_get_activity_scheduled_status() === $activity_status &&
+					function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
+					! bb_is_enabled_activity_schedule_posts()
+				) {
+					return new WP_Error(
+						'bp_rest_user_cannot_create_activity',
+						__( 'Schedule activity settings disabled.', 'buddyboss' ),
+						array(
+							'status' => 403,
+						)
+					);
+				} elseif ( bb_get_activity_scheduled_status() === $activity_status && empty( $activity_date ) ) {
+					return new WP_Error(
+						'bp_rest_user_cannot_create_activity',
+						__( 'Unable to schedule activity, date parameter required.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} elseif (
+					bb_get_activity_scheduled_status() === $activity_status &&
+					! empty( $activity_date ) &&
+					strtotime( $activity_date ) < ( gmdate( 'U' ) + 3600 )
+				) {
+					// Scheduled activity should be greater than the current time.
+					return new WP_Error(
+						'bp_rest_user_cannot_create_activity',
+						__( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						array(
+							'status' => 400,
+						)
+					);
+				} elseif ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! is_null( $item_id ) ) {
+
+					// Check if allowed to schedule or not.
+					if (
+						bb_get_activity_scheduled_status() === $activity_status &&
+						function_exists( 'bb_can_user_schedule_activity' ) &&
+						! bb_can_user_schedule_activity(
+							array(
+								'object'   => 'group',
+								'group_id' => $item_id,
+								'user_id'  => empty( $user_id ) ? bp_loggedin_user_id() : (int) $user_id,
+							)
+						)
+					) {
+						return new WP_Error(
+							'bp_rest_user_cannot_create_activity',
+							__( 'You are not permitted to schedule activity in this group.', 'buddyboss' ),
+							array(
+								'status' => 403,
+							)
+						);
+					}
+
 					if ( ! $this->show_hidden( $component, $item_id ) ) {
 						$retval = $error;
 					}
@@ -922,6 +999,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$prev_activity_status = BP_Activity_Activity::bb_get_activity_status( $activity_object->id );
+
+		if ( empty( $activity->status ) || bb_get_activity_scheduled_status() !== $activity->status ) {
+			$activity_object->recorded_time = bp_core_current_time();
+		}
+
 		if ( empty( $activity->action ) ) {
 			$activity_object->action = '';
 		}
@@ -960,7 +1043,32 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			bp_video_activity_update_video_privacy( $activity );
 		}
 
-		bp_activity_update_meta( $activity_id, '_is_edited', bp_core_current_time() );
+		if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+			bp_activity_update_meta( $activity_id, '_is_edited', bp_core_current_time() );
+		}
+
+		if (
+			'activity_update' === $activity->type &&
+			bb_get_activity_published_status() === $activity->status &&
+			bb_get_activity_scheduled_status() === $prev_activity_status
+		) {
+
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
+
+			bp_activity_at_name_send_emails( $activity );
+	
+			if ( bp_is_active( 'groups' ) && 'groups' === $activity->component ) {
+				$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
+				bb_subscription_send_subscribe_group_notifications(
+					$activity->content,
+					$activity->user_id,
+					$group_id,
+					$activity_id
+				);
+			} else {
+				bb_activity_send_email_to_following_post( $activity->content, $activity->user_id, $activity->id );
+			}
+		}
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $activity, $request )
@@ -1000,7 +1108,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$activity = $this->get_activity_object( $request );
+			$activity                = $this->get_activity_object( $request );
+			$user_id                 = ! empty( $request->get_param( 'user_id' ) ) ? (int) $request->get_param( 'user_id' ) : bp_loggedin_user_id();
+			$item_id                 = ! empty( $request->get_param( 'primary_item_id' ) ) ? (int) $request->get_param( 'primary_item_id' ) : 0;
+			$component               = ! empty( $request->get_param( 'component' ) ) ? $request->get_param( 'component' ) : 'activity';
+			$activity_status         = ! empty( $request->get_param( 'activity_status' ) ) ? $request->get_param( 'activity_status' ) : false;
+			$activity_date           = ! empty( $request->get_param( 'date' ) ) ? $request->get_param( 'date' ) : false;
+			$activity_date_timestamp = ! empty( $activity_date ) ? strtotime( $activity_date ) : false;
 
 			if ( empty( $activity->id ) ) {
 				$retval = new WP_Error(
@@ -1033,6 +1147,95 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
+				bb_get_activity_scheduled_status() === $activity_status &&
+				(
+					! function_exists( 'bb_platform_pro' ) ||
+					! function_exists( 'bb_can_user_schedule_activity' )
+				)
+			) {
+				return new WP_Error(
+					'bp_rest_user_cannot_create_activity',
+					__( 'Platform pro plugin is either older version or not active.', 'buddyboss' ),
+					array(
+						'status' => 403,
+					)
+				);
+			} elseif (
+				bb_get_activity_scheduled_status() === $activity_status &&
+				function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
+				! bb_is_enabled_activity_schedule_posts()
+			) {
+				return new WP_Error(
+					'bp_rest_user_cannot_create_activity',
+					__( 'Schedule activity settings disabled.', 'buddyboss' ),
+					array(
+						'status' => 403,
+					)
+				);
+			} elseif ( function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $activity_status && empty( $activity_date ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Unable to update schedule activity, date parameter required.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif (
+				bb_get_activity_scheduled_status() === $activity_status &&
+				! empty( $activity_date_timestamp ) &&
+				strtotime( $activity->date_recorded ) !== $activity_date_timestamp &&
+				$activity_date_timestamp < ( gmdate( 'U' ) + 3600 )
+			) {
+				// Scheduled activity should be greater than the current time.
+				return new WP_Error(
+					'bp_rest_user_cannot_create_activity',
+					__( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			} elseif ( function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $activity_status && function_exists( 'bb_is_enabled_activity_schedule_posts' ) && ! bb_is_enabled_activity_schedule_posts() ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Schedule activity settings disabled.', 'buddyboss' ),
+					array(
+						'status' => 403,
+					)
+				);
+			} elseif (
+				bb_get_activity_published_status() === $activity->status &&
+				$activity->status !== $activity_status
+			) {
+				// Updating status from published to scheduled not allowed.
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to change this activity status.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif (
+				bp_is_active( 'groups' ) &&
+				buddypress()->groups->id === $component &&
+				! empty( $item_id ) &&
+				bb_get_activity_scheduled_status() === $activity_status &&
+				function_exists( 'bb_can_user_schedule_activity' ) &&
+				! bb_can_user_schedule_activity(
+					array(
+						'object'   => 'group',
+						'group_id' => $item_id,
+						'user_id'  => $user_id,
+					)
+				)
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'You are not permitted to schedule activity in this group.', 'buddyboss' ),
+					array(
+						'status' => 403,
 					)
 				);
 			} elseif ( bp_activity_user_can_delete( $activity ) ) {
@@ -1172,7 +1375,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_user_favorites( $activity ) {
 		if ( null === $this->user_favorites ) {
 			if ( is_user_logged_in() && ! empty( $activity ) ) {
-				$activity_type        = $activity->type === 'activity_comment' ? $activity->type : 'activity';
+				$activity_type        = 'activity_comment' === $activity->type ? $activity->type : 'activity';
 				$user_favorites       = bp_activity_get_user_favorites( get_current_user_id(), $activity_type );
 				$this->user_favorites = array_filter( wp_parse_id_list( $user_favorites ) );
 			} else {
@@ -1222,7 +1425,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $request->get_param( 'item_type' ) ) ) {
 			$args['type'] = $request->get_param( 'item_type' );
 		} else {
-			$args['type'] = $activity->type === 'activity_comment' ? 'activity_comment' : 'activity';
+			$args['type'] = 'activity_comment' === $activity->type ? 'activity_comment' : 'activity';
 		}
 
 		if ( ! empty( $request->get_param( 'reaction_id' ) ) ) {
@@ -1324,7 +1527,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $request->get_param( 'item_type' ) ) ) {
 			$type = $request->get_param( 'item_type' );
 		} else {
-			$type = $activity->type === 'activity_comment' ? 'activity_comment' : 'activity';
+			$type = 'activity_comment' === $activity->type ? 'activity_comment' : 'activity';
 		}
 
 		if (
@@ -1470,7 +1673,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if (
 			is_user_logged_in() &&
 			'activity_update' === $activity->type &&
-			! in_array ( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
+			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
 				(
 					'group' === $pin_type &&
@@ -1557,7 +1760,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$feedback = esc_html__( 'You turned on commenting for this post', 'buddyboss' );
 			} elseif ( 'closed_comments' === $result ) {
 				$feedback = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
-			}  elseif ( 'not_allowed' === $result || 'not_member' === $result ) {
+			} elseif ( 'not_allowed' === $result || 'not_member' === $result ) {
 				$feedback = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
 			}
 		} else {
@@ -1634,7 +1837,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'activity_id' => $activity->id,
 					'action'      => ( (bool) $request->get_param( 'turn_on_comments' ) ) ? 'unclose_comments' : 'close_comments',
 				);
-				$retval = bb_activity_comments_close_action_allowed( $check_args );
+				$retval     = bb_activity_comments_close_action_allowed( $check_args );
 				if ( 'allowed' === $retval ) {
 					$retval = true;
 				} else {
@@ -1815,7 +2018,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'link'              => bp_activity_get_permalink( $activity->id ),
 			'primary_item_id'   => $activity->item_id,
 			'secondary_item_id' => $activity->secondary_item_id,
-			'status'            => $activity->is_spam ? 'spam' : 'published',
+			'status'            => $activity->is_spam ? 'spam' : $activity->status,
 			'title'             => $this->bb_rest_activity_action( $activity->action, $activity ),
 			'type'              => $activity->type,
 			'favorited'         => in_array( $activity->id, $this->get_user_favorites( $activity ), true ),
@@ -1835,16 +2038,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'link_embed_url'    => '',
 			'is_pinned'         => false,
 			'can_pin'           => false,
-			'reacted_names'     => bb_activity_reaction_names_and_count( $activity->id, $activity->type === 'activity_comment' ? $activity->type : 'activity', 1 ),
-			'reacted_counts'    => bb_get_activity_most_reactions( $activity->id, $activity->type === 'activity_comment' ? $activity->type : 'activity', 7 ),
+			'reacted_names'     => bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ),
+			'reacted_counts'    => bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ),
 			'reacted_id'        => bb_load_reaction()->bb_user_reacted_reaction_id(
 				array(
 					'item_id'   => $activity->id,
-					'item_type' => $activity->type === 'activity_comment' ? $activity->type : 'activity',
+					'item_type' => 'activity_comment' === $activity->type ? $activity->type : 'activity',
 					'user_id'   => bp_loggedin_user_id(),
 				)
 			),
 			'is_comment_closed' => function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false,
+			'activity_status'   => $activity->status,
 		);
 
 		// Add feature image as separate object which added last in the content.
@@ -1946,7 +2150,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Show pin actions.
 		if (
 			'activity_update' === $activity->type &&
-			! in_array ( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
+			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
 				(
 					'group' === $pin_type &&
@@ -2020,13 +2224,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 				}
 			}
-		} else {
-			if ( isset( $activity->all_child_count ) ) {
+		} elseif ( isset( $activity->all_child_count ) ) {
 				$data['comment_count'] = $activity->all_child_count;
-			} else {
-				$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id, true );
-				$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
-			}
+		} else {
+			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id, true );
+			$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
 		}
 
 		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
@@ -2056,7 +2258,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				: array();
 			$user_ids                        = array_unique( $user_ids );
 
-			if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) && ( $activity->user_id === bp_loggedin_user_id() || in_array( bp_loggedin_user_id(), $user_ids, true ) ) ) {
+			if (
+				! empty( $notification_type ) &&
+				! empty( array_filter( $notification_type ) ) &&
+				(
+					bp_loggedin_user_id() === $activity->user_id ||
+					in_array( bp_loggedin_user_id(), $user_ids, true )
+				)
+			) {
 				$data['can_toggle_notification'] = true;
 			}
 			$data['is_receive_notification'] = true;
@@ -2197,12 +2406,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Activity Privacy.
 		if ( ! empty( $schema['properties']['privacy'] ) && isset( $request['privacy'] ) ) {
 			$prepared_activity->privacy = $request['privacy'];
-		} else {
-			if ( ! empty( $activity->privacy ) ) {
+		} elseif ( ! empty( $activity->privacy ) ) {
 				$prepared_activity->privacy = $activity->privacy;
-			} else {
-				$prepared_activity->privacy = 'public';
-			}
+		} else {
+			$prepared_activity->privacy = 'public';
 		}
 
 		if ( ! empty( $status ) && in_array( $status, array( 'hidden', 'private' ), true ) ) {
@@ -2212,6 +2419,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Ignore privacy passed when posting into group.
 		if ( ! empty( $status ) ) {
 			$prepared_activity->privacy = 'public';
+		}
+
+		$prepared_activity->status = bb_get_activity_published_status();
+
+		// Scheduled activity data.
+		if (
+			'activity_update' === $request->get_param( 'type' ) &&
+			! empty( $schema['properties']['activity_status'] ) &&
+			isset( $request['activity_status'] ) &&
+			function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
+			bb_is_enabled_activity_schedule_posts()
+		) {
+			$prepared_activity->status = $request['activity_status'];
+
+			if ( isset( $request['date'] ) ) {
+				$prepared_activity->recorded_time = $request['date'];
+			}
+
+			$_POST['activity_action_type'] = $prepared_activity->status;
 		}
 
 		/**
@@ -2359,6 +2585,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'activity_ids'     => array( $activity_id ),
 				'display_comments' => true,
+				'status'           => ! empty( $request['activity_status'] ) ? $request['activity_status'] : false,
 			)
 		);
 
@@ -2401,6 +2628,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( WP_REST_Server::EDITABLE === $method ) {
 				$key = 'update_item';
 			}
+
+			$args['activity_status'] = array(
+				'description'       => __( 'Status of the activity.', 'buddyboss' ),
+				'default'           => 'published',
+				'type'              => 'string',
+				'enum'              => array( 'published', 'scheduled' ),
+				'sanitize_callback' => 'sanitize_key',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key = 'delete_item';
 		}
@@ -2450,7 +2687,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param array  $args   Query arguments.
 		 */
-		return apply_filters( "bp_rest_activity_favorite_query_arguments", $args );
+		return apply_filters( 'bp_rest_activity_favorite_query_arguments', $args );
 	}
 
 	/**
@@ -2706,6 +2943,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'activity_status'   => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Status of the activity.', 'buddyboss' ),
+					'type'        => 'string',
+					'enum'        => array( 'published', 'scheduled' ),
+				),
 			),
 		);
 
@@ -2906,6 +3149,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
+		$params['activity_status'] = array(
+			'description'       => __( 'Status of the activity.', 'buddyboss' ),
+			'default'           => 'published',
+			'type'              => 'string',
+			'enum'              => array( 'published', 'scheduled' ),
+			'sanitize_callback' => 'sanitize_key',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
 		/**
 		 * Filters the collection query params.
 		 *
@@ -2931,12 +3183,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$fav_count = bb_load_reaction()->bb_total_item_reactions_count(
 				array(
 					'item_id'   => $activity->id,
-					'item_type' => $activity->type === 'activity_comment' ? 'activity_comment' : 'activity',
+					'item_type' => 'activity_comment' === $activity->type ? 'activity_comment' : 'activity',
 				)
 			);
 		}
 
-		return (int)( ! empty( $fav_count ) ? $fav_count : 0 );
+		return (int) ( ! empty( $fav_count ) ? $fav_count : 0 );
 	}
 
 	/**
@@ -3068,7 +3320,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$new_scope = apply_filters( 'bp_rest_activity_default_scope', $new_scope );
 
 		return implode( ',', $new_scope );
-
 	}
 
 	/**
