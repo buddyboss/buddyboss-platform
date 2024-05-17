@@ -818,23 +818,37 @@ function bp_nouveau_ajax_post_update() {
 			// Combine date and time.
 			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
 
-			// Convert to MySQL datetime format
+			// Convert to MySQL datetime format.
 			$schedule_date_time = get_gmt_from_date( $activity_datetime );
 
 			// Get current GMT timestamp.
-			$current_timestamp = gmdate('U');
+			$current_timestamp = gmdate( 'U' );
 
-			// Add 1 hour to the timestamp (in seconds)
+			// Add 1 hour to the timestamp (in seconds).
 			$next_hour_timestamp = $current_timestamp + 3600;
-			$scheduled_timestamp = strtotime( $schedule_date_time );
 
-			if ( empty( $activity_id ) && $scheduled_timestamp < $next_hour_timestamp ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
-					)
-				);
-			} elseif( ! empty( $activity_id ) ) {
+			// Add 3 months to the timestamp (in seconds).
+			$three_months_ago_timestamp = strtotime( '+3 months', $current_timestamp );
+			$scheduled_timestamp        = strtotime( $schedule_date_time );
+			if ( empty( $activity_id ) ) {
+				// Check if the scheduled date is within the next hour.
+				if ( $scheduled_timestamp < $next_hour_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						)
+					);
+				}
+
+				// Check if the scheduled date is more than three months ago.
+				if ( $scheduled_timestamp > $three_months_ago_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'The selected date should not be more than three months in the future.', 'buddyboss' ),
+						)
+					);
+				}
+			} elseif ( ! empty( $activity_id ) ) {
 
 				// Check if the scheduled time is changed.
 				$obj_activity = new BP_Activity_Activity( $activity_id );
@@ -848,6 +862,7 @@ function bp_nouveau_ajax_post_update() {
 			}
 		}
 	}
+	return;
 
 	if ( $is_scheduled && ! bb_is_enabled_activity_schedule_posts() ) {
 		wp_send_json_error(
