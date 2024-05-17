@@ -388,9 +388,9 @@ window.bp = window.bp || {};
 				var schedule_allowed = $( '#whats-new-form' ).find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
 
 				if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
-					$( '#whats-new-form' ).find( '#bb-schedule-posts' ).show();
+					$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).show();
 				} else {
-					$( '#whats-new-form' ).find( '#bb-schedule-posts' ).hide();
+					$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).hide();
 				}
 			}
 
@@ -3915,7 +3915,7 @@ window.bp = window.bp || {};
 					// Check schedule post is allowed in this group or not.
 					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
 					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
-						whats_new_form.find( '#bb-schedule-posts' ).show();
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).show();
 						Backbone.trigger( 'cleanFeedBack' );
 					} else if ( 'scheduled' === this.model.attributes.activity_action_type ) {
 						// Reset the schedule data.
@@ -3924,15 +3924,22 @@ window.bp = window.bp || {};
 						this.model.set( 'activity_schedule_date', null );
 						this.model.set( 'activity_schedule_time', null );
 						this.model.set( 'activity_schedule_meridiem', null );
-						whats_new_form.find( '#bb-schedule-posts' ).hide();
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).hide();
 
 						// Show Warning message.
 						Backbone.trigger( 'onError', BP_Nouveau.activity_schedule.strings.notAllowScheduleWarning, 'error' );
 					} else {
-						whats_new_form.find( '#bb-schedule-posts' ).hide();
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).hide();
 					}
 				} else {
-					whats_new_form.find( '#bb-schedule-posts' ).show();
+					if (
+						undefined !== typeof BP_Nouveau.activity_schedule.params.can_schedule_in_feed &&
+						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+					) {
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).show();
+					} else {
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).hide();
+					}
 					Backbone.trigger( 'cleanFeedBack' );
 
 					var privacy       = this.model.attributes.privacy;
@@ -4910,12 +4917,21 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.model = new bp.Models.Activity(
-					_.pick(
-						BP_Nouveau.activity.params,
-						[ 'user_id', 'item_id', 'object' ]
-					)
+				var activityParams = _.pick(
+					BP_Nouveau.activity.params,
+					[ 'user_id', 'item_id', 'object' ]
 				);
+
+				// Pick parameters from BP_Nouveau.activity_schedule.params.
+				var scheduleParams = _.pick(
+					BP_Nouveau.activity_schedule.params,
+					[ 'can_schedule_in_feed' ] // Adjust the keys as needed
+				);
+
+				var mergedParams = _.extend( activityParams, scheduleParams );
+
+				// Create the model with the merged parameters
+				this.model = new bp.Models.Activity( mergedParams );
 
 				this.listenTo(Backbone, 'mediaprivacy', this.updateMultiMediaOptions);
 				this.listenTo(Backbone, 'mediaprivacytoolbar', this.updateMultiMediaToolbar);
