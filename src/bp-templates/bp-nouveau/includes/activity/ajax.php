@@ -862,7 +862,6 @@ function bp_nouveau_ajax_post_update() {
 			}
 		}
 	}
-	return;
 
 	if ( $is_scheduled && ! bb_is_enabled_activity_schedule_posts() ) {
 		wp_send_json_error(
