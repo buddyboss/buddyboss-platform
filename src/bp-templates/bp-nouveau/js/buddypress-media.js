@@ -387,9 +387,7 @@ window.bp = window.bp || {};
 			}
 
 			// Display download button for media/document/video if activity component is disabled.
-			if ( 'undefined' === typeof bp.Nouveau.Activity ) {
-				$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
-			}
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 		},
 
 		loadExistingMedia: function () {
