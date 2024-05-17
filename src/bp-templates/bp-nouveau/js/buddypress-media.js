@@ -312,10 +312,6 @@ window.bp = window.bp || {};
 			// Create Album.
 			$( document ).on( 'click', '.bp-media-create-popup-album-submit', this.submitCreateAlbumInPopup.bind( this ) );
 
-			// Activity More Option Dropdown if Activity component is deactivated.
-			if ( 'undefined' === typeof bp.Nouveau.Activity ) {
-				$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
-			}
 			// Group Messages.
 			var groupMessagesButtonSelector = $( '.buddypress.groups.messages' );
 			var groupMessagesToolbarSelector = $( '.buddypress.groups.messages form#send_group_message_form #whats-new-toolbar' );
@@ -389,24 +385,10 @@ window.bp = window.bp || {};
 			if ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) {
 				bp.Nouveau.Media.reply_topic_allow_delete_media = true;
 			}
-		},
 
-		toggleActivityOption: function( event ) {
-
-			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
-
-				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible open' ) ) {
-					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
-					$( 'body' ).removeClass( 'more_option_open' );
-				} else {
-					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
-					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible open' );
-					$( 'body' ).addClass( 'more_option_open' );
-				}
-
-			} else {
-				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
-				$( 'body' ).removeClass( 'more_option_open' );
+			// Display download button for media/document/video if activity component is disabled.
+			if ( 'undefined' === typeof bp.Nouveau.Activity ) {
+				$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 			}
 		},
 
@@ -6446,7 +6428,26 @@ window.bp = window.bp || {};
 			} else {
 				$( nav ).find( 'a#albums' ).append( '<span class="count">' + count + '</span>' );
 			}
-		}
+		},
+
+		toggleActivityOption: function( event ) {
+
+			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible open' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( 'body' ).removeClass( 'more_option_open' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible open' );
+					$( 'body' ).addClass( 'more_option_open' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+				$( 'body' ).removeClass( 'more_option_open' );
+			}
+		},
 	};
 
 	/**
