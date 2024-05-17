@@ -384,7 +384,7 @@ window.bp = window.bp || {};
 			}
 
 			// Show Hide Schedule post button according to group privacy.
-			if( 'group' === activity_data.privacy ) {
+			if ( 'group' === activity_data.privacy ) {
 				var schedule_allowed = $( '#whats-new-form' ).find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
 
 				if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
@@ -3917,7 +3917,7 @@ window.bp = window.bp || {};
 					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
 						whats_new_form.find( '#bb-schedule-posts' ).show();
 						Backbone.trigger( 'cleanFeedBack' );
-					} else if( this.model.attributes.activity_action_type === 'scheduled' ) {
+					} else if ( 'scheduled' === this.model.attributes.activity_action_type ) {
 						// Reset the schedule data.
 						this.model.set( 'activity_action_type', null );
 						this.model.set( 'activity_schedule_date_raw', null );
