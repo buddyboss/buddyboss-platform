@@ -209,6 +209,7 @@ function bp_core_install_activity_streams() {
 				mptt_right int(11) NOT NULL DEFAULT 0,
 				is_spam tinyint(1) NOT NULL DEFAULT 0,
 				privacy varchar(75) NOT NULL DEFAULT 'public',
+				status varchar(20) NOT NULL DEFAULT 'published',
 				PRIMARY KEY  (id),
 				KEY date_recorded (date_recorded),
 				KEY user_id (user_id),
@@ -532,7 +533,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$base_group_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-base-group-id', $base_group_id );
+				update_site_option( 'bp-xprofile-base-group-id', $base_group_id );
 			}
 		}
 	}
@@ -558,7 +559,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$first_name_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+					update_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 				}
 			}
 		}
@@ -578,7 +579,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$first_name_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+				update_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 			}
 		}
 	}
@@ -603,7 +604,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$last_name_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+					update_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 				}
 			}
 		}
@@ -623,7 +624,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$last_name_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+				update_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 			}
 		}
 	}
@@ -648,7 +649,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$nickname_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+					update_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 				}
 			}
 		}
@@ -668,7 +669,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$nickname_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+				update_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 			}
 		}
 	}
@@ -767,6 +768,7 @@ function bp_core_install_media() {
 		privacy varchar(50) NULL DEFAULT 'public',
 		type varchar(50) NULL DEFAULT 'photo',
 		menu_order bigint(20) NULL DEFAULT 0 ,
+		status varchar(20) NOT NULL DEFAULT 'published',
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
 		KEY attachment_id (attachment_id),
@@ -827,6 +829,7 @@ function bp_core_install_document() {
 		message_id bigint(20) NULL DEFAULT 0 ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		menu_order bigint(20) NULL DEFAULT 0 ,
+		status varchar(20) NOT NULL DEFAULT 'published',
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
