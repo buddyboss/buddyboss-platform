@@ -48,7 +48,6 @@ class BB_Woocommerce_Helpers {
 	public function compatibility_init() {
 
 		add_filter( 'bb_is_enable_custom_registration', array( $this, 'bb_check_woocommerce_enable_myaccount_registration' ), 9, 2 );
-		add_filter( 'the_content', array( $this, 'bb_wcs_add_mention_add_user_dynamic_link_compatibility' ), 20, 1 );
 
 		if ( class_exists( 'WC_Subscriptions' ) ) {
 			add_action( 'bp_init', array( $this, 'bb_wcs_add_subscription_compatibility' ), 9999 );
@@ -137,17 +136,6 @@ class BB_Woocommerce_Helpers {
 		}
 
 		return $validation_error;
-	}
-
-	/**
-	 * Function to make compatible BuddyBoss username mentions compitable in Woocommerce products description.
-	 *
-	 * @since BuddyBoss X.X.X
-	 *
-	 * @return void
-	 */
-	public function bb_wcs_add_mention_add_user_dynamic_link_compatibility( $content ) {
-		return bb_mention_add_user_dynamic_link( $content );
 	}
 }
 
