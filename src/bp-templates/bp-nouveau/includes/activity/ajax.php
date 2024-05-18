@@ -1643,6 +1643,24 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
+	// If Groups allow to schedule post then check user can delete schedule post or not;
+	if (
+		! function_exists( 'bb_can_user_schedule_activity' ) ||
+		! bb_can_user_schedule_activity(
+			array(
+				'object'   => 'group',
+				'group_id' => $activity->item_id,
+				'user_id'  => $activity->user_id,
+			)
+		)
+	) {
+		wp_send_json_error(
+			array(
+				'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss' ),
+			)
+		);
+	}
+
 	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
 
 	if (
