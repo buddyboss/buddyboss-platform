@@ -383,17 +383,6 @@ window.bp = window.bp || {};
 				}
 			}
 
-			// Show Hide Schedule post button according to group privacy.
-			if ( 'group' === activity_data.privacy ) {
-				var schedule_allowed = $( '#whats-new-form' ).find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
-
-				if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
-					$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).show();
-				} else {
-					$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).hide();
-				}
-			}
-
 			// Set link image index and confirm image index.
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
@@ -421,6 +410,21 @@ window.bp = window.bp || {};
 					}
 				} else if ( 'published' === activity_data.status ) {
 					self.postForm.$el.addClass( 'hide-schedule-button' );
+				}
+			}
+
+			// Show Hide Schedule post button according to group privacy.
+			if ( 'group' === activity_data.privacy ) {
+				var whatsNewForm = $( '#whats-new-form' );
+				var schedule_allowed = whatsNewForm.find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
+				self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
+				if (
+					( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) ||
+					'enabled' === activity_data.schedule_allowed
+				) {
+					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+				} else {
+					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 				}
 			}
 
@@ -1157,7 +1161,8 @@ window.bp = window.bp || {};
 				'activity_schedule_date_raw',
 				'activity_schedule_date',
 				'activity_schedule_time',
-				'activity_schedule_meridiem'
+				'activity_schedule_meridiem',
+				'schedule_allowed',
 			];
 
 			_.each(
@@ -3900,6 +3905,7 @@ window.bp = window.bp || {};
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
 					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( selected_privacy );
 					this.model.set( 'item_name', group_name );
+					this.model.set( 'group_name', group_name );
 					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
@@ -3915,7 +3921,8 @@ window.bp = window.bp || {};
 					// Check schedule post is allowed in this group or not.
 					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
 					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
-						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).show();
+						this.model.set( 'schedule_allowed', schedule_allowed );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 						Backbone.trigger( 'cleanFeedBack' );
 					} else if ( 'scheduled' === this.model.attributes.activity_action_type ) {
 						// Reset the schedule data.
@@ -3924,27 +3931,39 @@ window.bp = window.bp || {};
 						this.model.set( 'activity_schedule_date', null );
 						this.model.set( 'activity_schedule_time', null );
 						this.model.set( 'activity_schedule_meridiem', null );
-						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).hide();
+						this.model.set( 'schedule_allowed', null );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 
 						// Show Warning message.
 						Backbone.trigger( 'onError', BP_Nouveau.activity_schedule.strings.notAllowScheduleWarning, 'error' );
 					} else {
-						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).hide();
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
+
 				} else {
+
+					// Clear schedule post data when change privacy.
 					if (
 						undefined !== typeof BP_Nouveau.activity_schedule.params.can_schedule_in_feed &&
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
-						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).show();
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 					} else {
-						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).hide();
+						// Reset the schedule data.
+						this.model.set( 'activity_action_type', null );
+						this.model.set( 'activity_schedule_date_raw', null );
+						this.model.set( 'activity_schedule_date', null );
+						this.model.set( 'activity_schedule_time', null );
+						this.model.set( 'activity_schedule_meridiem', null );
+						this.model.set( 'schedule_allowed', null );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
 					Backbone.trigger( 'cleanFeedBack' );
 
 					var privacy       = this.model.attributes.privacy;
 					var privacy_label = whats_new_form.find( '#' + privacy ).data( 'title' );
 					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
+					console.log( ' 1 privacy_label ' + privacy_label );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
 					whats_new_form.find( '.bp-activity-privacy__input#' + privacy ).prop( 'checked', true );
 
@@ -4183,6 +4202,7 @@ window.bp = window.bp || {};
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
 					this.model.set( 'group_name', model.get( 'name' ) );
+					this.model.set( 'item_name', model.get( 'name' ) );
 					this.model.set( 'group_image', model.get( 'avatar_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
@@ -5118,6 +5138,10 @@ window.bp = window.bp || {};
 					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
 					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
 					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
+
+					if ( true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) {
+						$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass('bp-hide');
+					}
 				}
 
 				if ( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
