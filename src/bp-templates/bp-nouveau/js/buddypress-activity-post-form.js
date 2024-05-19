@@ -413,17 +413,45 @@ window.bp = window.bp || {};
 				}
 			}
 
+			// Display schedule button icon when privacy is not group for admin.
+			if (
+				'group' !== activity_data.privacy &&
+				! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+			) {
+				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+			}
+
 			// Show Hide Schedule post button according to group privacy.
 			if ( 'group' === activity_data.privacy ) {
 				var whatsNewForm = $( '#whats-new-form' );
+				// When change group from news feed.
 				var schedule_allowed = whatsNewForm.find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
-				self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
-				if (
-					( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) ||
-					'enabled' === activity_data.schedule_allowed
-				) {
+				if ( _.isUndefined( schedule_allowed ) ) {
+					// When change group from news feed.
+					if ( ! _.isUndefined( activity_data.schedule_allowed ) && 'enabled' === activity_data.schedule_allowed ) {
+						schedule_allowed = activity_data.schedule_allowed;
+						self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
+					} else if (
+						// On group page.
+						! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+					) {
+						schedule_allowed = 'enabled';
+					}
+				}
+
+				if ( ! _.isUndefined( schedule_allowed ) && 'enabled' === schedule_allowed ) {
 					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 				} else {
+
+					// If schedule post is not allowed then reset schedule post data.
+					self.postForm.model.set( 'activity_action_type', null );
+					self.postForm.model.set( 'activity_schedule_date_raw', null );
+					self.postForm.model.set( 'activity_schedule_date', null );
+					self.postForm.model.set( 'activity_schedule_time', null );
+					self.postForm.model.set( 'activity_schedule_meridiem', null );
+					self.postForm.model.set( 'schedule_allowed', null );
 					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 				}
 			}
@@ -1297,6 +1325,14 @@ window.bp = window.bp || {};
 			bp.draft_activity.post_action        = 'update';
 			bp.draft_activity.allow_delete_media = false;
 			bp.draft_activity.display_post       = '';
+
+			// Check if user can schedule in feed after discard draft.
+			if (
+				! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+			) {
+				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+			}
 		},
 
 		reloadWindow: function() {
@@ -3920,7 +3956,7 @@ window.bp = window.bp || {};
 
 					// Check schedule post is allowed in this group or not.
 					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
-					if ( undefined !== typeof schedule_allowed && 'enabled' === schedule_allowed ) {
+					if ( ! _.isUndefined( schedule_allowed ) && 'enabled' === schedule_allowed ) {
 						this.model.set( 'schedule_allowed', schedule_allowed );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 						Backbone.trigger( 'cleanFeedBack' );
@@ -3944,7 +3980,7 @@ window.bp = window.bp || {};
 
 					// Clear schedule post data when change privacy.
 					if (
-						undefined !== typeof BP_Nouveau.activity_schedule.params.can_schedule_in_feed &&
+						! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
@@ -3963,7 +3999,6 @@ window.bp = window.bp || {};
 					var privacy       = this.model.attributes.privacy;
 					var privacy_label = whats_new_form.find( '#' + privacy ).data( 'title' );
 					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
-					console.log( ' 1 privacy_label ' + privacy_label );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( privacy_label );
 					whats_new_form.find( '.bp-activity-privacy__input#' + privacy ).prop( 'checked', true );
 
@@ -5139,8 +5174,11 @@ window.bp = window.bp || {};
 					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
 					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
 
-					if ( true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) {
-						$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass('bp-hide');
+					if (
+						! _.isUndefined( typeof BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+					) {
+						$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 					}
 				}
 
