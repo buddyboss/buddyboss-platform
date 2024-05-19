@@ -3328,7 +3328,7 @@ window.bp = window.bp || {};
 						self.dropzone_obj.files.push( mock_file );
 						self.dropzone_obj.emit( 'addedfile', mock_file );
 						
-						if ( BP_Nouveau.is_as3cf_active !== undefined && BP_Nouveau.is_as3cf_active === '1' ) {
+						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
 							$( self.dropzone_obj.files[i].previewElement ).find( 'img' ).attr( 'src', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'thumbnail', activity_comment_data.media[i].thumb );
 							self.dropzone_obj.emit( 'complete', mock_file );

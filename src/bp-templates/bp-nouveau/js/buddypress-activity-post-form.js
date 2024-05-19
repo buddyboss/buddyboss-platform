@@ -518,7 +518,7 @@ window.bp = window.bp || {};
 						self.dropzone.files.push( mock_file );
 						self.dropzone.emit( 'addedfile', mock_file );
 						
-						if ( BP_Nouveau.is_as3cf_active !== undefined && BP_Nouveau.is_as3cf_active === '1' ) {
+						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
 							$( self.dropzone.files[i].previewElement ).find( 'img' ).attr( 'src', activity_data.media[i].thumb );
 							self.dropzone.emit( 'thumbnail', activity_data.media[i].thumb );
 							self.dropzone.emit( 'complete', mock_file );

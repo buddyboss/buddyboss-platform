@@ -71,7 +71,7 @@ class BB_AS3CF_Plugin_Compatibility {
 
 		add_filter( 'bb_media_offload_delivered', array( $this, 'bb_media_offload_delivered' ) );
 		add_filter( 'bb_media_offload_delivery_provider', array( $this, 'bb_media_offload_delivery_provider' ) );
-		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_offload_localize_scripts' ), 10, 1 );
+		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_offload_localize_scripts' ) );
 
 	}
 
@@ -351,16 +351,18 @@ class BB_AS3CF_Plugin_Compatibility {
 	}
 
 	/**
-	 * Add extra paramter into localize scripts.
+	 * Add extra parameter into localize scripts.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBos [BBVERSION]
 	 *
 	 * @param array $params Localize scripts parameter.
 	 *
 	 * @return array
 	 */
 	public function bb_offload_localize_scripts( $params = array() ) {
-		$params['is_as3cf_active'] = true;
+		if ( bp_is_active( 'activity' ) && bp_is_active( 'media' ) ) {
+			$params['is_as3cf_active'] = true;
+		}
 		return $params;
 	}
 }
