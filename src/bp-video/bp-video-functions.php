@@ -1047,6 +1047,8 @@ function bp_video_preview_image_by_js( $video ) {
 					'custom_image'   => isset( $auto_generated_thumbnails['custom_image'] ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ? $auto_generated_thumbnails['custom_image'] : array(),
 				);
 				update_post_meta( $video['id'], 'video_preview_thumbnails', $thumbnail_images );
+
+				do_action( 'bb_video_after_preview_image_by_js', $preview_attachment_id, $video );
 			}
 		}
 	}
@@ -1308,6 +1310,8 @@ function bp_video_background_create_thumbnail( $video ) {
 								update_post_meta( $preview_attachment_id, 'is_video_preview_image', true );
 								update_post_meta( $preview_attachment_id, 'video_id', $video->id );
 								update_post_meta( $preview_attachment_id, 'bp_video_upload', 1 );
+
+								do_action( 'bp_video_background_create_thumbnail', $preview_attachment_id, $video );
 							}
 						}
 					}
