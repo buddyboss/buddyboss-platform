@@ -1645,12 +1645,15 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 
 	// If Groups allow to schedule post then check user can delete schedule post or not;
 	if (
-		! function_exists( 'bb_can_user_schedule_activity' ) ||
-		! bb_can_user_schedule_activity(
-			array(
-				'object'   => 'group',
-				'group_id' => $activity->item_id,
-				'user_id'  => $activity->user_id,
+		bp_is_active( 'groups' ) &&
+		(
+			! function_exists( 'bb_can_user_schedule_activity' ) ||
+			! bb_can_user_schedule_activity(
+				array(
+					'object'   => $activity->component,
+					'group_id' => $activity->item_id,
+					'user_id'  => $activity->user_id,
+				)
 			)
 		)
 	) {
