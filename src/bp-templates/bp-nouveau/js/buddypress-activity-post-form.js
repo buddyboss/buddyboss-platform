@@ -4985,14 +4985,14 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( BP_Nouveau.activity_schedule ) ) {
 					var scheduleParams = _.pick(
 						BP_Nouveau.activity_schedule.params,
-						[ 'can_schedule_in_feed' ] // Adjust the keys as needed
+						[ 'can_schedule_in_feed' ]
 					);
+
+					activityParams = _.extend( activityParams, scheduleParams );
 				}
 
-				var mergedParams = _.extend( activityParams, scheduleParams );
-
 				// Create the model with the merged parameters
-				this.model = new bp.Models.Activity( mergedParams );
+				this.model = new bp.Models.Activity( activityParams );
 
 				this.listenTo(Backbone, 'mediaprivacy', this.updateMultiMediaOptions);
 				this.listenTo(Backbone, 'mediaprivacytoolbar', this.updateMultiMediaToolbar);
