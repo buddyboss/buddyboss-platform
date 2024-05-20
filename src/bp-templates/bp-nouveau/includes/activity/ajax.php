@@ -1643,8 +1643,16 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 		wp_send_json_error( $response );
 	}
 
-	// If Groups allow to schedule post then check user can delete schedule post or not;
-	if ( bb_is_enabled_activity_schedule_posts_filter() && 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
+	if (
+		(
+			// Check for non admin member to delete scheduled post which they scheduled when they have permission to moderate.
+			! bp_current_user_can( 'bp_moderate' ) && 'groups' !== $activity->component
+		) ||
+		(
+			// If Groups allow to schedule post then check user can delete schedule post or not;
+			'groups' === $activity->component && bp_is_active( 'groups' ) && bb_is_enabled_activity_schedule_posts_filter()
+		)
+	) {
 		$is_admin = groups_is_user_admin( $activity->user_id, $activity->item_id );
 		$is_mod   = groups_is_user_mod( $activity->user_id, $activity->item_id );
 		if ( ! $is_admin && ! $is_mod ) {
