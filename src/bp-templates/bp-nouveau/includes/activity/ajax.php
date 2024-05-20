@@ -407,12 +407,19 @@ function bp_nouveau_ajax_get_single_activity_content() {
 		wp_send_json_error( $response );
 	}
 
-	$activity_array = bp_activity_get_specific(
-		array(
-			'activity_ids'     => $_POST['id'],
-			'display_comments' => 'stream',
-		)
+	$args = array(
+		'activity_ids'     => $_POST['id'],
+		'display_comments' => 'stream',
 	);
+
+	// Check scheduled status.
+	$post_status = filter_input( INPUT_POST, 'post_status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	$post_status = ! empty( $post_status ) ? sanitize_text_field( wp_unslash( $post_status ) ) : '';
+	if ( ! empty( $post_status ) && in_array( $post_status, array( 'published', 'scheduled' ), true ) ) {
+		$args['status'] = $post_status;
+	}
+
+	$activity_array = bp_activity_get_specific( $args );
 
 	if ( empty( $activity_array['activities'][0] ) ) {
 		wp_send_json_error( $response );
