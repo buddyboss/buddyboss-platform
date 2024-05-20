@@ -1644,24 +1644,18 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 	}
 
 	// If Groups allow to schedule post then check user can delete schedule post or not;
-	if (
-		bp_is_active( 'groups' ) &&
-		(
-			! function_exists( 'bb_can_user_schedule_activity' ) ||
-			! bb_can_user_schedule_activity(
+	if ( bb_is_enabled_activity_schedule_posts_filter() && 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
+		$is_admin = groups_is_user_admin( $activity->user_id, $activity->item_id );
+		$is_mod   = groups_is_user_mod( $activity->user_id, $activity->item_id );
+		error_log( ' $is_admin ' . $is_admin );
+		error_log( ' $is_mod ' . $is_mod );
+		if ( ! $is_admin && ! $is_mod ) {
+			wp_send_json_error(
 				array(
-					'object'   => $activity->component,
-					'group_id' => $activity->item_id,
-					'user_id'  => $activity->user_id,
+					'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss' ),
 				)
-			)
-		)
-	) {
-		wp_send_json_error(
-			array(
-				'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss' ),
-			)
-		);
+			);
+		}
 	}
 
 	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
