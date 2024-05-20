@@ -1647,8 +1647,6 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 	if ( bb_is_enabled_activity_schedule_posts_filter() && 'groups' === $activity->component && bp_is_active( 'groups' ) ) {
 		$is_admin = groups_is_user_admin( $activity->user_id, $activity->item_id );
 		$is_mod   = groups_is_user_mod( $activity->user_id, $activity->item_id );
-		error_log( ' $is_admin ' . $is_admin );
-		error_log( ' $is_mod ' . $is_mod );
 		if ( ! $is_admin && ! $is_mod ) {
 			wp_send_json_error(
 				array(
