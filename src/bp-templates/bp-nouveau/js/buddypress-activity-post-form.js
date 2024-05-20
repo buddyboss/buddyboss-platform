@@ -416,6 +416,7 @@ window.bp = window.bp || {};
 			// Display schedule button icon when privacy is not group for admin.
 			if (
 				'group' !== activity_data.privacy &&
+				! _.isUndefined( BP_Nouveau.activity_schedule ) &&
 				! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
 				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 			) {
@@ -434,6 +435,7 @@ window.bp = window.bp || {};
 						self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
 					} else if (
 						// On group page.
+						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
 						! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
@@ -1328,6 +1330,7 @@ window.bp = window.bp || {};
 
 			// Check if user can schedule in feed after discard draft.
 			if (
+				! _.isUndefined( BP_Nouveau.activity_schedule ) &&
 				! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
 				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 			) {
@@ -3980,6 +3983,7 @@ window.bp = window.bp || {};
 
 					// Clear schedule post data when change privacy.
 					if (
+						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
 						! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
@@ -4978,10 +4982,12 @@ window.bp = window.bp || {};
 				);
 
 				// Pick parameters from BP_Nouveau.activity_schedule.params.
-				var scheduleParams = _.pick(
-					BP_Nouveau.activity_schedule.params,
-					[ 'can_schedule_in_feed' ] // Adjust the keys as needed
-				);
+				if ( ! _.isUndefined( BP_Nouveau.activity_schedule ) ) {
+					var scheduleParams = _.pick(
+						BP_Nouveau.activity_schedule.params,
+						[ 'can_schedule_in_feed' ] // Adjust the keys as needed
+					);
+				}
 
 				var mergedParams = _.extend( activityParams, scheduleParams );
 
@@ -5175,6 +5181,7 @@ window.bp = window.bp || {};
 					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
 
 					if (
+						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
 						! _.isUndefined( typeof BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
