@@ -433,6 +433,9 @@ window.bp = window.bp || {};
 					if ( ! _.isUndefined( activity_data.schedule_allowed ) && 'enabled' === activity_data.schedule_allowed ) {
 						schedule_allowed = activity_data.schedule_allowed;
 						self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
+					} else if ( ! _.isUndefined( activity_data.schedule_allowed ) && 'disabled' === activity_data.schedule_allowed ) {
+						schedule_allowed = 'disabled';
+						self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
 					} else if (
 						// On group page.
 						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
@@ -453,7 +456,7 @@ window.bp = window.bp || {};
 					self.postForm.model.set( 'activity_schedule_date', null );
 					self.postForm.model.set( 'activity_schedule_time', null );
 					self.postForm.model.set( 'activity_schedule_meridiem', null );
-					self.postForm.model.set( 'schedule_allowed', null );
+					self.postForm.model.set( 'schedule_allowed', 'disabled' );
 					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 				}
 			}
@@ -3970,12 +3973,13 @@ window.bp = window.bp || {};
 						this.model.set( 'activity_schedule_date', null );
 						this.model.set( 'activity_schedule_time', null );
 						this.model.set( 'activity_schedule_meridiem', null );
-						this.model.set( 'schedule_allowed', null );
+						this.model.set( 'schedule_allowed', 'disabled' );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 
 						// Show Warning message.
 						Backbone.trigger( 'onError', BP_Nouveau.activity_schedule.strings.notAllowScheduleWarning, 'error' );
 					} else {
+						this.model.set( 'schedule_allowed', 'disabled' );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
 
@@ -3995,7 +3999,7 @@ window.bp = window.bp || {};
 						this.model.set( 'activity_schedule_date', null );
 						this.model.set( 'activity_schedule_time', null );
 						this.model.set( 'activity_schedule_meridiem', null );
-						this.model.set( 'schedule_allowed', null );
+						this.model.set( 'schedule_allowed', 'disabled' );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
 					Backbone.trigger( 'cleanFeedBack' );
