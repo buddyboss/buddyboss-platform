@@ -1108,7 +1108,9 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		}
 
 		// If the link in plain text
-		$truncate = mb_substr( $truncate, 0, $last_space );
+		if ( false !== $last_space ) {
+			$truncate = mb_substr( $truncate, 0, $last_space );
+		}
 	}
 	$truncate .= $ending;
 
