@@ -413,9 +413,8 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	);
 
 	// Check scheduled status.
-	$post_status = filter_input( INPUT_POST, 'post_status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-	$post_status = ! empty( $post_status ) ? sanitize_text_field( wp_unslash( $post_status ) ) : '';
-	if ( ! empty( $post_status ) && in_array( $post_status, array( 'published', 'scheduled' ), true ) ) {
+	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status() ) {
 		$args['status'] = $post_status;
 	}
 
