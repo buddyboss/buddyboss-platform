@@ -131,10 +131,11 @@ function bp_nouveau_ajax_object_template_loader() {
 	 * Filters the server path for the template loader.
 	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 2.6.10 Added the `$object` parameter.
 	 *
 	 * @param string Template file path.
 	 */
-	$template_path = apply_filters( 'bp_nouveau_object_template_path', $template_path );
+	$template_path = apply_filters( 'bp_nouveau_object_template_path', $template_path, $object );
 
 	load_template( $template_path );
 	$result['contents'] = ob_get_contents();
