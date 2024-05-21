@@ -178,6 +178,7 @@ add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit
 add_filter( 'bp_get_activity_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_get_activity_content_body', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
+add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 
 // Modal template for activity.
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
