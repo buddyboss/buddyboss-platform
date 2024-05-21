@@ -388,7 +388,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$notice = bb_get_pro_label_notice( 'schedule_posts' );
 		?>
 			<input id="bb_enable_activity_schedule_posts" name="<?php echo empty( $notice ) ? '_bb_enable_activity_schedule_posts' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
-			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow Group Organisers and Moderators to schedule their posts', 'buddyboss' ); ?></label>
+			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow Group Organizers and Moderators to schedule their posts', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
