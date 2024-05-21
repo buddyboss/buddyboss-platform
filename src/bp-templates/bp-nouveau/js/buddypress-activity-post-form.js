@@ -412,6 +412,14 @@ window.bp = window.bp || {};
 				}
 			}
 
+			if( 'undefined' !== activity_data.activity_poll_title && activity_data.activity_poll_title ) {
+				self.postForm.model.set( 'activity_poll_title', activity_data.activity_poll_title );
+				self.postForm.model.set( 'activity_poll_options', activity_data.activity_poll_options );
+				self.postForm.model.set( 'activity_poll_allow_multiple_answer', activity_data.activity_poll_allow_multiple_answer );
+				self.postForm.model.set( 'activity_poll_allow_new_option', activity_data.activity_poll_allow_new_option );
+				self.postForm.model.set( 'activity_poll_duration', activity_data.activity_poll_duration );
+			}
+
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
@@ -1045,7 +1053,12 @@ window.bp = window.bp || {};
 			}
 
 			// validation for content editor.
-			if ( '' === filtered_content && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
+			if ( '' === filtered_content && ( 
+				( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && 
+				( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && 
+				( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && 
+				( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) 
+			) && ( _.isUndefined( self.postForm.model.get( 'activity_poll_title' ) ) || self.postForm.model.get( 'activity_poll_title' ).trim() === '' ) ) {
 				if ( bp.draft_content_changed ) {
 					localStorage.removeItem( bp.draft_activity.data_key );
 					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
