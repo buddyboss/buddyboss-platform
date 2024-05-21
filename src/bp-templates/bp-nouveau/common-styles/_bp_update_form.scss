@@ -145,6 +145,10 @@
 
 .activity-post-user-name-container {
 
+	h5 {
+		margin: 0;
+	}
+
 	.activity-post-user-name {
 		line-height: 1;
 	}
@@ -164,7 +168,8 @@
 	background-color: #fff;
 
 	#whats-new-privacy-stage,
-	#bp-activity-privacy-point {
+	#bp-activity-privacy-point,
+	#activity-schedule-section {
 		display: none;
 	}
 }
@@ -254,6 +259,7 @@
 
 	#discard-draft-activity {
 		display: block;
+		padding: 0 8px 0 0;
 	}
 }
 
@@ -400,6 +406,10 @@
 		position: relative;
 		display: inline-block;
 		width: 100%;
+
+		&.hide-schedule-button #bb-schedule-posts {
+			display: none;
+		}
 	}
 
 	#whats-new-form.bottom-notice {
@@ -545,6 +555,9 @@
 		padding: 16px;
 
 		img {
+			max-width: 45px;
+			height: auto;
+			border-radius: 50%;
 			box-shadow: none;
 			display: inline-block;
 			margin-right: 15px;
@@ -604,12 +617,28 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
-	@media screen and (max-width: 480px) {
+	@media screen and (max-width: 580px) {
 
-		.has-draft .whats-new-form-footer {
+		.whats-new-form-footer {
 			flex-direction: column;
 			align-items: center;
 			padding-top: $pad-med;
+		}
+
+		.activity-form.focus-in #activity-form-submit-wrapper {
+			padding: 0 15px;
+		}
+
+		#whats-new-form.activity-form.has-draft #discard-draft-activity {
+			padding: 0 10px 0 5px;
+		}
+
+		.activity-form.focus-in .whats-new-form-header #user-status-huddle {
+			flex-wrap: wrap;
+
+			.activity-post-name-status {
+				max-width: 50%;
+			}
 		}
 
 	}
@@ -1019,6 +1048,7 @@
 .activity-update-form {
 
 	#activity-header h3 {
+		font-size: 20px;
 		margin: 0;
 	}
 
