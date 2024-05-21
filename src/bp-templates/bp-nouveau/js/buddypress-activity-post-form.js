@@ -5401,7 +5401,17 @@ window.bp = window.bp || {};
 				}
 
 				// validation for content editor.
-				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true !== this.model.get( 'link_success' ) ) && ( ( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) && ( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) && ( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) && ( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+				if (
+					$( $.parseHTML( content ) ).text().trim() === '' && 
+					( ! _.isUndefined( this.model.get( 'link_success' ) ) && true !== this.model.get( 'link_success' ) ) &&
+					( 
+						( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) &&
+						( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) &&
+						( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) &&
+						( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) &&
+						( _.isUndefined( self.model.get( 'activity_poll_title' ) ) || self.model.get( 'activity_poll_title' ).trim() === '' )
+					)
+				) {
 					self.model.set(
 						'errors',
 						{
