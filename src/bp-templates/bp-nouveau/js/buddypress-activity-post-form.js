@@ -640,7 +640,15 @@ window.bp = window.bp || {};
 					if ( self.dropzone ) {
 						self.dropzone.files.push( mock_file );
 						self.dropzone.emit( 'addedfile', mock_file );
-						self.createThumbnailFromUrl( mock_file );
+
+						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+							$( self.dropzone.files[i].previewElement ).find( 'img' ).attr( 'src', activity_data.media[i].thumb );
+							self.dropzone.emit( 'thumbnail', activity_data.media[i].thumb );
+							self.dropzone.emit( 'complete', mock_file );
+						} else {
+							self.createThumbnailFromUrl( mock_file );
+						}
+
 						self.dropzone.emit( 'dz-success' );
 						self.dropzone.emit( 'dz-complete' );
 					}
