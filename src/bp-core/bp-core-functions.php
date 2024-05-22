@@ -9767,3 +9767,24 @@ function bb_mention_add_user_dynamic_link( $content ) {
 function bb_pro_schedule_posts_version() {
 	return '2.5.20';
 }
+
+/**
+ * Function for writing logs to debug.log 
+ * 
+ * @param [mixed] $log The log entry that needs to be written into the debug.log.
+ * @param [boolean] $always_print Optional. True then always print the log. Default false.
+ * 
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @return void
+ */
+function bb_error_log( $log = '', $always_print = false ) {
+	
+	if ( ( defined( 'BB_DEBUG_LOG' ) && true === BB_DEBUG_LOG ) || true === $always_print ){
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} else {
+			error_log( $log );
+		}
+	}
+}
