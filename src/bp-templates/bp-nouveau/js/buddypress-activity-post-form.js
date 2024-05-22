@@ -53,6 +53,11 @@ window.bp = window.bp || {};
 				this.dropzoneView();
 			}
 
+			var paramValue = this.bbGetUrlParameter( 'param' );
+			if ( 'scheduled_posts' === paramValue ) {
+				bp.Nouveau.SchedulePost.openSchedulePostModal();
+			}
+
 			this.postFormView();
 
 			this.postFormPlaceholderView();
@@ -61,6 +66,13 @@ window.bp = window.bp || {};
 			this.getCurrentDraftActivity();
 			this.syncDraftActivity();
 			this.reloadWindow();
+		},
+
+		bbGetUrlParameter( name ) {
+			name = name.replace( /[\[]/, '\\[' ).replace( /[\]]/, '\\]' );
+			var regex = new RegExp( '[\\?&]' + name + '=([^&#]*)' );
+			var results = regex.exec( location.search );
+			return results === null ? '' : decodeURIComponent( results[1].replace( /\+/g, ' ' ) );
 		},
 
 		postFormView: function () {
@@ -4142,6 +4154,7 @@ window.bp = window.bp || {};
 					this.model.set( 'object', this.model.get( 'object' ) );
 					this.model.set( 'group_name', model.get( 'name' ) );
 					this.model.set( 'group_image', model.get( 'avatar_url' ) );
+					this.model.set( 'group_url', model.get( 'group_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
@@ -5557,12 +5570,18 @@ window.bp = window.bp || {};
 							}
 
 							if ( '' !== title && '' !== desc && '' !== LinkText ) {
-								Backbone.trigger( 'triggerToastMessage',
+								var scheduleUrl = '';
+								if ( 'group' === data.privacy ) {
+									scheduleUrl = data.group_url + '?param=scheduled_posts';
+								}
+								Backbone.trigger(
+									'triggerToastMessage',
 									title,
 									'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
 									'success',
-									null,
-									true );
+									scheduleUrl,
+									true
+								);
 							}
 						}
 
