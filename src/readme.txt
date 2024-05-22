@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.11 =
+* Bug: Core - Updated Schedule posts logic for Group organisers and owners
+
 = 2.6.10 =
 * New Feature! Admins and Groups organizers and moderators now have the ability to use scheduling posts
 * Enhancement: Core - Updated REST API caching and purging business logic
