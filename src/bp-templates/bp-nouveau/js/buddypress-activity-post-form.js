@@ -4262,6 +4262,7 @@ window.bp = window.bp || {};
 					this.model.set( 'group_name', model.get( 'name' ) );
 					this.model.set( 'item_name', model.get( 'name' ) );
 					this.model.set( 'group_image', model.get( 'avatar_url' ) );
+					this.model.set( 'group_url', model.get( 'group_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
@@ -5685,23 +5686,29 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if ( 'scheduled' === data.activity_action_type ) {
-							var title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
-							var desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
+							var title    = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
+							var desc     = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
 							var LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditViewSchedulePost : '';
 
 							if ( ! data.edit_activity ) { // It's a new scheduled post.
-								title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
-								desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
+								title    = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
+								desc     = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
 								LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.viewSchedulePosts : '';
 							}
 
 							if ( '' !== title && '' !== desc && '' !== LinkText ) {
-								Backbone.trigger( 'triggerToastMessage',
+								var scheduleUrl = '';
+								if ( ! _.isUndefined( data.privacy ) && 'group' === data.privacy ) {
+									scheduleUrl = data.group_url + '?action=scheduled_posts';
+								}
+								Backbone.trigger(
+									'triggerToastMessage',
 									title,
 									'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
 									'success',
-									null,
-									true );
+									scheduleUrl,
+									true
+								);
 							}
 						}
 

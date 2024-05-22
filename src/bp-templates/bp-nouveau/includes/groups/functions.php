@@ -488,6 +488,9 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $item->id );
 		if ( $is_admin || $is_mod ) {
 			$args['allow_schedule'] = 'enabled';
+			if ( bp_is_active( 'activity' ) ) {
+				$args['group_url'] = trailingslashit( bp_get_group_permalink( $item ) . bp_get_activity_slug() );
+			}
 		}
 	}
 
