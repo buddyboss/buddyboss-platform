@@ -65,6 +65,15 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			bp_update_option( 'bp-default-group-avatar-type', $group_avatar_type_before_saving );
 		}
 
+		if ( 'group-name' === $group_avatar_type_after_saving && empty( _wp_image_editor_choose() ) ) {
+
+			if ( 'group-name' === $group_avatar_type_before_saving ) {
+				$group_avatar_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-default-group-avatar-type', $group_avatar_type_before_saving );
+		}
+
 		if ( ! isset( $bb_default_custom_group_cover ) || ( isset( $bb_default_custom_group_cover ) && empty( $bb_default_custom_group_cover ) && 'custom' === $group_cover_type_after_saving ) ) {
 
 			if ( 'custom' === $group_cover_type_before_saving ) {
@@ -122,8 +131,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-messages', esc_html__( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
 		}
 
-		// Allow group subscriptions setting.
-		$this->add_field( 'bb_enable_group_subscriptions', esc_html__( 'Subscriptions', 'buddyboss' ), 'bb_admin_setting_callback_group_subscriptions', 'intval' );
+		// Hide group subscription setting when notifications is disabled or forum/activity is not active.
+		if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
+			// Allow group subscriptions setting.
+			$this->add_field( 'bb_enable_group_subscriptions', esc_html__( 'Subscriptions', 'buddyboss' ), 'bb_admin_setting_callback_group_subscriptions', 'intval' );
+		}
 
 		// Group avatar and cover.
 		$this->add_section( 'bp_groups_avatar_settings', esc_html__( 'Group Images', 'buddyboss' ), '', 'bp_group_avatar_tutorial' );

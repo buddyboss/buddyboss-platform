@@ -439,16 +439,8 @@ function bp_version_updater() {
 			bb_update_to_2_3_1();
 		}
 
-		if ( $raw_db_version < 20001 ) {
-			bb_update_to_2_3_3();
-		}
-
 		if ( $raw_db_version < 20101 ) {
 			bb_update_to_2_3_4();
-		}
-
-		if ( $raw_db_version < 20111 ) {
-			bb_update_to_2_3_41();
 		}
 
 		if ( $raw_db_version < 20211 ) {
@@ -481,6 +473,22 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 20861 ) {
 			bb_update_to_2_4_71();
+		}
+
+		if ( $raw_db_version < 20991 ) {
+			bb_update_to_2_4_74();
+		}
+
+		if ( $raw_db_version < 21011 ) {
+			bb_update_to_2_4_75();
+		}
+
+		if ( $raw_db_version < 21081 ) {
+			bb_update_to_2_5_80();
+		}
+
+		if ( $raw_db_version < 21111 ) {
+			bb_update_to_2_6_10();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -2711,99 +2719,6 @@ function bb_update_to_2_3_1() {
 		BB_Presence::bb_load_presence_api_mu_plugin();
 		BB_Presence::bb_check_native_presence_load_directly();
 	}
-
-	bb_generate_member_profile_links_on_update();
-}
-
-/**
- * Function to run while update.
- *
- * @since BuddyBoss 2.3.3
- *
- * @return void
- */
-function bb_update_to_2_3_3() {
-	bb_repair_member_unique_slug();
-}
-
-/**
- * Background job to repair user profile slug.
- *
- * @since BuddyBoss 2.3.3
- *
- * @param int $paged Number of page.
- *
- * @return void
- */
-function bb_repair_member_unique_slug( $paged = 1 ) {
-	global $bp_background_updater;
-
-	if ( empty( $paged ) ) {
-		$paged = 1;
-	}
-
-	$per_page = 50;
-	$offset   = ( ( $paged - 1 ) * $per_page );
-
-	$user_ids = get_users(
-		array(
-			'fields'     => 'ids',
-			'number'     => $per_page,
-			'offset'     => $offset,
-			'orderby'    => 'ID',
-			'order'      => 'ASC',
-			'meta_query' => array(
-				array(
-					'key'     => 'bb_profile_slug',
-					'compare' => 'EXISTS',
-				),
-			),
-		)
-	);
-
-	if ( empty( $user_ids ) ) {
-		return;
-	}
-
-	$bp_background_updater->data(
-		array(
-			array(
-				'callback' => 'bb_remove_duplicate_member_slug',
-				'args'     => array( $user_ids, $paged ),
-			),
-		)
-	);
-	$bp_background_updater->save()->schedule_event();
-}
-
-/**
- * Delete duplicate bb_profile_slug_ key from the usermeta table.
- *
- * @since BuddyBoss 2.3.3
- *
- * @param array $user_ids Array of user ID.
- * @param int   $paged    Number of page.
- *
- * @return void
- */
-function bb_remove_duplicate_member_slug( $user_ids, $paged ) {
-	global $wpdb;
-
-	foreach ( $user_ids as $user_id ) {
-		$unique_slug = bp_get_user_meta( $user_id, 'bb_profile_slug', true );
-
-		$wpdb->query(
-			$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
-				"DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s AND user_id = %d",
-				"bb_profile_slug_{$unique_slug}",
-				$user_id
-			)
-		);
-	}
-
-	$paged++;
-	bb_repair_member_unique_slug( $paged );
 }
 
 /**
@@ -2838,24 +2753,6 @@ function bb_update_to_2_3_4() {
 	}
 
 	wp_cache_flush();
-}
-
-/**
- * Background job to update user profile slug.
- *
- * @since BuddyBoss 2.3.41
- *
- * @return void
- */
-function bb_update_to_2_3_41() {
-	$is_already_run = get_transient( 'bb_update_to_2_3_4' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	set_transient( 'bb_update_to_2_3_4', 'yes', DAY_IN_SECONDS );
-
-	bb_core_update_repair_member_slug();
 }
 
 /**
@@ -3513,4 +3410,196 @@ function bb_core_removed_orphaned_member_slug() {
 
 	// Re-register the background jobs until the result is empty.
 	bb_background_removed_orphaned_metadata();
+}
+
+/**
+ * Create a new table for background process logs.
+ *
+ * @since BuddyBoss 2.5.60
+ *
+ * @return void
+ */
+function bb_update_to_2_4_74() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
+}
+
+/**
+ * Remove columns from index key for background logs table.
+ *
+ * @since BuddyBoss 2.5.70
+ *
+ * @return void
+ */
+function bb_update_to_2_4_75() {
+	global $wpdb;
+
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+
+		// Delete the existing table.
+		$log_table_name = bp_core_get_table_prefix() . 'bb_background_process_logs';
+
+		// Check the index keys.
+		$indices_columns = $wpdb->get_col( $wpdb->prepare( "SELECT COLUMN_NAME FROM information_schema.statistics WHERE table_schema = %s AND table_name = %s", $wpdb->__get( 'dbname' ), $log_table_name ) );
+
+		if ( empty( $indices_columns ) ) {
+			return;
+		}
+
+		$pre_indices  = array( 'id', 'process_start_date_gmt' );
+		$diff_indices = array_diff( $indices_columns, $pre_indices );
+
+		if ( empty( $diff_indices ) ) {
+			return;
+		}
+
+		// Delete the existing table.
+		$wpdb->query( "DROP TABLE IF EXISTS {$log_table_name}" );
+
+		// Create a new table again.
+		BB_BG_Process_Log::instance()->create_table();
+	}
+}
+
+/**
+ * For existing installation, disable close comments setting by default.
+ * Migrate comment related discussion settings to new comment settings.
+ * Migrate the performance-related setting for existing installations.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_update_to_2_5_80() {
+
+	$is_already_run = get_transient( 'bb_update_to_2_5_80' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	set_transient( 'bb_update_to_2_5_80', true, HOUR_IN_SECONDS );
+
+	bp_update_option( '_bb_enable_close_activity_comments', 0 );
+
+	bp_update_option( '_bb_enable_activity_comment_threading', (int) get_option( 'thread_comments' ) );
+
+	$thread_comments_depth = (int) get_option( 'thread_comments_depth', 3 );
+	if ( $thread_comments_depth > 4 ) {
+		$thread_comments_depth = 4;
+	}
+	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
+
+	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
+
+	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
+	bp_update_option( 'bb_ajax_request_page_load', 2 );
+	bp_update_option( 'bb_load_activity_per_request', 10 );
+}
+
+/**
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
+ * Remove symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return void
+ */
+function bb_update_to_2_6_10() {
+	global $wpdb;
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	if ( function_exists( 'bp_media_symlink_path' ) ) {
+		$media_symlinks_path = bp_media_symlink_path();
+		bb_remove_symlinks( $media_symlinks_path );
+	}
+
+	if ( function_exists( 'bp_document_symlink_path' ) ) {
+		$document_symlinks_path = bp_document_symlink_path();
+		bb_remove_symlinks( $document_symlinks_path );
+	}
+
+	if ( function_exists( 'bb_video_symlink_path' ) ) {
+		$video_symlinks_path = bb_video_symlink_path();
+		bb_remove_symlinks( $video_symlinks_path );
+	}
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_activity' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_activity' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_activity' AND column_name = 'status'" ); //phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
+		}
+	}
+
+	// Check if the 'bp_media' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_media'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_media' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_media' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_media ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
+	}
+
+	// Check if the 'bp_document' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_document'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_document' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_document' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
+	}
+}
+
+/**
+ * Remove from the directory symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @param string $folder_path The folder path.
+ *
+ * @return void
+ */
+function bb_remove_symlinks( $folder_path ) {
+	// Open the folder.
+	if ( $handle = opendir( $folder_path ) ) {
+		// Loop through the folder contents.
+		while ( false !== ( $entry = readdir( $handle ) ) ) {
+
+			// Skip ., .. and index.html.
+			if ( '.' === $entry || '..' === $entry || 'index.html' === $entry ) {
+				continue;
+			}
+
+			// Full path to the entry.
+			$entry_path = $folder_path . '/' . $entry;
+
+			// Check if the entry is a symlink.
+			if ( is_link( $entry_path ) ) {
+				// Delete the symlink.
+				unlink( $entry_path );
+			}
+		}
+		// Close the folder handle.
+		closedir( $handle );
+	}
 }

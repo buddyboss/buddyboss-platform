@@ -91,6 +91,36 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'activity_update_close_comments' => array(
+					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'activity_loadmore_comments' => array(
+					'function' => 'bb_nouveau_ajax_activity_load_more_comments',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'activity_sync_from_modal' => array(
+					'function' => 'bb_nouveau_ajax_activity_sync_from_modal',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'toggle_activity_notification_status' => array(
+					'function' => 'bb_nouveau_ajax_toggle_activity_notification_status',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'delete_scheduled_activity' => array(
+					'function' => 'bb_nouveau_ajax_delete_scheduled_activity',
+					'nopriv'   => false,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -123,31 +153,53 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		wp_send_json_error();
 	}
 
-	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
-		$response = array(
-			'content'    => __( 'Unlike', 'buddyboss' ),
-			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
-			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
-		); // here like_count is for activity total like count
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bp_loggedin_user_id();
 
-		if ( ! bp_is_user() ) {
-			$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
-
-			if ( 1 === $fav_count ) {
-				$response['directory_tab'] = '<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
-					<a href="' . bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/">
-						' . esc_html__( 'Likes', 'buddyboss' ) . '
-					</a>
-				</li>';
-			} else {
-				$response['fav_count'] = $fav_count;
-			}
-		}
-
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error();
+	if ( ! bb_all_enabled_reactions( $item_type ) ) {
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
 	}
+
+	if ( ! empty( $_POST['reaction_id'] ) ) {
+		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+	} else {
+		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
+	}
+
+	$reacted = bp_activity_add_user_favorite(
+		$item_id,
+		$user_id,
+		array(
+			'type'        => $item_type,
+			'reaction_id' => $reaction_id,
+			'error_type'  => 'wp_error',
+		)
+	);
+
+	// If there was an error, return it.
+	if ( is_wp_error( $reacted ) ) {
+		wp_send_json_error( $reacted->get_error_message() );
+	}
+
+	$response = array(
+		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
+		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
+	);
+
+	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
+
+	if ( 1 === $fav_count ) {
+		$response['directory_tab'] = sprintf(
+			'<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
+				<a href="%1$s"><div class="bb-component-nav-item-point">%2$s</div> </a>
+			</li>',
+			esc_url( bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/' ),
+			bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' )
+		);
+	}
+
+	wp_send_json_success( $response );
 }
 
 /**
@@ -158,6 +210,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
  * @return string JSON reply
  */
 function bp_nouveau_ajax_unmark_activity_favorite() {
+
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error();
 	}
@@ -167,27 +220,48 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		wp_send_json_error();
 	}
 
-	if ( bp_activity_remove_user_favorite( $_POST['id'] ) ) {
-		$response = array(
-			'content'    => __( 'Like', 'buddyboss' ),
-			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
-			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
-		); // here like_count is for activity total like count.
-
-		$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
-
-		if ( 0 === $fav_count && ! bp_is_single_activity() ) {
-			$response['no_favorite'] = '<li><div class="bp-feedback bp-messages info">
-				' . __( 'Sorry, there was no activity found.', 'buddyboss' ) . '
-			</div></li>';
-		} else {
-			$response['fav_count'] = $fav_count;
-		}
-
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error();
+	if ( empty( $_POST['item_id'] ) ) {
+		wp_send_json_error( esc_html__( 'No item id', 'buddyboss' ) );
 	}
+
+	$item_id   = sanitize_text_field( $_POST['item_id'] );
+	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$user_id   = bp_loggedin_user_id();
+
+	if ( ! bb_all_enabled_reactions( $item_type ) ) {
+		wp_send_json_error( esc_html__( 'Reactions are temporarily disabled by site admin, please try again later', 'buddyboss' ) );
+	}
+
+	$un_reacted = bp_activity_remove_user_favorite(
+		$item_id,
+		$user_id,
+		array(
+			'type'       => $item_type,
+			'error_type' => 'wp_error',
+		)
+	);
+
+	if ( is_wp_error( $un_reacted ) ) {
+		wp_send_json_error( $un_reacted->get_error_message() );
+	}
+
+	$response = array(
+		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
+		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
+	);
+
+	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
+	if ( 0 === $fav_count && ! bp_is_single_activity() ) {
+		$response['no_favorite'] = sprintf(
+			'<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p>%s</p>
+			</aside>',
+			esc_html__( 'Sorry, there was no activity found.', 'buddyboss' )
+		);
+	}
+
+	wp_send_json_success( $response );
 }
 
 /**
@@ -333,12 +407,18 @@ function bp_nouveau_ajax_get_single_activity_content() {
 		wp_send_json_error( $response );
 	}
 
-	$activity_array = bp_activity_get_specific(
-		array(
-			'activity_ids'     => $_POST['id'],
-			'display_comments' => 'stream',
-		)
+	$args = array(
+		'activity_ids'     => $_POST['id'],
+		'display_comments' => 'stream',
 	);
+
+	// Check scheduled status.
+	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status() ) {
+		$args['status'] = $post_status;
+	}
+
+	$activity_array = bp_activity_get_specific( $args );
 
 	if ( empty( $activity_array['activities'][0] ) ) {
 		wp_send_json_error( $response );
@@ -484,11 +564,35 @@ function bp_nouveau_ajax_new_activity_comment() {
 			$parent_id = (int) $p_obj->secondary_item_id;
 		}
 		$activities_template->activity->current_comment->depth = $depth;
+
+		// Set activity related properties to be used in the loop.
+		if ( ! isset( $activities_template->activity->component ) ) {
+			if ( ! isset( $p_obj ) ) {
+				$a_obj = new BP_Activity_Activity( $activities_template->activities[0]->item_id );
+			} else {
+				$a_obj = new BP_Activity_Activity( $p_obj->item_id );
+			}
+
+			$activities_template->activity->component         = $a_obj->component;
+			$activities_template->activity->item_id           = $a_obj->item_id;
+			$activities_template->activity->secondary_item_id = $a_obj->secondary_item_id;
+		}
 	}
 
 	ob_start();
+
+	$comment_template_args = array();
+	if ( ! empty( $_POST['edit_comment'] ) && ! bp_is_single_activity() ) {
+		$comment_template_args = array(
+			'show_replies'   => false,
+			'limit_comments' => true,
+		);
+	}
+
 	// Get activity comment template part.
-	bp_get_template_part( 'activity/comment' );
+	add_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
+	bp_get_template_part( 'activity/comment', null, $comment_template_args );
+	remove_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
 	$response = array( 'contents' => ob_get_contents() );
 	ob_end_clean();
 
@@ -616,6 +720,15 @@ function bp_nouveau_ajax_post_update() {
 	$object      = '';
 	$is_private  = false;
 
+	// Check if the activity comments closed.
+	if ( ! empty( $activity_id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss' )
+			)
+		);
+	}
+
 	// Try to get the item id from posted variables.
 	if ( ! empty( $_POST['item_id'] ) ) {
 		$item_id = (int) $_POST['item_id'];
@@ -634,13 +747,15 @@ function bp_nouveau_ajax_post_update() {
 
 	$draft_activity_meta_key = 'draft_' . $object;
 
+	$activity_metas = bb_activity_get_metadata( $activity_id );
+
 	if (
 		bp_is_active( 'media' ) &&
 		! empty( $_POST['media'] )
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
 
-		$media_ids      = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+		$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
 		$posted_media   = array_column( $_POST['media'], 'media_id' );
 		$posted_media   = wp_parse_id_list( $posted_media );
@@ -663,7 +778,7 @@ function bp_nouveau_ajax_post_update() {
 	) {
 		$group_id = ( 'group' === $object ) ? $item_id : 0;
 
-		$document_ids      = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+		$document_ids      = $activity_metas['bp_document_ids'][0] ?? '';
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
 		$posted_document   = array_column( $_POST['document'], 'document_id' );
 		$posted_document   = wp_parse_id_list( $posted_document );
@@ -686,12 +801,101 @@ function bp_nouveau_ajax_post_update() {
 		$privacy = $_POST['privacy']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
+	$activity_status      = bb_get_activity_published_status();
+	$schedule_date_time   = '';
+	$is_scheduled         = false;
+	$activity_action_type = bb_filter_input_string( INPUT_POST, 'activity_action_type' );
+	if ( ! empty( $activity_action_type ) && 'scheduled' === $activity_action_type ) {
+		$activity_status = bb_get_activity_scheduled_status();
+
+		$activity_schedule_date_raw = bb_filter_input_string( INPUT_POST, 'activity_schedule_date_raw' );
+		$activity_schedule_time     = bb_filter_input_string( INPUT_POST, 'activity_schedule_time' );
+		$activity_schedule_meridiem = bb_filter_input_string( INPUT_POST, 'activity_schedule_meridiem' );
+		if ( ! empty( $activity_schedule_date_raw ) && ! empty( $activity_schedule_time ) && ! empty( $activity_schedule_meridiem ) ) {
+			$is_scheduled = true;
+
+			$activity_schedule_date_raw = sanitize_text_field( $activity_schedule_date_raw );
+			$activity_schedule_meridiem = sanitize_text_field( $activity_schedule_meridiem ); // 'pm' or 'am'
+			$activity_schedule_time     = sanitize_text_field( $activity_schedule_time );
+
+			// Convert 12-hour time format to 24-hour time format.
+			$activity_schedule_time_24hr = date( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
+
+			// Combine date and time.
+			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
+
+			// Convert to MySQL datetime format.
+			$schedule_date_time = get_gmt_from_date( $activity_datetime );
+
+			// Get current GMT timestamp.
+			$current_timestamp = gmdate( 'U' );
+
+			// Add 1 hour to the timestamp (in seconds).
+			$next_hour_timestamp = $current_timestamp + 3600;
+
+			// Add 3 months to the timestamp (in seconds).
+			$three_months_ago_timestamp = strtotime( '+3 months', $current_timestamp );
+			$scheduled_timestamp        = strtotime( $schedule_date_time );
+			if ( empty( $activity_id ) ) {
+				// Check if the scheduled date is within the next hour.
+				if ( $scheduled_timestamp < $next_hour_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						)
+					);
+				}
+
+				// Check if the scheduled date is more than three months ago.
+				if ( $scheduled_timestamp > $three_months_ago_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a schedule date between next three months.', 'buddyboss' ),
+						)
+					);
+				}
+			} elseif ( ! empty( $activity_id ) ) {
+
+				// Check if the scheduled time is changed.
+				$obj_activity = new BP_Activity_Activity( $activity_id );
+				if ( strtotime( $obj_activity->date_recorded ) !== $scheduled_timestamp && $scheduled_timestamp < $next_hour_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						)
+					);
+				}
+			}
+		}
+	}
+
+	if ( $is_scheduled && ! bb_is_enabled_activity_schedule_posts() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Schedule activity settings disabled.', 'buddyboss' ),
+			)
+		);
+	}
+
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
 
 		if ( ! bb_user_can_create_activity() ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'You don\'t have access to do a activity.', 'buddyboss' ),
+				)
+			);
+		}
+		if (
+			$is_scheduled &&
+			(
+				! function_exists( 'bb_can_user_schedule_activity' ) ||
+				! bb_can_user_schedule_activity()
+			)
+		) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You don\'t have access to schedule the activity.', 'buddyboss' ),
 				)
 			);
 		}
@@ -705,28 +909,56 @@ function bp_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
-		$activity_id = bp_activity_post_update(
-			array(
-				'id'         => $activity_id,
-				'content'    => $content,
-				'privacy'    => $privacy,
-				'error_type' => 'wp_error',
-			)
+		$post_array = array(
+			'id'         => $activity_id,
+			'content'    => $content,
+			'privacy'    => $privacy,
+			'error_type' => 'wp_error',
 		);
+
+		if ( $is_scheduled ) {
+			$post_array['recorded_time'] = $schedule_date_time;
+			$post_array['status']        = $activity_status;
+		}
+		$activity_id = bp_activity_post_update( $post_array );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {
 
-			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
+			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components.
+
+			if (
+				$is_scheduled &&
+				( 
+					! function_exists( 'bb_can_user_schedule_activity' ) ||
+					! bb_can_user_schedule_activity(
+						array(
+							'object'   => 'group',
+							'group_id' => $item_id,
+						)
+					)
+				)
+			) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'You don\'t have permission to schedule activity in particular group.', 'buddyboss' ),
+					)
+				);
+			}
+
+			$post_array = array(
+				'id'       => $activity_id,
+				'content'  => $_POST['content'],
+				'group_id' => $item_id,
+			);
+
+			if ( $is_scheduled ) {
+				$post_array['recorded_time'] = $schedule_date_time;
+				$post_array['status']        = $activity_status;
+			}
 
 			// This function is setting the current group!
-			$activity_id = groups_post_update(
-				array(
-					'id'       => $activity_id,
-					'content'  => $_POST['content'],
-					'group_id' => $item_id,
-				)
-			);
+			$activity_id = groups_post_update( $post_array );
 
 			if ( empty( $status ) ) {
 				if ( ! empty( $bp->groups->current_group->status ) ) {
@@ -792,7 +1024,7 @@ function bp_nouveau_ajax_post_update() {
 			 *
 			 * @since BuddyPress 3.0.0
 			 *
-			 * @param string/bool $is_private Privacy status for the update.
+			 * @param bool $is_private Privacy status for the update.
 			 */
 			'is_private'              => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
 			'is_directory'            => bp_is_activity_directory(),
@@ -1080,4 +1312,387 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 	} else {
 		wp_send_json_error( $response );
 	}
+}
+
+/**
+ * Update close activity comments.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_update_close_comments() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+	);
+
+	if ( ! bb_is_close_activity_comments_enabled() ) {
+		wp_send_json_error(
+			array(
+				'feedback' => esc_html__( 'There was a problem marking this operation. Close comments setting is disabled.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if (
+		! bp_is_post_request() ||
+		! is_user_logged_in() ||
+		empty( $_POST['nonce'] ) ||
+		! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' )
+	) {
+		wp_send_json_error( $response );
+	}
+
+	if (
+		empty( $_POST['id'] ) ||
+		empty( $_POST['close_comments_action'] ) ||
+		! in_array( $_POST['close_comments_action'], array( 'close_comments', 'unclose_comments' ), true )
+	) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['close_comments_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bp_loggedin_user_id(),
+		'retval'      => 'string',
+	);
+
+	$retval = bb_activity_close_unclose_comments( $args );
+	if ( ! empty( $retval ) ) {
+
+		if ( 'unclosed_comments' === $retval ) {
+			$response['feedback'] = esc_html__( 'You turned on commenting for this post', 'buddyboss' );
+		} elseif ( 'closed_comments' === $retval ) {
+			$response['feedback'] = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
+			$response['feedback'] = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
+		}
+
+		/**
+		 * Filters the response before updating activity close comments via AJAX.
+		 * This filter allows modification of the response data before it's used to update activity close comments via AJAX.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param mixed $response The response data. Can be of any type.
+		 * @param array $_POST    The $_POST data received via AJAX request.
+		 */
+		$response = apply_filters( 'bb_ajax_activity_update_close_comments', $response, $_POST );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unclosed_comments', 'closed_comments' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
+}
+
+/**
+ * Get more comments.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_load_more_comments() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['parent_comment_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Parent comment id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	global $activities_template;
+	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
+
+	$activities_template = new stdClass();
+	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
+	if ( empty( $parent_commment ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+	$comments = BP_Activity_Activity::append_comments(
+		array( $parent_commment ),
+		'',
+		true,
+		array(
+			'limit'                  => bb_get_activity_comment_loading(),
+			'offset'                 => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
+			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+			'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
+			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+		)
+	);
+
+	if ( empty( $comments[0] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'No more items to load.', 'buddyboss' ),
+			)
+		);
+	}
+
+	$activities_template->activity = $comments[0];
+	// We have all comments and replies just loop through.
+	ob_start();
+
+	$args = array(
+		'limit_comments'         => true,
+		'comment_load_limit'     => bb_get_activity_comment_loading(),
+		'parent_comment_id'      => $parent_comment_id,
+		'main_activity_id'       => $activity_id,
+		'is_ajax_load_more'      => true,
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
+	);
+
+	// Check if parent is the main activity.
+	if ( isset( $activities_template->activity ) ) {
+		// No current comment.
+		bp_activity_recurse_comments( $activities_template->activity, $args );
+	} else {
+		wp_send_json_error(
+			array(
+				'message' => __( 'No more items to load.', 'buddyboss' ),
+			)
+		);
+	}
+
+	wp_send_json_success(
+		array(
+			'comments' => ob_get_clean(),
+		)
+	);
+}
+
+/**
+ * Get particular activity to sync when activity modal is closed.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_activity_sync_from_modal() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Nonce verification.
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	if ( empty( $_POST['activity_id'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Activity id cannot be empty.', 'buddyboss' ),
+			)
+		);
+	}
+
+	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	$args = array(
+		'in'               => $activity_id,
+		'display_comments' => true,
+	);
+
+	ob_start();
+	if ( bp_has_activities( $args ) ) {
+		while ( bp_activities() ) {
+			bp_the_activity();
+			bp_get_template_part( 'activity/entry' );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'activity' => ob_get_clean(),
+		)
+	);
+}
+
+/**
+ * Mute/Unmute Activity Notification.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return void
+ */
+function bb_nouveau_ajax_toggle_activity_notification_status() {
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+	);
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['notification_toggle_action'] ) || ! in_array( $_POST['notification_toggle_action'], array( 'mute', 'unmute' ), true ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args = array(
+		'action'      => $_POST['notification_toggle_action'],
+		'activity_id' => (int) $_POST['id'],
+		'user_id'     => bp_loggedin_user_id(),
+	);
+
+	$retval = bb_toggle_activity_notification_status( $args );
+
+	if ( 'unmute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
+	} elseif ( 'mute' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
+	} elseif ( 'already_muted' === $retval ) {
+		$response['feedback'] = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
+	}
+
+	if ( ! empty( $retval ) && in_array( $retval, array( 'unmute', 'mute', 'already_muted' ), true ) ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error( $response );
+	}
+}
+
+/**
+ * Deletes the scheduled Activity item received via a POST request.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return void JSON reply.
+ */
+function bb_nouveau_ajax_delete_scheduled_activity() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'scheduled_post_nonce' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) || ! is_numeric( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+
+	// Check access.
+	if ( ! bp_activity_user_can_delete( $activity ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if (
+		(
+			// Check for non admin member to delete scheduled post which they scheduled when they have permission to moderate.
+			! bp_current_user_can( 'bp_moderate' ) && 'groups' !== $activity->component
+		) ||
+		(
+			// If Groups allow to schedule post then check user can delete schedule post or not;
+			'groups' === $activity->component && bp_is_active( 'groups' ) && bb_is_enabled_activity_schedule_posts_filter()
+		)
+	) {
+		$is_admin = groups_is_user_admin( $activity->user_id, $activity->item_id );
+		$is_mod   = groups_is_user_mod( $activity->user_id, $activity->item_id );
+		if ( ! $is_admin && ! $is_mod ) {
+			wp_send_json_error(
+				array(
+					'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss' ),
+				)
+			);
+		}
+	}
+
+	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+
+	if (
+		! bp_activity_delete(
+			array(
+				'id'      => $activity->id,
+				'user_id' => $activity->user_id,
+			)
+		)
+	) {
+		wp_send_json_error( $response );
+	}
+
+	do_action( 'bb_activity_action_delete_scheduled_activity', $activity->id, $activity->user_id );
+
+	// The activity has been deleted successfully.
+	$response = array( 'deleted' => $activity->id );
+
+	// If on a single activity redirect to user's home.
+	if ( ! empty( $_POST['is_single'] ) ) {
+		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
+		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
+	}
+
+	wp_send_json_success( $response );
 }

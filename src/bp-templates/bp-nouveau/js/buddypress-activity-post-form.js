@@ -331,6 +331,8 @@ window.bp = window.bp || {};
 			if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
 				$tabActivityFormWrap.addClass( 'bp-hide' );
 			}
+
+			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
@@ -380,9 +382,84 @@ window.bp = window.bp || {};
 					activity_data.object = 'groups';
 				}
 			}
+
 			// Set link image index and confirm image index.
 			self.postForm.model.set( 'link_image_index', activity_data.link_image_index_save );
 			self.postForm.model.set( 'link_image_index_save', activity_data.link_image_index_save );
+
+			if ( 'undefined' !== typeof BP_Nouveau.activity_schedule && BP_Nouveau.activity_schedule.strings.activity_schedule_enabled ) {
+				if ( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
+
+					// Set Schedule post data.
+					self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
+					self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
+					self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
+					self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+
+					if ( 'scheduled' === activity_data.status ) {
+						self.postForm.model.set( 'activity_action_type', activity_data.status );
+					} else {
+						self.postForm.model.set( 'activity_action_type', activity_data.activity_action_type );
+						// Check if time has passed and trigger warning.
+						var activity_schedule_datetime = activity_data.activity_schedule_date_raw + ' ' + activity_data.activity_schedule_time + ' ' + activity_data.activity_schedule_meridiem;
+						var activity_schedule_date = new Date( activity_schedule_datetime );
+						var current_date = new Date( bp.Nouveau.bbServerTime().currentServerTime );
+						if ( current_date > activity_schedule_date ) {
+							Backbone.trigger( 'onError', 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.scheduleWarning : '', 'warning' );
+						}
+					}
+				} else if ( 'published' === activity_data.status ) {
+					self.postForm.$el.addClass( 'hide-schedule-button' );
+				}
+			}
+
+			// Display schedule button icon when privacy is not group for admin.
+			if (
+				'group' !== activity_data.privacy &&
+				! _.isUndefined( BP_Nouveau.activity_schedule ) &&
+				! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+			) {
+				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+			}
+
+			// Show Hide Schedule post button according to group privacy.
+			if ( 'group' === activity_data.privacy ) {
+				var whatsNewForm = $( '#whats-new-form' );
+				// When change group from news feed.
+				var schedule_allowed = whatsNewForm.find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
+				if ( _.isUndefined( schedule_allowed ) ) {
+					// When change group from news feed.
+					if ( ! _.isUndefined( activity_data.schedule_allowed ) && 'enabled' === activity_data.schedule_allowed ) {
+						schedule_allowed = activity_data.schedule_allowed;
+						self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
+					} else if ( ! _.isUndefined( activity_data.schedule_allowed ) && 'disabled' === activity_data.schedule_allowed ) {
+						schedule_allowed = 'disabled';
+						self.postForm.model.set( 'schedule_allowed', activity_data.schedule_allowed );
+					} else if (
+						// On group page.
+						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
+						! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+					) {
+						schedule_allowed = 'enabled';
+					}
+				}
+
+				if ( ! _.isUndefined( schedule_allowed ) && 'enabled' === schedule_allowed ) {
+					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+				} else {
+
+					// If schedule post is not allowed then reset schedule post data.
+					self.postForm.model.set( 'activity_action_type', null );
+					self.postForm.model.set( 'activity_schedule_date_raw', null );
+					self.postForm.model.set( 'activity_schedule_date', null );
+					self.postForm.model.set( 'activity_schedule_time', null );
+					self.postForm.model.set( 'activity_schedule_meridiem', null );
+					self.postForm.model.set( 'schedule_allowed', 'disabled' );
+					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
+				}
+			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
@@ -949,7 +1026,7 @@ window.bp = window.bp || {};
 				self.postForm.$el.serializeArray(),
 				function( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -1112,7 +1189,13 @@ window.bp = window.bp || {};
 				'link_description',
 				'link_image',
 				'link_title',
-				'link_url'
+				'link_url',
+				'activity_action_type',
+				'activity_schedule_date_raw',
+				'activity_schedule_date',
+				'activity_schedule_time',
+				'activity_schedule_meridiem',
+				'schedule_allowed',
 			];
 
 			_.each(
@@ -1247,6 +1330,15 @@ window.bp = window.bp || {};
 			bp.draft_activity.post_action        = 'update';
 			bp.draft_activity.allow_delete_media = false;
 			bp.draft_activity.display_post       = '';
+
+			// Check if user can schedule in feed after discard draft.
+			if (
+				! _.isUndefined( BP_Nouveau.activity_schedule ) &&
+				! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+			) {
+				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+			}
 		},
 
 		reloadWindow: function() {
@@ -2502,11 +2594,19 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'activity-attached-gif-container',
 			template: bp.template( 'activity-attached-gif' ),
+			standalone: false,
 			events: {
 				'click .gif-image-remove': 'destroy'
 			},
 
-			initialize: function () {
+			initialize: function ( options ) {
+				this.destroy = this.destroy.bind( this );
+
+				// Check if standalone is provided in options and update the property.
+				if ( options && options.standalone !== undefined ) {
+					this.standalone = options.standalone;
+				}
+
 				this.listenTo( this.model, 'change', this.render );
 				this.listenTo( Backbone, 'activity_gif_close', this.destroy );
 			},
@@ -2563,8 +2663,14 @@ window.bp = window.bp || {};
 					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 
-				var tool_box_comment = this.$el.parents( '.ac-reply-content' );
-				this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
+				var tool_box_comment = this.$el.parents( '.bp-ac-form-container' );
+
+				if ( this.standalone ) {
+					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );
+				} else {
+					this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
+				}
+
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
@@ -2614,12 +2720,20 @@ window.bp = window.bp || {};
 			limit: 20,
 			q: null,
 			requests: [],
+			standalone: false,
 			events: {
 				'keydown .search-query-input': 'search',
 				'click .found-media-item': 'select'
 			},
 
 			initialize: function ( options ) {
+				this.select = this.select.bind( this );
+
+				// Check if standalone is provided in options and update the property.
+				if ( options && options.standalone !== undefined ) {
+					this.standalone = options.standalone;
+				}
+
 				this.options = options || {};
 				this.giphy   = new window.Giphy( BP_Nouveau.media.gif_api_key );
 
@@ -2733,12 +2847,21 @@ window.bp = window.bp || {};
 				}
 
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
-				this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+
+				if ( this.standalone ) {
+					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+				} else {
+					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
+				}
 
 				var whatNewScroll = whatNewForm.find( '.whats-new-scroll-view' );
-				whatNewScroll.stop().animate({
-					scrollTop: whatNewScroll[0].scrollHeight
-				}, 300);
+				if ( whatNewScroll.length > 0 ) {
+					whatNewScroll.stop().animate( {
+						scrollTop: whatNewScroll[0].scrollHeight
+					}, 300 );
+				}
+
+				e.stopPropagation();
 			},
 
 			// Add a single GifDataItem to the list by creating a view for it, and
@@ -3626,10 +3749,14 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
 
+				if ( undefined !== bp.Views.PostScheduleTime ) {
+					this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
+				}
+
 				$( '#whats-new-heading, #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
 				setTimeout(
 					function () {
-						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status' ).wrapAll( '<div class="activity-post-name-status" />' );
+						$( '.activity-singular #whats-new-heading, .activity-singular #whats-new-status, .activity-singular #activity-schedule-section' ).wrapAll( '<div class="activity-post-name-status" />' );
 					},
 					1000
 				);
@@ -3818,7 +3945,9 @@ window.bp = window.bp || {};
 				if ( selected_privacy === 'group' ) {
 					var group_name = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'title' );
 					whats_new_form.find( '.bp-activity-privacy-status' ).text( group_name );
+					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( selected_privacy );
 					this.model.set( 'item_name', group_name );
+					this.model.set( 'group_name', group_name );
 					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bp-activity-privacy-point span.privacy-point-icon' ).removeClass( 'privacy-point-icon' ).addClass( 'group-privacy-point-icon' );
@@ -3830,7 +3959,51 @@ window.bp = window.bp || {};
 					if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 						bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model: this.model } );
 					}
+
+					// Check schedule post is allowed in this group or not.
+					var schedule_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-schedule-post' );
+					if ( ! _.isUndefined( schedule_allowed ) && 'enabled' === schedule_allowed ) {
+						this.model.set( 'schedule_allowed', schedule_allowed );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+						Backbone.trigger( 'cleanFeedBack' );
+					} else if ( 'scheduled' === this.model.attributes.activity_action_type ) {
+						// Reset the schedule data.
+						this.model.set( 'activity_action_type', null );
+						this.model.set( 'activity_schedule_date_raw', null );
+						this.model.set( 'activity_schedule_date', null );
+						this.model.set( 'activity_schedule_time', null );
+						this.model.set( 'activity_schedule_meridiem', null );
+						this.model.set( 'schedule_allowed', 'disabled' );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
+
+						// Show Warning message.
+						Backbone.trigger( 'onError', BP_Nouveau.activity_schedule.strings.notAllowScheduleWarning, 'error' );
+					} else {
+						this.model.set( 'schedule_allowed', 'disabled' );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
+					}
+
 				} else {
+
+					// Clear schedule post data when change privacy.
+					if (
+						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
+						! _.isUndefined( BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+					) {
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+					} else {
+						// Reset the schedule data.
+						this.model.set( 'activity_action_type', null );
+						this.model.set( 'activity_schedule_date_raw', null );
+						this.model.set( 'activity_schedule_date', null );
+						this.model.set( 'activity_schedule_time', null );
+						this.model.set( 'activity_schedule_meridiem', null );
+						this.model.set( 'schedule_allowed', 'disabled' );
+						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
+					}
+					Backbone.trigger( 'cleanFeedBack' );
+
 					var privacy       = this.model.attributes.privacy;
 					var privacy_label = whats_new_form.find( '#' + privacy ).data( 'title' );
 					whats_new_form.find( '#bp-activity-privacy-point' ).removeClass().addClass( privacy );
@@ -4072,6 +4245,7 @@ window.bp = window.bp || {};
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
 					this.model.set( 'group_name', model.get( 'name' ) );
+					this.model.set( 'item_name', model.get( 'name' ) );
 					this.model.set( 'group_image', model.get( 'avatar_url' ) );
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
@@ -4673,6 +4847,11 @@ window.bp = window.bp || {};
 				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
 					buttomText = BP_Nouveau.activity.strings.updatePostButton;
 				}
+
+				if ( 'scheduled' === this.model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
 				this.submit = new bp.Views.ActivityInput(
 					{
 						model: this.model,
@@ -4684,21 +4863,11 @@ window.bp = window.bp || {};
 					}
 				);
 
-				this.discard = new bp.Views.ActivityInput(
-					{
-						model: this.model,
-						type: 'button',
-						id: 'discard-draft-activity',
-						className: 'button outline',
-						name: 'discard-draft-activity',
-						value: BP_Nouveau.activity.strings.discardButton
-					}
-				);
-
-				this.views.set( [ this.submit, this.reset, this.discard ] );
+				this.views.set( [ this.submit, this.reset ] );
 
 				this.model.on( 'change:object', this.updateDisplay, this );
 				this.model.on( 'change:posting', this.updateStatus, this );
+				this.model.on( 'change:activity_action_type', this.updateSubmitLabel, this );
 			},
 
 			updateDisplay: function ( model ) {
@@ -4729,6 +4898,19 @@ window.bp = window.bp || {};
 
 					this.submit.el.classList.remove( 'loading' );
 				}
+			},
+
+			updateSubmitLabel: function ( model ) {
+				var buttomText = BP_Nouveau.activity.strings.postUpdateButton;
+				if ( $( '#whats-new-form' ).hasClass( 'bp-activity-edit' ) ) {
+					buttomText = BP_Nouveau.activity.strings.updatePostButton;
+				}
+
+				if ( 'scheduled' === model.get( 'activity_action_type' ) || 'scheduled' === this.model.get( 'activity_status' ) ) {
+					this.submit.el.value = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.schedulePostButton : '';
+				} else {
+					this.submit.el.value = buttomText;
+				}
 			}
 		}
 	);
@@ -4756,6 +4938,20 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
+				this.views.add( new bp.Views.ActivityInput(
+					{
+						model: this.model,
+						type: 'button',
+						id: 'discard-draft-activity',
+						className: 'button outline',
+						name: 'discard-draft-activity',
+						value: BP_Nouveau.activity.strings.discardButton
+					}
+				) );
+
+				if( bp.Views.activitySchedulePost !== undefined ) {
+					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+				}
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
@@ -4784,18 +4980,31 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function () {
-				this.model = new bp.Models.Activity(
-					_.pick(
-						BP_Nouveau.activity.params,
-						[ 'user_id', 'item_id', 'object' ]
-					)
+				var activityParams = _.pick(
+					BP_Nouveau.activity.params,
+					[ 'user_id', 'item_id', 'object' ]
 				);
+
+				// Pick parameters from BP_Nouveau.activity_schedule.params.
+				if ( ! _.isUndefined( BP_Nouveau.activity_schedule ) ) {
+					var scheduleParams = _.pick(
+						BP_Nouveau.activity_schedule.params,
+						[ 'can_schedule_in_feed' ]
+					);
+
+					activityParams = _.extend( activityParams, scheduleParams );
+				}
+
+				// Create the model with the merged parameters
+				this.model = new bp.Models.Activity( activityParams );
 
 				this.listenTo(Backbone, 'mediaprivacy', this.updateMultiMediaOptions);
 				this.listenTo(Backbone, 'mediaprivacytoolbar', this.updateMultiMediaToolbar);
 
 				this.listenTo(Backbone, 'onError', this.onError);
 				this.listenTo(Backbone, 'cleanFeedBack', this.cleanFeedback);
+
+				this.listenTo( Backbone, 'triggerToastMessage', this.triggerToastMessage );
 
 				if ( 'user' === BP_Nouveau.activity.params.object ) {
 					if ( ! BP_Nouveau.activity.params.access_control_settings.can_create_activity ) {
@@ -4878,7 +5087,7 @@ window.bp = window.bp || {};
 				var $whatsNew = this.$el.find( '#whats-new' );
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
-				
+
 				if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
 					$whatsNew[0].innerHTML = '';
 				}
@@ -4974,6 +5183,14 @@ window.bp = window.bp || {};
 					$( '.activity-update-form #whats-new-form' ).append( '<div class="whats-new-form-footer"></div>' );
 					$( '.activity-update-form #whats-new-form' ).find( '#whats-new-toolbar' ).appendTo( '.whats-new-form-footer' );
 					$( '.activity-update-form #whats-new-form' ).find( '#activity-form-submit-wrapper' ).appendTo( '.whats-new-form-footer' );
+
+					if (
+						! _.isUndefined( BP_Nouveau.activity_schedule ) &&
+						! _.isUndefined( typeof BP_Nouveau.activity_schedule.params.can_schedule_in_feed ) &&
+						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
+					) {
+						$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+					}
 				}
 
 				if ( $( '.activity-update-form .whats-new-scroll-view' ).length ) {
@@ -5103,7 +5320,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).hide();
 
 				$( '#whats-new-content' ).find( '#bp-activity-id' ).val( '' ); // reset activity id if in edit mode.
-				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit' );
+				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bp-activity-edit hide-schedule-button' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) ) {
 					bp.Nouveau.Activity.postForm.postForm.$el.find('.bp-activity-privacy__label-group').show().find( 'input#group' ).attr( 'disabled', false ); // enable back group visibility level.
@@ -5162,6 +5379,10 @@ window.bp = window.bp || {};
 				);
 			},
 
+			triggerToastMessage: function ( title, message, type, url, autoHide ) {
+				$( document ).trigger( 'bb_trigger_toast_message', [ title, message, type, url, autoHide ] );
+			},
+
 			displayFeedback: function ( model ) {
 				if ( _.isUndefined( this.model.get( 'errors' ) ) ) {
 					this.cleanFeedback();
@@ -5173,6 +5394,14 @@ window.bp = window.bp || {};
 					var errorHeight = this.$el.find( '#message-feedabck' ).outerHeight( true );
 					this.$el.find( '#activity-header' ).css( { 'margin-bottom': errorHeight + 'px' } );
 				}
+			},
+
+			decodeHtml: function (html) {
+
+				var txt = document.createElement('textarea');
+				txt.innerHTML = html;
+				return txt.value;
+
 			},
 
 			postUpdate: function ( event ) {
@@ -5439,7 +5668,29 @@ window.bp = window.bp || {};
 						// Reset the form.
 						self.resetForm();
 
-						// Display a successful feedback if the acticity is not consistent with the displayed stream.
+						// Trigger Toast message if it is a scheduled post.
+						if ( 'scheduled' === data.activity_action_type ) {
+							var title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
+							var desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
+							var LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditViewSchedulePost : '';
+
+							if ( ! data.edit_activity ) { // It's a new scheduled post.
+								title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
+								desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
+								LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.viewSchedulePosts : '';
+							}
+
+							if ( '' !== title && '' !== desc && '' !== LinkText ) {
+								Backbone.trigger( 'triggerToastMessage',
+									title,
+									'<div>' + desc + ' <span class="toast-messages-action_link bb-view-scheduled-posts"> ' + LinkText + '</span></div>',
+									'success',
+									null,
+									true );
+							}
+						}
+
+						// Display a successful feedback if the activity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
 
 							self.views.add(
@@ -5453,8 +5704,40 @@ window.bp = window.bp || {};
 							$( '#whats-new-form' ).addClass( 'bottom-notice' );
 
 							// Edit activity.
-						} else if ( edit ) {
+						} else if ( edit && 'scheduled' !== data.activity_action_type && $( '#activity-' + response.id ).length ) {
 							$( '#activity-' + response.id ).replaceWith( response.activity );
+
+							// Extract value of data-bp-activity
+							var start_index = response.activity.indexOf('data-bp-activity="') + 'data-bp-activity="'.length;
+							var end_index = response.activity.indexOf('"', start_index);
+							var data_bp_activity = response.activity.substring(start_index, end_index);
+
+							var decoded_data_bp_activity = self.decodeHtml(data_bp_activity);
+
+							// Parse data-bp-activity attribute value as JSON
+							var parsed_data_bp_activity = JSON.parse(decoded_data_bp_activity);
+
+							// Handle HTML entities in the content
+							var decoded_content = $('<div>').html(parsed_data_bp_activity.content).html();
+
+							// Update the content property with the decoded content
+							parsed_data_bp_activity.content = decoded_content;
+
+							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
+							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
+							var activity_privacy_status = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.privacy-wrap' ).find( '.privacy');
+							var activity_privacy_list = activity_modal_item.find( '.bb-media-privacy-wrap' ).find( '.activity-privacy li');
+							if ( activity_modal_item.length > 0 ) {
+								var content = $( '#activity-' + response.id ).find( '.activity-content' ).find( '.activity-inner' ).html();
+								activity_target.empty();
+								activity_target.append( content );
+								activity_modal_item.data( 'bp-activity', parsed_data_bp_activity );
+								activity_privacy_status.removeClass().addClass( 'privacy selected ' + parsed_data_bp_activity.privacy );
+								activity_privacy_list.removeClass( 'selected' );
+								activity_privacy_list.filter(function() {
+									return $( this ).hasClass( parsed_data_bp_activity.privacy );
+								}).addClass( 'selected' );
+							}
 
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! $( '#activity-' + response.id ).length ) {

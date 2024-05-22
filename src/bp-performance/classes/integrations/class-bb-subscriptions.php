@@ -65,9 +65,13 @@ class BB_Subscriptions extends Integration_Abstract {
 		$cache_bb_subscriptions = isset( $is_component_active ) && isset( $settings ) && $is_component_active && $settings;
 
 		if ( $cache_bb_subscriptions ) {
+
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/subscriptions',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id' => 'id',
 				),
@@ -76,7 +80,7 @@ class BB_Subscriptions extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/subscriptions/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -144,9 +148,7 @@ class BB_Subscriptions extends Integration_Abstract {
 		);
 
 		if ( ! empty( $subscription_ids['subscriptions'] ) ) {
-			foreach ( $subscription_ids['subscriptions'] as $subscription_id ) {
-				$this->purge_item_cache_by_item_id( $subscription_id );
-			}
+			$this->purge_item_cache_by_item_ids( $subscription_ids['subscriptions'] );
 		}
 	}
 
@@ -223,10 +225,9 @@ class BB_Subscriptions extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_user_id( $user_id ) {
 		$subscription_ids = $this->get_subscription_ids_by_userid( $user_id );
+
 		if ( ! empty( $subscription_ids ) ) {
-			foreach ( $subscription_ids as $subscription_id ) {
-				$this->purge_item_cache_by_item_id( $subscription_id );
-			}
+			$this->purge_item_cache_by_item_ids( $subscription_ids );
 		}
 	}
 
@@ -237,5 +238,20 @@ class BB_Subscriptions extends Integration_Abstract {
 	 */
 	private function purge_item_cache_by_item_id( $subscription_id ) {
 		Cache::instance()->purge_by_group( 'bb-subscriptions_' . $subscription_id );
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bb-subscriptions_' ) );
 	}
 }

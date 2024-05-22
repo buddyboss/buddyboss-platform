@@ -106,6 +106,10 @@ function bp_nouveau_ajax_object_template_loader() {
 			$template_part = 'groups/single/members-loop.php';
 			break;
 
+		case 'manage_group_members':
+			$template_part = 'groups/single/admin/search-manage-members.php';
+			break;
+
 		case 'group_requests':
 			$template_part = 'groups/single/requests-loop.php';
 			break;
@@ -127,10 +131,11 @@ function bp_nouveau_ajax_object_template_loader() {
 	 * Filters the server path for the template loader.
 	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 2.6.10 Added the `$object` parameter.
 	 *
 	 * @param string Template file path.
 	 */
-	$template_path = apply_filters( 'bp_nouveau_object_template_path', $template_path );
+	$template_path = apply_filters( 'bp_nouveau_object_template_path', $template_path, $object );
 
 	load_template( $template_path );
 	$result['contents'] = ob_get_contents();
@@ -181,6 +186,8 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		}
 	}
 
+	$results['layout'] = bb_get_directory_layout_preference( 'members' );
+
 	return $results;
 }
 
@@ -206,6 +213,8 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
 	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
+
+	$results['layout'] = bb_get_directory_layout_preference( 'groups' );
 
 	return $results;
 }

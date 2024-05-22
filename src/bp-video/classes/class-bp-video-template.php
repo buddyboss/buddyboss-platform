@@ -154,6 +154,7 @@ class BP_Video_Template {
 			'group_id'         => false,
 			'privacy'          => false,
 			'moderation_query' => true,
+			'status'           => bb_video_get_published_status(),
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -162,9 +163,6 @@ class BP_Video_Template {
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
-
-		// Get an array of the logged in user's favorite video.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_video', true );
 
 		// Fetch specific video items based on ID's.
 		if ( ! empty( $include ) ) {
@@ -181,6 +179,7 @@ class BP_Video_Template {
 					'album_id'         => $album_id,
 					'privacy'          => $privacy,
 					'moderation_query' => $moderation_query,
+					'status'           => $status,
 				)
 			);
 
@@ -202,6 +201,7 @@ class BP_Video_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
+					'status'       => $status,
 				)
 			);
 		}

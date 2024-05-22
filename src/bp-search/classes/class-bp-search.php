@@ -279,39 +279,42 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 ++++++++++++++++++++++++++++++++++
 				group items of same type together
 				++++++++++++++++++++++++++++++++++ */
-				$types = array();
-				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-					$type = $item['type'];
-					if ( empty( $types ) || ! in_array( $type, $types ) ) {
-						$types[] = $type;
-					}
-				}
+				if ( ! isset( $args['forum_search'] ) || ! $args['forum_search'] ) {
 
-				$new_items = array();
-				foreach ( $types as $type ) {
-					$first_html_changed = false;
+					$types = array();
 					foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-						if ( $item['type'] != $type ) {
-							continue;
+						$type = $item['type'];
+						if ( empty( $types ) || ! in_array( $type, $types ) ) {
+							$types[] = $type;
 						}
-
-						// Filter by default will be false.
-						$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
-						if ( true === $bp_search_group_or_type_title ) {
-							// add group/type title in first one.
-							if ( ! $first_html_changed ) {
-								// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
-								$label              = apply_filters( 'bp_search_label_search_type', $type );
-								$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
-								$first_html_changed = true;
-							}
-						}
-
-						$new_items[ $item_id ] = $item;
 					}
-				}
 
-				$this->search_results['all']['items'] = $new_items;
+					$new_items = array();
+					foreach ( $types as $type ) {
+						$first_html_changed = false;
+						foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
+							if ( $item['type'] != $type ) {
+								continue;
+							}
+
+							// Filter by default will be false.
+							$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
+							if ( true === $bp_search_group_or_type_title ) {
+								// add group/type title in first one.
+								if ( ! $first_html_changed ) {
+									// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
+									$label              = apply_filters( 'bp_search_label_search_type', $type );
+									$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
+									$first_html_changed = true;
+								}
+							}
+
+							$new_items[ $item_id ] = $item;
+						}
+					}
+
+					$this->search_results['all']['items'] = $new_items;
+				}
 
 				/* _______________________________ */
 				$url = $this->search_page_search_url( false );
@@ -509,16 +512,27 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
-					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					if (
+						bp_is_active( 'forums' ) &&
+						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+					) {
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY entry_date DESC $limit ) ";
+					} else {
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					}
 					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
 				}
 
 				if ( empty( $sql_queries ) ) {
-					// thigs will get messy if program reaches here!!
+					// things will get messy if program reaches here!!
 					return;
 				}
 
 				$pre_search_query = implode( ' UNION ', $sql_queries );
+
+				if ( true === $args['forum_search'] ) {
+					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC, t1.id DESC";
+				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
@@ -662,7 +676,19 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 */
 				// $args['per_page'] = get_option( 'posts_per_page' );
 				$obj              = $this->search_helpers[ $args['search_subset'] ];
-				$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
+
+				if (
+					true === $args['forum_search'] ||
+					(
+						bp_is_active( 'forums' ) &&
+						! empty( $args['search_subset'] ) &&
+						in_array( $args['search_subset'], array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+					)
+				) {
+					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY entry_date DESC ';
+				} else {
+					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
+				}
 
 				if ( $args['per_page'] > 0 ) {
 					$offset            = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];

@@ -88,9 +88,12 @@ class BB_Replies extends Integration_Abstract {
 
 		if ( $cache_bb_replies ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/reply',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 				),
@@ -99,7 +102,7 @@ class BB_Replies extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/reply/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -249,11 +252,11 @@ class BB_Replies extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$replies_ids = $this->get_reply_ids_by_userid( $bp_moderation->item_id );
+
 		if ( ! empty( $replies_ids ) ) {
-			foreach ( $replies_ids as $reply_id ) {
-				$this->purge_item_cache_by_item_id( $reply_id );
-			}
+			$this->purge_item_cache_by_item_ids( $replies_ids );
 		}
 	}
 
@@ -266,11 +269,11 @@ class BB_Replies extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$replies_ids = $this->get_reply_ids_by_userid( $bp_moderation->item_id );
+
 		if ( ! empty( $replies_ids ) ) {
-			foreach ( $replies_ids as $reply_id ) {
-				$this->purge_item_cache_by_item_id( $reply_id );
-			}
+			$this->purge_item_cache_by_item_ids( $replies_ids );
 		}
 	}
 
@@ -282,10 +285,9 @@ class BB_Replies extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$replies_ids = $this->get_reply_ids_by_userid( $user_id );
+
 		if ( ! empty( $replies_ids ) ) {
-			foreach ( $replies_ids as $reply_id ) {
-				$this->purge_item_cache_by_item_id( $reply_id );
-			}
+			$this->purge_item_cache_by_item_ids( $replies_ids );
 		}
 	}
 
@@ -296,10 +298,9 @@ class BB_Replies extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$replies_ids = $this->get_reply_ids_by_userid( $user_id );
+
 		if ( ! empty( $replies_ids ) ) {
-			foreach ( $replies_ids as $reply_id ) {
-				$this->purge_item_cache_by_item_id( $reply_id );
-			}
+			$this->purge_item_cache_by_item_ids( $replies_ids );
 		}
 	}
 
@@ -310,10 +311,9 @@ class BB_Replies extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$replies_ids = $this->get_reply_ids_by_userid( $user_id );
+
 		if ( ! empty( $replies_ids ) ) {
-			foreach ( $replies_ids as $reply_id ) {
-				$this->purge_item_cache_by_item_id( $reply_id );
-			}
+			$this->purge_item_cache_by_item_ids( $replies_ids );
 		}
 	}
 
@@ -324,13 +324,13 @@ class BB_Replies extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$replies_ids = $this->get_reply_ids_by_userid( $user_id );
+
 				if ( ! empty( $replies_ids ) ) {
-					foreach ( $replies_ids as $reply_id ) {
-						$this->purge_item_cache_by_item_id( $reply_id );
-					}
+					$this->purge_item_cache_by_item_ids( $replies_ids );
 				}
 			}
 		}
@@ -360,5 +360,31 @@ class BB_Replies extends Integration_Abstract {
 	private function purge_item_cache_by_item_id( $reply_id ) {
 		Cache::instance()->purge_by_group( 'bbp-replies_' . $reply_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $reply_id ) ) );
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bbp-replies_' ), array( $this, 'prepare_reply_deeplink' ) );
+	}
+
+	/**
+	 * Prepare reply deeplink.
+	 *
+	 * @param int $reply_id Reply ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_reply_deeplink( $reply_id ) {
+		return 'bbapp-deeplinking_' . untrailingslashit( get_permalink( $reply_id ) );
 	}
 }

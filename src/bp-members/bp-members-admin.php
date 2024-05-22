@@ -27,12 +27,11 @@ function bb_get_profile_header_elements() {
 		'element_label' => esc_html__( 'Online Status', 'buddyboss' ),
 	);
 
-	if ( bp_member_type_enable_disable() && bp_member_type_display_on_profile() ) {
-		$elements[] = array(
-			'element_name'  => 'profile-type',
-			'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
-		);
-	}
+	$elements[] = array(
+		'element_name'  => 'profile-type',
+		'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
+		'element_class' => bp_member_type_enable_disable() && bp_member_type_display_on_profile() ? '' : 'bp-hide'
+	);
 
 	$elements[] = array(
 		'element_name'  => 'member-handle',
@@ -49,24 +48,25 @@ function bb_get_profile_header_elements() {
 		'element_label' => esc_html__( 'Last Active', 'buddyboss' ),
 	);
 
-	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
-		$elements[] = array(
-			'element_name'  => 'followers',
-			'element_label' => esc_html__( 'Followers', 'buddyboss' ),
-		);
+	$activity_follow_active = function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active();
 
-		$elements[] = array(
-			'element_name'  => 'following',
-			'element_label' => esc_html__( 'Following', 'buddyboss' ),
-		);
-	}
+	$elements[] = array(
+		'element_name'  => 'followers',
+		'element_label' => esc_html__( 'Followers', 'buddyboss' ),
+		'element_class' => $activity_follow_active ? '' : 'bp-hide',
+	);
 
-	if ( function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
-		$elements[] = array(
-			'element_name'  => 'social-networks',
-			'element_label' => esc_html__( 'Social Networks', 'buddyboss' ),
-		);
-	}
+	$elements[] = array(
+		'element_name'  => 'following',
+		'element_label' => esc_html__( 'Following', 'buddyboss' ),
+		'element_class' => $activity_follow_active ? '' : 'bp-hide',
+	);
+
+	$elements[] = array(
+		'element_name'  => 'social-networks',
+		'element_label' => esc_html__( 'Social Networks', 'buddyboss' ),
+		'element_class' => ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) ? '' : 'bp-hide',
+	);
 
 	/**
 	 * Profile headers elements.
@@ -93,19 +93,17 @@ function bb_get_member_directory_elements() {
 		'element_label' => esc_html__( 'Online Status', 'buddyboss' ),
 	);
 
-	if ( bp_member_type_enable_disable() && bp_member_type_display_on_profile() ) {
-		$elements[] = array(
-			'element_name'  => 'profile-type',
-			'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
-		);
-	}
+	$elements[] = array(
+		'element_name'  => 'profile-type',
+		'element_label' => esc_html__( 'Profile Type', 'buddyboss' ),
+		'element_class' => bp_member_type_enable_disable() && bp_member_type_display_on_profile() ? '' : 'bp-hide',
+	);
 
-	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
-		$elements[] = array(
-			'element_name'  => 'followers',
-			'element_label' => esc_html__( 'Followers', 'buddyboss' ),
-		);
-	}
+	$elements[] = array(
+		'element_name'  => 'followers',
+		'element_label' => esc_html__( 'Followers', 'buddyboss' ),
+		'element_class' => ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) ? '' : 'bp-hide',
+	);
 
 	$elements[] = array(
 		'element_name'  => 'last-active',
@@ -137,29 +135,31 @@ function bb_get_member_directory_elements() {
 function bb_get_member_directory_profile_actions() {
 	$profile_actions = array();
 
-	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
-		$profile_actions[] = array(
-			'element_name'  => 'follow',
-			'element_label' => esc_html__( 'Follow', 'buddyboss' ),
-		);
-	}
+	$profile_actions[] = array(
+		'element_name'  => 'follow',
+		'element_label' => esc_html__( 'Follow', 'buddyboss' ),
+		'element_class' => ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) ? '' : 'bp-hide',
+	);
 
-	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'friends' ) ) {
-		$profile_actions[] = array(
-			'element_name'  => 'connect',
-			'element_label' => esc_html__( 'Connect', 'buddyboss' ),
-		);
-	}
+	$profile_actions[] = array(
+		'element_name'  => 'connect',
+		'element_label' => esc_html__( 'Connect', 'buddyboss' ),
+		'element_class' => function_exists( 'bp_is_active' ) && bp_is_active( 'friends' ) ? '' : 'bp-hide',
+	);
 
 	$bp_force_friendship_to_message = bp_force_friendship_to_message();
 
-	if ( bp_is_active( 'messages' ) && ( ! $bp_force_friendship_to_message || ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) ) )
-	) {
-		$profile_actions[] = array(
-			'element_name'  => 'message',
-			'element_label' => esc_html__( 'Send Message', 'buddyboss' ),
-		);
-	}
+	$profile_actions[] = array(
+		'element_name'  => 'message',
+		'element_label' => esc_html__( 'Send Message', 'buddyboss' ),
+		'element_class' => (
+			bp_is_active( 'messages' ) &&
+			(
+				! $bp_force_friendship_to_message ||
+				( $bp_force_friendship_to_message && bp_is_active( 'friends' ) )
+			)
+		) ? '' : 'bp-hide',
+	);
 
 	/**
 	 * Profile actions for member directory.

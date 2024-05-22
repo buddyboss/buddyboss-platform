@@ -233,25 +233,11 @@ function bp_admin_setting_callback_heartbeat() {
 	} else {
 		echo 'disabled="disabled"'; }
 	?>
-	 />
+	/>
 	<label for="_bp_enable_heartbeat_refresh"><?php esc_html_e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
 	<?php if ( '1' == $heartbeat_disabled ) { ?>
 		<p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
 	<?php } ?>
-	<?php
-}
-
-/**
- * Automatically load more activity posts when scrolling to the bottom of the page.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_admin_setting_callback_enable_activity_autoload() {
-	?>
-
-	<input id="_bp_enable_activity_autoload" name="_bp_enable_activity_autoload" type="checkbox" value="1" <?php checked( bp_is_activity_autoload_active( false ) ); ?> />
-	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
-
 	<?php
 }
 
@@ -323,21 +309,6 @@ function bp_admin_setting_callback_enable_activity_follow() {
 
 	<?php
 }
-
-/**
- * Allow like activity stream.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_like() {
-	?>
-
-	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
 
 /**
  * Allow link previews in activity posts.
@@ -493,6 +464,16 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-display-name" name="bp-default-profile-avatar-type" type="radio" value="display-name" <?php checked( bb_get_default_profile_avatar_type(), 'display-name' ); ?> />
+		<label for="bp-default-profile-avatar-display-name">
+			<div class="img-block">
+				<img class="display-name-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-display-name.png' ); ?>"/>
+			</div>
+			<span><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
@@ -502,6 +483,32 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
+	<p class="no-field-notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo _wp_image_editor_choose(); ?>">
+
+	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Profile text with link. */
+			__( 'Display name will show either as a single initial or as double initials depending on your display name option in %s.', 'buddyboss' ),
+			sprintf(
+				'<a href="#bp-display-name-format">%s</a>',
+				__( 'Profile settings', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
 	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
 	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning" style="display:none;">
@@ -884,6 +891,16 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-group-name" name="bp-default-group-avatar-type" type="radio" value="group-name" <?php checked( bb_get_default_group_avatar_type(), 'group-name' ); ?> />
+		<label for="bp-default-group-avatar-group-name">
+			<div class="img-block">
+				<img class="group-name-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-display-name.png' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Group Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_group_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-group-avatar-custom">
 			<div class="img-block">
@@ -892,6 +909,20 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+
+	<p class="no-field-notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo _wp_image_editor_choose(); ?>">
 	<?php
 }
 
@@ -1214,7 +1245,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1251,7 +1282,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1288,7 +1319,7 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
 				?>
-				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1327,6 +1358,10 @@ function bb_admin_setting_member_profile_primary_action( $args ) {
 
 			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
 				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( false !== strpos( $profile_primary_action['element_class'], 'bp-hide' ) ) {
+						continue;
+					}
+
 					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
 						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
 					}
@@ -1635,10 +1670,10 @@ function bp_core_admin_integrations() {
  */
 function bp_core_admin_buddyboss_app() {
 	?>
-		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
-		</div>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+		<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
+	</div>
 	<?php
 }
 
@@ -3477,5 +3512,272 @@ function bp_admin_setting_callback_custom_logout_redirection() {
 		);
 		?>
 	</p>
+	<?php
+}
+
+/**
+ * Reactions settings enable markups.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bb_reactions_settings_callback_all_reactions() {
+
+	$all_reactions = bb_get_all_reactions();
+	?>
+	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
+
+	<br/>
+	<?php
+	foreach ( $all_reactions as $key => $field ) {
+
+		$field['enabled'] = bb_all_enabled_reactions( $key );
+		?>
+		<div class="bb-reactions-setting-field">
+			<input
+				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
+				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
+				type="checkbox"
+				value="1"
+				<?php
+				checked( $field['enabled'] );
+				disabled( $field['disabled'] );
+				?>
+			/>
+			<label for="bb_all_reactions_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $field['label'] ); ?>
+			</label>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Add reaction mode settings.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bb_reactions_settings_callback_reaction_mode() {
+
+	$reactions_modes = array(
+		'likes'    => array(
+			'label'      => esc_html__( 'Likes', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'likes',
+			'id'         => 'bb_reaction_mode_likes',
+			'is_checked' => 'likes' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+			'disabled'   => false,
+		),
+		'emotions' => array(
+			'label'      => esc_html__( 'Emotions', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'emotions',
+			'id'         => 'bb_reaction_mode_emotions',
+			'is_checked' => bb_is_reaction_emotions_enabled(),
+			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
+			'disabled'   => (
+				! class_exists( 'BB_Reactions' ) ||
+				! function_exists( 'bbp_pro_is_license_valid' ) ||
+				! bbp_pro_is_license_valid()
+			),
+		),
+	);
+
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		$notice_text = '';
+		foreach ( $reactions_modes as $reaction_mode ) {
+			?>
+			<label for="<?php echo esc_attr( $reaction_mode['id'] ); ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+				<input name="<?php echo esc_attr( $reaction_mode['name'] ); ?>"
+					id="<?php echo esc_attr( $reaction_mode['id'] ); ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					data-current-val="<?php echo esc_attr( bb_get_reaction_mode() ); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+					<?php
+					checked( $reaction_mode['is_checked'] );
+					disabled( $reaction_mode['disabled'] );
+					?>
+				/>
+				<?php echo $reaction_mode['label']; ?>
+			</label>
+			<?php
+
+			if ( ! empty( $reaction_mode['is_checked'] ) ) {
+				$notice_text = $reaction_mode['notice'];
+			}
+		}
+
+		if ( ! empty( $notice_text ) ) {
+			?>
+			<p class="description bb-reaction-mode-description">
+				<?php echo wp_kses_post( $notice_text ); ?>
+			</p>
+			<?php
+		}
+	}
+}
+
+/**
+ * Add reactions button settings.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return void
+ */
+function bb_reactions_settings_callback_reactions_button() {
+
+	$button_settings = bb_reaction_button_options();
+	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
+
+	?>
+	<label for="bb_reactions_button" class="bb-reaction-button-label">
+		<button type="button" class="button" id="bb-reaction-button-chooser">
+			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
+		</button>
+		<input
+			type="hidden"
+			name="bb_reactions_button[icon]"
+			id="bb-reaction-button-hidden-field"
+			value="<?php echo esc_attr( $button_icon ); ?>"
+		/>
+
+		<input
+			name="bb_reactions_button[text]"
+			id="bb-reaction-button-text"
+			type="text"
+			max-length="8"
+			value="<?php echo esc_attr( $button_text ); ?>"
+			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
+		/>
+		<span class="bb-reaction-button-text-limit">
+			<span><?php echo strlen( $button_text ); ?></span>/12
+		</span>
+
+		<p>
+			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
+		</p>
+	</label>
+	<?php
+}
+
+/**
+ * Link to General Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_general_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Link to Activity Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_activity_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a general section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_general_callback() {
+	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
+	?>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_ajax_request_page_load" id="bb_ajax_request_page_load">
+		<option value="1" <?php selected( $bb_ajax_request_page_load, 1 ); ?>>1</option>
+		<option value="2" <?php selected( $bb_ajax_request_page_load, 2 ); ?>>2</option>
+	</select>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a activity section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_activity_callback() {
+	$bb_load_activity_per_request = bb_get_load_activity_per_request();
+	$bb_activity_load_type        = bp_get_option( 'bb_activity_load_type', 'infinite' );
+
+	$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
+	$activity_per_page = bp_parse_args(
+		$activity_per_page,
+		array( 5, 10, 15, 20 )
+	);
+	asort( $activity_per_page );
+
+	$activity_autoload_options = apply_filters( 'bb_performance_activity_autoload', array() );
+	$activity_autoload_options        = bp_parse_args(
+		$activity_autoload_options,
+		array(
+			'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
+			'load_more' => __( 'Load more', 'buddyboss' ),
+		)
+	);
+	?>
+
+	<label for="bb_load_activity_per_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_load_activity_per_request" id="bb_load_activity_per_request">
+		<?php
+		foreach ( $activity_per_page as $load_val ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_val ) . '</option>';
+		}
+		?>
+	</select>
+	<label for="bb_activity_load_type"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
+	<select name="bb_activity_load_type" id="bb_activity_load_type">
+		<?php
+		foreach ( $activity_autoload_options as $load_val => $load_label ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_activity_load_type, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
+		}
+		?>
+	</select>
+	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
 	<?php
 }

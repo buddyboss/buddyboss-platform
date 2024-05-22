@@ -203,8 +203,10 @@ class BP_Activity_Template {
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
 			'pin_type'          => '',
+			'status'            => bb_get_activity_published_status(),
 		);
 		$r        = bp_parse_args( $args, $defaults );
+
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
@@ -215,7 +217,7 @@ class BP_Activity_Template {
 		$this->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 
 		// Get an array of the logged in user's favorite activities.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_activities', true );
+		$this->my_favs = bb_activity_get_user_reacted_item_ids( bp_loggedin_user_id() );
 
 		// Fetch specific activity items based on ID's.
 		if ( ! empty( $include ) ) {
@@ -233,6 +235,7 @@ class BP_Activity_Template {
 					'spam'              => $spam,
 					'scope'             => $scope,
 					'update_meta_cache' => $update_meta_cache,
+					'status'            => $status,
 				)
 			);
 
@@ -259,6 +262,7 @@ class BP_Activity_Template {
 					'spam'              => $spam,
 					'update_meta_cache' => $update_meta_cache,
 					'pin_type'          => $pin_type,
+					'status'            => $status,
 				)
 			);
 

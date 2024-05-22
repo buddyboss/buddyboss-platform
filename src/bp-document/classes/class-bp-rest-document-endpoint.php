@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -42,6 +49,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'upload_item' ),
 					'permission_callback' => array( $this, 'upload_item_permissions_check' ),
 				),
+				'allow_batch' => $this->allow_batch,
 			)
 		);
 
@@ -61,7 +69,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -69,7 +78,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the document.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -92,7 +101,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
@@ -2373,8 +2383,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
-		$document_id  = bp_activity_get_meta( $activity_id, 'bp_document_id', true );
+		$activity_metas = bb_activity_get_metadata( $activity_id );
+
+		$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
+		$document_id  = $activity_metas['bp_document_id'][0] ?? '';
 		$document_ids = trim( $document_ids );
 		$document_ids = explode( ',', $document_ids );
 
@@ -2393,6 +2405,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
 				'order_by'     => 'menu_order',
+				'status'       => function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $value->status ? bb_document_get_scheduled_status() : bb_document_get_published_status(),
 			)
 		);
 

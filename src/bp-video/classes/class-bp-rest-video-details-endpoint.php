@@ -174,6 +174,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
 				$tabs[ $key ]['position'] = $item['position'];
+				$tabs[ $key ]['slug']     = $item['slug'];
 			}
 		}
 

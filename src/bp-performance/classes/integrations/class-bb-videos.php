@@ -80,9 +80,12 @@ class BB_Videos extends Integration_Abstract {
 
 		if ( $cache_bb_media ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/video',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'     => array( 'id' ),
 					'include_param' => array(
@@ -95,7 +98,7 @@ class BB_Videos extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/video/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id' => array( 'id' ),
 				),
@@ -146,10 +149,10 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_bp_video_before_delete( $videos ) {
 		if ( ! empty( $videos ) ) {
-			foreach ( $videos as $video ) {
-				if ( ! empty( $video->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-video_' . $video->id );
-				}
+			$video_ids = wp_list_pluck( $videos, 'id' );
+
+			if ( ! empty( $video_ids ) ) {
+				$this->purge_item_cache_by_item_ids( $video_ids );
 			}
 		}
 	}
@@ -161,9 +164,7 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_bp_video_deleted_videos( $videos_ids ) {
 		if ( ! empty( $videos_ids ) ) {
-			foreach ( $videos_ids as $videos_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $videos_id );
-			}
+			$this->purge_item_cache_by_item_ids( $videos_ids );
 		}
 	}
 
@@ -186,12 +187,10 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_groups_update_group( $group_id ) {
 		$video_ids = $this->get_video_ids_by_group_id( $group_id );
-		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
-		}
 
+		if ( ! empty( $video_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $video_ids );
+		}
 	}
 
 	/**
@@ -202,12 +201,10 @@ class BB_Videos extends Integration_Abstract {
 	public function event_groups_group_after_save( $group ) {
 		if ( ! empty( $group->id ) ) {
 			$video_ids = $this->get_video_ids_by_group_id( $group->id );
-			if ( ! empty( $video_ids ) ) {
-				foreach ( $video_ids as $video_id ) {
-					Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-				}
-			}
 
+			if ( ! empty( $video_ids ) ) {
+				$this->purge_item_cache_by_item_ids( $video_ids );
+			}
 		}
 	}
 
@@ -218,10 +215,9 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
 		$video_ids = $this->get_video_ids_by_group_id( $group_id );
+
 		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
+			$this->purge_item_cache_by_item_ids( $video_ids );
 		}
 	}
 
@@ -233,12 +229,10 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$video_ids = $this->get_video_ids_by_user_id( $user_id );
-		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
-		}
 
+		if ( ! empty( $video_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $video_ids );
+		}
 	}
 
 	/**
@@ -248,10 +242,9 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$video_ids = $this->get_video_ids_by_user_id( $user_id );
+
 		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
+			$this->purge_item_cache_by_item_ids( $video_ids );
 		}
 	}
 
@@ -262,10 +255,9 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$video_ids = $this->get_video_ids_by_user_id( $user_id );
+
 		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
+			$this->purge_item_cache_by_item_ids( $video_ids );
 		}
 	}
 
@@ -276,13 +268,13 @@ class BB_Videos extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$video_ids = $this->get_video_ids_by_user_id( $user_id );
+
 				if ( ! empty( $video_ids ) ) {
-					foreach ( $video_ids as $video_id ) {
-						Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-					}
+					$this->purge_item_cache_by_item_ids( $video_ids );
 				}
 			}
 		}
@@ -350,11 +342,11 @@ class BB_Videos extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$video_ids = $this->get_video_ids_by_user_id( $bp_moderation->item_id );
+
 		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
+			$this->purge_item_cache_by_item_ids( $video_ids );
 		}
 	}
 
@@ -367,12 +359,26 @@ class BB_Videos extends Integration_Abstract {
 		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
 			return;
 		}
+
 		$video_ids = $this->get_video_ids_by_user_id( $bp_moderation->item_id );
+
 		if ( ! empty( $video_ids ) ) {
-			foreach ( $video_ids as $video_id ) {
-				Cache::instance()->purge_by_group( 'bp-video_' . $video_id );
-			}
+			$this->purge_item_cache_by_item_ids( $video_ids );
 		}
 	}
 
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-video_' ) );
+	}
 }

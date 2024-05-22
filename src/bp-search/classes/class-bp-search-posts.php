@@ -143,6 +143,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				array(
 					'search_term'         => $search_term,
 					'only_totalrow_count' => $only_totalrow_count,
+					'post_type'           => $this->pt_name,
 				)
 			);
 		}

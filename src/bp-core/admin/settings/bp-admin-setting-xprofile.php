@@ -134,6 +134,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
 		}
 
+		// Check the image extension/library and based on that saves the settings.
+		if ( 'display-name' === $default_profile_avatar_type_after_saving && empty( _wp_image_editor_choose() ) ) {
+
+			if ( 'display-name' === $default_profile_avatar_type_before_saving ) {
+				$default_profile_avatar_type_before_saving = 'buddyboss';
+			}
+
+			bp_update_option( 'bp-profile-avatar-type', $profile_avatar_type_before_saving );
+			bp_update_option( 'bp-disable-avatar-uploads', $bp_disable_avatar_uploads_before_saving );
+			bp_update_option( 'bp-default-profile-avatar-type', $default_profile_avatar_type_before_saving );
+			bp_update_option( 'bp-enable-profile-gravatar', $bp_enable_profile_gravatar_before_saving );
+		}
+
 		if ( ! isset( $bb_default_custom_profile_cover ) || ( isset( $bb_default_custom_profile_cover ) && empty( $bb_default_custom_profile_cover ) && 'custom' === $profile_cover_type_after_saving ) ) {
 
 			if ( 'custom' === $profile_cover_type_before_saving ) {
@@ -319,14 +332,25 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$profile_actions          = function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array();
 		$selected_profile_actions = function_exists( 'bb_get_enabled_member_directory_profile_actions' ) ? bb_get_enabled_member_directory_profile_actions() : array();
 
+		$has_visible_actions = false;
+
+		// Filter elements with "bp-hide" class.
+		$hidden_actions = array_filter( $profile_actions, function ( $element ) {
+			return isset( $element['element_class'] ) && strpos( $element['element_class'], 'bp-hide' ) !== false;
+		} );
+
+		if ( count( $profile_actions ) > count( $hidden_actions ) ) {
+			$has_visible_actions = true;
+		}
+
 		if ( ! empty( $profile_actions ) ) {
 			$args             = array();
-			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class );
+			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class ) . ( $has_visible_actions ? '' : ' bp-hide' );
 			$args['elements'] = $profile_actions;
 			$this->add_field( 'bb-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
 
 			$profile_primary_action_class = '';
-			if ( empty( $selected_profile_actions ) ) {
+			if ( empty( $selected_profile_actions ) || ! $has_visible_actions ) {
 				$profile_primary_action_class = ' bp-hide';
 			}
 
@@ -419,7 +443,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		$current_value = bp_core_display_name_format();
 
-		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
+		printf( '<select name="%1$s" id="%1$s" for="%1$s">', 'bp-display-name-format' );
 		foreach ( $options as $key => $value ) {
 			printf(
 				'<option value="%s" %s>%s</option>',

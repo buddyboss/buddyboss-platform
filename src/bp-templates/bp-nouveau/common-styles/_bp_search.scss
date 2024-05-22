@@ -125,3 +125,58 @@
 	}
 }
 
+// BB search block for default theme
+.bb-search-block {
+
+	.bp-search-results-list {
+
+		.bp-search-item {
+
+			.item-avatar {
+				float: none;
+				width: auto;
+				margin: 0 12px 0 0;
+				max-width: inherit;
+
+				img {
+					height: auto;
+					max-width: 160px;
+					width: 100%;
+				}
+			}
+		}
+
+		.search-document-list {
+
+			.media-folder_icon a {
+				text-decoration: none;
+			}
+		}
+	}
+
+	.search_results .albums-list .media-album_thumb .item-avatar {
+
+		body.search-results & {
+			margin: 0;
+
+			a {
+				text-decoration: none;
+
+				> i {
+					background-color: #f2f4f5;
+					color: #9b9c9f;
+					display: flex;
+					font-weight: 300;
+					align-items: center;
+					justify-content: center;
+					margin-top: 0;
+					font-size: 28px;
+					border-radius: 3px;
+					height: 90px;
+					width: 90px;
+				}
+			}
+		}
+	}
+}
+

@@ -65,6 +65,13 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			add_action( 'wpml_language_has_switched', 'bp_core_xprofile_clear_all_user_progress_cache' );
 
 			add_filter( 'bp_profile_search_main_form', array( $this, 'bb_profile_search_main_form' ) );
+
+			// Forum/Topic.
+			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
+			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
+			
+			// Fix incorrect search results for Global Search for translated/non-translated posts.
+			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
 		}
 
 		/**
@@ -199,6 +206,76 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $post_id;
+		}
+
+		/**
+		 * Adjusts the query arguments for member profile topic replies when using WPML.
+		 * If WPML plugin is active and the query arguments include 'post_parent' set to 'any',
+		 * this function adjusts it to an empty string to ensure correct filtering.
+		 *
+		 * @since BuddyBoss 2.5.70
+		 *
+		 * @param array $r The query arguments.
+		 *
+		 * @return array Modified query arguments.
+		 */
+		public function bb_wpml_member_profile_topic_reply( $r ) {
+			if ( class_exists( 'Sitepress' ) && isset( $r['post_parent'] ) && 'any' === $r['post_parent'] ) {
+				$r['post_parent'] = '';
+			}
+
+			return $r;
+		}
+
+		/**
+		 * Remove WPML post__in filter to allow parent translated post as well if the post is not translatable.
+		 *
+		 * @since BuddyBoss 2.6.00
+		 *
+		 * @param WP_Query $q Query for parsing WP QUERY.
+		 *
+		 * @return WP_Query $q Returns modified Query.
+		 */
+		public function bb_remove_wpml_post_parse_query( $q ) {
+			if ( isset( $q->query_vars['post__in'] ) ) {
+				unset( $q->query_vars['post__in'] );
+			}
+
+			return $q;
+		}
+
+		/**
+		 * Add fix for WPML post count issue in Global Search.
+		 *
+		 * @since BuddyBoss 2.6.00
+		 *
+		 * @param string $sql_query String of the SQL query to filter.
+		 * @param array  $args      Arguments of the filter to get the post_type.
+		 *
+		 * @return string $sql_query String of the SQL query to filter.
+		 */
+		public function bb_wpml_search_posts_sql( $sql_query, $args ) {
+			global $sitepress;
+
+			if (
+				defined( 'ICL_LANGUAGE_CODE' ) &&
+				$sitepress->is_translated_post_type( $args['post_type'] )
+			) {
+			        global $wpdb;
+				$sql_query .= " AND EXISTS (
+						SELECT 1 
+						FROM {$wpdb->prefix}icl_translations t
+						WHERE t.element_type = CONCAT('post_', %s)
+						AND t.language_code = %s
+						AND t.element_id = p.ID
+					)";
+
+				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
+			} else {
+				add_filter( 'wpml_post_parse_query', array( $this, 'bb_remove_wpml_post_parse_query' ) );
+			}
+
+			return $sql_query;
 		}
 
 	}

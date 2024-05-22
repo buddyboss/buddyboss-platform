@@ -361,6 +361,7 @@ function bp_document_get( $args = '' ) {
 			'meta_query_document' => false,        // Filter by activity meta. See WP_Meta_Query for format.
 			'meta_query_folder'   => false,        // Filter by activity meta. See WP_Meta_Query for format.
 			'moderation_query'    => true,         // Filter to include moderation query.
+			'status'              => bb_document_get_published_status(),  // Filter by document status. published, scheduled.
 		),
 		'document_get'
 	);
@@ -387,6 +388,7 @@ function bp_document_get( $args = '' ) {
 			'meta_query_document' => $r['meta_query_document'],
 			'meta_query_folder'   => $r['meta_query_folder'],
 			'moderation_query'    => $r['moderation_query'],
+			'status'              => $r['status'],
 		)
 	);
 
@@ -431,6 +433,7 @@ function bp_document_get_specific( $args = '' ) {
 			'meta_query'       => false,
 			'privacy'          => false,      // privacy to filter.
 			'moderation_query' => true,
+			'status'           => bb_document_get_published_status(), // Filter by document status. published, scheduled.
 		),
 		'document_get_specific'
 	);
@@ -447,6 +450,7 @@ function bp_document_get_specific( $args = '' ) {
 		'privacy'          => $r['privacy'],      // privacy to filter.
 		'meta_query'       => $r['meta_query'],
 		'moderation_query' => $r['moderation_query'],
+		'status'           => $r['status'],
 	);
 
 	/**
@@ -483,6 +487,7 @@ function bp_document_get_specific( $args = '' ) {
  * @type string        $date_created Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
  * @type string        $error_type   Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * @type string        $status       Optional. Status of the documents.
  * }
  * @return WP_Error|bool|int The ID of the document on success. False on error.
  * @since BuddyBoss 1.4.0
@@ -507,6 +512,7 @@ function bp_document_add( $args = '' ) {
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
 			'date_modified' => bp_core_current_time(),  // The GMT time that this document was modified.
 			'error_type'    => 'bool',
+			'status'        => bb_document_get_published_status(), // Document status.
 		),
 		'document_add'
 	);
@@ -527,6 +533,7 @@ function bp_document_add( $args = '' ) {
 	$document->date_created  = $r['date_created'];
 	$document->date_modified = $r['date_modified'];
 	$document->error_type    = $r['error_type'];
+	$document->status        = $r['status'];
 
 	// groups document always have privacy to `grouponly`.
 	if ( ! empty( $document->privacy ) && ( in_array( $document->privacy, array( 'forums', 'message' ), true ) ) ) {
@@ -605,6 +612,11 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 				$bp_document = new BP_Document( $document['document_id'] );
 
 				if ( ! empty( $bp_document->id ) ) {
+
+					if ( bp_is_active( 'activity' ) ) {
+						$obj_activity = new BP_Activity_Activity( $bp_document->activity_id );
+					}
+
 					$document_id = bp_document_add(
 						array(
 							'id'            => $bp_document->id,
@@ -619,6 +631,8 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'privacy'       => $bp_document->privacy,
 							'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
 							'date_modified' => bp_core_current_time(),
+							'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : $bp_document->date_created,
+							'status'        => ! empty( $obj_activity ) && function_exists( 'bb_get_activity_published_status' ) && bb_get_activity_published_status() === $obj_activity->status ? bb_document_get_published_status() : $bp_document->status,
 						)
 					);
 
@@ -645,6 +659,8 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 						'message_id'    => ! empty( $document['message_id'] ) ? $document['message_id'] : 0,
 						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
+						'status'        => ! empty( $document['status'] ) ? $document['status'] : bb_document_get_published_status(),
+						'date_created'  => ! empty( $document['date_created'] ) ? $document['date_created'] : bp_core_current_time(),
 					)
 				);
 
@@ -703,6 +719,7 @@ function bp_document_delete( $args = '', $from = false ) {
 			'group_id'      => false,
 			'privacy'       => false,
 			'date_created'  => false,
+			'status'        => false,
 		)
 	);
 
@@ -1224,9 +1241,6 @@ function folders_check_folder_access( $folder_id ) {
  */
 function bp_document_delete_orphaned_attachments() {
 
-	remove_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10 );
-	remove_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10 );
-
 	/**
 	 * Removed the WP_Query because it's conflicting with other plugins which hare using non-standard way using the
 	 * pre_get_posts & ajax_query_attachments_args hook & filter and it's getting all the media ids and it will remove
@@ -1234,43 +1248,38 @@ function bp_document_delete_orphaned_attachments() {
 	 *
 	 * @since BuddyBoss 1.7.6
 	 */
-	$args = array(
-		'posts_per_page' => -1,
-		'fields'         => 'ids',
-		'post_status'    => 'inherit',
-		'post_type'      => 'attachment',
-		'meta_query'     => array(
-			'relation' => 'AND',
-			array(
-				'key'   => 'bp_document_saved',
-				'value' => '0',
-			),
-			array(
-				'key'     => 'bb_media_draft',
-				'compare' => 'NOT EXISTS',
-				'value'   => '',
-			),
-		),
-		'date_query'     => array(
-			array(
-				'column' => 'post_date_gmt',
-				'before' => '6 hours ago',
-			),
-		),
-	);
+	global $wpdb;
+	$post_table              = $wpdb->posts;
+	$postmeta_table          = $wpdb->postmeta;
+	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
+	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
-	$document_wp_query = new WP_query( $args );
-	if ( 0 < $document_wp_query->found_posts ) {
-		foreach ( $document_wp_query->posts as $post_id ) {
+	$query = "SELECT {$post_table}.ID
+				FROM {$post_table}
+				LEFT JOIN {$postmeta_table} ON ( {$post_table}.ID = {$postmeta_table}.post_id )
+				LEFT JOIN {$postmeta_table} AS mt1
+					ON ( {$post_table}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
+					WHERE 1=1 AND
+						( {$post_table}.post_date_gmt < '{$six_hours_ago}' ) AND
+						(
+							(
+								{$postmeta_table}.meta_key = 'bp_document_saved' AND
+								{$postmeta_table}.meta_value = '0'
+							) AND
+							mt1.post_id IS NULL
+						) AND
+						{$post_table}.post_type = 'attachment' AND
+						( {$post_table}.post_status = 'inherit' )
+				GROUP BY {$post_table}.ID
+				ORDER BY {$post_table}.post_date DESC";
+
+	$document_wp_query_posts = $wpdb->get_col( $query );
+
+	if ( ! empty( $document_wp_query_posts ) ) {
+		foreach ( $document_wp_query_posts as $post_id ) {
 			wp_delete_attachment( $post_id, true );
 		}
 	}
-
-	wp_reset_postdata();
-	wp_reset_query();
-
-	add_filter( 'posts_join', 'bp_media_filter_attachments_query_posts_join', 10, 2 );
-	add_filter( 'posts_where', 'bp_media_filter_attachments_query_posts_where', 10, 2 );
 
 	bb_document_remove_orphaned_download();
 }
@@ -2119,7 +2128,13 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	}
 
-	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$cached = bp_core_get_incremented_cache( $documents_folder_query, 'bp_document_folder' );
+	if ( false === $cached ) {
+		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+		bp_core_set_incremented_cache( $documents_folder_query, 'bp_document_folder', $data );
+	} else {
+		$data = $cached;
+	}
 
 	// Build array of item references:
 	foreach ( $data as $key => &$item ) {
@@ -3855,6 +3870,8 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 				$group_status    = bp_get_group_status( $group_object );
 				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $privacy );
 			}
+
+			$attachment_path = $attachment_path . '.' . $extension;
 			if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
 				if ( ! is_link( $attachment_path ) ) {
 					// Generate Document Thumb Symlink.
@@ -3904,6 +3921,13 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 					$file_path = $file_path . '/' . $file['file'];
 				}
 
+				if ( ! empty( $file_path ) ) {
+					$preview_file_extension  = pathinfo( $file_path, PATHINFO_EXTENSION );
+					if ( ! empty( $preview_file_extension ) ) {
+						$attachment_path = $attachment_path . '.' . $preview_file_extension;
+					}
+				}
+
 				if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
 					if ( ! is_link( $attachment_path ) ) {
 
@@ -3917,6 +3941,11 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 						if ( ! file_exists( $output_file_src ) ) {
 							bb_document_regenerate_attachment_thumbnails( $attachment_id );
 							$file = image_get_intermediate_size( $attachment_id, $size );
+						}
+
+						$preview_file_extension  = pathinfo( $output_file_src, PATHINFO_EXTENSION );
+						if ( ! empty( $preview_file_extension ) ) {
+							$attachment_path = $attachment_path . '.' . $preview_file_extension;
 						}
 
 						// Check if file exists.
@@ -3966,39 +3995,32 @@ function bp_document_delete_symlinks( $document ) {
 	$document_symlinks_path = bp_document_symlink_path();
 	$attachment_id          = $old_document->attachment_id;
 
-	$privacy         = $old_document->privacy;
-	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
+	$all_attachments = array();
+
+	$privacy                = $old_document->privacy;
+	$medium_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'medium' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
-		$group_object    = groups_get_group( $old_document->group_id );
-		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'medium' );
+		$group_object           = groups_get_group( $old_document->group_id );
+		$group_status           = bp_get_group_status( $group_object );
+		$medium_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'medium' );
 	}
+	$all_attachments[] = $medium_attachment_path;
 
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
-
-	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
+	$large_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'large' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
-		$group_object    = groups_get_group( $old_document->group_id );
-		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'large' );
+		$group_object          = groups_get_group( $old_document->group_id );
+		$group_status          = bp_get_group_status( $group_object );
+		$large_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'large' );
 	}
+	$all_attachments[] = $large_attachment_path;
 
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
-
-	$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
+	$full_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $privacy . 'full' );
 	if ( $old_document->group_id > 0 && bp_is_active( 'groups' ) ) {
-		$group_object    = groups_get_group( $old_document->group_id );
-		$group_status    = bp_get_group_status( $group_object );
-		$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'full' );
+		$group_object         = groups_get_group( $old_document->group_id );
+		$group_status         = bp_get_group_status( $group_object );
+		$full_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . 'full' );
 	}
-
-	if ( file_exists( $attachment_path ) ) {
-		unlink( $attachment_path );
-	}
+	$all_attachments[] = $full_attachment_path;
 
 	$image_sizes = bb_document_get_image_sizes();
 	if ( ! empty( $image_sizes ) ) {
@@ -4011,10 +4033,7 @@ function bp_document_delete_symlinks( $document ) {
 					$attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $privacy . sanitize_key( $name ) );
 				}
 
-				// If rename the file then preview doesn't exist but symbolic is available in the folder. So, checked the file is not empty then remove it from symbolic.
-				if ( file_exists( $attachment_path ) ) {
-					@unlink( $attachment_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-				}
+				$all_attachments[] = $attachment_path;
 			}
 		}
 	}
@@ -4025,9 +4044,38 @@ function bp_document_delete_symlinks( $document ) {
 		$group_status            = bp_get_group_status( $group_object );
 		$preview_attachment_path = $document_symlinks_path . '/' . md5( $old_document->id . $attachment_id . $group_status . $old_document->privacy );
 	}
+	$all_attachments[] = $preview_attachment_path;
 
-	if ( file_exists( $preview_attachment_path ) ) {
-		unlink( $preview_attachment_path );
+	$extension          = bp_document_extension( $attachment_id );
+	$attached_file      = get_attached_file( $attachment_id );
+	$attached_file_info = pathinfo( $attached_file );
+	$symlink_extension  = $extension;
+
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		$file = image_get_intermediate_size( $attachment_id, 'bb-document-image-preview-activity-image' );
+
+		$file_path = '';
+		if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
+			$file_path = $attached_file_info['dirname'];
+			$file_path = $file_path . '/' . $file['file'];
+		}
+
+		$symlink_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
+	}
+
+	if ( ! empty( $all_attachments ) ) {
+		foreach ( $all_attachments as $attachment_path ) {
+			// Delete symlink without an extension.
+			if ( file_exists( $attachment_path ) ) {
+				unlink( $attachment_path );
+			}
+
+			// Delete symlink with an extension.
+			$attachment_path = $attachment_path . '.' . $symlink_extension;
+			if ( file_exists( $attachment_path ) ) {
+				unlink( $attachment_path );
+			}
+		}
 	}
 }
 
@@ -4337,6 +4385,22 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
 			}
 
+			$file = image_get_intermediate_size( $attachment_id, $size );
+			if ( ! empty( $file ) && ! empty( $file['file'] ) ) {
+				$attached_file      = get_attached_file( $attachment_id );
+				$attached_file_info = pathinfo( $attached_file );
+				$file_path          = '';
+				if ( ! empty( $attached_file_info['dirname'] ) ) {
+					$file_path = $attached_file_info['dirname'];
+					$file_path = $file_path . '/' . $file['file'];
+				}
+
+				$preview_file_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
+				if ( ! empty( $preview_file_extension ) ) {
+					$preview_attachment_path = $preview_attachment_path . '.' . $preview_file_extension;
+				}
+			}
+
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 				bp_document_create_symlinks( $document, $size );
 			}
@@ -4345,6 +4409,17 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 			} else {
 				$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
 			}
+
+			/**
+			 * Filters the attachment URL.
+			 * Added support for CDN URL.
+			 *
+			 * @since BuddyBoss 2.6.10
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
 
 			/**
 			 * Filter for the after thumb symlink generate.
@@ -4437,10 +4512,23 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 				$group_status            = bp_get_group_status( $group_object );
 				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $group_status . $document->privacy );
 			}
+
+			$preview_attachment_path = $preview_attachment_path . '.' . $extension;
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 				bp_document_create_symlinks( $document, '' );
 			}
 			$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $preview_attachment_path );
+
+			/**
+			 * Filters the attachment URL.
+			 *
+			 * @since BuddyBoss 2.6.10
+			 *
+			 * @param string $attachment_url URL for the given attachment.
+			 * @param int    $attachment_id  Attachment post ID.
+			 */
+			$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment_id );
+
 		} elseif ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && ! bb_enable_symlinks() ) {
 			$passed_attachment_id = $attachment_id;
 			$document_id          = 'forbidden_' . $document_id;
@@ -4579,10 +4667,12 @@ function bp_document_load_gopp_image_editor_gs() {
 /**
  * Create symlink for a document video.
  *
- * @param object $document BP_Document Object.
- * @param bool   $generate Generate Symlink or not.
- *
  * @since BuddyBoss 1.7.0
+ *
+ * @param bool       $generate Generate Symlink or not.
+ * @param object|int $document BP_Document Object.
+ *
+ * @return string|void
  */
 function bb_document_video_get_symlink( $document, $generate = true ) {
 
@@ -4663,6 +4753,9 @@ function bb_document_video_get_symlink( $document, $generate = true ) {
 
 				if ( strstr( $mime, 'video/' ) ) {
 					if ( ! empty( $attached_file ) && file_exists( $attached_file ) && is_file( $attached_file ) && ! is_dir( $attached_file ) && ! file_exists( $attachment_path ) ) {
+
+						$extension       = bp_document_extension( $attachment_id );
+						$attachment_path = $attachment_path . '.' . $extension;
 						if ( ! is_link( $attachment_path ) && ! file_exists( $attachment_path ) ) {
 							$get_existing = get_post_meta( $document->attachment_id, 'bb_video_symlinks_arr', true );
 							if ( ! $get_existing ) {
@@ -5079,4 +5172,123 @@ function bb_document_migration() {
 	 * @since BuddyBoss 2.4.50
 	 */
 	$wpdb->query( "UPDATE {$bp->document->table_name} AS d JOIN {$wpdb->posts} AS p ON p.ID = d.attachment_id SET d.description = p.post_content" ); // phpcs:ignore
+}
+
+/**
+ * Get activity document.
+ *
+ * @BuddyBoss 2.5.50
+ *
+ * @param object|null $activity Activity object.
+ *
+ * @return string|bool
+ */
+function bb_document_get_activity_document( $activity = '', $args = array() ) {
+	if ( empty( $activity ) ) {
+		global $activities_template;
+		$activity = $activities_template->activity ?? '';
+	}
+
+	if ( empty( $activity ) ) {
+		return false;
+	}
+
+	// Get activity metas.
+	$activity_metas = bb_activity_get_metadata( $activity->id );
+	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+
+	if ( empty( $document_ids ) ) {
+		return false;
+	}
+
+	// Documents based on group setting for forum.
+	if (
+		(
+			buddypress()->activity->id === $activity->component &&
+			! bp_is_profile_document_support_enabled()
+		) ||
+		(
+			bp_is_active( 'groups' ) &&
+			buddypress()->groups->id === $activity->component && ! bp_is_group_document_support_enabled()
+		)
+	) {
+		return false;
+	}
+
+	/**
+	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
+	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
+	 * it will hide document content which is created by blocked/blocked/suspended member.
+	 */
+	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) && bb_moderation_to_hide_forum_activity( $activity->id );
+
+	if ( true === $hide_forum_activity ) {
+		return false;
+	}
+
+	$document_args = array(
+		'include'  => $document_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+		'per_page' => 0,
+	);
+
+	// Update privacy for the group and comments.
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
+		$document_args['privacy'] = array( 'grouponly' );
+		if ( 'activity_comment' === $activity->type ) {
+			$document_args['privacy'][] = 'comment';
+		}
+	}
+
+	$document_args = bp_parse_args(
+		$args,
+		$document_args,
+		'activity_document'
+	);
+
+	if ( bp_is_active( 'activity' ) && bb_get_activity_scheduled_status() === $activity->status ) {
+		$document_args['status'] = bb_document_get_scheduled_status();
+	}
+
+	$content = '';
+	if ( bp_has_document( $document_args ) ) {
+		ob_start();
+		?>
+		<div class="bb-activity-media-wrap bb-media-length-1 ">
+			<?php
+			bp_get_template_part( 'document/activity-document-move' );
+			while ( bp_document() ) {
+				bp_the_document();
+				bp_get_template_part( 'document/activity-entry' );
+			}
+			?>
+		</div>
+		<?php
+		$content = ob_get_clean();
+	}
+
+	return $content;
+}
+
+/**
+ * Return the document published status.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_document_get_published_status() {
+	return buddypress()->document->published_status;
+}
+
+/**
+ * Return the document scheduled status.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_document_get_scheduled_status() {
+	return buddypress()->document->scheduled_status;
 }

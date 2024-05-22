@@ -603,7 +603,7 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
  */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_load_presence_api_mu_plugin( false );
 	}
 }
 
@@ -620,7 +620,7 @@ function bb_check_presence_load_directly() {
 	}
 }
 
-add_action( 'bp_init', 'bb_check_presence_load_directly' );
+add_action( 'bp_admin_init', 'bb_check_presence_load_directly' );
 
 /**
  * Register the post comment reply notifications.
@@ -690,9 +690,9 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 
 	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
 	$comment_content          = $commentdata['comment_content'];
-	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
+	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
@@ -918,8 +918,12 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	// Replace @mention text with userlinks.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)/';
-		$post_type_comment->comment_content = preg_replace( $pattern, "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $post_type_comment->comment_content );
+		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
+			// Pattern for cases with existing <a>@mention</a> or @mention.
+			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$post_type_comment->comment_content = preg_replace( $pattern, $replacement, $post_type_comment->comment_content );
+		}
 	}
 
 	// Send @mentions and setup BP notifications.
@@ -943,7 +947,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		) {
 
 			// Poster name.
-			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id, $user_id );
 			$author_id         = $comment_user_id;
 
 			/** Mail */
@@ -1090,3 +1094,78 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 
 add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
 
+/**
+ * Save directory layout settings for BuddyBoss.
+ * This function handles the AJAX request to save directory layout settings for BuddyBoss.
+ * It verifies the nonce, checks for valid options and values, and stores
+ * the layout option in the database or cookie.
+ *
+ * @since BuddyBoss 2.5.11
+ */
+function buddyboss_directory_save_layout() {
+	$object = bb_filter_input_string( INPUT_POST, 'object' );
+	if ( empty( $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid object.', 'buddyboss' ),
+		) );
+	}
+
+	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid request.', 'buddyboss' ),
+		) );
+	}
+
+	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
+	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid option', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
+	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid value', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	if ( 'group_members' === $object ) {
+		$object = 'members';
+	}
+
+	if ( is_user_logged_in() ) {
+		$existing_layout = get_user_meta( get_current_user_id(), $option_name, true );
+		$existing_layout = ! empty( $existing_layout ) ? $existing_layout : array();
+		// Store layout option in the db.
+		$existing_layout[ $object ] = $option_value;
+		update_user_meta( get_current_user_id(), $option_name, $existing_layout );
+	} else {
+		$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( $_COOKIE[ $option_name ] ), true ) : array();
+		// Store layout option in the cookie.
+		$existing_layout[ $object ] = $option_value;
+		setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );
+	}
+
+	wp_send_json_success();
+	wp_die();
+}
+
+add_action( 'wp_ajax_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+
+/**
+ * Function to load background process log class.
+ *
+ * @since BuddyBoss 2.5.60
+ */
+function bb_bg_process_log_load() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_bg_process_log_load' );

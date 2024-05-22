@@ -154,7 +154,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'document',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
-		'li_class'  => array(),
+		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_document_directory_permalink(),
 		'text'      => __( 'All Documents', 'buddyboss' ),
 		// 'count'     => bp_get_total_document_count(),
@@ -917,7 +917,6 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers.
 				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path.
 
-
 				// Create a new ZipFile instance.
 				$zip = new \ZipStream\ZipStream( $file_name, $options );
 
@@ -927,6 +926,11 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 				);
 
 				foreach ( $files as $file ) {
+
+					if ( '.' === $file->getfileName() || '..' === $file->getfileName() ) {
+						continue;
+					}
+
 					$relativePath = substr( $file, strlen( $parent_folder ) + 1 );
 
 					if ( $file->isDir() ) {
@@ -942,6 +946,11 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 				$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
 				foreach ( $files as $name => $file ) {
+
+					if ( '.' === $file->getfileName() || '..' === $file->getfileName() ) {
+						continue;
+					}
+
 					$filePath     = $file->getRealPath();
 					$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
 

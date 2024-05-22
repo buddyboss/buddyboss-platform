@@ -28,6 +28,12 @@ add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
 
 add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
 
+add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
+add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
+
+// Exclude account related notifications.
+add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
+
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
  *
@@ -769,8 +775,8 @@ function bb_load_member_type_label_custom_css() {
 					$background_color        = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
 					$text_color              = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
 					$class_name              = 'body .bp-member-type.bb-current-member-' . $type;
-					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
-					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color !important;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color !important;" . '}';
 				}
 			}
 			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
@@ -930,39 +936,78 @@ function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member
 }
 
 /**
- * This function will work as migration process which will repair member profile links.
+ * Generate profile slug registration and activation.
  *
- * @since BuddyBoss 2.3.41
+ * @since BuddyBoss 2.4.90
  *
- * @return array|void
+ * @param int $user_id ID of user.
+ *
+ * @return void
  */
-function bb_generate_member_profile_links_on_update() {
-	if ( ! bp_is_active( 'members' ) ) {
+function bb_generate_member_profile_slug_on_activate( $user_id ) {
+	if ( empty( $user_id ) ) {
 		return;
 	}
 
-	global $wpdb, $bp_background_updater;
-	$bp_prefix = bp_core_get_table_prefix();
-
-	// Get all users who have not generate unique slug while it runs from background.
-	$user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE um.user_id IS NULL ORDER BY u.ID ASC",
-			'bb_profile_slug'
-		)
-	);
-
-	if ( ! is_wp_error( $user_ids ) && ! empty( $user_ids ) ) {
-		foreach ( array_chunk( $user_ids, 50 ) as $chunked_user_ids ) {
-			$bp_background_updater->data(
-				array(
-					array(
-						'callback' => 'bb_set_bulk_user_profile_slug',
-						'args'     => array( $chunked_user_ids ),
-					),
-				)
-			);
-			$bp_background_updater->save()->dispatch();
-		}
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
 	}
+}
+
+add_action( 'bp_core_signup_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+
+/**
+ * Function to exclude the account settings related notification.
+ *
+ * @since BuddyBoss 2.5.30
+ *
+ * @param array $where_conditions Where clause to get notifications.
+ * @param array $args             Parsed arguments to get notifications.
+ *
+ * @return array
+ */
+function bb_members_hide_account_settings_notifications( $where_conditions, $args ) {
+
+	if ( ! bp_is_active( 'settings' ) ) {
+		$where_conditions['account_settings_exclude'] = "( component_action != 'bb_account_password' )";
+	}
+
+	return $where_conditions;
+}
+
+/**
+ * Delete default PNG for members when update the display name format.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ * @param string $option    Option name.
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_update_display_name( $old_value, $value, $option ) {
+	if (
+		'bp-display-name-format' === $option &&
+		$old_value !== $value
+	) {
+		// Delete default SVG for users.
+		bb_delete_default_user_png_avatar( array(), false );
+	}
+}
+
+/**
+ * Delete default PNG for member when delete the user.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $id ID of the user.
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
+	// Delete default PNG for users.
+	bb_delete_default_user_png_avatar( array( $id ) );
 }

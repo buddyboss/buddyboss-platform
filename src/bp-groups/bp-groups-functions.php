@@ -732,8 +732,16 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
 	}
 
+	/**
+	 * Apply filter to modified value to record group activity for group join.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @param bool $value Allow record activity.
+	 */
+	$allow_record_activity = (bool) apply_filters( 'bb_group_join_groups_record_activity', true );
 	// Record this in activity feeds.
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bp_is_active( 'activity' ) && true === $allow_record_activity ) {
 		groups_record_activity(
 			array(
 				'type'    => 'joined_group',
@@ -1759,12 +1767,14 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'         => false,
-			'content'    => false,
-			'user_id'    => bp_loggedin_user_id(),
-			'group_id'   => 0,
-			'privacy'    => 'public',
-			'error_type' => 'bool',
+			'id'            => false,
+			'content'       => false,
+			'user_id'       => bp_loggedin_user_id(),
+			'group_id'      => 0,
+			'privacy'       => 'public',
+			'error_type'    => 'bool',
+			'status'        => bb_get_activity_published_status(),
+			'recorded_time' => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1789,7 +1799,6 @@ function groups_post_update( $args = '' ) {
 	}
 
 	// Record this in activity feeds.
-	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . bp_get_group_name( $bp->groups->current_group ) . '</a>' );
 	$activity_content = $content;
 
 	/**
@@ -1799,7 +1808,7 @@ function groups_post_update( $args = '' ) {
 	 *
 	 * @param string $activity_action The new group activity update.
 	 */
-	$action = apply_filters( 'groups_activity_new_update_action', $activity_action );
+	$action = apply_filters( 'groups_activity_new_update_action', '' );
 
 	/**
 	 * Filters the content for the new group activity update.
@@ -1812,14 +1821,17 @@ function groups_post_update( $args = '' ) {
 
 	$activity_id = groups_record_activity(
 		array(
-			'id'         => $id,
-			'user_id'    => $user_id,
-			'action'     => $action,
-			'content'    => $content_filtered,
-			'type'       => 'activity_update',
-			'item_id'    => $group_id,
-			'privacy'    => $privacy,
-			'error_type' => $error_type,
+			'id'            => $id,
+			'user_id'       => $user_id,
+			'action'        => $action,
+			'content'       => $content_filtered,
+			'type'          => 'activity_update',
+			'item_id'       => $group_id,
+			'privacy'       => $privacy,
+			'error_type'    => $error_type,
+			'status'        => $status,
+			'recorded_time' => $recorded_time,
+
 		)
 	);
 
@@ -4025,7 +4037,7 @@ function bp_group_type_short_code_callback( $atts ) {
 		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav bp-shortcode-wrap">
 			<div class="screen-content">
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
-					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
+					<?php bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'groups' ) ); ?>
 				</div>
 				<div id="groups-dir-list" class="groups dir-list">
 					<?php
@@ -5389,7 +5401,8 @@ function bb_groups_migrate_subgroup_member() {
 function bb_update_groups_subgroup_membership_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+	$table_name = $bb_background_updater::$table_name;
+	$limit      = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
 
 	$sql = "SELECT gm.group_id, gm.user_id
 		FROM {$bp->groups->table_name_members} gm
@@ -5406,7 +5419,6 @@ function bb_update_groups_subgroup_membership_background_process() {
 		true !== bp_enable_group_hierarchies() ||
 		true !== bp_enable_group_restrict_invites()
 	) {
-		$table_name = $bb_background_updater::$table_name;
 		// Delete remaining background processes.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
@@ -5423,6 +5435,19 @@ function bb_update_groups_subgroup_membership_background_process() {
 	// Remove members from subgroups.
 	foreach ( $groups as $group ) {
 		groups_leave_group( $group->group_id, $group->user_id );
+	}
+
+	$total_bg = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'migration',
+			'bb_groups_subgroup_membership'
+		)
+	);
+
+	// If total background job is more than 4 then don't create new background job.
+	if ( ! empty( $total_bg->total ) && $total_bg->total > 4 ) {
+		return;
 	}
 
 	$bb_background_updater->push_to_queue(
@@ -5448,7 +5473,9 @@ function bb_update_groups_subgroup_membership_background_process() {
  */
 function bb_update_groups_invitation_background_process() {
 	global $wpdb, $bp, $bb_background_updater;
-	$limit = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
+
+	$table_name = $bb_background_updater::$table_name;
+	$limit      = (int) apply_filters( 'bb_limit_subgroup_membership_migration', 50 );
 
 	$invites_table_name = BP_Invitation_Manager::get_table_name();
 
@@ -5466,7 +5493,6 @@ function bb_update_groups_invitation_background_process() {
 		true !== bp_enable_group_hierarchies() ||
 		true !== bp_enable_group_restrict_invites()
 	) {
-		$table_name = $bb_background_updater::$table_name;
 		// Delete remaining background processes.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
@@ -5487,6 +5513,19 @@ function bb_update_groups_invitation_background_process() {
 		} else {
 			groups_delete_invite( $invitation->user_id, $invitation->item_id );
 		}
+	}
+
+	$total_bg = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'migration',
+			'bb_groups_subgroup_invitation'
+		)
+	);
+
+	// If total background job is more than 4 then don't create new background job.
+	if ( ! empty( $total_bg->total ) && $total_bg->total > 4 ) {
+		return;
 	}
 
 	$bb_background_updater->push_to_queue(

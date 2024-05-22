@@ -76,6 +76,8 @@ class BB_Groups extends Integration_Abstract {
 			'added_group_meta'                                   => 2,  // When Group added update. This needed for sorting by group last activity, member course.
 			'updated_group_meta'                                 => 2,  // When Group meta update. This needed for sorting by group last activity, member course.
 			'delete_group_meta'                                  => 2,  // When Group meta deleted. This needed for sorting by group last activity, member course.
+			'bb_subscriptions_after_save'                        => 1,  // Create subscription.
+			'bb_subscriptions_before_delete_subscription'        => 1,  // Delete subscription.
 
 			// Added moderation support.
 			'bp_suspend_groups_suspended'                        => 1, // Any Group Suspended.
@@ -104,6 +106,12 @@ class BB_Groups extends Integration_Abstract {
 
 			// For Group Video Support.
 			'update_option_bp_video_group_video_support'    => 3,
+
+			// When change the member display name.
+			'update_option_bp-display-name-format'          => 3,
+
+			// When change the schedule post.
+			'update_option__bb_enable_activity_schedule_posts' => 0,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -114,9 +122,12 @@ class BB_Groups extends Integration_Abstract {
 
 		if ( $cache_bb_groups ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/groups',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id' => 'id',
 				),
@@ -125,7 +136,7 @@ class BB_Groups extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/groups/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -363,6 +374,39 @@ class BB_Groups extends Integration_Abstract {
 		$this->purge_item_cache_by_item_id( $group_id );
 	}
 
+	/**
+	 * When Group has been subscribed.
+	 *
+	 * @param BB_Subscriptions $subscription Subscription object.
+	 */
+	public function event_bb_subscriptions_after_save( $subscription ) {
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'group'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
+	}
+
+	/**
+	 * When Group subscription has been removed.
+	 *
+	 * @param int $subscription_id  Subscription id.
+	 */
+	public function event_bb_subscriptions_before_delete_subscription( $subscription_id ) {
+		$subscription = bb_subscriptions_get_subscription( $subscription_id );
+		if (
+			! empty( $subscription->type ) &&
+			! empty( $subscription->item_id ) &&
+			$subscription->type == 'group'
+		) {
+			$this->purge_item_cache_by_item_id( $subscription->item_id );
+		}
+	}
+
+
+
 	/******************************* Moderation Support ******************************/
 	/**
 	 * Suspended Group ID.
@@ -390,10 +434,9 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				$this->purge_item_cache_by_item_id( $group_id );
-			}
+			$this->purge_item_cache_by_item_ids( $group_ids );
 		}
 	}
 
@@ -404,10 +447,9 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				$this->purge_item_cache_by_item_id( $group_id );
-			}
+			$this->purge_item_cache_by_item_ids( $group_ids );
 		}
 	}
 
@@ -418,10 +460,9 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				$this->purge_item_cache_by_item_id( $group_id );
-			}
+			$this->purge_item_cache_by_item_ids( $group_ids );
 		}
 	}
 
@@ -432,14 +473,14 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$item_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0; // group/user id.
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$user_id   = $item_id;
 				$group_ids = $this->get_group_ids_by_userid( $user_id );
+
 				if ( ! empty( $group_ids ) ) {
-					foreach ( $group_ids as $group_id ) {
-						$this->purge_item_cache_by_item_id( $group_id );
-					}
+					$this->purge_item_cache_by_item_ids( $group_ids );
 				}
 			} elseif ( isset( $args['object'] ) && 'group' === $args['object'] ) {
 				$this->purge_item_cache_by_item_id( $item_id );
@@ -474,6 +515,34 @@ class BB_Groups extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-groups_' . $group_id );
 		$group = new \BP_Groups_Group( $group_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) ) );
+	}
+
+	/**
+	 * Purge item cache by ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-groups_' ), array( $this, 'prepare_group_deeplink' ) );
+	}
+
+	/**
+	 * Prepare activity deeplink.
+	 *
+	 * @param int $group_id Activity ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_group_deeplink( $group_id ) {
+		$group = new \BP_Groups_Group( $group_id );
+
+		return 'bbapp-deeplinking_' . untrailingslashit( bp_get_group_permalink( $group ) );
 	}
 
 	/**
@@ -594,5 +663,23 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_update_option_bp_video_group_video_support( $old_value, $value, $option ) {
 		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When changed display name format settings from the Settings -> Profile.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_display_name_format( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When changed schedule post setting from the Settings -> Activity.
+	 */
+	public function event_update_option__bb_enable_activity_schedule_posts() {
+		Cache::instance()->purge_by_component( 'bp-groups' );
 	}
 }

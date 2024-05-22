@@ -45,6 +45,7 @@ require ABSPATH . WPINC . '/class-wp-user-meta-session-tokens.php';
 require ABSPATH . WPINC . '/class-wp-http-response.php';
 require ABSPATH . WPINC . '/theme.php';
 require ABSPATH . WPINC . '/l10n.php';
+require ABSPATH . WPINC . '/blocks.php';
 
 // Load rest api to validate the attributes.
 require ABSPATH . WPINC . '/rest-api/class-wp-rest-request.php';
