@@ -1900,19 +1900,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-			// Show/hide web/app preview.
-			$( '.preview-switcher .button' ).on(
-				'click',
-				function( event ) {
-					event.preventDefault();
-
-					var tab = $( this ).attr( 'href' );
-					$( this ).closest( '.preview-switcher-main' ).find( '.preview-block.active' ).removeClass( 'active' );
-					$( tab ).addClass( 'active' );
-					$( this ).addClass( 'button-primary' ).siblings().removeClass( 'button-primary' );
-				}
-			);
-
 			// Change preview avatar on change member header layout.
 			$( '.profile-header-style input[type="radio"], .group-header-style input[type="radio"]' ).on(
 				'change',
