@@ -5671,20 +5671,20 @@ window.bp = window.bp || {};
 
 						// Trigger Toast message if it is a scheduled post.
 						if ( 'scheduled' === data.activity_action_type ) {
-							var title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
-							var desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
+							var title    = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleTitle : '';
+							var desc     = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditSuccessScheduleDesc : '';
 							var LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.EditViewSchedulePost : '';
 
 							if ( ! data.edit_activity ) { // It's a new scheduled post.
-								title = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
-								desc = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
+								title    = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleTitle : '';
+								desc     = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.successScheduleDesc : '';
 								LinkText = 'undefined' !== typeof BP_Nouveau.activity_schedule ? BP_Nouveau.activity_schedule.strings.viewSchedulePosts : '';
 							}
 
 							if ( '' !== title && '' !== desc && '' !== LinkText ) {
 								var scheduleUrl = '';
-								if ( 'group' === data.privacy ) {
-									scheduleUrl = data.group_url + '?param=scheduled_posts';
+								if ( ! _.isUndefined( data.privacy ) && 'group' === data.privacy ) {
+									scheduleUrl = data.group_url + '?action=scheduled_posts';
 								}
 								Backbone.trigger(
 									'triggerToastMessage',
