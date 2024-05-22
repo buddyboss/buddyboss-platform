@@ -450,6 +450,10 @@ function bp_nouveau_groups_invites_custom_message( $message = '' ) {
  * Format a Group for a json reply
  *
  * @since BuddyPress 3.0.0
+ *
+ * @param object $item The group object
+ *
+ * @return array $args The group data.
  */
 function bp_nouveau_prepare_group_for_js( $item ) {
 	if ( empty( $item->id ) ) {

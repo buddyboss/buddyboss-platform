@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.10\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-05-15 08:17:53+00:00\n"
+"POT-Creation-Date: 2024-05-16 04:56:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5991,7 +5991,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:387
-msgid "Allow site owners and moderators to schedule their posts"
+msgid "Allow Group Organisers and Moderators to schedule their posts"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
