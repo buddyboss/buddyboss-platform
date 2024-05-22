@@ -53,11 +53,6 @@ window.bp = window.bp || {};
 				this.dropzoneView();
 			}
 
-			var paramValue = this.bbGetUrlParameter( 'param' );
-			if ( 'scheduled_posts' === paramValue ) {
-				bp.Nouveau.SchedulePost.openSchedulePostModal();
-			}
-
 			this.postFormView();
 
 			this.postFormPlaceholderView();
@@ -66,13 +61,6 @@ window.bp = window.bp || {};
 			this.getCurrentDraftActivity();
 			this.syncDraftActivity();
 			this.reloadWindow();
-		},
-
-		bbGetUrlParameter( name ) {
-			name = name.replace( /[\[]/, '\\[' ).replace( /[\]]/, '\\]' );
-			var regex = new RegExp( '[\\?&]' + name + '=([^&#]*)' );
-			var results = regex.exec( location.search );
-			return results === null ? '' : decodeURIComponent( results[1].replace( /\+/g, ' ' ) );
 		},
 
 		postFormView: function () {
