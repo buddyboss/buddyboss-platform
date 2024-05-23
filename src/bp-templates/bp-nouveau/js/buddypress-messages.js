@@ -3360,9 +3360,14 @@ window.bp = window.bp || {};
 				var bgNo   = Math.floor( Math.random() * (6 - 1 + 1) ) + 1,
 					images = this.model.get( 'images' );
 
+				var strictWidth = window.innerWidth > 768 ? 140 : 130;
+				var originalWidth = images.original.width;
+				var originalHeight = images.original.height;
+				var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+
 				this.$el.html( this.template( this.model.toJSON() ) );
 				this.el.classList.add( 'bg' + bgNo );
-				this.el.style.height = images.fixed_width.height + 'px';
+				this.el.style.height = relativeHeight + 'px';
 
 				return this;
 			}
