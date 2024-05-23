@@ -2405,6 +2405,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'document_ids' => $document_ids,
 				'sort'         => 'ASC',
 				'order_by'     => 'menu_order',
+				'status'       => function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $value->status ? bb_document_get_scheduled_status() : bb_document_get_published_status(),
 			)
 		);
 

@@ -145,6 +145,15 @@ class BP_Video {
 	var $description;
 
 	/**
+	 * Status of the current video item.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @var string
+	 */
+	public $status;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyBoss 1.7.0
@@ -197,6 +206,7 @@ class BP_Video {
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+		$this->status        = $row->status;
 
 		// Added fallback to get description.
 		if ( empty( $this->description ) ) {
@@ -230,6 +240,7 @@ class BP_Video {
 		$this->privacy       = apply_filters_ref_array( 'bp_video_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_video_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_video_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->status        = apply_filters_ref_array( 'bb_video_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current video item gets saved.
@@ -262,9 +273,9 @@ class BP_Video {
 
 		// If we have an existing ID, update the video item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, description = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->description, $this->id ); //phpcs:ignore
+			$q = $wpdb->prepare( "UPDATE {$bp->video->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, description = %s, status = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->description, $this->status, $this->id ); //phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video' );  //phpcs:ignore
+			$q = $wpdb->prepare( "INSERT INTO {$bp->video->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, type, status ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'video', $this->status );  //phpcs:ignore
 		}
 
 		if ( false === $wpdb->query( $q ) ) { //phpcs:ignore
@@ -309,6 +320,7 @@ class BP_Video {
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total video items
 	 *                                           for the query. Default: false.
+	 *     @type array|string $status            String or Array of video items status. Default: published.
 	 * }
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located videos
@@ -339,6 +351,7 @@ class BP_Video {
 				'privacy'          => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'moderation_query' => false,           // Whether to include moderation or not.
 				'count_total'      => false,           // Whether to use count_total.
+				'status'           => bb_video_get_published_status(),  // Filter by status.
 			)
 		);
 
@@ -449,6 +462,16 @@ class BP_Video {
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+		}
+
+		// Check the status of items.
+		if ( ! empty( $r['status'] ) ) {
+			if ( is_array( $r['status'] ) ) {
+				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$where_conditions['status'] = "m.status IN ({$status})";
+			} else {
+				$where_conditions['status'] = "m.status = '{$r['status']}'";
+			}
 		}
 
 		/**
@@ -636,6 +659,7 @@ class BP_Video {
 				$video->message_id    = (int) $video->message_id;
 				$video->group_id      = (int) $video->group_id;
 				$video->menu_order    = (int) $video->menu_order;
+				$video->status        = isset( $video->status ) ? $video->status : bb_video_get_published_status();
 			}
 
 			$file_url = wp_get_attachment_url( $video->attachment_id );
@@ -974,6 +998,7 @@ class BP_Video {
 				'group_id'      => false,
 				'privacy'       => false,
 				'date_created'  => false,
+				'status'        => false,
 			)
 		);
 
@@ -1028,6 +1053,11 @@ class BP_Video {
 		// Date created.
 		if ( ! empty( $r['date_created'] ) ) {
 			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
+		}
+
+		// Status.
+		if ( ! empty( $r['status'] ) ) {
+			$where_args[] = $wpdb->prepare( 'status = %s', $r['status'] );
 		}
 
 		// Delete the video.

@@ -1352,13 +1352,35 @@
 		.emojionearea-picker.emojionearea-picker-position-top {
 
 			.emojionearea-wrapper:after {
-				right: 82px;
+				right: 142px;
 			}
 		}
 	}
 
 	.emojionearea-button.active + .emojionearea-picker-position-top {
-		right: -80px;
+		right: -140px;
+	}
+
+	@media screen and (max-width: 540px) {
+
+		.post-elements-buttons-item.post-emoji {
+
+			&[data-nth-child="1"],
+			&[data-nth-child="2"] {
+
+				.emojionearea-picker.emojionearea-picker-position-top {
+
+					.emojionearea-wrapper:after {
+						right: 192px;
+					}
+				}
+
+				.emojionearea-button.active + .emojionearea-picker-position-top {
+					right: -190px;
+				}
+
+			}
+		}
 	}
 
 	.gif-media-search-dropdown {
@@ -1840,7 +1862,7 @@
 }
 
 // Prevent callout popup on long press on ios devices
-.bb-is-mobile.bb-reactions-mode {
+.bb-is-mobile {
 
 	.bp-generic-meta {
 
@@ -1849,8 +1871,12 @@
 		.ac-emotions_list .ac-emotion_item a > *,
 		.generic-button a > * {
 			-webkit-touch-callout: none !important;
+			-webkit-user-drag: none;
 		}
 	}
+}
+
+.bb-is-mobile.bb-reactions-mode {
 
 	&.activity * {
 		-webkit-user-select: none; // To prevent IOS to show context menu on long press
