@@ -5698,7 +5698,7 @@ window.bp = window.bp || {};
 
 							if ( '' !== title && '' !== desc && '' !== LinkText ) {
 								var scheduleUrl = '';
-								if ( ! _.isUndefined( data.privacy ) && 'group' === data.privacy ) {
+								if ( ! _.isUndefined( data.privacy ) && 'group' === data.privacy && ! _.isUndefined( data.group_url ) ) {
 									scheduleUrl = data.group_url + '?action=scheduled_posts';
 								}
 								Backbone.trigger(
