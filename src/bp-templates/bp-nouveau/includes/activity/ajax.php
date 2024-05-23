@@ -407,12 +407,18 @@ function bp_nouveau_ajax_get_single_activity_content() {
 		wp_send_json_error( $response );
 	}
 
-	$activity_array = bp_activity_get_specific(
-		array(
-			'activity_ids'     => $_POST['id'],
-			'display_comments' => 'stream',
-		)
+	$args = array(
+		'activity_ids'     => $_POST['id'],
+		'display_comments' => 'stream',
 	);
+
+	// Check scheduled status.
+	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status() ) {
+		$args['status'] = $post_status;
+	}
+
+	$activity_array = bp_activity_get_specific( $args );
 
 	if ( empty( $activity_array['activities'][0] ) ) {
 		wp_send_json_error( $response );
@@ -818,23 +824,37 @@ function bp_nouveau_ajax_post_update() {
 			// Combine date and time.
 			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;
 
-			// Convert to MySQL datetime format
+			// Convert to MySQL datetime format.
 			$schedule_date_time = get_gmt_from_date( $activity_datetime );
 
 			// Get current GMT timestamp.
-			$current_timestamp = gmdate('U');
+			$current_timestamp = gmdate( 'U' );
 
-			// Add 1 hour to the timestamp (in seconds)
+			// Add 1 hour to the timestamp (in seconds).
 			$next_hour_timestamp = $current_timestamp + 3600;
-			$scheduled_timestamp = strtotime( $schedule_date_time );
 
-			if ( empty( $activity_id ) && $scheduled_timestamp < $next_hour_timestamp ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
-					)
-				);
-			} elseif( ! empty( $activity_id ) ) {
+			// Add 3 months to the timestamp (in seconds).
+			$three_months_ago_timestamp = strtotime( '+3 months', $current_timestamp );
+			$scheduled_timestamp        = strtotime( $schedule_date_time );
+			if ( empty( $activity_id ) ) {
+				// Check if the scheduled date is within the next hour.
+				if ( $scheduled_timestamp < $next_hour_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						)
+					);
+				}
+
+				// Check if the scheduled date is more than three months ago.
+				if ( $scheduled_timestamp > $three_months_ago_timestamp ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Please set a schedule date between next three months.', 'buddyboss' ),
+						)
+					);
+				}
+			} elseif ( ! empty( $activity_id ) ) {
 
 				// Check if the scheduled time is changed.
 				$obj_activity = new BP_Activity_Activity( $activity_id );
@@ -921,7 +941,7 @@ function bp_nouveau_ajax_post_update() {
 			) {
 				wp_send_json_error(
 					array(
-						'message' => __( 'You don\'t have permission to schedule activity in perticular group.', 'buddyboss' ),
+						'message' => __( 'You don\'t have permission to schedule activity in particular group.', 'buddyboss' ),
 					)
 				);
 			}
@@ -1627,6 +1647,27 @@ function bb_nouveau_ajax_delete_scheduled_activity() {
 	// Check access.
 	if ( ! bp_activity_user_can_delete( $activity ) ) {
 		wp_send_json_error( $response );
+	}
+
+	if (
+		(
+			// Check for non admin member to delete scheduled post which they scheduled when they have permission to moderate.
+			! bp_current_user_can( 'bp_moderate' ) && 'groups' !== $activity->component
+		) ||
+		(
+			// If Groups allow to schedule post then check user can delete schedule post or not;
+			'groups' === $activity->component && bp_is_active( 'groups' ) && bb_is_enabled_activity_schedule_posts_filter()
+		)
+	) {
+		$is_admin = groups_is_user_admin( $activity->user_id, $activity->item_id );
+		$is_mod   = groups_is_user_mod( $activity->user_id, $activity->item_id );
+		if ( ! $is_admin && ! $is_mod ) {
+			wp_send_json_error(
+				array(
+					'feedback' => __( 'You don\'t have permission to delete scheduled activity.', 'buddyboss' ),
+				)
+			);
+		}
 	}
 
 	do_action( 'bb_activity_before_action_delete_scheduled_activity', $activity->id, $activity->user_id );
