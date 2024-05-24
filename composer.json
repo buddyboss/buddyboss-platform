@@ -50,6 +50,7 @@
 		"lint": ["@lint-php", "@lint-js", "@lint-css"],
 		"scoper": [
 			"rm -rf vendor",
+			"rm -rf scoped_vendor",
 			"composer install --no-dev",
 			"php-scoper add-prefix vendor includes/Library/Composer/Src --output-dir=scoped_vendor --prefix BuddyBossPlatform",
 			"rm -rf vendor",

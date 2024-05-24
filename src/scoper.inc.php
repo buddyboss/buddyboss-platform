@@ -11,7 +11,7 @@ return [
 	'prefix' => $namespace,
 	'whitelist' => [
 		// Excludes specific namespaces from being prefixed.
-		'Composer\\*',
+		'Composer\\*'
 	],
 	'finders' => [],
 	'patchers' => [],
