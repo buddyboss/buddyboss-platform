@@ -15,6 +15,8 @@ class Composer {
 	/**
 	 * Get the instance of the class.
 	 *
+	 * @since [BBVERSION]
+	 *
 	 * @return Composer
 	 */
 	public static function instance() {
@@ -29,6 +31,8 @@ class Composer {
 	/**
 	 * This function is used to get ZipStream instance from scoped vendor.
 	 *
+	 * @since [BBVERSION]
+	 *
 	 * @return \BuddyBoss\Library\Composer\ZipStream/\BuddyBossPlatform\BuddyBoss\Library\Composer\ZipStream
 	 */
 	function zipstream_instance() {
@@ -41,6 +45,8 @@ class Composer {
 
 	/**
 	 * This function is used to get FFMpeg instance from scoped vendor
+	 *
+	 * @since [BBVERSION]
 	 *
 	 * @return \BuddyBoss\Library\Composer\FFMpeg/\BuddyBossPlatform\BuddyBoss\Library\Composer\FFMpeg
 	 */
