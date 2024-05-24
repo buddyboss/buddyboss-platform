@@ -1002,21 +1002,38 @@ View = (function() {
 
   View.prototype.reposition = function(rect) {
     var _window, offset, overflowOffset, ref;
-    _window = this.context.app.iframeAsRoot ? this.context.app.window : window;
-    if (rect.bottom + this.$el.height() - $(_window).scrollTop() > $(_window).height()) {
-      rect.bottom = rect.top - this.$el.height();
+
+    var isInIframe = window !== window.top;
+
+    _window = isInIframe ? window : window.top;
+    var $window = $(_window);
+
+    if (isInIframe) {
+        var iframeOffset = $(window.frameElement).offset();
+        rect.top += iframeOffset.top;
+        rect.bottom -= iframeOffset.top;
+        rect.left -= iframeOffset.left;
     }
-    if (rect.left > (overflowOffset = $(_window).width() - this.$el.width() - 5)) {
-      rect.left = overflowOffset;
+
+    if (rect.bottom + this.$el.height() - $window.scrollTop() > $window.height()) {
+        rect.bottom = rect.top - this.$el.height();
     }
+
+    if (rect.left > (overflowOffset = $window.width() - this.$el.width() - 5)) {
+        rect.left = overflowOffset;
+    }
+
     offset = {
-      left: rect.left,
-      top: rect.bottom
+        left: rect.left,
+        top: rect.bottom
     };
+
     if ((ref = this.context.callbacks("beforeReposition")) != null) {
-      ref.call(this.context, offset);
+        ref.call(this.context, offset);
     }
+
     this.$el.offset(offset);
+
     return this.context.trigger("reposition", [offset]);
   };
 
