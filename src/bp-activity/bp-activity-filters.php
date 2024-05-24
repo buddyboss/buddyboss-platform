@@ -3609,6 +3609,7 @@ function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
  * @param bool   $activity_id Whether or not the activity recording succeeded.
  */
 function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $activity_id ) {
+	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }
