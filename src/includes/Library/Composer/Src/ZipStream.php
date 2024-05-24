@@ -8,6 +8,8 @@ class ZipStream
 	/**
 	 * Get the instance of the class.
 	 *
+	 * @since [BBVERSION]
+	 *
 	 * @return ZipStream
 	 */
 	public static function instance() {
@@ -22,6 +24,8 @@ class ZipStream
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
+	 * @since [BBVERSION]
+	 *
 	 * @return \ZipStream\ZipStream
 	 */
 	function zipstream( $file_name, $options ) {
@@ -30,6 +34,8 @@ class ZipStream
 
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
+	 *
+	 * @since [BBVERSION]
 	 *
 	 * @return \ZipStream\Option\Archive
 	 */

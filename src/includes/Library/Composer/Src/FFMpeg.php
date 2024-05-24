@@ -9,6 +9,8 @@ class FFMpeg
 	/**
 	 * Get the instance of the class.
 	 *
+	 * @since [BBVERSION]
+	 *
 	 * @return FFMpeg
 	 */
 	public static function instance() {
@@ -23,7 +25,7 @@ class FFMpeg
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
-	 * @since 2.6.11
+	 * @since [BBVERSION]
 	 *
 	 * @param \FFMpeg\Driver\FFMpegDriver $ffmpeg.
 	 * @param \FFMpeg\FFProbe             $ffprobe.
@@ -37,7 +39,7 @@ class FFMpeg
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
-	 * @since 2.6.11
+	 * @since [BBVERSION]
 	 *
 	 * @param \FFMpeg\Driver\FFProbeDriver $ffprobe.
 	 * @param \Doctrine\Common\Cache\Cache $cache.
@@ -51,7 +53,7 @@ class FFMpeg
 	/**
 	 * Creates an FFMpeg.
 	 *
-	 * @since 2.6.11
+	 * @since [BBVERSION]
 	 *
 	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
 	 * @param \Psr\Log\LoggerInterface                           $logger
@@ -66,7 +68,7 @@ class FFMpeg
 	 /**
 	 * Creates an FFProbe.
 	 *
-	 * @since 2.6.11
+	 * @since [BBVERSION]
 	 *
 	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
 	 * @param \Psr\Log\LoggerInterface                           $logger
@@ -81,7 +83,7 @@ class FFMpeg
 	/**
 	 * Create timecode from number of seconds From Scoped Vendor
 	 * 
-	 * @since 2.6.11
+	 * @since [BBVERSION]
 	 *
 	 * @param float $seconds Seconds value.
 	 *
