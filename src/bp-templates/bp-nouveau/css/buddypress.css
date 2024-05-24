@@ -20784,21 +20784,6 @@ body.login .login-popup .mfp-close:hover {
   width: 36%;
 }
 
-@media screen and (max-width: 544px) {
-  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem {
-    position: relative;
-  }
-}
-
-@media screen and (max-width: 544px) {
-  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
-  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
-  .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
-    position: static;
-    width: 100%;
-  }
-}
-
 .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout {
   flex: 0 0 64%;
   max-width: 64%;
@@ -20835,15 +20820,6 @@ body.login .login-popup .mfp-close:hover {
 .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
   top: initial;
   bottom: 0;
-}
-
-@media screen and (max-width: 544px) {
-  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
-  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
-  .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
-    position: static;
-    width: 100%;
-  }
 }
 
 .bb-activity-media-wrap.bb-media-length-more .bb-activity-media-elem .entry-img {
