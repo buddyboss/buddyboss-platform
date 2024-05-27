@@ -2,8 +2,12 @@
 
 namespace BuddyBoss\Library\Composer;
 
-class FFMpeg
-{
+/**
+ * FFMpeg custom class.
+ * 
+ * @since BuddyBoss [BBVERSION]
+ */
+class FFMpeg {
 	private static $instance;
 
 	/**

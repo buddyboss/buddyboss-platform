@@ -2,8 +2,12 @@
 
 namespace BuddyBoss\Library\Composer;
 
-class ZipStream
-{
+/**
+ * ZipStream custom class.
+ * 
+ * @since BuddyBoss [BBVERSION]
+ */
+class ZipStream {
 	private static $instance;
 	/**
 	 * Get the instance of the class.
