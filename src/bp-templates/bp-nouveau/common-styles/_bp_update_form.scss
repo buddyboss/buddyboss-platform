@@ -1704,6 +1704,10 @@
 
 div[class*="attached-gif-container"] {
 	position: relative;
+	height: auto !important;
+	width: auto !important;
+	max-width: 450px;
+	background-image: none;
 
 	.gif-image-remove {
 		border-radius: 10px;

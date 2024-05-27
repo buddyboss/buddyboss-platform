@@ -3143,6 +3143,10 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 
 div[class*="attached-gif-container"] {
   position: relative;
+  height: auto !important;
+  width: auto !important;
+  max-width: 450px;
+  background-image: none;
 }
 
 div[class*="attached-gif-container"] .gif-image-remove {
