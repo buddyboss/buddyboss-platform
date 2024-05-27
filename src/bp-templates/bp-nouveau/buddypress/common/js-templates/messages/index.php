@@ -28,3 +28,15 @@
 	<div class="bp-messages-content"></div>
 
 </div>
+
+<?php
+
+if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	bp_get_template_part( 'media/theatre' );
+}
+if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
+	bp_get_template_part( 'video/theatre' );
+}
+if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+	bp_get_template_part( 'document/theatre' );
+}
