@@ -3,12 +3,16 @@
 namespace BuddyBoss\Library;
 
 /**
- * Composer class
+ * Composer class.
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 class Composer {
 
 	/**
 	 * @var $instance
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private static $instance;
 
@@ -44,7 +48,7 @@ class Composer {
 	}
 
 	/**
-	 * This function is used to get FFMpeg instance from scoped vendor
+	 * This function is used to get FFMpeg instance from scoped vendor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

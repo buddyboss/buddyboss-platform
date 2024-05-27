@@ -1,4 +1,9 @@
 <?php
+/**
+ * Scoper configuration file.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 
 declare( strict_types=1 );
 
@@ -25,6 +30,7 @@ return array(
 			if ( strpos( $file_path, 'myclabs/php-enum' ) !== false ) {
 				return file_get_contents( $file_path ); // Revert to original contents.
 			}
+
 			return $contents; // Return modified contents for other files.
 		},
 	),

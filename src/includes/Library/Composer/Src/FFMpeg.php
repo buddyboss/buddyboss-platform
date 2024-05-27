@@ -4,7 +4,7 @@ namespace BuddyBoss\Library\Composer;
 
 /**
  * FFMpeg custom class.
- * 
+ *
  * @since BuddyBoss [BBVERSION]
  */
 class FFMpeg {
@@ -27,12 +27,12 @@ class FFMpeg {
 	}
 
 	/**
-	 * This Function Is Used To Get Instance From Scoped Vendor
+	 * This Function Is Used To Get Instance From Scoped Vendor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param \FFMpeg\Driver\FFMpegDriver $ffmpeg.
-	 * @param \FFMpeg\FFProbe             $ffprobe.
+	 * @param \FFMpeg\Driver\FFMpegDriver $ffmpeg
+	 * @param \FFMpeg\FFProbe             $ffprobe
 	 *
 	 * @return \FFMpeg\FFMpeg
 	 */
@@ -41,12 +41,12 @@ class FFMpeg {
 	}
 
 	/**
-	 * This Function Is Used To Get Instance From Scoped Vendor
+	 * This Function Is Used To Get Instance From Scoped Vendor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param \FFMpeg\Driver\FFProbeDriver $ffprobe.
-	 * @param \Doctrine\Common\Cache\Cache $cache.
+	 * @param \FFMpeg\Driver\FFProbeDriver $ffprobe
+	 * @param \Doctrine\Common\Cache\Cache $cache
 	 *
 	 * @return \FFMpeg\FFProbe
 	 */
@@ -69,7 +69,7 @@ class FFMpeg {
 		return \FFMpeg\FFMpeg::create( $configuration, $logger, $probe );
 	}
 
-	 /**
+	/**
 	 * Creates an FFProbe.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -86,7 +86,7 @@ class FFMpeg {
 
 	/**
 	 * Create timecode from number of seconds From Scoped Vendor
-	 * 
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param float $seconds Seconds value.
