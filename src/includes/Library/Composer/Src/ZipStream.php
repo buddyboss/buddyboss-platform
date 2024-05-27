@@ -8,7 +8,7 @@ class ZipStream
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return ZipStream
 	 */
@@ -24,7 +24,7 @@ class ZipStream
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return \ZipStream\ZipStream
 	 */
@@ -35,7 +35,7 @@ class ZipStream
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return \ZipStream\Option\Archive
 	 */

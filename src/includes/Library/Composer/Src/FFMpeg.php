@@ -9,7 +9,7 @@ class FFMpeg
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return FFMpeg
 	 */
@@ -25,7 +25,7 @@ class FFMpeg
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param \FFMpeg\Driver\FFMpegDriver $ffmpeg.
 	 * @param \FFMpeg\FFProbe             $ffprobe.
@@ -39,7 +39,7 @@ class FFMpeg
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param \FFMpeg\Driver\FFProbeDriver $ffprobe.
 	 * @param \Doctrine\Common\Cache\Cache $cache.
@@ -53,7 +53,7 @@ class FFMpeg
 	/**
 	 * Creates an FFMpeg.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
 	 * @param \Psr\Log\LoggerInterface                           $logger
@@ -68,7 +68,7 @@ class FFMpeg
 	 /**
 	 * Creates an FFProbe.
 	 *
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
 	 * @param \Psr\Log\LoggerInterface                           $logger
@@ -83,7 +83,7 @@ class FFMpeg
 	/**
 	 * Create timecode from number of seconds From Scoped Vendor
 	 * 
-	 * @since [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param float $seconds Seconds value.
 	 *
