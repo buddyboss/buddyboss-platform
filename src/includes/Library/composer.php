@@ -58,5 +58,3 @@ class Composer {
 		return \BuddyBoss\Library\Composer\FFMpeg::instance();
 	}
 }
-
-?>
