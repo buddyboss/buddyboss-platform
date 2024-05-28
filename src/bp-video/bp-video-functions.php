@@ -986,7 +986,6 @@ function bp_video_base64_to_jpeg( $base64_string, $output_file ) {
 function bp_video_background_create_thumbnail( $video ) {
 
 	$error = '';
-	global $bp_background_updater;
 
 	if (
 		! (
