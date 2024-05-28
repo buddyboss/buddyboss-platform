@@ -1231,7 +1231,10 @@ function bp_core_install_suspend() {
 	   PRIMARY KEY  (id),
 	   KEY suspend_item_id (item_id,item_type,blog_id),
 	   KEY suspend_item (item_id,item_type),
-	   KEY item_id (item_id)
+	   KEY item_id (item_id),
+	   KEY user_suspended (user_suspended),
+	   KEY hide_parent (hide_parent),
+	   KEY hide_sitewide (hide_sitewide)
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (
