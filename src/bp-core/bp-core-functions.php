@@ -4599,7 +4599,7 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
 
 	// Exclude mention in URL.
-	$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@([A-Za-z0-9-_\.@]+)\b/';
+	$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@([A-Za-z0-9-_\.@]+)/';
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
@@ -7786,6 +7786,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_activity_comments':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity-comment';
+			break;
 		case 'bp_custom_post_type':
 			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
 			break;
@@ -7878,6 +7881,12 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_reaction_settings_section':
 			$meta_icon = $bb_icon_bf . ' bb-icon-like';
+			break;
+		case 'bb_performance_general':
+			$meta_icon = $bb_icon_bf . ' bb-icon-cog';
+			break;
+		case 'bb_performance_activity':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
 		default:
 			$meta_icon = '';
@@ -8422,7 +8431,7 @@ function bb_did_filter( $hook_name ) {
  *                    value for deleted user. Boolean false if no mentions found.
  */
 function bb_mention_deleted_users( $mentioned_users, $content ) {
-	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)/';
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
@@ -9746,4 +9755,15 @@ function bb_mention_add_user_dynamic_link( $content ) {
 	};
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
+}
+
+/**
+ * Function to return the minimum pro version to show notice.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_schedule_posts_version() {
+	return '2.5.20';
 }

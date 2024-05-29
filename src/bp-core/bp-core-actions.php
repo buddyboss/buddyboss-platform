@@ -603,7 +603,7 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
  */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_load_presence_api_mu_plugin( false );
 	}
 }
 
@@ -620,7 +620,7 @@ function bb_check_presence_load_directly() {
 	}
 }
 
-add_action( 'bp_init', 'bb_check_presence_load_directly' );
+add_action( 'bp_admin_init', 'bb_check_presence_load_directly' );
 
 /**
  * Register the post comment reply notifications.
@@ -690,9 +690,9 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 
 	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
 	$comment_content          = $commentdata['comment_content'];
-	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
+	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
@@ -921,7 +921,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
-			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '\b(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 			$post_type_comment->comment_content = preg_replace( $pattern, $replacement, $post_type_comment->comment_content );
 		}
 	}
@@ -947,7 +947,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		) {
 
 			// Poster name.
-			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id, $user_id );
 			$author_id         = $comment_user_id;
 
 			/** Mail */

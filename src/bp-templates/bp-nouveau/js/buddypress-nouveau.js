@@ -140,6 +140,9 @@ window.bp = window.bp || {};
 					bp_icon_type = 'check';
 				} else if ( bp_msg_type === 'warning' ) {
 					bp_icon_type = 'exclamation-triangle';
+				} else if ( bp_msg_type === 'delete' ) {
+					bp_icon_type = 'trash';
+					bp_msg_type = 'error';
 				} else {
 					bp_icon_type = 'info';
 				}
@@ -201,6 +204,9 @@ window.bp = window.bp || {};
 
 			// An object containing each query var.
 			this.querystring = this.getLinkParams();
+
+			// Get Server Time Difference on load.
+			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - new Date().getTime();
 		},
 
 		/**
@@ -356,7 +362,7 @@ window.bp = window.bp || {};
 		 */
 		ajax: function ( post_data, object, button ) {
 
-			if ( this.ajax_request && typeof button === 'undefined' ) {
+			if ( this.ajax_request && typeof button === 'undefined' && post_data.status !== 'scheduled') {
 				this.ajax_request.abort();
 			}
 
@@ -595,6 +601,15 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// Control the scheduled posts layout view.
+					if( data.status === 'scheduled' ) {
+						if( $( response.data.contents ).hasClass( 'bp-feedback' ) ) {
+							$( data.target ).parent().addClass( 'has-no-content' );
+						} else {
+							$( data.target ).parent().addClass( 'has-content' );
+						}
+					}
+
 					if ( !_.isUndefined( response.data.layout ) ) {
 						$( '.layout-view' ).removeClass( 'active' );
 						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
@@ -689,6 +704,7 @@ window.bp = window.bp || {};
 						function () { // Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
+							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);
@@ -1294,27 +1310,28 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function () {
-			var object = $( '.grid-filters' ).data( 'object' );
-
-			if ( 'friends' === object ) {
-				object = 'members';
-			} else if ( 'group_requests' === object ) {
-				object = 'groups';
-			} else if ( 'notifications' === object ) {
-				object = 'members';
-			}
 
 			$( document ).on(
 				'click',
 				'.grid-filters .layout-view:not(.active)',
 				function ( e ) {
 					e.preventDefault();
+					var gridfilters = $( this ).parents( '.grid-filters' ),
+						object = gridfilters.data( 'object' );
 
-					if ( 'undefined' === typeof object ) {
+					if ( 'friends' === object ) {
+						object = 'members';
+					} else if ( 'group_requests' === object ) {
+						object = 'groups';
+					} else if ( 'notifications' === object ) {
+						object = 'members';
+					}
+
+					if ( ! object || 'undefined' === typeof object ) {
 						return;
 					}
 
-					if ( bp.Nouveau.ajax_request != false ) {
+					if ( 'undefined' !== typeof bp.Nouveau.ajax_request && null !== bp.Nouveau.ajax_request && bp.Nouveau.ajax_request != false ) {
 						bp.Nouveau.ajax_request.abort();
 
 						$( '.component-navigation [data-bp-object]' ).each(
@@ -1327,14 +1344,14 @@ window.bp = window.bp || {};
 					var layout = '';
 
 					if ( $( this ).hasClass( 'layout-list-view' ) ) {
-						$( '.layout-grid-view' ).removeClass( 'active' );
+						gridfilters.find( '.layout-grid-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
-						$( '.bp-list' ).removeClass( 'grid' );
+						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
 						layout = 'list';
 					} else {
-						$( '.layout-list-view' ).removeClass( 'active' );
+						gridfilters.find( '.layout-list-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
-						$( '.bp-list' ).addClass( 'grid' );
+						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
 						layout = 'grid';
 					}
 
@@ -3060,6 +3077,10 @@ window.bp = window.bp || {};
 				! $targetEl.closest( '.post-emoji' ).length &&
 				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
 				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
+				if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
+					$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
+					$( '.emojionearea-theatre' ).find( '.emojionearea-picker' ).addClass( 'hidden' );
+				}
 			}
 		},
 
@@ -3073,6 +3094,10 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( BP_Nouveau.media ) &&
 					! _.isUndefined( BP_Nouveau.media.emoji ) ) {
 					$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
+					if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
+						$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
+						$( '.emojionearea-theatre' ).find( '.emojionearea-picker' ).addClass( 'hidden' );
+					}
 				}
 			}
 		},
@@ -4228,7 +4253,7 @@ window.bp = window.bp || {};
 					);
 					self.render( self.options );
 				}
-			}
+			},
 		},
 
 		/**
@@ -4295,6 +4320,29 @@ window.bp = window.bp || {};
 				// Populate the object list.
 				bp.Nouveau.objectRequest( queryData );
 			}
+
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
+		},
+
+		/**
+		 *  Get current Server Time
+		 */
+		bbServerTime: function() {
+
+			var localTime = new Date();
+			var currentServerTime = new Date( localTime.getTime() + bp.Nouveau.bbServerTimeDiff );
+
+			// Extract date, year, and time components
+			var date = currentServerTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+			var year = currentServerTime.getFullYear();
+			var time = currentServerTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+			return {
+				currentServerTime: currentServerTime,
+				date: date,
+				year: year,
+				time: time
+			};
 		}
 	};
 
