@@ -85,12 +85,36 @@ function bp_ps_xprofile_search( $f ) {
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select']            = "SELECT user_id, field_id FROM {$bp->profile->table_name_data}";
+	$sql['select']            = "SELECT DISTINCT xpd.user_id FROM {$bp->profile->table_name_data} xpd";
 
 	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
 		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
 	} else {
 		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	}
+
+	if (
+		! current_user_can( 'administrator' )
+	) {
+		$field_visibility = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$loggin_user_id = bp_loggedin_user_id();
+			$field_visibility[] = 'loggedin';
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_ids_sql = $wpdb->prepare(
+					"SELECT CASE WHEN initiator_user_id = %d THEN friend_user_id ELSE initiator_user_id END AS friend_id
+					FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND( initiator_user_id = %d OR friend_user_id = %d )",
+					$loggin_user_id,
+					$loggin_user_id,
+					$loggin_user_id
+				);
+			}
+		}
+		$sql['where'][] = "field_id IN (
+			SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE xpd.user_id = user_id AND `value` IN ('" . implode( "','", $field_visibility ) . "')
+				OR ( `value` = 'friends' AND user_id IN ({$friend_ids_sql}) )
+				OR ( ( `value` = 'adminsonly' OR `value` = 'onlyme' ) AND user_id = {$loggin_user_id} )
+		)";
 	}
 
 	switch ( $filter ) {
@@ -218,37 +242,7 @@ function bp_ps_xprofile_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	// If repeater enabel then we check repeater field id is private or not.
-	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
-		$results  = $wpdb->get_results( $query, ARRAY_A );
-		$user_ids = array();
-		if ( ! empty( $results ) ) {
-			foreach ( $results as $key => $value ) {
-				$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
-				$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
-				if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
-					$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
-					if (
-						! current_user_can( 'administrator' ) &&
-						(
-							'adminsonly' === $field_visibility ||
-							(
-								bp_is_active( 'friends' ) &&
-								'friends' === $field_visibility &&
-								false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
-							)
-						)
-					) {
-						unset( $results[ $key ] );
-					} else {
-						$user_ids[] = $user_id;
-					}
-				}
-			}
-		}
-	} else {
-		$user_ids = $wpdb->get_col( $query );
-	}
+	$user_ids = $wpdb->get_col( $query );
 
 	return $user_ids;
 }

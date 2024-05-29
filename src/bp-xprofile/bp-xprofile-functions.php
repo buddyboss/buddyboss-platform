@@ -531,6 +531,11 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
 
 	$current_visibility_levels[ $field_id ] = $visibility_level;
 
+	// Save into separate visibility table.
+	$field_visibility        = new BB_XProfile_Visibility( $field_id, $user_id );
+	$field_visibility->value = $visibility_level;
+	$field_visibility->save();
+
 	return bp_update_user_meta( $user_id, 'bp_xprofile_visibility_levels', $current_visibility_levels );
 }
 
@@ -550,19 +555,26 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
 		return $current_level;
 	}
 
-	$current_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-	$current_level  = isset( $current_levels[ $field_id ] ) ? $current_levels[ $field_id ] : '';
-
 	// Use the user's stored level, unless custom visibility is disabled.
 	$field = xprofile_get_field( $field_id );
 	if ( isset( $field->allow_custom_visibility ) && 'disabled' === $field->allow_custom_visibility ) {
 		$current_level = $field->default_visibility;
-	}
+	} else {
 
-	// If we're still empty, it means that overrides are permitted, but the
-	// user has not provided a value. Use the default value.
-	if ( empty( $current_level ) ) {
-		$current_level = $field->default_visibility;
+		// Check if data available in the visibility table.
+		$field_visibility = new BB_XProfile_Visibility( $field_id, $user_id );
+		if( ! empty( $field_visibility->id ) ) {
+			$current_level = $field_visibility->value;
+		} else {
+			$current_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+			$current_level  = isset( $current_levels[ $field_id ] ) ? $current_levels[ $field_id ] : '';
+		}
+
+		// If we're still empty, it means that overrides are permitted, but the
+		// user has not provided a value. Use the default value.
+		if ( empty( $current_level ) && isset( $field->allow_custom_visibility ) ) {
+			$current_level = $field->default_visibility;
+		}
 	}
 
 	return $current_level;
@@ -1439,42 +1451,43 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		$levels = (array) $levels;
 	}
 
-	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
-		$user_visibility_levels = array();
-	}
+	// Get the field ids based on visibility.
+	$field_ids = BB_XProfile_Visibility::get_user_field_ids_by_visibility_levels( $user_id, $levels );
 
 	// Parse the user-provided visibility levels with the default levels, which may take
 	// precedence.
 	$default_visibility_levels = BP_XProfile_Group::fetch_default_visibility_levels();
 
 	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
+
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
 		if (
 			isset( $defaults['allow_custom'] ) &&
-			isset( $defaults['default'] ) &&
-			(
-				empty( $user_visibility_levels[ $d_field_id ] ) ||
-				'disabled' === $defaults['allow_custom']
-			)
+			isset( $defaults['default'] ) 
 		) {
-			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
-		}
-	}
-
-	$field_ids = array();
-	foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
-		if ( in_array( $field_visibility, $levels ) ) {
-			$field_ids[] = $field_id;
+			if (
+				(
+					! in_array( $d_field_id, $field_ids ) ||
+					'disabled' === $defaults['allow_custom']
+				) &&
+				in_array( $defaults['default'], $levels )
+			) {
+				$field_ids[ $d_field_id ] = $d_field_id;
+			} elseif (
+				in_array( $d_field_id, $field_ids ) &&
+				'disabled' === $defaults['allow_custom'] &&
+				! in_array( $defaults['default'], $levels )
+			) {
+				unset( $field_ids[ $d_field_id ] );
+			}
 		}
 	}
 
 	// Never allow the Nickname field to be excluded.
 	$nickname_field_id = bp_xprofile_nickname_field_id();
 	if ( in_array( $nickname_field_id, $field_ids ) ) {
-		$key = array_search( 1, $field_ids );
-		unset( $field_ids[ $key ] );
+		unset( $field_ids[ $nickname_field_id ] );
 	}
 
 	return $field_ids;
