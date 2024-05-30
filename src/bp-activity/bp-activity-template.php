@@ -289,6 +289,7 @@ function bp_has_activities( $args = '' ) {
 			// Searching.
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
+			'status'            => bb_get_activity_published_status(),
 		),
 		'has_activities'
 	);
