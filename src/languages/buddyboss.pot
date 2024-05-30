@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-05-30 05:36:51+00:00\n"
+"POT-Creation-Date: 2024-05-30 13:02:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -153,7 +153,7 @@ msgstr ""
 #: bp-activity/bb-activity-reactions.php:282
 #: bp-activity/bb-activity-reactions.php:845
 #: bp-activity/bb-activity-reactions.php:942
-#: bp-core/admin/bp-core-admin-settings.php:3654
+#: bp-core/admin/bp-core-admin-settings.php:3636
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:945
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:955
 msgid "Like"
@@ -183,7 +183,7 @@ msgid "Reactions"
 msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:478
-#: bp-core/admin/bp-core-admin-settings.php:3563
+#: bp-core/admin/bp-core-admin-settings.php:3545
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:991
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:198
 #: bp-templates/bp-nouveau/includes/activity/functions.php:344
@@ -2765,7 +2765,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2972
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:479
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1537
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1545
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:389
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1287
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2404
@@ -2780,7 +2780,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2980
 #: bp-blogs/classes/class-bp-rest-blogs-endpoint.php:487
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1545
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1553
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:397
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1295
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2411
@@ -2836,7 +2836,7 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1733
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1148
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1231
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1629
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1637
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:622
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1162
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1764
@@ -2870,7 +2870,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3088
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1182
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1728
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1736
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1423
 msgid "Limit result set to items with a specific scope."
 msgstr ""
@@ -3549,7 +3549,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:379
 #: bp-core/admin/bp-core-admin-functions.php:676
-#: bp-core/admin/bp-core-admin-settings.php:1627
+#: bp-core/admin/bp-core-admin-settings.php:1609
 #: bp-core/classes/class-bp-admin.php:337
 #: bp-core/classes/class-bp-admin.php:485
 #: bp-core/classes/class-bp-admin.php:759
@@ -3635,7 +3635,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:681
-#: bp-core/admin/bp-core-admin-settings.php:1652
+#: bp-core/admin/bp-core-admin-settings.php:1634
 #: bp-core/classes/class-bp-admin.php:346
 #: bp-core/classes/class-bp-admin.php:494
 msgid "Integrations"
@@ -4116,7 +4116,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3415
 #: bp-core/admin/bp-core-admin-functions.php:3427
 #: bp-core/admin/bp-core-admin-functions.php:3434
-#: bp-core/admin/bp-core-admin-settings.php:3316
+#: bp-core/admin/bp-core-admin-settings.php:3298
 msgid "to unlock"
 msgstr ""
 
@@ -4145,9 +4145,9 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3612
 #: bp-core/admin/bp-core-admin-functions.php:3651
 #: bp-core/admin/bp-core-admin-settings.php:752
-#: bp-core/admin/bp-core-admin-settings.php:1143
-#: bp-core/admin/bp-core-admin-settings.php:3427
-#: bp-core/admin/bp-core-admin-settings.php:3477
+#: bp-core/admin/bp-core-admin-settings.php:1125
+#: bp-core/admin/bp-core-admin-settings.php:3409
+#: bp-core/admin/bp-core-admin-settings.php:3459
 #: bp-document/bp-document-functions.php:2047
 #: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2577
 msgid "Default"
@@ -4189,23 +4189,23 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3613
 #: bp-core/admin/bp-core-admin-functions.php:3652
-#: bp-core/admin/bp-core-admin-settings.php:2447
-#: bp-core/admin/bp-core-admin-settings.php:3428
-#: bp-core/admin/bp-core-admin-settings.php:3478
+#: bp-core/admin/bp-core-admin-settings.php:2429
+#: bp-core/admin/bp-core-admin-settings.php:3410
+#: bp-core/admin/bp-core-admin-settings.php:3460
 msgid "Custom URL"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3625
 #: bp-core/admin/bp-core-admin-functions.php:3639
-#: bp-core/admin/bp-core-admin-settings.php:3440
-#: bp-core/admin/bp-core-admin-settings.php:3459
+#: bp-core/admin/bp-core-admin-settings.php:3422
+#: bp-core/admin/bp-core-admin-settings.php:3441
 msgid "Select a page or external link to redirect your members to after they login."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3664
 #: bp-core/admin/bp-core-admin-functions.php:3678
-#: bp-core/admin/bp-core-admin-settings.php:3490
-#: bp-core/admin/bp-core-admin-settings.php:3509
+#: bp-core/admin/bp-core-admin-settings.php:3472
+#: bp-core/admin/bp-core-admin-settings.php:3491
 msgid ""
 "Select a page or external link to redirect your members to after they "
 "logout."
@@ -4311,22 +4311,22 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:803
 #: bp-core/admin/bp-core-admin-settings.php:832
 #: bp-core/admin/bp-core-admin-settings.php:861
-#: bp-core/admin/bp-core-admin-settings.php:1194
-#: bp-core/admin/bp-core-admin-settings.php:1452
-#: bp-core/admin/bp-core-admin-settings.php:1543
-#: bp-core/admin/bp-core-admin-settings.php:1609
-#: bp-core/admin/bp-core-admin-settings.php:1993
-#: bp-core/admin/bp-core-admin-settings.php:2113
-#: bp-core/admin/bp-core-admin-settings.php:2430
-#: bp-core/admin/bp-core-admin-settings.php:2508
-#: bp-core/admin/bp-core-admin-settings.php:2547
-#: bp-core/admin/bp-core-admin-settings.php:2574
-#: bp-core/admin/bp-core-admin-settings.php:2714
-#: bp-core/admin/bp-core-admin-settings.php:3032
-#: bp-core/admin/bp-core-admin-settings.php:3059
-#: bp-core/admin/bp-core-admin-settings.php:3386
-#: bp-core/admin/bp-core-admin-settings.php:3689
-#: bp-core/admin/bp-core-admin-settings.php:3716
+#: bp-core/admin/bp-core-admin-settings.php:1176
+#: bp-core/admin/bp-core-admin-settings.php:1434
+#: bp-core/admin/bp-core-admin-settings.php:1525
+#: bp-core/admin/bp-core-admin-settings.php:1591
+#: bp-core/admin/bp-core-admin-settings.php:1975
+#: bp-core/admin/bp-core-admin-settings.php:2095
+#: bp-core/admin/bp-core-admin-settings.php:2412
+#: bp-core/admin/bp-core-admin-settings.php:2490
+#: bp-core/admin/bp-core-admin-settings.php:2529
+#: bp-core/admin/bp-core-admin-settings.php:2556
+#: bp-core/admin/bp-core-admin-settings.php:2696
+#: bp-core/admin/bp-core-admin-settings.php:3014
+#: bp-core/admin/bp-core-admin-settings.php:3041
+#: bp-core/admin/bp-core-admin-settings.php:3368
+#: bp-core/admin/bp-core-admin-settings.php:3671
+#: bp-core/admin/bp-core-admin-settings.php:3698
 #: bp-core/admin/settings/bp-admin-setting-activity.php:373
 #: bp-core/admin/settings/bp-admin-setting-friends.php:113
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:607
@@ -4355,7 +4355,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:285
-#: bp-core/admin/bp-core-admin-settings.php:1915
+#: bp-core/admin/bp-core-admin-settings.php:1897
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
@@ -4386,25 +4386,25 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:507
-#: bp-core/admin/bp-core-admin-settings.php:2007
-#: bp-core/admin/bp-core-admin-settings.php:2035
-#: bp-core/admin/bp-core-admin-settings.php:2063
+#: bp-core/admin/bp-core-admin-settings.php:1989
+#: bp-core/admin/bp-core-admin-settings.php:2017
+#: bp-core/admin/bp-core-admin-settings.php:2045
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:511
-#: bp-core/admin/bp-core-admin-settings.php:2012
-#: bp-core/admin/bp-core-admin-settings.php:2040
-#: bp-core/admin/bp-core-admin-settings.php:2077 bp-core/bp-core-options.php:40
+#: bp-core/admin/bp-core-admin-settings.php:1994
+#: bp-core/admin/bp-core-admin-settings.php:2022
+#: bp-core/admin/bp-core-admin-settings.php:2059 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:515
-#: bp-core/admin/bp-core-admin-settings.php:2017
-#: bp-core/admin/bp-core-admin-settings.php:2045
-#: bp-core/admin/bp-core-admin-settings.php:2082
+#: bp-core/admin/bp-core-admin-settings.php:1999
+#: bp-core/admin/bp-core-admin-settings.php:2027
+#: bp-core/admin/bp-core-admin-settings.php:2064
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:441
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
@@ -4469,7 +4469,7 @@ msgid "Allow members to edit their activity posts for a duration of"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:258
-#: bp-core/admin/bp-core-admin-settings.php:3337
+#: bp-core/admin/bp-core-admin-settings.php:3319
 msgid "Forever"
 msgstr ""
 
@@ -4638,7 +4638,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:591
 #: bp-core/admin/bp-core-admin-settings.php:1000
-#: bp-core/admin/bp-core-admin-settings.php:1357
+#: bp-core/admin/bp-core-admin-settings.php:1339
 #: bp-core/admin/settings/bp-admin-setting-activity.php:276
 #: bp-core/bp-core-functions.php:7418
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
@@ -4665,12 +4665,10 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:704
-#: bp-core/admin/bp-core-admin-settings.php:1092
 msgid "Browser"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:705
-#: bp-core/admin/bp-core-admin-settings.php:1093
 #: bp-core/bp-core-functions.php:7397 bp-core/bp-core-functions.php:7479
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:664
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:76
@@ -4678,7 +4676,7 @@ msgid "App"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:747
-#: bp-core/admin/bp-core-admin-settings.php:1138
+#: bp-core/admin/bp-core-admin-settings.php:1120
 msgid "Width"
 msgstr ""
 
@@ -4687,12 +4685,12 @@ msgid "Select the width of profile cover images in profile headers."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:753
-#: bp-core/admin/bp-core-admin-settings.php:1144
+#: bp-core/admin/bp-core-admin-settings.php:1126
 msgid "Full Width"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:765
-#: bp-core/admin/bp-core-admin-settings.php:1156
+#: bp-core/admin/bp-core-admin-settings.php:1138
 msgid "Height"
 msgstr ""
 
@@ -4701,17 +4699,17 @@ msgid "Select the height of profile cover images in profile headers."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:770
-#: bp-core/admin/bp-core-admin-settings.php:1161
+#: bp-core/admin/bp-core-admin-settings.php:1143
 msgid "Small"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:771
-#: bp-core/admin/bp-core-admin-settings.php:1162
+#: bp-core/admin/bp-core-admin-settings.php:1144
 msgid "Large"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:777
-#: bp-core/admin/bp-core-admin-settings.php:1168
+#: bp-core/admin/bp-core-admin-settings.php:1150
 msgid ""
 "Changing your size of your cover images will reposition cover images "
 "already uploaded by your members"
@@ -4739,440 +4737,441 @@ msgid ""
 "size is %1$spx by %2$spx."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1139
+#: bp-core/admin/bp-core-admin-settings.php:1121
 msgid "Select the width of group cover images in group headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1157
+#: bp-core/admin/bp-core-admin-settings.php:1139
 msgid "Select the height of group cover images in group headers and directories."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1212
-#: bp-core/admin/bp-core-admin-settings.php:2276
+#: bp-core/admin/bp-core-admin-settings.php:1194
+#: bp-core/admin/bp-core-admin-settings.php:2258
 #: bp-core/admin/settings/bp-admin-setting-groups.php:182
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:291
 msgid "Header Style"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1222
-#: bp-core/admin/bp-core-admin-settings.php:2286
-#: bp-core/admin/bp-core-admin-settings.php:2359
+#: bp-core/admin/bp-core-admin-settings.php:1204
+#: bp-core/admin/bp-core-admin-settings.php:2268
+#: bp-core/admin/bp-core-admin-settings.php:2341
 msgid "Centered"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1230
+#: bp-core/admin/bp-core-admin-settings.php:1212
 msgid ""
 "Select the style of your profile headers. Profile cover images will only be "
 "displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1267
-#: bp-core/admin/bp-core-admin-settings.php:1304
+#: bp-core/admin/bp-core-admin-settings.php:1249
+#: bp-core/admin/bp-core-admin-settings.php:1286
 msgid "Select which elements to show in your member directories."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1341
+#: bp-core/admin/bp-core-admin-settings.php:1323
 msgid "Select which profile actions to enable in your member directories."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1383
+#: bp-core/admin/bp-core-admin-settings.php:1365
 msgid ""
 "Select which profile action to show as a primary button. The remaining "
 "enabled profile actions will be shown as secondary buttons underneath."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1398
+#: bp-core/admin/bp-core-admin-settings.php:1380
 msgid "Enable social group creation by all members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1399
+#: bp-core/admin/bp-core-admin-settings.php:1381
 msgid "Administrators can always create groups, regardless of this setting."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1412
+#: bp-core/admin/bp-core-admin-settings.php:1394
 msgid "Enable avatars for groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1413
+#: bp-core/admin/bp-core-admin-settings.php:1395
 msgid ""
 "When enabled, group organizers will be able to upload avatars in the "
 "group's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1425
+#: bp-core/admin/bp-core-admin-settings.php:1407
 msgid "Enable cover images for groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1426
+#: bp-core/admin/bp-core-admin-settings.php:1408
 msgid ""
 "When enabled, group organizers will be able to upload cover images in the "
 "group's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1472
+#: bp-core/admin/bp-core-admin-settings.php:1454
 msgid "Enable <a href=\"%s\">group types</a> to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1483
+#: bp-core/admin/bp-core-admin-settings.php:1465
 msgid "Enable group types to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1502
+#: bp-core/admin/bp-core-admin-settings.php:1484
 msgid "Allow selected <a href=\"%s\">profile types</a> to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1513
+#: bp-core/admin/bp-core-admin-settings.php:1495
 msgid "Allow selected profile types to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1517
+#: bp-core/admin/bp-core-admin-settings.php:1499
 msgid ""
 "When a member requests to join a group their membership is automatically "
 "accepted"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1558
+#: bp-core/admin/bp-core-admin-settings.php:1540
 msgid "Allow groups to have subgroups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1570
+#: bp-core/admin/bp-core-admin-settings.php:1552
 msgid "Hide subgroups from Groups Directory & Group Type Shortcode"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1582
+#: bp-core/admin/bp-core-admin-settings.php:1564
 msgid "Restrict subgroup invites to members of the parent group"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1583
+#: bp-core/admin/bp-core-admin-settings.php:1565
 msgid ""
 "Members must first be a member of the parent group prior to being invited "
 "to a subgroup"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1674
+#: bp-core/admin/bp-core-admin-settings.php:1656
 #: bp-integrations/buddyboss-app/bp-buddyboss-app-integration.php:22
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
 msgid "BuddyBoss App"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1749
+#: bp-core/admin/bp-core-admin-settings.php:1731
 msgid "Allow members to customize the email subject"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1761
+#: bp-core/admin/bp-core-admin-settings.php:1743
 msgid "Allow members to customize the email body content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1773
+#: bp-core/admin/bp-core-admin-settings.php:1755
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1778
+#: bp-core/admin/bp-core-admin-settings.php:1760
 msgid ""
 "Customize this setting while editing any of your <a href=\"%s\">Profile "
 "Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1802
+#: bp-core/admin/bp-core-admin-settings.php:1784
 msgid ""
 "Select which custom post types show in the activity feed when members "
 "publish them. For each custom post type, you can select whether or not to "
 "show comments in these activity posts (if comments are supported)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1816
+#: bp-core/admin/bp-core-admin-settings.php:1798
 msgid "WordPress Posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1823
+#: bp-core/admin/bp-core-admin-settings.php:1805
 msgid "When members publish new blog posts, show them in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1849
+#: bp-core/admin/bp-core-admin-settings.php:1831
 #. translators: %s: comment post type
 msgid "Comments are not supported for %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1869
+#: bp-core/admin/bp-core-admin-settings.php:1851
 msgid "Enable WordPress Post comments in the activity feed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1869
+#: bp-core/admin/bp-core-admin-settings.php:1851
 msgid "Enable %s comments in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1876
+#: bp-core/admin/bp-core-admin-settings.php:1858
 msgid ""
 "Allow members to view and create comments to blog posts in the activity "
 "feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1909
+#: bp-core/admin/bp-core-admin-settings.php:1891
 msgid "Allow non-members to register new accounts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1948
+#: bp-core/admin/bp-core-admin-settings.php:1930
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1966
+#: bp-core/admin/bp-core-admin-settings.php:1948
 msgid "Allow members to use gravatars for profile avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1967
+#: bp-core/admin/bp-core-admin-settings.php:1949
 msgid ""
 "When enabled, members will be able to use avatars from their <a "
 "href=\"https://gravatar.com/\">Gravatar</a> account."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2012
-#: bp-core/admin/bp-core-admin-settings.php:2063
-#: bp-core/admin/bp-core-admin-settings.php:2077
+#: bp-core/admin/bp-core-admin-settings.php:1994
+#: bp-core/admin/bp-core-admin-settings.php:2045
+#: bp-core/admin/bp-core-admin-settings.php:2059
 msgid "(can be disabled)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2021
+#: bp-core/admin/bp-core-admin-settings.php:2003
 msgid ""
 "If you disable \"Last Name\" field, it will not appear anywhere in the "
 "network."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2049
+#: bp-core/admin/bp-core-admin-settings.php:2031
 msgid ""
 "All name fields are required with this format. Best used for professional "
 "networks."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2086
+#: bp-core/admin/bp-core-admin-settings.php:2068
 msgid ""
 "If you disable \"First Name\" and \"Last Name\" fields, they will not "
 "appear anywhere in the network. This allows your members to be fully "
 "anonymous (if they use a pseudonym for their nickname)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2171
+#: bp-core/admin/bp-core-admin-settings.php:2153
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2185
+#: bp-core/admin/bp-core-admin-settings.php:2167
 msgid "Add Legal Agreement checkbox to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2189
+#: bp-core/admin/bp-core-admin-settings.php:2171
 msgid ""
 "Require non-members to explicitly agree to your Terms of Service and "
 "Privacy Policy before registering."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2202
+#: bp-core/admin/bp-core-admin-settings.php:2184
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2214
+#: bp-core/admin/bp-core-admin-settings.php:2196
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:676
 msgid "Grid and List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2215
-#: bp-core/admin/bp-core-admin-settings.php:2246
+#: bp-core/admin/bp-core-admin-settings.php:2197
+#: bp-core/admin/bp-core-admin-settings.php:2228
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:677
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:708
 msgid "Grid"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2216
-#: bp-core/admin/bp-core-admin-settings.php:2247
+#: bp-core/admin/bp-core-admin-settings.php:2198
+#: bp-core/admin/bp-core-admin-settings.php:2229
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:678
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:709
 msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2233
+#: bp-core/admin/bp-core-admin-settings.php:2215
 msgid ""
 "Display group directories in Grid View, List View, or allow toggling "
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2282
-#: bp-core/admin/bp-core-admin-settings.php:2355
+#: bp-core/admin/bp-core-admin-settings.php:2264
+#: bp-core/admin/bp-core-admin-settings.php:2337
 msgid "Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2282
-#: bp-core/admin/bp-core-admin-settings.php:2355
+#: bp-core/admin/bp-core-admin-settings.php:2264
+#: bp-core/admin/bp-core-admin-settings.php:2337
 msgid "Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2294
+#: bp-core/admin/bp-core-admin-settings.php:2276
 msgid ""
-"Select the style of your group headers. Group avatars and cover images will "
-"only be displayed if they are enabled."
+"Select the style of your group header. Group avatars and cover images will "
+"only be displayed if they are enabled. This setting does not apply to the "
+"App style."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2331
+#: bp-core/admin/bp-core-admin-settings.php:2313
 msgid "Select which elements to show in your group headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2349
+#: bp-core/admin/bp-core-admin-settings.php:2331
 #: bp-core/admin/settings/bp-admin-setting-groups.php:230
 msgid "Grid Style"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2367
+#: bp-core/admin/bp-core-admin-settings.php:2349
 msgid ""
 "Select the style of the of grid layouts. Group avatars and cover images "
 "will only be displayed if they are enabled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2404
+#: bp-core/admin/bp-core-admin-settings.php:2386
 msgid ""
 "Select which elements show in your group directories. Cover images will "
 "only display in grid view and group descriptions will only display in list "
 "view."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2446
+#: bp-core/admin/bp-core-admin-settings.php:2428
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2454
+#: bp-core/admin/bp-core-admin-settings.php:2436
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2482
+#: bp-core/admin/bp-core-admin-settings.php:2464
 msgid ""
 "Enter a custom URL to redirect users to register to your site. Useful for "
 "membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2521
+#: bp-core/admin/bp-core-admin-settings.php:2503
 msgid "Allow for sending group messages to group members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2589
+#: bp-core/admin/bp-core-admin-settings.php:2571
 msgid "Enable on-screen notifications"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2590
+#: bp-core/admin/bp-core-admin-settings.php:2572
 msgid "Show members new notifications received while on a page on-screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2608
+#: bp-core/admin/bp-core-admin-settings.php:2590
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:869
 msgid "Bottom Left"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2616
+#: bp-core/admin/bp-core-admin-settings.php:2598
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:865
 msgid "Bottom Right"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2634
+#: bp-core/admin/bp-core-admin-settings.php:2616
 msgid "Show on-screen notifications on small screens"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2635
+#: bp-core/admin/bp-core-admin-settings.php:2617
 msgid ""
 "Enable this option to show on-screen notifications at the bottom of the "
 "screen smaller than 500px wide."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2649
+#: bp-core/admin/bp-core-admin-settings.php:2631
 msgid "Show new notifications in the title of the browser tab"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2650
+#: bp-core/admin/bp-core-admin-settings.php:2632
 msgid "Update the page <title> tab when new notifications are received."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2665
+#: bp-core/admin/bp-core-admin-settings.php:2647
 msgid "Never Hide"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2666
+#: bp-core/admin/bp-core-admin-settings.php:2648
 msgid "5 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2667
+#: bp-core/admin/bp-core-admin-settings.php:2649
 msgid "10 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2668
+#: bp-core/admin/bp-core-admin-settings.php:2650
 msgid "30 Seconds"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2669
+#: bp-core/admin/bp-core-admin-settings.php:2651
 msgid "1 Minute"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2670
+#: bp-core/admin/bp-core-admin-settings.php:2652
 msgid "2 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2671
+#: bp-core/admin/bp-core-admin-settings.php:2653
 msgid "3 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2672
+#: bp-core/admin/bp-core-admin-settings.php:2654
 msgid "4 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2673
+#: bp-core/admin/bp-core-admin-settings.php:2655
 msgid "5 Minutes"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2774
+#: bp-core/admin/bp-core-admin-settings.php:2756
 msgid "Restrict REST API access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2780
+#: bp-core/admin/bp-core-admin-settings.php:2762
 #. translators: Registration link.
 msgid "Login and %s APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2783
+#: bp-core/admin/bp-core-admin-settings.php:2765
 #: bp-core/admin/settings/bp-admin-setting-general.php:48
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 #: bp-integrations/recaptcha/bb-recaptcha-functions.php:208
 msgid "Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2804
+#: bp-core/admin/bp-core-admin-settings.php:2786
 #. translators: Settings link.
 msgid ""
 "Your BuddyBoss App is currently public. To restrict access to REST APIs for "
 "logged-out members, please enable \"Private App\" in the %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2807
+#: bp-core/admin/bp-core-admin-settings.php:2789
 msgid "BuddyBoss App's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2835
+#: bp-core/admin/bp-core-admin-settings.php:2817
 msgid ""
 "Enter REST API endpoint URLs or URI fragments (e.g. "
 "wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter "
 "one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2849
+#: bp-core/admin/bp-core-admin-settings.php:2831
 msgid "Restrict RSS feed access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2861
+#: bp-core/admin/bp-core-admin-settings.php:2843
 msgid ""
 "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain "
 "publicly visible always. Enter one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2878
+#: bp-core/admin/bp-core-admin-settings.php:2860
 msgid "BuddyBoss Labs"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2948
+#: bp-core/admin/bp-core-admin-settings.php:2930
 #. translators: Support portal.
 msgid ""
 "BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You "
@@ -5181,48 +5180,48 @@ msgid ""
 ">support portal</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2965
+#: bp-core/admin/bp-core-admin-settings.php:2947
 #. translators: Support portal.
 msgid ""
 "Please note, customer support will not be able to provide support for these "
 "features until their official release."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:2989
+#: bp-core/admin/bp-core-admin-settings.php:2971
 #. translators: Support portal.
 msgid "There are currently no BuddyBoss Labs features available."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3005
+#: bp-core/admin/bp-core-admin-settings.php:2987
 msgid "Allow members to subscribe to groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3006
+#: bp-core/admin/bp-core-admin-settings.php:2988
 msgid ""
 "When a member is subscribed to a group, they can receive notifications of "
 "new activity posts and discussions created in the group."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3073
-#: bp-core/admin/bp-core-admin-settings.php:3212
+#: bp-core/admin/bp-core-admin-settings.php:3055
+#: bp-core/admin/bp-core-admin-settings.php:3194
 msgid "Select Condition"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3074
-#: bp-core/admin/bp-core-admin-settings.php:3213
+#: bp-core/admin/bp-core-admin-settings.php:3056
+#: bp-core/admin/bp-core-admin-settings.php:3195
 msgid "Always Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3075
-#: bp-core/admin/bp-core-admin-settings.php:3214
+#: bp-core/admin/bp-core-admin-settings.php:3057
+#: bp-core/admin/bp-core-admin-settings.php:3196
 msgid "Never Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3076
+#: bp-core/admin/bp-core-admin-settings.php:3058
 msgid "Only Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3081
+#: bp-core/admin/bp-core-admin-settings.php:3063
 msgid ""
 "Add domain(s) to restrict new users from being able to register, you can "
 "use a wildcard (*) symbol to apply restrictions to an entire extension.\n"
@@ -5231,121 +5230,121 @@ msgid ""
 "\t\t"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3108
-#: bp-core/admin/bp-core-admin-settings.php:3157
+#: bp-core/admin/bp-core-admin-settings.php:3090
+#: bp-core/admin/bp-core-admin-settings.php:3139
 msgid "Domain name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3111
-#: bp-core/admin/bp-core-admin-settings.php:3160
+#: bp-core/admin/bp-core-admin-settings.php:3093
+#: bp-core/admin/bp-core-admin-settings.php:3142
 #: bp-media/bp-media-settings.php:1286 bp-media/bp-media-settings.php:1316
 #: bp-media/bp-media-settings.php:1843 bp-media/bp-media-settings.php:1865
 msgid "Extension"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3189
-#: bp-core/admin/bp-core-admin-settings.php:3271
+#: bp-core/admin/bp-core-admin-settings.php:3171
+#: bp-core/admin/bp-core-admin-settings.php:3253
 msgid "Remove Rule"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3198
+#: bp-core/admin/bp-core-admin-settings.php:3180
 msgid "Add Domain"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3217
+#: bp-core/admin/bp-core-admin-settings.php:3199
 msgid ""
 "Enter specific email addresses which you want to allow for user "
 "registrations. Enter one address per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3227
-#: bp-core/admin/bp-core-admin-settings.php:3257
+#: bp-core/admin/bp-core-admin-settings.php:3209
+#: bp-core/admin/bp-core-admin-settings.php:3239
 msgid "Email address"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3280
+#: bp-core/admin/bp-core-admin-settings.php:3262
 msgid "Add Email"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3293
+#: bp-core/admin/bp-core-admin-settings.php:3275
 msgid ""
 "Domain restrictions can be configured to limit new user registrations to "
 "specific domains or extensions. This setting is only available when using "
 "the BuddyBoss Registration Form."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3314
+#: bp-core/admin/bp-core-admin-settings.php:3296
 msgid "Enable the"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3315
+#: bp-core/admin/bp-core-admin-settings.php:3297
 msgid "BuddyBoss Registration Form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3334
+#: bp-core/admin/bp-core-admin-settings.php:3316
 msgid "Allow members to edit their comment for a duration of"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3359
+#: bp-core/admin/bp-core-admin-settings.php:3341
 msgid "Allow group owners and moderators to pin posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3527
+#: bp-core/admin/bp-core-admin-settings.php:3509
 msgid "Which type of content should members be able to react to?"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3568
+#: bp-core/admin/bp-core-admin-settings.php:3550
 msgid ""
 "A simple \"Like\" button will show for members to express their "
 "appreciation or acknowledgement."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3572
+#: bp-core/admin/bp-core-admin-settings.php:3554
 msgid "Emotions"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3577
+#: bp-core/admin/bp-core-admin-settings.php:3559
 msgid ""
 "Members express their thoughts or feelings by selecting an emotion from a "
 "list of options. Maximum of only 6 emotions can be used."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3661
+#: bp-core/admin/bp-core-admin-settings.php:3643
 msgid ""
 "Change the icon and text used within the Reactions button. When using "
 "“Emotions”, clicking on the button will react with the first emotion from "
 "the list of options."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3729
-#: bp-core/admin/bp-core-admin-settings.php:3765
+#: bp-core/admin/bp-core-admin-settings.php:3711
+#: bp-core/admin/bp-core-admin-settings.php:3747
 msgid "Load"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3734
+#: bp-core/admin/bp-core-admin-settings.php:3716
 msgid "page requests on page load"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3735
+#: bp-core/admin/bp-core-admin-settings.php:3717
 msgid ""
 "Select how many requests will be sent on page load. We recommend 1 request "
 "for high performing servers, and 2 for slower performing environments, or "
 "those who see conflicts with third party plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3759
+#: bp-core/admin/bp-core-admin-settings.php:3741
 msgid "Infinite scrolling"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3760
+#: bp-core/admin/bp-core-admin-settings.php:3742
 msgid "Load more"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3773
+#: bp-core/admin/bp-core-admin-settings.php:3755
 msgid "activity posts at a time using"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:3781
+#: bp-core/admin/bp-core-admin-settings.php:3763
 msgid ""
 "Use infinite scrolling to automatically load new posts while scrolling down "
 "feeds. Increasing the number of posts retrieved in each request may "
@@ -10392,7 +10391,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:798 bp-groups/bp-groups-template.php:800
 #: bp-groups/bp-groups-template.php:889
 #: bp-groups/classes/class-bp-groups-notification.php:864
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1987
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1995
 #: bp-moderation/classes/class-bp-moderation-groups.php:237
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-case-privacy.php:25
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:55
@@ -12060,8 +12059,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:390
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:62
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:68
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1234
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1276
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1242
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1284
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:947
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1071
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1195
@@ -21025,7 +21024,7 @@ msgid ""
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:1093
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1464
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1472
 msgid "Current member's role label in the group."
 msgstr ""
 
@@ -21479,230 +21478,230 @@ msgstr ""
 msgid "Sorry, you are not allowed to delete this group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1192
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1200
 msgid "Set type(s) for a group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1208
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1216
 msgid "Append type(s) for a group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1220
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1228
 msgid "Remove type(s) for a group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1242
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1250
 msgid "Delete the Group forum if exist."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1282
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1290
 msgid "The ID of the user who created the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1288
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1296
 msgid "The name of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1297
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1305
 msgid "Content for the name of the Group, as it exists in the database."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1303
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1311
 msgid "The URL-friendly slug for the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1312
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1320
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:2437
 msgid "The permalink to the Group on the site."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1319
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1327
 msgid "The description of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1330
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1338
 msgid "Content for the description of the Group, as it exists in the database."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1335
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1343
 msgid "HTML content for the description of the Group, transformed for display."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1344
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1352
 msgid "The status of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1354
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1712
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1362
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1720
 msgid "Whether the Group has a forum enabled or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1359
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1367
 msgid "ID of the parent Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1364
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1372
 msgid "The date the Group was created, in the site's timezone."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1371
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1379
 msgid "The type(s) of the Group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1381
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1389
 msgid "Name of the group type."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1387
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1395
 msgid "Sub Groups id if having a sub groups."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1396
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1404
 msgid "Group administrators."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1405
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1413
 msgid "Group moderators."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1414
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1422
 msgid "Count of all Group members."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1420
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1428
 msgid "The date the Group was last active, in the site's timezone."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1428
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1436
 msgid "The current user is member of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1434
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1442
 msgid "Return's invite ID if current user is invited for a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1440
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1448
 msgid "Return's request ID if invitation is pending for a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1446
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1454
 msgid "The current user is admin of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1452
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1460
 msgid "The current user is moderator of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1458
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1466
 msgid "Members count of the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1470
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1478
 msgid "Current member's role label in the plural form in the group"
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1476
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1484
 msgid "Check current user can join or request access."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1482
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1490
 msgid "Check current user can post activity or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1488
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1496
 msgid "Forum id of the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1494
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1502
 msgid "Whether the user has permission to upload media to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1500
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1508
 msgid "Whether the user has permission to create an album to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1506
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1514
 msgid "Whether the user has permission to upload video to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1512
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1520
 msgid "Whether the user has permission to upload document to the group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1518
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1526
 msgid "Whether the group type details will pass."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1524
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1532
 msgid "Check current user can schedule activities in perticular group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1552
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1560
 msgid "Whether to check group has default avatar or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1559
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1567
 msgid "Avatar URLs for the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1569
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1577
 msgid "Cover Image URLs for the group."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1577
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1585
 msgid "Whether to check the default cover image or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1588
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1596
 msgid "The current user is subscribed of a group or not."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1595
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1603
 msgid "The group subscription ID of current user."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1620
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1628
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1356
 msgid "Shorthand for certain orderby/order combinations."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1638
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1646
 msgid "Order Groups by which attribute."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1647
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1655
 msgid "Group statuses to limit results to."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1659
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1667
 msgid "Pass a user_id to limit to only Groups that this user is a member of."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1667
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1675
 msgid "Get Groups that are children of the specified Group(s) IDs."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1677
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1685
 msgid "Get Groups based on their meta data information."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1685
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1693
 msgid "Ensure result set includes Groups with specific IDs."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1694
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1702
 msgid "Ensure result set excludes Groups with specific IDs"
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1703
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1711
 msgid "Limit results set to a certain Group type."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1720
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1728
 msgid "Whether results should include hidden Groups."
 msgstr ""
 
-#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1737
+#: bp-groups/classes/class-bp-rest-groups-endpoint.php:1745
 msgid "Fetch current users groups which can post activity in it."
 msgstr ""
 
