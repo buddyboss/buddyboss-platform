@@ -99,9 +99,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				<div class="activity-group-heading"><a href="<?php echo $group_permalink; ?>"><?php echo $group_name; ?></a></div>
 				<div class="activity-group-post-meta">
 					<span class="activity-post-author">
-						<a href="<?php echo $user_link; ?>">
-							<?php echo bp_core_get_user_displayname( $activities_template->activity->user_id ); ?>
-						</a>
+						<?php bp_activity_action(); ?>
 					</span>
 					<a href="<?php echo $activity_link; ?>">
 						<?php

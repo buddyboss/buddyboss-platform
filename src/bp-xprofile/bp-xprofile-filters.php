@@ -792,7 +792,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * Conditionally filters 'bp_core_get_user_displayname' to return user display name from xprofile.
  *
  * @since BuddyBoss 1.2.3
- * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter 
+ * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter
  *
  * @global \BP_XProfile_Field_Type $field
  *
@@ -810,7 +810,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 	global $bb_default_display_avatar;
 
 	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id ) . '_' . trim( $current_user_id );
-	
+
 	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
@@ -1088,16 +1088,18 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 	$validation = array();
 	$field_name = xprofile_get_field( $field_id )->name;
 
+	$providers = bp_xprofile_social_network_provider();
+
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
 			$val = trim( $val );
 			if ( empty( $val ) ) {
-				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+				$key = bp_social_network_search_key( $key, $providers );
+				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $providers[ $key ]->name );
 			}
 		}
 	}
 
-	$providers = bp_xprofile_social_network_provider();
 	foreach ( $value as $k => $v ) {
 		if ( ! empty( $validation ) && ! empty( $validation[ $k ] ) ) {
 			continue;
