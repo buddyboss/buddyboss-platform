@@ -727,7 +727,10 @@ window.bp = window.bp || {};
 					// Continue when ajax is blocked for object request.
 					if (
 						$( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length &&
-						'' !== BP_Nouveau.is_send_ajax_request
+						(
+							! _.isUndefined( BP_Nouveau.is_send_ajax_request ) &&
+							'' !== BP_Nouveau.is_send_ajax_request
+						)
 					) {
 						return;
 					}
@@ -794,7 +797,7 @@ window.bp = window.bp || {};
 						}
 
 						// Populate the object list.
-						if ( '' !== BP_Nouveau.is_send_ajax_request ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' !== BP_Nouveau.is_send_ajax_request ) {
 							self.objectRequest( queryData );
 						}
 					}
