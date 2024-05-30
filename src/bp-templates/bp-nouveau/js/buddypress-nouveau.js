@@ -725,7 +725,10 @@ window.bp = window.bp || {};
 				this.objects,
 				function ( o, object ) {
 					// Continue when ajax is blocked for object request.
-					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+					if (
+						$( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length &&
+						'' !== BP_Nouveau.is_send_ajax_request
+					) {
 						return;
 					}
 
@@ -791,7 +794,9 @@ window.bp = window.bp || {};
 						}
 
 						// Populate the object list.
-						self.objectRequest( queryData );
+						if ( '' !== BP_Nouveau.is_send_ajax_request ) {
+							self.objectRequest( queryData );
+						}
 					}
 				}
 			);
