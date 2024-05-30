@@ -1600,7 +1600,11 @@ window.bp = window.bp || {};
 				var li_html = '';
 				for ( i = 0; i < response.data.length; i++ ) {
 					var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-					li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+					var strictWidth = window.innerWidth > 768 ? 140 : 130;
+					var originalWidth = response.data[ i ].images.original.width;
+					var originalHeight = response.data[ i ].images.original.height;
+					var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+					li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 						'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 						'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 						'\t</a>\n' +
@@ -1624,7 +1628,11 @@ window.bp = window.bp || {};
 				var li_html = '';
 				for ( i = 0; i < response.data.length; i++ ) {
 					var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-					li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+					var strictWidth = window.innerWidth > 768 ? 140 : 130;
+					var originalWidth = response.data[ i ].images.original.width;
+					var originalHeight = response.data[ i ].images.original.height;
+					var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+					li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 						'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 						'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 						'\t</a>\n' +
@@ -1884,7 +1892,11 @@ window.bp = window.bp || {};
 						var li_html = '';
 						for ( i = 0; i < response.data.length; i++ ) {
 							var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-							li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+							var strictWidth = window.innerWidth > 768 ? 140 : 130;
+							var originalWidth = response.data[ i ].images.original.width;
+							var originalHeight = response.data[ i ].images.original.height;
+							var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+							li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 								'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 								'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 								'\t</a>\n' +
@@ -1942,7 +1954,11 @@ window.bp = window.bp || {};
 						var li_html = '';
 						for ( i = 0; i < response.data.length; i++ ) {
 							var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-							li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+							var strictWidth = window.innerWidth > 768 ? 140 : 130;
+							var originalWidth = response.data[ i ].images.original.width;
+							var originalHeight = response.data[ i ].images.original.height;
+							var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+							li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 								'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 								'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 								'\t</a>\n' +
@@ -2019,7 +2035,11 @@ window.bp = window.bp || {};
 							var li_html = '';
 							for ( i = 0; i < response.data.length; i++ ) {
 								var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-								li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+								var strictWidth = window.innerWidth > 768 ? 140 : 130;
+								var originalWidth = response.data[ i ].images.original.width;
+								var originalHeight = response.data[ i ].images.original.height;
+								var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+								li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 									'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 									'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 									'\t</a>\n' +
@@ -2115,6 +2135,9 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.gif_api_key ) &&
 				!$targetEl.closest( '.post-gif' ).length ) {
+				if ( $targetEl.closest( '.gif-media-search-dropdown' ).length ) {
+					return;
+				}
 				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 				if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
 					target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
@@ -2178,7 +2201,11 @@ window.bp = window.bp || {};
 							var li_html = '';
 							for ( i = 0; i < response.data.length; i++ ) {
 								var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-								li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+								var strictWidth = window.innerWidth > 768 ? 140 : 130;
+								var originalWidth = response.data[ i ].images.original.width;
+								var originalHeight = response.data[ i ].images.original.height;
+								var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+								li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 									'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 									'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 									'\t</a>\n' +

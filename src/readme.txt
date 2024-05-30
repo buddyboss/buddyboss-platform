@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.5.3
 Requires PHP: 5.6.20
-Stable tag: 2.6.10
+Stable tag: 2.6.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.11 =
+* Bug: Core - Updated Schedule posts logic for Group organisers and owners
 
 = 2.6.10 =
 * New Feature! Admins and Groups organizers and moderators now have the ability to use scheduling posts
