@@ -2132,6 +2132,9 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.gif_api_key ) &&
 				!$targetEl.closest( '.post-gif' ).length ) {
+				if ( $targetEl.closest( '.gif-media-search-dropdown' ).length ) {
+					return;
+				}
 				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 				if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
 					target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
