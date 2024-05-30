@@ -4693,6 +4693,9 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 }
 
 @media screen and (max-width: 370px) {
+  .activity-list .activity-item .ac-emotions_list .ac-emotion_item {
+    min-width: 30px;
+  }
   .activity-list .activity-item .ac-emotions_list .ac-emotion_item img {
     width: 30px;
     height: 30px;
@@ -4704,12 +4707,12 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 
 .activity-list .activity-item .acomment-display .ac-emotions_list.active {
   bottom: 20px;
-  right: -60px;
+  right: -30px;
 }
 
 body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
   bottom: 20px;
-  right: -60px;
+  right: -30px;
 }
 
 .activity-list .emojionearea .emojionearea-picker {
@@ -4758,6 +4761,15 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list:hover, body:not(.bb-is-mobile)
 .activity-list .activity-item.elementor-activity-item .acomment-display .ac-emotions_list:hover {
   right: -10px;
+}
+
+@media screen and (max-width: 480px) {
+  .activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list.active {
+    right: -40px;
+  }
+  body:not(.bb-is-mobile) .activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list:hover {
+    right: -40px;
+  }
 }
 
 /* Activity comment modal ==> Starts Here */
