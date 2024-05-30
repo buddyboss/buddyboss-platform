@@ -491,7 +491,7 @@ window.bp = window.bp || {};
 					caller: null,
 					template: null,
 					method: 'reset',
-					preload: false,
+					ajaxload: true,
 				},
 				data
 			);
@@ -538,7 +538,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			if ( ! _.isUndefined( data.preload ) && true === data.preload ) {
+			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
 				return false;
 			}
 
@@ -802,7 +802,7 @@ window.bp = window.bp || {};
 						}
 
 						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
-							queryData.preload = true;
+							queryData.ajaxload = false;
 						}
 
 						// Populate the object list.
