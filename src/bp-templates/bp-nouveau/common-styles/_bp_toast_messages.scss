@@ -22,7 +22,7 @@
 		position: fixed;
 		bottom: 25px;
 		right: 35px;
-		max-width: 360px;
+		max-width: 370px;
 		width: 100%;
 		z-index: 1099;
 
@@ -32,6 +32,10 @@
 				position: static; // Don't position if Toast messages are appended into on screen notification
 			}
 
+		}
+
+		body.activity-modal-open & {
+			z-index: 999999;
 		}
 
 		.toast-messages-list {
@@ -121,8 +125,13 @@
 							font-weight: 400;
 							font-size: 13px;
 							line-height: 20px;
+							width: 100%;
 						}
 
+					}
+
+					.toast-messages-action_link {
+						display: inline-block;
 					}
 
 				}
@@ -157,6 +166,11 @@
 					top: 0;
 				}
 
+			}
+
+			.toast-messages-action_link {
+				color: $blue;
+				cursor: pointer;
 			}
 
 		}
