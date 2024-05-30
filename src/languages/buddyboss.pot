@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-05-30 05:02:56+00:00\n"
+"POT-Creation-Date: 2024-05-30 05:23:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -691,16 +691,16 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:686
-#: bp-activity/bp-activity-filters.php:2722
-#: bp-activity/bp-activity-filters.php:2759
+#: bp-activity/bp-activity-filters.php:687
+#: bp-activity/bp-activity-filters.php:2723
+#: bp-activity/bp-activity-filters.php:2760
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:690
-#: bp-activity/bp-activity-filters.php:2696
-#: bp-activity/bp-activity-filters.php:2720
-#: bp-activity/bp-activity-filters.php:2757
+#: bp-activity/bp-activity-filters.php:691
+#: bp-activity/bp-activity-filters.php:2697
+#: bp-activity/bp-activity-filters.php:2721
+#: bp-activity/bp-activity-filters.php:2758
 #: bp-activity/classes/class-bp-activity-notification.php:226
 #: bp-activity/classes/class-bp-activity-notification.php:241
 #: bp-activity/classes/class-bp-activity-notification.php:646
@@ -726,20 +726,20 @@ msgstr ""
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:752 bp-forums/core/filters.php:550
+#: bp-activity/bp-activity-filters.php:753 bp-forums/core/filters.php:550
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1021
+#: bp-activity/bp-activity-filters.php:1022
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3400
+#: bp-activity/bp-activity-filters.php:3401
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3401 bp-blogs/bp-blogs-template.php:1172
+#: bp-activity/bp-activity-filters.php:3402 bp-blogs/bp-blogs-template.php:1172
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
@@ -772,7 +772,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3402 bp-blogs/bp-blogs-template.php:1180
+#: bp-activity/bp-activity-filters.php:3403 bp-blogs/bp-blogs-template.php:1180
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
@@ -805,14 +805,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3413
+#: bp-activity/bp-activity-filters.php:3414
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:800
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3418
-#: bp-activity/bp-activity-filters.php:3438 bp-forums/core/actions.php:370
+#: bp-activity/bp-activity-filters.php:3419
+#: bp-activity/bp-activity-filters.php:3439 bp-forums/core/actions.php:370
 #: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:417
 #: bp-friends/bp-friends-filters.php:433
 #: bp-groups/bp-groups-notifications.php:1350
@@ -825,8 +825,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3425
-#: bp-activity/bp-activity-filters.php:3445 bp-forums/core/actions.php:376
+#: bp-activity/bp-activity-filters.php:3426
+#: bp-activity/bp-activity-filters.php:3446 bp-forums/core/actions.php:376
 #: bp-forums/core/actions.php:392 bp-friends/bp-friends-filters.php:423
 #: bp-friends/bp-friends-filters.php:439
 #: bp-groups/bp-groups-notifications.php:1356
@@ -839,7 +839,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3433
+#: bp-activity/bp-activity-filters.php:3434
 #: bp-core/gdpr/class-bp-settings-export.php:157
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:815
 msgid "A member replies to an update or comment you've posted"
@@ -33730,8 +33730,8 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:872
 #: bp-xprofile/bp-xprofile-filters.php:981
-#: bp-xprofile/bp-xprofile-filters.php:1095
-#: bp-xprofile/bp-xprofile-filters.php:1138
+#: bp-xprofile/bp-xprofile-filters.php:1098
+#: bp-xprofile/bp-xprofile-filters.php:1140
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:540
 #: bp-xprofile/screens/edit.php:77 bp-xprofile/screens/edit.php:221
 #. translators: Field name.
@@ -33762,37 +33762,37 @@ msgstr ""
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1110
+#: bp-xprofile/bp-xprofile-filters.php:1112
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1146
+#: bp-xprofile/bp-xprofile-filters.php:1148
 #. translators: Field name.
 msgid "Invalid %s. Please enter a valid URL."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1223
+#: bp-xprofile/bp-xprofile-filters.php:1225
 msgid "Repair BuddyBoss profile repeater field sets"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1301
+#: bp-xprofile/bp-xprofile-filters.php:1303
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1321
+#: bp-xprofile/bp-xprofile-filters.php:1323
 msgid "Repairing BuddyBoss profile repeater field sets &hellip; Complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1338
+#: bp-xprofile/bp-xprofile-filters.php:1340
 msgid "Repair user nicknames"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1400
+#: bp-xprofile/bp-xprofile-filters.php:1402
 #. translators: updated records count.
 msgid "%s user nicknames updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1403
+#: bp-xprofile/bp-xprofile-filters.php:1405
 msgid "Repairing user nicknames &hellip; Complete!"
 msgstr ""
 
