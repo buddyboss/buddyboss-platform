@@ -537,6 +537,10 @@ window.bp = window.bp || {};
 				}
 			);
 
+			if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+				return false;
+			}
+
 			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
 			} else {
@@ -797,9 +801,7 @@ window.bp = window.bp || {};
 						}
 
 						// Populate the object list.
-						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' !== BP_Nouveau.is_send_ajax_request ) {
-							self.objectRequest( queryData );
-						}
+						self.objectRequest( queryData );
 					}
 				}
 			);
