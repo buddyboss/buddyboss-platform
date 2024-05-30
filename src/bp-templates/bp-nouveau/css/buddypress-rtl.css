@@ -7996,6 +7996,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .acomment-content p,
 .bb-media-model-wrapper .activity-comments .acomment-content p {
   margin-bottom: 0.5em;
+  word-break: break-word;
 }
 
 .buddypress-wrap .activity-comments .acomment-content p:last-child,
