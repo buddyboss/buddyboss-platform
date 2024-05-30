@@ -490,7 +490,8 @@ window.bp = window.bp || {};
 					extras: null,
 					caller: null,
 					template: null,
-					method: 'reset'
+					method: 'reset',
+					preload: false,
 				},
 				data
 			);
@@ -537,7 +538,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+			if ( ! _.isUndefined( data.preload ) && true === data.preload ) {
 				return false;
 			}
 
@@ -798,6 +799,10 @@ window.bp = window.bp || {};
 							queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
 						} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+						}
+
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+							queryData.preload = true;
 						}
 
 						// Populate the object list.
