@@ -735,7 +735,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 	/**
 	 * Apply filter to modified value to record group activity for group join.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param bool $value Allow record activity.
 	 */
@@ -1767,12 +1767,14 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'         => false,
-			'content'    => false,
-			'user_id'    => bp_loggedin_user_id(),
-			'group_id'   => 0,
-			'privacy'    => 'public',
-			'error_type' => 'bool',
+			'id'            => false,
+			'content'       => false,
+			'user_id'       => bp_loggedin_user_id(),
+			'group_id'      => 0,
+			'privacy'       => 'public',
+			'error_type'    => 'bool',
+			'status'        => bb_get_activity_published_status(),
+			'recorded_time' => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1819,14 +1821,17 @@ function groups_post_update( $args = '' ) {
 
 	$activity_id = groups_record_activity(
 		array(
-			'id'         => $id,
-			'user_id'    => $user_id,
-			'action'     => $action,
-			'content'    => $content_filtered,
-			'type'       => 'activity_update',
-			'item_id'    => $group_id,
-			'privacy'    => $privacy,
-			'error_type' => $error_type,
+			'id'            => $id,
+			'user_id'       => $user_id,
+			'action'        => $action,
+			'content'       => $content_filtered,
+			'type'          => 'activity_update',
+			'item_id'       => $group_id,
+			'privacy'       => $privacy,
+			'error_type'    => $error_type,
+			'status'        => $status,
+			'recorded_time' => $recorded_time,
+
 		)
 	);
 

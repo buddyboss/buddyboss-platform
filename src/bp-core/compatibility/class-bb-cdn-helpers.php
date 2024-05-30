@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  */
 
 // Exit if accessed directly.
@@ -22,7 +22,7 @@ class BB_CDN_Helpers {
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @var self
 	 */
@@ -31,7 +31,7 @@ class BB_CDN_Helpers {
 	/**
 	 * BB_CDN_Helpers constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 */
 	public function __construct() {
 		$this->compatibility_init();
@@ -40,7 +40,7 @@ class BB_CDN_Helpers {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 * 
 	 * @return Controller|null
 	 */
@@ -57,7 +57,7 @@ class BB_CDN_Helpers {
 	/**
 	 * Register the compatibility hooks for the plugin.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 */
 	public function compatibility_init() {
 		add_filter( 'bp_nouveau_object_template_result', array( $this, 'bb_template_ajax_content_add_cdn' ), 10, 1 );
@@ -71,7 +71,7 @@ class BB_CDN_Helpers {
 	/**
 	 * Function to add CDN URL to ajax content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param array $result data array.
 	 *
@@ -88,7 +88,7 @@ class BB_CDN_Helpers {
 	/**
 	 * Function to add CDN URL to media preview symlink URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.10
 	 *
 	 * @param string $attachment_url Attachment URL.
 	 *

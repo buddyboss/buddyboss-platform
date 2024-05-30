@@ -429,11 +429,11 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		$group = groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
-		if ( 
-			! empty( $group ) && 
+		if (
+			! empty( $group ) &&
 			(
 				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
-				groups_is_user_admin( get_current_user_id(), $activity->item_id ) 
+				groups_is_user_admin( get_current_user_id(), $activity->item_id )
 			)
 		) {
 			$can_delete = true;
@@ -1119,15 +1119,15 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	if ( empty( $activity ) || ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
+	if ( ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
 		return;
 	}
 
 	// Return if main activity post not found or activity is media/document/video.
 	if (
-		empty( $activity ) ||
 		'groups' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}
@@ -1482,7 +1482,7 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 /**
  * Remove suspended user and assign site admin as group organizer only when a single group organizer.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param int $user_id User id.
  *
@@ -1563,7 +1563,7 @@ function bb_group_remove_suspended_user( $user_id ) {
 /**
  * Re-assign user when unsuspend to the group only when a single group organizer.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @param int $user_id User id.
  *
@@ -1629,7 +1629,7 @@ function bb_group_add_unsuspended_user( $user_id ) {
  * Function will not allow to record group activity when group organizer
  * unsuspend where group have only one organizer.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.10
  *
  * @return bool Return false.
  */

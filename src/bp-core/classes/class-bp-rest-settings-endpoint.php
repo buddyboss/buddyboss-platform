@@ -281,6 +281,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bb_is_reaction_activity_posts_enabled'    => function_exists( 'bb_is_reaction_activity_posts_enabled' ) && bb_is_reaction_activity_posts_enabled(),
 			'bb_is_reaction_activity_comments_enabled' => function_exists( 'bb_is_reaction_activity_comments_enabled' ) && bb_is_reaction_activity_comments_enabled(),
 			'bb_is_close_activity_comments_enabled'    => function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled(),
+
+			// WP timezone setting.
+			'bb_wp_timezone'                           => bp_get_option( 'timezone_string' ),
 		);
 
 		if ( bp_is_active( 'moderation' ) ) {
