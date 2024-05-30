@@ -9756,3 +9756,14 @@ function bb_mention_add_user_dynamic_link( $content ) {
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
 }
+
+/**
+ * Function to return the minimum pro version to show notice.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_schedule_posts_version() {
+	return '2.5.20';
+}
