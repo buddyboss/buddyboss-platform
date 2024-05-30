@@ -3075,7 +3075,8 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.media ) &&
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
-				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
+				! $targetEl.is( '.emojioneemoji,.emojibtn' ) &&
+				! $targetEl.closest( '.emojionearea-theatre' ).length ) {
 				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 				if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
 					$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );

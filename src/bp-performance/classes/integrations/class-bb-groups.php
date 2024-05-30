@@ -109,6 +109,9 @@ class BB_Groups extends Integration_Abstract {
 
 			// When change the member display name.
 			'update_option_bp-display-name-format'          => 3,
+
+			// When change the schedule post.
+			'update_option__bb_enable_activity_schedule_posts' => 0,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -671,5 +674,12 @@ class BB_Groups extends Integration_Abstract {
 	 */
 	public function event_update_option_bp_display_name_format( $old_value, $value, $option ) {
 		$this->purge_cache_on_change_default_group_images_settings();
+	}
+
+	/**
+	 * When changed schedule post setting from the Settings -> Activity.
+	 */
+	public function event_update_option__bb_enable_activity_schedule_posts() {
+		Cache::instance()->purge_by_component( 'bp-groups' );
 	}
 }
