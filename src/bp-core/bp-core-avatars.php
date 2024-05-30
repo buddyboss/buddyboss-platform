@@ -1715,6 +1715,10 @@ function bp_core_get_upload_dir( $type = 'upload_path' ) {
 	if ( isset( $bp->avatar->$type ) ) {
 		$retval = $bp->avatar->$type;
 	} else {
+		if ( ! isset( $bp->avatar ) ) {
+			$bp->avatar = new stdClass();
+		}
+
 		// If this value has been set in a constant, just use that.
 		if ( defined( $constant ) ) {
 			$retval = constant( $constant );
