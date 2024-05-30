@@ -490,7 +490,8 @@ window.bp = window.bp || {};
 					extras: null,
 					caller: null,
 					template: null,
-					method: 'reset'
+					method: 'reset',
+					ajaxload: true,
 				},
 				data
 			);
@@ -536,6 +537,10 @@ window.bp = window.bp || {};
 					// $( this ).find( 'span' ).text('');
 				}
 			);
+
+			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
+				return false;
+			}
 
 			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
@@ -725,7 +730,13 @@ window.bp = window.bp || {};
 				this.objects,
 				function ( o, object ) {
 					// Continue when ajax is blocked for object request.
-					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+					if (
+						$( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length &&
+						(
+							! _.isUndefined( BP_Nouveau.is_send_ajax_request ) &&
+							'' !== BP_Nouveau.is_send_ajax_request
+						)
+					) {
 						return;
 					}
 
@@ -788,6 +799,10 @@ window.bp = window.bp || {};
 							queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
 						} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+						}
+
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+							queryData.ajaxload = false;
 						}
 
 						// Populate the object list.
