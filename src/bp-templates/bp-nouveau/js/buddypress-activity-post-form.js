@@ -566,7 +566,15 @@ window.bp = window.bp || {};
 					if ( self.dropzone ) {
 						self.dropzone.files.push( mock_file );
 						self.dropzone.emit( 'addedfile', mock_file );
-						self.createThumbnailFromUrl( mock_file );
+
+						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+							$( self.dropzone.files[i].previewElement ).find( 'img' ).attr( 'src', activity_data.media[i].thumb );
+							self.dropzone.emit( 'thumbnail', activity_data.media[i].thumb );
+							self.dropzone.emit( 'complete', mock_file );
+						} else {
+							self.createThumbnailFromUrl( mock_file );
+						}
+
 						self.dropzone.emit( 'dz-success' );
 						self.dropzone.emit( 'dz-complete' );
 					}
@@ -2954,15 +2962,22 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.listenTo( this.model, 'change', this.render );
 				this.listenTo( this.model, 'destroy', this.remove );
+
+				window.addEventListener( 'resize', this.render.bind( this ) );
 			},
 
 			render: function () {
 				var bgNo   = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1,
 					images = this.model.get( 'images' );
 
+				var strictWidth = window.innerWidth > 768 ? 140 : 130;
+				var originalWidth = images.original.width;
+				var originalHeight = images.original.height;
+				var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+
 				this.$el.html( this.template( this.model.toJSON() ) );
 				this.el.classList.add( 'bg' + bgNo );
-				this.el.style.height = images.fixed_width.height + 'px';
+				this.el.style.height = relativeHeight + 'px';
 
 				return this;
 			}

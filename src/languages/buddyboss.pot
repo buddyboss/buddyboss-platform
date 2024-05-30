@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.11\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-05-22 09:56:08+00:00\n"
+"POT-Creation-Date: 2024-05-30 05:36:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -173,7 +173,7 @@ msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:476
 #: bp-core/admin/settings/bb-admin-setting-reactions.php:27
-#: bp-core/bp-core-functions.php:9189 bp-core/classes/class-bb-reaction.php:233
+#: bp-core/bp-core-functions.php:9196 bp-core/classes/class-bb-reaction.php:233
 #: bp-core/classes/class-bb-reaction.php:263
 #: bp-core/classes/class-bb-reaction.php:264
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:991
@@ -192,7 +192,7 @@ msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:536
 #: bp-activity/classes/class-bp-activity-list-table.php:347
-#: bp-core/bp-core-functions.php:7411
+#: bp-core/bp-core-functions.php:7418
 #: bp-groups/classes/class-bp-groups-list-table.php:370
 #: bp-messages/bp-messages-template.php:1022
 #: bp-moderation/classes/class-bp-moderation-list-table.php:285
@@ -691,16 +691,16 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:686
-#: bp-activity/bp-activity-filters.php:2722
-#: bp-activity/bp-activity-filters.php:2759
+#: bp-activity/bp-activity-filters.php:687
+#: bp-activity/bp-activity-filters.php:2723
+#: bp-activity/bp-activity-filters.php:2760
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:690
-#: bp-activity/bp-activity-filters.php:2696
-#: bp-activity/bp-activity-filters.php:2720
-#: bp-activity/bp-activity-filters.php:2757
+#: bp-activity/bp-activity-filters.php:691
+#: bp-activity/bp-activity-filters.php:2697
+#: bp-activity/bp-activity-filters.php:2721
+#: bp-activity/bp-activity-filters.php:2758
 #: bp-activity/classes/class-bp-activity-notification.php:226
 #: bp-activity/classes/class-bp-activity-notification.php:241
 #: bp-activity/classes/class-bp-activity-notification.php:646
@@ -726,20 +726,20 @@ msgstr ""
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:752 bp-forums/core/filters.php:550
+#: bp-activity/bp-activity-filters.php:753 bp-forums/core/filters.php:550
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1021
+#: bp-activity/bp-activity-filters.php:1022
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3400
+#: bp-activity/bp-activity-filters.php:3401
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3401 bp-blogs/bp-blogs-template.php:1172
+#: bp-activity/bp-activity-filters.php:3402 bp-blogs/bp-blogs-template.php:1172
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
@@ -772,7 +772,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3402 bp-blogs/bp-blogs-template.php:1180
+#: bp-activity/bp-activity-filters.php:3403 bp-blogs/bp-blogs-template.php:1180
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
@@ -805,14 +805,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3413
+#: bp-activity/bp-activity-filters.php:3414
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:800
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3418
-#: bp-activity/bp-activity-filters.php:3438 bp-forums/core/actions.php:370
+#: bp-activity/bp-activity-filters.php:3419
+#: bp-activity/bp-activity-filters.php:3439 bp-forums/core/actions.php:370
 #: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:417
 #: bp-friends/bp-friends-filters.php:433
 #: bp-groups/bp-groups-notifications.php:1350
@@ -825,8 +825,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3425
-#: bp-activity/bp-activity-filters.php:3445 bp-forums/core/actions.php:376
+#: bp-activity/bp-activity-filters.php:3426
+#: bp-activity/bp-activity-filters.php:3446 bp-forums/core/actions.php:376
 #: bp-forums/core/actions.php:392 bp-friends/bp-friends-filters.php:423
 #: bp-friends/bp-friends-filters.php:439
 #: bp-groups/bp-groups-notifications.php:1356
@@ -839,7 +839,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3433
+#: bp-activity/bp-activity-filters.php:3434
 #: bp-core/gdpr/class-bp-settings-export.php:157
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:815
 msgid "A member replies to an update or comment you've posted"
@@ -4332,7 +4332,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:607
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:663
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:745
-#: bp-core/bp-core-functions.php:9219
+#: bp-core/bp-core-functions.php:9226
 #: bp-core/classes/class-bp-admin-tab.php:538
 #: bp-integrations/learndash/bp-learndash-functions.php:408
 #: bp-integrations/learndash/bp-learndash-functions.php:431
@@ -4640,7 +4640,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1000
 #: bp-core/admin/bp-core-admin-settings.php:1357
 #: bp-core/admin/settings/bp-admin-setting-activity.php:276
-#: bp-core/bp-core-functions.php:7411
+#: bp-core/bp-core-functions.php:7418
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:247
@@ -4671,7 +4671,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:705
 #: bp-core/admin/bp-core-admin-settings.php:1093
-#: bp-core/bp-core-functions.php:7390 bp-core/bp-core-functions.php:7472
+#: bp-core/bp-core-functions.php:7397 bp-core/bp-core-functions.php:7479
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:664
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:76
 msgid "App"
@@ -7232,7 +7232,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:708 bp-core/bp-core-catchuri.php:818
-#: bp-core/bp-core-catchuri.php:1338 bp-core/bp-core-functions.php:6067
+#: bp-core/bp-core-catchuri.php:1338 bp-core/bp-core-functions.php:6074
 msgid "Please login to access this website."
 msgstr ""
 
@@ -8134,7 +8134,7 @@ msgid "Search Emails"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3353 bp-core/bp-core-functions.php:3449
-#: bp-core/bp-core-functions.php:7381 bp-forums/admin/metaboxes.php:602
+#: bp-core/bp-core-functions.php:7388 bp-forums/admin/metaboxes.php:602
 #: bp-members/classes/class-bp-members-admin.php:2476
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -8504,17 +8504,17 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6105
+#: bp-core/bp-core-functions.php:6112
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6680
+#: bp-core/bp-core-functions.php:6687
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed with "
 "custom CSS."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6699
+#: bp-core/bp-core-functions.php:6706
 #. translators: 1: theme setting url 2: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -8522,14 +8522,14 @@ msgid ""
 "changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6706
+#: bp-core/bp-core-functions.php:6713
 #. translators: 1: theme setting url
 msgid ""
 "The <strong>Cover Image Background</strong> color can be changed in the <a "
 "href=\"%s\">Theme Options</a>."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6712
+#: bp-core/bp-core-functions.php:6719
 #. translators: 1: app plugin url
 msgid ""
 "In a browser, the <strong>Cover Image Background</strong> color can be "
@@ -8537,64 +8537,64 @@ msgid ""
 "href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7281 bp-core/bp-core-functions.php:7501
-#: bp-core/bp-core-functions.php:7530
+#: bp-core/bp-core-functions.php:7288 bp-core/bp-core-functions.php:7508
+#: bp-core/bp-core-functions.php:7537
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:204
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7330 bp-core/bp-core-functions.php:7331
+#: bp-core/bp-core-functions.php:7337 bp-core/bp-core-functions.php:7338
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:919
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7333 bp-core/bp-core-functions.php:7334
+#: bp-core/bp-core-functions.php:7340 bp-core/bp-core-functions.php:7341
 msgid "Email Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7340
+#: bp-core/bp-core-functions.php:7347
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7346 bp-core/bp-core-functions.php:7347
+#: bp-core/bp-core-functions.php:7353 bp-core/bp-core-functions.php:7354
 msgid "Notification Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7349 bp-core/bp-core-functions.php:7350
+#: bp-core/bp-core-functions.php:7356 bp-core/bp-core-functions.php:7357
 msgid "Notification Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7353
+#: bp-core/bp-core-functions.php:7360
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7358
+#: bp-core/bp-core-functions.php:7365
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7379
+#: bp-core/bp-core-functions.php:7386
 msgid "Enable Notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7386 bp-core/bp-core-functions.php:7466
+#: bp-core/bp-core-functions.php:7393 bp-core/bp-core-functions.php:7473
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:662
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:63
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7461
+#: bp-core/bp-core-functions.php:7468
 msgid "A manual notification from a site admin"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:9265
+#: bp-core/bp-core-functions.php:9272
 msgid "Enable Reactions"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:9271
+#: bp-core/bp-core-functions.php:9278
 msgid "Reactions Mode"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:9282
+#: bp-core/bp-core-functions.php:9289
 msgid "Reactions Button"
 msgstr ""
 
@@ -10668,7 +10668,7 @@ msgstr ""
 msgid "Manage"
 msgstr ""
 
-#: bp-core/compatibility/bp-wp-offload-media-helpers.php:347
+#: bp-core/compatibility/bp-wp-offload-media-helpers.php:348
 msgid "Amazon S3"
 msgstr ""
 
@@ -33730,8 +33730,8 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:872
 #: bp-xprofile/bp-xprofile-filters.php:981
-#: bp-xprofile/bp-xprofile-filters.php:1095
-#: bp-xprofile/bp-xprofile-filters.php:1138
+#: bp-xprofile/bp-xprofile-filters.php:1098
+#: bp-xprofile/bp-xprofile-filters.php:1140
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:540
 #: bp-xprofile/screens/edit.php:77 bp-xprofile/screens/edit.php:221
 #. translators: Field name.
@@ -33762,37 +33762,37 @@ msgstr ""
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1110
+#: bp-xprofile/bp-xprofile-filters.php:1112
 msgid "Please enter valid %s profile url."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1146
+#: bp-xprofile/bp-xprofile-filters.php:1148
 #. translators: Field name.
 msgid "Invalid %s. Please enter a valid URL."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1223
+#: bp-xprofile/bp-xprofile-filters.php:1225
 msgid "Repair BuddyBoss profile repeater field sets"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1301
+#: bp-xprofile/bp-xprofile-filters.php:1303
 msgid "%s field updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1321
+#: bp-xprofile/bp-xprofile-filters.php:1323
 msgid "Repairing BuddyBoss profile repeater field sets &hellip; Complete!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1338
+#: bp-xprofile/bp-xprofile-filters.php:1340
 msgid "Repair user nicknames"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1400
+#: bp-xprofile/bp-xprofile-filters.php:1402
 #. translators: updated records count.
 msgid "%s user nicknames updated successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:1403
+#: bp-xprofile/bp-xprofile-filters.php:1405
 msgid "Repairing user nicknames &hellip; Complete!"
 msgstr ""
 
@@ -34897,17 +34897,17 @@ msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7046
+#: bp-core/bp-core-functions.php:7053
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7059
+#: bp-core/bp-core-functions.php:7066
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7073
+#: bp-core/bp-core-functions.php:7080
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""

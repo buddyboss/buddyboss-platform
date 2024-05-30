@@ -385,6 +385,9 @@ window.bp = window.bp || {};
 			if ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) {
 				bp.Nouveau.Media.reply_topic_allow_delete_media = true;
 			}
+
+			// Display download button for media/document/video.
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 		},
 
 		loadExistingMedia: function () {
@@ -1597,7 +1600,11 @@ window.bp = window.bp || {};
 				var li_html = '';
 				for ( i = 0; i < response.data.length; i++ ) {
 					var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-					li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+					var strictWidth = window.innerWidth > 768 ? 140 : 130;
+					var originalWidth = response.data[ i ].images.original.width;
+					var originalHeight = response.data[ i ].images.original.height;
+					var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+					li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 						'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 						'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 						'\t</a>\n' +
@@ -1621,7 +1628,11 @@ window.bp = window.bp || {};
 				var li_html = '';
 				for ( i = 0; i < response.data.length; i++ ) {
 					var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-					li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+					var strictWidth = window.innerWidth > 768 ? 140 : 130;
+					var originalWidth = response.data[ i ].images.original.width;
+					var originalHeight = response.data[ i ].images.original.height;
+					var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+					li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 						'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 						'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 						'\t</a>\n' +
@@ -1881,7 +1892,11 @@ window.bp = window.bp || {};
 						var li_html = '';
 						for ( i = 0; i < response.data.length; i++ ) {
 							var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-							li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+							var strictWidth = window.innerWidth > 768 ? 140 : 130;
+							var originalWidth = response.data[ i ].images.original.width;
+							var originalHeight = response.data[ i ].images.original.height;
+							var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+							li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 								'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 								'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 								'\t</a>\n' +
@@ -1939,7 +1954,11 @@ window.bp = window.bp || {};
 						var li_html = '';
 						for ( i = 0; i < response.data.length; i++ ) {
 							var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-							li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+							var strictWidth = window.innerWidth > 768 ? 140 : 130;
+							var originalWidth = response.data[ i ].images.original.width;
+							var originalHeight = response.data[ i ].images.original.height;
+							var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+							li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 								'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 								'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 								'\t</a>\n' +
@@ -2016,7 +2035,11 @@ window.bp = window.bp || {};
 							var li_html = '';
 							for ( i = 0; i < response.data.length; i++ ) {
 								var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-								li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+								var strictWidth = window.innerWidth > 768 ? 140 : 130;
+								var originalWidth = response.data[ i ].images.original.width;
+								var originalHeight = response.data[ i ].images.original.height;
+								var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+								li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 									'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 									'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 									'\t</a>\n' +
@@ -2112,6 +2135,9 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.gif_api_key ) &&
 				!$targetEl.closest( '.post-gif' ).length ) {
+				if ( $targetEl.closest( '.gif-media-search-dropdown' ).length ) {
+					return;
+				}
 				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 				if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
 					target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
@@ -2175,7 +2201,11 @@ window.bp = window.bp || {};
 							var li_html = '';
 							for ( i = 0; i < response.data.length; i++ ) {
 								var bgNo = Math.floor( Math.random() * ( 6 - 1 + 1 ) ) + 1;
-								li_html += '<li class="bg' + bgNo + '" style="height: ' + response.data[ i ].images.fixed_width.height + 'px;">\n' +
+								var strictWidth = window.innerWidth > 768 ? 140 : 130;
+								var originalWidth = response.data[ i ].images.original.width;
+								var originalHeight = response.data[ i ].images.original.height;
+								var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+								li_html += '<li class="bg' + bgNo + '" style="height: ' + relativeHeight + 'px;">\n' +
 									'\t<a class="found-media-item" href="' + response.data[ i ].images.original.url + '" data-id="' + response.data[ i ].id + '">\n' +
 									'\t\t<img src="' + response.data[ i ].images.fixed_width.url + '">\n' +
 									'\t</a>\n' +
@@ -6423,7 +6453,26 @@ window.bp = window.bp || {};
 			} else {
 				$( nav ).find( 'a#albums' ).append( '<span class="count">' + count + '</span>' );
 			}
-		}
+		},
+
+		toggleActivityOption: function( event ) {
+
+			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible open' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( 'body' ).removeClass( 'more_option_open' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible open' );
+					$( 'body' ).addClass( 'more_option_open' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+				$( 'body' ).removeClass( 'more_option_open' );
+			}
+		},
 	};
 
 	/**
