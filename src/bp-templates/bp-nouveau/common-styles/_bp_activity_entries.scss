@@ -2023,6 +2023,17 @@ ul.medium-editor-toolbar-actions {
 	display: flex;
 }
 
+.activity-header--group {
+
+	.activity-post-author > p {
+		display: inline;
+
+		.view.activity-time-since {
+			display: none;
+		}
+	}
+}
+
 .activity-group-avatar {
 	display: inline-block;
 	position: relative;
