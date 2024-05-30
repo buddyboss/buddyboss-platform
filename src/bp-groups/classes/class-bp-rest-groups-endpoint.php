@@ -774,6 +774,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'create_album'       => ( bp_is_active( 'media' ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $item->id ) ),
 			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
+			'can_schedule'       => function_exists( 'bb_is_enabled_activity_schedule_posts' ) && bb_is_enabled_activity_schedule_posts() && function_exists( 'bb_can_user_schedule_activity' ) && bb_can_user_schedule_activity( array ( 'object' => 'group', 'group_id' => $item->id, 'user_id' => bp_loggedin_user_id() ) ),
 		);
 
 		// BuddyBoss Platform support.
@@ -1516,6 +1517,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the group type details will pass.', 'buddyboss' ),
 					'type'        => 'array',
+					'readonly'    => true,
+				),
+				'can_schedule'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Check current user can schedule activities in perticular group.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			),
