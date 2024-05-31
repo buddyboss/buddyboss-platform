@@ -12,6 +12,9 @@ window.bp = window.bp || {};
 		return;
 	}
 
+	// Keep track of key states
+	var keyMap = {};
+
 	/**
 	 * [Nouveau description]
 	 *
@@ -889,6 +892,8 @@ window.bp = window.bp || {};
 
 			// Show Emoji Picker when pressing Win + . in Windows system.
 			$( document ).on( 'keydown', this.showWinEmojiPicker );
+			$( document ).on( 'keydown', this.revampWinEmojiPicker );
+			$( document ).on( 'keyup', this.revampWinEmojiPicker );
 		},
 
 		/**
@@ -4320,6 +4325,31 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				if( $( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).length > 0 ) {
 					$( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).closest( 'form' ).find( '.post-emoji .emojionearea-button' ).trigger( 'click' );
+				}
+			}
+		},
+
+		revampWinEmojiPicker: function(e) {
+			e = e || event; // deal with IE
+			keyMap[e.keyCode] = e.type === 'keydown';
+
+			// Clean up keyMap on keyup
+			if (e.type === 'keyup') {
+				delete keyMap[e.keyCode];
+			}
+
+			console.log('map:', keyMap);
+
+			if ( e.metaKey && keyMap[190] ) { 
+				console.log('metakey and dot');
+				if( $( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).length > 0 ) {
+					$( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).closest( 'form' ).find( '.post-emoji .emojionearea-button' ).trigger( 'click' );
+				}
+			}
+
+			if ( navigator.userAgent.indexOf('Win') !== -1 ) {
+				if ( e.metaKey && keyMap[190] ) { 
+					console.log('win metakey and dot');
 				}
 			}
 		}
