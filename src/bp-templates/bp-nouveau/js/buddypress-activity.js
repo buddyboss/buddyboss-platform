@@ -2161,7 +2161,9 @@ window.bp = window.bp || {};
 
 		insertBlankSpaceAtCursor: function() {
 			var selection = window.getSelection();
-			if ( !selection.rangeCount ) return;
+			if ( !selection.rangeCount ) {
+				return;
+			}
 
 			var range = selection.getRangeAt( 0 );
 
