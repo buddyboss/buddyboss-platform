@@ -1087,13 +1087,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 		<div class="preview-switcher-main">
 
-			<div class="button-group preview-switcher">
-				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
-					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
-				<?php endif; ?>
-			</div>
-
 			<div class="web-preview-wrap preview-block active" id="web-preview">
 				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
@@ -1102,17 +1095,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
-
-			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-				<div class="app-preview-wrap preview-block" id="app-preview">
-					<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['app_background_color'] ); ?>">
-						<img src="<?php echo esc_url( $app_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
-					</div>
-					<div class="preview-item-avatar">
-						<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
-					</div>
-				</div>
-			<?php endif; ?>
 
 		</div>
 
@@ -2291,7 +2273,7 @@ function bb_admin_setting_group_header_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -3679,7 +3661,7 @@ function bb_admin_performance_general_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 127197, // @todo update when release.
+						'article' => 127427,
 					),
 					'admin.php'
 				)
@@ -3706,7 +3688,7 @@ function bb_admin_performance_activity_setting_tutorial() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 127197, // @todo update when release.
+						'article' => 127427,
 					),
 					'admin.php'
 				)

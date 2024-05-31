@@ -121,7 +121,7 @@ jQuery( document ).ready(
 					var existingTags = form.find( '#bbp_topic_tags' ).val();
 					tagsArrayData    = existingTags && existingTags.length > 0 ? existingTags.split( ',' ) : [];
 					tagsArrayData    = tagsArrayData.filter( function( item ) {
-						return item !== data.text;
+						return jQuery.trim( item ) !== data.text;
 					});
 					var tags = tagsArrayData.join( ',' );
 

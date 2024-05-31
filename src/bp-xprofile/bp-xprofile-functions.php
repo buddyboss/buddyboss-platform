@@ -2597,3 +2597,81 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 		$bb_background_updater->save()->dispatch();
 	}
 }
+
+/**
+ * Function to save the xprofile fields data.
+ *
+ * @since BuddyBoss 2.5.90
+ *
+ * @param array $posted_field_ids Request array.
+ * @param array $is_required      Field is required or not.
+ *
+ * @return bool
+ */
+function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = array() ) {
+	$errors = false;
+
+	// Now we've checked for required fields, lets save the values.
+	$old_values = $new_values = array();
+
+	if ( ! empty( $posted_field_ids ) ) {
+		foreach ( (array) $posted_field_ids as $field_id ) {
+
+			// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
+			$value = $_POST[ 'field_' . $field_id ] ?? '';
+
+			$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
+
+			// Save the old and new values. They will be
+			// passed to the filter and used to determine
+			// whether an activity item should be posted.
+			$old_values[ $field_id ] = array(
+				'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
+				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
+			);
+
+			// Update the field data and visibility level.
+			xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, ( $is_required[ $field_id ] ?? false ) );
+
+			// We need to pass post value here.
+			// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
+			$new_values[ $field_id ] = array(
+				'value'      => $value,
+				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
+			);
+
+			$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
+
+			if ( ! $field_updated ) {
+				$errors = true;
+			} else {
+
+				/**
+				 * Fires on each iteration of an XProfile field being saved with no error.
+				 *
+				 * @since BuddyPress 1.1.0
+				 *
+				 * @param int    $field_id ID of the field that was saved.
+				 * @param string $value    Value that was saved to the field.
+				 */
+				do_action( 'xprofile_profile_field_data_updated', $field_id, $value );
+			}
+		}
+	}
+
+	/**
+	 * Fires after all XProfile fields have been saved for the current profile.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param int   $value            Displayed user ID.
+	 * @param array $posted_field_ids Array of field IDs that were edited.
+	 * @param bool  $errors           Whether or not any errors occurred.
+	 * @param array $old_values       Array of original values before updated.
+	 * @param array $new_values       Array of newly saved values after update.
+	 */
+	do_action( 'xprofile_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
+
+	return $errors;
+}
