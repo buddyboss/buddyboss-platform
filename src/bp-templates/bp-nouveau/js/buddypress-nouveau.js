@@ -890,8 +890,8 @@ window.bp = window.bp || {};
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
-			// Show Emoji Picker when pressing Win + . in Windows system.
-			// $( document ).on( 'keydown', this.showWinEmojiPicker );
+			// Prevent duplicated emoji from windows system emoji picker.
+			$( document ).keydown( this.mediumFormAction.bind( this ) );
 		},
 
 		/**
@@ -4316,15 +4316,47 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 *  Show Emoji Picker when pressing Win + . in Windows system.
+		 * Insert blank space at cursor position to prevent duplicated emoji from windows system emoji picker.
 		 */
-		showWinEmojiPicker: function(e) {
-			if ( navigator.userAgent.indexOf('Win') !== -1 && e.key === '.' && e.metaKey ) {
-				e.preventDefault();
-				if( $( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).length > 0 ) {
-					$( '.medium-editor-element[contenteditable="true"][data-medium-focused="true"]' ).closest( 'form' ).find( '.post-emoji .emojionearea-button' ).trigger( 'click' );
+		mediumFormAction: function( event ) {
+			var element;
+
+			event = event || window.event;
+
+			if ( event.target ) {
+				element = event.target;
+			} else if ( event.srcElement) {
+				element = event.srcElement;
+			}
+
+			if ( navigator.userAgent.indexOf( 'Win' ) !== -1 && $( element ).hasClass( 'medium-editor-element' ) && event.metaKey ) {
+				var content = element.innerHTML || element.textContent;
+				content = content.trim();
+				if ( !content ) {
+					event.preventDefault();
+					this.insertBlankSpaceAtCursor();
 				}
 			}
+		},
+
+		insertBlankSpaceAtCursor: function() {
+			var selection = window.getSelection();
+			if ( !selection.rangeCount ) {
+				return;
+			}
+
+			var range = selection.getRangeAt( 0 );
+
+			var spaceNode = document.createElement( 'span' );
+			spaceNode.innerHTML = '&nbsp;';
+
+			range.insertNode( spaceNode );
+
+			range.setStartAfter( spaceNode );
+			range.setEndAfter( spaceNode );
+
+			selection.removeAllRanges();
+			selection.addRange( range );
 		}
 	};
 

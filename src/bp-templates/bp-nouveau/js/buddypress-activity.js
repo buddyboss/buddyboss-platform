@@ -156,7 +156,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '.bb-activity-model-wrapper' ).on( 'click', '.ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
-			$( document ).keydown( this.commentFormAction.bind( this ) );
+			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
 			// forums.
@@ -2133,16 +2133,6 @@ window.bp = window.bp || {};
 				element = element.parentNode;
 			}
 
-			if ( navigator.userAgent.indexOf( 'Win' ) !== -1 && event.metaKey ) {
-				var content = element.innerHTML || element.textContent;
-				content = content.trim();
-				if ( !content ) {
-					event.preventDefault();
-					// Insert blank space at cursor position to prevent duplicated emoji from windows system emoji picker.
-					this.insertBlankSpaceAtCursor();
-				}
-			}
-
 			if ( event.altKey === true || event.metaKey === true ) {
 				return event;
 			}
@@ -2161,26 +2151,6 @@ window.bp = window.bp || {};
 			} else if ( event.ctrlKey && 13 === keyCode && $( element ).val() ) {
 				$( element ).closest( 'form' ).find( '[type=submit]' ).first().trigger( 'click' );
 			}
-		},
-
-		insertBlankSpaceAtCursor: function() {
-			var selection = window.getSelection();
-			if ( !selection.rangeCount ) {
-				return;
-			}
-
-			var range = selection.getRangeAt( 0 );
-
-			var spaceNode = document.createElement( 'span' );
-			spaceNode.innerHTML = '&nbsp;';
-
-			range.insertNode( spaceNode );
-
-			range.setStartAfter( spaceNode );
-			range.setEndAfter( spaceNode );
-
-			selection.removeAllRanges();
-			selection.addRange( range );
 		},
 
 		/**
