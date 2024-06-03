@@ -1897,3 +1897,9 @@ body .bp-messages-user-threads {
 		}
 	}
 }
+
+// Make sure to have container width wide enough
+body.messages .buddypress-wrap {
+	max-width: 1200px;
+}
+
