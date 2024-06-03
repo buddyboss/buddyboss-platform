@@ -12,9 +12,6 @@ window.bp = window.bp || {};
 		return;
 	}
 
-	// Keep track of key states
-	var keyMap = {};
-
 	/**
 	 * [Nouveau description]
 	 *
