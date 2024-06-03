@@ -2134,9 +2134,13 @@ window.bp = window.bp || {};
 			}
 
 			if ( navigator.userAgent.indexOf( 'Win' ) !== -1 && event.metaKey ) {
-				event.preventDefault();
-				// Insert blank space at cursor position
-				this.insertBlankSpaceAtCursor();
+				var content = element.innerHTML || element.textContent;
+				content = content.trim();
+				if ( !content ) {
+					event.preventDefault();
+					// Insert blank space at cursor position to prevent duplicated emoji from windows system emoji picker.
+					this.insertBlankSpaceAtCursor();
+				}
 			}
 
 			if ( event.altKey === true || event.metaKey === true ) {
