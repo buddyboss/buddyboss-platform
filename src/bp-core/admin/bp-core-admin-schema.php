@@ -479,6 +479,19 @@ function bp_core_install_extended_profiles() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_xprofile_visibility (
+				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				field_id bigint(20) unsigned NOT NULL,
+				user_id bigint(20) unsigned NOT NULL,
+				value varchar(20) DEFAULT NULL,
+				last_updated datetime NOT NULL,
+				PRIMARY KEY (id),
+				KEY field_id (field_id),
+				KEY user_id (user_id),
+				KEY value (value),
+				UNIQUE KEY unique_field_id_user_id (field_id,user_id)
+			) {$charset_collate};";
+
 	dbDelta( $sql );
 
 	bp_core_install_default_profiles_fields();

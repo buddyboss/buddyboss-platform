@@ -3654,8 +3654,38 @@ function bb_update_to_2_6_20() {
 
 		// If there are any statements to execute, run the ALTER TABLE query.
 		if ( ! empty( $alter_statements ) ) {
-			$alter_query = "ALTER TABLE '{$bp_prefix}bp_suspend' " . implode( ', ', $alter_statements );
+			$alter_query = "ALTER TABLE {$bp_prefix}bp_suspend " . implode( ', ', $alter_statements );
 			$wpdb->query( $alter_query ); //phpcs:ignore
 		}
 	}
+
+	// Install bb_xprofile_visibility table if already not exists.
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bb_xprofile_visibility'" );
+	if ( ! $table_exists ) {
+		$sql             = array();
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql[] = "CREATE TABLE {$bp_prefix}bb_xprofile_visibility (
+					id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					field_id bigint(20) unsigned NOT NULL,
+					user_id bigint(20) unsigned NOT NULL,
+					value varchar(20) DEFAULT NULL,
+					last_updated datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY field_id (field_id),
+					KEY user_id (user_id),
+					KEY value (value),
+					UNIQUE KEY unique_field_id_user_id (field_id,user_id)
+				) {$charset_collate};";
+
+		dbDelta( $sql );
+	}
+
+	// Run migration.
+	$is_already_run = get_transient( 'bb_migrate_xprofile_visibility' );
+	if ( ! $is_already_run ) {
+		bb_migrate_xprofile_visibility( true );
+		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
+	}
+	
 }

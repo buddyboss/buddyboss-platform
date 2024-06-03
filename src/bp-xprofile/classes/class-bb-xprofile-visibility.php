@@ -125,12 +125,38 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters whether or not data already exists for the user.
 		 *
-		 * @since BuddyPress 1.2.7
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param bool                   $retval Whether or not data already exists.
 		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
 		 */
 		return apply_filters_ref_array( 'xprofile_visibility_exists', array( (bool) $retval, $this ) );
+	}
+
+	/**
+	 * Check if any data exists for the user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User id.
+	 *
+	 * @return bool
+	 */
+	public static function user_data_exists( $user_id = 0 ) {
+		global $wpdb;
+
+		$bp     = buddypress();
+		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d", $user_id ) );
+
+		/**
+		 * Filters whether or not any data already exists for the user.
+		 *
+		 * @since  BuddyBoss [BBVERSION]
+		 *
+		 * @param bool $retval  Whether or not data already exists.
+		 * @param int  $user_id User id.
+		 */
+		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( (bool) $retval, $user_id ) );
 	}
 
 	/**
@@ -233,7 +259,6 @@ class BB_XProfile_Visibility {
 		if ( $this->is_valid_field() ) {
 			if ( $this->exists() && strlen( trim( $this->value ) ) ) {
 				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
-
 			} elseif ( $this->exists() && empty( $this->value ) ) {
 				// Data removed, delete the entry.
 				$result = $this->delete();
@@ -276,7 +301,7 @@ class BB_XProfile_Visibility {
 		global $wpdb;
 
 		$bp         = buddypress();
-		$table_name = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+		$table_name = $bp->profile->table_name_visibility;
 
 		/**
 		 * Fires before the current profile data instance gets deleted.
@@ -358,7 +383,7 @@ class BB_XProfile_Visibility {
 	 *
 	 * @param int $user_id User ID to get fields for.
 	 *
-	 * @return array
+	 * @return array Associative array with field_id as key and value.
 	 */
 	public static function get_user_field_ids_by_visibility_levels( $user_id, $levels = array() ) {
 		global $wpdb;
@@ -366,12 +391,25 @@ class BB_XProfile_Visibility {
 		$bp     = buddypress();
 		$fields = array();
 
-		if ( empty( $user_id ) || $levels = array() ) {
+		if ( empty( $user_id ) || empty( $levels ) ) {
 			return $fields;
 		}
 
-		$sql    = $wpdb->prepare( "SELECT DISTINCT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND value IN ( %s )" , $user_id, implode( ',', $levels ) );
-		$fields = $wpdb->get_results( $sql, OBJECT_K );
+		// Prepare the levels array by quoting each element.
+		$quoted_levels = array_map( function( $level ) {
+			global $wpdb;
+			return $wpdb->prepare( '%s', $level );
+		}, $levels );
+
+		$quoted_levels = implode( ',', $quoted_levels );
+
+		$sql     = $wpdb->prepare( "SELECT DISTINCT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND value IN ( $quoted_levels )" , $user_id );
+		$results = $wpdb->get_results( $sql, OBJECT_K );
+
+		// Iterate over the results and transform the array.
+		foreach ( $results as $field_id => $result ) {
+			$fields[ $field_id ] = $field_id;
+		}
 
 		return $fields;
 	}
