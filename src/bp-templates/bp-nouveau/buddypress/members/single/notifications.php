@@ -8,9 +8,9 @@
  * @version 1.0.0
  */
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
-
 $is_send_ajax_request = bb_is_send_ajax_request();
+
+bp_get_template_part( 'members/single/parts/item-subnav' );
 
 switch ( bp_current_action() ) :
 	case 'unread':
@@ -20,9 +20,9 @@ switch ( bp_current_action() ) :
 		<div id="notifications-user-list" class="notifications dir-list" data-bp-list="notifications">
 			<?php
 			if ( $is_send_ajax_request ) {
-				?>
-				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-notifications-loading' ); ?></div>
-				<?php
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'member-notifications-loading' );
+				echo '</div>';
 			} else {
 				bp_get_template_part( 'members/single/notifications/notifications-loop' );
 			}

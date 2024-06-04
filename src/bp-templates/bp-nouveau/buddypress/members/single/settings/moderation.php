@@ -18,11 +18,9 @@ switch ( bp_current_action() ) :
 		<div class="moderation" data-bp-list="moderation">
 			<?php
 			if ( $is_send_ajax_request ) {
-				?>
-				<div id="bp-ajax-loader">
-					<?php bp_nouveau_user_feedback( 'moderation-block-member-loading' ); ?>
-				</div>
-				<?php
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'moderation-block-member-loading' );
+				echo '</div>';
 			} else {
 				bp_get_template_part( 'moderation/moderation-loop' );
 			}
