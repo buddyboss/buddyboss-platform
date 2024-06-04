@@ -2744,18 +2744,18 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 				'compare' => 'EXISTS',
 			),
 		),
+		'fields' => 'ID',
 	);
 
 	$users = get_users( $args );
 
-	// Delete old count status on starting migration from repair community.
-	if ( ! $background && 1 === $page ) {
+	// Delete old count status on starting migration from repair community or no users exists.
+	if ( ( ! $background && 1 === $page ) || empty( $users ) ) {
 		delete_site_option( 'bb_xprofile_visibility_migrated_count' );
 	}
 
 	// No more users to process.
 	if ( empty( $users ) ) {
-		delete_site_option( 'bb_xprofile_visibility_migrated_count' );
 
 		if ( ! $background ) {
 			/* translators: Status of current action. */
@@ -2770,25 +2770,69 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		return; 
 	}
 
-	foreach ( $users as $user ) {
-		$user_id           = $user->ID;
+	foreach ( $users as $user_id ) {
+
 		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-
 		if ( ! empty( $visibility_levels ) ) {
-			$place_holder_queries = array();
-			$insert_query         = "INSERT INTO {$bp->profile->table_name_visibility} ( field_id, user_id, value, last_updated ) VALUES";
 
-			// Migrate visibility levels to the new table.
-			foreach ( $visibility_levels as $field_id => $level ) {
-				$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %s)', $field_id, $user_id, $level, bp_core_current_time() );
+			// Query existing entries for the user.
+			$existing_entries = $wpdb->get_results( $wpdb->prepare(
+				"SELECT field_id, value FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
+				$user_id
+			), OBJECT_K );
+
+			// Prepare placeholders for the insert and update queries.
+			$update_placeholders = array();
+			$insert_placeholders = array();
+			$delete_placeholders = array();
+
+			// Collect field IDs that need to be deleted.
+			$fields_to_delete = array_diff_key( $existing_entries, $visibility_levels );
+	
+			foreach ( $fields_to_delete as $field_id => $entry ) {
+				$delete_placeholders[] = $wpdb->prepare( '%d', $field_id );
 			}
-		}
 
-		if ( ! empty( $place_holder_queries ) ) {
-			$place_holder_queries = implode( ', ', $place_holder_queries );
+			$current_time = bp_core_current_time();
+			foreach ( $visibility_levels as $field_id => $level ) {
+				if ( isset( $existing_entries[ $field_id ] ) ) {
+					if ( $existing_entries[ $field_id ]->value !== $level ) {
 
-			$wpdb->query( "{$insert_query} {$place_holder_queries}" ); // phpcs:ignore
-			unset( $place_holder_queries );
+						// Prepare an update query.
+						$update_placeholders[] = $wpdb->prepare(
+							"UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d",
+							$level, $current_time, $user_id, $field_id
+						);
+					}
+				} else {
+					// Prepare an insert query.
+					$insert_placeholders[] = $wpdb->prepare( '(%d, %d, %s, %s)', $field_id, $user_id, $level, $current_time );
+				}
+			}
+
+			// Execute delete queries.
+			if ( ! empty( $delete_placeholders ) ) {
+				$delete_placeholders = implode( ', ', $delete_placeholders );
+				$delete_query = "DELETE FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND field_id IN ({$delete_placeholders})";
+				$wpdb->query( $wpdb->prepare( $delete_query, $user_id ) ); // phpcs:ignore
+			}
+
+			// Execute update queries.
+			foreach ( $update_placeholders as $update_query ) {
+				$wpdb->query( $update_query ); // phpcs:ignore
+			}
+
+			// Insert new entries.
+			if ( ! empty( $insert_placeholders ) ) {
+				$insert_placeholders = implode( ', ', $insert_placeholders );
+				$insert_query = "INSERT INTO {$bp->profile->table_name_visibility} ( field_id, user_id, value, last_updated ) VALUES {$insert_placeholders}";
+				$wpdb->query( $insert_query ); // phpcs:ignore
+			}
+		} else {
+
+			// Delete if somehow old data exists and no visibility user meta data exists.
+			$delete_query = "DELETE FROM {$bp->profile->table_name_visibility} WHERE user_id = %d";
+			$wpdb->query( $wpdb->prepare( $delete_query, $user_id ) ); // phpcs:ignore
 		}
 	}
 

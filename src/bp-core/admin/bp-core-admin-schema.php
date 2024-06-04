@@ -479,21 +479,9 @@ function bp_core_install_extended_profiles() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
-	$sql[] = "CREATE TABLE {$bp_prefix}bb_xprofile_visibility (
-				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-				field_id bigint(20) unsigned NOT NULL,
-				user_id bigint(20) unsigned NOT NULL,
-				value varchar(20) DEFAULT NULL,
-				last_updated datetime NOT NULL,
-				PRIMARY KEY (id),
-				KEY field_id (field_id),
-				KEY user_id (user_id),
-				KEY value (value),
-				UNIQUE KEY unique_field_id_user_id (field_id,user_id)
-			) {$charset_collate};";
-
 	dbDelta( $sql );
 
+	bb_core_install_xprofile_visibility();
 	bp_core_install_default_profiles_fields();
 }
 
@@ -1390,4 +1378,48 @@ function bb_core_install_subscription() {
    	) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/**
+ * Install database tables for the xprofile visibility new structure.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bb_core_install_xprofile_visibility() {
+	global $wpdb;
+
+	$bp_prefix = bp_core_get_table_prefix();
+	
+	// Install bb_xprofile_visibility table if already not exists.
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bb_xprofile_visibility'" );
+	if ( ! $table_exists ) {
+		$sql             = array();
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql[] = "CREATE TABLE {$bp_prefix}bb_xprofile_visibility (
+					id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					field_id bigint(20) unsigned NOT NULL,
+					user_id bigint(20) unsigned NOT NULL,
+					value varchar(20) DEFAULT NULL,
+					last_updated datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY field_id (field_id),
+					KEY user_id (user_id),
+					KEY value (value),
+					UNIQUE KEY unique_field_id_user_id (field_id,user_id)
+				) {$charset_collate};";
+
+		dbDelta( $sql );
+	}
+
+	/**
+	 * Fires after BuddyBoss adds the xprofile visibility table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bp_core_install_xprofile_visibility' );
 }
