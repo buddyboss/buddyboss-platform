@@ -3831,3 +3831,138 @@ table.moderations .column-member img {
   padding: 3px 8px;
   line-height: 25px;
 }
+
+/*------------------------------------------------------------------------------
+ * 20.0 Upgrade
+ *----------------------------------------------------------------------------*/
+.bp-upgrade-wrap {
+  position: relative;
+  font-size: 15px;
+  max-width: 1400px;
+  margin-top: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: wrap;
+  justify-content: space-between;
+}
+
+.bb-advance-card {
+  flex: 0 0 49%;
+  max-width: 49%;
+  margin: 20px 0 0;
+  padding: 0;
+  border-radius: 9px;
+  overflow: hidden;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+.bb-advance-card h2 {
+  font-weight: 600;
+  font-size: 1.6em;
+  line-height: 1.2;
+  margin: 0 0 11px;
+}
+
+.bb-advance-card .card-subtitle {
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+.card-data {
+  flex: 1;
+  padding: 2.3em 2.3em;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-figure {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  padding-top: 52.56%;
+  display: block;
+  background-color: #FAF9F7;
+}
+
+.card-figure .upgrade-figure {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 24px auto 0;
+  z-index: 0;
+  min-height: 100%;
+  max-height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.bb-advance-card--hero {
+  width: 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.bb-advance-card--hero .card-inner-wrap {
+  display: flex;
+}
+
+.bb-advance-card--hero .card-figure {
+  width: 42.417%;
+  padding-top: 22.56%;
+}
+
+.bb-advance-card--hero .card-figure .upgrade-figure {
+  max-height: none;
+  margin: 0 auto;
+}
+
+.bb-advance-card--hero .card-data {
+  flex: 1;
+  padding: 4.2em 2.8em;
+  display: flex;
+  flex-direction: column;
+}
+
+.advance-card-note {
+  margin: 24px 0;
+}
+
+.advance-card-note p {
+  margin: 0;
+}
+
+.advance-card-action {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+}
+
+.advance-card-action button {
+  border: 1px solid #E0613C;
+  color: #E0613C;
+  font-weight: 500;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 8px 16px;
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+.advance-card-action .advance-action-link {
+  color: #640398;
+  font-weight: 500;
+  text-decoration: none;
+  outline: none;
+}
+
+.advance-card-action .advance-action-link i {
+  display: inline-block;
+  transform: rotate(45deg);
+  line-height: 1;
+}

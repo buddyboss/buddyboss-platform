@@ -682,16 +682,21 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-integrations',
 		),
 		'4' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-upgrade' ), 'admin.php' ) ),
+			'name'  => __( 'Upgrade', 'buddyboss' ),
+			'class' => 'bp-upgrade',
+		),
+		'5' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
 			'name'  => __( 'Tools', 'buddyboss' ),
 			'class' => 'bp-tools',
 		),
-		'5' => array(
+		'6' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
 			'name'  => __( 'Help', 'buddyboss' ),
 			'class' => 'bp-help',
 		),
-		'6' => array(
+		'7' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',

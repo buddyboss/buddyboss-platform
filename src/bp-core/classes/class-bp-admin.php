@@ -349,6 +349,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_integrations'
 			);
 
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'Upgrade', 'buddyboss' ),
+				__( 'Upgrade', 'buddyboss' ),
+				$this->capability,
+				'bp-upgrade',
+				array( $this, 'bp_upgrade_screen' )
+			);
+
 			// Credits.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -497,6 +506,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_integrations'
 			);
 
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'Upgrade', 'buddyboss' ),
+				__( 'Upgrade', 'buddyboss' ),
+				$this->capability,
+				'bp-upgrade',
+				array( $this, 'bp_upgrade_screen' )
+			);
+
 			// Credits.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -596,6 +614,23 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
 			<?php include $this->admin_dir . 'templates/credit-screen.php'; ?>
+		</div>
+
+			<?php
+
+		}
+
+		/**
+		 * Output the upgrade screen.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
+		public function bp_upgrade_screen() {
+			?>
+
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Upgrade', 'buddyboss' ) ); ?></h2>
+			<?php include $this->admin_dir . 'templates/upgrade-screen.php'; ?>
 		</div>
 
 			<?php
