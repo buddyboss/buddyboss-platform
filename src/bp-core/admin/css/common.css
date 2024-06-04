@@ -3835,21 +3835,28 @@ table.moderations .column-member img {
 /*------------------------------------------------------------------------------
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
+.wrap h1.bb-advance-heading {
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 72px;
+  max-width: 45%;
+}
+
 .bp-upgrade-wrap {
   position: relative;
   font-size: 15px;
   max-width: 1400px;
   margin-top: 25px;
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
-  flex-flow: wrap;
   justify-content: space-between;
 }
 
 .bb-advance-card {
-  flex: 0 0 49%;
-  max-width: 49%;
-  margin: 20px 0 0;
+  flex: 0 0 48%;
+  max-width: 48%;
+  margin: 0;
   padding: 0;
   border-radius: 9px;
   overflow: hidden;
@@ -3881,10 +3888,10 @@ table.moderations .column-member img {
   width: 100%;
   height: 100%;
   position: relative;
-  overflow: hidden;
   padding-top: 52.56%;
   display: block;
   background-color: #FAF9F7;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .card-figure .upgrade-figure {
@@ -3895,8 +3902,7 @@ table.moderations .column-member img {
   right: 0;
   margin: 24px auto 0;
   z-index: 0;
-  min-height: 100%;
-  max-height: 100%;
+  max-height: calc(100% - 24px);
   width: auto;
   max-width: 100%;
   object-fit: cover;
@@ -3906,6 +3912,7 @@ table.moderations .column-member img {
   width: 100%;
   flex: 0 0 100%;
   max-width: 100%;
+  margin-bottom: 48px;
 }
 
 .bb-advance-card--hero .card-inner-wrap {
@@ -3915,6 +3922,7 @@ table.moderations .column-member img {
 .bb-advance-card--hero .card-figure {
   width: 42.417%;
   padding-top: 22.56%;
+  border: 0;
 }
 
 .bb-advance-card--hero .card-figure .upgrade-figure {
@@ -3943,7 +3951,7 @@ table.moderations .column-member img {
   margin-top: auto;
 }
 
-.advance-card-action button {
+.advance-action-button {
   border: 1px solid #E0613C;
   color: #E0613C;
   font-weight: 500;
@@ -3952,17 +3960,78 @@ table.moderations .column-member img {
   padding: 8px 16px;
   margin-right: 16px;
   cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
 }
 
-.advance-card-action .advance-action-link {
+.advance-action-button:hover {
+  color: #E0613C;
+}
+
+.advance-action-button:active, .advance-action-button:focus {
+  background-color: rgba(224, 97, 60, 0.1);
+  color: #E0613C;
+  outline: none;
+  box-shadow: none;
+}
+
+.advance-action-link {
   color: #640398;
   font-weight: 500;
   text-decoration: none;
   outline: none;
+  box-shadow: none;
+  border-bottom: 1px solid transparent;
+  padding: 2px 0 1px;
 }
 
-.advance-card-action .advance-action-link i {
+.advance-action-link i {
   display: inline-block;
   transform: rotate(45deg);
   line-height: 1;
+}
+
+.advance-action-link:hover {
+  color: #640398;
+  border-bottom: 1px solid #640398;
+}
+
+.advance-action-link:active, .advance-action-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.advance-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 33.33% 0 0;
+}
+
+.bb-advance-card--theme .advance-list {
+  margin-right: 16%;
+}
+
+.advance-list li {
+  max-width: 50%;
+  flex: 0 0 50%;
+  margin: 0 0 11px;
+  font-weight: 600;
+  font-size: 95%;
+}
+
+.advance-list li.advance-list__expand {
+  max-width: 100%;
+  flex: 0 0 100%;
+}
+
+.advance-list li:before {
+  content: "\e876";
+  display: inline-block;
+  font-family: "bb-icons";
+  font-size: 16px;
+  font-weight: 400;
+  margin-right: 8px;
+  line-height: 1;
+  color: #E0613C;
 }

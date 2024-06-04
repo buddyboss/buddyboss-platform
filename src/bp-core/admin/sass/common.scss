@@ -4153,21 +4153,28 @@ table.moderations .column-member {
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
 
-.bp-upgrade-wrap {
+ .wrap h1.bb-advance-heading {
+	font-size: 40px;
+	font-weight: 600;
+	margin-bottom: 72px;
+	max-width: 45%;
+}
+
+ .bp-upgrade-wrap {
 	position: relative;
 	font-size: 15px;
 	max-width: 1400px;
 	margin-top: 25px;
 	display: flex;
+	align-items: flex-start;
 	flex-wrap: wrap;
-	flex-flow: wrap;
 	justify-content: space-between;
 }
 
 .bb-advance-card {
-	flex: 0 0 49%;
-	max-width: 49%;
-	margin: 20px 0 0;
+	flex: 0 0 48%;
+	max-width: 48%;
+	margin: 0;
 	padding: 0;
 	border-radius: 9px;
 	overflow: hidden;
@@ -4199,10 +4206,10 @@ table.moderations .column-member {
 	width: 100%;
 	height: 100%;
 	position: relative;
-	overflow: hidden;
 	padding-top: 52.56%;
 	display: block;
 	background-color: #FAF9F7;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
 	.upgrade-figure {
 		position: absolute;
@@ -4212,8 +4219,7 @@ table.moderations .column-member {
 		right: 0;
 		margin: 24px auto 0;
 		z-index: 0;
-		min-height: 100%;
-		max-height: 100%;
+		max-height: calc(100% - 24px);
 		width: auto;
 		max-width: 100%;
 		object-fit: cover;
@@ -4224,6 +4230,7 @@ table.moderations .column-member {
 	width: 100%;
 	flex: 0 0 100%;
 	max-width: 100%;
+	margin-bottom: 48px;
 
 	.card-inner-wrap {
 		display: flex;
@@ -4232,6 +4239,7 @@ table.moderations .column-member {
 	.card-figure {
 		width: 42.417%;
     padding-top: 22.56%;
+		border: 0;
 
 		.upgrade-figure {
 			max-height: none;
@@ -4259,28 +4267,91 @@ table.moderations .column-member {
 	display: flex;
 	align-items: center;
 	margin-top: auto;
+}
 
-	button {
-		border: 1px solid #E0613C;
+.advance-action-button {
+	border: 1px solid #E0613C;
+	color: #E0613C;
+	font-weight: 500;
+	background-color: #fff;
+	border-radius: 5px;
+	padding: 8px 16px;
+	margin-right: 16px;
+	cursor: pointer;
+	text-decoration: none;
+	outline: none;
+	box-shadow: none;
+
+	&:hover {
 		color: #E0613C;
-		font-weight: 500;
-		background-color: #fff;
-		border-radius: 5px;
-		padding: 8px 16px;
-		margin-right: 16px;
-		cursor: pointer;
 	}
 
-	.advance-action-link {
-		color: #640398;
-		font-weight: 500;
-		text-decoration: none;
+	&:active,
+	&:focus {
+		background-color: rgba(224, 97, 60, 0.1);
+		color: #E0613C;
 		outline: none;
+		box-shadow: none;
+	}
+}
 
-		i {
+.advance-action-link {
+	color: #640398;
+	font-weight: 500;
+	text-decoration: none;
+	outline: none;
+	box-shadow: none;
+	border-bottom: 1px solid transparent;
+	padding: 2px 0 1px;
+
+	i {
+		display: inline-block;
+		transform: rotate(45deg);
+		line-height: 1;
+	}
+
+	&:hover {
+		color: #640398;
+		border-bottom: 1px solid #640398;
+	}
+
+	&:active,
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
+}
+
+.advance-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 33.33% 0 0;
+
+	.bb-advance-card--theme & {
+		margin-right: 16%;
+	}
+
+	li {
+		max-width: 50%;
+		flex: 0 0 50%;
+		margin: 0 0 11px;
+		font-weight: 600;
+		font-size: 95%;
+
+		&.advance-list__expand {
+			max-width: 100%;
+			flex: 0 0 100%;
+		}
+
+		&:before {
+			content: "\e876";
 			display: inline-block;
-			transform: rotate(45deg);
+			font-family: "bb-icons";
+			font-size: 16px;
+			font-weight: 400;
+			margin-right: 8px;
 			line-height: 1;
+			color: #E0613C;
 		}
 	}
 }
