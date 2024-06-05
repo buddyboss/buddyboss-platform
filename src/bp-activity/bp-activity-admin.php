@@ -133,6 +133,8 @@ function bp_activity_admin_reply() {
 	);
 	ob_end_clean();
 
+	unset( $new_activity, $new_activity_id );
+
 	// Send response.
 	$r = new WP_Ajax_Response();
 	$r->add( $response );
