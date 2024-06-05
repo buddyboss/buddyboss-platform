@@ -4205,6 +4205,12 @@ table.moderations .column-member {
 	.bb-integrations_filters {
 		display: flex;
 		gap: 25px;
+
+		select {
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			border-radius: 5px;
+			padding: 5px 16px;
+		}
 	}
 
 	.integrations_collection-sub {
@@ -4280,8 +4286,10 @@ table.moderations .column-member {
 		background-color: #fff;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		border-radius: 10px;
-		padding: 24px;
+		padding: 24px 24px 42px;
+		width: 100%;
 		max-width: 256px;
+		position: relative;
 
 		.holder_integrations_img {
 			display: flex;
@@ -4319,7 +4327,7 @@ table.moderations .column-member {
 		.short_desc p {
 			font-size: 12px;
 			color: rgba(0, 0, 0, 0.6);
-			min-height: 65px;
+			min-height: 45px;
 			margin: 0 0 15px;
 		}
 
@@ -4328,6 +4336,9 @@ table.moderations .column-member {
 			font-weight: 500;
 			color: #640398;
 			text-decoration: none;
+			position: absolute;
+			bottom: 24px;
+			left: 24px;
 
 			i {
 				font-size: 15px;
@@ -4401,6 +4412,28 @@ table.moderations .column-member {
 		border-radius: 5px;
 		padding: 8px 16px;
 		text-decoration: none;
+	}
+}
+
+@media screen and (max-width: 1080px) {
+
+	.bb-integrations-section h1 {
+		font-size: 28px;
+	}
+
+	.bb-integrations_filters_section {
+		flex-direction: column;
+		gap: 20px;
+
+		.bb-integrations_filters {
+			display: flex;
+			gap: 25px;
+			flex-wrap: wrap;
+		}
+	}
+
+	.bb-get-platform {
+		flex-direction: column;
 	}
 }
 
