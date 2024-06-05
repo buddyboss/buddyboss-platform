@@ -13920,6 +13920,10 @@ body .bp-messages-user-threads {
   vertical-align: middle;
 }
 
+body.messages .buddypress-wrap {
+  max-width: 1200px;
+}
+
 /**
 *------------------------------------------
 * @subsection 5.2.2.6 - Settings
