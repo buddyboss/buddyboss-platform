@@ -529,6 +529,10 @@ window.bp = window.bp || {};
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
+			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
+				return false;
+			}
+
 			/* Set the correct selected nav and filter */
 			$( this.objectNavParent + ' [data-bp-object]' ).each(
 				function () {
@@ -537,10 +541,6 @@ window.bp = window.bp || {};
 					// $( this ).find( 'span' ).text('');
 				}
 			);
-
-			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
-				return false;
-			}
 
 			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );

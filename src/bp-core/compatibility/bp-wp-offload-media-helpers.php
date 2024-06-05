@@ -353,7 +353,7 @@ class BB_AS3CF_Plugin_Compatibility {
 	/**
 	 * Add extra parameter into localize scripts for offload media plugin.
 	 *
-	 * @since BuddyBos 2.6.20
+	 * @since BuddyBoss 2.6.20
 	 *
 	 * @param array $params Localize scripts parameter.
 	 *

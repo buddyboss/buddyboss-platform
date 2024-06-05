@@ -4418,7 +4418,7 @@ function bp_group_directory_page_content() {
 
 	$page_ids = bp_core_get_directory_page_ids();
 
-	if ( ! empty( $page_ids['groups'] ) ) {
+	if ( ! empty( $page_ids['groups'] ) && ! bp_is_group_subgroups() ) {
 		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
 		echo apply_filters( 'the_content', $group_page_content );
 	}
