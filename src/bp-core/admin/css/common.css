@@ -3842,6 +3842,18 @@ table.moderations .column-member img {
   max-width: 45%;
 }
 
+@media screen and (max-width: 1400px) {
+  .wrap h1.bb-advance-heading {
+    max-width: 75%;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .wrap h1.bb-advance-heading {
+    max-width: 95%;
+  }
+}
+
 .bp-upgrade-wrap {
   position: relative;
   font-size: 15px;
@@ -3863,6 +3875,17 @@ table.moderations .column-member img {
   border: 1px solid #ccd0d4;
   box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.08);
   background: #fff;
+}
+
+@media screen and (max-width: 760px) {
+  .bb-advance-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 24px;
+  }
+  .bb-advance-card.bb-advance-card--hero {
+    margin-bottom: 24px;
+  }
 }
 
 .bb-advance-card h2 {
@@ -3919,10 +3942,33 @@ table.moderations .column-member img {
   display: flex;
 }
 
-.bb-advance-card--hero .card-figure {
+@media screen and (max-width: 760px) {
+  .bb-advance-card--hero .card-inner-wrap {
+    flex-direction: column;
+  }
+  .bb-advance-card--hero .card-inner-wrap .card-figure-wrapper {
+    width: 100%;
+  }
+  .bb-advance-card--hero .card-inner-wrap .card-figure {
+    padding-top: 52.56%;
+  }
+  .bb-advance-card--hero .card-inner-wrap .card-figure .upgrade-figure {
+    max-height: 100%;
+  }
+  .bb-advance-card--hero .card-inner-wrap .card-data {
+    padding: 2.3em 2.3em;
+  }
+}
+
+.bb-advance-card--hero .card-figure-wrapper {
   width: 42.417%;
+}
+
+.bb-advance-card--hero .card-figure {
+  width: 100%;
   padding-top: 22.56%;
   border: 0;
+  background-color: #1A1830;
 }
 
 .bb-advance-card--hero .card-figure .upgrade-figure {
@@ -3951,6 +3997,12 @@ table.moderations .column-member img {
   margin-top: auto;
 }
 
+@media screen and (max-width: 900px) {
+  .advance-card-action {
+    flex-direction: column;
+  }
+}
+
 .advance-action-button {
   border: 1px solid #E0613C;
   color: #E0613C;
@@ -3963,6 +4015,12 @@ table.moderations .column-member img {
   text-decoration: none;
   outline: none;
   box-shadow: none;
+}
+
+@media screen and (max-width: 900px) {
+  .advance-action-button {
+    margin: 0 0 16px;
+  }
 }
 
 .advance-action-button:hover {
@@ -4012,12 +4070,28 @@ table.moderations .column-member img {
   margin-right: 16%;
 }
 
+@media screen and (max-width: 1500px) {
+  .advance-list {
+    margin-right: 0;
+  }
+  .bb-advance-card--theme .advance-list {
+    margin-right: 0;
+  }
+}
+
 .advance-list li {
   max-width: 50%;
   flex: 0 0 50%;
   margin: 0 0 11px;
   font-weight: 600;
   font-size: 95%;
+}
+
+@media screen and (max-width: 1300px) {
+  .advance-list li {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
 }
 
 .advance-list li.advance-list__expand {

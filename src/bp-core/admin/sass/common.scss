@@ -4158,6 +4158,14 @@ table.moderations .column-member {
 	font-weight: 600;
 	margin-bottom: 72px;
 	max-width: 45%;
+
+	@media screen and (max-width: 1400px) {
+		max-width: 75%;
+	}
+
+	@media screen and (max-width: 760px) {
+		max-width: 95%;
+	}
 }
 
  .bp-upgrade-wrap {
@@ -4181,6 +4189,16 @@ table.moderations .column-member {
 	border: 1px solid #ccd0d4;
 	box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.08);
 	background: #fff;
+
+	@media screen and (max-width: 760px) {
+		flex: 0 0 100%;
+		max-width: 100%;
+		margin-bottom: 24px;
+
+		&.bb-advance-card--hero {
+			margin-bottom: 24px;
+		}
+	}
 
 	h2 {
 		font-weight: 600;
@@ -4234,12 +4252,37 @@ table.moderations .column-member {
 
 	.card-inner-wrap {
 		display: flex;
+
+		@media screen and (max-width: 760px) {
+			flex-direction: column;
+
+			.card-figure-wrapper {
+				width: 100%;
+			}
+
+			.card-figure {
+				padding-top: 52.56%;
+
+				.upgrade-figure {
+					max-height: 100%;
+				}
+			}
+
+			.card-data {
+				padding: 2.3em 2.3em;
+			}
+		}
+	}
+
+	.card-figure-wrapper {
+		width: 42.417%;
 	}
 
 	.card-figure {
-		width: 42.417%;
+		width: 100%;
     padding-top: 22.56%;
 		border: 0;
+		background-color: #1A1830;
 
 		.upgrade-figure {
 			max-height: none;
@@ -4267,6 +4310,10 @@ table.moderations .column-member {
 	display: flex;
 	align-items: center;
 	margin-top: auto;
+
+	@media screen and (max-width: 900px) {
+		flex-direction: column;
+	}
 }
 
 .advance-action-button {
@@ -4281,6 +4328,10 @@ table.moderations .column-member {
 	text-decoration: none;
 	outline: none;
 	box-shadow: none;
+
+	@media screen and (max-width: 900px) {
+		margin: 0 0 16px;
+	}
 
 	&:hover {
 		color: #E0613C;
@@ -4331,12 +4382,25 @@ table.moderations .column-member {
 		margin-right: 16%;
 	}
 
+	@media screen and (max-width: 1500px) {
+		margin-right: 0;
+
+		.bb-advance-card--theme & {
+			margin-right: 0;
+		}
+	}
+
 	li {
 		max-width: 50%;
 		flex: 0 0 50%;
 		margin: 0 0 11px;
 		font-weight: 600;
 		font-size: 95%;
+
+		@media screen and (max-width: 1300px) {
+			max-width: 100%;
+			flex: 0 0 100%;
+		}
 
 		&.advance-list__expand {
 			max-width: 100%;

@@ -28,8 +28,10 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 
 		<div class="bb-advance-card bb-advance-card--hero">
 			<div class="card-inner-wrap">
-				<div class="card-figure">
-					<?php echo '<img alt="" class="upgrade-figure" src="' . buddypress()->plugin_url . 'bp-core/images/upgrade/bb-upgrade-card-rapyd.png' . '" />'; ?>
+				<div class="card-figure-wrapper">
+					<div class="card-figure">
+						<?php echo '<img alt="" class="upgrade-figure" src="' . buddypress()->plugin_url . 'bp-core/images/upgrade/bb-upgrade-card-rapyd.png' . '" />'; ?>
+					</div>
 				</div>
 				<div class="card-data">
 					<h2><?php _e( 'Rapyd Cloud', 'buddyboss' ); ?></h2>
