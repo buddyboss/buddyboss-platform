@@ -4153,6 +4153,12 @@ table.moderations .column-member {
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
 
+ .buddyboss_page_bp-upgrade {
+	.nav-tab-wrapper {
+		display: none;
+	}
+ }
+
  .wrap h1.bb-advance-heading {
 	font-size: 40px;
 	font-weight: 600;
