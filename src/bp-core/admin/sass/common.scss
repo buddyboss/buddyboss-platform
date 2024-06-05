@@ -4281,6 +4281,7 @@ table.moderations .column-member {
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		border-radius: 10px;
 		padding: 24px;
+		max-width: 256px;
 
 		.holder_integrations_img {
 			display: flex;
@@ -4334,10 +4335,6 @@ table.moderations .column-member {
 				display: inline-block;
 			}
 		}
-	}
-
-	.integrations_single_holder + .integrations_single_holder {
-		margin-left: 32px;
 	}
 }
 

@@ -3965,6 +3965,7 @@ table.moderations .column-member img {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding: 24px;
+  max-width: 256px;
 }
 
 .bb-integrations-listing .integrations_single_holder .holder_integrations_img {
@@ -4018,10 +4019,6 @@ table.moderations .column-member img {
   font-size: 15px;
   transform: rotate(-45deg);
   display: inline-block;
-}
-
-.bb-integrations-listing .integrations_single_holder + .integrations_single_holder {
-  margin-left: 32px;
 }
 
 .bb-integrations-listing_loadmore {
