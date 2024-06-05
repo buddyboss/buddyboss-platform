@@ -4255,11 +4255,22 @@ window.bp = window.bp || {};
 			],
 			searchQuery: null,
 			category: 'all',
-			searchType: 'all'
-
+			searchType: 'all',
+			page: 1,
 		}
 
+		
+
 		function render( renderOptions ) {
+			var itemsPerPage = 30;
+			var currentPage = renderOptions.page;
+			var startIndex = (currentPage - 1) * itemsPerPage;
+			var endIndex = startIndex + itemsPerPage;
+
+			// Get items for the current page
+			var itemsToDisplay = renderOptions.data.slice(startIndex, endIndex);
+			renderOptions.data = itemsToDisplay;
+
 			// Link Preview Template
 			var tmpl = $('#tmpl-bb-integrations').html();
 
