@@ -39,57 +39,16 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 				<div class="bb-integrations_filters">
 					<select name="categories_integrations">
 						<option value="all">All</option>
-						<option value="ad_manager">Ad Manager</option>
-						<option value="affiliate_management">Affiliate Management</option>
-						<option value="anti_spam">Anti-spam</option>
-						<option value="automation">Automation</option>
-						<option value="bbPress">bbPress</option>
-						<option value="buddyBoss_app">BuddyBoss App</option>
-						<option value="buddyPress">BuddyPress</option>
-						<option value="classifieds">Classifieds</option>
-						<option value="comments_management">Comments Management</option>
-						<option value="crm">CRM</option>
-						<option value="custom_login">Custom Login</option>
-						<option value="custom_redirect">Custom Redirect</option>
-						<option value="dynamic_content">Dynamic Content</option>
-						<option value="ecommerce">eCommerce</option>
-						<option value="emails">Emails</option>
-						<option value="events">Events</option>
-						<option value="forms">Forms</option>
-						<option value="gamification">Gamification</option>
-						<option value="job_listings">Job Listings</option>
-						<option value="Listings">Listings</option>
-						<option value="live_streaming">Live Streaming</option>
-						<option value="lms">LMS</option>
-						<option value="marketing">Marketing</option>
-						<option value="media_gallery">Media Gallery</option>
-						<option value="membership_plugins">Membership Plugins</option>
-						<option value="page_builder">Page Builder</option>
-						<option value="polls">Polls</option>
-						<option value="popup_builder">Popup Builder</option>
-						<option value="profile_fields">Profile Fields</option>
-						<option value="project_management">Project Management</option>
-						<option value="question_answers">Question &amp; Answers</option>
-						<option value="ratings">Ratings</option>
-						<option value="security">Security</option>
-						<option value="seo">SEO</option>
-						<option value="social">Social</option>
-						<option value="support_ticketing">Support Ticketing</option>
-						<option value="translation">Translation</option>
+						<% jQuery.each( categories, function( key, item ) { %>
+							<option value="<%= item.id %>"><%= item.name %></option>
+						<% }); %>
 					</select>
 					<ul class="integrations_collection-sub integrations-lists">
-						<li class="checked act">
-							<input class="radio integrationscollection all styled" type="radio" value="all" name="integrations_collection" checked="" act=""><span>All</span>
-						</li>
-						<li class="order_1">
-							<input class="radio integrationscollection official styled" type="radio" value="official" name="integrations_collection"><span>Official</span>
-						</li>
-						<li class="order_2">
-							<input class="radio integrationscollection third-party styled" type="radio" value="third-party" name="integrations_collection"><span>Third-party</span>
-						</li>
-						<li class="order_3">
-							<input class="radio integrationscollection compatible styled" type="radio" value="compatible" name="integrations_collection"><span>Compatible</span>
-						</li>
+						<% jQuery.each( collections, function( key, item ) { %>
+							<li >
+								<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0  ? 'checked' : '' %> ><span><%= item.name %></span>
+							</li>
+						<% }); %>
 					</ul>
 				</div>
 			</div>
@@ -97,20 +56,24 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 				<% if ( data.length ) { %>
 				<% jQuery.each( data, function( key, item ) { %>
 				<% if ( 'title' === item.type ) { %>
-				<div class="integration_cat_title"><div class="cat_title"><%= item.text %></div></div>
+				<div class="integration_cat_title"><div class="cat_title"><%= item.title.rendered %></div></div>
 				<% } else { %>
 				<div class="integrations_single_holder">
 					<div class="holder_integrations_img">
-						<img class="lazyload-disable" src="<%= item.logo_url %>">
-						<div class="type_integrations_text type_compatible"><%= item.int_type %></div>
+						<% if (item && item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0] ) { %>
+							<img class="lazyload-disable" src="<%= item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url %>">
+						<% } %>
+						<% if (item && item._embedded && item._embedded['wp:term'] && item._embedded['wp:term'][0] && item._embedded['wp:term'][0][0] && item._embedded['wp:term'][0][0].name ) { %>
+							<div class="type_integrations_text type_compatible"><%= item._embedded['wp:term'][0][0].name %></div>
+						<% } %>
 					</div>
 					<div class="holder_integrations_desc">
-						<div class="logo_title"><%= item.title %></div>
+						<div class="logo_title"><%= item.title.rendered %></div>
 						<div class="short_desc">
-							<p><%= item.desc %></p>
+							<p><%= item.content.rendered %></p>
 						</div>
 					</div>
-					<a href="<%= item.title.toLowerCase() %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+					<a href="<%= item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
 				</div>
 				<% } %>
 				<% }); %>
