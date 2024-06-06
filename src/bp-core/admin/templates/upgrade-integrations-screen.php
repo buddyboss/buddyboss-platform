@@ -40,13 +40,13 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<select name="categories_integrations">
 						<option value="all">All</option>
 						<% jQuery.each( categories, function( key, item ) { %>
-							<option value="<%= item.id %>"><%= item.name %></option>
+							<option value="<%= item.id %>" <%= item.id == categoryId ? 'selected' : '' %> ><%= item.name %></option>
 						<% }); %>
 					</select>
 					<ul class="integrations_collection-sub integrations-lists">
 						<% jQuery.each( collections, function( key, item ) { %>
 							<li >
-								<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0  ? 'checked' : '' %> ><span><%= item.name %></span>
+								<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0 ? 'checked' : '' %> ><span><%= item.name %></span>
 							</li>
 						<% }); %>
 					</ul>
@@ -60,7 +60,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 				<% } else { %>
 				<div class="integrations_single_holder">
 					<div class="holder_integrations_img">
-						<% if (item && item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0] ) { %>
+						<% if (item && item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0] && item._embedded['wp:featuredmedia'][0].media_details && item._embedded['wp:featuredmedia'][0].media_details.sizes && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url ) { %>
 							<img class="lazyload-disable" src="<%= item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url %>">
 						<% } %>
 						<% if (item && item._embedded && item._embedded['wp:term'] && item._embedded['wp:term'][0] && item._embedded['wp:term'][0][0] && item._embedded['wp:term'][0][0].name ) { %>
