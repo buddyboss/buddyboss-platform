@@ -4345,6 +4345,11 @@ table.moderations .column-member {
 				transform: rotate(-45deg);
 				display: inline-block;
 			}
+
+			&:active,
+			&:focus {
+				box-shadow: none;
+			}
 		}
 	}
 }
@@ -4364,6 +4369,10 @@ table.moderations .column-member {
 	border-radius: 5px;
 	padding: 16px 20px;
 	min-width: 150px;
+
+	&:hover {
+		color: rgba(255, 255, 255, 0.8);
+	}
 }
 
 .bb-get-platform {
@@ -4434,6 +4443,10 @@ table.moderations .column-member {
 
 	.bb-get-platform {
 		flex-direction: column;
+
+		.guarantee-img {
+			margin-bottom: 24px;
+		}
 	}
 }
 
@@ -4441,17 +4454,18 @@ table.moderations .column-member {
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
 
- .buddyboss_page_bb-upgrade {
+.buddyboss_page_bb-upgrade {
+
 	.nav-tab-wrapper {
 		display: none;
 	}
- }
+}
 
- .wrap.wrap--upgrade {
+.wrap.wrap--upgrade {
 	width: calc(100% - 22px);
- }
+}
 
- .advance-tab-header {
+.advance-tab-header {
 	margin: 16px 0 0;
 	padding: 0 0 16px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -4513,44 +4527,47 @@ table.moderations .column-member {
 			color: rgba(224, 97, 60, 1);
 		}
 	}
- }
 
- .advance-brand {
+	.advance-nav-action {
+		margin-left: 24px;
+	}
+}
+
+.advance-brand {
 	margin-right: auto;
 
 	.upgrade-brand {
 		border-radius: 50%;
 		max-width: 40px;
 	}
- }
+}
 
- .adv-sep {
+.adv-sep {
 	width: 1px;
 	height: 24px;
 	background-color: rgba(0, 0, 0, 0.2);
 	margin: 0 24px;
- }
+}
 
- .advance-actions {
+.advance-actions {
 	display: flex;
 	align-items: center;
 
 	.advance-action-link {
 		font-size: 14px;
 	}
- }
+}
 
- .advance-nav-action {
+.advance-nav-action {
 	font-size: 14px;
 	font-weight: 500;
-	background: #E0613C;
+	background: #e0613c;
 	color: #fff;
 	border-radius: 5px;
 	padding: 8px 16px;
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 	text-decoration: none;
-	margin-left: 24px;
 
 	&:hover {
 		color: rgba(255, 255, 255, 0.8);
@@ -4569,9 +4586,9 @@ table.moderations .column-member {
 	svg {
 		margin-right: 8px;
 	}
- }
+}
 
- .wrap h1.bb-advance-heading {
+.wrap h1.bb-advance-heading {
 	font-size: 40px;
 	font-weight: 600;
 	margin-bottom: 72px;
@@ -4583,10 +4600,11 @@ table.moderations .column-member {
 
 	@media screen and (max-width: 760px) {
 		max-width: 95%;
+		margin-bottom: 42px;
 	}
 }
 
- .bb-upgrade-wrap {
+.bb-upgrade-wrap {
 	position: relative;
 	font-size: 15px;
 	max-width: 1400px;
@@ -4605,7 +4623,7 @@ table.moderations .column-member {
 	border-radius: 9px;
 	overflow: hidden;
 	border: 1px solid #ccd0d4;
-	box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 4px 28px 0 rgba(0, 0, 0, 0.08);
 	background: #fff;
 
 	@media screen and (max-width: 760px) {
@@ -4644,7 +4662,7 @@ table.moderations .column-member {
 	position: relative;
 	padding-top: 52.56%;
 	display: block;
-	background-color: #FAF9F7;
+	background-color: #faf9f7;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
 	.upgrade-figure {
@@ -4698,13 +4716,13 @@ table.moderations .column-member {
 
 	.card-figure {
 		width: 100%;
-    	padding-top: 22.56%;
+		padding-top: 0;
 		border: 0;
-		background-color: #1A1830;
+		background-color: #1a1830;
 
 		.upgrade-figure {
 			max-height: none;
-			margin: 0 auto;
+			margin: auto;
 		}
 	}
 
@@ -4736,8 +4754,8 @@ table.moderations .column-member {
 
 .advance-action-button,
 .wp-performance-check input[type="submit"] {
-	border: 1px solid #E0613C;
-	color: #E0613C;
+	border: 1px solid #e0613c;
+	color: #e0613c;
 	font-weight: 500;
 	background-color: #fff;
 	border-radius: 5px;
@@ -4753,13 +4771,13 @@ table.moderations .column-member {
 	}
 
 	&:hover {
-		color: #E0613C;
+		color: #e0613c;
 	}
 
 	&:active,
 	&:focus {
 		background-color: rgba(224, 97, 60, 0.1);
-		color: #E0613C;
+		color: #e0613c;
 		outline: none;
 		box-shadow: none;
 	}
@@ -4835,29 +4853,31 @@ table.moderations .column-member {
 		&:before {
 			content: "\e876";
 			display: inline-block;
-			font-family: "bb-icons";
+			font-family: bb-icons;
 			font-size: 16px;
 			font-weight: 400;
 			margin-right: 8px;
 			line-height: 1;
-			color: #E0613C;
+			color: #e0613c;
 		}
 	}
 }
 
 .wrap.wrap--performance {
-	& > h2:first-child {
+
+	> h2:first-child {
 		font-weight: 500;
 		font-size: 24px;
 	}
 
-	& > p {
+	> p {
 		color: rgba(0, 0, 0, 0.6);
 
 	}
 }
 
 .wp-performance-check {
+
 	input[type="submit"] {
 		margin: 24px 0 32px;
 	}
