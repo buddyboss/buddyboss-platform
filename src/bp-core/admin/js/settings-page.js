@@ -2854,7 +2854,7 @@ window.bp = window.bp || {};
 	}
 
 	function renderIntegrations() {
-		var renderOptions = {
+		var defaultOptions = {
 			previewParent: $( '.bb-integrations-section-listing' ),
 			data: [
 				{
@@ -4259,14 +4259,26 @@ window.bp = window.bp || {};
 			page: 1,
 		}
 
-		
-
 		function render( renderOptions ) {
+			// Search Query
+			if(renderOptions.searchQuery !== null) {
+				renderOptions.data = defaultOptions.data.filter(function(item) {
+					return item.title.toLowerCase().includes(renderOptions.searchQuery.toLowerCase());
+				});
+			}
+			
+			// Integration Type
+			if(renderOptions.searchType !== 'all') {
+				renderOptions.data = defaultOptions.data.filter(function(item) {
+					return item.int_type === renderOptions.searchType;
+				});
+			}
+
+			// Pagination
 			var itemsPerPage = 30;
 			var currentPage = renderOptions.page;
 			var startIndex = (currentPage - 1) * itemsPerPage;
 			var endIndex = startIndex + itemsPerPage;
-
 			// Get items for the current page
 			var itemsToDisplay = renderOptions.data.slice(startIndex, endIndex);
 			renderOptions.data = itemsToDisplay;
@@ -4284,7 +4296,19 @@ window.bp = window.bp || {};
 			}
 		}
 
-		render( renderOptions );
+		render( defaultOptions );
+
+		$( 'input[name="integrations_collection"]' ).on( 'change', function(e) {
+			var int_type = $(e.currentTarget).val();
+			Object.assign( defaultOptions, { searchType: int_type, page: 1 } );
+			render( defaultOptions );
+		});
+
+		$( 'input[name="search_integrations"]' ).on( 'keyup', function(e) {
+			var query = $(e.currentTarget).val();
+			Object.assign( defaultOptions, { searchQuery: query, page: 1 } );
+			render( defaultOptions );
+		});
 	}
 
 	renderIntegrations();
