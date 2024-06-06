@@ -4115,8 +4115,123 @@ table.moderations .column-member img {
 /*------------------------------------------------------------------------------
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
-.buddyboss_page_bp-upgrade .nav-tab-wrapper {
+.buddyboss_page_bb-upgrade .nav-tab-wrapper {
   display: none;
+}
+
+.advance-tab-header {
+  margin: 16px 0 0;
+  padding: 0 0 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 700px) {
+  .advance-tab-header {
+    flex-direction: column;
+  }
+  .advance-tab-header .advance-brand {
+    margin: 0 auto 16px;
+  }
+  .advance-tab-header .nav-settings-subsubsub {
+    margin-bottom: 16px;
+  }
+  .advance-tab-header .adv-sep {
+    display: none;
+  }
+  .advance-tab-header .advance-actions {
+    flex-direction: column;
+  }
+  .advance-tab-header .advance-actions .advance-nav-action {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}
+
+.advance-tab-header .nav-settings-subsubsub {
+  padding: 0;
+}
+
+.advance-tab-header .subsubsub {
+  margin: 0;
+}
+
+.advance-tab-header .subsubsub > li {
+  margin-right: 24px;
+}
+
+.advance-tab-header .subsubsub > li:last-of-type {
+  margin-right: 0;
+}
+
+.advance-tab-header .subsubsub a {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.advance-tab-header .subsubsub a:focus, .advance-tab-header .subsubsub a:active {
+  box-shadow: none;
+}
+
+.advance-tab-header .subsubsub a.current {
+  color: #e0613c;
+}
+
+.advance-brand {
+  margin-right: auto;
+}
+
+.advance-brand .upgrade-brand {
+  border-radius: 50%;
+  max-width: 40px;
+}
+
+.adv-sep {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin: 0 24px;
+}
+
+.advance-actions {
+  display: flex;
+  align-items: center;
+}
+
+.advance-actions .advance-action-link {
+  font-size: 14px;
+}
+
+.advance-nav-action {
+  font-size: 14px;
+  font-weight: 500;
+  background: #E0613C;
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-left: 24px;
+}
+
+.advance-nav-action:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.advance-nav-action:hover svg path {
+  fill: rgba(255, 255, 255, 0.8);
+}
+
+.advance-nav-action:focus, .advance-nav-action:active {
+  color: #fff;
+  box-shadow: none;
+}
+
+.advance-nav-action svg {
+  margin-right: 8px;
 }
 
 .wrap h1.bb-advance-heading {
@@ -4138,7 +4253,7 @@ table.moderations .column-member img {
   }
 }
 
-.bp-upgrade-wrap {
+.bb-upgrade-wrap {
   position: relative;
   font-size: 15px;
   max-width: 1400px;
@@ -4342,6 +4457,7 @@ table.moderations .column-member img {
 .advance-action-link:active, .advance-action-link:focus {
   outline: none;
   box-shadow: none;
+  color: #640398;
 }
 
 .advance-list {

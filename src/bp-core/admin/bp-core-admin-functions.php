@@ -684,7 +684,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 		'4' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-upgrade' ), 'admin.php' ) ),
 			'name'  => __( 'Upgrade', 'buddyboss' ),
-			'class' => 'bp-upgrade',
+			'class' => 'bb-upgrade',
 		),
 		'5' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
@@ -3829,7 +3829,7 @@ function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
 		if ( $i === $count ) {
 			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		}
 
 		++$i;

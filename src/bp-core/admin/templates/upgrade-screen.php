@@ -27,7 +27,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 	<div id="bb-upgrade">
 
 		<h1 class="bb-advance-heading"><?php _e( 'Unlock more social networking features for your websites', 'buddyboss' ); ?></h1>
-		<div class="bp-upgrade-wrap">
+		<div class="bb-upgrade-wrap">
 			<div class="bb-advance-card bb-advance-card--hero">
 				<div class="card-inner-wrap">
 					<div class="card-figure-wrapper">

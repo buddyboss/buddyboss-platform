@@ -4441,9 +4441,129 @@ table.moderations .column-member {
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
 
- .buddyboss_page_bp-upgrade {
+ .buddyboss_page_bb-upgrade {
 	.nav-tab-wrapper {
 		display: none;
+	}
+ }
+
+ .advance-tab-header {
+	margin: 16px 0 0;
+	padding: 0 0 16px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+
+	@media screen and (max-width: 700px) {
+		flex-direction: column;
+
+		.advance-brand {
+			margin: 0 auto 16px;
+		}
+
+		.nav-settings-subsubsub {
+			margin-bottom: 16px;
+		}
+
+		.adv-sep {
+			display: none;
+		}
+
+		.advance-actions {
+			flex-direction: column;
+
+			.advance-nav-action {
+				margin-left: 0;
+				margin-top: 8px;
+			}
+		}
+	}
+
+	.nav-settings-subsubsub {
+		padding: 0;
+	}
+
+	.subsubsub {
+		margin: 0;
+	}
+
+	.subsubsub > li {
+		margin-right: 24px;
+
+		&:last-of-type {
+			margin-right: 0;
+		}
+	}
+
+	.subsubsub a {
+		color: rgba(0, 0, 0, 0.6);
+		font-weight: 500;
+		font-size: 14px;
+
+		&:focus,
+		&:active {
+			box-shadow: none;
+		}
+
+		&.current {
+			color: rgba(224, 97, 60, 1);
+		}
+	}
+ }
+
+ .advance-brand {
+	margin-right: auto;
+
+	.upgrade-brand {
+		border-radius: 50%;
+		max-width: 40px;
+	}
+ }
+
+ .adv-sep {
+	width: 1px;
+	height: 24px;
+	background-color: rgba(0, 0, 0, 0.2);
+	margin: 0 24px;
+ }
+
+ .advance-actions {
+	display: flex;
+	align-items: center;
+
+	.advance-action-link {
+		font-size: 14px;
+	}
+ }
+
+ .advance-nav-action {
+	font-size: 14px;
+	font-weight: 500;
+	background: #E0613C;
+	color: #fff;
+	border-radius: 5px;
+	padding: 8px 16px;
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	margin-left: 24px;
+
+	&:hover {
+		color: rgba(255, 255, 255, 0.8);
+
+		svg path {
+			fill: rgba(255, 255, 255, 0.8);
+		}
+	}
+
+	&:focus,
+	&:active {
+		color: #fff;
+		box-shadow: none;
+	}
+
+	svg {
+		margin-right: 8px;
 	}
  }
 
@@ -4462,7 +4582,7 @@ table.moderations .column-member {
 	}
 }
 
- .bp-upgrade-wrap {
+ .bb-upgrade-wrap {
 	position: relative;
 	font-size: 15px;
 	max-width: 1400px;
@@ -4574,7 +4694,7 @@ table.moderations .column-member {
 
 	.card-figure {
 		width: 100%;
-    padding-top: 22.56%;
+    	padding-top: 22.56%;
 		border: 0;
 		background-color: #1A1830;
 
@@ -4664,6 +4784,7 @@ table.moderations .column-member {
 	&:focus {
 		outline: none;
 		box-shadow: none;
+		color: #640398;
 	}
 }
 
