@@ -1292,6 +1292,7 @@
 				}
 
 				@media screen and (max-width: 370px) {
+					min-width: 30px;
 
 					img {
 						width: 30px;
@@ -1310,14 +1311,14 @@
 
 			&.active {
 				bottom: 20px;
-				left: -60px;
+				left: -30px;
 			}
 
 			&:hover {
 
 				body:not(.bb-is-mobile) & {
 					bottom: 20px;
-					left: -60px;
+					left: -30px;
 				}
 			}
 
@@ -1402,6 +1403,23 @@
 
 			body:not(.bb-is-mobile) & {
 				left: -10px;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 480px) {
+
+	.activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list {
+
+		&.active {
+			left: -40px;
+		}
+
+		&:hover {
+
+			body:not(.bb-is-mobile) & {
+				left: -40px;
 			}
 		}
 	}
@@ -2021,6 +2039,17 @@ ul.medium-editor-toolbar-actions {
 
 .bp-activity-head-group {
 	display: flex;
+}
+
+.activity-header--group {
+
+	.activity-post-author > p {
+		display: inline;
+
+		.view.activity-time-since {
+			display: none;
+		}
+	}
 }
 
 .activity-group-avatar {
@@ -2694,9 +2723,8 @@ span.dashicons.dashicons-admin-file:before {
 		display: inline-block;
 
 		.activity-item {
-			margin-bottom: 40px;
-			max-height: calc(90vh - 40px);
-			min-height: calc(90vh - 40px);
+			max-height: 90vh;
+			min-height: 90vh;
 			position: static;
 		}
 
