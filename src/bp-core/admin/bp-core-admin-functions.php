@@ -3404,33 +3404,21 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.50', '<' ) &&
 		! empty( $type ) &&
-		'reaction' === $type
-	) {
-		$bb_pro_notice = sprintf(
-			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update', 'buddyboss' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			esc_html__( 'to unlock', 'buddyboss' )
-		);
-	} elseif (
-		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' ) &&
-		! empty( $type ) &&
-		'schedule_posts' === $type
-	) {
-		$bb_pro_notice = sprintf(
-			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update', 'buddyboss' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			esc_html__( 'to unlock', 'buddyboss' )
-		);
-	} elseif (
-		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.5.30', '<' ) &&
-		! empty( $type ) &&
-		'polls' === $type
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				version_compare( bb_platform_pro()->version, '2.5.30', '<' )
+			)
+		)
 	) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
@@ -3479,28 +3467,22 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 	}
 
 	if (
-		! empty( $type ) &&
-		'reaction' === $type &&
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.50', '<' )
-	) {
-		$pro_class = 'bb-pro-inactive';
-	}
-
-	if (
 		! empty( $type ) &&
-		'schedule_posts' === $type &&
-		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
-	) {
-		$pro_class = 'bb-pro-inactive';
-	}
-
-	if (
-		! empty( $type ) &&
-		'polls' === $type &&
-		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.5.30', '<' )
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				version_compare( bb_platform_pro()->version, '2.5.30', '<' )
+			)
+		)
 	) {
 		$pro_class = 'bb-pro-inactive';
 	}
