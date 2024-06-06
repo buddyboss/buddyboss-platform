@@ -826,7 +826,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 
-	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean );
+	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
