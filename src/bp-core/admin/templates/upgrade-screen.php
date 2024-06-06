@@ -44,7 +44,19 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 							</p>
 						</div>
 						<div class="advance-card-action">
-							<a href="#" class="advance-action-button"><?php _e( 'Test Performance', 'buddyboss' ); ?></a>
+							<a href="
+							<?php
+							echo bp_get_admin_url(
+								add_query_arg(
+									array(
+										'page' => 'bb-upgrade',
+										'tab'  => 'bb-performance-tester',
+									),
+									'admin.php'
+								)
+							);
+							?>
+							" class="advance-action-button"><?php _e( 'Test Performance', 'buddyboss' ); ?></a>
 							<a href="https://rapyd.cloud/pricing/" class="advance-action-link" target="_blank"><?php _e( 'View Pricing', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
 						</div>
 					</div>

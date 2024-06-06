@@ -18,6 +18,8 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) && file_exists(
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
+//include_once dirname( __FILE__ ) . '/src/bp-core/libraries/WPPerformanceTester/wp-performance-tester.php';
+
 // Assume you want to load from build.
 $bp_loader = dirname( __FILE__ ) . '/src/bp-loader.php';
 $subdir    = 'src';

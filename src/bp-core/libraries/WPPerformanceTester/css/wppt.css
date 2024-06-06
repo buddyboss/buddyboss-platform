@@ -1,0 +1,188 @@
+table {
+  font-family: "Helvetica Neue", Helvetica, sans-serif
+}
+
+h2, caption {
+  text-align: left;
+  color: black;
+  font-weight: bold;
+  /*text-transform: uppercase;*/
+  padding: 5px;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+thead {
+  background: SteelBlue;
+  color: white;
+}
+
+th,
+td {
+  padding: 5px 10px;
+}
+
+tbody tr:nth-child(even) {
+  background: WhiteSmoke;
+}
+
+tbody tr td:nth-child(2) {
+  text-align:right;
+}
+
+tbody tr td:nth-child(3),
+tbody tr td:nth-child(4) {
+  text-align: right;
+  font-family: monospace;
+}
+
+tfoot {
+  background: SeaGreen;
+  color: white;
+  text-align: right;
+}
+
+tfoot tr th:last-child {
+  font-family: monospace;
+}
+
+.wrap {
+  width: 600px;
+}
+
+/* Basic Grey */
+.basic-grey {
+    margin-left:0px;
+    margin-right:auto;
+    max-width: 600px;
+    padding: 25px 15px 25px 10px;
+    font: 14px Georgia, "Times New Roman", Times, serif;
+    color: #000;
+    text-shadow: 1px 1px 1px #FFF;
+}
+.basic-grey h1 {
+    font-size: 25px;
+    padding: 0px 0px 10px 40px;
+    display: block;
+    border-bottom:1px solid #E4E4E4;
+    margin: -10px -15px 30px -10px;;
+    color: #888;
+}
+form.basic-grey {
+    background-image: url('../images/write.png');
+    background-repeat: no-repeat;
+}
+.basic-grey h1>span {
+    display: block;
+    font-size: 11px;
+}
+.basic-grey label {
+    display: block;
+    margin: 0px;
+}
+.basic-grey label>span {
+    float: left;
+    width: 20%;
+    text-align: right;
+    padding-right: 10px;
+    margin-top: 10px;
+    color: #888;
+}
+.basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+    border: 1px solid #DADADA;
+    color: #888;
+    height: 30px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    outline: 0 none;
+    padding: 3px 3px 3px 5px;
+    width: 70%;
+    font-size: 12px;
+    line-height:15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+}
+.basic-grey textarea{
+    padding: 5px 3px 3px 5px;
+}
+.basic-grey select {
+    background: #FFF url('../images/down-arrow.png') no-repeat right;
+    appearance:none;
+    -webkit-appearance:none; 
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+    width: 70%;
+    height: 35px;
+    line-height: 25px;
+}
+.basic-grey textarea{
+    height:100px;
+}
+.basic-grey .button {
+    background: #E27575;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+.basic-grey .button:hover {
+    background: #CF7A7A
+}
+
+
+
+.basic-grey input[type="radio"] {
+  position: absolute;
+  opacity: 1;
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  margin: 3px 10px 0 0px;
+}
+
+.basic-grey label {
+  opacity: 1;
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  margin: 0px 0px 0 25px;
+}
+
+.basic-grey p {
+  max-width: 400px;
+}
+
+/* ChartJS Styling */
+
+#chartDiv ul {
+  list-style: none;
+}
+#chartDiv ul li {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 5px;
+  padding: 2px 8px 2px 28px;
+  font-size: 14px;
+  cursor: default;
+  -webkit-transition: background-color 200ms ease-in-out;
+  -moz-transition: background-color 200ms ease-in-out;
+  -o-transition: background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+#chartDiv li span {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  border-radius: 5px;
+}
