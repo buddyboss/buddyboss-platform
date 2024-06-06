@@ -1127,3 +1127,31 @@ function bb_wp_gravity_forms_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+
+/**
+ * Function to provide gamipress notification compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool   $retval       If readonly then true else false.
+ * @param object $notification Notification object.
+ *
+ * @return bool $retval If readonly then true else false.
+ */
+function bb_gamipress_notification_is_read_only_filter( $retval, $notification ) {
+
+	if (
+		class_exists( 'GamiPress' ) &&
+		class_exists( 'GamiPress_BuddyBoss_Notifications' ) &&
+		! empty( $notification ) &&
+		! empty( $notification->component_action ) &&
+		'gamipress_buddyboss_notifications' === $notification->component_action
+	) {
+		$retval = false;
+	}
+	
+	return $retval;
+
+}
+add_filter( 'bb_notification_is_read_only', 'bb_gamipress_notification_is_read_only_filter', 999, 2 );
