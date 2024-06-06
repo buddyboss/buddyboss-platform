@@ -4119,6 +4119,10 @@ table.moderations .column-member img {
   display: none;
 }
 
+.wrap.wrap--upgrade {
+  width: calc(100% - 22px);
+}
+
 .advance-tab-header {
   margin: 16px 0 0;
   padding: 0 0 16px;
@@ -4402,7 +4406,8 @@ table.moderations .column-member img {
   }
 }
 
-.advance-action-button {
+.advance-action-button,
+.wp-performance-check input[type="submit"] {
   border: 1px solid #E0613C;
   color: #E0613C;
   font-weight: 500;
@@ -4417,16 +4422,20 @@ table.moderations .column-member img {
 }
 
 @media screen and (max-width: 900px) {
-  .advance-action-button {
+  .advance-action-button,
+  .wp-performance-check input[type="submit"] {
     margin: 0 0 16px;
   }
 }
 
-.advance-action-button:hover {
+.advance-action-button:hover,
+.wp-performance-check input[type="submit"]:hover {
   color: #E0613C;
 }
 
-.advance-action-button:active, .advance-action-button:focus {
+.advance-action-button:active, .advance-action-button:focus,
+.wp-performance-check input[type="submit"]:active,
+.wp-performance-check input[type="submit"]:focus {
   background-color: rgba(224, 97, 60, 0.1);
   color: #E0613C;
   outline: none;
@@ -4508,4 +4517,17 @@ table.moderations .column-member img {
   margin-right: 8px;
   line-height: 1;
   color: #E0613C;
+}
+
+.wrap.wrap--performance > h2:first-child {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.wrap.wrap--performance > p {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.wp-performance-check input[type="submit"] {
+  margin: 24px 0 32px;
 }

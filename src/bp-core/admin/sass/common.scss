@@ -4447,6 +4447,10 @@ table.moderations .column-member {
 	}
  }
 
+ .wrap.wrap--upgrade {
+	width: calc(100% - 22px);
+ }
+
  .advance-tab-header {
 	margin: 16px 0 0;
 	padding: 0 0 16px;
@@ -4730,7 +4734,8 @@ table.moderations .column-member {
 	}
 }
 
-.advance-action-button {
+.advance-action-button,
+.wp-performance-check input[type="submit"] {
 	border: 1px solid #E0613C;
 	color: #E0613C;
 	font-weight: 500;
@@ -4832,5 +4837,23 @@ table.moderations .column-member {
 			line-height: 1;
 			color: #E0613C;
 		}
+	}
+}
+
+.wrap.wrap--performance {
+	& > h2:first-child {
+		font-weight: 500;
+		font-size: 24px;
+	}
+
+	& > p {
+		color: rgba(0, 0, 0, 0.6);
+
+	}
+}
+
+.wp-performance-check {
+	input[type="submit"] {
+		margin: 24px 0 32px;
 	}
 }

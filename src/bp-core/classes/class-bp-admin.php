@@ -628,7 +628,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function bp_upgrade_screen() {
 			$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
 			?>
-			<div class="wrap">
+			<div class="wrap wrap--upgrade">
 				<div class="advance-tab-header">
 					<div class="advance-brand">
 					<?php echo '<img alt="" class="upgrade-brand" src="' . buddypress()->plugin_url . 'bp-core/images/admin/credits-buddyboss.png' . '" />'; ?>

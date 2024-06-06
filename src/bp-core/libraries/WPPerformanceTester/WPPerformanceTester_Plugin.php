@@ -22,7 +22,7 @@ class WPPerformanceTester_Plugin extends WPPerformanceTester_LifeCycle {
             }
         }
         ?>
-        <div class="wrap">
+        <div class="wrap wrap--performance">
             <h2>WPPerformanceTester</h2>
             <p>WPPerformanceTester performs a series of tests to see how well your server performs. The first set test the raw server performance. The second is WordPress specific. Your results will be displayed and you can see how your results stack up against others.</p>
 
@@ -34,7 +34,7 @@ class WPPerformanceTester_Plugin extends WPPerformanceTester_LifeCycle {
 					),
 					'admin.php'
 				)
-			) ); ?>">
+			) ); ?>" class="wp-performance-check">
                 <input type="hidden" name="performTest" value="true">
                 <?php wp_nonce_field(); ?>
                 <input type="submit" value="Begin Performance Test" onclick="this.value='This may take a minute...'">
