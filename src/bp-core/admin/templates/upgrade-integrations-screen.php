@@ -46,7 +46,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<ul class="integrations_collection-sub integrations-lists">
 						<% jQuery.each( collections, function( key, item ) { %>
 							<li >
-								<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0 ? 'checked' : '' %> ><span><%= item.name %></span>
+								<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0 || item.id == collectionId ? 'checked' : '' %> ><span><%= item.name %></span>
 							</li>
 						<% }); %>
 					</ul>
