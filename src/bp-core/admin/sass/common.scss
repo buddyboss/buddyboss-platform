@@ -4763,6 +4763,11 @@ table.moderations .column-member {
 		outline: none;
 		box-shadow: none;
 	}
+
+	.advance-action-success & {
+		border-color: #019701;
+		color: #019701;
+	}
 }
 
 .advance-action-link {

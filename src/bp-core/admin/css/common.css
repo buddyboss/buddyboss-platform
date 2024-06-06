@@ -4442,6 +4442,12 @@ table.moderations .column-member img {
   box-shadow: none;
 }
 
+.advance-action-success .advance-action-button, .advance-action-success
+.wp-performance-check input[type="submit"] {
+  border-color: #019701;
+  color: #019701;
+}
+
 .advance-action-link {
   color: #640398;
   font-weight: 500;
