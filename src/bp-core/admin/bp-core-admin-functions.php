@@ -3820,6 +3820,11 @@ function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
 	foreach ( array_values( $tabs ) as $tab_data ) {
 
 		$is_current = strtolower( trim( $tab_data['slug'] ) ) === strtolower( trim( $active_tab ) );
+
+		if ( $tab_data['slug'] === 'bb-upgrade' && $active_tab === 'bb-performance-tester' ) {
+			$is_current = true;
+		}
+
 		$tab_class  = $is_current ? $active_class : $idle_class;
 		if ( $i === $count ) {
 			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
@@ -3907,4 +3912,24 @@ function bb_integration_submenu_page() {
 	</div>
 
 	<?php
+}
+
+function bb_web_performance_tester() {
+	if ( ! class_exists( 'WPPerformanceTester_Plugin' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/libraries/WPPerformanceTester/WPPerformanceTester_Plugin.php';
+	}
+	static $bb_wpt = null;
+
+	if ( null !== $bb_wpt ) {
+		return $bb_wpt;
+	}
+
+	$bb_wpt = new WPPerformanceTester_Plugin();
+	if ( ! $bb_wpt->isInstalled() ) {
+		$bb_wpt->install();
+	}
+
+	$bb_wpt->addActionsAndFilters();
+
+	return $bb_wpt;
 }

@@ -87,7 +87,6 @@ class WPPerformanceTester_Plugin extends WPPerformanceTester_LifeCycle {
                 <div id="chartDiv">
                     <div id="legendDiv"></div>
                     <canvas id="myChart" height="400" width="600"></canvas>
-                    <p style="text-align: center; font-style: italic;">Test Type</p>
                 </div>
                 <p>* Lower (faster) time is better. Please submit your results to improve our industry average data :)</p>
                 <script>
@@ -114,7 +113,15 @@ class WPPerformanceTester_Plugin extends WPPerformanceTester_LifeCycle {
                                     hoverBackgroundColor: "rgba(130,130,130,0.75)",
                                     hoverBorderColor: "rgba(130,130,130,1)",
                                     data: industryData
-                                }
+                                },
+							  {
+								  label: "Rapyd",
+								  backgroundColor: "rgba(219,73,179,1)",
+								  borderColor: "rgba(219,73,179,1)",
+								  hoverBackgroundColor: "rgba(219,73,179,1)",
+								  hoverBorderColor: "rgba(219,73,179,1)",
+								  data: [0.372, 1.909, 0.121, 0.258, 5.404, 8.064, 2.279]
+							  }
                             ]
                         };
                         const config = {
@@ -341,8 +348,7 @@ class WPPerformanceTester_Plugin extends WPPerformanceTester_LifeCycle {
     }
 
     public function enqueue_scripts_and_style( $hook ) {
-		error_log( print_r( $hook, 1 ) );
-        if ( $hook != 'tools_page_WPPerformanceTester_PluginSettings' ) {
+		if ( $hook != 'buddyboss_page_bb-upgrade' ) {
             return;
         }
         wp_enqueue_script( 'chart-js-3-7', plugins_url('/js/Chart.js', __FILE__) );

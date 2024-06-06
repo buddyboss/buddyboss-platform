@@ -76,8 +76,6 @@ add_action( 'bp_admin_init', 'bb_updated_component_emails' );
 add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
 
-add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
-
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -2651,19 +2649,4 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 	}
 
 	return $hosts;
-}
-
-/**
- * Remove notices from the buddyboss upgrade screens.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_remove_admin_notices() {
-	$screen = get_current_screen();
-	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
-		remove_all_actions( 'admin_notices' );
-
-		// Additional check for the common WordPress error/warning hooks
-		remove_all_actions( 'all_admin_notices' );
-	}
 }
