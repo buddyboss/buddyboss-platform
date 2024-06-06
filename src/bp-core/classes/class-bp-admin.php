@@ -354,7 +354,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				__( 'Upgrade', 'buddyboss' ),
 				__( 'Upgrade', 'buddyboss' ),
 				$this->capability,
-				'bp-upgrade',
+				'bb-upgrade',
 				array( $this, 'bp_upgrade_screen' )
 			);
 
@@ -511,7 +511,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				__( 'Upgrade', 'buddyboss' ),
 				__( 'Upgrade', 'buddyboss' ),
 				$this->capability,
-				'bp-upgrade',
+				'bb-upgrade',
 				array( $this, 'bp_upgrade_screen' )
 			);
 
@@ -626,15 +626,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function bp_upgrade_screen() {
+			$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
 			?>
-
-		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Upgrade', 'buddyboss' ) ); ?></h2>
-			<?php include $this->admin_dir . 'templates/upgrade-screen.php'; ?>
-		</div>
-
+			<div class="wrap">
+				<div class="nav-settings-subsubsub">
+					<ul class="subsubsub">
+						<?php bb_core_upgrade_admin_tabs(); ?>
+					</ul>
+				</div>
+				<?php
+				if ( 'bb-integrations' === $active_tab ) {
+					include $this->admin_dir . 'templates/upgrade-integrations-screen.php';
+				} elseif ( 'bb-performance-tester' === $active_tab ) {
+					include $this->admin_dir . 'templates/upgrade-performance-tester-screen.php';
+				} else {
+					include $this->admin_dir . 'templates/upgrade-screen.php';
+				}
+				?>
+			</div>
 			<?php
-
 		}
 
 		public function adjust_buddyboss_menus() {

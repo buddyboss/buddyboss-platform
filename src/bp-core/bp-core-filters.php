@@ -2660,7 +2660,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
-	if ( 'buddyboss_page_bp-upgrade' === $screen->id ) {
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
 		remove_all_actions( 'admin_notices' );
 
 		// Additional check for the common WordPress error/warning hooks

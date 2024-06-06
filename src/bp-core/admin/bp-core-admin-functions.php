@@ -682,7 +682,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-integrations',
 		),
 		'4' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-upgrade' ), 'admin.php' ) ),
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-upgrade' ), 'admin.php' ) ),
 			'name'  => __( 'Upgrade', 'buddyboss' ),
 			'class' => 'bp-upgrade',
 		),
@@ -3743,4 +3743,168 @@ function bb_cpt_feed_enabled_disabled() {
 	// Mapping the component pages in page settings except registration pages.
 	bp_core_add_page_mappings( $bp->active_components, 'keep', false );
 	bp_update_option( 'bp-active-components', $bp->active_components );
+}
+
+
+/**
+ * Register the BuddyBoss Upgrade submenu page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $active_tab Current tab name.
+ *
+ * return array
+ */
+function bb_core_get_upgrade_settings_admin_tabs( $active_tab = '' ) {
+
+	// Tabs for the BuddyBoss > Tools.
+	$tabs = array(
+		'0' => array(
+			'href' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bb-upgrade',
+						'tab'  => 'bb-upgrade',
+					),
+					'admin.php'
+				)
+			),
+			'name' => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'slug' => 'bb-upgrade',
+		),
+		'1' => array(
+			'href' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bb-upgrade',
+						'tab'  => 'bb-integrations',
+					),
+					'admin.php'
+				)
+			),
+			'name' => __( 'Integrations', 'buddyboss' ),
+			'slug' => 'bb-integrations',
+		),
+	);
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bb_core_get_upgrade_admin_tabs', $tabs );
+}
+
+function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
+
+	$tabs_html    = '';
+	$idle_class   = '';
+	$active_class = 'current';
+	$active_tab   = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyPress [BBVERSION]
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs = apply_filters( 'bb_core_upgrade_admin_tabs', bb_core_get_upgrade_settings_admin_tabs( $active_tab ) );
+
+	$count = count( array_values( $tabs ) );
+	$i     = 1;
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+
+		$is_current = strtolower( trim( $tab_data['slug'] ) ) === strtolower( trim( $active_tab ) );
+		$tab_class  = $is_current ? $active_class : $idle_class;
+		if ( $i === $count ) {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		} else {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+		}
+
+		++$i;
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyPress [BBVERSION]
+	 */
+	do_action( 'bb_upgrade_settings_admin_tabs' );
+}
+
+/**
+ * Render the BuddyBoss Repair Community page.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bb_integration_submenu_page() {
+	?>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bb_core_upgrade_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
+		<div class="bp-admin-card section-repair_community">
+
+			<h2>
+				<?php
+				$meta_icon = bb_admin_icons( 'repair_community' );
+				if ( ! empty( $meta_icon ) ) {
+					?>
+					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
+					<?php
+				}
+				esc_html_e( 'Repair Community', 'buddyboss' );
+				?>
+			</h2>
+
+			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
+
+			<form class="settings" method="post" action="">
+				<fieldset>
+					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
+
+					<div class="checkbox">
+						<?php
+						foreach ( bp_admin_repair_list() as $item ) :
+							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
+							?>
+							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo esc_attr( 'label-' . $item[0] ) . ( true === $disabled ? esc_attr( ' disabled' ) : '' ); ?>">
+								<input
+									type="checkbox"
+									class="checkbox"
+									name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
+									value="<?php echo esc_attr( $item[0] ); ?>"
+									<?php
+									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
+										echo 'checked'; }
+									disabled( $disabled );
+									?>
+								/> <?php echo esc_html( $item[1] ); ?></label>
+						<?php endforeach; ?>
+					</div>
+
+					<p class="submit">
+						<?php wp_nonce_field( 'bp-do-counts' ); ?>
+						<a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?></a>
+					</p>
+
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+	<?php
 }
