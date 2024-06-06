@@ -4978,8 +4978,13 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
-				// Add BB Poll View
-				if( bp.Views.activityPollForm !== undefined ) {
+				// Add BB Poll View.
+				if (
+					! _.isUndefined( BP_Nouveau.activity_polls ) &&
+					! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+					true === BP_Nouveau.activity_polls.params.can_create_poll_activity &&
+					! _.isUndefined( bp.Views.activityPollForm )
+				) {
 					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
 				}
 
