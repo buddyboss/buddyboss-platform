@@ -46,10 +46,13 @@
 				<div class="gif-media-search-dropdown"></div>
 			</div>
 		</div>
-	<?php endif; ?>
-	<div class="post-elements-buttons-item post-poll">
-		<a href="#" id="activity-poll-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Add Poll', 'buddyboss' ); ?>">
-			<i class="bb-icon-l bb-icon-poll"></i>
-		</a>
-	</div>
+	<?php endif;
+
+	/**
+	 * Fires at the end of the whats new toolbar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_whats_new_toolbar_end' );
+	?>
 </script>
