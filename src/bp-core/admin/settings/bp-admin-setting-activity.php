@@ -402,7 +402,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_enable_activity_post_polls( $args ) {
-		$val    = function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls() : false;
+		$val    = function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls( false ) : false;
 		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
 		?>
 		<input id="bb_enable_activity_post_polls" name="<?php echo empty( $notice ) ? '_bb_enable_activity_post_polls' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
