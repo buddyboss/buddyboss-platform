@@ -223,20 +223,18 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 				'id'    => 1,
 				'class' => 1,
 			),
-			'span' => array( "style" => 1 ),
-			'p'    => array( "style" => 1 ),
+			'span' => array(),
+			'p'    => array(),
 			'a'    => array(
 				'href'   => 1,
 				'target' => 1,
 			),
 		);
 
-		// Only allow 'text-align' property for non-capable users
-		if ( ! bp_current_user_can( 'unfiltered_html' ) ) {
-			add_filter( 'safe_style_css', function( $styles ) {
-				$styles = array( 'text-align' );
-				return $styles;
-			} );
+		// Allow style attributes on certain elements for capable users
+		if ( bp_current_user_can( 'unfiltered_html' ) ) {
+			$richtext_tags['span'] = array( 'style' => 1 );
+			$richtext_tags['p']    = array( 'style' => 1 );
 		}
 
 		$xprofile_allowedtags = array_merge( $allowedtags, $richtext_tags );

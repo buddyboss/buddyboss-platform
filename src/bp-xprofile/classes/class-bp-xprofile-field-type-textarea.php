@@ -120,6 +120,9 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 					'media_buttons' => false,
 					'quicktags'     => true,
 					'textarea_rows' => 10,
+					'tinymce'       => array(
+						'toolbar1' => bp_current_user_can('unfiltered_html') ? 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,fullscreen' : 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,undo,redo,link,fullscreen',
+					),
 				),
 				'edit'
 			);
