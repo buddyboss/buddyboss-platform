@@ -8,6 +8,8 @@
  * @version 1.0.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 bp_get_template_part( 'members/single/parts/item-subnav' );
 
 switch ( bp_current_action() ) :
@@ -16,7 +18,15 @@ switch ( bp_current_action() ) :
 		bp_get_template_part( 'common/search-and-filters-bar' );
 		?>
 		<div id="notifications-user-list" class="notifications dir-list" data-bp-list="notifications">
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-notifications-loading' ); ?></div>
+			<?php
+			if ( $is_send_ajax_request ) {
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'member-notifications-loading' );
+				echo '</div>';
+			} else {
+				bp_get_template_part( 'members/single/notifications/notifications-loop' );
+			}
+			?>
 		</div><!-- #groups-dir-list -->
 		<?php
 		break;
