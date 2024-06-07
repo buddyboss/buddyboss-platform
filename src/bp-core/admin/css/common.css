@@ -4134,6 +4134,24 @@ table.moderations .column-member img {
   display: inline-block;
 }
 
+@media screen and (max-width: 2600px) {
+  .bb-integrations-listing .integrations_single_holder {
+    max-width: calc(20% - 78px);
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .bb-integrations-listing .integrations_single_holder {
+    max-width: calc(25% - 78px);
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-integrations-listing .integrations_single_holder {
+    max-width: calc(33.3333% - 78px);
+  }
+}
+
 @media screen and (max-width: 1080px) {
   .bb-integrations-section h1 {
     font-size: 28px;
@@ -4152,6 +4170,35 @@ table.moderations .column-member img {
   }
   .bb-get-platform .guarantee-img {
     margin-bottom: 24px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .bb-integrations-listing {
+    gap: 20px;
+  }
+  .bb-integrations-listing .integrations_single_holder {
+    max-width: calc(50% - 60px);
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .bb-integrations-section h1 {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+  .bb-integrations_filters_section .bb-integrations_search {
+    max-width: inherit;
+  }
+  .bb-integrations_filters_section .bb-integrations_filters {
+    justify-content: center;
+  }
+  .bb-integrations_filters_section .bb-integrations_filters select {
+    width: 100%;
+    max-width: inherit;
+  }
+  .bb-integrations-listing .integrations_single_holder {
+    max-width: calc(100% - 40px);
   }
 }
 
