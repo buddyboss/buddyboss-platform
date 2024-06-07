@@ -52,12 +52,12 @@ window.bp = window.bp || {};
         function fetchCollectionsAndCategories() {
             var collectionsRequest = jQuery.ajax({
                 method: 'GET',
-                url: 'https://buddyboss.com/wp-json/wp/v2/integrations_collection'
+                url: 'https://buddyboss.com/wp-json/wp/v2/integrations_collection?per_page=99'
             });
     
             var categoriesRequest = jQuery.ajax({
                 method: 'GET',
-                url: 'https://buddyboss.com/wp-json/wp/v2/integrations_category'
+                url: 'https://buddyboss.com/wp-json/wp/v2/integrations_category?per_page=99'
             });
     
             jQuery.when( collectionsRequest, categoriesRequest ).done( function( collectionsResponse, categoriesResponse ) {
