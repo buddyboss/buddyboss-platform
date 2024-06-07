@@ -2,6 +2,8 @@ window.bp = window.bp || {};
 
 (function() {
 
+    var APIDomain = 'https://developbb.com/';
+
     function renderIntegrations() {
 
         var defaultOptions = {
@@ -37,7 +39,7 @@ window.bp = window.bp || {};
     
             jQuery.ajax({
                 method: 'GET',
-                url: 'https://buddyboss.com/wp-json/wp/v2/integrations',
+                url: APIDomain + 'wp-json/wp/v2/integrations',
                 data: requestData,
                 success: function( response ) {
                     defaultOptions.data = response;
@@ -52,12 +54,12 @@ window.bp = window.bp || {};
         function fetchCollectionsAndCategories() {
             var collectionsRequest = jQuery.ajax({
                 method: 'GET',
-                url: 'https://buddyboss.com/wp-json/wp/v2/integrations_collection?per_page=99'
+                url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99'
             });
     
             var categoriesRequest = jQuery.ajax({
                 method: 'GET',
-                url: 'https://buddyboss.com/wp-json/wp/v2/integrations_category?per_page=99'
+                url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99'
             });
     
             jQuery.when( collectionsRequest, categoriesRequest ).done( function( collectionsResponse, categoriesResponse ) {
