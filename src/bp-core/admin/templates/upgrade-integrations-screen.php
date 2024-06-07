@@ -37,12 +37,13 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<input type="search" name="search_integrations" placeholder="Search" />
 				</div>
 				<div class="bb-integrations_filters">
-					<% if( categories && categories.length ) { %>
+					<% if( categories ) { %>
 						<select name="categories_integrations">
 							<option value="all">All</option>
-							<% jQuery.each( categories, function( key, item ) { %>
-								<option value="<%= item.id %>" <%= item.id == categoryId ? 'selected' : '' %> ><%= item.name %></option>
-							<% }); %>
+							<% var categoriesKeys = Object.keys( categories ) %>
+							<% for (var i=0; i < categoriesKeys.length; i++ ) { %>
+								<option value="<%= categoriesKeys[i] %>" <%= categoriesKeys[i] == categoryId ? 'selected' : '' %> ><%= categories[categoriesKeys[i]] %></option>
+							<% } %>
 						</select>
 					<% } %>
 					<% if( collections && collections.length ) { %>
@@ -58,28 +59,31 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 			</div>
 			<div class="bb-integrations-listing">
 				<% if ( data && data.length ) { %>
+					<% currentCategory = null; %>
 					<% jQuery.each( data, function( key, item ) { %>
-						<% if ( 'title' === item.type ) { %>
-							<div class="integration_cat_title"><div class="cat_title"><%= item.title.rendered %></div></div>
-						<% } else { %>
-							<div class="integrations_single_holder">
-								<div class="holder_integrations_img">
-									<% if (item && item.logo_image_url ) { %>
-										<img class="lazyload-disable" src="<%= item.logo_image_url %>">
-									<% } %>
-									<% if (item && item.collection_name ) { %>
-										<div class="type_integrations_text type_compatible"><%= item.collection_name %></div>
-									<% } %>
-								</div>
-								<div class="holder_integrations_desc">
-									<div class="logo_title"><%= item.title.rendered %></div>
-									<div class="short_desc">
-										<p><%= item.short_description %></p>
-									</div>
-								</div>
-								<a href="<%= item.link_url ? item.link_url : item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+						<% if( categoryHeadings ) { %>
+							<% if ( currentCategory != item.integrations_category[0] ) { %>
+								<div class="integration_cat_title"><div class="cat_title"><%= categories[item.integrations_category[0]] %></div></div>
+								<% currentCategory = item.integrations_category[0] %>
+							<% }%>
+						<% }%>
+						<div class="integrations_single_holder">
+							<div class="holder_integrations_img">
+								<% if (item && item.logo_image_url ) { %>
+									<img class="lazyload-disable" src="<%= item.logo_image_url %>">
+								<% } %>
+								<% if (item && item.collection_name ) { %>
+									<div class="type_integrations_text type_compatible"><%= item.collection_name %></div>
+								<% } %>
 							</div>
-						<% } %>
+							<div class="holder_integrations_desc">
+								<div class="logo_title"><%= item.title.rendered %></div>
+								<div class="short_desc">
+									<p><%= item.short_description %></p>
+								</div>
+							</div>
+							<a href="<%= item.link_url ? item.link_url : item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+						</div>
 					<% }); %>
 				<% } else { %>
 					<div class="bb-integrations-loader">

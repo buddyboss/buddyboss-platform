@@ -16,6 +16,7 @@ window.bp = window.bp || {};
 			categoryId: 'all',
 			page: 1,
 			per_page: 20,
+			categoryHeadings: false
 		};
 
 		// Initial render.
@@ -36,6 +37,9 @@ window.bp = window.bp || {};
 
 			if ( defaultOptions.collectionId && defaultOptions.collectionId !== 'all' ) {
 				requestData.integrations_collection = defaultOptions.collectionId;
+			} else {
+				requestData['orderby'] = "category_name";
+				defaultOptions.categoryHeadings = true;
 			}
 
 			if ( defaultOptions.categoryId && defaultOptions.categoryId !== 'all' ) {
@@ -84,7 +88,11 @@ window.bp = window.bp || {};
 			jQuery.when( collectionsRequest, categoriesRequest ).done(
 				function ( collectionsResponse, categoriesResponse ) {
 					defaultOptions.collections = collectionsResponse[0];
-					defaultOptions.categories  = categoriesResponse[0];
+					defaultOptions.categories = {};
+					for (var i = 0; i < categoriesResponse[0].length; i++) {
+						var collection = categoriesResponse[0][i];
+						defaultOptions.categories[collection.id] = collection.name;
+					}
 					fetchIntegrations( false );
 				}
 			).fail(
