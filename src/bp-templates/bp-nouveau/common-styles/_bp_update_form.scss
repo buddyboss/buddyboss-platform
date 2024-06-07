@@ -1709,6 +1709,8 @@ div[class*="attached-gif-container"] {
 	display: inline-block;
 	max-width: 450px;
 	background-image: none !important;
+	min-width: 130px;
+	min-height: 100px;
 
 	.gif-image-remove {
 		border-radius: 10px;
