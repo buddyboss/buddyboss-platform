@@ -2,7 +2,7 @@ window.bp = window.bp || {};
 
 (function () {
 
-	var APIDomain = 'https://developbb.com/';
+	var APIDomain = 'https://buddyboss.com/';
 
 	function renderIntegrations() {
 
