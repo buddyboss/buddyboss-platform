@@ -54,8 +54,16 @@ class BB_Performance_Tester {
 
 		?>
 		<div class="wrap wrap--performance">
-			<h2><?php esc_html_e( 'WPPerformanceTester', 'buddyboss' ); ?></h2>
-			<p><?php esc_html_e( 'WPPerformanceTester performs a series of tests to see how well your server performs. The first set test the raw server performance. The second is WordPress specific. Your results will be displayed and you can see how your results stack up against others.', 'buddyboss' ); ?></p>
+			<h2><?php esc_html_e( 'Host Performance Tester', 'buddyboss' ); ?></h2>
+			<p>
+				<?php
+				printf(
+					/* translators: WPHostingBenchmarks link */
+					wp_kses_post( __( 'This tool completes a series of tests to see how well your server performs. The first set tests the raw server performance. The second is WordPress specific. Your results will be displayed and you can see how your results stack up against others. To compare your benchmarks against other hosts, check out %s', 'buddyboss' ) ),
+					'<a href="https://wphostingbenchmarks.com/">WPHostingBenchmarks.com</a>'
+				);
+				?>
+			</p>
 
 			<form method="post" action="
 			<?php
