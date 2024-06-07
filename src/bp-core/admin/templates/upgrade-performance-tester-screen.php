@@ -26,7 +26,7 @@ $bb_wpt = bb_web_performance_tester();
 			)
 		);
 		?>
-		"><?php esc_html_e( 'Go back', 'buddyboss' ); ?></a>
+		" class="advance-action-link advance-action-link--back"><i class="bb-icon-l bb-icon-arrow-left"></i><?php esc_html_e( 'Go back', 'buddyboss' ); ?></a>
 		<?php $bb_wpt->settings_page(); ?>
 	</div>
 </div>
