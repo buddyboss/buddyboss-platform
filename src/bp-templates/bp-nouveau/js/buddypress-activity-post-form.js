@@ -423,6 +423,16 @@ window.bp = window.bp || {};
 				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 			}
 
+			// Display poll button icon when privacy is not group for admin.
+			if (
+				'group' !== activity_data.privacy &&
+				! _.isUndefined( BP_Nouveau.activity_polls ) &&
+				! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+				true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+			) {
+				$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+			}
+
 			// Show Hide Schedule post button according to group privacy.
 			if ( 'group' === activity_data.privacy ) {
 				var whatsNewForm = $( '#whats-new-form' );
@@ -458,6 +468,32 @@ window.bp = window.bp || {};
 					self.postForm.model.set( 'activity_schedule_meridiem', null );
 					self.postForm.model.set( 'schedule_allowed', 'disabled' );
 					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
+				}
+
+				// Poll data.
+				var polls_allowed = whatsNewForm.find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-polls' );
+				if ( _.isUndefined( polls_allowed ) ) {
+					// When change group from news feed.
+					if ( ! _.isUndefined( activity_data.polls_allowed ) && 'enabled' === activity_data.polls_allowed ) {
+						polls_allowed = activity_data.polls_allowed;
+						self.postForm.model.set( 'polls_allowed', activity_data.polls_allowed );
+					} else if ( ! _.isUndefined( activity_data.polls_allowed ) && 'disabled' === activity_data.polls_allowed ) {
+						polls_allowed = 'disabled';
+						self.postForm.model.set( 'polls_allowed', activity_data.polls_allowed );
+					} else if (
+						// On group page.
+						! _.isUndefined( BP_Nouveau.activity_polls ) &&
+						! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+						true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+					) {
+						polls_allowed = 'enabled';
+					}
+				}
+
+				if ( ! _.isUndefined( polls_allowed ) && 'enabled' === polls_allowed ) {
+					whatsNewForm.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+				} else {
+					whatsNewForm.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 				}
 			}
 
@@ -1222,7 +1258,8 @@ window.bp = window.bp || {};
 				'activity_poll_options',
 				'activity_poll_allow_multiple_answer',
 				'activity_poll_allow_new_option',
-				'activity_poll_duration'
+				'activity_poll_duration',
+				'polls_allowed',
 			];
 
 			_.each(
@@ -1365,6 +1402,15 @@ window.bp = window.bp || {};
 				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 			) {
 				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+			}
+
+			// Check if user can create poll in feed after discard draft.
+			if (
+				! _.isUndefined( BP_Nouveau.activity_polls ) &&
+				! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+				true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+			) {
+				$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 			}
 		},
 
@@ -4017,6 +4063,17 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
 
+					// Check poll is allowed in this group or not.
+					var polls_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-polls' );
+					if ( ! _.isUndefined( polls_allowed ) && 'enabled' === polls_allowed ) {
+						this.model.set( 'polls_allowed', polls_allowed );
+						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+						Backbone.trigger( 'cleanFeedBack' );
+					} else {
+						this.model.set( 'polls_allowed', 'disabled' );
+						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
+					}
+
 				} else {
 
 					// Clear schedule post data when change privacy.
@@ -4036,6 +4093,19 @@ window.bp = window.bp || {};
 						this.model.set( 'schedule_allowed', 'disabled' );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
+
+					// Clear poll data when change privacy.
+					if (
+						! _.isUndefined( BP_Nouveau.activity_polls ) &&
+						! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+						true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+					) {
+						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+					} else {
+						this.model.set( 'polls_allowed', 'disabled' );
+						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
+					}
+
 					Backbone.trigger( 'cleanFeedBack' );
 
 					var privacy       = this.model.attributes.privacy;
@@ -4979,12 +5049,7 @@ window.bp = window.bp || {};
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
 				// Add BB Poll View.
-				if (
-					! _.isUndefined( BP_Nouveau.activity_polls ) &&
-					! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
-					true === BP_Nouveau.activity_polls.params.can_create_poll_activity &&
-					! _.isUndefined( bp.Views.activityPollForm )
-				) {
+				if ( ! _.isUndefined( bp.Views.activityPollForm ) ) {
 					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
 				}
 
@@ -5043,6 +5108,16 @@ window.bp = window.bp || {};
 					);
 
 					activityParams = _.extend( activityParams, scheduleParams );
+				}
+
+				// Pick parameters from BP_Nouveau.activity_polls.params.
+				if ( ! _.isUndefined( BP_Nouveau.activity_polls ) ) {
+					var pollParams = _.pick(
+						BP_Nouveau.activity_polls.params,
+						[ 'can_create_poll_activity' ]
+					);
+
+					activityParams = _.extend( activityParams, pollParams );
 				}
 
 				// Create the model with the merged parameters
@@ -5240,6 +5315,15 @@ window.bp = window.bp || {};
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
 						$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+					}
+
+					// Add Poll button.
+					if (
+						! _.isUndefined( BP_Nouveau.activity_polls ) &&
+						! _.isUndefined( typeof BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+						true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+					) {
+						$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 					}
 				}
 
