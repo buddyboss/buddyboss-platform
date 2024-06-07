@@ -4819,6 +4819,11 @@ table.moderations .column-member {
 		border-color: #019701;
 		color: #019701;
 	}
+
+	&.advance-action-button--idle {
+		pointer-events: none;
+		cursor: default;
+	}
 }
 
 .advance-action-link {

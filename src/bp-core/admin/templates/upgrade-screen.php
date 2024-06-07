@@ -57,7 +57,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 							);
 							?>
 							" class="advance-action-button"><?php _e( 'Test Performance', 'buddyboss' ); ?></a>
-							<a href="https://rapyd.cloud/pricing/" class="advance-action-link" target="_blank"><?php _e( 'View Pricing', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
+							<a href="https://rapyd.cloud/?fpr=buddyboss93" class="advance-action-link" target="_blank"><?php _e( 'View Pricing', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
 						</div>
 					</div>
 				</div>
@@ -86,7 +86,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 							</ul>
 						</div>
 						<div class="advance-card-action <?php echo $bb_platform_pro_active ? 'advance-action-success' : ''; ?>">
-							<a href="https://www.buddyboss.com/website-platform/#platform_pricing_box" class="advance-action-button" target="_blank"><?php ( ! $bb_platform_pro_active ) ? esc_html_e( 'Upgrade to Platform Pro', 'buddyboss' ) : esc_html_e( 'Activated', 'buddyboss' ); ?></a>
+							<a href="https://www.buddyboss.com/website-platform/#platform_pricing_box" class="advance-action-button <?php echo ( ! $bb_platform_pro_active ) ? "" : "advance-action-button--idle"; ?>" target="_blank"><?php ( ! $bb_platform_pro_active ) ? esc_html_e( 'Upgrade to Platform Pro', 'buddyboss' ) : esc_html_e( 'Activated', 'buddyboss' ); ?></a>
 							<a href="https://www.buddyboss.com/website-platform/" class="advance-action-link" target="_blank"><?php _e( 'Learn More', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
 						</div>
 					</div>
@@ -112,7 +112,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 							</ul>
 						</div>
 						<div class="advance-card-action <?php echo $bb_theme_active ? 'advance-action-success' : ''; ?>">
-							<a href="https://www.buddyboss.com/website-platform/#platform_pricing_box" class="advance-action-button"><?php ( ! $bb_theme_active ) ? esc_html_e( 'Get BuddyBoss Theme', 'buddyboss' ) : esc_html_e( 'Activated', 'buddyboss' ); ?></a>
+							<a href="https://www.buddyboss.com/website-platform/#platform_pricing_box" class="advance-action-button <?php echo ( ! $bb_theme_active ) ? '' : 'advance-action-button--idle'; ?>"><?php ( ! $bb_theme_active ) ? esc_html_e( 'Get BuddyBoss Theme', 'buddyboss' ) : esc_html_e( 'Activated', 'buddyboss' ); ?></a>
 							<a href="https://www.buddyboss.com/website-platform/" class="advance-action-link" target="_blank"><?php _e( 'Learn More', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
 						</div>
 					</div>
