@@ -64,8 +64,8 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 						<% } else { %>
 							<div class="integrations_single_holder">
 								<div class="holder_integrations_img">
-									<% if (item && item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0] && item._embedded['wp:featuredmedia'][0].media_details && item._embedded['wp:featuredmedia'][0].media_details.sizes && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url ) { %>
-										<img class="lazyload-disable" src="<%= item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url %>">
+									<% if (item && item.logo_image_url ) { %>
+										<img class="lazyload-disable" src="<%= item.logo_image_url %>">
 									<% } %>
 									<% if (item && item._embedded && item._embedded['wp:term'] && item._embedded['wp:term'][0] && item._embedded['wp:term'][0][0] && item._embedded['wp:term'][0][0].name ) { %>
 										<div class="type_integrations_text type_compatible"><%= item._embedded['wp:term'][0][0].name %></div>
@@ -74,7 +74,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 								<div class="holder_integrations_desc">
 									<div class="logo_title"><%= item.title.rendered %></div>
 									<div class="short_desc">
-										<p><%= item.content.rendered %></p>
+										<p><%= item.short_description %></p>
 									</div>
 								</div>
 								<a href="<%= item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
