@@ -4042,6 +4042,10 @@ table.moderations .column-member img {
 }
 
 .bb-integrations_loadmore {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
   color: #fff;
   cursor: pointer;
   font-size: 14px;
@@ -4055,6 +4059,21 @@ table.moderations .column-member img {
 
 .bb-integrations_loadmore:hover {
   color: rgba(255, 255, 255, 0.8);
+}
+
+.bb-integrations_loadmore.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.bb-integrations_loadmore.loading:after {
+  content: '\ef30';
+  font-family: bb-icons;
+  font-size: 18px;
+  font-weight: 400;
+  display: inline-block;
+  animation: spin 2s infinite linear;
+  display: inline-block;
 }
 
 .bb-get-platform {
@@ -4141,6 +4160,28 @@ table.moderations .column-member img {
  *----------------------------------------------------------------------------*/
 .buddyboss_page_bb-upgrade .nav-tab-wrapper {
   display: none;
+}
+
+.bb-upgrade-nav-tag {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 0 5px -1px 0;
+  padding: 8px;
+  min-width: 18px;
+  height: 19px;
+  border-radius: 15px;
+  background-color: #d63638;
+  color: #fff;
+  font-size: 11px;
+  line-height: 0.3;
+  text-align: center;
+}
+
+@media screen and (max-width: 760px) {
+  .bb-upgrade-nav-tag {
+    margin-top: 2px;
+  }
 }
 
 .wrap.wrap--upgrade {
@@ -4474,6 +4515,12 @@ table.moderations .column-member img {
 .wp-performance-check input[type="submit"] {
   border-color: #019701;
   color: #019701;
+}
+
+.advance-action-button.advance-action-button--idle,
+.wp-performance-check input[type="submit"].advance-action-button--idle {
+  pointer-events: none;
+  cursor: default;
 }
 
 .advance-action-link {

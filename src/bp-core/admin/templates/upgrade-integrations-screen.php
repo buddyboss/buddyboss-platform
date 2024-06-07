@@ -87,7 +87,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					</div>
 				<% } %>
 			</div>
-			<% if ( data && data.length == 20 ) { %>
+			<% if ( data && data.length >= 20 ) { %>
 				<div class="bb-integrations-listing_loadmore">
 					<button class="bb-integrations_loadmore">Load More</button>
 				</div>

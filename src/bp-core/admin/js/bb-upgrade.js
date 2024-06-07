@@ -8,7 +8,7 @@ window.bp = window.bp || {};
 
         var defaultOptions = {
             previewParent: jQuery('.bb-integrations-section-listing'),
-            data: null,
+            data: [],
             collections: null,
             categories: null,
             searchQuery: '',
@@ -21,7 +21,7 @@ window.bp = window.bp || {};
         // Initial render
         render( defaultOptions );
     
-        function fetchIntegrations() {
+        function fetchIntegrations( append = false ) {
             var requestData = {
                 '_embed': true,
                 'per_page': defaultOptions.per_page,
@@ -45,11 +45,19 @@ window.bp = window.bp || {};
                 url: APIDomain + 'wp-json/wp/v2/integrations',
                 data: requestData,
                 success: function( response ) {
-                    defaultOptions.data = response;
+                    if ( append ) {
+                        defaultOptions.data = defaultOptions.data.concat( response );
+                    } else {
+                        defaultOptions.data = response;
+                    }
                     render( defaultOptions );
                 },
-                error: function() {
+                error: function( response ) {
                     console.log( 'Error fetching integrations' );
+                    if( response && response.status === 400 ) {
+                        jQuery( '.bb-integrations_loadmore' ).remove();
+                        return;
+                    }
                 }
             });
         }
@@ -65,7 +73,7 @@ window.bp = window.bp || {};
                 url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99'
             });
     
-            jQuery.when( collectionsRequest, categoriesRequest ).done( function( collectionsResponse, categoriesResponse ) {
+            jQuery.when(collectionsRequest, categoriesRequest).done( function( collectionsResponse, categoriesResponse ) {
                 defaultOptions.collections = collectionsResponse[0];
                 defaultOptions.categories = categoriesResponse[0];
                 fetchIntegrations();
@@ -94,17 +102,27 @@ window.bp = window.bp || {};
             } else {
                 defaultOptions.collectionId = jQuery( this ).val();
             }
+            defaultOptions.page = 1;
             fetchIntegrations();
         });
-    
+
         jQuery( document ).on( 'keyup', 'input[name="search_integrations"]', function(e) {
             defaultOptions.searchQuery = jQuery( this ).val();
+            defaultOptions.page = 1;
             fetchIntegrations();
         });
-    
+
         jQuery( document ).on( 'change', 'select[name="categories_integrations"]', function(e) {
             defaultOptions.categoryId = jQuery( this ).val();
+            defaultOptions.page = 1;
             fetchIntegrations();
+        });
+
+        jQuery( document ).on('click', '.bb-integrations_loadmore', function(e) {
+            e.preventDefault();
+            jQuery( this ).addClass( 'loading' );
+            defaultOptions.page += 1;
+            fetchIntegrations( true );
         });
     }
 

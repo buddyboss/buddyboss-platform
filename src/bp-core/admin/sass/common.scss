@@ -4360,6 +4360,10 @@ table.moderations .column-member {
 }
 
 .bb-integrations_loadmore {
+	display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
 	color: #fff;
 	cursor: pointer;
 	font-size: 14px;
@@ -4372,6 +4376,21 @@ table.moderations .column-member {
 
 	&:hover {
 		color: rgba(255, 255, 255, 0.8);
+	}
+
+	&.loading {
+		pointer-events: none;
+		opacity: 0.8;
+
+		&:after {
+			content: '\ef30';
+			font-family: bb-icons;
+			font-size: 18px;
+			font-weight: 400;
+			display: inline-block;
+			animation: spin 2s infinite linear;
+			display: inline-block;
+		}
 	}
 }
 

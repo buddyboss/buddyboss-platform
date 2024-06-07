@@ -4042,6 +4042,10 @@ table.moderations .column-member img {
 }
 
 .bb-integrations_loadmore {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
   color: #fff;
   cursor: pointer;
   font-size: 14px;
@@ -4055,6 +4059,21 @@ table.moderations .column-member img {
 
 .bb-integrations_loadmore:hover {
   color: rgba(255, 255, 255, 0.8);
+}
+
+.bb-integrations_loadmore.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.bb-integrations_loadmore.loading:after {
+  content: '\ef30';
+  font-family: bb-icons;
+  font-size: 18px;
+  font-weight: 400;
+  display: inline-block;
+  animation: spin 2s infinite linear;
+  display: inline-block;
 }
 
 .bb-get-platform {
