@@ -67,8 +67,8 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 									<% if (item && item.logo_image_url ) { %>
 										<img class="lazyload-disable" src="<%= item.logo_image_url %>">
 									<% } %>
-									<% if (item && item._embedded && item._embedded['wp:term'] && item._embedded['wp:term'][0] && item._embedded['wp:term'][0][0] && item._embedded['wp:term'][0][0].name ) { %>
-										<div class="type_integrations_text type_compatible"><%= item._embedded['wp:term'][0][0].name %></div>
+									<% if (item && item.collection_name ) { %>
+										<div class="type_integrations_text type_compatible"><%= item.collection_name %></div>
 									<% } %>
 								</div>
 								<div class="holder_integrations_desc">
@@ -77,7 +77,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 										<p><%= item.short_description %></p>
 									</div>
 								</div>
-								<a href="<%= item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+								<a href="<%= item.link_url ? item.link_url : item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
 							</div>
 						<% } %>
 					<% }); %>
