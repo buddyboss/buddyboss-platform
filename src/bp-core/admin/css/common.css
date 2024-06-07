@@ -4143,6 +4143,28 @@ table.moderations .column-member img {
   display: none;
 }
 
+.bb-upgrade-nav-tag {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 0 0 -1px 5px;
+  padding: 8px;
+  min-width: 18px;
+  height: 19px;
+  border-radius: 15px;
+  background-color: #d63638;
+  color: #fff;
+  font-size: 11px;
+  line-height: 0.3;
+  text-align: center;
+}
+
+@media screen and (max-width: 760px) {
+  .bb-upgrade-nav-tag {
+    margin-top: 2px;
+  }
+}
+
 .wrap.wrap--upgrade {
   width: calc(100% - 22px);
 }

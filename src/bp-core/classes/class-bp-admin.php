@@ -509,7 +509,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'Upgrade', 'buddyboss' ),
-				__( 'Upgrade', 'buddyboss' ),
+				wp_kses(
+					__( 'Upgrade <span class="bb-upgrade-nav-tag">New</span>', 'buddyboss' ), array(
+						'span' => array(
+							'class' => array(),
+						),
+					)
+				),
 				$this->capability,
 				'bb-upgrade',
 				array( $this, 'bp_upgrade_screen' )
