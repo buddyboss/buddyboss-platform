@@ -1128,7 +1128,6 @@ function bb_wp_gravity_forms_compatibility_helper() {
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
 
-
 /**
  * Function to provide gamipress notification compatibility.
  *
@@ -1150,8 +1149,9 @@ function bb_gamipress_notification_is_read_only_filter( $retval, $notification )
 	) {
 		$retval = false;
 	}
-	
+
 	return $retval;
 
 }
+
 add_filter( 'bb_notification_is_read_only', 'bb_gamipress_notification_is_read_only_filter', 999, 2 );
