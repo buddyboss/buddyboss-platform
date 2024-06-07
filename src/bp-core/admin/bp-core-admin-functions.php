@@ -3915,8 +3915,8 @@ function bb_integration_submenu_page() {
 }
 
 function bb_web_performance_tester() {
-	if ( ! class_exists( 'WPPerformanceTester_Plugin' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/libraries/WPPerformanceTester/WPPerformanceTester_Plugin.php';
+	if ( ! class_exists( 'BB_Performance_Tester' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/class/class-bb-performance-tester.php';
 	}
 	static $bb_wpt = null;
 
@@ -3924,12 +3924,7 @@ function bb_web_performance_tester() {
 		return $bb_wpt;
 	}
 
-	$bb_wpt = new WPPerformanceTester_Plugin();
-	if ( ! $bb_wpt->isInstalled() ) {
-		$bb_wpt->install();
-	}
-
-	$bb_wpt->addActionsAndFilters();
+	$bb_wpt = new BB_Performance_Tester();
 
 	return $bb_wpt;
 }
