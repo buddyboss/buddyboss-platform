@@ -37,51 +37,61 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<input type="search" name="search_integrations" placeholder="Search" />
 				</div>
 				<div class="bb-integrations_filters">
-					<select name="categories_integrations">
-						<option value="all">All</option>
-						<% jQuery.each( categories, function( key, item ) { %>
-							<option value="<%= item.id %>" <%= item.id == categoryId ? 'selected' : '' %> ><%= item.name %></option>
-						<% }); %>
-					</select>
-					<ul class="integrations_collection-sub integrations-lists">
-						<% jQuery.each( collections, function( key, item ) { %>
-							<li >
-								<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0 || item.id == collectionId ? 'checked' : '' %> ><span><%= item.name %></span>
-							</li>
-						<% }); %>
-					</ul>
+					<% if( categories && categories.length ) { %>
+						<select name="categories_integrations">
+							<option value="all">All</option>
+							<% jQuery.each( categories, function( key, item ) { %>
+								<option value="<%= item.id %>" <%= item.id == categoryId ? 'selected' : '' %> ><%= item.name %></option>
+							<% }); %>
+						</select>
+					<% } %>
+					<% if( collections && collections.length ) { %>
+						<ul class="integrations_collection-sub integrations-lists">
+							<% jQuery.each( collections, function( key, item ) { %>
+								<li >
+									<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0 || item.id == collectionId ? 'checked' : '' %> ><span><%= item.name %></span>
+								</li>
+							<% }); %>
+						</ul>
+					<% } %>
 				</div>
 			</div>
 			<div class="bb-integrations-listing">
-				<% if ( data.length ) { %>
-				<% jQuery.each( data, function( key, item ) { %>
-				<% if ( 'title' === item.type ) { %>
-				<div class="integration_cat_title"><div class="cat_title"><%= item.title.rendered %></div></div>
+				<% if ( data && data.length ) { %>
+					<% jQuery.each( data, function( key, item ) { %>
+						<% if ( 'title' === item.type ) { %>
+							<div class="integration_cat_title"><div class="cat_title"><%= item.title.rendered %></div></div>
+						<% } else { %>
+							<div class="integrations_single_holder">
+								<div class="holder_integrations_img">
+									<% if (item && item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0] && item._embedded['wp:featuredmedia'][0].media_details && item._embedded['wp:featuredmedia'][0].media_details.sizes && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url ) { %>
+										<img class="lazyload-disable" src="<%= item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url %>">
+									<% } %>
+									<% if (item && item._embedded && item._embedded['wp:term'] && item._embedded['wp:term'][0] && item._embedded['wp:term'][0][0] && item._embedded['wp:term'][0][0].name ) { %>
+										<div class="type_integrations_text type_compatible"><%= item._embedded['wp:term'][0][0].name %></div>
+									<% } %>
+								</div>
+								<div class="holder_integrations_desc">
+									<div class="logo_title"><%= item.title.rendered %></div>
+									<div class="short_desc">
+										<p><%= item.content.rendered %></p>
+									</div>
+								</div>
+								<a href="<%= item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+							</div>
+						<% } %>
+					<% }); %>
 				<% } else { %>
-				<div class="integrations_single_holder">
-					<div class="holder_integrations_img">
-						<% if (item && item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0] && item._embedded['wp:featuredmedia'][0].media_details && item._embedded['wp:featuredmedia'][0].media_details.sizes && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail && item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url ) { %>
-							<img class="lazyload-disable" src="<%= item._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url %>">
-						<% } %>
-						<% if (item && item._embedded && item._embedded['wp:term'] && item._embedded['wp:term'][0] && item._embedded['wp:term'][0][0] && item._embedded['wp:term'][0][0].name ) { %>
-							<div class="type_integrations_text type_compatible"><%= item._embedded['wp:term'][0][0].name %></div>
-						<% } %>
+					<div class="bb-integrations-loader">
+						<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 					</div>
-					<div class="holder_integrations_desc">
-						<div class="logo_title"><%= item.title.rendered %></div>
-						<div class="short_desc">
-							<p><%= item.content.rendered %></p>
-						</div>
-					</div>
-					<a href="<%= item.link %>" class="integration_readmore">Learn more <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+				<% } %>
+			</div>
+			<% if ( data && data.length == 20 ) { %>
+				<div class="bb-integrations-listing_loadmore">
+					<button class="bb-integrations_loadmore">Load More</button>
 				</div>
-				<% } %>
-				<% }); %>
-				<% } %>
-			</div>
-			<div class="bb-integrations-listing_loadmore">
-				<button class="bb-integrations_loadmore">Load More</button>
-			</div>
+			<% } %>
 
 			<div class="bb-get-platform">
 				<img class="guarantee-img" src="<?php echo buddypress()->plugin_url . 'bp-core/images/upgrade/bb-guarantee.png' ?>" />

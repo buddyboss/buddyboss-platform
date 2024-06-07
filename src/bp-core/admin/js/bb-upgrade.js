@@ -17,6 +17,9 @@ window.bp = window.bp || {};
             page: 1,
             per_page: 20,
         };
+
+        // Initial render
+        render( defaultOptions );
     
         function fetchIntegrations() {
             var requestData = {

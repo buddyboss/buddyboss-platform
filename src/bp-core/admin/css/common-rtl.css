@@ -3891,6 +3891,12 @@ table.moderations .column-member img {
   gap: 25px;
 }
 
+.bb-integrations_filters_section .bb-integrations_filters select {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 5px 16px;
+}
+
 .bb-integrations_filters_section .integrations_collection-sub {
   display: flex;
   margin: 0;
@@ -3964,7 +3970,10 @@ table.moderations .column-member img {
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  padding: 24px;
+  padding: 24px 24px 42px;
+  width: 100%;
+  max-width: 256px;
+  position: relative;
 }
 
 .bb-integrations-listing .integrations_single_holder .holder_integrations_img {
@@ -4003,7 +4012,7 @@ table.moderations .column-member img {
 .bb-integrations-listing .integrations_single_holder .short_desc p {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.6);
-  min-height: 65px;
+  min-height: 45px;
   margin: 0 0 15px;
 }
 
@@ -4012,6 +4021,9 @@ table.moderations .column-member img {
   font-weight: 500;
   color: #640398;
   text-decoration: none;
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
 }
 
 .bb-integrations-listing .integrations_single_holder .integration_readmore i {
@@ -4020,8 +4032,8 @@ table.moderations .column-member img {
   display: inline-block;
 }
 
-.bb-integrations-listing .integrations_single_holder + .integrations_single_holder {
-  margin-right: 32px;
+.bb-integrations-listing .integrations_single_holder .integration_readmore:active, .bb-integrations-listing .integrations_single_holder .integration_readmore:focus {
+  box-shadow: none;
 }
 
 .bb-integrations-listing_loadmore {
@@ -4039,6 +4051,10 @@ table.moderations .column-member img {
   border-radius: 5px;
   padding: 16px 20px;
   min-width: 150px;
+}
+
+.bb-integrations_loadmore:hover {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .bb-get-platform {
@@ -4086,11 +4102,167 @@ table.moderations .column-member img {
   text-decoration: none;
 }
 
+.bb-integrations-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 250px;
+}
+
+.bb-integrations-loader i {
+  font-size: 26px;
+  display: inline-block;
+}
+
+@media screen and (max-width: 1080px) {
+  .bb-integrations-section h1 {
+    font-size: 28px;
+  }
+  .bb-integrations_filters_section {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .bb-integrations_filters_section .bb-integrations_filters {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+  }
+  .bb-get-platform {
+    flex-direction: column;
+  }
+  .bb-get-platform .guarantee-img {
+    margin-bottom: 24px;
+  }
+}
+
 /*------------------------------------------------------------------------------
  * 20.0 Upgrade
  *----------------------------------------------------------------------------*/
-.buddyboss_page_bp-upgrade .nav-tab-wrapper {
+.buddyboss_page_bb-upgrade .nav-tab-wrapper {
   display: none;
+}
+
+.wrap.wrap--upgrade {
+  width: calc(100% - 22px);
+}
+
+.advance-tab-header {
+  margin: 16px 0 0;
+  padding: 0 0 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 700px) {
+  .advance-tab-header {
+    flex-direction: column;
+  }
+  .advance-tab-header .advance-brand {
+    margin: 0 auto 16px;
+  }
+  .advance-tab-header .nav-settings-subsubsub {
+    margin-bottom: 16px;
+  }
+  .advance-tab-header .adv-sep {
+    display: none;
+  }
+  .advance-tab-header .advance-actions {
+    flex-direction: column;
+  }
+  .advance-tab-header .advance-actions .advance-nav-action {
+    margin-right: 0;
+    margin-top: 8px;
+  }
+}
+
+.advance-tab-header .nav-settings-subsubsub {
+  padding: 0;
+}
+
+.advance-tab-header .subsubsub {
+  margin: 0;
+}
+
+.advance-tab-header .subsubsub > li {
+  margin-left: 24px;
+}
+
+.advance-tab-header .subsubsub > li:last-of-type {
+  margin-left: 0;
+}
+
+.advance-tab-header .subsubsub a {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.advance-tab-header .subsubsub a:focus, .advance-tab-header .subsubsub a:active {
+  box-shadow: none;
+}
+
+.advance-tab-header .subsubsub a.current {
+  color: #e0613c;
+}
+
+.advance-tab-header .advance-nav-action {
+  margin-right: 24px;
+}
+
+.advance-brand {
+  margin-left: auto;
+}
+
+.advance-brand .upgrade-brand {
+  border-radius: 50%;
+  max-width: 40px;
+}
+
+.adv-sep {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin: 0 24px;
+}
+
+.advance-actions {
+  display: flex;
+  align-items: center;
+}
+
+.advance-actions .advance-action-link {
+  font-size: 14px;
+}
+
+.advance-nav-action {
+  font-size: 14px;
+  font-weight: 500;
+  background: #e0613c;
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.advance-nav-action:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.advance-nav-action:hover svg path {
+  fill: rgba(255, 255, 255, 0.8);
+}
+
+.advance-nav-action:focus, .advance-nav-action:active {
+  color: #fff;
+  box-shadow: none;
+}
+
+.advance-nav-action svg {
+  margin-left: 8px;
 }
 
 .wrap h1.bb-advance-heading {
@@ -4109,10 +4281,11 @@ table.moderations .column-member img {
 @media screen and (max-width: 760px) {
   .wrap h1.bb-advance-heading {
     max-width: 95%;
+    margin-bottom: 42px;
   }
 }
 
-.bp-upgrade-wrap {
+.bb-upgrade-wrap {
   position: relative;
   font-size: 15px;
   max-width: 1400px;
@@ -4131,7 +4304,7 @@ table.moderations .column-member img {
   border-radius: 9px;
   overflow: hidden;
   border: 1px solid #ccd0d4;
-  box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 28px 0 rgba(0, 0, 0, 0.08);
   background: #fff;
 }
 
@@ -4171,7 +4344,7 @@ table.moderations .column-member img {
   position: relative;
   padding-top: 52.56%;
   display: block;
-  background-color: #FAF9F7;
+  background-color: #faf9f7;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -4224,14 +4397,14 @@ table.moderations .column-member img {
 
 .bb-advance-card--hero .card-figure {
   width: 100%;
-  padding-top: 22.56%;
+  padding-top: 0;
   border: 0;
-  background-color: #1A1830;
+  background-color: #1a1830;
 }
 
 .bb-advance-card--hero .card-figure .upgrade-figure {
   max-height: none;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .bb-advance-card--hero .card-data {
@@ -4261,9 +4434,10 @@ table.moderations .column-member img {
   }
 }
 
-.advance-action-button {
-  border: 1px solid #E0613C;
-  color: #E0613C;
+.advance-action-button,
+.wp-performance-check input[type="submit"] {
+  border: 1px solid #e0613c;
+  color: #e0613c;
   font-weight: 500;
   background-color: #fff;
   border-radius: 5px;
@@ -4276,20 +4450,30 @@ table.moderations .column-member img {
 }
 
 @media screen and (max-width: 900px) {
-  .advance-action-button {
+  .advance-action-button,
+  .wp-performance-check input[type="submit"] {
     margin: 0 0 16px;
   }
 }
 
-.advance-action-button:hover {
-  color: #E0613C;
+.advance-action-button:hover,
+.wp-performance-check input[type="submit"]:hover {
+  color: #e0613c;
 }
 
-.advance-action-button:active, .advance-action-button:focus {
+.advance-action-button:active, .advance-action-button:focus,
+.wp-performance-check input[type="submit"]:active,
+.wp-performance-check input[type="submit"]:focus {
   background-color: rgba(224, 97, 60, 0.1);
-  color: #E0613C;
+  color: #e0613c;
   outline: none;
   box-shadow: none;
+}
+
+.advance-action-success .advance-action-button, .advance-action-success
+.wp-performance-check input[type="submit"] {
+  border-color: #019701;
+  color: #019701;
 }
 
 .advance-action-link {
@@ -4316,6 +4500,7 @@ table.moderations .column-member img {
 .advance-action-link:active, .advance-action-link:focus {
   outline: none;
   box-shadow: none;
+  color: #640398;
 }
 
 .advance-list {
@@ -4360,10 +4545,23 @@ table.moderations .column-member img {
 .advance-list li:before {
   content: "\e876";
   display: inline-block;
-  font-family: "bb-icons";
+  font-family: bb-icons;
   font-size: 16px;
   font-weight: 400;
   margin-left: 8px;
   line-height: 1;
-  color: #E0613C;
+  color: #e0613c;
+}
+
+.wrap.wrap--performance > h2:first-child {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.wrap.wrap--performance > p {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.wp-performance-check input[type="submit"] {
+  margin: 24px 0 32px;
 }

@@ -4102,6 +4102,19 @@ table.moderations .column-member img {
   text-decoration: none;
 }
 
+.bb-integrations-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 250px;
+}
+
+.bb-integrations-loader i {
+  font-size: 26px;
+  display: inline-block;
+}
+
 @media screen and (max-width: 1080px) {
   .bb-integrations-section h1 {
     font-size: 28px;
