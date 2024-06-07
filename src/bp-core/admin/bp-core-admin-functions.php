@@ -3916,7 +3916,7 @@ function bb_integration_submenu_page() {
 
 function bb_web_performance_tester() {
 	if ( ! class_exists( 'BB_Performance_Tester' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/class/class-bb-performance-tester.php';
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-performance-tester.php';
 	}
 	static $bb_wpt = null;
 

@@ -172,7 +172,7 @@ class BB_Performance_Tester {
 										borderColor: "rgba(219,73,179,1)",
 										hoverBackgroundColor: "rgba(219,73,179,1)",
 										hoverBorderColor: "rgba(219,73,179,1)",
-										data: [0.372, 1.909, 0.121, 0.258, 5.404, 8.064, 2.279]
+										data: [0.026, 0.061, 0.005, 0.007, 7.244, 7.342, 0.296]
 									}
 								]
 							};
