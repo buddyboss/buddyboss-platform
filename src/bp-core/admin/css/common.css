@@ -4529,6 +4529,10 @@ h1.bb-advance-heading {
   margin: 0;
 }
 
+.advance-card-note p.wp-upgrade-description {
+  color: rgba(0, 0, 0, 0.6);
+}
+
 .advance-card-action {
   display: flex;
   align-items: center;
