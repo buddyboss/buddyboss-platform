@@ -1253,7 +1253,7 @@ window.bp = window.bp || {};
 				'activity_schedule_time',
 				'activity_schedule_meridiem',
 				'schedule_allowed',
-				'activity_schedule_meridiem',
+				'poll_id',
 				'activity_poll_title',
 				'activity_poll_options',
 				'activity_poll_allow_multiple_answer',
