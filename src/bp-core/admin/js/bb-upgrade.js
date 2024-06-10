@@ -215,6 +215,8 @@ window.bp = window.bp || {};
 		);
 	}
 
-	renderIntegrations();
+	if( jQuery( '.bb-integrations-section-listing' ).length ) {
+		renderIntegrations();
+	}
 
 }(jQuery));
