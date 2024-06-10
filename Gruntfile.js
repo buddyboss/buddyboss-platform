@@ -361,6 +361,7 @@ module.exports = function (grunt) {
 						'!**/emojionearea-edited.js',
 						'!**/node_modules/**/*.js',
 						'!**/endpoints/**/*.js',
+						'!**/js/lib/Chart.js',
 						]
 					)
 				}
@@ -466,7 +467,8 @@ module.exports = function (grunt) {
 						'!**/emojionearea-edited.js',
 						'!**/vendor/**/*.js',
 						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js'
+						'!**/endpoints/**/*.js',
+						'!**/js/lib/Chart.js',
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
