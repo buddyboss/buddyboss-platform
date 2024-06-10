@@ -3486,9 +3486,23 @@ window.bp = window.bp || {};
 			template: bp.template( 'activity-target-item' ),
 
 			initialize: function () {
+				// this.listenTo( this.model, 'change:selected', this.updateSelectedClass );
+        		this.listenTo( Backbone, 'update:selected', this.resetSelected );
 				if ( this.model.get( 'selected' ) ) {
 					this.el.className += ' selected';
 				}
+			},
+
+			updateSelectedClass: function() {
+				if ( this.model.get( 'selected' ) ) {
+					this.$el.addClass( 'selected' );
+				} else {
+					this.$el.removeClass( 'selected' );
+				}
+			},
+
+			resetSelected: function() {
+				this.model.set( 'selected', false );
 			},
 
 			events: {
@@ -3499,6 +3513,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var whats_new_form = $( '#whats-new-form' );
+				console.log('---' + JSON.stringify(this.model, null, 2));
 
 				if ( true === this.model.get( 'selected' ) ) {
 					return false;
@@ -5362,6 +5377,8 @@ window.bp = window.bp || {};
 				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
 				whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object' ).removeClass( 'selected' );
 				whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object__radio' ).prop( 'checked', false );
+
+				Backbone.trigger( 'update:selected' );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
