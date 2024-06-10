@@ -1385,7 +1385,6 @@ function bb_core_install_subscription() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @uses  bp_core_set_charset()
  * @uses  bp_core_get_table_prefix()
  * @uses  dbDelta()
  */

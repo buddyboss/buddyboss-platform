@@ -1699,9 +1699,9 @@ function bb_xprofile_remove_default_png_avatar_on_update_xprofile_visibility( BB
  *
  * @param array $repair_list Repair list items.
  *
- * @return array Repair list items.
- *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Repair list items.
  */
 function bb_xprofile_repair_xprofile_visibility ( $repair_list ) {
 	$repair_list[] = array(
