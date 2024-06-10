@@ -3487,7 +3487,7 @@ window.bp = window.bp || {};
 
 			initialize: function () {
 				// this.listenTo( this.model, 'change:selected', this.updateSelectedClass );
-        		this.listenTo( Backbone, 'update:selected', this.resetSelected );
+				this.listenTo( Backbone, 'update:selected', this.resetSelected );
 				if ( this.model.get( 'selected' ) ) {
 					this.el.className += ' selected';
 				}
@@ -3513,7 +3513,6 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var whats_new_form = $( '#whats-new-form' );
-				console.log('---' + JSON.stringify(this.model, null, 2));
 
 				if ( true === this.model.get( 'selected' ) ) {
 					return false;
