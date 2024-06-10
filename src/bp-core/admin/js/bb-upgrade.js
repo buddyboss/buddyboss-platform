@@ -81,7 +81,7 @@ window.bp = window.bp || {};
 			var categoriesRequest = jQuery.ajax(
 				{
 					method: 'GET',
-					url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99'
+					url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99&orderby=name&hide_empty=1'
 				}
 			);
 
