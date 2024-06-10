@@ -16,7 +16,7 @@ window.bp = window.bp || {};
 			categoryId: 'all',
 			page: 1,
 			per_page: 20,
-			categoryHeadings: false
+			categoryHeadings: false,
 		};
 
 		// Initial render.
@@ -29,6 +29,7 @@ window.bp = window.bp || {};
 				'page': defaultOptions.page,
 				'orderby': 'category_name',
 				'order': 'asc',
+				'exclude': '390262', // Exclude submit one.
 			};
 
 			if ( defaultOptions.searchQuery ) {
