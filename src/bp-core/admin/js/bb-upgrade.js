@@ -23,6 +23,8 @@ window.bp = window.bp || {};
 			totalpages: 1,
 		};
 
+		var searchDebounce = null;
+
 		// Initial render.
 		render( defaultOptions );
 
@@ -165,9 +167,14 @@ window.bp = window.bp || {};
 			'keyup',
 			'input[name="search_integrations"]',
 			function () {
-				defaultOptions.searchQuery = jQuery( this ).val();
-				defaultOptions.page        = 1;
-				fetchIntegrations( false );
+				if ( searchDebounce ) {
+					clearTimeout( searchDebounce );
+				}
+				searchDebounce = setTimeout( function() {
+					defaultOptions.searchQuery = jQuery( this ).val();
+					defaultOptions.page = 1;
+					fetchIntegrations( false );
+				}.bind( this ), 500 );
 			}
 		);
 
