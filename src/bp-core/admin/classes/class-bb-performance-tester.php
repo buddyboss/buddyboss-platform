@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file contains the necessary code for the BuddyBoss Performance Tester.
+ *
+ * @package BuddyBoss
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 
 require_once buddypress()->plugin_dir . 'bp-core/admin/templates/benchmark.php';
 
@@ -7,7 +14,7 @@ require_once buddypress()->plugin_dir . 'bp-core/admin/templates/benchmark.php';
  *
  * @package BuddyBoss
  *
- * @since buddyboss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  */
 class BB_Performance_Tester {
 
@@ -15,11 +22,15 @@ class BB_Performance_Tester {
 	 * Store class instance.
 	 *
 	 * @var BB_Performance_Tester
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private static $instance;
 
 	/**
 	 * Class instance
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof BB_Performance_Tester ) ) {
@@ -30,6 +41,8 @@ class BB_Performance_Tester {
 
 	/**
 	 * Constructor
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_style' ) );
@@ -37,12 +50,15 @@ class BB_Performance_Tester {
 
 	/**
 	 * Settings page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'buddyboss' ) );
 		}
 		$bb_perform_test = false;
+		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( ! empty( $_POST['bb_perform_test'] ) && ( true === (bool) $_POST['bb_perform_test'] ) ) {
 			// verify nonce.
 			if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) ) ) {
@@ -351,12 +367,23 @@ class BB_Performance_Tester {
 	/**
 	 * Version name of the API.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @return string
 	 */
 	private function get_version() {
 		return '2.0.0';
 	}
 
+	/**
+	 * Fires when enqueuing scripts for all admin pages.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $hook The current admin page.
+	 *
+	 * @return void
+	 */
 	public function enqueue_scripts_and_style( $hook ) {
 		if ( 'buddyboss_page_bb-upgrade' !== $hook ) {
 			return;
