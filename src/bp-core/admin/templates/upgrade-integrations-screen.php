@@ -96,9 +96,9 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<% }); %>
 				<% } else { %>
 					<div class="bb-integrations-no-results">
-						<i class="bb-icon-f bb-icon-search"></i>
-						<h2>No Results Found</h2>
-						<p>Try using different options.</p>
+						<i class="bb-icon-f bb-icon-exclamation-triangle"></i>
+						<h2><?php esc_html_e( 'No Results Found', 'buddyboss' ); ?></h2>
+						<p><?php esc_html_e( 'Sorry, there was no result found', 'buddyboss' ); ?></p>
 					</div>
 				<% } %>
 			</div>

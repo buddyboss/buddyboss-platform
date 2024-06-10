@@ -4378,10 +4378,27 @@ table.moderations .column-member {
 		display: flex;
 		align-items: center;
 		flex-direction: column;
+		background-color: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 10px;
+		padding: 40px 20px;
 		width: 100%;
 
+		h2 {
+			font-size: 22px;
+			margin-top: 20px;
+			margin-bottom: 0;
+		}
+
+		p {
+			color: #9b9c9f;
+			margin-top: 10px;
+		}
+
 		> i {
+			color: #9b9c9f;
 			font-size: 38px;
+			opacity: 0.9;
 		}
 	}
 }
