@@ -4218,6 +4218,10 @@ table.moderations .column-member img {
   }
 }
 
+.advance-performance-wrapper .wrap--performance {
+  width: 100%;
+}
+
 .wrap.wrap--upgrade {
   width: calc(100% - 22px);
   margin-left: 0;
@@ -4550,6 +4554,7 @@ h1.bb-advance-heading {
   text-decoration: none;
   outline: none;
   box-shadow: none;
+  font-size: 15px;
 }
 
 @media screen and (max-width: 900px) {
@@ -4682,4 +4687,12 @@ h1.bb-advance-heading {
 
 .wp-performance-check input[type="submit"] {
   margin: 24px 0 32px;
+}
+
+.wrap--performance {
+  max-width: 600px;
+}
+
+.wrap--performance #resultTable table {
+  width: 100%;
 }

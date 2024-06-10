@@ -10,7 +10,7 @@
 $bb_wpt = bb_web_performance_tester();
 ?>
 
-<div class="wrap">
+<div class="advance-performance-wrapper">
 	<div id="bb-upgrade">
 		<a href="
 		<?php

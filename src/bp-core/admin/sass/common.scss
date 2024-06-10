@@ -4560,6 +4560,13 @@ table.moderations .column-member {
 	}
 }
 
+.advance-performance-wrapper {
+
+	.wrap--performance {
+		width: 100%;
+	}
+}
+
 .wrap.wrap--upgrade {
 	width: calc(100% - 22px);
 	margin-left: 0;
@@ -4886,6 +4893,7 @@ h1.bb-advance-heading {
 	text-decoration: none;
 	outline: none;
 	box-shadow: none;
+	font-size: 15px;
 
 	@media screen and (max-width: 900px) {
 		margin: 0 0 16px;
@@ -5015,5 +5023,16 @@ h1.bb-advance-heading {
 
 	input[type="submit"] {
 		margin: 24px 0 32px;
+	}
+}
+
+.wrap--performance {
+	max-width: 600px;
+
+	#resultTable {
+
+		table {
+			width: 100%;
+		}
 	}
 }
