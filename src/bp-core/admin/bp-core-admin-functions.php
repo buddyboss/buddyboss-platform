@@ -3844,7 +3844,7 @@ function bb_core_upgrade_admin_tabs() {
 		++$i;
 	}
 
-	echo wp_kses( $tabs_html );
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
