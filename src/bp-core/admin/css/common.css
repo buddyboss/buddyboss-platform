@@ -4741,6 +4741,7 @@ h1.bb-advance-heading {
 
 .wrap.wrap--performance > p {
   color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
 }
 
 .wp-performance-check input[type="submit"] {
