@@ -352,7 +352,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'Upgrade', 'buddyboss' ),
-				__( 'Upgrade', 'buddyboss' ),
+				sprintf(
+					/* translators: New Tag */
+					__( 'Upgrade %s', 'buddyboss' ),
+					'<span class="bb-upgrade-nav-tag">' . esc_html__( 'New', 'buddyboss' ) . '</span>'
+				),
 				$this->capability,
 				'bb-upgrade',
 				array( $this, 'bp_upgrade_screen' )
@@ -509,12 +513,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'Upgrade', 'buddyboss' ),
-				wp_kses(
-					__( 'Upgrade <span class="bb-upgrade-nav-tag">New</span>', 'buddyboss' ), array(
-						'span' => array(
-							'class' => array(),
-						),
-					)
+				sprintf(
+					/* translators: New Tag */
+					__( 'Upgrade %s', 'buddyboss' ),
+					'<span class="bb-upgrade-nav-tag">' . esc_html__( 'New', 'buddyboss' ) . '</span>'
 				),
 				$this->capability,
 				'bb-upgrade',

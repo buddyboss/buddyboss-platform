@@ -3790,19 +3790,28 @@ function bb_core_get_upgrade_settings_admin_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $tabs Tab data.
 	 */
 	return apply_filters( 'bb_core_get_upgrade_admin_tabs', $tabs );
 }
 
-function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
+/**
+ * Output the performance tabs in the admin area.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_core_upgrade_admin_tabs() {
 
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	$active_tab   = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
+
+	// phpcs:ignore
+	$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
 
 	/**
 	 * Filters the admin tabs to be displayed.
@@ -3821,11 +3830,11 @@ function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
 
 		$is_current = strtolower( trim( $tab_data['slug'] ) ) === strtolower( trim( $active_tab ) );
 
-		if ( $tab_data['slug'] === 'bb-upgrade' && $active_tab === 'bb-performance-tester' ) {
+		if ( 'bb-upgrade' === $tab_data['slug'] && 'bb-performance-tester' === $active_tab ) {
 			$is_current = true;
 		}
 
-		$tab_class  = $is_current ? $active_class : $idle_class;
+		$tab_class = $is_current ? $active_class : $idle_class;
 		if ( $i === $count ) {
 			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
@@ -3835,7 +3844,7 @@ function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
 		++$i;
 	}
 
-	echo $tabs_html;
+	echo wp_kses( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -3846,74 +3855,12 @@ function bb_core_upgrade_admin_tabs( $active_tab = '' ) {
 }
 
 /**
- * Render the BuddyBoss Repair Community page.
+ * Web performance tester class.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
+ *
+ * return object
  */
-function bb_integration_submenu_page() {
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bb_core_upgrade_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-repair_community">
-
-			<h2>
-				<?php
-				$meta_icon = bb_admin_icons( 'repair_community' );
-				if ( ! empty( $meta_icon ) ) {
-					?>
-					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-					<?php
-				}
-				esc_html_e( 'Repair Community', 'buddyboss' );
-				?>
-			</h2>
-
-			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-
-			<form class="settings" method="post" action="">
-				<fieldset>
-					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
-
-					<div class="checkbox">
-						<?php
-						foreach ( bp_admin_repair_list() as $item ) :
-							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
-							?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo esc_attr( 'label-' . $item[0] ) . ( true === $disabled ? esc_attr( ' disabled' ) : '' ); ?>">
-								<input
-									type="checkbox"
-									class="checkbox"
-									name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
-									value="<?php echo esc_attr( $item[0] ); ?>"
-									<?php
-									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
-										echo 'checked'; }
-									disabled( $disabled );
-									?>
-								/> <?php echo esc_html( $item[1] ); ?></label>
-						<?php endforeach; ?>
-					</div>
-
-					<p class="submit">
-						<?php wp_nonce_field( 'bp-do-counts' ); ?>
-						<a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?></a>
-					</p>
-
-				</fieldset>
-			</form>
-		</div>
-	</div>
-
-	<?php
-}
-
 function bb_web_performance_tester() {
 	if ( ! class_exists( 'BB_Performance_Tester' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-performance-tester.php';
