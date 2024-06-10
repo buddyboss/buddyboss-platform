@@ -10,7 +10,7 @@ window.bp = window.bp || {};
 
 		var defaultOptions = {
 			previewParent: jQuery( '.bb-integrations-section-listing' ),
-			data: [],
+			data: null,
 			collections: null,
 			categoriesArr: null,
 			categoriesObj: null,
@@ -189,6 +189,17 @@ window.bp = window.bp || {};
 				jQuery( this ).addClass( 'loading' );
 				defaultOptions.page += 1;
 				fetchIntegrations( true );
+			}
+		);
+
+		jQuery( document ).on(
+			'click',
+			'.bb-integrations_search .clear-search',
+			function (e) {
+				e.preventDefault();
+				defaultOptions.page        = 1;
+				defaultOptions.searchQuery = '';
+				fetchIntegrations( false );
 			}
 		);
 	}

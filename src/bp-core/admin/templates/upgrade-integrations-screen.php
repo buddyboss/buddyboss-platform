@@ -35,6 +35,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 			<div class="bb-integrations_filters_section">
 				<div class="bb-integrations_search">
 					<input type="search" name="search_integrations" placeholder="Search" value="<%= searchQuery ? searchQuery : '' %>" />
+					<span class="bb-icon-l bb-icon-search <%= searchQuery !== '' ? 'clear-search' : '' %>"></span>
 				</div>
 				<div class="bb-integrations_filters">
 					<% if ( categoriesArr ) { %>
@@ -58,7 +59,15 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 				</div>
 			</div>
 			<div class="bb-integrations-listing">
-				<% if ( data && data.length ) { %>
+				<% if ( data == null ) { %>
+					<% for ( var i = 0; i < 5; i++ ) { %>
+						<div class="integrations_single_holder loading">
+							<div class="integrations_single_holder_avatar bb-bg-animation bb-loading-bg"></div>
+							<div class="integrations_single_holder_block bb-bg-animation bb-loading-bg"></div>
+							<div class="integrations_single_holder_block bb-bg-animation bb-loading-bg"></div>
+						</div>
+					<% } %>
+				<% } else if ( data && data.length ) { %>
 					<% currentCategory = null; %>
 					<% jQuery.each( data, function( key, item ) { %>
 						<% if ( categoryHeadings ) { %>
@@ -86,8 +95,10 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 						</div>
 					<% }); %>
 				<% } else { %>
-					<div class="bb-integrations-loader">
-						<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
+					<div class="bb-integrations-no-results">
+						<i class="bb-icon-f bb-icon-search"></i>
+						<h2>No Results Found</h2>
+						<p>Try using different options.</p>
 					</div>
 				<% } %>
 			</div>

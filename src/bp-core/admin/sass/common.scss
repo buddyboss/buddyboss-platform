@@ -4165,17 +4165,25 @@ table.moderations .column-member {
 		max-width: 290px;
 		position: relative;
 
-		&:after {
-			content: "\ef10";
-			font-family: bb-icons;
+		span {
 			font-size: 15px;
 			font-weight: 400;
 			color: #000;
 			position: absolute;
-			right: 16px;
+			right: 12px;
 			top: 50%;
 			transform: translateY(-50%);
 			pointer-events: none;
+
+			&.clear-search {
+				font-size: 18px;
+				pointer-events: all;
+				cursor: pointer;
+
+				&:before {
+					content: "\e828";
+				}
+			}
 		}
 
 		input {
@@ -4345,6 +4353,35 @@ table.moderations .column-member {
 			&:focus {
 				box-shadow: none;
 			}
+		}
+
+		&.loading {
+			border: 0;
+
+			.integrations_single_holder_avatar {
+				height: 70px;
+				width: 70px;
+				border-radius: 50%;
+				margin-bottom: 35px;
+			}
+
+			.integrations_single_holder_block {
+				height: 18px;
+				border-radius: 6px;
+				width: 100%;
+				margin-bottom: 15px;
+			}
+		}
+	}
+
+	.bb-integrations-no-results {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		width: 100%;
+
+		> i {
+			font-size: 38px;
 		}
 	}
 }

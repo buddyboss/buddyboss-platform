@@ -3850,17 +3850,25 @@ table.moderations .column-member img {
   position: relative;
 }
 
-.bb-integrations_filters_section .bb-integrations_search:after {
-  content: "\ef10";
-  font-family: bb-icons;
+.bb-integrations_filters_section .bb-integrations_search span {
   font-size: 15px;
   font-weight: 400;
   color: #000;
   position: absolute;
-  right: 16px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+}
+
+.bb-integrations_filters_section .bb-integrations_search span.clear-search {
+  font-size: 18px;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.bb-integrations_filters_section .bb-integrations_search span.clear-search:before {
+  content: "\e828";
 }
 
 .bb-integrations_filters_section .bb-integrations_search input {
@@ -4029,6 +4037,35 @@ table.moderations .column-member img {
 
 .bb-integrations-listing .integrations_single_holder .integration_readmore:active, .bb-integrations-listing .integrations_single_holder .integration_readmore:focus {
   box-shadow: none;
+}
+
+.bb-integrations-listing .integrations_single_holder.loading {
+  border: 0;
+}
+
+.bb-integrations-listing .integrations_single_holder.loading .integrations_single_holder_avatar {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  margin-bottom: 35px;
+}
+
+.bb-integrations-listing .integrations_single_holder.loading .integrations_single_holder_block {
+  height: 18px;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.bb-integrations-listing .bb-integrations-no-results {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.bb-integrations-listing .bb-integrations-no-results > i {
+  font-size: 38px;
 }
 
 .bb-integrations-listing_loadmore {
