@@ -82,7 +82,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 									<p><%= item.short_description %></p>
 								</div>
 							</div>
-							<a href="<%= item.link_url ? item.link_url : item.link %>" class="integration_readmore"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?> <i class="bb-icon-l bb-icon-arrow-right"></i></a>
+							<a href="<%= item.link_url ? item.link_url : item.link %>" class="integration_readmore" target="_blank"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?> <i class="bb-icon-l bb-icon-arrow-right"></i></a>
 						</div>
 					<% }); %>
 				<% } else { %>
