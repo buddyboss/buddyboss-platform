@@ -4,6 +4,8 @@ window.bp = window.bp || {};
 
 	var APIDomain = 'https://www.buddyboss.com/';
 
+	var xhr = null;
+
 	function renderIntegrations() {
 
 		var defaultOptions = {
@@ -39,7 +41,6 @@ window.bp = window.bp || {};
 			if ( defaultOptions.collectionId && defaultOptions.collectionId !== 'all' ) {
 				requestData.integrations_collection = defaultOptions.collectionId;
 			} else {
-				requestData['orderby'] = "category_name";
 				defaultOptions.categoryHeadings = true;
 			}
 
@@ -47,7 +48,11 @@ window.bp = window.bp || {};
 				requestData.integrations_category = defaultOptions.categoryId;
 			}
 
-			jQuery.ajax(
+			if ( xhr ) {
+				xhr.abort();
+			}
+
+			xhr = jQuery.ajax(
 				{
 					method: 'GET',
 					url: APIDomain + 'wp-json/wp/v2/integrations',
@@ -61,6 +66,7 @@ window.bp = window.bp || {};
 						defaultOptions.totalpages = parseInt( jqXHR.getResponseHeader( 'X-WP-TotalPages' ) );
 						console.log( defaultOptions );
 						render( defaultOptions );
+						xhr = null;
 					},
 					error: function ( response ) {
 						console.log( 'Error fetching integrations' );
@@ -68,6 +74,7 @@ window.bp = window.bp || {};
 							jQuery( '.bb-integrations_loadmore' ).remove();
 							return;
 						}
+						xhr = null;
 					}
 				}
 			);
