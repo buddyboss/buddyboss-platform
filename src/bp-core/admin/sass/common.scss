@@ -4203,6 +4203,22 @@ table.moderations .column-member {
 				display: none;
 			}
 		}
+
+		&.loading {
+			pointer-events: none;
+
+			&:after {
+				content: "\ef30";
+				font-size: 20px;
+				font-family: bb-icons;
+				display: inline-block;
+				animation: spin 2s infinite linear;
+				position: absolute;
+				top: 10px;
+				margin: 0;
+				right: -30px;
+			}
+		}
 	}
 
 	.bb-integrations_filters {
@@ -4391,6 +4407,7 @@ table.moderations .column-member {
 		}
 
 		p {
+			font-size: 14px;
 			color: #9b9c9f;
 			margin-top: 10px;
 		}

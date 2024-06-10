@@ -61,6 +61,8 @@ window.bp = window.bp || {};
 					url: APIDomain + 'wp-json/wp/v2/integrations',
 					data: requestData,
 					success: function ( response, textStatus, jqXHR ) {
+						// Clear Loading indicator
+						jQuery( '.bb-integrations_search' ).addClass( 'loading' );
 						if ( append ) {
 							defaultOptions.data = defaultOptions.data.concat( response );
 						} else {
@@ -171,6 +173,7 @@ window.bp = window.bp || {};
 					clearTimeout( searchDebounce );
 				}
 				searchDebounce = setTimeout( function() {
+					jQuery( this ).closest( '.bb-integrations_search' ).addClass( 'loading' );
 					defaultOptions.searchQuery = jQuery( this ).val();
 					defaultOptions.page = 1;
 					fetchIntegrations( false );
@@ -206,6 +209,7 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				defaultOptions.page        = 1;
 				defaultOptions.searchQuery = '';
+				jQuery( this ).closest( '.bb-integrations_search' ).addClass( 'loading' );
 				fetchIntegrations( false );
 			}
 		);

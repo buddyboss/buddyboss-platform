@@ -3889,6 +3889,22 @@ table.moderations .column-member img {
   display: none;
 }
 
+.bb-integrations_filters_section .bb-integrations_search.loading {
+  pointer-events: none;
+}
+
+.bb-integrations_filters_section .bb-integrations_search.loading:after {
+  content: "\ef30";
+  font-size: 20px;
+  font-family: bb-icons;
+  display: inline-block;
+  animation: spin 2s infinite linear;
+  position: absolute;
+  top: 10px;
+  margin: 0;
+  right: -30px;
+}
+
 .bb-integrations_filters_section .bb-integrations_filters {
   display: flex;
   gap: 25px;
@@ -4075,6 +4091,7 @@ table.moderations .column-member img {
 }
 
 .bb-integrations-listing .bb-integrations-no-results p {
+  font-size: 14px;
   color: #9b9c9f;
   margin-top: 10px;
 }
