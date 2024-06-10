@@ -73,12 +73,14 @@ window.bp = window.bp || {};
 
 		function fetchCollectionsAndCategories() {
 			// Check localStorage before making API requests.
-			var cachedCollections = localStorage.getItem('bb-integrations-collections');
-			var cachedCategories = localStorage.getItem('bb-integrations-categories');
+			var cachedCollections = localStorage.getItem( 'bb-integrations-collections' );
+			var cachedCategoriesObj = localStorage.getItem( 'bb-integrations-categories-obj' );
+			var cachedCategoriesArr = localStorage.getItem( 'bb-integrations-categories-arr' );
 		
-			if (cachedCollections && cachedCategories) {
-				defaultOptions.collections = JSON.parse(cachedCollections);
-				defaultOptions.categories = JSON.parse(cachedCategories);
+			if ( cachedCollections && cachedCategoriesObj && cachedCategoriesArr ) {
+				defaultOptions.collections = JSON.parse( cachedCollections );
+				defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
+				defaultOptions.categoriesArr = JSON.parse( cachedCategoriesArr );
 				fetchIntegrations(false);
 			} else {
 				var collectionsRequest = jQuery.ajax(
@@ -98,15 +100,18 @@ window.bp = window.bp || {};
 				jQuery.when( collectionsRequest, categoriesRequest ).done(
 					function ( collectionsResponse, categoriesResponse ) {
 						defaultOptions.collections = collectionsResponse[0];
-						defaultOptions.categories = {};
+						defaultOptions.categoriesObj = {};
+						defaultOptions.categoriesArr = [];
 						for (var i = 0; i < categoriesResponse[0].length; i++) {
 							var collection = categoriesResponse[0][i];
-							defaultOptions.categories[collection.id] = collection.name;
+							defaultOptions.categoriesObj[collection.id] = collection.name;
+							defaultOptions.categoriesArr.push( [ collection.id, collection.name ] );
 						}
 
 						// Store the data in localStorage
-						localStorage.setItem('bb-integrations-collections', JSON.stringify(defaultOptions.collections));
-						localStorage.setItem('bb-integrations-categories', JSON.stringify(defaultOptions.categories));
+						localStorage.setItem('bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
+						localStorage.setItem('bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
+						localStorage.setItem('bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
 
 						fetchIntegrations( false );
 					}

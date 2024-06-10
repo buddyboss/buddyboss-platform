@@ -37,12 +37,12 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<input type="search" name="search_integrations" placeholder="Search" />
 				</div>
 				<div class="bb-integrations_filters">
-					<% if( categories ) { %>
+					<% if( typeof categoriesArr !== 'undefined' && categoriesArr.length ) { %>
 						<select name="categories_integrations">
 							<option value="all"><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
-							<% var categoriesKeys = Object.keys( categories ) %>
-							<% for (var i=0; i < categoriesKeys.length; i++ ) { %>
-								<option value="<%= categoriesKeys[i] %>" <%= categoriesKeys[i] == categoryId ? 'selected' : '' %> ><%= categories[categoriesKeys[i]] %></option>
+							<% for (var i=0; i < categoriesArr.length; i++ ) { %>
+								<option value="<%= categoriesArr[i][0] %>" <%= categoriesArr[i][0] == categoryId ? 'selected' : '' %> ><%= categoriesArr[i][1] %></option>
+
 							<% } %>
 						</select>
 					<% } %>
@@ -63,7 +63,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<% jQuery.each( data, function( key, item ) { %>
 						<% if( categoryHeadings ) { %>
 							<% if ( currentCategory != item.integrations_category[0] ) { %>
-								<div class="integration_cat_title"><div class="cat_title"><%= categories[item.integrations_category[0]] %></div></div>
+								<div class="integration_cat_title"><div class="cat_title"><%= categoriesObj[item.integrations_category[0]] %></div></div>
 								<% currentCategory = item.integrations_category[0] %>
 							<% }%>
 						<% }%>
