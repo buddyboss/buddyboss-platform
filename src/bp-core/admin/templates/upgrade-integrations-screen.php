@@ -34,10 +34,10 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 		<script type="text/html" id="tmpl-bb-integrations">
 			<div class="bb-integrations_filters_section">
 				<div class="bb-integrations_search">
-					<input type="search" name="search_integrations" placeholder="Search" />
+					<input type="search" name="search_integrations" placeholder="Search" value="<%= searchQuery %>" />
 				</div>
 				<div class="bb-integrations_filters">
-					<% if( typeof categoriesArr !== 'undefined' && categoriesArr.length ) { %>
+					<% if( categoriesArr ) { %>
 						<select name="categories_integrations">
 							<option value="all"><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
 							<% for (var i=0; i < categoriesArr.length; i++ ) { %>
