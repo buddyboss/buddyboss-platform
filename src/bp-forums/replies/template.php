@@ -2251,7 +2251,18 @@ function bbp_get_reply_trash_link( $args = '' ) {
 	$actions = array();
 	$reply   = bbp_get_reply( bbp_get_reply_id( (int) $r['id'] ) );
 
-	if ( empty( $reply ) || ! current_user_can( 'delete_reply', $reply->ID ) ) {
+
+	// Check if the current user is a moderator or if the reply is empty.
+	if ( empty( $reply ) || user_can( bp_loggedin_user_id(), 'moderate' ) ) {
+		$reply_author_id = bbp_get_reply_author_id( $reply->ID );
+
+		// Check if the reply author is also an admin using BuddyPress functions.
+		if ( user_can( $reply_author_id, 'bp_moderate' ) ) {
+			// If the reply author is an admin, exit the function.
+			return;
+		}
+	} else {
+		// If the current user is not a moderator and the reply is not empty, exit the function.
 		return;
 	}
 
