@@ -4215,7 +4215,6 @@ table.moderations .column-member {
 				animation: spin 2s infinite linear;
 				position: absolute;
 				top: 10px;
-				margin: 0;
 				right: -30px;
 			}
 		}
@@ -4229,6 +4228,22 @@ table.moderations .column-member {
 			border: 1px solid rgba(0, 0, 0, 0.1);
 			border-radius: 5px;
 			padding: 5px 16px;
+		}
+
+		&.loading {
+			pointer-events: none;
+			position: relative;
+
+			&:after {
+				content: "\ef30";
+				font-size: 20px;
+				font-family: bb-icons;
+				display: inline-block;
+				animation: spin 2s infinite linear;
+				position: absolute;
+				top: 10px;
+				left: -30px;
+			}
 		}
 	}
 
@@ -4555,6 +4570,10 @@ table.moderations .column-member {
 			display: flex;
 			gap: 25px;
 			flex-wrap: wrap;
+
+			&.loading:after {
+				left: -20px;
+			}
 		}
 	}
 
@@ -4581,16 +4600,32 @@ table.moderations .column-member {
 
 @media screen and (max-width: 560px) {
 
-	.bb-integrations_filters_section .bb-integrations_search {
-		max-width: inherit;
+	.bb-integrations_filters_section {
+
+		.bb-integrations_search {
+			margin: 0 25px;
+			max-width: calc(100% - 50px);
+		}
+
+		.integrations_collection-sub li span {
+			font-size: 11px;
+			padding: 5px 10px;
+		}
 	}
 
 	.bb-integrations_filters_section .bb-integrations_filters {
 		justify-content: center;
 
 		select {
-			width: 100%;
+			font-size: 13px;
+			margin: 0 25px;
+			width: calc(100% - 50px);
 			max-width: inherit;
+		}
+
+		&.loading:after {
+			left: inherit;
+			right: -4px;
 		}
 	}
 

@@ -3901,7 +3901,6 @@ table.moderations .column-member img {
   animation: spin 2s infinite linear;
   position: absolute;
   top: 10px;
-  margin: 0;
   left: -30px;
 }
 
@@ -3914,6 +3913,22 @@ table.moderations .column-member img {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 5px 16px;
+}
+
+.bb-integrations_filters_section .bb-integrations_filters.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.bb-integrations_filters_section .bb-integrations_filters.loading:after {
+  content: "\ef30";
+  font-size: 20px;
+  font-family: bb-icons;
+  display: inline-block;
+  animation: spin 2s infinite linear;
+  position: absolute;
+  top: 10px;
+  right: -30px;
 }
 
 .bb-integrations_filters_section .integrations_collection-sub {
@@ -4227,6 +4242,9 @@ table.moderations .column-member img {
     gap: 25px;
     flex-wrap: wrap;
   }
+  .bb-integrations_filters_section .bb-integrations_filters.loading:after {
+    right: -20px;
+  }
   .bb-get-platform {
     flex-direction: column;
   }
@@ -4246,14 +4264,25 @@ table.moderations .column-member img {
 
 @media screen and (max-width: 560px) {
   .bb-integrations_filters_section .bb-integrations_search {
-    max-width: inherit;
+    margin: 0 25px;
+    max-width: calc(100% - 50px);
+  }
+  .bb-integrations_filters_section .integrations_collection-sub li span {
+    font-size: 11px;
+    padding: 5px 10px;
   }
   .bb-integrations_filters_section .bb-integrations_filters {
     justify-content: center;
   }
   .bb-integrations_filters_section .bb-integrations_filters select {
-    width: 100%;
+    font-size: 13px;
+    margin: 0 25px;
+    width: calc(100% - 50px);
     max-width: inherit;
+  }
+  .bb-integrations_filters_section .bb-integrations_filters.loading:after {
+    right: inherit;
+    left: -4px;
   }
   .bb-integrations-listing .integrations_single_holder {
     max-width: calc(100% - 40px);

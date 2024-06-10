@@ -61,8 +61,6 @@ window.bp = window.bp || {};
 					url: APIDomain + 'wp-json/wp/v2/integrations',
 					data: requestData,
 					success: function ( response, textStatus, jqXHR ) {
-						// Clear Loading indicator
-						jQuery( '.bb-integrations_search' ).addClass( 'loading' );
 						if ( append ) {
 							defaultOptions.data = defaultOptions.data.concat( response );
 						} else {
@@ -155,6 +153,7 @@ window.bp = window.bp || {};
 			'change',
 			'input[name="integrations_collection"]',
 			function () {
+				jQuery( this ).closest( '.bb-integrations_filters' ).addClass( 'loading' );
 				if ( jQuery( this ).siblings( 'span' ).text().toLowerCase() === 'all' ) {
 					defaultOptions.collectionId = 'all';
 				} else {
@@ -185,6 +184,7 @@ window.bp = window.bp || {};
 			'change',
 			'select[name="categories_integrations"]',
 			function () {
+				jQuery( this ).closest( '.bb-integrations_filters' ).addClass( 'loading' );
 				defaultOptions.categoryId = jQuery( this ).val();
 				defaultOptions.page       = 1;
 				fetchIntegrations( false );
