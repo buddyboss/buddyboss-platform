@@ -91,6 +91,7 @@ window.bp = window.bp || {};
 				defaultOptions.collections = JSON.parse( cachedCollections );
 				defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
 				defaultOptions.categoriesArr = JSON.parse( cachedCategoriesArr );
+				render( defaultOptions );
 				fetchIntegrations(false);
 			} else {
 				var collectionsRequest = jQuery.ajax(
@@ -122,7 +123,7 @@ window.bp = window.bp || {};
 						localStorage.setItem('bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
 						localStorage.setItem('bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
 						localStorage.setItem('bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
-
+						render( defaultOptions );
 						fetchIntegrations( false );
 					}
 				).fail(
