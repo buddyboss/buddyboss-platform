@@ -65,7 +65,6 @@ window.bp = window.bp || {};
 							defaultOptions.data = response;
 						}
 						defaultOptions.totalpages = parseInt( jqXHR.getResponseHeader( 'X-WP-TotalPages' ) );
-						console.log( defaultOptions );
 						render( defaultOptions );
 						xhr = null;
 					},

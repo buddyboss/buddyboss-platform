@@ -34,10 +34,10 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 		<script type="text/html" id="tmpl-bb-integrations">
 			<div class="bb-integrations_filters_section">
 				<div class="bb-integrations_search">
-					<input type="search" name="search_integrations" placeholder="Search" value="<%= searchQuery %>" />
+					<input type="search" name="search_integrations" placeholder="Search" value="<%= searchQuery ? searchQuery : '' %>" />
 				</div>
 				<div class="bb-integrations_filters">
-					<% if( categoriesArr ) { %>
+					<% if ( categoriesArr ) { %>
 						<select name="categories_integrations">
 							<option value="all"><?php esc_html_e( 'All', 'buddyboss' ); ?></option>
 							<% for (var i=0; i < categoriesArr.length; i++ ) { %>
@@ -46,13 +46,13 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 							<% } %>
 						</select>
 					<% } %>
-					<% if( collections && collections.length ) { %>
+					<% if ( collections && collections.length ) { %>
 						<ul class="integrations_collection-sub integrations-lists">
 							<% jQuery.each( collections, function( key, item ) { %>
 								<li >
 									<input class="radio integrationscollection styled" type="radio" value="<%= item.id %>" name="integrations_collection" <%= key == 0 || item.id == collectionId ? 'checked' : '' %> ><span><%= item.name %></span>
 								</li>
-							<% }); %>
+							<% } ); %>
 						</ul>
 					<% } %>
 				</div>
@@ -61,18 +61,18 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 				<% if ( data && data.length ) { %>
 					<% currentCategory = null; %>
 					<% jQuery.each( data, function( key, item ) { %>
-						<% if( categoryHeadings ) { %>
+						<% if ( categoryHeadings ) { %>
 							<% if ( currentCategory != item.integrations_category[0] ) { %>
 								<div class="integration_cat_title"><div class="cat_title"><%= categoriesObj[item.integrations_category[0]] %></div></div>
 								<% currentCategory = item.integrations_category[0] %>
-							<% }%>
-						<% }%>
+							<% } %>
+						<% } %>
 						<div class="integrations_single_holder">
 							<div class="holder_integrations_img">
-								<% if (item && item.logo_image_url ) { %>
+								<% if ( item && item.logo_image_url ) { %>
 									<img class="lazyload-disable" src="<%= item.logo_image_url %>">
 								<% } %>
-								<% if (item && item.collection_name ) { %>
+								<% if ( item && item.collection_name ) { %>
 									<div class="type_integrations_text type_compatible"><%= item.collection_name %></div>
 								<% } %>
 							</div>
