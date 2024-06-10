@@ -91,7 +91,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					</div>
 				<% } %>
 			</div>
-			<% if ( data && data.length >= 20 ) { %>
+			<% if ( totalpages && totalpages > page ) { %>
 				<div class="bb-integrations-listing_loadmore">
 					<button class="bb-integrations_loadmore"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></button>
 				</div>

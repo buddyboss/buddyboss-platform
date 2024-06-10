@@ -17,6 +17,7 @@ window.bp = window.bp || {};
 			page: 1,
 			per_page: 20,
 			categoryHeadings: false,
+			totalpages: 1,
 		};
 
 		// Initial render.
@@ -24,7 +25,6 @@ window.bp = window.bp || {};
 
 		function fetchIntegrations( append ) {
 			var requestData = {
-				'_embed': true,
 				'per_page': defaultOptions.per_page,
 				'page': defaultOptions.page,
 				'orderby': 'category_name',
@@ -52,12 +52,14 @@ window.bp = window.bp || {};
 					method: 'GET',
 					url: APIDomain + 'wp-json/wp/v2/integrations',
 					data: requestData,
-					success: function ( response ) {
+					success: function ( response, textStatus, jqXHR ) {
 						if ( append ) {
 							defaultOptions.data = defaultOptions.data.concat( response );
 						} else {
 							defaultOptions.data = response;
 						}
+						defaultOptions.totalpages = parseInt( jqXHR.getResponseHeader( 'X-WP-TotalPages' ) );
+						console.log( defaultOptions );
 						render( defaultOptions );
 					},
 					error: function ( response ) {
@@ -76,7 +78,7 @@ window.bp = window.bp || {};
 			var cachedCollections = localStorage.getItem( 'bb-integrations-collections' );
 			var cachedCategoriesObj = localStorage.getItem( 'bb-integrations-categories-obj' );
 			var cachedCategoriesArr = localStorage.getItem( 'bb-integrations-categories-arr' );
-		
+
 			if ( cachedCollections && cachedCategoriesObj && cachedCategoriesArr ) {
 				defaultOptions.collections = JSON.parse( cachedCollections );
 				defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
