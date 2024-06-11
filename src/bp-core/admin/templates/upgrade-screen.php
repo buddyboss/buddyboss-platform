@@ -86,7 +86,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 						</ul>
 					</div>
 					<div class="advance-card-action <?php echo $bb_platform_pro_active ? 'advance-action-success' : ''; ?>">
-						<a href="https://www.buddyboss.com/bbwebupgrade" class="advance-action-button <?php echo ( ! $bb_platform_pro_active ) ? '' : 'advance-action-button--idle'; ?>" target="_blank"><?php ( ! $bb_platform_pro_active ) ? esc_html_e( 'Upgrade to Platform Pro', 'buddyboss' ) : esc_html_e( 'Activated', 'buddyboss' ); ?></a>
+						<a href="https://www.buddyboss.com/bbwebupgrade" class="advance-action-button <?php echo ( ! $bb_platform_pro_active ) ? '' : 'advance-action-button--idle'; ?>"><?php ( ! $bb_platform_pro_active ) ? esc_html_e( 'Upgrade to Platform Pro', 'buddyboss' ) : esc_html_e( 'Activated', 'buddyboss' ); ?></a>
 						<a href="https://www.buddyboss.com/bbweblearn" class="advance-action-link" target="_blank"><?php esc_html_e( 'Learn More', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
 					</div>
 				</div>
