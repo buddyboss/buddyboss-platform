@@ -3486,23 +3486,9 @@ window.bp = window.bp || {};
 			template: bp.template( 'activity-target-item' ),
 
 			initialize: function () {
-				// this.listenTo( this.model, 'change:selected', this.updateSelectedClass );
-				this.listenTo( Backbone, 'update:selected', this.resetSelected );
 				if ( this.model.get( 'selected' ) ) {
 					this.el.className += ' selected';
 				}
-			},
-
-			updateSelectedClass: function() {
-				if ( this.model.get( 'selected' ) ) {
-					this.$el.addClass( 'selected' );
-				} else {
-					this.$el.removeClass( 'selected' );
-				}
-			},
-
-			resetSelected: function() {
-				this.model.set( 'selected', false );
 			},
 
 			events: {
@@ -3515,52 +3501,51 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 
 				if ( true === this.model.get( 'selected' ) ) {
-					return false;
+					this.model.unset( 'selected' );
+				}
+
+				whats_new_form.removeClass( 'focus-in--blank-group' );
+				var $this = this;
+				if ( $this.model.hasOwnProperty('attributes') &&
+						$this.model.attributes.hasOwnProperty('object_type') &&
+						'group' === $this.model.attributes.object_type ) {
+					var previousSelected = _.find( this.model.collection.models, function ( model ) {
+						return model !== $this.model && model.get( 'selected' );
+					} );
+					if ( previousSelected ) {
+						previousSelected.set( 'selected', false );
+					}
+				}
+				this.model.set( 'selected', true );
+				var model_attributes = this.model.attributes;
+				// check media is enable in groups or not.
+				if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
+					if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
+						Backbone.trigger( 'activity_media_close' );
+					}
 				} else {
-					whats_new_form.removeClass( 'focus-in--blank-group' );
-					var $this = this;
-					if ( $this.model.hasOwnProperty('attributes') &&
-					     $this.model.attributes.hasOwnProperty('object_type') &&
-					     'group' === $this.model.attributes.object_type ) {
-						var previousSelected = _.find( this.model.collection.models, function ( model ) {
-							return model !== $this.model && model.get( 'selected' );
-						} );
-						if ( previousSelected ) {
-							previousSelected.set( 'selected', false );
-						}
-					}
-					this.model.set( 'selected', true );
-					var model_attributes = this.model.attributes;
-					// check media is enable in groups or not.
-					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
-						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
-							Backbone.trigger( 'activity_media_close' );
-						}
-					} else {
-						$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
-					}
+					$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
+				}
 
-					// check document is enable in groups or not.
-					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
-						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
-							Backbone.trigger( 'activity_document_close' );
-						}
-					} else {
-						$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
+				// check document is enable in groups or not.
+				if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
+					if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
+						Backbone.trigger( 'activity_document_close' );
 					}
+				} else {
+					$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
+				}
 
-					// check video is enable in groups or not.
-					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
-						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							Backbone.trigger( 'activity_video_close' );
-						}
-					} else {
-						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
+				// check video is enable in groups or not.
+				if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
+					if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
+						Backbone.trigger( 'activity_video_close' );
 					}
-
+				} else {
+					$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
 				}
 			}
 		}
@@ -5376,8 +5361,6 @@ window.bp = window.bp || {};
 				whats_new_form.find( '#public.bp-activity-privacy__input' ).prop( 'checked', true );
 				whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object' ).removeClass( 'selected' );
 				whats_new_form.find( '#bp-activity-group-ac-items .bp-activity-object__radio' ).prop( 'checked', false );
-
-				Backbone.trigger( 'update:selected' );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$( '#show-toolbar-button' ).removeClass( 'active' );
