@@ -98,7 +98,7 @@ window.bp = window.bp || {};
 				var collectionsRequest = jQuery.ajax(
 					{
 						method: 'GET',
-						url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99',
+						url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99&orderby=id',
 					}
 				);
 
