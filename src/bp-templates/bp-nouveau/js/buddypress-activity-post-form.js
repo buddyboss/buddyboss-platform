@@ -497,7 +497,9 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if( 'undefined' !== activity_data.activity_poll_title && activity_data.activity_poll_title ) {
+			// Set poll data.
+			if ( ! _.isUndefined( activity_data.poll_id ) ) {
+				self.postForm.model.set( 'poll_id', activity_data.poll_id );
 				self.postForm.model.set( 'activity_poll_title', activity_data.activity_poll_title );
 				self.postForm.model.set( 'activity_poll_options', activity_data.activity_poll_options );
 				self.postForm.model.set( 'activity_poll_allow_multiple_answer', activity_data.activity_poll_allow_multiple_answer );
