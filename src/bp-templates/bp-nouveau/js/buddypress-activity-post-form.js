@@ -1080,6 +1080,9 @@ window.bp = window.bp || {};
 				self.postForm.$el.serializeArray(),
 				function( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
+					if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
+						pair.name = pair.name.replace( /\[\d+\]/, '' );
+					}
 					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
@@ -5560,6 +5563,9 @@ window.bp = window.bp || {};
 					self.$el.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
+						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
+							pair.name = pair.name.replace( /\[\d+\]/, '' );
+						}
 						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
 								meta[ pair.name ] = pair.value;
