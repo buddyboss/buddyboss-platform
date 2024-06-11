@@ -4195,6 +4195,10 @@ table.moderations .column-member {
 			border-radius: 5px;
 			width: 100%;
 
+			&::placeholder {
+				color: #000;
+			}
+
 			&::-webkit-search-cancel-button {
 				display: none;
 			}
@@ -4228,6 +4232,7 @@ table.moderations .column-member {
 			border: 1px solid rgba(0, 0, 0, 0.1);
 			border-radius: 5px;
 			padding: 5px 16px;
+			background-color: rgba(0, 0, 0, 0.05);
 		}
 
 		&.loading {

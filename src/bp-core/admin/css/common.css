@@ -3881,6 +3881,10 @@ table.moderations .column-member img {
   width: 100%;
 }
 
+.bb-integrations_filters_section .bb-integrations_search input::placeholder {
+  color: #000;
+}
+
 .bb-integrations_filters_section .bb-integrations_search input::-webkit-search-cancel-button {
   display: none;
 }
@@ -3913,6 +3917,7 @@ table.moderations .column-member img {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 5px 16px;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .bb-integrations_filters_section .bb-integrations_filters.loading {
