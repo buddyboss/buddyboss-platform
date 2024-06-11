@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.21\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-06-05 12:33:28+00:00\n"
+"POT-Creation-Date: 2024-06-11 06:18:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -341,7 +341,7 @@ msgstr ""
 #: bp-integrations/learndash/library/ReportsGenerator.php:389
 #: bp-invites/bp-invites-admin.php:75
 #: bp-members/classes/class-bp-members-admin.php:953
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:91
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:107
 msgid "Status"
 msgstr ""
 
@@ -8143,7 +8143,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:320
 #: bp-search/classes/class-bp-search-members.php:373
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:631
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:89
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:105
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:51
 #: bp-templates/bp-nouveau/includes/functions.php:1151
 #: bp-templates/bp-nouveau/includes/functions.php:1225
@@ -8617,7 +8617,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-list-table.php:156
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:49
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:88
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:104
 #: bp-templates/bp-nouveau/includes/document/ajax.php:923
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1268
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1426
@@ -23486,7 +23486,7 @@ msgstr ""
 msgid "You didn't include any email addresses!"
 msgstr ""
 
-#: bp-invites/actions/invites.php:245
+#: bp-invites/actions/invites.php:248
 msgid "To accept this invitation, please <a href=\"%s\">click here</a>."
 msgstr ""
 
@@ -23513,9 +23513,9 @@ msgstr ""
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:742
 #: bp-members/classes/class-bp-members-list-table.php:158
 #: bp-members/classes/class-bp-members-ms-list-table.php:145
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:139
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:143
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:145
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:155
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:159
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:161
 msgid "Registered"
 msgstr ""
 
@@ -23525,13 +23525,13 @@ msgstr ""
 
 #: bp-invites/bp-invites-admin.php:134
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:740
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:90
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:139
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:106
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:155
 msgid "Invited"
 msgstr ""
 
 #: bp-invites/bp-invites-admin.php:138
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:145
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:161
 msgid "Are you sure you want to revoke this invitation?"
 msgstr ""
 
@@ -23559,7 +23559,7 @@ msgstr ""
 #: bp-invites/classes/class-bp-invites-component.php:249
 #: bp-invites/classes/class-bp-invites-component.php:307
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1302
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:78
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:94
 msgid "Sent Invites"
 msgstr ""
 
@@ -23645,7 +23645,7 @@ msgid "Invitations did not send because these email addresses are invalid:"
 msgstr ""
 
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:420
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:67
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:83
 msgid ""
 "Invitations did not send to the following email addresses, because the "
 "address or domain has been blacklisted:"
@@ -23681,7 +23681,7 @@ msgid "Sorry, you don't have permission to view invites profile type."
 msgstr ""
 
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:742
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:143
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:159
 msgid "Revoke Invite"
 msgstr ""
 
@@ -30694,19 +30694,25 @@ msgstr ""
 msgid "Invitations were sent successfully to the following email addresses:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:82
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:67
+msgid ""
+"Invitations did not send to the following email addresses, because they are "
+"already invited:"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:98
 msgid "You have sent invitation emails to the following people:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:183
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:199
 msgid "You haven't sent any invitations yet."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:198
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:214
 msgid "« Prev"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:199
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:215
 msgid "Next »"
 msgstr ""
 
