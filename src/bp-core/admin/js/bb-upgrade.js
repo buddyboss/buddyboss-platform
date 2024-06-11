@@ -1,6 +1,6 @@
 window.bp = window.bp || {};
 
-(function () {
+( function () {
 
 	var APIDomain = 'https://www.buddyboss.com/';
 
@@ -77,53 +77,53 @@ window.bp = window.bp || {};
 							return;
 						}
 						xhr = null;
-					}
+					},
 				}
 			);
 		}
 
 		function fetchCollectionsAndCategories() {
 			// Check localStorage before making API requests.
-			var cachedCollections = localStorage.getItem( 'bb-integrations-collections' );
+			var cachedCollections   = localStorage.getItem( 'bb-integrations-collections' );
 			var cachedCategoriesObj = localStorage.getItem( 'bb-integrations-categories-obj' );
 			var cachedCategoriesArr = localStorage.getItem( 'bb-integrations-categories-arr' );
 
 			if ( cachedCollections && cachedCategoriesObj && cachedCategoriesArr ) {
-				defaultOptions.collections = JSON.parse( cachedCollections );
+				defaultOptions.collections   = JSON.parse( cachedCollections );
 				defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
 				defaultOptions.categoriesArr = JSON.parse( cachedCategoriesArr );
 				render( defaultOptions );
-				fetchIntegrations(false);
+				fetchIntegrations( false );
 			} else {
 				var collectionsRequest = jQuery.ajax(
 					{
 						method: 'GET',
-						url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99'
+						url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99',
 					}
 				);
 
 				var categoriesRequest = jQuery.ajax(
 					{
 						method: 'GET',
-						url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99&orderby=name&hide_empty=1'
+						url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99&orderby=name&hide_empty=1',
 					}
 				);
 
 				jQuery.when( collectionsRequest, categoriesRequest ).done(
 					function ( collectionsResponse, categoriesResponse ) {
-						defaultOptions.collections = collectionsResponse[0];
+						defaultOptions.collections   = collectionsResponse[ 0 ];
 						defaultOptions.categoriesObj = {};
 						defaultOptions.categoriesArr = [];
-						for (var i = 0; i < categoriesResponse[0].length; i++) {
-							var collection = categoriesResponse[0][i];
-							defaultOptions.categoriesObj[collection.id] = collection.name;
+						for ( var i = 0; i < categoriesResponse[ 0 ].length; i++ ) {
+							var collection                                = categoriesResponse[ 0 ][ i ];
+							defaultOptions.categoriesObj[ collection.id ] = collection.name;
 							defaultOptions.categoriesArr.push( [ collection.id, collection.name ] );
 						}
 
-						// Store the data in localStorage
-						localStorage.setItem('bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
-						localStorage.setItem('bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
-						localStorage.setItem('bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
+						// Store the data in localStorage.
+						localStorage.setItem( 'bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
+						localStorage.setItem( 'bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
+						localStorage.setItem( 'bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
 						render( defaultOptions );
 						fetchIntegrations( false );
 					}
@@ -171,12 +171,15 @@ window.bp = window.bp || {};
 				if ( searchDebounce ) {
 					clearTimeout( searchDebounce );
 				}
-				searchDebounce = setTimeout( function() {
-					jQuery( this ).closest( '.bb-integrations_search' ).addClass( 'loading' );
-					defaultOptions.searchQuery = jQuery( this ).val();
-					defaultOptions.page = 1;
-					fetchIntegrations( false );
-				}.bind( this ), 500 );
+				searchDebounce = setTimeout(
+					function () {
+						jQuery( this ).closest( '.bb-integrations_search' ).addClass( 'loading' );
+						defaultOptions.searchQuery = jQuery( this ).val();
+						defaultOptions.page        = 1;
+						fetchIntegrations( false );
+					}.bind( this ),
+					500
+				);
 			}
 		);
 
@@ -194,7 +197,7 @@ window.bp = window.bp || {};
 		jQuery( document ).on(
 			'click',
 			'.bb-integrations_loadmore',
-			function (e) {
+			function ( e ) {
 				e.preventDefault();
 				jQuery( this ).addClass( 'loading' );
 				defaultOptions.page += 1;
@@ -205,7 +208,7 @@ window.bp = window.bp || {};
 		jQuery( document ).on(
 			'click',
 			'.bb-integrations_search .clear-search',
-			function (e) {
+			function ( e ) {
 				e.preventDefault();
 				defaultOptions.page        = 1;
 				defaultOptions.searchQuery = '';
@@ -215,8 +218,8 @@ window.bp = window.bp || {};
 		);
 	}
 
-	if( jQuery( '.bb-integrations-section-listing' ).length ) {
+	if ( jQuery( '.bb-integrations-section-listing' ).length ) {
 		renderIntegrations();
 	}
 
-}(jQuery));
+}( jQuery ) );
