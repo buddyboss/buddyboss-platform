@@ -57,6 +57,22 @@ if ( isset( $exists ) && '' !== $exists ) {
 	<?php
 }
 
+$duplicates = trim( bb_filter_input_string( INPUT_GET, 'duplicates' ) );
+if ( isset( $duplicates ) && '' !== $duplicates ) {
+	?>
+	<aside class="bp-feedback bp-send-invites bp-template-notice error">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
+			<?php
+			$text = __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss' );
+			echo esc_html( trim( $text . ' ' . $duplicates ) );
+			?>
+		</p>
+
+	</aside>
+	<?php
+}
+
 $restricted = trim( bb_filter_input_string( INPUT_GET, 'restricted' ) );
 if ( isset( $restricted ) && '' !== $restricted ) {
 	?>
