@@ -1782,6 +1782,10 @@ div[class*="attached-gif-container"] {
 	background-image: none !important;
 	min-width: 130px;
 	min-height: 100px;
+
+	&.closed {
+		display: none;
+	}
 }
 
 .gif-media-search-dropdown {

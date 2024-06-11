@@ -3223,6 +3223,10 @@ div[class*="attached-gif-container"] .gif-icon {
   min-height: 100px;
 }
 
+#bbpress-forums div[class*="attached-gif-container"].closed {
+  display: none;
+}
+
 .gif-media-search-dropdown {
   position: absolute;
   top: 100%;
