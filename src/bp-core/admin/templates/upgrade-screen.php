@@ -75,14 +75,14 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 						<ul class="advance-list">
 							<li><?php esc_html_e( 'Member Profiles', 'buddyboss' ); ?></li>
 							<li><?php esc_html_e( 'Polls', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Social groups', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Member connections', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Email notifications', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Social Groups', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Member Connections', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Email Notifications', 'buddyboss' ); ?></li>
 							<li><?php esc_html_e( 'Reactions', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Forum discussions', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Private messaging', 'buddyboss' ); ?></li>
-							<li class="advance-list__expand"><?php esc_html_e( 'Activity feeds', 'buddyboss' ); ?></li>
-							<li class="advance-list__expand"><?php esc_html_e( 'Media uploading', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Forum Discussions', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Private Messaging', 'buddyboss' ); ?></li>
+							<li class="advance-list__expand"><?php esc_html_e( 'Activity Feeds', 'buddyboss' ); ?></li>
+							<li class="advance-list__expand"><?php esc_html_e( 'Media Uploading', 'buddyboss' ); ?></li>
 						</ul>
 					</div>
 					<div class="advance-card-action <?php echo $bb_platform_pro_active ? 'advance-action-success' : ''; ?>">
@@ -103,12 +103,12 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 					<div class="card-subtitle"><?php esc_html_e( 'Get an elegant design with powerful features for your course and community', 'buddyboss' ); ?></div>
 					<div class="advance-card-note">
 						<ul class="advance-list">
-							<li><?php esc_html_e( 'Premium interface', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Plug & play sites', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Premium learnDash interface', 'buddyboss' ); ?></li>
-							<li><?php esc_html_e( 'Plug & play sections', 'buddyboss' ); ?></li>
-							<li class="advance-list__expand"><?php esc_html_e( 'Member/student dashboard', 'buddyboss' ); ?></li>
-							<li class="advance-list__expand"><?php esc_html_e( 'Events calendar interface', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Premium Interface', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Plug & Play Sites', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Premium LearnDash Interface', 'buddyboss' ); ?></li>
+							<li><?php esc_html_e( 'Plug & Play Sections', 'buddyboss' ); ?></li>
+							<li class="advance-list__expand"><?php esc_html_e( 'Member/Student Dashboard', 'buddyboss' ); ?></li>
+							<li class="advance-list__expand"><?php esc_html_e( 'Events Calendar Interface', 'buddyboss' ); ?></li>
 						</ul>
 					</div>
 					<div class="advance-card-action <?php echo $bb_theme_active ? 'advance-action-success' : ''; ?>">
