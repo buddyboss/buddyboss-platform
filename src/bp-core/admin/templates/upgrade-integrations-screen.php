@@ -79,7 +79,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 						<div class="integrations_single_holder">
 							<div class="holder_integrations_img">
 								<% if ( item && item.logo_image_url ) { %>
-									<img class="lazyload-disable" src="<%= item.logo_image_url %>">
+									<img alt="" class="lazyload-disable" src="<%= item.logo_image_url %>">
 								<% } %>
 								<% if ( item && item.collection_name ) { %>
 									<div class="type_integrations_text type_compatible"><%= item.collection_name %></div>
@@ -109,7 +109,7 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 			<% } %>
 
 			<div class="bb-get-platform">
-				<img class="guarantee-img" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/upgrade/bb-guarantee.png' ); ?>" />
+				<img alt="" class="guarantee-img" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/upgrade/bb-guarantee.png' ); ?>" />
 				<div class="bb-get-platform_details">
 					<h3><?php echo wp_kses_post( __( 'Get Platform Pro for <br/>as low as $99', 'buddyboss' ) ); ?></h3>
 					<p><?php echo wp_kses_post( __( 'If you are unsatisfied for any reason for up to 14 days following your <br/>purchase, contact us for a full refund. No questions asked.', 'buddyboss' ) ); ?></p>
