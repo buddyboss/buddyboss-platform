@@ -83,56 +83,71 @@ window.bp = window.bp || {};
 		}
 
 		function fetchCollectionsAndCategories() {
+
+			function getTimestamp() {
+				return new Date().getTime();
+			}
+		
+			// Duration in milliseconds for 7 days
+			var duration = 7 * 24 * 60 * 60 * 1000;
+
 			// Check localStorage before making API requests.
 			var cachedCollections   = localStorage.getItem( 'bb-integrations-collections' );
 			var cachedCategoriesObj = localStorage.getItem( 'bb-integrations-categories-obj' );
 			var cachedCategoriesArr = localStorage.getItem( 'bb-integrations-categories-arr' );
+			var cachedTimestamp     = localStorage.getItem( 'bb-integrations-time' );
 
-			if ( cachedCollections && cachedCategoriesObj && cachedCategoriesArr ) {
-				defaultOptions.collections   = JSON.parse( cachedCollections );
-				defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
-				defaultOptions.categoriesArr = JSON.parse( cachedCategoriesArr );
-				render( defaultOptions );
-				fetchIntegrations( false );
-			} else {
-				var collectionsRequest = jQuery.ajax(
-					{
-						method: 'GET',
-						url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99&orderby=id',
-					}
-				);
-
-				var categoriesRequest = jQuery.ajax(
-					{
-						method: 'GET',
-						url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99&orderby=name&hide_empty=1',
-					}
-				);
-
-				jQuery.when( collectionsRequest, categoriesRequest ).done(
-					function ( collectionsResponse, categoriesResponse ) {
-						defaultOptions.collections   = collectionsResponse[ 0 ];
-						defaultOptions.categoriesObj = {};
-						defaultOptions.categoriesArr = [];
-						for ( var i = 0; i < categoriesResponse[ 0 ].length; i++ ) {
-							var collection                                = categoriesResponse[ 0 ][ i ];
-							defaultOptions.categoriesObj[ collection.id ] = collection.name;
-							defaultOptions.categoriesArr.push( [ collection.id, collection.name ] );
-						}
-
-						// Store the data in localStorage.
-						localStorage.setItem( 'bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
-						localStorage.setItem( 'bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
-						localStorage.setItem( 'bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
-						render( defaultOptions );
-						fetchIntegrations( false );
-					}
-				).fail(
-					function () {
-						console.log( 'Error fetching collections or categories' );
-					}
-				);
+			if ( cachedCollections && cachedCategoriesObj && cachedCategoriesArr && cachedTimestamp ) {
+				var currentTime = getTimestamp();
+        		var cachedTime = parseInt( cachedTimestamp, 10 );
+				if ( currentTime - cachedTime < duration ) {
+					defaultOptions.collections   = JSON.parse( cachedCollections );
+					defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
+					defaultOptions.categoriesArr = JSON.parse( cachedCategoriesArr );
+					render( defaultOptions );
+					fetchIntegrations( false );
+					return;
+				}
 			}
+
+			var collectionsRequest = jQuery.ajax(
+				{
+					method: 'GET',
+					url: APIDomain + 'wp-json/wp/v2/integrations_collection?per_page=99&orderby=id',
+				}
+			);
+
+			var categoriesRequest = jQuery.ajax(
+				{
+					method: 'GET',
+					url: APIDomain + 'wp-json/wp/v2/integrations_category?per_page=99&orderby=name&hide_empty=1',
+				}
+			);
+
+			jQuery.when( collectionsRequest, categoriesRequest ).done(
+				function ( collectionsResponse, categoriesResponse ) {
+					defaultOptions.collections   = collectionsResponse[ 0 ];
+					defaultOptions.categoriesObj = {};
+					defaultOptions.categoriesArr = [];
+					for ( var i = 0; i < categoriesResponse[ 0 ].length; i++ ) {
+						var collection                                = categoriesResponse[ 0 ][ i ];
+						defaultOptions.categoriesObj[ collection.id ] = collection.name;
+						defaultOptions.categoriesArr.push( [ collection.id, collection.name ] );
+					}
+
+					// Store the data in localStorage.
+					localStorage.setItem( 'bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
+					localStorage.setItem( 'bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
+					localStorage.setItem( 'bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
+					localStorage.setItem( 'bb-integrations-time', getTimestamp().toString());
+					render( defaultOptions );
+					fetchIntegrations( false );
+				}
+			).fail(
+				function () {
+					console.log( 'Error fetching collections or categories' );
+				}
+			);
 		}
 
 		function render( renderOptions ) {
