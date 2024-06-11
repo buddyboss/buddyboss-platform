@@ -4301,14 +4301,15 @@ table.moderations .column-member img {
   vertical-align: top;
   box-sizing: border-box;
   margin: 0 5px -1px 0;
-  padding: 8px;
+  padding-right: 8px;
+  padding-left: 8px;
   min-width: 18px;
-  height: 19px;
+  height: 20px;
+  line-height: 20px;
   border-radius: 15px;
   background-color: #d63638;
   color: #fff;
   font-size: 11px;
-  line-height: 0.3;
   text-align: center;
 }
 
