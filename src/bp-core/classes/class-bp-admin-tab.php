@@ -124,7 +124,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				wp_enqueue_script(
 					'bb-upgrade',
 					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade'. $min . '.js',
-					array( 'jquery' ),
+					array( 'jquery', 'underscore' ),
 					buddypress()->version,
 					true
 				);
