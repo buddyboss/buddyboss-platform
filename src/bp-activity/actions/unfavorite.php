@@ -35,6 +35,7 @@ function bp_activity_action_remove_favorite() {
 	$activity = new BP_Activity_Activity( $activity_id );
 
 	if ( empty( $activity->id ) ) {
+		unset( $activity );
 		return false;
 	}
 
@@ -62,6 +63,8 @@ function bp_activity_action_remove_favorite() {
 	} else {
 		bp_core_add_message( $message );
 	}
+
+	unset( $activity, $un_reacted, $type, $message );
 
 	bp_core_redirect( $redirect );
 }
