@@ -4693,6 +4693,9 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 }
 
 @media screen and (max-width: 370px) {
+  .activity-list .activity-item .ac-emotions_list .ac-emotion_item {
+    min-width: 30px;
+  }
   .activity-list .activity-item .ac-emotions_list .ac-emotion_item img {
     width: 30px;
     height: 30px;
@@ -4704,12 +4707,12 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 
 .activity-list .activity-item .acomment-display .ac-emotions_list.active {
   bottom: 20px;
-  left: -60px;
+  left: -30px;
 }
 
 body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
   bottom: 20px;
-  left: -60px;
+  left: -30px;
 }
 
 .activity-list .emojionearea .emojionearea-picker {
@@ -4758,6 +4761,15 @@ body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emot
 body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .acomment-display .ac-emotions_list:hover, body:not(.bb-is-mobile)
 .activity-list .activity-item.elementor-activity-item .acomment-display .ac-emotions_list:hover {
   left: -10px;
+}
+
+@media screen and (max-width: 480px) {
+  .activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list.active {
+    left: -40px;
+  }
+  body:not(.bb-is-mobile) .activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list:hover {
+    left: -40px;
+  }
 }
 
 /* Activity comment modal ==> Starts Here */
@@ -5259,6 +5271,14 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
 
 .bp-activity-head-group {
   display: flex;
+}
+
+.activity-header--group .activity-post-author > p {
+  display: inline;
+}
+
+.activity-header--group .activity-post-author > p .view.activity-time-since {
+  display: none;
 }
 
 .activity-group-avatar {
@@ -5873,9 +5893,8 @@ span.dashicons.dashicons-admin-file:before {
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list .activity-item,
 #buddypress.bb-media-model-wrapper.document-theatre .activity-list.bp-list .activity-item {
-  margin-bottom: 40px;
-  max-height: calc(90vh - 40px);
-  min-height: calc(90vh - 40px);
+  max-height: 90vh;
+  min-height: 90vh;
   position: static;
 }
 
@@ -7977,6 +7996,7 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .acomment-content p,
 .bb-media-model-wrapper .activity-comments .acomment-content p {
   margin-bottom: 0.5em;
+  word-break: break-word;
 }
 
 .buddypress-wrap .activity-comments .acomment-content p:last-child,
@@ -7987,6 +8007,11 @@ span.dashicons.dashicons-admin-file:before {
 .buddypress-wrap .activity-comments .acomment-content p:empty,
 .bb-media-model-wrapper .activity-comments .acomment-content p:empty {
   min-height: 1em;
+}
+
+.buddypress-wrap .activity-comments .acomment-content p a,
+.bb-media-model-wrapper .activity-comments .acomment-content p a {
+  word-break: break-all;
 }
 
 .buddypress-wrap .activity-comments .acomment-content .bb-activity-video-wrap,
