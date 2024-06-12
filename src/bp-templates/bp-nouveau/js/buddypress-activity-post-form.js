@@ -498,13 +498,13 @@ window.bp = window.bp || {};
 			}
 
 			// Set poll data.
-			if ( ! _.isUndefined( activity_data.poll_id ) ) {
-				self.postForm.model.set( 'poll_id', activity_data.poll_id );
-				self.postForm.model.set( 'activity_poll_title', activity_data.activity_poll_title );
-				self.postForm.model.set( 'activity_poll_options', activity_data.activity_poll_options );
-				self.postForm.model.set( 'activity_poll_allow_multiple_answer', activity_data.activity_poll_allow_multiple_answer );
-				self.postForm.model.set( 'activity_poll_allow_new_option', activity_data.activity_poll_allow_new_option );
-				self.postForm.model.set( 'activity_poll_duration', activity_data.activity_poll_duration );
+			if ( ! _.isUndefined( activity_data.poll ) ) {
+				self.postForm.model.set( 'poll_id', activity_data.poll.poll_id );
+				self.postForm.model.set( 'activity_poll_title', activity_data.poll.activity_poll_title );
+				self.postForm.model.set( 'activity_poll_options', activity_data.poll.activity_poll_options );
+				self.postForm.model.set( 'activity_poll_allow_multiple_answer', activity_data.poll.activity_poll_allow_multiple_answer );
+				self.postForm.model.set( 'activity_poll_allow_new_option', activity_data.poll.activity_poll_allow_new_option );
+				self.postForm.model.set( 'activity_poll_duration', activity_data.poll.activity_poll_duration );
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
