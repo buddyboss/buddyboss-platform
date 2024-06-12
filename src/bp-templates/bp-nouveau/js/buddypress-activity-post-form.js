@@ -5684,7 +5684,16 @@ window.bp = window.bp || {};
 						'link_error_msg',
 						'link_scrapping',
 						'link_loading',
-						'posting'
+						'posting',
+						'group_image',
+						'can_schedule_in_feed',
+						'can_create_poll_activity',
+						'bb-poll-question-option',
+						'activity_poll_title',
+						'activity_poll_allow_multiple_answer',
+						'activity_poll_allow_new_option',
+						'activity_poll_duration',
+						'activity_poll_options'
 					]
 				);
 
