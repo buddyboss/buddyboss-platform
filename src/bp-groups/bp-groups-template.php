@@ -292,6 +292,8 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
 		$retval = $before . $label . $after;
 	}
 
+	unset( $types, $before, $after, $label );
+
 	return $retval;
 }
 
@@ -500,6 +502,8 @@ function bp_has_groups( $args = '' ) {
 
 	// Setup the Groups template global.
 	$groups_template = new BP_Groups_Template( $args );
+
+	unset( $args );
 
 	/**
 	 * Filters whether or not there are groups to iterate over for the groups loop.
@@ -800,6 +804,8 @@ function bp_get_group_type( $group = false ) {
 			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
 	}
+
+	unset( $group_type, $type_slug );
 
 	/**
 	 * Filters the type for the current group in the loop.
@@ -2031,6 +2037,8 @@ function bp_group_list_parents( $group = false ) {
 
 		<?php
 	}
+
+	unset( $parent_group, $group_type, $group_type_object );
 }
 
 /**
@@ -2231,6 +2239,8 @@ function bp_group_search_form() {
 
 		' . wp_nonce_field( 'group-filter-box', '_wpnonce_group_filter', true, false ) . '
 		</form>';
+
+	unset( $action, $label, $name );
 
 	echo apply_filters( 'bp_group_search_form', $search_form_html );
 }
@@ -2546,6 +2556,8 @@ function bp_group_show_invite_status_setting( $setting, $group = false ) {
 	if ( $setting == $invite_status ) {
 		echo ' checked="checked"';
 	}
+
+	unset( $invite_status, $group_id );
 }
 
 /**
@@ -2593,6 +2605,8 @@ function bp_group_get_invite_status( $group_id = false ) {
 		$invite_status         = bb_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
 	}
 
+	unset( $allowed_invite_status );
+
 	/**
 	 * Filters the invite status of a group.
 	 *
@@ -2623,6 +2637,8 @@ function bp_group_show_activity_feed_status_setting( $setting, $group = false ) 
 	if ( $setting == $activity_feed_status ) {
 		echo ' checked="checked"';
 	}
+
+	unset( $activity_feed_status, $group_id );
 }
 
 /**
@@ -2664,6 +2680,8 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 		$activity_feed_status         = bb_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
 	}
 
+	unset( $allowed_activity_feed_status );
+
 	/**
 	 * Filters the invite status of a group.
 	 *
@@ -2694,6 +2712,8 @@ function bp_group_show_albums_status_setting( $setting, $group = false ) {
 	if ( $setting == $album_status ) {
 		echo ' checked="checked"';
 	}
+
+	unset( $album_status, $group_id );
 }
 
 /**
@@ -2735,6 +2755,8 @@ function bp_group_get_album_status( $group_id = false ) {
 		$album_status         = bb_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
 	}
 
+	unset( $allowed_album_status );
+
 	/**
 	 * Filters the album status of a group.
 	 *
@@ -2765,6 +2787,8 @@ function bp_group_show_media_status_setting( $setting, $group = false ) {
 	if ( $setting == $media_status ) {
 		echo ' checked="checked"';
 	}
+
+	unset( $media_status, $group_id );
 }
 
 /**
@@ -2784,6 +2808,8 @@ function bp_group_show_document_status_setting( $setting, $group = false ) {
 	if ( $setting === $document_status ) {
 		echo ' checked="checked"';
 	}
+
+	unset( $document_status, $group_id );
 }
 
 /**
@@ -2803,6 +2829,8 @@ function bp_group_show_video_status_setting( $setting, $group = false ) {
 	if ( $setting === $video_status ) {
 		echo ' checked="checked"';
 	}
+
+	unset( $video_status, $group_id );
 }
 
 /**
@@ -2843,6 +2871,8 @@ function bp_group_get_media_status( $group_id = false ) {
 		$allowed_media_status = bb_groups_get_settings_status( 'media' );
 		$media_status         = bb_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
 	}
+
+	unset( $allowed_media_status );
 
 	/**
 	 * Filters the album status of a group.
@@ -2896,6 +2926,8 @@ function bp_group_get_document_status( $group_id = false ) {
 		$document_status         = bb_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 	}
 
+	unset( $allowed_document_status );
+
 	/**
 	 * Filters the album status of a group.
 	 *
@@ -2944,6 +2976,8 @@ function bp_get_parent_group_id( $group_id = false, $user_id = false, $context =
 			$parent_id = 0;
 		}
 	}
+
+	unset( $group, $parent_group );
 
 	return (int) $parent_id;
 }
@@ -3009,6 +3043,8 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 
 	$possible_parents = groups_get_groups( $args );
 
+	unset( $descendants, $exclude_ids, $args );
+
 	return $possible_parents['groups'];
 }
 
@@ -3073,6 +3109,8 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
 			}
 		}
 		// }
+
+		unset( $child_args, $children, $parents );
 
 		return $groups;
 }

@@ -126,6 +126,8 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 	 * @param int    $group_id ID of the group that was updated.
 	 */
 	do_action( 'bp_groups_sent_updated_email', $user_ids, '', '', $group_id );
+
+	unset( $group, $changed, $changed_text, $user_ids, $type_key, $background_process, $unsubscribe_args, $args );
 }
 
 /**
@@ -204,6 +206,8 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 		),
 	);
 	bp_send_email( 'groups-membership-request', (int) $admin_id, $args );
+
+	unset( $group, $unsubscribe_args, $request_message, $requests, $args );
 }
 
 /**
@@ -283,6 +287,8 @@ function groups_notification_membership_request_completed( $requesting_user_id =
 
 		bp_send_email( 'groups-membership-request-rejected', (int) $requesting_user_id, $args );
 	}
+
+	unset( $group, $type_key, $args, $unsubscribe_args );
 }
 add_action( 'groups_membership_accepted', 'groups_notification_membership_request_completed', 10, 3 );
 add_action( 'groups_membership_rejected', 'groups_notification_membership_request_completed', 10, 3 );
@@ -355,6 +361,8 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 		),
 	);
 	bp_send_email( 'groups-member-promoted', (int) $user_id, $args );
+
+	unset( $group, $type_key, $args, $unsubscribe_args );
 }
 add_action( 'groups_promoted_member', 'groups_notification_promoted_member', 10, 2 );
 
@@ -451,6 +459,8 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		),
 	);
 	bp_send_email( 'groups-invitation', (int) $invited_user_id, $args );
+
+	unset( $inviter_ud, $invited_user_id, $type_key, $invited_link, $unsubscribe_args, $invite_message, $invitations, $args );
 }
 
 /** Notifications *************************************************************/
@@ -1544,6 +1554,8 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 			);
 		}
 	}
+
+	unset( $user_ids );
 }
 
 /**

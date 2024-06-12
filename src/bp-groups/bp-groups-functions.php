@@ -351,6 +351,8 @@ function groups_edit_base_group_details( $args = array() ) {
 	 */
 	do_action( 'groups_details_updated', $group->id, $old_group, $r['notify_members'] );
 
+	unset( $old_group, $group, $r );
+
 	return true;
 }
 
@@ -481,6 +483,8 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	 */
 	do_action( 'groups_settings_updated', $group->id );
 
+	unset( $group, $parents, $old_parent );
+
 	return true;
 }
 
@@ -522,6 +526,8 @@ function groups_delete_group( $group_id ) {
 	 * @param int $group_id ID of the group that was deleted.
 	 */
 	do_action( 'groups_delete_group', $group_id );
+
+	unset( $group );
 
 	return true;
 }
@@ -935,6 +941,8 @@ function groups_get_group_members( $args = array() ) {
 		);
 	}
 
+	unset( $members, $group_member_args, $cache_key );
+
 	return $retval;
 }
 
@@ -1000,6 +1008,8 @@ function groups_get_groups( $args = '' ) {
 	);
 
 	$r = bp_parse_args( $args, $defaults, 'groups_get_groups' );
+
+	unset( $defaults );
 
 	$groups = BP_Groups_Group::get(
 		array(
@@ -1310,6 +1320,8 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 		$groups = array_reverse( $groups, true );
 	}
 
+	unset( $membership_ids, $invitation_ids, $filters, $int_keys, $bool_keys );
+
 	return $groups;
 }
 
@@ -1474,6 +1486,8 @@ function groups_is_user_admin( $user_id, $group_id ) {
 		$is_admin = $user_groups[ $group_id ]->id;
 	}
 
+	unset( $user_groups );
+
 	return $is_admin;
 }
 
@@ -1499,6 +1513,8 @@ function groups_is_user_mod( $user_id, $group_id ) {
 	if ( isset( $user_groups[ $group_id ] ) ) {
 		$is_mod = $user_groups[ $group_id ]->id;
 	}
+
+	unset( $user_groups );
 
 	return $is_mod;
 }
@@ -1526,6 +1542,8 @@ function groups_is_user_member( $user_id, $group_id ) {
 	if ( isset( $user_groups[ $group_id ] ) ) {
 		$is_member = $user_groups[ $group_id ]->id;
 	}
+
+	unset( $user_groups );
 
 	return $is_member;
 }
@@ -1566,6 +1584,8 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 	} elseif ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;
 	}
+
+	unset( $status, $is_admin, $is_mod );
 
 	return $is_allowed;
 }
@@ -1611,6 +1631,8 @@ function groups_can_user_manage_media( $user_id, $group_id ) {
 		$is_allowed = true;
 	}
 
+	unset( $status, $is_admin, $is_mod );
+
 	return $is_allowed;
 }
 
@@ -1655,6 +1677,8 @@ function groups_can_user_manage_albums( $user_id, $group_id ) {
 		$is_allowed = true;
 	}
 
+	unset( $status, $is_admin, $is_mod );
+
 	return $is_allowed;
 }
 
@@ -1681,6 +1705,8 @@ function groups_is_user_banned( $user_id, $group_id ) {
 	if ( isset( $user_groups[ $group_id ] ) ) {
 		$is_banned = $user_groups[ $group_id ]->id;
 	}
+
+	unset( $user_groups );
 
 	return $is_banned;
 }
@@ -1895,6 +1921,8 @@ function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = fals
 	);
 	$groups = groups_get_groups( $args );
 
+	unset( $group_ids, $args );
+
 	return array(
 		'groups' => $groups['groups'],
 		'total'  => groups_get_invite_count_for_user( $user_id ),
@@ -2002,6 +2030,8 @@ function groups_invite_user( $args = '' ) {
 	 */
 	do_action( 'groups_invite_user', $r, $created );
 
+	unset( $r, $inv_args, $invites_class );
+
 	return $created;
 }
 
@@ -2044,6 +2074,8 @@ function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
 		 */
 		do_action( 'groups_uninvite_user', $group_id, $user_id, $inviter_id );
 	}
+
+	unset( $invites_class );
 
 	return $success;
 }
@@ -2109,6 +2141,8 @@ function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
 	 */
 	do_action( 'groups_reject_invite', $user_id, $group_id, $inviter_id );
 
+	unset( $invites_class );
+
 	return $success;
 }
 
@@ -2149,6 +2183,8 @@ function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
 	 * @param int $inviter_id ID of the inviter.
 	 */
 	do_action( 'groups_delete_invite', $user_id, $group_id, $inviter_id );
+
+	unset( $invites_class );
 
 	return true;
 }
@@ -2234,6 +2270,8 @@ function groups_send_invites( $args = array() ) {
 	 * @param int   $user_id       ID of the inviting user.
 	 */
 	do_action( 'groups_send_invites', $r['group_id'], $invited_users, $r['inviter_id'] );
+
+	unset( $invites_class, $invites, $invited_users, $args, $r );
 }
 
 /**
@@ -2385,6 +2423,8 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 		groups_add_membermeta( $member_id, 'promoted_' . $status . '_date', bp_core_current_time() );
 	}
 
+	unset( $member, $member_id );
+
 	return $status_updated;
 }
 
@@ -2422,6 +2462,8 @@ function groups_demote_member( $user_id, $group_id ) {
 		// Track demoted time.
 		groups_add_membermeta( $member_id, 'demoted_date', bp_core_current_time() );
 	}
+
+	unset( $member, $member_id );
 
 	return $status_updated;
 }
@@ -2461,6 +2503,8 @@ function groups_ban_member( $user_id, $group_id ) {
 		groups_add_membermeta( $member_id, 'banned_date', bp_core_current_time() );
 	}
 
+	unset( $member, $member_id );
+
 	return $status_updated;
 }
 
@@ -2498,6 +2542,8 @@ function groups_unban_member( $user_id, $group_id ) {
 		// Track unbanned time.
 		groups_add_membermeta( $member_id, 'unbanned_date', bp_core_current_time() );
 	}
+
+	unset( $member, $member_id );
 
 	return $status_updated;
 }
@@ -2603,6 +2649,8 @@ function groups_send_membership_request( $args = array() ) {
 
 			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
 				groups_join_group( $inv_args['item_id'], $inv_args['user_id'] );
+
+				unset( $inv_args, $r );
 				return true;
 			}
 		}
@@ -2631,8 +2679,11 @@ function groups_send_membership_request( $args = array() ) {
 		 */
 		do_action( 'groups_membership_requested', $r['user_id'], $admins, $r['group_id'], $request_id );
 
+		unset( $invites_class, $r, $admins );
 		return $request_id;
 	}
+
+	unset( $invites_class, $r );
 
 	return false;
 }
@@ -2739,6 +2790,8 @@ function groups_delete_membership_request( $membership_id, $user_id = 0, $group_
 			'item_id' => $group_id,
 		)
 	);
+
+	unset( $invites_class );
 
 	return $success;
 }
@@ -2899,6 +2952,8 @@ function groups_accept_all_pending_membership_requests( $group_id = 0 ) {
 	 * @param int $group_id ID of the group whose pending memberships were accepted.
 	 */
 	do_action( 'groups_accept_all_pending_membership_requests', $group_id );
+
+	unset( $user_ids );
 
 	return true;
 }
@@ -3175,6 +3230,8 @@ function bp_groups_update_orphaned_groups_on_group_delete( $group ) {
 		$cgroup->parent_id = $grandparent_group_id;
 		$cgroup->save();
 	}
+
+	unset( $grandparent_group_id, $child_args, $children, $cgroup );
 }
 add_action( 'bp_groups_delete_group', 'bp_groups_update_orphaned_groups_on_group_delete', 10, 2 );
 
@@ -3679,6 +3736,8 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 		'date_modified' => $member->date_modified,
 	);
 
+	unset( $member );
+
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
 }
 
@@ -3712,6 +3771,7 @@ function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
 
 	if ( empty( $invite_id ) ) {
+		unset( $group );
 		return '';
 	}
 
@@ -3720,6 +3780,8 @@ function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 
 	$message  = $member->content;
 	$group_id = $group->id;
+
+	unset( $group, $member );
 
 	/**
 	 * Filters will give you the invitation text.
@@ -3880,6 +3942,8 @@ function bp_group_get_group_type_key( $post_id ) {
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
 	}
 
+	unset( $term, $digits, $unique );
+
 	return apply_filters( 'bp_group_get_group_type_key', $key );
 }
 
@@ -3981,6 +4045,8 @@ function bp_register_active_group_types() {
 			}
 		}
 	}
+
+	unset( $group_type_ids, $group_types, $group_type_id, $name, $key, $singular_name, $temp );
 }
 
 /**
@@ -4253,6 +4319,9 @@ function bp_groups_get_excluded_group_types() {
 	endif;
 	wp_reset_query();
 	wp_reset_postdata();
+
+	unset( $post_type, $bp_group_type_args, $post_id, $name );
+
 	return $bp_group_type_ids;
 }
 
@@ -4291,6 +4360,8 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 	$query   = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
 	$results = $wpdb->get_results( $query, ARRAY_A );
 
+	unset( $bp_group_type_query, $taxonomy_id, $groups, $group_meta, $term_relationships, $query );
+
 	return $results;
 }
 
@@ -4326,6 +4397,8 @@ function bp_group_get_group_type_id( $group_type = '' ) {
 		$id               = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
 
 		$cache[ $cache_key ] = $id;
+
+		unset( $group_type_query, $posts );
 	}
 
 	return $id;
@@ -4405,6 +4478,8 @@ function get_group_role_label( $group_id, $label_name ) {
 		}
 	}
 
+	unset( $group_type_post_id, $group_type_roles, $get_group_type );
+
 	return apply_filters( 'bp_' . $label_name, $label, $group_id, $label_name );
 
 }
@@ -4422,6 +4497,8 @@ function bp_group_directory_page_content() {
 		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
 		echo apply_filters( 'the_content', $group_page_content );
 	}
+
+	unset( $page_ids, $group_page_content );
 }
 
 add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
@@ -4462,6 +4539,8 @@ function groups_can_user_manage_folders( $user_id, $group_id ) {
 	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
+
+	unset( $status, $is_admin, $is_mod );
 
 	return $is_allowed;
 }
@@ -4507,6 +4586,8 @@ function groups_can_user_manage_document( $user_id, $group_id ) {
 		$is_allowed = true;
 	}
 
+	unset( $status, $is_admin, $is_mod );
+
 	return $is_allowed;
 }
 
@@ -4547,6 +4628,8 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
+
+	unset( $status, $is_admin, $is_mod, $is_member );
 
 	return $is_allowed;
 }
@@ -4612,6 +4695,8 @@ function bp_groups_prime_mentions_results() {
 			)
 		);
 	}
+
+	unset( $members, $results );
 }
 add_action( 'bp_activity_mentions_prime_results', 'bp_groups_prime_mentions_results' );
 add_action( 'bbp_forums_mentions_prime_results', 'bp_groups_prime_mentions_results' );
@@ -4662,6 +4747,8 @@ function bp_groups_migrate_invitations() {
 	if ( $ids_to_delete ) {
 		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
 	}
+
+	unset( $records, $processed, $values, $table_name, $query, $ids_to_delete );
 }
 
 
@@ -4722,6 +4809,8 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 		$is_allowed = true;
 	}
 
+	unset( $status, $is_admin, $is_mod );
+
 	return $is_allowed;
 }
 
@@ -4761,6 +4850,8 @@ function groups_can_user_manage_video_albums( $user_id, $group_id ) {
 	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
+
+	unset( $status, $is_admin, $is_mod );
 
 	return $is_allowed;
 }
@@ -4843,6 +4934,8 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 		<?php
 	}
 
+	unset( $members, $total, $member, $avatar, $member_count );
+
 }
 
 /**
@@ -4908,6 +5001,8 @@ function bb_get_group_type_label_colors( $type ) {
 		);
 		wp_cache_set( $cache_key, $bp_group_type_label_color, 'bp_groups_group_type' );
 	}
+
+	unset( $post_id, $label_colors_meta, $label_color_data, $color_type, $background_color, $text_color );
 
 	return apply_filters( 'bb_get_group_type_label_colors', $bp_group_type_label_color );
 }
@@ -4978,6 +5073,8 @@ function bb_get_all_members_for_groups( $args = array() ) {
 		// Get the specific user ids.
 		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
 	}
+
+	unset( $sql );
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
 }
@@ -5085,12 +5182,14 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 	$group   = groups_get_group( $item_id );
 
 	if ( empty( $item_id ) || empty( $r ) ) {
+		unset( $item_id, $user_id, $group );
 		return ! empty( $html ) ? '' : array();
 	}
 
 	// Check the current user's permission.
 	$is_group_member = groups_is_user_member( $user_id, $item_id );
 	if ( false === (bool) $is_group_member ) {
+		unset( $item_id, $user_id, $group, $is_group_member );
 		return ! empty( $html ) ? '' : array();
 	}
 
@@ -5167,6 +5266,8 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			wp_kses_post( $button['link_text'] )
 		);
 	}
+
+	unset( $item_id, $user_id, $group, $is_group_member, $button_icon, $button_text, $button_hover_text, $subscription_status, $action, $url );
 
 	/**
 	 * Filter to update group subscription link.
@@ -5437,6 +5538,8 @@ function bb_update_groups_subgroup_membership_background_process() {
 		groups_leave_group( $group->group_id, $group->user_id );
 	}
 
+	unset( $groups );
+
 	$total_bg = $wpdb->get_row(
 		$wpdb->prepare(
 			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -5461,6 +5564,8 @@ function bb_update_groups_subgroup_membership_background_process() {
 	);
 
 	$bb_background_updater->save()->schedule_event();
+
+	unset( $total_bg );
 }
 
 
@@ -5515,6 +5620,8 @@ function bb_update_groups_invitation_background_process() {
 		}
 	}
 
+	unset( $group_invitations );
+
 	$total_bg = $wpdb->get_row(
 		$wpdb->prepare(
 			"SELECT count(DISTINCT id) as total FROM {$table_name} WHERE `type` = %s AND `group` = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -5539,6 +5646,8 @@ function bb_update_groups_invitation_background_process() {
 	);
 
 	$bb_background_updater->save()->schedule_event();
+
+	unset( $total_bg );
 }
 
 /**
@@ -5574,6 +5683,8 @@ function bb_get_parent_group_ids( $group_id ) {
 			break;
 		}
 	}
+
+	unset( $current_group_id, $parent_id );
 
 	return $parent_groups;
 }
@@ -5655,6 +5766,8 @@ function bb_update_groups_members_background_process( $group_id, $parent_id ) {
 	foreach ( $members as $member ) {
 		groups_join_group( $parent_id, $member );
 	}
+
+	unset( $members );
 
 	// Background job to add child group members to the parent groups.
 	$bb_background_updater->push_to_queue(

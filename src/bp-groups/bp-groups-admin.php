@@ -57,6 +57,8 @@ function bp_groups_add_admin_menu() {
 		// Hook into early actions to load custom CSS and our init handler.
 		add_action( "load-$hook", 'bp_groups_admin_load' );
 	}
+
+	unset( $hooks );
 }
 add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu', 60 );
 
@@ -133,6 +135,8 @@ function bp_groups_admin_load() {
 		}
 
 		$redirect_to = add_query_arg( 'deleted', $count, $redirect_to );
+
+		unset( $group_ids, $gf_ids, $forum_ids, $count );
 
 		bp_core_redirect( $redirect_to );
 
@@ -304,6 +308,7 @@ function bp_groups_admin_load() {
 
 		// If the group doesn't exist, just redirect back to the index.
 		if ( empty( $group->slug ) ) {
+			unset( $group, $group_id, $doaction );
 			wp_safe_redirect( $redirect_to );
 			exit;
 		}
@@ -575,6 +580,8 @@ function bp_groups_admin_load() {
 			$redirect_to    = add_query_arg( 'error_modified', $error_modified, $redirect_to );
 		}
 
+		unset( $group_id, $group, $error, $success_new, $error_new, $success_modified, $error_modified, $user_names, $new_role, $existing_role, $result, $success_modified, $error_modified );
+
 		/**
 		 * Filters the URL to redirect to after successfully editing a group.
 		 *
@@ -587,6 +594,9 @@ function bp_groups_admin_load() {
 
 		// If a referrer and a nonce is supplied, but no action, redirect back.
 	} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
+
+		unset( $doaction, $redirect_to );
+
 		wp_safe_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
 		exit;
 	}
@@ -1091,6 +1101,7 @@ function bp_groups_admin_delete() {
 	</div>
 
 	<?php
+	unset( $group_ids, $groups, $gids );
 }
 
 /**
@@ -1319,6 +1330,8 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php endif; ?>
 
 	<?php
+
+	unset( $invite_status, $activity_feed_status, $media_status, $album_status, $document_status, $video_status, $message_status );
 }
 
 /**
@@ -1353,6 +1366,8 @@ function bp_groups_admin_edit_metabox_group_parent( $item ) {
 	</div>
 
 	<?php
+
+	unset( $current_parent_group_id, $possible_parent_groups );
 }
 
 /**
@@ -1562,6 +1577,8 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 
 		<?php
 	endforeach;
+
+	unset( $members, $pagination );
 }
 
 /**
@@ -1634,6 +1651,7 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 	</div>
 
 	<?php
+	unset( $types, $current_types, $backend_only );
 
 	wp_nonce_field( 'bp-group-type-change-' . $group->id, 'bp-group-type-nonce' );
 }
@@ -1760,6 +1778,8 @@ function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
 		$usernames[] = $user->user_login;
 	}
 
+	unset( $users );
+
 	return $usernames;
 }
 
@@ -1804,7 +1824,9 @@ function bp_groups_admin_autocomplete_handler() {
 		}
 	}
 
-	wp_die( json_encode( $matches ) );
+	unset( $suggestions, $term, $group_id );
+
+	wp_die( wp_json_encode( $matches ) );
 }
 add_action( 'wp_ajax_bp_group_admin_member_autocomplete', 'bp_groups_admin_autocomplete_handler' );
 
@@ -1876,6 +1898,8 @@ function bp_groups_admin_process_group_type_bulk_changes( $doaction ) {
 	} else {
 		$redirect = add_query_arg( array( 'updated' => 'group-type-change-success' ), wp_get_referer() );
 	}
+
+	unset( $new_type, $error, $group_id, $group_type, $removed, $set );
 
 	wp_safe_redirect( $redirect );
 	exit();
@@ -2128,7 +2152,7 @@ function bp_group_type_labels_meta_box( $post ) {
 	</table>
 
 	<?php
-
+	unset( $meta, $label_name, $label_singular_name, $group_type_roles, $organizer_plural, $moderator_plural, $members_plural, $organizer_singular, $moderator_singular, $members_singular );
 }
 
 /**
@@ -2299,6 +2323,8 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<?php
 		}
 	}
+
+	unset( $meta, $enable_filter, $get_restrict_invites_same_group_types, $get_all_registered_member_types, $get_selected_member_types, $member_type_key );
 }
 
 /**
@@ -2496,15 +2522,18 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$post = get_post( $post_id );
 
 	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+		unset( $post );
 		return;
 	}
 
 	if ( ! isset( $_POST['_bp-group-type-nonce'] ) ) {
+		unset( $post );
 		return;
 	}
 
 	// verify nonce
 	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+		unset( $post );
 		return;
 	}
 
@@ -2512,6 +2541,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$data = isset( $_POST['bp-group-type'] ) ? $_POST['bp-group-type'] : array();
 
 	if ( empty( $data ) ) {
+		unset( $post, $data );
 		return;
 	}
 
@@ -2556,6 +2586,8 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', $member_type_group_invites );
 	update_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', $get_restrict_invites_same_group_types );
 	update_post_meta( $post_id, '_bp_group_type_label_color', $label_color );
+
+	unset( $post, $data, $error, $post_title, $key, $label_name, $singular_name, $enable_filter, $enable_remove, $label_color, $member_type, $member_type_group_invites, $get_restrict_invites_same_group_types, $term, $digits, $unique, $get_existing );
 }
 
 function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
@@ -2567,15 +2599,18 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
 	$post = get_post( $post_id );
 
 	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+		unset( $post );
 		return;
 	}
 
 	if ( ! isset( $_POST['_bp-group-type-nonce'] ) ) {
+		unset( $post );
 		return;
 	}
 
 	// verify nonce
 	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+		unset( $post );
 		return;
 	}
 
@@ -2585,10 +2620,12 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
 	$data = isset( $bp_group_roles_labels ) ? $bp_group_roles_labels : array();
 
 	if ( empty( $data ) ) {
+		unset( $post, $data, $bp_group_roles_labels );
 		return;
 	}
 
 	update_post_meta( $post_id, '_bp_group_type_role_labels', $data );
+	unset( $post, $data, $bp_group_roles_labels );
 }
 
 /**
@@ -2597,7 +2634,7 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_groups_admin_group_type_listing_add_groups_tab() {
-	global $pagenow ,$post;
+	global $pagenow, $post;
 
 	if ( true === bp_disable_group_type_creation() ) {
 
@@ -2674,6 +2711,8 @@ function bb_group_type_labelcolor_metabox( $post ) {
 		</div>
 	</div>
 	<?php
+
+	unset( $post_type, $meta_data, $label_color_data, $color_type, $colorpicker_class, $background_color, $text_color );
 }
 
 /**
