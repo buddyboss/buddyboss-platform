@@ -29,8 +29,8 @@
 	"require": {
 		"composer/installers": "~1.0",
 		"php": ">=5.3.0",
-		"phpunit/phpunit": "6.1.0",
-		"php-ffmpeg/php-ffmpeg": "^0.16.0",
+		"phpunit/phpunit": "11.2.1",
+		"php-ffmpeg/php-ffmpeg": "v1.2.0",
 		"maennchen/zipstream-php": "^2.1"
 	},
 	"require-dev": {

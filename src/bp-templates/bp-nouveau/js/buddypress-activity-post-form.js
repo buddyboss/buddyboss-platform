@@ -2212,6 +2212,10 @@ window.bp = window.bp || {};
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
+					chunking 					 : true,
+					chunkSize					 : 30*1024*1024,
+					retryChunks					 : true,
+					retryChunksLimit			 : 3,
 					maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
 					maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 					dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
@@ -2298,7 +2302,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 
 							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
 							if ( ! bp.privacyEditable ) {
