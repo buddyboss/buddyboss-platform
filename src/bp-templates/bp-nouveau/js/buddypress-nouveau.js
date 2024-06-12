@@ -140,6 +140,9 @@ window.bp = window.bp || {};
 					bp_icon_type = 'check';
 				} else if ( bp_msg_type === 'warning' ) {
 					bp_icon_type = 'exclamation-triangle';
+				} else if ( bp_msg_type === 'delete' ) {
+					bp_icon_type = 'trash';
+					bp_msg_type = 'error';
 				} else {
 					bp_icon_type = 'info';
 				}
@@ -201,6 +204,9 @@ window.bp = window.bp || {};
 
 			// An object containing each query var.
 			this.querystring = this.getLinkParams();
+
+			// Get Server Time Difference on load.
+			this.bbServerTimeDiff = new Date( BP_Nouveau.wpTime ).getTime() - new Date().getTime();
 		},
 
 		/**
@@ -356,7 +362,7 @@ window.bp = window.bp || {};
 		 */
 		ajax: function ( post_data, object, button ) {
 
-			if ( this.ajax_request && typeof button === 'undefined' ) {
+			if ( this.ajax_request && typeof button === 'undefined' && post_data.status !== 'scheduled') {
 				this.ajax_request.abort();
 			}
 
@@ -484,7 +490,8 @@ window.bp = window.bp || {};
 					extras: null,
 					caller: null,
 					template: null,
-					method: 'reset'
+					method: 'reset',
+					ajaxload: true,
 				},
 				data
 			);
@@ -520,6 +527,10 @@ window.bp = window.bp || {};
 
 			if ( null !== data.extras ) {
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
+			}
+
+			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
+				return false;
 			}
 
 			/* Set the correct selected nav and filter */
@@ -593,6 +604,15 @@ window.bp = window.bp || {};
 				function ( response ) {
 					if ( false === response.success || _.isUndefined( response.data ) ) {
 						return;
+					}
+
+					// Control the scheduled posts layout view.
+					if( data.status === 'scheduled' ) {
+						if( $( response.data.contents ).hasClass( 'bp-feedback' ) ) {
+							$( data.target ).parent().addClass( 'has-no-content' );
+						} else {
+							$( data.target ).parent().addClass( 'has-content' );
+						}
 					}
 
 					if ( !_.isUndefined( response.data.layout ) ) {
@@ -710,7 +730,13 @@ window.bp = window.bp || {};
 				this.objects,
 				function ( o, object ) {
 					// Continue when ajax is blocked for object request.
-					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+					if (
+						$( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length &&
+						(
+							! _.isUndefined( BP_Nouveau.is_send_ajax_request ) &&
+							'' !== BP_Nouveau.is_send_ajax_request
+						)
+					) {
 						return;
 					}
 
@@ -773,6 +799,10 @@ window.bp = window.bp || {};
 							queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
 						} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+						}
+
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+							queryData.ajaxload = false;
 						}
 
 						// Populate the object list.
@@ -3063,7 +3093,8 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.media ) &&
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
-				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
+				! $targetEl.is( '.emojioneemoji,.emojibtn' ) &&
+				! $targetEl.closest( '.emojionearea-theatre' ).length ) {
 				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 				if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
 					$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
@@ -3700,7 +3731,7 @@ window.bp = window.bp || {};
 				totalProgress = 0;
 			if ( dropzone.files.length == 1 ) {
 				$( dropzone.element ).addClass( 'dz-single-view' );
-				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
+				message = BP_Nouveau.media.i18n_strings.uploading + ' <strong>' + dropzone.files[0].name + '</strong>';
 				progress = dropzone.files[0].upload.progress;
 			} else {
 				$( dropzone.element ).removeClass( 'dz-single-view' );
@@ -3709,7 +3740,7 @@ window.bp = window.bp || {};
 					totalProgress += file.upload.progress;
 				});
 				progress = totalProgress / dropzone.files.length;
-				message = 'Uploading <strong>' + dropzone.files.length + ' files</strong>';
+				message = BP_Nouveau.media.i18n_strings.uploading + ' <strong>' + dropzone.files.length + ' files</strong>';
 			}
 
 			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
@@ -4241,7 +4272,7 @@ window.bp = window.bp || {};
 					);
 					self.render( self.options );
 				}
-			}
+			},
 		},
 
 		/**
@@ -4310,6 +4341,27 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
+		},
+
+		/**
+		 *  Get current Server Time
+		 */
+		bbServerTime: function() {
+
+			var localTime = new Date();
+			var currentServerTime = new Date( localTime.getTime() + bp.Nouveau.bbServerTimeDiff );
+
+			// Extract date, year, and time components
+			var date = currentServerTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+			var year = currentServerTime.getFullYear();
+			var time = currentServerTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+			return {
+				currentServerTime: currentServerTime,
+				date: date,
+				year: year,
+				time: time
+			};
 		},
 
 		/**

@@ -6007,6 +6007,13 @@ function bb_check_server_disabled_symlink() {
  * @since BuddyBoss 1.8.6
  */
 function bb_restricate_rss_feed() {
+	if (
+		empty( $_SERVER['HTTP_HOST'] ) ||
+		empty( $_SERVER['REQUEST_URI'] )
+	) {
+		return;
+	}
+
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (
 		strpos( $actual_link, '/feed/' ) === false &&
@@ -9755,4 +9762,15 @@ function bb_mention_add_user_dynamic_link( $content ) {
 	};
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
+}
+
+/**
+ * Function to return the minimum pro version to show notice.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_schedule_posts_version() {
+	return '2.5.20';
 }

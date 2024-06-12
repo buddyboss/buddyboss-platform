@@ -167,6 +167,9 @@ class BP_Document_Component extends BP_Component {
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
 
+		$this->published_status = 'published';
+		$this->scheduled_status = 'scheduled';
+
 		// Global tables for document component.
 		$global_tables = array(
 			'table_name'             => $bp->table_prefix . 'bp_document',
