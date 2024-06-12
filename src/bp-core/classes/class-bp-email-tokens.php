@@ -2759,7 +2759,7 @@ class BP_Email_Tokens {
 							?>
 							<div class="bb-activity-media-elem" style="background-image: url('<?php echo esc_url( $poster_thumb ); ?>'); background-size:cover; display: block; width: 250px; vertical-align: top; height: 145px; overflow: hidden; padding: 0; border-radius: 4px;">
 								<a href="<?php echo esc_url( $image_url ); ?>">
-									<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.svg" alt="<?php echo esc_attr( bp_get_video_title() ); ?>"/>
+									<img style="display: block; height: 60px;width: 60px; background-color: #fff; border-radius: 50%; margin: 42.5px 0 0 95px" src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-play.png" alt="<?php echo esc_attr( bp_get_video_title() ); ?>"/>
 								</a>
 							</div>
 							<?php if ( $total_video_ids > 1 ) : ?>
