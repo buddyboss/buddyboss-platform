@@ -102,6 +102,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$screen    = get_current_screen();
 			$screen_id = $screen ? $screen->id : '';
 
+			$min = bp_core_get_minified_asset_suffix();
+
 			if (
 				'buddyboss_page_bp-settings' === $screen_id ||
 				'bp-member-type' === $screen_id
@@ -112,11 +114,21 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			wp_enqueue_script(
 				'bp-admin',
-				buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
+				buddypress()->plugin_url . 'bp-core/admin/js/settings-page'. $min . '.js',
 				array( 'jquery', 'jquery-ui-sortable' ),
 				buddypress()->version,
 				true
 			);
+
+			if ( 'buddyboss_page_bb-upgrade' === $screen_id ) {
+				wp_enqueue_script(
+					'bb-upgrade',
+					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade'. $min . '.js',
+					array( 'jquery', 'underscore' ),
+					buddypress()->version,
+					true
+				);
+			}
 
 			$email_template = '';
 
