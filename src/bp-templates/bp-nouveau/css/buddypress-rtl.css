@@ -3213,6 +3213,20 @@ div[class*="attached-gif-container"] .gif-icon {
   opacity: 0.45;
 }
 
+#bbpress-forums div[class*="attached-gif-container"] {
+  height: auto !important;
+  width: auto !important;
+  display: inline-block;
+  max-width: 450px;
+  background-image: none !important;
+  min-width: 130px;
+  min-height: 100px;
+}
+
+#bbpress-forums div[class*="attached-gif-container"].closed {
+  display: none;
+}
+
 .gif-media-search-dropdown {
   position: absolute;
   top: 100%;
@@ -26937,7 +26951,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {

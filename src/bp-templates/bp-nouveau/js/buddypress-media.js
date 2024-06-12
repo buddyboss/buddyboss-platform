@@ -2083,6 +2083,12 @@ window.bp = window.bp || {};
 			if ( $forums_video_container.length ) {
 				self.resetForumsVideoComponent( $forums_video_container.data( 'key' ) );
 			}
+
+			// Scroll down to show GIF picker in full size.
+			if ( $( window ).width() <= 544 ) {
+				var FormPopup = target.closest( '.bb-modal' );
+				jQuery( FormPopup ).scrollTop( FormPopup[0].scrollHeight );
+			}
 		},
 
 		closePickersOnEsc: function ( event ) {
