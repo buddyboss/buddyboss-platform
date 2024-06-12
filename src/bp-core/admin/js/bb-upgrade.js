@@ -87,8 +87,8 @@ window.bp = window.bp || {};
 			function getTimestamp() {
 				return new Date().getTime();
 			}
-		
-			// Duration in milliseconds for 7 days
+
+			// Duration in milliseconds for 7 days.
 			var duration = 7 * 24 * 60 * 60 * 1000;
 
 			// Check localStorage before making API requests.
@@ -99,7 +99,7 @@ window.bp = window.bp || {};
 
 			if ( cachedCollections && cachedCategoriesObj && cachedCategoriesArr && cachedTimestamp ) {
 				var currentTime = getTimestamp();
-        		var cachedTime = parseInt( cachedTimestamp, 10 );
+				var cachedTime  = parseInt( cachedTimestamp, 10 );
 				if ( currentTime - cachedTime < duration ) {
 					defaultOptions.collections   = JSON.parse( cachedCollections );
 					defaultOptions.categoriesObj = JSON.parse( cachedCategoriesObj );
@@ -139,7 +139,7 @@ window.bp = window.bp || {};
 					localStorage.setItem( 'bb-integrations-collections', JSON.stringify( defaultOptions.collections ) );
 					localStorage.setItem( 'bb-integrations-categories-obj', JSON.stringify( defaultOptions.categoriesObj ) );
 					localStorage.setItem( 'bb-integrations-categories-arr', JSON.stringify( defaultOptions.categoriesArr ) );
-					localStorage.setItem( 'bb-integrations-time', getTimestamp().toString());
+					localStorage.setItem( 'bb-integrations-time', getTimestamp().toString() );
 					render( defaultOptions );
 					fetchIntegrations( false );
 				}
