@@ -912,13 +912,19 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			$phpVersion = phpversion();
 
 			// Added phpversion check as ZipFile is not supported in less than PHP 7.1.
-			if ( version_compare( $phpVersion, '7.1', '>=' ) ) {
-				$options = new \ZipStream\Option\Archive();
+			if (
+				version_compare( $phpVersion, '7.1', '>=' ) &&
+				(
+					class_exists( 'BuddyBossPlatform\ZipStream\ZipStream' ) ||
+					class_exists( '\ZipStream\ZipStream' )
+				)
+			) {
+				$options = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->archive();
 				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers.
 				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path.
 
 				// Create a new ZipFile instance.
-				$zip = new \ZipStream\ZipStream( $file_name, $options );
+				$zip = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->zipstream( $file_name, $options );
 
 				$files = new RecursiveIteratorIterator(
 					new RecursiveDirectoryIterator( $parent_folder ),
