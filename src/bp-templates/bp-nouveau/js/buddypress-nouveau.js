@@ -904,6 +904,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 
+			// Display download button for media/document/video, Display more options on activity.
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
+
 			// Create event for remove single notification.
 			bp.Nouveau.notificationRemovedAction();
 			// Remove all notifications.
@@ -4367,6 +4370,25 @@ window.bp = window.bp || {};
 				year: year,
 				time: time
 			};
+		},
+
+		toggleActivityOption: function( event ) {
+
+			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible open' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( 'body' ).removeClass( 'more_option_open' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible open' );
+					$( 'body' ).addClass( 'more_option_open' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+				$( 'body' ).removeClass( 'more_option_open' );
+			}
 		},
 
 		/**
