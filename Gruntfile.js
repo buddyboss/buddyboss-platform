@@ -225,6 +225,7 @@ module.exports = function (grunt) {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
 				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
+				composer: [ BUILD_DIR + 'composer.json', BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
 			},
 			copy: {
 				files: {
@@ -446,7 +447,7 @@ module.exports = function (grunt) {
 					stdout: false,
 				},
 				composer: {
-					command: 'composer update',
+					command: 'composer update; composer scoper;',
 					cwd: SOURCE_DIR,
 					stdout: false
 				}
@@ -554,7 +555,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.
