@@ -3506,12 +3506,17 @@ window.bp = window.bp || {};
 
 				whats_new_form.removeClass( 'focus-in--blank-group' );
 				var $this = this;
-				if ( $this.model.hasOwnProperty('attributes') &&
-						$this.model.attributes.hasOwnProperty('object_type') &&
-						'group' === $this.model.attributes.object_type ) {
-					var previousSelected = _.find( this.model.collection.models, function ( model ) {
-						return model !== $this.model && model.get( 'selected' );
-					} );
+				if (
+					$this.model.hasOwnProperty( 'attributes' ) &&
+					$this.model.attributes.hasOwnProperty( 'object_type' ) &&
+					'group' === $this.model.attributes.object_type
+				) {
+					var previousSelected = _.find(
+						this.model.collection.models,
+						function ( model ) {
+							return model !== $this.model && model.get( 'selected' );
+						}
+					);
 					if ( previousSelected ) {
 						previousSelected.set( 'selected', false );
 					}
@@ -3525,7 +3530,7 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'activity_media_close' );
 					}
 				} else {
-					$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
+					$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'media-support-hide' );
 				}
 
 				// check document is enable in groups or not.
@@ -3535,7 +3540,7 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'activity_document_close' );
 					}
 				} else {
-					$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
+					$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'document-support-hide' );
 				}
 
 				// check video is enable in groups or not.
@@ -3545,7 +3550,7 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'activity_video_close' );
 					}
 				} else {
-					$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
+					$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'video-support-hide' );
 				}
 			}
 		}
