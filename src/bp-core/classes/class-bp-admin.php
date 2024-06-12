@@ -631,7 +631,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Output the upgrade screen.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.30
 		 */
 		public function bp_upgrade_screen() {
 			$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade'; // phpcs:ignore

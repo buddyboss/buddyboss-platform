@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 
 require_once buddypress()->plugin_dir . 'bp-core/admin/templates/benchmark.php';
@@ -14,7 +14,7 @@ require_once buddypress()->plugin_dir . 'bp-core/admin/templates/benchmark.php';
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 class BB_Performance_Tester {
 
@@ -23,14 +23,14 @@ class BB_Performance_Tester {
 	 *
 	 * @var BB_Performance_Tester
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 */
 	private static $instance;
 
 	/**
 	 * Class instance
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof BB_Performance_Tester ) ) {
@@ -42,7 +42,7 @@ class BB_Performance_Tester {
 	/**
 	 * Constructor
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_and_style' ) );
@@ -51,7 +51,7 @@ class BB_Performance_Tester {
 	/**
 	 * Settings page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 */
 	public function settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -367,7 +367,7 @@ class BB_Performance_Tester {
 	/**
 	 * Version name of the API.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return string
 	 */
@@ -378,7 +378,7 @@ class BB_Performance_Tester {
 	/**
 	 * Fires when enqueuing scripts for all admin pages.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param string $hook The current admin page.
 	 *

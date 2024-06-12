@@ -3749,7 +3749,7 @@ function bb_cpt_feed_enabled_disabled() {
 /**
  * Register the BuddyBoss Upgrade submenu page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  *
  * @param string $active_tab Current tab name.
  *
@@ -3790,7 +3790,7 @@ function bb_core_get_upgrade_settings_admin_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param array $tabs Tab data.
 	 */
@@ -3800,7 +3800,7 @@ function bb_core_get_upgrade_settings_admin_tabs( $active_tab = '' ) {
 /**
  * Output the performance tabs in the admin area.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  *
  * @return void
  */
@@ -3816,7 +3816,7 @@ function bb_core_upgrade_admin_tabs() {
 	/**
 	 * Filters the admin tabs to be displayed.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 2.6.30
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
@@ -3849,7 +3849,7 @@ function bb_core_upgrade_admin_tabs() {
 	/**
 	 * Fires after the output of tabs for the admin area.
 	 *
-	 * @since BuddyPress [BBVERSION]
+	 * @since BuddyPress 2.6.30
 	 */
 	do_action( 'bb_upgrade_settings_admin_tabs' );
 }
@@ -3857,7 +3857,7 @@ function bb_core_upgrade_admin_tabs() {
 /**
  * Web performance tester class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  *
  * return object
  */
