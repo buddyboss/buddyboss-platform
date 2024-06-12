@@ -1077,6 +1077,11 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	$bp->avatar_admin->resized = $avatar_attachment->shrink( $bp->avatar_admin->original['file'], $ui_available_width );
 	$bp->avatar_admin->image   = new stdClass();
 
+	if ( is_wp_error( $bp->avatar_admin->resized ) ) {
+		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
+		return false;
+	}
+
 	// We only want to handle one image after resize.
 	if ( empty( $bp->avatar_admin->resized ) ) {
 		$bp->avatar_admin->image->file = $bp->avatar_admin->original['file'];

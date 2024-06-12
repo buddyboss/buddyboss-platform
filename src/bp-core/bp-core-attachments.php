@@ -1406,6 +1406,11 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 
 	// Resize the image so that it fit with the cover photo dimensions.
 	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
+
+	if ( is_wp_error( $cover_image ) ) {
+		return false;
+	}
+
 	$is_too_small = false;
 
 	// Image is too small in width and height.
@@ -1656,6 +1661,11 @@ function bp_attachments_cover_image_ajax_upload() {
 	);
 
 	if ( ! $cover ) {
+
+		if ( ! extension_loaded( 'gd' ) ) {
+			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'GD library is disabled.', 'buddyboss' ) );
+		}
+
 		bp_attachments_json_response(
 			false,
 			$is_html4,
