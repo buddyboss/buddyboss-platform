@@ -529,6 +529,10 @@ window.bp = window.bp || {};
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
+			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
+				return false;
+			}
+
 			/* Set the correct selected nav and filter */
 			$( this.objectNavParent + ' [data-bp-object]' ).each(
 				function () {
@@ -537,10 +541,6 @@ window.bp = window.bp || {};
 					// $( this ).find( 'span' ).text('');
 				}
 			);
-
-			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
-				return false;
-			}
 
 			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
@@ -916,6 +916,9 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+
+			// Prevent duplicated emoji from windows system emoji picker.
+			$( document ).keydown( this.mediumFormAction.bind( this ) );
 		},
 
 		/**
@@ -4359,6 +4362,50 @@ window.bp = window.bp || {};
 				year: year,
 				time: time
 			};
+		},
+
+		/**
+		 * Insert blank space at cursor position to prevent duplicated emoji from windows system emoji picker.
+		 */
+		mediumFormAction: function( event ) {
+			var element;
+
+			event = event || window.event;
+
+			if ( event.target ) {
+				element = event.target;
+			} else if ( event.srcElement) {
+				element = event.srcElement;
+			}
+
+			if ( navigator.userAgent.indexOf( 'Win' ) !== -1 && $( element ).hasClass( 'medium-editor-element' ) && event.metaKey ) {
+				var content = element.innerHTML || element.textContent;
+				content = content.trim();
+				if ( !content ) {
+					event.preventDefault();
+					this.insertBlankSpaceAtCursor();
+				}
+			}
+		},
+
+		insertBlankSpaceAtCursor: function() {
+			var selection = window.getSelection();
+			if ( !selection.rangeCount ) {
+				return;
+			}
+
+			var range = selection.getRangeAt( 0 );
+
+			var spaceNode = document.createElement( 'span' );
+			spaceNode.innerHTML = '&nbsp;';
+
+			range.insertNode( spaceNode );
+
+			range.setStartAfter( spaceNode );
+			range.setEndAfter( spaceNode );
+
+			selection.removeAllRanges();
+			selection.addRange( range );
 		}
 	};
 
