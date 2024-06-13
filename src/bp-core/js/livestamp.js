@@ -149,7 +149,7 @@
 							output = ( count < 2 ) ? bb_livestamp.minute_text : livestampGlobal.bbConcateString( floor_count, bb_livestamp.minutes_text );
 							break;
 						default:
-							output = ( count < 2 ) ? bb_livestamp.second_text : livestampGlobal.bbConcateString( floor_count, bb_livestamp.seconds_text );
+							output = bb_livestamp.right_now_text;
 					}
 
 					// No output, so happened right now.
@@ -159,7 +159,9 @@
 				}
 			}
 
-			output = bb_livestamp.ago_text.replace( '%s', output );
+			if ( output !== bb_livestamp.right_now_text ) {
+				output = bb_livestamp.ago_text.replace( '%s', output );
+			}
 
 			return output;
 		},

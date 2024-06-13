@@ -804,7 +804,7 @@ function bp_core_enqueue_livestamp() {
 				1,
 			),
 			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
-			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) ),
 			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
 			'second_text'       => __( 'a second', 'buddyboss' ),
 			'seconds_text'      => __( 'seconds', 'buddyboss' ),
