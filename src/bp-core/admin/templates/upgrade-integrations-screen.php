@@ -4,7 +4,7 @@
  *
  * This file contains information about BuddyBoss Upgrade.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.6.30
  *
  * @package BuddyBoss
  */

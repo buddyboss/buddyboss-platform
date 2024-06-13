@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Performance Tester Admin Screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  *
  * @package BuddyBoss
  */
