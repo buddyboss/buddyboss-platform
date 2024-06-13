@@ -666,37 +666,35 @@ function bb_get_member_invitation_query() {
 }
 
 /**
- * Check if the invite already sent to perticular email address.
+ * Check if the invite already sent to particular email address.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $email Email.
  *
  * @return bool $is_already_invited True|False.
  */
 function bb_is_email_address_already_invited( $email ) {
 
-	$is_already_invited = false;
-
 	// Get invites.
 	$invites = get_posts(
-			array(
+		array(
 			'post_type'   => 'bp-invite',
 			'post_status' => 'publish',
 			'meta_key'    => '_bp_invitee_email',
 			'meta_value'  => $email,
-			'numberposts' => 1
+			'numberposts' => 1,
 		)
 	);
 
-	if ( ! empty( $invites ) ) { 
-		$is_already_invited = true;
-	}
+	$is_already_invited = ! empty( $invites );
 
 	/**
-	 * Filter to check if email address alredy invited.
-	 *
-	 * @param bool $is_already_invited True|False.
+	 * Filter to check if email address already invited.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $is_already_invited True|False.
 	 */
-	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited );
+	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited, $email, $invites );
 }
