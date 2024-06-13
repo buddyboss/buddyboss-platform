@@ -676,8 +676,6 @@ function bb_get_member_invitation_query() {
  */
 function bb_is_email_address_already_invited( $email ) {
 
-	$is_already_invited = false;
-
 	// Get invites.
 	$invites = get_posts(
 		array(
@@ -689,9 +687,7 @@ function bb_is_email_address_already_invited( $email ) {
 		)
 	);
 
-	if ( ! empty( $invites ) ) {
-		$is_already_invited = true;
-	}
+	$is_already_invited = ! empty( $invites );
 
 	/**
 	 * Filter to check if email address already invited.
