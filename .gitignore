@@ -18,6 +18,12 @@ logs
 results
 src/vendor
 vendor
+includes/Library/Composer/*.php
+includes/Library/Composer/[!Src]
+src/includes/Library/Composer/*.php
+src/includes/Library/Composer/[!Src]
+scoped_vendor
+src/scoped_vendor
 
 node_modules
 npm-debug.log

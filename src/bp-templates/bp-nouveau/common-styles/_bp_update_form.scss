@@ -1774,6 +1774,20 @@ div[class*="attached-gif-container"] {
 	}
 }
 
+#bbpress-forums div[class*="attached-gif-container"] {
+	height: auto !important;
+	width: auto !important;
+	display: inline-block;
+	max-width: 450px;
+	background-image: none !important;
+	min-width: 130px;
+	min-height: 100px;
+
+	&.closed {
+		display: none;
+	}
+}
+
 .gif-media-search-dropdown {
 	position: absolute;
 	top: 100%;
