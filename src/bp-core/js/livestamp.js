@@ -159,7 +159,9 @@
 				}
 			}
 
-			output = bb_livestamp.ago_text.replace( '%s', output );
+			if ( output !== bb_livestamp.right_now_text ) {
+				output = bb_livestamp.ago_text.replace( '%s', output );
+			}
 
 			return output;
 		},
