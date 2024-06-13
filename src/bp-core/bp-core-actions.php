@@ -1178,7 +1178,7 @@ add_action( 'bp_init', 'bb_bg_process_log_load' );
 /**
  * Remove notices from the buddyboss upgrade screens.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
@@ -1193,7 +1193,7 @@ function bb_remove_admin_notices() {
 /**
  * Load the web performance tester.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  *
  * @return void
  */

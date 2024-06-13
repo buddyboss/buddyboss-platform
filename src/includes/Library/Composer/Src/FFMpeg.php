@@ -5,7 +5,7 @@ namespace BuddyBoss\Library\Composer;
 /**
  * FFMpeg custom class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 class FFMpeg {
 	private static $instance;
@@ -13,7 +13,7 @@ class FFMpeg {
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return FFMpeg
 	 */
@@ -29,7 +29,7 @@ class FFMpeg {
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param \FFMpeg\Driver\FFMpegDriver $ffmpeg
 	 * @param \FFMpeg\FFProbe             $ffprobe
@@ -43,7 +43,7 @@ class FFMpeg {
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param \FFMpeg\Driver\FFProbeDriver $ffprobe
 	 * @param \Doctrine\Common\Cache\Cache $cache
@@ -57,7 +57,7 @@ class FFMpeg {
 	/**
 	 * Creates an FFMpeg.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
 	 * @param \Psr\Log\LoggerInterface                           $logger
@@ -72,7 +72,7 @@ class FFMpeg {
 	/**
 	 * Creates an FFProbe.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param array|\Alchemy\BinaryDriver\ConfigurationInterface $configuration
 	 * @param \Psr\Log\LoggerInterface                           $logger
@@ -87,7 +87,7 @@ class FFMpeg {
 	/**
 	 * Create timecode from number of seconds From Scoped Vendor
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @param float $seconds Seconds value.
 	 *

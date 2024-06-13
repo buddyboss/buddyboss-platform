@@ -5,7 +5,7 @@ namespace BuddyBoss\Library\Composer;
 /**
  * ZipStream custom class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 class ZipStream {
 	private static $instance;
@@ -13,7 +13,7 @@ class ZipStream {
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return ZipStream
 	 */
@@ -29,7 +29,7 @@ class ZipStream {
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return \ZipStream\ZipStream
 	 */
@@ -40,7 +40,7 @@ class ZipStream {
 	/**
 	 * This Function Is Used To Get Instance From Scoped Vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return \ZipStream\Option\Archive
 	 */

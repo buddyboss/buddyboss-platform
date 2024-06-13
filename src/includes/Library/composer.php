@@ -5,21 +5,21 @@ namespace BuddyBoss\Library;
 /**
  * Composer class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 class Composer {
 
 	/**
 	 * @var $instance
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 */
 	private static $instance;
 
 	/**
 	 * Get the instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return Composer
 	 */
@@ -35,7 +35,7 @@ class Composer {
 	/**
 	 * This function is used to get ZipStream instance from scoped vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return \BuddyBoss\Library\Composer\ZipStream/\BuddyBossPlatform\BuddyBoss\Library\Composer\ZipStream
 	 */
@@ -50,7 +50,7 @@ class Composer {
 	/**
 	 * This function is used to get FFMpeg instance from scoped vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.30
 	 *
 	 * @return \BuddyBoss\Library\Composer\FFMpeg/\BuddyBossPlatform\BuddyBoss\Library\Composer\FFMpeg
 	 */

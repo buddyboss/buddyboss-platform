@@ -2,7 +2,7 @@
 /**
  * Scoper configuration file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.30
  */
 
 declare( strict_types=1 );
