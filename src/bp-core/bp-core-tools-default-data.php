@@ -129,6 +129,8 @@ function bp_admin_tools_default_data_save() {
 			}
 		}
 	}
+
+	unset( $imported, $users, $groups, $g_members, $g_activity, $forums, $topics, $groupsforums, $forum_ids, $topic_ids, $messages, $profile, $friends, $activity );
 }
 
 /**
@@ -196,6 +198,8 @@ function bp_dd_delete_dummy_members() {
 			bp_core_delete_account( $user_id );
 		}
 	}
+
+	unset( $users, $users_str, $user_id );
 }
 
 /**
@@ -213,6 +217,7 @@ function bp_dd_delete_dummy_reply() {
 			wp_delete_post( $forum_id );
 		}
 	}
+	unset( $forums, $forum_id );
 }
 
 /**
@@ -230,6 +235,8 @@ function bp_dd_delete_dummy_topic() {
 			wp_delete_post( $forum_id );
 		}
 	}
+
+	unset( $forums, $forum_id );
 }
 
 
@@ -252,6 +259,8 @@ function bp_dd_delete_dummy_forum() {
 			}
 		}
 	}
+
+	unset( $forums, $forum_id );
 }
 
 /**
@@ -270,6 +279,8 @@ function bp_dd_delete_dummy_groups() {
 			groups_delete_group( $group_id );
 		}
 	}
+
+	unset( $groups, $group_id );
 }
 
 /**
@@ -285,6 +296,8 @@ function bp_dd_delete_dummy_xprofile() {
 	foreach ( (array) $xprofile_ids as $xprofile_id ) {
 		xprofile_delete_field_group( $xprofile_id );
 	}
+
+	unset( $xprofile_ids, $xprofile_id );
 }
 
 /**
@@ -364,6 +377,8 @@ function bp_dd_get_random_groups_ids( $count = 1, $output = 'array' ) {
 	 */
 	$groups = array_map( 'intval', $groups );
 
+	unset( $groups_arr, $random_keys, $total_groups, $key, $value, $limit );
+
 	if ( $output === 'string' ) {
 		return implode( ',', $groups );
 	}
@@ -403,6 +418,8 @@ function bp_dd_get_forums_enable_groups_ids( $count, $output = 'array' ) {
 	 * Convert to integers, because get_col() returns array of strings.
 	 */
 	$groups = array_map( 'intval', $groups );
+
+	unset( $groups_arr, $random_keys, $total_groups, $key, $value );
 
 	if ( $output === 'string' ) {
 		return implode( ',', $groups );
@@ -446,6 +463,8 @@ function bp_dd_get_random_forums_ids( $count = 1, $output = 'array' ) {
 	 */
 	$forums = array_map( 'intval', $forums );
 
+	unset( $forums_arr, $random_keys, $total_forums, $key, $value );
+
 	if ( $output === 'string' ) {
 		return implode( ',', $forums );
 	}
@@ -486,6 +505,8 @@ function bp_dd_get_random_topics_ids( $count = 1, $output = 'array' ) {
 	 * Convert to integers, because get_col() returns array of strings.
 	 */
 	$topics = array_map( 'intval', $topics );
+
+	unset( $topics_arr, $random_keys, $total_topics, $key, $value );
 
 	if ( $output === 'string' ) {
 		return implode( ',', $topics );
@@ -534,6 +555,8 @@ function bp_dd_get_random_users_ids( $count = 1, $output = 'array' ) {
 	 * Convert to integers, because get_col() and get_users() return array of strings.
 	 */
 	$users = array_map( 'intval', $users );
+
+	unset( $users_arr, $random_keys, $total_members, $key, $value );
 
 	if ( $output === 'string' ) {
 		return implode( ',', $users );
@@ -747,6 +770,8 @@ function bp_dd_import_users() {
 		bp_update_option( 'bp_dd_imported_user_ids', $users );
 	}
 
+	unset( $users_data, $user, $user_id, $image_url, $cover_image_url, $avatars_image_url, $result );
+
 	return $users;
 }
 
@@ -857,6 +882,8 @@ function bp_dd_import_users_profile() {
 		bp_update_option( 'bp_dd_imported_user_xprofile_ids', $groups );
 	}
 
+	unset( $xprofile_structure, $group_type, $group_data, $group_id, $field_type, $field_data, $field_id, $option, $option_id, $xprofile_data, $users, $user_id, $field_id, $field_data );
+
 	return $count;
 }
 
@@ -927,6 +954,8 @@ function bp_dd_import_users_messages() {
 		bp_update_option( 'bp_dd_imported_user_messages_ids', $messages );
 	}
 
+	unset( $messages_subjects, $messages_content, $message, $user_object, $user_id, $recipients_numbers, $recipients, $thread_reply, $message_id, $all_recipients, $i, $replying_sender_id, $replying_recipients_id );
+
 	return $messages;
 }
 
@@ -968,6 +997,8 @@ function bp_dd_import_users_activity() {
 		}
 	}
 
+	unset( $users, $activity, $user, $content, $bp_activity_id, $bp_activity );
+
 	return $count;
 }
 
@@ -1000,6 +1031,8 @@ function bp_dd_import_users_friends() {
 	}
 
 	remove_filter( 'bp_core_current_time', 'bp_dd_friends_add_friend_date_fix' );
+
+	unset( $users, $user_one, $user_two );
 
 	return $count;
 }
@@ -1071,6 +1104,8 @@ function bp_dd_import_groups( $users = false ) {
 		bp_update_option( 'bp_dd_imported_forums_group_ids', $forum_group_ids );
 	}
 
+	unset( $groups, $group, $creator_id, $cur, $image_url, $cover_image_url, $avatars_image_url, $forum_group_ids );
+
 	return $group_ids;
 }
 
@@ -1119,6 +1154,8 @@ function bp_dd_import_groups_activity() {
 		}
 	}
 
+	unset( $users, $groups, $activity, $user_id, $group_id, $content, $bp_activity_id, $bp_activity );
+
 	return $count;
 }
 
@@ -1156,6 +1193,8 @@ function bp_dd_import_groups_members( $groups = false ) {
 
 	remove_filter( 'bp_after_activity_add_parse_args', 'bp_dd_groups_join_group_date_fix' );
 
+	unset( $groups, $group_id, $user_ids, $user_id );
+
 	return $members;
 }
 
@@ -1188,6 +1227,8 @@ function bp_dd_create_forums( $forum, $users = array() ) {
 	if ( ! empty( $forum_id ) && isset( $forum['status'] ) ) {
 		update_post_meta( $forum_id, '_bbp_status', $forum['status'] );
 	}
+
+	unset( $args, $creator_id );
 
 	return $forum_id;
 }
@@ -1229,6 +1270,8 @@ function bp_dd_import_forums( $users = false ) {
 		/** @noinspection PhpParamsInspection */
 		bp_update_option( 'bp_dd_imported_forum_ids', array_unique( $forum_ids ) );
 	}
+
+	unset( $forums, $forum, $forum_id );
 
 	return $forum_ids;
 }
@@ -1309,6 +1352,8 @@ function bp_dd_import_forums_topics( $forums = false ) {
 		/** @noinspection PhpParamsInspection */
 		bp_update_option( 'bp_dd_imported_topic_ids', array_unique( $topics_ids ) );
 	}
+
+	unset( $topics, $topic, $topic_data, $topic_id, $forum_id, $users );
 
 	return $topics_ids;
 }
@@ -1397,6 +1442,8 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 		bp_update_option( 'bp_dd_imported_reply_ids', array_unique( $reply_ids ) );
 	}
 
+	unset( $replies, $reply, $reply_data, $reply_id, $topic_id, $users );
+
 	return $reply_ids;
 }
 
@@ -1483,6 +1530,8 @@ function bp_dd_import_forums_in_groups() {
 	}
 
 	bp_update_option( 'bp_dd_imported_reply_ids', array_merge( $reply_ids, bp_get_option( 'bp_dd_imported_reply_ids', array() ) ) );
+
+	unset( $topics, $replies, $forum_ids, $topics_ids, $reply_ids, $group, $forum, $forum_id, $topic, $topic_data, $topic_id, $reply, $reply_data, $reply_id, $users );
 
 	return $groups_ids;
 }

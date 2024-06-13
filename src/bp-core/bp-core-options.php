@@ -219,6 +219,8 @@ function bp_add_options() {
 		bp_add_option( $key, $value );
 	}
 
+	unset( $options );
+
 	/**
 	 * Fires after the addition of default options when BuddyPress is first activated.
 	 *
@@ -249,6 +251,8 @@ function bp_delete_options() {
 		delete_option( $key );
 	}
 
+	unset( $options );
+
 	/**
 	 * Fires after the deletion of default options when BuddyPress is first deactivated.
 	 *
@@ -273,6 +277,8 @@ function bp_setup_option_filters() {
 	foreach ( array_keys( $options ) as $key ) {
 		add_filter( 'pre_option_' . $key, 'bp_pre_get_option' );
 	}
+
+	unset( $options );
 
 	/**
 	 * Fires after the addition of filters to each BuddyPress option.
@@ -302,6 +308,8 @@ function bp_pre_get_option( $value = false ) {
 	if ( ! empty( $bp->options[ $option ] ) ) {
 		$value = $bp->options[ $option ];
 	}
+
+	unset( $option );
 
 	// Always return a value, even if false.
 	return $value;

@@ -26,6 +26,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 		$comment = get_comment( $comment_id );
 		if ( empty( $comment ) || empty( $comment->comment_post_ID ) ) {
+			unset( $comment );
 			return false;
 		}
 
@@ -54,6 +55,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 		// If there are no addresses to send the comment to, bail.
 		if ( ! count( $emails ) ) {
+			unset( $comment, $post, $author );
 			return false;
 		}
 
@@ -345,6 +347,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			restore_previous_locale();
 		}
 
+		unset( $comment, $post, $author, $emails, $email, $email_notify_message, $notify_message, $wp_email, $from, $reply_to, $message_headers, $subject, $switched_locale );
+
 		return true;
 	}
 endif;
@@ -625,6 +629,8 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			restore_previous_locale();
 		}
 
+		unset( $comment, $post, $author, $emails, $email, $email_notify_message, $notify_message, $wp_email, $from, $reply_to, $message_headers, $subject, $switched_locale );
+
 		return true;
 	}
 endif;
@@ -685,6 +691,8 @@ if ( ! function_exists( 'wp_password_change_notification' ) ) :
 			);
 
 			remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
+			unset( $wp_password_change_notification_email, $message, $blogname );
 		}
 	}
 endif;
@@ -848,6 +856,8 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 		if ( $switched_locale ) {
 			restore_previous_locale();
 		}
+
+		unset( $user, $blogname, $key, $hashed, $key_saved, $switched_locale, $message, $wp_new_user_notification_email, $wp_new_user_notification_email_admin );
 	}
 }
 
@@ -1328,6 +1338,8 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
 		$msg = bp_email_core_wp_get_template( $msg, get_user_by( 'email', $email ) );
+
+		unset( $email, $options_site_url, $blogname, $siteurl );
 
 		return $msg;
 	}
