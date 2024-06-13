@@ -183,6 +183,11 @@ add_action(
 	2
 );
 
+// remove admin notices for the upgrade page.
+add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
+// load the web performance loader class.
+add_action( 'bp_admin_init', 'bb_load_web_performance_tester', 999 );
+
 /**
  * Restrict user when visit attachment url from media/document.
  * - Privacy security.
@@ -1169,3 +1174,34 @@ function bb_bg_process_log_load() {
 }
 
 add_action( 'bp_init', 'bb_bg_process_log_load' );
+
+/**
+ * Remove notices from the buddyboss upgrade screens.
+ *
+ * @since BuddyBoss 2.6.30
+ */
+function bb_remove_admin_notices() {
+	$screen = get_current_screen();
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+		remove_all_actions( 'admin_notices' );
+
+		// Additional check for the common WordPress error/warning hooks.
+		remove_all_actions( 'all_admin_notices' );
+	}
+}
+
+/**
+ * Load the web performance tester.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @return void
+ */
+function bb_load_web_performance_tester() {
+	$active_tab  = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : ''; // phpcs:ignore
+	$active_page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : ''; // phpcs:ignore
+
+	if ( 'bb-upgrade' === $active_page && 'bb-performance-tester' === $active_tab ) {
+		bb_web_performance_tester();
+	}
+}
