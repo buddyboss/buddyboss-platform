@@ -1904,10 +1904,10 @@ document = window.document || {};
 
 		var scrollTop = $(window).scrollTop();
 		var offset = self.button.offset();
-		var topPosition = Math.round(offset.top);
-		var leftPosition = Math.round(offset.left);
 		var pickerWidth = self.picker.width();
 		var pickerHeight = self.picker.height();
+		var topPosition = Math.round(offset.top);
+		var leftPosition = $(window).width() > 1000 ? Math.round(offset.left) + 42 : Math.round(offset.left) + pickerWidth - 95;
 		if (
 			self.options.containerPicker &&
 			!isNaN(topPosition) &&
@@ -1915,7 +1915,7 @@ document = window.document || {};
 			!isNaN(pickerWidth) &&
 			!isNaN(pickerHeight)
 		) {
-			var transformValue = 'translate(' + (leftPosition + 42) + 'px, ' + (topPosition - scrollTop - 10) + 'px) translate(-100%, -100%)';
+			var transformValue = 'translate(' + (leftPosition ) + 'px, ' + (topPosition - scrollTop - 10) + 'px) translate(-100%, -100%)';
 		}
 
 		if (self._sh_timer) {
