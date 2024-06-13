@@ -109,6 +109,8 @@ add_action( 'bp_suspend_unhide_user', 'bb_group_add_unsuspended_user', 9, 1 );
 
 add_action( 'bp_before_group_body', 'bb_before_group_body_callback' );
 add_action( 'bp_after_group_body', 'bb_after_group_body_callback' );
+add_action( 'bp_before_subgroups_loop', 'bb_before_group_body_callback' );
+add_action( 'bp_after_subgroups_loop', 'bb_after_group_body_callback' );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
