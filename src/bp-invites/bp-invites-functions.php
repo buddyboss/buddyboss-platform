@@ -696,5 +696,5 @@ function bb_is_email_address_already_invited( $email ) {
 	 *
 	 * @param bool $is_already_invited True|False.
 	 */
-	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited );
+	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited, $email, $invites );
 }
