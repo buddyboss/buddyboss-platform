@@ -666,27 +666,31 @@ function bb_get_member_invitation_query() {
 }
 
 /**
- * Check if the invite already sent to particular email address.
+ * Check if the invite already sent to particular email address by perticular inviter id if $inviter_id passed.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $email Email.
+ * @param string $email      Email address to check for existing invite.
+ * @param int    $inviter_id Id of the inviter to cross check already existing invite.
  *
  * @return bool $is_already_invited True|False.
  */
-function bb_is_email_address_already_invited( $email ) {
+function bb_is_email_address_already_invited( $email, $inviter_id = 0 ) {
 
-	// Get invites.
-	$invites = get_posts(
-		array(
-			'post_type'   => 'bp-invite',
-			'post_status' => 'publish',
-			'meta_key'    => '_bp_invitee_email',
-			'meta_value'  => $email,
-			'numberposts' => 1,
-		)
+	$args = array(
+		'post_type'   => 'bp-invite',
+		'post_status' => 'publish',
+		'meta_key'    => '_bp_invitee_email',
+		'meta_value'  => $email,
+		'numberposts' => 1,
 	);
 
+	if ( ! empty( $inviter_id ) ) {
+		$args['author'] = $inviter_id;
+	}
+
+	// Get invites.
+	$invites            = get_posts( $args );
 	$is_already_invited = ! empty( $invites );
 
 	/**
@@ -696,5 +700,5 @@ function bb_is_email_address_already_invited( $email ) {
 	 *
 	 * @param bool $is_already_invited True|False.
 	 */
-	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited, $email, $invites );
+	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited, $email, $inviter_id, $invites );
 }
