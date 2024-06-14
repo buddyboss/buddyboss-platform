@@ -332,7 +332,7 @@ function bp_messages_star_enqueue_scripts() {
 
 	wp_enqueue_style( 'dashicons' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_messages_star_enqueue_scripts' );
+add_action( 'bp_enqueue_community_scripts', 'bp_messages_star_enqueue_scripts' );
 
 /**
  * Add the "Add star" and "Remove star" options to the bulk management list.

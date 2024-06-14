@@ -1091,7 +1091,7 @@ function bb_load_group_type_label_custom_css() {
 		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
 	}
 }
-add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
+add_action( 'bp_enqueue_community_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
 /**
  * Send subscription notification to users after post an activity.

@@ -465,21 +465,58 @@ function bp_enqueue_scripts() {
 }
 
 /**
- * Fires the 'bp_enqueue_embed_scripts' action in the <head> for BP oEmbeds.
+ * Fires an action hook to enqueue scripts and styles for specific BuddyPress contexts.
  *
- * @since BuddyPress 2.6.0
+ * @since 11.0.0
+ *
+ * @param string $context The specific BuddyPress context. Supported values are `embed` and `community`.
+ *                        Default: `embed`.
  */
-function bp_enqueue_embed_scripts() {
-	if ( ! is_buddypress() ) {
+function bp_enqueue_context_scripts( $context = 'embed' ) {
+	$bp_pages_only_assets = false;
+
+	/**
+	 * Filter here & return `true` to restrict BP Assets loading to BP Pages.
+	 *
+	 * @since 11.0.0
+	 * @since 12.0.0 Default value has been switched from `false` to `true`.
+	 *
+	 * @param bool $value True to only load BP Assets inside BP generated pages. False otherwise.
+	 */
+	$bp_pages_only = apply_filters( 'bp_enqueue_assets_in_bp_pages_only', true );
+
+	if ( 'embed' === $context || $bp_pages_only ) {
+		$bp_pages_only_assets = true;
+	}
+
+	if ( $bp_pages_only_assets && ! is_buddypress() ) {
 		return;
 	}
 
 	/**
-	 * Enqueue CSS and JS files for BuddyPress embeds.
+	 * Enqueue CSS and JS files for a specific BuddyPress context.
 	 *
-	 * @since BuddyPress 2.6.0
+	 * @since 11.0.0
 	 */
-	do_action( 'bp_enqueue_embed_scripts' );
+	do_action( "bp_enqueue_{$context}_scripts" );
+}
+
+/**
+ * Fires the 'bp_enqueue_embed_scripts' action in the <head> for BP oEmbeds.
+ *
+ * @since 2.6.0
+ */
+function bp_enqueue_embed_scripts() {
+	return bp_enqueue_context_scripts( 'embed' );
+}
+
+/**
+ * Fires the  `bp_enqueue_community_scripts` action for Template packs scripts and styles.
+ *
+ * @since 11.0.0
+ */
+function bp_enqueue_community_scripts() {
+	return bp_enqueue_context_scripts( 'community' );
 }
 
 /**

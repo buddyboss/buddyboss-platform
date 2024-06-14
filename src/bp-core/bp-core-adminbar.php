@@ -93,7 +93,7 @@ add_action( 'init', 'bp_core_load_admin_bar', 9 );
  * @since BuddyPress 1.5.0
  */
 function bp_core_load_admin_bar_css() {
-	add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
+	add_action( 'bp_enqueue_community_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
 	add_action( 'bp_admin_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
 }
 

@@ -39,7 +39,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		);
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
-			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'bp_enqueue_community_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 	}
 
