@@ -131,6 +131,9 @@ function groups_remove_group_invite() {
 	}
 
 	bp_core_add_message( $message, $error );
+
+	unset( $friend_id, $group_id, $message, $error );
+
 	bp_core_redirect( $redirect );
 }
 add_action( 'bp_screens', 'groups_remove_group_invite' );

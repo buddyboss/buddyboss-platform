@@ -92,6 +92,8 @@ class BP_Activity_Component extends BP_Component {
 		}
 
 		parent::includes( $includes );
+
+		unset( $includes );
 	}
 
 	/**

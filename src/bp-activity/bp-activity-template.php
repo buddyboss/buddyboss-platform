@@ -469,6 +469,7 @@ function bp_get_activity_pagination_count() {
 
 	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
 
+	unset( $start_num, $from_num, $to_num, $total );
 	return $message;
 }
 
@@ -2374,6 +2375,8 @@ function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
 	/** This filter is documented in bp-activity/bp-activity-template.php */
 	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activity_comment->content, &$activity_comment ) );
 
+	unset( $activity_comment );
+
 	/**
 	 * Filters the content of the current activity comment.
 	 *
@@ -2919,6 +2922,8 @@ function bp_get_activity_comment_css_class() {
 		$class .= ' has-child-comments';
 	}
 
+	unset( $comments_count, $comment_depth );
+
 	return apply_filters( 'bp_get_activity_comment_css_class', $class );
 }
 
@@ -2952,6 +2957,8 @@ function bp_get_activity_delete_link() {
 	}
 
 	$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss' ) . '</a>';
+
+	unset( $url, $class );
 
 	/**
 	 * Filters the activity delete link.
@@ -4425,6 +4432,8 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 			$can_edit = false;
 		}
 	}
+
+	unset( $activity_comment_edit_time, $bp_dd_get_time, $activity_comment_edit_expire_time );
 
 	/**
 	 * Filters whether the current user can edit an activity comment item.

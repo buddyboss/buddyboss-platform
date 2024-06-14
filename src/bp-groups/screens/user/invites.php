@@ -44,6 +44,8 @@ function groups_screen_group_invites() {
 			$redirect_to = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() . '/' . bp_current_action() );
 		}
 
+		unset( $group, $group_id );
+
 		bp_core_redirect( $redirect_to );
 
 	} elseif ( bp_is_action_variable( 'reject' ) && is_numeric( $group_id ) ) {
