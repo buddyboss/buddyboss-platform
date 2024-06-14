@@ -74,7 +74,7 @@ function bp_member_invite_submit() {
 		if ( '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) {
 			if ( email_exists( (string) $_POST['email'][ $key ][0] ) ) {
 				$invite_exists_array[] = $_POST['email'][ $key ][0];
-			} elseif ( bb_is_email_address_already_invited( $_POST['email'][ $key ][0] ) ) {
+			} elseif ( bb_is_email_address_already_invited( $_POST['email'][ $key ][0], bp_loggedin_user_id() ) ) {
 				$invite_duplicate_array[] = $_POST['email'][ $key ][0];
 			} elseif ( bb_is_allowed_register_email_address( $_POST['email'][ $key ][0] ) ) {
 				$invite_correct_array[] = array(
