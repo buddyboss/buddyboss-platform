@@ -1076,3 +1076,100 @@ function bb_moderation_async_request_batch_process( $batch ) {
 }
 add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
 
+add_action( 'action_scheduler_before_execute', 'bb_as_moderation_async_request_batch_process', 10, 2 );
+function bb_as_moderation_async_request_batch_process( $action_id, $context ) {
+	global $wpdb;
+	if ( empty( $action_id ) ) {
+		return;
+	}
+
+	$get_current_action = ActionScheduler::store()->fetch_action( $action_id );
+	$action_meta        = bb_get_as_meta( $action_id );
+	$action_meta        = ! empty( $action_meta ) ? current( $action_meta ) : array();
+	if (
+		empty( $action_meta ) ||
+		! isset( $action_meta['group'] ) ||
+		empty( $action_meta['group'] ) ||
+		false === strpos( $action_meta['group'], 'bb_moderation_' )
+	) {
+		return;
+	}
+
+	$group_name = $action_meta['group'];
+	$item_id    = $action_meta['data_id'];
+	$type       = $action_meta['type'];
+
+	$next_group_name = '';
+	if ( false !== strpos( $group_name, 'unsuspend' ) ) {
+		$next_group_name = str_replace( 'unsuspend', 'suspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'suspend' ) ) {
+		$next_group_name = str_replace( 'suspend', 'unsuspend', $group_name );
+	} elseif ( false !== strpos( $group_name, 'unhide' ) ) {
+		$next_group_name = str_replace( 'unhide', 'hide', $group_name );
+	} elseif ( false !== strpos( $group_name, 'hide' ) ) {
+		$next_group_name = str_replace( 'hide', 'unhide', $group_name );
+	}
+
+	if ( empty( $next_group_name ) ) {
+		return;
+	}
+
+	$sql = $wpdb->prepare( "SELECT action_id from {$wpdb->prefix}actionscheduler_meta WHERE `group` = %s AND data_id = %s AND type = %s ORDER BY priority, id DESC LIMIT 1", $next_group_name, $item_id, $type );
+    $data = $wpdb->get_results( $sql ); // phpcs:ignore
+
+	if ( ! empty( $data ) ) {
+		$next_action_id      = current( $data );
+
+		$next_action_status  = ActionScheduler::store()->get_status( $next_action_id->action_id );
+		if ( $next_action_status !== 'pending' ) {
+			return;
+		}
+		error_log( $sql );
+		error_log( 'found 2' );
+
+		$next_batch          = ActionScheduler::store()->fetch_action( $next_action_id->action_id );
+		$next_batch_args     = $next_batch->get_args();
+		$currrent_batch_args = $get_current_action->get_args();
+
+		$current_data = ! empty( $currrent_batch_args ) ? $currrent_batch_args : array();
+		$next_data    = ! empty( $next_batch_args ) ? $next_batch_args : array();
+
+		$current_args = ! empty( $current_data ) ? end( $current_data ) : array();
+		$next_args    = ! empty( $next_data ) ? end( $next_data ) : array();
+
+		// Used for suspend/unsuspend.
+		if (
+			isset( $current_args['action_suspend'] ) &&
+			isset( $next_args['action_suspend'] ) &&
+			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
+		) {
+			// Update the status of the action.
+			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $action_id, $next_action_id->action_id ) );
+			ActionScheduler::store()->mark_complete( $action_id ); // Set the status to whatever you need, e.g., 'completed', 'failed', 'pending', etc.
+			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $action_id, $next_action_id->action_id ) );
+
+			// Used for hide_parent argument check.
+		} elseif (
+			isset( $current_args['hide_parent'] ) &&
+			isset( $next_args['hide_parent'] ) &&
+			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
+		) {
+			// Update the status of the action.
+			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $action_id, $next_action_id->action_id ) );
+			ActionScheduler::store()->mark_complete( $action_id ); // Set the status to whatever you need, e.g., 'completed', 'failed', 'pending', etc.
+			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $action_id, $next_action_id->action_id ) );
+			// Used for hide_sitewide argument check.
+		} elseif (
+			! empty( $next_data ) &&
+			! empty( $current_data ) &&
+			isset( $next_data[1] ) &&
+			isset( $current_data[1] ) &&
+			(int) $next_data[1] !== (int) $current_data[1]
+		) {
+			// Update the status of the action.
+			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $action_id, $next_action_id->action_id ) );
+			ActionScheduler::store()->mark_complete( $action_id ); // Set the status to whatever you need, e.g., 'completed', 'failed', 'pending', etc.
+			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $action_id, $next_action_id->action_id ) );
+		}
+	}
+}

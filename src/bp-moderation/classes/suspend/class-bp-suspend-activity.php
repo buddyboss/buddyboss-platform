@@ -29,7 +29,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -352,17 +352,30 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $activity_id, $hide_sitewide, $args );
 		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $activity_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $activity_id, $hide_sitewide, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+//			$bb_background_updater->data(
+//				array(
+//					'type'              => $this->item_type,
+//					'group'             => $group_name,
+//					'data_id'           => $activity_id,
+//					'secondary_data_id' => $args['parent_id'],
+//					'callback'          => array( $this, 'hide_related_content' ),
+//					'args'              => array( $activity_id, $hide_sitewide, $args ),
+//				),
+//			);
+//			$bb_background_updater->save()->schedule_event();
+
+			if ( as_has_scheduled_action( 'bb_as_hide_related_content', array( $activity_id, $hide_sitewide, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_hide_related_content', array( $activity_id, $hide_sitewide, $args ), $group_name, true );
+			if ( $action_id ) {
+				error_log( 'action_id' );
+				error_log( $action_id );
+				error_log( print_r( array( $activity_id, $hide_sitewide, $args ), true ) );
+				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $activity_id, $args['parent_id'] );
+			} else {
+				error_log( 'duplicate' );
+			}
 		}
 	}
 
@@ -424,17 +437,30 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $activity_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $activity_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $activity_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+//			$bb_background_updater->data(
+//				array(
+//					'type'              => $this->item_type,
+//					'group'             => $group_name,
+//					'data_id'           => $activity_id,
+//					'secondary_data_id' => $args['parent_id'],
+//					'callback'          => array( $this, 'unhide_related_content' ),
+//					'args'              => array( $activity_id, $hide_sitewide, $force_all, $args ),
+//				),
+//			);
+//			$bb_background_updater->save()->schedule_event();
+
+			if ( as_has_scheduled_action( 'bb_as_unhide_related_content', array( $activity_id, $hide_sitewide, $force_all, $args ), $group_name ) ) {
+				return;
+			}
+			$action_id = as_enqueue_async_action( 'bb_as_unhide_related_content', array( $activity_id, $hide_sitewide, $force_all, $args ), $group_name, true );
+			if ( $action_id ) {
+				error_log( 'action_id' );
+				error_log( $action_id );
+				error_log( print_r( array( $activity_id, $hide_sitewide, $force_all, $args ), true ) );
+				bb_insert_as_meta( $action_id, $this->item_type, $group_name, $activity_id, $args['parent_id'] );
+			} else {
+				error_log( 'duplicate' );
+			}
 		}
 	}
 
