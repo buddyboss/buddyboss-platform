@@ -653,7 +653,7 @@ abstract class BP_Attachment {
 		$editor = wp_get_image_editor( $r['file'] );
 
 		if ( is_wp_error( $editor ) ) {
-			if ( ! extension_loaded( 'gd' ) ) {
+			if ( ! bb_is_gd_library_enabled() ) {
 				return new WP_Error( 'gd_library_disabled', esc_html__( 'GD library is disabled.', 'buddyboss' ) );
 			}
 

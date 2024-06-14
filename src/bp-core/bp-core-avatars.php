@@ -1479,9 +1479,14 @@ function bp_avatar_ajax_set() {
 		}
 
 		if ( ! bp_avatar_handle_capture( $webcam_avatar, $avatar_data['item_id'] ) ) {
+			$feedback_code = 1;
+			if ( ! bb_is_gd_library_enabled() ) {
+				$feedback_code = 5;
+			}
+
 			wp_send_json_error(
 				array(
-					'feedback_code' => 1,
+					'feedback_code' => $feedback_code,
 				)
 			);
 

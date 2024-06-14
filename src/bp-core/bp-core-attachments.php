@@ -454,7 +454,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 			)
 		);
 
-		$created = ! empty( $cover_image['cover_file'] );
+		$created = ! is_wp_error( $cover_image ) && ! empty( $cover_image['cover_file'] );
 	}
 
 	// Remove copied file if it fails.
@@ -1377,7 +1377,8 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
  *     @type string $cover_image_dir The cover photo dir to write the image into. Required.
  * }
  * @param BP_Attachment_Cover_Image|null $cover_image_class The class to use to fit the cover photo.
- * @return false|array An array containing cover photo data on success, false otherwise.
+ *
+ * @return WP_Error|false|array WP_Error on specific error or an array containing cover photo data on success, false otherwise.
  */
 function bp_attachments_cover_image_generate_file( $args = array(), $cover_image_class = null ) {
 	// Bail if an argument is missing.
@@ -1406,9 +1407,8 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 
 	// Resize the image so that it fit with the cover photo dimensions.
 	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
-
 	if ( is_wp_error( $cover_image ) ) {
-		return false;
+		return $cover_image;
 	}
 
 	$is_too_small = false;
@@ -1660,10 +1660,10 @@ function bp_attachments_cover_image_ajax_upload() {
 		$cover_image_attachment
 	);
 
-	if ( ! $cover ) {
+	if ( ! $cover || is_wp_error( $cover ) ) {
 
-		if ( ! extension_loaded( 'gd' ) ) {
-			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'GD library is disabled.', 'buddyboss' ) );
+		if ( is_wp_error( $cover ) ) {
+			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), $cover->get_error_message() );
 		}
 
 		bp_attachments_json_response(

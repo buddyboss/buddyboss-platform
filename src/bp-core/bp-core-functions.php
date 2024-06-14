@@ -9774,3 +9774,20 @@ function bb_mention_add_user_dynamic_link( $content ) {
 function bb_pro_schedule_posts_version() {
 	return '2.5.20';
 }
+
+/**
+ * Function to check if GD library is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_gd_library_enabled() {
+	static $is_enabled = '';
+
+	if ( '' === $is_enabled ) {
+		$is_enabled = extension_loaded( 'gd' ) ? true : false;
+	}
+
+	return $is_enabled;
+}
