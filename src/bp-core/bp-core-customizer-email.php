@@ -85,6 +85,8 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 		remove_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 		remove_action( 'wp_footer', 'bb_on_screen_notification_template' );
 	}
+
+	unset( $sections, $settings, $min, $controls );
 }
 add_action( 'bp_customize_register', 'bp_email_init_customizer' );
 
@@ -531,6 +533,8 @@ function bp_email_get_redirect_to_customizer_url() {
 		restore_current_blog();
 	}
 
+	unset( $switched, $email, $preview_url );
+
 	return $redirect_url;
 }
 
@@ -593,6 +597,8 @@ function bb_email_customizer_default_avatar( $avatar = '' ) {
 			);
 		}
 	}
+
+	unset( $show_avatar, $profile_avatar_type, $default_profile_avatar_type );
 
 	return $avatar;
 }

@@ -265,6 +265,8 @@ function bp_core_register_common_scripts() {
 			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss' ),
 		)
 	);
+
+	unset( $bp_select2, $bp_emojionearea, $scripts );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
@@ -340,6 +342,8 @@ function bp_core_register_common_styles() {
 			wp_style_add_data( $id, 'suffix', $min );
 		}
 	}
+
+	unset( $styles, $admin_bar_file, $url, $min, $id, $style );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_styles', 1 );
@@ -517,6 +521,8 @@ function bp_core_add_cropper_inline_js() {
 	</script>
 
 	<?php
+
+	unset( $image, $full_height, $full_width, $aspect_ratio, $crop_left, $crop_right, $padding_w, $crop_top, $crop_bottom, $padding_h );
 }
 
 /**

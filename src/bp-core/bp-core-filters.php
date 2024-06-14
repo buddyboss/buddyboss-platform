@@ -284,6 +284,8 @@ function bp_core_menu_highlight_nav_menu_item( $retval, $item ) {
 	// See if we should add our highlight CSS classes for the page.
 	$retval = bp_core_menu_highlight_parent_page( $retval, $page );
 
+	unset( $page );
+
 	return $retval;
 }
 add_filter( 'nav_menu_css_class', 'bp_core_menu_highlight_nav_menu_item', 10, 2 );
@@ -313,6 +315,7 @@ function bp_core_filter_comments( $comments, $post_id ) {
 	$user_ids = implode( ',', wp_parse_id_list( $user_ids ) );
 
 	if ( ! $userdata = $wpdb->get_results( "SELECT ID as user_id, user_login, user_nicename FROM {$wpdb->users} WHERE ID IN ({$user_ids})" ) ) {
+		unset( $user_ids );
 		return $comments;
 	}
 
@@ -327,6 +330,8 @@ function bp_core_filter_comments( $comments, $post_id ) {
 			}
 		}
 	}
+
+	unset( $user_ids, $userdata, $users );
 
 	return $comments;
 }
@@ -530,6 +535,8 @@ function bp_core_activation_signup_blog_notification( $domain, $path, $title, $u
 
 	bp_send_email( 'core-user-registration-with-blog', array( array( $user_email => $user ) ), $args );
 
+	unset( $args );
+
 	// Return false to stop the original WPMU function from continuing.
 	return false;
 }
@@ -593,6 +600,8 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 
 	bp_send_email( 'core-user-registration', array( array( $user_email => $user ) ), $args );
 
+	unset( $args, $user_object, $user_id );
+
 	// Return false to stop the original WPMU function from continuing.
 	return false;
 }
@@ -652,6 +661,8 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	if ( false === $title_tag_compatibility ) {
 		$new_title = $new_title . $prefix;
 	}
+
+	unset( $bp_title_parts, $blogname, $title_tag_compatibility, $prefix );
 
 	/**
 	 * Filters the older 'wp_title' page title for BuddyPress pages.
@@ -976,6 +987,8 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 		);
 	}
 
+	unset( $bp_items );
+
 	return array_slice( $items, 10 * $page, 10 );
 }
 add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_items', 10, 4 );
@@ -1221,6 +1234,8 @@ function bp_email_set_default_headers( $headers, $property, $transform, $email )
 		}
 	}
 
+	unset( $tokens );
+
 	return $headers;
 }
 add_filter( 'bp_email_get_headers', 'bp_email_set_default_headers', 6, 4 );
@@ -1292,6 +1307,8 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	if ( $post ) {
 		$tokens['email.preheader'] = sanitize_text_field( get_post_meta( $post->ID, 'bp_email_preheader', true ) );
 	}
+
+	unset( $recipient, $user_obj, $post );
 
 	return $tokens;
 }
@@ -1696,6 +1713,8 @@ function bp_rest_restrict_oembed_request_post_id( $post_id ) {
 		$post_id = 0;
 	}
 
+	unset( $media_meta, $document_meta );
+
 	return $post_id;
 }
 
@@ -1771,6 +1790,8 @@ function bp_core_cron_schedules( $schedules = array() ) {
 			);
 		}
 	}
+
+	unset( $bb_schedules );
 
 	return $schedules;
 }
@@ -2088,6 +2109,8 @@ function bb_save_profile_group_cover_options_on_upload_custom_cover( $item_id, $
 			bp_update_option( 'bp-default-custom-group-cover', $cover_url );
 		}
 	}
+
+	unset( $is_validate, $object );
 }
 add_action( 'xprofile_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
 add_action( 'groups_cover_image_uploaded', 'bb_save_profile_group_cover_options_on_upload_custom_cover', 10, 4 );
@@ -2113,6 +2136,8 @@ function bb_delete_profile_group_cover_images_url( $item_id ) {
 			bp_update_option( 'bp-default-custom-group-cover', '' );
 		}
 	}
+
+	unset( $item_id, $item_type );
 }
 add_action( 'xprofile_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
 add_action( 'groups_cover_image_deleted', 'bb_delete_profile_group_cover_images_url', 10, 1 );
@@ -2178,6 +2203,8 @@ function bb_add_default_cover_image_inline_css() {
 	}
 
 	wp_add_inline_style( 'bp-nouveau', $css_rules );
+
+	unset( $css_rules, $current_theme, $bb_theme_version, $profile_cover_type, $group_cover_type, $background_color );
 }
 add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
 
@@ -2327,6 +2354,8 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 		}
 	}
 
+	unset( $active_components, $db_component, $timestamp, $time_delay_email_notification, $schedule_key );
+
 }
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
 
@@ -2346,6 +2375,8 @@ function bb_heartbeat_member_presence_info( $response = array(), $data = array()
 
 	$presence_user_ids          = wp_parse_id_list( $data['presence_users'] );
 	$response['users_presence'] = bb_get_users_presence( $presence_user_ids );
+
+	unset( $presence_user_ids );
 
 	return $response;
 }
@@ -2445,6 +2476,8 @@ function buddyboss_menu_order( $menu_order ) {
 			$submenu['buddyboss-platform'][ ++ $sep_position ] = $buddyboss_updater_menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 	}
+
+	unset( $buddyboss_theme_options_menu, $buddyboss_theme_font_menu, $buddyboss_updater_menu, $sep_position, $after_sep );
 
 	return $menu_order;
 }
@@ -2647,6 +2680,8 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 			}
 		}
 	}
+
+	unset( $allow_custom_url_domains, $custom_url, $args, $query, $parsed_url, $current_host );
 
 	return $hosts;
 }

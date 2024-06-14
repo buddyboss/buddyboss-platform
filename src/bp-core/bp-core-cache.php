@@ -89,6 +89,7 @@ function bp_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
 
 	// Bail if post ID is not a directory page
 	if ( ! in_array( $post_id, $page_ids ) ) {
+		unset( $page_ids );
 		return;
 	}
 
@@ -97,6 +98,8 @@ function bp_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
 	if ( is_multisite() ) {
 		$cache_key = $cache_key . '_' . get_current_blog_id();
 	}
+
+	unset( $page_ids );
 
 	wp_cache_delete( $cache_key, 'bp_pages' );
 }
@@ -157,6 +160,8 @@ function bp_core_clear_root_options_cache( $option ) {
 	if ( in_array( $option, $keys ) ) {
 		wp_cache_delete( 'root_blog_options', 'bp' );
 	}
+
+	unset( $keys );
 }
 add_action( 'update_option', 'bp_core_clear_root_options_cache' );
 add_action( 'update_site_option', 'bp_core_clear_root_options_cache' );
@@ -280,6 +285,8 @@ function bp_update_meta_cache( $args = array() ) {
 			wp_cache_set( $uncached_id, $cache[ $uncached_id ], $cache_group );
 		}
 	}
+
+	unset( $uncached_ids, $meta_list, $id_list, $metarow, $mpid, $mkey, $mval );
 
 	return $cache;
 }
@@ -508,6 +515,8 @@ function bb_subscriptions_clear_cache_after_update_status( $type, $item_id ) {
 			bb_subscriptions_clear_bbpress_cache( $id );
 		}
 	}
+
+	unset( $subscription_ids );
 }
 
 add_action( 'bb_subscriptions_after_update_subscription_status', 'bb_subscriptions_clear_cache_after_update_status', 10, 2 );
@@ -547,6 +556,8 @@ function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 			bb_subscriptions_clear_bbpress_cache( $id );
 		}
 	}
+
+	unset( $subscription_ids );
 }
 
 add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );
