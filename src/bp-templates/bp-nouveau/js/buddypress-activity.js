@@ -3024,9 +3024,9 @@ window.bp = window.bp || {};
 				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
 
-			var scrollTop = $( window ).scrollTop(),
-				offset = $( currentTarget ).offset(),
-				topPosition = Math.round( offset.top ),
+			var scrollTop    = $( window ).scrollTop(),
+				offset       = $( currentTarget ).offset(),
+				topPosition  = Math.round( offset.top ),
 				leftPosition = Math.round( offset.left );
 
 			if ( $gifPickerEl.is( ':empty' ) ) {

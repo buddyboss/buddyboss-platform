@@ -1902,20 +1902,20 @@ document = window.document || {};
 	EmojioneArea.prototype.showPicker = function () {
 		var self = this;
 
-		var scrollTop = $(window).scrollTop();
-		var offset = self.button.offset();
-		var pickerWidth = self.picker.width();
+		var scrollTop    = $( window ).scrollTop();
+		var offset       = self.button.offset();
+		var pickerWidth  = self.picker.width();
 		var pickerHeight = self.picker.height();
-		var topPosition = Math.round(offset.top);
-		var leftPosition = $(window).width() > 1000 ? Math.round(offset.left) + 42 : Math.round(offset.left) + pickerWidth - 95;
+		var topPosition  = Math.round( offset.top );
+		var leftPosition = $( window ).width() > 1000 ? Math.round( offset.left ) + 42 : Math.round( offset.left ) + pickerWidth - 95;
 		if (
 			self.options.containerPicker &&
-			!isNaN(topPosition) &&
-			!isNaN(leftPosition) &&
-			!isNaN(pickerWidth) &&
-			!isNaN(pickerHeight)
+			! isNaN( topPosition ) &&
+			! isNaN( leftPosition ) &&
+			! isNaN( pickerWidth ) &&
+			! isNaN( pickerHeight )
 		) {
-			var transformValue = 'translate(' + (leftPosition ) + 'px, ' + (topPosition - scrollTop - 10) + 'px) translate(-100%, -100%)';
+			var transformValue = 'translate(' + ( leftPosition ) + 'px, ' + ( topPosition - scrollTop - 10 ) + 'px) translate(-100%, -100%)';
 		}
 
 		if (self._sh_timer) {
