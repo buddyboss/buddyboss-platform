@@ -1678,5 +1678,12 @@ function bb_add_subgroups_args_single_home( $args ) {
 		$args['show_hidden'] = true;
 	}
 
-	return apply_filters( 'bb_add_subgroups_args', $args );
+	/**
+	 * Filters the group args for single/home page to avoid looping for subgroups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Group args.
+	 */
+	return apply_filters( 'bb_add_subgroups_args_single_home', $args );
 }
