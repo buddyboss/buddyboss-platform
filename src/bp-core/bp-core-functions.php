@@ -6007,6 +6007,13 @@ function bb_check_server_disabled_symlink() {
  * @since BuddyBoss 1.8.6
  */
 function bb_restricate_rss_feed() {
+	if (
+		empty( $_SERVER['HTTP_HOST'] ) ||
+		empty( $_SERVER['REQUEST_URI'] )
+	) {
+		return;
+	}
+
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (
 		strpos( $actual_link, '/feed/' ) === false &&
@@ -7672,7 +7679,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 /**
  * Convert Media to base64 from attachment id.
  *
- * @since buddyboss 2.0.0
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $attachment_id Attachment id.
  * @param string $size          Image size.
