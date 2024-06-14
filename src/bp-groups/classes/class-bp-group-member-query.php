@@ -308,6 +308,8 @@ class BP_Group_Member_Query extends BP_User_Query {
 		 */
 		$this->group_member_ids = apply_filters( 'bp_group_member_query_group_member_ids', $this->group_member_ids, $this );
 
+		unset( $sql, $group_member_ids, $invited_member_ids );
+
 		return $this->group_member_ids;
 	}
 
@@ -453,6 +455,8 @@ class BP_Group_Member_Query extends BP_User_Query {
 			}
 		}
 
+		unset( $invites, $extras, $group_ids );
+
 		// Don't filter other BP_User_Query objects on the same page.
 		remove_action( 'bp_user_query_populate_extras', array( $this, 'populate_group_member_extras' ), 10 );
 	}
@@ -496,6 +500,8 @@ class BP_Group_Member_Query extends BP_User_Query {
 		$sql['where'] = 'WHERE ' . implode( ' AND ', $sql['where'] );
 
 		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" );
+
+		unset( $sql );
 
 		return wp_list_pluck( $group_user_ids, 'user_id' );
 	}

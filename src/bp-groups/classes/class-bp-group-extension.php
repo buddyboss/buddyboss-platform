@@ -1718,6 +1718,8 @@ class BP_Group_Extension {
 					break;
 			}
 		}
+
+		unset( $properties );
 	}
 }
 
