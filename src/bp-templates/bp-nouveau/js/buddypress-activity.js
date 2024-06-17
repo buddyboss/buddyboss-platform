@@ -3024,11 +3024,10 @@ window.bp = window.bp || {};
 				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
 
-			var scrollTop = $( window ).scrollTop(),
-				offset = $( currentTarget ).offset(),
-				topPosition = Math.round( offset.top ),
-				leftPosition = Math.round( offset.left ),
-				transformValue = 'translate(' + ( leftPosition + 50 ) + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px)  translate(-100%, -100%)';
+			var scrollTop    = $( window ).scrollTop(),
+				offset       = $( currentTarget ).offset(),
+				topPosition  = Math.round( offset.top ),
+				leftPosition = Math.round( offset.left );
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model = new bp.Models.ACReply(),
@@ -3041,10 +3040,6 @@ window.bp = window.bp || {};
 				this.models[ activityID ] = model;
 			}
 
-			if ( isInsideModal ) {
-				$gifPickerEl.css( 'transform', transformValue );
-			}
-
 			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
 			if ( $( currentTarget ).hasClass( 'active' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
 				$( currentTarget ).removeClass( 'active' );
@@ -3053,6 +3048,10 @@ window.bp = window.bp || {};
 			}
 
 			$gifPickerEl.toggleClass( 'open' );
+			var transformValue = 'translate(' + ( leftPosition + $gifPickerEl.width() - 70 ) + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px)  translate(-100%, -100%)';
+			if ( isInsideModal ) {
+				$gifPickerEl.css( 'transform', transformValue );
+			}
 			this.destroyCommentMediaUploader( activityID );
 			this.destroyCommentDocumentUploader( activityID );
 			this.destroyCommentVideoUploader( activityID );
