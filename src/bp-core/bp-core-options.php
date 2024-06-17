@@ -168,6 +168,27 @@ function bp_get_default_options() {
 		'widget_bp_core_recently_active_widget'      => false,
 		'widget_bp_groups_widget'                    => false,
 		'widget_bp_messages_sitewide_notices_widget' => false,
+
+		// Enabled activity pinned posts.
+		'_bb_enable_activity_pinned_posts'           => true,
+
+		// Enabled reactions and their mode.
+		'bb_all_reactions'                           => array(
+			'activity'         => true,
+			'activity_comment' => true
+		),
+		'bb_reaction_mode'                           => 'likes',
+		'bb_reaction_button'                         => array(
+			array(
+				'text' => '',
+				'icon' => 'thumbs-up',
+			)
+		),
+
+		// Performance Settings.
+		'bb_ajax_request_page_load'                  => 1,
+		'bb_load_activity_per_request'               => 10,
+		'bb_activity_load_type'                      => 'infinite',
 	);
 
 	/**
@@ -900,8 +921,9 @@ function bp_disable_blogforum_comments( $default = false ) {
  *              items, otherwise false.
  */
 function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
-	$option_name = bb_post_type_feed_comment_option_name( $post_type );
-
+	$option_name  = bb_post_type_feed_comment_option_name( $post_type );
+	$option_value = (bool) bp_get_option( $option_name, $default );
+	$is_enabled   = bb_activity_is_enabled_cpt_global_comment( $post_type );
 	/**
 	 * Filters whether or not custom post type feed comments are enable.
 	 *
@@ -909,7 +931,7 @@ function bb_is_post_type_feed_comment_enable( $post_type, $default = false ) {
 	 *
 	 * @param bool $value Whether or not custom post type activity feed comments are enable.
 	 */
-	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', (bool) bp_get_option( $option_name, $default ), $post_type );
+	return (bool) apply_filters( 'bb_is_post_type_feed_comment_enable', ( $is_enabled && $option_value ), $post_type );
 }
 
 /**
@@ -988,14 +1010,16 @@ function bp_is_akismet_active( $default = true ) {
  */
 function bp_is_activity_autoload_active( $default = true ) {
 
+	$default_val = true === $default ? 'infinite' : 'load_more';
+
 	/**
-	 * Filters whether or not Activity Autoload is enabled.
+	 * Filters whether Activity Autoload is enabled.
 	 *
-	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss 2.5.80
 	 *
-	 * @param bool $value Whether or not Activity Autoload is enabled.
+	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_autoload_active', (bool) bp_get_option( '_bp_enable_activity_autoload', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default_val ) ) );
 }
 
 /**
@@ -1171,6 +1195,11 @@ function bp_is_activity_follow_active( $default = false ) {
  */
 function bp_is_activity_like_active( $default = true ) {
 
+	$is_activity_post_like_active = false;
+	if ( bb_is_reaction_activity_posts_enabled( $default ) ) {
+		$is_activity_post_like_active = true;
+	}
+
 	/**
 	 * Filters whether or not Activity Like is enabled.
 	 *
@@ -1178,7 +1207,7 @@ function bp_is_activity_like_active( $default = true ) {
 	 *
 	 * @param bool $value Whether or not Activity Like is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_like_active', $is_activity_post_like_active );
 }
 
 
@@ -1395,9 +1424,15 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether post type feed enabled or not.
+	 * @since BuddyBoss 2.5.00
+	 * Introduce new params $post_type and $default.
+	 *
+	 * @param bool   $value     Whether post type feed enabled or not.
+	 * @param string $post_type Post type.
+	 * @param bool   $default   Optional. Fallback value if not found in the database.
+	 *                          Default: false.
 	 */
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( bb_post_type_feed_option_name( $post_type ), $default ), $post_type, $default );
 }
 
 /**
@@ -1954,21 +1989,8 @@ function bb_feed_post_types() {
 	// Get all active custom post type.
 	$post_types = get_post_types( array( 'public' => true ) );
 
-	// Exclude BP CPT.
-	$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
-
-	$bp_excluded_cpt = array();
-
-	foreach ( $post_types as $post_type ) {
-		// Exclude all the custom post type which is already in BuddyPress Activity support.
-		if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
-			continue;
-		}
-
-		$bp_excluded_cpt[] = $post_type;
-	}
-
-	return $bp_excluded_cpt;
+	// Use array_diff to exclude specific post types.
+	return array_diff( $post_types, bb_feed_excluded_post_types() );
 }
 
 /**
@@ -1979,8 +2001,23 @@ function bb_feed_post_types() {
  * @return array.
  */
 function bb_feed_not_allowed_comment_post_types() {
-	// Exclude BP CPT.
-	return array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+	$post_types = bb_feed_post_types();
+
+	$bp_exclude_cpt = array();
+	foreach ( $post_types as $post_type ) {
+		if ( ! post_type_supports( $post_type, 'comments' ) ) {
+			$bp_exclude_cpt[] = $post_type;
+		}
+	}
+
+	$bp_exclude_cpt = array_merge( array( 'forum', 'product', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ), $bp_exclude_cpt );
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss 2.4.60
+	 */
+	return apply_filters( 'bb_feed_not_allowed_comment_post_types', $bp_exclude_cpt );
 }
 
 /**
@@ -2332,4 +2369,389 @@ function bb_get_profile_slug_format( $default = 'username' ) {
 	 * @param string $value Default profile slug format.
 	 */
 	return apply_filters( 'bb_get_profile_slug_format', bp_get_option( 'bb_profile_slug_format', $default ) );
+}
+
+/**
+ * Get domain restrictions setting value from the database.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @return array Domain restrictions setting value.
+ */
+function bb_domain_restrictions_setting( $default = array() ) {
+
+	/**
+	 * Filters domain restriction settings.
+	 *
+	 * @since BuddyBoss 2.4.11
+	 *
+	 * @param array $value Domain restrictions setting value.
+	 */
+	return apply_filters( 'bb_domain_restrictions_setting', bp_get_option( 'bb-domain-restrictions', $default ) );
+}
+
+/**
+ * Get email restrictions setting value from the database.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ * @return array Email restrictions setting value.
+ */
+function bb_email_restrictions_setting( $default = array() ) {
+
+	/**
+	 * Filters email restriction settings.
+	 *
+	 * @since BuddyBoss 2.4.11
+	 *
+	 * @param array $value Email restrictions setting value.
+	 */
+	return apply_filters( 'bb_email_restrictions_setting', bp_get_option( 'bb-email-restrictions', $default ) );
+}
+
+/**
+ * Check whether Activity comment edit is enabled.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bb_is_activity_comment_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether Activity comment edit is enabled.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param bool $value Whether Activity comment edit is enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_comment_edit_enabled', (bool) bp_get_option( '_bb_enable_activity_comment_edit', $default ) );
+}
+
+/**
+ * Get BuddyBoss activity comment Time option.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param bool $default when option not found, function will return $default value.
+ *
+ * @return mixed|void
+ */
+function bb_get_activity_comment_edit_time( $default = false ) {
+	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+}
+
+/**
+ * Function to exclude Custom post types for activity settings.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @return array.
+ */
+function bb_feed_excluded_post_types() {
+
+	/**
+	 * Function to exclude Custom post types for activity settings.
+	 *
+	 * @since BuddyBoss 2.4.60
+	 */
+	return apply_filters( 'bb_feed_excluded_post_types', array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ) );
+}
+
+/**
+ * Check whether activity pinned posts are enabled.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ *
+ * @return bool True    If activity pinned posts are enabled, otherwise false.
+ */
+function bb_is_active_activity_pinned_posts( $default = false ) {
+
+	/**
+	 * Filters whether activity pinned posts are enabled.
+	 *
+	 * @since BuddyBoss 2.4.60
+	 *
+	 * @param bool $value Whether activity pinned posts are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+}
+
+/**
+ * Get login redirection settings value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Login redirection setting value.
+ */
+function bb_login_redirection( $default = '' ) {
+
+	/**
+	 * Filters login redirection settings.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Login redirection setting value.
+	 */
+	return apply_filters( 'bb_login_redirection', bp_get_option( 'bb-login-redirection', $default ) );
+}
+
+/**
+ * Get logout redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Logout redirection setting value.
+ */
+function bb_logout_redirection( $default = '' ) {
+
+	/**
+	 * Filters logout redirection settings.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Logout redirection setting value.
+	 */
+	return apply_filters( 'bb_logout_redirection', bp_get_option( 'bb-logout-redirection', $default ) );
+}
+
+/**
+ * Get custom login redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Login redirection setting value.
+ */
+function bb_custom_login_redirection( $default = '' ) {
+
+	/**
+	 * Filters custom login page URL.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Custom login page URL.
+	 */
+	return apply_filters( 'bb_custom_login_redirection', bp_get_option( 'bb-custom-login-redirection', $default ) );
+}
+
+/**
+ * Get custom logout redirection setting value from the database.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: Empty string.
+ *
+ * @return string Logout redirection setting value.
+ */
+function bb_custom_logout_redirection( $default = '' ) {
+
+	/**
+	 * Filters custom logout page URL.
+	 *
+	 * @since BuddyBoss 2.4.70
+	 *
+	 * @param string $value Custom logout page URL.
+	 */
+	return apply_filters( 'bb_custom_logout_redirection', bp_get_option( 'bb-custom-logout-redirection', $default ) );
+}
+
+/**
+ * Get all reaction types.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array[]
+ */
+function bb_get_all_reactions() {
+	return array(
+		'activity'         => array(
+			'label'     => esc_html__( 'Activity posts', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+		),
+		'activity_comment' => array(
+			'label'     => esc_html__( 'Activity comments', 'buddyboss' ),
+			'disabled'  => ! bp_is_active( 'activity' ),
+			'component' => 'activity',
+		),
+	);
+}
+
+/**
+ * Check whether Reaction is enabled based on key.
+ *
+ * @param string $key Key of the reaction.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array|bool
+ */
+function bb_all_enabled_reactions( $key = '' ) {
+	$get_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+	if ( empty( $key ) ) {
+		return $get_reactions;
+	}
+
+	$all_reactions = bb_get_all_reactions();
+
+	return (bool) (
+		isset( $get_reactions[ $key ] ) &&
+		$all_reactions[ $key ] &&
+		! empty( $all_reactions[ $key ]['component'] ) &&
+		bp_is_active( $all_reactions[ $key ]['component'] ) &&
+		$get_reactions[ $key ]
+	);
+}
+
+/**
+ * Check whether Reaction for activity posts is enabled.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if reaction for activity posts is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+}
+
+/**
+ * Check whether Reaction for activity comments is enabled.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: True.
+ * @return bool True if reaction for activity comments is enabled, otherwise false.
+ */
+function bb_is_reaction_activity_comments_enabled( $default = true ) {
+	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
+}
+
+/**
+ * Get currently active reaction mode.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: 'likes'
+ *
+ * @return string The reaction mode, either 'likes' or 'emotions'.
+ */
+function bb_get_reaction_mode( $default = 'likes' ) {
+
+	$mode = bp_get_option( 'bb_reaction_mode', $default );
+	if (
+		! class_exists( 'BB_Reactions' ) ||
+		! function_exists( 'bbp_pro_is_license_valid' ) ||
+		! bbp_pro_is_license_valid()
+	) {
+		$mode = 'likes';
+	}
+
+	return apply_filters( 'bb_get_reaction_mode', $mode );
+}
+
+/**
+ * Check whether emotions is enabled.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return bool
+ */
+function bb_is_reaction_emotions_enabled() {
+	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
+}
+
+/**
+ * Get data for reaction button options.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $key Key name for the option.
+ *
+ * @return array|mixed
+ */
+function bb_reaction_button_options( $key = '' ) {
+	$button_settings = (array) bp_get_option( 'bb_reactions_button', array() );
+	if ( empty( $key ) ) {
+		return $button_settings;
+	}
+
+	return $button_settings[ $key ];
+}
+
+/**
+ * Fetch the enabled reactions based on mode.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_active_reactions() {
+	if ( bb_is_reaction_emotions_enabled() ) {
+		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+	} else {
+		$all_emotions = bb_load_reaction()->bb_get_reactions();
+	}
+
+
+	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
+}
+
+/**
+ * Get Page requests option.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default when option not found, function will return $default value.
+ *
+ * @return int
+ */
+function bb_get_ajax_request_page_load( $default = 2 ) {
+	return (int) apply_filters( 'bb_get_ajax_request_page_load', bp_get_option( 'bb_ajax_request_page_load', $default ) );
+}
+
+/**
+ * Get an Activity loading option.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @param int $default when option not found, function will return $default value.
+ *
+ * @return int
+ */
+function bb_get_load_activity_per_request( $default = 10 ) {
+	return (int) apply_filters( 'bb_get_load_activity_per_request', bp_get_option( 'bb_load_activity_per_request', $default ) );
+}
+
+/**
+ * Function to check the send ajax request to load main content.
+ *
+ * @since BuddyBoss 2.5.80
+ *
+ * @return bool
+ */
+function bb_is_send_ajax_request() {
+	return (bool) ( 2 === bb_get_ajax_request_page_load() );
 }

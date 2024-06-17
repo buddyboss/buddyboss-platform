@@ -74,6 +74,9 @@ function bp_members_clear_member_type_cache( $user_id ) {
 			wp_cache_delete( $cache_key, 'bp_member_member_type' );
 		}
 	}
+
+	// Clear user data from BP_User_Query.
+	wp_cache_delete( $user_id, 'bb_user' );
 }
 add_action( 'wpmu_delete_user', 'bp_members_clear_member_type_cache' );
 add_action( 'delete_user', 'bp_members_clear_member_type_cache' );

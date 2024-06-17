@@ -103,7 +103,7 @@ function bp_member_type_query( $query ) {
 	if ( isset( $type_id ) ) {
 
 		// Alter SELECT with INNER JOIN
-		$query->uid_clauses['select'] .= " INNER JOIN {$wpdb->prefix}term_relationships r ON u.{$query->uid_name} = r.object_id ";
+		$query->uid_clauses['select'] .= " INNER JOIN {$wpdb->term_relationships} r ON u.{$query->uid_name} = r.object_id ";
 
 		// Alter WHERE clause
 		$query_where_glue             = empty( $query->uid_clauses['where'] ) ? ' WHERE ' : ' AND ';

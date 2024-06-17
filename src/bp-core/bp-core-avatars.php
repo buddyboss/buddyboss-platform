@@ -1715,6 +1715,10 @@ function bp_core_get_upload_dir( $type = 'upload_path' ) {
 	if ( isset( $bp->avatar->$type ) ) {
 		$retval = $bp->avatar->$type;
 	} else {
+		if ( ! isset( $bp->avatar ) ) {
+			$bp->avatar = new stdClass();
+		}
+
 		// If this value has been set in a constant, just use that.
 		if ( defined( $constant ) ) {
 			$retval = constant( $constant );
@@ -1821,6 +1825,11 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 
 	if ( false !== strpos( $avatar, '/' . $user_id . '/' ) ) {
 		$retval = true;
+	}
+
+	// Check that the avatar has '/default/USER_ID/' path.
+	if ( false !== strpos( $avatar, '/default/' . $user_id . '/' ) ) {
+		$retval = false;
 	}
 
 	// Support WP User Avatar Plugin default avatar image.
@@ -2198,6 +2207,8 @@ function bp_avatar_is_front_edit() {
  */
 function bp_avatar_use_webcam() {
 	global $is_safari, $is_IE, $is_chrome;
+	$browser	= bb_core_get_browser();
+	$is_firefox	= isset( $browser['name'] ) ? 'Firefox' === $browser['b_name'] : false;
 
 	/**
 	 * Do not use the webcam feature for mobile devices
@@ -2212,7 +2223,7 @@ function bp_avatar_use_webcam() {
 	 *
 	 * @see http://caniuse.com/#feat=stream
 	 */
-	if ( $is_safari || $is_IE || ( $is_chrome && ! is_ssl() ) ) {
+	if ( ( $is_safari && isset( $browser['version'] ) && $browser['version'] < 11 ) || $is_IE || ( ( $is_chrome || $is_firefox ) && ! is_ssl() ) ) {
 		return false;
 	}
 

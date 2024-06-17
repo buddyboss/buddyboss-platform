@@ -382,12 +382,7 @@
 }
 
 #buddypress #send_group_message_form .select2-search__field {
-	background: transparent;
-	border-width: 0;
-	min-width: 100%;
-	width: 100% !important;
-	padding-left: 0;
-	height: 30px;
+	display: none;
 }
 
 #buddypress #send_group_message_form li:first-child .select2-search__field {
@@ -983,9 +978,9 @@ span.icons:before {
 	line-height: 0;
 
 	&:after {
-		content: "\f465";
+		content: "\ee5a";
 		font-size: 20px;
-		font-family: dashicons;
+		font-family: bb-icons;
 		vertical-align: top;
 		text-align: center;
 		transition: color 0.1s ease-in;

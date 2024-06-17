@@ -369,7 +369,14 @@ function bp_nouveau_ajax_video_save() {
 	$video = '';
 	if ( ! empty( $video_ids ) ) {
 		ob_start();
-		if ( bp_has_video( array( 'include' => implode( ',', $video_ids ) ) ) ) {
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $video_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/entry' );
@@ -512,22 +519,88 @@ function bp_nouveau_ajax_video_delete() {
 		}
 	}
 
+	$video_html_content   = '';
 	$video_personal_count = 0;
 	$video_group_count    = 0;
-
 	if ( bp_is_user_video() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
-		bp_has_video( bp_ajax_querystring( 'video' ) );
+
+		$video_args = bp_ajax_querystring( 'video' );
+		$video_args = bp_parse_args( $video_args );
+		unset( $video_args['per_page'] );
+		$has_videos           = bp_has_video( $video_args );
 		$video_personal_count = bp_core_number_format( $GLOBALS['video_template']->total_video_count );
+
 		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_personal_scope', 20 );
+
+		ob_start();
+		if ( $has_videos ) {
+			while ( bp_video() ) {
+				bp_the_video();
+
+				bp_get_template_part( 'video/entry' );
+			}
+
+			if ( bp_video_has_more_items() ) {
+				?>
+				<li class="load-more">
+					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+			}
+		} else {
+			?>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
+			</aside>
+			<?php
+		}
+
+		$video_html_content = ob_get_clean();
 	}
 
+	$group_video_html_content = '';
 	if ( bp_is_group_video() ) {
 
 		// Update the count of photos in groups in navigation menu.
 		wp_cache_flush();
 
 		$video_group_count = bp_video_get_total_group_video_count();
+
+		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+		$group_video_args = bp_ajax_querystring( 'video' );
+		$group_video_args = bp_parse_args( $group_video_args );
+		unset( $group_video_args['per_page'] );
+		$has_group_videos = bp_has_video( $group_video_args );
+
+		remove_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
+
+		ob_start();
+		if ( $has_group_videos ) {
+			while ( bp_video() ) {
+				bp_the_video();
+
+				bp_get_template_part( 'video/entry' );
+			}
+
+			if ( bp_video_has_more_items() ) {
+				?>
+				<li class="load-more">
+					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+			}
+		} else {
+			?>
+			<aside class="bp-feedback bp-messages info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
+			</aside>
+			<?php
+		}
+
+		$group_video_html_content = ob_get_clean();
 	}
 
 	if ( bp_is_group_albums() ) {
@@ -538,13 +611,15 @@ function bp_nouveau_ajax_video_delete() {
 
 	wp_send_json_success(
 		array(
-			'video'                => $video,
-			'video_personal_count' => $video_personal_count,
-			'video_group_count'    => $video_group_count,
-			'video_ids'            => ( isset( $response['video_activity_ids'] ) ) ? $response['video_activity_ids'] : '',
-			'video_content'        => ( isset( $response['content'] ) ) ? $response['content'] : '',
-			'delete_activity'      => $delete_box,
-			'activity_content'     => $activity_content,
+			'video'                    => $video,
+			'video_personal_count'     => $video_personal_count,
+			'video_group_count'        => $video_group_count,
+			'video_ids'                => ( isset( $response['video_activity_ids'] ) ) ? $response['video_activity_ids'] : '',
+			'video_content'            => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'delete_activity'          => $delete_box,
+			'activity_content'         => $activity_content,
+			'video_html_content'       => $video_html_content,
+			'group_video_html_content' => $group_video_html_content,
 		)
 	);
 }
@@ -630,7 +705,14 @@ function bp_nouveau_ajax_video_move_to_album() {
 	$video_html = '';
 	if ( ! empty( $video_ids ) ) {
 		ob_start();
-		if ( bp_has_video( array( 'include' => implode( ',', $video_ids ) ) ) ) {
+		if (
+			bp_has_video(
+				array(
+					'include'  => implode( ',', $video_ids ),
+					'per_page' => 0,
+				)
+			)
+		) {
 			while ( bp_video() ) {
 				bp_the_video();
 				bp_get_template_part( 'video/entry' );
@@ -1077,12 +1159,25 @@ function bp_nouveau_ajax_video_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Added backward compatibility.
 	$video_post['ID']           = $attachment_id;
 	$video_post['post_content'] = $description;
 	wp_update_post( $video_post );
 
-	$response['description'] = $description;
-	wp_send_json_success( $response );
+	$video_id = get_post_meta( $attachment_id, 'bp_video_id', true );
+	if ( ! empty( $video_id ) ) {
+		$video = new BP_Video( $video_id );
+
+		if ( ! empty( $video->id ) ) {
+			$video->description = $description;
+			$video->save();
+
+			$response['description'] = $description;
+			wp_send_json_success( $response );
+		}
+	}
+
+	wp_send_json_error( $response );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_video_tabs', 10, 2 );
@@ -1188,6 +1283,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$user_domain      = bp_core_get_user_domain( $video->user_id );
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );
+	add_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 	$avatar           = bp_core_fetch_avatar(
 		array(
 			'item_id' => $video->user_id,
@@ -1195,12 +1291,35 @@ function bp_nouveau_ajax_video_get_video_description() {
 			'type'    => 'full',
 		)
 	);
+	remove_filter( 'bb_get_blocked_avatar_url', 'bb_moderation_fetch_avatar_url_filter', 10, 3 );
 
 	ob_start();
 
 	if ( $can_view ) {
 		?>
 		<li class="activity activity_update activity-item mini ">
+			<?php
+			if ( $can_download_btn && ! empty( $video_id ) && ! empty( $attachment_id ) ) {
+				$download_url = bp_video_download_link( $attachment_id, $video_id );
+				if ( $download_url ) {
+					?>
+					<div class="bb-activity-more-options-wrap action">
+							<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
+								<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+							</span>
+						<div class="bb-activity-more-options">
+							<div class="generic-button">
+								<a id="activity-video-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-video-download download-activity">
+									<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+									<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<?php
+				}
+			}
+			?>
 			<div class="bp-activity-head">
 				<div class="activity-avatar item-avatar">
 					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo wp_kses_post( $avatar ); ?></a>
@@ -1236,20 +1355,6 @@ function bp_nouveau_ajax_video_get_video_description() {
 				}
 				?>
 			</div>
-			<?php
-			if ( ! empty( $video_id ) ) {
-				if ( $can_download_btn ) {
-					$download_url = bp_video_download_link( $attachment_id, $video_id );
-					if ( $download_url ) {
-						?>
-						<a class="download-video" href="<?php echo esc_url( $download_url ); ?>">
-							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
-						</a>
-						<?php
-					}
-				}
-			}
-			?>
 		</li>
 		<?php
 		$video_description = ob_get_clean();

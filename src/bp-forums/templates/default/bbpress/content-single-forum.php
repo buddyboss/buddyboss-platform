@@ -66,6 +66,10 @@
 
 			<?php bbp_get_template_part( 'form', 'topic' ); ?>
 
+		<?php elseif ( bbp_is_forum_category() ) : ?>
+
+			<?php bbp_get_template_part( 'feedback', 'forum-category' ); ?>
+
 		<?php endif; ?>
 
 	<?php endif; ?>

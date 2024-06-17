@@ -359,6 +359,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['topic_edit_document'] = array();
@@ -388,6 +389,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['topic_edit_video'] = array();
@@ -426,6 +428,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $media_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['topic_edit_media'] = array();
@@ -470,6 +473,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['reply_edit_document'] = array();
@@ -499,6 +503,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['reply_edit_video'] = array();
@@ -537,6 +542,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $media_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['reply_edit_media'] = array();
@@ -581,6 +587,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['forum_edit_document'] = array();
@@ -610,6 +617,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['forum_edit_video'] = array();
@@ -648,6 +656,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							'include'  => $media_ids,
 							'order_by' => 'menu_order',
 							'sort'     => 'ASC',
+							'per_page' => 0,
 						)
 					) ) {
 						$params['forum_edit_media'] = array();

@@ -741,7 +741,7 @@ add_filter( 'heartbeat_nopriv_received', 'bb_heartbeat_on_screen_notifications',
  * @return bool
  */
 function bb_notifications_background_enabled() {
-	return class_exists( 'BP_Notifications_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) );
+	return class_exists( 'BB_Background_Updater' ) && apply_filters( 'bb_notifications_background_enabled', true );
 }
 
 /**
@@ -895,7 +895,7 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	$all_notifications = array();
 
 	// Enabled default notification from backend.
-	$default_by_admin = array();
+	$settings_by_admin = array();
 
 	if ( empty( $preferences ) ) {
 		return;
@@ -947,12 +947,12 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 				$admin_excluded_actions = array_merge( $admin_excluded_actions, $all_actions[ $key . '_' . $type ] );
 			}
 			if ( isset( $types[ $type ] ) ) {
-				$default_by_admin[ $key . '_' . $type ] = 'yes';
+				$settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
 			}
 		}
 	}
 
-	$notifications          = bp_parse_args( $default_by_admin, $all_notifications );
+	$notifications          = bp_parse_args( $settings_by_admin, $all_notifications );
 	$excluded_actions       = array();
 	$notifications_type_key = 'enable_notification';
 	if ( in_array( $type, array( 'web', 'app' ), true ) ) {
@@ -960,17 +960,21 @@ function bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' )
 	}
 
 	foreach ( $notifications as $key => $val ) {
+
 		$user_val = get_user_meta( $user_id, $key, true );
 		if ( $user_val ) {
 			$notifications[ $key ] = $user_val;
 		}
 
-		if ( 'no' === $notifications[ $key ] && isset( $all_actions[ $key ] ) ) {
-			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
-		}
-
-		// Add in excluded action if the settings is disabled from frontend top bar Enable Notification option.
-		if ( 'no' === bp_get_user_meta( $user_id, $notifications_type_key, true ) ) {
+		if (
+			isset( $all_actions[ $key ] ) &&
+			is_array( $all_actions[ $key ] ) &&
+			(
+				'no' === $notifications[ $key ] ||
+				// Add in excluded action if the settings are disabled from frontend top bar Enable a Notification option.
+				'no' === bp_get_user_meta( $user_id, $notifications_type_key, true )
+			)
+		) {
 			$excluded_actions = array_merge( $excluded_actions, $all_actions[ $key ] );
 		}
 	}
@@ -1324,7 +1328,9 @@ function bb_get_notification_conditional_icon( $notification ) {
 	switch ( $notification->component_action ) {
 		case 'bb_new_mention':
 			$notification_type = bp_notifications_get_meta( $notification->id, 'type', true );
-			if ( 'activity_comment' === $notification_type ) {
+			if ( ! empty( $notification->component_name ) && 'core' === $notification->component_name ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square-dots';
+			} elseif ( 'activity_comment' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-comment-activity';
 			} elseif ( 'activity_post' === $notification_type ) {
 				$icon_class = 'bb-icon-f bb-icon-activity';
@@ -1379,13 +1385,14 @@ function bb_get_notification_conditional_icon( $notification ) {
 			break;
 		case 'bb_activity_following_post':
 		case 'bb_groups_subscribed_activity':
-			$item_id      = $notification->item_id;
-			$activity     = new BP_Activity_Activity( $item_id );
-			$media_ids    = bp_activity_get_meta( $item_id, 'bp_media_ids', true );
-			$document_ids = bp_activity_get_meta( $item_id, 'bp_document_ids', true );
-			$video_ids    = bp_activity_get_meta( $item_id, 'bp_video_ids', true );
-			$gif_data     = bp_activity_get_meta( $item_id, '_gif_data', true );
-			$excerpt      = wp_strip_all_tags( $activity->content );
+			$item_id        = $notification->item_id;
+			$activity       = new BP_Activity_Activity( $item_id );
+			$activity_metas = bb_activity_get_metadata( $item_id );
+			$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
+			$document_ids   = $activity_metas['bp_document_ids'][0] ?? '';
+			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
+			$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
+			$excerpt        = wp_strip_all_tags( $activity->content );
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
@@ -1639,17 +1646,6 @@ function bb_delay_email_notifications_enabled() {
 }
 
 /**
- * Function to check the Delay email notifications for new messages is enabled or not.
- *
- * @since BuddyBoss 2.1.4
- *
- * @return int
- */
-function bb_get_delay_email_notifications_time() {
-	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
-}
-
-/**
  * Function to check the Delay email notifications for new messages is enabled with pusher or not.
  *
  * @since BuddyBoss 2.1.4
@@ -1709,12 +1705,32 @@ function bb_notification_after_save_meta( $notification ) {
 				array(
 					'bb_activity_following_post',
 					'bb_groups_subscribed_activity',
+					'bb_activity_comment',
 				),
 				true
 			)
 		) {
-			$activity  = new BP_Activity_Activity( $notification->item_id );
+			$activity = new BP_Activity_Activity( $notification->item_id );
+
+			if ( ! empty( $activity ) && empty( $activity->content ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
+				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_false' );
+				$activity->content = bp_blogs_activity_comment_content_with_read_more( '', $activity );
+				add_filter( 'bp_blogs_activity_comment_content_with_read_more', '__return_true' );
+			}
+
 			$usernames = ! empty( $activity ) && ! empty( $activity->content ) && bp_activity_do_mentions() ? bp_activity_find_mentions( $activity->content ) : array();
+		} elseif (
+			'core' === $notification->component_name &&
+			in_array(
+				$notification->component_action,
+				array(
+					'bb_posts_new_comment_reply',
+				),
+				true
+			)
+		) {
+			$comment   = get_comment( $notification->item_id );
+			$usernames = ! empty( $comment ) && ! empty( $comment->comment_content ) ? bp_find_mentions_by_at_sign( array(), $comment->comment_content ) : array();
 		} elseif (
 			bp_is_active( 'forums' ) &&
 			in_array(
@@ -2111,3 +2127,35 @@ function bb_notification_excluded_component_actions() {
 
 	return apply_filters( 'bb_notification_excluded_component_actions', $actions );
 }
+
+/**
+ * Function to add the notification for post new comment reply.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int   $comment_id   The comment ID.
+ * @param int   $commenter_id Commenter ID.
+ * @param array $commentdata  Comment data.
+ */
+function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id, $commentdata ) {
+
+	// Specify the Notification type.
+	$component_action = 'bb_posts_new_comment_reply';
+	$parent_comment   = get_comment( $commentdata['comment_parent'] );
+
+	add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+	bp_notifications_add_notification(
+		array(
+			'user_id'           => (int) $parent_comment->user_id,
+			'item_id'           => $comment_id,
+			'secondary_item_id' => $commenter_id,
+			'component_name'    => 'core',
+			'component_action'  => $component_action,
+			'date_notified'     => bp_core_current_time(),
+			'is_new'            => 1,
+		)
+	);
+	remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+
+}
+add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );

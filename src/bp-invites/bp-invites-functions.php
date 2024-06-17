@@ -144,23 +144,28 @@ function bp_invites_member_invite_remove_registration_lock() {
 				'value'   => $email,
 				'compare' => '=',
 			),
+			array(
+				'key'     => '_bp_invitee_status',
+				'value'   => 0,
+				'compare' => '=',
+			),
 		),
 	);
 
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bp_core_add_message( __( "We couldn't find any invitations associated with this email address.", 'buddyboss' ), 'error' );
+		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
 		return;
 	}
 
 	// To support old versions of BP, we have to force the overloaded
-	// site_options property in some cases
+	// site_options property in some cases.
 	if ( is_multisite() ) {
 		$site_options = $bp->site_options;
-		if ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
+		if ( ! empty( $bp->site_options['registration'] ) && 'blog' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'all';
-		} elseif ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
+		} elseif ( ! empty( $bp->site_options['registration'] ) && 'none' === $bp->site_options['registration'] ) {
 			$site_options['registration'] = 'user';
 		}
 		$bp->site_options = $site_options;
@@ -252,14 +257,35 @@ function bp_invites_member_invite_register_screen_message() {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
 				?>
 				<script>
-					jQuery(document).ready(function () {
-						if ( jQuery(".field_type_membertypes").length) {
-							jQuery(".field_type_membertypes fieldset select").val("<?php echo esc_js( $member_type_post_id ); ?>");
-							jQuery(".field_type_membertypes fieldset select").attr('disabled', 'disabled');
+					jQuery( document ).ready( function () {
+						// On form submission remove disabled attribute from the select.
+						jQuery( "#signup-form" ).on( "submit", function() {
+							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
+						} );
+
+						if ( jQuery( ".field_type_membertypes" ).length ) {
+							jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
+							jQuery( ".field_type_membertypes fieldset select" ).val( "<?php echo esc_js( $member_type_post_id ); ?>" );
 						}
-					});
+					} );
 				</script>
 				<?php
+
+				// Set member type param for signup fields display.
+				add_filter(
+					'bp_after_has_profile_parse_args',
+					function ( $args ) use ( $get_invite_profile_type ) {
+						if (
+							bp_invites_member_invite_invitation_page() &&
+							! empty( $get_invite_profile_type ) &&
+							( empty( $args['member_type'] ) || 'any' === $args['member_type'] )
+						) {
+							$args['member_type'] = $get_invite_profile_type;
+						}
+
+						return $args;
+					}
+				);
 			}
 		}
 	endif;

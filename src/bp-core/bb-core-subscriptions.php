@@ -87,9 +87,6 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 		} else {
 			delete_site_option( 'bb_subscriptions_migrate_offset' );
 
-			// Delete duplicate entries.
-			bb_remove_duplicate_subscriptions();
-
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
 				$statement = __( 'Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
@@ -374,8 +371,6 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 		if ( ! empty( $results ) ) {
 			return bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
 		} else {
-			// Delete duplicate entries.
-			bb_remove_duplicate_subscriptions();
 
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
@@ -571,8 +566,8 @@ function bb_register_subscriptions_types( $type = '' ) {
 
 	$subscription_type = apply_filters( 'bb_register_subscriptions_types', array() );
 
-	if ( ! empty( $type ) && isset( $subscription_type[ $type ] ) ) {
-		return $subscription_type[ $type ];
+	if ( ! empty( $type ) ) {
+		return isset( $subscription_type[ $type ] ) ? $subscription_type[ $type ] : array();
 	}
 
 	return $subscription_type;
@@ -591,7 +586,7 @@ function bb_get_subscriptions_types( $singular = false ) {
 	$types                   = array();
 	$all_subscriptions_types = bb_register_subscriptions_types();
 
-	if ( ! bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
+	if ( ! bb_enabled_legacy_email_preference() ) {
 		if ( ! empty( $all_subscriptions_types ) ) {
 			foreach ( $all_subscriptions_types as $type ) {
 				if ( bb_is_enabled_subscription( $type['subscription_type'] ) ) {
@@ -1026,7 +1021,12 @@ function bb_is_enabled_subscription( $type, $notification_type = '' ) {
 				$is_enabled = function_exists( 'bbp_is_subscriptions_active' ) && true === bbp_is_subscriptions_active();
 				break;
 			case 'group':
-				$is_enabled = function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions();
+				$is_enabled = (
+					bp_is_active( 'notifications' ) &&
+					function_exists( 'bb_enable_group_subscriptions' ) &&
+					true === bb_enable_group_subscriptions() &&
+					! empty( bb_register_subscriptions_types( 'group' ) )
+				);
 				break;
 			default:
 				if ( ! empty( $notification_type ) ) {
@@ -1133,29 +1133,37 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$parse_args['usernames'] = $usernames;
 	}
 
+	$background_process = false;
 	if (
 		isset( $subscriptions['total'] ) &&
-		$subscriptions['total'] > $min_count
+		1 < $subscriptions['total']
 	) {
-		global $bp_background_updater;
+		$background_process = true;
+	}
+
+	if ( true === $background_process ) {
+		global $bb_background_updater;
 		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
-			foreach ( $chunk_user_ids as $key => $user_ids ) {
+			foreach ( $chunk_user_ids as $user_ids ) {
 				$parse_args['user_ids'] = $user_ids;
-				$bp_background_updater->data(
+
+				$bb_background_updater->data(
 					array(
-						array(
-							'callback' => $send_callback,
-							'args'     => array( $parse_args ),
-						),
-					)
+						'type'     => 'notification',
+						'group'    => 'send_notifications_to_subscribers',
+						'data_id'  => $item_id,
+						'priority' => 5,
+						'callback' => $send_callback,
+						'args'     => array( $parse_args ),
+					),
 				);
 
-				$bp_background_updater->save();
+				$bb_background_updater->save();
 			}
 		}
 
-		$bp_background_updater->dispatch();
+		$bb_background_updater->dispatch();
 	} else {
 		$parse_args['user_ids'] = $subscriptions['subscriptions'];
 		call_user_func(
@@ -1163,6 +1171,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 			$parse_args
 		);
 	}
+
 }
 
 /**
@@ -1285,9 +1294,6 @@ function bb_migrate_group_subscription( $is_background = false ) {
 			);
 		}
 	} else {
-
-		// Delete duplicate entries.
-		bb_remove_duplicate_subscriptions();
 
 		delete_site_option( 'bb_group_subscriptions_migrate_page' );
 		delete_site_option( 'bb_group_subscriptions_migrated_count' );
@@ -1430,18 +1436,4 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
-}
-
-/**
- * Delete duplicate subscription entries.
- *
- * @since BuddyBoss 2.2.9.1
- *
- * @return void
- */
-function bb_remove_duplicate_subscriptions() {
-	global $wpdb;
-
-	$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
-	$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE id not IN( SELECT ID FROM ( SELECT MAX(id) as ID from {$subscription_tbl} GROUP BY `user_id`, `type`, `item_id`, `blog_id` ) AS SB );" ); // phpcs:ignore
 }

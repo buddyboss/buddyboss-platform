@@ -296,7 +296,7 @@ EOD;
 			}
 
 			if ( true === isset( $anchor_text ) ) {
-				$caption .= sprintf( '<a rel="nofollow" href="%1$s" onclick="top.location.href=\'%1$s\'">%2$s</a>', esc_url( $url ), apply_filters( 'the_title', $anchor_text ) );
+				$caption .= sprintf( '<a rel="nofollow" href="%1$s" onclick="top.location.href=\'%1$s\'">%2$s</a>', esc_url( $url ), apply_filters( 'the_title', $anchor_text, 0 ) );
 			}
 
 			// Set up caption.

@@ -502,8 +502,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$thread_id = ! empty( $request['id'] ) ? (int) $request['id'] : 0;
+
 		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
@@ -516,7 +518,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_document = bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
@@ -529,7 +531,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_video = bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bp_message_video',
@@ -542,7 +544,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_gif = bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_gif',
@@ -558,24 +560,24 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			empty( $request['message'] )
 			&& ! (
 				(
-					function_exists( 'bp_is_messages_media_support_enabled' )
-					&& false !== bp_is_messages_media_support_enabled()
+					function_exists( 'bb_user_has_access_upload_media' )
+					&& false !== bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['bp_media_ids'] )
 				)
 				|| (
-					function_exists( 'bp_is_messages_gif_support_enabled' )
-					&& false !== bp_is_messages_gif_support_enabled()
+					function_exists( 'bb_user_has_access_upload_gif' )
+					&& false !== bb_user_has_access_upload_gif( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['media_gif']['url'] )
 					&& ! empty( $request['media_gif']['mp4'] )
 				)
 				|| (
-					function_exists( 'bp_is_messages_document_support_enabled' )
-					&& false !== bp_is_messages_document_support_enabled()
+					function_exists( 'bb_user_has_access_upload_document' )
+					&& false !== bb_user_has_access_upload_document( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['bp_documents'] )
 				)
 				|| (
-					function_exists( 'bp_is_messages_video_support_enabled' )
-					&& false !== bp_is_messages_video_support_enabled()
+					function_exists( 'bb_user_has_access_upload_video' )
+					&& false !== bb_user_has_access_upload_video( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' )
 					&& ! empty( $request['bp_videos'] )
 				)
 			)
@@ -603,7 +605,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$group_id      = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
 
 			if ( ! empty( $group_id ) ) {
-				$group = groups_get_group( $group_id );
+				$group          = groups_get_group( $group_id );
+				$_POST['group'] = $group_id;
 			}
 		}
 
@@ -722,10 +725,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			);
 		} else {
 			$thread_id = (int) $request->get_param( 'id' );
+			$sender_id = (int) $request->get_param( 'sender_id' );
 
 			// It's an existing thread.
 			if ( $thread_id ) {
-				if ( bp_current_user_can( 'bp_moderate' ) || ( messages_is_valid_thread( $thread_id ) && messages_check_thread_access( $thread_id ) ) ) {
+				$sender_id = ( 0 !== $sender_id ? $sender_id : bp_loggedin_user_id() );
+
+				if (
+					! empty( $sender_id ) &&
+					messages_is_valid_thread( $thread_id ) &&
+					messages_check_thread_access( $thread_id, $sender_id )
+				) {
 					$retval = true;
 				}
 			} else {
@@ -792,7 +802,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'term'         => sanitize_text_field( $term ),
 			'type'         => 'members',
-			'only_friends' => bp_is_active( 'friends' ) && function_exists( 'bp_force_friendship_to_message' ) && bp_force_friendship_to_message(),
+			'only_friends' => false,
 			'page'         => $request->get_param( 'page' ),
 			'limit'        => $request->get_param( 'per_page' ),
 			'count_total'  => 'count_query',
@@ -814,7 +824,23 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$args['group_id'] = $group_id;
 		}
 
+		if (
+			bp_is_active( 'friends' ) &&
+			bp_force_friendship_to_message() &&
+			empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+		) {
+			add_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+		}
+
 		$results = bp_core_get_suggestions( $args );
+
+		if (
+			bp_is_active( 'friends' ) &&
+			bp_force_friendship_to_message() &&
+			empty( bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) )
+		) {
+			remove_filter( 'bp_user_query_uid_clauses', 'bb_messages_update_recipient_user_query_uid_clauses', 9999, 2 );
+		}
 
 		$results_total = apply_filters( 'bp_members_suggestions_results_total', $results['total'] );
 		$results       = apply_filters( 'bp_members_suggestions_results', isset( $results['members'] ) ? $results['members'] : array() );
@@ -1421,8 +1447,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$prepared_thread->thread_id = $thread->thread_id;
 		}
 
-		if ( ! empty( $schema['properties']['sender_id'] ) && ! empty( $request['sender_id'] ) ) {
-			$prepared_thread->sender_id = $thread->sender_id;
+		if ( ! empty( $request['sender_id'] ) ) {
+			$prepared_thread->sender_id = (int) $request['sender_id'];
 		} elseif ( ! empty( $thread->sender_id ) ) {
 			$prepared_thread->sender_id = $thread->sender_id;
 		} else {
@@ -1909,9 +1935,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$message_rendered = preg_replace( '#(<p></p>)#', '<p><br></p>', $message_rendered );
 
 		$data = array(
-			'id'                        => $thread->thread_id,
-			'message_id'                => $thread->last_message_id,
-			'last_sender_id'            => $thread->last_sender_id,
+			'id'                        => (int) $thread->thread_id,
+			'message_id'                => (int) $thread->last_message_id,
+			'last_sender_id'            => (int) $thread->last_sender_id,
 			'subject'                   => array(
 				'raw'      => $thread->last_message_subject,
 				'rendered' => apply_filters( 'bp_get_message_thread_subject', $thread->last_message_subject ),
@@ -1947,7 +1973,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'next_messages_timestamp'   => $next_messages_timestamp,
 			'messages'                  => array(),
 			'loggedin_user_permissions' => $this->get_current_user_permissions( $permission_args, $request ),
-			'is_hidden'                 => $this->bb_rest_thread_is_hidden( $thread->thread_id, bp_loggedin_user_id() ),
+			'is_hidden'                 => messages_is_valid_archived_thread( $thread->thread_id, bp_loggedin_user_id() ),
 		);
 
 		if ( $thread->messages ) {
@@ -2620,9 +2646,29 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$thread->group_id        = $group_id;
 		$thread->is_group_thread = $is_group_message_thread;
 
-		$retval['can_manage_media']    = bp_is_active( 'media' ) && apply_filters( 'bp_user_can_create_message_media', bp_is_messages_media_support_enabled(), $thread, $recipient->user_id );
-		$retval['can_manage_video']    = bp_is_active( 'video' ) && apply_filters( 'bp_user_can_create_message_video', bp_is_messages_video_support_enabled(), $thread, $recipient->user_id );
-		$retval['can_manage_document'] = bp_is_active( 'document' ) && apply_filters( 'bp_user_can_create_message_document', bp_is_messages_document_support_enabled(), $thread, $recipient->user_id );
+		if (
+			bp_is_active( 'media' ) &&
+			function_exists( 'bb_user_has_access_upload_media' ) &&
+			bb_user_has_access_upload_media( $group_id, $recipient->user_id, 0, $thread->thread_id )
+		) {
+			$retval['can_manage_media'] = apply_filters( 'bp_user_can_create_message_media', true, $thread, $recipient->user_id );
+		}
+
+		if (
+			bp_is_active( 'video' ) &&
+			function_exists( 'bb_user_has_access_upload_video' ) &&
+			bb_user_has_access_upload_video( $group_id, $recipient->user_id, 0, $thread->thread_id )
+		) {
+			$retval['can_manage_video'] = apply_filters( 'bp_user_can_create_message_video', true, $thread, $recipient->user_id );
+		}
+
+		if (
+			bp_is_active( 'document' ) &&
+			function_exists( 'bb_user_has_access_upload_document' ) &&
+			bb_user_has_access_upload_document( $group_id, $recipient->user_id, 0, $thread->thread_id )
+		) {
+			$retval['can_manage_document'] = apply_filters( 'bp_user_can_create_message_document', true, $thread, $recipient->user_id );
+		}
 
 		if ( isset( $recipient->is_hidden ) ) {
 			$retval['hide_thread'] = true;
@@ -3004,7 +3050,15 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			// Check recipients if connected or not.
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && count( $recepients ) < 3 ) {
 				foreach ( $recepients as $recepient ) {
-					if ( (int) $user_id !== (int) $recepient->user_id && ! friends_check_friendship( (int) $user_id, (int) $recepient->user_id ) ) {
+					if (
+						(int) $user_id !== (int) $recepient->user_id &&
+						! bb_messages_user_can_send_message(
+							array(
+								'sender_id'     => (int) $user_id,
+								'recipients_id' => (int) $recepient->user_id,
+							)
+						)
+					) {
 						return new WP_Error(
 							'bp_rest_friendship_required',
 							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
@@ -3053,20 +3107,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		return $where;
-	}
-
-	/**
-	 * Function to check the thread id hidden/archive or not.
-	 *
-	 * @param int $thread_id Thread id.
-	 * @param int $user_id   User id.
-	 *
-	 * @return bool
-	 */
-	public function bb_rest_thread_is_hidden( $thread_id, $user_id ) {
-		global $wpdb, $bp;
-		// Check the thread is hide/archived or not.
-		return (bool) $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
 	}
 
 	/**

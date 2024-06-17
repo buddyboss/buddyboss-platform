@@ -465,7 +465,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			}
 			$blocked_by_query = bb_moderation_get_blocked_by_sql( bp_loggedin_user_id() );
 			if ( ! empty( $blocked_by_query ) ) {
-				$comment_data['where'] .= ' AND ' . $wpdb->prefix . 'comments.user_id NOT IN ( ' . $blocked_by_query . ' )';
+				$comment_data['where'] .= ' AND ' . $wpdb->comments . '.user_id NOT IN ( ' . $blocked_by_query . ' )';
 			}
 		}
 

@@ -311,7 +311,12 @@ class BP_Members_Component extends BP_Component {
 			// users without the cap trying to access a spammer's subnav page will get
 			// redirected to the root of the suspender's profile page.  this occurs by
 			// by removing the component in the canonical stack.
-			if ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( bp_displayed_user_id() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			if (
+				bp_is_active( 'moderation' ) &&
+				bp_moderation_is_user_suspended( bp_displayed_user_id() ) &&
+				! bp_current_user_can( 'bp_moderate' ) &&
+				! bp_is_single_activity()
+			) {
 				unset( $bp->canonical_stack['component'] );
 			}
 		}
@@ -512,6 +517,7 @@ class BP_Members_Component extends BP_Component {
 			'BP_REST_Members_Details_Endpoint',
 			'BP_REST_Attachments_Member_Avatar_Endpoint',
 			'BB_REST_Subscriptions_Endpoint',
+			'BB_REST_Reactions_Endpoint',
 		);
 
 		if ( function_exists( 'bp_core_get_suggestions' ) ) {

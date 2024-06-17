@@ -76,6 +76,32 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
+		// Redirection Settings Section.
+		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
+
+		$this->add_field( 'bb-login-redirection', __( 'After Login', 'buddyboss' ), 'bb_admin_setting_callback_login_redirection', 'string' );
+		$args          = array();
+		$args['class'] = 'child-no-padding login-redirection-text-box';
+		$this->add_field( 'bb-custom-login-redirection', '', 'bp_admin_setting_callback_custom_login_redirection', 'string', $args );
+
+		$this->add_field( 'bb-logout-redirection', __( 'After Logout', 'buddyboss' ), 'bb_admin_setting_callback_logout_redirection', 'string' );
+		$args          = array();
+		$args['class'] = 'child-no-padding logout-redirection-text-box';
+		$this->add_field( 'bb-custom-logout-redirection', '', 'bp_admin_setting_callback_custom_logout_redirection', 'string', $args );
+
+		// Email domain restriction section.
+		$this->add_section( 'bb_registration_restrictions', __( 'Registration Restrictions', 'buddyboss' ), 'bb_admin_setting_callback_registration_restrictions_instructions', 'bb_registration_restrictions_tutorial' );
+
+		// Blacklist email settings.
+		$args          = array();
+		$args['class'] = ( bp_allow_custom_registration() ) ? 'bb-inactive-field' : '';
+		$this->add_field( 'bb-domain-restrictions', __( 'Domain Restrictions', 'buddyboss' ) . bb_get_buddyboss_registration_notice(), 'bb_admin_setting_callback_domain_restrictions', '', $args );
+
+		// Whitelist email settings.
+		$args          = array();
+		$args['class'] = ( bp_allow_custom_registration() ) ? 'bb-inactive-field' : '';
+		$this->add_field( 'bb-email-restrictions', __( 'Email Restrictions', 'buddyboss' ) . bb_get_buddyboss_registration_notice(), 'bb_admin_setting_callback_email_restrictions', '', $args );
+
 		// Main Privacy Settings Section.
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ), '', 'bp_privacy_tutorial' );
 
@@ -85,7 +111,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		if ( ! $enable_private_network ) {
 			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Website Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
 		}
-		
+
 		// Private REST APIs Settings.
 		$this->add_field( 'bb-enable-private-rest-apis', esc_html__( 'Private REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis', 'intval' );
 		if (
@@ -101,7 +127,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		) {
 			$this->add_field( 'bb-enable-private-rest-apis-public-content', __( 'Public REST APIs', 'buddyboss' ), 'bb_admin_setting_callback_private_rest_apis_public_content', 'stripslashes' );
 		}
-		
+
 		// Private RSS Feeds Settings.
 		$this->add_field( 'bb-enable-private-rss-feeds', esc_html__( 'Private RSS Feeds', 'buddyboss' ), 'bb_admin_setting_callback_private_rss_feeds', 'intval' );
 		if ( true === bp_enable_private_rss_feeds() ) {

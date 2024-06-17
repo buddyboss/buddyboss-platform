@@ -118,9 +118,16 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 				// Check if force friendship is enabled and check recipients.
 				if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-					foreach ( $members as $f => $member ) {
-						if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-							unset( $members[ $f ] );
+					if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+						foreach ( $members as $f => $member ) {
+							if (
+								! (
+									bb_messages_allowed_messaging_without_connection( $member ) ||
+									friends_check_friendship( bp_loggedin_user_id(), $member )
+								)
+							) {
+								unset( $members[ $f ] );
+							}
 						}
 					}
 				}
@@ -144,9 +151,20 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_group_message ) {
 					$not_access_list[] = bp_core_get_user_displayname( $member );
 				}
+			}
 
-				if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-					$not_friends[] = bp_core_get_user_displayname( $member );
+			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+				if ( ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+					foreach ( $members as $f => $member ) {
+						if (
+							! (
+								bb_messages_allowed_messaging_without_connection( $member ) ||
+								friends_check_friendship( bp_loggedin_user_id(), $member )
+							)
+						) {
+							$not_friends[] = bp_core_get_user_displayname( $member );
+						}
+					}
 				}
 			}
 
@@ -221,7 +239,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_media_ids'] ) && function_exists( 'bb_user_has_access_upload_media' ) ) {
-			$can_send_media = bb_user_has_access_upload_media( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_media = bb_user_has_access_upload_media( $group, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
@@ -234,7 +252,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_documents'] ) && function_exists( 'bb_user_has_access_upload_document' ) ) {
-			$can_send_document = bb_user_has_access_upload_document( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_document = bb_user_has_access_upload_document( $group, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
@@ -247,7 +265,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['bp_videos'] ) && function_exists( 'bb_user_has_access_upload_video' ) ) {
-			$can_send_video = bb_user_has_access_upload_video( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_video = bb_user_has_access_upload_video( $group, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
@@ -260,7 +278,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['media_gif'] ) && function_exists( 'bb_user_has_access_upload_gif' ) ) {
-			$can_send_gif = bb_user_has_access_upload_gif( ( ( 'open' === $message_type && 'all' === $message_users ) ? $group : 0 ), bp_loggedin_user_id(), 0, 0, 'message' );
+			$can_send_gif = bb_user_has_access_upload_gif( $group, bp_loggedin_user_id(), 0, 0, 'message' );
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
@@ -828,29 +846,32 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 			// Else "Private Reply (BCC)" selected.
 		} else {
-			global $bb_email_background_updater;
+			global $bb_background_updater;
 
 			$all_members = $members;
 
 			if ( ! empty( $members ) ) {
+				$min_count = function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10;
 				if (
-					! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) &&
-					( $bb_email_background_updater instanceof BP_Email_Background_Updater )
+					( count( $members ) > $min_count ) &&
+					( $bb_background_updater instanceof BB_Background_Updater )
 				) {
-					$chunk_members = array_chunk( $members, function_exists( 'bb_get_email_queue_min_count' ) ? bb_get_email_queue_min_count() : 10 );
+					$chunk_members = array_chunk( $members, $min_count );
 					if ( ! empty( $chunk_members ) ) {
 						foreach ( $chunk_members as $key => $members ) {
-							$bb_email_background_updater->data(
+							$bb_background_updater->data(
 								array(
-									array(
-										'callback' => 'bb_send_group_message_background',
-										'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
-									),
-								)
+									'type'     => 'email',
+									'group'    => 'group_private_message',
+									'data_id'  => $group,
+									'priority' => 5,
+									'callback' => 'bb_send_group_message_background',
+									'args'     => array( $_POST, $members, bp_loggedin_user_id(), $message, true ),
+								),
 							);
-							$bb_email_background_updater->save();
+							$bb_background_updater->save();
 						}
-						$bb_email_background_updater->dispatch();
+						$bb_background_updater->dispatch();
 					}
 
 					$message = true;

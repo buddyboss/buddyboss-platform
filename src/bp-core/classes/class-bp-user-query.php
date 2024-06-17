@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * Member directories, the Connections component, etc.
  *
  * @since BuddyPress 1.7.0
+ * @since BuddyPress 10.0.0 Added $date_query parameter.
+ * @since BuddyBoss 2.3.90 Added $date_query parameter.
  *
  * @param array            $query               {
  *                                              Query arguments. All items are optional.
@@ -49,6 +51,9 @@ defined( 'ABSPATH' ) || exit;
  *                                                  associated with $meta_key matches $meta_value. Default: false.
  * @type array             $xprofile_query      Filter results by xprofile data. Requires the xprofile component.
  *                                                  See {@see BP_XProfile_Query} for details.
+ * @type array             $date_query          Filter results by member last activity date. See first parameter of
+ *                                                  {@link WP_Date_Query::__construct()} for syntax. Only applicable if
+ *                                                  $type is either 'active', 'random', 'newest', or 'online'.
  * @type bool              $populate_extras     True if you want to fetch extra metadata
  *                                                  about returned users, such as total group and friend counts.
  * @type string            $count_total         Determines how BP_User_Query will do a count of total users matching
@@ -177,6 +182,7 @@ class BP_User_Query {
 					'xprofile_query'      => false,
 					'populate_extras'     => true,
 					'count_total'         => 'count_query',
+					'date_query'          => false,
 				)
 			);
 
@@ -288,9 +294,15 @@ class BP_User_Query {
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
-				$sql['where'][] = $wpdb->prepare( 'u.date_recorded >= DATE_SUB( UTC_TIMESTAMP(), INTERVAL %d MINUTE )', $online_default_time / 60 );
+				$sql['where'][] = $wpdb->prepare( 'TIMESTAMPDIFF( SECOND, u.date_recorded, UTC_TIMESTAMP() ) <= %d', $online_default_time );
 				$sql['orderby'] = 'ORDER BY u.date_recorded';
 				$sql['order']   = 'DESC';
+
+				// Date query.
+				$date_query = BP_Date_Query::get_where_sql( $date_query, 'u.date_recorded' );
+				if ( ! empty( $date_query ) ) {
+					$sql['where']['date_query'] = $date_query;
+				}
 
 				break;
 
@@ -314,6 +326,12 @@ class BP_User_Query {
 						array( 'COALESCE( a.date_recorded, NULL )', 'DESC' ),
 						array( 'u.display_name', 'ASC' ),
 					);
+				}
+
+				// Date query.
+				$date_query = BP_Date_Query::get_where_sql( $date_query, 'a.date_recorded' );
+				if ( ! empty( $date_query ) ) {
+					$sql['where']['date_query'] = $date_query;
 				}
 
 				break;
@@ -388,7 +406,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Join SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -496,7 +514,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -558,7 +576,7 @@ class BP_User_Query {
 		if ( is_array( $this->uid_clauses['orderby'] ) ) {
 			$orderby_multiple = array();
 			foreach ( $this->uid_clauses['orderby'] as $part ) {
-				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC
+				$orderby_multiple[] = $part[0] . ' ' . $part[1];// column_name DESC/ASC.
 			}
 
 			$this->uid_clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_multiple );
@@ -598,7 +616,6 @@ class BP_User_Query {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function do_wp_user_query() {
-		static $do_wp_user_query;
 		$fields = array(
 			'ID',
 			'user_login',
@@ -609,7 +626,7 @@ class BP_User_Query {
 			'user_registered',
 			'user_activation_key',
 			'user_status',
-			'display_name'
+			'display_name',
 		);
 
 		if ( is_multisite() ) {
@@ -617,51 +634,44 @@ class BP_User_Query {
 			$fields[] = 'deleted';
 		}
 
-		/**
-		 * Filters the WP User Query arguments before passing into the class.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param array         $value Array of arguments for the user query.
-		 * @param BP_User_Query $this  Current BP_User_Query instance.
-		 */
-		$args = apply_filters( 'bp_wp_user_query_args', array(
-			// Relevant.
-			'fields'      => $fields,
-			'include'     => $this->user_ids,
+		$r = array();
 
-			// Overrides
-			'blog_id'     => 0,    // BP does not require blog roles.
-			'count_total' => false, // We already have a count.
-		), $this );
+		// Prime caches as necessary.
+		$uncached_ids = bp_get_non_cached_ids( $this->user_ids, 'bb_user' );
+		if ( ! empty( $uncached_ids ) ) {
+			/**
+			 * Filters the WP User Query arguments before passing into the class.
+			 *
+			 * @since BuddyPress 1.7.0
+			 *
+			 * @param array         $value Array of arguments for the user query.
+			 * @param BP_User_Query $this  Current BP_User_Query instance.
+			 */
+			$args = apply_filters( 'bp_wp_user_query_args', array(
+				// Relevant.
+				'fields'      => $fields,
+				'include'     => $uncached_ids,
 
-		$cache_key = 'bb_do_wp_user_query_' . md5( maybe_serialize( $args ) );
+				// Overrides
+				'blog_id'     => 0,    // BP does not require blog roles.
+				'count_total' => false, // We already have a count.
+			), $this );
 
-		if ( ! isset( $do_wp_user_query[ $cache_key ] ) ) {
 			$wp_user_query = new WP_User_Query( $args );
 
-			$do_wp_user_query[ $cache_key ] = $wp_user_query;
-		} else {
-			$wp_user_query = $do_wp_user_query[ $cache_key ];
-		}
-
-		// We calculate total_users using a standalone query, except
-		// when a whitelist of user_ids is passed to the constructor.
-		// This clause covers the latter situation, and ensures that
-		// pagination works when querying by $user_ids.
-		if ( empty( $this->total_users ) ) {
-			$this->total_users = count( $wp_user_query->results );
-		}
-
-		// Reindex for easier matching.
-		$r = array();
-		foreach ( $wp_user_query->results as $u ) {
-			$r[ $u->ID ] = $u;
+			// Reindex for easier matching.
+			foreach ( $wp_user_query->results as $u ) {
+				$r[ $u->ID ] = $u;
+			}
 		}
 
 		// Match up to the user ids from the main query.
 		foreach ( $this->user_ids as $key => $uid ) {
-			if ( isset( $r[ $uid ] ) ) {
+
+			$user = wp_cache_get( $uid, 'bb_user' );
+			if ( ! empty( $user ) ) {
+				$this->results[ $uid ] = $user;
+			} elseif ( isset( $r[ $uid ] ) ) {
 				$r[ $uid ]->ID          = (int) $uid;
 				$r[ $uid ]->user_status = isset( $r[ $uid ]->user_status ) ? (int) $r[ $uid ]->user_status : 0;
 
@@ -671,10 +681,19 @@ class BP_User_Query {
 				// (as opposed to 'ID') property.
 				$this->results[ $uid ]->id = (int) $uid;
 
-				// Remove user ID from original user_ids property.
+				// Set data to cache.
+				wp_cache_set( $uid, $this->results[ $uid ], 'bb_user' );
 			} else {
 				unset( $this->user_ids[ $key ] );
 			}
+		}
+
+		// We calculate total_users using a standalone query, except
+		// when a whitelist of user_ids is passed to the constructor.
+		// This clause covers the latter situation, and ensures that
+		// pagination works when querying by $user_ids.
+		if ( empty( $this->total_users ) ) {
+			$this->total_users = count( $this->user_ids );
 		}
 	}
 

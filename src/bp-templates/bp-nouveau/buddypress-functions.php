@@ -381,17 +381,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of styles to enqueue.
 		 */
-		$styles = apply_filters( 'bp_nouveau_enqueue_styles', array(
-			'bp-nouveau-icons-map' => array(
-				'file' => 'icons/css/icons-map%1$s%2$s.css', 'dependencies' => array(), 'version' => $this->version,
-			),
-			'bp-nouveau-bb-icons' => array(
-				'file' => 'icons/css/bb-icons%1$s%2$s.css', 'dependencies' => array(), 'version' => $bb_icon_version,
-			),
-			'bp-nouveau' => array(
-				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
-			),
-		) );
+		$styles = apply_filters(
+			'bp_nouveau_enqueue_styles',
+			array(
+				'bp-nouveau-icons-map' => array(
+					'file'         => 'icons/css/icons-map%s.css',
+					'dependencies' => array(),
+					'version'      => $this->version,
+				),
+				'bp-nouveau-bb-icons'  => array(
+					'file'         => 'icons/css/bb-icons%1$s%2$s.css',
+					'dependencies' => array(),
+					'version'      => $bb_icon_version,
+				),
+				'bp-nouveau'           => array(
+					'file'         => 'css/buddypress%1$s%2$s.css',
+					'dependencies' => $css_dependencies,
+					'version'      => $this->version,
+				),
+			)
+		);
 
 		if ( $styles ) {
 
@@ -400,7 +409,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 					continue;
 				}
 
-				$file = sprintf( $style['file'], $rtl, $min );
+				if ( 'bp-nouveau-icons-map' === $handle ) {
+					$file = sprintf( $style['file'], $min );
+				} else {
+					$file = sprintf( $style['file'], $rtl, $min );
+				}
 
 				// Locate the asset if needed.
 				if ( false === strpos( $style['file'], '://' ) ) {
@@ -608,20 +621,27 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function localize_scripts() {
 
 		$params = array(
-			'ajaxurl'            => bp_core_ajax_url(),
-			'only_admin_notice'  => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'  => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'            => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'    => __( 'View previous comments', 'buddyboss' ),
-			'unsaved_changes'    => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
-			'object_nav_parent'  => '#buddypress',
-			'anchorPlaceholderText' => __( 'Paste or type a link', 'buddyboss' ),
-			'empty_field'        => __( 'New Field', 'buddyboss' ),
-			'close'              => __( 'Close', 'buddyboss' ),
+			'ajaxurl'                    => bp_core_ajax_url(),
+			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'                    => __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'            => __( 'View more comments', 'buddyboss' ),
+			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'object_nav_parent'          => '#buddypress',
+			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
+			'empty_field'                => __( 'New Field', 'buddyboss' ),
+			'close'                      => __( 'Close', 'buddyboss' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
+			'group_leave_confirm'        => sprintf(
+				'<p>%s<span class="bb-group-name"></span>?</p>',
+				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
+			),
+			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
+			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 		);
 
-		// If the Object/Item nav are in the sidebar
+		// If the Object/Item nav are in the sidebar.
 		if ( bp_nouveau_is_object_nav_in_sidebar() ) {
 			$params['object_nav_parent'] = '.buddypress_object_nav';
 		}
@@ -652,6 +672,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		if ( true === $group_sub_objects ) {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
+			// Group sub objects nonce.
+			$object_nonces[ 'group_members' ] = wp_create_nonce( 'bp_nouveau_group_members' );
 		}
 
 //		if ( bp_is_active( 'media' ) ) {
@@ -666,6 +688,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( is_customize_preview() ) {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
 		}
+
+		// Add localize variable for performance tab.
+		$params['is_send_ajax_request'] = function_exists( 'bb_is_send_ajax_request' ) ? bb_is_send_ajax_request() : '';
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
@@ -792,7 +817,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @return string
 	 */
 	public function theme_compat_wrapper( $retval ) {
-		if ( false !== strpos( $retval, '<div id="buddypress"' ) ) {
+		if (
+			false !== strpos( $retval, '<div id="buddypress"' ) &&
+			false === strpos( $retval, 'bp-shortcode-wrap' )
+		) {
 			return $retval;
 		}
 

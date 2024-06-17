@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
  */
 add_filter( 'request', 'bp_request', 10 );
 add_filter( 'template_include', 'bp_template_include', 10 );
-add_filter( 'login_redirect', 'bp_login_redirect', 10, 3 );
+add_filter( 'login_redirect', 'bp_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'map_meta_cap', 'bp_map_meta_caps', 10, 4 );
 
 // Add some filters to feedback messages.
@@ -69,6 +69,12 @@ add_filter( 'bp_core_widget_user_display_name', 'wp_filter_kses' );
 add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
 add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
+
+add_action( 'bp_admin_init', 'bb_updated_component_emails' );
+
+// Redirects.
+add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
+add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
 
 // Avatars.
 /**
@@ -115,6 +121,10 @@ add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
 
 // Remove deleted members link from mention for blog comment.
 add_filter( 'comment_text', 'bb_mention_remove_deleted_users_link', 20, 1 );
+
+// Add user dynamic link for blog comment.
+add_filter( 'comment_text', 'bb_mention_add_user_dynamic_link', 20, 1 );
+
 /**
  * Prevent specific pages (eg 'Activate') from showing on page listings.
  *
@@ -797,7 +807,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			$menu_item->classes[] = 'current-menu-item';
 		} else {
 
-			if ( is_user_logged_in() && ( strpos( $current, bp_loggedin_user_domain() ) !== false ) ) {
+			if ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
 				if (
 					(
 						! in_array( 'settings', $url_parts, true ) &&
@@ -2455,3 +2465,188 @@ function bb_core_number_format_callback( $formatted ) {
 }
 
 add_filter( 'bp_core_number_format', 'bb_core_number_format_callback', 10, 1 );
+
+/**
+ * Fix the issue with loom embed not working correctly.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param string $return The returned oEmbed HTML.
+ * @param object $data   A data object result from an oEmbed provider.
+ * @param string $url    The URL of the content to be embedded.
+ *
+ * @return array|mixed|string|string[]|null
+ */
+function bb_oembed_dataparse( $return, $data, $url ) {
+	if ( ! empty( $return ) && false !== strpos( $return, 'loom.com' ) ) {
+		$return = preg_replace( '/\s*sandbox\s*=\s*(["\']).*?\1/', '', $return );
+	}
+
+	return $return;
+}
+
+add_filter( 'oembed_dataparse', 'bb_oembed_dataparse', 999, 3 );
+
+/**
+ * Make the loom video embed discoverable.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param bool   $retval Return value to enabled discover support or not.
+ * @param string $url    URL to parse for embed.
+ *
+ * @return bool
+ */
+function bb_loom_oembed_discover_support( $retval, $url ) {
+	if ( ! empty( $url ) && false !== strpos( $url, 'loom.com' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10, 2 );
+
+/**
+ * Install emails on plugin activation.
+ *
+ * @since BuddyBoss 2.4.60
+ *
+ * @return void
+ */
+function bb_updated_component_emails() {
+	global $plugin_page;
+
+	if (
+		'bp-components' === $plugin_page &&
+		! empty( $_GET['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		! empty( $_GET['added'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		'true' === $_GET['added'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	) {
+		bp_admin_install_emails();
+	}
+}
+
+/**
+ * Redirect after login.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string  $redirect_to The redirect destination URL.
+ * @param string  $request     The requested redirect destination URL passed as a parameter.
+ * @param WP_User $user        WP_User object if login was successful.
+ *
+ * @return mixed|string
+ */
+function bb_login_redirect( $redirect_to, $request, $user ) {
+
+	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+
+		// Exclude admins.
+		if ( in_array( 'administrator', $user->roles, true ) ) {
+			return $redirect_to;
+		}
+		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'login' );
+	}
+
+	return $redirect_to;
+}
+
+/**
+ * Redirect after logout.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string  $redirect_to The redirect destination URL.
+ * @param string  $request     The requested redirect destination URL passed as a parameter.
+ * @param WP_User $user        WP_User object if login was successful.
+ *
+ * @return mixed|string
+ */
+function bb_logout_redirect( $redirect_to, $request, $user ) {
+
+	if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+
+		// Exclude admins.
+		if ( in_array( 'administrator', $user->roles, true ) ) {
+			return $redirect_to;
+		}
+		$redirect_to = bb_redirect_after_action( $redirect_to, $user->ID, 'logout' );
+	}
+
+	return $redirect_to;
+}
+
+/**
+ * Allow third party domains for redirections.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param array $hosts Array of allowed hosts.
+ */
+function bb_redirection_allowed_third_party_domains( $hosts ) {
+	$allow_custom_url_domains = array();
+	$custom_url               = esc_url( bb_custom_login_redirection() );
+	if ( ! empty( $custom_url ) ) {
+		$allow_custom_url_domains[] = $custom_url;
+	}
+	$custom_url = esc_url( bb_custom_logout_redirection() );
+	if ( ! empty( $custom_url ) ) {
+		$allow_custom_url_domains[] = $custom_url;
+	}
+
+	// Get member type redirection custom urls.
+	$args = array(
+		'post_type'      => 'bp-member-type', // Replace with your custom post type or 'post' for regular posts.
+		'posts_per_page' => - 1, // To get all posts.
+		'post_status'    => 'publish', // Filter by published posts.
+		'meta_query'     => array(
+			'relation' => 'OR', // Use 'OR' to search for any of the specified meta keys.
+			array(
+				'key'     => '_bp_member_type_custom_login_redirection',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => '_bp_member_type_custom_logout_redirection',
+				'compare' => 'EXISTS',
+			),
+		),
+	);
+
+	$query = new WP_Query( $args );
+
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+
+			// Retrieve the meta values.
+			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_login_redirection', true );
+			if ( ! empty( $custom_url ) ) {
+				$allow_custom_url_domains[] = esc_url( $custom_url );
+			}
+
+			$custom_url = get_post_meta( get_the_ID(), '_bp_member_type_custom_logout_redirection', true );
+			if ( ! empty( $custom_url ) ) {
+				$allow_custom_url_domains[] = esc_url( $custom_url );
+			}
+		}
+	}
+
+	wp_reset_postdata();
+
+	if ( count( $allow_custom_url_domains ) > 0 ) {
+		foreach ( $allow_custom_url_domains as $url ) {
+			$parsed_url   = parse_url( $url );
+			$current_host = $_SERVER['HTTP_HOST'];
+
+			if (
+				isset( $parsed_url['host'] ) &&
+				$parsed_url['host'] !== $current_host
+			) {
+				$hosts[] = $parsed_url['host'];
+			}
+		}
+	}
+
+	return $hosts;
+}

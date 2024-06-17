@@ -81,13 +81,14 @@ add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_op
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
 
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
-add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 2 );
+add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 3 );
 
 // Saving field value.
 add_filter( 'xprofile_validate_field', 'bb_xprofile_validate_character_limit_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
+add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_website_url_value', 10, 3 );
 
 // Display name adjustment.
 add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
@@ -137,6 +138,15 @@ add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_
 
 // When email changed then check profile completion for gravatar.
 add_action( 'profile_update', 'bb_profile_update_completion_user_progress', 10, 2 );
+
+// When first and last changed, then delete the user default PNG avatar.
+add_action( 'xprofile_data_before_save', 'bb_xprofile_remove_default_png_avatar_on_update_user_details', 999, 1 );
+
+// When visibility settings changed, then delete the user default PNG avatar.
+add_action( 'update_xprofile_field_metadata', 'bb_xprofile_remove_default_png_avatar_on_update_visibility', 10, 5 );
+
+// When visibility settings changed by the user, then delete the user default PNG avatar.
+add_filter( 'update_user_metadata', 'bb_xprofile_remove_default_png_avatar_on_user_update_visibility', 10, 5 );
 
 /**
  * Sanitize each field option name for saving to the database.
@@ -466,7 +476,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
 			$data_obj = new BP_XProfile_ProfileData( $field_id, bp_displayed_user_id() );
 		}
 
-		$value = xprofile_filter_kses( $value, $data_obj );
+		$value = xprofile_filter_kses( $value, $data_obj, $field_id );
 	} elseif ( 'socialnetworks' === $field_type ) {
 		$data_obj = null;
 		if ( bp_is_user() ) {
@@ -780,23 +790,29 @@ function xprofile_filter_field_edit_name( $field_name ) {
 }
 
 /**
- * Conditionally filters 'bp_core_get_user_displayname' to return user diaplay name from xprofile.
+ * Conditionally filters 'bp_core_get_user_displayname' to return user display name from xprofile.
  *
  * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter
  *
  * @global \BP_XProfile_Field_Type $field
  *
  * @param  string $full_name
  * @param  int    $user_id
+ * @param  int    $current_user_id
  * @return string
  */
-function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
+function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_user_id ) {
 	static $cache;
-	if ( empty( $user_id ) ) {
+	if ( empty( $user_id ) || empty( $current_user_id ) ) {
 		return $full_name;
 	}
-	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id );
-	if ( isset( $cache[ $cache_key ] ) ) {
+
+	global $bb_default_display_avatar;
+
+	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id ) . '_' . trim( $current_user_id );
+
+	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
 
@@ -808,7 +824,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 			$full_name = $display_name;
 		}
 
-		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id );
+		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 
 		if ( ! empty( $list_fields ) ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
@@ -818,7 +834,8 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
-		$cache[ $cache_key ] = $full_name;
+		$bb_default_display_avatar = false;
+		$cache[ $cache_key ]       = $full_name;
 	}
 
 	return $full_name;
@@ -1113,25 +1130,69 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		return $retval;
 	}
 
+	$validation = array();
 	$field_name = xprofile_get_field( $field_id )->name;
+
+	$providers = bp_xprofile_social_network_provider();
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
 			$val = trim( $val );
 			if ( empty( $val ) ) {
-				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+				$key = bp_social_network_search_key( $key, $providers );
+				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $providers[ $key ]->name );
 			}
 		}
 	}
 
-	$providers = bp_xprofile_social_network_provider();
 	foreach ( $value as $k => $v ) {
+		if ( ! empty( $validation ) && ! empty( $validation[ $k ] ) ) {
+			continue;
+		}
+
 		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL ) ) {
 
 		} else {
 			$key = bp_social_network_search_key( $k, $providers );
-			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
+			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
+	}
+
+	return ! empty( $validation ) ? $validation : $retval;
+}
+
+/**
+ * Validate website field values.
+ *
+ * @since BuddyBoss 2.4.20
+ *
+ * @param mixed  $retval     The return value.
+ * @param string $field_id   The ID of the field.
+ * @param string $value      The value to validate.
+ *
+ * @return mixed
+ */
+function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
+	$field = xprofile_get_field( $field_id, null, false );
+
+	if ( 'url' !== $field->type || $retval ) {
+		return $retval;
+	}
+
+	if ( 1 === $field->is_required && '' === trim( $value ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( '%s is required and not allowed to be empty.', 'buddyboss' ),
+			$field->name
+		);
+	}
+
+	if ( ! empty( $value ) && ! wp_http_validate_url( $value ) ) {
+		return sprintf(
+			/* translators: Field name. */
+			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ),
+			$field->name
+		);
 	}
 
 	return $retval;
@@ -1331,51 +1392,61 @@ function bb_xprofile_repair_user_nicknames( $repair_list ) {
  * This function will work as migration process which will update user nicknames.
  *
  * @since BuddyBoss 1.7.9
+ * @since BuddyBoss 2.3.50 Added support to skip updating nickname if modified by the user.
  */
 function bb_xprofile_repair_user_nicknames_callback() {
 	global $wpdb;
 
 	$records_updated = 0;
-	$users_query     = "
-		SELECT
-			users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value
-		FROM
-			`{$wpdb->users}` as users, `{$wpdb->usermeta}` as meta
-		WHERE
-			users.ID = meta.user_ID
-			and meta.meta_key = 'nickname'
-			and users.user_nicename != meta.meta_value";
-	$records         = $wpdb->get_results( $users_query );
+
+	$users_query = "SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
+					FROM `{$wpdb->users}` as users
+					LEFT JOIN `{$wpdb->usermeta}` as meta ON users.ID = meta.user_ID AND meta.meta_key = 'nickname'
+					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
+					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
+
+	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
 
 	if ( ! empty( $records ) ) {
-		$wpdb->query(
-			"UPDATE
-				`{$wpdb->usermeta}` as meta, `{$wpdb->users}` as users
-			SET
-				meta.meta_value = users.user_nicename
-			WHERE
-				users.ID = meta.user_ID
-				and meta.meta_key = 'nickname'
-				and users.user_nicename != meta.meta_value"
-		);
-		$wpdb->query(
-			$wpdb->prepare(
-				"UPDATE
-					`{$wpdb->users}` as users, `{$wpdb->prefix}bp_xprofile_data` as xprofile
-				SET
-					xprofile.value = users.user_nicename
-				WHERE
-					users.ID = xprofile.user_id
-					and xprofile.field_id = %d
-					and users.user_nicename != xprofile.value",
-				bp_xprofile_nickname_field_id()
-			)
-		);
-		$records_updated = sprintf( __( '%s user nicknames updated successfully.', 'buddyboss' ), number_format_i18n( count( $records ) ) );
+		foreach ( $records as $record ) {
+			$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $record->xprofile_nickname, $record->ID );
+
+			if (
+				! empty( $record->xprofile_nickname ) &&
+				empty( $invalid ) &&
+				$record->xprofile_nickname === $record->meta_value
+			) {
+				// Skip updating nickname if xprofile field is modified by the user.
+				continue;
+			}
+
+			$wpdb->update(
+				$wpdb->usermeta,
+				array( 'meta_value' => $record->user_nicename ),
+				array( 'user_id' => $record->ID, 'meta_key' => 'nickname' ),
+				array( '%s' ),
+				array( '%d', '%s' )
+			);
+
+			$wpdb->update(
+				"{$wpdb->base_prefix}bp_xprofile_data",
+				array( 'value' => $record->user_nicename ),
+				array( 'user_id' => $record->ID, 'field_id' => bp_xprofile_nickname_field_id() ),
+				array( '%s' ),
+				array( '%d', '%d' )
+			);
+
+			$records_updated ++;
+		}
 	}
+
 	return array(
 		'status'  => 1,
-		'records' => $records_updated,
+		'records' => sprintf(
+			/* translators: updated records count. */
+			__( '%s user nicknames updated successfully.', 'buddyboss' ),
+			bp_core_number_format( $records_updated )
+		),
 		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss' ),
 	);
 }
@@ -1477,4 +1548,168 @@ function bb_xprofile_set_social_network_param( $args = array() ) {
  */
 function bb_core_xprofile_clear_group_cache() {
 	BP_XProfile_Group::$bp_xprofile_group_ids = array();
+}
+
+/**
+ * Delete the user default PNG avatar when update the first and last name.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param BP_XProfile_ProfileData $field Instance of the profile data being saved.
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_user_details( $field ) {
+	if (
+		empty( $field->field_id ) ||
+		empty( $field->user_id )
+	) {
+		return;
+	}
+
+	global $bb_default_display_avatar;
+
+	$current_value = get_option( 'bp-display-name-format' );
+	$field_ids     = array();
+	if (
+		'first_name' === $current_value ||
+		'first_last_name' === $current_value
+	) {
+		$field_ids[] = bp_xprofile_firstname_field_id();
+		if ( 'first_last_name' === $current_value ) {
+			$field_ids[] = bp_xprofile_lastname_field_id();
+		}
+	} elseif ( 'nickname' === $current_value ) {
+		$field_ids[] = bp_xprofile_nickname_field_id();
+	}
+
+	$field_ids = wp_parse_id_list( $field_ids );
+	if ( ! in_array( (int) $field->field_id, $field_ids, true ) ) {
+		return;
+	}
+
+	$new_value = ( ! empty( $field->value ) ? bb_core_get_first_character( $field->value ) : '' );
+	$old_value = xprofile_get_field_data( $field->field_id, $field->user_id );
+	$old_value = ( ! empty( $old_value ) ? bb_core_get_first_character( $old_value ) : '' );
+
+	$bb_default_display_avatar = false;
+	if ( $new_value !== $old_value ) {
+		$bb_default_display_avatar = true;
+		bb_delete_default_user_png_avatar( array( $field->user_id ) );
+	}
+}
+
+/**
+ * Delete user meta for default PNG when update visibility related settings from backend.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param null|bool $retval       Whether to allow updating metadata for the given type.
+ * @param int       $object_id    ID of the object metadata is for.
+ * @param string    $meta_key     Metadata key.
+ * @param mixed     $meta_value   Metadata value. Must be serializable if non-scalar.
+ * @param mixed     $prev_value   Optional. Previous value to check before updating.
+ *                                If specified, only update existing metadata entries with
+ *                                this value. Otherwise, update all entries.
+ *
+ * @return bool
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_visibility( $retval, $object_id, $meta_key, $meta_value, $prev_value ) {
+
+	$last_filed_id = bp_xprofile_lastname_field_id();
+	if (
+		$last_filed_id !== $object_id ||
+		! in_array( $meta_key, array( 'allow_custom_visibility', 'default_visibility' ), true )
+	) {
+		return $retval;
+	}
+
+	// Compare existing value to new value if no prev value given and the key exists only once.
+	if ( empty( $prev_value ) ) {
+		$old_value = get_metadata_raw( 'xprofile_field', $object_id, $meta_key );
+		if ( is_countable( $old_value ) && count( $old_value ) === 1 ) {
+			$prev_value = $old_value[0];
+		}
+	}
+
+	if ( $prev_value === $meta_value ) {
+		return $retval;
+	}
+
+	if ( 'default_visibility' === $meta_key ) {
+
+		// Get allowed visibility levels.
+		$allowed_values = bp_xprofile_get_visibility_levels();
+		if ( ! empty( $allowed_values['public'] ) ) {
+			unset( $allowed_values['public'] );
+		}
+
+		if (
+			array_key_exists( $meta_value, $allowed_values ) &&
+			array_key_exists( $prev_value, $allowed_values )
+		) {
+			return $retval;
+		}
+
+	}
+
+	bb_delete_default_user_png_avatar( array(), false );
+
+	return $retval;
+}
+
+/**
+ * Delete user meta for default PNG when update own visibility related settings.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param null|bool $retval      Whether to allow updating metadata for the given type.
+ * @param int       $object_id   ID of the object metadata is for.
+ * @param string    $meta_key    Metadata key.
+ * @param mixed     $meta_value  Metadata value. Must be serializable if non-scalar.
+ * @param mixed     $prev_value  Optional. Previous value to check before updating.
+ *                               If specified, only update existing metadata entries with
+ *                               this value. Otherwise, update all entries.
+ *
+ * @return bool
+ */
+function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retval, $object_id, $meta_key, $meta_value, $prev_value ) {
+
+	if (
+		'bp_xprofile_visibility_levels' === $meta_key &&
+		! empty( $meta_value ) &&
+		function_exists( 'bb_delete_default_user_png_avatar' )
+	) {
+		$last_filed_id            = bp_xprofile_lastname_field_id();
+		$new_last_name_visibility = $meta_value[ $last_filed_id ] ?? '';
+
+		// Compare existing value to new value if no prev value given and the key exists only once.
+		if ( empty( $prev_value ) ) {
+			$old_value = get_metadata_raw( 'user', $object_id, $meta_key );
+			if ( is_countable( $old_value ) && count( $old_value ) === 1 ) {
+
+				// Get old last name visibility.
+				$old_last_name_visibility = $old_value[0][ $last_filed_id ] ?? '';
+
+				if ( $new_last_name_visibility === $old_last_name_visibility ) {
+					return $retval;
+				}
+
+				// Get allowed visibility levels.
+				$allowed_values = bp_xprofile_get_visibility_levels();
+				if ( ! empty( $allowed_values['public'] ) ) {
+					unset( $allowed_values['public'] );
+				}
+
+				if (
+					array_key_exists( $new_last_name_visibility, $allowed_values ) &&
+					array_key_exists( $old_last_name_visibility, $allowed_values )
+				) {
+					return $retval;
+				}
+			}
+		}
+
+		bb_delete_default_user_png_avatar( array( $object_id ) );
+	}
+
+	return $retval;
 }

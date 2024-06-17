@@ -20,20 +20,27 @@ if ( bp_is_user_activity() && ! bp_is_activity_tabs_active() && ! empty( $curren
 }
 
 $bp_hide_class = (
-	! empty( $current_action ) &&
-	! is_array( $current_action ) &&
-	'just-me' !== $current_action &&
-	'activity' !== $current_action
-) ? 'bp-hide is-bp-hide' : '';
+	(
+		! bb_user_can_create_activity() &&
+		! bp_is_group_activity()
+	) ||
+	(
+		! empty( $current_action ) &&
+		! is_array( $current_action ) &&
+		'just-me' !== $current_action &&
+		'activity' !== $current_action
+	)
+) ? ' bp-hide is-bp-hide' : '';
 
+// Added media off class.
+$media_enabled_class = '';
+if ( ! bp_is_active( 'media' ) ) {
+	$media_enabled_class = ' media-off';
+}
 ?>
-
-<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss' ); ?></h2>
-
-<div id="bp-nouveau-activity-form-placeholder" class="bp-nouveau-activity-form-placeholder-<?php if ( ! bp_is_active( 'media' ) ) { echo ' media-off'; } ?> <?php echo esc_attr( $bp_hide_class ); ?>"></div>
-
-<div id="bp-nouveau-activity-form" class="activity-update-form<?php if ( ! bp_is_active( 'media' ) ) { echo ' media-off'; } ?> <?php echo esc_attr( $bp_hide_class ); ?>"></div>
-
+	<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss' ); ?></h2>
+	<div id="bp-nouveau-activity-form-placeholder" class="bp-nouveau-activity-form-placeholder-<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
+	<div id="bp-nouveau-activity-form" class="activity-update-form<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
 <?php
 /*
  * Template tag to load the Javascript templates of the Post form UI.

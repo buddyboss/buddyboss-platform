@@ -81,6 +81,7 @@ add_action( 'bp_init', 'bp_add_permastructs', 40 );
 add_action( 'bp_init', 'bp_init_background_updater', 50 );
 add_action( 'bp_init', 'bb_init_email_background_updater', 51 );
 add_action( 'bp_init', 'bb_init_notifications_background_updater', 52 );
+add_action( 'bp_init', 'bb_init_background_updater', 50 );
 
 /**
  * The bp_register_taxonomies hook - Attached to 'bp_init' @ priority 2 above.
@@ -122,6 +123,12 @@ add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
 
 // Restrict user when view media/document from url.
 add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
+
+// Load Post Notifications.
+add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
+add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
+add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
+add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
 
 // Load the admin.
 if ( is_admin() ) {
@@ -175,6 +182,11 @@ add_action(
 	10,
 	2
 );
+
+// remove admin notices for the upgrade page.
+add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
+// load the web performance loader class.
+add_action( 'bp_admin_init', 'bb_load_web_performance_tester', 999 );
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -425,6 +437,23 @@ function bb_handle_cron_healthcheck() {
 add_action( 'bp_init_background_updater', 'bb_handle_cron_healthcheck' );
 
 /**
+ * Check and reschedule the newly added background process if queue is not empty.
+ *
+ * @since BuddyBoss 2.4.20
+ */
+function bb_updater_handle_cron_healthcheck() {
+	global $bb_background_updater;
+	if (
+		is_object( $bb_background_updater ) &&
+		$bb_background_updater->is_updating()
+	) {
+		$bb_background_updater->schedule_event();
+	}
+}
+
+add_action( 'bb_init_background_updater', 'bb_updater_handle_cron_healthcheck' );
+
+/**
  * Function will remove RSS Feeds.
  *
  * @since BuddyBoss 1.8.6
@@ -579,7 +608,7 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
  */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_load_presence_api_mu_plugin( false );
 	}
 }
 
@@ -596,4 +625,583 @@ function bb_check_presence_load_directly() {
 	}
 }
 
-add_action( 'bp_init', 'bb_check_presence_load_directly' );
+add_action( 'bp_admin_init', 'bb_check_presence_load_directly' );
+
+/**
+ * Register the post comment reply notifications.
+ *
+ * @since BuddyBoss 2.3.50
+ */
+function bb_load_post_notifications() {
+	if ( class_exists( 'BB_Post_Notification' ) ) {
+		BB_Post_Notification::instance();
+	}
+}
+
+/**
+ * Send new post comment reply notification.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param int        $comment_id       The comment ID.
+ * @param int|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
+ * @param array      $commentdata      Comment data.
+ */
+function bb_post_new_comment_reply_notification( $comment_id, $comment_approved, $commentdata ) {
+
+	// Don't send notification if the comment hasn't been approved.
+	if ( empty( $comment_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $comment_approved ) {
+		return false;
+	}
+
+	if ( empty( $commentdata['comment_parent'] ) ) {
+		return false;
+	}
+
+	// Get the post.
+	$post = get_post( $commentdata['comment_post_ID'] );
+	if (
+		! is_a( $post, 'WP_Post' ) ||
+		( isset( $post->post_type ) && 'post' !== $post->post_type ) // Allow only for the WP default post only.
+	) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$comment_author = get_user_by( 'email', $commentdata['comment_author_email'] );
+	$parent_comment = get_comment( $commentdata['comment_parent'] );
+
+	if ( empty( $parent_comment->user_id ) ) {
+		return false;
+	}
+
+	if ( ! empty( $comment_author ) && $comment_author->ID === (int) $parent_comment->user_id ) {
+		return false;
+	}
+
+	// Check for moderation.
+	if (
+		! empty( $parent_comment ) &&
+		! empty( $comment_author ) &&
+		true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id )
+	) {
+		return false;
+	}
+
+	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
+	$comment_content          = $commentdata['comment_content'];
+	$comment_link             = get_comment_link( $comment_id );
+	$parent_comment_author_id = (int) $parent_comment->user_id;
+	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
+
+	// Send an email if the user hasn't opted-out.
+	if ( ! empty( $parent_comment_author_id ) ) {
+
+		$usernames = bp_find_mentions_by_at_sign( array(), $comment_content );
+		$send_mail = true;
+
+		if ( ! empty( $usernames ) && array_key_exists( $parent_comment_author_id, $usernames ) ) {
+			if ( true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_new_mention' ) ) {
+				$send_mail = false;
+			}
+		}
+
+		if ( true === $send_mail && true === bb_is_notification_enabled( $parent_comment_author_id, 'bb_posts_new_comment_reply' ) ) {
+
+			$unsubscribe_args = array(
+				'user_id'           => $parent_comment_author_id,
+				'notification_type' => 'new-comment-reply',
+			);
+
+			$args = array(
+				'tokens' => array(
+					'comment.id'     => $comment_id,
+					'commenter.id'   => $comment_author_id,
+					'commenter.name' => $comment_author_name,
+					'comment_reply'  => wp_strip_all_tags( $comment_content ),
+					'comment.url'    => esc_url( $comment_link ),
+					'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			);
+
+			bp_send_email( 'new-comment-reply', $parent_comment_author_id, $args );
+
+		}
+
+		update_comment_meta( $comment_id, 'bb_comment_notified_after_approved', 1 );
+
+		/**
+		 * Fires at the point that notifications should be sent for new comment reply.
+		 *
+		 * @since BuddyPress 2.3.50
+		 *
+		 * @param int   $comment_id   ID for the newly received comment reply.
+		 * @param int   $commenter_id ID of the user who made the comment reply.
+		 * @param array $commentdata  Comment reply related data.
+		 */
+		do_action( 'bb_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
+	}
+}
+
+/**
+ * Check post comment status on transition_comment_status hook and send the new comment reply notification if not sent already.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
+ */
+function bb_post_comment_on_status_change( $new_status, $old_status, $comment ) {
+
+	$notification_already_sent = get_comment_meta( $comment->comment_ID, 'bb_comment_notified_after_approved', true );
+	if (
+		empty( $notification_already_sent ) &&
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
+		$commentdata = get_object_vars( $comment );
+		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+	}
+}
+
+/**
+ * Call new blog post comment reply notification in case of REST API.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param string     $comment_ID Comment id.
+ * @param WP_Comment $comment    Comment data.
+ */
+function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) {
+	$commentdata               = get_object_vars( $comment );
+	$notification_already_sent = get_comment_meta( $comment_ID, 'bb_comment_notified_after_approved', true );
+	if ( empty( $notification_already_sent ) && 1 === (int) $commentdata['comment_approved'] ) {
+		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
+	}
+}
+
+/**
+ * Mark blog comment notifications as read.
+ *
+ * @since BuddyBoss 2.3.50
+ */
+function bb_core_read_blog_comment_notification() {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	$comment_id = 0;
+	// For replies to a parent update.
+	if ( ! empty( $_GET['cid'] ) ) {
+		$comment_id = (int) $_GET['cid'];
+	}
+
+	// Mark individual notification as read.
+	if ( ! empty( $comment_id ) ) {
+		$updated = BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id' => bp_loggedin_user_id(),
+				'id'      => $comment_id,
+			)
+		);
+
+		if ( 1 === $updated ) {
+			$notifications_data = bp_notifications_get_notification( $comment_id );
+			if ( isset( $notifications_data->item_id ) ) {
+				BP_Notifications_Notification::update(
+					array(
+						'is_new' => false,
+					),
+					array(
+						'user_id'        => bp_loggedin_user_id(),
+						'item_id'        => $notifications_data->item_id,
+						'component_name' => $notifications_data->component_name,
+					)
+				);
+
+				if ( bp_is_active( 'activity' ) ) {
+					$activity_id = get_comment_meta( $notifications_data->item_id, 'bp_activity_comment_id', true );
+					if ( ! empty( $activity_id ) ) {
+						BP_Notifications_Notification::update(
+							array(
+								'is_new' => false,
+							),
+							array(
+								'user_id'        => bp_loggedin_user_id(),
+								'item_id'        => $activity_id,
+								'component_name' => 'activity',
+							)
+						);
+					}
+				}
+			}
+		}
+	}
+}
+
+add_action( 'template_redirect', 'bb_core_read_blog_comment_notification', 99 );
+
+/**
+ * Fire an email when someone mentioned users into the blog post comment and post published.
+ *
+ * @since BuddyBoss 1.9.3
+ *
+ * @param int  $comment_id  ID of the comment.
+ * @param bool $is_approved Whether the comment is approved or not.
+ */
+function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
+
+	if ( ! function_exists( 'bp_find_mentions_by_at_sign' ) ) {
+		return;
+	}
+
+	// Get the users comment.
+	$post_type_comment = get_comment( $comment_id );
+
+	// Don't record activity if the comment hasn't been approved.
+	if ( empty( $is_approved ) ) {
+		return false;
+	}
+
+	// Don't record activity if no email address has been included.
+	if ( empty( $post_type_comment->comment_author_email ) ) {
+		return false;
+	}
+
+	// Don't record activity if the comment has already been marked as spam.
+	if ( 'spam' === $is_approved ) {
+		return false;
+	}
+
+	// Get the user by the comment author email.
+	$user = get_user_by( 'email', $post_type_comment->comment_author_email );
+
+	// If user isn't registered, don't record activity.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
+	// Get the user_id.
+	$comment_user_id = (int) $user->ID;
+
+	// Get the post.
+	$post = get_post( $post_type_comment->comment_post_ID );
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return false;
+	}
+
+	if (
+		! empty( $post->post_type ) &&
+		bp_is_active( 'activity' ) &&
+		(
+			bp_is_post_type_feed_enable( $post->post_type ) ||
+			(
+				bp_is_post_type_feed_enable( $post->post_type ) &&
+				! bb_is_post_type_feed_comment_enable( $post->post_type )
+			)
+		)
+	) {
+		return;
+	}
+
+	// Try to find mentions.
+	$usernames = bp_find_mentions_by_at_sign( array(), $post_type_comment->comment_content );
+
+	if ( empty( $usernames ) ) {
+		return;
+	}
+
+	// Replace @mention text with userlinks.
+	foreach ( (array) $usernames as $user_id => $username ) {
+		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
+			// Pattern for cases with existing <a>@mention</a> or @mention.
+			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
+			$post_type_comment->comment_content = preg_replace( $pattern, $replacement, $post_type_comment->comment_content );
+		}
+	}
+
+	// Send @mentions and setup BP notifications.
+	foreach ( (array) $usernames as $user_id => $username ) {
+
+		// Check the sender is blocked by recipient or not.
+		if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $user_id, $comment_user_id ) ) {
+			continue;
+		}
+
+		// User Mentions email.
+		if (
+			(
+				! bb_enabled_legacy_email_preference() &&
+				true === bb_is_notification_enabled( $user_id, 'bb_new_mention' )
+			) ||
+			(
+				bb_enabled_legacy_email_preference() &&
+				true === bb_is_notification_enabled( $user_id, 'notification_activity_new_mention' )
+			)
+		) {
+
+			// Poster name.
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id, $user_id );
+			$author_id         = $comment_user_id;
+
+			/** Mail */
+			// Strip tags from text and setup mail data.
+			$reply_content = apply_filters( 'comment_text', $post_type_comment->comment_content, $post_type_comment, array() );
+			$reply_url     = get_comment_link( $post_type_comment );
+			$title_text    = get_the_title( $post );
+
+			$email_type = 'new-mention';
+
+			$unsubscribe_args = array(
+				'user_id'           => $user_id,
+				'notification_type' => $email_type,
+			);
+
+			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+
+			$args = array(
+				'tokens' => array(
+					'usermessage'       => wp_strip_all_tags( $reply_content ),
+					'mentioned.url'     => $reply_url,
+					'poster.name'       => $reply_author_name,
+					'receiver-user.id'  => $user_id,
+					'unsubscribe'       => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+					'mentioned.type'    => $notification_type_html,
+					'mentioned.content' => $reply_content,
+					'author_id'         => $author_id,
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'title_text'        => $title_text,
+				),
+			);
+
+			bp_send_email( $email_type, $user_id, $args );
+		}
+
+		if ( bp_is_active( 'notifications' ) ) {
+			// Specify the Notification type.
+			$component_action = 'bb_new_mention';
+			$component_name   = 'core';
+
+			add_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $comment_id,
+					'secondary_item_id' => $comment_user_id,
+					'component_name'    => $component_name,
+					'component_action'  => $component_action,
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
+			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
+		}
+	}
+
+}
+
+add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
+
+/**
+ * Fired and mention email when comment has been approved.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param string     $new_status New comment status.
+ * @param string     $old_status Previous comment status.
+ * @param WP_Comment $comment Comment data.
+ *
+ * @return void
+ */
+function bb_mention_post_type_comment_status_change( $new_status, $old_status, $comment ) {
+
+	if (
+		'approved' === $new_status &&
+		in_array( $old_status, array( 'unapproved', 'spam' ), true )
+	) {
+		$commentdata = get_object_vars( $comment );
+		bb_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
+	}
+}
+
+add_action( 'transition_comment_status', 'bb_mention_post_type_comment_status_change', 10, 3 );
+
+/**
+ * Registered component name for the core.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @param array $component_names Array of registered component names.
+ *
+ * @return mixed
+ */
+function bb_core_registered_notification_components( $component_names ) {
+	if ( ! in_array( 'core', $component_names, true ) ) {
+		$component_names[] = 'core';
+	}
+
+	return $component_names;
+}
+
+add_action( 'bp_notifications_get_registered_components', 'bb_core_registered_notification_components', 20, 1 );
+
+/**
+ * Removed duplicate background jobs from the table if exists.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param object $batch Batch object.
+ *
+ * @return void
+ */
+function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
+	global $bb_background_updater, $wpdb;
+
+	if (
+		empty( $batch ) ||
+		! property_exists( $batch, 'group' ) ||
+		empty( $batch->group ) ||
+		empty( $batch->data ) ||
+		empty( $batch->data['args'] )
+	) {
+		return;
+	}
+
+	$table_name = $bb_background_updater::$table_name;
+
+	$del_sql = $wpdb->prepare(
+		"DELETE FROM {$table_name} WHERE `type` = %s AND `group` = %s AND `data_id` = %s AND `secondary_data_id` = %s AND `data` = %s AND `priority` = %d AND `blog_id` = %d AND `id` != %d",
+		array(
+			$batch->type,
+			$batch->group,
+			$batch->item_id,
+			$batch->secondary_id,
+			maybe_serialize( $batch->data ),
+			$batch->priority,
+			$batch->blog_id,
+			$batch->key,
+		)
+	);
+
+	$wpdb->query( $del_sql );
+}
+
+add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
+
+/**
+ * Save directory layout settings for BuddyBoss.
+ * This function handles the AJAX request to save directory layout settings for BuddyBoss.
+ * It verifies the nonce, checks for valid options and values, and stores
+ * the layout option in the database or cookie.
+ *
+ * @since BuddyBoss 2.5.11
+ */
+function buddyboss_directory_save_layout() {
+	$object = bb_filter_input_string( INPUT_POST, 'object' );
+	if ( empty( $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid object.', 'buddyboss' ),
+		) );
+	}
+
+	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Invalid request.', 'buddyboss' ),
+		) );
+	}
+
+	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
+	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid option', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
+	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
+		wp_send_json_error( array(
+			'message' => __( 'Not a valid value', 'buddyboss' ),
+		) );
+		wp_die();
+	}
+
+	if ( 'group_members' === $object ) {
+		$object = 'members';
+	}
+
+	if ( is_user_logged_in() ) {
+		$existing_layout = get_user_meta( get_current_user_id(), $option_name, true );
+		$existing_layout = ! empty( $existing_layout ) ? $existing_layout : array();
+		// Store layout option in the db.
+		$existing_layout[ $object ] = $option_value;
+		update_user_meta( get_current_user_id(), $option_name, $existing_layout );
+	} else {
+		$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( $_COOKIE[ $option_name ] ), true ) : array();
+		// Store layout option in the cookie.
+		$existing_layout[ $object ] = $option_value;
+		setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );
+	}
+
+	wp_send_json_success();
+	wp_die();
+}
+
+add_action( 'wp_ajax_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+add_action( 'wp_ajax_nopriv_buddyboss_directory_save_layout', 'buddyboss_directory_save_layout' );
+
+/**
+ * Function to load background process log class.
+ *
+ * @since BuddyBoss 2.5.60
+ */
+function bb_bg_process_log_load() {
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_bg_process_log_load' );
+
+/**
+ * Remove notices from the buddyboss upgrade screens.
+ *
+ * @since BuddyBoss 2.6.30
+ */
+function bb_remove_admin_notices() {
+	$screen = get_current_screen();
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+		remove_all_actions( 'admin_notices' );
+
+		// Additional check for the common WordPress error/warning hooks.
+		remove_all_actions( 'all_admin_notices' );
+	}
+}
+
+/**
+ * Load the web performance tester.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @return void
+ */
+function bb_load_web_performance_tester() {
+	$active_tab  = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : ''; // phpcs:ignore
+	$active_page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : ''; // phpcs:ignore
+
+	if ( 'bb-upgrade' === $active_page && 'bb-performance-tester' === $active_tab ) {
+		bb_web_performance_tester();
+	}
+}

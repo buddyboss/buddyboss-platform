@@ -179,7 +179,8 @@ window.bp = window.bp || {};
 					navigator.webkitGetUserMedia ||
 					navigator.mozGetUserMedia ||
 					navigator.msGetUserMedia ||
-					navigator.oGetUserMedia
+					navigator.oGetUserMedia ||
+					navigator.mediaDevices.getUserMedia
 				);
 
 				if ( typeof navigator.getUserMedia !== 'undefined' ) {
@@ -198,13 +199,13 @@ window.bp = window.bp || {};
 							x: 0,
 							y: 0,
 							type: 'camera'
-							}
+						}
 					);
 
-						this.model.set( params );
+					this.model.set( params );
 				}
 
-					this.on( 'ready', this.useStream, this );
+				this.on( 'ready', this.useStream, this );
 			},
 
 			useStream:function() {

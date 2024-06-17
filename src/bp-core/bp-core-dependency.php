@@ -549,6 +549,28 @@ function bp_init_background_updater() {
 }
 
 /**
+ * Fire the 'bb_init_background_updater' action, where BB updates data.
+ *
+ * @since BuddyBoss 2.4.20
+ */
+function bb_init_background_updater() {
+	global $bb_background_updater;
+
+	if ( ! class_exists( 'BB_Background_Updater' ) ) {
+		include_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-background-updater.php';
+	}
+
+	$bb_background_updater = new BB_Background_Updater();
+
+	/**
+	 * Fires inside the 'bb_init_background_updater' function, where BB updates data.
+	 *
+	 * @since BuddyBoss 2.4.20
+	 */
+	do_action( 'bb_init_background_updater' );
+}
+
+/**
  * Fire the 'bp_setup_theme' action.
  *
  * The main purpose of 'bp_setup_theme' is give themes a place to load their

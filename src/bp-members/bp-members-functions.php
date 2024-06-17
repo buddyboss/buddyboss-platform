@@ -77,6 +77,8 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * bp_use_legacy_user_query value, returning true.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyPress 7.0.0 Added `xprofile_query` parameter. Added `user_ids` parameter.
+ * @since BuddyBoss 2.3.90 Added `xprofile_query` parameter. Added `user_ids` parameter.
  *
  * @param array|string $args {
  *     Array of arguments. All are optional. See {@link BP_User_Query} for
@@ -92,6 +94,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  *                                             `$member_type` takes precedence over this parameter.
  *     @type array|string $member_type__not_in Array or comma-separated string of profile types to be excluded.
  *     @type mixed        $include             Limit results by user IDs. Default: false.
+ *     @type mixed        $user_ids            IDs corresponding to the users. Default: false.
  *     @type int          $per_page            Results per page. Default: 20.
  *     @type int          $page                Page of results. Default: 1.
  *     @type bool         $populate_extras     Fetch optional extras. Default: true.
@@ -105,19 +108,21 @@ function bp_core_get_users( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'type'                => 'active',     // Active, newest, alphabetical, random or popular.
-			'user_id'             => false,        // Pass a user_id to limit to only friend connections for this user.
-			'exclude'             => false,        // Users to exclude from results.
-			'search_terms'        => false,        // Limit to users that match these search terms.
-			'meta_key'            => false,        // Limit to users who have this piece of usermeta.
-			'meta_value'          => false,        // With meta_key, limit to users where usermeta matches this value.
+			'type'                => 'active',      // Active, newest, alphabetical, random or popular.
+			'user_id'             => false,         // Pass a user_id to limit to only friend connections for this user.
+			'exclude'             => false,         // Users to exclude from results.
+			'search_terms'        => false,         // Limit to users that match these search terms.
+			'meta_key'            => false,         // Limit to users who have this piece of usermeta.
+			'meta_value'          => false,         // With meta_key, limit to users where usermeta matches this value.
 			'member_type'         => '',
 			'member_type__in'     => '',
 			'member_type__not_in' => '',
-			'include'             => false,        // Pass comma separated list of user_ids to limit to only these users.
-			'per_page'            => 20,           // The number of results to return per page.
-			'page'                => 1,            // The page to return if limiting per page.
-			'populate_extras'     => true,         // Fetch the last active, where the user is a friend, total friend count, latest update.
+			'include'             => false,         // Pass comma separated list of user_ids to limit to only these users.
+			'user_ids'            => false,
+			'per_page'            => 20,            // The number of results to return per page.
+			'page'                => 1,             // The page to return if limiting per page.
+			'populate_extras'     => true,          // Fetch the last active, where the user is a friend, total friend count, latest update.
+			'xprofile_query'      => false,
 			'count_total'         => 'count_query', // What kind of total user count to do, if any. 'count_query', 'sql_calc_found_rows', or false.
 		),
 		'core_get_users'
@@ -522,12 +527,14 @@ function bp_core_get_user_displaynames( $user_ids ) {
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
+ * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
+ * @param int $current_user_id                 Optional. ID of the user viewing the profile.
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
-function bp_core_get_user_displayname( $user_id_or_username ) {
+function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 0 ) {
 	if ( empty( $user_id_or_username ) ) {
 		return false;
 	}
@@ -542,7 +549,11 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		return false;
 	}
 
-	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id() );
+	if ( empty( $current_user_id ) ) {
+		$current_user_id = bp_loggedin_user_id();
+	}
+
+	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 	if ( empty( $list_fields ) ) {
 		$full_name = get_the_author_meta( 'display_name', $user_id );
 		if ( empty( $full_name ) ) {
@@ -571,7 +582,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id );
+	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id, $current_user_id );
 }
 add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
@@ -1640,6 +1651,11 @@ function bp_core_validate_email_address( $user_email ) {
 		}
 	}
 
+	// Check buddyboss enmail restrictions.
+	if ( function_exists( 'bb_is_allowed_register_email_address' ) && ! bb_is_allowed_register_email_address( $user_email ) ) {
+		$errors['bb_restricted_email'] = 1;
+	}
+
 	// Is the email alreday in use?
 	if ( email_exists( $user_email ) ) {
 		$errors['in_use'] = 1;
@@ -1680,6 +1696,10 @@ function bp_core_add_validation_error_messages( WP_Error $errors, $validation_re
 
 	if ( ! empty( $validation_results['in_use'] ) ) {
 		$errors->add( 'user_email', __( 'Sorry, that email address is already used!', 'buddyboss' ) );
+	}
+
+	if ( ! empty( $validation_results['bb_restricted_email'] ) ) {
+		$errors->add( 'user_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ) );
 	}
 }
 
@@ -1948,6 +1968,11 @@ function bp_core_activate_signup( $key ) {
 	global $wpdb;
 
 	$user = false;
+
+	$is_valid = apply_filters( 'bb_before_core_activate_signup', true );
+	if ( is_wp_error( $is_valid ) ) {
+		return $is_valid;
+	}
 
 	// Multisite installs have their own activation routine.
 	if ( is_multisite() ) {
@@ -2265,6 +2290,12 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 
 		bp_xprofile_update_display_name( $user_id );
 	}
+
+	// Generate user profile slug on user registration.
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
+	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
 
@@ -2461,7 +2492,15 @@ function bp_core_wpsignup_redirect() {
 	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
 		bp_core_redirect( bp_get_signup_page() );
 	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
-		bp_core_redirect( bp_custom_register_page_url() );
+		$bp_custom_register_page_url = bp_custom_register_page_url();
+
+		// Check if custom registration URL is https://site.com/wp-login.php?action=register then we do not need to redirect again.
+		if (
+			false === strpos( $bp_custom_register_page_url, 'wp-login.php' ) &&
+			'register' !== $action
+		) {
+			bp_core_redirect( $bp_custom_register_page_url );
+		}
 	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
@@ -3077,6 +3116,7 @@ function bp_get_member_type_post_type_labels() {
 	return apply_filters(
 		'bp_get_member_type_post_type_labels',
 		array(
+			'add_new'            => __( 'Add New', 'buddyboss' ),
 			'add_new_item'       => __( 'New Profile Type', 'buddyboss' ),
 			'all_items'          => __( 'Profile Types', 'buddyboss' ),
 			'edit_item'          => __( 'Edit Profile Type', 'buddyboss' ),
@@ -3315,7 +3355,7 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
  *
  * @param $member_type
  *
- * @return array
+ * @return int
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
@@ -3369,7 +3409,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -3518,12 +3558,14 @@ function bp_register_active_member_types() {
 		foreach ( $member_type_ids as $member_type_id ) {
 			$key = bp_get_member_type_key( $member_type_id );
 
+			$label_name    = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+			$singular_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 			bp_register_member_type(
 				$key,
 				array(
 					'labels'        => array(
-						'name'          => get_post_meta( $member_type_id, '_bp_member_type_label_name', true ),
-						'singular_name' => get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true ),
+						'name'          => ! empty( $label_name ) ? wp_specialchars_decode( $label_name ) : '',
+						'singular_name' => ! empty( $singular_name ) ? wp_specialchars_decode( $singular_name ) : '',
 					),
 					'has_directory' => true,
 				)
@@ -3808,7 +3850,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 	echo '<div id="buddypress" class="buddypress-wrap bp-dir-hori-nav bp-shortcode-wrap">';
 	echo '<div class="members">';
 	echo '<div class="subnav-filters filters no-ajax" id="subnav-filters">';
-	bp_get_template_part( 'common/filters/grid-filters' );
+	bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'members' ) );
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
 
@@ -3827,9 +3869,10 @@ function bp_member_type_shortcode_callback( $atts ) {
 	// Get a BuddyPress members-loop template part for display in a theme.
 	bp_get_template_part( 'members/members-loop' );
 
-	echo '</div>';
-	echo '</div>';
-	echo '</div>';
+	echo '</div> <!-- #members-dir-list -->';
+	echo '</div><!-- .members-directory-content -->';
+	echo '</div><!-- .members -->';
+	echo '</div><!-- #buddypress -->';
 
 	return ob_get_clean();
 
@@ -3921,15 +3964,20 @@ function bp_get_user_member_type( $user_id ) {
  * @return string
  */
 function bp_get_user_gender_pronoun_type( $user_id = '' ) {
-
 	global $wpdb;
-	global $bp;
+	static $static_cache = '';
 
 	if ( '' === $user_id ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
-		$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' " );
+		if ( empty( $static_cache ) ) {
+			$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' " );
+			$static_cache = $exists_gender;
+		} else {
+			$exists_gender = $static_cache;
+		}
+
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
 			$gender   = xprofile_get_field_data( $field_id, $user_id );
@@ -4220,8 +4268,14 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 	if ( true === bp_member_type_enable_disable() ) {
 
 		// Check Member Type Dropdown added on register page.
-		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
-		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
+		$get_parent_id_of_member_types_field  = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->base_prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+		$get_selected_member_type_on_register = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) );
+		if ( ! empty( $get_selected_member_type_on_register ) ) {
+			$get_selected_member_type_on_register = trim( $get_selected_member_type_on_register );
+		} else {
+			$get_selected_member_type_on_register = '';
+		}
+
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
@@ -4966,10 +5020,10 @@ function bb_member_loop_set_member_id( $id ) {
 
 		// This will fix the issues in theme members directory page & members connections tab send message issue.
 		if ( is_user_logged_in() && bp_loggedin_user_id() === $id ) {
-			if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+			if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
 				return bp_get_member_user_id();
-			} elseif ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+			} elseif ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
 				return bp_get_member_user_id();
 			} else {
@@ -4977,7 +5031,8 @@ function bb_member_loop_set_member_id( $id ) {
 			}
 		} else {
 			if (
-				'friends' === bp_current_component() &&
+				function_exists( 'bp_get_friends_slug' ) &&
+				bp_get_friends_slug() === bp_current_component() &&
 				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
 			) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
@@ -5003,12 +5058,12 @@ function bb_member_loop_set_member_id( $id ) {
  */
 function bb_member_loop_set_my_profile( $my_profile ) {
 
-	if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+	if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
 			return false;
 		}
 	}
-	if ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+	if ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
 			return false;
 		}
@@ -5146,87 +5201,11 @@ function bb_members_get_user_mentionname( $user_id ) {
 }
 
 /**
- * Sync the user's notification settings based on the admin default settings.
- *
- * @since BuddyBoss 1.9.3
- *
- * @param int $user_id ID of the user.
- */
-function bb_core_sync_user_notification_settings( $user_id ) {
-
-	if (
-		function_exists( 'bb_enabled_legacy_email_preference' ) &&
-		bb_enabled_legacy_email_preference()
-	) {
-		return false;
-	}
-
-	if ( ! $user_id ) {
-		return false;
-	}
-
-	// All preferences registered.
-	$preferences = bb_register_notification_preferences();
-
-	// Saved notification from backend default settings.
-	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
-	$all_notifications    = array();
-	$default_by_admin     = array();
-
-	if ( ! empty( $preferences ) ) {
-		$preferences = array_column( $preferences, 'fields', null );
-		foreach ( $preferences as $key => $val ) {
-			$all_notifications = array_merge( $all_notifications, $val );
-		}
-	}
-
-	$main = array();
-
-	if ( ! empty( $enabled_notification ) ) {
-		foreach ( $enabled_notification as $key => $types ) {
-			if ( isset( $types['main'] ) ) {
-				$main[ $key ] = $types['main'];
-			}
-			if ( isset( $types['email'] ) ) {
-				$default_by_admin[ $key ] = $types['email'];
-			}
-			foreach ( array( 'web', 'app' ) as $device ) {
-				if ( isset( $types[ $device ] ) ) {
-					$key_type                      = $key . '_' . $device;
-					$default_by_admin[ $key_type ] = $types[ $device ];
-				}
-			}
-		}
-	}
-
-	$all_notifications_keys = array_column( $all_notifications, 'default', 'key' );
-	$notifications          = bp_parse_args( $main, $all_notifications_keys );
-
-	foreach ( $notifications as $k => $v ) {
-		if ( ( ! isset( $default_by_admin[ $k ] ) || ( array_key_exists( $k, $default_by_admin ) && 'no' !== $default_by_admin[ $k ] ) ) && 'no' !== $v ) {
-			update_user_meta( $user_id, $k, 'yes' );
-		} else {
-			update_user_meta( $user_id, $k, 'no' );
-		}
-		foreach ( array( 'web', 'app' ) as $device ) {
-			$key_type = $k . '_' . $device;
-			if ( ( ! isset( $default_by_admin[ $key_type ] ) || ( array_key_exists( $key_type, $default_by_admin ) && 'no' !== $default_by_admin[ $key_type ] ) ) && 'no' !== $v ) {
-				update_user_meta( $user_id, $key_type, 'yes' );
-			} else {
-				update_user_meta( $user_id, $key_type, 'no' );
-			}
-		}
-	}
-
-}
-add_action( 'user_register', 'bb_core_sync_user_notification_settings' );
-
-/**
  * Function will return label background and text color's for specific member type.
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $type Type of the member
+ * @param string $type Type of the member
  *
  * @return array Return array of label color data
  */
@@ -5345,26 +5324,40 @@ function bb_user_presence_html( $user_id, $expiry = true ) {
  * Generate user profile slug.
  *
  * @since BuddyBoss 2.3.1
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
- * @param int $user_id user id.
+ * @param int  $user_id user id.
+ * @param bool $force   Optional. If true then will generate new slug forcefully.
  *
  * @return string
  */
-function bb_generate_user_profile_slug( int $user_id ) {
+function bb_generate_user_profile_slug( int $user_id, bool $force = false ) {
 	$unique_identifier = '';
+
+	// If empty user ID.
 	if ( empty( $user_id ) ) {
 		return $unique_identifier;
 	}
 
-	$user_profile_slug = bb_core_get_user_slug( $user_id );
-	if ( ! empty( $user_profile_slug ) ) {
-		return $unique_identifier;
+	if ( ! $force ) {
+		// Get user slug if already exists.
+		$user_profile_slug = bb_core_get_user_slug( $user_id );
+
+		// Check the slug and it's not long.
+		if (
+			! empty( $user_profile_slug ) &&
+			bb_is_short_user_unique_identifier( $user_profile_slug )
+		) {
+			return $user_profile_slug;
+		}
 	}
 
+	// Get user by ID.
 	$user = get_user_by( 'ID', (int) $user_id );
 
 	if ( $user ) {
-		$unique_identifier = sha1( $user->user_email . $user->user_nicename . $user->ID );
+		$new_unique_identifier = bb_generate_user_random_profile_slugs();
+		$unique_identifier     = ! empty( $new_unique_identifier ) ? current( $new_unique_identifier ) : '';
 	}
 
 	return $unique_identifier;
@@ -5391,21 +5384,26 @@ function bb_get_user_by_profile_slug( $profile_slug ) {
 	$cache_key = 'bb_profile_slug_' . $profile_slug;
 
 	if ( ! isset( $cache[ $cache_key ] ) ) {
+		global $wpdb;
 
-		$found_users = get_users(
-			array(
-				'meta_key'    => 'bb_profile_slug', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-				'meta_value'  => $profile_slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-				'number'      => 1,
-				'count_total' => false,
-				'fields'      => 'ID',
-			)
+		// Backward compatible to check 40 characters long unique slug or new slug as well.
+		$user_query = $wpdb->prepare(
+			"SELECT user_id FROM `{$wpdb->usermeta}` WHERE `meta_key` IN ( %s, %s )",
+			"bb_profile_slug_{$profile_slug}",
+			"bb_profile_long_slug_{$profile_slug}"
 		);
 
-		$user = ( ! empty( $found_users ) ? current( $found_users ) : 0 );
+		// Get the user ID from the created query based on string length.
+		$found_users = $wpdb->get_var( $user_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
+		// Validate the user ID.
+		$user = ( ! empty( $found_users ) && ! is_wp_error( $found_users ) ? $found_users : 0 );
+
+		// Set in static cache.
 		$cache[ $cache_key ] = $user;
 	} else {
+
+		// If already cached then return from the cache.
 		$user = isset( $cache[ $cache_key ] ) ? $cache[ $cache_key ] : 0;
 	}
 
@@ -5444,15 +5442,31 @@ function bb_core_get_user_slug( int $user_id ) {
  * Setup the user profile hash to the user meta.
  *
  * @since BuddyBoss 2.3.1
+ * @since BuddyBoss 2.3.41 The `$force` parameter was added.
  *
- * @param int $user_id User ID.
+ * @param int  $user_id User ID.
+ * @param bool $force   Optional. If true then will generate new slug and update forcefully.
  *
  * @return string
  */
-function bb_set_user_profile_slug( int $user_id ) {
+function bb_set_user_profile_slug( int $user_id, bool $force = false ) {
 
-	$unique_identifier = bb_generate_user_profile_slug( $user_id );
+	$unique_identifier = bb_generate_user_profile_slug( $user_id, $force );
 	if ( ! empty( $unique_identifier ) ) {
+
+		// Backward compatible to store 40 characters long unique slug.
+		$old_unique_identifier = bb_core_get_user_slug( $user_id );
+		if ( ! empty( $old_unique_identifier ) ) {
+
+			// Delete the existing meta.
+			bp_delete_user_meta( $user_id, 'bb_profile_slug_' . $old_unique_identifier );
+
+			// Backed up 40 characters long unique identifier.
+			if ( ! bb_is_short_user_unique_identifier( $old_unique_identifier ) ) {
+				bp_update_user_meta( $user_id, 'bb_profile_long_slug_' . $old_unique_identifier, $user_id );
+			}
+		}
+
 		bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
 		bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
 	}
@@ -5467,18 +5481,279 @@ function bb_set_user_profile_slug( int $user_id ) {
  *
  * @param array $user_ids User IDs.
  */
-function bb_set_bluk_user_profile_slug( $user_ids ) {
+function bb_set_bulk_user_profile_slug( $user_ids ) {
+	global $wpdb, $is_member_slug_background;
 
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	foreach ( $user_ids as $user_id ) {
-		$user_id           = (int) $user_id;
-		$unique_identifier = bb_generate_user_profile_slug( $user_id );
-		if ( ! empty( $unique_identifier ) ) {
-			bp_update_user_meta( $user_id, 'bb_profile_slug', $unique_identifier );
-			bp_update_user_meta( $user_id, 'bb_profile_slug_' . $unique_identifier, $user_id );
+	$implode_user_ids = implode( ',', $user_ids );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' AND LENGTH(meta_key) >= 56 AND user_id IN ({$implode_user_ids})",
+			'bb_profile_slug_',
+			'bb_profile_long_slug_'
+		)
+	);
+
+	foreach ( $user_ids as $key => $user_id ) {
+
+		// removed old user meta which have value length 40.
+		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
+
+		// Remove duplicate log slug with same value.
+		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+
+		// fetch user slug if already exists.
+		$p_slug = bb_core_get_user_slug( $user_id );
+		if ( ! empty( $p_slug ) && strlen( $p_slug ) <= 12 ) {
+
+			// Remove duplicate meta with same value.
+			delete_user_meta( $user_id, 'bb_profile_slug', $p_slug );
+			update_user_meta( $user_id, 'bb_profile_slug', $p_slug );
+
+			// Remove duplicate meta with same value.
+			delete_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
+			update_user_meta( $user_id, 'bb_profile_slug_' . $p_slug, $user_id );
+
+			bb_remove_orphaned_profile_slug( $user_id );
+
+			// Unset user if already setup.
+			unset( $user_ids[$key] );
 		}
+	}
+
+	$prefix                = ! empty( $is_member_slug_background ) ? 'b' : '';
+	$new_unique_identifier = bb_generate_user_random_profile_slugs( count( $user_ids ), $prefix );
+
+	$bps_sql_data = array();
+	foreach ( $user_ids as $key => $user_id ) {
+		if ( isset( $new_unique_identifier[ $key ] ) ) {
+			$uuid           = $new_unique_identifier[ $key ];
+			$bps_sql_data[] = "({$user_id}, 'bb_profile_slug', '{$uuid}'), ({$user_id}, 'bb_profile_slug_{$uuid}', $user_id)";
+		}
+	}
+
+	// Insert 'bb_profile_slug' metakey.
+	if ( ! empty( $bps_sql_data ) ) {
+		$bps_sql = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) VALUES " . implode( ', ', $bps_sql_data ); // Remove the trailing comma and space.
+		$wpdb->query( $bps_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+
+	// Rest the global variable.
+	$is_member_slug_background = false;
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	// Flush WP cache.
+	wp_cache_flush();
+}
+
+/**
+ * Function to generate the unique keys.
+ *
+ * @since BuddyBoss 2.3.41
+ * @since BuddyBoss 2.4.41 Added $prefix argument.
+ *
+ * @param int    $max_ids How many unique IDs need to be generated? Default 1.
+ * @param string $prefix  Prefix key to add in UUID. In backgound it will be 'b' or empty.
+ *
+ * @return array
+ */
+function bb_generate_user_random_profile_slugs( $max_ids = 1, $prefix = '' ) {
+	$max_ids       = absint( $max_ids );
+	$start         = 0;
+	$length        = 8;
+	$loop_count    = 1;
+	$max_length    = 12;
+	$generated_ids = array(); // holds the generated ids.
+
+	/**
+	 * Generate the missing ids.
+	 */
+	$generate_ids_func = function( $generated_ids ) use ( $max_ids, $start, $length, $prefix ) {
+		while ( count( $generated_ids ) < $max_ids ) { // phpcs:ignore Squiz.PHP.DisallowSizeFunctionsInLoops.Found
+			$generated_ids[] = strtolower( substr( $prefix . sha1( wp_generate_password( 40 ) ), $start, $length ) );
+		}
+
+		return $generated_ids;
+	};
+
+	// Initially generate the UUIDs.
+	$generated_ids = $generate_ids_func( $generated_ids );
+
+	// Check the generated UUIDs already exists or not?
+	$match_found = bb_is_exists_user_unique_identifier( $generated_ids );
+
+	// Validate the ID's with existing matches in DB.
+	while ( ! empty( $match_found ) ) {
+		// unset the match which are found.
+		foreach ( $match_found as $k ) {
+			if ( isset( $generated_ids[ array_search( $k, $generated_ids, true ) ] ) ) {
+				unset( $generated_ids[ array_search( $k, $generated_ids, true ) ] );
+			}
+		}
+
+		// Break the loop if run more than 6 times.
+		if ( 6 < $loop_count ) {
+			$loop_count = 1;
+
+			if ( $length < $max_length ) {
+				$length ++;
+			}
+		}
+
+		$generated_ids = $generate_ids_func( $generated_ids );
+		$match_found   = bb_is_exists_user_unique_identifier( $generated_ids );
+		$loop_count ++;
+	}
+
+	return array_values( $generated_ids );
+}
+
+/**
+ * Function to check the newly generated slug is exists or not.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @param array|string $unique_identifier Newly generated unique identifier.
+ * @param int          $user_id           Optional. ID of user to exclude from the search.
+ *
+ * @return array
+ */
+function bb_is_exists_user_unique_identifier( $unique_identifier, $user_id = 0 ) {
+	global $wpdb;
+
+	if ( empty( $unique_identifier ) ) {
+		return $unique_identifier;
+	}
+
+	if ( is_array( $unique_identifier ) ) {
+		$unique_identifier = array_filter( $unique_identifier );
+		if ( empty( $unique_identifier ) ) {
+			return $unique_identifier;
+		}
+		$prefixed_array = array_map( function ( $item ) {
+			return 'bb_profile_slug_' . $item;
+		}, $unique_identifier );
+
+		$profile_keys = '"' . implode( '","', $prefixed_array ) . '"';
+		$unique_identifier = '"' . implode( '","', $unique_identifier ) . '"';
+	} else {
+		$profile_keys      = '"bb_profile_slug_' . $unique_identifier . '"';
+		$unique_identifier = '"' . $unique_identifier . '"';
+	}
+
+	// Prepare the statement to check unique identifier.
+	$prepare_user_query = "SELECT u.user_nicename, u.user_login FROM `{$wpdb->users}` AS u WHERE ( u.user_login IN ({$unique_identifier}) OR u.user_nicename IN ({$unique_identifier}) )";
+
+	// Exclude the user to check unique identifier.
+	if ( ! empty( $user_id ) ) {
+		$prepare_user_query = $wpdb->prepare(
+			$prepare_user_query . ' AND u.ID != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$user_id
+		);
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$user_val = $wpdb->get_results( $prepare_user_query );
+
+	$matched_uuids = array();
+	if ( ! empty( $user_val ) ) {
+		$user_val      = array_unique( $user_val );
+		$matched_uuids = array_column( $user_val, 'user_nicename' );
+		$matched_uuids = array_merge( $matched_uuids, array_column( $user_val, 'user_login' ) );
+	}
+
+	// Prepare the statement to check unique identifier.
+	$prepare_meta_query = "SELECT REPLACE( um.meta_key, 'bb_profile_slug_', '' ) as value FROM `{$wpdb->usermeta}` AS um WHERE ( um.meta_key IN ({$profile_keys}) )";
+
+	// Exclude the user to check unique identifier.
+	if ( ! empty( $user_id ) ) {
+		$prepare_meta_query = $wpdb->prepare(
+			$prepare_meta_query . ' AND um.user_id != %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$user_id
+		);
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$meta_val = $wpdb->get_col( $prepare_meta_query );
+
+	if ( ! empty( $meta_val ) ) {
+		$matched_uuids = array_merge( $matched_uuids, $meta_val );
+	}
+
+	return array_filter( array_unique( $matched_uuids ) );
+}
+
+/**
+ * Function to check the unique identifier slug is short or not.
+ *
+ * @since BuddyBoss 2.3.41
+ *
+ * @param string $unique_identifier User unique identifier.
+ *
+ * @return bool False if unique identifier is 40 characters long otherwise return true.
+ */
+function bb_is_short_user_unique_identifier( $unique_identifier ) {
+	// Get length of provided unique identifier.
+	if ( function_exists( 'mb_strlen' ) ) {
+		$length = mb_strlen( $unique_identifier );
+	} else {
+		$length = strlen( $unique_identifier );
+	}
+
+	// Check the unique identifier is short then return true.
+	if ( $length >= 8 && $length <= 12 ) {
+		return true;
+	}
+
+	// Return false because unique identifier is 40 characters long.
+	return false;
+}
+
+/**
+ * Removed orphaned user meta.
+ *
+ * @param int $user_id user meta.
+ *
+ * @since BuddyBoss 2.4.71
+ *
+ * @return void
+ */
+function bb_remove_orphaned_profile_slug( $user_id ) {
+	global $wpdb;
+
+	$p_slug         = bb_core_get_user_slug( $user_id );
+	$table_name     = $wpdb->usermeta;
+	$condition      = array();
+	$condition_join = '';
+
+	if ( empty( $p_slug ) || empty( $user_id ) ) {
+		return;
+	}
+
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
+	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
+
+	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
+
+	// Initial deletion query
+	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
+
+	// Execute the initial deletion
+	$wpdb->query( $delete_query );
+
+	// Recursive deletion until no more rows are affected
+	while ( $wpdb->rows_affected > 0 ) {
+		bb_remove_orphaned_profile_slug( $user_id );
 	}
 }

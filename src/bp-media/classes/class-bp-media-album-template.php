@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Media_Album_Template {
 
 	/**
@@ -155,9 +156,6 @@ class BP_Media_Album_Template {
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
-
-		// Get an array of the logged in user's favorite album.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_album', true );
 
 		// Fetch specific album items based on ID's.
 		if ( ! empty( $include ) ) {

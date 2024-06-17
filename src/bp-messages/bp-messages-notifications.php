@@ -248,28 +248,30 @@ function bp_messages_message_sent_add_notification( $message ) {
 			true === bb_notifications_background_enabled() &&
 			count( $message->recipients ) > $min_count
 		) {
-			global $bb_notifications_background_updater;
+			global $bb_background_updater;
 			$recipients = (array) $message->recipients;
 			$user_ids   = wp_list_pluck( $recipients, 'user_id' );
-			$bb_notifications_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => 'bb_add_background_notifications',
-						'args'     => array(
-							$user_ids,
-							$message->id,
-							$message->sender_id,
-							buddypress()->messages->id,
-							$action,
-							bp_core_current_time(),
-							true,
-							$message->sender_id,
-							$group,
-						),
+					'type'     => 'notification',
+					'group'    => 'group_messages_new_message_notification',
+					'data_id'  => $group,
+					'priority' => 5,
+					'callback' => 'bb_add_background_notifications',
+					'args'     => array(
+						$user_ids,
+						$message->id,
+						$message->sender_id,
+						buddypress()->messages->id,
+						$action,
+						bp_core_current_time(),
+						true,
+						$message->sender_id,
+						$group,
 					),
-				)
+				),
 			);
-			$bb_notifications_background_updater->save()->dispatch();
+			$bb_background_updater->save()->dispatch();
 		} else {
 			foreach ( (array) $message->recipients as $recipient ) {
 				// Check the sender is blocked by/blocked/suspended/deleted recipient or not.

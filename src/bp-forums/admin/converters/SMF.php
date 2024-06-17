@@ -30,7 +30,7 @@ class SMF extends BBP_Converter_Base {
 			'from_tablename' => 'boards',
 			'from_fieldname' => 'id_board',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id',
+			'to_fieldname'   => '_bbp_old_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0, Stored in postmeta)
@@ -38,7 +38,7 @@ class SMF extends BBP_Converter_Base {
 			'from_tablename' => 'boards',
 			'from_fieldname' => 'id_parent',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_parent_id',
+			'to_fieldname'   => '_bbp_old_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -136,7 +136,7 @@ class SMF extends BBP_Converter_Base {
 			'from_tablename' => 'topics',
 			'from_fieldname' => 'id_topic',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id',
+			'to_fieldname'   => '_bbp_old_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -236,7 +236,7 @@ class SMF extends BBP_Converter_Base {
 			'from_tablename'  => 'topics',
 			'from_fieldname'  => 'locked',
 			'to_type'         => 'topic',
-			'to_fieldname'    => 'post_status',
+			'to_fieldname'    => '_bbp_old_closed_status_id',
 			'callback_method' => 'callback_topic_status',
 		);
 
@@ -245,7 +245,7 @@ class SMF extends BBP_Converter_Base {
 			'from_tablename'  => 'topics',
 			'from_fieldname'  => 'is_sticky',
 			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_old_sticky_status',
+			'to_fieldname'    => '_bbp_old_sticky_status_id',
 			'callback_method' => 'callback_sticky_status',
 		);
 
@@ -309,12 +309,12 @@ class SMF extends BBP_Converter_Base {
 
 		/** Reply Section */
 
-		// Reply id (Stored in postmeta)
+		// Old Reply Id (Stored in postmeta).
 		$this->field_map[] = array(
 			'from_tablename' => 'messages',
 			'from_fieldname' => 'id_msg',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_post_id',
+			'to_fieldname'   => '_bbp_old_reply_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -326,7 +326,7 @@ class SMF extends BBP_Converter_Base {
 			'join_expression' => 'USING (id_topic) WHERE topics.id_first_msg != messages.id_msg',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid',
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -428,7 +428,7 @@ class SMF extends BBP_Converter_Base {
 			'from_tablename' => 'members',
 			'from_fieldname' => 'id_member',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id',
+			'to_fieldname'   => '_bbp_old_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
@@ -706,9 +706,9 @@ class SMF extends BBP_Converter_Base {
 		$SMF_markup = preg_replace( '/\[\/td\]/', '</td>', $SMF_markup );
 
 		// Replace '[list]' with '<ul>'
-		$phpbb_uid = preg_replace( '/\[list\]/', '<ul>', $phpbb_uid );
+		$SMF_markup = preg_replace( '/\[list\]/', '<ul>', $SMF_markup );
 		// Replace '[liist type=decimal]' with '<ol type="a">'
-		$phpbb_uid = preg_replace( '/\[list\ type=decimal\]/', '<ol type="a">', $phpbb_uid );
+		$SMF_markup = preg_replace( '/\[list\ type=decimal\]/', '<ol type="a">', $SMF_markup );
 		// Replace '[li]' with '<li>'
 		$SMF_markup = preg_replace( '/\[li\]/', '<li>', $SMF_markup );
 		// Replace '[/li]' with '</li>'

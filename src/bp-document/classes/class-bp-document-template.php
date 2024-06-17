@@ -156,6 +156,7 @@ class BP_Document_Template {
 			'meta_query_folder'   => false,
 			'meta_query'          => false,
 			'moderation_query'    => true,
+			'status'              => bb_document_get_published_status(),
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -164,9 +165,6 @@ class BP_Document_Template {
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
-
-		// Get an array of the logged in user's favorite document.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_document', true );
 
 		// Fetch specific document items based on ID's.
 		if ( ! empty( $include ) ) {
@@ -187,6 +185,7 @@ class BP_Document_Template {
 					'meta_query'       => $meta_query,
 					'privacy'          => $privacy,
 					'moderation_query' => $moderation_query,
+					'status'           => $status,
 				)
 			);
 
@@ -211,6 +210,7 @@ class BP_Document_Template {
 					'user_directory'      => $user_directory,
 					'meta_query_document' => $meta_query_document,
 					'meta_query_folder'   => $meta_query_folder,
+					'status'              => $status,
 				)
 			);
 		}

@@ -107,6 +107,14 @@
 						return BP_Group_Admin.warn_on_leave;
 					}
 				};
+
+				$('#bbpress_group_admin_ui_meta_box #bbp-edit-group-forum').change( function() {
+					if( this.checked ) {
+						$('#bb_group_forum_list').show();
+					} else {
+						$('#bb_group_forum_list').hide();
+					}
+				});
 		}
 	);
 })( jQuery );

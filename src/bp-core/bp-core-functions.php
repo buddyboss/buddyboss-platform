@@ -594,8 +594,14 @@ function bp_core_update_directory_page_ids( $blog_page_ids ) {
 function bp_core_get_directory_pages() {
 	global $wpdb;
 
+	$cache_key = 'directory_pages';
+
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
+	}
+
 	// Look in cache first.
-	$pages = wp_cache_get( 'directory_pages', 'bp_pages' );
+	$pages = wp_cache_get( $cache_key, 'bp_pages' );
 
 	if ( false === $pages ) {
 
@@ -639,7 +645,7 @@ function bp_core_get_directory_pages() {
 			}
 		}
 
-		wp_cache_set( 'directory_pages', $pages, 'bp_pages' );
+		wp_cache_set( $cache_key, $pages, 'bp_pages' );
 	}
 
 	/**
@@ -2363,9 +2369,10 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
+
+	unload_textdomain( $domain );
 
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
@@ -2374,8 +2381,12 @@ function bp_core_load_buddypress_textdomain() {
 		}
 	}
 
-	// Default to WP and glotpress.
-	return load_plugin_textdomain( $domain );
+	$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
+	$buddyboss_lang_path = $plugin_folder . '/languages';
+	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+		$buddyboss_lang_path = $plugin_folder . '/src/languages';
+	}
+	return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 }
 add_action( 'bp_core_loaded', 'bp_core_load_buddypress_textdomain' );
 
@@ -3222,6 +3233,7 @@ function bp_core_get_suggestions( $args ) {
 
 	// Removed action only for xprofile fields First, last and nickname.
 	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+
 	/**
 	 * Filters the available type of at-mentions.
 	 *
@@ -4063,15 +4075,10 @@ function bp_email_unsubscribe_handler() {
 	$raw_hash       = ! empty( $_GET['nh'] ) ? $_GET['nh'] : '';
 	$raw_user_id    = ! empty( $_GET['uid'] ) ? absint( $_GET['uid'] ) : 0;
 	$new_hash       = hash_hmac( 'sha1', "{$raw_email_type}:{$raw_user_id}", bp_email_get_salt() );
+	$message_type   = 'error';
 
 	// Check required values.
 	if ( ! $raw_user_id || ! $raw_email_type || ! $raw_hash || ! array_key_exists( $raw_email_type, $emails ) ) {
-		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
-
-		// Check valid hash.
-	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
 		$redirect_to = wp_login_url();
 		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
 		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
@@ -4090,6 +4097,11 @@ function bp_email_unsubscribe_handler() {
 		} else {
 			$redirect_to = bp_core_get_user_domain( get_current_user_id() );
 		}
+		// Check valid hash
+	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
+		$redirect_to = wp_login_url();
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 	} else {
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -4105,8 +4117,9 @@ function bp_email_unsubscribe_handler() {
 		$meta_key = $emails[ $raw_email_type ]['unsubscribe']['meta_key'];
 		bp_update_user_meta( $raw_user_id, $meta_key, 'no' );
 
-		$result_msg = $emails[ $raw_email_type ]['unsubscribe']['message'];
-		$unsub_msg  = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$result_msg   = $emails[ $raw_email_type ]['unsubscribe']['message'];
+		$unsub_msg    = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$message_type = 'success';
 	}
 
 	$message = sprintf(
@@ -4116,7 +4129,7 @@ function bp_email_unsubscribe_handler() {
 		esc_html( $unsub_msg )
 	);
 
-	bp_core_add_message( $message );
+	bp_core_add_message( $message , $message_type );
 	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
 
 	exit;
@@ -4536,9 +4549,14 @@ function bp_ajax_get_suggestions() {
 	}
 
 	$args = array(
-		'term' => sanitize_text_field( $_GET['term'] ),
-		'type' => sanitize_text_field( $_GET['type'] ),
+			'term'        => sanitize_text_field( $_GET['term'] ),
+			'type'        => sanitize_text_field( $_GET['type'] ),
+			'count_total' => 'count_query',
 	);
+
+	if ( ! empty( $_GET['page'] ) ) {
+		$args['page'] = absint( $_GET['page'] );
+	}
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
@@ -4556,7 +4574,15 @@ function bp_ajax_get_suggestions() {
 		exit;
 	}
 
-	wp_send_json_success( $results );
+	$results_total = apply_filters( 'bb_members_suggestions_results_total', $results['total'] ?? 0 );
+	$results       = apply_filters( 'bb_members_suggestions_results', $results['members'] ?? array() );
+
+	wp_send_json_success(
+		array(
+			'results'     => $results,
+			'total_pages' => ceil( $results_total / 10 ),
+		)
+	);
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
@@ -4571,7 +4597,9 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *                    value. Boolean false if no mentions found.
  */
 function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
-	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+
+	// Exclude mention in URL.
+	$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@([A-Za-z0-9-_\.@]+)/';
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
@@ -4763,10 +4791,9 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'redirection' => 1,
 				'stream'      => true,
 				'headers'     => array(
-					'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 				),
 			),
 		);
@@ -4796,7 +4823,7 @@ function bp_core_parse_url( $url ) {
 		}
 	}
 
-	$cache_key = 'bp_activity_oembed_' . md5( maybe_serialize( $url ) );
+	$cache_key = 'bb_oembed_' . md5( maybe_serialize( $url ) );
 
 	// get transient data for url.
 	$parsed_url_data = get_transient( $cache_key );
@@ -4816,10 +4843,11 @@ function bp_core_parse_url( $url ) {
 
 	$embed_code = '';
 	$oembed_obj = _wp_oembed_get_object();
-	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => false ) );
+	$discover   = apply_filters( 'bb_oembed_discover_support', false, $url );
+	$is_oembed  = $oembed_obj->get_data( $url, array( 'discover' => $discover ) );
 
 	if ( $is_oembed ) {
-		$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
+		$embed_code = wp_oembed_get( $url, array( 'discover' => $discover ) );
 	}
 
 	// Fetch the oembed code for URL.
@@ -4830,14 +4858,14 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
+		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+
+		if ( bb_is_same_site_url( $url ) ) {
+			$args['sslverify'] = false;
+		}
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get(
-			$url,
-			array(
-				'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
-			)
-		);
+		$response = wp_safe_remote_get( $url, $args );
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty.
@@ -5360,15 +5388,6 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
-
-		if (
-			is_array( $matched_user_ids ) &&
-			count( $matched_user_ids ) > 0 &&
-			! did_action( 'wp_ajax_messages_search_recipients' ) &&
-			$query->query_vars['per_page'] < count( $matched_user_ids )
-		) {
-			$sql['limit'] = ' LIMIT 0, ' . count( $matched_user_ids );
-		}
 	}
 
 	return $sql;
@@ -5468,7 +5487,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
  * @param string $output_file_src Absolute path of the site.
  * @param string $attachment_path Symbolising path to generate.
  */
-function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, $attachment_path ) {
+function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src, string $attachment_path ) {
 
 	if ( true === bb_check_server_disabled_symlink() ) {
 		return;
@@ -5774,8 +5793,8 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 	global $wpdb;
 
 	$record         = array();
-	$media_table    = "{$wpdb->prefix}bp_media";
-	$document_table = "{$wpdb->prefix}bp_document";
+	$media_table    = "{$wpdb->base_prefix}bp_media";
+	$document_table = "{$wpdb->base_prefix}bp_document";
 
 	if ( in_array( $type, array( 'media', 'video' ) ) ) {
 		$cache_key   = 'bb_' . $type . '_activity_' . $id;
@@ -5825,7 +5844,7 @@ function bb_moderation_suspend_record_exist( $id ) {
 		return $record;
 	}
 
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 
 	$cache_key = 'bb_suspend_' . $id;
 	$record    = wp_cache_get( $cache_key, 'bp_moderation' );
@@ -5854,7 +5873,7 @@ function bb_moderation_suspend_record_exist( $id ) {
 function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 ) {
 	global $wpdb;
 
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 
 	if ( ! empty( $moderated_activities ) ) {
 		foreach ( $moderated_activities as $moderated_activity ) {
@@ -5925,7 +5944,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
  */
 function bb_moderation_bg_update_moderation_data() {
 	global $wpdb;
-	$suspend_table = "{$wpdb->prefix}bp_suspend";
+	$suspend_table = "{$wpdb->base_prefix}bp_suspend";
 	$table_exists  = (bool) $wpdb->get_results( "DESCRIBE {$suspend_table}" );
 
 	if ( ! $table_exists ) {
@@ -5988,6 +6007,13 @@ function bb_check_server_disabled_symlink() {
  * @since BuddyBoss 1.8.6
  */
 function bb_restricate_rss_feed() {
+	if (
+		empty( $_SERVER['HTTP_HOST'] ) ||
+		empty( $_SERVER['REQUEST_URI'] )
+	) {
+		return;
+	}
+
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (
 		strpos( $actual_link, '/feed/' ) === false &&
@@ -6473,8 +6499,8 @@ function bb_get_custom_buddyboss_group_cover() {
  */
 function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 
-	$object = isset( $params['object'] ) ? $params['object'] : 'user';
-	$size   = isset( $params['type'] ) ? $params['type'] : 'full';
+	$object = $params['object'] ?? 'user';
+	$size   = $params['type'] ?? 'full';
 
 	$avatar_image_url       = false;
 	$disable_avatar_uploads = ( 'user' === $object ) ? bp_disable_avatar_uploads() : bp_disable_group_avatar_uploads();
@@ -6498,6 +6524,10 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 				// Default Profile Avatar = Legacy.
 			} elseif ( 'legacy' === $default_profile_avatar_type ) {
 				$avatar_image_url = bb_get_legacy_profile_avatar( $size );
+
+				// Default Profile Avatar = Display Name.
+			} elseif ( 'display-name' === $default_profile_avatar_type ) {
+				$avatar_image_url = empty( $params['item_id'] ) ? bb_get_buddyboss_profile_avatar( $size ) : bb_get_default_png_avatar( $params );
 
 				// Default Profile Avatar = Custom.
 			} elseif ( 'custom' === $default_profile_avatar_type ) {
@@ -6529,6 +6559,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 			$avatar_image_url = bb_get_buddyboss_group_avatar( $size );
 		} elseif ( 'legacy' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_legacy_group_avatar( $size );
+		} elseif ( 'group-name' === $group_avatar_type ) {
+			$avatar_image_url = empty( $params['item_id'] ) ? bb_get_buddyboss_group_avatar( $size ) : bb_get_default_png_avatar( $params );
 		} elseif ( 'custom' === $group_avatar_type ) {
 			$avatar_image_url = bb_get_default_custom_upload_group_avatar( bb_get_buddyboss_group_avatar( $size ), $size );
 		}
@@ -6742,7 +6774,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	// Saved notification from backend default settings.
 	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
 	$all_notifications    = array();
-	$default_by_admin     = array();
+	$settings_by_admin    = array();
 
 	if ( ! empty( $preferences ) ) {
 		$preferences = array_column( $preferences, 'fields', null );
@@ -6783,14 +6815,16 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	$main = array();
 
 	$all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
 	if ( ! empty( $enabled_notification ) ) {
 		foreach ( $enabled_notification as $key => $types ) {
 			if ( isset( $types['main'] ) ) {
 				$main[ $key ] = $types['main'];
 			}
+
 			if ( isset( $types[ $type ] ) ) {
-				$key_type                      = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
-				$default_by_admin[ $key_type ] = 'yes';
+				$key_type                       = in_array( $type, array( 'web', 'app' ), true ) ? $key . '_' . $type : $key;
+				$settings_by_admin[ $key_type ] = $types[ $type ];
 			}
 		}
 	}
@@ -6799,14 +6833,23 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		return false;
 	}
 
-	$notifications     = bp_parse_args( $all_notifications, $default_by_admin );
+	$notifications     = bp_parse_args( $settings_by_admin, $all_notifications );
 	$notification_type = in_array( $type, array( 'web', 'app' ), true ) ? $notification_type . '_' . $type : $notification_type;
 	$enable_type_key   = in_array( $type, array( 'web', 'app' ), true ) ? 'enable_notification_' . $type : 'enable_notification';
 
 	if (
-		array_key_exists( $notification_type, $notifications ) &&
 		'no' !== bp_get_user_meta( $user_id, $enable_type_key, true ) &&
-		'no' !== bp_get_user_meta( $user_id, $notification_type, true )
+		(
+			(
+				metadata_exists( 'user', $user_id, $notification_type ) &&
+				'yes' === bp_get_user_meta( $user_id, $notification_type, true )
+			) ||
+			(
+				! metadata_exists( 'user', $user_id, $notification_type ) &&
+				array_key_exists( $notification_type, $notifications ) &&
+				'yes' === $notifications[ $notification_type ]
+			)
+		)
 	) {
 		return true;
 	}
@@ -6869,17 +6912,25 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	$notification_type = array_filter(
 		array_map(
 			function ( $n ) use ( $component_name, $component_action ) {
+
 				if (
 					'bb_new_mention' === $component_action &&
-					in_array( $component_name, array( 'activity', 'forums', 'members' ), true )
+					in_array( $component_name, array( 'activity', 'forums', 'members', 'core' ), true ) &&
+					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
 				} elseif (
 					'bb_groups_new_message' === $component_action &&
-					in_array( $component_name, array( 'messages', 'groups' ), true )
+					in_array( $component_name, array( 'messages', 'groups' ), true ) &&
+					$component_action === $n['component_action']
 				) {
 					return $n['notification_type'];
-				} elseif ( ! empty( $n['component'] ) && ! empty( $n['component_action'] ) && $component_name === $n['component'] && $component_action === $n['component_action'] ) {
+				} elseif (
+					! empty( $n['component'] ) &&
+					! empty( $n['component_action'] ) &&
+					$component_name === $n['component'] &&
+					$component_action === $n['component_action']
+				) {
 					return $n['notification_type'];
 				}
 			},
@@ -6992,12 +7043,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	$email_checked = bp_get_user_meta( $user_id, $field['key'], true );
-	if ( ! $email_checked ) {
-		if ( $user_id ) {
-			$email_checked = 'yes';
-		} else {
-			$email_checked = ( $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'] );
-		}
+	if ( empty( $email_checked ) ) {
+		$email_checked = $enabled_all_notification[ $field['key'] ]['email'] ?? $field['default'];
 	}
 
 	$options['email'] = array(
@@ -7009,12 +7056,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 	if ( bb_web_notification_enabled() ) {
 		$web_checked = bp_get_user_meta( $user_id, $field['key'] . '_web', true );
-		if ( ! $web_checked ) {
-			if ( $user_id ) {
-				$web_checked = 'yes';
-			} else {
-				$web_checked = ( $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'] );
-			}
+		if ( empty( $web_checked ) ) {
+			$web_checked = $enabled_all_notification[ $field['key'] ]['web'] ?? $field['default'];
 		}
 
 		$options['web'] = array(
@@ -7027,12 +7070,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 
 	if ( bb_app_notification_enabled() ) {
 		$app_checked = bp_get_user_meta( $user_id, $field['key'] . '_app', true );
-		if ( ! $app_checked ) {
-			if ( $user_id ) {
-				$app_checked = 'yes';
-			} else {
-				$app_checked = ( $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'] );
-			}
+		if ( empty( $app_checked ) ) {
+			$app_checked = $enabled_all_notification[ $field['key'] ]['app'] ?? $field['default'];
 		}
 
 		$options['app'] = array(
@@ -7224,6 +7263,7 @@ function bb_render_notification( $notification_group ) {
 				}
 
 				$options = bb_notification_preferences_types( $field, bp_loggedin_user_id() );
+
 				?>
 				<tr>
 					<td><?php echo( isset( $field['label'] ) ? esc_html( $field['label'] ) : '' ); ?></td>
@@ -7639,7 +7679,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 /**
  * Convert Media to base64 from attachment id.
  *
- * @since buddyboss 2.0.0
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $attachment_id Attachment id.
  * @param string $size          Image size.
@@ -7753,6 +7793,9 @@ function bb_admin_icons( $id ) {
 		case 'bp_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_activity_comments':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity-comment';
+			break;
 		case 'bp_custom_post_type':
 			$meta_icon = $bb_icon_bf . ' bb-icon-thumbtack';
 			break;
@@ -7833,11 +7876,24 @@ function bb_admin_icons( $id ) {
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
+		case 'bb_registration_restrictions':
 		case 'bp_messaging_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
 		case 'bp_web_push_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-paste';
+			break;
+		case 'bb_redirection':
+			$meta_icon = $bb_icon_bf . ' bb-icon-sign-in';
+			break;
+		case 'bp_reaction_settings_section':
+			$meta_icon = $bb_icon_bf . ' bb-icon-like';
+			break;
+		case 'bb_performance_general':
+			$meta_icon = $bb_icon_bf . ' bb-icon-cog';
+			break;
+		case 'bb_performance_activity':
+			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
 		default:
 			$meta_icon = '';
@@ -8294,6 +8350,17 @@ function bb_pro_pusher_version() {
 }
 
 /**
+ * Function to check the Delay email notifications for new messages is enabled or not.
+ *
+ * @since BuddyBoss 2.1.4
+ *
+ * @return int
+ */
+function bb_get_delay_email_notifications_time() {
+	return (int) apply_filters( 'bb_get_delay_email_notifications_time', bp_get_option( 'time_delay_email_notification', 15 ) );
+}
+
+/**
  * Function to return the time span for the presence in seconds.
  *
  * @since BuddyBoss 2.2
@@ -8371,7 +8438,7 @@ function bb_did_filter( $hook_name ) {
  *                    value for deleted user. Boolean false if no mentions found.
  */
 function bb_mention_deleted_users( $mentioned_users, $content ) {
-	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)\b/';
+	$pattern = '/(?<=[^A-Za-z0-9]|^)@([A-Za-z0-9-_\.@]+)/';
 	preg_match_all( $pattern, $content, $usernames );
 
 	// Make sure there's only one instance of each username.
@@ -8536,4 +8603,1174 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		return $string;
 
 	}
+}
+
+/**
+ * Return to check its working with WP CLI or not.
+ *
+ * @since BuddyBoss 2.3.50
+ *
+ * @return bool
+ */
+function bb_is_wp_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}
+
+/**
+ * Download an image from the specified URL and attach it to a post.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $file The URL of the image to download.
+ *
+ * @return int|void
+ */
+function bb_media_sideload_attachment( $file ) {
+	if ( empty( $file ) ) {
+		return;
+	}
+
+	// Set variables for storage, fix file filename for query strings.
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
+	$file_array = array();
+
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$file_array['name'] = basename( $matches[0] );
+
+	// Load function download_url if not exists.
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+
+	// Download file to temp location.
+	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
+	$file                   = str_replace( '&amp;', '&', $file );
+	$file_array['tmp_name'] = download_url( $file );
+
+	// If error storing temporarily, return the error.
+	if ( is_wp_error( $file_array['tmp_name'] ) ) {
+		return;
+	}
+
+	// Do the validation and storage stuff.
+	$id = bb_media_handle_sideload( $file_array );
+
+	// If error storing permanently, unlink.
+	if ( is_wp_error( $id ) ) {
+		return;
+	}
+
+	return $id;
+}
+
+/**
+ * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param array $file_array Array similar to a {@link $_FILES} upload array.
+ * @param array $post_data  allows you to overwrite some of the attachment.
+ *
+ * @return int|object The ID of the attachment or a WP_Error on failure
+ */
+function bb_media_handle_sideload( $file_array, $post_data = array() ) {
+
+	$overrides = array( 'test_form' => false );
+
+	$time = current_time( 'mysql' );
+	if ( $post = get_post() ) {
+		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
+			$time = $post->post_date;
+		}
+	}
+
+	$file = wp_handle_sideload( $file_array, $overrides, $time );
+	if ( isset( $file['error'] ) ) {
+		return new WP_Error( 'upload_error', $file['error'] );
+	}
+
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
+	$content = '';
+
+	// Load function wp_read_image_metadata if not exists.
+	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
+
+	// Use image exif/iptc data for title and caption defaults if possible.
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+			$title = $image_meta['title'];
+		}
+		if ( trim( $image_meta['caption'] ) ) {
+			$content = $image_meta['caption'];
+		}
+	}
+
+	if ( isset( $desc ) ) {
+		$title = $desc;
+	}
+
+	// Construct the attachment array.
+	$attachment = array_merge(
+		array(
+			'post_mime_type' => $type,
+			'guid'           => $url,
+			'post_title'     => $title,
+			'post_content'   => $content,
+		),
+		$post_data
+	);
+
+	// This should never be set as it would then overwrite an existing attachment.
+	if ( isset( $attachment['ID'] ) ) {
+		unset( $attachment['ID'] );
+	}
+
+	// Save the attachment metadata.
+	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! is_wp_error( $id ) ) {
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	}
+
+	return $id;
+}
+
+/**
+ * Check the notification type is enabled or not.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	// Check If given notification type is enabled or disabled in DB.
+	$enabled_notifications = bp_get_option( 'bb_enabled_notification', array() );
+
+	if (
+		! empty( $enabled_notifications[ $notification_type ] ) &&
+		isset( $enabled_notifications[ $notification_type ][ $type ] )
+	) {
+		return 'yes' === $enabled_notifications[ $notification_type ][ $type ];
+	}
+
+	// Check if default notification type is already set.
+	$notification_preferences = bb_register_notification_preferences();
+	$all_preferences          = array();
+	if ( ! empty( $notification_preferences ) ) {
+		foreach ( $notification_preferences as $preference ) {
+			if ( ! empty( $preference['fields'] ) ) {
+				$all_preferences = array_merge( $all_preferences, $preference['fields'] );
+			}
+		}
+	}
+
+	if ( ! empty( $all_preferences ) ) {
+		$notifications = array_column( $all_preferences, 'default', 'key' );
+
+		return ! empty( $notifications[ $notification_type ] ) && 'yes' === $notifications[ $notification_type ];
+	}
+
+	return false;
+}
+
+/**
+ * Enable the notification type if disabled.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_enable_notification_type( $notification_type, $type = 'main' ) {
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	// Check if notification types is already enable or not.
+	if ( bb_is_notification_type_enabled( $notification_type, $type ) ) {
+		return false;
+	}
+
+	if (
+		( 'web' === $type && ! bb_web_push_notification_enabled() ) ||
+		( 'app' === $type && ! bb_app_notification_enabled() )
+	) {
+		return false;
+	}
+
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	$enabled_notification[ $notification_type ][ $type ] = 'yes';
+	update_option( 'bb_enabled_notification', $enabled_notification );
+
+	return true;
+}
+
+/**
+ * Disable the notification type if enabled.
+ *
+ * @since BuddyBoss 2.3.60
+ *
+ * @param string $notification_type Notification type.
+ * @param string $type              Type of notification.
+ *
+ * @return bool
+ */
+function bb_disable_notification_type( $notification_type, $type = 'main' ) {
+
+	if ( empty( $notification_type ) ) {
+		return false;
+	}
+
+	// Check if notification types is already disable or not.
+	if ( ! bb_is_notification_type_enabled( $notification_type, $type ) ) {
+		return false;
+	}
+
+	if (
+		( 'web' === $type && ! bb_web_push_notification_enabled() ) ||
+		( 'app' === $type && ! bb_app_notification_enabled() )
+	) {
+		return false;
+	}
+
+	$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+
+	$enabled_notification[ $notification_type ][ $type ] = 'no';
+	update_option( 'bb_enabled_notification', $enabled_notification );
+
+	return true;
+}
+
+/**
+ * Check if the requested URL is from same site.
+ *
+ * @since BuddyBoss 2.4.00
+ *
+ * @param string $url URL to check.
+ *
+ * @return bool
+ */
+function bb_is_same_site_url( $url ) {
+	$parsed_url = wp_parse_url( $url );
+	$home_url   = wp_parse_url( home_url( '/' ) );
+
+	if ( ! empty( $parsed_url['host'] ) && ! empty( $parsed_url['scheme'] ) ) {
+		return ( strtolower( $parsed_url['host'] ) === strtolower( $home_url['host'] ) ) && ( $parsed_url['scheme'] === $home_url['scheme'] );
+	}
+
+	return false;
+}
+
+/**
+ * Check if email address allowed to register.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @param string $email Email address.
+ *
+ * @return bool
+ */
+function bb_is_allowed_register_email_address( $email = '' ) {
+
+	$email = strtolower( trim( $email ) );
+	if ( empty( $email ) || ( ! is_email( $email ) ) ) {
+		return false;
+	}
+
+	$domain_restrictions = bb_domain_restrictions_setting();
+	$email_restrictions  = bb_email_restrictions_setting();
+
+	// No restrictions or custom registration enabled then return true.
+	if (
+		(
+			empty( $domain_restrictions ) &&
+			empty( $email_restrictions )
+		) ||
+		bp_allow_custom_registration()
+	) {
+		return true;
+	}
+
+	// Check if the email address is allowed or not.
+	foreach ( $email_restrictions as $key => $rule ) {
+		$rule_email = ( ! empty( $rule['address'] ) ? strtolower( trim( $rule['address'] ) ) : '' );
+
+		// Split the email addresses into parts using '@'.
+		$rule_email_parts  = explode( '@', $rule_email );
+		$input_email_parts = explode( '@', $email );
+
+		// Remove aliases, everything after '+'.
+		$rule_email_user  = explode( '+', $rule_email_parts[0] )[0];
+		$input_email_user = explode( '+', $input_email_parts[0] )[0];
+
+		// Compose the email address without the alias.
+		$rule_email  = $rule_email_user . '@' . $rule_email_parts[1];
+		$input_email = $input_email_user . '@' . $input_email_parts[1];
+
+		if ( $input_email === $rule_email ) {
+			if ( 'always_allow' === $rule['condition'] ) {
+				return true;
+			} elseif ( 'never_allow' === $rule['condition'] ) {
+				return false;
+			}
+		}
+	}
+
+	// Split the email into parts.
+	$email_parts = explode( '@', $email );
+	if ( count( $email_parts ) === 2 ) {
+		$domain_and_ext = $email_parts[1];
+		$domain_parts   = explode( '.', $domain_and_ext );
+		if ( count( $domain_parts ) >= 2 ) {
+			$extension = array_pop( $domain_parts );
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+
+	// Check condition the email domain.
+	$is_allowed = '';
+	$only_allow = false;
+	foreach ( $domain_restrictions as $key => $rule ) {
+
+		$rule_domain    = strtolower( trim( $rule['domain'] ) );
+		$rule_tld       = strtolower( trim( $rule['tld'] ) );
+		$rule_condition = $rule['condition'];
+
+		if ( 'only_allow' === $rule_condition ) {
+			$only_allow = true;
+		}
+
+		// Exact match with domain and extension.
+		if ( $domain_and_ext === $rule_domain . '.' . $rule_tld ) {
+			if ( 'only_allow' === $rule_condition ) {
+				return true;
+			} elseif ( 'always_allow' === $rule_condition ) {
+				return true;
+			} elseif ( 'never_allow' === $rule_condition ) {
+				return false;
+			}
+
+			// Domain starting with placeholder.
+		} elseif ( 0 === strpos( $rule_domain, '*.' ) && $extension === $rule_tld ) {
+			$pattern = preg_quote( $rule_domain . '.' . $rule_tld, '/' );
+			$pattern = str_replace( '\*', '[a-zA-Z0-9.-]*', $pattern );
+			$pattern = "/$pattern$/";
+
+			if ( preg_match( $pattern, $domain_and_ext ) ) {
+				if ( 'only_allow' === $rule_condition ) {
+					$is_allowed = true;
+				} elseif ( 'always_allow' === $rule_condition ) {
+					$is_allowed = true;
+				} elseif ( 'never_allow' === $rule_condition ) {
+					$is_allowed = false;
+				}
+			}
+
+			// Domain with * as placeholder.
+		} elseif ( '*' === $rule_domain && $extension === $rule_tld ) {
+			if ( 'only_allow' === $rule_condition ) {
+				$is_allowed = true;
+			} elseif ( 'always_allow' === $rule_condition ) {
+				$is_allowed = true;
+			} elseif ( 'never_allow' === $rule_condition ) {
+				$is_allowed = false;
+			}
+		}
+	}
+
+	// If only allowed occurred but rules not matched.
+	if ( true === $only_allow && '' === $is_allowed ) {
+		return false;
+	}
+
+	// If no matching found, allow registration by default.
+	if ( '' === $is_allowed ) {
+		return true;
+	} else {
+		return $is_allowed;
+	}
+}
+
+/**
+ * Function to load the instance of the class BB_Reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @return null|BB_Reaction|void
+ */
+function bb_load_reaction() {
+	if ( class_exists( 'BB_Reaction' ) ) {
+		return BB_Reaction::instance();
+	}
+}
+
+/**
+ * Wrapper function to get the redirect url as per action.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param string $redirect_to Original redirect URL.
+ * @param int    $user_id     User ID.
+ * @param string $action      Type of action i.e. login or logout.
+ *
+ * @return string $redirect_to Updated redirect URL.
+ */
+function bb_redirect_after_action( $redirect_to, $user_id = 0, $action = 'login' ) {
+	$custom_url       = '';
+	$redirect_setting = '';
+
+	if ( 'login' === $action ) {
+		$redirect_setting = bb_login_redirection();
+	} elseif ( 'logout' === $action ) {
+		$redirect_setting = bb_logout_redirection();
+	}
+
+	// Check if any page or custom URL is set.
+	if ( '' !== $redirect_setting ) {
+		if ( '0' === $redirect_setting ) {
+			if ( 'login' === $action ) {
+				$custom_url = esc_url( bb_custom_login_redirection() );
+			} elseif ( 'logout' === $action ) {
+				$custom_url = esc_url( bb_custom_logout_redirection() );
+			}
+
+			if ( ! empty( $custom_url ) ) {
+
+				// Custom Page URL.
+				$redirect_to = $custom_url;
+			}
+		} else {
+
+			// Page ID.
+			if (
+				! empty( $redirect_setting ) &&
+				is_numeric( $redirect_setting ) &&
+				'publish' === get_post_status( $redirect_setting )
+			) {
+				$redirect_to = get_permalink( $redirect_setting );
+			}
+		}
+	}
+
+	// Check for profile type settings for login redirection.
+	if ( false !== bp_member_type_enable_disable() ) {
+		$member_type = bp_get_member_type( $user_id );
+		if ( false !== $member_type ) {
+			$member_type_post_id = bp_member_type_post_by_type( $member_type );
+			if ( ! empty( $member_type_post_id ) ) {
+
+				$member_type_redirect_setting = get_post_meta( $member_type_post_id, '_bp_member_type_' . $action . '_redirection', true );
+
+				// Check if any page or custom URL is set.
+				if ( '' !== $member_type_redirect_setting ) {
+
+					$custom_url = '';
+					if ( '0' === $member_type_redirect_setting ) {
+						$custom_url = get_post_meta( $member_type_post_id, '_bp_member_type_custom_' . $action . '_redirection', true );
+						if ( ! empty( $custom_url ) ) {
+
+							// Custom Page URL.
+							$redirect_to = $custom_url;
+						}
+					} else {
+
+						// Page ID.
+						if (
+							! empty( $member_type_redirect_setting ) &&
+							is_numeric( $member_type_redirect_setting ) &&
+							'publish' === get_post_status( $member_type_redirect_setting )
+						) {
+							$redirect_to = get_permalink( $member_type_redirect_setting );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Support for custom third party URLs.
+	if ( ! empty( $custom_url ) ) {
+		add_filter( 'allowed_redirect_hosts', 'bb_redirection_allowed_third_party_domains' );
+	}
+
+	return $redirect_to;
+}
+
+/**
+ * Remove action which used in thord party class.
+ *
+ * @since BuddyBoss 2.5.00
+ *
+ * @param string $action Action name.
+ * @param string $class  Class name.
+ * @param string $method Method name.
+ */
+function bb_remove_class_action( $action, $class, $method ) {
+	global $wp_filter;
+	if ( isset( $wp_filter[ $action ] ) ) {
+		$len = strlen( $method );
+		foreach ( $wp_filter[ $action ] as $pri => $actions ) {
+			foreach ( $actions as $name => $def ) {
+				if ( substr( $name, - $len ) === $method ) {
+					if ( is_array( $def['function'] ) && ! empty( $def['function'] ) ) {
+						if ( get_class( $def['function'][0] ) === $class ) {
+							if ( is_object( $wp_filter[ $action ] ) && isset( $wp_filter[ $action ]->callbacks ) ) {
+								unset( $wp_filter[ $action ]->callbacks[ $pri ][ $name ] );
+							} else {
+								unset( $wp_filter[ $action ][ $pri ][ $name ] );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Retrieve the current layout for BuddyBoss directories.
+ * This function retrieves the current layout for BuddyBoss directories based on the specified action.
+ * It checks whether the user is logged in, retrieves layout preferences from user meta or cookies,
+ * and provides a default layout value if no user preferences are found.
+ *
+ * @since BuddyBoss 2.5.11
+ *
+ * @param string $action The directory action for which to retrieve the layout
+ *                       (e.g. 'members', 'ld-course', 'groups').
+ *
+ * @return string The current layout format ('grid' or 'list').
+ */
+function bb_get_directory_layout_preference( $action ) {
+	if ( is_user_logged_in() ) {
+		$existing_layouts = get_user_meta( get_current_user_id(), 'bb_layout_view', true );
+	} else {
+		$existing_layouts = ! empty( $_COOKIE['bb_layout_view'] ) ? json_decode( rawurldecode( $_COOKIE['bb_layout_view'] ), true ) : array();
+	}
+	$default_value = '';
+	if ( 'members' === $action ) {
+		$default_value = bp_profile_layout_default_format( 'grid' );
+	} elseif ( 'groups' === $action ) {
+		$default_value = bp_group_layout_default_format( 'grid' );
+	} elseif ( 'ld-course' === $action ) {
+		$default_value = apply_filters( 'bb_learndash_course_layout', 'grid' );
+	}
+
+	return ! empty( $existing_layouts ) && ! empty( $existing_layouts[ $action ] ) ? $existing_layouts[ $action ] : $default_value;
+}
+
+/**
+ * Get the Reactions settings sections.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_sections() {
+
+	$settings = array(
+		'bp_reaction_settings_section' => array(
+			'page'              => 'reaction',
+			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
+			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
+}
+
+/**
+ * Link to Reaction tutorial.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bp_admin_reaction_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127197,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get reaction settings fields by section.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $section_id Section ID.
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ */
+function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty.
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bb_reactions_get_settings_fields();
+	$retval = $fields[ $section_id ] ?? false;
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all of the reactions settings fields.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_fields() {
+
+	$fields    = array();
+	$pro_class = bb_get_pro_fields_class( 'reaction' );
+
+	$reaction_btn_class = 'bb_reaction_button_row ' . $pro_class;
+	if ( function_exists( 'bb_get_reaction_mode' ) && 'emotions' !== bb_get_reaction_mode() ) {
+		$reaction_btn_class .= ' bp-hide';
+	}
+
+	$fields['bp_reaction_settings_section'] = array(
+		'bb_all_reactions' => array(
+			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
+			'callback' => 'bb_reactions_settings_callback_all_reactions',
+			'args'     => array(),
+		),
+
+		'bb_reaction_mode' => array(
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
+			'sanitize_callback' => 'sanitize_text_field',
+			'args'              => array(
+				'class' => $pro_class
+			),
+		),
+
+		'bb_reaction_emotions' => array(),
+
+		'bb_reactions_button' => array(
+			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
+			'callback' => 'bb_reactions_settings_callback_reactions_button',
+			'args'     => array(
+				'class' => $reaction_btn_class
+			),
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
+}
+
+/**
+ * Function to check WP_Filesystem object available or not.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @return object
+ */
+function bb_wp_filesystem() {
+	global $wp_filesystem;
+
+	if ( ! is_object( $wp_filesystem ) ) {
+
+		// Check if WP_Filesystem not exists then include file.
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		WP_Filesystem();
+	}
+
+	return $wp_filesystem;
+}
+
+/**
+ * Function to retrieve the first character of the give string and make it uppercase.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param string $string String to find first character.
+ *
+ * @return string
+ */
+function bb_core_get_first_character( $string ) {
+	if ( function_exists( 'mb_strtoupper' ) && function_exists( 'mb_substr' ) ) {
+		$character = mb_strtoupper( mb_substr( $string, 0, 1 ) );
+	} else {
+		$character = strtoupper( substr( $string, 0, 1 ) );
+	}
+
+	// Allowed only english or number character.
+	if ( ! preg_match( '/^[A-Za-z0-9]+$/i', $character ) ) {
+		$character = '';
+	}
+
+	return strval( $character );
+}
+
+/**
+ * Function to return pre-defined color palettes.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @return array
+ */
+function bb_get_predefined_palette() {
+	/**
+	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param array $palette Array of color palette.
+	 */
+	return apply_filters(
+		'bb_predefined_palette',
+		array(
+			1  => '#dc143c',
+			2  => '#b22222',
+			3  => '#8b0000',
+			4  => '#663399',
+			5  => '#4682b4',
+			6  => '#8a2be2',
+			7  => '#9400d3',
+			8  => '#9932cc',
+			9  => '#800080',
+			10 => '#4b0082',
+			11 => '#6a5acd',
+			12 => '#c71585',
+			13 => '#483d8b',
+			14 => '#4169e1',
+			15 => '#0000cd',
+			16 => '#000080',
+			17 => '#191970',
+			18 => '#008000',
+			19 => '#006400',
+			20 => '#8b4513',
+			21 => '#a0522d'
+		)
+	);
+}
+
+/**
+ * Function to retrieve the default PNG avatar if don't exists then generate.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param array $params Array of avatar details.
+ *
+ * @return string
+ */
+function bb_get_default_png_avatar( $params ) {
+	$object  = $params['object'] ?? 'user';
+	$item_id = $params['item_id'] ?? 0;
+
+	$user_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
+	$group_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
+
+	if ( empty( $item_id ) ) {
+		return ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar;
+	}
+
+	if ( 'user' === $object ) {
+
+		// If user deleted then fallback the buddyboss avatar.
+		$user = get_userdata( $item_id );
+		if ( empty( $user ) || ! empty( $user->deleted ) ) {
+			bb_delete_default_user_png_avatar( array( $item_id ) );
+			return $user_fallback_avatar;
+		}
+
+		$avatar_image_url = get_user_meta( $item_id, 'default-user-avatar-png', true );
+	} else {
+
+		// If group deleted then fallback the buddyboss avatar.
+		$group = new BP_Groups_Group( (int) $item_id );
+		if ( empty( $group ) || empty( $group->id ) ) {
+			bb_delete_default_group_png_avatar( array( $item_id ) );
+			return $group_fallback_avatar;
+		}
+
+		$avatar_image_url = groups_get_groupmeta( $item_id, 'default-group-avatar-png', true );
+	}
+
+	if ( ! empty( $avatar_image_url ) ) {
+		$avatar_image_path = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $avatar_image_url );
+		if ( ! file_exists( $avatar_image_path ) ) {
+			$avatar_image_url = '';
+		}
+	}
+
+	if ( empty( $avatar_image_url ) ) {
+		$avatar_image_url = bb_generate_default_avatar( $params )['url'];
+	}
+
+	return ! empty( $avatar_image_url ) ? $avatar_image_url : ( ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar );
+}
+
+/**
+ * Function to prepare array to generate the default PNG avatar.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param array $args Array of avatar details.
+ *
+ * @return array
+ */
+function bb_generate_default_avatar( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'item_id'   => 0,
+			'object'    => 0,
+			'item_name' => '',
+		)
+	);
+
+	$prepare_response = array(
+		'path' => '',
+		'url'  => '',
+	);
+
+	// Check the image library is available or not.
+	$image_library = _wp_image_editor_choose();
+
+	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
+		return $prepare_response;
+	}
+
+	if ( empty( $r['item_name'] ) ) {
+		if ( 'user' === $r['object'] ) {
+			$r['item_name'] = bp_core_get_user_displayname( $r['item_id'] );
+		} else {
+			$group          = groups_get_group( $r['item_id'] );
+			$r['item_name'] = bp_get_group_name( $group );
+		}
+	}
+
+	if ( empty( $r['item_name'] ) ) {
+		return $prepare_response;
+	}
+
+	$char1 = bb_core_get_first_character( $r['item_name'] );
+	$char2 = '';
+	if ( 'user' === $r['object'] ) {
+		$display_format = bp_core_display_name_format();
+		if (
+			'first_last_name' === $display_format &&
+			function_exists( 'bp_is_active' ) &&
+			bp_is_active( 'xprofile' )
+		) {
+			// Get the last field ID and its visibility.
+			$last_filed_id    = bp_xprofile_lastname_field_id();
+			$field_visibility = xprofile_get_field_visibility_level( $last_filed_id, $r['item_id'] );
+
+			// If visibility is public, then display the second character.
+			if ( 'public' === $field_visibility ) {
+				$last_name = xprofile_get_field_data( $last_filed_id, $r['item_id'] );
+				if ( ! empty( $last_name ) ) {
+					$char2 = bb_core_get_first_character( $last_name );
+				}
+			}
+		}
+	}
+
+	$item_name = strtoupper( $char1 . $char2 );
+	if ( empty( $item_name ) && '0' !== $item_name ) {
+		return $prepare_response;
+	}
+
+	$all_palettes = bb_get_predefined_palette();
+	if ( 'user' === $r['object'] ) {
+		$palette = get_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', true );
+	} else {
+		$palette = groups_get_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette' );
+	}
+
+	if ( empty( $palette ) ) {
+		$palette = array_rand( $all_palettes );
+	}
+
+	/**
+	 * Set font family full path to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param string $font_family Full path of font family. It should be a TTF file.
+	 */
+	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Medium.ttf' );
+
+	if ( empty( $font_family ) ) {
+		return $prepare_response;
+	}
+
+	// Setup default if empty.
+	$bg_color = ! empty( $all_palettes[ $palette ] ) ? $all_palettes[ $palette ] : '#008000';
+
+	/**
+	 * Set font color to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param string $png_text_color The color of the font to display on image.
+	 */
+	$png_text_color = apply_filters( 'bb_default_png_avatar_text_color', '#FFFFFF' );
+	if ( empty( $png_text_color ) ) {
+		$png_text_color = '#FFFFFF';
+	}
+
+	/**
+	 * Set font size to render text on image.
+	 *
+	 * @since BuddyBoss [BBVSERION]
+	 *
+	 * @param int $font_size The font size of the text to display on image.
+	 */
+	$font_size = (int) apply_filters( 'bb_default_png_avatar_text_font_size', 110 );
+	if ( empty( $font_size ) ) {
+		$font_size = 120;
+	}
+
+	// Generate filename.
+	$filename = time() . $r['item_id'] . '.png';
+
+	// Set upload directory and URL based on object.
+	$file_path = bp_core_avatar_upload_path() . '/group-avatars/default/' . $r['item_id'] . '/';
+	$file_url  = bp_core_get_upload_dir( 'url' ) . '/group-avatars/default/' . $r['item_id'] . '/' . $filename;
+	if ( 'user' === $r['object'] ) {
+		$file_path = bp_core_avatar_upload_path() . '/avatars/default/' . $r['item_id'] . '/';
+		$file_url  = bp_core_get_upload_dir( 'url' ) . '/avatars/default/' . $r['item_id'] . '/' . $filename;
+	}
+
+	$wp_filesystem = bb_wp_filesystem();
+	$wp_filesystem->rmdir( $file_path, true );
+	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
+
+	$file           = $file_path . $filename;
+	$chose_editor   = _wp_image_editor_choose();
+	$default_avatar = '';
+
+	// Set up image editor object.
+	$image_editor = wp_get_image_editor( buddypress()->plugin_dir . 'bp-core/images/blank.png' );
+
+	// Check if image editor is available and create text on the image.
+	if ( ! is_wp_error( $image_editor ) ) {
+		$text_dimensions = imagettfbbox( $font_size, 0, $font_family, $item_name );
+
+		// Extract width and height from the bounding box.
+		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] ); // Width (right - left).
+		$text_height = abs( $text_dimensions[5] - $text_dimensions[3] ); // Height (bottom - top).
+
+		$image_size   = $image_editor->get_size();
+		$image_width  = $image_size['width'];
+		$image_height = $image_size['height'];
+
+		$text_x = ( ( $image_width - $text_width ) / 2 ) - $text_dimensions[0];
+		$text_y = ( ( $image_height + $text_height ) / 2 ) - 3;
+
+		$rf_image_editor = new ReflectionClass( $image_editor );
+		$property        = $rf_image_editor->getProperty( 'image' );
+		$property->setAccessible( true );
+		$image = $property->getValue( $image_editor );
+
+		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
+			// Define the background color.
+			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
+			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
+
+			imagefill( $image, 0, 0, $filtered_bg_color );
+			imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $item_name );
+
+		} else {
+			$image = new Imagick();
+			$image->setAntiAlias( true );
+			$image->setResolution( 300, 300 );
+			$image->newImage( $image_width, $image_height, new ImagickPixel( $bg_color ) );
+
+			// Set up the text properties.
+			$draw = new ImagickDraw();
+			$draw->setFont( $font_family ); // Path to your TrueType font file.
+			$draw->setResolution( 95, 95 ); // text resolution.
+			$draw->setFontSize( $font_size ); // Font size.
+			$draw->setFillColor( new ImagickPixel( $png_text_color ) ); // Text color.
+			$draw->setGravity( Imagick::GRAVITY_CENTER ); // Set the text to be centered.
+
+			// Add text to the image.
+			$image->annotateImage( $draw, 0, 0, 0, $item_name );
+			$image->setImageFormat( 'png' );
+		}
+
+		$property->setValue( $image_editor, $image );
+
+		// Save the image with the text as a PNG.
+		$result = $image_editor->save( $file, 'image/png' );
+
+		if ( ! is_wp_error( $result ) ) {
+			$default_avatar = $file_url;
+		}
+	}
+
+	if ( ! empty( $default_avatar ) ) {
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png-background-color-palette', $palette );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png-background-color-palette', $palette );
+		}
+
+		if ( 'user' === $r['object'] ) {
+			update_user_meta( $r['item_id'], 'default-user-avatar-png', $default_avatar );
+		} else {
+			groups_update_groupmeta( $r['item_id'], 'default-group-avatar-png', $default_avatar );
+		}
+
+		$prepare_response['url']  = $default_avatar;
+		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );
+	}
+
+	return $prepare_response;
+}
+
+/**
+ * Function to delete the user default PNG avatar.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param array $item_ids      Array of user IDs.
+ * @param bool  $is_delete_dir True then delete directory. Default true.
+ *
+ * @return void
+ */
+function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
+	global $wpdb;
+
+	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
+	if ( ! empty( $item_ids ) ) {
+		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+	}
+
+	$wpdb->query( $delete_query );
+
+	if ( $is_delete_dir ) {
+		$wp_filesystem   = bb_wp_filesystem();
+		$user_avatar_dir = bp_core_avatar_upload_path() . '/avatars/default/';
+		if ( is_dir( $user_avatar_dir ) ) {
+			if ( ! empty( $item_ids ) ) {
+				foreach ( $item_ids as $user_id ) {
+					$wp_filesystem->delete( $user_avatar_dir . $user_id . '/', true );
+				}
+			} else {
+				$wp_filesystem->delete( $user_avatar_dir, true );
+			}
+		}
+	}
+}
+
+/**
+ * Function to delete the group default PNG avatar.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param array $item_ids      Array of group IDs.
+ * @param bool  $is_delete_dir True then delete directory. Default true.
+ *
+ * @return void
+ */
+function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
+	global $wpdb, $bp;
+
+	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
+	if ( ! empty( $item_ids ) ) {
+		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+	}
+
+	$wpdb->query( $delete_query );
+
+	if ( $is_delete_dir ) {
+		$wp_filesystem    = bb_wp_filesystem();
+		$group_avatar_dir = bp_core_avatar_upload_path() . '/group-avatars/default/';
+		if ( is_dir( $group_avatar_dir ) ) {
+			if ( ! empty( $item_ids ) ) {
+				foreach ( $item_ids as $group_id ) {
+					$wp_filesystem->delete( $group_avatar_dir . $group_id . '/', true );
+				}
+			} else {
+				$wp_filesystem->delete( $group_avatar_dir, true );
+			}
+		}
+	}
+}
+
+/**
+ * Replace mention placeholders with user URLs in the given content.
+ * This function searches for mention placeholders in the provided content (e.g., {{mention_user_id_XXXX}})
+ * and replaces them with the corresponding user URLs using bp_core_get_user_domain().
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param mixed $content The content containing mention placeholders to be replaced..
+ *
+ * @return mixed The content with mention placeholders replaced by user URLs.
+ */
+function bb_mention_add_user_dynamic_link( $content ) {
+
+	if ( empty( $content ) ) {
+		return $content;
+	}
+
+	// Define a callback function for preg_replace_callback.
+	$replace_callback = function ( $matches ) {
+		$user_id = $matches[1];                     // Extract the user ID from the match.
+
+		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
+
+	};
+
+	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
+}
+
+/**
+ * Function to return the minimum pro version to show notice.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_schedule_posts_version() {
+	return '2.5.20';
 }

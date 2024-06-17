@@ -127,19 +127,15 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		 * @param array $value Array of post types to track.
 		 */
 
-		$post_types = get_post_types( array( 'public' => true ) );
+		// Allow tutor lesson comment tracking.
+		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+		}
 
-		// Exclude BP CPT.
-		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+		$bp_allowed_cpt = bb_feed_post_types();
 
-		$bp_allowed_cpt = array();
-		foreach ( $post_types as $p_type ) {
-			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array( $p_type, $bp_exclude_cpt, true ) ) {
-				continue;
-			}
-
-			$bp_allowed_cpt[] = $p_type;
+		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 		}
 
 		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_allowed_cpt );
@@ -697,7 +693,7 @@ function bp_blogs_record_activity_on_site_creation( $recorded_blog, $is_private,
 				 * @param string $value Blog primary link.
 				 * @param int    $value Blog ID.
 				 */
-				'primary_link' => apply_filters( 'bp_blogs_activity_created_blog_primary_link', bp_blogs_get_blogmeta( $recorded_blog->blog_id, 'url' ), $recorded_blog->blog_id ),
+				'primary_link' => apply_filters( 'bp_blogs_activity_created_blog_primary_link', '', $recorded_blog->blog_id ),
 				'type'         => 'new_blog',
 				'item_id'      => $recorded_blog->blog_id,
 			)
@@ -829,6 +825,13 @@ add_action( 'delete_post', 'bp_blogs_remove_post' );
  * @param object $parent_activity Parameters of the parent activity item (in this case, the blog post).
  */
 function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_activity ) {
+	global $bb_activity_comment_edit;
+
+	// Return if $comment_id empty or edit activity comment.
+	if ( $bb_activity_comment_edit ) {
+		return;
+	}
+
 	// if parent activity isn't a post type having the buddypress-activity support, stop now!
 	if ( ! bp_activity_type_supports( $parent_activity->type, 'post-type-comment-tracking' ) ) {
 		return;
@@ -869,7 +872,9 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 * @param string $content         Content for the posted comment.
 	 * @param int    $comment_id      The activity ID for the posted activity comment.
 	 */
+	remove_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 	$params['content'] = apply_filters( 'bp_activity_comment_content', $params['content'], $comment_id );
+	add_filter( 'bp_activity_comment_content', 'bp_activity_at_name_filter' );
 
 	// Comment args.
 	$args = array(
@@ -877,7 +882,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 		'comment_author'       => bp_core_get_user_displayname( $params['user_id'] ),
 		'comment_author_email' => $user->user_email,
 		'comment_author_url'   => bp_core_get_user_domain( $params['user_id'], $user->user_nicename, $user->user_login ),
-		'comment_content'      => $params['content'],
+		'comment_content'      => bp_activity_at_name_filter( $params['content'] ),
 		'comment_type'         => '', // Could be interesting to add 'buddypress' here...
 		'comment_parent'       => (int) $comment_parent,
 		'user_id'              => $params['user_id'],
@@ -886,6 +891,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 
 	// Prevent separate activity entry being made.
 	remove_action( 'comment_post', 'bp_activity_post_type_comment', 10 );
+	remove_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 
 	// Handle multisite.
 	switch_to_blog( $parent_activity->item_id );
@@ -913,7 +919,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	// @todo since this is done after AJAX posting, the activity comment permalink
 	// doesn't change on the front end until the next page refresh.
 	$resave_activity               = new BP_Activity_Activity( $comment_id );
-	$resave_activity->primary_link = get_comment_link( $post_comment_id );
+	$resave_activity->primary_link = '';
 
 	/**
 	 * Now that the activity id exists and the post comment was created, we don't need to update
@@ -931,6 +937,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	restore_current_blog();
 
 	// Add the comment hook back.
+	add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 	add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
 
 	/**
@@ -1076,6 +1083,21 @@ function bp_blogs_sync_activity_edit_to_post_comment( BP_Activity_Activity $acti
 	// Restore actions
 	add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comment_status', 10, 3 );
 	add_action( 'bp_activity_post_type_comment', 'bp_blogs_comment_sync_activity_comment', 10, 4 );
+
+	// If activity comment edited and it's a blog, then set activity comment content as blank.
+	$activity->primary_link = ! empty( $activity->primary_link ) ? $activity->primary_link : '';
+
+	/**
+	 * Now that the activity id exists and the post comment was created, we don't need to update
+	 * the content of the comment as there are no chances it has evolved.
+	 */
+	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
+
+	$activity->content = '';
+	$activity->save();
+
+	// Add the edit activity comment hook back.
+	add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
 	restore_current_blog();
 }
@@ -1447,6 +1469,15 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 	// Maybe adjust the link if item ID exists.
 	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
 		$retval = $activities_template->activity->current_comment->primary_link;
+		if ( empty( $retval ) ) {
+			$post_type = str_replace( 'new_blog_', '', $activities_template->activity->type );
+			if ( empty( $post_type ) ) {
+				$comment_post_type = $activities_template->activity->secondary_item_id;
+				$post_type         = get_post_type( $comment_post_type );
+			}
+			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
+		}
 	}
 
 	return $retval;
@@ -1477,6 +1508,15 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 
 	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
+		if ( empty( $retval ) ) {
+			$post_type = str_replace( 'new_blog_', '', $parent_activity->type );
+			if ( empty( $post_type ) ) {
+				$comment_post_type = $parent_activity->secondary_item_id;
+				$post_type         = get_post_type( $comment_post_type );
+			}
+			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
+		}
 	}
 
 	return $retval;

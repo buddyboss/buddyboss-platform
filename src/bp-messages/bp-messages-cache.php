@@ -56,6 +56,8 @@ add_action( 'messages_screen_inbox', 'bp_core_clear_cache' );
 function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message ) {
 	// Delete thread cache.
 	// wp_cache_delete( $message->thread_id, 'bp_messages_threads' );
+	$cache_key = "{$message->thread_id}99999999";
+	wp_cache_delete( $cache_key, 'bp_messages_threads' );
 	bp_messages_delete_thread_paginated_messages_cache( $message->thread_id );
 
 	// Delete unread count for each recipient.
@@ -83,6 +85,8 @@ function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 	// Delete thread and thread recipient cache.
 	foreach ( (array) $thread_ids as $thread_id ) {
 		// wp_cache_delete( $thread_id, 'bp_messages_threads' );
+		$cache_key = "{$thread_id}99999999";
+		wp_cache_delete( $cache_key, 'bp_messages_threads' );
 		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
 		wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
@@ -145,6 +149,7 @@ add_action( 'messages_delete_thread', 'bb_core_clear_message_cache' );
 add_action( 'messages_send_notice', 'bb_core_clear_message_cache' );
 add_action( 'messages_message_sent', 'bb_core_clear_message_cache' );
 add_action( 'messages_thread_mark_as_read', 'bb_core_clear_message_cache' );
+add_action( 'messages_thread_mark_as_unread', 'bb_core_clear_message_cache' );
 
 /**
  * Clear cache when group messages has been disabled by admin.
@@ -183,6 +188,7 @@ add_action( 'update_option_bp-disable-group-messages', 'bb_clear_cache_while_gro
 function bp_messages_clear_message_unread_cache_on_thread_archived( $thread_id, $user_id ) {
 	wp_cache_delete( $user_id, 'bp_messages_unread_count' );
 	wp_cache_delete( "bb_thread_message_unread_count_{$user_id}_{$thread_id}", 'bp_messages_unread_count' );
+	bp_core_reset_incrementor( 'bp_messages' );
 }
 add_action( 'bb_messages_thread_archived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
 add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );

@@ -46,7 +46,7 @@ if ( ! empty( $member_types ) ) {
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $member_types as $member_type_id ) {
 						$type_name        = bp_get_member_type_key( $member_type_id );
-						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
+						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 						?>
 						<option value="<?php echo esc_attr( $member_type_id ); ?>">
 							<?php echo esc_attr( $member_type_name ); ?>

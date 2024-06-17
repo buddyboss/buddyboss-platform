@@ -376,6 +376,18 @@ function bp_core_set_uri_globals() {
 				}
 			}
 
+			// If the displayed user is marked as a pending, 404 (unless logged-in user is a super admin).
+			if ( bp_displayed_user_id() && ! bp_is_user_active( bp_displayed_user_id() ) ) {
+				if ( bp_current_user_can( 'bp_moderate' ) ) {
+					bp_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss' ), 'warning' );
+				} else {
+					$bp->displayed_user->id = 0;
+					$bp->current_component = '';
+					bp_do_404();
+					return;
+				}
+			}
+
 			// Bump the offset.
 			if ( bp_displayed_user_id() ) {
 				if ( isset( $bp_uri[ $uri_offset + 2 ] ) ) {
@@ -686,8 +698,8 @@ function bp_core_no_access( $args = '' ) {
 
 	// Build the redirect URL.
 	$redirect_url  = is_ssl() ? 'https://' : 'http://';
-	$redirect_url .= $_SERVER['HTTP_HOST'];
-	$redirect_url .= $_SERVER['REQUEST_URI'];
+	$redirect_url .= $_SERVER['HTTP_HOST'] ?? '';
+	$redirect_url .= $_SERVER['REQUEST_URI'] ?? '';
 
 	$defaults = array(
 		'mode'     => 2,                    // 1 = $root, 2 = wp-login.php.
@@ -1291,6 +1303,17 @@ function bp_private_network_template_redirect() {
 
 							// Check URL is fully matched without remove trailing slash.
 						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
+							return;
+							// Allow to view if it's matched the page URL like /page/:id.
+						} elseif (
+							false !== $check_is_full_url &&
+							! empty( $request_url ) &&
+							! empty( $un_trailing_slash_it_url ) &&
+							strpos( $request_url, $un_trailing_slash_it_url ) !== false &&
+							! empty( get_query_var( 'paged' ) ) &&
+							preg_match( '%\/page/[0-9]+%', $request_url ) &&
+							$un_trailing_slash_it_url . '/page/' . get_query_var( 'paged' ) === untrailingslashit( $request_url )
+						) {
 							return;
 						}
 					}

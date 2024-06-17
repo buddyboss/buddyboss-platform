@@ -174,6 +174,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
 				$tabs[ $key ]['position'] = $item['position'];
+				$tabs[ $key ]['slug']     = $item['slug'];
 			}
 		}
 
@@ -188,7 +189,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_video_privacy() {
-		$privacy = buddypress()->video->visibility_levels;
+		$privacy = apply_filters( 'bp_video_get_visibility_levels', buddypress()->video->visibility_levels );
 		$retval  = array();
 
 		if ( ! empty( $privacy ) ) {

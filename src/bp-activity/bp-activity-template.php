@@ -283,9 +283,13 @@ function bp_has_activities( $args = '' ) {
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
 			'filter_query'      => false,        // Advanced filtering.  See BP_Activity_Query for format.
 
+			// Pinned post.
+			'pin_type'          => '',           // Show pinned post for type of feed - group, activity.
+
 			// Searching.
 			'search_terms'      => $search_terms_default,
 			'update_meta_cache' => true,
+			'status'            => bb_get_activity_published_status(),
 		),
 		'has_activities'
 	);
@@ -349,6 +353,11 @@ function bp_has_activities( $args = '' ) {
 	// argument. This prevents backpat errors with AJAX.
 	if ( ! empty( $r['include'] ) && ( 'ham_only' === $r['spam'] ) ) {
 		$r['spam'] = 'all';
+	}
+
+	// Pinned post.
+	if ( empty( $r['pin_type'] ) ) {
+		$r['pin_type'] = bb_activity_pin_type( $r );
 	}
 
 	/*
@@ -1472,7 +1481,6 @@ function bp_get_activity_content() {
 	$content = bp_get_activity_action() . ' ' . bp_get_activity_content_body();
 	// return apply_filters( 'bp_get_activity_content', $content );
 	return apply_filters_ref_array( 'bp_get_activity_content', array( $content, &$activities_template->activity ) );
-
 }
 
 /**
@@ -1900,38 +1908,69 @@ function bp_activity_comments( $args = '' ) {
 function bp_activity_get_comments( $args = '' ) {
 	global $activities_template;
 
-	if ( ! in_array( $activities_template->activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) && ! bp_activity_can_comment() ) {
+	if ( in_array( $activities_template->activity->component, array( 'blogs' ), true ) && ! bp_activity_can_comment() ) {
 		return false;
 	}
 
-	if ( empty( $activities_template->activity->children ) ) {
+	if ( empty( $activities_template->activity->all_child_count ) ) {
 		return false;
 	}
 
-	bp_activity_recurse_comments( $activities_template->activity );
+	$args = array(
+		'limit_comments'     => bp_is_single_activity() ? false : true,
+		'comment_load_limit' => bb_get_activity_comment_visibility(),
+	);
+	bp_activity_recurse_comments( $activities_template->activity, $args );
 }
 
 /**
  * Loops through a level of activity comments and loads the template for each.
- *
  * Note: The recursion itself used to happen entirely in this function. Now it is
  * split between here and the comment.php template.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.80
+ * Added new param as args to pass some arguments to the function.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @global object $activities_template    {@link BP_Activity_Template}
  *
  * @param object $comment The activity object currently being recursed.
+ * @param array  $args {
+ * Array of arguments.
+ *
+ * @type bool   $limit_comments         Limit comments loading or not Default: false.
+ * @type int    $comment_load_limit     The number of comments to load. Default: 0.
+ * @type int    $parent_comment_id      The ID of the parent comment.
+ * @type int    $main_activity_id       The ID of the main activity.
+ * @type bool   $is_ajax_load_more      Whether the comments are being loaded via AJAX.
+ * @type string $last_comment_timestamp The timestamp of the last comment. Default: empty string.
+ * }
+ *
  * @return bool|string
  */
-function bp_activity_recurse_comments( $comment ) {
+function bp_activity_recurse_comments( $comment, $args = array() ) {
 	global $activities_template;
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'limit_comments'         => false,
+			'comment_load_limit'     => 0,
+			'parent_comment_id'      => 0,
+			'main_activity_id'       => 0,
+			'is_ajax_load_more'      => false,
+			'last_comment_timestamp' => '',
+			'last_comment_id'        => 0,
+			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+		),
+		'bb_activity_recurse_comments'
+	);
 
 	if ( empty( $comment ) ) {
 		return false;
 	}
 
-	if ( empty( $comment->children ) ) {
+	if ( empty( $comment->all_child_count ) ) {
 		return false;
 	}
 
@@ -1942,28 +1981,88 @@ function bp_activity_recurse_comments( $comment ) {
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_start_ul', '<ul>' );
+	if ( ! $r['is_ajax_load_more'] ) {
+		if (
+			false !== $r['limit_comments'] &&
+			0 !== $r['comment_load_limit'] &&
+			(
+				$comment->top_level_count > $r['comment_load_limit']
+			)
+		) {
+			echo '<a href="javascript:void(0);" class="view-more-comments">' . esc_html__( 'View more comments', 'buddyboss' ) . '</a>';
+		}
 
+		/**
+		 * Filters the start of nested comment list in the activity.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 *
+		 * @param string $output The HTML output of the start of the UL element.
+		 */
+		echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+	}
+
+	$comment_loaded_count = 0;
 	foreach ( (array) $comment->children as $comment_child ) {
 
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment_loaded_count === $r['comment_load_limit']
+			)
+		) {
+			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
+				$view_more_text = __( 'View more replies', 'buddyboss' );
+				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
+			} else {
+				$view_more_text = __( 'View more comments', 'buddyboss' );
+				$view_more_icon = '';
+			}
+
+			$hidden_class = '';
+			if ( ! $r['is_ajax_load_more'] ) {
+				$hidden_class = 'acomments-view-more--hide';
+			}
+
+			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . $view_more_icon . esc_html( $view_more_text ) . '</li>';
+			break;
+		}
 		// Put the comment into the global so it's available to filters.
 		$activities_template->activity->current_comment = $comment_child;
 
 		$template = bp_locate_template( 'activity/comment.php', false, false );
 
-		load_template( $template, false );
+		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment->id === $comment_child->secondary_item_id ||
+				$comment->item_id === $comment->secondary_item_id ||
+				in_array( $comment->component, array( 'groups', 'blogs' ), true )
+			)
+		) {
+			// First level comments.
+			$comment_template_args['show_replies'] = false;
+		}
+
+		load_template( $template, false, $comment_template_args );
 
 		unset( $activities_template->activity->current_comment );
+
+		++$comment_loaded_count;
 	}
 
-	/**
-	 * Filters the closing tag for the template that list activity comments.
-	 *
-	 * @since BuddyPress  1.6.0
-	 *
-	 * @param string $value Closing tag for the HTML markup to use.
-	 */
-	echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	if ( ! $r['is_ajax_load_more'] ) {
+
+		/**
+		 * Filters the closing tag for the template that list activity comments.
+		 *
+		 * @since BuddyPress  1.6.0
+		 *
+		 * @param string $value Closing tag for the HTML markup to use.
+		 */
+		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	}
 }
 
 /**
@@ -2156,9 +2255,13 @@ function bp_get_activity_comment_date_recorded() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @param string|bool Date for the activity comment currently being displayed.
+	 * @since BuddyBoss 2.5.80
+	 * Updated param.
+	 *
+	 * @param string|bool string|bool $date_recorded Time since the activity was recorded,
+	 *                    in the form "%s ago". False on failure.
 	 */
-	return apply_filters( 'bp_activity_comment_date_recorded', bp_core_time_since( bp_get_activity_comment_date_recorded_raw() ) );
+	return apply_filters( 'bp_activity_comment_date_recorded', bp_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -2241,22 +2344,35 @@ function bp_activity_comment_content() {
  * comments only.
  *
  * @since BuddyPress 1.5.0
+ * @since BuddyBoss 2.4.40 Added $activity_comment_id parameter to get activity comment content.
  *
- * @global object $activities_template {@link BP_Activity_Template}
+ * @param int $activity_comment_id Activity comment ID.
  *
  * @return string $content The content of the current activity comment.
+ * @global object $activities_template {@link BP_Activity_Template}
  */
-function bp_get_activity_comment_content() {
+function bp_get_activity_comment_content( $activity_comment_id = 0 ) {
 	global $activities_template;
 
+	$activity_comment = new stdClass();
+	if ( ! empty( $activity_comment_id ) ) {
+		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
+	}
+
+	// check activity comment exists.
+	if ( empty( $activity_comment->id ) ) {
+		return '';
+	}
+
 	// scrape off activity content if it contain empty characters only
-	if ( in_array( $activities_template->activity->current_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
-		$activities_template->activity->current_comment->content = '';
+	if ( in_array( $activity_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
+		$activity_comment->content = '';
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
-	// $content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );
-	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activities_template->activity->current_comment->content, &$activities_template->activity->current_comment ) );
+	$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activity_comment->content, &$activity_comment ) );
 
 	/**
 	 * Filters the content of the current activity comment.
@@ -2297,10 +2413,7 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 	}
 
-	// Get the count using the purpose-built recursive function.
-	$count = ! empty( $activities_template->activity->children )
-		? bp_activity_recurse_comment_count( $activities_template->activity )
-		: 0;
+	$count = $activities_template->activity->all_child_count ?? 0;
 
 	/**
 	 * Filters the activity comment count.
@@ -2332,7 +2445,7 @@ function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
 	// Loop through children and recursively count comments.
 	if ( ! empty( $comment->children ) ) {
 		foreach ( (array) $comment->children as $comment ) {
-			$new_count++;
+			++$new_count;
 			$new_count = bp_activity_recurse_comment_count( $comment, $new_count );
 		}
 	}
@@ -2616,12 +2729,18 @@ function bp_activity_favorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
+ * @param int $activity_id The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity favorite link.
  */
-function bp_get_activity_favorite_link() {
-	global $activities_template;
+function bp_get_activity_favorite_link( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		global $activities_template;
+
+		$activity_id = $activities_template->activity->id;
+	}
 
 	/**
 	 * Filters the activity favorite link.
@@ -2630,7 +2749,7 @@ function bp_get_activity_favorite_link() {
 	 *
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activities_template->activity->id . '/' ), 'mark_favorite' ) );
+	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_id . '/' ), 'mark_favorite' ) );
 }
 
 /**
@@ -2647,12 +2766,18 @@ function bp_activity_unfavorite_link() {
  *
  * @since BuddyPress 1.2.0
  *
+ * @param int $activity_id The activity ID.
  * @global object $activities_template {@link BP_Activity_Template}
  *
  * @return string The activity unfavorite link.
  */
-function bp_get_activity_unfavorite_link() {
-	global $activities_template;
+function bp_get_activity_unfavorite_link( $activity_id = 0 ) {
+
+	if ( empty( $activity_id ) ) {
+		global $activities_template;
+
+		$activity_id = $activities_template->activity->id;
+	}
 
 	/**
 	 * Filters the activity unfavorite link.
@@ -2661,7 +2786,7 @@ function bp_get_activity_unfavorite_link() {
 	 *
 	 * @param string $value Constructed link for unfavoriting the activity comment.
 	 */
-	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activities_template->activity->id . '/' ), 'unmark_favorite' ) );
+	return apply_filters( 'bp_get_activity_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_id . '/' ), 'unmark_favorite' ) );
 }
 
 /**
@@ -2714,8 +2839,31 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
-	if ( '0' !== bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true ) ) {
+	if ( bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activities_template->activity->id ) ) {
+		$class .= ' bb-closed-comments';
+	}
+
+	$activity_metas    = bb_activity_get_metadata( bp_get_activity_id() );
+	$link_embed        = $activity_metas['_link_embed'][0] ?? '';
+	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
+
+	if (
+		'0' !== $link_embed ||
+		! empty( $link_preview_data )
+	) {
 		$class .= ' wp-link-embed';
+	}
+
+	if ( ! empty( $activities_template->pinned_id ) && bp_get_activity_id() === (int) $activities_template->pinned_id ) {
+		$class .= ' bb-pinned';
+	}
+
+	if ( bb_user_has_mute_notification( bp_get_activity_id(), bp_loggedin_user_id() ) ) {
+		$class .= ' bb-muted';
+	}
+
+	if ( 'groups' === $activities_template->activity->component ) {
+		$class .= ' group-' . $activities_template->activity->item_id;
 	}
 
 	/**
@@ -2729,7 +2877,6 @@ function bp_get_activity_css_class() {
 }
 
 /**
- *
  * Output the activity comment CSS class.
  *
  * @since BuddyBoss 1.0.0
@@ -2747,14 +2894,29 @@ function bp_activity_comment_css_class() {
  */
 function bp_get_activity_comment_css_class() {
 
-	$class = ' comment-item';
+	$class = ' comment-item activity-comment';
 
 	// Fall back on current comment in activity loop.
 	$comment_depth = bp_activity_get_comment_depth();
 
 	// Threading is turned on, so check the depth.
-	if ( get_option( 'thread_comments' ) ) {
-		$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+	if ( 'blogs' === bp_get_activity_object_name() ) {
+		if ( get_option( 'thread_comments' ) ) {
+			$class .= ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+		}
+	} elseif ( bb_is_activity_comment_threading_enabled() ) {
+		$class .= ( $comment_depth > bb_get_activity_comment_threading_depth() ) ? ' detached-comment-item' : '';
+	}
+
+	// Has children's.
+	$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
+		array(
+			'spam'     => 'ham_only',
+			'activity' => bp_activity_current_comment(),
+		)
+	);
+	if ( ! empty( $comments_count['all_child_count'] ) > 0 ) {
+		$class .= ' has-child-comments';
 	}
 
 	return apply_filters( 'bp_get_activity_comment_css_class', $class );
@@ -3096,38 +3258,45 @@ function bp_activity_can_comment_reply( $comment = false ) {
  */
 function bp_activity_can_favorite() {
 
+	$retval = is_user_logged_in() && bb_is_reaction_activity_posts_enabled();
+
 	/**
-	 * Filters whether or not users can favorite activity items.
+	 * Filters whether users can favorite activity items.
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @param bool $value Whether or not favoriting is enabled.
+	 * @param bool $value Whether favoriting is enabled.
 	 */
-	return apply_filters( 'bp_activity_can_favorite', true );
+	return apply_filters( 'bp_activity_can_favorite', $retval );
 }
 
 /**
  * Output the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @see bp_get_total_favorite_count_for_user() for description of parameters.
+ * @param int    $user_id       See {@link bp_get_total_favorite_count_for_user()}.
+ * @param string $activity_type Activity type.
  *
- * @param int $user_id See {@link bp_get_total_favorite_count_for_user()}.
+ * @see   bp_get_total_favorite_count_for_user() for description of parameters.
  */
-function bp_total_favorite_count_for_user( $user_id = 0 ) {
-	echo bp_get_total_favorite_count_for_user( $user_id );
+function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
+	echo bp_get_total_favorite_count_for_user( $user_id, $activity_type );
 }
 
 /**
  * Return the total favorite count for a specified user.
  *
  * @since BuddyPress 1.2.0
+ * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
  *
- * @param int $user_id ID of user being queried. Default: displayed user ID.
+ * @param int    $user_id       ID of user being queried. Default: displayed user ID.
+ * @param string $activity_type Activity type.
+ *
  * @return int The total favorite count for the specified user.
  */
-function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
+function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
 	$retval = false;
 
 	if ( bp_activity_can_favorite() ) {
@@ -3138,7 +3307,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 
 		// Get user meta if user ID exists.
 		if ( ! empty( $user_id ) ) {
-			$retval = bp_activity_total_favorites_for_user( $user_id );
+			$retval = bp_activity_total_favorites_for_user( $user_id, $activity_type );
 		}
 	}
 
@@ -3147,11 +3316,13 @@ function bp_get_total_favorite_count_for_user( $user_id = 0 ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
+	 * @since BuddyBoss 2.5.20 Added `$activity_type` property to indicate whether the current ID is activity or comment.
 	 *
-	 * @param int|bool $retval  Total favorite count for a user. False on no favorites.
-	 * @param int      $user_id ID of the queried user.
+	 * @param int|bool $retval        Total favorite count for a user. False on no favorites.
+	 * @param int      $user_id       ID of the queried user.
+	 * @param string   $activity_type Activity type.
 	 */
-	return apply_filters( 'bp_get_total_favorite_count_for_user', $retval, $user_id );
+	return apply_filters( 'bp_get_total_favorite_count_for_user', $retval, $user_id, $activity_type );
 }
 
 /**
@@ -4014,15 +4185,17 @@ function bp_get_follower_ids( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_followers( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_followers( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_follower_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4054,15 +4227,17 @@ function bp_get_following_ids( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'user_id' => bp_displayed_user_id(),
+			'user_id'  => bp_displayed_user_id(),
+			'page'     => false,
+			'per_page' => false,
 		)
 	);
 
-	$ids = implode( ',', (array) bp_get_following( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_following( $r ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_get_following_ids', $ids, $r['user_id'], $r );
 }
 
 /**
@@ -4201,3 +4376,157 @@ function bp_get_activity_entry_css_class() {
 	return apply_filters( 'bp_get_activity_entry_css_class', $class );
 }
 
+/**
+ * Determine if the current user can edit an activity comment item.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
+ * @param bool                       $privacy_edit     Optional. True if editing privacy.
+ *
+ * @return bool True if can edit, false otherwise.
+ */
+function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_edit = false ) {
+
+	// Try to use current activity comment if none was passed.
+	if ( empty( $activity_comment ) ) {
+		$activity_comment = bp_activity_current_comment();
+	}
+
+	// Assume the user cannot edit the activity item.
+	$can_edit = false;
+
+	// Only logged in users can edit activity comment and Activity must be of type 'activity_update', 'activity_comment'.
+	if (
+		is_user_logged_in() &&
+		in_array( $activity_comment->type, array( 'activity_update', 'activity_comment' ), true )
+	) {
+
+		// Users are allowed to edit their own activity.
+		if ( isset( $activity_comment->user_id ) && ( bp_loggedin_user_id() === $activity_comment->user_id ) ) {
+			$can_edit = true;
+		}
+
+		// Viewing a single item, and this user is an admin of that item.
+		if ( bp_is_single_item() && bp_is_item_admin() ) {
+			$can_edit = true;
+		}
+	}
+
+	if ( $can_edit && ! $privacy_edit ) {
+
+		// Check activity comment edit time expiration.
+		$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
+		$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
+		$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
+
+		// Checking if expire time still greater than current time.
+		if ( - 1 !== $activity_comment_edit_time && $activity_comment_edit_expire_time <= $bp_dd_get_time ) {
+			$can_edit = false;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an activity comment item.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param bool   $can_edit         Whether the user can edit the item.
+	 * @param object $activity_comment Current activity item object.
+	 */
+	return (bool) apply_filters( 'bb_activity_comment_user_can_edit', $can_edit, $activity_comment );
+}
+
+/**
+ * Determine whether favorites are allowed.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return bool
+ */
+function bb_activity_comment_can_favorite() {
+
+	$retval = is_user_logged_in() && bb_is_reaction_activity_comments_enabled();
+
+	/**
+	 * Filters whether users can favorite activity comment items.
+	 *
+	 * @since BuddyBoss 2.5.20
+	 *
+	 * @param bool $value Whether comment favoriting is enabled.
+	 */
+	return (bool) apply_filters( 'bb_activity_comment_can_favorite', $retval );
+}
+
+/**
+ * Return whether the current activity comment is in a current user's favorites.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return bool
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ */
+function bb_get_activity_comment_is_favorite() {
+	/**
+	 * Filters whether the current activity comment item is in the current user's favorites.
+	 *
+	 * @since BuddyBoss 2.5.20
+	 *
+	 * @param bool $value Whether the current activity item is in the current user's favorites.
+	 */
+	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' ) );
+}
+
+/**
+ * Return the activity comment favorite link.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param int $activity_comment_id The activity comment ID.
+ *
+ * @return string The activity favorite link.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ */
+function bb_get_activity_comment_favorite_link( $activity_comment_id = 0 ) {
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+
+	/**
+	 * Filters the activity comment favorite link.
+	 *
+	 * @since BuddyBoss 2.5.20
+	 *
+	 * @param string $value Constructed link for favoriting the activity comment.
+	 */
+	return apply_filters( 'bb_get_activity_comment_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activity_comment_id . '/' ), 'mark_favorite' ) );
+}
+
+/**
+ * Return the activity comment unfavorite link.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param int $activity_comment_id The activity comment ID.
+ *
+ * @return string The activity comment unfavorite link.
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ */
+function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
+
+	if ( empty( $activity_comment_id ) ) {
+		$activity_comment_id = bp_get_activity_comment_id();
+	}
+	/**
+	 * Filters the activity comment unfavorite link.
+	 *
+	 * @since BuddyBoss 2.5.20
+	 *
+	 * @param string $value Constructed link for unfavoriting the activity comment.
+	 */
+	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
+}

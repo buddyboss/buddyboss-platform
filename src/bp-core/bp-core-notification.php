@@ -16,7 +16,7 @@ add_action( 'bb_core_before_install', 'bb_core_default_install_emails' );
 /**
  * Before install load the notification registration.
  *
- * @since buddyboss 1.9.3
+ * @since BuddyBoss 1.9.3
  *
  * @param array $default_components Default component lists.
  */
@@ -98,4 +98,16 @@ function bb_core_default_install_emails( $default_components ) {
 
 		BP_Messages_Notification::instance();
 	}
+
+	// Called Posts Notification class.
+	if ( ! class_exists( 'BB_Post_Notification' ) ) {
+
+		// Load Messages notification file.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-post-notification.php' ) ) {
+			require buddypress()->plugin_dir . 'bp-core/classes/class-bb-post-notification.php';
+		}
+
+		BB_Post_Notification::instance();
+	}
+
 }

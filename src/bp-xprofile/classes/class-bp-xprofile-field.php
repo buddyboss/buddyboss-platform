@@ -233,7 +233,7 @@ class BP_XProfile_Field {
 				return false;
 			}
 
-			wp_cache_add( $id, $field, 'bp_xprofile_fields' );
+			wp_cache_set( $id, $field, 'bp_xprofile_fields' );
 		}
 
 		$this->fill_data( $field );
@@ -434,9 +434,9 @@ class BP_XProfile_Field {
 		$this->parent_id    = apply_filters( 'xprofile_field_parent_id_before_save', $this->parent_id, $this->id );
 		$this->type         = apply_filters( 'xprofile_field_type_before_save', $this->type, $this->id );
 		$this->name         = apply_filters( 'xprofile_field_name_before_save', $this->name, $this->id );
-		$this->description  = apply_filters( 'xprofile_field_description_before_save', $this->description, $this->id );
+		$this->description  = apply_filters( 'xprofile_field_description_before_save', isset( $this->description ) ? $this->description : '', $this->id );
 		$this->is_required  = apply_filters( 'xprofile_field_is_required_before_save', $this->is_required, $this->id );
-		$this->order_by     = apply_filters( 'xprofile_field_order_by_before_save', $this->order_by, $this->id );
+		$this->order_by     = apply_filters( 'xprofile_field_order_by_before_save', isset( $this->order_by ) ? $this->order_by : '', $this->id );
 		$this->field_order  = apply_filters( 'xprofile_field_field_order_before_save', $this->field_order, $this->id );
 		$this->option_order = apply_filters( 'xprofile_field_option_order_before_save', $this->option_order, $this->id );
 		$this->can_delete   = apply_filters( 'xprofile_field_can_delete_before_save', $this->can_delete, $this->id );
@@ -1124,11 +1124,12 @@ class BP_XProfile_Field {
 
 		// Sort member_type matches in arrays, keyed by field_id.
 		foreach ( $mt_meta as $_mt_meta ) {
-			if ( ! isset( $fields[ $_mt_meta->object_id ] ) ) {
+			if ( isset( $_mt_meta->object_id ) && ! isset( $fields[ $_mt_meta->object_id ] ) ) {
 				$fields[ $_mt_meta->object_id ] = array();
 			}
-
-			$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
+			if ( isset( $_mt_meta->meta_value ) ) {
+				$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
+			}
 		}
 
 		// Add temp null member type before add field to register page from the $member_types array.
@@ -1582,7 +1583,7 @@ class BP_XProfile_Field {
 						<th><?php _e( 'Instructions', 'buddyboss' ); ?></th>
 						<td>
 							<textarea name="description" id="description" rows="6"
-									  cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
+									  cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
 							<p class="description"><?php _e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
 						</td>
 					</tr>

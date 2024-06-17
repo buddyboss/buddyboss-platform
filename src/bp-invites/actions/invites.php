@@ -56,20 +56,31 @@ function bp_member_invite_submit() {
 		die();
 	}
 
-	$invite_correct_array = array();
-	$invite_wrong_array   = array();
-	$invite_exists_array  = array();
+	$invite_correct_array    = array();
+	$invite_wrong_array      = array();
+	$invite_exists_array     = array();
+	$invite_restricted_array = array();
+	$duplicate_email_inputs  = array();
+
 	foreach ( $_POST['email'] as $key => $value ) {
+
+		// Ignore duplicate email input.
+		if ( in_array( $_POST['email'][ $key ][0], $duplicate_email_inputs, true ) ) {
+			continue;
+		}
+		$duplicate_email_inputs[] = strtolower( trim( $_POST['email'][ $key ][0] ) );
 
 		if ( '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) {
 			if ( email_exists( (string) $_POST['email'][ $key ][0] ) ) {
 				$invite_exists_array[] = $_POST['email'][ $key ][0];
-			} else {
+			} elseif ( bb_is_allowed_register_email_address( $_POST['email'][ $key ][0] ) ) {
 				$invite_correct_array[] = array(
 					'name'        => $_POST['invitee'][ $key ][0],
 					'email'       => $_POST['email'][ $key ][0],
 					'member_type' => ( isset( $_POST['member-type'][ $key ][0] ) && ! empty( $_POST['member-type'][ $key ][0] ) ) ? $_POST['member-type'][ $key ][0] : '',
 				);
+			} else {
+				$invite_restricted_array[] = $_POST['email'][ $key ][0];
 			}
 		} else {
 			$invite_wrong_array[] = array(
@@ -187,7 +198,7 @@ function bp_member_invite_submit() {
 	}
 
 	$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
-	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email=' . implode( ', ', $query_string ) . '&exists=' . implode( ', ', $invite_exists_array ) . '&failed=' . implode( ',', array_filter( $failed_invite ) ) );
+	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email=' . urlencode( implode( ', ', $query_string ) ) . '&exists=' . urlencode( implode( ', ', $invite_exists_array ) ) . '&restricted=' . urlencode( implode( ', ', $invite_restricted_array ) ) . '&failed=' . urlencode( implode( ',', array_filter( $failed_invite ) ) ) );
 
 }
 add_action( 'bp_actions', 'bp_member_invite_submit' );

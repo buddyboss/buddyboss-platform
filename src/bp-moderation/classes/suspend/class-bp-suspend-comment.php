@@ -99,7 +99,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	}
 
 	/**
-	 * Hide related content of activity
+	 * Hide related content of comment.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
@@ -108,7 +108,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_comment( $comment_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $comment_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -124,25 +128,37 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $comment_id;
 
 		if ( $this->background_disabled ) {
 			$this->hide_related_content( $comment_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $comment_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $comment_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $comment_id, $hide_sitewide, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
 	/**
-	 * Un-hide related content of activity
+	 * Un-hide related content of comment.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
@@ -152,7 +168,11 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_comment( $comment_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $comment_id ) ) {
+			return;
+		}
 
 		$suspend_args = bp_parse_args(
 			$args,
@@ -180,20 +200,32 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $comment_id;
 
 		if ( $this->background_disabled ) {
 			$this->unhide_related_content( $comment_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $comment_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $comment_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $comment_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -502,7 +534,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	public function bb_blocked_comments_pre_query( $comment_data, $query ) {
 		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'widget_comments_args' ) ) {
 			global $wpdb;
-			$comment_data['join']  .= ' ' . $this->exclude_joint_query( $wpdb->prefix . 'comments.user_id', BP_Moderation_Members::$moderation_type );
+			$comment_data['join']  .= ' ' . $this->exclude_joint_query( $wpdb->comments . '.user_id', BP_Moderation_Members::$moderation_type );
 			$comment_data['where'] .= ' AND ' . $this->exclude_where_query();
 		}
 

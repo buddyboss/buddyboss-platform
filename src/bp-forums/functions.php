@@ -457,9 +457,9 @@ function bbp_remove_group_id_from_forum( $forum_id = 0, $group_id = 0 ) {
 	$group_ids = bbp_get_forum_group_ids( $forum_id );
 
 	// Maybe update the groups forums.
-	if ( in_array( $group_id, $group_ids ) ) {
+	if ( in_array( $group_id, $group_ids, true ) ) {
 		$group_ids = array_diff( array_values( $group_ids ), (array) $group_id );
-
+		bb_update_last_group_forum_associations( $group_id, $forum_id );
 		return bbp_update_forum_group_ids( $forum_id, $group_ids );
 	}
 }
@@ -485,9 +485,9 @@ function bbp_remove_forum_id_from_group( $group_id = 0, $forum_id = 0 ) {
 	$forum_ids = bbp_get_group_forum_ids( $group_id );
 
 	// Maybe update the groups forums.
-	if ( in_array( $forum_id, $forum_ids ) ) {
+	if ( in_array( $forum_id, $forum_ids, true ) ) {
 		$forum_ids = array_diff( array_values( $forum_ids ), (array) $forum_id );
-
+		bb_update_last_group_forum_associations( $group_id, $forum_id );
 		return bbp_update_group_forum_ids( $group_id, $forum_ids );
 	}
 }
@@ -1033,6 +1033,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums'] = array(
 		'params'  => array(
 			'bb_current_user_id' => $user_id,
+			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
 			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
@@ -1115,4 +1116,184 @@ function bb_is_forum_group_forum( $forum_id = 0 ) {
 	$retval = function_exists( 'bbp_is_group_forums_active' ) && function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_group_forums_active() && bbp_is_forum_group_forum( $forum_id );
 
 	return (bool) apply_filters( 'bb_is_forum_group_forum', $retval, $forum_id );
+}
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss 2.3.60
+ */
+function bb_forums_link_preview_parse_url() {
+	// Get URL.
+	$url = isset( $_POST['url'] ) ? $_POST['url'] : ''; // phpcs:ignore
+
+	// Check if URL is validated.
+	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+	}
+
+	// Get URL parsed data.
+	$parse_url_data = bp_core_parse_url( $url );
+
+	// If empty data then send error.
+	if ( empty( $parse_url_data ) ) {
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+	}
+
+	// send json success.
+	wp_send_json( $parse_url_data );
+}
+
+add_action( 'wp_ajax_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+if ( bbp_allow_anonymous() ) {
+	add_action( 'wp_ajax_nopriv_bb_forums_parse_url', 'bb_forums_link_preview_parse_url' );
+}
+
+/**
+ * Backup the last group forum associations.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $group_id Group ID.
+ * @param int $forum_id Forum ID.
+ */
+function bb_update_last_group_forum_associations( $group_id = 0, $forum_id = 0 ) {
+	if ( empty( $forum_id ) ) {
+		return;
+	}
+	$forum_id = bbp_get_forum_id( $forum_id );
+
+	// Use current group if none is set.
+	if ( empty( $group_id ) ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	// Get the values to backup.
+	$group_ids = array_filter( bbp_get_forum_group_ids( $forum_id ) );
+	$forum_ids = array_filter( bbp_get_group_forum_ids( $group_id ) );
+
+	if (
+		in_array( $group_id, $group_ids, true ) &&
+		in_array( $forum_id, $forum_ids, true )
+	) {
+		// Save the backups.
+		update_post_meta( $forum_id, '_last_bbp_group_ids', $group_ids );
+		groups_update_groupmeta( $group_id, 'last_forum_id', $forum_id );
+	}
+}
+
+/**
+ * Run migration for resolving the issue related to the forums.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @param int $raw_db_version Raw database version.
+ */
+function bb_forums_migration( $raw_db_version ) {
+	global $wpdb, $bb_background_updater;
+
+	$is_already_run = get_transient( 'bb_forums_migration' );
+
+	if ( $is_already_run ) {
+		return;
+	}
+
+	if ( bp_is_active( 'groups' ) && $raw_db_version < 20674 ) { // Release version 2.4.50.
+
+		/**
+		 * Migrate orphan group's forum discussion notification subscriptions.
+		 *
+		 * @since BuddyBoss 2.4.50
+		 */
+		$subscription_tbl = BB_Subscriptions::get_subscription_tbl();
+
+		// phpcs:ignore
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT DISTINCT secondary_item_id FROM {$subscription_tbl} WHERE type = %s ORDER BY id DESC",
+				'topic',
+			)
+		);
+
+		if ( ! empty( $results ) ) {
+			$min_count = apply_filters( 'bb_update_group_discussion_subscription_count', 10 );
+			if ( count( $results ) > $min_count ) {
+				foreach ( array_chunk( $results, $min_count ) as $chunk ) {
+					$bb_background_updater->push_to_queue(
+						array(
+							'type'     => 'migration',
+							'group'    => 'bb_forums_notification_subscriptions',
+							'priority' => 5,
+							'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+							'args'     => array( $chunk ),
+						)
+					);
+					$bb_background_updater->save()->schedule_event();
+				}
+			} else {
+				$bb_background_updater->push_to_queue(
+					array(
+						'type'     => 'migration',
+						'group'    => 'bb_forums_notification_subscriptions',
+						'priority' => 5,
+						'callback' => 'bb_update_groups_discussion_subscriptions_background_process',
+						'args'     => array( $results ),
+					)
+				);
+
+				$bb_background_updater->save()->schedule_event();
+			}
+		}
+	}
+
+	set_transient( 'bb_forums_migration', true, HOUR_IN_SECONDS );
+}
+
+/**
+ * Function to run discussion notification subscription within background process.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @param array $subscriptions Subscription results.
+ *
+ * @return void
+ */
+function bb_update_groups_discussion_subscriptions_background_process( $subscriptions ) {
+
+	if ( empty( $subscriptions ) ) {
+		return;
+	}
+
+	// Remove orphan forum topics notification subscriptions if user is not a member of related private/hidden group.
+	foreach ( $subscriptions as $subscription ) {
+		$forum_id  = $subscription->secondary_item_id;
+		$group_ids = bbp_get_forum_group_ids( $forum_id );
+		$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
+
+		if (
+			! empty( $group_id ) &&
+			(
+				bbp_is_forum_private( $forum_id ) ||
+				bbp_is_forum_hidden( $forum_id )
+			)
+		) {
+			$topics = BB_Subscriptions::get(
+				array(
+					'type'              => 'topic',
+					'secondary_item_id' => $forum_id,
+				)
+			);
+
+			if ( empty( $topics['subscriptions'] ) ) {
+				continue;
+			}
+
+			foreach ( $topics['subscriptions'] as $topic ) {
+				if ( ! groups_is_user_member( $topic->user_id, $group_id ) ) {
+					bbp_remove_user_topic_subscription( $topic->user_id, $topic->item_id );
+				}
+			}
+		}
+	}
 }

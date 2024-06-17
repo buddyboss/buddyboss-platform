@@ -218,23 +218,7 @@
 		right: 0;
 		bottom: 0;
 		width: 36%;
-
-		@media screen and (max-width: 544px) {
-			position: relative;
-		}
 	}
-
-	@media screen and (max-width: 544px) {
-
-		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
-		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
-		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
-			position: static;
-			width: 100%;
-		}
-
-	}
-
 }
 
 .bb-activity-media-wrap.bb-media-length-4 {
@@ -276,19 +260,6 @@
 		top: initial;
 		bottom: 0;
 	}
-
-
-	@media screen and (max-width: 544px) {
-
-		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem,
-		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem,
-		.act-grid-1-1.bb-vertical-layout + .bb-activity-media-elem + .bb-activity-media-elem + .bb-activity-media-elem {
-			position: static;
-			width: 100%;
-		}
-
-	}
-
 }
 
 .bb-activity-media-wrap.bb-media-length-more {
@@ -601,24 +572,28 @@
 	}
 }
 
-.buddypress-wrap .bp-subnavs .component-navigation.video-nav,
-.buddypress-wrap .bp-subnavs .component-navigation.document-nav,
-.buddypress-wrap .bp-subnavs .component-navigation.media-nav {
+.buddypress-wrap .bp-subnavs .component-navigation {
 
-	li.selected.loading a:after {
-		content: "\ef30";
-		font-weight: 400;
-		font-family: "bb-icons"; /* stylelint-disable-line */
-		font-size: 20px;
-		line-height: 1;
-		margin-left: 5px;
-		text-align: center;
-		display: inline-block;
-		vertical-align: middle;
-		-webkit-animation: spin 2s infinite linear;
-		animation: spin 2s infinite linear;
+	li.selected.loading a {
+
+		&:after {
+			content: "\ef30";
+			font-weight: 400;
+			font-family: "bb-icons"; /* stylelint-disable-line */
+			font-size: 20px;
+			line-height: 1;
+			margin-left: 5px;
+			text-align: center;
+			display: inline-block;
+			vertical-align: middle;
+			-webkit-animation: spin 2s infinite linear;
+			animation: spin 2s infinite linear;
+		}
+
+		.count {
+			display: none;
+		}
 	}
-
 }
 
 .bb-item-cover-wrap {
@@ -685,6 +660,19 @@
 			visibility: visible;
 			opacity: 1;
 		}
+	}
+}
+
+#media-stream .media-list,
+#video-stream .video-list {
+
+	.bb-item-thumb {
+
+		&.loading.deleting {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+
 	}
 }
 
@@ -994,17 +982,6 @@ a.bb-close-model {
 
 		.acomment-meta {
 			font-size: 13px;
-			overflow: hidden;
-		}
-
-		.acomment-content {
-			border-left: 0;
-			margin: 0 0 0 51px;
-			padding: 0;
-
-			.bb-activity-media-wrap {
-				margin: 15px 0;
-			}
 		}
 
 		.action {
@@ -1014,9 +991,14 @@ a.bb-close-model {
 
 		form {
 			background: #fbfbfc;
-			margin: 0 -15px;
-			margin-right: 0;
-			padding: 15px 15px 0;
+
+			/*margin: 15px -15px;*/
+			padding: 15px 0 0;
+		}
+
+		.comment-item form {
+			padding-left: 0;
+			padding-right: 0;
 		}
 	}
 }
@@ -1862,6 +1844,22 @@ ul.bb-albums-list {
 	.media-list li .video-action-wrap {
 		display: none;
 	}
+
+	.media-list > li {
+
+		.bp-tooltip[data-bp-tooltip-pos="up"]:after {
+			transform: translate(-10px, 0);
+		}
+
+		.bp-tooltip[data-bp-tooltip-pos="up"]:before {
+			transform: translate(-5px, 0);
+		}
+
+		.bb-open-media-theatre,
+		.bb-open-video-theatre {
+			pointer-events: none;
+		}
+	}
 }
 
 .bb-model-close-button .bb-icon-close {
@@ -2019,24 +2017,24 @@ img.emoji,
 img.emojioneemoji {
 	display: inline-block;
 	margin: 3px;
-	width: 24px !important;
-	height: 24px !important;
+	width: 24px;
+	height: 24px;
 }
 
 .emojionearea-filters {
 
 	img.emoji,
 	img.emojioneemoji {
-		max-width: 20px !important;
-		max-height: 20px !important;
-		width: 20px !important;
-		height: auto !important;
+		max-width: 20px;
+		max-height: 20px;
+		width: 20px;
+		height: auto;
 	}
 
 	.emojionearea-filter-flags {
 
 		img.emojioneemoji {
-			max-width: 14px !important;
+			max-width: 14px;
 		}
 	}
 }
@@ -2306,10 +2304,11 @@ img.emojioneemoji {
 
 	.dz-error-message {
 		top: 96%;
-		left: inherit;
+		left: 50%;
 		right: inherit;
 		max-width: 350px;
 		min-width: 100%;
+		transform: translateX(-50%);
 	}
 
 	.dz-remove {
@@ -3259,6 +3258,11 @@ div.dropzone .dz-preview {
 		.hide {
 			display: none;
 		}
+
+		.bp-tooltip {
+			display: inline-block;
+			vertical-align: middle;
+		}
 	}
 
 	.media-folder_actions {
@@ -3355,6 +3359,13 @@ div.dropzone .dz-preview {
 						&.disabled-move a {
 							pointer-events: none;
 							opacity: 0.7;
+						}
+
+						&.disabled-move[data-balloon]:after {
+							content: attr(data-balloon);
+							white-space: normal;
+							max-width: 200px;
+							width: 100%;
 						}
 
 						a:before {
@@ -3677,6 +3688,10 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 		letter-spacing: -0.15px;
 		line-height: 1.1875;
 		width: auto;
+
+		.bp-tooltip {
+			display: inline-block;
+		}
 	}
 
 	.media-album_group_name a {
@@ -4005,6 +4020,27 @@ body.search-results.bb-template-v2 .search_results {
 
 		.bb-title {
 			width: auto;
+
+			&.loading {
+				position: relative;
+				padding-right: 30px;
+
+				&:after {
+					content: "\ef30";
+					font-weight: 400;
+					font-family: "bb-icons"; /* stylelint-disable-line */
+					font-size: 20px;
+					line-height: 1;
+					position: absolute;
+					right: 0;
+					top: 7px;
+					text-align: center;
+					display: inline-block;
+					vertical-align: middle;
+					-webkit-animation: spin 2s infinite linear;
+					animation: spin 2s infinite linear;
+				}
+			}
 		}
 	}
 
@@ -4067,6 +4103,25 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		flex-basis: 25%;
 	}
 
+}
+
+#bp-media-single-folder .bb-single-album-header .bb-title.loading {
+	position: relative;
+	padding-right: 30px;
+
+	&:after {
+		content: "\ef30";
+		font-weight: 400;
+		font-family: "bb-icons"; /* stylelint-disable-line */
+		font-size: 20px;
+		line-height: 1;
+		margin-left: 10px;
+		text-align: center;
+		display: inline-block;
+		vertical-align: middle;
+		-webkit-animation: spin 2s infinite linear;
+		animation: spin 2s infinite linear;
+	}
 }
 
 @media screen and (max-width: 1120px) {
@@ -4144,7 +4199,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 			.bp-dir-search-form {
-				border: 0;
 
 				.nouveau-search-submit {
 					opacity: 0;
@@ -4666,6 +4720,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			&:after {
 				content: "\ef30";
 				font-family: "bb-icons"; /* stylelint-disable-line */
+				font-weight: 400;
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -5007,13 +5062,27 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
-.directory.media .media-options,
-.directory.document .document-options,
-.directory.video .video-options {
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 0;
+body.buddyboss-theme {
+
+	&.directory.media .site-main,
+	&.directory.document .site-main,
+	&.directory.video .site-main {
+		position: relative;
+
+		.media-options,
+		.document-options,
+		.video-options {
+			position: absolute;
+			right: 0;
+			top: 0;
+			margin: 0;
+
+			@media screen and (max-width: 1024px) {
+				position: static;
+				margin: 0;
+			}
+		}
+	}
 }
 
 .directory.media .media-options,
@@ -5038,6 +5107,47 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	padding-left: 32px;
 	font-size: 14px;
 	height: 39px;
+	outline: 0;
+}
+
+.buddypress-wrap {
+
+	.bp-invites-search-form,
+	form.bp-dir-search-form,
+	form.bp-messages-search-form {
+
+		&:before {
+			content: "\ef10";
+			color: inherit;
+			font-family: bb-icons;
+			font-size: 17px;
+			opacity: 0.4;
+			position: absolute;
+			left: 9px;
+			top: 4px;
+		}
+
+		input[type="search"]::-webkit-search-cancel-button {
+			display: none;
+		}
+
+	}
+}
+
+#dir-activity-search-form {
+
+	#dir-activity-search-submit {
+		opacity: 0;
+	}
+
+	#dir-activity-search {
+		border: 0;
+		background-color: transparent;
+		outline: 0;
+		padding-left: 35px;
+		font-size: 14px;
+		height: 34px;
+	}
 }
 
 .directory.media,
@@ -5068,12 +5178,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 
 	@media screen and (max-width: 1024px) {
-		position: static;
-		margin: 0;
 
 		> * {
 			margin-bottom: 15px;
 			width: 100% !important;
+			display: inline-block;
+			box-sizing: border-box;
 		}
 
 		.subnav-filters .subnav-search {

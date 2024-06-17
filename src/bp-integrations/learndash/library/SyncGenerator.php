@@ -25,6 +25,7 @@ class SyncGenerator {
 	protected $bpGroupId;
 	protected $ldGroupId;
 	protected $syncMetaKey = '_sync_group_id';
+	protected $syncTo;
 
 	/**
 	 * Constructor
@@ -379,7 +380,6 @@ class SyncGenerator {
 		$this->syncingToLearndash(
 			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
-				$this->maybeRemoveAsLdUser( 'admin', $userId );
 				$this->promoteAsGroupLeader( $userId, 'admin', $remove );
 			}
 		);
@@ -404,7 +404,6 @@ class SyncGenerator {
 		$this->syncingToLearndash(
 			function () use ( $userId, $remove ) {
 				call_user_func_array( $this->getBpSyncFunction( 'mod' ), array( $userId, $this->ldGroupId, $remove ) );
-				$this->maybeRemoveAsLdUser( 'mod', $userId );
 				$this->promoteAsGroupLeader( $userId, 'mod', $remove );
 			}
 		);
@@ -743,7 +742,13 @@ class SyncGenerator {
 	 */
 	protected function addUserToBpGroup( $userId, $type, $remove ) {
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
-		$syncTo      = $this->getLdSyncToRole( $type );
+
+		$this->syncTo = $this->getLdSyncToRole( $type );
+
+		// ignore moderator in syncing as there's no moderator in learndash.
+		if ( 1 === $groupMember->is_mod && 'admin' === $this->syncTo ) {
+			return false;
+		}
 
 		if ( $remove ) {
 			if ( bp_is_active( 'messages' ) ) {
@@ -753,22 +758,11 @@ class SyncGenerator {
 			return $groupMember->remove();
 		}
 
-		$groupMember->group_id      = $this->bpGroupId;
-		$groupMember->user_id       = $userId;
-		$groupMember->is_admin      = 0;
-		$groupMember->is_mod        = 0;
-		$groupMember->is_confirmed  = 1;
-		$groupMember->date_modified = bp_core_current_time();
+		add_action( 'groups_member_before_save', array( $this, 'update_group_member_role' ), 10 );
 
-		if ( 'user' !== $syncTo ) {
-			$var               = "is_{$syncTo}";
-			$groupMember->$var = 1;
-		}
+		groups_join_group( $this->bpGroupId, $userId );
 
-		$groupMember->save();
-		if ( bp_is_active( 'messages' ) ) {
-			bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
-		}
+		remove_action( 'groups_member_before_save', array( $this, 'update_group_member_role' ), 10 );
 	}
 
 	/**
@@ -837,16 +831,18 @@ class SyncGenerator {
 		$bpGroup = groups_get_group( $groupId );
 
 		if ( ! empty( $ld_group_id ) ) {
-			wp_update_post(
-				array(
-					'ID'           => $ld_group_id,
-					'post_title'   => $bpGroup->name,
-					'post_author'  => $bpGroup->creator_id,
-					'post_content' => $bpGroup->description,
-					'post_status'  => 'publish',
-					'post_type'    => learndash_get_post_type_slug( 'group' ),
-				)
-			);
+			$ldGroup = get_post( $ld_group_id );
+			$args    = array();
+
+			if ( $bpGroup->name !== $ldGroup->post_title ) {
+				$args['post_title'] = $bpGroup->name;
+			}
+
+			// Update the LD group if it has above any changed.
+			if ( ! empty( $args ) ) {
+				$args['ID'] = $ld_group_id;
+				wp_update_post( $args );
+			}
 		}
 	}
 
@@ -864,25 +860,34 @@ class SyncGenerator {
 
 		if ( ! empty( $groupId ) ) {
 
+			$bb_group = groups_get_group( $groupId );
+			$args     = array();
+
 			// Get the bp parent group id associate with ld parent group.
 			$bp_parent_group_id = 0;
 			if ( ! empty( $ldGroup->post_parent ) ) {
-				$bp_parent_group_id = get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
+				$bp_parent_group_id = (int) get_post_meta( $ldGroup->post_parent, '_sync_group_id', true );
 			}
 
-			groups_create_group(
-				array(
-					'group_id'    => $groupId,
-					'creator_id'  => $ldGroup->post_author,
-					'name'        => $ldGroup->post_title ?: sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId ),
-					//'status'      => $settings->get( 'learndash.default_bp_privacy' ),
-					'description' => $ldGroup->post_content,
-					'slug'        => $ldGroup->post_name,
-					'parent_id'   => $bp_parent_group_id,
-				)
-			);
+			if ( isset( $bb_group->parent_id ) && $bp_parent_group_id !== $bb_group->parent_id ) {
+				$args['parent_id'] = ! empty( $bp_parent_group_id ) ? $bp_parent_group_id : 0;
+			}
 
-			groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+			// Check if group name is changed and get updated group name.
+			if ( isset( $bb_group->name ) && $ldGroup->post_title !== $bb_group->name ) {
+				$args['name'] = ! empty( $ldGroup->post_title ) ? $ldGroup->post_title : sprintf( __( 'For Social Group: %s', 'buddyboss' ), $this->ldGroupId );
+			}
+
+			if ( ! empty( $args ) ) {
+				$args['group_id'] = $groupId;
+				groups_create_group( $args );
+			}
+
+			$invite_status = groups_get_groupmeta( $groupId, 'invite_status', true );
+			if ( empty( $invite_status ) ) {
+				groups_update_groupmeta( $groupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
+			}
+
 		}
 
 		$this->setSyncGropuIds();
@@ -1006,5 +1011,21 @@ class SyncGenerator {
 		$user = new \WP_User( (int) $userId );
 		// Remove role
 		$user->remove_role( 'group_leader' );
+	}
+
+	/**
+	 * Update BB group member role.
+	 *
+	 * @since 2.4.40
+	 *
+	 * @param object $group_member Member item.
+	 *
+	 * @return void
+	 */
+	public function update_group_member_role( $group_member ) {
+		if ( 'user' !== $this->syncTo ) {
+			$var				= "is_{$this->syncTo}";
+			$group_member->$var = 1;
+		}
 	}
 }

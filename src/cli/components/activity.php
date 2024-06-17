@@ -130,20 +130,7 @@ class Activity extends BuddypressCommand {
 		}
 
 		if ( 'groups' === $r['component'] ) {
-			$group_id = $r['component'];
-
-			if ( ! is_numeric( $group_id ) ) {
-				$group_id = groups_get_id( $group_id );
-			}
-
-			// Get group object.
-			$group_obj = groups_get_group(
-				array(
-					'group_id' => $group_id,
-				)
-			);
-
-			$r['item-id'] = intval( $group_obj->id );
+			$r['item-id'] = $this->get_group_id_from_identifier( $r['item-id'] );
 		}
 
 		// If some data is not set, we have to generate it.
@@ -879,7 +866,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title ) . '</a>' );
+						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title, $post->ID ) . '</a>' );
 					}
 
 					if ( '' === $r['content'] ) {

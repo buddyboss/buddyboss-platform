@@ -334,7 +334,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		array(
 			'fields'      => 'ids',
 			'per_page'    => - 1,
-			'user_id'     => $user_id,
+			'user_id'     => bp_loggedin_user_id(),
 			'show_hidden' => true,
 		)
 	);
@@ -469,7 +469,10 @@ function groups_record_activity( $args = '' ) {
 		$activity = new BP_Activity_Activity( $args['id'] );
 
 		if ( ! empty( $activity->id ) ) {
-			$bp_activity_edit = true;
+
+			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+				$bp_activity_edit = true;
+			}
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $args['error_type'] ) {
@@ -489,18 +492,22 @@ function groups_record_activity( $args = '' ) {
 				'user_id'           => $activity->user_id,
 				'item_id'           => ! empty( $args['item_id'] ) ? $args['item_id'] : $activity->item_id,
 				'secondary_item_id' => $activity->secondary_item_id,
-				'recorded_time'     => $activity->date_recorded,
+				'recorded_time'     => ! empty( $args['recorded_time'] ) ? $args['recorded_time'] : $activity->date_recorded,
 				'hide_sitewide'     => $activity->hide_sitewide,
 				'is_spam'           => $activity->is_spam,
 				'privacy'           => $activity->privacy,
 				'error_type'        => ! empty( $args['error_type'] ) ? $args['error_type'] : $activity->error_type,
+				'status'            => ! empty( $args['status'] ) ? $args['status'] : bb_get_activity_published_status(),
 			);
 
-			/**
-			 * Addition from the BuddyBoss
-			 * Add meta to ensure that this activity has been edited.
-			 */
-			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			if ( bb_get_activity_scheduled_status() !== $activity->status ) {
+
+				/**
+				 * Addition from the BuddyBoss
+				 * Add meta to ensure that this activity has been edited.
+				 */
+				bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+			}
 
 		}
 	}
@@ -521,6 +528,7 @@ function groups_record_activity( $args = '' ) {
 			'hide_sitewide'     => $hide_sitewide,
 			'privacy'           => 'public',
 			'error_type'        => 'bool',
+			'status'            => bb_get_activity_published_status(),
 		),
 		'groups_record_activity'
 	);
@@ -794,8 +802,8 @@ add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity',
  * @return string
  */
 function bb_groups_get_join_sql_for_activity( $sql, $r ) {
-	global $wpdb;
-	$sql .= ' LEFT JOIN ' . $wpdb->prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
+	$bp_prefix = bp_core_get_table_prefix();
+	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
 
 	return $sql;
 }
@@ -811,13 +819,13 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
  * @return mixed
  */
 function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
-	$where_conditions['exclude_where'] = ' ( 
-		mt.meta_key = "activity_feed_status" AND 
-		( 
-			( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR 
-			( mt.meta_value = "admins" AND m.is_admin = "1" ) OR 
-			( mt.meta_value = "members" ) 
-		) 
+	$where_conditions['exclude_where'] = ' (
+		mt.meta_key = "activity_feed_status" AND
+		(
+			( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR
+			( mt.meta_value = "admins" AND m.is_admin = "1" ) OR
+			( mt.meta_value = "members" )
+		)
 	)';
 
 	return $where_conditions;

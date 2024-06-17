@@ -600,6 +600,12 @@ div.video-js {
 
 	}
 
+	.vjs-poster > img {
+		position: absolute;
+		object-fit: contain;
+		height: 100%;
+		width: 100%;
+	}
 }
 
 //Video more option dropdown in theater
@@ -713,7 +719,7 @@ div.video-js {
 	}
 }
 
-.bb-media-model-container .bb-media-info-section .bb-activity-video-wrap .vjs-control-bar {
+.activity-comments .bb-activity-video-wrap .vjs-control-bar {
 
 	.skip-5,
 	.vjs-time-control,
@@ -902,8 +908,9 @@ div.video-js {
 
 			&.act-grid-1-1,
 			&.act-grid-1-2 {
-				flex: 0 0 100% !important;
-				max-width: 100% !important;
+
+				/*flex: 0 0 100% !important;
+				max-width: 100% !important;*/
 
 				.bb-item-cover-wrap {
 					padding-top: 82.56% !important;
@@ -1844,6 +1851,10 @@ div.dropzone.dz-started {
 		}
 	}
 
+	.dz-preview.dz-processing:not(.dz-complete) .dz-details .dz-filename {
+		display: none;
+	}
+
 	div.dz-preview.dz-file-preview .dz-remove {
 		position: absolute;
 		bottom: 5px;
@@ -1918,6 +1929,14 @@ div.dropzone.dz-started {
 				top: 0;
 				left: 0;
 			}
+		}
+
+	}
+
+	.dz-preview.dz-file-preview.dz-has-thumbnail:not(.dz-error) {
+
+		.dz-details .dz-filename {
+			display: none;
 		}
 
 	}
@@ -2075,7 +2094,6 @@ div.dropzone.dz-started {
 
 		.dz-preview.dz-file-preview {
 			width: calc(50% - 11.5px);
-			margin: 0 5px 10px;
 
 			&:last-child {
 				margin-right: 0;

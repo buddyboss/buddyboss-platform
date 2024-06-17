@@ -1363,7 +1363,7 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 		$cover_src = '';
 	}
 
-	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $group_id );
+	return (bool) apply_filters( 'bp_attachments_get_group_has_cover_image', $cover_src, $group_id );
 }
 
 /**

@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.2.6
@@ -47,7 +54,8 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -55,7 +63,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the Subscription.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -79,7 +87,8 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::DELETABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -707,7 +716,7 @@ class BB_REST_Subscriptions_Endpoint extends WP_REST_Controller {
 			'secondary_item_id' => (int) $item->secondary_item_id,
 			'date_recorded'     => bp_rest_prepare_date_response( $item->date_recorded ),
 			'status'            => (bool) $item->status,
-			'title'             => $item->title,
+			'title'             => html_entity_decode( $item->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
 			'description_html'  => $item->description_html,
 			'parent_html'       => $item->parent_html,
 			'icon'              => $item->icon,

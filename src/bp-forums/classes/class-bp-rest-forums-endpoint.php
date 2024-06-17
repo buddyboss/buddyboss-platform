@@ -23,6 +23,13 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public $group;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -48,7 +55,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'args'                => $this->get_collection_params(),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -56,7 +64,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the forum.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -68,7 +76,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -133,7 +142,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $request['search'];
+			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -1492,5 +1501,42 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		) {
 			return array( 'participate' );
 		}
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string $content Topic or reply content.
+	 * @param int    $post_id Topic or reply id.
+	 *
+	 * @return string $content
+	 */
+	public function bp_rest_forums_remove_lazyload( $content, $post_id ) {
+		$link_embed = get_post_meta( $post_id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
+	}
+
+	/**
+	 * Sanitize a query argument used to pass some search terms.
+	 * Accepts a single parameter to be used for forums, topics, or replies.
+	 *
+	 * @param string $terms Search Term.
+	 *
+	 * @return string
+	 */
+	public function bbp_sanitize_search_request( $term ) {
+		$retval = ! empty( $term ) && is_string( $term ) ? urldecode( trim( $term ) ) : '';
+
+		// Filter & return.
+		return apply_filters( 'bbp_sanitize_search_request', $retval, $term );
 	}
 }

@@ -136,11 +136,24 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public function update_where_sql( $where, $suspend ) {
+		global $wpdb;
 		$this->alias = $suspend->alias;
 
-		$sql = $this->exclude_where_query();
+		// Remove has blocked/is blocked members discussion from widget.
+		$exclude_where = false;
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_topic_widget_settings_parse_args' ) ) {
+			$exclude_where = true;
+		}
+
+		// Remove has blocked members discussion from widget.
+		$sql = $this->exclude_where_query( $exclude_where );
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
+		}
+
+		if ( true === $exclude_where ) {
+			// Remove is blocked members discussion from widget.
+			$where['moderation_widget_forums'] = '( ' . $wpdb->posts . '.post_author NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
 		}
 
 		return $where;
@@ -284,14 +297,6 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	public function bb_subscriptions_moderation_where_conditions( $where, $suspend ) {
 		$moderation_where = 'hide_parent = 1 OR hide_sitewide = 1';
 
-		$blocked_query = $this->blocked_user_query();
-		if ( ! empty( $blocked_query ) ) {
-			if ( ! empty( $moderation_where ) ) {
-				$moderation_where .= ' OR ';
-			}
-			$moderation_where .= "( id IN ( $blocked_query ) )";
-		}
-
 		$where['moderation_where'] = $moderation_where;
 
 		return $where;
@@ -315,5 +320,21 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		$content = bb_moderation_remove_mention_link( $content );
 
 		return $content;
+	}
+
+	/**
+	 * Check content is hidden or not.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return bool
+	 */
+	protected function is_content_hidden( $item_id ) {
+		if ( $this->is_reporting_enabled() && BP_Core_Suspend::check_hidden_content( $item_id, $this->item_type ) ) {
+			return true;
+		}
+		return false;
 	}
 }

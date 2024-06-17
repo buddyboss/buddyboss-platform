@@ -290,9 +290,10 @@ function bp_nouveau_ajax_joinleave_group() {
 				$bp_is_group = bp_is_group() || ( bp_is_user_groups() && bp_is_my_profile() );
 
 				$response = array(
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => $bp_is_group,
-					'type'     => 'success',
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => $bp_is_group,
+					'is_parent' => ! empty( bp_get_descendent_groups( $group->id ) ) ? true : false,
+					'type'      => 'success',
 				);
 
 				if ( 'hidden' === $group->status ) {
@@ -387,7 +388,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( $parent_group_id > 0 ) {
 					$members_query      = groups_get_group_members(
 						array(
-							'group_id' => $parent_group_id,
+							'group_id'            => $parent_group_id,
+							'exclude_admins_mods' => false,
 						)
 					);
 					$members            = wp_list_pluck( $members_query['members'], 'ID' );
@@ -740,7 +742,13 @@ function bp_nouveau_ajax_send_group_invites() {
 	$invited = array();
 
 	foreach ( (array) $_POST['users'] as $user_id ) {
-		$user_id             = (int) $user_id;
+		$user_id = (int) $user_id;
+
+		// Check friends & settings component is active and all members can be invited.
+		if ( bp_is_active( 'friends' ) && bp_nouveau_groups_get_group_invites_setting( $user_id ) && 'is_friend' !== BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $user_id ) ) {
+			continue;
+		}
+
 		$invited[ $user_id ] = groups_invite_user(
 			array(
 				'user_id'  => $user_id,
@@ -940,18 +948,25 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$name = bp_core_get_user_displayname( $member->ID );
 
-			$can_send_group_message = apply_filters( 'bb_user_can_send_group_message', true, $member->ID, bp_loggedin_user_id() );
 			$is_friends_connection  = true;
-			if ( bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-				if ( ! friends_check_friendship( bp_loggedin_user_id(), $member->ID ) ) {
-					$is_friends_connection = false;
-				}
+
+			if (
+				! bb_messages_user_can_send_message(
+					array(
+						'sender_id'     => bp_loggedin_user_id(),
+						'recipients_id' => $member->ID,
+						'group_id'      => bp_get_current_group_id(),
+
+					)
+				)
+			) {
+				$is_friends_connection = false;
 			}
 			?>
-			<li class="group-message-member-li 
+			<li class="group-message-member-li
 			<?php
 			echo $member->ID;
-			echo ( $can_send_group_message && $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
+			echo ( $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
 			?>
 			">
 				<div class="item-avatar">
@@ -966,9 +981,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						</a>
 					</div>
 				</div>
-				<div class="action <?php echo ( $can_send_group_message && $is_friends_connection ) ? esc_attr( 'can-grp-msg' ) : esc_attr( 'can-not-grp-msg' ); ?>">
+				<div class="action <?php echo ( $is_friends_connection ) ? esc_attr( 'can-grp-msg' ) : esc_attr( 'can-not-grp-msg' ); ?>">
 					<?php
-					if ( $can_send_group_message && $is_friends_connection ) {
+					if ( $is_friends_connection ) {
 						?>
 						<button type="button"
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
@@ -1061,7 +1076,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
  */
 function bp_nouveau_ajax_groups_send_message() {
 
-	global $wpdb, $bp, $bb_email_background_updater;
+	global $wpdb, $bp, $bb_background_updater;
 
 	if ( false === bp_disable_group_messages() ) {
 		return;
@@ -1166,9 +1181,16 @@ function bp_nouveau_ajax_groups_send_message() {
 
 			// Check if force friendship is enabled and check recipients.
 			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-				foreach ( $members as $f => $member ) {
-					if ( ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-						unset( $members[ $f ] );
+				if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+					foreach ( $members as $f => $member ) {
+						if (
+							! (
+								bb_messages_allowed_messaging_without_connection( $member ) ||
+								friends_check_friendship( bp_loggedin_user_id(), $member )
+							)
+						) {
+							unset( $members[ $f ] );
+						}
 					}
 				}
 			}
@@ -1193,9 +1215,20 @@ function bp_nouveau_ajax_groups_send_message() {
 			if ( ! $can_send_group_message ) {
 				$not_access_list[] = bp_core_get_user_displayname( $member );
 			}
+		}
 
-			if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && ! friends_check_friendship( bp_loggedin_user_id(), $member ) ) {
-				$not_friends[] = bp_core_get_user_displayname( $member );
+		if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+			if ( bp_is_active( 'messages' ) && ! bb_messages_allowed_messaging_without_connection( bp_loggedin_user_id() ) ) {
+				foreach ( $members as $f => $member ) {
+					if (
+						! (
+							bb_messages_allowed_messaging_without_connection( $member ) ||
+							friends_check_friendship( bp_loggedin_user_id(), $member )
+						)
+					) {
+						$not_friends[] = bp_core_get_user_displayname( $member );
+					}
+				}
 			}
 		}
 
@@ -1735,21 +1768,24 @@ function bp_nouveau_ajax_groups_send_message() {
 			// This post variable will use in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
-			if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-				$chunk_members = array_chunk( $members, bb_get_email_queue_min_count() );
+			$min_count = bb_get_email_queue_min_count();
+			if ( count( $members ) > $min_count ) {
+				$chunk_members = array_chunk( $members, $min_count );
 				if ( ! empty( $chunk_members ) ) {
-					foreach ( $chunk_members as $key => $members ) {
-						$bb_email_background_updater->data(
+					foreach ( $chunk_members as $members ) {
+						$bb_background_updater->data(
 							array(
-								array(
-									'callback' => 'bb_send_group_message_background',
-									'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content, true ),
-								),
-							)
+								'type'     => 'email',
+								'group'    => 'group_private_message',
+								'data_id'  => $group,
+								'priority' => 5,
+								'callback' => 'bb_send_group_message_background',
+								'args'     => array( $_POST, $members, bp_loggedin_user_id(), $content, true ),
+							),
 						);
-						$bb_email_background_updater->save();
+						$bb_background_updater->save();
 					}
-					$bb_email_background_updater->dispatch();
+					$bb_background_updater->dispatch();
 				}
 
 				$message = true;

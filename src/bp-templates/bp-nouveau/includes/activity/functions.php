@@ -36,6 +36,11 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
 				'footer'       => true,
 			),
+			'bp-nouveau-activity-reacted'           => array(
+				'file'         => 'js/bb-activity-reacted%s.js',
+				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
+				'footer'       => true,
+			),
 		)
 	);
 }
@@ -51,6 +56,7 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+	wp_enqueue_script( 'bp-nouveau-activity-reacted' );
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -61,6 +67,9 @@ function bp_nouveau_activity_enqueue_scripts() {
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 		bp_get_template_part( 'common/js-templates/activity/form' );
 	}
+
+	// Add activity reaction popup js template.
+	bb_load_reaction_popup_modal_js_template();
 }
 
 /**
@@ -182,7 +191,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		);
 
 		// the groups component is active & the current user is at least a member of 1 group
-		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
+		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
 				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
@@ -238,11 +247,24 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
 		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
+		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
 	);
 
-    if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
-    }
+	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+		/* translators: %s = user name */
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+	}
 
 	if ( bp_is_group() ) {
 		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
@@ -253,7 +275,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'object'       => 'group',
 				'item_id'      => bp_get_current_group_id(),
 				'item_name'    => bp_get_current_group_name(),
-				'group_avatar' => bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
+				'group_avatar' => bp_disable_group_avatar_uploads() ? '' : bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
 
@@ -289,7 +311,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'activity',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-		'li_class'  => array( 'dynamic' ),
+		'li_class'  => array( 'dynamic', 'selected' ),
 		'link'      => bp_get_activity_directory_permalink(),
 		'text'      => __( 'All Updates', 'buddyboss' ),
 		'count'     => false,
@@ -319,7 +341,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'Likes', 'buddyboss' ),
+				'text'      => bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 10,
 			);
@@ -648,5 +670,3 @@ function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 //		),
 	) );
 }
-
-

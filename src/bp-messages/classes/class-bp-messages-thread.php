@@ -455,7 +455,7 @@ class BP_Messages_Thread {
 		if ( false === $messages || static::$noCache ) {
 			// if current user isn't the recpient, then return empty array.
 			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
+				wp_cache_set( $cache_key, false, 'bp_messages_threads' );
 
 				return array();
 			}
@@ -492,9 +492,15 @@ class BP_Messages_Thread {
 
 		// Integer casting.
 		foreach ( $messages as $key => $data ) {
-			$messages[ $key ]->id        = (int) $messages[ $key ]->id;
-			$messages[ $key ]->thread_id = (int) $messages[ $key ]->thread_id;
-			$messages[ $key ]->sender_id = (int) $messages[ $key ]->sender_id;
+			if ( isset( $messages[ $key ]->id ) ) {
+				$messages[ $key ]->id = (int) $messages[ $key ]->id;
+			}
+			if ( isset( $messages[ $key ]->thread_id ) ) {
+				$messages[ $key ]->thread_id = (int) $messages[ $key ]->thread_id;
+			}
+			if ( isset( $messages[ $key ]->sender_id ) ) {
+				$messages[ $key ]->sender_id = (int) $messages[ $key ]->sender_id;
+			}
 		}
 
 		return $messages;
@@ -968,6 +974,9 @@ class BP_Messages_Thread {
 
 		$additional_where = array();
 
+		// Get only actual message.
+		$additional_where[] = "m.id NOT IN ( SELECT DISTINCT message_id FROM {$bp->messages->table_name_meta} WHERE meta_key IN ( 'bp_messages_deleted', 'group_message_group_joined', 'group_message_group_left' ) )";
+
 		if ( 'unarchived' === $r['thread_type'] ) {
 			if ( ! empty( $r['include'] ) ) {
 				$user_threads_query = $r['include'];
@@ -1234,12 +1243,8 @@ class BP_Messages_Thread {
 			$total_threads = $total_threads_cached;
 		}
 
-		// Sort threads by date_sent.
+		// Format threads data.
 		foreach ( (array) $thread_ids as $thread ) {
-			$last_message = self::get_last_message( $thread->thread_id );
-			if ( ! empty( $last_message ) && ! empty( $last_message->date_sent ) && $last_message->date_sent !== $thread->date_sent ) {
-				$thread->date_sent = $last_message->date_sent;
-			}
 			$sorted_threads[ $thread->thread_id ] = strtotime( $thread->date_sent );
 		}
 
@@ -2050,7 +2055,15 @@ class BP_Messages_Thread {
 			$user_id = bp_loggedin_user_id();
 		}
 
-		$is_thread_archived = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id ) );
+		$is_thread_archived_query = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE is_hidden = %d AND thread_id = %d AND user_id = %d", 1, $thread_id, $user_id );
+
+		$cached = bp_core_get_incremented_cache( $is_thread_archived_query, 'bp_messages' );
+		if ( false === $cached ) {
+			$is_thread_archived = $wpdb->query( $is_thread_archived_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			bp_core_set_incremented_cache( $is_thread_archived_query, 'bp_messages', $is_thread_archived );
+		} else {
+			$is_thread_archived = $cached;
+		}
 
 		if ( 0 < $is_thread_archived ) {
 			return true;

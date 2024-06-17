@@ -9,6 +9,8 @@
  * @version 1.4.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 global $document_folder_template;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$folder_id = (int) bp_action_variable( 1 );
@@ -20,6 +22,8 @@ $folder_privacy = bb_media_user_can_access( $folder_id, 'folder' );
 $can_edit_btn   = true === (bool) $folder_privacy['can_edit'];
 $can_add_btn    = true === (bool) $folder_privacy['can_add'];
 $can_delete_btn = true === (bool) $folder_privacy['can_delete'];
+
+$bp_is_group = bp_is_group();
 
 $bradcrumbs = bp_document_folder_bradcrumb( $folder_id );
 if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
@@ -51,11 +55,11 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 								</form>
 							</div>
 							<?php
-							if ( is_user_logged_in() && ( bp_is_user_document() || bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) ) :
+							if ( is_user_logged_in() && ( bp_is_user_document() || bp_is_my_profile() || $bp_is_group || bp_is_document_directory() ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+									if ( bp_is_active( 'groups' ) && $bp_is_group ) {
 										$manage = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
 										if ( $manage ) {
 											?>
@@ -67,7 +71,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											</a>
 											<?php
 										}
-									} elseif ( ! bp_is_group() && $can_edit_btn && bb_user_can_create_document() ) {
+									} elseif ( ! $bp_is_group && $can_edit_btn && bb_user_can_create_document() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -126,8 +130,16 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 					}
 					?>
 				</div> <!-- .bp-media-header-wrap -->
-				<div id="media-stream" class="media" data-bp-list="document">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-document-loading' ); ?></div>
+				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'member-document-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'document/document-loop' );
+					}
+					?>
 				</div>
 			</div>
 		</div>

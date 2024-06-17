@@ -690,6 +690,34 @@ function bp_dd_import_users() {
 			)
 		);
 
+		if ( is_wp_error( $user_id ) ) {
+
+			// If multisite and user already exist, then add user to the current blog.
+			if (
+				is_multisite() &&
+				'existing_user_login' === $user_id->get_error_code()
+			) {
+				$userdata = get_user_by( 'login', $user['login'] );
+
+				if ( ! empty( $userdata->ID ) ) {
+					$result = add_existing_user_to_blog(
+						array(
+							'user_id' => $userdata->ID,
+							'role'    => get_option( 'default_role' ),
+						)
+					);
+
+					// If user added to current blog then set this ID to $users.
+					if ( ! is_wp_error( $result ) ) {
+						$users[] = $userdata->ID;
+					}
+				}
+			}
+
+			// If found an errors then continue loop.
+			continue;
+		}
+
 		if ( bp_is_active( 'xprofile' ) ) {
 			xprofile_set_field_data( 1, $user_id, $user['display_name'] );
 		}

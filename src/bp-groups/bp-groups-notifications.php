@@ -69,14 +69,15 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 	$user_ids = BP_Groups_Member::get_group_member_ids( $group->id );
 
-	// check if it has enough recipients to use batch emails.
-	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( (array) $user_ids );
-
 	$type_key = 'notification_groups_group_updated';
 	if ( ! bb_enabled_legacy_email_preference() ) {
 		$type_key = bb_get_prefences_key( 'legacy', $type_key );
 	}
 
+	$background_process = false;
+	if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && 1 < count( (array) $user_ids ) ) {
+		$background_process = true;
+	}
 	foreach ( (array) $user_ids as $user_id ) {
 
 		// Continue if member opted out of receiving this email.
@@ -99,13 +100,16 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 				'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 			),
 		);
-		if ( function_exists( 'bb_is_email_queue' ) && bb_is_email_queue() && $min_count_recipients ) {
+		if ( true === $background_process ) {
 			bb_email_queue()->add_record( 'groups-details-updated', (int) $user_id, $args );
-			// call email background process.
-			bb_email_queue()->bb_email_background_process();
 		} else {
 			bp_send_email( 'groups-details-updated', (int) $user_id, $args );
 		}
+	}
+
+	if ( true === $background_process ) {
+		// call email background process.
+		bb_email_queue()->bb_email_background_process();
 	}
 
 	/**
@@ -440,6 +444,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 			'inviter.name'   => bp_core_get_userlink( $inviter_user_id, true, false, true ),
 			'inviter.url'    => bp_core_get_user_domain( $inviter_user_id ),
 			'inviter.id'     => $inviter_user_id,
+			'invited.id'     => $invited_user_id,
 			'invites.url'    => esc_url( $invited_link . '/invites/' ),
 			'invite.message' => $invite_message,
 			'unsubscribe'    => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
@@ -1491,30 +1496,39 @@ function bb_groups_notification_groups_updated( $group_id = 0 ) {
 		unset( $user_ids[ $unset_sender_key ] );
 	}
 
-	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 20 );
+	$min_count = (int) apply_filters( 'bb_groups_details_updated_notifications_count', 10 );
 	if (
 		function_exists( 'bb_notifications_background_enabled' ) &&
 		true === bb_notifications_background_enabled() &&
 		count( $user_ids ) > $min_count
 	) {
-		global $bb_notifications_background_updater;
-		$bb_notifications_background_updater->data(
-			array(
-				array(
-					'callback' => 'bb_add_background_notifications',
-					'args'     => array(
-						$user_ids,
-						$group_id,
-						$sender_id,
-						buddypress()->groups->id,
-						'bb_groups_details_updated',
-						bp_core_current_time(),
-						true,
+		global $bb_background_updater;
+
+		$chunk_user_ids = array_chunk( $user_ids, $min_count );
+		if ( ! empty( $chunk_user_ids ) ) {
+			foreach ( $chunk_user_ids as $chunk_user_id ) {
+				$bb_background_updater->data(
+					array(
+						'type'     => 'notification',
+						'group'    => 'groups_updated_notification',
+						'data_id'  => $group_id,
+						'priority' => 5,
+						'callback' => 'bb_add_background_notifications',
+						'args'     => array(
+							$chunk_user_id,
+							$group_id,
+							$sender_id,
+							buddypress()->groups->id,
+							'bb_groups_details_updated',
+							bp_core_current_time(),
+							true,
+						),
 					),
-				),
-			)
-		);
-		$bb_notifications_background_updater->save()->dispatch();
+				);
+				$bb_background_updater->save();
+			}
+		}
+		$bb_background_updater->dispatch();
 	} else {
 		foreach ( $user_ids  as $user_id ) {
 			bp_notifications_add_notification(

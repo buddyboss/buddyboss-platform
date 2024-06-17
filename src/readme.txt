@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.1.1
+Tested up to: 6.5.4
 Requires PHP: 5.6.20
-Stable tag: 2.3.3
+Stable tag: 2.6.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,558 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.30 =
+* Enhancement: Core - We have added a new namespace (BuddyBossPlatform) in the composer library (vendor folder) so if existing plugins use the same composer library, it will work fine with our new namespace
+* Enhancement: Platform - We have added a new Platform plugin menu option called upgrade, where you can now more easily access and track, Platform, Server and Integrations knowledge
+* Bug: Activity - User timeline URL was redirected users to the main activity feed once WPML plugin was activated
+* Bug: Activity - When setting the page request from performance to option 1, the posts on the user timeline were being duplicated
+* Bug: Core - The Favicon was not displaying on the Messages page
+* Bug: Core - When using Windows inbuilt emoji’s in Edge or Chrome browser was causing the emoji to duplicate
+* Bug: Email - Mention email was not showing correct content which meant the View post button then also redirected to the wrong location
+* Bug: Email - Play icon on videos within a transactional email notification was broken
+* Bug: Forums - The GIF picker and preview in the Forum Discussion and replies are now showing properly on mobile responsive view
+* Bug: Platform - When the Media Uploading component was not enabled then the 3 dots (ellipses) drop-down menu on activity posts was not clickable
+* Bug: Styling - The mobile view display of multiple images uploaded on the activity feed was not displaying correctly
+
+= 2.6.21 =
+* Bug: Performance - When page load is set to 1 this caused the members page in groups to stop loading
+
+= 2.6.20 =
+* Enhancement: Core - Buddyboss default posts description have all been checked and updated to show correct information in the post
+* Enhancement: Platform - Removed app preview options in BuddyBoss - Settings - Groups due to the new group header design in the app this is no longer available
+* Bug: Activity - The GIF search was not working on multi-level comments
+* Bug: Activity - The reactions displayed on the mobile view were overlapping on the displayed screen
+* Bug: Activity - When page request was set to 1 in the new performance tab setting posted activity was delayed
+* Bug: Core - The conditional profile fields did not display error when the requirement fields were not filled
+* Bug: Core - The GIF picker was incorrect height which distorted the GIF previews slightly
+* Bug: Core - The scheduled posts modal will now open to the specific feed in the specific group where the scheduled post was originally created from
+* Bug: Forums - Removing tags on forum discussion was not working correctly after a user removed them tags were still showing
+* Bug: Groups - The More Options when opening a document was not clickable and there for did not display the content
+* Bug: Media - The photo preview was now showing when editing an activity or activity comment/reply while the WP offload plugin was enabled
+* Bug: Styling - Long comments did not break to a new line and was being displayed continuously in a straight line
+* Bug: Styling - Pasting long links in to an activity post comment broke the UI design which then the link overlapped
+* Bug: Translations - The word 'Uploading' when users are uploading media is now available for translation
+* Bug: WooCommerce - When mentioning users in a product description, the mentioned link lead to a 404 error page instead of the user profile
+
+= 2.6.11 =
+* Bug: Core - Updated Schedule posts logic for Group organisers and owners
+
+= 2.6.10 =
+* New Feature! Admins and Groups organizers and moderators now have the ability to use scheduling posts
+* Enhancement: Core - Updated REST API caching and purging business logic
+* Bug: Core - The "Like/Reaction" button in the newsfeed was causing a redirection when using an iOS device when holding the button to choose from the reactions menu
+* Bug: Core - When improper texts are added to the social network profile field, it would show ‘Array' error message
+* Bug: Core - When the emoji setting was disabled, the pop up modal display when clicking view more comments was not closable causing an error
+* Bug: Groups - Added new functionality that when suspending a group creator site admin then become the owner of the group
+* Bug: Integration - Error was showing on Homepage when Rank Math installed with BuddyBoss platform
+* Bug: Moderation - The Blocked/Reported member is no longer getting automatically suspended without the auto-suspend being configured
+* Bug: Multisite - The default profile fields repair tool was not working correctly in multisite
+* Bug: Platform - Updated media to add file type suffix so that Symlinks will work with offloading and CDN’s
+* Bug: Styling - Giphy panel would fall behind the buddy bar when expanded and no left sidebar widgets were used
+* Bug: Styling - Improved the UI to handle some inconsistencies for the activity comment forms when viewing in mobile web view
+* Bug: Styling - Removed the blue hover effect of the text formatting on the message form
+
+= 2.6.00 =
+* Enhancement: Groups - The group feed displays the group avatar and the users avatar overlayed we have removed the group avatar from posts within said groups
+* Bug: Activity - Elementor Activity feed widget would not allow the upload of gif images
+* Bug: Core - Network Search from Default 2022 Theme was showing a blank results page
+* Bug: Core - The _transient_timeout_bb_presence_api_mu_download now only called once a week
+* Bug: Core - Users are now prohibited from commenting on or liking posts if the post's privacy setting is set to ‘only me' or 'my connections’.
+* Bug: Core - When enabling repeater fields in profile field sets the values were not showing individually on the backend
+* Bug: Core - When using the WPML plugin the search result count number on the page and post was incorrect due to a conflict
+* Bug: Email - The image preview from the BuddyBoss email notification did not fit properly when using the Google App on mobile
+* Bug: Groups - Group forum discussion/replies which were also posted in News Feed, showed link preview in the News Feed even if the link preview is disabled for both Activity and Forum
+* Bug: Styling - Removed "0 Comments" text When there are no comments on an activity post
+
+= 2.5.91 =
+* Enhancement: Activity - Made small UI adjustments to the new activity pop-up modal
+
+= 2.5.90 =
+* Bug: Activity - Creating a new post was highlighting the recent media file button that was used in a previous post
+* Bug: Activity - When selecting a single image from a post that had a multiple image uploads to pin then this would not work
+* Bug: Core - If a social link fails validation on the frontend then this would stop all network links from working
+* bug: Core - Last name privacy was not being reflected in the email if the users were not connected
+* Bug: Core - When an email invitee registers using the sent link that had a profile type already suggested this now does not show the profile type field required error notice when submitting
+* Bug: Core - When using Profile Type shortcode the list/grid toggle did not work when viewing in the frontend
+* Bug: Core: The default profile type was not working and the newly registered users were showing as Member
+* Bug: LearnDash - Buddyboss groups were getting created when a LearnDash group was created even if the LearnDash associated setting was off
+* Bug: Message - Send message button redirection was not working properly from both Member and Profile connections additionally, the filter in the connection tab on the logged-in member's profile was displaying incorrectly
+
+= 2.5.81 =
+* Bug: Activity - Fixed a memory allocation issue which was affecting the activity loading function which had added a significant delay
+
+= 2.5.80 =
+* New Feature! - Close comments allows post authors and admins to turn of commenting on any specific post which gives users and admins another great way to maintain control and moderation
+* New Feature! - To make the activity feed more streamlined we have introduced the View more comments and View more replies which will allow users to expand the threads they are interested in rather than showing the full expanded user interactions
+* New Feature! - We have added a new tab in the settings dedicated to performance settings with a new page load count setting which lets you select whether to load the page in 1 or 2 calls
+* New Feature! - We have updated our Activity feed design to now open selected posts into its own modal which provides a more focused experience for users when interacting with posts
+* New Feature! - Users now have the ability to Turn off Notifications on specific posts they have interacted with that they no longer have interest in
+* Enhancement: Activity - We have added new settings to allow for more granular control on our new Activity feed update that lets you select thread count, load count, default comment visibility and even the ability to turn off commenting all together
+* Enhancement: Performance - Converted the current phase loading approach with a single request by default to improve performance
+* Bug: Activity - When updating the post with link preview and there were comments, meta value for comments was filled based from Preview
+* Bug: Core - The phone Number profile field was displaying “//” within the link when hovering over it
+* Bug: Core - When users added a Dot to the end of their nickname this broke the link, we have now added this functionality
+* Bug: Forums - The BuddyBoss Forum login widget was showing a typographical error
+* Bug: Groups - Subscription option in the backend setting is now removed after disabling
+* Bug: LearnDash - Switching from grid to list view from the LearnDash course grid using the LearnDash Course List block was showing a JS error
+* Bug: Profiles - Profile types were not showing or retaining previous settings
+* Bug: Styling - When searching member on the members page there was an issue with text spacing
+* Bug: Translations - When selecting German language there were spacing issues showing for author names on activity posts
+
+= 2.5.71 =
+* Bug: Core - Media files were being removed when running the cron bp_document_delete_orphaned_attachments_hook
+
+= 2.5.70 =
+* Bug: Core - Create Account button and privacy policy checkbox were showing in the confirm email address notice screen and have now been removed
+* Bug: Core - Reactions migration tool was taking too long when migrating large numbers of Likes
+* Bug: Core - Updated background process log logic to maintain the log table size between 500MB or less and no larger than 1GB
+* Bug: Forums - Discussions and replies in secondary languages were not displayed on the users profile page discussions tab
+* Bug: Groups - When promoting a member in the the group to co-organizer or moderator the users were losing course access
+
+= 2.5.61 =
+* Bug: Core - reCaptcha update fixing issues with verifying on Login, Register, Reset password, Account Activation pages
+* Bug: Core - When disabling the Group component in BuddyBoss settings, when then visiting the photos tab in the user profile, this was causing a fatal error
+
+= 2.5.60 =
+* New Feature! - We now officially support Google reCAPTCHA, this is a great feature to help mitigate risk of bot and spam accounts being created and login in to your site
+* Enhancement: Core - Performance improvement by introducing a Batch REST API endpoint that will allow the App to request multiple endpoints in a single REST API request
+* Enhancement: Rapyd - Now generating background process Logs for the app on the server
+* Bug: Core - Broken class found and fixed in the background code due to a typo
+* Bug: Forums - When Instructor role plugin was active, the forum title was not showing on forums page
+* Bug: Notifications - REST API endpoints updated to show the standard WordPress headers
+
+= 2.5.52 =
+* Bug: Activity - Updated the call to an undefined function that was causing an error in the profile page if the Activity component was deactivated
+
+= 2.5.51 =
+* Bug: Core - A fatal error occurred on the profile page when the Activity Feed component was deactivated
+
+= 2.5.50 =
+* New Feature! - The Profile Avatar User Initials is a new setting to allow site owners to set the default user avatar to use display name initials with different background colors. We have also added this feature to group avatars.
+* Enhancement: Core - Code refactoring to improve performance within the Activity Feed with object caching support
+* Enhancement: Core - Updates and code refactoring for the Activity structure to provide scalability to upcoming features
+* Enhancement: Groups - Added a search option within Manage Group - Members page to search members easier
+* Bug: Core - Added xprofile field ID validation from the cache data to avoid unexpected error
+* Bug: Core - Default Theme 2023 Notification Preference was not showing the lists of subscribed groups, forums and discussion
+* Bug: Core - Links were getting clipped due to the ‘Read more’ text which was then redirected users to wrong url
+* Bug: Custom Development - A deprecated error was showing when updating or creating new LearnDash groups while social group integration was enabled
+* Bug: Elementor - Group pages was showing an error while editing with Elementor
+* Bug: Forums - Forum search results was not showing the same result between autocomplete and the search page
+* Bug: Messages - Issues with group messaging when new user joined or left a group
+* Bug: Translations - Translation strings for posts that had 3 or more reactions were not working as it was missing on the LocoTranslate plugin
+
+= 2.5.40 =
+* Enhancement: Core - Code Refinement for background jobs in the platform complete
+* Enhancement: Groups - New tab has been added to BuddyBoss - Groups backend called ‘No Members’ so that you can now filter and pickup groups with no members in automations
+* Bug: Activity - Images were not deleted on the server when the activity post was edited and the image removed
+* Bug: Core - Migrating sites from vBulletin to BuddyBoss was giving a fatal error when user logged in with the same username
+* Bug: Core - Previous custom posts on the news feed page from group discussions and replies were not reflecting the updated translation from LocoTranslate plugin
+* Bug: Core - While typing a longer reply or comment in a pinned post on the Activity Feed the feed would refresh while typing which then clearing the text
+* Bug: Forums - URL link embedded into a forum page would not show
+* Bug: Platform - On a fresh WP install, after activating the BuddyBoss Platform it triggered a WordPress Database error in the debug log
+* Bug: Styling - Notification settings tabs under the user Account Settings page did not display correctly
+
+= 2.5.31 =
+* Bug: Access controls - When restricting subscribers from posting to the Activity Feed, this has also restricted subscribers posting to the Group activity feed
+
+= 2.5.30 =
+* Bug: Core - Account settings was not updating correctly to only display notifications of components that are active instead of showing all settings options
+* Bug: Core - Activity feed options within group settings was showing even if the Activity Fee component had not been activated
+* Bug: Core - Blocking a user then disabling other BuddyBoss components except moderation lead to an infinite loading and a fatal error within the debug log
+* Bug: Core - Enabling the Network Search component while using the default Wordpress theme stopped the search page working correctly
+* Bug: Core - Removed Reactions lower icon upload limit of 200px to allow for smaller icons to be uploaded
+* Bug: Core - Updated the CRON process so that all group messages will not send all at once causing a 500 server error
+* Bug: Core - When switching languages in WordPress some words were not translated from backend to frontend due to translation path issues
+* Bug: Forums - If two discussions have the exact same name then a tag is allocated, the tag would not use the original tag but instead would create a new tag
+* Bug: Groups - Courses that were created via Elementor were not properly displaying on Social Group’s course tab
+* Bug: Groups - Group avatars were still showing even if the Show Group Avatar setting was disabled
+* Bug: Groups - If you select multiple users to send a group invite to, the Send button would allow you keep clicking it and sending multiple invites
+* Bug: Media - Creating a photo album created an infinite loading state when all other BuddyBoss Components were disabled except for Media Uploading
+* Bug: Media - Email notifications from activity post that had images did not display properly in the Gmail app for iOS devices
+* Bug: Media - Video player UI was not working correctly when switching language in TranslatePress
+* Bug: Platform - In the default WP theme 2024, if the Activity Access is restricted in the BuddyBoss platform by Profile Type, then restricting permissions would not work as the WP theme does not use Profile Types
+* Bug: Styling - Buttons from the videos and photos page were overlapping the content when viewing on mobile view or by resizing the page to a smaller view
+* Bug: The subscription icon was showing on social groups even though other components were disabled such as the forum discussion component
+
+= 2.5.20 =
+* New Feature! - Introducing reaction into the platform, where your members will now have the ability to react with different emotions to posts, comments and replies. As an added feature you will be able to customise your emotions to suite your brand.
+* Enhancement: Core - Reactions settings updated to include REST API’s
+
+= 2.5.11 =
+* Bug: Core - Changed directory layout view, switching logic, such as ‘Grid' and 'List’ for pages that utilize the the change view options so on page refresh will maintain the default settings
+
+= 2.5.10 =
+* Bug: Forums - Creating a new post when there was an existing discussion showed the previous discussion title
+* Bug: Groups - Document tab within a group would load slowly with groups with thousand or more members
+* Bug: Groups - When adding a LearnDash course to a group within the settings, previously this then would alter the groups permalink and alter the group invite settings
+* Bug: Styling - The & sign when used within a label for a Profile Type would show &AMP code on user profile and member directory
+
+= 2.5.00 =
+* New Feature! - TutorLMS settings added to BuddyBoss integration page for adding courses to groups and choosing course activity posts into group feeds depending in user interactions
+
+= 2.4.90 =
+* Enhancement: Core - Priority profile slug performance optimized
+* Bug: Activity - Link previews disappeared after editing the activity in the backend activity page
+* Bug: Core - Fatal error fix with the Presence PHP file
+* Bug: Core - Link embeds styling disappeared from the more recent versions
+* Bug: Core - Network search page was not working correctly with Block theme
+* Bug: Core - Pinned post pop up has been updated to a toast message
+* Bug: Core - Recently active, most members, newly created, and alphabetical filters are now showing up on the Group Directory page using Block theme
+* Bug: Core - When downloading folders on MacOS were showing empty
+
+= 2.4.80 =
+* Bug: Activity - Could not select any other media to upload to a new reply in the thread after previously uploading a GIF
+* Bug: Activity - When a user tried to edit a post, the Read More option was shown as part of the post
+* Bug: Core - The Last Name field did not work properly with the "Only Me" option when the "Allow members to override" setting was selected
+* Bug: Core - The search functionality and UI within our core pages are now working correctly
+* Bug: Core - When debug log was enabled in PHP 8.2 this then caused an error
+* Bug: Forums - Validation message is now working when the “Forums” setting of the Group is updated.
+* Bug: Groups - The member's single activity in Groups now shows correctly once group members leave that group
+* Bug: Media - Removing one of the added file extension on documents/videos also removed the rest of the extensions also
+* Bug: Media - The rename option within folders created under the group’s document tab has been added
+* Bug: Styling - Extra spacing added when removing URLs from posts with link preview
+* Bug: Styling - MemberPress Pro mode template pages UI breaks fixed
+
+= 2.4.71 =
+* Bug: Core - Refactored the unique identifier profile slug character length so that there are no more duplications
+
+= 2.4.70 =
+* New Feature! - Login Logout Redirect, redirects users on login and logout as a global setting and by profile type
+* Bug: Activity - The post button was not enabled when using only emojis without any accompanying text entered directly from the keyboard
+* Bug: Activity - When copying and pasting a post that included a tagged member, it would generate a preview thumbnail
+* Bug: Core - Code refactoring of background processes updated to use options instead of transients
+* Bug: Core - The social network on the profile header did not update when removing a social network in the settings
+* Bug: Core - Videos text showing lower case in Global Search result
+* Bug: Forums - Enabling the Forums component results in a 500 error on the site when using Avada.
+* Bug: Forums - Lead topic tags automatically appear in inner reply form
+* Bug: Forums - When trying to import a forum with categories it appeared as empty on the front end
+* Bug: Groups - Moving groups into subgroups did not automatically add the members to the parent group hierarchy
+* Bug: Members - Connection count still showing in emails even with Member Connections component disabled
+* Bug: Messages - Console errors occurred when uploading videos and documents in Live Messaging
+* Bug: Notifications - When the notification component is disabled, the Group Subscription option was not visible
+* Bug: Performance - Posting was taking too long when user had a lot of followers
+* Bug: Profiles - The conditional profile field was not displaying correctly for email invites
+
+= 2.4.63 =
+* Hotfix: Activity - Fixed vulnerability where any user could pin posts
+
+= 2.4.62 =
+* Bug: Forums - Adding content to Wordpress settings comment moderation, this was causing a critical error when adding a new discussion or replying to discussions
+
+= 2.4.61 =
+* Bug: Groups - When forum discussions was inactive this caused a conflict with loading group feeds when enabling pinned posts
+
+= 2.4.60 =
+* New Feature! - Pin to Activity feed also know as Pin to Posts
+* Enhancement: Groups - Updated Groups Tab Creator Pro plugin support
+* Bug: Core - Background process update for migrating friend counts, enabling fewer queries and providing faster results.
+* Bug: Core - Page contents that were added on the Documents page were not showing
+* Bug: Core - Search Results was not returning posts from custom post type
+* Bug: Core - The scheduled task handling orphaned videos mistakenly deleted video content uploaded through the API in the messaging feature.
+* Bug: Core - Wordfence was blocking link embeds when the post had iframe content in the link description
+* Bug: Email - Emails were being incorrectly sanitised during signup
+* Bug: Email - Installing email templates while activating the component.
+* Bug: Forums - Video & Document content was not showing when you tried to edit content within a group or standalone forum discussion
+* Bug: Groups - Group Albums, album count did not update after a new album was created while uploading media
+* Bug: Groups - When the "Restrict Invitations" feature is enabled, leaving a parent group results in unintentionally leaving the associated subgroups.
+* Bug: LearnDash - When the author was mentioned in the comments, the mention notification directed users to the commenters profile instead of the course
+* Bug: Platform - "Add new" button in profile types and group types was showing incorrect text
+* Bug: Platform - Implemented support for profile search translation compatibility using WPML.
+* Bug: Platform - The Profile Images and Group images view tutorial buttons redirected to incorrect tutorials
+* Bug: Profiles - User profile photos/videos load more pagination was not working correctly when all items from the first page were deleted
+* Bug: Styling - Link previews for certain links were not showing the previews correctly
+
+= 2.4.50 =
+* Enhancement: Core - Background process logic for reactions updated
+* Enhancement: Media - Provide mechanism to search media by description in the directory and global search
+* Enhancement: Profiles - Added TikTok to Social Network Links
+* Bug: Activity - Issues were found with tagging more than 1 member in activity post's comments
+* Bug: Activity - When activity tabs and the relevant activity setting was turned on, users were unable to see their own posts on the activity feed.
+* Bug: Core - Adding a photo was not working from the user profile, Select Photo tab in Albums
+* Bug: Core - Changing passwords from the account page was not working
+* Bug: Core - Remove connection confirmation pop up was showing twice one after another
+* Bug: Forums - Changing a Forums privacy setting from public to private, the forum would automatically revert back to public
+* Bug: Forums - If a Forums page was not set then Forums content was populating the Blog page
+* Bug: Forums - When moving a discussion from group forum back to standalone forum, the discussion remained in the group
+* Bug: Forums - Youtube links were not shown correctly in forum topic replies with / without additional text
+* Bug: Messages - Emoji on messaging were not working properly
+* Bug: Messages - When sending a group message, the recipient text box was clickable and showed the text box
+* Bug: Multisite - BuddyBoss default users import is causing a Fatal error in MultiSite
+* Bug: Notifications - Notification were being sent when user created a reply even after the user had then left a hidden or private group
+* Bug: Platform - New notification message added to Media settings Direct access when direct access to media is blocked by Offload Media
+* Bug: Profiles - shortcode: [group type=”competition”], from BuddyPress User Profile Tab Creator Pro the cover image on the profile was not displaying
+* Bug: Report - Typo error in Report/Block member menu in the message sidebar for single private message
+* Bug: Styling - Search Form reset button styling issue when inviting users during group creation process on the frontend
+* Bug: Translations - Translation issue in Loco Translate with translations switching back to English
+* Bug: Widgets - Some strings were not able to translate dashboard widget
+
+= 2.4.41 =
+* Bug: Activity - When commenting or replying to a comment on a post some users were seeing “Server error or connection is lost. Please try again later." message
+* Bug: Core - When selecting to generate members unique identifier (profile url), the process was causing a crash due to a background code issue which has now bee refactored
+
+= 2.4.40 =
+* New Feature! - Allow users to Edit Activity Comments
+* Bug: Activity - Activity search : Search results are getting incorrect.
+* Bug: Activity - Video uploading issue on Activity feed due to missing video thumbnail
+* Bug: Core - "Relaxed" Emoji is not showing correctly
+* Bug: Core - Added a 'Successfully Saved' message in the plugin when saving settings
+* Bug: Core - Fatal error when registering users with Magyar language selected
+* Bug: Core - Profile, photos tab was showing delete and select all buttons even with no uploaded media
+* Bug: Core - Text Smilies were not converting to emojis when first added in discussions reply.
+* Bug: Core - Wordpress dashboard shown in mobile size, profile dropdown arrow in admin bar would position incorrectly
+* Bug: Custom Development - 'groups_join_group' hook not called when member is added to BuddyBoss Group via LearnDash sync
+* Bug: Forums - Changing the parent forum from backend was not working for the forums that is associated with groups
+* Bug: Forums - Discussion shortcodes not returning the correct results
+* Bug: Groups - Subscription emails were delayed when saving the new group feed and updating the group details in frontend
+* Bug: Groups - When subgroup restrict access setting is active a new message alerting users to first request access to the parent group will appear if a user tries to access a subgroup first
+* Bug: LearnDash - Undefined variable $post warning in LearnDash topics removed
+* Bug: Messages - Image link was broken for Messages in Email
+* Bug: Multisite - Profile search page is not working in admin area if platform is network activated
+* Bug: The Events Calendar - When the private website option is enabled from the BuddyBoss platform, the filters in the Events Calendar was not working
+* Bug: Widgets - Who’s Online widget was not accurately showing members online status
+
+= 2.4.30 =
+* Enhancement: Activity - database alterations made in preparations for future activity features
+* Enhancement: Core - Allow options within the new blacklist/whitelist feature so that user can block the email plus aliases.
+* Enhancement: Forums - Automatically reconnect an existing forum when reenabling the forum within a group
+* Bug: Core - API issues addressed when activating BuddyBoss platform plugin
+* Bug: Core - Design issue when posting a discussion when using Firefox browser
+* Bug: Core - Pagination problem occurred on pages where the group type shortcode was used
+* Bug: Core - Paging was disabled when fetching media, videos and documents based on specific ids
+* Bug: Forums - Add direct link for the grouped forum instead on the Discussions links to removed the unnecessary redirect
+* Bug: Forums - Discussions pagination was not working when setting the forum page as the home page
+* Bug: Forums - Forum was not importing from Invision
+* Bug: Groups - When Group Message feature is disbaled, existing messages associated to groups are now removed from users inbox
+* Bug: Messages - Attached media in a group message sent by a group member was not viewable by other members
+* Bug: Messages - Messages thread order was not staying in the correct order when paginating
+* Bug: Multisite - BuddyBoss component pages were not assigned correctly across the subsites
+* Bug: Profiles - Pending signup user profile were visible on the frontend in some cases
+* Bug: Profiles - Removed Google+ from 'Social Networks' profile field
+* Bug: Profiles - Update Twitter name to X on all Social Links
+* Bug: Tools - SMF forum import tool could not keep the hierarchical relationships between forum > discussion > reply
+
+= 2.4.20 =
+* Enhancement: Core - The Background Process working when suspending and un-suspending users got stuck creating an infinite loop
+* Enhancement: Custom Development - Add the missing hooks into the Activity Comments
+* Bug: Activity - New Activity Post ‘Privacy’ option had white spacing above the options
+* Bug: Activity - When editing a posts Giff within Discussion or Discussion reply, the Giff still remained in the Activity Feed.
+* Bug: Core - Add default parameters and documentation to media, documents and videos "get" functions
+* Bug: Core - Display name setting code correction
+* Bug: Core - Fix typo in the core template
+* Bug: Core - Hyperlink was not working in the Safari browser on Activity feed posts
+* Bug: Core - Profile field "website" did not check for URL validation
+* Bug: Core - Removed the unsupported URL preview that WordPress Embed shows when not supporting to just showing the link in this case
+* Bug: Core - When WP DEBUG is turned on with Error Display on, this displayed warning on the "Admin" Profile page
+* Bug: Forums - When adding YouTube link before text caused the preview to glitch
+* Bug: Forums - Forum and discussion Image Missing in Email
+* Bug: Forums - Multilevel Forums were not displaying correctly on BB Forums List widget.
+* Bug: Forums - Topic in hidden/private forum is still visible within the users profile
+* Bug: Forums - URL previews were not showing correctly for both topics and replies.
+* Bug: Forums - When going back to a draft post then the ‘Post’ button would be greyed out
+* Bug: Media - When leaving a Private or Hidden groups, users stall had permissions to upload and download media from that group
+* Bug: Messages - Message inbox the mark as Unread/Read option was showing different in the message to the sidebar ellipses option
+* Bug: Notifications - Deleted group posts still showed the Notification and return Not Found
+
+= 2.4.11 =
+* New Feature! - This new 'Restrict Registration' feature allows you to restrict or allow specific email or domains from registering on your site
+
+= 2.4.10 =
+* Bug: Activity - If a link contains a @user mention, the rest of the link was being cut off
+* Bug: Activity - Web fall back pages were showing a warning if it contains a link preview
+* Bug: Core - Identified filters refinement and bugs by taking reference from BBPress recent releases
+* Bug: Core - Removed the unnecessary "!important" tags in the Theme
+* Bug: Email - Unsubscribe Link not redirecting when a user logs in after clicking the link
+* Bug: Groups - Group Invites were being sent even if it was restricted by the user
+* Bug: Groups - Groups were not being reassigned to another user if the Organizer was deleted
+* Bug: Media - Incorrect icon was shown for image files when uploaded to Documents from a user profile
+* Bug: Messages - New line (Shift+Enter) was not working correctly and lists were not formatted appropriately on Notification emails
+* Bug: Notifications - Web Push Notifications were not sending notifications for Group Activity feed posts.
+* Bug: Profiles - Embedding a TikTok link that had the same username as another member caused the link to redirect the users profile
+* Bug: Translations - Icons were not showing for File Extensions when RTL was enabled
+
+= 2.4.00 =
+* Enhancement: Core - Identified code improvements across different components by taking reference from BBPress recent releases
+* Enhancement: Core - Improved the handling of data migration when switching between release versions
+* Bug: Activity - Link previews were not displaying when referencing the same site
+* Bug: Elementor - Profile Type shortcodes caused layout conflicts when used within columns
+* Bug: Forums - Private forums were redirecting to 404 page instead of login for logged out users
+* Bug: Forums - Shortcode compatibility when using multiple Forums, Topics, and Replies on a single page
+* Bug: Forums - UI improvements to media upload modal for Safari browser on iOS devices
+* Bug: Groups - Subgroups could not invite Organizers of the parent group
+* Bug: LearnDash - Updated the ‘Topic Search > Enrolled Only’ setting to ensure search results are only returned if a member is enrolled into the course
+* Bug: Messages - AM/PM in private messages list was showing different results due to timezone differences
+* Bug: Widgets - Groups widget returned zero results to users who were not a member of any group
+
+= 2.3.91 =
+* Bug: Groups - Mentioning users inside a group didn’t show all members
+* Bug: MemberPress - Fixed conflict for user registration where ‘username is required’ error was shown
+
+= 2.3.90 =
+* New Feature! Allow specific profiles types to send messages without being connected
+* Enhancement: Core - Identified code improvements across different components by taking reference from BuddyPress recent releases
+* Enhancement: Tools - New repair option to recalculate group member count for each group
+* Bug: Activity - Deleting only the 'activity post' of a discussion or any post from other component was also deleting the attachment from the original discussion
+* Bug: Activity - Twitter link previews UI resolved to not return a console error
+* Bug: Activity - Videos on lessons were showing double in the news feed when the lesson was automatically fetched after creation
+* Bug: Core - Fatal error resolved when applying "the_title" filter
+* Bug: Core - Identified filters refinement and bugs by taking reference from BuddyPress most recent releases
+* Bug: Core - Identified security issues by taking reference from BBPress most recent releases
+* Bug: Core - Identified security Issues by taking reference from BuddyPress most recent releases
+* Bug: Core - Resolved fatal error whenever bbp_db() function was called
+* Bug: Core - Site notice appears twice on subgroup overview page
+* Bug: Core - Unnecessary use of "!important" tag in message component
+* Bug: Core - Unnecessary use of "!important" tag in theme related to social groups component
+* Bug: Core - When clicking the unsubscribe link while logged in as different user, a success error message was displayed instead of alert error message
+* Bug: Core - Wrong translation string for "You will no longer receive emails of new discussions in groups you are subscribed to"
+* Bug: Forums - Could not add a hyperlink to text that began with italic/bold formatting
+* Bug: Forums - Data was not accurate when using specific forum shortcodes on a single page
+* Bug: Geodirectory - Fixed compatibility issue with a profile’s Reviews tab showing incorrect stars
+* Bug: Groups - Comments were not visible to logged in users viewing a public group whilst not being a group member
+* Bug: Groups - Courses tab was not working whenever the courses slug was changed into a different language
+* Bug: Groups - Subgroups were not displaying whenever going to User > Profile > Groups
+* Bug: Media - Documents for public groups were not showing in the app for logged out users
+* Bug: Media - Wrong icon style was used for the Create album button
+* Bug: MemberPress - Upload file now compatible when using custom registration or checkout forms
+* Bug: Multisite - Database error for user activity on Multisite Network Installation after updating to v 2.3.1
+* Bug: Multisite - Members page previously displayed 404 error whenever Profile Link's Link Format was configured to be a "Unique Identifier"
+* Bug: Profiles - Profile type filter was not showing plural labels on the Members directory
+
+= 2.3.81 =
+* Bug: Core - Fixed access to public pages as a logged out user so that it no longer redirects to the login form
+
+= 2.3.80 =
+* Bug: Activity - Post button was inconsistent when trying to reply to activity post.
+* Bug: Activity - Unable to click the activity comments from group search when a member was tagged using "@" function
+* Bug: Activity - While posting a link directly from the app with www, no link preview is shown
+* Bug: Core - Node version issue on `npm install` script after a repo was cloned
+* Bug: Core - Platform main components page showed incorrect count for "All" and "Active" components
+* Bug: Email Invites - Revoking the email invite from admin was redirecting the user to post list page
+* Bug: Forums - Private forum were redirecting to 404 instead of login screen for logged out users
+* Bug: Groups - Child group was displaying parent group description from subgroup page
+* Bug: Groups - Super Sticky was incorrectly showing on the admin panel for discussions within a Group
+* Bug: Gutenberg - Discussions on editor added extreme spacing between lines
+* Bug: LifterLMS - Deleting an user who is a Course Participant did not remove the user from Participants list
+* Bug: Media - Next/Previous navigation on media modal accessible even while commenting
+* Bug: Media - "Create new album" translation was missing on the photos page
+* Bug: Media - Document folder meta was not being saved in the database using bp_document_folder_add_meta function
+* Bug: Media - Move file tooltip not clear and inconsistent
+* Bug: Media - Unable to download folders due to size constraints
+* Bug: Media - When uploading media, we will now handle the error messaging dynamically
+* Bug: Messages - Error in POST API endpoint when creating a message
+* Bug: Messages - Mark as unread was not working when object cache is enabled
+* Bug: Moderation - Clear API cache when member blocked/unblocked
+* Bug: Notifications - Follow notification still shows in dropdown after being unfollowed
+* Bug: Notifications - Group subscriptions page was broken on iOS Safari mobile browser
+* Bug: Notifications - Replied with GIF Notification were showing as empty
+* Bug: Profiles - Deleting a field in the fieldset was not reflected and when refreshing the page an error was displayed
+* Bug: The Events Calendar - Events page was showing blank instead of the login screen when visited from the guest user on a private site
+
+= 2.3.70 =
+* Enhancement: Network Search - Extended search results to only show LearnDash lessons from a course that a user has enrolled into. This is configured in the LearnDash Settings > Lesson Search
+* Enhancement: Performance improvements to the followers and following feature by adding pagination to the background process when notifications are being sent
+* Bug: Blog - Logged out users on private networks could had an unresponsive ‘Load More’ when attempting to load additional articles
+* Bug: Core - Code refactoring of the Activity and Forums by removing unnecessary !important tags
+* Bug: Forums - Pagination loading issue when forum was set to homepage
+* Bug: Forums - Using forum shortcodes whilst having a forum widget on the sidebar removed the ability to subscribe or create new discussions
+* Bug: Forums - Resolved performance issue where discussions took longer to load as users subscribed to many discussions
+* Bug: Groups - Cleaned PHP notice when multiple groups were selected as part of the 'groups_get_group_members' function
+* Bug: Media - New albums created from the Videos page were not displaying due to Redis Cache compatibility
+* Bug: Media - Images and video thumbnails were not being cache when not using Symlinks
+* Bug: Media - Image previews of documents after being renamed were not available
+* Bug: Media - Updated edit buttons to use correct case sensitive
+* Bug: Members - Search results returned incorrect values if a standard profile field was switched to a repeater field
+* Bug: Messages - Search terms were being removed from the search box when a search returned multiple results and was scrolled down
+* Bug: Multisite - Database error related to an unknown column ‘meta_id’
+* Bug: Network Search - Improved compatibility with Object Caching when searching for Groups
+* Bug: Notifications - Updated dropdown labels to use correct case sensitive
+* Bug: Profile - Improved support for uploading Profile photos using the built in Safari browser webcam capture
+* Bug: Widgets - Recent Topics and Recent Replies widgets for Forums were not loading content if custom prefixes were applied to the database table
+* Bug: Widgets - Sell All link on the Recent Active Members widget was unresponsive
+* Bug: Widgets - Group widget not showing hidden members of the same group when applied to Members Page
+* Bug: Elementor - Improved compatibility with the Elementor Maintenance mode
+* Bug: Elementor - Activity block content and excerpt conflicted with replies whenever multiple mentions were added
+* Bug: Geodirectory - Dropdown menu on Favorites and Listings tab was unresponsive
+* Bug: MemberPress - New error message if a user attempts to use an email address as a username/nickname, this resolves issues where @mentions cannot be sent due to invalid character
+* Bug: Rankmath - Fixed an issue where titles and meta details were not being applied to forum or discussions
+
+= 2.3.60 =
+* Notifications - Optimized the performance of the default notification preference workflow for members
+* Groups - Addressed the member count issue in groups when one of the members is suspended
+* Forums - Introduced link preview support for Forums discussions and replies
+* Forums - Resolved the issue where the shortcode for hidden group discussions would throw permission errors for group members
+* Forums - Fixed the issue with the discussion reply 'post' button not being enabled in the responsive view on Android
+* Forums - Resolved the layout issue with the 'Recent Replies' widget when using third-party Themes
+* Forums - Fixed the layout issue with discussion replies pagination when the page number is out of range
+* Activity - Handled the issue where the 'post' button was not accessible in the responsive view when the post content is significant
+* Media - Updated the media database table schema by adding indexing
+* Media - Addressed a UI issue with the search form in the documents sub-folder screen
+* Messages - Enhanced the upload and send media workflow performance in private messages. This improvement optimizes the way media data is stored and deleted, resulting in a faster and smoother messaging experience
+* Moderation - Resolved the issue of suspended member group activity single screen throwing a 404 error
+* Network Search - Refactored the code to allow for easy extension of the feature
+* Core - Provided an option to retain link previews and embeds even after deleting the associated links in activity, forum discussions, and replies
+* Core - Improved the user experience by displaying a loading icon when a search form is submitted or reset
+* Core - Improved the user experience of the GIPHY option in the dashboard by hiding sensitive text. Users can now toggle the visibility of sensitive content with an eye icon
+* Core - Handled a critical issue with the Presence PHP file, ensuring correct detection of active and inactive member status even on non-English language sites
+* Core - Handled a critical conflict with the 'BuddyBoss App' plugin build screen
+* REST API - Added API support for link previews in forums discussions and replies
+* REST API - Updated API support to align with the messages media workflow improvement
+* REST API - Handled the issue where the photos and videos reply option was disabled in the API
+* Learndash - Addressed the issue with social group members roles when sync is enabled for the Learndash group and social group
+
+= 2.3.50 =
+* Profiles - Addressed the issue where the password updated email was triggered when the account email is updated in the profile
+* Profiles - Resolved the incorrect last active stats issue on Members and profile pages
+* Notifications - Introduced new notification type to trigger when members create a reply to a blog post comment
+* Notifications - Improved the business logic for notification preferences, now loading from admin default if not updated
+* Notifications - Improved to send @mention email for blog post comments
+* Groups - Resolved the hidden group not showing issue for WP CLI commands
+* Groups - Resolved the activity not getting created issue for WP CLI commands
+* Groups - Handled the forum option not showing issue while creating a group when the forums slug is updated
+* Forums - Handled create discussion UX issue when selecting auto-generated tags
+* Activity - Improved the @mention dropdown by providing load more pagination
+* Activity - Fixed the multiple @mention option not working issue
+* Activity - Resolved the post form GIF search option UX issue
+* Media - Resolved the video thumbnail issue for videos with portrait orientation or a small-sized
+* Media - Fixed the documents search not working issue when the document is in the folder
+* Media - Addressed the media modal issue that was not showing the option to like and comment
+* Messages - Fixed the duplicate text issue when copy-pasting in the send message editor
+* Moderation - Improved the logic for handling suspended and blocked members content in Social groups, Network Search, Forums, Activity, and Widgets
+* Moderation - Handled the report member option UX issue, preventing multiple reports
+* Moderation - Addressed a minor accessibility issue with the 'report group' option
+* Network Search - Addressed the incorrect count issue when modifying search results using a hook
+* Core - Improvement by loading minified JS and CSS for third-party libraries
+* Core - Fixed the 'Repair user nicknames' tool that was not working as expected
+* REST API - Provided API support for social groups, activity, and forums moderation related updates
+* REST API - Handled the Forum discussion images URL issue in the API
+* REST API - Addressed the selected profile type not returning issue in the users endpoint
+* REST API - Resolved the join group action not working issue in the API for private and hidden groups when auto-approval is enabled
+* REST API - Fixed the read more option not working issue in the API for activity when it contains a link
+
+= 2.3.42 =
+* Registration - Resolved invited users can't register issue when registration option is disabled for non-members
+
+= 2.3.41 =
+* Profiles - Improved members profile link by reducing the length auto-generated unique identifier
+
+= 2.3.4 =
+* Profiles - Resolved formatting issues with paragraph type fields in profile fields
+* Groups - Handled incorrect group count issue on the directory screen when the sub-groups option is enabled
+* Forums - Enhanced performance of forum discussion favorites by restructuring their data
+* Forums - Resolved performance issues with discussions having a large number of replies through efficient pagination
+* Forums - Fixed a database error that occurred when updating a forum reply with attached media
+* Forums - Introduced a new parameter for the [bbp-reply-form] shortcode to pass the discussion ID
+* Forums - Fixed the issue where an auto-generated discussion would have preceding empty space
+* Activity - Fixed the problem with the discard draft option in the activity form
+* Activity - Handled the issue with auto-generated activity for comments links on custom post types not being clickable
+* Activity - Addressed the formatting issue where highlighted text did not maintain proper formatting when a link was applied
+* Media - Addressed the issue where the 'move photos' option was not functioning as expected
+* Media - Provided hooks to modify privacy options for media files
+* Registration - Enhanced invite flow to prevent multiple registrations using the same email invite
+* Core - Updated performance API MU plugin file name for improved consistency
+* Core - Improved code to load templates with block themes
+* REST API - Resolved the problem where the profile avatar was not returning in the notification endpoint
+* REST API - Fixed the issue where the group privacy option was being removed when updated using the group settings endpoint
 
 = 2.3.3 =
 * Profiles - Resolved critical issue of duplicate unique identifiers
@@ -152,7 +704,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Notifications - Handled repeated email notification issues by removing duplicate forum subscription entries
 * Notifications - Handled triggering notification when an activity post is updated in a social group
 * Notifications - Handled notification broken template issue when media uploaded in a social group
-* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin 
+* Notifications - Handled 'subscriptions' page 404 conflict with the 'WooCommerce Subscriptions' plugin
 * Notifications - Handled defaults disabled issue for force enabled notifications types
 
 = 2.2.9 =
@@ -166,7 +718,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Handled 'Recent Discussions' widget small floating content UI issue
 * Forums - Handled reply editor lagging issue while typing at normal speed
 * Forums - Handled discussion email notification for subscribed members, the link doesn't take to the discussion on login
-* Emails - Handled group email notification template UI issue in the responsive view 
+* Emails - Handled group email notification template UI issue in the responsive view
 * Moderation - Improved the suspended and blocked members content logic in the messaging module
 * Network Search - Handled course layout issue in the search results by handling excerpt formatting
 * Network Search - Handled search blog post by tag not working issue
@@ -524,7 +1076,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Handled Activity form text color issue when @mention added and removed
 * Activity - Small improvement to show user-friendly validation message from dropzone uploader
 * Activity - Small improvement to restrict media upload for post types auto-generated activity
-* Activity - Handled post types auto-generated activity long comment read more issue 
+* Activity - Handled post types auto-generated activity long comment read more issue
 * Media - Handled symlink not working issue on private page excluded URL for non-logged-in member
 * Media - Handled media upload not showing thumbnail issue for media size more than 10MB
 * Media - Handled media popup layout issue for a specific set of device sizes

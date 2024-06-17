@@ -322,8 +322,7 @@ function bbp_user_profile_url( $user_id = 0, $user_nicename = '' ) {
 	 * @param int    $user_id Optional. User id
 	 * @param string $user_nicename Optional. User nicename
 	 * @uses bbp_get_user_id() To get user id
-	 * @uses WP_Rewrite::using_permalinks() To check if the blog is using
-	 *                                       permalinks
+	 * @uses bbp_use_pretty_urls() To check if the site is using pretty URLs
 	 * @uses add_query_arg() To add custom args to the url
 	 * @uses home_url() To get blog home url
 	 * @uses apply_filters() Calls 'bbp_get_user_profile_url' with the user
@@ -331,7 +330,6 @@ function bbp_user_profile_url( $user_id = 0, $user_nicename = '' ) {
 	 * @return string User profile url
 	 */
 function bbp_get_user_profile_url( $user_id = 0, $user_nicename = '' ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -346,8 +344,8 @@ function bbp_get_user_profile_url( $user_id = 0, $user_nicename = '' ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%';
+	if ( bbp_use_pretty_urls() ) {
+		$url = bbp_get_root_url() . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%';
 
 		// Get username if not passed
 		if ( empty( $user_nicename ) ) {
@@ -431,7 +429,6 @@ function bbp_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
 	 * @return string
 	 */
 function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
-	global $wp_rewrite;
 
 	$bbp     = bbpress();
 	$user_id = bbp_get_user_id( $user_id );
@@ -440,8 +437,8 @@ function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = $wp_rewrite->root . bbp_get_user_slug() . '/%' . $bbp->user_id . '%/' . $bbp->edit_id;
+	if ( bbp_use_pretty_urls() ) {
+		$url = bbp_get_root_url() . bbp_get_user_slug() . '/%' . $bbp->user_id . '%/' . $bbp->edit_id;
 
 		// Get username if not passed
 		if ( empty( $user_nicename ) ) {
@@ -816,7 +813,6 @@ function bbp_favorites_permalink( $user_id = 0 ) {
 	 * @return string Permanent link to user profile page
 	 */
 function bbp_get_favorites_permalink( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -831,8 +827,8 @@ function bbp_get_favorites_permalink( $user_id = 0 ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/%' . bbp_get_user_favorites_rewrite_id() . '%';
+	if ( bbp_use_pretty_urls() ) {
+		$url  = bbp_get_root_url() . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/%' . bbp_get_user_favorites_rewrite_id() . '%';
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user->user_nicename ) ) {
 			$user_nicename = $user->user_nicename;
@@ -994,7 +990,6 @@ function bbp_subscriptions_permalink( $user_id = 0 ) {
 	 * @return string Permanent link to user subscriptions page
 	 */
 function bbp_get_subscriptions_permalink( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested.
 	$user_id = bbp_get_user_id( $user_id );
@@ -1390,7 +1385,6 @@ function bbp_user_topics_created_url( $user_id = 0 ) {
 	 * @return string Permanent link to user profile page
 	 */
 function bbp_get_user_topics_created_url( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -1405,8 +1399,8 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
+	if ( bbp_use_pretty_urls() ) {
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ) . bbp_get_topic_archive_slug();
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -1448,7 +1442,6 @@ function bbp_user_replies_created_url( $user_id = 0 ) {
 	 * @return string Permanent link to user profile page
 	 */
 function bbp_get_user_replies_created_url( $user_id = 0 ) {
-	global $wp_rewrite;
 
 	// Use displayed user ID if there is one, and one isn't requested
 	$user_id = bbp_get_user_id( $user_id );
@@ -1463,8 +1456,8 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 	}
 
 	// Pretty permalinks
-	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
+	if ( bbp_use_pretty_urls() ) {
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ). bbp_get_reply_archive_slug();
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -1534,7 +1527,7 @@ function bbp_login_notices() {
  *
  * @param string $url The URL to redirect to
  * @uses is_user_logged_in() Check if user is logged in
- * @uses wp_safe_redirect() To safely redirect
+ * @uses bbp_redirect() To safely redirect
  * @uses bbp_get_user_profile_url() To get the profile url of the user
  * @uses bbp_get_current_user_id() To get the current user id
  * @todo deprecate?
@@ -1550,8 +1543,7 @@ function bbp_logged_in_redirect( $url = '' ) {
 	$redirect_to = ! empty( $url ) ? $url : bbp_get_user_profile_url( bbp_get_current_user_id() );
 
 	// Do a safe redirect and exit
-	wp_safe_redirect( $redirect_to );
-	exit;
+	bbp_redirect( $redirect_to );
 }
 
 /**
@@ -2015,7 +2007,7 @@ function bbp_current_user_can_access_create_forum_form() {
 		$retval = true;
 
 		// Looking at a single forum & forum is open
-	} elseif ( ( is_page() || is_single() ) && bbp_is_forum_open() ) {
+	} elseif ( ( is_singular() ) && bbp_is_forum_open() ) {
 		$retval = bbp_current_user_can_publish_forums();
 
 		// User can edit this topic
@@ -2051,7 +2043,7 @@ function bbp_current_user_can_access_create_topic_form() {
 		$retval = true;
 
 		// Looking at a single forum & forum is open
-	} elseif ( ( bbp_is_single_forum() || is_page() || is_single() ) && bbp_is_forum_open() ) {
+	} elseif ( ( bbp_is_single_forum() || is_singular() ) && bbp_is_forum_open() ) {
 		$retval = bbp_current_user_can_publish_topics();
 
 		// User can edit this topic
@@ -2079,27 +2071,31 @@ function bbp_current_user_can_access_create_topic_form() {
  */
 function bbp_current_user_can_access_create_reply_form() {
 
-	// Users need to earn access
+	// Users need to earn access.
 	$retval = false;
 
-	// Always allow keymasters
+	// Always allow keymasters.
 	if ( bbp_is_user_keymaster() ) {
 		$retval = true;
 
-		// Looking at a single topic, topic is open, and forum is open
-	} elseif ( ( bbp_is_single_topic() || is_page() || is_single() ) && bbp_is_topic_open() && bbp_is_forum_open() ) {
+		// Looking at single topic (and singulars), topic is open, and forum is open.
+	} elseif ( ( bbp_is_single_topic() || is_singular() ) && bbp_is_topic_open() && bbp_is_forum_open() && bbp_is_topic_published() ) {
 		$retval = bbp_current_user_can_publish_replies();
 
-		// User can edit this topic
-	} elseif ( bbp_is_reply_edit() ) {
+		// User can edit this reply.
+	} elseif ( bbp_get_reply_id() ) {
 		$retval = current_user_can( 'edit_reply', bbp_get_reply_id() );
 
+		// User can edit this topic.
+	} elseif ( bbp_get_topic_id() ) {
+		$retval = current_user_can( 'edit_topic', bbp_get_topic_id() );
+
+		// Check for ajax reply.
 	} elseif ( bbp_is_ajax() && isset( $_POST['action'] ) && 'reply' === $_POST['action'] ) {
 		$retval = true;
-		// Check for ajax reply.
 	}
 
-	// Allow access to be filtered
+	// Allow access to be filtered.
 	return (bool) apply_filters( 'bbp_current_user_can_access_create_reply_form', (bool) $retval );
 }
 

@@ -92,7 +92,13 @@ function bp_core_clear_directory_pages_cache_page_edit( $post_id = 0 ) {
 		return;
 	}
 
-	wp_cache_delete( 'directory_pages', 'bp_pages' );
+	$cache_key = 'directory_pages';
+
+	if ( is_multisite() ) {
+		$cache_key = $cache_key . '_' . get_current_blog_id();
+	}
+
+	wp_cache_delete( $cache_key, 'bp_pages' );
 }
 add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
 
@@ -105,7 +111,14 @@ add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
  */
 function bp_core_clear_directory_pages_cache_settings_edit( $option ) {
 	if ( 'bp-pages' === $option ) {
-		wp_cache_delete( 'directory_pages', 'bp_pages' );
+
+		$cache_key = 'directory_pages';
+
+		if ( is_multisite() ) {
+			$cache_key = $cache_key . '_' . get_current_blog_id();
+		}
+
+		wp_cache_delete( $cache_key, 'bp_pages' );
 	}
 }
 add_action( 'update_option', 'bp_core_clear_directory_pages_cache_settings_edit' );
@@ -341,8 +354,13 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  * @return string
  */
 function bp_core_get_incremented_cache_key( $key, $group ) {
+	global $wpdb;
 	$incrementor = bp_core_get_incrementor( $group );
-	$cache_key   = md5( $key . $incrementor );
+
+	// Removes the placeholder escape strings from a query.
+	$key       = $wpdb->remove_placeholder_escape( $key );
+	$cache_key = md5( $key . $incrementor );
+
 	return $cache_key;
 }
 
@@ -532,3 +550,114 @@ function bb_subscriptions_clear_cache_after_update_secondary_item_id( $r ) {
 }
 
 add_action( 'bb_subscriptions_after_update_secondary_item_id', 'bb_subscriptions_clear_cache_after_update_secondary_item_id', 10 );
+
+/**
+ * Clear cache when add/remove user item reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $user_reaction_id User reaction id.
+ *
+ * @return void
+ */
+function bb_reaction_clear_user_item_cache( $user_reaction_id ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $user_reaction_id ) ) {
+		wp_cache_delete( $user_reaction_id, 'bb_reactions' );
+	}
+}
+
+add_action( 'bb_reaction_after_add_user_item_reaction', 'bb_reaction_clear_user_item_cache', 10, 1 );
+add_action( 'bb_reaction_after_remove_user_item_reaction', 'bb_reaction_clear_user_item_cache', 10, 1 );
+
+/**
+ * Clear cache when update user reaction.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int|false $deleted   The number of rows deleted, or false on error.
+ * @param array     $r         Args of user item reactions.
+ * @param object    $reactions Reaction data.
+ *
+ * @return void
+ */
+function bb_reaction_clear_remove_user_item_cache( $deleted, $r, $reactions ) {
+	bp_core_reset_incrementor( 'bb_reactions' );
+	if ( ! empty( $reactions ) ) {
+		foreach ( $reactions as $id ) {
+			wp_cache_delete( $id, 'bb_reactions' );
+		}
+	}
+}
+
+add_action( 'bb_reaction_after_remove_user_item_reactions', 'bb_reaction_clear_remove_user_item_cache', 10, 3 );
+
+/**
+ * Clear cache when reaction data updated.
+ *
+ * @since BuddyBoss 2.4.30
+ *
+ * @param int $reaction_data_id Reaction data id.
+ *
+ * @return void
+ */
+function bb_reaction_clear_reactions_data_cache( $reaction_data_id ) {
+	bp_core_reset_incrementor( 'bb_reaction_data' );
+	if ( ! empty( $reaction_data_id ) ) {
+		wp_cache_delete( $reaction_data_id, 'bb_reaction_data' );
+	}
+}
+
+add_action( 'bb_reaction_after_add_reactions_data', 'bb_reaction_clear_reactions_data_cache', 10, 1 );
+
+/**
+ * Clear cache when reaction settings updated.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param string $option    Name of the updated option.
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ *
+ * @return void
+ */
+function bb_reaction_clear_reactions_cache_on_update_settings( $old_value = '', $value = '', $option = '' ) {
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		bp_core_reset_incrementor( 'bb_reactions' );
+		bp_core_reset_incrementor( 'bb_reaction_data' );
+
+		wp_cache_flush_group( 'bb_reactions' );
+		wp_cache_flush_group( 'bb_reaction_data' );
+	} else {
+		wp_cache_flush();
+	}
+}
+
+add_action( 'update_option_bb_all_reactions', 'bb_reaction_clear_reactions_cache_on_update_settings', 10, 3 );
+add_action( 'update_option_bb_reaction_mode', 'bb_reaction_clear_reactions_cache_on_update_settings', 10, 3 );
+
+/**
+ * Clear cache when emotion deleted.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @param int    $postid Post ID.
+ * @param object $post   Post object.
+ *
+ * @return void
+ */
+function bb_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
+	if (
+		! empty( $post ) &&
+		! empty( $post->post_type ) &&
+		'bb_reaction' === $post->post_type
+	) {
+		bb_reaction_clear_reactions_cache_on_update_settings();
+	}
+}
+
+add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion', 10, 2 );

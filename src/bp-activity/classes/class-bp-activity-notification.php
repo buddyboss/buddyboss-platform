@@ -219,13 +219,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			$activity         = new BP_Activity_Activity( $item_id );
-			$activity_excerpt = '"' . bp_create_excerpt(
+			$activity_excerpt = bp_create_excerpt(
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
 					'ending' => __( '&hellip;', 'buddyboss' ),
 				)
-			) . '"';
+			);
 
 			if ( '&nbsp;' === $activity_excerpt ) {
 				$activity_excerpt = '';
@@ -234,28 +234,31 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			if ( empty( $activity_excerpt ) && function_exists( 'bp_blogs_activity_comment_content_with_read_more' ) ) {
 				$activity_excerpt = bp_blogs_activity_comment_content_with_read_more( '', $activity );
 
-				$activity_excerpt = '"' . bp_create_excerpt(
+				$activity_excerpt = bp_create_excerpt(
 					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
 						'ending' => __( '&hellip;', 'buddyboss' ),
 					)
-				) . '"';
+				);
 
 				if ( '&nbsp;' === $activity_excerpt ) {
 					$activity_excerpt = '';
 				}
 			}
 
+			$activity_excerpt = '"' . $activity_excerpt . '"';
+
 			$activity_excerpt = str_replace( '&hellip;"', '&hellip;', $activity_excerpt );
 			$activity_excerpt = str_replace( '&#8203;', '', $activity_excerpt );
 			$activity_excerpt = str_replace( '""', '', $activity_excerpt );
 
-			$media_ids    = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
-			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
-			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
-			$amount       = 'single';
+			$activity_metas = bb_activity_get_metadata( $activity->id );
+			$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
+			$document_ids   = $activity_metas['bp_document_ids'][0] ?? '';
+			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
+			$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
+			$amount         = 'single';
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
@@ -859,7 +862,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New Follower', 'buddyboss' ),
+			esc_html__( 'New followers', 'buddyboss' ),
 			array( 'bb_following_new' ),
 			17
 		);
