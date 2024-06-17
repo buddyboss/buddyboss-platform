@@ -1705,7 +1705,7 @@ function bb_xprofile_remove_default_png_avatar_on_update_xprofile_visibility( BB
  *
  * @return array Repair list items.
  */
-function bb_xprofile_repair_xprofile_visibility ( $repair_list ) {
+function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-visibility-field-migrate',
 		esc_html__( 'Migrate visibility settings of profile fields to the new structure', 'buddyboss' ),

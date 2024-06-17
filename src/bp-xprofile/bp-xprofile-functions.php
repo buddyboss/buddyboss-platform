@@ -563,7 +563,7 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
 
 		// Check if data available in the visibility table.
 		$field_visibility = new BB_XProfile_Visibility( $field_id, $user_id );
-		if( ! empty( $field_visibility->id ) ) {
+		if ( ! empty( $field_visibility->id ) ) {
 			$current_level = $field_visibility->value;
 		} else {
 			$current_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
@@ -1487,7 +1487,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	} else {
 
 		$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-		if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
+		if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
 			$user_visibility_levels = array();
 		}
 
@@ -1508,7 +1508,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	
 		$field_ids = array();
 		foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
-			if ( in_array( $field_visibility, $levels ) ) {
+			if ( in_array( $field_visibility, $levels, true ) ) {
 				$field_ids[] = $field_id;
 			}
 		}
@@ -2736,15 +2736,15 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
 	$bp   = buddypress();
 	$args = array(
-		'number' => 50,
-		'paged'  => $page,
+		'number'     => 50,
+		'paged'      => $page,
 		'meta_query' => array(
 			array(
 				'key'     => 'bp_xprofile_visibility_levels',
 				'compare' => 'EXISTS',
 			),
 		),
-		'fields' => 'ID',
+		'fields'     => 'ID',
 	);
 
 	$users = get_users( $args );
@@ -2813,7 +2813,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 			// Execute delete queries.
 			if ( ! empty( $delete_placeholders ) ) {
 				$delete_placeholders = implode( ', ', $delete_placeholders );
-				$delete_query = "DELETE FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND field_id IN ({$delete_placeholders})";
+				$delete_query        = "DELETE FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND field_id IN ({$delete_placeholders})";
 				$wpdb->query( $wpdb->prepare( $delete_query, $user_id ) ); // phpcs:ignore
 			}
 
@@ -2825,7 +2825,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 			// Insert new entries.
 			if ( ! empty( $insert_placeholders ) ) {
 				$insert_placeholders = implode( ', ', $insert_placeholders );
-				$insert_query = "INSERT INTO {$bp->profile->table_name_visibility} ( field_id, user_id, value, last_updated ) VALUES {$insert_placeholders}";
+				$insert_query        = "INSERT INTO {$bp->profile->table_name_visibility} ( field_id, user_id, value, last_updated ) VALUES {$insert_placeholders}";
 				$wpdb->query( $insert_query ); // phpcs:ignore
 			}
 		} else {

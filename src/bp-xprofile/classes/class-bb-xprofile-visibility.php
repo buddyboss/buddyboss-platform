@@ -328,6 +328,7 @@ class BB_XProfile_Visibility {
 
 		return true;
 	}
+
 	/**
 	 * Delete field.
 	 *
@@ -403,7 +404,7 @@ class BB_XProfile_Visibility {
 
 		$quoted_levels = implode( ',', $quoted_levels );
 
-		$sql     = $wpdb->prepare( "SELECT DISTINCT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND value IN ( $quoted_levels )" , $user_id );
+		$sql     = $wpdb->prepare( "SELECT DISTINCT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND value IN ( $quoted_levels )", $user_id );
 		$results = $wpdb->get_results( $sql, OBJECT_K );
 
 		// Iterate over the results and transform the array.

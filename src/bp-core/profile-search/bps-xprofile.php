@@ -93,12 +93,10 @@ function bp_ps_xprofile_search( $f ) {
 		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
 	}
 
-	if (
-		! current_user_can( 'administrator' )
-	) {
+	if ( ! current_user_can( 'administrator' ) ) {
 		$field_visibility = array( 'public' );
 		if ( is_user_logged_in() ) {
-			$loggin_user_id = bp_loggedin_user_id();
+			$loggin_user_id     = bp_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
 			if ( bp_is_active( 'friends' ) ) {
 				$friend_ids_sql = $wpdb->prepare(
@@ -619,12 +617,10 @@ function bp_ps_anyfield_search( $f ) {
 
 	$sql['select'] = "SELECT DISTINCT xpd.user_id as user_id, xpd.field_id as field_id FROM {$bp->profile->table_name_data} xpd";
 
-	if (
-		! current_user_can( 'administrator' )
-	) {
+	if ( ! current_user_can( 'administrator' ) ) {
 		$field_visibility = array( 'public' );
 		if ( is_user_logged_in() ) {
-			$loggin_user_id = bp_loggedin_user_id();
+			$loggin_user_id     = bp_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
 			if ( bp_is_active( 'friends' ) ) {
 				$friend_ids_sql = $wpdb->prepare(
