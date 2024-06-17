@@ -145,8 +145,13 @@ class BB_XProfile_Visibility {
 	public static function user_data_exists( $user_id = 0 ) {
 		global $wpdb;
 
-		$bp     = buddypress();
-		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d", $user_id ) );
+		$bp           = buddypress();
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
+		if ( $table_exists ) {
+			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d", $user_id ) );
+		} else {
+			$retval = false;
+		}
 
 		/**
 		 * Filters whether or not any data already exists for the user.
