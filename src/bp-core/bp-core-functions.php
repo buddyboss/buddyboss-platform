@@ -9776,7 +9776,7 @@ function bb_pro_schedule_posts_version() {
 }
 
 /**
- * Function to check if GD library is enabled.
+ * Function to check if GD or Imagick library is enabled.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -9807,5 +9807,12 @@ function bb_is_gd_or_imagick_library_enabled() {
 		}
 	}
 
+	/**
+	 * Filters the enabled/disabled value for image library.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $is_enabled True if enabled else false.
+	 */ 
 	return apply_filters( 'bb_is_gd_or_imagick_library_enabled', (bool) $is_enabled );
 }
