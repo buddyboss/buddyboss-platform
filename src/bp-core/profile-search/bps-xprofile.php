@@ -673,7 +673,6 @@ function bp_ps_anyfield_search( $f ) {
 				'user_id'                        => false,
 			)
 		);
-
 		$fields_array = array();
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_value ) {
@@ -685,7 +684,6 @@ function bp_ps_anyfield_search( $f ) {
 				}
 			}
 		}
-
 		foreach ( $results as $key => $value ) {
 			$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
 			$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
