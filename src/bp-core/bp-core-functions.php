@@ -9776,6 +9776,32 @@ function bb_pro_schedule_posts_version() {
 }
 
 /**
+ * Function for writing logs to debug.log
+ *
+ * @param [mixed] $log The log entry that needs to be written into the debug.log.
+ * @param [boolean] $always_print Optional. True then always print the log. Default false.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_error_log( $log = '', $always_print = false ) {
+	if (
+		(
+			defined( 'BB_DEBUG_LOG' ) &&
+			true === BB_DEBUG_LOG
+		) ||
+		true === $always_print
+	) {
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} else {
+			error_log( $log );
+		}
+	}
+}
+
+/**
  * Function to check if GD or Imagick library is enabled.
  *
  * @since BuddyBoss [BBVERSION]
@@ -9813,6 +9839,6 @@ function bb_is_gd_or_imagick_library_enabled() {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $is_enabled True if enabled else false.
-	 */ 
+	 */
 	return apply_filters( 'bb_is_gd_or_imagick_library_enabled', (bool) $is_enabled );
 }
