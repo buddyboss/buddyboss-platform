@@ -9782,12 +9782,30 @@ function bb_pro_schedule_posts_version() {
  *
  * @return bool
  */
-function bb_is_gd_library_enabled() {
+function bb_is_gd_or_imagick_library_enabled() {
 	static $is_enabled = '';
 
 	if ( '' === $is_enabled ) {
-		$is_enabled = extension_loaded( 'gd' ) ? true : false;
+
+		// Check if editor loaded successfully.
+		if ( function_exists( '_wp_image_editor_choose' ) ) {
+			$lib_loaded = _wp_image_editor_choose();
+			if (
+				! empty( $lib_loaded  ) &&
+				! is_wp_error( $lib_loaded  ) &&
+				(
+					'WP_Image_Editor_GD' === $lib_loaded ||
+					'WP_Image_Editor_Imagick' === $lib_loaded
+				)
+			) {
+				$is_enabled = true;
+			} else {
+				$is_enabled = false;
+			}
+		} else {
+			$is_enabled = extension_loaded( 'gd' ) || extension_loaded( 'imagick' );
+		}
 	}
 
-	return $is_enabled;
+	return apply_filters( 'bb_is_gd_or_imagick_library_enabled', (bool) $is_enabled );
 }

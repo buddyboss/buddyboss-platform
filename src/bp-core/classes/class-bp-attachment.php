@@ -653,8 +653,8 @@ abstract class BP_Attachment {
 		$editor = wp_get_image_editor( $r['file'] );
 
 		if ( is_wp_error( $editor ) ) {
-			if ( ! bb_is_gd_library_enabled() ) {
-				return new WP_Error( 'gd_library_disabled', esc_html__( 'GD library is disabled.', 'buddyboss' ) );
+			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+				return new WP_Error( 'image_no_editor', esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
 			}
 
 			return $editor;
