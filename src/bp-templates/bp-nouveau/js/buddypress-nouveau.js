@@ -490,7 +490,8 @@ window.bp = window.bp || {};
 					extras: null,
 					caller: null,
 					template: null,
-					method: 'reset'
+					method: 'reset',
+					ajaxload: true,
 				},
 				data
 			);
@@ -526,6 +527,10 @@ window.bp = window.bp || {};
 
 			if ( null !== data.extras ) {
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
+			}
+
+			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
+				return false;
 			}
 
 			/* Set the correct selected nav and filter */
@@ -725,7 +730,13 @@ window.bp = window.bp || {};
 				this.objects,
 				function ( o, object ) {
 					// Continue when ajax is blocked for object request.
-					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+					if (
+						$( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length &&
+						(
+							! _.isUndefined( BP_Nouveau.is_send_ajax_request ) &&
+							'' !== BP_Nouveau.is_send_ajax_request
+						)
+					) {
 						return;
 					}
 
@@ -788,6 +799,10 @@ window.bp = window.bp || {};
 							queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
 						} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+						}
+
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+							queryData.ajaxload = false;
 						}
 
 						// Populate the object list.
@@ -889,6 +904,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 
+			// Display download button for media/document/video, Display more options on activity.
+			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
+
 			// Create event for remove single notification.
 			bp.Nouveau.notificationRemovedAction();
 			// Remove all notifications.
@@ -901,6 +919,9 @@ window.bp = window.bp || {};
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+
+			// Prevent duplicated emoji from windows system emoji picker.
+			$( document ).keydown( this.mediumFormAction.bind( this ) );
 		},
 
 		/**
@@ -3075,7 +3096,8 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.media ) &&
 				! _.isUndefined( BP_Nouveau.media.emoji ) &&
 				! $targetEl.closest( '.post-emoji' ).length &&
-				! $targetEl.is( '.emojioneemoji,.emojibtn' ) ) {
+				! $targetEl.is( '.emojioneemoji,.emojibtn' ) &&
+				! $targetEl.closest( '.emojionearea-theatre' ).length ) {
 				$( '.post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
 				if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
 					$( '.emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
@@ -3712,7 +3734,7 @@ window.bp = window.bp || {};
 				totalProgress = 0;
 			if ( dropzone.files.length == 1 ) {
 				$( dropzone.element ).addClass( 'dz-single-view' );
-				message = 'Uploading <strong>' + dropzone.files[0].name + '</strong>';
+				message = BP_Nouveau.media.i18n_strings.uploading + ' <strong>' + dropzone.files[0].name + '</strong>';
 				progress = dropzone.files[0].upload.progress;
 			} else {
 				$( dropzone.element ).removeClass( 'dz-single-view' );
@@ -3721,7 +3743,7 @@ window.bp = window.bp || {};
 					totalProgress += file.upload.progress;
 				});
 				progress = totalProgress / dropzone.files.length;
-				message = 'Uploading <strong>' + dropzone.files.length + ' files</strong>';
+				message = BP_Nouveau.media.i18n_strings.uploading + ' <strong>' + dropzone.files.length + ' files</strong>';
 			}
 
 			$( dropzone.element ).find( '.dz-global-progress .dz-progress').css( 'width', progress + '%' );
@@ -4343,7 +4365,70 @@ window.bp = window.bp || {};
 				year: year,
 				time: time
 			};
-		}
+		},
+
+		/**
+		 * Insert blank space at cursor position to prevent duplicated emoji from windows system emoji picker.
+		 */
+		mediumFormAction: function( event ) {
+			var element;
+
+			event = event || window.event;
+
+			if ( event.target ) {
+				element = event.target;
+			} else if ( event.srcElement) {
+				element = event.srcElement;
+			}
+
+			if ( navigator.userAgent.indexOf( 'Win' ) !== -1 && $( element ).hasClass( 'medium-editor-element' ) && event.metaKey ) {
+				var content = element.innerHTML || element.textContent;
+				content = content.trim();
+				if ( !content ) {
+					event.preventDefault();
+					this.insertBlankSpaceAtCursor();
+				}
+			}
+		},
+
+		insertBlankSpaceAtCursor: function() {
+			var selection = window.getSelection();
+			if ( !selection.rangeCount ) {
+				return;
+			}
+
+			var range = selection.getRangeAt( 0 );
+
+			var spaceNode = document.createElement( 'span' );
+			spaceNode.innerHTML = '&nbsp;';
+
+			range.insertNode( spaceNode );
+
+			range.setStartAfter( spaceNode );
+			range.setEndAfter( spaceNode );
+
+			selection.removeAllRanges();
+			selection.addRange( range );
+		},
+
+		toggleActivityOption: function( event ) {
+
+			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
+
+				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible open' ) ) {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( 'body' ).removeClass( 'more_option_open' );
+				} else {
+					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible open' );
+					$( 'body' ).addClass( 'more_option_open' );
+				}
+
+			} else {
+				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
+				$( 'body' ).removeClass( 'more_option_open' );
+			}
+		},
 	};
 
    // Launch BP Nouveau.
