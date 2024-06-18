@@ -40,7 +40,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 			if ( is_callable( $callback ) ) {
 				// phpcs:ignore
-				error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
+				bb_error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
 
 				if ( empty( $args ) ) {
 					$result = (bool) call_user_func( $callback, $this );

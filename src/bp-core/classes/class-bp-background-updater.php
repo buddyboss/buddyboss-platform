@@ -38,7 +38,7 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 			$dispatched = parent::dispatch();
 
 			if ( is_wp_error( $dispatched ) ) {
-				error_log( sprintf( 'Unable to dispatch BuddyPress updater: %s', $dispatched->get_error_message() ) );
+				bb_error_log( sprintf( 'Unable to dispatch BuddyPress updater: %s', $dispatched->get_error_message() ) );
 			}
 		}
 
@@ -104,7 +104,7 @@ if ( ! class_exists( 'BP_Background_Updater' ) ) {
 			}
 
 			if ( is_callable( $callback ) ) {
-				error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
+				bb_error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
 
 				if ( empty( $args ) ) {
 					$result = (bool) call_user_func( $callback, $this );
