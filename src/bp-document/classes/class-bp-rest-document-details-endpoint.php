@@ -158,6 +158,7 @@ class BP_REST_Document_Details_Endpoint extends WP_REST_Controller {
 
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
+				$tabs[ $key ]['slug']     = $item['slug'];
 			}
 		}
 
@@ -170,7 +171,7 @@ class BP_REST_Document_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_documents_privacy() {
-		$privacy = buddypress()->document->visibility_levels;
+		$privacy = apply_filters( 'bp_document_get_visibility_levels', buddypress()->document->visibility_levels );
 		$retval  = array();
 
 		if ( ! empty( $privacy ) ) {

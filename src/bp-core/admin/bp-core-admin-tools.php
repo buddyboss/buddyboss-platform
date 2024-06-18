@@ -384,13 +384,21 @@ function bp_admin_repair_list() {
 		);
 	}
 
-	// Groups:
-	// - user group count.
+	// Group repair actions.
 	if ( bp_is_active( 'groups' ) ) {
+
+		// User group count.
 		$repair_list[10] = array(
 			'bp-group-count',
 			esc_html__( 'Repair total groups count for each member', 'buddyboss' ),
 			'bp_admin_repair_group_count',
+		);
+
+		// Recalculate group members count for each group.
+		$repair_list[124] = array(
+			'bp-group-members-count',
+			esc_html__( 'Recalculate the total members count for each group', 'buddyboss' ),
+			'bp_admin_repair_group_member_count',
 		);
 	}
 
@@ -439,7 +447,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
-			esc_html__( 'Update activity favorites data', 'buddyboss' ),
+			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss' ),
 			'bp_admin_update_activity_favourite',
 		);
 	}
@@ -450,6 +458,13 @@ function bp_admin_repair_list() {
 		'bp-invitations-table',
 		esc_html__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss' ),
 		'bp_admin_invitations_table',
+	);
+
+	// Sync profile completion widget.
+	$repair_list[111] = array(
+		'bp-sync-profile-completion-widget',
+		esc_html__( 'Re-Sync Profile Completion widget profile photo status', 'buddyboss' ),
+		'bb_sync_profile_completion_widget',
 	);
 
 	ksort( $repair_list );
@@ -981,7 +996,14 @@ function bp_admin_install_emails() {
 			continue;
 		}
 
-		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		$args = bp_parse_args( $email, $defaults, 'install_email_' . $id );
+
+		$page_exist = post_exists( $args['post_title'], '', '', bp_get_email_post_type() );
+		if ( ! empty( $page_exist ) && 'publish' === get_post_status( $page_exist ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( $args );
 		if ( ! $post_id ) {
 			continue;
 		}
@@ -1227,7 +1249,7 @@ function bp_admin_repair_tools_wrapper_function() {
 		),
 	);
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$type = bb_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {
 		wp_send_json_error( $response );
@@ -1300,57 +1322,68 @@ add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_t
  * @since BuddyBoss 1.3.3
  */
 function bp_admin_update_activity_favourite() {
+	global $wpdb, $bp;
 
-	$bp_activity_favorites = bp_get_option( 'bp_activity_favorites', false );
+	$bp_activity_reactions = bp_get_option( 'bp_activity_reactions', false );
 
-	if ( ! $bp_activity_favorites ) {
+	if ( ! $bp_activity_reactions ) {
+		$offset   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+		$per_page = (int) apply_filters( 'bb_admin_update_activity_favourite_per_page', 200 );
 
-		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-
-		$args = array(
-			'number' => 50,
-			'offset' => $offset,
+		$items = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT a.id AS activity_id, am.meta_value FROM {$bp->activity->table_name} a INNER JOIN {$bp->activity->table_name_meta} am ON a.id = am.activity_id WHERE am.meta_key = 'bp_favorite_users' AND am.meta_value != '' ORDER BY a.id DESC LIMIT %d OFFSET %d",
+				$per_page,
+				$offset
+			),
+			ARRAY_A
 		);
 
-		$users = get_users( $args );
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $item ) {
 
-		if ( ! empty( $users ) ) {
+				$item_id      = $item['activity_id'];
+				$fav_user_ids = maybe_unserialize( $item['meta_value'] );
 
-			foreach ( $users as $user ) {
-				$user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
-				if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
-					$offset ++;
+				if ( ! is_array( $fav_user_ids ) || empty( $fav_user_ids ) ) {
+					++$offset;
 					continue;
 				}
-				foreach ( $user_favs as $fav ) {
 
-					// Update the users who have favorited this activity.
-					$favorite_users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
-					if ( empty( $favorite_users ) || ! is_array( $favorite_users ) ) {
-						$favorite_users = array();
-					}
-					// Add to activity's favorited users.
-					$favorite_users[] = $user->ID;
+				$migrated_fav_user_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						'SELECT user_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
+						$item_id
+					)
+				);
 
-					// Update activity meta
-					bp_activity_update_meta( $fav, 'bp_favorite_users', array_unique( $favorite_users ) );
-
+				if ( ! empty( $migrated_fav_user_ids ) ) {
+					$fav_user_ids = array_diff( $fav_user_ids, $migrated_fav_user_ids );
 				}
-				$offset ++;
+
+				if ( ! empty( $fav_user_ids ) ) {
+					$chunk_length    = (int) apply_filters( 'bb_admin_update_activity_favourite_chunk_length', 500 );
+					$user_fav_chunks = count( $fav_user_ids ) > $chunk_length ? array_chunk( $fav_user_ids, $chunk_length ) : array( $fav_user_ids );
+
+					if ( ! empty( $user_fav_chunks ) ) {
+						foreach ( $user_fav_chunks as $chunk ) {
+							bb_admin_tool_migration_reaction( $item_id, $chunk );
+						}
+					}
+				}
+
+				++$offset;
 			}
 
-			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 			return array(
 				'status'  => 'running',
 				'offset'  => $offset,
 				'records' => $records_updated,
 			);
-
 		} else {
-
-			bp_update_option( 'bp_activity_favorites', true );
-
+			bp_update_option( 'bp_activity_reactions', true );
 			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 			return array(
@@ -1368,6 +1401,60 @@ function bp_admin_update_activity_favourite() {
 	}
 }
 
+/**
+ * Insert reactions for a user in bulk.
+ *
+ * @since 2.5.70
+ *
+ * @param int   $item_id  Item ID.
+ * @param array $user_ids Array of user ID.
+ *
+ * @return void
+ */
+function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
+	global $wpdb;
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	// Validate the user ids.
+	$filtered_user_ids = get_users(
+		array(
+			'include'         => $user_ids,
+			'fields'          => 'ids',
+			'populate_extras' => false,
+			'count_total'     => false,
+		)
+	);
+
+	if ( empty( $filtered_user_ids ) ) {
+		return;
+	}
+
+	$user_reaction_tbl    = bb_load_reaction()::$user_reaction_table;
+	$reaction_id          = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$place_holder_queries = array();
+
+	foreach ( $filtered_user_ids as $user_id ) {
+		$place_holder_queries[] = $wpdb->prepare( '(%d, %d, %s, %d, %s)', $user_id, $reaction_id, 'activity', $item_id, bp_core_current_time() );
+	}
+
+	if ( ! empty( $place_holder_queries ) ) {
+		$place_holder_queries = implode( ', ', $place_holder_queries );
+        $wpdb->query( "INSERT INTO {$user_reaction_tbl} ( user_id, reaction_id, item_type, item_id, date_created ) VALUES {$place_holder_queries}" ); // phpcs:ignore
+
+		bp_core_reset_incrementor( 'bb_reactions' );
+
+		bb_load_reaction()->bb_prepare_reaction_summary_data(
+			array(
+				'reaction_id' => $reaction_id,
+				'item_id'     => $item_id,
+				'item_type'   => 'activity',
+			)
+		);
+	}
+}
 
 /**
  * Create the invitations database table if it does not exist.
@@ -1432,5 +1519,186 @@ function bp_admin_invitations_table() {
 	return array(
 		'status'  => 0,
 		'message' => sprintf( $statement, $result ),
+	);
+}
+
+/**
+ * Function will sync profile uploaded photo for profile completion widget data.
+ *
+ * @since BuddyBoss 2.0.9
+ *
+ * @return array
+ */
+function bb_sync_profile_completion_widget() {
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	// Users args.
+	$args = array(
+		'number'   => 50,
+		'fields'   => array( 'ID' ),
+		'meta_key' => 'bp_profile_completion_widgets',
+		'offset'   => $offset,
+	);
+
+	$users = get_users( $args );
+	if ( ! empty( $users ) ) {
+		foreach ( $users as $user ) {
+			// Get existing user meta who have profile completion widget data in DB.
+			$get_user_data = bp_get_user_meta( $user->ID, 'bp_profile_completion_widgets', true );
+			if ( ! empty( $get_user_data ) ) {
+				$total_completed_count = isset( $get_user_data['completed_fields'] ) ? $get_user_data['completed_fields'] : 0;
+
+				if (
+					isset( $get_user_data['photo_type'] ) &&
+					isset( $get_user_data['photo_type']['profile_photo'] ) &&
+					isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] )
+				) {
+					$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user->ID ) ) ? 1 : 0;
+
+					if ( ! $is_profile_photo_uploaded &&
+					     bp_enable_profile_gravatar() &&
+					     'blank' !== get_option( 'avatar_default', 'mystery' )
+					) {
+						/**
+						 * There is not any direct way to check gravatar set for user.
+						 * Need to check $profile_url is send 200 status or not.
+						 */
+						$profile_url = get_avatar_url( $user->ID, array( 'default' => '404' ) );
+
+						$headers = get_headers( $profile_url, 1 );
+						if ( $headers[0] === 'HTTP/1.1 200 OK' && isset( $headers['Link'] ) ) {
+							$is_profile_photo_uploaded = 1;
+						}
+					}
+
+					if ( (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] !== (int) $is_profile_photo_uploaded ) {
+						$get_user_data['photo_type']['profile_photo']['is_uploaded'] = $is_profile_photo_uploaded;
+						if ( 1 === (int) $is_profile_photo_uploaded ) {
+							$total_completed_count = ++ $total_completed_count;
+						} else {
+							$total_completed_count = -- $total_completed_count;
+						}
+					}
+				}
+
+				$get_user_data['completed_fields'] = $total_completed_count;
+
+				// Update new response for completion widget.
+				bp_update_user_meta( $user->ID, 'bp_profile_completion_widgets', $get_user_data );
+			}
+
+			$offset++;
+		}
+
+		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss' );
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
+
+/**
+ * Function will recalculate the group total members count
+ * and remove the orphaned group members records.
+ *
+ * @since BuddyBoss 2.3.90
+ *
+ * @return array
+ */
+function bp_admin_repair_group_member_count() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'groups' ) ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp     = buddypress();
+
+	/**
+	 * Check and delete orphan group members records from wp_bp_groups_members table
+	 * if user doesn't exist in users table.
+	 */
+	if ( 0 === $offset ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query( "DELETE m, mm FROM {$wpdb->prefix}bp_groups_members AS m LEFT JOIN {$wpdb->users} AS u ON u.ID = m.user_id LEFT JOIN {$wpdb->prefix}bp_groups_membermeta AS mm ON m.ID = mm.member_id WHERE u.ID IS NULL" );
+	}
+
+	// Fetch all groups.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$group_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT id FROM {$wpdb->prefix}bp_groups ORDER BY id DESC LIMIT 20 OFFSET %d", $offset ) );
+
+	if ( ! empty( $group_ids ) ) {
+		foreach ( $group_ids as $group_id ) {
+			// Remove cached group member count.
+			$cache_key = 'bp_group_get_total_member_count_' . $group_id;
+			wp_cache_delete( $cache_key, 'bp_groups' );
+
+			$select_sql = "SELECT COUNT(u.ID) FROM {$bp->groups->table_name_members} m";
+			$join_sql   = "LEFT JOIN {$wpdb->users} u ON u.ID = m.user_id";
+
+			// Where conditions.
+			$where_conditions          = array();
+			$where_conditions['where'] = $wpdb->prepare( 'm.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $group_id );
+
+			/**
+			 * Filters the MySQL WHERE conditions for the group members count.
+			 *
+			 * @since BuddyBoss 2.3.90
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $ud_name          moderation type
+			 */
+			$where_conditions = apply_filters( 'bb_group_member_count_where_sql', $where_conditions, 'user_id' );
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filters the MySQL JOIN conditions for the group members count.
+			 *
+			 * @since BuddyBoss 2.3.90
+			 *
+			 * @param array  $join_sql Current conditions for MySQL JOIN statement.
+			 * @param string $ud_name  moderation type
+			 */
+			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
+
+			$sql = "{$select_sql} {$join_sql} {$where_sql}";
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+			$member_count = $wpdb->get_var( $sql );
+
+			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
+			wp_cache_set( $cache_key, absint( $member_count ), 'bp_groups' );
+
+			$offset++;
+		}
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => sprintf(
+				/* translators: %s: number of groups */
+				esc_html__( '%s groups member count updated successfully.', 'buddyboss' ),
+				bp_core_number_format( $offset )
+			),
+		);
+	}
+
+	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
+
+	return array(
+		'status'  => 1,
+		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss' ) ),
 	);
 }

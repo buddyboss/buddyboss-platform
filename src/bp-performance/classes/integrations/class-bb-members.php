@@ -101,6 +101,9 @@ class BB_Members extends Integration_Abstract {
 			'update_option_bp-disable-cover-image-uploads'   => 3,
 			'update_option_bp-default-profile-cover-type'    => 3,
 			'update_option_bp-default-custom-profile-cover'  => 3,
+
+			// When change the member display name.
+			'update_option_bp-display-name-format'           => 3,
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -111,9 +114,12 @@ class BB_Members extends Integration_Abstract {
 
 		if ( $cache_bb_members ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/members',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 					'purge_deep_events' => array_keys( $purge_single_events ),
@@ -123,7 +129,7 @@ class BB_Members extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/members/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -191,22 +197,25 @@ class BB_Members extends Integration_Abstract {
 	 * @param array $signup_ids Signup IDs.
 	 */
 	public function event_bp_core_signup_after_delete( $signup_ids ) {
-
 		if ( ! empty( $signup_ids ) && is_array( $signup_ids ) ) {
 			$to_delete = \BP_Signup::get(
 				array(
 					'include' => $signup_ids,
 				)
 			);
-			$signups   = ! empty( $to_delete['signups'] ) ? $to_delete['signups'] : '';
+
+			$signups = ! empty( $to_delete['signups'] ) ? $to_delete['signups'] : '';
+
 			if ( ! empty( $signups ) ) {
+				$user_ids = array();
+
 				foreach ( $signups as $signup ) {
-					$user_id = username_exists( $signup->user_login );
-					$this->purge_item_cache_by_item_id( $user_id );
+					$user_ids[] = username_exists( $signup->user_login );
 				}
+
+				$this->purge_item_cache_by_item_ids( $user_ids );
 			}
 		}
-
 	}
 
 	/**
@@ -377,7 +386,7 @@ class BB_Members extends Integration_Abstract {
 	 * @param int $user_id User ID.
 	 */
 	public function event_bp_core_user_updated_last_activity( $user_id ) {
-		$this->purge_item_cache_by_item_id( $user_id );
+		$this->purge_item_cache_by_item_id( $user_id, false );
 	}
 
 	/**
@@ -422,9 +431,38 @@ class BB_Members extends Integration_Abstract {
 	 *
 	 * @param $member_id
 	 */
-	private function purge_item_cache_by_item_id( $member_id ) {
+	private function purge_item_cache_by_item_id( $member_id, $clear_subscription = true ) {
 		Cache::instance()->purge_by_group( 'bp-members_' . $member_id );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking_' . untrailingslashit( bp_core_get_user_domain( $member_id ) ) );
+		if ( $clear_subscription ) {
+			$this->purge_subscription_cache_by_user_id( $member_id );
+		}
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-members_' ), array( $this, 'prepare_user_deeplink' ) );
+	}
+
+	/**
+	 * Prepare activity deeplink.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string
+	 */
+	public function prepare_user_deeplink( $user_id ) {
+		return 'bbapp-deeplinking_' . untrailingslashit( bp_core_get_user_domain( $user_id ) );
 	}
 
 	/**
@@ -560,5 +598,56 @@ class BB_Members extends Integration_Abstract {
 		Cache::instance()->purge_by_component( 'post_comment' );
 		Cache::instance()->purge_by_component( 'sfwd-' );
 		Cache::instance()->purge_by_group( 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_group( 'bb-subscriptions' );
+		Cache::instance()->purge_by_component( 'bb-subscriptions_' );
+	}
+
+	/**
+	 * Purge item cache by user id.
+	 *
+	 * @param int $user_id User ID.
+	 */
+	private function purge_subscription_cache_by_user_id( $user_id ) {
+		$args = array(
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+		);
+
+		$all_subscription = bb_get_subscriptions(
+			$args,
+			true
+		);
+
+		if ( ! empty( $all_subscription['subscriptions'] ) ) {
+			$this->purge_item_cache_by_subscription_ids( $all_subscription['subscriptions'] );
+			Cache::instance()->purge_by_group( 'bb-subscriptions' );
+		}
+	}
+
+	/**
+	 * When changed display name format settings from the Settings -> Profile.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_update_option_bp_display_name_format( $old_value, $value, $option ) {
+		$this->purge_cache_on_change_default_profile_images_settings();
+	}
+
+	/**
+	 * Purge item cache by ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_subscription_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bb-subscriptions_' ) );
 	}
 }

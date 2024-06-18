@@ -9,8 +9,9 @@
  * @since   BuddyBoss 1.4.0
  * @version 1.4.0
  */
-?>
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+?>
 <div class="bb-media-container group-media">
 
 	<?php
@@ -43,13 +44,17 @@
 						?>
 
 						<div id="search-documents-form" class="media-search-form" data-bp-search="document">
-							<form action="" method="get" class="bp-dir-search-form" id="group-document-search-form" autocomplete="off">
-								<button type="submit" id="group-document-search-submit" class="nouveau-search-submit" name="group_document_search_submit">
+							<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="group-document-search-form" autocomplete="off">
+								<button type="submit" id="group-document-search-submit" class="nouveau-search-submit search-form_submit" name="group_document_search_submit">
 									<span class="dashicons dashicons-search" aria-hidden="true"></span>
 									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 								</button>
 								<label for="group-document-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?></label>
 								<input id="group-document-search" name="document_search" type="search" placeholder="<?php esc_attr_e( 'Search Documents…', 'buddyboss' ); ?>">
+								<button type="reset" class="search-form_reset">
+									<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
+									<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+								</button>
 							</form>
 						</div>
 
@@ -57,17 +62,21 @@
 				</div><!-- .bp-document-listing -->
 
 				<?php
-
 				bp_nouveau_group_hook( 'before', 'document_content' );
-
 				bp_get_template_part( 'document/actions' );
-
 				?>
-				<div id="media-stream" class="media" data-bp-list="document">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-document-loading' ); ?></div>
+				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'group-document-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'document/document-loop' );
+					}
+					?>
 				</div><!-- .media -->
 				<?php
-
 				bp_nouveau_group_hook( 'after', 'document_content' );
 
 				break;

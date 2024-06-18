@@ -27,7 +27,7 @@
 
 			a {
 				border: 0;
-				display: block;
+				display: flex;
 				padding: 5px 10px;
 				text-decoration: none;
 			}
@@ -41,9 +41,12 @@
 
 				@include font-size(12);
 				margin-left: 2px;
-				padding: 3px 6px;
+				padding-top: 2px;
+				padding-bottom: 2px;
 				text-align: center;
 				vertical-align: middle;
+				min-width: 25px;
+				align-self: center;
 			}
 		}
 
@@ -107,17 +110,6 @@
 				color: $black;
 			}
 		}
-
-		li.selected,
-		li.current {
-
-			a,
-			a:focus,
-			a:hover {
-				background: $dark-grey;
-				color: $off-white;
-			}
-		}
 	}
 
 	@include medium-up() {
@@ -158,20 +150,31 @@
 			}
 		}
 	} // close @media
+} // close .buddypress-wrap - current & selected states.
 
-	.bp-subnavs {
+.bp-subnavs {
 
-		li.selected,
-		li.current {
+	li.selected,
+	li.current {
 
-			a {
-				background: $white;
-				color: $black;
-				font-weight: 600;
-			}
+		a,
+		a:focus,
+		a:hover {
+			background: $dark-grey;
+			color: $off-white;
 		}
 	}
-} // close .buddypress-wrap - current & selected states.
+
+	li.selected,
+	li.current {
+
+		a {
+			background: $white;
+			color: $black;
+			font-weight: 600;
+		}
+	}
+}
 
 // visual styling of default single navs - adds background/padding to
 // the parent elements if vertical nav not selected
@@ -206,39 +209,6 @@
 // Specifically default subnav elements
 .buddypress-wrap {
 
-	.bp-subnavs,
-	ul.subnav {
-		// width: 100%;
-	}
-
-	.bp-subnavs {
-
-		margin: $marg-sml 0;
-		overflow: hidden;
-
-		ul {
-
-			li {
-				margin-top: 0;
-
-				&.selected,
-				&.current {
-
-					:focus,
-					:hover {
-						background: none;
-						color: $black;
-					}
-				}
-
-			}
-		}
-	}
-
-	ul.subnav {
-		// width: auto;
-	}
-
 	.bp-navs.bp-invites-nav#subnav,
 	.bp-navs.bp-invites-filters#subsubnav,
 	.bp-navs.bp-messages-filters#subsubnav {
@@ -252,6 +222,30 @@
 	}
 
 } // close .buddypress-wrap
+
+.bp-subnavs {
+
+	margin: $marg-sml 0;
+	overflow: hidden;
+
+	ul {
+
+		li {
+			margin-top: 0;
+
+			&.selected,
+			&.current {
+
+				:focus,
+				:hover {
+					background: none;
+					color: $black;
+				}
+			}
+
+		}
+	}
+}
 
 // Single screens object navs
 // Adjusts visual styling for small screens only
@@ -271,25 +265,25 @@
 				}
 			}
 		}
+	}
 
-		.bp-subnavs {
+	.bp-subnavs {
 
-			li {
+		li {
 
-				a {
+			a {
 
-					@include font-size(14);
-				}
+				@include font-size(14);
+			}
 
-				&.selected,
-				&.current {
+			&.selected,
+			&.current {
 
-					a,
-					a:focus,
-					a:hover {
-						background: $dark-grey;
-						color: $white;
-					}
+				a,
+				a:focus,
+				a:hover {
+					background: $dark-grey;
+					color: $white;
 				}
 			}
 		}

@@ -161,7 +161,7 @@ function bp_nouveau_has_dismiss_button() {
 }
 
 /**
- * Ouptut the dismiss type.
+ * Output the dismiss type.
  *
  * $type is used to set the data-attr for the button.
  * 'clear' is tested for & used to remove cookies, if set, in buddypress-nouveau.js.
@@ -401,6 +401,11 @@ function bp_nouveau_pagination( $position ) {
 		$pagination_type = 'groups';
 	}
 
+	// Set default values.
+	$page_arg  = '';
+	$pag_count = '';
+	$pag_links = '';
+
 	switch ( $pagination_type ) {
 		case 'blogs':
 			$pag_count   = bp_get_blogs_pagination_count();
@@ -577,46 +582,32 @@ function bp_nouveau_get_loop_classes() {
 				$current_value = bp_get_option( 'bp-group-layout-format' );
 			}
 		}
+
 		if ( 'list_grid' === $current_value ) {
-			$list = false;
-			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
-				$list = true;
-			}
-
-			if ( ! $list && isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
-				$list = true;
-			}
-
-			if ( ! $list ) {
-				if ( bp_is_members_directory() || bp_is_user() ) {
-					if ( ! bp_is_user_groups() ) {
-						$default_current_value = bp_profile_layout_default_format( 'grid' );
-					} else {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
-					}
-				} elseif ( bp_is_groups_directory() || bp_is_group() ) {
-					if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
-						$default_current_value = bp_profile_layout_default_format( 'grid' );
-					} else {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
-					}
+			if ( bp_is_members_directory() || bp_is_user() ) {
+				if ( ! bp_is_user_groups() ) {
+					$default_current_value = bb_get_directory_layout_preference( 'members' );
 				} else {
-					$default_current_value = bp_group_layout_default_format( 'grid' );
+					$default_current_value = bb_get_directory_layout_preference( 'groups' );
 				}
-				$classes = array_merge(
-					$classes,
-					array(
-						$default_current_value,
-					)
-				);
-			} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
-				$classes = array_merge(
-					$classes,
-					array(
-						$_POST['extras']['layout'],
-					)
-				);
+			} elseif ( bp_is_groups_directory() || bp_is_group() ) {
+				if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+					$default_current_value = bb_get_directory_layout_preference( 'members' );
+				} else {
+					$default_current_value = bb_get_directory_layout_preference( 'groups' );
+				}
+			} else {
+				$default_current_value = bb_get_directory_layout_preference( 'groups' );
 			}
+			if ( bp_is_group() && 'members' === bp_current_action() ) {
+				$default_current_value = bb_get_directory_layout_preference( 'members' );
+			}
+			$classes = array_merge(
+				$classes,
+				array(
+					$default_current_value,
+				)
+			);
 		} elseif ( 'list' === $current_value ) {
 			$classes = array_merge(
 				$classes,
@@ -767,7 +758,7 @@ function bp_nouveau_avatar_args() {
 function bp_nouveau_has_nav( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$n = wp_parse_args(
+	$n = bp_parse_args(
 		$args,
 		array(
 			'type'                    => 'primary',
@@ -824,12 +815,17 @@ function bp_nouveau_has_nav( $args = array() ) {
 		// Build the nav for the displayed user.
 	} elseif ( bp_is_user() ) {
 		$bp_nouveau->displayed_nav = 'personal';
+		$parent_slug               = bp_current_component();
 		$user_nav                  = buddypress()->members->nav;
+
+		if ( 'account_notifications' === $bp_nouveau->object_nav ) {
+			$parent_slug .= '_notifications';
+		}
 
 		if ( 'secondary' === $n['type'] ) {
 			$nav = $user_nav->get_secondary(
 				array(
-					'parent_slug'     => bp_current_component(),
+					'parent_slug'     => $parent_slug,
 					'user_has_access' => (bool) $n['user_has_access'],
 				)
 			);
@@ -1566,6 +1562,8 @@ function bp_nouveau_get_container_classes() {
 		if ( $layout_prefs && (int) $layout_prefs === 1 && ( bp_is_user() || bp_is_group() ) ) {
 			$classes[] = 'bp-single-vert-nav';
 			$classes[] = 'bp-vertical-navs';
+		} else {
+			$classes[] = 'bp-single-plain-nav';
 		}
 
 		if ( $layout_prefs && bp_is_directory() ) {
@@ -1673,7 +1671,9 @@ function bp_nouveau_single_item_subnav_classes() {
 	 * @return string CSS classes
 	 */
 function bp_nouveau_get_single_item_subnav_classes() {
-	$classes = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
+	$customizer_option = ( bp_is_user() ) ? 'user_nav_display' : 'group_nav_display';
+	$layout_prefs      = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+	$classes           = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
 
 	// Set user or group class string
 	if ( bp_is_user() ) {
@@ -1690,6 +1690,12 @@ function bp_nouveau_get_single_item_subnav_classes() {
 
 	if ( ( bp_is_group() && 'messages' === bp_current_action() ) ) {
 		$classes[] = 'bp-messages-nav';
+	}
+
+	if ( $layout_prefs && 1 === (int) $layout_prefs && ( bp_is_user() || bp_is_group() ) ) {
+		$classes[] = 'bb-subnav-vert';
+	} else {
+		$classes[] = 'bb-subnav-plain';
 	}
 
 	$class = array_map( 'sanitize_html_class', $classes );
@@ -2488,7 +2494,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-l bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password" tabindex="-1"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
 				print( $field_output );  // Constructed safely above.
@@ -2598,7 +2604,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content', $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2606,7 +2612,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content', $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2630,7 +2636,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content', $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
@@ -2655,7 +2661,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content', $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>

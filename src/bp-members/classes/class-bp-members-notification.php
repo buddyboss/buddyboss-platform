@@ -58,14 +58,16 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @return mixed|void
 	 */
 	public function load() {
-		$this->register_notification_group(
-			'members',
-			esc_html__( 'Account Settings', 'buddyboss' ),
-			esc_html__( 'Account Settings', 'buddyboss' ),
-			6
-		);
+		if ( bp_is_active( 'settings' ) ) {
+			$this->register_notification_group(
+				'members',
+				esc_html__( 'Account Settings', 'buddyboss' ),
+				esc_html__( 'Account Settings', 'buddyboss' ),
+				6
+			);
 
-		$this->register_notification_for_password_change();
+			$this->register_notification_for_password_change();
+		}
 	}
 
 	/**
@@ -101,6 +103,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 			'members',
 			'bb_account_password',
 			'bb_account_password',
+			'bb-icon-f bb-icon-key'
 		);
 
 		$this->register_notification_filter(
@@ -125,38 +128,52 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 	 * @param int    $notification_id       Notification ID.
 	 * @param string $screen                Notification Screen type.
 	 *
-	 * @return array
+	 * @return array|string
 	 */
 	public function format_notification( $content, $item_id, $secondary_item_id, $total_items, $component_action_name, $component_name, $notification_id, $screen ) {
+
+		if ( ! bp_is_active( 'settings' ) ) {
+			return $content;
+		}
 
 		$notification = bp_notifications_get_notification( $notification_id );
 
 		if ( 'members' === $component_name && 'bb_account_password' === $component_action_name ) {
+			$amount = 'single';
 
-			// Set up the string and the filter.
-			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $total_items );
-				$amount = 'multiple';
+			if ( 'web_push' === $screen ) {
+				$settings_link = trailingslashit( bp_core_get_user_domain( $notification->user_id ) . bp_get_settings_slug() );
+				$settings_link = add_query_arg( 'rid', (int) $notification->id, $settings_link );
+				$text          = __( 'Your password was changed. If you didn\'t make this change, please reset your password.', 'buddyboss' );
 			} else {
-				$text   = __( 'Your password was changed', 'buddyboss' );
-				$amount = 'single';
-			}
+				$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
+				$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
 
-			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
-			$settings_link = add_query_arg( 'rid', (int) $notification_id, $settings_link );
+				// Set up the string and the filter.
+				if ( (int) $total_items > 1 ) {
+					$text   = sprintf( __( '%d Your password was changed', 'buddyboss' ), (int) $total_items );
+					$amount = 'multiple';
+				} else {
+					$text = __( 'Your password was changed', 'buddyboss' );
+				}
+			}
 
 			return apply_filters(
 				'bb_members_' . $amount . '_' . $component_action_name . '_notification',
 				array(
-					'link' => $settings_link,
-					'text' => $text,
+					'link'  => $settings_link,
+					'text'  => $text,
+					'title' => bp_get_site_name(),
+					'image' => bb_notification_avatar_url( $notification ),
 				),
 				$notification,
 				$text,
-				$settings_link
+				$settings_link,
+				$screen
 			);
 		}
 
 		return $content;
 	}
+
 }

@@ -103,7 +103,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			}
 
 			$privacy = array( 'public' );
-			if( is_user_logged_in() ) {
+			if ( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
 			}
 
@@ -112,7 +112,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			if ( $only_totalrow_count ) {
 				$sql['select'] .= ' COUNT( DISTINCT a.id ) ';
 			} else {
-				$sql['select']       .= " DISTINCT a.id , 'activity_comment' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
+				$sql['select']      .= " DISTINCT a.id , 'activity_comment' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
 				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
@@ -121,33 +121,31 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the activity Search query.
 			 *
-             * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
 			$sql['from'] = apply_filters( 'bp_activity_comments_search_join_sql', $sql['from'] );
 
+			// searching only activity updates, others don't make sense.
+			$where_conditions = array( '1=1' );
 
-			// searching only activity updates, others don't make sense
-			$where_conditions   = array( '1=1' );
-
-			// searching only activity updates, others don't make sense
+			// searching only activity updates, others don't make sense.
 			$where_conditions[] = "a.is_spam = 0
-						AND a.content LIKE %s
-						AND a.type = 'activity_comment'
-						AND
-						(
-							( ac.privacy IN ( '" . implode( "','", $privacy ) . "' ) and ac.component != 'groups' ) " .
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ac.component = 'groups' )" : '' ) .
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ac.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ac.privacy = 'friends' )" : '' ) .
-							( is_user_logged_in() ? " OR ( ac.user_id = '" . bp_loggedin_user_id() . "' AND ac.privacy = 'onlyme' )" : '' ) .
-						")
-				";
+				AND a.content LIKE %s
+				AND a.type = 'activity_comment'
+				AND
+				(
+					( ac.privacy IN ( '" . implode( "','", $privacy ) . "' ) and ac.component != 'groups' ) " .
+					( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ac.item_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ac.component = 'groups' )" : '' ) .
+					( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ac.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ac.privacy = 'friends' )" : '' ) .
+					( is_user_logged_in() ? " OR ( ac.user_id = '" . bp_loggedin_user_id() . "' AND ac.privacy = 'onlyme' )" : '' ) .
+				')';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the activity Search query.
 			 *
-             * @since BuddyBoss 1.5.6
+			 * @since BuddyBoss 1.5.6
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
@@ -186,6 +184,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 					'include'          => $post_ids,
 					'per_page'         => count( $post_ids_arr ),
 					'show_hidden'      => true,
+					'scope'            => false,
 				)
 			) ) {
 
@@ -206,7 +205,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 
 	}
 
-	// End class Bp_Search_Posts
+	// End class Bp_Search_Posts.
 
 endif;
 

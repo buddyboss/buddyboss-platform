@@ -39,10 +39,12 @@ class BB_Documents extends Integration_Abstract {
 			'bp_document_folder_before_delete', // Any Document Folder delete.
 
 			// Added moderation support.
-			'bp_suspend_document_suspended',          // Any Document Suspended.
-			'bp_suspend_document_unsuspended',        // Any Document Unsuspended.
-			'bp_suspend_document_folder_suspended',   // Any Document Folder Suspended.
-			'bp_suspend_document_folder_unsuspended', // Any Document Folder Unsuspended.
+			'bp_suspend_document_suspended',            // Any Document Suspended.
+			'bp_suspend_document_unsuspended',          // Any Document Unsuspended.
+			'bp_suspend_document_folder_suspended',     // Any Document Folder Suspended.
+			'bp_suspend_document_folder_unsuspended',   // Any Document Folder Unsuspended.
+			'bp_moderation_after_save',                 // Hide document when member blocked.
+			'bb_moderation_after_delete'                // Unhide document when member unblocked.
 		);
 
 		$this->purge_event( 'bp-document', $purge_events );
@@ -72,6 +74,8 @@ class BB_Documents extends Integration_Abstract {
 			'bp_suspend_document_unsuspended'        => 1, // Any Document Unsuspended.
 			'bp_suspend_document_folder_suspended'   => 1, // Any Document Folder Suspended.
 			'bp_suspend_document_folder_unsuspended' => 1, // Any Document Folder Unsuspended.
+			'bp_moderation_after_save'               => 1, // Hide document when member blocked.
+			'bb_moderation_after_delete'             => 1, // Unhide document when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                         => 1, // User updated on site.
@@ -88,9 +92,12 @@ class BB_Documents extends Integration_Abstract {
 
 		if ( $cache_bb_media ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/document',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => array( 'type', 'id' ),
 					'include_param'     => array(
@@ -103,7 +110,7 @@ class BB_Documents extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/document/folder',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => array( 'type', 'id' ),
 					'include_param'     => array(
@@ -115,7 +122,7 @@ class BB_Documents extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/document/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id' => array( 'type', 'id' ),
 				),
@@ -124,7 +131,7 @@ class BB_Documents extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/document/folder/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id' => array( 'type', 'id' ),
 				),
@@ -163,11 +170,7 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_bp_document_before_delete( $documents ) {
 		if ( ! empty( $documents ) ) {
-			foreach ( $documents as $document ) {
-				if ( ! empty( $document->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-document_document_' . $document->id );
-				}
-			}
+			$this->purge_item_cache_by_item_ids( wp_list_pluck( $documents, 'id' ) );
 		}
 	}
 
@@ -200,11 +203,7 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_bp_document_folder_before_delete( $folders ) {
 		if ( ! empty( $folders ) ) {
-			foreach ( $folders as $folder ) {
-				if ( ! empty( $folder->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder->id );
-				}
-			}
+			$this->purge_item_cache_by_folder_ids( wp_list_pluck( $folders, 'id' ) );
 		}
 	}
 
@@ -236,17 +235,15 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_groups_update_group( $group_id ) {
 		$document_ids = $this->get_document_ids_by_group_id( $group_id );
+
 		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-			}
+			$this->purge_item_cache_by_item_ids( $document_ids );
 		}
 
 		$document_folder_ids = $this->get_document_folder_ids_by_group_id( $group_id );
+
 		if ( ! empty( $document_folder_ids ) ) {
-			foreach ( $document_folder_ids as $folder_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-			}
+			$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 		}
 	}
 
@@ -258,17 +255,15 @@ class BB_Documents extends Integration_Abstract {
 	public function event_groups_group_after_save( $group ) {
 		if ( ! empty( $group->id ) ) {
 			$document_ids = $this->get_document_ids_by_group_id( $group->id );
+
 			if ( ! empty( $document_ids ) ) {
-				foreach ( $document_ids as $document_id ) {
-					Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-				}
+				$this->purge_item_cache_by_item_ids( $document_ids );
 			}
 
 			$document_folder_ids = $this->get_document_folder_ids_by_group_id( $group->id );
+
 			if ( ! empty( $document_folder_ids ) ) {
-				foreach ( $document_folder_ids as $folder_id ) {
-					Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-				}
+				$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 			}
 		}
 	}
@@ -280,17 +275,15 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
 		$document_ids = $this->get_document_ids_by_group_id( $group_id );
+
 		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-			}
+			$this->purge_item_cache_by_item_ids( $document_ids );
 		}
 
 		$document_folder_ids = $this->get_document_folder_ids_by_group_id( $group_id );
+
 		if ( ! empty( $document_folder_ids ) ) {
-			foreach ( $document_folder_ids as $folder_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-			}
+			$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 		}
 	}
 
@@ -331,6 +324,40 @@ class BB_Documents extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
 	}
 
+	/**
+	 * Update cache for document when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+
+		$document_ids = $this->get_document_ids_by_user_id( $bp_moderation->item_id );
+
+		if ( ! empty( $document_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $document_ids );
+		}
+	}
+
+	/**
+	 * Update cache for document when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+
+		$document_ids = $this->get_document_ids_by_user_id( $bp_moderation->item_id );
+
+		if ( ! empty( $document_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $document_ids );
+		}
+	}
+
 	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
@@ -339,17 +366,15 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$document_ids = $this->get_document_ids_by_user_id( $user_id );
+
 		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-			}
+			$this->purge_item_cache_by_item_ids( $document_ids );
 		}
 
 		$document_folder_ids = $this->get_document_folder_ids_by_user_id( $user_id );
+
 		if ( ! empty( $document_folder_ids ) ) {
-			foreach ( $document_folder_ids as $folder_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-			}
+			$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 		}
 	}
 
@@ -360,17 +385,15 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$document_ids = $this->get_document_ids_by_user_id( $user_id );
+
 		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-			}
+			$this->purge_item_cache_by_item_ids( $document_ids );
 		}
 
 		$document_folder_ids = $this->get_document_folder_ids_by_user_id( $user_id );
+
 		if ( ! empty( $document_folder_ids ) ) {
-			foreach ( $document_folder_ids as $folder_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-			}
+			$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 		}
 	}
 
@@ -381,17 +404,15 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$document_ids = $this->get_document_ids_by_user_id( $user_id );
+
 		if ( ! empty( $document_ids ) ) {
-			foreach ( $document_ids as $document_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-			}
+			$this->purge_item_cache_by_item_ids( $document_ids );
 		}
 
 		$document_folder_ids = $this->get_document_folder_ids_by_user_id( $user_id );
+
 		if ( ! empty( $document_folder_ids ) ) {
-			foreach ( $document_folder_ids as $folder_id ) {
-				Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-			}
+			$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 		}
 	}
 
@@ -402,20 +423,19 @@ class BB_Documents extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$document_ids = $this->get_document_ids_by_user_id( $user_id );
+
 				if ( ! empty( $document_ids ) ) {
-					foreach ( $document_ids as $document_id ) {
-						Cache::instance()->purge_by_group( 'bp-document_document_' . $document_id );
-					}
+					$this->purge_item_cache_by_item_ids( $document_ids );
 				}
 
 				$document_folder_ids = $this->get_document_folder_ids_by_user_id( $user_id );
+
 				if ( ! empty( $document_folder_ids ) ) {
-					foreach ( $document_folder_ids as $folder_id ) {
-						Cache::instance()->purge_by_group( 'bp-document_folder_' . $folder_id );
-					}
+					$this->purge_item_cache_by_folder_ids( $document_folder_ids );
 				}
 			}
 		}
@@ -490,4 +510,33 @@ class BB_Documents extends Integration_Abstract {
 		return $wpdb->get_col( $sql );
 	}
 
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-document_document_' ) );
+	}
+
+	/**
+	 * Purge item cache by folder ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_folder_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-document_folder_' ) );
+	}
 }

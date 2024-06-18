@@ -24,11 +24,16 @@ window.bp = window.bp || {};
 
             var title = '';
             $set.find('.editfield').each( function(){
-                var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
-                var field_name = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).attr('name' );
+                var field = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' );
+                var field_val = field.val();
+                var field_name = field.attr('name' );
 				var name_split = ( field_name ? field_name.split('_') : '' );
 				var arrayContainsVisibility = (name_split.indexOf('visibility') > -1);
                 if ( $.trim( field_val ) !== '' && ! arrayContainsVisibility ) {
+                    if ( field.is( 'select' ) ) {
+                        title = $.trim( field.find('option:selected').text() );
+                        return false;
+                    }
                     title = $.trim( field_val );
                     return false;
                 }

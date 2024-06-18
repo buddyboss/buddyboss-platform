@@ -45,8 +45,8 @@ function bp_moderation_admin_scripts( $hook ) {
 					'unhide_confirm_msg'     => esc_js( __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
-					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
-					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
+					'suspend_label'          => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
+					'unsuspend_label'        => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
 					'suspend_author_label'   => esc_js( __( 'Suspend Owner', 'buddyboss' ) ),
 					'unsuspend_author_label' => esc_js( __( 'Unsuspend Owner', 'buddyboss' ) ),
 				),
@@ -112,7 +112,7 @@ function bp_moderation_admin_load() {
 
 	$doaction                = bp_admin_list_table_current_bulk_action();
 	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
-	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+	$moderation_content_type = bb_filter_input_string( INPUT_GET, 'content_type' );
 
 	$request_url            = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
 	$_SERVER['REQUEST_URI'] = remove_query_arg(
@@ -375,13 +375,13 @@ function bp_moderation_admin() {
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper">
 				<?php
-				$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+				$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 				$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 				if ( 'reported-content' === $current_tab ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				} else {
-					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
+					bp_core_admin_moderation_tabs( esc_html__( 'Flagged Members', 'buddyboss' ) );
 				}
 				?>
 			</h2>
@@ -390,9 +390,9 @@ function bp_moderation_admin() {
 	}
 
 	// Decide whether to load the index or edit screen.
-	$doaction                = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
-	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+	$doaction                = bb_filter_input_string( INPUT_GET, 'action' );
+	$moderation_content_type = bb_filter_input_string( INPUT_GET, 'content_type' );
 
 	// Display the single activity edit screen.
 	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
@@ -445,7 +445,7 @@ function bp_moderation_admin_index() {
 		}
 	}
 
-	$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+	$current_tab = bb_filter_input_string( INPUT_GET, 'tab' );
 	$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 	// Prepare the group items for display.
@@ -457,7 +457,7 @@ function bp_moderation_admin_index() {
 			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			} else {
-				esc_html_e( 'Blocked Members', 'buddyboss' );
+				esc_html_e( 'Flagged Members', 'buddyboss' );
 			}
 			?>
 		</h1>
@@ -544,8 +544,12 @@ function bp_moderation_admin_view() {
 	}
 
 	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
-	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+	$moderation_content_type = bb_filter_input_string( INPUT_GET, 'content_type' );
 	$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
+
+	if ( empty( $moderation_request_data->id ) ) {
+		$moderation_request_data = new BP_Moderation( $moderation_id, BP_Moderation_Members::$moderation_type_report );
+	}
 
 	/**
 	 * Fires before moderation edit form is displays so plugins can modify the activity.

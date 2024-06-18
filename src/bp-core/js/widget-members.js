@@ -25,6 +25,10 @@ jQuery( document ).ready(
 					if ( jQuery( '#boss_recently_active_widget_heartbeat' ).length ) {
 						  data.boss_recently_active_widget = jQuery( '#boss_recently_active_widget_heartbeat' ).data( 'max' );
 					}
+
+					if ( jQuery( '#recently-active-members' ).length ) {
+						data.buddyboss_members_widget_active = jQuery( '#recently-active-members' ).data( 'max' );
+					}
 					jQuery( '.bs-heartbeat-reload' ).removeClass( 'hide' );
 				}
 			);
@@ -54,6 +58,15 @@ jQuery( document ).ready(
 					if ( jQuery( '#boss_recently_active_widget_heartbeat' ).length ) {
 						jQuery( '#boss_recently_active_widget_heartbeat' ).html( data.boss_recently_active_widget );
 					}
+
+					// Update active members list on Members widget if currently active tab is visible.
+					if (
+						jQuery( '#members-list' ).length &&
+						jQuery( '#recently-active-members').length &&
+						jQuery( '#recently-active-members').hasClass( 'selected' ) ) {
+						jQuery( '.widget_bp_core_members_widget' ).find('#members-list').html( data.buddyboss_members_widget_active );
+					}
+
 					jQuery( '.bs-heartbeat-reload' ).addClass( 'hide' );
 				}
 			);

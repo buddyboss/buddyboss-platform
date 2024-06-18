@@ -60,9 +60,13 @@ class BP_Groups_Widget extends WP_Widget {
 		 *
 		 * @since BuddyPress 1.5.0
 		 *
-		 * @param string $value Empty user ID.
+		 * @param string $value Current user ID if user logged-in otherwise empty user ID.
 		 */
-		$user_id = apply_filters( 'bp_group_widget_user_id', '0' );
+		$user_id = apply_filters( 'bp_group_widget_user_id', get_current_user_id() );
+		
+		if ( 0 !== $user_id && empty( bp_get_total_group_count_for_user( $user_id ) ) ) {
+			$user_id = 0;
+		}
 
 		extract( $args );
 
@@ -142,9 +146,11 @@ class BP_Groups_Widget extends WP_Widget {
 					bp_the_group();
 					?>
 					<li <?php bp_group_class(); ?>>
+					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 						<div class="item-avatar">
 							<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar_thumb(); ?></a>
 						</div>
+					<?php endif; ?>
 
 						<div class="item">
 							<div class="item-title"><?php bp_group_link(); ?></div>
@@ -201,7 +207,7 @@ class BP_Groups_Widget extends WP_Widget {
 		$instance['title']         = strip_tags( $new_instance['title'] );
 		$instance['max_groups']    = strip_tags( $new_instance['max_groups'] );
 		$instance['group_default'] = strip_tags( $new_instance['group_default'] );
-		$instance['link_title']    = (bool) $new_instance['link_title'];
+		$instance['link_title']    = isset( $new_instance['link_title'] ) ? (bool) $new_instance['link_title'] : false;
 
 		return $instance;
 	}

@@ -633,7 +633,7 @@ class bbPress1 extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
 
@@ -666,6 +666,6 @@ class bbPress1 extends BBP_Converter_Base {
 		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 }

@@ -47,9 +47,7 @@ if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 	endif;
 
 else :
-
 	bp_nouveau_user_feedback( 'video-loop-none' );
-
 endif;
 
 bp_nouveau_after_loop();

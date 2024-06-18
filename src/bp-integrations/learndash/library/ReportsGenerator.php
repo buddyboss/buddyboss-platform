@@ -45,7 +45,7 @@ class ReportsGenerator {
 	public function __construct() {
 		$this->args = apply_filters(
 			'bp_ld_sync/reports_generator_args',
-			wp_parse_args( bp_ld_sync()->getRequest(), $this->defaults )
+			bp_parse_args( bp_ld_sync()->getRequest(), $this->defaults )
 		);
 
 		if ( $_POST ) {
@@ -218,7 +218,7 @@ class ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatDataForDisplay( $data, $activity ) {
-		return wp_parse_args(
+		return bp_parse_args(
 			array(
 				'course' => sprintf(
 					'<a href="%s" target="_blank">%s</a>',

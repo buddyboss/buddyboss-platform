@@ -279,39 +279,42 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 ++++++++++++++++++++++++++++++++++
 				group items of same type together
 				++++++++++++++++++++++++++++++++++ */
-				$types = array();
-				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-					$type = $item['type'];
-					if ( empty( $types ) || ! in_array( $type, $types ) ) {
-						$types[] = $type;
-					}
-				}
+				if ( ! isset( $args['forum_search'] ) || ! $args['forum_search'] ) {
 
-				$new_items = array();
-				foreach ( $types as $type ) {
-					$first_html_changed = false;
+					$types = array();
 					foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-						if ( $item['type'] != $type ) {
-							continue;
+						$type = $item['type'];
+						if ( empty( $types ) || ! in_array( $type, $types ) ) {
+							$types[] = $type;
 						}
-
-						// Filter by default will be false.
-						$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
-						if ( true === $bp_search_group_or_type_title ) {
-							// add group/type title in first one.
-							if ( ! $first_html_changed ) {
-								// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
-								$label              = apply_filters( 'bp_search_label_search_type', $type );
-								$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
-								$first_html_changed = true;
-							}
-						}
-
-						$new_items[ $item_id ] = $item;
 					}
-				}
 
-				$this->search_results['all']['items'] = $new_items;
+					$new_items = array();
+					foreach ( $types as $type ) {
+						$first_html_changed = false;
+						foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
+							if ( $item['type'] != $type ) {
+								continue;
+							}
+
+							// Filter by default will be false.
+							$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
+							if ( true === $bp_search_group_or_type_title ) {
+								// add group/type title in first one.
+								if ( ! $first_html_changed ) {
+									// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
+									$label              = apply_filters( 'bp_search_label_search_type', $type );
+									$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
+									$first_html_changed = true;
+								}
+							}
+
+							$new_items[ $item_id ] = $item;
+						}
+					}
+
+					$this->search_results['all']['items'] = $new_items;
+				}
 
 				/* _______________________________ */
 				$url = $this->search_page_search_url( false );
@@ -426,7 +429,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'number'        => 3,
 			);
 
-			$args = wp_parse_args( $args, $defaults );
+			$args = bp_parse_args( $args, $defaults );
 
 			if ( true === $args['forum_search'] ) {
 				$this->searchable_items = array( 'forum', 'topic', 'reply' );
@@ -509,16 +512,27 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
 					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
-					$sql_queries[]         = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
-					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
+					if (
+						bp_is_active( 'forums' ) &&
+						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+					) {
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY entry_date DESC $limit ) ";
+					} else {
+						$sql_queries[] = '( ' . $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC $limit ) ";
+					}
+					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'], $search_type );
 				}
 
 				if ( empty( $sql_queries ) ) {
-					// thigs will get messy if program reaches here!!
+					// things will get messy if program reaches here!!
 					return;
 				}
 
 				$pre_search_query = implode( ' UNION ', $sql_queries );
+
+				if ( true === $args['forum_search'] ) {
+					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC, t1.id DESC";
+				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
 					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
@@ -614,7 +628,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$last_item = end( $items );
 							$end_html  = '</ul>';
 
-							if ( $total_results > 3 ) {
+							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
@@ -635,7 +649,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						foreach ( $ordered_items_group as $type => $grouped_items ) {
 
 							// Remove last item from list
-							if ( count( $grouped_items ) > 3 ) {
+							if ( count( $grouped_items ) > $args['number'] ) {
 								array_pop( $grouped_items );
 							}
 
@@ -662,7 +676,19 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				 */
 				// $args['per_page'] = get_option( 'posts_per_page' );
 				$obj              = $this->search_helpers[ $args['search_subset'] ];
-				$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
+
+				if (
+					true === $args['forum_search'] ||
+					(
+						bp_is_active( 'forums' ) &&
+						! empty( $args['search_subset'] ) &&
+						in_array( $args['search_subset'], array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
+					)
+				) {
+					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY entry_date DESC ';
+				} else {
+					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
+				}
 
 				if ( $args['per_page'] > 0 ) {
 					$offset            = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
@@ -739,7 +765,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					if ( ! isset( $total[ $search_type ] ) ) {
 						$obj               = $this->search_helpers[ $search_type ];
-						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'] );
+						$total_match_count = $obj->get_total_match_count( $this->search_args['search_term'], $search_type );
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total_match_count;
 					} else {
 						$this->search_results[ $search_type ]['total_match_count'] = (int) $total[ $search_type ];
@@ -750,6 +776,16 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 				$this->search_results['all']['total_match_count'] = $all_items_count;
 			}
+
+			/**
+			 * Filters out the search results.
+			 *
+			 * @since BuddyBoss 2.3.50
+			 *
+			 * @param array  $search_results Array of search results.
+			 * @param object $this           Object of BP_Search class.
+			 */
+			$this->search_results = apply_filters( 'bp_search_query_final_results', $this->search_results, $this );
 		}
 
 		/**
@@ -784,7 +820,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @return array
 		 */
 		public function sanitize_args( $args = '' ) {
-			$args = wp_parse_args( $args, array() );
+			$args = bp_parse_args( $args, array() );
 
 			if ( isset( $args['search_term'] ) ) {
 				$args['search_term'] = sanitize_text_field( $args['search_term'] );

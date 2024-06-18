@@ -169,7 +169,7 @@ function bbp_admin_get_settings_fields() {
 
 				// Allow auto embedding setting
 				'_bbp_use_autoembed'          => array(
-					'title'             => __( 'Auto-embed links', 'buddyboss' ),
+					'title'             => __( 'Link Previews', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_use_autoembed',
 					'sanitize_callback' => 'intval',
 					'args'              => array(),
@@ -517,7 +517,7 @@ function bbp_admin_setting_callback_subscriptions() {
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_subscriptions' );
 	?>
 	 />
-	<label for="_bbp_enable_subscriptions"><?php esc_html_e( 'Allow members to subscribe to forums and discussions', 'buddyboss' ); ?></label>
+	<label for="_bbp_enable_subscriptions"><?php esc_html_e( 'Allow members to subscribe to discussions and standalone forums', 'buddyboss' ); ?></label>
 
 	<?php
 }

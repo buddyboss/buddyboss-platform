@@ -30,7 +30,7 @@ class Invision extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id',
+			'to_fieldname'   => '_bbp_old_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0, Stored in postmeta)
@@ -38,7 +38,7 @@ class Invision extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'parent_id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_parent_id',
+			'to_fieldname'   => '_bbp_old_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -74,12 +74,21 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// Forum title.
-		$this->field_map[] = array(
-			'from_tablename' => 'forums',
-			'from_fieldname' => 'name',
-			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title',
-		);
+		if ( bb_check_column_exists( $this->opdb, 'forums', 'name' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'forums',
+				'from_fieldname' => 'name',
+				'to_type'        => 'forum',
+				'to_fieldname'   => 'post_title',
+			);
+		} elseif ( bb_check_column_exists( $this->opdb, 'forums', 'last_title' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'forums',
+				'from_fieldname' => 'last_title',
+				'to_type'        => 'forum',
+				'to_fieldname'   => 'post_title',
+			);
+		}
 
 		// Forum slug (Clean name to avoid confilcts)
 		$this->field_map[] = array(
@@ -91,13 +100,15 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// Forum description.
-		$this->field_map[] = array(
-			'from_tablename'  => 'forums',
-			'from_fieldname'  => 'description',
-			'to_type'         => 'forum',
-			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null',
-		);
+		if ( bb_check_column_exists( $this->opdb, 'forums', 'description' ) ) {
+			$this->field_map[] = array(
+				'from_tablename'  => 'forums',
+				'from_fieldname'  => 'description',
+				'to_type'         => 'forum',
+				'to_fieldname'    => 'post_content',
+				'callback_method' => 'callback_null',
+			);
+		}
 
 		// Forum display order (Starts from 1)
 		$this->field_map[] = array(
@@ -114,6 +125,13 @@ class Invision extends BBP_Converter_Base {
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_type',
 			'callback_method' => 'callback_forum_type',
+		);
+
+		// Forum status (Set a default value 'open', Stored in postmeta)
+		$this->field_map[] = array(
+			'to_type'      => 'forum',
+			'to_fieldname' => '_bbp_status',
+			'default'      => 'open'
 		);
 
 		// Forum dates.
@@ -145,7 +163,7 @@ class Invision extends BBP_Converter_Base {
 			'from_tablename' => 'topics',
 			'from_fieldname' => 'tid',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id',
+			'to_fieldname'   => '_bbp_old_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -219,7 +237,7 @@ class Invision extends BBP_Converter_Base {
 			'from_tablename'  => 'topics',
 			'from_fieldname'  => 'pinned',
 			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_old_sticky_status',
+			'to_fieldname'    => '_bbp_old_sticky_status_id',
 			'callback_method' => 'callback_sticky_status',
 		);
 
@@ -286,7 +304,7 @@ class Invision extends BBP_Converter_Base {
 			'from_tablename' => 'posts',
 			'from_fieldname' => 'pid',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_post_id',
+			'to_fieldname'   => '_bbp_old_reply_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -392,7 +410,7 @@ class Invision extends BBP_Converter_Base {
 			'from_tablename' => 'members',
 			'from_fieldname' => 'member_id',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id',
+			'to_fieldname'   => '_bbp_old_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
@@ -453,12 +471,21 @@ class Invision extends BBP_Converter_Base {
 		);
 
 		// User display name.
-		$this->field_map[] = array(
-			'from_tablename' => 'members',
-			'from_fieldname' => 'members_display_name',
-			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name',
-		);
+		if ( bb_check_column_exists( $this->opdb, 'members', 'members_seo_name' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'members',
+				'from_fieldname' => 'members_seo_name',
+				'to_type'        => 'user',
+				'to_fieldname'   => 'display_name',
+			);
+		} elseif ( bb_check_column_exists( $this->opdb, 'members', 'members_display_name' ) ) {
+			$this->field_map[] = array(
+				'from_tablename' => 'members',
+				'from_fieldname' => 'members_display_name',
+				'to_type'        => 'user',
+				'to_fieldname'   => 'display_name',
+			);
+		}
 	}
 
 	/**
@@ -522,7 +549,7 @@ class Invision extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
 
@@ -550,13 +577,13 @@ class Invision extends BBP_Converter_Base {
 	private function to_char( $input ) {
 		$output = '';
 		for ( $i = 0; $i < strlen( $input ); $i++ ) {
-			$j = ord( $input{$i} );
+			$j = ord( $input[$i] );
 			if ( ( $j >= 65 && $j <= 90 )
 				|| ( $j >= 97 && $j <= 122 )
 				|| ( $j >= 48 && $j <= 57 ) ) {
-				$output .= $input{$i};
+				$output .= $input[$i];
 			} else {
-				$output .= '&#' . ord( $input{$i} ) . ';';
+				$output .= '&#' . ord( $input[$i] ) . ';';
 			}
 		}
 		return $output;
@@ -569,7 +596,7 @@ class Invision extends BBP_Converter_Base {
 
 		// Strips Invision custom HTML first from $field before parsing $field to parser.php
 		$invision_markup = $field;
-		$invision_markup = html_entity_decode( $invision_markup );
+		$invision_markup = html_entity_decode( $invision_markup, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 		// Replace '[html]' with '<pre><code>'
 		$invision_markup = preg_replace( '/\[html\]/', '<pre><code>', $invision_markup );
@@ -643,6 +670,6 @@ class Invision extends BBP_Converter_Base {
 		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 }

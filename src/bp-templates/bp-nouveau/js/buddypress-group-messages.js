@@ -306,7 +306,7 @@ window.bp = window.bp || {};
 					membersDiv.addEventListener(
 						'scroll',
 						function () {
-							if ( membersDiv.offsetHeight + membersDiv.scrollTop >= membersDiv.scrollHeight ) {
+							if ( membersDiv.offsetHeight + membersDiv.scrollTop + 30 >= membersDiv.scrollHeight ) {
 
 								if ( page >= total_pages || scroll_xhr != null ) {
 									return false;
@@ -626,7 +626,7 @@ window.bp = window.bp || {};
 						'type'    		: type,
 						'gif_data'     	: gif
 					};
-
+					
 					target.addClass( 'loading' ).attr( 'disabled', true );
 
 					xhr_submit_message = $.ajax(
@@ -893,6 +893,7 @@ window.bp = window.bp || {};
 						},
 						imageDragging: false,
 						anchor: {
+							placeholderText: BP_Nouveau.anchorPlaceholderText,
 							linkValidation: true
 						}
 					}
@@ -945,7 +946,15 @@ window.bp = window.bp || {};
 								emojibtn_click: function () {
 									$( '#group_message_content' )[0].emojioneArea.hidePicker();
 									window.group_messages_editor.checkContentChanged();
-								}
+								},
+
+								picker_show: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).addClass('active');
+								},
+
+								picker_hide: function () {
+									$( this.button[0] ).closest( '.post-emoji' ).removeClass('active');
+								},
 							}
 						}
 					);

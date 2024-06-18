@@ -50,6 +50,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 		'attachment_id',
 		'user_id',
 		'title',
+		'description',
 		'album_id',
 		'group_id',
 		'activity_id',

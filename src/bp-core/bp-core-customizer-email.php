@@ -77,6 +77,8 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 			true
 		);
 
+		do_action( 'bb_email_customize_preview' );
+
 		// Include the preview loading style.
 		add_action( 'wp_footer', array( $wp_customize, 'customize_preview_loading_style' ) );
 

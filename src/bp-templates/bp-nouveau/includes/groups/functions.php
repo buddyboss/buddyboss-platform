@@ -84,9 +84,6 @@ function bp_nouveau_groups_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-select2' );
-	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-		wp_enqueue_script( 'bp-select2-local' );
-	}
 	wp_enqueue_script( 'bp-nouveau-group-invites' );
 }
 
@@ -207,15 +204,19 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	$response = array(
 		'id'     => intval( $user->ID ),
 		'name'   => bp_core_get_user_displayname( intval( $user->ID ) ),
-		'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
-				'item_id' => $user->ID,
-				'object'  => 'user',
-				'type'    => 'thumb',
-				'width'   => 150,
-				'height'  => 150,
-				'html'    => false
-			)
-		) ),
+		'avatar' => htmlspecialchars_decode(
+			bp_core_fetch_avatar(
+				array(
+					'item_id' => $user->ID,
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 150,
+					'height'  => 150,
+					'html'    => false,
+				)
+			),
+			ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
+		),
 	);
 
 	// Group id
@@ -235,15 +236,20 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 			}
 
 			$response['invited_by'][] = array(
-				'avatar'    => htmlspecialchars_decode( bp_core_fetch_avatar( array(
-					'item_id' => $inviter_id,
-					'object'  => 'user',
-					'type'    => 'thumb',
-					'width'   => 50,
-					'height'  => 50,
-					'html'    => false,
-					'class'   => $class,
-				) ) ),
+				'avatar' => htmlspecialchars_decode(
+					bp_core_fetch_avatar(
+						array(
+							'item_id' => $inviter_id,
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'width'   => 50,
+							'height'  => 50,
+							'html'    => false,
+							'class'   => $class,
+						)
+					),
+					ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401
+				),
 				'user_link' => bp_core_get_userlink( $inviter_id, false, true ),
 				'user_name' => bp_core_get_username( $inviter_id ),
 				'name'      => bp_core_get_user_displayname( intval( $inviter_id ) ),
@@ -444,24 +450,30 @@ function bp_nouveau_groups_invites_custom_message( $message = '' ) {
  * Format a Group for a json reply
  *
  * @since BuddyPress 3.0.0
+ *
+ * @param object $item The group object
+ *
+ * @return array $args The group data.
  */
 function bp_nouveau_prepare_group_for_js( $item ) {
 	if ( empty( $item->id ) ) {
 		return array();
 	}
 
-	$item_avatar_url = bp_core_fetch_avatar( array(
-		'item_id'    => $item->id,
-		'object'     => 'group',
-		'type'       => 'thumb',
-		'width'      => 100,
-		'height'     => 100,
-		'html'       => false
-	) );
+	$item_avatar_url = bp_disable_group_avatar_uploads() ? '' : bp_core_fetch_avatar(
+		array(
+			'item_id' => $item->id,
+			'object'  => 'group',
+			'type'    => 'thumb',
+			'width'   => 100,
+			'height'  => 100,
+			'html'    => false,
+		)
+	);
 
-	return array(
+	$args = array(
 		'id'             => $item->id,
-		'name'           => wp_specialchars_decode( $item->name ),
+		'name'           => bp_get_group_name( $item ),
 		'avatar_url'     => $item_avatar_url,
 		'object_type'    => 'group',
 		'is_public'      => ( 'public' === $item->status ),
@@ -469,6 +481,20 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 		'group_video'    => ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
+
+	$val = function_exists( 'bb_is_enabled_activity_schedule_posts_filter' ) ? bb_is_enabled_activity_schedule_posts_filter() : false;
+	if ( $val ) {
+		$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $item->id );
+		$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $item->id );
+		if ( $is_admin || $is_mod ) {
+			$args['allow_schedule'] = 'enabled';
+			if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
+				$args['group_url'] = trailingslashit( bp_get_group_permalink( $item ) . bp_get_activity_slug() );
+			}
+		}
+	}
+
+	return $args;
 }
 
 /**

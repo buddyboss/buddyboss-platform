@@ -352,7 +352,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			foreach ( (array) $subscribers as $subscriber ) {
 
 				// Shift the subscriber if told to.
-				if ( ! empty( $request['subscribers'] ) && ( true === $request['subscribers'] ) && bbp_is_subscriptions_active() ) {
+				if ( ! empty( $request['subscribers'] ) && ( true === $request['subscribers'] ) && bb_is_enabled_subscription( 'topic' ) ) {
 					bbp_add_user_subscription( $subscriber, $destination_topic->ID );
 				}
 
@@ -500,12 +500,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 */
 		do_action( 'bp_rest_topic_get_item', $destination_topic, $source_topic, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -776,7 +775,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
 		/** Subscriptions */
 		// Copy the subscribers.
-		if ( ! empty( $request['subscribers'] ) && true === $request['subscribers'] && bbp_is_subscriptions_active() ) {
+		if ( ! empty( $request['subscribers'] ) && true === $request['subscribers'] && bb_is_enabled_subscription( 'topic' ) ) {
 
 			// Get the subscribers.
 			$subscribers = bbp_get_topic_subscribers( $source_topic->ID );
@@ -942,12 +941,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 */
 		do_action( 'bp_rest_split_get_item', $from_reply, $source_topic, $destination_topic, $request );
 
-		return $this->get_item(
-			array(
-				'id'      => $destination_topic->ID,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $destination_topic->ID );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -1000,6 +998,9 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
+	 * NOTICE: Since 2.2.2, forum subscriptions have been migrated to a
+	 * new API for subscribing users to notifications: /wp-json/buddyboss/v1/subscriptions
+	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/action/:id Topic Actions
 	 * @apiName        ActionBBPTopic
 	 * @apiGroup       Forum Topics
@@ -1044,12 +1045,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			return $retval;
 		}
 
-		return $this->get_item(
-			array(
-				'id'      => $topic_id,
-				'context' => 'view',
-			)
-		);
+		$object = new WP_REST_Request();
+		$object->set_param( 'id', $topic_id );
+		$object->set_param( 'context', 'view' );
+
+		return $this->get_item( $object );
 	}
 
 	/**
@@ -1337,7 +1337,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return bool|WP_Error
 	 */
 	protected function rest_update_subscribe( $topic_id, $value, $user_id ) {
-		if ( ! bbp_is_subscriptions_active() ) {
+		if ( ! bb_is_enabled_subscription( 'topic' ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_action_disabled',
 				__( 'Subscriptions are no longer active.', 'buddyboss' ),

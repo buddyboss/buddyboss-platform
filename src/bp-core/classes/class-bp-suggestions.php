@@ -78,7 +78,7 @@ abstract class BP_Suggestions {
 	 * }
 	 */
 	public function set_query( array $args = array() ) {
-		$this->args = wp_parse_args( $args, $this->default_args );
+		$this->args = bp_parse_args( $args, $this->default_args );
 	}
 
 	/**

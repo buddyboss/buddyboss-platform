@@ -112,7 +112,7 @@ class BP_Akismet {
 		}
 
 		if ( $desc ) {
-			echo '<span class="akismet-status"><a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history">' . htmlspecialchars( $desc ) . '</a></span>';
+			echo '<span class="akismet-status"><a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history">' . htmlspecialchars( $desc, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '</a></span>';
 		}
 
 		/**

@@ -107,7 +107,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_type'                         => implode( ',', array_unique( $allowed ) ),
 		'profile_video'                      => bp_is_profile_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), 0 ),
 		'profile_album'                      => bp_is_profile_albums_support_enabled(),
-		'group_video'                        => bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'group_video'                        => bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() || bp_is_user_messages() ),
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_video'                     => bp_is_messages_video_support_enabled() && bb_user_can_create_video(),
 		'messages_video_active'              => bp_is_messages_video_support_enabled(),
@@ -118,7 +118,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'invalid_video_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
 		'video_size_error_header'            => __( 'File too large ', 'buddyboss' ),
 		'video_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'                     => __( 'File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.', 'buddyboss' ),
+		'dictFileTooBig'                     => __( 'Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.', 'buddyboss' ),
 		'maxFiles'                           => bp_video_allowed_upload_video_per_batch(),
 		'is_video_directory'                 => ( bp_is_video_directory() ) ? 'yes' : 'no',
 		'create_album_error_title'           => __( 'Please enter title of album', 'buddyboss' ),
@@ -157,7 +157,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'album_delete_error'      => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'video_delete_confirm'    => __( 'Are you sure you want to delete this video?', 'buddyboss' ),
 		'video_enlarge_text'      => __( 'Enlarge', 'buddyboss' ),
-		'video_fullscreen_text'   => __( 'Enter fullscreen', 'buddyboss' ),
+		'video_fullscreen_text'   => __( 'Full screen', 'buddyboss' ),
 		'video_play_text'         => __( 'Play', 'buddyboss' ),
 		'video_pause_text'        => __( 'Pause', 'buddyboss' ),
 		'video_uploaded_text'     => __( 'Uploaded', 'buddyboss' ),
@@ -166,6 +166,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_speed_text'        => __( 'Speed', 'buddyboss' ),
 		'video_skip_back_text'    => __( 'Step Back (5)', 'buddyboss' ),
 		'video_skip_forward_text' => __( 'Step Forward (5)', 'buddyboss' ),
+		'video_picture_in_text'   => __( 'This video is playing in the miniplayer.', 'buddyboss' ),
 	);
 
 	return $params;
@@ -184,7 +185,7 @@ function bp_nouveau_get_video_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'video',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
-		'li_class'  => array(),
+		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_video_directory_permalink(),
 		'text'      => __( 'All Videos', 'buddyboss' ),
 		'count'     => bp_get_total_video_count(),

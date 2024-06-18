@@ -922,15 +922,15 @@ class BBP_Converter {
 	 * @since 2.1.0 bbPress (r3813)
 	 */
 	public static function sync_table( $drop = false ) {
-		global $wpdb;
 
 		// Setup DB.
-		$table_name   = $wpdb->prefix . 'bbp_converter_translator';
-		$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
+		$bbp_db       = bbp_db();
+		$table_name   = $bbp_db->prefix . 'bbp_converter_translator';
+		$table_exists = $bbp_db->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
 
 		// Maybe drop the sync table.
 		if ( ( true === $drop ) && ( true === $table_exists ) ) {
-			$wpdb->query( "DROP TABLE {$table_name}" );
+			$bbp_db->query( "DROP TABLE {$table_name}" );
 		}
 
 		// Maybe include the upgrade functions, for dbDelta().
@@ -946,13 +946,13 @@ class BBP_Converter {
 		$max_index_length = 75;
 
 		// Maybe override the character set.
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate .= "DEFAULT CHARACTER SET {$wpdb->charset}";
+		if ( ! empty( $bbp_db->charset ) ) {
+			$charset_collate .= "DEFAULT CHARACTER SET {$bbp_db->charset}";
 		}
 
 		// Maybe override the collation.
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE {$wpdb->collate}";
+		if ( ! empty( $bbp_db->collate ) ) {
+			$charset_collate .= " COLLATE {$bbp_db->collate}";
 		}
 
 		/** Translator */
@@ -1070,7 +1070,6 @@ abstract class BBP_Converter_Base {
 	 * @since 2.1.0
 	 */
 	private function init() {
-		global $wpdb;
 
 		/** BBCode Parse Properties */
 
@@ -1104,7 +1103,7 @@ abstract class BBP_Converter_Base {
 		/** Get database connections */
 
 		// Setup WordPress Database.
-		$this->wpdb = $wpdb;
+		$this->wpdb = bbp_db();
 
 		// Setup old forum Database.
 		$this->opdb = new wpdb( $db_user, $db_pass, $db_name, $db_host );
@@ -1324,7 +1323,11 @@ abstract class BBP_Converter_Base {
 		foreach ( $this->field_map as $item ) {
 
 			// Yay a match, and we have a from table, too.
-			if ( ( $item['to_type'] === $to_type ) && ! empty( $item['from_tablename'] ) ) {
+			if (
+				( $item['to_type'] === $to_type ) &&
+				! empty( $item['from_tablename'] ) &&
+				bb_check_table_exists( $this->opdb, $this->opdb->prefix . $item['from_tablename'] )
+			) {
 
 				// $from_tablename was set from a previous loop iteration.
 				if ( ! empty( $from_tablename ) ) {
@@ -1556,6 +1559,11 @@ abstract class BBP_Converter_Base {
 						default:
 							if ( 0 === count( $insert_post ) ) {
 								break;
+							}
+
+							// Avoid trim deprecation error when post_title empty.
+							if ( ! empty( $insert_post['post_name'] ) && empty( $insert_post['post_title'] ) ) {
+								$insert_post['post_title'] = sanitize_title( $insert_post['post_name'] );
 							}
 
 							$post_id = wp_insert_post( $insert_post, true );
@@ -2049,7 +2057,10 @@ abstract class BBP_Converter_Base {
 	 * @return bool
 	 */
 	private function count_rows_by_table( $table_name = '' ) {
-		$count = (int) $this->opdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+		$count = 0;
+		if ( bb_check_table_exists( $this->opdb, $this->opdb->prefix . $table_name ) ) {
+			$count = (int) $this->opdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+		}
 
 		return update_option( '_bbp_converter_rows_in_step', $count );
 	}
@@ -2224,7 +2235,7 @@ abstract class BBP_Converter_Base {
 			$bbcode->{$prop} = $value;
 		}
 
-		return html_entity_decode( $bbcode->Parse( $field ) );
+		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
 
 	protected function callback_null( $field ) {
@@ -2234,6 +2245,10 @@ abstract class BBP_Converter_Base {
 	}
 
 	protected function callback_datetime( $field ) {
+		if ( empty( $field ) ) {
+			return '';
+		}
+
 		return is_numeric( $field )
 			? date( 'Y-m-d H:i:s', $field )
 			: date( 'Y-m-d H:i:s', strtotime( $field ) );

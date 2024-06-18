@@ -153,6 +153,71 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			/**
+			 * Function for hide/show auto suspend fields on member blocking enable/disabled.
+			 */
+			$( document ).on(
+				'change',
+				'#bpm_blocking_member_blocking',
+				function () {
+					$( 'label[for="bpm_blocking_auto_suspend"]' ).toggleClass( 'is_disabled' );
+					$( '#bpm_blocking_auto_suspend' ).prop( 'checked', false );
+					$( 'label[for="bpm_blocking_email_notification"]' ).removeClass( 'is_disabled' );
+					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
+					}
+				}
+			);
+
+			/**
+			 * Function for hide/show auto suspend fields on member reporting enable/disabled.
+			 */
+			$( document ).on(
+				'change',
+				'#bb_blocking_member_reporting',
+				function () {
+					$( 'label[for="bb_reporting_auto_suspend"]' ).toggleClass('is_disabled');
+					$( '#bb_reporting_auto_suspend' ).prop( 'checked', false );
+					$( 'label[for="bpm_blocking_email_notification"]' ).removeClass( 'is_disabled' );
+					if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+						$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
+					}
+				}
+			);
+
+			/**
+			 * Checked if member block and reporting both inactive then disabled the email notification for it.
+			 */
+			if( false === $( '#bpm_blocking_member_blocking' ).prop( 'checked' ) && false === $( '#bb_blocking_member_reporting' ).prop( 'checked' ) ) {
+				$( '#bpm_blocking_email_notification' ).prop( 'checked', false );
+				$( 'label[for="bpm_blocking_email_notification"]' ).addClass( 'is_disabled' );
+			}
+
+			if( $( '#bb_reporting_category_description' ).length ) {
+				$('.wp-heading-inline').append( $( '#bb_reporting_category_description' ) );
+			}
+
+			$( 'body.taxonomy-bpm_category span:contains("Slug")' ).each( function () {
+				$( this ).parent().remove();
+			} );
+
+			$( '.taxonomy-bpm_category #the-list' ).on( 'click', 'button.editinline', function ( e ) {
+				e.preventDefault();
+				var $tr = $( this ).closest( 'tr' );
+				var val = $tr.find( 'td.bb_category_show_when_reporting' ).text();
+				if ( val !== '' ) {
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' )
+						.prop( 'selected', false );
+					$( 'tr.inline-edit-row select[name="bb_category_show_when_reporting"] option' )
+						.filter( function () {
+							return this.text === val;
+						} )
+						.prop( 'selected', true );
+				}
+			} );
 		}
 	);
 
@@ -446,6 +511,21 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+
+				// Show confirmation dialog when user enable restrict invite option.
+				$( document ).on(
+					'click',
+					'#bp-enable-group-restrict-invites',
+					function () {
+						if ( true === this.checked ) {
+							if ( confirm( BP_ADMIN.group.restrict_invites_confirm_message ) ) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				);
 			}
 
 			// Hide/show group header element group type.
@@ -736,9 +816,9 @@ window.bp = window.bp || {};
 			}
 
 			// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
-			if ( $( '.display-options' ).length ) {
+			if ( $( '.display-options:not(.button)' ).length ) {
 
-					var selectorAll    = $( '.display-options' );
+					var selectorAll    = $( '.display-options:not(.button)' );
 					var displayOptions = $( 'select[name=bp-display-name-format]' );
 					var currentValue   = displayOptions.val();
 
@@ -999,6 +1079,61 @@ window.bp = window.bp || {};
 					);
 			}
 
+			if ( $( '#bb-giphy-connect' ).length ) {
+
+				$( document ).on(
+					'click',
+					'#bb-giphy-connect',
+					function( e ) {
+						e.preventDefault();
+						if ( $( '#bb-giphy-connect' ).data( 'connected' ) ) {
+							$( '#bb-giphy-connect' ).data( 'connected', false );
+							$( '#bb-giphy-connect' ).addClass( 'button-primary' );
+							$( '#bp_media_gif_api_key' ).attr( 'readonly', false );
+							$( '#bp_media_gif_api_key' ).val( '' );
+							$( '#bp_media_profiles_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_groups_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_messages_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bp_media_forums_gif_support' ).attr( 'disabled', true ).attr( 'checked', false );
+							$( '#bb-giphy-connect' ).val( $( '#bb-giphy-connect' ).data( 'connect-text' ) );
+							return false;
+						}
+						$( '#bb-giphy-connect' ).addClass( 'disable-btn' );
+						$( '#bp_media_settings_gifs .bp-new-notice-panel-notice' ).addClass( 'hidden' );
+						$.ajax(
+							{
+								'url' : BP_ADMIN.ajax_url,
+								'method' : 'POST',
+								'data' : {
+									'action' : 'bb_admin_check_valid_giphy_key',
+									'key'    : $( '#bp_media_gif_api_key' ).val(),
+									'nonce'  : $( '#bb-giphy-connect' ).data( 'nonce' )
+								},
+								'success' : function( response ) {
+									if ( response.data.code && 200 === response.data.code ) {
+										$( '#bb-giphy-connect' ).data( 'connected', true );
+										$( '#bb-giphy-connect' ).removeClass( 'button-primary' );
+										$( '#bp_media_gif_api_key' ).attr( 'readonly', true );
+										$( '#bp_media_profiles_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_groups_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_messages_gif_support' ).attr( 'disabled', false );
+										$( '#bp_media_forums_gif_support' ).attr( 'disabled', false );
+										$( '#bb-giphy-connect' ).val( $( '#bb-giphy-connect' ).data( 'disconnect-text' ) );
+									} else {
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice' ).removeClass( 'hidden' );
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice span#giphy_response_code' ).html( response.data.code );
+										$( '#bp_media_settings_gifs .bp-new-notice-panel-notice span#giphy_response_message' ).html( response.data.message );
+									}
+								},
+								'error' : function() {
+									$( '#bb-giphy-connect' ).removeClass( 'disable-btn' );
+								}
+							}
+						);
+					}
+				);
+			}
+
 			if ( $( '#bp-tools-forum-submit' ).length ) {
 				var bp_admin_forum_repair_tools_wrapper_function = function( offset, currentAction ) {
 					$( 'body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"]' ).append( '<div class="loader-repair-tools"></div>' );
@@ -1203,6 +1338,17 @@ window.bp = window.bp || {};
 						} else {
 							profileAvatarURL = $( '.' + this.value + '-profile-avatar' ).prop( 'src' );
 							defaultProfileAvatarCustomContainer.addClass( 'bp-hide' );
+						}
+
+						var is_available_image_library = $( 'input[name="bb-is-available-image-library"]' ).val();
+						if ( 'display-name' === this.value ) {
+							$( '.bp-default-profile-avatar-display-name-description' ).removeClass( 'bp-hide' );
+							if ( 0 === is_available_image_library.length ) {
+								$( '.bp-default-profile-avatar-display-name-notice' ).removeClass( 'bp-hide' );
+							}
+						} else {
+							$( '.bp-default-profile-avatar-display-name-description' ).addClass( 'bp-hide' );
+							$( '.bp-default-profile-avatar-display-name-notice' ).addClass( 'bp-hide' );
 						}
 
 						if ( typeof profileAvatarURL.length !== 'undefined' && 0 < profileAvatarURL.length ) {
@@ -1585,6 +1731,13 @@ window.bp = window.bp || {};
 							groupAvatarURL = $( '.' + this.value + '-group-avatar' ).prop( 'src' );
 						}
 
+						var group_is_available_image_library = $( 'input[name="bb-is-available-image-library"]' ).val();
+						if ( 'group-name' === this.value && 0 === group_is_available_image_library.length ) {
+							$( '.bp-default-group-avatar-group-name-notice' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.bp-default-group-avatar-group-name-notice' ).addClass( 'bp-hide' );
+						}
+
 						if ( typeof groupAvatarURL.length !== 'undefined' && 0 < groupAvatarURL.length ) {
 							previewContainer.find( '.preview_avatar_cover' ).addClass( 'has-avatar' );
 						}
@@ -1667,57 +1820,61 @@ window.bp = window.bp || {};
 			// Confirmed box appears when change profile sizes options.
 			var is_confirmed_show = false;
 
-			var bpCoverProfileWidth  = $( 'select[id="bb-cover-profile-width"] option:selected' ).val();
-			var bpCoverProfileHeight = $( 'select[id="bb-cover-profile-height"] option:selected' ).val();
-			$( '#bp_member_avatar_settings' ).on(
-				'change',
-				'select[id="bb-cover-profile-width"], select[id="bb-cover-profile-height"]',
-				function(e) {
-					e.preventDefault();
+			if ( $( '#bp_member_avatar_settings .image-width-height' ).length ) {
+				var bpCoverProfileWidth  = $( 'select#bb-cover-profile-width' ).find( 'option:selected' ).val();
+				var bpCoverProfileHeight = $( 'select#bb-cover-profile-height' ).find( 'option:selected' ).val();
+				$( '#bp_member_avatar_settings' ).on(
+					'change',
+					'select#bb-cover-profile-width, select#bb-cover-profile-height',
+					function(e) {
+						e.preventDefault();
 
-					is_confirmed_show = true;
-					if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
-						is_confirmed_show = false;
-					} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
-						is_confirmed_show = false;
-					}
+						is_confirmed_show = true;
+						if ( 'bb-cover-profile-width' === $( this ).attr( 'id' ) && bpCoverProfileWidth === $( this ).val() ) {
+							is_confirmed_show = false;
+						} else if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) && bpCoverProfileHeight === $( this ).val() ) {
+							is_confirmed_show = false;
+						}
 
-					// Add class to preview section for browser only.
-					if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
-						if ( 'small' === $( this ).val() ) {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-						} else {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						// Add class to preview section for browser only.
+						if ( 'bb-cover-profile-height' === $( this ).attr( 'id' ) ) {
+							if ( 'small' === $( this ).val() ) {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+							} else {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+							}
 						}
 					}
-				}
-			);
+				);
+			}
 
-			var bpCoverGroupWidth  = $( 'select[id="bb-cover-group-width"] option:selected' ).val();
-			var bpCoverGroupHeight = $( 'select[id="bb-cover-group-height"] option:selected' ).val();
-			$( '#bp_groups_avatar_settings' ).on(
-				'change',
-				'select[id="bb-cover-group-width"], select[id="bb-cover-group-height"]',
-				function(e) {
-					e.preventDefault();
+			if ( $( '#bp_groups_avatar_settings .image-width-height' ).length ) {
+				var bpCoverGroupWidth  = $( 'select#bb-cover-group-width' ).find( 'option:selected' ).val();
+				var bpCoverGroupHeight = $( 'select#bb-cover-group-height' ).find( 'option:selected' ).val();
+				$( '#bp_groups_avatar_settings' ).on(
+					'change',
+					'select#bb-cover-group-width, select#bb-cover-group-height',
+					function(e) {
+						e.preventDefault();
 
-					is_confirmed_show = true;
-					if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
-						is_confirmed_show = false;
-					} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
-						is_confirmed_show = false;
-					}
+						is_confirmed_show = true;
+						if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
+							is_confirmed_show = false;
+						} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
+							is_confirmed_show = false;
+						}
 
-					// Add class to preview section for browser only.
-					if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
-						if ( 'small' === $( this ).val() ) {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-						} else {
-							$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+						// Add class to preview section for browser only.
+						if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
+							if ( 'small' === $( this ).val() ) {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
+							} else {
+								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
+							}
 						}
 					}
-				}
-			);
+				);
+			}
 
 			$( 'body.buddyboss_page_bp-settings' ).on(
 				'click',
@@ -1955,22 +2112,29 @@ window.bp = window.bp || {};
 					$( this ).closest( 'tr' ).remove();
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
 					totalCount     = 1;
+					var media_type = 'bp_document';
+					if ( 
+						$( this ).closest('tr.custom-extension').length > 0 &&
+						$( this ).closest('tr.custom-extension').hasClass('video-extensions')
+					) {
+						media_type = 'bp_video';
+					}
 					parent.find( 'tbody tr.extra-extension' ).each(
 						function() {
-								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-check' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-name' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
+								$( this ).find( 'input.extension-check' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-check' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-name' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-name' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'select.extension-icon' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][icon]' );
+								$( this ).find( 'select.extension-icon' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][icon]' );
 								totalCount = totalCount + 1;
 						}
 					);
@@ -2182,8 +2346,21 @@ window.bp = window.bp || {};
 					} else {
 						$( this ).parent().next( 'label' ).addClass( 'is_disabled' ).find( 'input[type="checkbox"]' ).removeProp( 'checked' ).removeAttr( 'checked' ).prop( 'disabled', 'disabled' );
 					}
+					$( 'label[for="bpm_reporting_email_notification"]' ).removeClass( 'is_disabled' );
+					if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
+						$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
+						$( 'label[for="bpm_reporting_email_notification"]' ).addClass( 'is_disabled' );
+					}
 				}
 			);
+
+			/**
+			 * Checked all item reporting inactive then disabled the email notification for it.
+			 */
+			if ( 0 === $( '.bpm_reporting_content_content_label > input:checked' ).length ) {
+				$( '#bpm_reporting_email_notification' ).prop( 'checked', false );
+				$( 'label[for="bpm_reporting_email_notification"]' ).addClass( 'is_disabled' );
+			}
 
 			$( document ).on(
 				'click',
@@ -2272,6 +2449,99 @@ window.bp = window.bp || {};
 					} );
 				}
 			}
+
+			$( document ).on(
+				'click',
+				'.bb-hide-pw',
+				function ( e ) {
+					e.preventDefault();
+					var $this  = $( this );
+					var $input = $this.closest( '.password-toggle' ).find( 'input' );
+					var $default_type = $input.data( 'type' ) ? $input.data( 'type' ) : 'text';
+					$this.toggleClass( 'bb-show-pass' );
+					if ( $this.hasClass( 'bb-show-pass' ) ) {
+						$input.attr( 'type', $default_type );
+					} else {
+						$input.attr( 'type', 'password' );
+					}
+				}
+			);
+
+			// Redirection select box Select2
+			if( typeof $.fn.select2 !== 'undefined' ) {
+				if( $( '#bb-login-redirection' ).length > 0 ) {
+					$( '#bb-login-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+				if( $( '#bb-logout-redirection' ).length > 0 ) {
+					$( '#bb-logout-redirection' ).select2({
+						containerCssClass: 'custom-select2',
+						dropdownCssClass: 'custom-dropdown-select2'
+					});
+				}
+			}
+
+			// Login Redirection Settings Show/Hide.
+			var loginRedSettings = $( '#bb-login-redirection' );
+			var currentLoginRedSettings = '0';
+
+			if ( loginRedSettings.length ) {
+				currentLoginRedSettings = loginRedSettings.val();
+
+				if ( '0' === currentLoginRedSettings ) {
+					$( '.login-redirection-text-box' ).show();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+				} else {
+					$( '.login-redirection-text-box' ).hide();
+					loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+				}
+
+				$( loginRedSettings ).change(
+					function () {
+						currentLoginRedSettings = $( this ).val();
+						if ( '0' === currentLoginRedSettings ) {
+							$( '.login-redirection-text-box' ).show();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+						} else {
+							$( '.login-redirection-text-box' ).hide();
+							loginRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+						}
+
+					}
+				);
+			}
+
+			// Logout Redirection Settings Show/Hide.
+			var logoutRedSettings = $( '#bb-logout-redirection' );
+			var currentLogoutRedSettings = '0';
+
+			if ( logoutRedSettings.length ) {
+				currentLogoutRedSettings = logoutRedSettings.val();
+
+				if ( '0' === currentLogoutRedSettings ) {
+					$( '.logout-redirection-text-box' ).show();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+				} else {
+					$( '.logout-redirection-text-box' ).hide();
+					logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+				}
+
+				$( logoutRedSettings ).change(
+					function () {
+						currentLogoutRedSettings = $( this ).val();
+						if ( '0' === currentLogoutRedSettings ) {
+							$( '.logout-redirection-text-box' ).show();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).hide();
+						} else {
+							$( '.logout-redirection-text-box' ).hide();
+							logoutRedSettings.closest( 'td' ).find( '.description, .bb-description' ).show();
+						}
+
+					}
+				);
+			}
 		}
 	);
 
@@ -2295,6 +2565,292 @@ window.bp = window.bp || {};
 		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 			results = regex.exec(location.search);
 		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	// Domain Restrictions.
+	$( document ).on(
+		'click',
+		'.registration-restrictions-listing .registration-restrictions-add-rule',
+		function ( e ) {
+			e.preventDefault();
+			var $this = $( this );
+			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex' ).val() ) + 1;
+			var regex = new RegExp( 'placeholder_priority_index', 'g' );
+			var $row = $this.closest( '.registration-restrictions-listing' ).find( '.registration-restrictions-rule-list .registration-restrictions-rule.custom' ).html();
+			$this.closest( '.registration-restrictions-listing' ).
+				find( '.registration-restrictions-rule-list' ).
+				append( ' <div class="registration-restrictions-rule untouched"> ' + $row.replace( regex, newindex ) + ' </div> ' );
+			$this.prev( '.registration-restrictions-lastindex' ).val( newindex );
+			domainRestictionUpdatePriorityNumber();
+		}
+	);
+
+	$( document ).on(
+		'click',
+		'.registration-restrictions-listing .registration-restrictions-rule-remove',
+		function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $listing = $this.parents( '.bb-domain-restrictions-listing' );
+			var newindex = parseInt( $this.prev( '.registration-restrictions-lastindex' ).val() ) - 1;
+			if ( !$this.closest( '.registration-restrictions-rule' ).hasClass( 'custom' ) ) {
+				$this.closest( '.registration-restrictions-rule' ).remove();
+				$this.parents( '.registration-restrictions-listing' ).find( '.registration-restrictions-lastindex' ).val( newindex );
+			}
+
+			// If no rules or all are never allow then enable all option.
+			if ( 'undefined' !== typeof $listing && $listing.length > 0 ) {
+				if ( 0 === $listing.find( '.registration-restrictions-rule' ).not( '.custom' ).length ) {
+					$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+				} else {
+					var $select = $listing.find( '.registration-restrictions-rule:not(.custom) .registration-restrictions-input-select' );
+					if (
+						0 === $select.find( 'option[value="only_allow"]:selected' ).length &&
+						0 === $select.find( 'option[value="always_allow"]:selected' ).length
+					) {
+						$( '.bb-domain-restrictions-listing .registration-restrictions-select' ).find( 'option' ).attr( 'disabled', false );
+					}
+				}
+			}
+
+			domainRestictionUpdatePriorityNumber();
+		}
+	);
+
+	$( document ).on(
+		'change',
+		'.registration-restrictions-listing .registration-restrictions-select',
+		function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' );
+			var $other_dropdowns = $this.parents( '.bb-domain-restrictions-listing' ).find( '.registration-restrictions-select' ).not( $this );
+			var current_val = '';
+			var all_values = [];
+
+			$dropdowns.each( function ( index, element ) {
+				var element_val = $( this ).find( 'option:selected' ).val();
+				all_values[ index ] = element_val;
+
+				if ( $this.length !== 0 && $this.get( 0 ) === element ) {
+					current_val = element_val;
+				}
+			} );
+
+			var filtered_val = bb_unique( all_values );
+			filtered_val = filtered_val.filter( function ( v ) {
+				return v !== '';
+			} );
+
+			if ( filtered_val.length === 1 ) {
+				if ( filtered_val[ 0 ] === 'always_allow' ) {
+					if ( 1 === $other_dropdowns.length ) {
+						$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+						$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					} else {
+						$dropdowns.find( 'option' ).attr( 'disabled', false );
+						$dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+					}
+				} else if ( filtered_val[ 0 ] === 'only_allow' ) {
+					if ( 1 === $other_dropdowns.length ) {
+						$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+						$other_dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					} else {
+						$dropdowns.find( 'option' ).attr( 'disabled', false );
+						$dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+					}
+				} else if ( filtered_val[ 0 ] === 'never_allow' ) {
+					$dropdowns.find( 'option' ).attr( 'disabled', false );
+				}
+			} else if (
+				filtered_val.length !== 0 &&
+				filtered_val.length > 1 &&
+				current_val !== ''
+			) {
+				if ( 'only_allow' === current_val ) {
+					$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+					$other_dropdowns.find( 'option[value="always_allow"]' ).attr( 'disabled', true );
+				} else if ( 'always_allow' === $this.find( ':selected' ).val() ) {
+					$other_dropdowns.find( 'option' ).attr( 'disabled', false );
+					$other_dropdowns.find( 'option[value="only_allow"]' ).attr( 'disabled', true );
+				}
+			}
+			validateDuplicateDomainRuleEntry();
+		}
+	);
+
+	$( '.registration-restrictions-rule-list.bb-sortable' ).sortable( {
+		update: function () {
+			domainRestictionUpdatePriorityNumber();
+		},
+	} );
+
+	function domainRestictionUpdatePriorityNumber() {
+		$( '.bb-sortable .registration-restrictions-rule:not(.custom)' ).each( function ( index ) {
+			$( this ).find( '.registration-restrictions-priority' ).html( index + 1 );
+		} );
+	}
+
+	// Function to validate duplicate entry.
+	function validateDuplicateDomainRuleEntry( e, eventType ) {
+		var wrapper = $( '#bb-domain-restrictions-setting' );
+		//Store all the entry.
+		var allDomainExtension = [];
+		// Store Errors
+		var domainRestrictionsErrors = [];
+
+		if ( e && e.currentTarget && $( e.currentTarget ).closest( '.registration-restrictions-rule' ).hasClass( 'untouched' ) ) {
+			$( e.currentTarget ).closest( '.registration-restrictions-rule' ).removeClass( 'untouched' );
+		}
+
+		if ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
+			$( '.registration-restrictions-rule' ).removeClass( 'untouched' );
+		}
+
+		$( '.bb-domain-restrictions-listing .registration-restrictions-rule' ).not( '.custom' ).not( '.untouched' ).each( function () {
+			var currentDomain = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
+			var currentExtension = $( this ).find( '.registration-restrictions-tld' ).val().trim().toLowerCase();
+			var conditionType = $( this ).find( '.registration-restrictions-input-select' ).val();
+
+			$( this ).removeClass( 'error' );
+			wrapper.children( '.restrictions-error' ).html( '' );
+
+			if ( '' !== currentDomain && '' !== currentExtension ) {
+				if ( 'undefined' === typeof allDomainExtension[ currentDomain + '_' + currentExtension ] ) {
+					allDomainExtension[ currentDomain + '_' + currentExtension ] = 1;
+				} else {
+					allDomainExtension[ currentDomain + '_' + currentExtension ] += 1;
+					$( this ).addClass( 'error' );
+					if ( !domainRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate ) ) {
+						domainRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate );
+					}
+				}
+			}
+
+			if ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) {
+				if ( '' === currentDomain || '' === currentExtension || '' === conditionType ) {
+					$( this ).addClass( 'error' );
+					if ( !domainRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty ) ) {
+						domainRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
+					}
+				}
+			}
+		} );
+
+		$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+
+		for ( var i = 0; i < domainRestrictionsErrors.length; i++ ) {
+			var error = '<p>' + domainRestrictionsErrors[ i ] + '</p>';
+			$( '#bb-domain-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+		}
+
+		if ( domainRestrictionsErrors.length > 0 && eventType === 'submit' ) {
+			e.preventDefault();
+		}
+	}
+
+	// Validate Email Restrictions emails duplicate entry.
+	function validateDuplicateEmailRuleEntry( e, eventType ) {
+		//Store all the entry.
+		var allEmailEntries = [];
+		var emailRestrictionsErrors = [];
+		$( '#bb-email-restrictions-setting .registration-restrictions-rule' ).not( '.custom' ).each( function () {
+			var currentEmailValue = $( this ).find( '.registration-restrictions-domain' ).val().trim().toLowerCase();
+			var currentEmailCondition = $( this ).find( '.registration-restrictions-input-select' ).val();
+
+			if ( currentEmailValue !== '' ) {
+				if ( 'undefined' === typeof allEmailEntries[ currentEmailValue ] ) {
+					allEmailEntries[ currentEmailValue ] = 1;
+					$( this ).removeClass( 'error' );
+				} else {
+					allEmailEntries[ currentEmailValue ] += 1;
+					$( this ).addClass( 'error' );
+					if ( !emailRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate ) ) {
+						emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.duplicate );
+					}
+				}
+			}
+
+			var emptyValueOnSubmit = ( eventType === 'submit' || eventType === 'remove' || eventType === 'add' ) && ( currentEmailValue === '' || currentEmailCondition === '' );
+			var eventFromField = e && e.currentTarget;
+			var emptyConditionOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-input-select' ) && currentEmailCondition === '';
+			var emptyEmailOnChange = eventFromField && e.currentTarget.classList.contains( 'registration-restrictions-domain' ) && currentEmailValue === '';
+
+			if ( emptyValueOnSubmit || emptyConditionOnChange || emptyEmailOnChange ) {
+				$( this ).addClass( 'error' );
+				if ( !emailRestrictionsErrors.includes( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty ) ) {
+					emailRestrictionsErrors.push( BP_ADMIN.bb_registration_restrictions.feedback_messages.empty );
+				}
+			}
+		} );
+
+		$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).html( '' );
+
+		for ( var i = 0; i < emailRestrictionsErrors.length; i++ ) {
+			var error = '<p>' + emailRestrictionsErrors[ i ] + '</p>';
+			$( '#bb-email-restrictions-setting' ).children( '.restrictions-error' ).append( error );
+		}
+
+		if ( emailRestrictionsErrors.length > 0 ) {
+			if ( eventType === 'submit' ) {
+				e.preventDefault();
+			}
+		}
+	}
+
+	// Handle input and blur event on domain and extension textboxes.
+	$( document ).on( 'input blur', '.bb-domain-restrictions-listing .registration-restrictions-domain, .registration-restrictions-tld', function ( e ) {
+		validateDuplicateDomainRuleEntry( e );
+	} );
+
+	// Handle adding domain restriction.
+	$( '.registration-restrictions-add-rule' ).on( 'click', function () {
+		var $this = $( this );
+		if ( $this.hasClass( 'domain-rule-add' ) ) {
+			validateDuplicateDomainRuleEntry( null, 'add' );
+		} else {
+			validateDuplicateEmailRuleEntry( null, 'add' );
+		}
+	} );
+
+	// Handle removing domain restriction.
+	$( document ).on( 'click', '.registration-restrictions-rule-remove', function () {
+		var $this = $( this );
+		if ( $this.hasClass( 'domain-rule-remove' ) ) {
+			validateDuplicateDomainRuleEntry( null, 'remove' );
+		} else {
+			validateDuplicateEmailRuleEntry( null, 'remove' );
+		}
+	} );
+
+	// Handle settings save.
+	$( '#bb_registration_restrictions' ).parents( 'form' ).on( 'submit', function ( e ) {
+		validateDuplicateDomainRuleEntry( e, 'submit' );
+		validateDuplicateEmailRuleEntry( e, 'submit' );
+		if ( $( '#bb-domain-restrictions-setting .registration-restrictions-rule.error' ).length > 0 ) {
+			$( 'html, body' ).animate( {
+				'scrollTop': $( '#bb-domain-restrictions-setting' ).offset().top - 75,
+			} );
+		} else if ( $( '#bb-email-restrictions-setting .registration-restrictions-rule.error' ).length > 0 ) {
+			$( 'html, body' ).animate( {
+				'scrollTop': $( '#bb-email-restrictions-setting' ).offset().top - 75,
+			} );
+		}
+	} );
+
+	// Handle input and blur event on email textboxes.
+	$( document ).on( 'input blur', '#bb-email-restrictions-setting .registration-restrictions-domain', function ( e ) {
+		validateDuplicateEmailRuleEntry( e );
+	} );
+
+	$( document ).on( 'change', '#bb-email-restrictions-setting .registration-restrictions-input-select', function ( e ) {
+		validateDuplicateEmailRuleEntry( e );
+	} );
+
+	function bb_unique( array ) {
+		return $.grep( array, function ( el, index ) {
+			return index === $.inArray( el, array );
+		} );
 	}
 
 	/* jshint ignore:end */

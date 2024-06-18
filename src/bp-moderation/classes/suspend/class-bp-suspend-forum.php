@@ -67,6 +67,9 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'activity' ) ) {
 			add_filter( 'bb_moderation_restrict_single_item_' . BP_Suspend_Activity::$type, array( $this, 'unbind_restrict_single_item' ), 10, 2 );
 		}
+
+		// Update the where condition for forum Subscriptions.
+		add_filter( 'bb_subscriptions_get_where_conditions', array( $this, 'bb_subscriptions_forum_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -195,9 +198,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			}
 		}
 
-		$where                  = array();
-		$where['suspend_where'] = $this->exclude_where_query();
-
+		$where = array();
+		// Remove suspended members forum from widget.
+		if ( function_exists( 'bb_did_filter' ) && bb_did_filter( 'bbp_after_forum_widget_settings_parse_args' ) ) {
+			$where['suspend_where'] = $this->exclude_where_query();
+		}
 		/**
 		 * Filters the hidden forum Where SQL statement.
 		 *
@@ -237,12 +242,6 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			return $post;
 		}
 
-		$post_id = ( ARRAY_A === $output ? $post['ID'] : ( ARRAY_N === $output ? current( $post ) : $post->ID ) );
-
-		if ( BP_Core_Suspend::check_suspended_content( (int) $post_id, self::$type ) ) {
-			return null;
-		}
-
 		return $post;
 	}
 
@@ -256,7 +255,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_hidden_forum( $forum_id, $hide_sitewide, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $forum_id ) ) {
+			return;
+		}
 
 		// if Group forums then return.
 		$group_ids = bbp_get_forum_group_ids( $forum_id );
@@ -270,7 +273,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $forum_id,
@@ -284,20 +287,32 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'hide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::add_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $forum_id;
 
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $forum_id, $hide_sitewide, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'hide_related_content' ),
-						'args'     => array( $forum_id, $hide_sitewide, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $forum_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'hide_related_content' ),
+					'args'              => array( $forum_id, $hide_sitewide, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -312,7 +327,11 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function manage_unhidden_forum( $forum_id, $hide_sitewide, $force_all, $args = array() ) {
-		global $bp_background_updater;
+		global $bb_background_updater;
+
+		if ( empty( $forum_id ) ) {
+			return;
+		}
 
 		$force_bg_process = false;
 		if ( isset( $args['force_bg_process'] ) ) {
@@ -320,7 +339,7 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			unset( $args['force_bg_process'] );
 		}
 
-		$suspend_args = wp_parse_args(
+		$suspend_args = bp_parse_args(
 			$args,
 			array(
 				'item_id'   => $forum_id,
@@ -346,20 +365,32 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 
 		$suspend_args = self::validate_keys( $suspend_args );
 
+		$group_name_args = array_merge(
+			$suspend_args,
+			array(
+				'custom_action' => 'unhide',
+			)
+		);
+		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
+
 		BP_Core_Suspend::remove_suspend( $suspend_args );
+
+		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $forum_id;
 
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->unhide_related_content( $forum_id, $hide_sitewide, $force_all, $args );
 		} else {
-			$bp_background_updater->data(
+			$bb_background_updater->data(
 				array(
-					array(
-						'callback' => array( $this, 'unhide_related_content' ),
-						'args'     => array( $forum_id, $hide_sitewide, $force_all, $args ),
-					),
-				)
+					'type'              => $this->item_type,
+					'group'             => $group_name,
+					'data_id'           => $forum_id,
+					'secondary_data_id' => $args['parent_id'],
+					'callback'          => array( $this, 'unhide_related_content' ),
+					'args'              => array( $forum_id, $hide_sitewide, $force_all, $args ),
+				),
 			);
-			$bp_background_updater->save()->schedule_event();
+			$bb_background_updater->save()->schedule_event();
 		}
 	}
 
@@ -459,5 +490,55 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 		}
 
 		return $restrict;
+	}
+
+	/**
+	 * Prepare subscription forum Where SQL query to filter blocked Forum.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 *
+	 * @param array $where_conditions Subscription Where sql.
+	 * @param array $r                Array of subscription arguments.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function bb_subscriptions_forum_where_conditions( $where_conditions, $r ) {
+		global $bp;
+
+		if ( isset( $r['bypass_moderation'] ) && true === (bool) $r['bypass_moderation'] ) {
+			return $where_conditions;
+		}
+
+		if ( ! empty( $r['type'] ) ) {
+			if ( ! is_array( $r['type'] ) ) {
+				$r['type'] = preg_split( '/[\s,]+/', $r['type'] );
+			}
+			$r['type'] = array_map( 'sanitize_title', $r['type'] );
+		}
+
+		if ( ! empty( $r['type'] ) && ! in_array( 'forum', $r['type'], true ) ) {
+			return $where_conditions;
+		}
+
+		// Get suspended where query for the forum subscription.
+		$where = array();
+
+		/**
+		 * Filters the hidden forum Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.2.6
+		 *
+		 * @param array $where            Query to hide suspended user's forum.
+		 * @param array $this             current class object.
+		 * @param array $where_conditions Subscription Where sql.
+		 * @param array $r                Array of subscription arguments.
+		 */
+		$where = apply_filters( 'bb_subscriptions_suspend_forum_get_where_conditions', $where, $this, $where_conditions, $r );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['suspend_forum_where'] = "sc.item_id NOT IN ( SELECT item_id FROM {$bp->table_prefix}bp_suspend WHERE item_type = 'forum' AND ( " . implode( ' OR ', $where ) . ' ) )';
+		}
+
+		return $where_conditions;
 	}
 }

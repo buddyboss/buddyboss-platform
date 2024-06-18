@@ -185,7 +185,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			foreach ( $bp_active_member_types as $bp_active_member_type ) {
 				$enabled = get_post_meta( $bp_active_member_type, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $bp_active_member_type, '_bp_member_type_label_singular_name', true );
-				if ( '' === $enabled || '1' === $enabled ) {
+				if ( '' === $enabled || '1' === $enabled || (int)$post_selected === $bp_active_member_type ) {
 					$html .= sprintf(
 						'<option value="%s" %s>%s</option>',
 						$bp_active_member_type,

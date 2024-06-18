@@ -370,7 +370,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * @return array
 	 */
 	protected function get_oembed_response_data( $item, $width ) {
-		$data = wp_parse_args(
+		$data = bp_parse_args(
 			$item,
 			array(
 				'version'       => '1.0',

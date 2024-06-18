@@ -402,4 +402,15 @@
 		}
 	} // close ul.item-list
 
+	.gd-list-view-select {
+
+		.dropdown-menu {
+
+			button.dropdown-item {
+				border-radius: unset;
+				width: 100%;
+			}
+		}
+	}
+
 } // close .buddypress-wrap

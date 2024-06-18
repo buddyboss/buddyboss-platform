@@ -25,6 +25,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 	 *
 	 * @since bbPress (r3552)
 	 */
+	#[\AllowDynamicProperties]
 	class BP_Forums_Component extends BP_Component {
 
 		/**
@@ -124,7 +125,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// Setup the components
 			add_action( 'bp_init', array( $this, 'setup_components' ), 7 );
 			// Setup meta title.
-			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 999, 1 );
+			add_filter( 'pre_get_document_title', array( $this, 'bb_group_forums_set_title_tag' ), 10, 1 );
 			if ( current_user_can( 'administrator' ) ) {
 				// Admin bar menu for forum and discussion.
 				add_action( 'admin_bar_menu', array( $this, 'bb_forums_admin_bar_menu' ), 100 );
@@ -247,19 +248,6 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				);
 			}
 
-			// Subscribed topics (my profile only)
-			if ( ( is_admin() || bp_is_my_profile() ) && bbp_is_subscriptions_active() ) {
-				$sub_nav[] = array(
-					'name'            => __( 'Subscriptions', 'buddyboss' ),
-					'slug'            => bbp_get_user_subscriptions_slug(),
-					'parent_url'      => $forums_link,
-					'parent_slug'     => $this->slug,
-					'screen_function' => 'bbp_member_forums_screen_subscriptions',
-					'position'        => 60,
-					'item_css_id'     => 'subscriptions',
-				);
-			}
-
 			parent::setup_nav( $main_nav, $sub_nav );
 		}
 
@@ -307,14 +295,6 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'id'     => 'my-account-' . $this->id . '-favorites',
 					'title'  => __( 'My Favorites', 'buddyboss' ),
 					'href'   => trailingslashit( $forums_link . bbp_get_user_favorites_slug() ),
-				);
-
-				// Subscriptions
-				$wp_admin_nav[] = array(
-					'parent' => 'my-account-' . $this->id,
-					'id'     => 'my-account-' . $this->id . '-subscriptions',
-					'title'  => __( 'Subscriptions', 'buddyboss' ),
-					'href'   => trailingslashit( $forums_link . bbp_get_user_subscriptions_slug() ),
 				);
 			}
 
@@ -369,6 +349,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'BP_REST_Topics_Actions_Endpoint',
 					'BP_REST_Reply_Endpoint',
 					'BP_REST_Reply_Actions_Endpoint',
+					'BB_REST_Forums_Link_Preview_Endpoint',
 				)
 			);
 		}

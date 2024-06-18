@@ -1010,7 +1010,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			 *
 			 * @since BuddyPress 1.1.0
 			 *
-			 * @param string $truncate      Generated excerpt.
+			 * @param string $text          Generated excerpt.
 			 * @param string $original_text Original text provided.
 			 * @param int    $length        Length of returned string, including ellipsis.
 			 * @param array  $options       Array of HTML attributes and options.
@@ -1087,6 +1087,30 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		}
 
 		$truncate = rtrim( mb_substr( $truncate, 0, $spacepos ) );
+
+		// If there's a space or broken link within the trimmed content.
+		$last_space      = mb_strrpos( $truncate, ' ' );
+		$last_link_start = mb_strrpos( $truncate, '<a' );
+		$last_link_end   = mb_strrpos( $truncate, '</a>' );
+
+		if ( false !== $last_link_start && false === $last_link_end ) {
+			// If last_link_start exist and last_link_end is not exist.
+
+			$truncate = mb_substr( $truncate, 0, $last_link_start );
+		} elseif ( false !== $last_link_start && false !== $last_link_end ) {
+			// If last_link_start exist and last_link_end is exist.
+
+			if ( $last_link_start > $last_link_end ) {
+				// But last_link_start greater than last_link_end.
+
+				$truncate = mb_substr( $truncate, 0, $last_link_start );
+			}
+		}
+
+		// If the link in plain text
+		if ( false !== $last_space ) {
+			$truncate = mb_substr( $truncate, 0, $last_space );
+		}
 	}
 	$truncate .= $ending;
 
@@ -3467,7 +3491,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 	// Now we can build the BP Title Parts
 	// Is there a displayed user, and do they have a name?
-	$displayed_user_name = bp_get_displayed_user_fullname();
+	$displayed_user_name = bp_core_get_user_displayname( bp_displayed_user_id() );
 
 	// Displayed user.
 	if ( ! empty( $displayed_user_name ) && ! is_404() ) {
@@ -3862,6 +3886,11 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 		$bp_classes[] = 'buddypress';
 	}
 
+	// Add bb-is-mobile class if we are in mobile device
+	if ( wp_is_mobile() ) { // https://developer.wordpress.org/reference/functions/wp_is_mobile/
+		$bp_classes[] = 'bb-is-mobile';
+	}
+
 	// Add the theme name/id to the body classes
 	$bp_classes[] = 'bp-' . bp_get_theme_compat_id();
 
@@ -4082,7 +4111,7 @@ function bp_nav_menu( $args = array() ) {
 		'menu_id'         => '',
 		'walker'          => '',
 	);
-	$args     = wp_parse_args( $args, $defaults );
+	$args     = bp_parse_args( $args, $defaults );
 
 	/**
 	 * Filters the parsed bp_nav_menu arguments.
@@ -4592,4 +4621,3 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	return false;
 
 }
-

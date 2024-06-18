@@ -496,16 +496,21 @@ function bp_the_notification_description() {
 	echo bp_get_the_notification_description();
 }
 
-	/**
-	 * Get full-text description for a specific notification.
-	 *
-	 * @since BuddyPress 1.9.0
-	 *
-	 * @return string
-	 */
-function bp_get_the_notification_description() {
-	$bp           = buddypress();
-	$notification = $bp->notifications->query_loop->notification;
+/**
+ * Get full-text description for a specific notification.
+ *
+ * @param object $notification Notification object.
+ *
+ * @since BuddyPress 1.9.0
+ *
+ * @return string
+ */
+function bp_get_the_notification_description( $notification = '' ) {
+	$bp = buddypress();
+
+	if ( empty( $notification ) ) {
+		$notification = $bp->notifications->query_loop->notification;
+	}
 
 	// Callback function exists.
 	if ( isset( $bp->{ $notification->component_name }->notification_callback ) && is_callable( $bp->{ $notification->component_name }->notification_callback ) ) {
@@ -544,7 +549,7 @@ function bp_get_the_notification_description() {
 	 * @param string $description  Full-text description for a specific notification.
 	 * @param object $notification Notification object.
 	 */
-	return apply_filters( 'bp_get_the_notification_description', $description, $notification );
+	return apply_filters( 'bp_get_the_notification_description', stripcslashes( $description ), $notification );
 }
 
 /**
@@ -902,7 +907,7 @@ function bp_get_the_notification_action_links( $args = '' ) {
 	$user_id = isset( $args['user_id'] ) ? $args['user_id'] : bp_displayed_user_id();
 
 	// Parse.
-	$r = wp_parse_args(
+	$r = bp_parse_args(
 		$args,
 		array(
 			'before' => '',
@@ -1064,40 +1069,46 @@ function bp_notifications_bulk_management_dropdown() {
 function bb_on_screen_notification_template() {
 	$is_on_screen_notification_enable = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
-	if ( empty( $is_on_screen_notification_enable ) ) {
+	if ( empty( $is_on_screen_notification_enable ) || ! is_user_logged_in() ) {
 		return;
 	}
 
 	remove_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
-	$user_unread_notification = BP_Notifications_Notification::get_unread_for_user( bp_loggedin_user_id() );
+	$args = array(
+		'user_id'           => bp_loggedin_user_id(),
+		'is_new'            => true,
+		'fields'            => 'id',
+		'update_meta_cache' => false,
+	);
+	// Actually, query it.
+	$user_unread_notification_ids = BP_Notifications_Notification::get( $args );
 	add_filter( 'bp_notifications_get_registered_components', 'bb_notification_exclude_group_message_notification', 999, 1 );
 
-	$user_unread_notification_ids = wp_list_pluck( $user_unread_notification, 'id' );
-	$position                     = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
-	$has_mobile_support           = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
-	$browser_tab                  = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
-	$visibility                   = bp_get_option( '_bp_on_screen_notifications_visibility', 0 );
-	$enable                       = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
+	$position           = bp_get_option( '_bp_on_screen_notifications_position', 'right' );
+	$has_mobile_support = bp_get_option( '_bp_on_screen_notifications_mobile_support', '0' );
+	$browser_tab        = bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 );
+	$visibility         = bp_get_option( '_bp_on_screen_notifications_visibility', 0 );
+	$enable             = bp_get_option( '_bp_on_screen_notifications_enable', 0 );
 
 	?>
-	<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : '';  ?>">
-		<div 
-			class="bb-onscreen-notification bb-position-<?php echo esc_attr( $position ); ?>" 
-			style="display: none;" 
-			data-title-tag="" 
+	<div class="bb-onscreen-notification-enable <?php echo '1' === $has_mobile_support ? 'bb-onscreen-notification-enable-mobile-support' : ''; ?>">
+		<div
+			class="bb-onscreen-notification bb-position-<?php echo esc_attr( $position ); ?>"
+			style="display: none;"
+			data-title-tag=""
 			data-flash-status="default_title"
 			data-broser-tab="<?php echo esc_attr( $browser_tab ); ?>"
 			data-visibility="<?php echo esc_attr( $visibility ); ?>"
 			data-enable="<?php echo esc_attr( $enable ); ?>"
-		> 
-			<ul 
-				class="notification-list bb-nouveau-list" 
-				data-removed-items="<?php echo esc_attr( json_encode( $user_unread_notification_ids ) ); ?>"
-				data-auto-removed-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				data-border-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				data-flash-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-				data-animated-items="<?php echo esc_attr( json_encode( array() ) ); ?>"
-			>	
+		>
+			<ul
+				class="notification-list bb-nouveau-list"
+				data-removed-items="<?php echo esc_attr( wp_json_encode( $user_unread_notification_ids ) ); ?>"
+				data-auto-removed-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+				data-border-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+				data-flash-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+				data-animated-items="<?php echo esc_attr( wp_json_encode( array() ) ); ?>"
+			>
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">

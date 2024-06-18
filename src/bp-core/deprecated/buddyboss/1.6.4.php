@@ -70,4 +70,4 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 
 	return $retval;
 }
-add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
+

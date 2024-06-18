@@ -242,7 +242,7 @@ function learndash_integration_prepare_price_str( $price ) {
 			'ZWL' => '&#90;&#36;',
 		);
 
-		return html_entity_decode( $currency_symbols[ $price['code'] ] ) . $price['value'];
+		return html_entity_decode( $currency_symbols[ $price['code'] ], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . $price['value'];
 	}
 
 	return '';
@@ -353,29 +353,6 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 	} );
 
 	return $certificates;
-}
-
-/**
- * Get the course style view
- *
- * @since BuddyBoss 1.2.0
- *
- * @return string
- */
-function bp_learndash_page_display() {
-
-	if ( empty( $_COOKIE['courseview'] ) || $_COOKIE['courseview'] == '' ) {
-
-		if ( function_exists( 'bp_get_view' ) ):
-			$view = bp_get_view();
-		else:
-			$view = 'grid';
-		endif;
-	} else {
-		$view = $_COOKIE['courseview'];
-	}
-
-	return $view;
 }
 
 /**

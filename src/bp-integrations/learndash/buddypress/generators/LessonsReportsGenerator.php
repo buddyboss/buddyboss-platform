@@ -91,7 +91,7 @@ class LessonsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatDataForDisplay( $data, $activity ) {
-		$data = wp_parse_args(
+		$data = bp_parse_args(
 			array(
 				'lesson' => sprintf(
 					'<a href="%s" target="_blank">%s</a>',

@@ -32,10 +32,30 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		}
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
-
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
+			$enrolled_courses  = array();
+			$exclude_post_type = false;
+			if ( function_exists( 'learndash_get_post_types' ) ) {
+				$ld_post_types = learndash_get_post_types();
+				if ( ! empty( $ld_post_types ) && in_array( $this->cpt_name, $ld_post_types, true ) ) {
+					$ld_course_slug = learndash_get_post_type_slug( 'course' );
+					if (
+						$ld_course_slug === $this->cpt_name &&
+						'yes' !== LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' )
+					) {
+						$exclude_post_type = true;
+					} else {
+						if ( is_user_logged_in() ) {
+							if ( learndash_post_type_search_param( $this->cpt_name, 'search_enrolled_only' ) ) {
+								$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
+							}
+						} elseif ( learndash_post_type_search_param( $this->cpt_name, 'search_login_only' ) ) {
+							$exclude_post_type = true;
+						}
+					}
+				}
+			}
 
 			$query_placeholder = array();
 
@@ -49,7 +69,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$query_placeholder[] = $search_term;
 			}
 
-			$sql .= " FROM {$wpdb->prefix}posts p";
+			$sql .= " FROM {$wpdb->posts} p";
 
 			$tax        = array();
 			$taxonomies = get_object_taxonomies( $this->cpt_name );
@@ -93,6 +113,14 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$sql .= " AND p.post_status = 'inherit' AND p.ID NOT IN ( SELECT post_id FROM {$wpdb->postmeta} pm WHERE pm.`meta_key` IN ( 'bp_media_upload', 'bp_document_upload', 'bp_video_upload' ) )";
 			} else {
 				$sql .= " AND p.post_status = 'publish'";
+			}
+
+			if ( true === $exclude_post_type ) {
+				$sql                 .= " AND p.post_type != %s";
+				$query_placeholder[] = $this->cpt_name;
+			} elseif ( false === $exclude_post_type && ! empty( $enrolled_courses ) ) {
+				$courses_id_in = '"' . implode( '","', $enrolled_courses ) . '"';
+				$sql .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
 			}
 
 			$query_placeholder[] = $this->cpt_name;

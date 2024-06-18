@@ -301,6 +301,7 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
  * @since BuddyPress 1.0.0
  * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
  * @since BuddyPress 2.7.0 Added `$update_admin_cache` parameter.
+ * @since BuddyBoss 2.3.90 Added `$status` parameter.
  *
  * @param array|string $args {
  *     Array of parameters. All items are optional.
@@ -327,8 +328,12 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
  *     @type array|string $group_type__in     Array or comma-separated list of group types to limit results to.
  *     @type array|string $group_type__not_in Array or comma-separated list of group types that will be
  *                                            excluded from results.
+ *     @type array|string $status             Array or comma-separated list of group statuses to limit results to.
  *     @type array        $meta_query         An array of meta_query conditions.
  *                                            See {@link WP_Meta_Query::queries} for description.
+ *     @type array        $date_query         Filter results by group last activity date. See first parameter of
+ *                                            {@link WP_Date_Query::__construct()} for syntax. Only applicable if
+ *                                            $type is either 'newest' or 'active'.
  *     @type array|string $include            Array or comma-separated list of group IDs. Results will be limited
  *                                            to groups within the list. Default: false.
  *     @type array|string $exclude            Array or comma-separated list of group IDs. Results will exclude
@@ -380,6 +385,16 @@ function bp_has_groups( $args = '' ) {
 		}
 	}
 
+	$status = array();
+ 	if ( ! empty( $_GET['status'] ) ) {
+ 		if ( is_array( $_GET['status'] ) ) {
+ 			$status = $_GET['status'];
+ 		} else {
+			// Can be a comma-separated list.
+			$status = explode( ',', $_GET['status'] );
+		}
+	}
+
 	// Default search string (too soon to escape here).
 	$search_query_arg = bp_core_get_component_search_query_arg( 'groups' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
@@ -410,7 +425,7 @@ function bp_has_groups( $args = '' ) {
 
 	$parent_id = null;
 
-	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+	if ( bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
 		$parent_id = 0;
 	}
 
@@ -437,7 +452,9 @@ function bp_has_groups( $args = '' ) {
 			'group_type'         => $group_type,
 			'group_type__in'     => '',
 			'group_type__not_in' => $group_type__not_in,
+			'status'             => $status,
 			'meta_query'         => false,
+			'date_query'         => false,
 			'include'            => false,
 			'exclude'            => false,
 			'parent_id'          => $parent_id,
@@ -462,7 +479,9 @@ function bp_has_groups( $args = '' ) {
 		'group_type'         => $r['group_type'],
 		'group_type__in'     => $r['group_type__in'],
 		'group_type__not_in' => $r['group_type__not_in'],
+		'status'             => $r['status'],
 		'meta_query'         => $r['meta_query'],
+		'date_query'         => $r['date_query'],
 		'include'            => $r['include'],
 		'exclude'            => $r['exclude'],
 		'parent_id'          => $r['parent_id'],
@@ -470,7 +489,7 @@ function bp_has_groups( $args = '' ) {
 		'update_admin_cache' => (bool) $r['update_admin_cache'],
 	);
 
-	if ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) {
+	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) {
 		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
 		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
 		$args['include']     = $ids;
@@ -651,6 +670,15 @@ function bp_get_group_class( $classes = array() ) {
 		$classes[] = 'group-has-avatar';
 	}
 
+	// If group has child group and invite restriction is enabled.
+	if (
+		true === bp_enable_group_hierarchies() &&
+		true === bp_enable_group_restrict_invites() &&
+		! empty( bp_get_descendent_groups( bp_get_group_id() ) )
+	) {
+		$classes[] = 'has-child';
+	}
+
 	/**
 	 * Filters classes that will be applied to row class of the current group in the loop.
 	 *
@@ -690,6 +718,10 @@ function bp_get_group_name( $group = false ) {
 
 	if ( empty( $group ) ) {
 		$group =& $groups_template->group;
+	}
+
+	if ( empty( $group->id ) || empty( $group->name ) ) {
+		return '';
 	}
 
 	/**
@@ -1401,6 +1433,49 @@ function bp_get_group_description_editable( $group = false ) {
 }
 
 /**
+ * Output the name for the current group in the loop, for use in a textbox.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_name_editable( $group = false ) {
+	echo bp_get_group_name_editable( $group );
+}
+
+/**
+ * Return the permalink for the current group in the loop, for use in a textarea.
+ *
+ * 'bp_get_group_name_editable' does not have the formatting
+ * filters that 'bp_get_group_name' has, which makes it
+ * appropriate for "raw" editing.
+ *
+ * @since BuddyBoss 2.0.4
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ * @return string
+ */
+function bp_get_group_name_editable( $group = false ) {
+	global $groups_template;
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	/**
+	 * Filters the name of the current group in the loop.
+	 *
+	 * @since BuddyBoss 2.0.4
+	 *
+	 * @param string $name  Name of the current group in the loop.
+	 * @param object $group Group object.
+	 */
+	return apply_filters( 'bp_get_group_name_editable', $group->name, $group );
+}
+
+/**
  * Output an excerpt of the group description.
  *
  * @since BuddyPress 1.0.0
@@ -1456,7 +1531,7 @@ function bp_get_group_description_excerpt( $group = false, $length = 225 ) {
  */
 function bb_get_group_description_excerpt_view_more( $excerpt, $group ) {
 	$group_link = '... <a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" class="bb-more-link">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
-	if ( bp_is_single_item() ) {
+	if ( bp_is_single_item() && bp_is_current_item( $group->slug ) ) {
 		$group_link = '... <a href="#group-description-popup" class="bb-more-link show-action-popup">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
 	}
 	return bp_create_excerpt( $excerpt, 120, array( 'ending' => $group_link ) );
@@ -1938,7 +2013,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -2514,7 +2589,8 @@ function bp_group_get_invite_status( $group_id = false ) {
 
 	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
 	if ( ! $invite_status ) {
-		$invite_status = apply_filters( 'bp_group_invite_status_fallback', 'members' );
+		$allowed_invite_status = bb_groups_get_settings_status( 'invite' );
+		$invite_status         = bb_groups_settings_default_fallback( 'invite', current( $allowed_invite_status ) );
 	}
 
 	/**
@@ -2584,7 +2660,8 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 
 	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
 	if ( ! $activity_feed_status ) {
-		$activity_feed_status = apply_filters( 'bp_group_activity_feed_status_fallback', 'members' );
+		$allowed_activity_feed_status = bb_groups_get_settings_status( 'activity_feed' );
+		$activity_feed_status         = bb_groups_settings_default_fallback( 'activity_feed', current( $allowed_activity_feed_status ) );
 	}
 
 	/**
@@ -2654,7 +2731,8 @@ function bp_group_get_album_status( $group_id = false ) {
 
 	// Backward compatibility. When 'album_status' is not set, fall back to a default value.
 	if ( ! $album_status ) {
-		$album_status = apply_filters( 'bp_group_album_status_fallback', 'members' );
+		$allowed_album_status = bb_groups_get_settings_status( 'album' );
+		$album_status         = bb_groups_settings_default_fallback( 'album', current( $allowed_album_status ) );
 	}
 
 	/**
@@ -2762,7 +2840,8 @@ function bp_group_get_media_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $media_status ) {
-		$media_status = apply_filters( 'bp_group_media_status_fallback', 'members' );
+		$allowed_media_status = bb_groups_get_settings_status( 'media' );
+		$media_status         = bb_groups_settings_default_fallback( 'media', current( $allowed_media_status ) );
 	}
 
 	/**
@@ -2813,7 +2892,8 @@ function bp_group_get_document_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $document_status ) {
-		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+		$allowed_document_status = bb_groups_get_settings_status( 'document' );
+		$document_status         = bb_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 	}
 
 	/**
@@ -2900,6 +2980,10 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 			// If we can't resolve the user_id, don't proceed with a zero value.
 			return array();
 		}
+	}
+
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$user_id = false;
 	}
 
 	// First, get a list of descendants (don't pass a user id--we want them all).
@@ -6577,6 +6661,11 @@ function bp_get_group_has_avatar( $group_id = false ) {
 		)
 	);
 
+	// Check that the avatar has '/default/GROUP_ID/' path.
+	if ( false !== strpos( $group_avatar, '/default/' . $group_id . '/' ) ) {
+		return false;
+	}
+
 	if ( false !== strpos( $group_avatar, '/' . $group_id . '/' ) ) {
 		return true;
 	}
@@ -7695,7 +7784,8 @@ function bp_group_get_message_status( $group_id = false ) {
 
 	// Backward compatibility. When 'message_status' is not set, fall back to a default value.
 	if ( ! $message_status ) {
-		$message_status = apply_filters( 'bp_group_message_status_fallback', 'mods' );
+		$allowed_message_status = bb_groups_get_settings_status( 'message' );
+		$message_status         = bb_groups_settings_default_fallback( 'message', current( $allowed_message_status ) );
 	}
 
 	/**
@@ -7797,7 +7887,8 @@ function bp_group_get_video_status( $group_id = false ) {
 
 	// Backward compatibility. When 'video_status' is not set, fall back to a default value.
 	if ( ! $video_status ) {
-		$video_status = apply_filters( 'bp_group_video_status_fallback', 'members' );
+		$allowed_video_status = bb_groups_get_settings_status( 'video' );
+		$video_status         = bb_groups_settings_default_fallback( 'video', current( $allowed_video_status ) );
 	}
 
 	/**

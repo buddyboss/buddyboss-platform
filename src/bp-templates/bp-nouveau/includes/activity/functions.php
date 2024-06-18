@@ -36,6 +36,11 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
 				'footer'       => true,
 			),
+			'bp-nouveau-activity-reacted'           => array(
+				'file'         => 'js/bb-activity-reacted%s.js',
+				'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
+				'footer'       => true,
+			),
 		)
 	);
 }
@@ -51,6 +56,7 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+	wp_enqueue_script( 'bp-nouveau-activity-reacted' );
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -61,6 +67,9 @@ function bp_nouveau_activity_enqueue_scripts() {
 		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
 		bp_get_template_part( 'common/js-templates/activity/form' );
 	}
+
+	// Add activity reaction popup js template.
+	bb_load_reaction_popup_modal_js_template();
 }
 
 /**
@@ -79,15 +88,24 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
+	// Draft activity meta key.
+	$draft_activity_meta_key = 'draft_user';
+
+	if ( 0 < bp_displayed_user_id() ) {
+		$draft_activity_meta_key = 'draft_user_' . bp_displayed_user_id();
+	}
+
 	$activity_params = array(
-		'user_id'          => bp_loggedin_user_id(),
-		'object'           => 'user',
-		'backcompat'       => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'       => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'excluded_hosts'   => array(),
-		'user_can_post'    => ( is_user_logged_in() && bb_user_can_create_activity() ),
-		'is_activity_edit' => bp_is_activity_edit() ? (int) bp_current_action() : false,
-		'errors'           => array(
+		'user_id'           => bp_loggedin_user_id(),
+		'object'            => 'user',
+		'backcompat'        => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'        => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'post_draft_nonce'  => wp_create_nonce( 'post_draft_activity' ),
+		'excluded_hosts'    => array(),
+		'user_can_post'     => ( is_user_logged_in() && bb_user_can_create_activity() ),
+		'is_activity_edit'  => bp_is_activity_edit() ? (int) bp_current_action() : false,
+		'displayed_user_id' => bp_displayed_user_id(),
+		'errors'            => array(
 			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
@@ -173,7 +191,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		);
 
 		// the groups component is active & the current user is at least a member of 1 group
-		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
+		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
 				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
@@ -192,7 +210,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			);
 			$cache_key  = 'bbp_default_groups_' . md5( maybe_serialize( $group_args ) );
 			if ( ! isset( $group_query_cache[ $cache_key ] ) ) {
+				add_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				add_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 				$group_query_cache[ $cache_key ] = groups_get_groups( $group_args );
+				remove_filter( 'bp_groups_get_join_sql', 'bb_groups_get_join_sql_for_activity', 10, 2 );
+				remove_filter( 'bp_groups_get_where_conditions', 'bb_groups_get_where_conditions_for_activity', 10, 2 );
 			}
 			$groups = $group_query_cache[ $cache_key ];
 
@@ -224,11 +246,25 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
+		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
 	);
 
-    if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
-    }
+	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
+		/* translators: %s = user name */
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+	}
 
 	if ( bp_is_group() ) {
 		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
@@ -239,10 +275,16 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				'object'       => 'group',
 				'item_id'      => bp_get_current_group_id(),
 				'item_name'    => bp_get_current_group_name(),
-				'group_avatar' => bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
+				'group_avatar' => bp_disable_group_avatar_uploads() ? '' : bp_get_group_avatar_url( groups_get_group( bp_get_current_group_id() ) ), // Add group avatar in get activity data object.
 			)
 		);
+
+		$draft_activity_meta_key = 'draft_group_' . bp_get_current_group_id();
 	}
+
+	// Get draft activity.
+	$draft_activity                    = bp_get_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key, true );
+	$activity_params['draft_activity'] = $draft_activity;
 
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),
@@ -269,7 +311,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'activity',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-		'li_class'  => array( 'dynamic' ),
+		'li_class'  => array( 'dynamic', 'selected' ),
 		'link'      => bp_get_activity_directory_permalink(),
 		'text'      => __( 'All Updates', 'buddyboss' ),
 		'count'     => false,
@@ -299,7 +341,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'Likes', 'buddyboss' ),
+				'text'      => bb_is_reaction_emotions_enabled() ? esc_html__( 'Reactions', 'buddyboss' ) : esc_html__( 'Likes', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 10,
 			);

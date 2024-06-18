@@ -21,13 +21,13 @@ function bp_moderation_get_settings_sections() {
 
 	$settings = array(
 		'bp_moderation_settings_blocking'  => array(
-			'page'  => 'moderation',
-			'title' => esc_html__( 'Member Blocking', 'buddyboss' ),
+			'page'              => 'moderation',
+			'title'             => esc_html__( 'Member Moderation', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_moderation_block_setting_tutorial',
 		),
 		'bp_moderation_settings_reporting' => array(
-			'page'  => 'moderation',
-			'title' => esc_html__( 'Content Reporting', 'buddyboss' ),
+			'page'              => 'moderation',
+			'title'             => esc_html__( 'Content Reporting', 'buddyboss' ),
 			'tutorial_callback' => 'bp_admin_moderation_report_setting_tutorial',
 		),
 	);
@@ -54,6 +54,13 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
+		'bb_blocking_member_reporting'        => array(
+			'title'             => __( 'Member Reporting', 'buddyboss' ),
+			'callback'          => 'bb_blocking_settings_callback_member_reporting',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+
 		'bpm_blocking_auto_suspend'           => array(
 			'title'             => __( 'Auto Suspend', 'buddyboss' ),
 			'callback'          => 'bpm_blocking_settings_callback_auto_suspend',
@@ -62,6 +69,16 @@ function bp_moderation_get_settings_fields() {
 		),
 
 		'bpm_blocking_auto_suspend_threshold' => array(
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+
+		'bb_reporting_auto_suspend'           => array(
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
+
+		'bb_reporting_auto_suspend_threshold' => array(
 			'sanitize_callback' => 'intval',
 			'args'              => array(),
 		),
@@ -100,7 +117,7 @@ function bp_moderation_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bpm_reporting_categories'  => array(
+		'bpm_reporting_categories'          => array(
 			'title'             => __( 'Reporting Categories', 'buddyboss' ),
 			'callback'          => 'bpm_reporting_settings_callback_categories',
 			'sanitize_callback' => '',
@@ -184,10 +201,45 @@ function bpm_blocking_settings_callback_member_blocking() {
 	<label for="bpm_blocking_member_blocking">
 		<input name="bpm_blocking_member_blocking" id="bpm_blocking_member_blocking" type="checkbox" value="1"
 			<?php checked( bp_is_moderation_member_blocking_enable( false ) ); ?> />
-		<?php esc_html_e( 'Allow members to block each other.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Allow members to block other members.', 'buddyboss' ); ?>
 	</label>
 	<p class="description"><?php esc_html_e( 'When a member is blocked, their profile and all of their content is hidden from the member who blocked them.', 'buddyboss' ); ?></p>
 	<?php
+}
+
+/**
+ * Moderation blocking Member reporting setting field.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @uses checked() To display the checked attribute.
+ */
+function bb_blocking_settings_callback_member_reporting() {
+	?>
+	<label for="bb_blocking_member_reporting">
+		<input name="bb_blocking_member_reporting" id="bb_blocking_member_reporting" type="checkbox" value="1"
+			<?php checked( bb_is_moderation_member_reporting_enable( false ) ); ?> />
+		<?php esc_html_e( 'Allow members to report other members.', 'buddyboss' ); ?>
+	</label>
+	<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				wp_kses_post(
+					/* translators: Reporting category link. */
+					__( 'If a member observes another member is in violation of one of your <a href="%s">reporting categories</a>, they can report them to site administrators.', 'buddyboss' )
+				),
+				esc_url(
+					add_query_arg(
+						array(
+							'taxonomy' => 'bpm_category',
+							'tab'      => 'report-categories',
+						),
+						admin_url( 'edit-tags.php' )
+					)
+				)
+			)
+		);
 }
 
 /**
@@ -201,14 +253,26 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	ob_start();
 	bpm_blocking_settings_callback_auto_suspend_threshold();
 	$threshold = ob_get_clean();
+	ob_start();
+	bb_blocking_settings_callback_auto_suspend_report_threshold();
+	$threshold_report = ob_get_clean();
 	?>
 
-	<label for="bpm_blocking_auto_suspend">
+	<label for="bpm_blocking_auto_suspend" class="<?php echo bp_is_moderation_member_blocking_enable( false ) ? '' : esc_attr( 'is_disabled' ); ?>">
 		<input name="bpm_blocking_auto_suspend" id="bpm_blocking_auto_suspend" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
 		<?php
 		// translators: html for threshold fields.
-		printf( esc_html__( 'Automatically suspend members after they have been blocked at least %s times.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		printf( esc_html__( 'Auto suspend members after %s blocks.', 'buddyboss' ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
+	</label>
+	<br/><br/>
+	<label for="bb_reporting_auto_suspend" class="<?php echo bb_is_moderation_member_reporting_enable( false ) ? '' : esc_attr( 'is_disabled' ); ?>">
+		<input name="bb_reporting_auto_suspend" id="bb_reporting_auto_suspend" type="checkbox" value="1"
+				<?php checked( bb_is_moderation_auto_suspend_report_enable( false ) ); ?> />
+		<?php
+		// translators: html for report threshold fields.
+		printf( esc_html__( 'Auto suspend members after %s reports.', 'buddyboss' ), $threshold_report ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		?>
 	</label>
 	<?php
@@ -224,6 +288,19 @@ function bpm_blocking_settings_callback_auto_suspend() {
 function bpm_blocking_settings_callback_auto_suspend_threshold() {
 	?>
 	<input name="bpm_blocking_auto_suspend_threshold" id="bpm_blocking_auto_suspend_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bp_moderation_auto_suspend_threshold( 5 ) ); ?>" class="small-text"/>
+	<?php
+}
+
+/**
+ * Moderation blocking auto suspend report threshold setting field.
+ *
+ * @since BuddyBoss 2.1.1
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bb_blocking_settings_callback_auto_suspend_report_threshold() {
+	?>
+	<input name="bb_reporting_auto_suspend_threshold" id="bb_reporting_auto_suspend_threshold" type="number" min="1" step="1" value="<?php echo esc_attr( bb_moderation_auto_suspend_report_threshold() ); ?>" class="small-text"/>
 	<?php
 }
 
@@ -257,6 +334,7 @@ function bpm_blocking_settings_callback_email_notification() {
  */
 function bpm_reporting_settings_callback_content_reporting() {
 	$content_types = bp_moderation_content_types();
+	unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
 	?>
 	<label
 			for="bpm_reporting_content_reporting"><?php esc_html_e( 'Allow the following content types to be reported:', 'buddyboss' ); ?></label>
@@ -284,7 +362,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 					<?php checked( bp_is_moderation_auto_hide_enable( false, $slug ) ); ?> />
 			<?php
 			// translators: html for threshold fields.
-			printf( esc_html__( 'Auto hide %s after %s reports.', 'buddyboss' ), strtolower($type), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( esc_html__( 'Auto hide %1$s after %2$s reports.', 'buddyboss' ), strtolower( $type ), $threshold ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</label>
 		<br/>

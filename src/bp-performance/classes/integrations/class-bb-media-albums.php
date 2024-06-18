@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class BB_Media_Albums extends Integration_Abstract {
 
-
 	/**
 	 * Add(Start) Integration
 	 *
@@ -41,6 +40,8 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_suspend_media_unsuspended',       // Any Media Unsuspended.
 			'bp_suspend_media_album_suspended',   // Any Media Album Suspended.
 			'bp_suspend_media_album_unsuspended', // Any Media Album Unsuspended.
+			'bp_moderation_after_save',           // Hide media album when member blocked.
+			'bb_moderation_after_delete'          // Unhide media album when member unblocked.
 		);
 
 		$this->purge_event( 'bp-media-albums', $purge_events );
@@ -49,18 +50,18 @@ class BB_Media_Albums extends Integration_Abstract {
 		 * Support for single items purge
 		 */
 		$purge_single_events = array(
-			'bp_media_album_after_save'   => 1, // Any Media Album add.
-			'bp_media_album_after_delete' => 1, // Any Media Album deleted.
-			'bp_video_album_after_save'   => 1, // Any Video Album add.
-			'bp_video_album_after_delete' => 1, // Any Video Album deleted.
+			'bp_media_album_after_save'          => 1, // Any Media Album add.
+			'bp_media_album_after_delete'        => 1, // Any Media Album deleted.
+			'bp_video_album_after_save'          => 1, // Any Video Album add.
+			'bp_video_album_after_delete'        => 1, // Any Video Album deleted.
 
 			'bp_media_add'                       => 1, // Any Media Photo add.
 			'bp_media_after_save'                => 1, // Any Media Photo updated.
 			'bp_media_before_delete'             => 1, // Any Media Photos deleted.
 
-			'bp_video_add'           => 1, // Any Video File add.
-			'bp_video_after_save'    => 1, // Any Video File updated.
-			'bp_video_before_delete' => 1, // Any Video File deleted.
+			'bp_video_add'                       => 1, // Any Video File add.
+			'bp_video_after_save'                => 1, // Any Video File updated.
+			'bp_video_before_delete'             => 1, // Any Video File deleted.
 
 			// Media group information update support.
 			'groups_update_group'                => 1,   // When Group Details updated.
@@ -72,6 +73,8 @@ class BB_Media_Albums extends Integration_Abstract {
 			'bp_suspend_media_unsuspended'       => 1, // Any Media Unsuspended.
 			'bp_suspend_media_album_suspended'   => 1, // Any Media Album Suspended.
 			'bp_suspend_media_album_unsuspended' => 1, // Any Media Album Unsuspended.
+			'bp_moderation_after_save'           => 1, // Hide media album when member blocked.
+			'bb_moderation_after_delete'         => 1, // Unhide media album when member unblocked.
 
 			// Add Author Embed Support.
 			'profile_update'                     => 1, // User updated on site.
@@ -88,9 +91,12 @@ class BB_Media_Albums extends Integration_Abstract {
 
 		if ( $cache_bb_media ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/media/albums',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 				),
@@ -99,7 +105,7 @@ class BB_Media_Albums extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/media/albums/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -125,11 +131,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_media_album_after_delete( $albums ) {
 		if ( ! empty( $albums ) ) {
-			foreach ( $albums as $album ) {
-				if ( ! empty( $album->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
-				}
-			}
+			$album_ids = wp_list_pluck( $albums, 'id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -162,11 +166,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_media_before_delete( $medias ) {
 		if ( ! empty( $medias ) ) {
-			foreach ( $medias as $media ) {
-				if ( ! empty( $media->album_id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $media->album_id );
-				}
-			}
+			$album_ids = wp_list_pluck( $medias, 'album_id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -189,11 +191,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_video_album_after_delete( $albums ) {
 		if ( ! empty( $albums ) ) {
-			foreach ( $albums as $album ) {
-				if ( ! empty( $album->id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album->id );
-				}
-			}
+			$album_ids = wp_list_pluck( $albums, 'id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -226,11 +226,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_video_before_delete( $videos ) {
 		if ( ! empty( $videos ) ) {
-			foreach ( $videos as $video ) {
-				if ( ! empty( $video->album_id ) ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $video->album_id );
-				}
-			}
+			$album_ids = wp_list_pluck( $videos, 'album_id' );
+
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -242,10 +240,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_groups_update_group( $group_id ) {
 		$album_ids = $this->get_album_ids_by_group_id( $group_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -257,10 +254,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	public function event_groups_group_after_save( $group ) {
 		if ( ! empty( $group->id ) ) {
 			$album_ids = $this->get_album_ids_by_group_id( $group->id );
+
 			if ( ! empty( $album_ids ) ) {
-				foreach ( $album_ids as $album_id ) {
-					Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-				}
+				$this->purge_item_cache_by_item_ids( $album_ids );
 			}
 		}
 	}
@@ -272,10 +268,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_groups_group_details_edited( $group_id ) {
 		$album_ids = $this->get_album_ids_by_group_id( $group_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -287,10 +282,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_media_suspended( $media_id ) {
 		$album_ids = $this->get_album_id_by_media_id( $media_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -301,10 +295,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_suspend_media_unsuspended( $media_id ) {
 		$album_ids = $this->get_album_id_by_media_id( $media_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -326,6 +319,40 @@ class BB_Media_Albums extends Integration_Abstract {
 		Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
 	}
 
+	/**
+	 * Update cache for media album when member blocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bp_moderation_after_save( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+
+		$album_ids = $this->get_album_ids_by_user_id( $bp_moderation->item_id );
+
+		if ( ! empty( $album_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $album_ids );
+		}
+	}
+
+	/**
+	 * Update cache for media album when member unblocked.
+	 *
+	 * @param BP_Moderation $bp_moderation Current instance of moderation item. Passed by reference.
+	 */
+	public function event_bb_moderation_after_delete( $bp_moderation ) {
+		if ( empty( $bp_moderation->item_id ) || empty( $bp_moderation->item_type ) || 'user' !== $bp_moderation->item_type ) {
+			return;
+		}
+
+		$album_ids = $this->get_album_ids_by_user_id( $bp_moderation->item_id );
+
+		if ( ! empty( $album_ids ) ) {
+			$this->purge_item_cache_by_item_ids( $album_ids );
+		}
+	}
+
 	/****************************** Author Embed Support *****************************/
 	/**
 	 * User updated on site
@@ -334,10 +361,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_profile_update( $user_id ) {
 		$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -348,10 +374,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_deleted_user( $user_id ) {
 		$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -362,10 +387,9 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_xprofile_avatar_uploaded( $user_id ) {
 		$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-			}
+			$this->purge_item_cache_by_item_ids( $album_ids );
 		}
 	}
 
@@ -376,16 +400,31 @@ class BB_Media_Albums extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+
 		if ( ! empty( $user_id ) ) {
 			if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
 				$album_ids = $this->get_album_ids_by_user_id( $user_id );
+
 				if ( ! empty( $album_ids ) ) {
-					foreach ( $album_ids as $album_id ) {
-						Cache::instance()->purge_by_group( 'bp-media-albums_' . $album_id );
-					}
+					$this->purge_item_cache_by_item_ids( $album_ids );
 				}
 			}
 		}
+	}
+
+	/**
+	 * Purge item cache by item ids.
+	 *
+	 * @param array $ids Array of ids.
+	 *
+	 * @return void
+	 */
+	private function purge_item_cache_by_item_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		Cache::instance()->purge_by_group_names( $ids, array( 'bp-media-albums_' ) );
 	}
 
 	/*********************************** Functions ***********************************/

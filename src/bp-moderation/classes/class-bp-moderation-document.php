@@ -139,6 +139,10 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 			$where['moderation_where'] = $sql;
 		}
 
+		if ( isset( $where['moderation_where'] ) && ! empty( $where['moderation_where'] ) ) {
+			$where['moderation_where'] .= ' AND ';
+		}
+		$where['moderation_where'] .= ' ( d.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) OR ( d.privacy = "comment" OR d.privacy = "forums" ) ) ';
 		return $where;
 	}
 
@@ -220,8 +224,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.7.7
 	 *
-	 * @param array $report_button Activity report button
-	 * @param array $args          Arguments
+	 * @param array $report_button Activity report button.
+	 * @param array $args          Arguments.
 	 *
 	 * @return array|string
 	 */
@@ -247,7 +251,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 					'bbp_forum_create',
 					'bbp_topic_create',
 					'bbp_reply_create',
-				)
+				),
+				true
 			)
 		) {
 			$explode_documents = explode( ',', $document_ids );
@@ -263,5 +268,33 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $report_button;
+	}
+
+	/**
+	 * Prepare Where sql for exclude Blocked items.
+	 *
+	 * @since BuddyBoss 2.3.50
+	 *
+	 * @param bool $blocked_user_query If true then blocked user query will fire.
+	 *
+	 * @return string|void
+	 */
+	protected function exclude_where_query( $blocked_user_query = true ) {
+		$where = '';
+
+		$where .= "( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND
+		( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
+
+		if ( true === $blocked_user_query ) {
+			$blocked_query = $this->blocked_user_query();
+			if ( ! empty( $blocked_query ) ) {
+				if ( ! empty( $where ) ) {
+					$where .= ' AND ';
+				}
+				$where .= "( ( {$this->alias}.id NOT IN ( $blocked_query ) OR ( d.privacy = 'comment' OR d.privacy = 'forums' ) ) OR {$this->alias}.id IS NULL )";
+			}
+		}
+
+		return $where;
 	}
 }

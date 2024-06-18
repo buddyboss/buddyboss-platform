@@ -17,12 +17,6 @@
 
 	<?php if ( bp_is_active( 'media' ) ) : ?>
 
-		<div class="post-elements-buttons-item show-toolbar"  data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_attr_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
-			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
-				<span class="bb-icon-l bb-icon-font"></span>
-			</a>
-		</div>
-
 		<div class="post-elements-buttons-item post-media post-media-photo-support">
 			<a href="#" id="messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 				<i class="bb-icon-l bb-icon-camera"></i>
@@ -59,9 +53,6 @@
 				<div class="gif-media-search-dropdown"></div>
 			</div>
 		</div>
-
-		<div class="post-elements-buttons-item post-emoji bp-tooltip post-media-emoji-support" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
-
 
 	<?php endif; ?>
 

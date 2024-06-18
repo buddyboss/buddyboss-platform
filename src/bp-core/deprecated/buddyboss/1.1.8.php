@@ -101,7 +101,7 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
 	if( $object != 'groups' )
 		return $qs;
 
-	$args = wp_parse_args( $qs );
+	$args = bp_parse_args( $qs );
 
 	if( ! empty( $args['exclude'] ) )
 		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
@@ -336,7 +336,7 @@ function bp_member_type_type_id( $type_name ) {
 	global $wpdb;
 	$type_name = strtolower($type_name);
 	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
-	$type_id = $wpdb->get_col( "SELECT t.term_id FROM {$wpdb->prefix}terms t INNER JOIN {$wpdb->prefix}term_taxonomy tt ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
+	$type_id = $wpdb->get_col( "SELECT t.term_id FROM {$wpdb->terms} t INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
 	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
 }
 
@@ -359,7 +359,7 @@ function bp_active_member_type_by_type( $type_id ) {
 	if ( empty ( $type_id ) ) {
 		return $member_ids;
 	}
-	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
 			$table = bp_core_get_table_prefix() . 'bp_activity';

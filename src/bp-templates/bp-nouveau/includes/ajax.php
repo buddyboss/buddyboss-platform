@@ -106,6 +106,10 @@ function bp_nouveau_ajax_object_template_loader() {
 			$template_part = 'groups/single/members-loop.php';
 			break;
 
+		case 'manage_group_members':
+			$template_part = 'groups/single/admin/search-manage-members.php';
+			break;
+
 		case 'group_requests':
 			$template_part = 'groups/single/requests-loop.php';
 			break;
@@ -127,21 +131,20 @@ function bp_nouveau_ajax_object_template_loader() {
 	 * Filters the server path for the template loader.
 	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 2.6.10 Added the `$object` parameter.
 	 *
 	 * @param string Template file path.
 	 */
-	$template_path = apply_filters( 'bp_nouveau_object_template_path', $template_path );
+	$template_path = apply_filters( 'bp_nouveau_object_template_path', $template_path, $object );
 
 	load_template( $template_path );
 	$result['contents'] = ob_get_contents();
 	ob_end_clean();
 
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
-		$result['count'] = $GLOBALS['members_template']->total_member_count;
+		$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
-		$result['count'] = $GLOBALS['groups_template']->group_count;
-	} elseif ( 'activity' === $object ) {
-		// $result['count'] = $GLOBALS["activities_template"]->activity_count;
+		$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
 	}
 
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
@@ -183,6 +186,8 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		}
 	}
 
+	$results['layout'] = bb_get_directory_layout_preference( 'members' );
+
 	return $results;
 }
 
@@ -201,13 +206,15 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 
 	add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['all'] = $GLOBALS['groups_template']->total_group_count;
+	$results['scopes']['all'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['personal'] = $GLOBALS['groups_template']->total_group_count;
+	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
+
+	$results['layout'] = bb_get_directory_layout_preference( 'groups' );
 
 	return $results;
 }
@@ -222,7 +229,7 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 		$counts = bp_total_follow_counts();
@@ -250,7 +257,7 @@ function bp_nouveau_object_template_results_members_following_scope( $querystrin
 		return $querystring;
 	}
 
-	$querystring = wp_parse_args( $querystring );
+	$querystring = bp_parse_args( $querystring );
 
 	$args                             = array(
 		'user_id' => ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id(),
@@ -277,7 +284,7 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 		return $querystring;
 	}
 
-	$querystring             = wp_parse_args( $querystring );
+	$querystring             = bp_parse_args( $querystring );
 	$querystring['scope']    = 'personal';
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';

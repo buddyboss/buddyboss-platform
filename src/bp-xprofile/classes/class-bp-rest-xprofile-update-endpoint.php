@@ -154,6 +154,20 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 					$validation = $this->validate_update( $field_id, $user_id, $value );
 
+					if ( 'socialnetworks' === $field->type && ! empty( $validation ) ) {
+						if ( is_array( $validation['message'] ) && ! empty( $validation['message'] ) ) {
+							foreach ( $validation['message'] as $key => $error ) {
+								if ( isset( $value[ $key ] ) ) {
+									unset( $value[ $key ] );
+								}
+							}
+					
+							if ( ! empty( $value ) ) {
+								xprofile_set_field_data( $field_id, $user_id, $value, $field->is_required );
+							}
+						}
+					}
+
 					if ( empty( $validation ) ) {
 						xprofile_set_field_data( $field_id, $user_id, $value, $field->is_required );
 					} else {
@@ -490,9 +504,13 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 			$selected_member_type_wp_roles = get_post_meta( $value, '_bp_member_type_wp_roles', true );
 
 			if ( bp_current_user_can( 'administrator' ) ) {
-				if ( 'none' === $selected_member_type_wp_roles[0] ) {
+				if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
 					bp_set_member_type( $user_id, '' );
 					bp_set_member_type( $user_id, $member_type_name );
+
+					// Bypass profile type required error for admin.
+					$errors      = false;
+					$is_required = false;
 				} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
 					$errors                  = true;
 					$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
@@ -500,9 +518,13 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					$validations['message']  = $bp_error_message_string;
 				}
 			} elseif ( bp_current_user_can( 'editor' ) ) {
-				if ( 'none' === $selected_member_type_wp_roles[0] ) {
+				if ( empty( $selected_member_type_wp_roles ) || ( isset( $selected_member_type_wp_roles[0] ) && 'none' === $selected_member_type_wp_roles[0] ) ) {
 					bp_set_member_type( $user_id, '' );
 					bp_set_member_type( $user_id, $member_type_name );
+
+					// Bypass profile type required error for editor.
+					$errors      = false;
+					$is_required = false;
 				} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ), true ) ) {
 					$errors                  = true;
 					$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );

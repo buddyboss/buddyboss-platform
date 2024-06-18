@@ -67,6 +67,7 @@ function bp_media_reset_cache_incrementor() {
 }
 add_action( 'bp_media_delete', 'bp_media_reset_cache_incrementor' );
 add_action( 'bp_media_add', 'bp_media_reset_cache_incrementor' );
+add_action( 'bp_video_add', 'bp_media_reset_cache_incrementor' );
 
 /**
  * Clear a user's cached media count.

@@ -49,8 +49,8 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		}
 
 		/* Widget VARS */
-		$profile_groups_selected        = $instance['profile_groups_enabled'];
-		$this->widget_id                = $args['widget_id'];
+		$profile_groups_selected        = ! empty( $instance['profile_groups_enabled'] ) ? $instance['profile_groups_enabled'] : array();
+		$this->widget_id                = ! empty( $args['widget_id'] ) ? $args['widget_id'] : '';
 		$profile_phototype_selected     = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
 		$profile_hide_widget_selected   = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
 		$settings                       = array();
@@ -67,6 +67,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		if ( 100 === (int) $user_progress['completion_percentage'] && ! empty( $instance['profile_hide_widget'] ) ) {
 			return;
 		}
+
+		/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
+		$instance['title'] = apply_filters( 'widget_title', ! empty( $instance['title'] ) ? $instance['title'] : '', $instance );
 
 		/* Widget Template */
 
@@ -119,7 +122,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function form( $instance ) {
 
-		$instance = wp_parse_args(
+		$instance = bp_parse_args(
 				(array) $instance,
 				array(
 						'title' => __( 'Complete Your Profile', 'buddyboss' ),

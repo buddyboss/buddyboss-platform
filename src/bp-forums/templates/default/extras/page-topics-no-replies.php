@@ -34,6 +34,7 @@ get_header(); ?>
 						array(
 							'meta_key'      => '_bbp_reply_count',
 							'meta_value'    => '1',
+							'meta_type'     => 'NUMERIC',
 							'meta_compare'  => '<',
 							'orderby'       => 'date',
 							'show_stickies' => false,

@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
+#[\AllowDynamicProperties]
 class BP_Friends_Component extends BP_Component {
 
 	/**
@@ -176,7 +177,7 @@ class BP_Friends_Component extends BP_Component {
 		$main_nav_name .= sprintf(
 			' <span class="%s">%s</span>',
 			esc_attr( $class ),
-			bp_core_number_format( $count )
+			$count
 		);
 
 		$main_nav = array(

@@ -114,6 +114,8 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 				</div>
 
 				<?php
+				do_action( 'bb_group_single_top_header_action' );
+
 				echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : '';
 				bp_nouveau_group_hook( 'before', 'header_meta' );
 				?>
@@ -124,42 +126,10 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 					</div><!-- .item-meta -->
 					<?php
 				endif;
+				?>
 
-				if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
-					?>
-					<p class="last-activity item-meta">
-						<?php
-						printf(
-							/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-							esc_html__( 'Active %s', 'buddyboss' ),
-							wp_kses_post( bp_get_group_last_active() )
-						);
-						?>
-					</p>
-					<?php
-				endif;
+				<div class="bp-group-meta-wrap flex align-items-center">
 
-				if (
-					! bp_nouveau_groups_front_page_description() &&
-					bp_nouveau_group_has_meta( 'description' ) &&
-					bb_platform_group_headers_element_enable( 'group-description' )
-				) :
-					?>
-					<div class="group-description">
-					<?php bp_group_description_excerpt(); ?>
-					</div><!-- //.group_description -->
-					<?php
-				endif;
-
-				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) :
-					?>
-					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-				<?php endif; ?>
-
-				<div class="group-actions-wrap" >
-					<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>
-
-					<div class="group-actions-absolute">
 					<?php
 					if (
 						function_exists( 'bp_get_group_status_description' ) &&
@@ -170,10 +140,45 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						<?php
 					}
 
-					bp_nouveau_group_header_buttons();
-					bb_nouveau_group_header_bubble_buttons();
+					if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
+						?>
+						<p class="last-activity item-meta">
+							<?php
+							printf(
+								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+								esc_html__( 'Active %s', 'buddyboss' ),
+								wp_kses_post( bp_get_group_last_active() )
+							);
+							?>
+						</p>
+					<?php endif; ?>
+				</div>
+
+				<?php
+				if (
+					! bp_nouveau_groups_front_page_description() &&
+					bp_nouveau_group_has_meta( 'description' ) &&
+					bb_platform_group_headers_element_enable( 'group-description' )
+				) :
 					?>
-					</div>
+					<div class="group-description">
+						<?php bp_group_description_excerpt(); ?>
+					</div><!-- //.group_description -->
+					<?php
+				endif;
+
+				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) :
+					?>
+					<p class="bp-group-meta bp-group-type">
+						<?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?>
+					</p>
+				<?php endif; ?>
+
+				<div class="group-actions-wrap" >
+					<?php
+						bp_get_template_part( 'groups/single/parts/header-item-actions' );
+						do_action( 'bb_group_single_bottom_header_action' );
+					?>
 				</div>
 
 			</div><!-- #item-header-content -->
@@ -196,7 +201,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 						</a>
 					</header>
 					<div class="bb-action-popup-content">
-						<p><?php bp_group_description(); ?></p>
+						<?php bp_group_description(); ?>
 					</div>
 				</div>
 			</div>
@@ -206,30 +211,28 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 <!-- Leave Group confirmation popup -->
 <div class="bb-leave-group-popup bb-action-popup" style="display: none">
-		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
-					<div class="modal-container">
-						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
-							<a class="bb-close-leave-group bb-model-close-button" href="#">
-								<span class="bb-icon-l bb-icon-times"></span>
-							</a>
-						</header>
-						<div class="bb-leave-group-content bb-action-popup-content">
-							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
-						</div>
-						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
-						</footer>
-
+	<transition name="modal">
+		<div class="modal-mask bb-white bbm-model-wrap">
+			<div class="modal-wrapper">
+				<div class="modal-container">
+					<header class="bb-model-header">
+						<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+						<a class="bb-close-leave-group bb-model-close-button" href="#">
+							<span class="bb-icon-l bb-icon-times"></span>
+						</a>
+					</header>
+					<div class="bb-leave-group-content bb-action-popup-content">
+						<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
 					</div>
+					<footer class="bb-model-footer flex align-items-center">
+						<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+					</footer>
+
 				</div>
 			</div>
-		</transition>
-	</div> <!-- .bb-leave-group-popup -->
-
-
+		</div>
+	</transition>
+</div> <!-- .bb-leave-group-popup -->
 <?php
-	remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
+remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );

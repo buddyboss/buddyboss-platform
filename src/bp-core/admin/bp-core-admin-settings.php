@@ -233,25 +233,11 @@ function bp_admin_setting_callback_heartbeat() {
 	} else {
 		echo 'disabled="disabled"'; }
 	?>
-	 />
+	/>
 	<label for="_bp_enable_heartbeat_refresh"><?php esc_html_e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
 	<?php if ( '1' == $heartbeat_disabled ) { ?>
 		<p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
 	<?php } ?>
-	<?php
-}
-
-/**
- * Automatically load more activity posts when scrolling to the bottom of the page.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_admin_setting_callback_enable_activity_autoload() {
-	?>
-
-	<input id="_bp_enable_activity_autoload" name="_bp_enable_activity_autoload" type="checkbox" value="1" <?php checked( bp_is_activity_autoload_active( false ) ); ?> />
-	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
-
 	<?php
 }
 
@@ -323,21 +309,6 @@ function bp_admin_setting_callback_enable_activity_follow() {
 
 	<?php
 }
-
-/**
- * Allow like activity stream.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_like() {
-	?>
-
-	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php esc_html_e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
 
 /**
  * Allow link previews in activity posts.
@@ -493,6 +464,16 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-profile-avatar-display-name" name="bp-default-profile-avatar-type" type="radio" value="display-name" <?php checked( bb_get_default_profile_avatar_type(), 'display-name' ); ?> />
+		<label for="bp-default-profile-avatar-display-name">
+			<div class="img-block">
+				<img class="display-name-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-display-name.png' ); ?>"/>
+			</div>
+			<span><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-profile-avatar-custom" name="bp-default-profile-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_profile_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-profile-avatar-custom">
 			<div class="img-block">
@@ -502,6 +483,32 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 		</label>
 	</div>
 
+	<p class="no-field-notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo _wp_image_editor_choose(); ?>">
+
+	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Profile text with link. */
+			__( 'Display name will show either as a single initial or as double initials depending on your display name option in %s.', 'buddyboss' ),
+			sprintf(
+				'<a href="#bp-display-name-format">%s</a>',
+				__( 'Profile settings', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
 	<p class="description"><?php esc_html_e( 'Select which image should be used for members who haven\'t uploaded a profile avatar.', 'buddyboss' ); ?></p>
 
 	<div class="bp-cover-image-status bb-wordpress-profile-gravatar-warning" style="display:none;">
@@ -786,7 +793,7 @@ function bp_profile_photos_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 125202,
+							'article' => 72341,
 						),
 						'admin.php'
 					)
@@ -844,7 +851,7 @@ function bp_group_avatar_tutorial() {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 62811,
+							'article' => 125202,
 						),
 						'admin.php'
 					)
@@ -884,6 +891,16 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 	</div>
 
 	<div class="avatar-custom-input">
+		<input id="bp-default-group-avatar-group-name" name="bp-default-group-avatar-type" type="radio" value="group-name" <?php checked( bb_get_default_group_avatar_type(), 'group-name' ); ?> />
+		<label for="bp-default-group-avatar-group-name">
+			<div class="img-block">
+				<img class="group-name-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-display-name.png' ); ?>" />
+			</div>
+			<span><?php esc_html_e( 'Group Name', 'buddyboss' ); ?></span>
+		</label>
+	</div>
+
+	<div class="avatar-custom-input">
 		<input id="bp-default-group-avatar-custom" name="bp-default-group-avatar-type" type="radio" value="custom" <?php checked( bb_get_default_group_avatar_type(), 'custom' ); ?> />
 		<label for="bp-default-group-avatar-custom">
 			<div class="img-block">
@@ -892,6 +909,20 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<span><?php esc_html_e( 'Custom', 'buddyboss' ); ?></span>
 		</label>
 	</div>
+
+	<p class="no-field-notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
+		<?php
+		echo sprintf(
+		/* translators: Imagick text with link. */
+			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
+			sprintf(
+				'<a href="https://github.com/ImageMagick/ImageMagick">%s</a>',
+				__( 'Imagick', 'buddyboss' )
+			)
+		);
+		?>
+	</p>
+	<input type="hidden" name="bb-is-available-image-library" value="<?php echo _wp_image_editor_choose(); ?>">
 	<?php
 }
 
@@ -1056,13 +1087,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 		<div class="preview-switcher-main">
 
-			<div class="button-group preview-switcher">
-				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
-					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
-				<?php endif; ?>
-			</div>
-
 			<div class="web-preview-wrap preview-block active" id="web-preview">
 				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
@@ -1071,17 +1095,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
-
-			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-				<div class="app-preview-wrap preview-block" id="app-preview">
-					<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['app_background_color'] ); ?>">
-						<img src="<?php echo esc_url( $app_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
-					</div>
-					<div class="preview-item-avatar">
-						<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
-					</div>
-				</div>
-			<?php endif; ?>
 
 		</div>
 
@@ -1214,7 +1227,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1251,7 +1264,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1288,7 +1301,7 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
 				?>
-				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1327,6 +1340,10 @@ function bb_admin_setting_member_profile_primary_action( $args ) {
 
 			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
 				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( false !== strpos( $profile_primary_action['element_class'], 'bp-hide' ) ) {
+						continue;
+					}
+
 					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
 						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
 					}
@@ -1635,10 +1652,10 @@ function bp_core_admin_integrations() {
  */
 function bp_core_admin_buddyboss_app() {
 	?>
-		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
-		</div>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+		<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
+	</div>
 	<?php
 }
 
@@ -1800,9 +1817,10 @@ function bp_feed_settings_callback_post_type( $args ) {
  * @return void
  */
 function bb_feed_settings_callback_post_type_comments( $args ) {
-	$post_type     = $args['post_type'];
-	$option_name   = bb_post_type_feed_comment_option_name( $post_type );
-	$post_type_obj = get_post_type_object( $post_type );
+	$post_type              = $args['post_type'];
+	$option_name            = bb_post_type_feed_comment_option_name( $post_type );
+	$post_type_obj          = get_post_type_object( $post_type );
+	$is_cpt_comment_enabled = bb_activity_is_enabled_cpt_global_comment( $post_type );
 
 	if ( in_array( $post_type, bb_feed_not_allowed_comment_post_types(), true ) ) {
 		?>
@@ -1827,6 +1845,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		type="checkbox"
 		value="1"
 		<?php checked( bb_is_post_type_feed_comment_enable( $post_type, false ) ); ?>
+		<?php disabled( $is_cpt_comment_enabled, false ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
@@ -2254,7 +2273,7 @@ function bb_admin_setting_group_header_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2836,10 +2855,10 @@ function bb_admin_setting_callback_private_rss_feeds_public_content() {
 function bb_labs_get_settings_sections() {
 
 	$settings = array(
-		'bp_labs_settings_notifications' => array(
+		'bp_labs_settings' => array(
 			'page'     => 'labs',
 			'title'    => esc_html__( 'BuddyBoss Labs', 'buddyboss' ),
-			'callback' => 'bb_labs_notification_preferences_info_section_callback',
+			'callback' => 'bb_labs_info_section_callback',
 		),
 	);
 
@@ -2878,118 +2897,19 @@ function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
  */
 function bb_labs_get_settings_fields() {
 
-	$fields = array();
+	$fields = (array) apply_filters( 'bb_labs_get_settings_fields', array() );
 
-	$fields['bp_labs_settings_notifications'] = array(
-
-		'bp_labs_notification_preferences_enabled' => array(
-			'title'             => __( 'Notification Preferences', 'buddyboss' ),
-			'callback'          => 'bb_labs_settings_callback_notification_preferences_enabled',
-			'sanitize_callback' => 'absint',
-			'args'              => array(),
-		),
-	);
-
-	return (array) apply_filters( 'bb_labs_get_settings_fields', $fields );
-}
-
-/**
- * Setting > Media > Profile support.
- *
- * @since BuddyBoss 1.9.3
- */
-function bb_labs_settings_callback_notification_preferences_enabled() {
-
-	?>
-	<input name="bp_labs_notification_preferences_enabled" id="bp_labs_notification_preferences_enabled" type="checkbox" value="1"
-		<?php checked( bp_is_labs_notification_preferences_support_enabled() ); ?>
-	/>
-	<label for="bp_labs_notification_preferences_enabled">
-		<?php esc_html_e( 'Enable Notification Preferences', 'buddyboss' ); ?>
-	</label>
-
-	<?php
-	if ( ! bp_is_active( 'notifications' ) ) {
-		printf(
-			'<p class="bp-new-notice-panel-notice">%s</p>',
-			sprintf(
-				/* translators: Components page link. */
-				wp_kses_post( __( 'To make full use of this feature, enable the %s component.', 'buddyboss' ) ),
-				'<strong><a href="' . esc_url(
-					add_query_arg(
-						array( 'page' => 'bp-components' ),
-						admin_url( 'admin.php' )
-					)
-				) . '">' . esc_html__( 'Notifications', 'buddyboss' ) . '</a></strong>'
-			)
-		);
-
-		printf(
-			'<p class="description">%s</p>',
-			esc_html__(
-				'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the Notifications settings.',
-				'buddyboss'
-			)
-		);
-	} else {
-
-		printf(
-			'<p class="description">%s</p>',
-			sprintf(
-				wp_kses_post(
-					/* translators: Notification settings link. */
-					__( 'Once enabled, a Notification Preferences screen will be available to each member in their Account Settings. In this screen, members can configure which notifications they receive via email, web or app. In addition, you\'ll be able manage each the notification types used on your site in the <a href="%s">Notifications</a> settings.', 'buddyboss' )
-				),
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-settings',
-							'tab'  => 'bp-notifications',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
-			)
+	if ( empty( $fields ) ) {
+		$fields['bp_labs_settings'] = array(
+			'bb_labs_no_settings_callback' => array(
+				'title'    => ' ',
+				'callback' => 'bb_labs_no_settings_callback',
+				'args'     => array( 'class' => 'notes-hidden-header' ),
+			),
 		);
 	}
 
-	printf(
-		'<p class="description">%s</p>',
-		sprintf(
-			'<a href="%1$s" class="button">%2$s</a>',
-			esc_url(
-				bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 125369,
-						),
-						'admin.php'
-					)
-				)
-			),
-			esc_html__( 'View Tutorial', 'buddyboss' )
-		)
-	);
-	?>
-
-	<p class="display-notice bb-lab-notice">
-		<strong><?php esc_html_e( 'Note to Developers', 'buddyboss' ); ?></strong>
-		<br/>
-		<?php
-		printf(
-			/* translators: Tutorial link. */
-			wp_kses_post( __( 'As part of this feature we have changed the methods for registering custom BuddyBoss Notifications, App Push Notifications and Emails. For help updating your custom development and integrations to support this new feature, please %s.', 'buddyboss' ) ),
-			sprintf(
-				'<a href="%s" target="_blank" >' . esc_html__( 'review this tutorial', 'buddyboss' ) . '</a>',
-				'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/'
-			)
-		)
-		?>
-	</p>
-
-	<?php
-
+	return $fields;
 }
 
 /**
@@ -2997,7 +2917,7 @@ function bb_labs_settings_callback_notification_preferences_enabled() {
  *
  * @since BuddyBoss 1.9.3
  */
-function bb_labs_notification_preferences_info_section_callback() {
+function bb_labs_info_section_callback() {
 	?>
 
 	<p>
@@ -3012,11 +2932,834 @@ function bb_labs_notification_preferences_info_section_callback() {
 						'buddyboss'
 					)
 				),
-				"https://support.buddyboss.com"
+				'https://support.buddyboss.com'
 			)
 		);
 		?>
 	</p>
 
+	<p>
+		<?php
+		printf(
+			'<p class="description">%s</p>',
+			wp_kses_post(
+			/* translators: Support portal. */
+				__(
+					'Please note, customer support will not be able to provide support for these features until their official release.',
+					'buddyboss'
+				)
+			)
+		);
+		?>
+	</p>
+
+	<?php
+}
+
+/**
+ * Function to show the notice about the no labs features available.
+ *
+ * @since BuddyBoss 2.1.5.1
+ *
+ * @return void
+ */
+function bb_labs_no_settings_callback() {
+	printf(
+		'<p class="no-field-notice">%s</p><style>.submit{display:none;}</style>',
+		wp_kses_post(
+		/* translators: Support portal. */
+			__(
+				'There are currently no BuddyBoss Labs features available.',
+				'buddyboss'
+			)
+		)
+	);
+}
+
+/**
+ * Allow all users to subscribe groups field.
+ *
+ * @since BuddyBoss 2.2.8
+ */
+function bb_admin_setting_callback_group_subscriptions() {
+	?>
+	<input id="bb_enable_group_subscriptions" name="bb_enable_group_subscriptions" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( bb_enable_group_subscriptions() ); ?> />
+	<label for="bb_enable_group_subscriptions"><?php esc_html_e( 'Allow members to subscribe to groups', 'buddyboss' ); ?></label>
+	<p class="description" id="bb_enable_group_subscriptions"><?php esc_html_e( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Link to profile slug tutorial
+ *
+ * @since BuddyBoss 2.3.1
+ */
+function bb_profile_slug_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 126235,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Link to registration restrictions tutorial.
+ *
+ * @since BuddyBoss 2.4.11
+ */
+function bb_registration_restrictions_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 126835,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Allow admin to add blacklist emails and domains.
+ *
+ * @since  BuddyBoss 2.4.11
+ */
+function bb_admin_setting_callback_domain_restrictions() {
+
+	$domain_restrictions = bb_domain_restrictions_setting();
+	$conditions          = array(
+		''             => esc_html__( 'Select Condition', 'buddyboss' ),
+		'always_allow' => esc_html__( 'Always Allow', 'buddyboss' ),
+		'never_allow'  => esc_html__( 'Never Allow', 'buddyboss' ),
+		'only_allow'   => esc_html__( 'Only Allow', 'buddyboss' ),
+	);
+	?>
+	<label for="bb-domain-restrictions-setting">
+		<?php
+		esc_html_e( 'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension.
+		When multiple restrictions are in place, a domain will always take priority over an extension.
+		', 'buddyboss' );
+		?>
+	</label>
+
+	<div id="bb-domain-restrictions-setting" class="bb-domain-restrictions-listing registration-restrictions-listing">
+		<div class="restrictions-error"></div>
+		<div class="registration-restrictions-rule-list bb-sortable">
+		<?php
+		// Count the occurrences used later to validate.
+		$pre_saved_conditions = array(
+			'always_allow' => 0,
+			'only_allow'   => 0,
+		);
+
+		if ( ! empty( $domain_restrictions ) ) {
+			foreach ( $domain_restrictions as $key_rule => $rule ) {
+				if ( isset( $rule['condition'] ) && isset( $pre_saved_conditions[ $rule['condition'] ] ) ) {
+					$pre_saved_conditions[ $rule['condition'] ] += 1;
+				}
+			}
+			foreach ( $domain_restrictions as $key_rule => $rule ) {
+				?>
+				<div class="registration-restrictions-rule">
+					<span class='registration-restrictions-priority' style='display:none;'><?php echo esc_html( $key_rule + 1 ); ?></span>
+					<div class="registration-restrictions-input">
+						<input type="text" name="bb-domain-restrictions[<?php echo esc_attr( $key_rule ); ?>][domain]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Domain name', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['domain'] ); ?>"/>
+					</div>
+					<div class="registration-restrictions-input registration-restrictions-input-tld">
+						<input type="text" name="bb-domain-restrictions[<?php echo esc_attr( $key_rule ); ?>][tld]" class="registration-restrictions-tld" placeholder="<?php esc_attr_e( 'Extension', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['tld'] ); ?>"/>
+					</div>
+					<div class="registration-restrictions-select">
+						<select name="bb-domain-restrictions[<?php echo esc_attr( $key_rule ); ?>][condition]" class="registration-restrictions-input-select">
+							<?php
+							foreach ( $conditions as $key => $value ) {
+								$disabled = false;
+								if (
+									(
+										'always_allow' === $key && $pre_saved_conditions['only_allow'] > 0
+									) ||
+									(
+										'only_allow' === $key && $pre_saved_conditions['always_allow'] > 0
+									)
+								) {
+									$disabled = true;
+								}
+								?>
+								<option value='<?php echo esc_attr( $key ); ?>'
+									<?php
+									selected( $key === $rule['condition'] );
+									disabled( $disabled );
+									?>
+								>
+									<?php echo esc_html( $value ); ?>
+								</option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+					<div class="registration-restrictions-remove">
+						<button class="registration-restrictions-rule-remove domain-rule-remove" aria-label="Remove Rule">
+							<i class="bb-icon-f bb-icon-times"></i>
+						</button>
+					</div>
+				</div>
+				<?php
+			}
+		}
+		?>
+
+			<!-- This below HTML is for clone only - Starts -->
+			<div class="custom registration-restrictions-rule" style="display: none;">
+				<span class='registration-restrictions-priority' style='display:none;'><?php echo esc_html( empty( $domain_restrictions ) ? 0 : count( $domain_restrictions ) + 1 ); ?></span>
+				<div class="registration-restrictions-input">
+					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][domain]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Domain name', 'buddyboss' ); ?>" value="" />
+				</div>
+				<div class="registration-restrictions-input registration-restrictions-input-tld">
+					<input type="text" name="bb-domain-restrictions[placeholder_priority_index][tld]" class="registration-restrictions-tld" placeholder="<?php esc_attr_e( 'Extension', 'buddyboss' ); ?>" value="" />
+				</div>
+				<div class="registration-restrictions-select">
+					<select name="bb-domain-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">
+						<?php
+						foreach ( $conditions as $key => $value ) {
+							$disabled = false;
+							if (
+								(
+									'always_allow' === $key && $pre_saved_conditions['only_allow'] > 0
+								) ||
+								(
+									'only_allow' === $key && $pre_saved_conditions['always_allow'] > 0
+								)
+							) {
+								$disabled = true;
+							}
+							?>
+							<option value='<?php echo esc_attr( $key ); ?>'
+								<?php echo disabled( $disabled ); ?>
+							>
+								<?php echo esc_html( $value ); ?>
+							</option>
+							<?php
+						}
+						?>
+					</select>
+				</div>
+				<div class="registration-restrictions-remove">
+					<button class="registration-restrictions-rule-remove domain-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<!-- This below HTML is for clone only - Ends -->
+
+		</div>
+		<input type='hidden' class='registration-restrictions-lastindex' value='<?php echo empty( $domain_restrictions ) ? 0 : count( $domain_restrictions ); ?>' />
+		<button class="button registration-restrictions-add-rule domain-rule-add"> <?php esc_html_e( 'Add Domain', 'buddyboss' ); ?></button>
+	</div>
+	<?php
+}
+
+/**
+ * Allow admin to add whitelist emails and domains.
+ *
+ * @since BuddyBoss 2.4.11
+ */
+function bb_admin_setting_callback_email_restrictions() {
+
+	$email_restrictions = bb_email_restrictions_setting();
+	$conditions         = array(
+		''             => esc_html__( 'Select Condition', 'buddyboss' ),
+		'always_allow' => esc_html__( 'Always Allow', 'buddyboss' ),
+		'never_allow'  => esc_html__( 'Never Allow', 'buddyboss' ),
+	);
+	?>
+	<label for="bb-email-restrictions-setting"><?php esc_html_e( 'Enter specific email addresses which you want to allow for user registrations. Enter one address per line.', 'buddyboss' ); ?></label>
+	<div id="bb-email-restrictions-setting" class="bb-email-restrictions-listing registration-restrictions-listing">
+		<div class="restrictions-error"></div>
+		<div class="registration-restrictions-rule-list">
+		<?php
+		if ( ! empty( $email_restrictions ) ) {
+			foreach ( $email_restrictions as $key_rule => $rule ) {
+				?>
+				<div class="registration-restrictions-rule">
+					<div class="registration-restrictions-input">
+						<input type="email" name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value="<?php echo esc_attr( $rule['address'] ); ?>"/>
+					</div>
+					<div class="registration-restrictions-select">
+						<select name="bb-email-restrictions[<?php echo esc_attr( $key_rule ); ?>][condition]" class="registration-restrictions-input-select">
+							<?php
+							foreach ( $conditions as $key => $value ) {
+								?>
+								<option value='<?php echo esc_attr( $key ); ?>'
+									<?php selected( $key === $rule['condition'] ); ?>
+								>
+									<?php echo esc_html( $value ); ?>
+								</option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+					<div class="registration-restrictions-remove">
+						<button class="registration-restrictions-rule-remove email-rule-remove" aria-label="Remove Rule">
+							<i class="bb-icon-f bb-icon-times"></i>
+						</button>
+					</div>
+				</div>
+				<?php
+			}
+		}
+		?>
+			<!-- This below HTML is for clone only - Starts -->
+			<div class="custom registration-restrictions-rule" style="display: none;">
+				<div class="registration-restrictions-input">
+					<input type="email" name="bb-email-restrictions[placeholder_priority_index][address]" class="registration-restrictions-domain" placeholder="<?php esc_attr_e( 'Email address', 'buddyboss' ); ?>" value=""/>
+				</div>
+				<div class="registration-restrictions-select">
+					<select name="bb-email-restrictions[placeholder_priority_index][condition]" class="registration-restrictions-input-select">
+						<?php
+						foreach ( $conditions as $key => $value ) {
+							?>
+							<option value='<?php echo esc_attr( $key ); ?>'><?php echo esc_html( $value ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+				</div>
+				<div class="registration-restrictions-remove">
+					<button class="registration-restrictions-rule-remove email-rule-remove" aria-label="<?php esc_attr_e( 'Remove Rule', 'buddyboss' ); ?>">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<!-- This below HTML is for clone only - Ends -->
+
+		</div>
+		<input type='hidden' class='registration-restrictions-lastindex' value='<?php echo empty( $email_restrictions ) ? 0 : count( $email_restrictions ); ?>' />
+		<button class="button registration-restrictions-add-rule email-rule-add"> <?php esc_html_e( 'Add Email', 'buddyboss' ); ?></button>
+	</div>
+	<?php
+}
+
+
+/**
+ * Callback function for registration restrictions section.
+ *
+ * @since BuddyBoss 2.4.11
+ */
+function bb_admin_setting_callback_registration_restrictions_instructions() {
+	?>
+	<p class='description'><?php esc_html_e( 'Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Get label with buddyboss registration notice if not active for the registration restrictions.
+ *
+ * @since BuddyBoss 2.4.11
+ *
+ * @return string $bb_registration_notice Notice content.
+ */
+function bb_get_buddyboss_registration_notice() {
+	static $bb_registration_notice = '';
+
+	if ( '' !== $bb_registration_notice ) {
+		return $bb_registration_notice;
+	}
+
+	if ( bp_allow_custom_registration() ) {
+		$bb_registration_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <a href="#bp_registration"><strong>%2$s</strong></a> %3$s</span>',
+			esc_html__( 'Enable the', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Registration Form', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	}
+
+	return $bb_registration_notice;
+}
+
+/**
+ * Enable activity comment edit.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_admin_setting_callback_enable_activity_comment_edit() {
+	$edit_times = bp_activity_edit_times();
+	$edit_time  = bb_get_activity_comment_edit_time();
+	?>
+
+	<input id="_bb_enable_activity_comment_edit" name="_bb_enable_activity_comment_edit" type="checkbox" value="1" <?php checked( bb_is_activity_comment_edit_enabled( false ) ); ?> />
+	<label for="_bb_enable_activity_comment_edit"><?php esc_html_e( 'Allow members to edit their comment for a duration of', 'buddyboss' ); ?></label>
+
+	<select name="_bb_activity_comment_edit_time">
+		<option value="-1"><?php esc_html_e( 'Forever', 'buddyboss' ); ?></option>
+		<?php
+		foreach ( $edit_times as $time ) {
+			$value      = isset( $time['value'] ) ? $time['value'] : 0;
+			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
+			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
+		}
+		?>
+	</select>
+
+	<?php
+}
+
+/**
+ * Allow pinned activity posts.
+ *
+ * @since BuddyBoss 2.4.60
+ */
+function bb_admin_setting_callback_enable_activity_pinned_posts() {
+	?>
+
+	<input id="_bb_enable_activity_pinned_posts" name="_bb_enable_activity_pinned_posts" type="checkbox" value="1" <?php checked( bb_is_active_activity_pinned_posts() ); ?> />
+	<label for="_bb_enable_activity_pinned_posts"><?php esc_html_e( 'Allow group owners and moderators to pin posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Link to redirection tutorial.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_redirection_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127063,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Get the published page list.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @return array Associative array of page id and page title of pages.
+ */
+function bb_get_published_pages() {
+	static $published_pages = array();
+
+	if ( ! empty( $published_pages ) ) {
+		return $published_pages;
+	}
+
+	$pages = get_pages(
+		array(
+			'post_status' => 'publish',
+		)
+	);
+
+	foreach ( $pages as $page ) {
+		$published_pages[ $page->ID ] = $page->post_title;
+	}
+
+	return $published_pages;
+}
+
+/**
+ * Admin settings for showing the login redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_setting_callback_login_redirection() {
+	$login_redirection = bb_login_redirection();
+	?>
+	<select name="bb-login-redirection" id="bb-login-redirection">
+		<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom login redirection page url.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bp_admin_setting_callback_custom_login_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-login-redirection" name="bb-custom-login-redirection" type="text" value="<?php echo esc_url( bb_custom_login_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they login.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the logout redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bb_admin_setting_callback_logout_redirection() {
+	$logout_redirection = bb_logout_redirection();
+	?>
+	<select name="bb-logout-redirection" id="bb-logout-redirection">
+		<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+		<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+		<?php
+		$pages = bb_get_published_pages();
+		foreach ( $pages as $id => $title ) {
+			?>
+			<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+			<?php
+		}
+		?>
+	</select>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		)
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Admin settings for showing the custom logout redirection page url.
+ *
+ * @since BuddyBoss 2.4.70
+ */
+function bp_admin_setting_callback_custom_logout_redirection() {
+	?>
+	<input style="width: 89%;" id="bb-custom-logout-redirection" name="bb-custom-logout-redirection" type="text" value="<?php echo esc_url( bb_custom_logout_redirection() ); ?>"/>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Select a page or external link to redirect your members to after they logout.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Reactions settings enable markups.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bb_reactions_settings_callback_all_reactions() {
+
+	$all_reactions = bb_get_all_reactions();
+	?>
+	<p class="description access_control_label_header"><?php esc_html_e( 'Which type of content should members be able to react to?', 'buddyboss' ); ?></p>
+
+	<br/>
+	<?php
+	foreach ( $all_reactions as $key => $field ) {
+
+		$field['enabled'] = bb_all_enabled_reactions( $key );
+		?>
+		<div class="bb-reactions-setting-field">
+			<input
+				name="bb_all_reactions[<?php echo esc_attr( $key ); ?>]"
+				id="bb_all_reactions_<?php echo esc_attr( $key ); ?>"
+				type="checkbox"
+				value="1"
+				<?php
+				checked( $field['enabled'] );
+				disabled( $field['disabled'] );
+				?>
+			/>
+			<label for="bb_all_reactions_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $field['label'] ); ?>
+			</label>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Add reaction mode settings.
+ *
+ * @since BuddyBoss 2.5.20
+ */
+function bb_reactions_settings_callback_reaction_mode() {
+
+	$reactions_modes = array(
+		'likes'    => array(
+			'label'      => esc_html__( 'Likes', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'likes',
+			'id'         => 'bb_reaction_mode_likes',
+			'is_checked' => 'likes' === bb_get_reaction_mode(),
+			'notice'     => esc_html__( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+			'disabled'   => false,
+		),
+		'emotions' => array(
+			'label'      => esc_html__( 'Emotions', 'buddyboss' ),
+			'name'       => 'bb_reaction_mode',
+			'value'      => 'emotions',
+			'id'         => 'bb_reaction_mode_emotions',
+			'is_checked' => bb_is_reaction_emotions_enabled(),
+			'notice'     => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
+			'disabled'   => (
+				! class_exists( 'BB_Reactions' ) ||
+				! function_exists( 'bbp_pro_is_license_valid' ) ||
+				! bbp_pro_is_license_valid()
+			),
+		),
+	);
+
+	$reactions_modes = apply_filters( 'bb_setting_reaction_mode_args', $reactions_modes );
+
+	if ( ! empty( $reactions_modes ) && is_array( $reactions_modes ) ) {
+		$notice_text = '';
+		foreach ( $reactions_modes as $reaction_mode ) {
+			?>
+			<label for="<?php echo esc_attr( $reaction_mode['id'] ); ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+				<input name="<?php echo esc_attr( $reaction_mode['name'] ); ?>"
+					id="<?php echo esc_attr( $reaction_mode['id'] ); ?>"
+					type="radio"
+					value="<?php echo $reaction_mode['value']; ?>"
+					data-current-val="<?php echo esc_attr( bb_get_reaction_mode() ); ?>"
+					data-notice="<?php echo ! empty( $reaction_mode['notice'] ) ? $reaction_mode['notice'] : ''; ?>"
+					<?php
+					checked( $reaction_mode['is_checked'] );
+					disabled( $reaction_mode['disabled'] );
+					?>
+				/>
+				<?php echo $reaction_mode['label']; ?>
+			</label>
+			<?php
+
+			if ( ! empty( $reaction_mode['is_checked'] ) ) {
+				$notice_text = $reaction_mode['notice'];
+			}
+		}
+
+		if ( ! empty( $notice_text ) ) {
+			?>
+			<p class="description bb-reaction-mode-description">
+				<?php echo wp_kses_post( $notice_text ); ?>
+			</p>
+			<?php
+		}
+	}
+}
+
+/**
+ * Add reactions button settings.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return void
+ */
+function bb_reactions_settings_callback_reactions_button() {
+
+	$button_settings = bb_reaction_button_options();
+	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : '';
+
+	?>
+	<label for="bb_reactions_button" class="bb-reaction-button-label">
+		<button type="button" class="button" id="bb-reaction-button-chooser">
+			<i class="bb-icon-<?php echo esc_attr( $button_icon ); ?>"></i>
+		</button>
+		<input
+			type="hidden"
+			name="bb_reactions_button[icon]"
+			id="bb-reaction-button-hidden-field"
+			value="<?php echo esc_attr( $button_icon ); ?>"
+		/>
+
+		<input
+			name="bb_reactions_button[text]"
+			id="bb-reaction-button-text"
+			type="text"
+			max-length="8"
+			value="<?php echo esc_attr( $button_text ); ?>"
+			placeholder="<?php esc_attr_e( 'Like', 'buddyboss' ); ?>"
+		/>
+		<span class="bb-reaction-button-text-limit">
+			<span><?php echo strlen( $button_text ); ?></span>/12
+		</span>
+
+		<p>
+			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
+		</p>
+	</label>
+	<?php
+}
+
+/**
+ * Link to General Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_general_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Link to Activity Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_activity_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a general section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_general_callback() {
+	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
+	?>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_ajax_request_page_load" id="bb_ajax_request_page_load">
+		<option value="1" <?php selected( $bb_ajax_request_page_load, 1 ); ?>>1</option>
+		<option value="2" <?php selected( $bb_ajax_request_page_load, 2 ); ?>>2</option>
+	</select>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a activity section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_activity_callback() {
+	$bb_load_activity_per_request = bb_get_load_activity_per_request();
+	$bb_activity_load_type        = bp_get_option( 'bb_activity_load_type', 'infinite' );
+
+	$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
+	$activity_per_page = bp_parse_args(
+		$activity_per_page,
+		array( 5, 10, 15, 20 )
+	);
+	asort( $activity_per_page );
+
+	$activity_autoload_options = apply_filters( 'bb_performance_activity_autoload', array() );
+	$activity_autoload_options        = bp_parse_args(
+		$activity_autoload_options,
+		array(
+			'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
+			'load_more' => __( 'Load more', 'buddyboss' ),
+		)
+	);
+	?>
+
+	<label for="bb_load_activity_per_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_load_activity_per_request" id="bb_load_activity_per_request">
+		<?php
+		foreach ( $activity_per_page as $load_val ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_val ) . '</option>';
+		}
+		?>
+	</select>
+	<label for="bb_activity_load_type"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
+	<select name="bb_activity_load_type" id="bb_activity_load_type">
+		<?php
+		foreach ( $activity_autoload_options as $load_val => $load_label ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_activity_load_type, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
+		}
+		?>
+	</select>
+	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
 	<?php
 }

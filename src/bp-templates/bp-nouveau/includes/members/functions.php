@@ -22,7 +22,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'members',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-		'li_class'  => array(),
+		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
 		'count'     => bp_core_get_all_member_count(),
@@ -477,4 +477,102 @@ function bp_nouveau_member_customizer_nav() {
 	bp_nouveau_set_nav_item_order( $nav, bp_nouveau_get_appearance_settings( 'user_nav_order' ) );
 
 	return $nav->get_primary();
+}
+
+/**
+ * Enqueue the members scripts
+ *
+ * @since BuddyBoss 2.2.6
+ */
+function bp_nouveau_member_enqueue_scripts() {
+	if ( ! bp_is_user_settings() ) {
+		return;
+	}
+
+	if ( bp_is_user_settings_notifications() && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
+		wp_enqueue_script( 'bb-subscriptions' );
+
+		/**
+		 * Split each js template to its own file. Easier for child theme to
+		 * overwrite individual parts.
+		 *
+		 * @version BuddyBoss 2.2.6
+		 */
+		$template_parts = apply_filters(
+			'bb_member_subscriptions_js_template_parts',
+			array(
+				'bb-member-subscription-loading',
+				'bb-subscription-item',
+				'bb-member-subscription-pagination',
+				'bb-member-no-subscription',
+			)
+		);
+
+		foreach ( $template_parts as $template_part ) {
+			bp_get_template_part( 'common/js-templates/members/settings/' . $template_part );
+		}
+	}
+}
+
+/**
+ * Register Scripts for the Member component
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param array $scripts The array of scripts to register.
+ *
+ * @return array The same array with the specific messages scripts.
+ */
+function bp_nouveau_member_register_scripts( $scripts = array() ) {
+	if ( ! isset( $scripts['bp-nouveau'] ) ) {
+		return $scripts;
+	}
+
+	return array_merge(
+		$scripts,
+		array(
+			'bb-subscriptions' => array(
+				'file'         => 'js/bb-subscriptions%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-api-request' ),
+				'footer'       => true,
+			),
+		)
+	);
+}
+
+/**
+ * Localize the strings needed for the Member UI
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts.
+ *
+ * @return array         The same array with specific strings for the messages UI if needed.
+ */
+function bp_nouveau_member_localize_scripts( $params = array() ) {
+	if ( ! bp_is_user_settings() && ! function_exists( 'bp_is_groups_component' ) ) {
+		return $params;
+	}
+
+	if (
+		(
+			bp_is_user_settings_notifications() &&
+			bp_action_variables() &&
+			'subscriptions' === bp_action_variable( 0 )
+		) ||
+		(
+			bp_is_groups_component() &&
+			bp_is_group()
+		)
+	) {
+		$params['subscriptions'] = array(
+			'unsubscribe'     => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
+			'error'           => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
+			'per_page'        => apply_filters( 'bb_subscriptions_per_page', 5 ),
+			'no_result'       => __( 'You are not currently subscribed to any %s.', 'buddyboss' ),
+			'subscribe_error' => __( 'There was a problem subscribing to ', 'buddyboss' ),
+		);
+	}
+
+	return $params;
 }

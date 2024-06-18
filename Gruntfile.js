@@ -15,14 +15,14 @@ module.exports = function (grunt) {
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss.
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
-			'!bp-forums/**/*.css',
+			// '!bp-forums/**/*.css',
 			'!**/endpoints/**/*.css'
 		],
 
 		BP_JS = [
 			'**/*.js',
 			'!**/*.min.js',
-			'!bp-forums/**/*.js',
+			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js',
 		],
@@ -127,7 +127,25 @@ module.exports = function (grunt) {
 					flatten: true,
 					src: ['bp-core/admin/sass/*.scss'],
 					dest: SOURCE_DIR + 'bp-core/admin/css/'
-				}
+				},
+				pusher: {
+					cwd: SOURCE_DIR,
+					expand: true,
+					extDot: 'last',
+					ext: '.css',
+					flatten: true,
+					src: ['bp-integrations/pusher/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/pusher/assets/css/',
+				},
+				recaptcha: {
+					cwd: SOURCE_DIR,
+					expand: true,
+					extDot: 'last',
+					ext: '.css',
+					flatten: true,
+					src: ['bp-integrations/recaptcha/assets/css/scss/*.scss'],
+					dest: SOURCE_DIR + 'bp-integrations/recaptcha/assets/css/',
+				},
 			},
 			rtlcss: {
 				options: {
@@ -205,7 +223,9 @@ module.exports = function (grunt) {
 			},
 			clean: {
 				all: [BUILD_DIR],
-				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/']
+				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
+				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
+				composer: [ BUILD_DIR + 'composer.json', BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
 			},
 			copy: {
 				files: {
@@ -288,29 +308,42 @@ module.exports = function (grunt) {
 							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 						}
 					}
-			},
-			bp_rest_performance: {
-				cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
-				dest: SOURCE_DIR + 'bp-performance/classes/',
-				expand: true,
-				src: '**',
-				options: {
-					process : function( content ) {
-						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+				},
+				bp_rest_performance: {
+					cwd: SOURCE_DIR + 'buddyboss-platform-api/Performance/',
+					dest: SOURCE_DIR + 'bp-performance/classes/',
+					expand: true,
+					src: '**',
+					options: {
+						process : function( content ) {
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						}
 					}
-				}
-			},
-			bp_rest_mu: {
-				cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
-				dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
-				expand: true,
-				src: '**',
-				options: {
-					process : function( content ) {
-						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+				},
+				bp_rest_mu: {
+					cwd: SOURCE_DIR + 'buddyboss-platform-api/MuPlugin/',
+					dest: SOURCE_DIR + 'bp-performance/mu-plugins/',
+					expand: true,
+					src: '**',
+					options: {
+						process : function( content ) {
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						}
 					}
-				}
-			},
+				},
+				bb_icons: {
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/output/',
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					dot: true,
+					expand: true,
+					src: [
+						'css/**',
+						'fonts/**',
+						'!example.html',
+						'font-map.json',
+						'!svg/**',
+					],
+				},
 			},
 			uglify: {
 				core: {
@@ -328,6 +361,7 @@ module.exports = function (grunt) {
 						'!**/emojionearea-edited.js',
 						'!**/node_modules/**/*.js',
 						'!**/endpoints/**/*.js',
+						'!**/js/lib/Chart.js',
 						]
 					)
 				}
@@ -348,6 +382,8 @@ module.exports = function (grunt) {
 						'!**/*.min.css',
 						'!**/admin/**/*.css',
 						'!**/emojionearea-edited.css',
+						'!**/pusher/**/*.css',
+						'!**/recaptcha/**/*.css',
 						'!**/endpoints/**/*.css'
 						]
 					)
@@ -402,12 +438,17 @@ module.exports = function (grunt) {
 					stdout: false
 				},
 				rest_performance: {
-				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
+				fetch_bb_icons: {
+					command: 'git clone https://github.com/buddyboss/bb-icons.git',
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					stdout: false,
+				},
 				composer: {
-					command: 'composer update',
+					command: 'composer update; composer scoper;',
 					cwd: SOURCE_DIR,
 					stdout: false
 				}
@@ -426,7 +467,8 @@ module.exports = function (grunt) {
 						'!**/emojionearea-edited.js',
 						'!**/vendor/**/*.js',
 						'!**/node_modules/**/*.js',
-						'!**/endpoints/**/*.js'
+						'!**/endpoints/**/*.js',
+						'!**/js/lib/Chart.js',
 						].concat( BP_EXCLUDED_MISC )
 					}
 				}
@@ -452,6 +494,17 @@ module.exports = function (grunt) {
 					},
 				}
 			},
+			json2php: {
+				convert: {
+					expand: true,
+					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
+					ext: '.php',
+					src: [
+						'font-map.json'
+					]
+				}
+			},
 			'string-replace': {
 				dist: {
 					files: [{
@@ -464,6 +517,20 @@ module.exports = function (grunt) {
 							replacement: '<%= pkg.BBVersion %>'
 						}]
 					}
+				},
+				'icon-translate': {
+					files: [{
+						src: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/font-map.php',
+						expand: true,
+					}],
+					options: {
+						replacements: [
+							{
+								pattern: /return/g,
+								replacement: '$bb_icons_data ='
+							}
+						]
+					}
 				}
 			}
 		}
@@ -472,11 +539,25 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
+	// Fetch bb icons.
+	grunt.registerTask(
+		'fetch_bb_icons',
+		[
+			'clean:bb_icons',
+			'exec:fetch_bb_icons',
+			'copy:bb_icons',
+			'clean:bb_icons',
+			'json2php',
+			'string-replace:icon-translate',
+			'rtlcss',
+			'cssmin'
+		]
+	);
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
-	grunt.registerTask('build', ['string-replace', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.

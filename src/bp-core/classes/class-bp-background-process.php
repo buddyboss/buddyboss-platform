@@ -98,7 +98,15 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 			$this->lock_process();
 
 			do {
-				$batch = $this->get_batch();
+
+				/**
+				 * Filter to use before start process.
+				 *
+				 * @since BuddyBoss 2.5.60
+				 *
+				 * @param object $batch Batch object.
+				 */
+				$batch = apply_filters( 'bb_bp_bg_process_start', $this->get_batch() );
 
 				foreach ( $batch->data as $key => $value ) {
 					$task = $this->task( $value );
@@ -121,6 +129,16 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 				} else {
 					$this->delete( $batch->key );
 				}
+
+				/**
+				 * Action to use after end the process.
+				 *
+				 * @since BuddyBoss 2.5.60
+				 *
+				 * @param object $batch Batch object.
+				 */
+				do_action( 'bb_bp_bg_process_end', $batch );
+
 			} while ( ! $this->batch_limit_exceeded() && ! $this->is_queue_empty() );
 
 			$this->unlock_process();
@@ -211,6 +229,26 @@ if ( ! class_exists( 'BP_Background_Process' ) ) {
 				$this->delete_all_batches();
 				wp_clear_scheduled_hook( $this->cron_hook_identifier );
 			}
+		}
+
+		/**
+		 * Should the process exit with wp_die?
+		 *
+		 * @param mixed $return What to return if filter says don't die, default is null.
+		 *
+		 * @return void|mixed
+		 */
+		protected function maybe_wp_die( $return = null ) {
+			/**
+			 * Should wp_die be used?
+			 *
+			 * @return bool
+			 */
+			if ( apply_filters( $this->identifier . '_wp_die', true ) ) {
+				wp_die();
+			}
+
+			return $return;
 		}
 	}
 }

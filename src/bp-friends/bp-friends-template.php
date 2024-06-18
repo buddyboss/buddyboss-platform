@@ -383,11 +383,11 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 		return false;
 	}
 
-	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+	$button_args = bp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
 
 	switch ( $is_friend ) {
 		case 'pending':
-			$button = wp_parse_args(
+			$button = bp_parse_args(
 				array(
 					'id'                  => 'pending',
 					'component'           => 'friends',
@@ -412,7 +412,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 			break;
 
 		case 'awaiting_response':
-			$button = wp_parse_args(
+			$button = bp_parse_args(
 				array(
 					'id'                  => 'awaiting_response',
 					'component'           => 'friends',
@@ -437,7 +437,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 			break;
 
 		case 'is_friend':
-			$button = wp_parse_args(
+			$button = bp_parse_args(
 				array(
 					'id'                  => 'is_friend',
 					'component'           => 'friends',
@@ -464,7 +464,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 			break;
 
 		default:
-			$button = wp_parse_args(
+			$button = bp_parse_args(
 				array(
 					'id'                  => 'not_friends',
 					'component'           => 'friends',
@@ -750,7 +750,6 @@ function bp_get_total_friend_count( $user_id = 0 ) {
 	 */
 	return apply_filters( 'bp_get_total_friend_count', friends_get_total_friend_count( $user_id ), $user_id );
 }
-	add_filter( 'bp_get_total_friend_count', 'bp_core_number_format' );
 
 /**
  * Output the total friendship request count for a given user.

@@ -20,8 +20,19 @@ add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 // Filter the user registration URL to point to BuddyPress's registration page.
 add_filter( 'register_url', 'bp_get_signup_page' );
 
-// Change the last active display format if users active within 5 minutes then shows 'Active now'.
+// Change the last active display format if users active within interval then shows 'Active now'.
 add_filter( 'bp_get_last_activity', 'bb_get_member_last_active_within_minutes', 10, 2 );
+
+// Repair member profile links.
+add_filter( 'bp_repair_list', 'bb_repair_member_profile_links', 12 );
+
+add_action( 'bb_assign_default_member_type_to_activate_user_on_admin', 'bb_set_default_member_type_to_activate_user_on_admin', 1, 2 );
+
+add_action( 'update_option_bp-display-name-format', 'bb_member_remove_default_png_avatar_on_update_display_name', 10, 3 );
+add_action( 'deleted_user', 'bb_member_remove_default_png_avatar_on_deleted_user' );
+
+// Exclude account related notifications.
+add_filter( 'bp_notifications_get_where_conditions', 'bb_members_hide_account_settings_notifications', 10, 2 );
 
 /**
  * Load additional sign-up sanitization filters on bp_loaded.
@@ -48,7 +59,10 @@ function bp_members_signup_sanitization() {
 
 	// Add the filters to each field.
 	foreach ( $fields as $filter ) {
-		add_filter( $filter, 'esc_html', 1 );
+		// Remove filter to support apostrophe in useremail.
+		if ( 'bp_get_signup_email_value' !== $filter ) {
+			add_filter( $filter, 'esc_html', 1 );
+		}
 		add_filter( $filter, 'wp_filter_kses', 2 );
 		add_filter( $filter, 'stripslashes', 3 );
 	}
@@ -231,9 +245,17 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -305,9 +327,17 @@ function bp_members_filter_video_personal_scope( $retval = array(), $filter = ar
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			)
 		);
 	}
 
@@ -530,7 +560,7 @@ add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_fol
  *
  * This is intended to speed up @mentions lookups for a majority of use cases.
  *
- * @since buddyboss 1.8.6
+ * @since BuddyBoss 1.8.6
  *
  * @see   bp_activity_mentions_script()
  */
@@ -538,10 +568,6 @@ function bb_core_prime_mentions_results() {
 
 	// Stop here if user is not logged in.
 	if ( ! is_user_logged_in() ) {
-		return;
-	}
-
-	if ( bp_is_active( 'activity' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
 		return;
 	}
 
@@ -569,7 +595,7 @@ function bb_core_prime_mentions_results() {
 
 	foreach ( $members_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = $user->user_nicename;
+		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
 		$result->image = bp_core_fetch_avatar(
 			array(
 				'html'    => false,
@@ -582,6 +608,7 @@ function bb_core_prime_mentions_results() {
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}
+		$result->user_id = $user->ID;
 
 		$members[] = $result;
 	}
@@ -662,10 +689,10 @@ function bb_get_member_last_active_within_minutes( $last_activity, $user_id ) {
 	// Difference in seconds.
 	$since_diff = bp_core_current_time( true, 'timestamp' ) - $last_active_timestamp;
 	if ( $since_diff < HOUR_IN_SECONDS && $since_diff >= 0 ) {
-		$minutes_diff = round( $since_diff / MINUTE_IN_SECONDS );
 
-		// Difference within 5 minutes.
-		if ( 5 >= $minutes_diff ) {
+		$online_default_time = apply_filters( 'bb_default_online_presence_time', bb_presence_interval() + bb_presence_time_span() );
+
+		if ( $online_default_time >= $since_diff ) {
 			return esc_html__( 'Active now', 'buddyboss' );
 		}
 	}
@@ -745,11 +772,11 @@ function bb_load_member_type_label_custom_css() {
 					isset( $label_color_data['color_type'] ) &&
 					'custom' === $label_color_data['color_type']
 				) {
-					$background_color       = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
-					$text_color             = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
-					$class_name             = 'body .bp-member-type.bb-current-member-' . $type;
-					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color;" . '}';
-					$member_type_custom_css .= $class_name . ' {' . "color:$text_color;" . '}';
+					$background_color        = isset( $label_color_data['background-color'] ) ? $label_color_data['background-color'] : '';
+					$text_color              = isset( $label_color_data['color'] ) ? $label_color_data['color'] : '';
+					$class_name              = 'body .bp-member-type.bb-current-member-' . $type;
+					$member_type_custom_css .= $class_name . ' {' . "background-color:$background_color !important;" . '}';
+					$member_type_custom_css .= $class_name . ' {' . "color:$text_color !important;" . '}';
 				}
 			}
 			wp_cache_set( $cache_key, $member_type_custom_css, 'bp_member_member_type' );
@@ -759,3 +786,228 @@ function bb_load_member_type_label_custom_css() {
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
 
+/**
+ * Remove all subscription associations for a given user.
+ *
+ * @since BuddyBoss 2.2.6
+ *
+ * @param int $user_id ID whose subscription data should be removed.
+ *
+ * @return bool Returns false on failure.
+ */
+function bb_delete_user_subscriptions( $user_id ) {
+	// Get the user subscriptions.
+	$all_subscriptions = bb_get_subscriptions(
+		array(
+			'blog_id' => false,
+			'user_id' => $user_id,
+			'fields'  => 'id',
+			'status'  => null,
+			'cache'   => false,
+		),
+		true
+	);
+	$subscriptions     = ! empty( $all_subscriptions['subscriptions'] ) ? $all_subscriptions['subscriptions'] : array();
+
+	if ( ! empty( $subscriptions ) ) {
+		foreach ( $subscriptions as $subscription ) {
+			bb_delete_subscription( $subscription );
+		}
+	}
+
+	return true;
+}
+add_action( 'wpmu_delete_user', 'bb_delete_user_subscriptions' );
+add_action( 'delete_user', 'bb_delete_user_subscriptions' );
+
+
+/**
+ * Add repair member profile links.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @return array Repair list items.
+ */
+function bb_repair_member_profile_links( $repair_list ) {
+	$repair_list[] = array(
+		'bb-member-repair-profile-links',
+		__( 'Repair member profile links', 'buddyboss' ),
+		'bb_repair_member_profile_links_callback',
+	);
+
+	return $repair_list;
+}
+
+/**
+ * This function will work as migration process which will repair member profile links.
+ *
+ * @since BuddyBoss 2.3.1
+ *
+ * @return array|void
+ */
+function bb_repair_member_profile_links_callback() {
+	if ( ! bp_is_active( 'members' ) ) {
+		return;
+	}
+
+	global $wpdb;
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$offset    = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$per_page  = apply_filters( 'bb_core_update_repair_member_slug_limit', 50 );
+
+	// Set limit while repair the member slug.
+	$user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT u.ID FROM `{$wpdb->users}` AS u LEFT JOIN `{$wpdb->usermeta}` AS um ON ( u.ID = um.user_id AND um.meta_key = %s ) WHERE ( um.user_id IS NULL OR LENGTH(meta_value) = %d ) ORDER BY u.ID ASC LIMIT %d, %d",
+			'bb_profile_slug',
+			40,
+			0,
+			$per_page
+		)
+	);
+
+	if ( ! is_wp_error( $user_ids ) && ! empty( $user_ids ) ) {
+		bb_set_bulk_user_profile_slug( $user_ids );
+
+		$total           = $offset + count( $user_ids );
+		$records_updated = sprintf(
+		/* translators: total user */
+			_n( '%d user unique identifier generated successfully', '%d users unique identifier generated successfully', $total, 'buddyboss' ),
+			$total
+		);
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $total,
+			'records' => $records_updated,
+		);
+	} else {
+		/* translators: Status of current action. */
+		$statement = __( 'Profile unique identifier generated for all users; %s', 'buddyboss' );
+
+		// All done!
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
+
+/**
+ * Assign the default member type to user who register recently.
+ *
+ * @since BuddyBoss 2.3.2
+ *
+ * @param int    $user_id     ID of user.
+ * @param string $member_type Default selected member type.
+ */
+function bb_set_default_member_type_to_activate_user_on_admin( $user_id, $member_type ) {
+
+	if ( empty( $user_id ) || empty( $member_type ) ) {
+		return false;
+	}
+
+	if ( is_admin() ) {
+
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+	} else {
+		// Assign the default member type to user.
+		bp_set_member_type( $user_id, '' );
+		bp_set_member_type( $user_id, $member_type );
+
+		$member_type_id                = bp_member_type_post_by_type( $member_type );
+		$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+		if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+			$bp_user = new WP_User( $user_id );
+			foreach ( $bp_user->roles as $role ) {
+				// Remove role.
+				$bp_user->remove_role( $role );
+			}
+			// Add role.
+			$bp_user->add_role( $selected_member_type_wp_roles[0] );
+		}
+	}
+}
+
+/**
+ * Generate profile slug registration and activation.
+ *
+ * @since BuddyBoss 2.4.90
+ *
+ * @param int $user_id ID of user.
+ *
+ * @return void
+ */
+function bb_generate_member_profile_slug_on_activate( $user_id ) {
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$username = bb_core_get_user_slug( $user_id );
+	if ( empty( $username ) ) {
+		bb_set_user_profile_slug( $user_id );
+	}
+}
+
+add_action( 'bp_core_signup_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+add_action( 'bp_core_activated_user', 'bb_generate_member_profile_slug_on_activate', 10, 1 );
+
+/**
+ * Function to exclude the account settings related notification.
+ *
+ * @since BuddyBoss 2.5.30
+ *
+ * @param array $where_conditions Where clause to get notifications.
+ * @param array $args             Parsed arguments to get notifications.
+ *
+ * @return array
+ */
+function bb_members_hide_account_settings_notifications( $where_conditions, $args ) {
+
+	if ( ! bp_is_active( 'settings' ) ) {
+		$where_conditions['account_settings_exclude'] = "( component_action != 'bb_account_password' )";
+	}
+
+	return $where_conditions;
+}
+
+/**
+ * Delete default PNG for members when update the display name format.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param mixed  $old_value The old option value.
+ * @param mixed  $value     The new option value.
+ * @param string $option    Option name.
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_update_display_name( $old_value, $value, $option ) {
+	if (
+		'bp-display-name-format' === $option &&
+		$old_value !== $value
+	) {
+		// Delete default SVG for users.
+		bb_delete_default_user_png_avatar( array(), false );
+	}
+}
+
+/**
+ * Delete default PNG for member when delete the user.
+ *
+ * @since BuddyBoss 2.5.50
+ *
+ * @param int $id ID of the user.
+ *
+ * @return void
+ */
+function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
+	// Delete default PNG for users.
+	bb_delete_default_user_png_avatar( array( $id ) );
+}

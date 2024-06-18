@@ -19,6 +19,7 @@ use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+#[\AllowDynamicProperties]
 /**
  * COre file of the plugin
  *
@@ -400,7 +401,7 @@ class Core {
 	 */
 	public function getRequest( $key = '*', $default = null, $type = null ) {
 		if ( $type ) {
-			return $key == '*' ? $$type : ( isset( $$type[ $key ] ) ? $$type[ $key ] : $default );
+			return $key == '*' ? ${$type} : ( isset( ${$type[ $key ]} ) ? ${$type[ $key ]} : $default );
 		}
 
 		$merged = array_merge( $_GET, $_POST, $_REQUEST );
@@ -415,7 +416,7 @@ class Core {
 	 */
 	public function isRequestExists( $key, $default = null, $type = null ) {
 		if ( $type ) {
-			return isset( $$type[ $key ] );
+			return isset( ${$type[ $key ]} );
 		}
 
 		$merged = array_merge( $_GET, $_POST, $_REQUEST );

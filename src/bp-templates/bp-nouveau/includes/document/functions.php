@@ -79,7 +79,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$exclude         = array_merge( $mime_types, $extensions );
 	$document_params = array(
 		'profile_document'                => bp_is_profile_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), 0 ),
-		'group_document'                  => bp_is_group_document_support_enabled() && ( bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() ),
+		'group_document'                  => bp_is_group_document_support_enabled() && ( bb_document_user_can_upload( bp_loggedin_user_id(), ( bp_is_active( 'groups' ) && bp_is_group_single() ? bp_get_current_group_id() : $group_id ) ) || bp_is_activity_directory() || bp_is_user_messages() ),
 		'messages_document'               => bp_is_messages_document_support_enabled() && bb_user_can_create_document(),
 		'messages_document_active'        => bp_is_messages_document_support_enabled(),
 		'document_type'                   => implode( ',', array_unique( $exclude ) ),
@@ -154,7 +154,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 	$nav_items['all'] = array(
 		'component' => 'document',
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
-		'li_class'  => array(),
+		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_document_directory_permalink(),
 		'text'      => __( 'All Documents', 'buddyboss' ),
 		// 'count'     => bp_get_total_document_count(),
@@ -909,42 +909,103 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			$file_name = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
-			$zip = new ZipArchive();
-			$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
+			$phpVersion = phpversion();
 
-			$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
+			// Added phpversion check as ZipFile is not supported in less than PHP 7.1.
+			if (
+				version_compare( $phpVersion, '7.1', '>=' ) &&
+				(
+					class_exists( 'BuddyBossPlatform\ZipStream\ZipStream' ) ||
+					class_exists( '\ZipStream\ZipStream' )
+				)
+			) {
+				$options = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->archive();
+				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers.
+				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path.
 
-			foreach ( $files as $name => $file ) {
-				$filePath     = $file->getRealPath();
-				$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
+				// Create a new ZipFile instance.
+				$zip = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->zipstream( $file_name, $options );
 
-				if ( ! $file->isDir() ) {
-					$zip->addFile( $filePath, $relativePath );
-				} else {
-					if ( $relativePath !== false ) {
+				$files = new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator( $parent_folder ),
+					RecursiveIteratorIterator::LEAVES_ONLY
+				);
+
+				foreach ( $files as $file ) {
+
+					if ( '.' === $file->getfileName() || '..' === $file->getfileName() ) {
+						continue;
+					}
+
+					$relativePath = substr( $file, strlen( $parent_folder ) + 1 );
+
+					if ( $file->isDir() ) {
+						$zip->addFile( $relativePath, '' );
+					} else {
+						$zip->addFileFromPath( $relativePath, $file->getPathname() );
+					}
+				}
+				$zip->finish();
+			} else {
+				$zip = new ZipArchive();
+				$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
+
+				$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
+				foreach ( $files as $name => $file ) {
+
+					if ( '.' === $file->getfileName() || '..' === $file->getfileName() ) {
+						continue;
+					}
+
+					$filePath     = $file->getRealPath();
+					$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
+
+					if ( ! $file->isDir() ) {
+						$zip->addFile( $filePath, $relativePath );
+					} elseif ( $relativePath !== false ) {
 						$zip->addEmptyDir( $relativePath );
 					}
 				}
+
+				$zip->close();
 			}
 
-			$zip->close();
+			bb_document_force_download( $zip_name, basename( $zip_name ) );
 
-			header( 'Expires: 0' );
-			header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-			header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-			header( 'Pragma: no-cache' );
-			header( 'Content-type: application/zip' );
-			header( "Content-Disposition:attachment; filename={$file_name}" );
-			header( 'Content-Type: application/force-download' );
-
-			readfile( "{$zip_name}" );
-
-			BP_Document::bp_document_remove_temp_directory( $upload_dir );
+			bp_document_remove_temp_directory( $upload_dir );
 			exit();
 
 		}
 	}
 
+}
+
+/**
+ * Download the file from the server.
+ *
+ * @since BuddyBoss 2.3.80
+ *
+ * @param string $file_path File absolute path.
+ * @param string $file_name File name.
+ *
+ * @return void
+ */
+function bb_document_force_download( $file_path, $file_name ) {
+	$chunk_size = apply_filters( 'bb_document_download_chunk_size', 4096 ); // Chunk size in bytes.
+
+	header( 'Expires: 0' );
+	header( 'Cache-Control: must-revalidate' );
+	header( 'Pragma: public' );
+	header( 'Content-Type: application/octet-stream' );
+	header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
+	header( 'Content-Length: ' . filesize( $file_path ) );
+
+	$handle = fopen( $file_path, 'rb' );
+	while ( ! feof( $handle ) ) {
+		echo fread( $handle, $chunk_size );
+		flush();
+	}
+	fclose( $handle );
 }
 
 function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {

@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
+#[\AllowDynamicProperties]
 class BP_Groups_Group {
 
 	/**
@@ -308,7 +309,11 @@ class BP_Groups_Group {
 			$this->slug = groups_check_slug( $this->slug );
 		}
 
+		$old_group_name = '';
 		if ( ! empty( $this->id ) ) {
+			// Get the group name from the database.
+			$old_group_name = bp_get_group_name( groups_get_group( $this->id ) );
+
 			$sql = $wpdb->prepare(
 				"UPDATE {$bp->groups->table_name} SET
 					creator_id = %d,
@@ -363,6 +368,10 @@ class BP_Groups_Group {
 
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
+		} elseif ( ! empty( $old_group_name ) && $this->name !== $old_group_name ) {
+			if ( bb_core_get_first_character( $old_group_name ) !== bb_core_get_first_character( $this->name ) ) {
+				bb_delete_default_group_png_avatar( array( $this->id ) );
+			}
 		}
 
 		/**
@@ -394,10 +403,12 @@ class BP_Groups_Group {
 
 		// Fetch the user IDs of all the members of the group.
 		$user_ids    = BP_Groups_Member::get_group_member_ids( $this->id );
-		$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
+		if ( ! empty( $user_ids ) ) {
+			$user_id_str = esc_sql( implode( ',', wp_parse_id_list( $user_ids ) ) );
 
-		// Modify group count usermeta for members.
-		$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+			// Modify group count usermeta for members.
+			$wpdb->query( "UPDATE {$wpdb->usermeta} SET meta_value = meta_value - 1 WHERE meta_key = 'total_group_count' AND user_id IN ( {$user_id_str} )" );
+		}
 
 		// Now delete all group member entries.
 		BP_Groups_Member::delete_all( $this->id );
@@ -421,22 +432,20 @@ class BP_Groups_Group {
 			return false;
 		}
 
+		$wp_filesystem = bb_wp_filesystem();
+
 		// Delete group avatars.
 		$upload_path = bp_core_avatar_upload_path();
-		if ( function_exists( 'system' ) ) {
-			system( 'rm -rf ' . escapeshellarg( $upload_path . '/group-avatars/' . $this->id ) );
-		} else {
-			bp_core_remove_temp_directory( $upload_path . '/group-avatars/' . $this->id );
-		}
+		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/' . $this->id ), true );
 
 		// Delete group avatars.
 		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
 		$type_dir                   = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
-		if ( function_exists( 'system' ) ) {
-			system( 'rm -rf ' . escapeshellarg( $type_dir . 'groups/' . $this->id ) );
-		} else {
-			bp_core_remove_temp_directory( $type_dir . 'groups/' . $this->id );
-		}
+		$wp_filesystem->delete( trailingslashit( $type_dir . 'groups/' . $this->id ), true );
+
+		// Delete group default PNG avatars.
+		$upload_path = bp_core_avatar_upload_path();
+		$wp_filesystem->delete( trailingslashit( $upload_path . '/group-avatars/default/' . $this->id ), true );
 
 		return true;
 	}
@@ -1056,6 +1065,8 @@ class BP_Groups_Group {
 	 * @since BuddyPress 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
 	 * @since BuddyPress 2.8.0 Changed `$search_terms` parameter handling and added `$search_columns` parameter.
 	 * @since BuddyPress 2.9.0 Added `$slug` parameter.
+	 * @since BuddyPress 10.0.0 Added `$date_query` parameter.
+	 * @since BuddyBoss 2.3.90 `$date_query` parameter.
 	 *
 	 * @param array $args {
 	 *     Array of parameters. All items are optional.
@@ -1092,6 +1103,9 @@ class BP_Groups_Group {
 	 *                                            excluded from results.
 	 *     @type array        $meta_query         Optional. An array of meta_query conditions.
 	 *                                            See {@link WP_Meta_Query::queries} for description.
+	 *     @type array        $date_query         Optional. Filter results by group last activity date. See first
+	 *                                            paramter of {@link WP_Date_Query::__construct()} for syntax. Only
+	 *                                            applicable if $type is either 'newest' or 'active'.
 	 *     @type array|string $value              Optional. Array or comma-separated list of group IDs. Results
 	 *                                            will be limited to groups within the list. Default: false.
 	 *     @type array|string $parent_id          Optional. Array or comma-separated list of group IDs. Results
@@ -1156,6 +1170,7 @@ class BP_Groups_Group {
 			'group_type__in'     => '',
 			'group_type__not_in' => '',
 			'meta_query'         => false,
+			'date_query'         => false,
 			'include'            => false,
 			'parent_id'          => null,
 			'update_meta_cache'  => true,
@@ -1208,7 +1223,15 @@ class BP_Groups_Group {
 		) {
 			// Exclude all other hidden group.
 			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", ( ! empty( $r['user_id'] ) ? $r['user_id'] : bp_loggedin_user_id() ) );
-		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() ) ) {
+		} elseif (
+			(
+				empty( $r['show_hidden'] ) ||
+				(
+					! empty( $r['show_hidden'] ) &&
+					! is_user_logged_in()
+				)
+			) && ! bb_is_wp_cli()
+		) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 
@@ -1360,6 +1383,15 @@ class BP_Groups_Group {
 			$orderby = 'date_created';
 		}
 
+		// Process date query for 'date_created' and 'last_activity' sort.
+		if ( 'date_created' === $orderby || 'last_activity' === $orderby ) {
+			$date_query_sql = BP_Date_Query::get_where_sql( $r['date_query'], self::convert_orderby_to_order_by_term( $orderby ) );
+
+			if ( ! empty( $date_query_sql ) ) {
+				$where_conditions['date'] = $date_query_sql;
+			}
+		}
+
 		// Sanitize 'order'.
 		$order = bp_esc_sql_order( $order );
 
@@ -1509,7 +1541,7 @@ class BP_Groups_Group {
 	}
 
 	/**
-	 * Get the SQL for the 'meta_query' param in BP_Activity_Activity::get()
+	 * Get the SQL for the 'meta_query' param in BP_Groups_Group::get()
 	 *
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses.
@@ -1828,7 +1860,38 @@ class BP_Groups_Group {
 		$record    = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $record ) {
-			$record = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->groups->table_name_members} WHERE group_id = %d AND is_confirmed = 1 AND is_banned = 0", $group_id ) );
+			$select_sql = "SELECT COUNT(m.id) FROM {$bp->groups->table_name_members} m";
+			$join_sql   = '';
+
+			// Where conditions.
+			$where_conditions = array();
+			$where_conditions['where'] = "m.group_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
+
+			/**
+			 * Filters the MySQL WHERE conditions for the group members count.
+			 *
+			 * @since BuddyBoss 2.3.60
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $ud_name          moderation type
+			 */
+			$where_conditions = apply_filters( 'bb_group_member_count_where_sql', $where_conditions, 'user_id' );
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			/**
+			 * Filters the MySQL JOIN conditions for the group members count.
+			 *
+			 * @since BuddyBoss 2.3.60
+			 *
+			 * @param array  $join_sql Current conditions for MySQL JOIN statement.
+			 * @param string $ud_name  moderation type
+			 */
+			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
+
+			$sql    = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id );
+			$record = $wpdb->get_var( $sql );
 			wp_cache_set( $cache_key, $record, 'bp_groups' );
 		}
 
@@ -1852,9 +1915,9 @@ class BP_Groups_Group {
 		$ids = array();
 
 		$ids['all']     = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name}" );
-		$ids['public']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'public'" );
-		$ids['private'] = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'private'" );
-		$ids['hidden']  = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} WHERE status = 'hidden'" );
+		$ids['public']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'public' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['private'] = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'private' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
+		$ids['hidden']  = $wpdb->get_col( "SELECT g.id FROM {$bp->groups->table_name} g JOIN {$bp->groups->table_name_groupmeta} gm ON g.id = gm.group_id WHERE g.status = 'hidden' AND gm.meta_key = 'total_member_count' AND gm.meta_value > 0" );
 
 		return $ids;
 	}

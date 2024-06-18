@@ -70,6 +70,15 @@ class BP_Core_Suspend {
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}
+
+		/**
+		 * Handle notification.
+		 *
+		 * @since BuddyBoss 2.0.3
+		 */
+		if ( bp_is_active( 'notifications' ) ) {
+			new BP_Suspend_Notification();
+		}
 	}
 
 	/**
@@ -102,6 +111,10 @@ class BP_Core_Suspend {
 			unset( $args['blocked_user'] );
 		}
 
+		if ( isset( $args['parent_id'] ) ) {
+			unset( $args['parent_id'] );
+		}
+
 		/**
 		 * Hook fire before item suspended
 		 *
@@ -117,6 +130,14 @@ class BP_Core_Suspend {
 				'item_id'   => $args['item_id'],
 				'item_type' => $args['item_type'],
 			);
+
+			if ( empty( $args['user_report'] ) ) {
+				unset( $args['user_report'] );
+			}
+
+			if ( empty( $args['report'] ) ) {
+				unset( $args['report'] );
+			}
 
 			$wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 		} else {
@@ -268,6 +289,10 @@ class BP_Core_Suspend {
 		if ( ! empty( $args['blocked_user'] ) ) {
 			$member = $args['blocked_user'];
 			unset( $args['blocked_user'] );
+		}
+
+		if ( isset( $args['parent_id'] ) ) {
+			unset( $args['parent_id'] );
 		}
 
 		/**
@@ -423,14 +448,14 @@ class BP_Core_Suspend {
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
 
-			static $cache = array();
+			$blocked_content_sql = $wpdb->prepare( "SELECT s.id FROM {$bp->moderation->table_name} as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type );
 
-			if ( ! isset( $cache[ $item_id . '_' . $item_type ] ) ) {
-				$result = $wpdb->get_var( $wpdb->prepare( "SELECT s.id FROM {$bp->table_prefix}bp_suspend as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type ) ); // phpcs:ignore
-
-				$cache[ $item_id . '_' . $item_type ] = ! empty( $result ) ? $result : false;
+			$cached = bp_core_get_incremented_cache( $blocked_content_sql, 'bp_moderation' );
+			if ( false === $cached ) {
+				$result = $wpdb->get_var( $blocked_content_sql );
+				bp_core_set_incremented_cache( $blocked_content_sql, 'bp_moderation', $result );
 			} else {
-				$result = $cache[ $item_id . '_' . $item_type ];
+				$result = $cached;
 			}
 
 			return ! empty( $result );

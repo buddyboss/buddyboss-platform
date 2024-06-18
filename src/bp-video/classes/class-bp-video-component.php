@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
+#[\AllowDynamicProperties]
 class BP_Video_Component extends BP_Component {
 
 	/**
@@ -149,6 +150,9 @@ class BP_Video_Component extends BP_Component {
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
 
+		$this->published_status = 'published';
+		$this->scheduled_status = 'scheduled';
+
 		// Global tables for video component.
 		$global_tables = array(
 			'table_name'        => $bp->table_prefix . 'bp_media',
@@ -182,7 +186,7 @@ class BP_Video_Component extends BP_Component {
 
 		// Perform a daily tidy up.
 		if ( ! wp_next_scheduled( 'bp_video_delete_orphaned_attachments_hook' ) ) {
-			wp_schedule_event( time(), 'daily', 'bp_video_delete_orphaned_attachments_hook' );
+			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bp_video_delete_orphaned_attachments_hook' );
 		}
 
 		add_action( 'bp_video_delete_orphaned_attachments_hook', 'bp_video_delete_orphaned_attachments' );
@@ -224,7 +228,7 @@ class BP_Video_Component extends BP_Component {
 				$nav_name .= sprintf(
 					' <span class="%s">%s</span>',
 					esc_attr( $class ),
-					bp_core_number_format( $count )
+					$count
 				);
 			} else {
 				$nav_name = __( 'Videos', 'buddyboss' );

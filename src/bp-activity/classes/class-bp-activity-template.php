@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Activity_Template {
 
 	/**
@@ -107,6 +108,22 @@ class BP_Activity_Template {
 	public $full_name;
 
 	/**
+	 *  Pinned activity id.
+	 *
+	 * @since BuddyPress 2.4.60
+	 * @var int
+	 */
+	public $pinned_id;
+
+	/**
+	 *  Pinned activity scope.
+	 *
+	 * @since BuddyPress 2.4.60
+	 * @var string
+	 */
+	public $pinned_scope;
+
+	/**
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same
@@ -185,8 +202,11 @@ class BP_Activity_Template {
 			'show_hidden'       => false,
 			'spam'              => 'ham_only',
 			'update_meta_cache' => true,
+			'pin_type'          => '',
+			'status'            => bb_get_activity_published_status(),
 		);
-		$r        = wp_parse_args( $args, $defaults );
+		$r        = bp_parse_args( $args, $defaults );
+
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
@@ -197,7 +217,7 @@ class BP_Activity_Template {
 		$this->disable_blogforum_replies = (bool) bp_core_get_root_option( 'bp-disable-blogforum-comments' );
 
 		// Get an array of the logged in user's favorite activities.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_activities', true );
+		$this->my_favs = bb_activity_get_user_reacted_item_ids( bp_loggedin_user_id() );
 
 		// Fetch specific activity items based on ID's.
 		if ( ! empty( $include ) ) {
@@ -215,6 +235,7 @@ class BP_Activity_Template {
 					'spam'              => $spam,
 					'scope'             => $scope,
 					'update_meta_cache' => $update_meta_cache,
+					'status'            => $status,
 				)
 			);
 
@@ -240,9 +261,29 @@ class BP_Activity_Template {
 					'in'                => $in,
 					'spam'              => $spam,
 					'update_meta_cache' => $update_meta_cache,
+					'pin_type'          => $pin_type,
+					'status'            => $status,
 				)
 			);
+
 		}
+
+		$pinned_id = 0;
+		if ( 'group' === $pin_type ) {
+			if (
+				! empty( $filter['primary_id'] ) &&
+				! empty( $filter['object'] ) &&
+				'groups' === $filter['object']
+			) {
+				$group_id           = $filter['primary_id'];
+				$pinned_id          = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
+				$this->pinned_scope = 'group';
+			}
+		} elseif ( 'activity' === $pin_type ) {
+			$pinned_id          = bp_get_option( 'bb_pinned_post', 0 );
+			$this->pinned_scope = 'activity';
+		}
+		$this->pinned_id = $pinned_id;
 
 		// The total_activity_count property will be set only if a
 		// 'count_total' query has taken place.

@@ -121,6 +121,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				" (
 					(
 						d.title LIKE %s
+						OR d.description LIKE %s
 						OR dm.meta_key = 'extension'
 						AND dm.meta_value LIKE %s
 						OR dm.meta_key = 'file_name'
@@ -134,6 +135,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
 				')
 				)',
+				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%'

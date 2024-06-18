@@ -70,14 +70,13 @@ function bp_nouveau_ajax_xprofile_get_field() {
 
 	$bp                        = buddypress();
 	$member_type_id            = filter_input( INPUT_GET, 'type', FILTER_VALIDATE_INT );
-	$existing_fields           = filter_input( INPUT_GET, 'fields', FILTER_SANITIZE_STRING );
-	$existing_fields_exclude   = filter_input( INPUT_GET, 'fields', FILTER_SANITIZE_STRING );
-	$existing_fields_fixed_ids = filter_input( INPUT_GET, 'fixedIds', FILTER_SANITIZE_STRING );
-	$prevId                    = filter_input( INPUT_GET, 'prevId', FILTER_SANITIZE_STRING );
+	$existing_fields           = bb_filter_input_string( INPUT_GET, 'fields' );
+	$existing_fields_exclude   = bb_filter_input_string( INPUT_GET, 'fields' );
+	$existing_fields_fixed_ids = bb_filter_input_string( INPUT_GET, 'fixedIds' );
+	$prevId                    = bb_filter_input_string( INPUT_GET, 'prevId' );
 	$member_type_key           = bp_get_member_type_key( $member_type_id );
 	$prev_type_key             = bp_get_member_type_key( $prevId );
 	$existing_fields_arr       = explode( ',', $existing_fields );
-	$tinymce_added             = filter_input( INPUT_GET, 'tinymce', FILTER_VALIDATE_INT );
 	$signup_group_id           = bp_xprofile_base_group_id();
 
 	//FOr prev data
@@ -116,25 +115,6 @@ function bp_nouveau_ajax_xprofile_get_field() {
 
 	ob_start();
 
-	if ( 0 === $tinymce_added ) {
-		$check_editor = array();
-
-		foreach ( $fixed_fields_arr as $id ) {
-			$fields = xprofile_get_field( $id, null, false );
-			if ( isset( $fields->type ) && 'textarea' === $fields->type ) {
-				$check_editor[] = $id;
-			}
-		}
-
-		if ( empty( $check_editor ) ) {
-			$tinymce_added = 1;
-			?>
-			<script type='text/javascript' src='<?php echo esc_url( site_url( '/' ) . WPINC . '/js/tinymce/tinymce.min.js' ); ?>'></script>
-			<?php
-		}
-
-	}
-
 	if ( bp_has_profile( "profile_group_id=$signup_group_id&exclude_fields=$existing_fields_exclude&include_fields=$include_fields" ) ) :
 
 		while ( bp_profile_groups() ) : bp_the_profile_group();
@@ -157,7 +137,6 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$response               = array();
 	$response['field_ids']  = $existing_fields;
 	$response['field_html'] = $content;
-	$response['field_tiny'] = $tinymce_added;
 
 
 	wp_send_json_success( $response );

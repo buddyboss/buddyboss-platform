@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Message Thread Template Class
  */
+#[\AllowDynamicProperties]
 class BP_Messages_Thread_Template {
 
 	/**

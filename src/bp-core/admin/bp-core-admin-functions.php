@@ -367,10 +367,11 @@ function bp_core_activation_notice() {
 	$dupe_names = array();
 	$page_ids   = bp_core_get_directory_page_ids();
 	$dupes      = array_diff_assoc( $page_ids, array_unique( $page_ids ) );
+	$bp_pages   = bp_core_get_directory_pages();
 
 	if ( ! empty( $dupes ) ) {
 		foreach ( array_keys( $dupes ) as $dupe_component ) {
-			$dupe_names[] = $bp->pages->{$dupe_component}->title;
+			$dupe_names[] = $bp_pages->{$dupe_component}->title;
 		}
 
 		// Make sure that there are no duplicate duplicates :).
@@ -379,7 +380,7 @@ function bp_core_activation_notice() {
 
 	// If there are duplicates, post a message about them.
 	if ( ! empty( $dupe_names ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings' ), 'admin.php' ) );
+		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
 			$notice = sprintf(
 				'%1$s',
@@ -681,16 +682,21 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-integrations',
 		),
 		'4' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-upgrade' ), 'admin.php' ) ),
+			'name'  => __( 'Upgrade', 'buddyboss' ),
+			'class' => 'bb-upgrade',
+		),
+		'5' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
 			'name'  => __( 'Tools', 'buddyboss' ),
 			'class' => 'bp-tools',
 		),
-		'5' => array(
+		'6' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
 			'name'  => __( 'Help', 'buddyboss' ),
 			'class' => 'bp-help',
 		),
-		'6' => array(
+		'7' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
@@ -736,7 +742,7 @@ function bp_core_get_admin_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_setting_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-settings',
@@ -778,9 +784,9 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 		$tab_class  = $is_current ? $active_class : $idle_class;
 
 		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li class="' . esc_attr( sanitize_key( $tab_data['name'] ) ) . '"><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
 		}
 
 		$i = $i + 1;
@@ -897,7 +903,7 @@ function bp_core_get_admin_integration_active_tab_object() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_integrations_url( $tab, $args = array() ) {
-	$args = wp_parse_args(
+	$args = bp_parse_args(
 		$args,
 		array(
 			'page' => 'bp-integrations',
@@ -1240,19 +1246,19 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 	?>
 
 	<div id="buddypress-menu" class="posttypediv">
-		<h4><?php _e( 'Logged-In', 'buddyboss' ); ?></h4>
-		<p><?php _e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-In', 'buddyboss' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in.', 'buddyboss' ); ?></p>
 
-		<div id="tabs-panel-posttype-<?php echo $post_type_name; ?>-loggedin" class="tabs-panel tabs-panel-active">
+		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedin" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedin" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $tabs['loggedin']['pages'] ), 0, (object) $args ); ?>
 			</ul>
 		</div>
 
-		<h4><?php _e( 'Logged-Out', 'buddyboss' ); ?></h4>
-		<p><?php _e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss' ); ?></p>
+		<h4><?php esc_html_e( 'Logged-Out', 'buddyboss' ); ?></h4>
+		<p><?php esc_html_e( '<em>Logged-Out</em> links are not visible to users who are logged in.', 'buddyboss' ); ?></p>
 
-		<div id="tabs-panel-posttype-<?php echo $post_type_name; ?>-loggedout" class="tabs-panel tabs-panel-active">
+		<div id="tabs-panel-posttype-<?php echo esc_attr( $post_type_name ); ?>-loggedout" class="tabs-panel tabs-panel-active">
 			<ul id="buddypress-menu-checklist-loggedout" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $tabs['loggedout']['pages'] ), 0, (object) $args ); ?>
 			</ul>
@@ -1710,6 +1716,7 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-redirection', __( 'Redirection', 'buddyboss' ), 'bb_member_type_redirection_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-label-color', esc_html__( 'Label Colors', 'buddyboss' ), 'bb_member_type_labelcolor_metabox', null, 'normal', 'high' );
 	if ( 'add' != $screen->action ) {
 		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
@@ -1781,9 +1788,10 @@ function bp_member_type_labels_metabox( $post ) {
  */
 function bp_member_type_permissions_metabox( $post ) {
 
-	$meta                 = get_post_custom( $post->ID );
-	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
-	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
+	$meta                               = get_post_custom( $post->ID );
+	$enable_filter                      = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default.
+	$enable_profile_field               = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default.
+	$allow_messaging_without_connection = isset( $meta['_bp_member_type_allow_messaging_without_connection'] ) ? $meta['_bp_member_type_allow_messaging_without_connection'][0] : 0; // disabled by default.
 	?>
 	<!-- accesslint:ignore -->
 	<table class="widefat bp-postbox-table">
@@ -1864,6 +1872,31 @@ function bp_member_type_permissions_metabox( $post ) {
 		</tr>
 		</tbody>
 	</table>
+	<?php
+
+		if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
+	?>
+		<table class="widefat bp-postbox-table">
+			<thead>
+			<tr>
+				<th scope="col" colspan="2">
+					<?php _e( 'Messaging', 'buddyboss' ); ?>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
+						value='1' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
+					<?php _e( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ); ?>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	<?php
+		}
+	?>
 	<!-- accesslint:endignore -->
 	<?php
 	if ( bp_is_active( 'groups' ) && false === bp_restrict_group_creation() ) {
@@ -2001,7 +2034,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registerd and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
+						<?php _e( 'Automatically add members of this profile type to the following group types, after they have registered and activated their account. This setting does not apply to hidden groups.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
@@ -2218,6 +2251,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; // default active.
 	$label_color          = isset( $data['label_color'] ) ? $data['label_color'] : '';
 
+	$allow_messaging_without_connection = isset( $data['allow_messaging_without_connection'] ) ? absint( $data['allow_messaging_without_connection'] ) : 0; // default inactive.
+
 	$data['wp_roles'] = array_filter( $data['wp_roles'] ); // Remove empty value from wp_roles array.
 	$wp_roles         = isset( $data['wp_roles'] ) ? $data['wp_roles'] : '';
 
@@ -2251,6 +2286,32 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );
 	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
 	update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
+	update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
+
+	// Redirections.
+	$login_redirection         = $data['login_redirection'] ?? '';
+	$custom_login_redirection  = $data['custom_login_redirection'] ?? '';
+	$logout_redirection        = $data['logout_redirection'] ?? '';
+	$custom_logout_redirection = $data['custom_logout_redirection'] ?? '';
+
+	update_post_meta( $post_id, '_bp_member_type_login_redirection', $login_redirection );
+	update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
+	update_post_meta( $post_id, '_bp_member_type_logout_redirection', $logout_redirection );
+	update_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', $custom_logout_redirection );
+
+	// Update all profile types which are allowed to message without connections.
+	$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
+
+	if ( true === (bool) $allow_messaging_without_connection ) {
+		$profile_types_allowed_messaging[ $get_existing ] = true;
+	} elseif (
+		! empty( $profile_types_allowed_messaging ) &&
+		array_key_exists( $get_existing, $profile_types_allowed_messaging )
+	) {
+		unset( $profile_types_allowed_messaging[ $get_existing ] );
+	}
+
+	update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -2274,7 +2335,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 		if ( isset( $type_term->term_id ) ) {
 			// Fetch all the users which associated this profile type.
-			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
+			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
 			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 				if ( in_array( get_current_user_id(), $get_user_ids ) ) {
 					$bp_prevent_data_update = true;
@@ -2433,7 +2494,7 @@ add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
 function bp_register_member_type_import_submenu_page() {
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		__( 'Repair Community', 'buddyboss' ),
 		__( 'Repair Community', 'buddyboss' ),
 		'manage_options',
@@ -2442,7 +2503,7 @@ function bp_register_member_type_import_submenu_page() {
 	);
 
 	add_submenu_page(
-		null,   // or 'options.php'.
+		'',
 		'Import Member Types',
 		'Import Member Types',
 		'manage_options',
@@ -3280,7 +3341,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 					'admin.php'
 				)
 			),
-			'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
+			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
@@ -3324,15 +3385,20 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  * Get label with platform pro notice if the platform is not active or not validate.
  *
  * @since BuddyBoss 1.9.1
+ * @since BuddyBoss 2.5.20 Added support for type.
+ *
+ * @param string $type Type to check.
  *
  * @return string
  */
-function bb_get_pro_label_notice() {
-	static $bb_pro_notice = '';
+function bb_get_pro_label_notice( $type = 'default' ) {
+	static $retval = array();
 
-	if ( '' !== $bb_pro_notice ) {
-		return $bb_pro_notice;
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
 	}
+
+	$bb_pro_notice = '';
 
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
@@ -3341,7 +3407,31 @@ function bb_get_pro_label_notice() {
 			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} else {
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '2.4.50', '<' ) &&
+		! empty( $type ) &&
+		'reaction' === $type
+	) {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Update', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' ) &&
+		! empty( $type ) &&
+		'schedule_posts' === $type
+	) {
+		$bb_pro_notice = sprintf(
+			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
+			esc_html__( 'Update', 'buddyboss' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
+			esc_html__( 'to unlock', 'buddyboss' )
+		);
+	} elseif( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),
@@ -3350,6 +3440,8 @@ function bb_get_pro_label_notice() {
 		);
 	}
 
+	$retval[ $type ] = $bb_pro_notice;
+
 	return $bb_pro_notice;
 }
 
@@ -3357,14 +3449,17 @@ function bb_get_pro_label_notice() {
  * Get class for buddyboss pro settings fields.
  *
  * @since BuddyBoss 1.9.1
+ * @since BuddyBoss 2.5.20 Added support for type.
+ *
+ * @param string $type Type to check.
  *
  * @return string
  */
-function bb_get_pro_fields_class() {
-	static $pro_class = '';
+function bb_get_pro_fields_class( $type = 'default' ) {
+	static $retval = array();
 
-	if ( '' !== $pro_class ) {
-		return $pro_class;
+	if ( isset( $retval[ $type ] ) ) {
+		return $retval[ $type ];
 	}
 
 	$pro_class = 'bb-pro-inactive';
@@ -3375,6 +3470,26 @@ function bb_get_pro_fields_class() {
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$pro_class = 'bb-pro-inactive';
 	}
+
+	if (
+		! empty( $type ) &&
+		'reaction' === $type &&
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+	) {
+		$pro_class = 'bb-pro-inactive';
+	}
+
+	if (
+		! empty( $type ) &&
+		'schedule_posts' === $type &&
+		function_exists( 'bb_platform_pro' ) &&
+		version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+	) {
+		$pro_class = 'bb-pro-inactive';
+	}
+
+	$retval[ $type ] = $pro_class;
 
 	return $pro_class;
 }
@@ -3454,3 +3569,309 @@ function bb_member_type_labelcolor_metabox( $post ) {
 	<?php
 }
 
+/**
+ * Added new meta box for member types redirection settings.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param Object $post Post data object.
+ */
+function bb_member_type_redirection_metabox( $post ) {
+	$login_redirection         = get_post_meta( $post->ID, '_bp_member_type_login_redirection', true );
+	$custom_login_redirection  = get_post_meta( $post->ID, '_bp_member_type_custom_login_redirection', true );
+	$logout_redirection        = get_post_meta( $post->ID, '_bp_member_type_logout_redirection', true );
+	$custom_logout_redirection = get_post_meta( $post->ID, '_bp_member_type_custom_logout_redirection', true );
+	?>
+	<table class="form-table">
+		<tbody>
+			<tr class="child-no-padding-first">
+				<th scope="row"></th>
+				<td>
+					<?php
+					printf(
+						'<p class="description">%s</p>',
+						sprintf(
+							/* translators:  */
+							esc_html__( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in %s', 'buddyboss' ),
+							sprintf(
+								'<a href="%s">%s</a>',
+								esc_url(
+									add_query_arg(
+										array(
+											'page' => 'bp-settings#bb_redirection',
+										),
+										admin_url( 'admin.php' )
+									)
+								),
+								esc_html__( 'Buddyboss - Settings - General', 'buddyboss' )
+							)
+						)
+					);
+					?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">After Login</th>
+				<td>
+					<select name="bp-member-type[login_redirection]" id="bb-login-redirection">
+						<option value="" <?php selected( '', $login_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+						<option value="0" <?php selected( 0, $login_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+						<?php
+						$pages = bb_get_published_pages();
+						foreach ( $pages as $id => $title ) {
+							?>
+							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $login_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+					<p class="bb-description">
+						<?php
+						esc_html_e(
+							'Select a page or external link to redirect your members to after they login.',
+							'buddyboss'
+						)
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr class="child-no-padding login-redirection-text-box" style="display: none;">
+				<th scope="row"></th>
+				<td>
+					<input style="width: 89%;" id="bb-custom-login-redirection" name="bp-member-type[custom_login_redirection]" type="text" value="<?php echo esc_url( $custom_login_redirection ); ?>">
+					<p class="bb-description">
+						<?php
+						esc_html_e(
+							'Select a page or external link to redirect your members to after they login.',
+							'buddyboss'
+						)
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">After Logout</th>
+				<td>
+					<select name="bp-member-type[logout_redirection]" id="bb-logout-redirection">
+						<option value="" <?php selected( '', $logout_redirection ); ?>><?php esc_html_e( 'Default', 'buddyboss' ); ?></option>
+						<option value="0" <?php selected( 0, $logout_redirection ); ?>><?php esc_html_e( 'Custom URL', 'buddyboss' ); ?></option>
+						<?php
+						$pages = bb_get_published_pages();
+						foreach ( $pages as $id => $title ) {
+							?>
+							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $id, $logout_redirection ); ?>><?php echo esc_html( $title ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+					<p class="bb-description">
+						<?php
+						esc_html_e(
+							'Select a page or external link to redirect your members to after they logout.',
+							'buddyboss'
+						)
+						?>
+					</p>
+				</td>
+			</tr>
+			<tr class="child-no-padding logout-redirection-text-box" style="display: none;">
+			<th scope="row"></th>
+			<td>
+				<input style="width: 89%;" id="bb-custom-logout-redirection" name="bp-member-type[custom_logout_redirection]" type="text" value="<?php echo esc_url( $custom_logout_redirection ); ?>">
+				<p class="bb-description">
+					<?php
+					esc_html_e(
+						'Select a page or external link to redirect your members to after they logout.',
+						'buddyboss'
+					)
+					?>
+				</p>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<?php
+}
+
+/**
+ * Function to check any CPT enabled or disabled. If enabled then its set blog component active.
+ *
+ * @since BuddyBoss 2.5.00
+ *
+ * @return void
+ */
+function bb_cpt_feed_enabled_disabled() {
+	$bp                = buddypress();
+	$active_components = $bp->active_components;
+
+	// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
+	$is_blog_component_active = false;
+
+	// Get all active custom post type.
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+
+	$post_types = bb_feed_post_types();
+
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+
+	foreach ( $post_types as $cpt ) {
+		$enable_blog_feeds = apply_filters( 'bb_enable_blog_feed', isset( $_POST["bp-feed-custom-post-type-$cpt"] ), $cpt );
+
+		if ( $enable_blog_feeds ) {
+			$is_blog_component_active = true;
+		}
+	}
+
+	// Add blogs component to $active_components list.
+	if ( $is_blog_component_active ) {
+		$active_components['blogs'] = '1';
+	} else {
+		unset( $active_components['blogs'] );
+	}
+
+	// Save settings and upgrade schema.
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+
+	$bp->active_components = $active_components;
+	bp_core_install( $bp->active_components );
+
+	// Mapping the component pages in page settings except registration pages.
+	bp_core_add_page_mappings( $bp->active_components, 'keep', false );
+	bp_update_option( 'bp-active-components', $bp->active_components );
+}
+
+
+/**
+ * Register the BuddyBoss Upgrade submenu page.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @param string $active_tab Current tab name.
+ *
+ * return array
+ */
+function bb_core_get_upgrade_settings_admin_tabs( $active_tab = '' ) {
+
+	// Tabs for the BuddyBoss > Tools.
+	$tabs = array(
+		'0' => array(
+			'href' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bb-upgrade',
+						'tab'  => 'bb-upgrade',
+					),
+					'admin.php'
+				)
+			),
+			'name' => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'slug' => 'bb-upgrade',
+		),
+		'1' => array(
+			'href' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bb-upgrade',
+						'tab'  => 'bb-integrations',
+					),
+					'admin.php'
+				)
+			),
+			'name' => __( 'Integrations', 'buddyboss' ),
+			'slug' => 'bb-integrations',
+		),
+	);
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 2.6.30
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bb_core_get_upgrade_admin_tabs', $tabs );
+}
+
+/**
+ * Output the performance tabs in the admin area.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @return void
+ */
+function bb_core_upgrade_admin_tabs() {
+
+	$tabs_html    = '';
+	$idle_class   = '';
+	$active_class = 'current';
+
+	// phpcs:ignore
+	$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyPress 2.6.30
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs = apply_filters( 'bb_core_upgrade_admin_tabs', bb_core_get_upgrade_settings_admin_tabs( $active_tab ) );
+
+	$count = count( array_values( $tabs ) );
+	$i     = 1;
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+
+		$is_current = strtolower( trim( $tab_data['slug'] ) ) === strtolower( trim( $active_tab ) );
+
+		if ( 'bb-upgrade' === $tab_data['slug'] && 'bb-performance-tester' === $active_tab ) {
+			$is_current = true;
+		}
+
+		$tab_class = $is_current ? $active_class : $idle_class;
+		if ( $i === $count ) {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		} else {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		}
+
+		++$i;
+	}
+
+	echo wp_kses_post( $tabs_html );
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyPress 2.6.30
+	 */
+	do_action( 'bb_upgrade_settings_admin_tabs' );
+}
+
+/**
+ * Web performance tester class.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * return object
+ */
+function bb_web_performance_tester() {
+	if ( ! class_exists( 'BB_Performance_Tester' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-performance-tester.php';
+	}
+	static $bb_wpt = null;
+
+	if ( null !== $bb_wpt ) {
+		return $bb_wpt;
+	}
+
+	$bb_wpt = new BB_Performance_Tester();
+
+	return $bb_wpt;
+}

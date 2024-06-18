@@ -66,7 +66,6 @@ add_filter( 'bp_get_new_group_description', 'esc_textarea' );
 add_filter( 'bp_get_total_group_count', 'bp_core_number_format' );
 add_filter( 'bp_get_group_total_for_member', 'bp_core_number_format' );
 add_filter( 'bp_get_group_total_members', 'bp_core_number_format' );
-add_filter( 'bp_get_total_group_count_for_user', 'bp_core_number_format' );
 
 // Activity component integration.
 add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mention_notification_for_non_public_groups', 10, 4 );
@@ -87,8 +86,26 @@ add_filter( 'bp_get_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'bp_get_new_group_name', 'bb_core_remove_unfiltered_html', 99 );
 add_filter( 'groups_group_name_before_save', 'bb_core_remove_unfiltered_html', 99 );
 
+// setup backward compatibilty to retrieve the encoded value from db.
+add_filter( 'groups_group_name_before_save', 'html_entity_decode' );
+add_filter( 'bp_get_group_name', 'html_entity_decode' );
+add_filter( 'bp_get_group_description', 'html_entity_decode' );
+
 // Load Group Notifications.
 add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
+
+add_filter( 'bp_repair_list', 'bb_groups_repair_group_subscriptions', 11 );
+add_action( 'bp_actions', 'bb_group_subscriptions_handler' );
+
+// Filter group count.
+add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_where_sql', 10, 2 );
+
+// Remove from group forums and topics.
+add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
+
+// The user suspends/unsuspends and only when a single group organizer then fire these hooks.
+add_action( 'bp_suspend_hide_user', 'bb_group_remove_suspended_user', 99, 1 );
+add_action( 'bp_suspend_unhide_user', 'bb_group_add_unsuspended_user', 9, 1 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -100,30 +117,28 @@ add_action( 'bp_groups_includes', 'bb_load_groups_notifications' );
  */
 function bp_groups_filter_kses( $content = '' ) {
 
+	$allowed_tags = array();
 	/**
 	 * Note that we don't immediately bail if $content is empty. This is because
 	 * WordPress's KSES API calls several other filters that might be relevant
 	 * to someone's workflow (like `pre_kses`)
 	 */
 
-	// Get allowed tags using core WordPress API allowing third party plugins
-	// to target the specific `buddypress-groups` context.
-	$allowed_tags = wp_kses_allowed_html( 'buddypress-groups' );
-
 	// Add our own tags allowed in group descriptions.
-	$allowed_tags['a']['class']    = array();
-	$allowed_tags['img']           = array();
-	$allowed_tags['img']['src']    = array();
-	$allowed_tags['img']['alt']    = array();
-	$allowed_tags['img']['width']  = array();
-	$allowed_tags['img']['height'] = array();
-	$allowed_tags['img']['class']  = array();
-	$allowed_tags['img']['id']     = array();
-	$allowed_tags['code']          = array();
-	$allowed_tags['ol']            = array();
-	$allowed_tags['ul']            = array();
-	$allowed_tags['li']            = array();
-	$allowed_tags['a']['target']   = array();
+	$allowed_tags['a']           = array();
+	$allowed_tags['a']['href']   = true;
+	$allowed_tags['a']['title']  = true;
+	$allowed_tags['a']['class']  = array();
+	$allowed_tags['a']['target'] = array();
+	$allowed_tags['i']           = array();
+	$allowed_tags['b']           = array();
+	$allowed_tags['strong']      = array();
+	$allowed_tags['em']          = array();
+	$allowed_tags['blockquote']  = array();
+	$allowed_tags['ol']          = array();
+	$allowed_tags['ul']          = array();
+	$allowed_tags['li']          = array();
+	$allowed_tags['code']        = array();
 
 	/**
 	 * Filters the HTML elements allowed for a given context.
@@ -133,6 +148,9 @@ function bp_groups_filter_kses( $content = '' ) {
 	 * @param string $allowed_tags Allowed tags, attributes, and/or entities.
 	 */
 	$tags = apply_filters( 'bp_groups_filter_kses', $allowed_tags );
+
+	// Convert HTML entities to their corresponding characters.
+	$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );
@@ -172,7 +190,7 @@ add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_groups_maybe_load_men
  * @param BP_Activity_Activity $activity  Activity object.
  * @return bool
  */
-function bp_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, BP_Activity_Activity $activity ) {
+function bp_groups_disable_at_mention_notification_for_non_public_groups( $send, $usernames, $user_id, $activity ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.
 	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
 		return $send;
@@ -411,7 +429,13 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		$group = groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
-		if ( ! empty( $group ) && groups_is_user_mod( get_current_user_id(), $activity->item_id ) ) {
+		if (
+			! empty( $group ) &&
+			(
+				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
+				groups_is_user_admin( get_current_user_id(), $activity->item_id )
+			)
+		) {
 			$can_delete = true;
 		}
 	}
@@ -551,6 +575,10 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -574,15 +602,23 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
 		);
 	}
 
 	$retval = array(
 		'relation' => 'OR',
-		$args
+		$args,
 	);
 
 	return $retval;
@@ -645,6 +681,10 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -668,9 +708,17 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
 		);
 	}
 
@@ -746,6 +794,8 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 	if ( bp_is_group() ) {
 		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	} elseif ( ! empty( $filter['group_id'] ) ) {
+		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -764,7 +814,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 			$folder_ids[] = $folder_id;
 			$folders      = array(
-				'column'  => 'parent',
+				'column'  => 'folder_id',
 				'compare' => 'IN',
 				'value'   => $folder_ids,
 			);
@@ -865,6 +915,8 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	if ( bp_is_group() ) {
 		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	} elseif ( ! empty( $filter['group_id'] ) ) {
+		$group_ids = array( 'groups' => array( $filter['group_id'] ) );
 	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -1041,3 +1093,546 @@ function bb_load_group_type_label_custom_css() {
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
+/**
+ * Send subscription notification to users after post an activity.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param string $content     The content of the update.
+ * @param int    $user_id     ID of the user posting the update.
+ * @param int    $group_id    ID of the group being posted to.
+ * @param bool   $activity_id Whether the activity recording succeeded.
+ *
+ * @return void
+ */
+function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) {
+	global $bp_activity_edit;
+
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'group' ) || ! bp_is_active( 'activity' ) ) {
+		return;
+	}
+
+	if ( empty( $user_id ) || empty( $group_id ) || empty( $activity_id ) || $bp_activity_edit ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
+		return;
+	}
+
+	// Return if main activity post not found or activity is media/document/video.
+	if (
+		'groups' !== $activity->component ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		bb_get_activity_published_status() !== $activity->status
+	) {
+		return;
+	}
+
+	$activity_user_id = $activity->user_id;
+	$poster_name      = bp_core_get_user_displayname( $activity_user_id );
+	$activity_link    = bp_activity_get_permalink( $activity_id );
+	$group            = groups_get_group( $group_id );
+	$activity_metas   = bb_activity_get_metadata( $activity_id );
+	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
+	$document_ids     = $activity_metas['bp_document_ids'][0] ?? '';
+	$video_ids        = $activity_metas['bp_video_ids'][0] ?? '';
+	$gif_data         = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
+
+	if ( ! empty( wp_strip_all_tags( $activity->content ) ) ) {
+		$activity_type = __( 'an update', 'buddyboss' );
+	} elseif ( $media_ids ) {
+		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
+		if ( count( $media_ids ) > 1 ) {
+			$activity_type = __( 'some photos', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a photo', 'buddyboss' );
+		}
+	} elseif ( $document_ids ) {
+		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
+		if ( count( $document_ids ) > 1 ) {
+			$activity_type = __( 'some documents', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a document', 'buddyboss' );
+		}
+	} elseif ( $video_ids ) {
+		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
+		if ( count( $video_ids ) > 1 ) {
+			$activity_type = __( 'some videos', 'buddyboss' );
+		} else {
+			$activity_type = __( 'a video', 'buddyboss' );
+		}
+	} elseif ( $gif_data ) {
+		$activity_type = __( 'a gif', 'buddyboss' );
+	} else {
+		$activity_type = __( 'an update', 'buddyboss' );
+	}
+
+	$args = array(
+		'tokens' => array(
+			'activity'      => $activity,
+			'poster.name'   => $poster_name,
+			'activity.url'  => esc_url( $activity_link ),
+			'group.url'     => esc_url( bp_get_group_permalink( $group ) ),
+			'group.name'    => bp_get_group_name( $group ),
+			'activity.type' => $activity_type,
+		),
+	);
+
+	bb_send_notifications_to_subscribers(
+		array(
+			'type'              => 'group',
+			'item_id'           => $group_id,
+			'notification_from' => 'bb_groups_subscribed_activity',
+			'data'              => array(
+				'activity_id'  => $activity_id,
+				'author_id'    => $activity_user_id,
+				'email_tokens' => $args,
+			),
+		)
+	);
+}
+add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+
+/**
+ * Add group subscription repair list item.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param array $repair_list Repair list.
+ *
+ * @return array Repair list items.
+ */
+function bb_groups_repair_group_subscriptions( $repair_list ) {
+	if ( bp_is_active( 'groups' ) ) {
+		$repair_list[] = array(
+			'bb-repair-group-subscription',
+			esc_html__( 'Migrate Group forum and discussion subscriptions data structure to the new subscription flow', 'buddyboss' ),
+			'bb_migrate_group_subscription',
+		);
+	}
+
+	return $repair_list;
+}
+
+/**
+ * Handles the front end subscribing and unsubscribing topics.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @return void|WP_Error
+ */
+function bb_group_subscriptions_handler() {
+	global $wp;
+
+	if ( ! function_exists( 'bb_is_enabled_subscription' ) || ! bb_is_enabled_subscription( 'group' ) ) {
+		return;
+	}
+
+	// Bail if no group ID is passed.
+	if ( empty( $_GET['action'] ) || empty( $_GET['group_id'] ) || empty( $_GET['_wpnonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		return;
+	}
+
+	// Get required data.
+	$user_id  = get_current_user_id();
+	$group_id = (int) sanitize_text_field( wp_unslash( $_GET['group_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	$action   = sanitize_text_field( wp_unslash( $_GET['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	$nonce    = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	$group    = groups_get_group( $group_id );
+
+	// Setup possible get actions.
+	$possible_actions = array(
+		'subscribe',
+		'unsubscribe',
+	);
+
+	// Bail if actions aren't meant for this function.
+	if ( ! in_array( $action, $possible_actions, true ) ) {
+		return;
+	}
+
+	$message = '';
+	$type    = 'error';
+
+	// Check for empty group.
+	if ( empty( $group_id ) || empty( $group->id ) ) {
+		$message = __( 'No group was found! Which group are you subscribing/unsubscribing to?', 'buddyboss' );
+	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription-' . $group_id ) ) {
+		$message = __( 'There was a problem subscribing/unsubscribing from that group!', 'buddyboss' );
+	} elseif ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		$message = __( 'You are not part of that group!', 'buddyboss' );
+	}
+
+	$group_name = sprintf(
+		'<strong>%s</strong>',
+		bp_get_group_name( $group )
+	);
+
+	$is_subscription = bb_is_member_subscribed_group( $group_id, $user_id );
+
+	if ( empty( $message ) && 'subscribe' === $action ) {
+		if ( $is_subscription ) {
+			$message = __( '%s You are already subscribe this group.', 'buddyboss' );
+		} else {
+			$subscription_id = bb_create_subscription(
+				array(
+					'user_id'           => $user_id,
+					'item_id'           => $group_id,
+					'type'              => 'group',
+					'secondary_item_id' => $group->parent_id,
+				)
+			);
+
+			if ( is_wp_error( $subscription_id ) ) {
+				$message = sprintf(
+				/* translators: Group name */
+					__( 'There was a problem subscribing to %s.', 'buddyboss' ),
+					$group_name
+				);
+			} else {
+				$message = sprintf(
+				/* translators: Group name */
+					__( 'You\'ve been subscribed to %s.', 'buddyboss' ),
+					$group_name
+				);
+				$type    = 'success';
+			}
+		}
+	} elseif ( empty( $message ) && 'unsubscribe' === $action ) {
+		if (  ! $is_subscription || ! bb_delete_subscription( $is_subscription ) ) {
+			$message = sprintf(
+			/* translators: Group name */
+				__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
+				$group_name
+			);
+		} else {
+			$message = sprintf(
+			/* translators: Group name */
+				__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
+				$group_name
+			);
+			$type    = 'success';
+		}
+	}
+
+	if ( ! empty( $message ) ) {
+		bp_core_add_message( $message, $type );
+	}
+	wp_safe_redirect( esc_url( trailingslashit( home_url( $wp->request ) ) ) );
+	exit();
+}
+
+/**
+ * Display group header action button when layout is left.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @return void
+ */
+function bb_group_single_left_header_actions() {
+	if ( 'left' === bb_platform_group_header_style() ) {
+		bb_group_single_header_actions();
+	}
+}
+add_action( 'bb_group_single_top_header_action', 'bb_group_single_left_header_actions' );
+
+/**
+ * Display group header action button when layout is center.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @return void
+ */
+function bb_group_single_center_header_actions() {
+	if ( 'centered' === bb_platform_group_header_style() ) {
+		bb_group_single_header_actions();
+	}
+}
+add_action( 'bb_group_single_bottom_header_action', 'bb_group_single_center_header_actions' );
+
+/**
+ * Delete group subscription when delete the group.
+ *
+ * @since BuddyBoss 2.2.8
+ *
+ * @param int $group_id ID of the group.
+ *
+ * @return bool|int True on success, false on failure.
+ */
+function bb_delete_group_subscriptions( $group_id ) {
+	bb_delete_subscriptions_by_item( 'group', $group_id );
+}
+add_action( 'groups_delete_group', 'bb_delete_group_subscriptions' );
+
+/**
+ * Send subscription notification to users after upload media/documents/videos in the group.
+ *
+ * @since BuddyBoss 2.2.9.1
+ *
+ * @param string $content     The content of the update.
+ * @param int    $user_id     ID of the user posting the update.
+ * @param bool   $activity_id Whether the activity recording succeeded.
+ *
+ * @return void
+ */
+function bb_subscription_send_subscribe_group_media_notifications( $content, $user_id, $activity_id ) {
+	global $bp_activity_edit;
+
+	// Bail if subscriptions are turned off.
+	if ( ! bb_is_enabled_subscription( 'group' ) || ! bp_is_active( 'activity' ) ) {
+		return;
+	}
+
+	if ( empty( $user_id ) || empty( $activity_id ) || $bp_activity_edit ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Return if main activity post not found or activity is media/document/video.
+	if (
+		empty( $activity ) ||
+		'groups' !== $activity->component ||
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+	) {
+		return;
+	}
+
+	bb_subscription_send_subscribe_group_notifications( $content, $user_id, $activity->item_id, $activity_id );
+}
+add_action( 'bb_media_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
+add_action( 'bb_document_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
+add_action( 'bb_video_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
+
+/**
+ * Filters the Where SQL statement.
+ *
+ * @since 2.3.4
+ *
+ * @param array $where_conditions Group Where sql.
+ * @param array $args             Query arguments.
+ *
+ * @return mixed Where SQL
+ */
+function bb_groups_count_update_where_sql( $where_conditions, $args = array() ) {
+
+	if ( ! bp_is_user_groups() && bp_is_groups_directory() && true === (bool) bp_enable_group_hide_subgroups() ) {
+		$where_conditions[] = 'g.parent_id = 0';
+	}
+
+	return $where_conditions;
+}
+
+/**
+ * Unsubscribe a user from a group forum topics.
+ *
+ * @since BuddyBoss 2.4.50
+ *
+ * @param int $group_id Group ID
+ * @param int $user_id  User ID
+ *
+ * @return void
+ */
+function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
+
+	// Bail if forum is disabled.
+	if ( ! bp_is_active( 'forums' ) ) {
+		return;
+	}
+
+	// Bail if group id and user id is not set.
+	if ( empty( $group_id ) || empty( $user_id ) ) {
+		return;
+	}
+
+	$forum_ids = bbp_get_group_forum_ids( $group_id );
+	if ( empty( $forum_ids ) ) {
+		return;
+	}
+
+	$notifications = BB_Subscriptions::get(
+		array(
+			'user_id'           => $user_id,
+			'type'              => 'topic',
+			'fields'            => 'item_id',
+			'secondary_item_id' => $forum_ids,
+		)
+	);
+
+	if ( empty( $notifications['subscriptions'] ) ) {
+		return;
+	}
+
+	// Loop through subscribed topics and remove user from this group related topics.
+	foreach ( (array) $notifications['subscriptions'] as $topic_id ) {
+		$topic_forum_id = bbp_get_topic_forum_id( $topic_id );
+		if (
+			bbp_is_forum_private( $topic_forum_id ) ||
+			bbp_is_forum_hidden( $topic_forum_id )
+		) {
+			bbp_remove_user_topic_subscription( $user_id, $topic_id );
+		}
+	}
+}
+
+/**
+ * Remove suspended user and assign site admin as group organizer only when a single group organizer.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_group_remove_suspended_user( $user_id ) {
+	global $wpdb, $bp;
+	if ( empty( $user_id ) ) {
+		return;
+	}
+	// Remove user when suspended.
+	if (
+		function_exists( 'bp_moderation_is_user_suspended' ) &&
+		bp_moderation_is_user_suspended( $user_id )
+	) {
+		$group_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = %d AND is_banned = %d AND is_admin = %d ORDER BY date_modified ASC",
+				$user_id,
+				1,
+				0,
+				1
+			)
+		);
+
+		if ( ! empty( $group_ids ) ) {
+			$admin = get_users(
+				array(
+					'blog_id' => bp_get_root_blog_id(),
+					'fields'  => 'id',
+					'number'  => 1,
+					'orderby' => 'ID',
+					'role'    => 'administrator',
+					'exclude' => array( $user_id ),
+				)
+			);
+			foreach ( $group_ids as $group_id ) {
+				if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
+
+					if ( ! empty( $admin ) ) {
+						if ( bp_is_active( 'messages' ) ) {
+							remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						}
+						add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+
+						groups_join_group( $group_id, $admin[0] );
+
+						remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+						if ( bp_is_active( 'messages' ) ) {
+							add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						}
+						$member = new BP_Groups_Member( $admin[0], $group_id );
+						$member->promote( 'admin' );
+					}
+				}
+
+				BP_Groups_Member::delete( $user_id, $group_id );
+
+				// Update the group meta to store organiser when they suspended.
+				$suspended_users = groups_get_groupmeta( $group_id, 'bb_suspended_users' );
+				if ( ! empty( $suspended_users ) && ! empty( $suspended_users['admins'] ) ) {
+					$suspended_users['admin'][] = $user_id;
+				} else {
+					$suspended_users = array(
+						'admin' => array(
+							$user_id,
+						),
+					);
+				}
+
+				$suspended_users['admin'] = array_unique( $suspended_users['admin'] );
+				groups_update_groupmeta( $group_id, 'bb_suspended_users', $suspended_users );
+			}
+		}
+	}
+}
+
+/**
+ * Re-assign user when unsuspend to the group only when a single group organizer.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_group_add_unsuspended_user( $user_id ) {
+	global $wpdb, $bp;
+
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	// Remove user when un-suspended.
+	$group_metas = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT group_id, meta_value FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s AND meta_value LIKE %s ORDER BY id ASC",
+			'bb_suspended_users',
+			'%' . $wpdb->esc_like( $user_id ) . '%'
+		),
+		ARRAY_A
+	);
+
+	if ( ! empty( $group_metas ) ) {
+		foreach ( $group_metas as $group ) {
+			$group_meta = maybe_unserialize( $group['meta_value'] );
+
+			if ( ! empty( $group_meta ) && ! empty( $group_meta['admin'] ) ) {
+				// Search for the value in the array.
+				$result_index = array_search( $user_id, $group_meta['admin'] );
+
+				// Check if the value was found.
+				if ( false !== $result_index ) {
+
+					// Remove that user from meta.
+					unset( $group_meta['admin'][ $result_index ] );
+
+					if ( bp_is_active( 'messages' ) ) {
+						remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					}
+					add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+
+					// Join this user in the group.
+					groups_join_group( $group['group_id'], $user_id );
+
+					remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+					if ( bp_is_active( 'messages' ) ) {
+						add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					}
+
+					// Promoted to admin.
+					$member = new BP_Groups_Member( $user_id, $group['group_id'] );
+					$member->promote( 'admin' );
+
+					// Update the group meta.
+					groups_update_groupmeta( $group['group_id'], 'bb_suspended_users', $group_meta );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Function will not allow to record group activity when group organizer
+ * unsuspend where group have only one organizer.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return bool Return false.
+ */
+function bb_group_join_groups_record_activity_unsuspend_users() {
+	return false;
+}

@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.7.0
  */
+#[\AllowDynamicProperties]
 class BP_Video_Template {
 
 	/**
@@ -136,48 +137,49 @@ class BP_Video_Template {
 	public function __construct( $args ) {
 
 		$defaults = array(
-			'page'         => 1,
-			'per_page'     => 20,
-			'page_arg'     => 'acpage',
-			'max'          => false,
-			'fields'       => 'all',
-			'count_total'  => false,
-			'sort'         => false,
-			'order_by'     => false,
-			'include'      => false,
-			'exclude'      => false,
-			'search_terms' => false,
-			'scope'        => false,
-			'user_id'      => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'privacy'      => false,
+			'page'             => 1,
+			'per_page'         => 20,
+			'page_arg'         => 'acpage',
+			'max'              => false,
+			'fields'           => 'all',
+			'count_total'      => false,
+			'sort'             => false,
+			'order_by'         => false,
+			'include'          => false,
+			'exclude'          => false,
+			'search_terms'     => false,
+			'scope'            => false,
+			'user_id'          => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'privacy'          => false,
+			'moderation_query' => true,
+			'status'           => bb_video_get_published_status(),
 		);
 
-		$r = wp_parse_args( $args, $defaults );
+		$r = bp_parse_args( $args, $defaults );
 		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		// Get an array of the logged in user's favorite video.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_video', true );
-
 		// Fetch specific video items based on ID's.
 		if ( ! empty( $include ) ) {
 			$this->videos = bp_video_get_specific(
 				array(
-					'video_ids'   => explode( ',', $include ),
-					'max'         => $max,
-					'count_total' => $count_total,
-					'page'        => $this->pag_page,
-					'per_page'    => $this->pag_num,
-					'sort'        => $sort,
-					'order_by'    => $order_by,
-					'user_id'     => $user_id,
-					'album_id'    => $album_id,
-					'privacy'     => $privacy,
+					'video_ids'        => explode( ',', $include ),
+					'max'              => $max,
+					'count_total'      => $count_total,
+					'page'             => $this->pag_page,
+					'per_page'         => $this->pag_num,
+					'sort'             => $sort,
+					'order_by'         => $order_by,
+					'user_id'          => $user_id,
+					'album_id'         => $album_id,
+					'privacy'          => $privacy,
+					'moderation_query' => $moderation_query,
+					'status'           => $status,
 				)
 			);
 
@@ -199,6 +201,7 @@ class BP_Video_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
+					'status'       => $status,
 				)
 			);
 		}

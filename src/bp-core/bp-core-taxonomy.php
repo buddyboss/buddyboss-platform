@@ -148,7 +148,9 @@ function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 		}
 
 		$site_terms = wp_get_object_terms( $object_ids, $site_taxonomies, $args );
-		$retval     = array_merge( $retval, $site_terms );
+		if ( ! is_wp_error( $site_terms ) ) {
+			$retval = array_merge( $retval, $site_terms );
+		}
 
 		if ( $switched ) {
 			restore_current_blog();

@@ -16,6 +16,7 @@ $group_avatar     = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 
+add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );
 ?>
 <div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( bb_platform_group_header_style() ); ?>">
 
@@ -37,6 +38,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 			<div id="item-header-content">
 
 				<?php
+				$current_group_name = bp_get_group_name();
 				if ( function_exists( 'bp_enable_group_hierarchies' ) && bp_enable_group_hierarchies() ) {
 					$parent_id = bp_get_parent_group_id();
 					if ( 0 !== $parent_id ) {
@@ -47,7 +49,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 							<div class="bp-parent-group-title-wrap">
 								<a class="bp-parent-group-title" href="<?php echo esc_url( bp_get_group_permalink( $parent_group ) ); ?>"><?php echo wp_kses_post( bp_get_group_name( $parent_group ) ); ?></a>
 								<i class="bb-icon-l bb-icon-angle-right"></i>
-								<span class="bp-current-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></span>
+								<span class="bp-current-group-title"><?php echo wp_kses_post( $current_group_name ); ?></span>
 							</div>
 						</div>
 						<?php
@@ -56,51 +58,72 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 				?>
 
 				<div class="flex align-items-center bp-group-title-wrap">
-					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
-					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+					<h2 class="bb-bp-group-title"><?php echo wp_kses_post( $current_group_name ); ?></h2>
+					<?php if ( bb_platform_group_headers_element_enable( 'group-type' ) ) : ?>
+						<p class="bp-group-meta bp-group-type">
+							<?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?>
+						</p>
+					<?php endif; ?>
 				</div>
 
-				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : ''; ?>
-				<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
+				<?php
+				do_action( 'bb_group_single_top_header_action' );
 
-				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>
+				echo isset( bp_nouveau_group_meta()->group_type_list ) ? wp_kses_post( bp_nouveau_group_meta()->group_type_list ) : '';
+
+				bp_nouveau_group_hook( 'before', 'header_meta' );
+
+				if ( bp_nouveau_group_has_meta_extra() ) : ?>
 					<div class="item-meta">
 						<?php echo wp_kses_post( bp_nouveau_group_meta()->extra ); ?>
 					</div><!-- .item-meta -->
 				<?php endif; ?>
 
-				<p class="last-activity item-meta">
+				<div class="bp-group-meta-wrap flex align-items-center">
 					<?php
-					printf(
-						/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						esc_html__( 'Active %s', 'buddyboss' ),
-						wp_kses_post( bp_get_group_last_active() )
-					);
-					?>
-				</p>
+					if ( function_exists( 'bp_get_group_status_description' ) && bb_platform_group_headers_element_enable( 'group-privacy' ) ) :
+						?>
+							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
+						<?php
+					endif;
 
-				<?php if ( ! bp_nouveau_groups_front_page_description() && bp_nouveau_group_has_meta( 'description' ) ) : ?>
+					if ( bb_platform_group_headers_element_enable( 'group-activity' ) ) :
+						?>
+						<p class="last-activity item-meta">
+							<?php
+							printf(
+								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+								esc_html__( 'Active %s', 'buddyboss' ),
+								wp_kses_post( bp_get_group_last_active() )
+							);
+							?>
+						</p>
+					<?php endif; ?>
+				</div>
+
+				<?php
+				if (
+					! bp_nouveau_groups_front_page_description() &&
+					bp_nouveau_group_has_meta( 'description' ) &&
+					bb_platform_group_headers_element_enable( 'group-description' )
+				) :
+					?>
 					<div class="group-description">
-						<?php bp_group_description(); ?>
+						<?php bp_group_description_excerpt(); ?>
 					</div><!-- //.group_description -->
+					<?php
+				endif;
+
+				if ( bb_platform_group_headers_element_enable( 'group-type' ) ) :
+					?>
+					<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
 				<?php endif; ?>
 
-				<p class="bp-group-meta bp-group-type"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-
 				<div class="group-actions-wrap" >
-					<?php bp_get_template_part( 'groups/single/parts/header-item-actions' ); ?>
-					<div class="group-actions-absolute">
-						<?php
-						if ( function_exists( 'bp_get_group_status_description' ) ) :
-							?>
-							<p class="highlight bp-group-meta bp-group-status bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip-length="large" data-bp-tooltip="<?php echo esc_attr( bp_get_group_status_description() ); ?>"><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></p>
-							<?php
-						endif;
-
-						bp_nouveau_group_header_buttons();
-						bb_nouveau_group_header_bubble_buttons();
-						?>
-					</div>
+					<?php
+						bp_get_template_part( 'groups/single/parts/header-item-actions' );
+						do_action( 'bb_group_single_bottom_header_action' );
+					?>
 				</div>
 
 			</div><!-- #item-header-content -->
@@ -155,3 +178,5 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 		</div>
 	</transition>
 </div> <!-- .bb-leave-group-popup -->
+<?php
+remove_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerpt_view_more', 99, 2 );

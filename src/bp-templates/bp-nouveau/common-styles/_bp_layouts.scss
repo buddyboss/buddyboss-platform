@@ -286,6 +286,23 @@
 // parent object navigation in a vertical column & sub navs
 // horizontally across the item-body
 
+.bp-single-vert-nav {
+
+	.main-navs {
+
+		ul {
+
+			li {
+				width: 100%;
+
+				a {
+					justify-content: space-between;
+				}
+			}
+		}
+	}
+}
+
 @include medium-up() {
 
 	.bp-single-vert-nav { // described for the #buddypress element
@@ -304,15 +321,14 @@
 			padding-left: 20px;
 		}
 
-		#subnav {
+		.subnav {
 			background: $light-grey;
-			margin: 0;
 			width: auto;
 
 			li {
 
 				@include font-size(16);
-				margin: $marg-sml 0;
+				margin: 0 0 $marg-sml;
 
 				a {
 					border-right: 1px solid $bp-border-dark;
@@ -336,11 +352,11 @@
 			li:last-child {
 
 				a {
-					border: none;
+					border-right: none;
 				}
 			}
 
-		} // close #subnav
+		} // close .subnav
 	}
 
 	.bb-single-main-nav--vertical {
@@ -463,5 +479,15 @@
 
 	a.bb-close-panel i {
 		top: 32px;
+	}
+}
+
+@media screen and (max-width: 782px) {
+
+	#wpadminbar .menupop .menupop > .ab-item {
+
+		.wp-admin-bar-arrow:before {
+			position: initial;
+		}
 	}
 }

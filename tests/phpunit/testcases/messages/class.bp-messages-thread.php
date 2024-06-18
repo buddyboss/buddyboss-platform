@@ -46,18 +46,20 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$message_1 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u1,
 			'recipients' => array( $u2 ),
-			'subject' => 'Foo',
+			'subject' => 'Foo'
 		) );
-		$m1 = BP_Messages_Message::$last_inserted_id;
+
+		$m1 = $message_1->id;
 
 		// create reply
 		$message_2 = self::factory()->message->create_and_get( array(
 			'thread_id' => $message_1->thread_id,
 			'sender_id' => $u1,
 			'recipients' => array( $u2 ),
-			'content' => 'Bar'
+			'content' => 'Bar',
+			'show_log' => true
 		) );
-		$m2 = BP_Messages_Message::$last_inserted_id;
+		$m2 = $message_2->id;
 
 		// now get thread by DESC
 		$thread = new BP_Messages_Thread( $message_1->thread_id, 'DESC' );
@@ -225,7 +227,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		// Cache should be empty.
 		$num_queries = $wpdb->num_queries;
 		$recipients_uncached = $thread->get_recipients();
-		$this->assertEquals( $num_queries + 1, $wpdb->num_queries );
+		$this->assertEquals( $num_queries + 2, $wpdb->num_queries );
 	}
 
 	/**
@@ -523,19 +525,25 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'sender_id' => $u1,
 			'recipients' => array( $u2, $u3 ),
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
+			'content' => get_user_by('id', $u2)->display_name,
 		) );
 
 		$message3 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u1,
 			'recipients' => array( $u2, $u3, $u4 ),
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 3 ),
+			'content' => get_user_by('id', $u2)->display_name,
 		) );
+
+		$this->set_current_user( $u2 );
 
 		$message4 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u2,
 			'recipients' => array( $u3, $u4 ),
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 4 ),
 		) );
+
+		$this->set_current_user( $u1 );
 
 		messages_delete_thread($message->thread_id);
 
@@ -573,12 +581,14 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'sender_id' => $u1,
 			'recipients' => array( $u2 ),
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 1 ),
+			'content' => get_user_by('id', $u2)->display_name
 		) );
 
 		$message2 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u1,
 			'recipients' => array( $u2, $u3 ),
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
+			'content' => get_user_by('id', $u2)->display_name
 		) );
 
 		$message3 = self::factory()->message->create_and_get( array(
@@ -594,6 +604,8 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'content' => get_user_by('id', $u2)->display_name
 		) );
 
+		$this->set_current_user( $u2 );
+
 		$message5 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u2,
 			'recipients' => array( $u3 ),
@@ -606,6 +618,8 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 6 ),
 			'content' => get_user_by('id', $u2)->display_name
 		) );
+
+		$this->set_current_user( $u1 );
 
 		$threads = BP_Messages_Thread::get_current_threads_for_user([
 			'user_id' => $u1,

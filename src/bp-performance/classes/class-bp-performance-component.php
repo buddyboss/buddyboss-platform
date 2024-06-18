@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.7
  */
+#[\AllowDynamicProperties]
 class BP_Performance_Component extends BP_Component {
 
 	/**

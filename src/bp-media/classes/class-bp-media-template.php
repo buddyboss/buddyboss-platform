@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Media_Template {
 
 	/**
@@ -136,48 +137,49 @@ class BP_Media_Template {
 	public function __construct( $args ) {
 
 		$defaults = array(
-			'page'         => 1,
-			'per_page'     => 20,
-			'page_arg'     => 'acpage',
-			'max'          => false,
-			'fields'       => 'all',
-			'count_total'  => false,
-			'sort'         => false,
-			'order_by'     => false,
-			'include'      => false,
-			'exclude'      => false,
-			'search_terms' => false,
-			'scope'        => false,
-			'user_id'      => false,
-			'album_id'     => false,
-			'group_id'     => false,
-			'privacy'      => false,
-			'video'        => false,
+			'page'             => 1,
+			'per_page'         => 20,
+			'page_arg'         => 'acpage',
+			'max'              => false,
+			'fields'           => 'all',
+			'count_total'      => false,
+			'sort'             => false,
+			'order_by'         => false,
+			'include'          => false,
+			'exclude'          => false,
+			'search_terms'     => false,
+			'scope'            => false,
+			'user_id'          => false,
+			'album_id'         => false,
+			'group_id'         => false,
+			'privacy'          => false,
+			'video'            => false,
+			'moderation_query' => true,
+			'status'           => bb_media_get_published_status(),
 		);
-		$r        = wp_parse_args( $args, $defaults );
+		$r        = bp_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		// Get an array of the logged in user's favorite media.
-		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_media', true );
-
 		// Fetch specific media items based on ID's.
 		if ( ! empty( $include ) ) {
 			$this->medias = bp_media_get_specific(
 				array(
-					'media_ids'   => explode( ',', $include ),
-					'max'         => $max,
-					'count_total' => $count_total,
-					'page'        => $this->pag_page,
-					'per_page'    => $this->pag_num,
-					'sort'        => $sort,
-					'order_by'    => $order_by,
-					'user_id'     => $user_id,
-					'album_id'    => $album_id,
-					'privacy'     => $privacy,
+					'media_ids'        => explode( ',', $include ),
+					'max'              => $max,
+					'count_total'      => $count_total,
+					'page'             => $this->pag_page,
+					'per_page'         => $this->pag_num,
+					'sort'             => $sort,
+					'order_by'         => $order_by,
+					'user_id'          => $user_id,
+					'album_id'         => $album_id,
+					'privacy'          => $privacy,
+					'moderation_query' => $moderation_query,
+					'status'           => $status,
 				)
 			);
 
@@ -199,6 +201,7 @@ class BP_Media_Template {
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
 					'video'        => $video,
+					'status'       => $status,
 				)
 			);
 		}

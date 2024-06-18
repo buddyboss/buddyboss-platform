@@ -145,6 +145,10 @@
 
 .activity-post-user-name-container {
 
+	h5 {
+		margin: 0;
+	}
+
 	.activity-post-user-name {
 		line-height: 1;
 	}
@@ -164,7 +168,8 @@
 	background-color: #fff;
 
 	#whats-new-privacy-stage,
-	#bp-activity-privacy-point {
+	#bp-activity-privacy-point,
+	#activity-schedule-section {
 		display: none;
 	}
 }
@@ -233,6 +238,7 @@
 	}
 }
 
+#whats-new-form.media-uploading,
 #whats-new-form.focus-in--empty {
 
 	#aw-whats-new-submit {
@@ -240,6 +246,30 @@
 		cursor: default;
 		pointer-events: none;
 	}
+}
+
+#whats-new-form.activity-form {
+
+	#discard-draft-activity {
+		display: none;
+	}
+}
+
+#whats-new-form.activity-form.has-draft {
+
+	#discard-draft-activity {
+		display: block;
+		padding: 0 8px 0 0;
+	}
+}
+
+#discard-draft-activity {
+	background-color: transparent !important;
+	border: 0 !important;
+	font-size: 15px !important;
+	line-height: 1 !important;
+	text-decoration: none !important;
+	color: inherit !important;
 }
 
 #whats-new-form:not(.focus-in--group) #privacy-status-group-back {
@@ -376,6 +406,19 @@
 		position: relative;
 		display: inline-block;
 		width: 100%;
+
+		&.hide-schedule-button #bb-schedule-posts {
+			display: none;
+		}
+	}
+
+	#whats-new-form.bottom-notice {
+		margin-bottom: 60px;
+
+		#message-feedabck.updated {
+			position: absolute;
+			bottom: -60px;
+		}
 	}
 
 	.whats-new-form-header {
@@ -512,6 +555,9 @@
 		padding: 16px;
 
 		img {
+			max-width: 45px;
+			height: auto;
+			border-radius: 50%;
 			box-shadow: none;
 			display: inline-block;
 			margin-right: 15px;
@@ -569,6 +615,32 @@
 		justify-content: space-between;
 		background-color: $light-grey;
 		border-top: 1px solid $bp-border-color;
+	}
+
+	@media screen and (max-width: 580px) {
+
+		.whats-new-form-footer {
+			flex-direction: column;
+			align-items: center;
+			padding-top: $pad-med;
+		}
+
+		.activity-form.focus-in #activity-form-submit-wrapper {
+			padding: 0 15px;
+		}
+
+		#whats-new-form.activity-form.has-draft #discard-draft-activity {
+			padding: 0 10px 0 5px;
+		}
+
+		.activity-form.focus-in .whats-new-form-header #user-status-huddle {
+			flex-wrap: wrap;
+
+			.activity-post-name-status {
+				max-width: 50%;
+			}
+		}
+
 	}
 
 	#whats-new-toolbar .post-elements-buttons-item.disable,
@@ -656,10 +728,15 @@
 
 		.whats-new-scroll-view {
 			max-height: calc(100vh - 280px);
+			min-height: 150px;
 			overflow: auto;
 			width: 100%;
-			overscroll-behavior: contain; // Prevent page scroll when scrolling the popup
 			padding-bottom: 10px;
+		}
+
+		.focus-in--privacy .whats-new-scroll-view {
+			min-height: auto;
+			padding-bottom: 0;
 		}
 
 		#whats-new-form {
@@ -667,6 +744,14 @@
 			max-width: 90%;
 			margin: auto;
 			box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+
+			@media screen and (max-width: 768px) and (min-height: 550px) {
+
+				.bb-is-mobile & {
+					top: -70px;
+				}
+
+			}
 		}
 
 		.gif-media-search-dropdown {
@@ -839,7 +924,8 @@
 }
 
 #whats-new-toolbar,
-#whats-new-messages-toolbar {
+#whats-new-messages-toolbar,
+#whats-new-formatting-toolbar {
 	position: relative;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -962,6 +1048,7 @@
 .activity-update-form {
 
 	#activity-header h3 {
+		font-size: 20px;
 		margin: 0;
 	}
 
@@ -990,6 +1077,11 @@
 			.medium-editor-action-more-button b:before {
 				content: "\ee5c";
 				font-family: 'bb-icons'; /* stylelint-disable-line */
+				font-weight: 300;
+			}
+
+			.medium-editor-action-more-button.active b:before {
+				color: #000;
 			}
 
 			> ul {
@@ -999,10 +1091,10 @@
 				left: 10px;
 				transform: translateX(-50%);
 				background: #fff;
-				border: 1px solid #e7e9eb;
+				border: 1px solid #e1e3e6;
 				box-sizing: border-box;
-				box-shadow: 0 0 6px rgba(0, 0, 0, 0.1), 0 6px 14px rgba(0, 0, 0, 0.16);
-				border-radius: 3px;
+				box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.13);
+				border-radius: 4px;
 				display: none;
 
 				&:after {
@@ -1024,6 +1116,7 @@
 					-webkit-transition: all linear 0.2s;
 					transition: all linear 0.2s;
 					z-index: 101;
+					display: none;
 				}
 
 				button {
@@ -1146,8 +1239,8 @@
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-	bottom: -24px;
-	left: -15px;
+	bottom: -11px;
+	left: 0;
 }
 
 .activity-update-form .focus-in .medium-editor-toolbar {
@@ -1228,12 +1321,14 @@
 		right: 12px;
 		transform: translate(0, -50%);
 		z-index: 6;
-		width: 20px;
-		height: 20px;
+		width: 15px;
+		height: 15px;
 		cursor: pointer;
 
 		i {
-			font-size: 20px;
+			font-size: 15px;
+			font-weight: 200;
+			line-height: 1;
 			color: rgba(18, 43, 70, 0.4);
 			display: block;
 		}
@@ -1583,13 +1678,20 @@
 .bb-media-model-container {
 
 	.bb-media-privacy-wrap .activity-privacy {
-		left: auto;
-		right: -20px;
+		left: -5px;
+		right: auto;
 	}
 
 	.bb-media-privacy-wrap .activity-privacy:before {
-		left: auto;
-		right: 44px;
+		left: 20px;
+		right: auto;
+	}
+
+	.bb-media-privacy-wrap .activity-privacy {
+
+		a {
+			font-weight: 400;
+		}
 	}
 
 }
@@ -1633,17 +1735,19 @@ div[class*="attached-gif-container"] {
 		video {
 			margin: 0;
 			max-width: 100%;
+			border-radius: 4px;
 		}
 	}
 
 	.gif-play-button {
-		height: 80px;
-		width: 80px;
+		height: 60px;
+		width: 60px;
+		font-size: 60px;
 		position: absolute;
 		left: 50%;
-		margin-left: -40px;
+		margin-left: -30px;
 		top: 50%;
-		margin-top: -40px;
+		margin-top: -30px;
 
 		.bb-icon-play-thin {
 			font-size: 80px;
@@ -1655,16 +1759,32 @@ div[class*="attached-gif-container"] {
 	}
 
 	.gif-icon {
-		background: url(../images/gif-symbol.png) bottom left no-repeat;
+		background: url(../images/GIF.svg) center no-repeat;
 		position: absolute;
-		width: 100%;
-		height: 100%;
 		display: block;
-		bottom: 30px;
-		left: 10px;
-		background-size: 40px 30px;
-		max-width: 40px;
-		max-height: 30px;
+		height: 28px;
+		width: 44px;
+		bottom: 0;
+		left: 0;
+		border-radius: 0 4px 0 0;
+		background-size: 28px;
+		padding: 8px;
+		background-color: #000;
+		opacity: 0.45;
+	}
+}
+
+#bbpress-forums div[class*="attached-gif-container"] {
+	height: auto !important;
+	width: auto !important;
+	display: inline-block;
+	max-width: 450px;
+	background-image: none !important;
+	min-width: 130px;
+	min-height: 100px;
+
+	&.closed {
+		display: none;
 	}
 }
 
@@ -1684,12 +1804,40 @@ div[class*="attached-gif-container"] {
 		display: block;
 		width: 300px;
 	}
+
+	.gif-alert {
+		justify-content: center;
+		flex-flow: column;
+		min-height: 100px;
+		display: none;
+
+		&.show {
+
+			@include center-vert();
+		}
+
+		[class*="bb-icon"] {
+			font-size: 30px;
+			color: $black;
+			opacity: 0.4;
+		}
+
+		p {
+			color: $black;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.5;
+			opacity: 0.4;
+		}
+
+	}
+
 }
 
 @media screen and (min-width: 768px) {
 
 	.gif-media-search-dropdown.open {
-		width: 360px;
+		width: 320px;
 	}
 
 }
@@ -1764,6 +1912,15 @@ input.search-query-input {
 
 #content .toolbar-button {
 	box-shadow: none;
+}
+
+.ac-input,
+.medium-editor-element {
+
+	font[color] {
+		color: inherit; //Fix font tag dictating color
+	}
+
 }
 
 @media screen and (max-width: 768px) {

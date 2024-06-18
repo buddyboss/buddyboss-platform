@@ -85,6 +85,9 @@ add_action( 'load-tools_page_bbp-reset', 'bbp_admin_reset_handler' );
 // Add sample permalink filter
 add_filter( 'post_type_link', 'bbp_filter_sample_permalink', 10, 4 );
 
+// Add quick stats to dashboard glance elements.
+add_filter( 'dashboard_glance_items', 'bbp_filter_dashboard_glance_items', -99 );
+
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site
@@ -113,6 +116,32 @@ function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 
 	// restore original blog
 	restore_current_blog();
+}
+
+/**
+ * Filter sample permalinks so that certain languages display properly.
+ *
+ * @since bbPress (r3336)
+ *
+ * @param string $post_link Custom post type permalink
+ * @param object $_post Post data object
+ * @param bool   $leavename Optional, defaults to false. Whether to keep post name or page name.
+ * @param bool   $sample Optional, defaults to false. Is it a sample permalink.
+ *
+ * @uses is_admin() To make sure we're on an admin page
+ * @uses bbp_is_custom_post_type() To get the forum post type
+ *
+ * @return string The custom post type permalink
+ */
+function bbp_filter_sample_permalink( $post_link, $_post, $leavename = false, $sample = false ) {
+
+	// Bail if not on an admin page and not getting a sample permalink
+	if ( ! empty( $sample ) && is_admin() && bbp_is_custom_post_type() ) {
+		return urldecode( $post_link );
+	}
+
+	// Return post link
+	return $post_link;
 }
 
 /** Sub-Actions ***************************************************************/

@@ -69,7 +69,7 @@ class BP_Buttons_Group {
 	 */
 	public function set( $args = array() ) {
 
-		$r = wp_parse_args( (array) $args, array(
+		$r = bp_parse_args( (array) $args, array(
 			'id'                => '',
 			'position'          => 99,
 			'component'         => '',

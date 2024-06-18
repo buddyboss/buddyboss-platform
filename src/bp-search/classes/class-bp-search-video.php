@@ -137,6 +137,8 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 				" (
 					(
 						m.title LIKE %s
+						OR
+						m.description LIKE %s
 					)
 					AND
 					(
@@ -146,6 +148,7 @@ if ( ! class_exists( 'Bp_Search_Video' ) ) :
 							( is_user_logged_in() ? " OR ( m.type = 'video' AND m.user_id = '" . bp_loggedin_user_id() . "' AND m.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					')
 				)',
+				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
 

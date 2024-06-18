@@ -261,6 +261,11 @@ window.bp = window.bp || {};
 								'page'     : page
 							};
 
+							feedbackInviteColumn.show().parents( '.bp-invites-feedback' ).show();
+							feedbackInviteColumn.attr( 'class', 'bp-feedback' );
+							feedbackInviteColumn.addClass( 'info' );
+							feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
+
 							$.ajax(
 								{
 									type: 'POST',
@@ -311,6 +316,11 @@ window.bp = window.bp || {};
 							'page'     	   : page,
 							'search_terms' : searchText
 						};
+
+						feedbackInviteColumn.show().parents( '.bp-invites-feedback' ).show();
+						feedbackInviteColumn.attr( 'class', 'bp-feedback' );
+						feedbackInviteColumn.addClass( 'info' );
+						feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
 
 						$.ajax(
 							{
@@ -488,6 +498,11 @@ window.bp = window.bp || {};
 							'scope'    : scope,
 							'page'     : page
 						};
+
+						feedbackSelectorLeftClass.show().parent().show();
+						feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+						feedbackSelectorLeftClass.addClass( 'info' );
+						feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
 
 						$.ajax(
 							{
@@ -762,6 +777,7 @@ window.bp = window.bp || {};
 				'#group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-bottom #send_group_invite_button',
 				function( e ) {
 					e.preventDefault();
+					var target     = $( e.currentTarget );
 					var users_list = [];
 					var newData    = $.grep(
 						$group_invites_select.select2( 'data' ),
@@ -786,6 +802,8 @@ window.bp = window.bp || {};
 						'message' 	 	: $( 'textarea#send-invites-control' ).val(),
 						'users'   		: users_list
 					};
+
+					target.attr( 'disabled', true );
 
 					$.ajax(
 						{
@@ -871,6 +889,8 @@ window.bp = window.bp || {};
 										4000
 									); // <-- time in milliseconds
 								}
+
+								target.attr( 'disabled', false );
 							}
 						}
 					);
@@ -969,6 +989,14 @@ window.bp = window.bp || {};
 						'search_terms' : searchText
 					};
 
+					feedbackSelectorLeftClass.show().parent().show();
+					feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+					feedbackSelectorLeftClass.addClass( 'info' );
+					feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+					var form = $( e.currentTarget ).closest( 'form' );
+					form.addClass( 'is-loading' );
+					$( 'button.search-form_reset' ).hide();
+					
 					$.ajax(
 						{
 							type: 'POST',
@@ -993,6 +1021,12 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								}
+								form.removeClass( 'is-loading' );
+								setTimeout( function() {
+									if ( ! form.hasClass( 'is-loading' ) ) {
+										$( 'button.search-form_reset' ).show();
+									}
+								}, 800 );
 							}
 						}
 					);
@@ -1022,6 +1056,9 @@ window.bp = window.bp || {};
 						'page'     	   : page,
 						'search_terms' : searchText
 					};
+					var form = $( e.currentTarget ).closest( 'form' );
+					form.addClass( 'is-loading' );
+					$( 'button.search-form_reset' ).hide();
 
 					$.ajax(
 						{
@@ -1029,6 +1066,7 @@ window.bp = window.bp || {};
 							url: BP_Nouveau.ajaxurl,
 							data: data,
 							success: function (response) {
+
 								if ( response.success ) {
 									listSelector.html( '' );
 									listSelector.html( response.data.html );
@@ -1047,6 +1085,13 @@ window.bp = window.bp || {};
 									feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								}
+
+								form.removeClass( 'is-loading' );
+								setTimeout( function() {
+									if ( ! form.hasClass( 'is-loading' ) ) {
+										$( 'button.search-form_reset' ).show();
+									}
+								}, 800 );
 							}
 						}
 					);
@@ -1061,7 +1106,33 @@ window.bp = window.bp || {};
 				{
 					placeholder: '',
 					minimumInputLength: 1,
-					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+					language: {
+						errorLoading: function () {
+							return bp_select2.i18n.errorLoading;
+						},
+						inputTooLong: function ( e ) {
+							var n = e.input.length - e.maximum;
+							return bp_select2.i18n.inputTooLong.replace( '%%', n );
+						},
+						inputTooShort: function ( e ) {
+							return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
+						},
+						loadingMore: function () {
+							return bp_select2.i18n.loadingMore;
+						},
+						maximumSelected: function ( e ) {
+							return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
+						},
+						noResults: function () {
+							return bp_select2.i18n.noResults;
+						},
+						searching: function () {
+							return bp_select2.i18n.searching;
+						},
+						removeAllItems: function () {
+							return bp_select2.i18n.removeAllItems;
+						}
+					},
 					ajax: {
 						url: bp.ajax.settings.url,
 						dataType: 'json',

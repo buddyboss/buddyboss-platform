@@ -330,6 +330,43 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			// Formally update the topic
 			bbp_update_topic( $topic_id, $forum_id, $anonymous_data, $author_id, $is_edit );
 
+			$old_forum_id = ! empty( $_POST['old_parent_id'] ) ? $_POST['old_parent_id'] : 0;
+			if (
+				! empty( $old_forum_id ) &&
+				$forum_id !== $old_forum_id
+			) {
+
+				// Get forum stickies.
+				$old_stickies = bbp_get_stickies( $old_forum_id );
+
+				// Only proceed if stickies are found.
+				if ( ! empty( $old_stickies ) ) {
+
+					// Define local variables.
+					$updated_stickies = array();
+
+					// Loop through stickies of forum and add misses to the updated array.
+					foreach ( (array) $old_stickies as $sticky_topic_id ) {
+						if ( $topic_id !== $sticky_topic_id ) {
+							$updated_stickies[] = $sticky_topic_id;
+						}
+					}
+
+					// If stickies are different, update or delete them.
+					if ( $updated_stickies !== $old_stickies ) {
+
+						// No more stickies so delete the meta.
+						if ( empty( $updated_stickies ) ) {
+							delete_post_meta( $old_forum_id, '_bbp_sticky_topics' );
+
+							// Still stickies so update the meta.
+						} else {
+							update_post_meta( $old_forum_id, '_bbp_sticky_topics', $updated_stickies );
+						}
+					}
+				}
+			}
+
 			// Stickies
 			if ( ! empty( $_POST['bbp_stick_topic'] ) && in_array( $_POST['bbp_stick_topic'], array( 'stick', 'super', 'unstick' ) ) ) {
 
@@ -343,7 +380,11 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 
 					// Super sticky in all forums
 					case 'super':
-						bbp_stick_topic( $topic_id, true );
+						if ( bb_is_group_forum_topic( $topic_id ) ) {
+							bbp_stick_topic( $topic_id );
+						} else {
+							bbp_stick_topic( $topic_id, true );
+						}
 						break;
 
 					// Normal
@@ -496,7 +537,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 		 * @uses do_action() Calls 'bbp_toggle_topic_admin' with success, post
 		 *                    data, action and message
 		 * @uses add_query_arg() To add custom args to the url
-		 * @uses wp_safe_redirect() Redirect the page to custom url
+		 * @uses bbp_redirect() Redirect the page to custom url
 		 */
 		public function toggle_topic() {
 
@@ -566,10 +607,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 
 				// Redirect back to the topic
 				$redirect = add_query_arg( $message, remove_query_arg( array( 'action', 'topic_id' ) ) );
-				wp_safe_redirect( $redirect );
-
-				// For good measure
-				exit();
+				bbp_redirect( $redirect );
 			}
 		}
 
@@ -974,6 +1012,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			// Add post_parent query_var if one is present
 			if ( ! empty( $_GET['bbp_forum_id'] ) ) {
 				$query_vars['meta_key']   = '_bbp_forum_id';
+				$query_vars['meta_type']  = 'NUMERIC';
 				$query_vars['meta_value'] = $_GET['bbp_forum_id'];
 			}
 
