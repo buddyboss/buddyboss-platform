@@ -1672,7 +1672,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			false,
 			$is_html4,
 			array(
-				'type'    => 'upload_error',
+				'type'    => $error_code,
 				'message' => $error_message,
 			)
 		);
