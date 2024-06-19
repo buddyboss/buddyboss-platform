@@ -3523,6 +3523,7 @@ window.bp = window.bp || {};
 			var form_submit_btn_attr_val = form_submit_btn.attr( 'data-add-edit-label' );
 			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
+			form.find( '.post-elements-buttons-item' ).removeClass( 'disable' );
 			form.find( '.post-elements-buttons-item .toolbar-button' ).removeClass( 'active' );
 
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
