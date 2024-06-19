@@ -1480,7 +1480,7 @@ function bp_avatar_ajax_set() {
 
 		if ( ! bp_avatar_handle_capture( $webcam_avatar, $avatar_data['item_id'] ) ) {
 			$feedback_code = 1;
-			if ( ! bb_is_gd_library_enabled() ) {
+			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
 				$feedback_code = 5;
 			}
 
