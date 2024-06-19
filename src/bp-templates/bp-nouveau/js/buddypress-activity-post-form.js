@@ -2931,7 +2931,7 @@ window.bp = window.bp || {};
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container, .buddypress-wrap' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
 				}
