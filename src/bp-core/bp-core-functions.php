@@ -7679,7 +7679,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 /**
  * Convert Media to base64 from attachment id.
  *
- * @since buddyboss 2.0.0
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $attachment_id Attachment id.
  * @param string $size          Image size.
