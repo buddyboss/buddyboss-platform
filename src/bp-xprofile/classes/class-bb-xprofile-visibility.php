@@ -299,11 +299,11 @@ class BB_XProfile_Visibility {
 				$result = $this->delete();
 
 			} else {
-				$table  = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+
 				$result = $wpdb->query(
 					$wpdb->prepare(
 					// phpcs:ignore
-						"INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated
+						"INSERT INTO {$bp->profile->table_name_visibility} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated
 					)
 				);
 				$this->id = $wpdb->insert_id;
