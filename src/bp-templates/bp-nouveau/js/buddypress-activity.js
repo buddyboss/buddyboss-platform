@@ -3048,7 +3048,17 @@ window.bp = window.bp || {};
 			}
 
 			$gifPickerEl.toggleClass( 'open' );
-			var transformValue = 'translate(' + ( leftPosition + $gifPickerEl.width() - 70 ) + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px)  translate(-100%, -100%)';
+			var pickerLeftPosition = leftPosition + $gifPickerEl.width() - 70;
+			var commentLevel = $( currentTarget ).parents( 'li' ).length;
+
+			if ( commentLevel > 2 ) {
+				pickerLeftPosition = leftPosition + $gifPickerEl.width() - 110;
+			}
+
+			if ( $( currentTarget ).closest( '.post-elements-buttons-item' ).index() > 1 ) {
+				pickerLeftPosition = leftPosition + $gifPickerEl.width() - 180;
+			}
+			var transformValue = 'translate(' + ( pickerLeftPosition ) + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px)  translate(-100%, -100%)';
 			if ( isInsideModal ) {
 				$gifPickerEl.css( 'transform', transformValue );
 			}
