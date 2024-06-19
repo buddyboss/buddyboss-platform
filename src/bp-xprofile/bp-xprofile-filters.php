@@ -854,7 +854,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
  * @return mixed|string
  */
 function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value ) {
-	if ( ! in_array( $field_id, array( bp_xprofile_firstname_field_id(), bp_xprofile_lastname_field_id() ), true ) ) {
+	if ( ! in_array( (int) $field_id, array( bp_xprofile_firstname_field_id(), bp_xprofile_lastname_field_id() ), true ) ) {
 		return $retval;
 	}
 
