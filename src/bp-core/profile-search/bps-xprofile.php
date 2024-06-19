@@ -241,9 +241,8 @@ function bp_ps_xprofile_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$user_ids = $wpdb->get_col( $query );
-
-	return $user_ids;
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_col( $query );
 }
 
 /**
@@ -610,7 +609,7 @@ function bp_ps_anyfield_search( $f ) {
 	$filter = $f->filter;
 	$value  = str_replace( '&', '&amp;', $f->value );
 
-	$sql           = array(
+	$sql = array(
 		'select' => '',
 		'where'  => array(),
 	);

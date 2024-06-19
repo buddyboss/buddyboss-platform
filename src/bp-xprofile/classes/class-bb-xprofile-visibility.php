@@ -89,10 +89,16 @@ class BB_XProfile_Visibility {
 
 		$table_name = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
 
-		$sql                = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
-		$profile_visibility = $wpdb->get_row( $sql );
+		$profile_visibility = $wpdb->get_row(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				"SELECT * FROM $table_name WHERE field_id = %d AND user_id = %d",
+				$field_id,
+				$user_id
+			)
+		);
 
-		if ( $profile_visibility ) {
+		if ( isset( $profile_visibility ) ) {
 			$this->id           = (int) $profile_visibility->id;
 			$this->user_id      = (int) $profile_visibility->user_id;
 			$this->field_id     = (int) $profile_visibility->field_id;
@@ -120,7 +126,14 @@ class BB_XProfile_Visibility {
 		global $wpdb;
 
 		$table  = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
-		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d AND field_id = %d", $this->user_id, $this->field_id ) );
+		$retval = $wpdb->get_row(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				"SELECT id FROM {$table} WHERE user_id = %d AND field_id = %d",
+				$this->user_id,
+				$this->field_id
+			)
+		);
 
 		/**
 		 * Filters whether or not data already exists for the user.
@@ -148,7 +161,13 @@ class BB_XProfile_Visibility {
 		$bp           = buddypress();
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
 		if ( $table_exists ) {
-			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d", $user_id ) );
+			$retval = $wpdb->get_row(
+				$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
+					$user_id
+				)
+			);
 		} else {
 			$retval = false;
 		}
@@ -156,7 +175,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters whether or not any data already exists for the user.
 		 *
-		 * @since  BuddyBoss [BBVERSION]
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param bool $retval  Whether or not data already exists.
 		 * @param int  $user_id User id.
@@ -181,7 +200,13 @@ class BB_XProfile_Visibility {
 		$retval    = wp_cache_get( $cache_key, 'bp_xprofile' );
 
 		if ( false === $retval ) {
-			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $this->field_id ) );
+			$retval = $wpdb->get_row(
+				$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery
+					"SELECT id FROM {$table} WHERE id = %d",
+					$this->field_id
+				)
+			);
 			wp_cache_set( $cache_key, $retval, 'bp_xprofile' );
 		}
 
@@ -263,14 +288,24 @@ class BB_XProfile_Visibility {
 
 		if ( $this->is_valid_field() ) {
 			if ( $this->exists() && strlen( trim( $this->value ) ) ) {
-				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
+				$result = $wpdb->query(
+					$wpdb->prepare(
+					// phpcs:ignore
+						"UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id
+					)
+				);
 			} elseif ( $this->exists() && empty( $this->value ) ) {
 				// Data removed, delete the entry.
 				$result = $this->delete();
 
 			} else {
-				$table    = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
-				$result   = $wpdb->query( $wpdb->prepare( "INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated ) );
+				$table  = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+				$result = $wpdb->query(
+					$wpdb->prepare(
+					// phpcs:ignore
+						"INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated
+					)
+				);
 				$this->id = $wpdb->insert_id;
 			}
 
@@ -317,7 +352,12 @@ class BB_XProfile_Visibility {
 		 */
 		do_action_ref_array( 'xprofile_visibility_before_delete', array( $this ) );
 
-		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE field_id = %d AND user_id = %d", $this->field_id, $this->user_id ) );
+		$deleted = $wpdb->query(
+			$wpdb->prepare(
+			// phpcs:ignore
+				"DELETE FROM {$table_name} WHERE field_id = %d AND user_id = %d", $this->field_id, $this->user_id
+			)
+		);
 		if ( empty( $deleted ) ) {
 			return false;
 		}
@@ -347,7 +387,12 @@ class BB_XProfile_Visibility {
 		global $wpdb;
 
 		$bp      = buddypress();
-		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_visibility} WHERE field_id = %d", $field_id ) );
+		$deleted = $wpdb->query(
+			$wpdb->prepare(
+			// phpcs:ignore
+				"DELETE FROM {$bp->profile->table_name_visibility} WHERE field_id = %d", $field_id
+			)
+		);
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
 			return false;
 		}
@@ -369,7 +414,13 @@ class BB_XProfile_Visibility {
 
 		$bp = buddypress();
 
-		$field_ids = $wpdb->get_col( $wpdb->prepare( "SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d", $user_id ) );
+		$field_ids = $wpdb->get_col(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				"SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
+				$user_id
+			)
+		);
 
 		if ( ! $field_ids ) {
 			return false;
@@ -387,7 +438,8 @@ class BB_XProfile_Visibility {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $user_id User ID to get fields for.
+	 * @param int   $user_id User ID to get fields for.
+	 * @param array $levels  Visibility levels to get fields for.
 	 *
 	 * @return array Associative array with field_id as key and value.
 	 */
@@ -402,19 +454,31 @@ class BB_XProfile_Visibility {
 		}
 
 		// Prepare the levels array by quoting each element.
-		$quoted_levels = array_map( function( $level ) {
-			global $wpdb;
-			return $wpdb->prepare( '%s', $level );
-		}, $levels );
+		$quoted_levels = array_map(
+			function ( $level ) {
+				global $wpdb;
+
+				return $wpdb->prepare( '%s', $level );
+			},
+			$levels
+		);
 
 		$quoted_levels = implode( ',', $quoted_levels );
 
-		$sql     = $wpdb->prepare( "SELECT DISTINCT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND value IN ( $quoted_levels )", $user_id );
-		$results = $wpdb->get_results( $sql, OBJECT_K );
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				"SELECT DISTINCT field_id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND value IN ( $quoted_levels )",
+				$user_id
+			),
+			OBJECT_K
+		);
 
 		// Iterate over the results and transform the array.
-		foreach ( $results as $field_id => $result ) {
-			$fields[ $field_id ] = $field_id;
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $field_id => $result ) {
+				$fields[ $field_id ] = $field_id;
+			}
 		}
 
 		return $fields;

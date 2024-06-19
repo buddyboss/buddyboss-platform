@@ -1711,5 +1711,6 @@ function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
 		esc_html__( 'Migrate visibility settings of profile fields to the new structure', 'buddyboss' ),
 		'bb_migrate_xprofile_visibility',
 	);
+
 	return $repair_list;
 }

@@ -3621,16 +3621,15 @@ function bb_update_to_2_6_20() {
 	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 
 	// Check if the 'bp_suspend' table exists.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
 	if ( $table_exists ) {
 
 		// Get all existing indexes for the table.
 		$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_suspend' ) );
-	
+
 		// Array to store parts of the ALTER TABLE query.
 		$alter_statements = array();
-	
+
 		// Add key for user_suspended if it doesn't exist.
 		if ( ! in_array( 'user_suspended', $indexes, true ) ) {
 			$alter_statements[] = 'ADD KEY user_suspended (user_suspended)';
@@ -3660,5 +3659,5 @@ function bb_update_to_2_6_20() {
 		bb_migrate_xprofile_visibility( true );
 		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
 	}
-	
+
 }

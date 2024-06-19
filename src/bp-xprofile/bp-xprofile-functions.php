@@ -1472,13 +1472,13 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 
 				// Custom level but disabled custom visibility and custom visibility is not specific level then unset field id.
 				if (
-					in_array( $d_field_id, $field_ids ) &&
-					! in_array( $defaults['default'], $levels )
+					in_array( $d_field_id, $field_ids, true ) &&
+					! in_array( $defaults['default'], $levels, true )
 				) {
 					unset( $field_ids[ $d_field_id ] );
 
 					// Disabled custom visibility and custom visibility is in specific level add field id.
-				} elseif ( in_array( $defaults['default'], $levels ) ) {
+				} elseif ( in_array( $defaults['default'], $levels, true ) ) {
 					$field_ids[ $d_field_id ] = $d_field_id;
 				}
 			}
@@ -1505,11 +1505,13 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 				$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 			}
 		}
-	
+
 		$field_ids = array();
-		foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
-			if ( in_array( $field_visibility, $levels, true ) ) {
-				$field_ids[] = $field_id;
+		if ( ! empty( $user_visibility_levels ) ) {
+			foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
+				if ( in_array( $field_visibility, $levels, true ) ) {
+					$field_ids[] = $field_id;
+				}
 			}
 		}
 	}
@@ -2725,9 +2727,9 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $background True if run in background.
+ * @param bool $background True if run in the background.
  * @param int  $page       Page number as offset for getting users.
- * 
+ *
  * @return void|array
  */
 function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
@@ -2767,7 +2769,8 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 			);
 		}
-		return; 
+
+		return;
 	}
 
 	foreach ( $users as $user_id ) {
@@ -2776,10 +2779,14 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		if ( ! empty( $visibility_levels ) ) {
 
 			// Query existing entries for the user.
-			$existing_entries = $wpdb->get_results( $wpdb->prepare(
-				"SELECT field_id, value FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
-				$user_id
-			), OBJECT_K );
+			$existing_entries = $wpdb->get_results(
+				$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+					"SELECT field_id, value FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
+					$user_id
+				),
+				OBJECT_K
+			);
 
 			// Prepare placeholders for the insert and update queries.
 			$update_placeholders = array();
@@ -2788,9 +2795,11 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 
 			// Collect field IDs that need to be deleted.
 			$fields_to_delete = array_diff_key( $existing_entries, $visibility_levels );
-	
-			foreach ( $fields_to_delete as $field_id => $entry ) {
-				$delete_placeholders[] = $wpdb->prepare( '%d', $field_id );
+
+			if ( ! empty( $fields_to_delete ) ) {
+				foreach ( $fields_to_delete as $field_id => $entry ) {
+					$delete_placeholders[] = $wpdb->prepare( '%d', $field_id );
+				}
 			}
 
 			$current_time = bp_core_current_time();
@@ -2800,6 +2809,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 
 						// Prepare an update query.
 						$update_placeholders[] = $wpdb->prepare(
+							// phpcs:ignore
 							"UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d",
 							$level, $current_time, $user_id, $field_id
 						);
@@ -2836,7 +2846,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		}
 	}
 
-	// If running in background, schedule the next batch.
+	// If running in the background, schedule the next batch.
 	if ( $background ) {
 		$bb_background_updater->data(
 			array(
