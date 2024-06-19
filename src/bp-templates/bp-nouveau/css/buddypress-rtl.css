@@ -11178,6 +11178,7 @@ body.buddypress.bp-user #page #primary .entry-header {
   vertical-align: middle;
   width: 20px;
   text-align: center;
+  line-height: 1;
 }
 
 #buddypress .bb_more_options .bb_more_options_list .generic-button > button.reported-content:before, #buddypress .bb_more_options .bb_more_options_list .generic-button > button.report-content:before,
