@@ -202,10 +202,11 @@ class BP_XProfile_Component extends BP_Component {
 
 		// Tables.
 		$global_tables = array(
-			'table_name_data'   => $bp->table_prefix . 'bp_xprofile_data',
-			'table_name_groups' => $bp->table_prefix . 'bp_xprofile_groups',
-			'table_name_fields' => $bp->table_prefix . 'bp_xprofile_fields',
-			'table_name_meta'   => $bp->table_prefix . 'bp_xprofile_meta',
+			'table_name_data'       => $bp->table_prefix . 'bp_xprofile_data',
+			'table_name_visibility' => $bp->table_prefix . 'bb_xprofile_visibility',
+			'table_name_groups'     => $bp->table_prefix . 'bp_xprofile_groups',
+			'table_name_fields'     => $bp->table_prefix . 'bp_xprofile_fields',
+			'table_name_meta'       => $bp->table_prefix . 'bp_xprofile_meta',
 		);
 
 		$meta_tables = array(
