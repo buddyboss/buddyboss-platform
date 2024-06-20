@@ -109,8 +109,8 @@ function bp_ps_xprofile_search( $f ) {
 		                	ELSE initiator_user_id
 		                	END AS friend_id
 		                	FROM ' . $bp->friends->table_name . '
-		                    WHERE is_confirmed = 1
-		                    AND ( initiator_user_id = %d OR friend_user_id = %d )',
+		                	WHERE is_confirmed = 1
+		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
 					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
 			}
@@ -649,8 +649,8 @@ function bp_ps_anyfield_search( $f ) {
 		                	ELSE initiator_user_id
 		                	END AS friend_id
 		                	FROM ' . $bp->friends->table_name . '
-		                    WHERE is_confirmed = 1
-		                    AND ( initiator_user_id = %d OR friend_user_id = %d )',
+		                	WHERE is_confirmed = 1
+		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
 					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
 			}
