@@ -1385,7 +1385,6 @@ function bb_core_install_subscription() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @uses  bp_core_set_charset()
  * @uses  bp_core_get_table_prefix()
  * @uses  dbDelta()
  */
@@ -1395,7 +1394,7 @@ function bb_core_install_xprofile_visibility() {
 	$bp_prefix = bp_core_get_table_prefix();
 	
 	// Install bb_xprofile_visibility table if already not exists.
-	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bb_xprofile_visibility'" );
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bb_xprofile_visibility' ) );
 	if ( ! $table_exists ) {
 		$sql             = array();
 		$charset_collate = $wpdb->get_charset_collate();
@@ -1421,5 +1420,5 @@ function bb_core_install_xprofile_visibility() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	do_action( 'bp_core_install_xprofile_visibility' );
+	do_action( 'bb_core_install_xprofile_visibility' );
 }

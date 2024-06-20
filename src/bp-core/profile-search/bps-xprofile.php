@@ -119,29 +119,44 @@ function bp_ps_xprofile_search( $f ) {
 		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
 	}
 
-	if (
-		! current_user_can( 'administrator' )
-	) {
+	if ( ! current_user_can( 'administrator' ) ) {
 		$field_visibility = array( 'public' );
+		$loggin_user_id   = 0;
+		$friend_ids_sql   = '';
+
 		if ( is_user_logged_in() ) {
-			$loggin_user_id = bp_loggedin_user_id();
+			$loggin_user_id     = bp_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
+
 			if ( bp_is_active( 'friends' ) ) {
 				$friend_ids_sql = $wpdb->prepare(
-					"SELECT CASE WHEN initiator_user_id = %d THEN friend_user_id ELSE initiator_user_id END AS friend_id
-					FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND( initiator_user_id = %d OR friend_user_id = %d )",
-					$loggin_user_id,
-					$loggin_user_id,
-					$loggin_user_id
+					'SELECT CASE
+		                	WHEN initiator_user_id = %d THEN friend_user_id
+		                	ELSE initiator_user_id
+		                	END AS friend_id
+		                	FROM ' . $bp->friends->table_name . '
+		                	WHERE is_confirmed = 1
+		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
+					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
 			}
 		}
-		$sql['where'][] = "field_id IN (
-			SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE xpd.user_id = user_id AND ( `value` IN ('" . implode( "','", $field_visibility ) . "')
-				OR ( `value` = 'friends' AND user_id IN ({$friend_ids_sql}) )
-				OR ( user_id = {$loggin_user_id} )
-			)
-		)";
+
+		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
+
+		$sql_where_condition = 'xpd.field_id IN (
+		            SELECT xpv.field_id
+		            FROM ' . $bp->profile->table_name_visibility . ' as xpv
+		            WHERE xpv.user_id = xpd.user_id
+		            AND (
+		                xpv.value IN (\'' . $visibility_values . '\')
+		                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( xpv.value = \'friends\' AND xpv.user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
+		                ' . ( ! empty( $loggin_user_id ) ? 'OR ( xpv.user_id = ' . $loggin_user_id . ' )' : '' ) . '
+		            )
+		        )';
+
+		$sql['where'][] = $sql_where_condition;
+
 	}
 
 	switch ( $filter ) {
@@ -269,9 +284,8 @@ function bp_ps_xprofile_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$user_ids = $wpdb->get_col( $query );
-
-	return $user_ids;
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_col( $query );
 }
 
 /**
@@ -639,37 +653,51 @@ function bp_ps_anyfield_search( $f ) {
 	$filter = $f->filter;
 	$value  = str_replace( '&', '&amp;', $f->value );
 
-	$sql           = array(
+	$sql = array(
 		'select' => '',
 		'where'  => array(),
 	);
 
 	$sql['select'] = "SELECT DISTINCT xpd.user_id as user_id, xpd.field_id as field_id FROM {$bp->profile->table_name_data} xpd";
 
-	if (
-		! current_user_can( 'administrator' )
-	) {
+	if ( ! current_user_can( 'administrator' ) ) {
 		$field_visibility = array( 'public' );
+		$loggin_user_id   = 0;
+		$friend_ids_sql   = '';
+
 		if ( is_user_logged_in() ) {
-			$loggin_user_id = bp_loggedin_user_id();
+			$loggin_user_id     = bp_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
+
 			if ( bp_is_active( 'friends' ) ) {
 				$friend_ids_sql = $wpdb->prepare(
-					"SELECT CASE WHEN initiator_user_id = %d THEN friend_user_id ELSE initiator_user_id END AS friend_id
-					FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND( initiator_user_id = %d OR friend_user_id = %d )",
-					$loggin_user_id,
-					$loggin_user_id,
-					$loggin_user_id
+					'SELECT CASE
+		                	WHEN initiator_user_id = %d THEN friend_user_id
+		                	ELSE initiator_user_id
+		                	END AS friend_id
+		                	FROM ' . $bp->friends->table_name . '
+		                	WHERE is_confirmed = 1
+		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
+					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
 			}
 		}
 
-		$sql['where'][] = "xpd.field_id IN (
-			SELECT xpv.field_id FROM {$bp->profile->table_name_visibility} xpv WHERE xpv.user_id = xpd.user_id AND ( xpv.value IN ('" . implode( "','", $field_visibility ) . "')
-				OR ( xpv.value = 'friends' AND xpv.user_id IN ({$friend_ids_sql}) )
-				OR ( xpv.user_id = {$loggin_user_id} )
-			)
-		)";
+		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
+
+		$sql_where_condition = 'xpd.field_id IN (
+		            SELECT xpv.field_id
+		            FROM ' . $bp->profile->table_name_visibility . ' as xpv
+		            WHERE xpv.user_id = xpd.user_id
+		            AND (
+		                xpv.value IN (\'' . $visibility_values . '\')
+		                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( xpv.value = \'friends\' AND xpv.user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
+		                ' . ( ! empty( $loggin_user_id ) ? 'OR ( xpv.user_id = ' . $loggin_user_id . ' )' : '' ) . '
+		            )
+		        )';
+
+		$sql['where'][] = $sql_where_condition;
+
 	}
 
 	switch ( $filter ) {
@@ -704,7 +732,6 @@ function bp_ps_anyfield_search( $f ) {
 				'user_id'                        => false,
 			)
 		);
-
 		$fields_array = array();
 		if ( ! empty( $group_ids ) ) {
 			foreach ( $group_ids as $group_value ) {
@@ -716,7 +743,6 @@ function bp_ps_anyfield_search( $f ) {
 				}
 			}
 		}
-
 		foreach ( $results as $key => $value ) {
 			$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
 			$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
