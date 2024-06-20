@@ -95,37 +95,39 @@ function bp_ps_xprofile_search( $f ) {
 
 	if ( ! current_user_can( 'administrator' ) ) {
 		$field_visibility = array( 'public' );
+		$loggin_user_id   = 0;
+		$friend_ids_sql   = '';
+
 		if ( is_user_logged_in() ) {
 			$loggin_user_id     = bp_loggedin_user_id();
 			$field_visibility[] = 'loggedin';
+
 			if ( bp_is_active( 'friends' ) ) {
 				$friend_ids_sql = $wpdb->prepare(
-					"SELECT CASE WHEN initiator_user_id = %d THEN friend_user_id ELSE initiator_user_id END AS friend_id
-					FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND ( initiator_user_id = %d OR friend_user_id = %d )",
-					$loggin_user_id,
-					$loggin_user_id,
-					$loggin_user_id
+					'SELECT CASE
+		                    WHEN initiator_user_id = %d THEN friend_user_id
+		                    ELSE initiator_user_id
+		                    END AS friend_id
+		                	FROM ' . $bp->friends->table_name . '
+		                    WHERE is_confirmed = 1
+		                    AND ( initiator_user_id = %d OR friend_user_id = %d )',
+					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
 			}
 		}
 
-		$sql_where_condition = "field_id IN (
-									SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE xpd.user_id = user_id AND 
-									(
-										`value` IN ('" . implode( "','", $field_visibility ) . "')";
+		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
 
-		// Conditionally add the friend condition.
-		if ( ! empty( $friend_ids_sql ) ) {
-			$sql_where_condition .= " OR ( `value` = 'friends' AND user_id IN ({$friend_ids_sql}) )";
-		}
-
-		// Conditionally add the logged-in user condition.
-		if ( ! empty( $loggin_user_id ) ) {
-			$sql_where_condition .= " OR ( user_id = {$loggin_user_id} )";
-		}
-
-		// Close the subquery.
-		$sql_where_condition .= ") )";
+		$sql_where_condition = 'field_id IN (
+		            SELECT field_id
+		            FROM ' . $bp->profile->table_name_visibility . '
+		            WHERE xpd.user_id = user_id
+		            AND (
+		                `value` IN (\'' . $visibility_values . '\')
+		                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( `value` = \'friends\' AND user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
+		                ' . ( ! empty( $loggin_user_id ) ? 'OR ( user_id = ' . $loggin_user_id . ' )' : '' ) . '
+		            )
+		        )';
 
 		$sql['where'][] = $sql_where_condition;
 
