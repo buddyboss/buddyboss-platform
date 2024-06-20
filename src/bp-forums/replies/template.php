@@ -154,7 +154,7 @@ function bbp_has_replies( $args = '' ) {
 		's'                        => $default_reply_search,      // Maybe search
 		'moderation_query'         => false,
 		'update_post_family_cache' => true,
-		
+
 	);
 
 	// What are the default allowed statuses (based on user caps)
@@ -2250,8 +2250,7 @@ function bbp_get_reply_trash_link( $args = '' ) {
 
 	$actions = array();
 	$reply   = bbp_get_reply( bbp_get_reply_id( (int) $r['id'] ) );
-
-
+	
 	// Check if the current user is a moderator or if the reply is empty.
 	if ( empty( $reply ) || user_can( bp_loggedin_user_id(), 'moderate' ) ) {
 		// Check if the current user is not an administrator.
