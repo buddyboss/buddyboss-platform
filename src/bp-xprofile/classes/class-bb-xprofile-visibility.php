@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Visibility Class.
+ * BuddyBoss XProfile Visibility Class.
  *
  * @package BuddyBoss\XProfile\Classes
  *
