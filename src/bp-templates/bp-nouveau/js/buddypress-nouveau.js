@@ -3281,6 +3281,12 @@ window.bp = window.bp || {};
 				$( 'body' ).removeClass( 'user_more_option_open' );
 				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
+
+			if ( $( event.target ).closest( '.bs-dropdown-link' ).length > 0 ) {
+				$( 'body' ).addClass( 'bbpress_more_option_open' );
+			} else {
+				$( 'body' ).removeClass( 'bbpress_more_option_open' );
+			}
 		},
 
 		getVideoThumb: function ( file, target ) { // target = '.node'.
