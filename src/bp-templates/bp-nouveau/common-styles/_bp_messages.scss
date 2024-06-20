@@ -750,6 +750,7 @@
 		padding: $pad-sml;
 		margin: 1em 0;
 		width: 100%;
+		box-sizing: border-box;
 
 		&.divider-date {
 			position: relative;
@@ -901,6 +902,7 @@
 		float: left;
 		margin: 0 $marg-sml 0 0;
 		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+		max-width: 100%;
 	}
 
 	.actions {
