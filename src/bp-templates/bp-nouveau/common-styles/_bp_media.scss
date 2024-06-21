@@ -5666,10 +5666,17 @@ body.buddyboss-theme {
 	}
 
 	/*More option popup General styles*/
-	body[class*="more_option_open"] {
 
-		.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
-			display: none;
+	/* body[class*="more_option_open"] {
+
+		.bb-media-model-container .activity-list .bb-activity-more-options-wrap {
+
+			.bb-activity-more-options-action {
+
+				&[data-balloon][data-balloon-pos="up"]:before {
+					display: none;
+				}
+			}
 		}
 	}
 
@@ -5685,5 +5692,5 @@ body.buddyboss-theme {
 		&:after {
 			display: none;
 		}
-	}
+	} */
 }
