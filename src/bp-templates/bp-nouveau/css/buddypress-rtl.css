@@ -26326,7 +26326,6 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   opacity: 0.4;
   position: absolute;
   left: 15px;
-  top: 11px;
 }
 
 #comments .bb_more_dropdown .bb_more_dropdown__close_button > i,
@@ -26353,6 +26352,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
     top: 50%;
     right: 50%;
     max-height: calc(100% - 100px);
+    height: fit-content;
     max-width: 220px;
     overflow: auto;
     padding: 0;
@@ -26369,7 +26369,8 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   #comments .bb_more_dropdown.open .bb_more_dropdown__title,
   #buddypress .bb_more_dropdown.open .bb_more_dropdown__title,
   #bbpress-forums .bb_more_dropdown.open .bb_more_dropdown__title {
-    display: block;
+    display: flex;
+    align-items: center;
     border-bottom: 1px solid #e1e3e5;
     border-radius: 4px 4px 0 0;
     text-align: right;
