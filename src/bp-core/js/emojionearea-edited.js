@@ -1907,7 +1907,22 @@ document = window.document || {};
 		var pickerWidth  = self.picker.width();
 		var pickerHeight = self.picker.height();
 		var topPosition  = Math.round( offset.top );
-		var leftPosition = $( window ).width() > 1000 ? Math.round( offset.left ) + 42 : Math.round( offset.left ) + pickerWidth - 95;
+		var leftPosition = Math.round( offset.left ) + 42
+
+		if ( $( window ).width() < 1000 ) {
+			leftPosition = Math.round( offset.left ) + pickerWidth - 95;
+			var commentLevel = $( this.button ).parents( "li" ).length;
+			var emojiOrder = $( this.button ).closest( ".post-elements-buttons-item" ).index();
+
+			if ( commentLevel > 2 ) {
+				self.picker.addClass( "level-2" );
+			}
+
+			if( emojiOrder > 2 ) {
+				leftPosition = Math.round( offset.left ) + pickerWidth - 130;
+			}
+		}
+
 		if (
 			self.options.containerPicker &&
 			! isNaN( topPosition ) &&
@@ -1947,6 +1962,7 @@ document = window.document || {};
 			},
 			500
 		);
+		self.picker.removeClass( "level-2" );
 		trigger( self, "picker.hide", [self.picker] );
 		return self;
 	}
