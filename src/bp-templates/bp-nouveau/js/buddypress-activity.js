@@ -3049,7 +3049,7 @@ window.bp = window.bp || {};
 
 			$gifPickerEl.toggleClass( 'open' );
 			var pickerLeftPosition = leftPosition + $gifPickerEl.width() - 70;
-			var commentLevel = $( currentTarget ).parents( 'li' ).length;
+			var commentLevel       = $( currentTarget ).parents( 'li' ).length;
 
 			if ( commentLevel > 2 ) {
 				pickerLeftPosition = leftPosition + $gifPickerEl.width() - 110;
