@@ -178,6 +178,7 @@ add_filter( 'bb_activity_comment_get_edit_data', 'bb_blogs_activity_comment_edit
 add_filter( 'bp_get_activity_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_get_activity_content_body', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_filter( 'bp_activity_comment_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
+add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 
 // Modal template for activity.
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
@@ -3593,6 +3594,7 @@ add_action( 'bp_start_following', 'bb_send_email_to_follower' );
  * @param int    $activity_id ID of the activity item being updated.
  */
 function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
+	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }
@@ -3608,6 +3610,7 @@ function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
  * @param bool   $activity_id Whether or not the activity recording succeeded.
  */
 function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $activity_id ) {
+	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
 }

@@ -136,6 +136,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 					$q->set( 'page_id', $bp_pages->document->id );
 				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
 					$q->set( 'page_id', $bp_pages->video->id );
+				} elseif ( 'activity' === $bp_current_component && isset( $bp_pages->activity->id ) ) {
+					$q->set( 'page_id', $bp_pages->activity->id );
 				} else {
 					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
 					if ( $page_id ) {
