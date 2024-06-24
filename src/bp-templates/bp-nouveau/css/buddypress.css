@@ -5150,6 +5150,9 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 @media screen and (max-width: 1000px) {
+  .emojionearea-theatre .emojionearea-picker.emojionearea-picker-position-top.level-2 .emojionearea-wrapper:after {
+    display: none;
+  }
   .emojionearea-theatre .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
     right: inherit;
     left: 98px;
