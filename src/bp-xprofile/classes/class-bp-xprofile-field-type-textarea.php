@@ -70,7 +70,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-		
+
 		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 			<?php
@@ -95,6 +95,32 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			<?php
 
 		} else {
+
+			// Define an array of toolbar options.
+			$toolbar_buttons = array(
+				'bold',
+				'italic',
+				'underline',
+				'blockquote',
+				'strikethrough',
+				'bullist',
+				'numlist',
+				'undo',
+				'redo',
+				'link',
+				'fullscreen',
+			);
+
+			if ( current_user_can( 'unfiltered_html' ) ) {
+				$align_buttons = array( 'alignleft', 'aligncenter', 'alignright' );
+
+				$position = array_search( 'numlist', $toolbar_buttons, true );
+				if ( false !== $position ) {
+					array_splice( $toolbar_buttons, $position + 1, 0, $align_buttons );
+				} else {
+					$toolbar_buttons = array_merge( $toolbar_buttons, $align_buttons );
+				}
+			}
 
 			/**
 			 * Filters the arguments passed to `wp_editor()` in richtext xprofile fields.
@@ -121,7 +147,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 					'quicktags'     => true,
 					'textarea_rows' => 10,
 					'tinymce'       => array(
-						'toolbar1' => bp_current_user_can('unfiltered_html') ? 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,fullscreen' : 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,undo,redo,link,fullscreen',
+						'toolbar1' => implode( ',', $toolbar_buttons ),
 					),
 				),
 				'edit'
