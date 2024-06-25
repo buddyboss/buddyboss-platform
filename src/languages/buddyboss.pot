@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-06-25 05:19:15+00:00\n"
+"POT-Creation-Date: 2024-06-25 06:19:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7596,6 +7596,9 @@ msgstr ""
 
 #: bp-core/bp-core-attachments.php:1582 bp-core/bp-core-attachments.php:1667
 #: bp-core/bp-core-avatars.php:1081 bp-core/bp-core-avatars.php:1097
+#: bp-core/classes/trait-bp-rest-attachments.php:123
+#: bp-core/classes/trait-bp-rest-attachments.php:317
+#. translators: %s: the upload error message
 msgid "Upload Error: %s"
 msgstr ""
 
@@ -7607,6 +7610,7 @@ msgstr ""
 #: bp-core/bp-core-attachments.php:1667
 #: bp-core/classes/class-bp-attachment-avatar.php:407
 #: bp-core/classes/class-bp-attachment.php:657
+#: bp-core/classes/trait-bp-rest-attachments.php:123
 msgid "Missing image editor! Enable GD or Imagick library."
 msgstr ""
 
@@ -11002,28 +11006,28 @@ msgstr ""
 msgid "The cover image directory is not valid."
 msgstr ""
 
-#: bp-core/classes/trait-bp-rest-attachments.php:120
+#: bp-core/classes/trait-bp-rest-attachments.php:119
 msgid "There was a problem uploading the cover image."
 msgstr ""
 
-#: bp-core/classes/trait-bp-rest-attachments.php:203
+#: bp-core/classes/trait-bp-rest-attachments.php:212
 #. translators: %s: the upload error message
 msgid "Upload failed! Error was: %s."
 msgstr ""
 
-#: bp-core/classes/trait-bp-rest-attachments.php:234
+#: bp-core/classes/trait-bp-rest-attachments.php:243
 #. translators: %1$s and %2$s is replaced with the correct sizes.
 msgid ""
 "You have selected an image that is smaller than recommended. For best "
 "results, upload a picture larger than %1$s x %2$s pixels."
 msgstr ""
 
-#: bp-core/classes/trait-bp-rest-attachments.php:319
+#: bp-core/classes/trait-bp-rest-attachments.php:343
 #. translators: %s: the upload error message
 msgid "Upload failed! Error was: %s"
 msgstr ""
 
-#: bp-core/classes/trait-bp-rest-attachments.php:396
+#: bp-core/classes/trait-bp-rest-attachments.php:420
 #. translators: %s is replaced with object type.
 msgid "There was a problem cropping your %s photo."
 msgstr ""
@@ -15473,7 +15477,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:2199
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:2255
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:369
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:873
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:894
 msgid "The date the object was published, in the site's timezone."
 msgstr ""
 
@@ -15481,7 +15485,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:2205
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:2261
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:375
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:879
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:900
 msgid "The date the object was published, as GMT."
 msgstr ""
 
@@ -23895,8 +23899,8 @@ msgid "Date Invited"
 msgstr ""
 
 #: bp-invites/bp-invites-admin.php:125
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:740
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:742
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:761
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:763
 #: bp-members/classes/class-bp-members-list-table.php:158
 #: bp-members/classes/class-bp-members-ms-list-table.php:145
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:155
@@ -23910,7 +23914,7 @@ msgid "Pending &ndash; Revoke Invite"
 msgstr ""
 
 #: bp-invites/bp-invites-admin.php:134
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:740
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:761
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:106
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:155
 msgid "Invited"
@@ -24018,116 +24022,135 @@ msgstr ""
 msgid "Sorry, you need to set the fields parameter."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:412
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:419
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:51
 msgid ""
 "Invitations did not send to the following email addresses, because they are "
 "already members:"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:416
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:425
+msgid ""
+"Invitations did not send to the following email addresses, because they are "
+"already invited or already members:"
+msgstr ""
+
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:427
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:67
+msgid ""
+"Invitations did not send to the following email addresses, because they are "
+"already invited:"
+msgstr ""
+
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:432
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:35
 msgid "Invitations did not send because these email addresses are invalid:"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:420
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:438
+msgid ""
+"Invitations did not send to the following email addresses, because they are "
+"invalid email addresses or the address or domain has been blacklisted:"
+msgstr ""
+
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:440
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:83
 msgid ""
 "Invitations did not send to the following email addresses, because the "
 "address or domain has been blacklisted:"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:467
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:488
 msgid "Sorry, you need to be logged in to create invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:479
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:500
 msgid "Sorry, you don't have permission to create invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:560
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:581
 msgid "Sorry, you need to be logged in to revoke invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:573
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:594
 msgid "Sorry, you don't have permission to revoke invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:581
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:589
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:602
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:610
 msgid "Invalid invite ID."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:682
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:703
 msgid "Sorry, you need to be logged in to view invites profile type."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:694
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:715
 msgid "Sorry, you don't have permission to view invites profile type."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:742
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:763
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:159
 msgid "Revoke Invite"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:778
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:799
 msgid "Fields array with name and email_id to create an invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:784
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:805
 msgid "Recipient Name for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:791
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:812
 msgid "Recipient Email for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:802
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:823
 msgid "Fields array with name, email_id and profile_type to create an invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:804
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:825
 msgid "Profile Type for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:814
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:835
 msgid "Subject for invite a member."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:823
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:844
 msgid "Content for invite a member."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:855
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:876
 msgid "Unique identifier for the invite."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:861
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:882
 msgid "Member's name."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:867
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:888
 msgid "Member's email address"
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:885
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:906
 msgid "Status to perform on it."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:890
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:911
 msgid "Whether invitee is registered or not."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:895
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:916
 msgid "Whether revoke invite or not."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:923
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:944
 msgid "Designates ascending or descending order of invites."
 msgstr ""
 
-#: bp-invites/classes/class-bp-rest-invites-endpoint.php:932
+#: bp-invites/classes/class-bp-rest-invites-endpoint.php:953
 msgid "Sort retrieved invites by parameter."
 msgstr ""
 
@@ -31057,12 +31080,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:20
 msgid "Invitations were sent successfully to the following email addresses:"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:67
-msgid ""
-"Invitations did not send to the following email addresses, because they are "
-"already invited:"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:98
