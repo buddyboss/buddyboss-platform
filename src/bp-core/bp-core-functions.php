@@ -9781,7 +9781,7 @@ function bb_pro_schedule_posts_version() {
  * @param [mixed] $log The log entry that needs to be written into the debug.log.
  * @param [boolean] $always_print Optional. True then always print the log. Default false.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  *
  * @return void
  */
@@ -9804,7 +9804,7 @@ function bb_error_log( $log = '', $always_print = false ) {
 /**
  * Function to check if GD or Imagick library is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  *
  * @return bool
  */
@@ -9836,7 +9836,7 @@ function bb_is_gd_or_imagick_library_enabled() {
 	/**
 	 * Filters the enabled/disabled value for image library.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.40
 	 *
 	 * @param bool $is_enabled True if enabled else false.
 	 */
