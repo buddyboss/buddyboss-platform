@@ -40,7 +40,7 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 			if ( is_callable( $callback ) ) {
 				// phpcs:ignore
-				error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
+				bb_error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
 
 				if ( empty( $args ) ) {
 					$result = (bool) call_user_func( $callback, $this );
@@ -50,10 +50,10 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 				if ( $result ) {
 					// phpcs:ignore
-					error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
+					bb_error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
 				} else {
 					// phpcs:ignore
-					error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
+					bb_error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
 				}
 			} else {
 				// phpcs:ignore
