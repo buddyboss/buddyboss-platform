@@ -282,7 +282,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support AffiliateWP.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.40
 	 */
 	if ( function_exists( 'affwp_do_actions' ) ) {
 		remove_action( 'init', 'affwp_do_actions', 9 );

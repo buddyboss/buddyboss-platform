@@ -668,7 +668,7 @@ function bb_get_member_invitation_query() {
 /**
  * Check if the invite already sent to particular email address by perticular inviter id if $inviter_id passed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  *
  * @param string $email      Email address to check for existing invite.
  * @param int    $inviter_id Id of the inviter to cross check already existing invite.
@@ -696,7 +696,7 @@ function bb_is_email_address_already_invited( $email, $inviter_id = 0 ) {
 	/**
 	 * Filter to check if email address already invited.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.40
 	 *
 	 * @param bool $is_already_invited True|False.
 	 */
