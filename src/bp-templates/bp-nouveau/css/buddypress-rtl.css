@@ -1479,7 +1479,7 @@ a.layout-grid-view {
 
 #user-status-huddle #bp-activity-privacy-point .group-privacy-point-icon img {
   max-height: 24px;
-  margin: -2px -5px -2px 0;
+  margin: -2px -5px -2px 5px;
   border-radius: 3px;
 }
 
@@ -26961,7 +26961,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
