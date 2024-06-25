@@ -57,6 +57,17 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.40 =
+* Bug: Activity - When creating a group post via the news feed page, the user was unable to create another post to the same group as the last post
+* Bug: Core - Fatal error occurred when GD and Imagick libraries were disabled from the servers
+* Bug: Core - Logs from the background process when migrating reactions were showing on the debug log even without turning on DEBUG in the wp-config file
+* Bug: Core - Profile details fields have now been given a maximum of 32 character validation limit
+* Bug: Email Invites - Users can now send multiple invites multiple times to a single email address
+* Bug: Groups - Group header title would change to show the first subgroup title even it was not selected
+* Bug: Integration - AffiliateWP was encountering a critical error when activating BuddyBoss
+* Bug: Messages - Updated the text in messages to show Shift+Return to add new line
+* Bug: Styling - The emoji/gif picker was cropped in mobile view and was not displaying properly on the view more comments modal
+
 = 2.6.30 =
 * Enhancement: Core - We have added a new namespace (BuddyBossPlatform) in the composer library (vendor folder) so if existing plugins use the same composer library, it will work fine with our new namespace
 * Enhancement: Platform - We have added a new Platform plugin menu option called upgrade, where you can now more easily access and track, Platform, Server and Integrations knowledge
