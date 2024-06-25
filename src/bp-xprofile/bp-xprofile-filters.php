@@ -849,7 +849,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 /**
  * Validate First Name and Last Name with Maximum Length.
  *
- * @since  BuddyBoss [BBVERSION]
+ * @since  BuddyBoss 2.6.40
  *
  * @param string $retval   Return value of the field.
  * @param int    $field_id Field id.
@@ -1711,7 +1711,7 @@ function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retva
 /**
  * Validate first_name and last_name field value length when user updated from the backend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  *
  * @param WP_Error $errors WP_Error object (passed by reference).
  * @param bool     $update Whether this is a user update.

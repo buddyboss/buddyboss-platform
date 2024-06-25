@@ -1644,7 +1644,7 @@ function bb_group_join_groups_record_activity_unsuspend_users() {
 /**
  * Add subgroup args for single/home page to avoid looping for subgroups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  */
 function bb_before_group_body_callback() {
 	add_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
@@ -1653,7 +1653,7 @@ function bb_before_group_body_callback() {
 /**
  * Remove subgroup args for single/home page to avoid looping for subgroups.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  */
 function bb_after_group_body_callback() {
 	remove_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
@@ -1662,7 +1662,7 @@ function bb_after_group_body_callback() {
 /**
  * Add subgroups args to fetch subgroups for the single/home page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.40
  *
  * @param array $args Group args.
  *
@@ -1681,7 +1681,7 @@ function bb_add_subgroups_args_single_home( $args ) {
 	/**
 	 * Filters the group args for single/home page to avoid looping for subgroups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.40
 	 *
 	 * @param array $args Group args.
 	 */
