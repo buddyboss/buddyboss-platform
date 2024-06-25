@@ -31,7 +31,6 @@ switch ( bp_action_variable( 0 ) ) :
 			if ( $is_send_ajax_request ) {
 				?>
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-members-loading' ); ?></div>
-				?>
 				<?php
 			} else {
 				bp_get_template_part( 'groups/single/members-loop' );
