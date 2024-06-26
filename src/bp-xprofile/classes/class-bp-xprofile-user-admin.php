@@ -249,6 +249,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 					// Validate xprofile
 					if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) {
+						$message     = is_array( $message ) ? reset( $message ) : $message;
 						$redirect_to = add_query_arg(
 							array(
 								'error'   => '4',

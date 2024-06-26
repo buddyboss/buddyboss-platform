@@ -275,6 +275,19 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-cdn-helpers.php';
 	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Fixed the issue with user register and issue with clear API cache.
+	 *
+	 * Support AffiliateWP.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 */
+	if ( function_exists( 'affwp_do_actions' ) ) {
+		remove_action( 'init', 'affwp_do_actions', 9 );
+		add_action( 'init', 'affwp_do_actions', 10 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
