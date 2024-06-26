@@ -1098,8 +1098,8 @@ class BP_Moderation {
 		$auto_hide          = false;
 
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( bp_is_moderation_auto_suspend_enable() || bb_is_moderation_auto_suspend_report_enable() ) ) {
-			$threshold          = bp_moderation_auto_suspend_threshold( 5 );
-			$user_threshold     = bb_moderation_auto_suspend_report_threshold();
+			$threshold          = bp_is_moderation_auto_suspend_enable() ? bp_moderation_auto_suspend_threshold( 5 ) : false;
+			$user_threshold     = bb_is_moderation_auto_suspend_report_enable() ? bb_moderation_auto_suspend_report_threshold() : false;
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
 			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
@@ -1128,15 +1128,25 @@ class BP_Moderation {
 			} else {
 				$this->count += 1;
 			}
-			if ( ! empty( $threshold ) ) {
-				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
-					$this->hide_sitewide = 1;
-					$auto_hide           = true;
-				}
-				if ( BP_Moderation_Members::$moderation_type === $this->item_type && $this->count_report >= $user_threshold && empty( $this->hide_sitewide ) ) {
-					$this->hide_sitewide = 1;
-					$auto_hide           = true;
-				}
+			
+			if (
+				! empty( $threshold ) &&
+				$this->count >= $threshold &&
+				1 !== $this->user_report &&
+				empty( $this->hide_sitewide )
+			) {
+				$this->hide_sitewide = 1;
+				$auto_hide           = true;
+			}
+			if (
+				BP_Moderation_Members::$moderation_type === $this->item_type &&
+				! empty( $user_threshold ) &&
+				$this->count_report >= $user_threshold &&
+				1 === $this->user_report &&
+				empty( $this->hide_sitewide )
+			) {
+				$this->hide_sitewide = 1;
+				$auto_hide           = true;
 			}
 		}
 
