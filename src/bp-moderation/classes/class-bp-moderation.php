@@ -1098,7 +1098,7 @@ class BP_Moderation {
 		$auto_hide          = false;
 
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && ( bp_is_moderation_auto_suspend_enable() || bb_is_moderation_auto_suspend_report_enable() ) ) {
-			$threshold          = bp_is_moderation_auto_suspend_enable() && bp_moderation_auto_suspend_threshold( 5 );
+			$threshold          = bp_is_moderation_auto_suspend_enable() ? bp_moderation_auto_suspend_threshold( 5 ) : false;
 			$user_threshold     = bb_is_moderation_auto_suspend_report_enable() ? bb_moderation_auto_suspend_report_threshold() : false;
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
