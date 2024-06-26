@@ -498,7 +498,7 @@ window.bp = window.bp || {};
 			}
 
 			// Set poll data.
-			if ( ! _.isUndefined( activity_data.poll ) ) {
+			if ( ! _.isUndefined( activity_data.poll ) && ! $.isEmptyObject( activity_data.poll ) ) {
 				var pollObject = {
 					id: activity_data.poll.id,
 					user_id: parseInt( activity_data.poll.user_id ),
@@ -1168,6 +1168,7 @@ window.bp = window.bp || {};
 				(
 					(
 						! _.isUndefined( self.postForm.model.get( 'poll' ) ) &&
+						! $.isEmptyObject( self.postForm.model.get( 'poll' ) ) &&
 						! Object.keys( self.postForm.model.get( 'poll' ) ).length
 					) ||
 					_.isUndefined( self.postForm.model.get( 'poll' ) )
