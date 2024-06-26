@@ -107,6 +107,11 @@ add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10
 add_action( 'bp_suspend_hide_user', 'bb_group_remove_suspended_user', 99, 1 );
 add_action( 'bp_suspend_unhide_user', 'bb_group_add_unsuspended_user', 9, 1 );
 
+add_action( 'bp_before_group_body', 'bb_before_group_body_callback' );
+add_action( 'bp_after_group_body', 'bb_after_group_body_callback' );
+add_action( 'bp_before_subgroups_loop', 'bb_before_group_body_callback' );
+add_action( 'bp_after_subgroups_loop', 'bb_after_group_body_callback' );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -1635,4 +1640,51 @@ function bb_group_add_unsuspended_user( $user_id ) {
  */
 function bb_group_join_groups_record_activity_unsuspend_users() {
 	return false;
+}
+
+/**
+ * Add subgroup args for single/home page to avoid looping for subgroups.
+ *
+ * @since BuddyBoss 2.6.40
+ */
+function bb_before_group_body_callback() {
+	add_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
+}
+
+/**
+ * Remove subgroup args for single/home page to avoid looping for subgroups.
+ *
+ * @since BuddyBoss 2.6.40
+ */
+function bb_after_group_body_callback() {
+	remove_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
+}
+
+/**
+ * Add subgroups args to fetch subgroups for the single/home page.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @param array $args Group args.
+ *
+ * @return array
+ */
+function bb_add_subgroups_args_single_home( $args ) {
+	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) {
+		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
+		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
+		$args['include']     = $ids;
+		$args['slug']        = '';
+		$args['type']        = '';
+		$args['show_hidden'] = true;
+	}
+
+	/**
+	 * Filters the group args for single/home page to avoid looping for subgroups.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 *
+	 * @param array $args Group args.
+	 */
+	return apply_filters( 'bb_add_subgroups_args_single_home', $args );
 }

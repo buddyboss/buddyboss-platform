@@ -50,7 +50,7 @@
 
 		#user-status-huddle & {
 			max-height: 24px;
-			margin: -2px 0 -2px -5px;
+			margin: -2px 5px -2px -5px;
 			border-radius: 3px;
 		}
 
@@ -1771,6 +1771,20 @@ div[class*="attached-gif-container"] {
 		padding: 8px;
 		background-color: #000;
 		opacity: 0.45;
+	}
+}
+
+#bbpress-forums div[class*="attached-gif-container"] {
+	height: auto !important;
+	width: auto !important;
+	display: inline-block;
+	max-width: 450px;
+	background-image: none !important;
+	min-width: 130px;
+	min-height: 100px;
+
+	&.closed {
+		display: none;
 	}
 }
 
