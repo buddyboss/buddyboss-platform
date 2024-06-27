@@ -40,7 +40,7 @@ function bp_ps_xprofile_setup( $fields ) {
 				$f->description = $f->description;
 				$f->type        = $field->type;
 				$f->format         = bp_ps_xprofile_format( $field->type, $field->id );
-				$f->search         = 'bp_ps_xprofile_search';
+				$f->search         = 'bp_ps_xprofile_search_test';
 				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
 				$f->get_value      = 'bp_ps_xprofile_get_value';
 
@@ -249,6 +249,182 @@ function bp_ps_xprofile_search( $f ) {
 	} else {
 		$user_ids = $wpdb->get_col( $query );
 	}
+
+	return $user_ids;
+}
+
+
+function bp_ps_xprofile_search_test( $f ) {
+	global $bp, $wpdb;
+
+	$value  = $f->value;
+	$filter = $f->format . '_' . ( $f->filter == '' ? 'is' : $f->filter );
+
+	$sql                      = array(
+		'select' => '',
+		'where'  => array(),
+	);
+	$sql['select']            = "SELECT distinct user_id FROM {$bp->profile->table_name_data}";
+
+	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
+		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
+	} else {
+		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	}
+
+	if (
+		! current_user_can( 'administrator' )
+	) {
+		$field_visibility = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$loggin_user_id = bp_loggedin_user_id();
+
+			$field_visibility[] = 'loggedin';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_ids_sql = $wpdb->prepare(
+					"SELECT CASE WHEN initiator_user_id = %d THEN friend_user_id ELSE initiator_user_id END AS friend_id
+					FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND( initiator_user_id = %d OR friend_user_id = %d )",
+					$loggin_user_id,
+					$loggin_user_id,
+					$loggin_user_id
+				);
+			}
+		}
+
+		$sql['where'][] = "field_id IN (
+			SELECT field_id FROM {$bp->profile->table_name_visibility} WHERE `value` IN ('" . implode( "','", $field_visibility ) . "')
+			 OR ( `value` = 'friends' AND user_id IN ({$friend_ids_sql}) )
+			 OR ( `value` = 'onlyme' AND user_id = {$loggin_user_id} )
+		)";
+	}
+
+	switch ( $filter ) {
+		case 'integer_range':
+			if ( isset( $value['min'] ) ) {
+				$sql['where']['min'] = $wpdb->prepare( 'value >= %d', $value['min'] );
+			}
+			if ( isset( $value['max'] ) ) {
+				$sql['where']['max'] = $wpdb->prepare( 'value <= %d', $value['max'] );
+			}
+			break;
+
+		case 'decimal_range':
+			if ( isset( $value['min'] ) ) {
+				$sql['where']['min'] = $wpdb->prepare( 'value >= %f', $value['min'] );
+			}
+			if ( isset( $value['max'] ) ) {
+				$sql['where']['max'] = $wpdb->prepare( 'value <= %f', $value['max'] );
+			}
+			break;
+
+		case 'date_date_range':
+			$range_types = array( 'min', 'max' );
+			foreach ( $range_types as $range_type ) {
+				if ( isset( $value[ $range_type ]['year'] ) && ! empty( $value[ $range_type ]['year'] ) ) {
+					$year  = $f->value[ $range_type ]['year'];
+					$month = ! empty( $f->value[ $range_type ]['month'] ) ? $f->value[ $range_type ]['month'] : '00';
+					$day   = ! empty( $f->value[ $range_type ]['day'] ) ? $f->value[ $range_type ]['day'] : '00';
+					$date  = $year . '-' . $month . '-' . $day;
+
+					$operator = 'min' == $range_type ? '>=' : '<=';
+
+					$sql['where'][ $range_type ] = $wpdb->prepare( "DATE(value) $operator %s", $date );
+				}
+			}
+			break;
+
+		case 'date_age_range':
+			$day   = date( 'j' );
+			$month = date( 'n' );
+			$year  = date( 'Y' );
+
+			if ( isset( $value['max'] ) ) {
+				$ymin                    = $year - $value['max'] - 1;
+				$sql['where']['age_min'] = $wpdb->prepare( 'DATE(value) > %s', "$ymin-$month-$day" );
+			}
+			if ( isset( $value['min'] ) ) {
+				$ymax                    = $year - $value['min'];
+				$sql['where']['age_max'] = $wpdb->prepare( 'DATE(value) <= %s', "$ymax-$month-$day" );
+			}
+			break;
+
+		case 'text_contains':
+		case 'location_contains':
+			if ( is_array( $value ) ) {
+				$values = (array) $value;
+				$parts  = array();
+				foreach ( $values as $v ) {
+					$v       = str_replace( '&', '&amp;', $v );
+					$escaped = '%' . bp_ps_esc_like( $v ) . '%';
+					$parts[] = $wpdb->prepare( 'value LIKE %s', $escaped );
+				}
+				$match                   = ' OR ';
+				$sql['where'][ $filter ] = '(' . implode( $match, $parts ) . ')';
+			} else {
+				$value                   = str_replace( '&', '&amp;', $value );
+				$escaped                 = '%' . bp_ps_esc_like( $value ) . '%';
+				$sql['where'][ $filter ] = $wpdb->prepare( 'value LIKE %s', $escaped );
+			}
+			break;
+
+		case 'text_like':
+		case 'location_like':
+			$value                   = str_replace( '&', '&amp;', $value );
+			$value                   = str_replace( '\\\\%', '\\%', $value );
+			$value                   = str_replace( '\\\\_', '\\_', $value );
+			$sql['where'][ $filter ] = $wpdb->prepare( 'value LIKE %s', $value );
+			break;
+
+		case 'text_is':
+		case 'location_is':
+			$value                   = str_replace( '&', '&amp;', $value );
+			$sql['where'][ $filter ] = $wpdb->prepare( 'value = %s', $value );
+			break;
+
+		case 'integer_is':
+			$sql['where'][ $filter ] = $wpdb->prepare( 'value = %d', $value );
+			break;
+
+		case 'decimal_is':
+			$sql['where'][ $filter ] = $wpdb->prepare( 'value = %f', $value );
+			break;
+
+		case 'date_is':
+			$sql['where'][ $filter ] = $wpdb->prepare( 'DATE(value) = %s', $value );
+			break;
+
+		case 'text_one_of':
+			$values = (array) $value;
+			$parts  = array();
+			foreach ( $values as $value ) {
+				$value   = str_replace( '&', '&amp;', $value );
+				$parts[] = $wpdb->prepare( 'value = %s', $value );
+			}
+			$sql['where'][ $filter ] = '(' . implode( ' OR ', $parts ) . ')';
+			break;
+
+		case 'set_match_any':
+		case 'set_match_all':
+			$values = (array) $value;
+			$parts  = array();
+			foreach ( $values as $value ) {
+				$value   = str_replace( '&', '&amp;', $value );
+				$escaped = '%:"' . bp_ps_esc_like( $value ) . '";%';
+				$parts[] = $wpdb->prepare( 'value LIKE %s', $escaped );
+			}
+			$match                   = ( $filter == 'set_match_any' ) ? ' OR ' : ' AND ';
+			$sql['where'][ $filter ] = '(' . implode( $match, $parts ) . ')';
+			break;
+
+		default:
+			return array();
+	}
+
+	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
+	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
+
+	$user_ids = $wpdb->get_col( $query );
 
 	return $user_ids;
 }
