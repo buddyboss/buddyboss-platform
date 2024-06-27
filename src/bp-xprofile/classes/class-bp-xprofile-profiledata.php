@@ -304,6 +304,22 @@ class BP_XProfile_ProfileData {
 		if ( empty( $deleted ) ) {
 			return false;
 		}
+		
+		if ( $deleted ) {
+
+			// Delete profile visibility on user's field delete.
+			$user_visibility_levels = bp_get_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', true );
+			if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
+				$user_visibility_levels = array();
+			}
+
+			if ( ! empty( $user_visibility_levels ) && is_array( $user_visibility_levels ) && array_key_exists( $this->field_id, $user_visibility_levels ) ) {
+				unset( $user_visibility_levels[ $this->field_id ] );
+				bp_update_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', $user_visibility_levels );
+			}
+
+			BB_XProfile_Visibility::delete_specific_data_for_user( $this->field_id, $this->user_id );
+		}
 
 		/**
 		 * Fires after the current profile data instance gets deleted.
