@@ -2066,7 +2066,6 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 	if ( isset( $user->nickname ) ) {
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
 	}
-
 }
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
 
@@ -2083,7 +2082,6 @@ add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
  *
  * @return void
  */
-
 function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
 	if ( ! empty( $errors ) ) {
@@ -2108,7 +2106,6 @@ function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old
 		if ( ! $field_id || $field_id == $nickname_id ) {
 			bp_update_user_meta( $user_id, 'nickname', $new_value['value'] );
 		}
-
 	}
 
 	bp_xprofile_update_display_name( $user_id );
@@ -2119,7 +2116,7 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
  * Return Transient name using logged in User ID.
  *
  * @param string $key - Transient prefix key
- * @param int $widget_id - Widget id part of transient name string
+ * @param int    $widget_id - Widget id part of transient name string
  *
  * @return string $transient_name
  *
@@ -2131,7 +2128,6 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
 	$transient_name = $key . $user_id . $widget_id;
 
 	return apply_filters( 'bp_xprofile_get_profile_completion_transient_name', $transient_name );
-
 }
 
 /**
@@ -2176,7 +2172,7 @@ function bp_xprofile_get_user_profile_progress_data( $settings ) {
  */
 function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
-	if( empty($group_ids) ){
+	if ( empty( $group_ids ) ) {
 		$group_ids = array();
 	}
 
@@ -2361,7 +2357,7 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 	/* Groups */
 
 	$loggedin_user_domain = bp_loggedin_user_domain();
-	$profile_slug          = bp_get_profile_slug();
+	$profile_slug         = bp_get_profile_slug();
 
 	// Calculate Total Progress percentage.
 	$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
@@ -2371,7 +2367,7 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 	// Group specific details
 	$listing_number = 1;
-	if( isset( $user_progress_arr['groups'] ) ){
+	if ( isset( $user_progress_arr['groups'] ) ) {
 		foreach ( $user_progress_arr['groups'] as $group_id => $group_details ) {
 
 			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
@@ -2811,7 +2807,10 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 						$update_placeholders[] = $wpdb->prepare(
 							// phpcs:ignore
 							"UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d",
-							$level, $current_time, $user_id, $field_id
+							$level,
+							$current_time,
+							$user_id,
+							$field_id
 						);
 					}
 				} else {
