@@ -963,6 +963,7 @@ function bp_xprofile_update_display_name( $user_id ) {
  */
 function xprofile_remove_data( $user_id ) {
 	BP_XProfile_ProfileData::delete_data_for_user( $user_id );
+	BB_XProfile_Visibility::delete_data_for_user( $user_id );
 }
 add_action( 'wpmu_delete_user', 'xprofile_remove_data' );
 add_action( 'delete_user', 'xprofile_remove_data' );
@@ -2734,7 +2735,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
 	$bp   = buddypress();
 	$args = array(
-		'number'     => 50,
+		'number'     => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
 		'paged'      => $page,
 		'meta_query' => array(
 			array(

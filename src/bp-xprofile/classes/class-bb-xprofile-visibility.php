@@ -445,6 +445,28 @@ class BB_XProfile_Visibility {
 	}
 
 	/**
+	 * Delete specific field for specific user.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param int $field_id ID of the field to delete.
+	 * @param int $user_id  ID of the user whose field is to be deleted.
+	 *
+	 * @return bool
+	 */
+	public static function delete_specific_data_for_user( $field_id, $user_id ) {
+		global $wpdb;
+
+		$bp      = buddypress();
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_visibility} WHERE field_id = %d AND user_id = %d", $field_id, $user_id ) );
+		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get the XProfile profile visibility data.
 	 *
 	 * @since BuddyBoss [BBVERSION]
