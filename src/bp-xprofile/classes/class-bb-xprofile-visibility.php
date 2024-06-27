@@ -89,6 +89,7 @@ class BB_XProfile_Visibility {
 
 		$table_name = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$profile_visibility = $wpdb->get_row(
 			$wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -126,6 +127,7 @@ class BB_XProfile_Visibility {
 		global $wpdb;
 
 		$table  = bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$retval = $wpdb->get_row(
 			$wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -136,11 +138,11 @@ class BB_XProfile_Visibility {
 		);
 
 		/**
-		 * Filters whether or not data already exists for the user.
+		 * Filters whether data already exists for the user.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool                   $retval Whether or not data already exists.
+		 * @param bool                   $retval Whether data already exists.
 		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
 		 */
 		return apply_filters_ref_array( 'xprofile_visibility_exists', array( (bool) $retval, $this ) );
@@ -157,14 +159,16 @@ class BB_XProfile_Visibility {
 	 */
 	public static function user_data_exists( $user_id = 0 ) {
 		global $wpdb;
+		$bp = buddypress();
 
-		$bp           = buddypress();
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
 		if ( $table_exists ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval = $wpdb->get_row(
 				$wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d limit 0, 1",
 					$user_id
 				)
 			);
@@ -173,14 +177,14 @@ class BB_XProfile_Visibility {
 		}
 
 		/**
-		 * Filters whether or not any data already exists for the user.
+		 * Filters whether any data already exists for the user.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool $retval  Whether or not data already exists.
+		 * @param bool $retval  Whether data already exists.
 		 * @param int  $user_id User id.
 		 */
-		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( (bool) $retval, $user_id ) );
+		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval ), $user_id ) );
 	}
 
 	/**
@@ -200,6 +204,7 @@ class BB_XProfile_Visibility {
 		$retval    = wp_cache_get( $cache_key, 'bp_xprofile' );
 
 		if ( false === $retval ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval = $wpdb->get_row(
 				$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -211,11 +216,11 @@ class BB_XProfile_Visibility {
 		}
 
 		/**
-		 * Filters whether or not data is for a valid field.
+		 * Filters whether data is for a valid field.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool                   $retval Whether or not data is valid.
+		 * @param bool                   $retval Whether data is valid.
 		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
 		 */
 		return apply_filters_ref_array( 'xprofile_visibility_is_valid_field', array( (bool) $retval, $this ) );
@@ -287,10 +292,12 @@ class BB_XProfile_Visibility {
 		do_action_ref_array( 'xprofile_visibility_before_save', array( $this ) );
 
 		if ( $this->is_valid_field() ) {
+			// Data exists, update it.
 			if ( $this->exists() && strlen( trim( $this->value ) ) ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$result = $wpdb->query(
 					$wpdb->prepare(
-					// phpcs:ignore
+						// phpcs:ignore
 						"UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id
 					)
 				);
@@ -299,7 +306,7 @@ class BB_XProfile_Visibility {
 				$result = $this->delete();
 
 			} else {
-
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$result = $wpdb->query(
 					$wpdb->prepare(
 					// phpcs:ignore
@@ -352,6 +359,7 @@ class BB_XProfile_Visibility {
 		 */
 		do_action_ref_array( 'xprofile_visibility_before_delete', array( $this ) );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
 			// phpcs:ignore
@@ -386,13 +394,15 @@ class BB_XProfile_Visibility {
 	public static function delete_for_field( $field_id ) {
 		global $wpdb;
 
-		$bp      = buddypress();
+		$bp = buddypress();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
 			// phpcs:ignore
 				"DELETE FROM {$bp->profile->table_name_visibility} WHERE field_id = %d", $field_id
 			)
 		);
+
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
 			return false;
 		}
@@ -414,6 +424,7 @@ class BB_XProfile_Visibility {
 
 		$bp = buddypress();
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$field_ids = $wpdb->get_col(
 			$wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -465,6 +476,7 @@ class BB_XProfile_Visibility {
 
 		$quoted_levels = implode( ',', $quoted_levels );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
