@@ -1964,7 +1964,14 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 		// Merge private and hidden forums together
 		$forum_ids = (array) array_filter( wp_parse_id_list( array_merge( $private, $hidden ) ) );
 
-		// There are forums that need to be excluded
+		if ( bp_is_active( 'groups' ) && is_user_logged_in() ) {
+
+			// Get the forums associated to groups.
+			$grouped_forum_ids = bb_get_all_private_grouped_forums_ids();
+			$forum_ids = (array) array_filter( wp_parse_id_list( array_unique( array_merge( $forum_ids, $grouped_forum_ids ) ) ) );
+		}
+
+		// There are forums that need to be excluded.
 		if ( ! empty( $forum_ids ) ) {
 
 			// check the user is the member of group or not while rendering the shortcode with group.
@@ -2759,4 +2766,35 @@ function bbp_get_non_public_forum_statuses() {
 
 	// Filter & return.
 	return (array) apply_filters( 'bbp_get_non_public_forum_statuses', $statuses );
+}
+
+/**
+ * Return array of all grouped forum Ids.
+ *
+ * @since BuddyBoss[BBVERSION]
+ *
+ * @return array
+ */
+function bb_get_all_private_grouped_forums_ids() {
+
+	static $forums_ids = array();
+
+	if ( empty( $forums_ids ) ) {
+		global $wpdb;
+
+		// Prepare the SQL query.
+		$query = "SELECT DISTINCT p.ID
+					FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+					WHERE p.post_type = 'forum'
+					AND p.post_status = 'private'
+					AND pm.meta_key = '_bbp_group_ids'
+					AND pm.meta_value != '' AND pm.meta_value != 'a:0:{}'";
+
+		// Execute the query.
+		$forums_ids = $wpdb->get_col( $query );
+	}
+
+	// Filter & return.
+	return (array) apply_filters( 'bb_get_all_private_grouped_forums_ids', $forums_ids );
 }
