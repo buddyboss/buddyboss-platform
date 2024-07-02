@@ -1408,23 +1408,6 @@
 	}
 }
 
-@media screen and (max-width: 480px) {
-
-	.activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list {
-
-		&.active {
-			left: -40px;
-		}
-
-		&:hover {
-
-			body:not(.bb-is-mobile) & {
-				left: -40px;
-			}
-		}
-	}
-}
-
 /* Activity comment modal ==> Starts Here */
 .acomments-modal-open {
 	overflow: hidden;
