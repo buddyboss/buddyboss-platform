@@ -9842,3 +9842,35 @@ function bb_is_gd_or_imagick_library_enabled() {
 	 */
 	return apply_filters( 'bb_is_gd_or_imagick_library_enabled', (bool) $is_enabled );
 }
+
+
+/**
+ * Remove deleted user's last_activity entries from activity table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_remove_deleted_user_last_activities() {
+	global $wpdb;
+
+	// Get the BuddyPress table prefix if available, otherwise use the base prefix
+	$bp_prefix = function_exists('bp_core_get_table_prefix') ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_activity' table exists
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
+
+	if ( $table_exists ) {
+		$sql = "DELETE a FROM {$bp_prefix}bp_activity a
+			LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID
+			WHERE u.ID IS NULL
+			AND a.component = 'members'
+			AND a.type = 'last_activity'
+		";
+
+		// Execute the query.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( $sql );
+	}
+}
