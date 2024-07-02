@@ -1206,6 +1206,8 @@ function bp_add_activation_redirect() {
 		}
 	}
 
+	bb_remove_deleted_user_last_activities();
+
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
 
@@ -3656,6 +3658,11 @@ function bb_update_to_2_6_20() {
 	// Run migration.
 	$is_already_run = get_transient( 'bb_migrate_xprofile_visibility' );
 	if ( ! $is_already_run ) {
+
+		// Remove deleted user last_activity on update.
+		bb_remove_deleted_user_last_activities();
+
+		// Migrate xprofile visibility data.
 		bb_core_install_xprofile_visibility();
 		bb_migrate_xprofile_visibility( true );
 		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
