@@ -502,7 +502,7 @@ window.bp = window.bp || {};
 				var pollObject = {
 					id: activity_data.poll.id,
 					user_id: parseInt( activity_data.poll.user_id ),
-					activity_id: activity_data.id,
+					item_id: ! _.isUndefined( activity_data.poll.item_id ) ? activity_data.poll.item_id : 0,
 					vote_disabled_date: activity_data.poll.vote_disabled_date,
 					question: activity_data.poll.question,
 					options: activity_data.poll.options,
