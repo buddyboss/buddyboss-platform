@@ -202,17 +202,15 @@
 											<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 										</a>
 										<div class="document-action_list bb_more_dropdown">
-											<div class="bb_more_dropdown__title"> 
-												<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
-												<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+											<div class="bb_more_dropdown-wrapper">
+												<?php bp_get_template_part( 'common/more-options-view' ); ?>
+												<ul>
+													<li class="copy_download_file_url">
+														<a href="{{data.document[i].url}}">{{data.document[i].copy_download_link}}</a>
+													</li>
+												</ul>
 											</div>
-											<ul>
-												<li class="copy_download_file_url">
-													<a href="{{data.document[i].url}}">{{data.document[i].copy_download_link}}</a>
-												</li>
-											</ul>
 										</div>
-										<div class="bb_more_dropdown_overlay"></div>
 									</div>
 									{{{data.document[i].msg_preview}}}
 								<# } #>
