@@ -1671,22 +1671,20 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb-activity-more-options-wrap' ) );
 	}
 
+	ob_start();
+	bp_get_template_part( 'common/more-options-view' );
+	$template_part_content = ob_get_clean();
+
 	$output = sprintf(
 		'<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%1$s">
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 		</span>
 		<div class="bb-activity-more-options bb_more_dropdown">
-			<div class="bb_more_dropdown__title">
-				<span class="bb_more_dropdown__title__text">%2$s</span>
-				<span class="bb_more_dropdown__close_button" role="button">
-					<i class="bb-icon-l bb-icon-times"></i>
-				</span>
-			</div>
+			%2$s
 			%3$s
-		</div>
-		<div class="bb_more_dropdown_overlay"></div>',
+		</div>',
 		esc_html__( 'More Options', 'buddyboss' ),
-		esc_html__( 'Options', 'buddyboss' ),
+		$template_part_content,
 		$output
 	);
 
