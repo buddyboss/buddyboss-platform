@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.4.3
+Tested up to: 6.5.5
 Requires PHP: 5.6.20
-Stable tag: 2.5.91
+Stable tag: 2.6.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,80 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.40 =
+* Bug: Activity - When creating a group post via the news feed page, the user was unable to create another post to the same group as the last post
+* Bug: Core - Fatal error occurred when GD and Imagick libraries were disabled from the servers
+* Bug: Core - Logs from the background process when migrating reactions were showing on the debug log even without turning on DEBUG in the wp-config file
+* Bug: Core - Profile details fields have now been given a maximum of 32 character validation limit
+* Bug: Email Invites - Users can now send multiple invites multiple times to a single email address
+* Bug: Groups - Group header title would change to show the first subgroup title even it was not selected
+* Bug: Integration - AffiliateWP was encountering a critical error when activating BuddyBoss
+* Bug: Messages - Updated the text in messages to show Shift+Return to add new line
+* Bug: Styling - The emoji/gif picker was cropped in mobile view and was not displaying properly on the view more comments modal
+
+= 2.6.30 =
+* Enhancement: Core - We have added a new namespace (BuddyBossPlatform) in the composer library (vendor folder) so if existing plugins use the same composer library, it will work fine with our new namespace
+* Enhancement: Platform - We have added a new Platform plugin menu option called upgrade, where you can now more easily access and track, Platform, Server and Integrations knowledge
+* Bug: Activity - User timeline URL was redirected users to the main activity feed once WPML plugin was activated
+* Bug: Activity - When setting the page request from performance to option 1, the posts on the user timeline were being duplicated
+* Bug: Core - The Favicon was not displaying on the Messages page
+* Bug: Core - When using Windows inbuilt emoji’s in Edge or Chrome browser was causing the emoji to duplicate
+* Bug: Email - Mention email was not showing correct content which meant the View post button then also redirected to the wrong location
+* Bug: Email - Play icon on videos within a transactional email notification was broken
+* Bug: Forums - The GIF picker and preview in the Forum Discussion and replies are now showing properly on mobile responsive view
+* Bug: Platform - When the Media Uploading component was not enabled then the 3 dots (ellipses) drop-down menu on activity posts was not clickable
+* Bug: Styling - The mobile view display of multiple images uploaded on the activity feed was not displaying correctly
+
+= 2.6.21 =
+* Bug: Performance - When page load is set to 1 this caused the members page in groups to stop loading
+
+= 2.6.20 =
+* Enhancement: Core - Buddyboss default posts description have all been checked and updated to show correct information in the post
+* Enhancement: Platform - Removed app preview options in BuddyBoss - Settings - Groups due to the new group header design in the app this is no longer available
+* Bug: Activity - The GIF search was not working on multi-level comments
+* Bug: Activity - The reactions displayed on the mobile view were overlapping on the displayed screen
+* Bug: Activity - When page request was set to 1 in the new performance tab setting posted activity was delayed
+* Bug: Core - The conditional profile fields did not display error when the requirement fields were not filled
+* Bug: Core - The GIF picker was incorrect height which distorted the GIF previews slightly
+* Bug: Core - The scheduled posts modal will now open to the specific feed in the specific group where the scheduled post was originally created from
+* Bug: Forums - Removing tags on forum discussion was not working correctly after a user removed them tags were still showing
+* Bug: Groups - The More Options when opening a document was not clickable and there for did not display the content
+* Bug: Media - The photo preview was now showing when editing an activity or activity comment/reply while the WP offload plugin was enabled
+* Bug: Styling - Long comments did not break to a new line and was being displayed continuously in a straight line
+* Bug: Styling - Pasting long links in to an activity post comment broke the UI design which then the link overlapped
+* Bug: Translations - The word 'Uploading' when users are uploading media is now available for translation
+* Bug: WooCommerce - When mentioning users in a product description, the mentioned link lead to a 404 error page instead of the user profile
+
+= 2.6.11 =
+* Bug: Core - Updated Schedule posts logic for Group organisers and owners
+
+= 2.6.10 =
+* New Feature! Admins and Groups organizers and moderators now have the ability to use scheduling posts
+* Enhancement: Core - Updated REST API caching and purging business logic
+* Bug: Core - The "Like/Reaction" button in the newsfeed was causing a redirection when using an iOS device when holding the button to choose from the reactions menu
+* Bug: Core - When improper texts are added to the social network profile field, it would show ‘Array' error message
+* Bug: Core - When the emoji setting was disabled, the pop up modal display when clicking view more comments was not closable causing an error
+* Bug: Groups - Added new functionality that when suspending a group creator site admin then become the owner of the group
+* Bug: Integration - Error was showing on Homepage when Rank Math installed with BuddyBoss platform
+* Bug: Moderation - The Blocked/Reported member is no longer getting automatically suspended without the auto-suspend being configured
+* Bug: Multisite - The default profile fields repair tool was not working correctly in multisite
+* Bug: Platform - Updated media to add file type suffix so that Symlinks will work with offloading and CDN’s
+* Bug: Styling - Giphy panel would fall behind the buddy bar when expanded and no left sidebar widgets were used
+* Bug: Styling - Improved the UI to handle some inconsistencies for the activity comment forms when viewing in mobile web view
+* Bug: Styling - Removed the blue hover effect of the text formatting on the message form
+
+= 2.6.00 =
+* Enhancement: Groups - The group feed displays the group avatar and the users avatar overlayed we have removed the group avatar from posts within said groups
+* Bug: Activity - Elementor Activity feed widget would not allow the upload of gif images
+* Bug: Core - Network Search from Default 2022 Theme was showing a blank results page
+* Bug: Core - The _transient_timeout_bb_presence_api_mu_download now only called once a week
+* Bug: Core - Users are now prohibited from commenting on or liking posts if the post's privacy setting is set to ‘only me' or 'my connections’.
+* Bug: Core - When enabling repeater fields in profile field sets the values were not showing individually on the backend
+* Bug: Core - When using the WPML plugin the search result count number on the page and post was incorrect due to a conflict
+* Bug: Email - The image preview from the BuddyBoss email notification did not fit properly when using the Google App on mobile
+* Bug: Groups - Group forum discussion/replies which were also posted in News Feed, showed link preview in the News Feed even if the link preview is disabled for both Activity and Forum
+* Bug: Styling - Removed "0 Comments" text When there are no comments on an activity post
 
 = 2.5.91 =
 * Enhancement: Activity - Made small UI adjustments to the new activity pop-up modal

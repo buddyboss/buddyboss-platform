@@ -69,6 +69,9 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// Forum/Topic.
 			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
+			
+			// Fix incorrect search results for Global Search for translated/non-translated posts.
+			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
 		}
 
 		/**
@@ -133,6 +136,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 					$q->set( 'page_id', $bp_pages->document->id );
 				} elseif ( 'videos' === $bp_current_component && isset( $bp_pages->video->id ) ) {
 					$q->set( 'page_id', $bp_pages->video->id );
+				} elseif ( 'activity' === $bp_current_component && isset( $bp_pages->activity->id ) ) {
+					$q->set( 'page_id', $bp_pages->activity->id );
 				} else {
 					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
 					if ( $page_id ) {
@@ -222,6 +227,57 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $r;
+		}
+
+		/**
+		 * Remove WPML post__in filter to allow parent translated post as well if the post is not translatable.
+		 *
+		 * @since BuddyBoss 2.6.00
+		 *
+		 * @param WP_Query $q Query for parsing WP QUERY.
+		 *
+		 * @return WP_Query $q Returns modified Query.
+		 */
+		public function bb_remove_wpml_post_parse_query( $q ) {
+			if ( isset( $q->query_vars['post__in'] ) ) {
+				unset( $q->query_vars['post__in'] );
+			}
+
+			return $q;
+		}
+
+		/**
+		 * Add fix for WPML post count issue in Global Search.
+		 *
+		 * @since BuddyBoss 2.6.00
+		 *
+		 * @param string $sql_query String of the SQL query to filter.
+		 * @param array  $args      Arguments of the filter to get the post_type.
+		 *
+		 * @return string $sql_query String of the SQL query to filter.
+		 */
+		public function bb_wpml_search_posts_sql( $sql_query, $args ) {
+			global $sitepress;
+
+			if (
+				defined( 'ICL_LANGUAGE_CODE' ) &&
+				$sitepress->is_translated_post_type( $args['post_type'] )
+			) {
+			        global $wpdb;
+				$sql_query .= " AND EXISTS (
+						SELECT 1 
+						FROM {$wpdb->prefix}icl_translations t
+						WHERE t.element_type = CONCAT('post_', %s)
+						AND t.language_code = %s
+						AND t.element_id = p.ID
+					)";
+
+				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
+			} else {
+				add_filter( 'wpml_post_parse_query', array( $this, 'bb_remove_wpml_post_parse_query' ) );
+			}
+
+			return $sql_query;
 		}
 
 	}
