@@ -135,8 +135,14 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		$options = $this->field_obj->get_children();
 		$html    = '';
 
-		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
+		if ( wp_doing_ajax() ) {
+			if ( empty( $original_option_values ) && ! empty( $_GET['post'][ 'field_' . $this->field_obj->id ] ) ) {
+				$original_option_values = sanitize_text_field( $_GET['post'][ 'field_' . $this->field_obj->id ] );
+			}
+		} else {
+			if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+				$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
+			}
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
@@ -145,10 +151,20 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
-			foreach ( $option_values as $i => $option_value ) {
-				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ][ $i ] != $option_value ) {
-					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) ) {
-						$option_values[] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ][ $i ] );
+			if ( wp_doing_ajax() ) {
+				foreach ( $option_values as $i => $option_value ) {
+					if ( isset( $_GET['post'][ 'field_' . $this->field_obj->id ] ) && $_GET['post'][ 'field_' . $this->field_obj->id ][ $i ] != $option_value ) {
+						if ( ! empty( $_GET['post'][ 'field_' . $this->field_obj->id ][ $i ] ) ) {
+							$option_values[] = ( $_GET['post'][ 'field_' . $this->field_obj->id ][ $i ] );
+						}
+					}
+				}
+			} else {
+				foreach ( $option_values as $i => $option_value ) {
+					if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ][ $i ] != $option_value ) {
+						if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ][ $i ] ) ) {
+							$option_values[] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ][ $i ] );
+						}
 					}
 				}
 			}

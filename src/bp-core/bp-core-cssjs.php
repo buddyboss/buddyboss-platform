@@ -175,15 +175,6 @@ function bp_core_register_common_scripts() {
 		),
 	);
 
-	// Add the "register.js" file if it's a register page and Profile Type field.
-	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
-		$scripts['bp-register-page'] = array(
-			'file'         => "{$url}register{$min}.js",
-			'dependencies' => array( 'jquery' ),
-			'footer'       => false,
-		);
-	}
-
 	/**
 	 * Filters the BuddyBoss Core javascript files to register.
 	 *
@@ -205,6 +196,16 @@ function bp_core_register_common_scripts() {
 		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
+	}
+
+	// Add the "register.js" file if it's a register page and Profile Type field.
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		wp_enqueue_script( 'bp-register-page', "{$url}register{$min}.js", array( 'jquery' ), false, true );
+	
+		// Localize script
+		wp_localize_script( 'bp-register-page', 'registrationData', array(
+			'postData' => filter_var_array( $_POST ),
+		) );
 	}
 
 	/**

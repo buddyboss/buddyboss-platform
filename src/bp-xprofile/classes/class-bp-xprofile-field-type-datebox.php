@@ -214,24 +214,46 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 		// Check for updated posted values, and errors preventing them from
 		// being saved first time.
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_day' ] ) ) {
-			$new_day = (int) $_POST[ 'field_' . $this->field_obj->id . '_day' ];
-			$day     = ( $day != $new_day ) ? $new_day : $day;
-		}
-
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_month' ] ) ) {
-			if ( in_array( $_POST[ 'field_' . $this->field_obj->id . '_month' ], $eng_months ) ) {
-				$new_month = $_POST[ 'field_' . $this->field_obj->id . '_month' ];
-			} else {
-				$new_month = $month;
+		if ( wp_doing_ajax() ){
+			if ( ! empty( $_GET['post'][ 'field_' . $this->field_obj->id . '_day' ] ) ) {
+				$new_day = (int) $_GET['post'][ 'field_' . $this->field_obj->id . '_day' ];
+				$day     = ( $day != $new_day ) ? $new_day : $day;
 			}
-
-			$month = ( $month !== $new_month ) ? $new_month : $month;
-		}
-
-		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_year' ] ) ) {
-			$new_year = (int) $_POST[ 'field_' . $this->field_obj->id . '_year' ];
-			$year     = ( $year != $new_year ) ? $new_year : $year;
+	
+			if ( ! empty( $_GET['post'][ 'field_' . $this->field_obj->id . '_month' ] ) ) {
+				if ( in_array( $_GET['post'][ 'field_' . $this->field_obj->id . '_month' ], $eng_months ) ) {
+					$new_month = $_GET['post'][ 'field_' . $this->field_obj->id . '_month' ];
+				} else {
+					$new_month = $month;
+				}
+	
+				$month = ( $month !== $new_month ) ? $new_month : $month;
+			}
+	
+			if ( ! empty( $_GET['post'][ 'field_' . $this->field_obj->id . '_year' ] ) ) {
+				$new_year = (int) $_GET['post'][ 'field_' . $this->field_obj->id . '_year' ];
+				$year     = ( $year != $new_year ) ? $new_year : $year;
+			}
+		} else {
+			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_day' ] ) ) {
+				$new_day = (int) $_POST[ 'field_' . $this->field_obj->id . '_day' ];
+				$day     = ( $day != $new_day ) ? $new_day : $day;
+			}
+	
+			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_month' ] ) ) {
+				if ( in_array( $_POST[ 'field_' . $this->field_obj->id . '_month' ], $eng_months ) ) {
+					$new_month = $_POST[ 'field_' . $this->field_obj->id . '_month' ];
+				} else {
+					$new_month = $month;
+				}
+	
+				$month = ( $month !== $new_month ) ? $new_month : $month;
+			}
+	
+			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_year' ] ) ) {
+				$new_year = (int) $_POST[ 'field_' . $this->field_obj->id . '_year' ];
+				$year     = ( $year != $new_year ) ? $new_year : $year;
+			}
 		}
 
 		// $type will be passed by calling function when needed.

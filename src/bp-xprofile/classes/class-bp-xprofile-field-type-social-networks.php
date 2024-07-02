@@ -109,8 +109,14 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 
 		$raw_properties = array();
 
-		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
+		if ( wp_doing_ajax() ){
+			if ( empty( $original_option_values ) && ! empty( $_GET['post'][ 'field_' . $this->field_obj->id ] ) ) {
+				$original_option_values = $_GET['post'][ 'field_' . $this->field_obj->id ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			}
+		} else {
+			if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+				$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
+			}
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();

@@ -70,6 +70,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 
 	$bp                        = buddypress();
 	$member_type_id            = filter_input( INPUT_GET, 'type', FILTER_VALIDATE_INT );
+	$post_data                 = isset( $_GET['post'] ) ? wp_unslash( $_GET['post'] ) : array();
 	$existing_fields           = bb_filter_input_string( INPUT_GET, 'fields' );
 	$existing_fields_exclude   = bb_filter_input_string( INPUT_GET, 'fields' );
 	$existing_fields_fixed_ids = bb_filter_input_string( INPUT_GET, 'fixedIds' );
@@ -121,6 +122,22 @@ function bp_nouveau_ajax_xprofile_get_field() {
 			while ( bp_profile_fields() ) : bp_the_profile_field();
 				?>
 				<div<?php bp_field_css_class( 'editfield ajax_added' ); bp_field_data_attribute(); ?>>
+					<?php
+					foreach ( $new_fields as $field_id ) {
+						if ( isset( $post_data[ 'field_' . $field_id ] ) && ( $field_id == bp_get_the_profile_field_id() ) && $message = xprofile_validate_field( $field_id, $post_data[ 'field_' . $field_id ], '' ) ) {
+							if ( is_array( $message ) ) {
+								$message = implode( '<br>', $message ) . '</br>';
+							}
+
+							?><div class="bp-messages bp-feedback error">
+								<span class="bp-icon" aria-hidden="true"></span>
+								<p><?php echo $message ?></p>
+							</div>
+							<?php
+						}
+					}
+					?>
+
 					<fieldset>
 						<?php
 						$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
