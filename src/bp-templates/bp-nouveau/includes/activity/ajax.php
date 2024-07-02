@@ -145,12 +145,12 @@ add_action(
  */
 function bp_nouveau_ajax_mark_activity_favorite() {
 	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
+		wp_send_json_error( esc_html__( 'There was a problem marking this operation, please reload the page and try again', 'buddyboss' ) );
 	}
 
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error();
+		wp_send_json_error( esc_html__( 'There was a problem marking this operation, please reload the page and try again', 'buddyboss' ) );
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
@@ -212,12 +212,12 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 function bp_nouveau_ajax_unmark_activity_favorite() {
 
 	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
+		wp_send_json_error( esc_html__( 'There was a problem marking this operation, please reload the page and try again', 'buddyboss' ) );
 	}
 
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error();
+		wp_send_json_error( esc_html__( 'There was a problem marking this operation, please reload the page and try again', 'buddyboss' ) );
 	}
 
 	if ( empty( $_POST['item_id'] ) ) {

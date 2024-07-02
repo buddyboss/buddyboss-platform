@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.6.40\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-06-25 10:44:51+00:00\n"
+"POT-Creation-Date: 2024-07-02 04:35:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31430,6 +31430,15 @@ msgstr ""
 msgid ""
 "By leaving this main group you will automatically be removed and "
 "unsubscribed to any subgroups relating to this group."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:148
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:153
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:215
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:220
+msgid ""
+"There was a problem marking this operation, please reload the page and try "
+"again"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:224
