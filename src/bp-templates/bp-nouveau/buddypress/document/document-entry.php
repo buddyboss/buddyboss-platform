@@ -260,7 +260,11 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 		if ( $show ) {
 			?>
 			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
-			<div class="media-folder_action__list">
+			<div class="media-folder_action__list bb_more_dropdown">
+				<div class="bb_more_dropdown__title"> 
+					<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
+					<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
+				</div>
 				<ul>
 					<?php
 					if ( $can_download ) {
@@ -359,6 +363,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					?>
 				</ul>
 			</div>
+			<div class="bb_more_dropdown_overlay"></div>
 			<?php
 		}
 		?>

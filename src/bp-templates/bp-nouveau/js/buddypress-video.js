@@ -264,18 +264,22 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			$( event.currentTarget ).closest( '.bb-activity-video-elem' ).toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
+			$( event.currentTarget ).closest( '.bb-activity-video-elem' ).find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem .bb_more_dropdown' ).removeClass( 'open' );
+			$( 'body' ).addClass( 'video_more_option_open' );
 
 			if ( $( event.currentTarget ).closest( '.bb-activity-video-elem' ).length < 1 ) {
 				$( event.currentTarget ).closest( '.bb-video-thumb' ).toggleClass( 'is-visible' ).parent().siblings().find( '.bb-video-thumb' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-video-thumb' ).find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-video-thumb' ).parent().siblings().find( '.bb_more_dropdown' ).removeClass( 'open' );
 			}
 
 			if ( $( event.currentTarget ).closest( '.bb-media-model-container' ).length ) {
-				$( event.currentTarget ).closest( '.video-action-wrap' ).toggleClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_more_dropdown' ).toggleClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() == 'a' && ( ! $( event.currentTarget ).hasClass( 'video-action_more' ) ) ) {
-				$( event.currentTarget ).closest( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
+				$( event.currentTarget ).closest( '.bb-activity-video-elem' ).removeClass( 'is-visible' ).find( '.bb_more_dropdown' ).removeClass( 'open' );
 				$( event.currentTarget ).closest( '.bb-item-thumb' ).removeClass( 'is-visible' );
+				$( 'body' ).removeClass( 'video_more_option_open' );
 			}
 		},
 
