@@ -135,13 +135,13 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		$options = $this->field_obj->get_children();
 		$html    = '';
 
-		if ( wp_doing_ajax() ) {
+		if ( wp_doing_ajax() ){
 			if ( empty( $original_option_values ) && ! empty( $_GET['post'][ 'field_' . $this->field_obj->id ] ) ) {
-				$original_option_values = sanitize_text_field( $_GET['post'][ 'field_' . $this->field_obj->id ] );
+				$original_option_values = array_map( 'sanitize_text_field', $_GET['post'][ 'field_' . $this->field_obj->id ] );
 			}
 		} else {
 			if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
-				$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
+				$original_option_values = array_map( 'sanitize_text_field', $_POST[ 'field_' . $this->field_obj->id ] );
 			}
 		}
 
