@@ -5514,6 +5514,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   border-radius: 4px 4px 0 0;
   object-fit: cover;
   object-position: center;
+  max-width: 100%;
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder {
