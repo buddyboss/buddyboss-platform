@@ -188,10 +188,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 								<i class="bb-icon-menu-dots-h"></i>
 							</a>
 							<div class="bb_more_options_list bb_more_dropdown">
-								<div class="bb_more_dropdown__title"> 
-									<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
-									<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
-								</div>
+								<?php bp_get_template_part( 'common/more-options-view' ); ?>
 								<?php echo wp_kses_post( bp_get_add_switch_button( $member_user_id ) ); ?>
 							</div>
 							<div class="bb_more_dropdown_overlay"></div>
