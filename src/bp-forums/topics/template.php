@@ -2922,7 +2922,19 @@ function bbp_get_topic_trash_link( $args = '' ) {
 	$actions = array();
 	$topic   = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );
 
-	if ( empty( $topic ) || ! current_user_can( 'delete_topic', $topic->ID ) ) {
+	// Check if the current user is a moderator or if the topic is empty.
+	if ( empty( $topic ) || user_can( bp_loggedin_user_id(), 'moderate' ) ) {
+		// Check if the current user is not an administrator.
+		if ( ! current_user_can( 'administrator' ) ) {
+			$topic_author_id = bbp_get_topic_author_id( $topic->ID );
+			// Check if the topic author is also an admin using BuddyPress functions.
+			if ( user_can( $topic_author_id, 'bp_moderate' ) ) {
+				// If the topic author is an admin, exit the function.
+				return;
+			}
+		}
+	} else {
+		// If the current user is not a moderator and the topic is not empty, exit the function.
 		return;
 	}
 

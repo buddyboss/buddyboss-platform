@@ -2168,16 +2168,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		unset( $return['activity_delete'] );
 	}
 
-	// Remove the Delete button - Group moderators are not allowed to delete activities created by the group organizer.
-	if (
-		bp_is_active( 'groups' ) &&
-		'groups' === bp_get_activity_object_name() &&
-		groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() ) &&
-		groups_is_user_admin( bp_get_activity_user_id(), bp_get_activity_item_id() )
-	) {
-		unset( $return['activity_delete'] );
-	}
-
 	/**
 	 * Leave a chance to adjust the $return
 	 *
