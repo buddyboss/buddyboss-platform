@@ -42,50 +42,49 @@ if ( $group_id > 0 ) {
 		<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 	</a>
 	<div class="document-action_list bb_more_dropdown">
-		<div class="bb_more_dropdown-wrapper">
-			<?php bp_get_template_part( 'common/more-options-view' ); ?>
-			<ul class="conflict-activity-ul-li-comment">
+		<?php bp_get_template_part( 'common/more-options-view' ); ?>
+		<ul class="conflict-activity-ul-li-comment">
+			<?php
+			if ( $can_download_btn ) {
+				?>
+				<li class="copy_download_file_url document-action-class">
+					<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_attr_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+				</li>
 				<?php
-				if ( $can_download_btn ) {
+			}
+			if ( $can_move || bp_loggedin_user_id() === $document_user_id || bp_current_user_can( 'bp_moderate' ) ) {
+				if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+					if ( $is_comment_doc ) {
+						?>
+						<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+						</li>
+						<?php
+					} else {
+						if ( $can_move ) {
+							?>
+							<li class="move_file document-action-class">
+								<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						}
+					}
+				}
+				$item_id = 0;
+				if ( bp_is_active( 'activity' ) ) {
+					$activity_comment_id = bp_get_activity_comment_id();
+					$item_id             = ( $activity_comment_id ) ? $activity_comment_id : bp_get_activity_id();
+				}
+				if ( $can_delete ) {
 					?>
-					<li class="copy_download_file_url document-action-class">
-						<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_attr_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+					<li class="delete_file document-action-class">
+						<a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
 					</li>
 					<?php
 				}
-				if ( $can_move || bp_loggedin_user_id() === $document_user_id || bp_current_user_can( 'bp_moderate' ) ) {
-					if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-						if ( $is_comment_doc ) {
-							?>
-							<li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-								<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-							</li>
-							<?php
-						} else {
-							if ( $can_move ) {
-								?>
-								<li class="move_file document-action-class">
-									<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-								</li>
-								<?php
-							}
-						}
-					}
-					$item_id = 0;
-					if ( bp_is_active( 'activity' ) ) {
-						$activity_comment_id = bp_get_activity_comment_id();
-						$item_id             = ( $activity_comment_id ) ? $activity_comment_id : bp_get_activity_id();
-					}
-					if ( $can_delete ) {
-						?>
-						<li class="delete_file document-action-class">
-							<a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
-						</li>
-						<?php
-					}
-				}
-				?>
-			</ul>
-		</div>
+			}
+			?>
+		</ul>
 	</div>
+	<div class="bb_more_dropdown_overlay"></div>
 </div>

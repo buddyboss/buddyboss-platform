@@ -1680,11 +1680,10 @@ function bb_nouveau_activity_entry_bubble_buttons( $args = array() ) {
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 		</span>
 		<div class="bb-activity-more-options bb_more_dropdown">
-			<div class="bb_more_dropdown-wrapper">
-				%2$s
-				%3$s
-			</div>
-		</div>',
+			%2$s
+			%3$s
+		</div>
+		<div class="bb_more_dropdown_overlay"></div>',
 		esc_html__( 'More Options', 'buddyboss' ),
 		$template_part_content,
 		$output
@@ -2236,11 +2235,10 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 		</span>
 		<div class="bb-activity-more-options bb_more_dropdown">
-			<div class="bb_more_dropdown-wrapper">
-				%2$s
-				%3$s
-			</div>
-		</div>',
+			%2$s
+			%3$s
+		</div>
+		<div class="bb_more_dropdown_overlay"></div>',
 		esc_html__( 'More Options', 'buddyboss' ),
 		$template_part_content,
 		$output
