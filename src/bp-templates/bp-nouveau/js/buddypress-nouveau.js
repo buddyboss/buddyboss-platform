@@ -4047,10 +4047,8 @@ window.bp = window.bp || {};
 					self.dataInput = targetDataInput;
 				}
 
-				//Remove mentioned members Link
-				var tempNode = jQuery( '<div></div>' ).html( urlText );
-				tempNode.find( 'a.bp-suggestions-mention' ).remove();
-				tempNode.find( '[rel="nofollow"]' ).remove() ;
+				// Remove HTML tags from the content.
+				var tempNode = jQuery( '<div></div>' ).html( urlText.replace(/<\/?[^>]+(>|$)/g, ' ') );
 				urlText = tempNode.html();
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
