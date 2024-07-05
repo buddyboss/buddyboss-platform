@@ -1902,20 +1902,35 @@ document = window.document || {};
 	EmojioneArea.prototype.showPicker = function () {
 		var self = this;
 
-		var scrollTop = $(window).scrollTop();
-		var offset = self.button.offset();
-		var topPosition = Math.round(offset.top);
-		var leftPosition = Math.round(offset.left);
-		var pickerWidth = self.picker.width();
+		var scrollTop    = $( window ).scrollTop();
+		var offset       = self.button.offset();
+		var pickerWidth  = self.picker.width();
 		var pickerHeight = self.picker.height();
+		var topPosition  = Math.round( offset.top );
+		var leftPosition = Math.round( offset.left ) + 42
+
+		if ( $( window ).width() < 1000 ) {
+			leftPosition = Math.round( offset.left ) + pickerWidth - 95;
+			var commentLevel = $( this.button ).parents( "li" ).length;
+			var emojiOrder = $( this.button ).closest( ".post-elements-buttons-item" ).index();
+
+			if ( commentLevel > 2 ) {
+				self.picker.addClass( "level-2" );
+			}
+
+			if( emojiOrder > 2 ) {
+				leftPosition = Math.round( offset.left ) + pickerWidth - 130;
+			}
+		}
+
 		if (
 			self.options.containerPicker &&
-			!isNaN(topPosition) &&
-			!isNaN(leftPosition) &&
-			!isNaN(pickerWidth) &&
-			!isNaN(pickerHeight)
+			! isNaN( topPosition ) &&
+			! isNaN( leftPosition ) &&
+			! isNaN( pickerWidth ) &&
+			! isNaN( pickerHeight )
 		) {
-			var transformValue = 'translate(' + (leftPosition + 42) + 'px, ' + (topPosition - scrollTop - 10) + 'px) translate(-100%, -100%)';
+			var transformValue = 'translate(' + ( leftPosition ) + 'px, ' + ( topPosition - scrollTop - 10 ) + 'px) translate(-100%, -100%)';
 		}
 
 		if (self._sh_timer) {
@@ -1947,6 +1962,7 @@ document = window.document || {};
 			},
 			500
 		);
+		self.picker.removeClass( "level-2" );
 		trigger( self, "picker.hide", [self.picker] );
 		return self;
 	}

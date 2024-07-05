@@ -924,7 +924,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 */
 		protected function completed() {
 			// phpcs:ignore
-			error_log( 'Data update completed' );
+			bb_error_log( 'Data update completed' );
 			do_action( $this->identifier . '_completed' );
 		}
 

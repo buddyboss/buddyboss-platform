@@ -359,6 +359,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$args['pin_type'] = bb_activity_pin_type( $args );
 		}
 
+		if ( bb_get_activity_scheduled_status() === $args['status'] ) {
+			if ( ! isset( $request['user_id'] ) ) {
+				$args['filter']['user_id'] = bp_loggedin_user_id();
+			}
+			if ( ! empty( $args['group_id'] ) ) {
+				$args['filter']['object'] = 'groups';
+			} else {
+				$args['filter']['object'] = 'activity';
+			}
+		}
 		/**
 		 * Filter the query arguments for the request.
 		 *
