@@ -289,7 +289,6 @@ function bp_activity_save_link_data( $activity ) {
 					'bbp-new-reply',
 					'bbp-edit-topic',
 					'bbp-edit-reply',
-					'publish_scheduled_activity',
 				),
 				true
 			)
