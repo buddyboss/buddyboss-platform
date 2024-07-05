@@ -4048,8 +4048,8 @@ window.bp = window.bp || {};
 				}
 
 				// Remove HTML tags from the content.
-				var tempNode = jQuery( '<div></div>' ).html( urlText.replace(/<\/?[^>]+(>|$)/g, ' ') );
-				urlText = tempNode.html();
+				var tempNode = urlText.replace(/<\/?[^>]+(>|$)/g, ' ');
+				urlText = tempNode;
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
 					urlText = urlText.replace( /<img .*?>/g, '' );
