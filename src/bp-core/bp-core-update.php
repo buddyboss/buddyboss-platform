@@ -491,6 +491,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_10();
 		}
 
+		if ( $raw_db_version < 21121 ) {
+			bb_update_to_2_6_20();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -1201,6 +1205,8 @@ function bp_add_activation_redirect() {
 
 		}
 	}
+
+	bb_remove_deleted_user_last_activities();
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
@@ -3602,4 +3608,63 @@ function bb_remove_symlinks( $folder_path ) {
 		// Close the folder handle.
 		closedir( $handle );
 	}
+}
+
+/**
+ * Add keys for user_suspended, hide_parent, hide_sitewide columns.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_20() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_suspend' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
+	if ( $table_exists ) {
+
+		// Get all existing indexes for the table.
+		$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_suspend' ) );
+
+		// Array to store parts of the ALTER TABLE query.
+		$alter_statements = array();
+
+		// Add key for user_suspended if it doesn't exist.
+		if ( ! in_array( 'user_suspended', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY user_suspended (user_suspended)';
+		}
+
+		// Add key for hide_parent if it doesn't exist.
+		if ( ! in_array( 'hide_parent', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY hide_parent (hide_parent)';
+		}
+
+		// Add key for hide_sitewide if it doesn't exist.
+		if ( ! in_array( 'hide_sitewide', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY hide_sitewide (hide_sitewide)';
+		}
+
+		// If there are any statements to execute, run the ALTER TABLE query.
+		if ( ! empty( $alter_statements ) ) {
+			$alter_query = "ALTER TABLE {$bp_prefix}bp_suspend " . implode( ', ', $alter_statements );
+			$wpdb->query( $alter_query ); //phpcs:ignore
+		}
+	}
+
+	// Run migration.
+	$is_already_run = get_transient( 'bb_migrate_xprofile_visibility' );
+	if ( ! $is_already_run ) {
+
+		// Remove deleted user last_activity on update.
+		bb_remove_deleted_user_last_activities();
+
+		// Migrate xprofile visibility data.
+		bb_core_install_xprofile_visibility();
+		bb_migrate_xprofile_visibility( true );
+		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
+	}
+
 }
