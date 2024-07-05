@@ -4047,9 +4047,16 @@ window.bp = window.bp || {};
 					self.dataInput = targetDataInput;
 				}
 
-				// Remove HTML tags from the content.
-				var tempNode = urlText.replace(/<\/?[^>]+(>|$)/g, ' ');
-				urlText = tempNode;
+				 // Create a DOM parser
+				 var parser = new DOMParser();
+				 var doc = parser.parseFromString( urlText, 'text/html' );
+				 
+				 // Exclude the mention links from the urlText
+				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
+				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
+
+				// parse html now to get the url.
+				urlText = doc.body.innerHTML;
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
 					urlText = urlText.replace( /<img .*?>/g, '' );
