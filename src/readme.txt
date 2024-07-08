@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.5.5
 Requires PHP: 5.6.20
-Stable tag: 2.6.40
+Stable tag: 2.6.41
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.41 =
+* Bug: Core - Security Issue for the Forum component updated
 
 = 2.6.40 =
 * Bug: Activity - When creating a group post via the news feed page, the user was unable to create another post to the same group as the last post
