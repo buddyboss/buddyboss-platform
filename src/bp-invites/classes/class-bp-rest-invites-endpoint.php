@@ -231,6 +231,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		$invite_exists_array     = array();
 		$failed_invite           = array();
 		$invite_restricted_array = array();
+		$invite_duplicate_array  = array();
 		$duplicate_email_inputs  = array();
 
 		$bp = buddypress();
@@ -253,6 +254,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 					if ( email_exists( (string) $field['email_id'] ) ) {
 						$invite_exists_array[] = $field['email_id'];
+					} elseif ( function_exists( 'bb_is_email_address_already_invited' ) && bb_is_email_address_already_invited( $field['email_id'], bp_loggedin_user_id() ) ) {
+						$invite_duplicate_array[] = $field['email_id'];
 					} elseif ( ! function_exists( 'bb_is_allowed_register_email_address' ) ) {
 						$invite_correct_array[] = array(
 							'name'        => $field['name'],
@@ -408,8 +411,21 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			'failed' => '',
 		);
 
+		if ( ! empty( $invite_wrong_array ) ) {
+			$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
+		}
+
 		if ( ! empty( $invite_exists_array ) ) {
 			$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' ) . ' ' . implode( ', ', $invite_exists_array ) );
+		}
+
+		if ( ! empty( $invite_duplicate_array ) ) {
+			if ( ! empty( $invite_exists_array ) ) {
+				$merged_emails    = array_unique( array_merge( $invite_exists_array, $invite_duplicate_array ) );
+				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited or already members:', 'buddyboss' ) . ' ' . implode( ', ', $merged_emails ) );
+			} else {
+				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss' ) . ' ' . implode( ', ', $invite_duplicate_array ) );
+			}
 		}
 
 		if ( ! empty( $failed_invite ) ) {
@@ -417,7 +433,12 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $invite_restricted_array ) ) {
-			$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $invite_restricted_array ) );
+			if ( ! empty( $failed_invite ) ) {
+				$merged_emails    = array_unique( array_merge( $failed_invite, $invite_restricted_array ) );
+				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because they are invalid email addresses or the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $merged_emails ) );
+			} else {
+				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $invite_restricted_array ) );
+			}
 		}
 
 		if ( ! empty( $invitations_ids ) ) {

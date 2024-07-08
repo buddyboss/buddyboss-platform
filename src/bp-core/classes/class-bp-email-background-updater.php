@@ -104,7 +104,7 @@ if ( ! class_exists( 'BP_Email_Background_Updater' ) ) {
 			}
 
 			if ( is_callable( $callback ) ) {
-				error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
+				bb_error_log( sprintf( 'Running %s callback', json_encode( $callback ) ) );
 
 				if ( empty( $args ) ) {
 					$result = (bool) call_user_func( $callback, $this );
@@ -113,9 +113,9 @@ if ( ! class_exists( 'BP_Email_Background_Updater' ) ) {
 				}
 
 				if ( $result ) {
-					error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
+					bb_error_log( sprintf( '%s callback needs to run again', json_encode( $callback ) ) );
 				} else {
-					error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
+					bb_error_log( sprintf( 'Finished running %s callback', json_encode( $callback ) ) );
 				}
 			} else {
 				error_log( sprintf( 'Could not find %s callback', json_encode( $callback ) ) );
@@ -131,7 +131,7 @@ if ( ! class_exists( 'BP_Email_Background_Updater' ) ) {
 		 * performed, or, call parent::complete().
 		 */
 		protected function complete() {
-			error_log( 'Data update complete' );
+			bb_error_log( 'Data update complete' );
 			parent::complete();
 		}
 

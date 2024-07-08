@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.5.3
+Tested up to: 6.5.5
 Requires PHP: 5.6.20
-Stable tag: 2.6.21
+Stable tag: 2.6.41
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,33 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.41 =
+* Bug: Core - Security Issue for the Forum component updated
+
+= 2.6.40 =
+* Bug: Activity - When creating a group post via the news feed page, the user was unable to create another post to the same group as the last post
+* Bug: Core - Fatal error occurred when GD and Imagick libraries were disabled from the servers
+* Bug: Core - Logs from the background process when migrating reactions were showing on the debug log even without turning on DEBUG in the wp-config file
+* Bug: Core - Profile details fields have now been given a maximum of 32 character validation limit
+* Bug: Email Invites - Users can now send multiple invites multiple times to a single email address
+* Bug: Groups - Group header title would change to show the first subgroup title even it was not selected
+* Bug: Integration - AffiliateWP was encountering a critical error when activating BuddyBoss
+* Bug: Messages - Updated the text in messages to show Shift+Return to add new line
+* Bug: Styling - The emoji/gif picker was cropped in mobile view and was not displaying properly on the view more comments modal
+
+= 2.6.30 =
+* Enhancement: Core - We have added a new namespace (BuddyBossPlatform) in the composer library (vendor folder) so if existing plugins use the same composer library, it will work fine with our new namespace
+* Enhancement: Platform - We have added a new Platform plugin menu option called upgrade, where you can now more easily access and track, Platform, Server and Integrations knowledge
+* Bug: Activity - User timeline URL was redirected users to the main activity feed once WPML plugin was activated
+* Bug: Activity - When setting the page request from performance to option 1, the posts on the user timeline were being duplicated
+* Bug: Core - The Favicon was not displaying on the Messages page
+* Bug: Core - When using Windows inbuilt emoji’s in Edge or Chrome browser was causing the emoji to duplicate
+* Bug: Email - Mention email was not showing correct content which meant the View post button then also redirected to the wrong location
+* Bug: Email - Play icon on videos within a transactional email notification was broken
+* Bug: Forums - The GIF picker and preview in the Forum Discussion and replies are now showing properly on mobile responsive view
+* Bug: Platform - When the Media Uploading component was not enabled then the 3 dots (ellipses) drop-down menu on activity posts was not clickable
+* Bug: Styling - The mobile view display of multiple images uploaded on the activity feed was not displaying correctly
 
 = 2.6.21 =
 * Bug: Performance - When page load is set to 1 this caused the members page in groups to stop loading
