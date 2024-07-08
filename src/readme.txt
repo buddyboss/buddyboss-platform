@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.41 =
+* Bug: Core - Security Issue for the Forum component updated
+
 = 2.6.40 =
 * Bug: Activity - When creating a group post via the news feed page, the user was unable to create another post to the same group as the last post
 * Bug: Core - Fatal error occurred when GD and Imagick libraries were disabled from the servers
