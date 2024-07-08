@@ -4966,15 +4966,6 @@ body:not(.bb-is-mobile) .bb-media-model-wrapper .activity-list .activity-item .a
   left: -10px;
 }
 
-@media screen and (max-width: 480px) {
-  .activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list.active {
-    left: -40px;
-  }
-  body:not(.bb-is-mobile) .activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list:hover {
-    left: -40px;
-  }
-}
-
 /* Activity comment modal ==> Starts Here */
 .acomments-modal-open {
   overflow: hidden;
