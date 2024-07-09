@@ -750,6 +750,7 @@
 		padding: $pad-sml;
 		margin: 1em 0;
 		width: 100%;
+		box-sizing: border-box;
 
 		&.divider-date {
 			position: relative;
@@ -901,6 +902,7 @@
 		float: left;
 		margin: 0 $marg-sml 0 0;
 		image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+		max-width: 100%;
 	}
 
 	.actions {
@@ -1695,14 +1697,13 @@ body .bp-messages-user-threads {
 
 #message-new-submit #bp-messages-send,
 #message-reply-new-submit #send_reply_button {
-	opacity: 0;
-	padding: 0;
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
+	inset: 0;
+	opacity: 0;
 	width: auto;
 	min-width: auto;
+	margin: 0;
+	padding: 0;
 	-webkit-tap-highlight-color: transparent;
 }
 
@@ -1897,3 +1898,9 @@ body .bp-messages-user-threads {
 		}
 	}
 }
+
+// Make sure to have container width wide enough
+body.messages .buddypress-wrap {
+	max-width: 1200px;
+}
+
