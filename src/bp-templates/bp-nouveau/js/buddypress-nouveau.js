@@ -4047,11 +4047,16 @@ window.bp = window.bp || {};
 					self.dataInput = targetDataInput;
 				}
 
-				//Remove mentioned members Link
-				var tempNode = jQuery( '<div></div>' ).html( urlText );
-				tempNode.find( 'a.bp-suggestions-mention' ).remove();
-				tempNode.find( '[rel="nofollow"]' ).remove() ;
-				urlText = tempNode.html();
+				 // Create a DOM parser
+				 var parser = new DOMParser();
+				 var doc = parser.parseFromString( urlText, 'text/html' );
+				 
+				 // Exclude the mention links from the urlText
+				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
+				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
+
+				// parse html now to get the url.
+				urlText = doc.body.innerHTML;
 
 				if ( urlText.indexOf( '<img' ) >= 0 ) {
 					urlText = urlText.replace( /<img .*?>/g, '' );
