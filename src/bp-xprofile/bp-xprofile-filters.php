@@ -1709,6 +1709,35 @@ function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retva
 }
 
 /**
+ * Validate first_name and last_name field value length when user updated from the backend.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @param WP_Error $errors WP_Error object (passed by reference).
+ * @param bool     $update Whether this is a user update.
+ * @param stdClass $user   User object (passed by reference).
+ */
+function bb_validate_field_value_length( $errors, $update, $user ) {
+	if ( isset( $user->first_name ) && ! empty( $user->first_name ) ) {
+		$invalid = bb_xprofile_validate_character_limit_value( '', bp_xprofile_firstname_field_id(), $user->first_name );
+
+		// or use the user_nickname.
+		if ( $invalid ) {
+			$errors->add( 'first_name', esc_html( $invalid ) );
+		}
+	}
+
+	if ( isset( $user->last_name ) && ! empty( $user->last_name ) ) {
+		$invalid = bb_xprofile_validate_character_limit_value( '', bp_xprofile_lastname_field_id(), $user->last_name );
+
+		// or use the user_nickname.
+		if ( $invalid ) {
+			$errors->add( 'last_name', esc_html( $invalid ) );
+		}
+	}
+}
+
+/**
  * Remove default PNG when update visibility.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1748,33 +1777,4 @@ function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
 	);
 
 	return $repair_list;
-}
-
-/**
- * Validate first_name and last_name field value length when user updated from the backend.
- *
- * @since BuddyBoss 2.6.40
- *
- * @param WP_Error $errors WP_Error object (passed by reference).
- * @param bool     $update Whether this is a user update.
- * @param stdClass $user   User object (passed by reference).
- */
-function bb_validate_field_value_length( $errors, $update, $user ) {
-	if ( isset( $user->first_name ) && ! empty( $user->first_name ) ) {
-		$invalid = bb_xprofile_validate_character_limit_value( '', bp_xprofile_firstname_field_id(), $user->first_name );
-
-		// or use the user_nickname.
-		if ( $invalid ) {
-			$errors->add( 'first_name', esc_html( $invalid ) );
-		}
-	}
-
-	if ( isset( $user->last_name ) && ! empty( $user->last_name ) ) {
-		$invalid = bb_xprofile_validate_character_limit_value( '', bp_xprofile_lastname_field_id(), $user->last_name );
-
-		// or use the user_nickname.
-		if ( $invalid ) {
-			$errors->add( 'last_name', esc_html( $invalid ) );
-		}
-	}
 }
