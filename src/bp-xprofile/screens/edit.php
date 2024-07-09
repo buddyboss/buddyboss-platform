@@ -91,7 +91,6 @@ function xprofile_screen_edit_profile() {
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
 						// If selected profile type is empty then bypass required field error for admin.
-						$errors                   = false;
 						$is_required[ $field_id ] = false;
 					} elseif (
 						(
@@ -110,7 +109,6 @@ function xprofile_screen_edit_profile() {
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
 						// If selected profile type is empty then bypass required field error for editor.
-						$errors                   = false;
 						$is_required[ $field_id ] = false;
 					} elseif (
 						(
