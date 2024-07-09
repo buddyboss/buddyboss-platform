@@ -126,7 +126,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			 * Filters the arguments passed to `wp_editor()` in richtext xprofile fields.
 			 *
 			 * @since BuddyPress 2.4.0
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.6.50
 			 * Remove align button for non-admin members.
 			 *
 			 * @param array $args {

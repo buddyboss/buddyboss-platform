@@ -1740,7 +1740,7 @@ function bb_validate_field_value_length( $errors, $update, $user ) {
 /**
  * Remove default PNG when update visibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  *
  * @param BB_XProfile_Visibility $obj_xprofile_visibility BB_XProfile_Visibility object.
  */
@@ -1765,7 +1765,7 @@ function bb_xprofile_remove_default_png_avatar_on_update_xprofile_visibility( BB
  *
  * @param array $repair_list Repair list items.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  *
  * @return array Repair list items.
  */

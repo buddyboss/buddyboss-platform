@@ -1383,7 +1383,7 @@ function bb_core_install_subscription() {
 /**
  * Install database tables for the xprofile visibility new structure.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  *
  * @uses  bp_core_get_table_prefix()
  * @uses  dbDelta()
@@ -1418,7 +1418,7 @@ function bb_core_install_xprofile_visibility() {
 	/**
 	 * Fires after BuddyBoss adds the xprofile visibility table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 */
 	do_action( 'bb_core_install_xprofile_visibility' );
 }
