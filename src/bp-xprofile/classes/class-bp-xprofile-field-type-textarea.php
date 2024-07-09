@@ -126,6 +126,8 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			 * Filters the arguments passed to `wp_editor()` in richtext xprofile fields.
 			 *
 			 * @since BuddyPress 2.4.0
+			 * @since BuddyBoss [BBVERSION]
+			 * Remove align button for non-admin members.
 			 *
 			 * @param array $args {
 			 *     Array of optional arguments. See `wp_editor()`.
@@ -134,6 +136,10 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			 *     @type bool $quicktags     Whether to show the quicktags buttons. Default true.
 			 *     @type int  $textarea_rows Number of rows to display in the editor. Defaults to 1 in the
 			 *                               'admin' context, and 10 in the 'edit' context.
+			 *     @type array $tinymce {
+			 *       Array of TinyMCE arguments.
+			 *          @type string $toolbar1 Comma-separated list of buttons to display in the first row of the toolbar.
+			 *      }
 			 * }
 			 * @param string $context The display context. 'edit' when the markup is intended for the
 			 *                        profile edit screen, 'admin' when intended for the Profile Fields
