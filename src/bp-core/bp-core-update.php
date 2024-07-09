@@ -3614,7 +3614,7 @@ function bb_remove_symlinks( $folder_path ) {
 /**
  * Add keys for user_suspended, hide_parent, hide_sitewide columns.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  *
  * @return void
  */

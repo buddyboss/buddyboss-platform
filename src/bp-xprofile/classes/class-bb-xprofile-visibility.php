@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\XProfile\Classes
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class for XProfile visibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  */
 class BB_XProfile_Visibility {
 
 	/**
 	 * XProfile Visibility ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @var int $id
 	 */
@@ -29,7 +29,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * User ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @var int $user_id
 	 */
@@ -38,7 +38,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * XProfile field ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @var int $field_id
 	 */
@@ -47,7 +47,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * XProfile field visibility value.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @var string $value
 	 */
@@ -56,7 +56,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * XProfile field last updated time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @var string $last_updated
 	 */
@@ -65,7 +65,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * BB_XProfile_Visibility constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @param int|null $field_id Field ID to instantiate.
 	 * @param int|null $user_id  User ID to instantiate for.
@@ -79,7 +79,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Populates the XProfile profile visibility data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @param int $field_id Field ID to populate.
 	 * @param int $user_id  User ID to populate for.
@@ -116,7 +116,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Check if there is data already for the user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @global wpdb  $wpdb WordPress database abstraction object.
 	 * @global array $bp
@@ -140,7 +140,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters whether data already exists for the user.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param bool                   $retval Whether data already exists.
 		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
@@ -151,7 +151,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Check if any data exists for the user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @param int $user_id User id.
 	 *
@@ -179,7 +179,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters whether any data already exists for the user.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param bool $retval  Whether data already exists.
 		 * @param int  $user_id User id.
@@ -190,7 +190,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Check if this data is for a valid field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -218,7 +218,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters whether data is for a valid field.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param bool                   $retval Whether data is valid.
 		 * @param BB_XProfile_Visibility $this   Instance of the current BB_XProfile_Visibility class.
@@ -229,7 +229,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Save the data for the XProfile field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @return bool
 	 */
@@ -241,7 +241,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters the data's user ID before saving to the database.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param int $user_id The user ID.
 		 * @param int $data_id The field data ID.
@@ -251,7 +251,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters the data's field ID before saving to the database.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param int $field_id The field ID.
 		 * @param int $data_id  The field data ID.
@@ -261,7 +261,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters the data's value before saving to the database.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param string                 $field_value The field value.
 		 * @param int                    $data_id     The field data ID.
@@ -273,7 +273,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Filters the data's last updated timestamp before saving to the database.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param int $last_updated The last updated timestamp.
 		 * @param int $data_id      The field data ID.
@@ -285,7 +285,7 @@ class BB_XProfile_Visibility {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param BB_XProfile_Visibility $this Current instance of the profile data being saved.
 		 */
@@ -323,7 +323,7 @@ class BB_XProfile_Visibility {
 			/**
 			 * Fires after the current profile data instance gets saved.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.6.50
 			 *
 			 * @param BB_XProfile_Visibility $this Current instance of the profile data being saved.
 			 */
@@ -338,7 +338,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Delete specific XProfile field data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -353,7 +353,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Fires before the current profile data instance gets deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param BB_XProfile_Visibility $this Current instance of the profile data being deleted.
 		 */
@@ -373,7 +373,7 @@ class BB_XProfile_Visibility {
 		/**
 		 * Fires after the current profile data instance gets deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.6.50
 		 *
 		 * @param BB_XProfile_Visibility $this Current instance of the profile data being deleted.
 		 */
@@ -385,7 +385,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Delete field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @param int $field_id ID of the field to delete.
 	 *
@@ -413,7 +413,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Delete all data for provided user ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @param int $user_id User ID to remove data for.
 	 *
@@ -469,7 +469,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Get the XProfile profile visibility data.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.50
 	 *
 	 * @param int   $user_id User ID to get fields for.
 	 * @param array $levels  Visibility levels to get fields for.

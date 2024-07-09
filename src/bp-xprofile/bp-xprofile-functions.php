@@ -2722,7 +2722,7 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 /**
  * Background job for migrating the user profile visibility data's to visibility table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  *
  * @param bool $background True if run in the background.
  * @param int  $page       Page number as offset for getting users.
