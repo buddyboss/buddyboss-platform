@@ -18767,6 +18767,7 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap {
   display: table;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right,
