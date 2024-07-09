@@ -9847,7 +9847,7 @@ function bb_is_gd_or_imagick_library_enabled() {
 /**
  * Remove deleted user's last_activity entries from activity table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.50
  *
  * @return void
  */
