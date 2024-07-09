@@ -247,6 +247,7 @@ function messages_new_message( $args = '' ) {
 
 		// Loop the recipients and convert all usernames to user_ids where needed.
 		foreach ( (array) $r['recipients'] as $recipient ) {
+			$recipient_id = 0;
 
 			// Trim spaces and skip if empty.
 			$recipient = trim( $recipient );
@@ -256,10 +257,14 @@ function messages_new_message( $args = '' ) {
 
 			// Check user_login / nicename columns first
 			// @see http://buddypress.trac.wordpress.org/ticket/5151.
-			if ( bp_is_username_compatibility_mode() ) {
-				$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
-			} else {
-				$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+			if ( ! bb_is_rest() ) {
+
+				// Exclude api requests as they pass user ids so it shouldn't conflict with user_login of other.
+				if ( bp_is_username_compatibility_mode() ) {
+					$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
+				} else {
+					$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+				}
 			}
 
 			// Check against user ID column if no match and if passed recipient is numeric.
