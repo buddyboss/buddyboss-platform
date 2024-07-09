@@ -1051,7 +1051,7 @@ function bb_moderation_async_request_batch_process( $batch ) {
 			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
 		) {
 			$batch->data = array();
-			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			bb_error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
 
 			// Used for hide_parent argument check.
 		} elseif (
@@ -1060,7 +1060,7 @@ function bb_moderation_async_request_batch_process( $batch ) {
 			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
 		) {
 			$batch->data = array();
-			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			bb_error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
 			// Used for hide_sitewide argument check.
 		} elseif (
 			! empty( $next_data ) &&
@@ -1070,7 +1070,7 @@ function bb_moderation_async_request_batch_process( $batch ) {
 			(int) $next_data[1] !== (int) $current_data[1]
 		) {
 			$batch->data = array();
-			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			bb_error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
 		}
 	}
 }
