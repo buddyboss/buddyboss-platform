@@ -9878,11 +9878,11 @@ function bb_remove_deleted_user_last_activities() {
 			FROM {$bp_prefix}bp_activity a1 
 			INNER JOIN {$bp_prefix}bp_activity a2 
 			ON a1.user_id = a2.user_id 
+			AND a1.component = a2.component 
+			AND a1.type = a2.type 
 			AND a1.component = 'members' 
 			AND a1.type = 'last_activity' 
 			AND a1.id < a2.id 
-			AND a1.type = a2.type
-			AND a1.component = a2.component
 		";
 
 		// Execute the query.
