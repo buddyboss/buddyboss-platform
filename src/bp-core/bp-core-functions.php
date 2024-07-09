@@ -9775,6 +9775,74 @@ function bb_pro_schedule_posts_version() {
 	return '2.5.20';
 }
 
+/**
+ * Function for writing logs to debug.log
+ *
+ * @param [mixed] $log The log entry that needs to be written into the debug.log.
+ * @param [boolean] $always_print Optional. True then always print the log. Default false.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @return void
+ */
+function bb_error_log( $log = '', $always_print = false ) {
+	if (
+		(
+			defined( 'BB_DEBUG_LOG' ) &&
+			true === BB_DEBUG_LOG
+		) ||
+		true === $always_print
+	) {
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} else {
+			error_log( $log );
+		}
+	}
+}
+
+/**
+ * Function to check if GD or Imagick library is enabled.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @return bool
+ */
+function bb_is_gd_or_imagick_library_enabled() {
+	static $is_enabled = '';
+
+	if ( '' === $is_enabled ) {
+
+		// Check if editor loaded successfully.
+		if ( function_exists( '_wp_image_editor_choose' ) ) {
+			$lib_loaded = _wp_image_editor_choose();
+			if (
+				! empty( $lib_loaded  ) &&
+				! is_wp_error( $lib_loaded  ) &&
+				(
+					'WP_Image_Editor_GD' === $lib_loaded ||
+					'WP_Image_Editor_Imagick' === $lib_loaded
+				)
+			) {
+				$is_enabled = true;
+			} else {
+				$is_enabled = false;
+			}
+		} else {
+			$is_enabled = extension_loaded( 'gd' ) || extension_loaded( 'imagick' );
+		}
+	}
+
+	/**
+	 * Filters the enabled/disabled value for image library.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 *
+	 * @param bool $is_enabled True if enabled else false.
+	 */
+	return apply_filters( 'bb_is_gd_or_imagick_library_enabled', (bool) $is_enabled );
+}
+
 
 /**
  * Remove deleted user's last_activity entries from activity table.

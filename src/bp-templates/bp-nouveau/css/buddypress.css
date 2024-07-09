@@ -1479,7 +1479,7 @@ a.layout-grid-view {
 
 #user-status-huddle #bp-activity-privacy-point .group-privacy-point-icon img {
   max-height: 24px;
-  margin: -2px 0 -2px -5px;
+  margin: -2px 5px -2px -5px;
   border-radius: 3px;
 }
 
@@ -5142,6 +5142,16 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   top: 0;
   left: 0;
   transition: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .emojionearea-theatre .emojionearea-picker.emojionearea-picker-position-top.level-2 .emojionearea-wrapper:after {
+    display: none;
+  }
+  .emojionearea-theatre .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
+    right: inherit;
+    left: 98px;
+  }
 }
 
 .gif-media-search-dropdown.gif-media-search-dropdown-standalone {
@@ -12894,6 +12904,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   padding: 0.7em;
   margin: 1em 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 #bp-message-thread-list li.divider-date {
@@ -13028,6 +13039,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   float: left;
   margin: 0 10px 0 0;
   image-rendering: -webkit-optimize-contrast;
+  max-width: 100%;
 }
 
 #bp-message-thread-list .actions a:before {
@@ -13763,14 +13775,13 @@ body .bp-messages-user-threads {
 
 #message-new-submit #bp-messages-send,
 #message-reply-new-submit #send_reply_button {
-  opacity: 0;
-  padding: 0;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
+  opacity: 0;
   width: auto;
   min-width: auto;
+  margin: 0;
+  padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -13932,6 +13943,10 @@ body .bp-messages-user-threads {
   -webkit-animation: spin 3s infinite linear;
   animation: spin 3s infinite linear;
   vertical-align: middle;
+}
+
+body.messages .buddypress-wrap {
+  max-width: 1200px;
 }
 
 /**

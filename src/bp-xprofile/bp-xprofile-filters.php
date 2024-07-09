@@ -83,17 +83,18 @@ add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_de
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
 add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 3 );
 
-// Saving field value
+// Saving field value.
+add_filter( 'xprofile_validate_field', 'bb_xprofile_validate_character_limit_value', 10, 3 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_website_url_value', 10, 3 );
 
-// Display name adjustment
+// Display name adjustment.
 add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
 add_filter( 'get_user_metadata', 'bp_xprofile_adjust_display_name', 10, 3 );
 
-// Email Username
+// Email Username.
 add_filter( 'new_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'delete_site_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'new_network_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
@@ -120,7 +121,7 @@ add_action( 'xprofile_groups_saved_group', 'bb_core_xprofile_clear_group_cache' 
 add_action( 'xprofile_groups_deleted_group', 'bb_core_xprofile_clear_group_cache' );
 add_action( 'xprofile_fields_deleted_field', 'bb_core_xprofile_clear_group_cache' );
 
-// Display Name setting support
+// Display Name setting support.
 add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 
 // Repair repeater field repeated in admin side.
@@ -134,6 +135,7 @@ add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
 // Validate user_nickname when user created from the backend
 add_filter( 'insert_user_meta', 'bb_validate_user_nickname_on_user_register', 10, 3 );
 add_action( 'user_profile_update_errors', 'bb_validate_user_nickname_on_user_update', 10, 3 );
+add_action( 'user_profile_update_errors', 'bb_validate_field_value_length', 10, 3 );
 
 add_filter( 'bp_before_has_profile_parse_args', 'bb_xprofile_set_social_network_param' );
 
@@ -842,6 +844,39 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 	}
 
 	return $full_name;
+}
+
+/**
+ * Validate First Name and Last Name with Maximum Length.
+ *
+ * @since  BuddyBoss 2.6.40
+ *
+ * @param string $retval   Return value of the field.
+ * @param int    $field_id Field id.
+ * @param string $value    Field value.
+ *
+ * @return mixed|string
+ */
+function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value ) {
+	if ( ! in_array( (int) $field_id, array( bp_xprofile_firstname_field_id(), bp_xprofile_lastname_field_id() ), true ) ) {
+		return $retval;
+	}
+
+	$value      = strtolower( $value );
+	$field_name = xprofile_get_field( $field_id )->name;
+
+	// Must be shorter than 32 characters.
+	$field_length = (int) apply_filters( 'bb_xprofile_field_character_max_length', 32 );
+	if ( strlen( $value ) > $field_length ) {
+		return sprintf(
+			/* translators: 1. Field Name, 2. character length. */
+			__( '%1$s must be shorter than %2$d characters.', 'buddyboss' ),
+			$field_name,
+			$field_length
+		);
+	}
+
+	return $retval;
 }
 
 /**
@@ -1671,6 +1706,35 @@ function bb_xprofile_remove_default_png_avatar_on_user_update_visibility( $retva
 	}
 
 	return $retval;
+}
+
+/**
+ * Validate first_name and last_name field value length when user updated from the backend.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @param WP_Error $errors WP_Error object (passed by reference).
+ * @param bool     $update Whether this is a user update.
+ * @param stdClass $user   User object (passed by reference).
+ */
+function bb_validate_field_value_length( $errors, $update, $user ) {
+	if ( isset( $user->first_name ) && ! empty( $user->first_name ) ) {
+		$invalid = bb_xprofile_validate_character_limit_value( '', bp_xprofile_firstname_field_id(), $user->first_name );
+
+		// or use the user_nickname.
+		if ( $invalid ) {
+			$errors->add( 'first_name', esc_html( $invalid ) );
+		}
+	}
+
+	if ( isset( $user->last_name ) && ! empty( $user->last_name ) ) {
+		$invalid = bb_xprofile_validate_character_limit_value( '', bp_xprofile_lastname_field_id(), $user->last_name );
+
+		// or use the user_nickname.
+		if ( $invalid ) {
+			$errors->add( 'last_name', esc_html( $invalid ) );
+		}
+	}
 }
 
 /**

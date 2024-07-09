@@ -1861,6 +1861,22 @@
 			transition: none;
 		}
 	}
+
+	@media screen and (max-width: 1000px) {
+
+		.emojionearea-picker.emojionearea-picker-position-top {
+
+			&.level-2 .emojionearea-wrapper:after {
+				display: none;
+			}
+
+			.emojionearea-wrapper:after {
+				right: inherit;
+				left: 98px;
+			}
+		}
+
+	}
 }
 
 .gif-media-search-dropdown {
