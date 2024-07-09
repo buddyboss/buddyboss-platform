@@ -57,6 +57,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.50 =
+* Enhancement: Members - Updated the member directory loading & filtering filtering logic to provide a much faster loading experience
+* Bug: Activity - GIF on multi level comment could not be posted without text
+* Bug: Activity - The Pin to feed option for published blog posts was not working correctly
+* Bug: Core - The Send button in the messaging screen is now showing when using a default WP Theme
+* Bug: Groups - The request option found on the group’s manage tab was not loading when the page request from Performance settings was set to 1
+* Bug: Messages - Messages were incorrectly sent to new registered users after account setup
+* Bug: Moderation - The Blocked/Reported member is no longer getting automatically suspended without the auto-suspend being configured
+* Bug: Profiles - Paragraph text profile field was not centering the text correctly
+
 = 2.6.41 =
 * Bug: Core - Security Issue for the Forum component updated
 
