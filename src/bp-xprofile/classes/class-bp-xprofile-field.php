@@ -401,6 +401,7 @@ class BP_XProfile_Field {
 		// Delete the data in the DB for this field.
 		if ( true === $delete_data ) {
 			BP_XProfile_ProfileData::delete_for_field( $this->id );
+			BB_XProfile_Visibility::delete_for_field( $this->id );
 		}
 
 		/**
@@ -983,6 +984,8 @@ class BP_XProfile_Field {
 	public static function delete_for_group( $group_id = 0 ) {
 		global $wpdb;
 
+		$bp = buddypress();
+
 		// Bail if no group ID.
 		if ( empty( $group_id ) ) {
 			return false;
@@ -992,7 +995,6 @@ class BP_XProfile_Field {
 		$ids       = wp_cache_get( $cache_key, 'bp_xprofile' );
 
 		if ( false === $ids ) {
-			$bp  = buddypress();
 			$ids = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
 			wp_cache_set( $cache_key, $ids, 'bp_xprofile' );
 		}
