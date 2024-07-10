@@ -3714,4 +3714,10 @@ function bb_update_to_2_6_51() {
 
 	// Insert the last_activity entries for the users based on the registered date.
 	$wpdb->query( $insert_query ); // phpcs:ignore
+
+	// Insert query to add 'last_activity' meta for users who don't have it.
+	$insert_query = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) SELECT u.ID, 'last_activity', u.user_registered FROM {$wpdb->users} u LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'last_activity' AND u.user_status = 0 WHERE um.user_id IS NULL;";
+
+	// Insert the last_activity meta for the users who don't have it.
+	$wpdb->query($insert_query); // phpcs:ignore
 }
