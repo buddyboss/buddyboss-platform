@@ -9862,28 +9862,24 @@ function bb_remove_deleted_user_last_activities() {
 	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
 
 	if ( $table_exists ) {
-		$sql = "DELETE a FROM {$bp_prefix}bp_activity a
-			LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID
-			WHERE u.ID IS NULL
-			AND a.component = 'members'
-			AND a.type = 'last_activity'
-		";
+		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE u.ID IS NULL AND a.component = 'members' AND a.type = 'last_activity'";
 
 		// Execute the query.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$wpdb->query( $sql );
 
+		// Remove usermeta entries for deleted users.
+		$delete_query = "DELETE um FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id = u.ID WHERE um.meta_key = 'last_activity' AND u.ID IS NULL;";
+		$wpdb->query( $delete_query );
+
+		// Remove duplicate last_activity on user meta.
+		// Query to delete duplicates based on the provided SQL logic
+		$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
+		// Execute the query.
+		$wpdb->query( $delete_query );
+
 		// Also remove duplicates last_activity per user if any.
-		$duplicate_query = "DELETE a1 
-			FROM {$bp_prefix}bp_activity a1 
-			INNER JOIN {$bp_prefix}bp_activity a2 
-			ON a1.user_id = a2.user_id 
-			AND a1.component = 'members' 
-			AND a1.type = 'last_activity' 
-			AND a1.id < a2.id 
-			AND a1.type = a2.type
-			AND a1.component = a2.component
-		";
+		$duplicate_query = "DELETE a1 FROM {$bp_prefix}bp_activity a1 INNER JOIN {$bp_prefix}bp_activity a2 ON a1.user_id = a2.user_id AND a1.component = 'members' AND a1.type = 'last_activity' AND a1.id < a2.id AND a1.type = a2.type AND a1.component = a2.component";
 
 		// Execute the query.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared

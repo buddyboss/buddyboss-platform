@@ -1273,6 +1273,16 @@ function bp_last_activity_migrate() {
 	// table.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity'", $bp->members->id ) );
 
+	// Remove usermeta entries for deleted users.
+	$delete_query = "DELETE um FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id = u.ID WHERE um.meta_key = 'last_activity' AND u.ID IS NULL;";
+	$wpdb->query( $delete_query );
+
+	// Remove duplicate last_activity on user meta.
+	// Query to delete duplicates based on the provided SQL logic
+	$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
+	// Execute the query
+	$wpdb->query( $delete_query );
+
 	$sql = "INSERT INTO {$bp->members->table_name_last_activity} (`user_id`, `component`, `type`, `action`, `content`, `primary_link`, `item_id`, `date_recorded` ) (
 		  SELECT user_id, '{$bp->members->id}' as component, 'last_activity' as type, '' as action, '' as content, '' as primary_link, 0 as item_id, meta_value AS date_recorded
 		  FROM {$wpdb->usermeta}
