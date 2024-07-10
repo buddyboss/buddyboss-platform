@@ -495,6 +495,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_20();
 		}
 
+		if ( $raw_db_version < 21151 ) {
+			bb_update_to_2_6_51();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3668,4 +3672,53 @@ function bb_update_to_2_6_20() {
 		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
 	}
 
+}
+
+/**
+ * Remove duplicate last_activity entries from activity table.
+ * For count fix, create the last_activity entries for the users based on the registered date.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_51() {
+	// Remove deleted user last_activity on update.
+	bb_remove_deleted_user_last_activities();
+
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+
+	$insert_query = "INSERT INTO {$bp_prefix}bp_activity (user_id, component, type, action, content, primary_link, item_id, secondary_item_id, date_recorded, hide_sitewide, mptt_left, mptt_right, is_spam)
+		SELECT
+		    u.ID AS user_id,
+		    'members' AS component,
+		    'last_activity' AS type,
+		    '' AS action,
+		    '' AS content,
+		    '' AS primary_link,
+		    0 AS item_id,
+		    0 AS secondary_item_id,
+		    u.user_registered AS date_recorded,
+		    0 AS hide_sitewide,
+		    0 AS mptt_left,
+		    0 AS mptt_right,
+		    0 AS is_spam
+		FROM
+		    {$bp_prefix}users u
+		LEFT JOIN
+		    {$bp_prefix}bp_activity a ON u.ID = a.user_id AND a.component = 'members' AND a.type = 'last_activity'
+		WHERE
+		    u.user_status = 0
+		    AND a.user_id IS NULL;
+		";
+
+	// Insert the last_activity entries for the users based on the registered date.
+	$wpdb->query( $insert_query ); // phpcs:ignore
+
+	// Insert query to add 'last_activity' meta for users who don't have it.
+	$insert_query = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) SELECT u.ID, 'last_activity', u.user_registered FROM {$wpdb->users} u LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'last_activity' AND u.user_status = 0 WHERE um.user_id IS NULL;";
+
+	// Insert the last_activity meta for the users who don't have it.
+	$wpdb->query($insert_query); // phpcs:ignore
 }
