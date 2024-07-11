@@ -4253,7 +4253,11 @@ function bp_get_allowedtags() {
 				'id'             => array(),
 			),
 			'ul'      => array(),
-			'ol'      => array(),
+			'ol'      => array(
+				'start'    => true,
+				'type'     => true,
+				'reversed' => true,
+			),
 			'li'      => array(),
 			'p'       => array(
 				'class' => array(),
