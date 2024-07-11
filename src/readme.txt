@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.51 =
+* Bug: Core - Count was not loading correctly on Members page on the initial page load due to the performance tab page load option set to 2
+
 = 2.6.50 =
 * Enhancement: Members - Updated the member directory loading & filtering filtering logic to provide a much faster loading experience
 * Bug: Activity - GIF on multi level comment could not be posted without text
