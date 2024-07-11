@@ -506,9 +506,9 @@ window.bp = window.bp || {};
 					vote_disabled_date: activity_data.poll.vote_disabled_date,
 					question: activity_data.poll.question,
 					options: activity_data.poll.options,
-					allow_multiple_options: activity_data.poll.allow_multiple_options || 'false',
-					allow_new_option: activity_data.poll.allow_new_option || 'false',
-					duration: activity_data.poll.duration || '7',
+					allow_multiple_options: activity_data.poll.allow_multiple_options || false,
+					allow_new_option: activity_data.poll.allow_new_option || false,
+					duration: activity_data.poll.duration || 7,
 					total_votes: activity_data.poll.total_votes,
 				};
 
