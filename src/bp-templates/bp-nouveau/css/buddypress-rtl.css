@@ -18867,6 +18867,19 @@ fieldset div.avatar {
   background-color: #fafafa;
 }
 
+.activity-list li.blogs .activity-content .activity-inner .bb-content-wrp > ul {
+  margin-bottom: 0;
+}
+
+.activity-list li.blogs .activity-content .activity-inner .bb-content-wrp > ul li {
+  list-style: disc;
+  margin-bottom: 0;
+}
+
+.activity-list li.blogs .activity-content .activity-inner .bb-content-wrp > ul li:before {
+  display: inline;
+}
+
 .activity-list li.blogs .activity-content .activity-inner .bb-video-wrapper .fluid-width-video-wrapper {
   margin: 0;
 }

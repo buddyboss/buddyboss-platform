@@ -1183,6 +1183,19 @@ fieldset div.avatar {
 			display: block;
 			padding: 12px;
 			background-color: #fafafa;
+
+			> ul {
+				margin-bottom: 0;
+
+				li {
+					list-style: disc;
+					margin-bottom: 0;
+
+					&:before {
+						display: inline;
+					}
+				}
+			}
 		}
 
 		.bb-video-wrapper .fluid-width-video-wrapper {
