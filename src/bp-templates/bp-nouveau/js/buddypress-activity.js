@@ -1355,6 +1355,10 @@ window.bp = window.bp || {};
 				target.closest( '.activity-comments' ).find( '.comment-item' ).removeClass( 'comment-item-focus' );
 				target.closest( '.acomment-display' ).addClass( 'display-focus' );
 				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
+				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
+					activity_data = target.closest( 'li' ).data( 'bp-activity-comment' );
+					activity_data_nickname = activity_data.nickname;
+				}
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
@@ -1395,11 +1399,16 @@ window.bp = window.bp || {};
 					}
 				}
 
+				if ( ! target.hasClass( 'acomment-edit' ) ) {
+					$( hasParentModal + '#ac-input-' + activity_id ).html( '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;' );
+					form.addClass( 'has-content' )
+				}
+
 				// Place caret at the end of the content.
 				if (
 					'undefined' !== typeof window.getSelection &&
 					'undefined' !== typeof document.createRange &&
-					( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) )
+					! _.isNull( activity_comment_data )
 				) {
 					var range = document.createRange();
 					range.selectNodeContents( $( hasParentModal + '#ac-input-' + activity_id )[0] );
