@@ -1399,7 +1399,7 @@ window.bp = window.bp || {};
 					}
 				}
 
-				if ( ! target.hasClass( 'acomment-edit' ) ) {
+				if ( ! target.hasClass( 'acomment-edit' ) && ! target.hasClass( 'button') ) {
 					$( hasParentModal + '#ac-input-' + activity_id ).html( '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;' );
 					form.addClass( 'has-content' )
 				}

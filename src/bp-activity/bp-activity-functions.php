@@ -6335,16 +6335,16 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		}
 
 		$edit_data = array(
-			'id'               => $activity_comment_id,
-			'can_edit_privacy' => $can_edit_privacy,
-			'album_id'         => $album_id,
-			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activity_comment->content ),
-			'item_id'          => $activity_comment->item_id,
-			'object'           => $activity_comment->component,
-			'privacy'          => $activity_comment->privacy,
-			'author'	       => $activity_comment_author,
-			'nickname'	       => $activity_comment_nickname,
+			'id'               	=> $activity_comment_id,
+			'can_edit_privacy' 	=> $can_edit_privacy,
+			'album_id'         	=> $album_id,
+			'folder_id'        	=> $folder_id,
+			'content'          	=> stripslashes( $activity_comment->content ),
+			'item_id'          	=> $activity_comment->item_id,
+			'object'           	=> $activity_comment->component,
+			'privacy'          	=> $activity_comment->privacy,
+			'author'	       	=> $activity_comment_author,
+			'nickname'			=> $activity_comment_nickname,
 		);
 	}
 
