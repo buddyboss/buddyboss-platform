@@ -2230,7 +2230,7 @@ function bb_nouveau_activity_comment_bubble_buttons( $args = array() ) {
 	bp_get_template_part( 'common/more-options-view' );
 	$template_part_content = ob_get_clean();
 
-	$output = sprintf( 
+	$output = sprintf(
 		'<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="%1$s">
 			<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 		</span>
