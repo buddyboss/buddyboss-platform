@@ -4095,6 +4095,8 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'cleanFeedBack' );
 					} else {
 						this.model.set( 'polls_allowed', 'disabled' );
+						this.model.set( 'poll', {} );
+						this.model.set( 'poll_id', '' );
 						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 					}
 
@@ -4127,6 +4129,8 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 					} else {
 						this.model.set( 'polls_allowed', 'disabled' );
+						this.model.set( 'poll', {} );
+						this.model.set( 'poll_id', '' );
 						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 					}
 
