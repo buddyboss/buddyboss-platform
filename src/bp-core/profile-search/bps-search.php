@@ -323,8 +323,6 @@ function bp_ps_search( $request, $users = null ) {
 
 	$fields = bp_ps_parse_request( $request );
 
-	$copied_arr = array();
-
 	foreach ( $fields as $f ) {
 		// Disable search for some individual field.
 		if ( ! apply_filters( 'bp_ps_field_can_filter', true, $f, $request ) ) {
@@ -342,23 +340,6 @@ function bp_ps_search( $request, $users = null ) {
 
 		$found = call_user_func( $f->search, $f );
 		$found = apply_filters( 'bp_ps_field_search_results', $found, $f );
-
-		$copied_arr = $found;
-		if ( isset( $copied_arr, $f->id ) && ! empty( $copied_arr ) ) {
-			foreach ( $copied_arr as $key => $user ) {
-				$field_visibility = xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					if ( ( $key = array_search( $user, $found ) ) !== false ) {
-						unset( $found[ $key ] );
-					}
-				}
-				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user ), bp_loggedin_user_id() ) ) {
-					if ( ( $key = array_search( $user, $found ) ) !== false ) {
-						unset( $found[ $key ] );
-					}
-				}
-			}
-		}
 
 		$match_all = apply_filters( 'bp_ps_match_all', true );
 		if ( $match_all ) {

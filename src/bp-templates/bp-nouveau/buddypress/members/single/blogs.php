@@ -11,6 +11,8 @@
 bp_get_template_part( 'members/single/parts/item-subnav' );
 bp_get_template_part( 'common/search-and-filters-bar' );
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 switch ( bp_current_action() ) :
 
 	// Home/My Blogs
@@ -19,7 +21,15 @@ switch ( bp_current_action() ) :
 		?>
 
 		<div class="blogs myblogs" data-bp-list="blogs">
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-blogs-loading' ); ?></div>
+			<?php
+			if ( $is_send_ajax_request ) {
+				echo '<div id="bp-ajax-loader">';
+				bp_nouveau_user_feedback( 'member-blogs-loading' );
+				echo '</div>';
+			} else {
+				bp_get_template_part( 'blogs/blogs-loop' );
+			}
+			?>
 		</div><!-- .blogs.myblogs -->
 
 		<?php
