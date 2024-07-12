@@ -5625,7 +5625,6 @@ body.buddyboss-theme {
 		opacity: 0.4;
 		position: absolute;
 		right: 15px;
-		top: 11px;
 
 		> i {
 			font-size: 24px;
@@ -5647,6 +5646,7 @@ body.buddyboss-theme {
 			top: 50%;
 			left: 50%;
 			max-height: calc(100% - 100px);
+			height: fit-content;
 			max-width: 220px;
 			overflow: auto;
 			padding: 0;
@@ -5659,7 +5659,8 @@ body.buddyboss-theme {
 			}
 
 			.bb_more_dropdown__title {
-				display: block;
+				display: flex;
+				align-items: center;
 				border-bottom: 1px solid #e1e3e5;
 				border-radius: 4px 4px 0 0;
 				text-align: left;
@@ -5692,10 +5693,17 @@ body.buddyboss-theme {
 	}
 
 	/*More option popup General styles*/
-	body[class*="more_option_open"] {
 
-		.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
-			display: none;
+	/* body[class*="more_option_open"] {
+
+		.bb-media-model-container .activity-list .bb-activity-more-options-wrap {
+
+			.bb-activity-more-options-action {
+
+				&[data-balloon][data-balloon-pos="up"]:before {
+					display: none;
+				}
+			}
 		}
 	}
 
@@ -5711,5 +5719,5 @@ body.buddyboss-theme {
 		&:after {
 			display: none;
 		}
-	}
+	} */
 }

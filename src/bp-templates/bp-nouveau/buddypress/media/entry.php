@@ -69,10 +69,7 @@ if ( 'video' === $media_template->media->type ) {
 						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
 					<div class="video-action_list item-action_list bb_more_dropdown">
-						<div class="bb_more_dropdown__title"> 
-							<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
-							<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
-						</div>
+						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<?php
 							if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
@@ -239,10 +236,7 @@ if ( 'video' === $media_template->media->type ) {
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="media-action_list bb_more_dropdown">
-					<div class="bb_more_dropdown__title"> 
-						<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
-						<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
-					</div>
+					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
 						if ( $is_comment_pic ) {

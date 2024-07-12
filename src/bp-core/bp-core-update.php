@@ -3678,7 +3678,7 @@ function bb_update_to_2_6_20() {
  * Remove duplicate last_activity entries from activity table.
  * For count fix, create the last_activity entries for the users based on the registered date.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.51
  *
  * @return void
  */
