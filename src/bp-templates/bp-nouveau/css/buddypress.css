@@ -5518,6 +5518,7 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   border-radius: 4px 4px 0 0;
   object-fit: cover;
   object-position: center;
+  max-width: 100%;
 }
 
 .activity-url-scrapper-container #activity-url-scrapper-img-holder {
@@ -18750,6 +18751,7 @@ fieldset div.avatar {
 .activity-list li.blogs .activity-content .activity-inner .bb-content-inr-wrap {
   display: table;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .activity-list li.bbp_topic_create .activity-content .activity-inner .bb-content-inr-wrap > .bb-icon-corner-down-right,
@@ -31686,6 +31688,7 @@ body.activity-modal-open .bb-toast-messages-enable .bb-toast-messages {
   border-radius: 4px 4px 0 0;
   object-fit: cover;
   object-position: center;
+  max-width: 100%;
 }
 
 .bb-url-scrapper-container #bb-url-scrapper-img-holder {
@@ -31849,7 +31852,6 @@ body.activity-modal-open .bb-toast-messages-enable .bb-toast-messages {
     display: block;
     margin: auto;
     width: auto;
-    max-width: 100%;
   }
 }
 
