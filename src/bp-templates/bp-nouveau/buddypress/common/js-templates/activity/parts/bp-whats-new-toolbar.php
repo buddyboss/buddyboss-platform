@@ -46,5 +46,13 @@
 				<div class="gif-media-search-dropdown"></div>
 			</div>
 		</div>
-	<?php endif; ?>
+	<?php endif;
+
+	/**
+	 * Fires at the end of the whats new toolbar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_whats_new_toolbar_end' );
+	?>
 </script>

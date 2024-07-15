@@ -659,6 +659,9 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
+			$poll_id      = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
+			$poll         = ! empty( $poll_id ) && function_exists( 'bb_load_polls' ) ? bb_load_polls()->bb_get_poll( $poll_id ) : '';
+			$question     = ! empty( $poll->question ) ? $poll->question : '';
 			$amount       = 'single';
 
 			if ( 'web_push' === $screen ) {
@@ -692,6 +695,12 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					}
 				} elseif ( ! empty( $gif_data ) ) {
 					$text = __( 'Posted an update', 'buddyboss' );
+				} elseif ( ! empty( $question ) ) {
+					$text = sprintf(
+					/* translators: %s: question. */
+						__( 'Posted a poll "%1$s"', 'buddyboss' ),
+						$question
+					);
 				} else {
 					$text = __( 'Posted an update', 'buddyboss' );
 				}
@@ -763,6 +772,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						/* translators: User full name. */
 							__( '%1$s posted an update', 'buddyboss' ),
 							$user_fullname
+						);
+					} elseif ( ! empty( $question ) ) {
+						$text = sprintf(
+						/* translators: %1$s: User full name, %2$s: question. */
+							__( '%1$s posted a poll "%2$s"', 'buddyboss' ),
+							$user_fullname,
+							$question
 						);
 					} else {
 						$text = sprintf(
