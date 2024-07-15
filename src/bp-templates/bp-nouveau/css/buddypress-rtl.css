@@ -26413,33 +26413,9 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   #comments .bb_more_dropdown .report-content {
     margin-left: 0;
   }
-  /*More option popup General styles*/
-  /* body[class*="more_option_open"] {
-
-		.bb-media-model-container .activity-list .bb-activity-more-options-wrap {
-
-			.bb-activity-more-options-action {
-
-				&[data-balloon][data-balloon-pos="up"]:before {
-					display: none;
-				}
-			}
-		}
-	}
-
-	.item-action_more[data-balloon],
-	.media-action_more[data-balloon],
-	.document-action_more[data-balloon],
-	.bb_more_options_action[data-bp-tooltip],
-	.bb-activity-more-options-action[data-balloon],
-	.bb-reply-actions-button.active[data-balloon],
-	.bb-activity-more-options-action[data-balloon] {
-
-		&:before,
-		&:after {
-			display: none;
-		}
-	} */
+  div:has(> .bb_more_dropdown.open) > [data-balloon]:before, div:has(> .bb_more_dropdown.open) > [data-balloon]:after {
+    display: none;
+  }
 }
 
 /* BASICS */
