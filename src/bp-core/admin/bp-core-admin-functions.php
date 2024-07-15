@@ -3421,7 +3421,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			) ||
 			(
 				'polls' === $type &&
-				version_compare( bb_platform_pro()->version, '2.5.50', '<' )
+				version_compare( bb_platform_pro()->version, '2.5.60', '<' ) // @todo: update when release.
 			)
 		)
 	) {
@@ -3485,7 +3485,7 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			) ||
 			(
 				'polls' === $type &&
-				version_compare( bb_platform_pro()->version, '2.5.50', '<' )
+				version_compare( bb_platform_pro()->version, '2.5.60', '<' ) // @todo: update when release.
 			)
 		)
 	) {
