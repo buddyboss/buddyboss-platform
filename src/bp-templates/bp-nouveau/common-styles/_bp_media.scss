@@ -5666,11 +5666,15 @@ body.buddyboss-theme {
 		margin-right: 0;
 	}
 
-	div:has(> .bb_more_dropdown.open) > [data-balloon] {
+	div:has(> .bb_more_dropdown.open) {
 
-		&:before,
-		&:after {
-			display: none;
+		> [data-bp-tooltip],
+		> [data-balloon] {
+
+			&:before,
+			&:after {
+				display: none;
+			}
 		}
 	}
 }

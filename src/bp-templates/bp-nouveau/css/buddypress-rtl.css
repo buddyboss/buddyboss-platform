@@ -4396,7 +4396,7 @@ body:not(.bb-reactions-mode) .activity-list .activity-item .activity-content .bp
 }
 
 .activity-list .comment-item .bb-activity-more-options-wrap:has(.bb-activity-more-options.is_visible) {
-  z-index: 111;
+  z-index: 119;
 }
 
 .activity-list .comment-item .bb-activity-more-options-wrap:has(.bb-activity-more-options.is_visible) .bb-activity-more-options-action {
@@ -26413,7 +26413,9 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   #comments .bb_more_dropdown .report-content {
     margin-left: 0;
   }
-  div:has(> .bb_more_dropdown.open) > [data-balloon]:before, div:has(> .bb_more_dropdown.open) > [data-balloon]:after {
+  div:has(> .bb_more_dropdown.open) > [data-bp-tooltip]:before, div:has(> .bb_more_dropdown.open) > [data-bp-tooltip]:after,
+  div:has(> .bb_more_dropdown.open) > [data-balloon]:before,
+  div:has(> .bb_more_dropdown.open) > [data-balloon]:after {
     display: none;
   }
 }
