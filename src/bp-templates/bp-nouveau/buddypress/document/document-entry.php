@@ -261,10 +261,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 			?>
 			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
 			<div class="media-folder_action__list bb_more_dropdown">
-				<div class="bb_more_dropdown__title"> 
-					<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
-					<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
-				</div>
+				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<ul>
 					<?php
 					if ( $can_download ) {

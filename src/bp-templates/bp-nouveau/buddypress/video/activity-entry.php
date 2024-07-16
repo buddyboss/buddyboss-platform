@@ -89,10 +89,7 @@ echo esc_attr( $has_no_thumbnail );
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="video-action_list item-action_list bb_more_dropdown">
-					<div class="bb_more_dropdown__title"> 
-						<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options','buddyboss' ); ?></span>
-						<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
-					</div>
+					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php if ( ! in_array( $db_privacy, array( 'forums', 'comment', 'message' ), true ) ) { ?>
 						<li class="edit_thumbnail_video video-action-class">

@@ -717,10 +717,6 @@
 			display: none;
 			z-index: 112;
 
-			.generic-button {
-				margin-right: 0 !important;
-			}
-
 			&.is_visible {
 				display: block;
 			}
@@ -768,7 +764,6 @@
 						text-transform: none;
 						font-weight: 400;
 						min-height: auto;
-						line-height: 1.2;
 						border-radius: 0;
 						padding: 10px 14px;
 						color: #7f868f;
@@ -935,6 +930,14 @@
 			transform: translateY(calc(-50% - 24px));
 			z-index: 11;
 
+			@media screen and (max-width: 980px) {
+				transform: none;
+
+				.bb-activity-more-options-action {
+					transform: translateY(calc(-50% - 24px));
+				}
+			}
+
 			.bb-activity-more-options-action {
 				border-radius: $block-radius-inner;
 
@@ -954,7 +957,7 @@
 			}
 
 			&:has(.bb-activity-more-options.is_visible) {
-				z-index: 111;
+				z-index: 119;
 
 				.bb-activity-more-options-action {
 					background-color: $light-grey;

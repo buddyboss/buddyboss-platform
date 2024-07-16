@@ -5599,7 +5599,6 @@ body.buddyboss-theme {
 		opacity: 0.4;
 		position: absolute;
 		right: 15px;
-		top: 11px;
 
 		> i {
 			font-size: 24px;
@@ -5621,6 +5620,7 @@ body.buddyboss-theme {
 			top: 50%;
 			left: 50%;
 			max-height: calc(100% - 100px);
+			height: fit-content;
 			max-width: 220px;
 			overflow: auto;
 			padding: 0;
@@ -5633,7 +5633,8 @@ body.buddyboss-theme {
 			}
 
 			.bb_more_dropdown__title {
-				display: block;
+				display: flex;
+				align-items: center;
 				border-bottom: 1px solid #e1e3e5;
 				border-radius: 4px 4px 0 0;
 				text-align: left;
@@ -5665,25 +5666,15 @@ body.buddyboss-theme {
 		margin-right: 0;
 	}
 
-	/*More option popup General styles*/
-	body[class*="more_option_open"] {
+	div:has(> .bb_more_dropdown.open) {
 
-		.bb-media-model-container .activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:before {
-			display: none;
-		}
-	}
+		> [data-bp-tooltip],
+		> [data-balloon] {
 
-	.item-action_more[data-balloon],
-	.media-action_more[data-balloon],
-	.document-action_more[data-balloon],
-	.bb_more_options_action[data-bp-tooltip],
-	.bb-activity-more-options-action[data-balloon],
-	.bb-reply-actions-button.active[data-balloon],
-	.bb-activity-more-options-action[data-balloon] {
-
-		&:before,
-		&:after {
-			display: none;
+			&:before,
+			&:after {
+				display: none;
+			}
 		}
 	}
 }
