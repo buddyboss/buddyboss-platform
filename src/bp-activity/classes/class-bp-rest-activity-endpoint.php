@@ -1682,7 +1682,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if (
 			is_user_logged_in() &&
-			'activity_update' === $activity->type &&
+			'activity_comment' !== $activity->type &&
 			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
 				(
@@ -2159,7 +2159,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Show pin actions.
 		if (
-			'activity_update' === $activity->type &&
+			'activity_comment' !== $activity->type &&
 			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
 				(
