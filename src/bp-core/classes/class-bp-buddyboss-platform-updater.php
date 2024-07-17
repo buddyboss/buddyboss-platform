@@ -93,9 +93,10 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			}
 
 			$request_data = array(
-				'id'      => $this->plugin_id,
-				'slug'    => $this->plugin_slug,
-				'version' => $current_version,
+				'id'            => $this->plugin_id,
+				'slug'          => $this->plugin_slug,
+				'version'       => $current_version,
+				'licence_stats' => $this->bb_get_license_stats(),
 			);
 
 			if ( ! empty( $this->license ) ) {
@@ -152,10 +153,10 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			$plugin_info = get_site_transient( 'update_plugins' );
 
 			$request_data = array(
-				'id'      => $this->plugin_id,
-				'slug'    => $this->plugin_slug,
-				'version' => ( isset( $plugin_info->checked ) ) ? $plugin_info->checked[ $this->plugin_path ] : 0,
-				// Current version
+				'id'            => $this->plugin_id,
+				'slug'          => $this->plugin_slug,
+				'version'       => ( isset( $plugin_info->checked ) ) ? $plugin_info->checked[ $this->plugin_path ] : 0, // Current version
+				'licence_stats' => $this->bb_get_license_stats(),
 			);
 
 			if ( ! empty( $this->license ) ) {
@@ -187,6 +188,30 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 					'api-key' => md5( home_url() ),
 				),
 				'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url(),
+			);
+		}
+
+		/**
+		 * Get the license stats
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array
+		 */
+		function bb_get_license_stats() {
+			global $wpdb;
+
+			return array(
+				'site_url'            => get_bloginfo( 'wpurl' ),
+				'wp_version'          => get_bloginfo( 'version' ),
+				'locale'              => get_locale(),
+				'php_version'         => PHP_VERSION,
+				'server_architecture' => sprintf( '%s %s %s', php_uname( 's' ), php_uname( 'r' ), php_uname( 'm' ) ),
+				'web_server'          => ( $_SERVER['SERVER_SOFTWARE'] ?? '' ),
+				'db_server_ver'       => $wpdb->dbhost,
+				'db_client_ver'       => $wpdb->dbh->client_info,
+				'db_charset'          => $wpdb->charset,
+				'is_multisite'        => is_multisite(),
 			);
 		}
 
