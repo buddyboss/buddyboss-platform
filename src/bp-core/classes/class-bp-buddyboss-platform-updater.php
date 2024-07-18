@@ -203,7 +203,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		function bb_get_license_stats( $main_file = '' ) {
 			global $wpdb;
 
-			return array(
+			$stats = array(
 				'site_url'            => get_bloginfo( 'wpurl' ),
 				'wp_version'          => get_bloginfo( 'version' ),
 				'locale'              => get_locale(),
@@ -213,11 +213,16 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				'db_server_ver'       => $wpdb->dbhost,
 				'db_client_ver'       => $wpdb->dbh->client_info,
 				'db_charset'          => $wpdb->charset,
-				'is_multisite'        => array(
-					'is_multisite' => is_multisite(),
-					'active'       => ! empty( $main_file ) && function_exists( 'is_plugin_active_for_network' ) && is_plugin_active_for_network( $main_file ) ? 'networkwide' : 'sitewide',
-				),
 			);
+
+			if ( is_multisite() ) {
+				$stats['multisite'] = array(
+					'is_multisite' => true,
+					'active'       => ! empty( $main_file ) && function_exists( 'is_plugin_active_for_network' ) && is_plugin_active_for_network( $main_file ) ? 'networkwide' : 'sitewide',
+				);
+			}
+
+			return $stats;
 		}
 
 	}
