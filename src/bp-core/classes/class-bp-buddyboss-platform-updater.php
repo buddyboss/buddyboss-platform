@@ -192,7 +192,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		}
 
 		/**
-		 * Get the license stats
+		 * Get the license stats.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
