@@ -5676,5 +5676,9 @@ body.buddyboss-theme {
 				display: none;
 			}
 		}
+
+		.bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:not(.specificity):before {
+			display: none;
+		}
 	}
 }
