@@ -26207,6 +26207,9 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   div:has(> .bb_more_dropdown.open) > [data-balloon]:after {
     display: none;
   }
+  div:has(> .bb_more_dropdown.open) .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:not(.specificity):before {
+    display: none;
+  }
 }
 
 /* BASICS */
