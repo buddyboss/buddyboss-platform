@@ -96,7 +96,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				'id'            => $this->plugin_id,
 				'slug'          => $this->plugin_slug,
 				'version'       => $current_version,
-				'licence_stats' => $this->bb_get_license_stats(),
+				'licence_stats' => $this->bb_get_license_stats( $this->plugin_path ),
 			);
 
 			if ( ! empty( $this->license ) ) {
@@ -156,7 +156,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				'id'            => $this->plugin_id,
 				'slug'          => $this->plugin_slug,
 				'version'       => ( isset( $plugin_info->checked ) ) ? $plugin_info->checked[ $this->plugin_path ] : 0, // Current version
-				'licence_stats' => $this->bb_get_license_stats(),
+				'licence_stats' => $this->bb_get_license_stats( $this->plugin_path ),
 			);
 
 			if ( ! empty( $this->license ) ) {
@@ -196,9 +196,11 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param string $main_file Plugin path.
+		 *
 		 * @return array
 		 */
-		function bb_get_license_stats() {
+		function bb_get_license_stats( $main_file = '' ) {
 			global $wpdb;
 
 			return array(
@@ -211,7 +213,10 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				'db_server_ver'       => $wpdb->dbhost,
 				'db_client_ver'       => $wpdb->dbh->client_info,
 				'db_charset'          => $wpdb->charset,
-				'is_multisite'        => is_multisite(),
+				'is_multisite'        => array(
+					'is_multisite' => is_multisite(),
+					'active'       => ! empty( $main_file ) && function_exists( 'is_plugin_active_for_network' ) && is_plugin_active_for_network( $main_file ) ? 'networkwide' : 'sitewide',
+				),
 			);
 		}
 
