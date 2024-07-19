@@ -9878,3 +9878,14 @@ function bb_remove_deleted_user_last_activities() {
 		$wpdb->query( $delete_query ); // phpcs:ignore
 	}
 }
+
+/**
+ * Function to return the minimum pro version to show notice for poll.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_poll_version() {
+	return '2.5.60'; // @todo: update when release.
+}

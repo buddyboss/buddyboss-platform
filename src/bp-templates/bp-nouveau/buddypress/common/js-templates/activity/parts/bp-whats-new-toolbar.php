@@ -11,7 +11,16 @@
 ?>
 <script type="text/html" id="tmpl-whats-new-toolbar">
 
-	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ) : ?>
+	<?php
+
+	/**
+	 * Fires at the beginning of the whats new toolbar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_whats_new_toolbar_before' );
+
+	if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ) : ?>
 		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
 				<i class="bb-icon-l bb-icon-camera"></i>
@@ -53,6 +62,6 @@
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	do_action( 'bb_whats_new_toolbar_end' );
+	do_action( 'bb_whats_new_toolbar_after' );
 	?>
 </script>
