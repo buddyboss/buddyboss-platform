@@ -1135,6 +1135,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @return string The formatted activity action.
 		 */
 		function bbp_format_activity_action_new_post( $type = '', $action = '', $activity = false ) {
+			// Capture the original arguments
+			$original_args = func_get_args();
 
 			// Get actions.
 			$actions = $this->bbp_get_activity_actions();
@@ -1145,7 +1147,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Bail if intercepted.
-			$intercept = bbp_maybe_intercept( __FUNCTION__, func_get_args() );
+			$intercept = bbp_maybe_intercept( __FUNCTION__, $original_args );
 			if ( bbp_is_intercepted( $intercept ) ) {
 				return $intercept;
 			}
