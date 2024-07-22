@@ -2518,6 +2518,7 @@ function bp_core_get_minified_asset_suffix() {
  * @return array Requested components' data.
  */
 function bp_core_get_components( $type = 'all' ) {
+	global $course_component_available;
 
 	$required_components = array(
 		'members'  => array(
@@ -2728,6 +2729,12 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'courses'        => array(
+			'title'       => __( 'Courses', 'buddyboss' ),
+			'settings'    => false,
+			'description' => __( 'Buddyboss LMS', 'buddyboss' ),
+			'default'     => false,
+		),
 	);
 
 	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
@@ -2743,6 +2750,26 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			);
+		}
+
+		if (
+			function_exists( 'bbp_pro_is_license_valid' ) &&
+			bbp_pro_is_license_valid() &&
+			class_exists( 'BuddyBoss_LMS' ) &&
+			function_exists( 'is_plugin_active' ) &&
+			is_plugin_active( 'buddyboss-lms/buddyboss-lms.php' )
+		) {
+			$course_component_available = true;
+
+			$optional_components['courses']['settings'] = bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'buddyboss-lms-settings',
+					),
+					'admin.php'
+				)
+			);
+
 		}
 	}
 
