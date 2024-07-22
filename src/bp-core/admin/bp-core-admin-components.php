@@ -45,7 +45,6 @@ function bp_core_admin_components_settings() {
  * @todo Use settings API
  */
 function bp_core_admin_components_options() {
-	global $course_component_available;
 
 	// Declare local variables.
 	$deactivated_components = array();
@@ -71,7 +70,7 @@ function bp_core_admin_components_options() {
 	unset( $optional_components['document'] );
 	unset( $optional_components['video'] );
 
-	if ( ! $course_component_available ) {
+	if ( ! bb_is_course_component_available() ) {
 		unset( $active_components[ 'courses' ] );
 	}
 
@@ -278,7 +277,7 @@ function bp_core_admin_components_options() {
 								(
 									(
 										'courses' === $name &&
-										$course_component_available
+										bb_is_course_component_available()
 									) ||
 									'courses' !== $name
 								) &&
@@ -327,7 +326,7 @@ function bp_core_admin_components_options() {
 										<?php _e( 'Required', 'buddyboss' ); ?>
 									</span>
 								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-									<?php if ( 'courses' === $name && ! $course_component_available ) : ?>
+									<?php if ( 'courses' === $name && ! bb_is_course_component_available() ) : ?>
 											<a href="
 											<?php
 											echo wp_nonce_url(
