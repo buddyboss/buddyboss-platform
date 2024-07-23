@@ -4033,7 +4033,22 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
 function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 
 	static $cache = array();
-	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	$cache_key    = 'bb_check_valid_giphy_api_key';
+	$saved_key    = bp_media_get_gif_api_key();
+	$use_caching  = false;
+
+	if ( empty( $api_key ) && empty( $cache ) ) {
+
+		// Use caching if not user action.
+		$cache       = get_transient( $cache_key );
+		$use_caching = true;
+
+		if ( empty( $cache[ $saved_key ] ) ) {
+			delete_transient( $cache_key );
+		}
+	}
+
+	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
 	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
 		if ( true === $message ) {
 			return $cache[ $api_key ];
@@ -4048,6 +4063,13 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
 	if ( $output ) {
 		$cache[ $api_key ] = $output;
+		if ( $use_caching ) {
+			$cache_expiry = MONTH_IN_SECONDS;
+			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
+				$cache_expiry = WEEK_IN_SECONDS;
+			}
+			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
+		}
 	}
 	if ( true === $message ) {
 		return $cache[ $api_key ];
