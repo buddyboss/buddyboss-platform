@@ -6,7 +6,7 @@
  *
  * @since 2.3.60
  */
-
+// phpcs:disable PHPCompatibility
 ?>
 <script type="text/html" id="tmpl-bb-link-preview">
 <% if ( link_scrapping ) { %>
@@ -76,3 +76,6 @@
 	<% } %>
 <% } %>
 </script>
+<?php
+// phpcs:enable PHPCompatibility
+?>
