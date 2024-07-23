@@ -345,7 +345,7 @@ function bp_core_admin_components_options() {
 											);
 											?>
 											">
-												<?php _e( 'Install', 'buddyboss' ); ?>
+												<?php _e( 'Upgrade', 'buddyboss' ); ?>
 											</a>
 										<?php
 										elseif ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>

@@ -2730,7 +2730,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'courses'        => array(
 			'title'       => __( 'Courses', 'buddyboss' ),
 			'settings'    => false,
-			'description' => __( 'Buddyboss LMS', 'buddyboss' ),
+			'description' => __( 'Buddyboss Learning Management System', 'buddyboss' ),
 			'default'     => false,
 		),
 	);
