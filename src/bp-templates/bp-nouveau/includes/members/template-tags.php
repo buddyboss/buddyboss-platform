@@ -217,7 +217,11 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 		);
 	}
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
+	ob_start();
+	bp_get_template_part( 'common/more-options-view' );
+	$template_part_content = ob_get_clean();
+
+	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %1$s %2$s</div><div class="bb_more_dropdown_overlay"></div>', $template_part_content, $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
