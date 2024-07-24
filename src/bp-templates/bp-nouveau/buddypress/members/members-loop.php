@@ -230,13 +230,15 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 						<a href="#" class="bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
 							<i class="bb-icon-menu-dots-h"></i>
 						</a>
-						<div class="bb_more_options_list">
+						<div class="bb_more_options_list bb_more_dropdown">
+							<?php bp_get_template_part( 'common/more-options-view' ); ?>
 							<?php
 							echo wp_kses_post( $member_switch_button );
 							echo wp_kses_post( $member_report_button );
 							echo wp_kses_post( $member_block_button );
 							?>
 						</div>
+						<div class="bb_more_dropdown_overlay"></div>
 					</div><!-- .bb_more_options -->
 					<?php } ?>
 				</div>

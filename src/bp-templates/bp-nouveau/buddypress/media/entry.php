@@ -68,7 +68,8 @@ if ( 'video' === $media_template->media->type ) {
 					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
-					<div class="video-action_list item-action_list">
+					<div class="video-action_list item-action_list bb_more_dropdown">
+						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<?php
 							if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
@@ -139,6 +140,7 @@ if ( 'video' === $media_template->media->type ) {
 							?>
 						</ul>
 					</div>
+					<div class="bb_more_dropdown_overlay"></div>
 					<?php
 				}
 				?>
@@ -233,7 +235,8 @@ if ( 'video' === $media_template->media->type ) {
 				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
-				<div class="media-action_list">
+				<div class="media-action_list bb_more_dropdown">
+					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
 						if ( $is_comment_pic ) {
@@ -290,6 +293,7 @@ if ( 'video' === $media_template->media->type ) {
 						?>
 					</ul>
 				</div>
+				<div class="bb_more_dropdown_overlay"></div>
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
 		<a
