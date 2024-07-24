@@ -489,15 +489,6 @@ function bp_has_groups( $args = '' ) {
 		'update_admin_cache' => (bool) $r['update_admin_cache'],
 	);
 
-	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) {
-		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
-		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
-		$args['include']     = $ids;
-		$args['slug']        = '';
-		$args['type']        = '';
-		$args['show_hidden'] = true;
-	}
-
 	// Setup the Groups template global.
 	$groups_template = new BP_Groups_Template( $args );
 

@@ -275,6 +275,19 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-cdn-helpers.php';
 	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Fixed the issue with user register and issue with clear API cache.
+	 *
+	 * Support AffiliateWP.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 */
+	if ( function_exists( 'affwp_do_actions' ) ) {
+		remove_action( 'init', 'affwp_do_actions', 9 );
+		add_action( 'init', 'affwp_do_actions', 10 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1127,3 +1140,23 @@ function bb_wp_gravity_forms_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+/**
+ * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $allow_handle Allowed handles.
+ *
+ * @return array
+ */
+function mpcs_add_buddyboss_style( $allow_handle ) {
+	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
+		$allow_handle[] = 'bp-nouveau';
+	}
+
+	return $allow_handle;
+
+}
+
+add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );

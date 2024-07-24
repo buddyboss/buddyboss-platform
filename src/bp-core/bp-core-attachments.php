@@ -454,7 +454,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 			)
 		);
 
-		$created = ! empty( $cover_image['cover_file'] );
+		$created = ! is_wp_error( $cover_image ) && ! empty( $cover_image['cover_file'] );
 	}
 
 	// Remove copied file if it fails.
@@ -1377,6 +1377,7 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
  *     @type string $cover_image_dir The cover photo dir to write the image into. Required.
  * }
  * @param BP_Attachment_Cover_Image|null $cover_image_class The class to use to fit the cover photo.
+ *
  * @return false|array An array containing cover photo data on success, false otherwise.
  */
 function bp_attachments_cover_image_generate_file( $args = array(), $cover_image_class = null ) {
@@ -1406,6 +1407,10 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 
 	// Resize the image so that it fit with the cover photo dimensions.
 	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
+	if ( is_wp_error( $cover_image ) ) {
+		return false;
+	}
+
 	$is_too_small = false;
 
 	// Image is too small in width and height.
@@ -1656,11 +1661,18 @@ function bp_attachments_cover_image_ajax_upload() {
 	);
 
 	if ( ! $cover ) {
+
+		$error_code = 'upload_error';
+		if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
+			$error_code    = 'image_no_editor';
+		}
+
 		bp_attachments_json_response(
 			false,
 			$is_html4,
 			array(
-				'type'    => 'upload_error',
+				'type'    => $error_code,
 				'message' => $error_message,
 			)
 		);

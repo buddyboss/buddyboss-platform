@@ -992,6 +992,7 @@ window.bp = window.bp || {};
 			}
 
 			$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
+			$( 'body' ).removeClass( 'message_more_option_open' );
 
 			var is_current_thread = 'no';
 			if ( parseInt( thread_id ) === parseInt( $( event.currentTarget ).closest( '#bp-message-thread-header' ).find( '.message_action__list' ).data( 'bp-thread-id' ) ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
@@ -4907,7 +4908,8 @@ window.bp = window.bp || {};
 						if ( $( event.target ).hasClass( 'message_action__anchor' ) || $( event.target ).parent().hasClass( 'message_action__anchor' ) ) {
 							return event;
 						} else {
-							$( '.message_action__list.open' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
+							$( '.message_action__list.open' ).removeClass( 'open' );
+							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
 					}
@@ -4929,6 +4931,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
 				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions' ).toggleClass( 'open' );
+				$( 'body' ).addClass( 'message_more_option_open' );
 			},
 
 		}

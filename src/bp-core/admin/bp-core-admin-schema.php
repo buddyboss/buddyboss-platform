@@ -481,6 +481,7 @@ function bp_core_install_extended_profiles() {
 
 	dbDelta( $sql );
 
+	bb_core_install_xprofile_visibility();
 	bp_core_install_default_profiles_fields();
 }
 
@@ -1231,7 +1232,10 @@ function bp_core_install_suspend() {
 	   PRIMARY KEY  (id),
 	   KEY suspend_item_id (item_id,item_type,blog_id),
 	   KEY suspend_item (item_id,item_type),
-	   KEY item_id (item_id)
+	   KEY item_id (item_id),
+	   KEY user_suspended (user_suspended),
+	   KEY hide_parent (hide_parent),
+	   KEY hide_sitewide (hide_sitewide)
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (
@@ -1374,4 +1378,47 @@ function bb_core_install_subscription() {
    	) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/**
+ * Install database tables for the xprofile visibility new structure.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bb_core_install_xprofile_visibility() {
+	global $wpdb;
+
+	$bp_prefix = bp_core_get_table_prefix();
+	
+	// Install bb_xprofile_visibility table if already not exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bb_xprofile_visibility' ) );
+	if ( ! $table_exists ) {
+		$sql             = array();
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql[] = "CREATE TABLE {$bp_prefix}bb_xprofile_visibility (
+					id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					field_id bigint(20) unsigned NOT NULL,
+					user_id bigint(20) unsigned NOT NULL,
+					value varchar(20) DEFAULT NULL,
+					last_updated datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY field_id (field_id),
+					KEY user_id (user_id),
+					KEY value (value),
+					UNIQUE KEY unique_field_id_user_id (field_id,user_id)
+				) {$charset_collate};";
+
+		dbDelta( $sql );
+	}
+
+	/**
+	 * Fires after BuddyBoss adds the xprofile visibility table.
+	 *
+	 * @since BuddyBoss 2.6.50
+	 */
+	do_action( 'bb_core_install_xprofile_visibility' );
 }

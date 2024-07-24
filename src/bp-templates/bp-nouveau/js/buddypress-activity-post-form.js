@@ -2857,7 +2857,7 @@ window.bp = window.bp || {};
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container, .buddypress-wrap' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
 				}
@@ -3132,15 +3132,16 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				//Remove mentioned members Link
-				var tempNode = $( '<div></div>' ).html( urlText );
-				tempNode.find( 'a.bp-suggestions-mention' ).remove();
-				tempNode.find( '[rel="nofollow"]' ).remove() ;
-				urlText = tempNode.html();
+				 // Create a DOM parser
+				 var parser = new DOMParser();
+				 var doc = parser.parseFromString( urlText, 'text/html' );
+				 
+				 // Exclude the mention links from the urlText
+				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
+				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
 
-				if ( urlText.indexOf( '<img' ) >= 0 ) {
-					urlText = urlText.replace( /<img .*?>/g, '' );
-				}
+				// parse html now to get the url.
+				urlText = doc.body.innerHTML;
 
 				if ( urlText.indexOf( 'http://' ) >= 0 ) {
 					urlString = this.getURL( 'http://', urlText );
@@ -3501,52 +3502,56 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#whats-new-form' );
 
 				if ( true === this.model.get( 'selected' ) ) {
-					return false;
-				} else {
-					whats_new_form.removeClass( 'focus-in--blank-group' );
-					var $this = this;
-					if ( $this.model.hasOwnProperty('attributes') &&
-					     $this.model.attributes.hasOwnProperty('object_type') &&
-					     'group' === $this.model.attributes.object_type ) {
-						var previousSelected = _.find( this.model.collection.models, function ( model ) {
+					this.model.unset( 'selected' );
+				}
+
+				whats_new_form.removeClass( 'focus-in--blank-group' );
+				var $this = this;
+				if (
+					$this.model.hasOwnProperty( 'attributes' ) &&
+					$this.model.attributes.hasOwnProperty( 'object_type' ) &&
+					'group' === $this.model.attributes.object_type
+				) {
+					var previousSelected = _.find(
+						this.model.collection.models,
+						function ( model ) {
 							return model !== $this.model && model.get( 'selected' );
-						} );
-						if ( previousSelected ) {
-							previousSelected.set( 'selected', false );
 						}
+					);
+					if ( previousSelected ) {
+						previousSelected.set( 'selected', false );
 					}
-					this.model.set( 'selected', true );
-					var model_attributes = this.model.attributes;
-					// check media is enable in groups or not.
-					if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
-						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
-							$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
-							Backbone.trigger( 'activity_media_close' );
-						}
-					} else {
-						$( '#whats-new-toolbar .post-media.media-support' ).removeClass('media-support-hide');
+				}
+				this.model.set( 'selected', true );
+				var model_attributes = this.model.attributes;
+				// check media is enable in groups or not.
+				if ( typeof model_attributes.group_media !== 'undefined' && model_attributes.group_media === false ) {
+					if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-media-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
+						Backbone.trigger( 'activity_media_close' );
 					}
+				} else {
+					$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'media-support-hide' );
+				}
 
-					// check document is enable in groups or not.
-					if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
-						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
-							$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
-							Backbone.trigger( 'activity_document_close' );
-						}
-					} else {
-						$( '#whats-new-toolbar .post-media.document-support' ).removeClass('document-support-hide');
+				// check document is enable in groups or not.
+				if ( typeof model_attributes.group_document !== 'undefined' && model_attributes.group_document === false ) {
+					if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-document-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
+						Backbone.trigger( 'activity_document_close' );
 					}
+				} else {
+					$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'document-support-hide' );
+				}
 
-					// check video is enable in groups or not.
-					if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
-						if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
-							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
-							Backbone.trigger( 'activity_video_close' );
-						}
-					} else {
-						$( '#whats-new-toolbar .post-video.video-support' ).removeClass('video-support-hide');
+				// check video is enable in groups or not.
+				if ( typeof model_attributes.group_video !== 'undefined' && model_attributes.group_video === false ) {
+					if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
+						$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
+						Backbone.trigger( 'activity_video_close' );
 					}
-
+				} else {
+					$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'video-support-hide' );
 				}
 			}
 		}
