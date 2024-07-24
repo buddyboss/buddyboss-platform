@@ -2631,6 +2631,17 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form .activity-attached-gif-container {
   margin-bottom: 0;
   height: auto !important;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 560px) {
+  .activity-update-form .activity-attached-gif-container {
+    min-height: auto !important;
+  }
+}
+
+.activity-update-form .activity-attached-gif-container .gif-image-container img {
+  max-width: 100%;
 }
 
 .bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
@@ -27410,7 +27421,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
