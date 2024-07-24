@@ -2857,7 +2857,7 @@ window.bp = window.bp || {};
 				var whatNewForm = this.$el.closest( '#whats-new-form' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container, .buddypress-wrap' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
 				}
@@ -3132,15 +3132,16 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				//Remove mentioned members Link
-				var tempNode = $( '<div></div>' ).html( urlText );
-				tempNode.find( 'a.bp-suggestions-mention' ).remove();
-				tempNode.find( '[rel="nofollow"]' ).remove() ;
-				urlText = tempNode.html();
+				 // Create a DOM parser
+				 var parser = new DOMParser();
+				 var doc = parser.parseFromString( urlText, 'text/html' );
+				 
+				 // Exclude the mention links from the urlText
+				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
+				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
 
-				if ( urlText.indexOf( '<img' ) >= 0 ) {
-					urlText = urlText.replace( /<img .*?>/g, '' );
-				}
+				// parse html now to get the url.
+				urlText = doc.body.innerHTML;
 
 				if ( urlText.indexOf( 'http://' ) >= 0 ) {
 					urlString = this.getURL( 'http://', urlText );

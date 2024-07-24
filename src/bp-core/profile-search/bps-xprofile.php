@@ -81,16 +81,56 @@ function bp_ps_xprofile_search( $f ) {
 	$value  = $f->value;
 	$filter = $f->format . '_' . ( $f->filter == '' ? 'is' : $f->filter );
 
-	$sql                      = array(
+	$sql           = array(
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select']            = "SELECT user_id, field_id FROM {$bp->profile->table_name_data}";
+	$sql['select'] = "SELECT DISTINCT xpd.user_id FROM {$bp->profile->table_name_data} xpd";
 
 	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
 		$sql['where']['field_id'] = $wpdb->prepare( "field_id IN ( SELECT f.id FROM {$bp->profile->table_name_fields} as f, {$bp->profile->table_name_meta} as m where f.id = m.object_id AND group_id = %d AND f.type = %s AND m.meta_key = '_cloned_from' AND m.meta_value = %d )", $f->group_id, $f->type, $f->id );
 	} else {
 		$sql['where']['field_id'] = $wpdb->prepare( 'field_id = %d', $f->id );
+	}
+
+	if ( ! current_user_can( 'administrator' ) ) {
+		$field_visibility = array( 'public' );
+		$loggin_user_id   = 0;
+		$friend_ids_sql   = '';
+
+		if ( is_user_logged_in() ) {
+			$loggin_user_id     = bp_loggedin_user_id();
+			$field_visibility[] = 'loggedin';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_ids_sql = $wpdb->prepare(
+					'SELECT CASE
+		                	WHEN initiator_user_id = %d THEN friend_user_id
+		                	ELSE initiator_user_id
+		                	END AS friend_id
+		                	FROM ' . $bp->friends->table_name . '
+		                	WHERE is_confirmed = 1
+		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
+					$loggin_user_id, $loggin_user_id, $loggin_user_id
+				);
+			}
+		}
+
+		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
+
+		$sql_where_condition = 'xpd.field_id IN (
+		            SELECT xpv.field_id
+		            FROM ' . $bp->profile->table_name_visibility . ' as xpv
+		            WHERE xpv.user_id = xpd.user_id
+		            AND (
+		                xpv.value IN (\'' . $visibility_values . '\')
+		                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( xpv.value = \'friends\' AND xpv.user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
+		                ' . ( ! empty( $loggin_user_id ) ? 'OR ( xpv.user_id = ' . $loggin_user_id . ' )' : '' ) . '
+		            )
+		        )';
+
+		$sql['where'][] = $sql_where_condition;
+
 	}
 
 	switch ( $filter ) {
@@ -218,39 +258,8 @@ function bp_ps_xprofile_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	// If repeater enabel then we check repeater field id is private or not.
-	if ( 'on' === bp_xprofile_get_meta( $f->group_id, 'group', 'is_repeater_enabled', true ) ) {
-		$results  = $wpdb->get_results( $query, ARRAY_A );
-		$user_ids = array();
-		if ( ! empty( $results ) ) {
-			foreach ( $results as $key => $value ) {
-				$field_id = ! empty( $value['field_id'] ) ? (int) $value['field_id'] : 0;
-				$user_id  = ! empty( $value['user_id'] ) ? (int) $value['user_id'] : 0;
-				if ( ! empty( $field_id ) && ! empty( $user_id ) ) {
-					$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
-					if (
-						! current_user_can( 'administrator' ) &&
-						(
-							'adminsonly' === $field_visibility ||
-							(
-								bp_is_active( 'friends' ) &&
-								'friends' === $field_visibility &&
-								false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
-							)
-						)
-					) {
-						unset( $results[ $key ] );
-					} else {
-						$user_ids[] = $user_id;
-					}
-				}
-			}
-		}
-	} else {
-		$user_ids = $wpdb->get_col( $query );
-	}
-
-	return $user_ids;
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+	return $wpdb->get_col( $query );
 }
 
 /**
@@ -617,26 +626,67 @@ function bp_ps_anyfield_search( $f ) {
 	$filter = $f->filter;
 	$value  = str_replace( '&', '&amp;', $f->value );
 
-	$sql           = array(
+	$sql = array(
 		'select' => '',
 		'where'  => array(),
 	);
-	$sql['select'] = "SELECT DISTINCT user_id, field_id FROM {$bp->profile->table_name_data}";
+
+	$sql['select'] = "SELECT DISTINCT xpd.user_id as user_id, xpd.field_id as field_id FROM {$bp->profile->table_name_data} xpd";
+
+	if ( ! current_user_can( 'administrator' ) ) {
+		$field_visibility = array( 'public' );
+		$loggin_user_id   = 0;
+		$friend_ids_sql   = '';
+
+		if ( is_user_logged_in() ) {
+			$loggin_user_id     = bp_loggedin_user_id();
+			$field_visibility[] = 'loggedin';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_ids_sql = $wpdb->prepare(
+					'SELECT CASE
+		                	WHEN initiator_user_id = %d THEN friend_user_id
+		                	ELSE initiator_user_id
+		                	END AS friend_id
+		                	FROM ' . $bp->friends->table_name . '
+		                	WHERE is_confirmed = 1
+		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
+					$loggin_user_id, $loggin_user_id, $loggin_user_id
+				);
+			}
+		}
+
+		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
+
+		$sql_where_condition = 'xpd.field_id IN (
+		            SELECT xpv.field_id
+		            FROM ' . $bp->profile->table_name_visibility . ' as xpv
+		            WHERE xpv.user_id = xpd.user_id
+		            AND (
+		                xpv.value IN (\'' . $visibility_values . '\')
+		                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( xpv.value = \'friends\' AND xpv.user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
+		                ' . ( ! empty( $loggin_user_id ) ? 'OR ( xpv.user_id = ' . $loggin_user_id . ' )' : '' ) . '
+		            )
+		        )';
+
+		$sql['where'][] = $sql_where_condition;
+
+	}
 
 	switch ( $filter ) {
 		case 'contains':
 			$escaped                 = '%' . bp_ps_esc_like( $value ) . '%';
-			$sql['where'][ $filter ] = $wpdb->prepare( 'value LIKE %s', $escaped );
+			$sql['where'][ $filter ] = $wpdb->prepare( 'xpd.value LIKE %s', $escaped );
 			break;
 
 		case '':
-			$sql['where'][ $filter ] = $wpdb->prepare( 'value = %s', $value );
+			$sql['where'][ $filter ] = $wpdb->prepare( 'xpd.value = %s', $value );
 			break;
 
 		case 'like':
 			$value                   = str_replace( '\\\\%', '\\%', $value );
 			$value                   = str_replace( '\\\\_', '\\_', $value );
-			$sql['where'][ $filter ] = $wpdb->prepare( 'value LIKE %s', $value );
+			$sql['where'][ $filter ] = $wpdb->prepare( 'xpd.value LIKE %s', $value );
 			break;
 	}
 
@@ -674,22 +724,8 @@ function bp_ps_anyfield_search( $f ) {
 					unset( $results[ $key ] );
 					continue;
 				}
-				$field_visibility = xprofile_get_field_visibility_level( intval( $field_id ), intval( $user_id ) );
-				if (
-					! current_user_can( 'administrator' ) &&
-					(
-						'adminsonly' === $field_visibility ||
-						(
-							bp_is_active( 'friends' ) &&
-							'friends' === $field_visibility &&
-							false === friends_check_friendship( intval( $user_id ), bp_loggedin_user_id() )
-						)
-					)
-				) {
-					unset( $results[ $key ] );
-				} else {
-					$user_ids[] = $user_id;
-				}
+
+				$user_ids[] = $user_id;
 			}
 		}
 	}

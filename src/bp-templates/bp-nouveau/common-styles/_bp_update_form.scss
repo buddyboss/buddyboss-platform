@@ -1201,6 +1201,16 @@
 	.activity-attached-gif-container {
 		margin-bottom: 0;
 		height: auto !important;
+		max-width: 100%;
+
+		@media screen and (max-width: 560px) {
+
+			min-height: auto !important;
+		}
+
+		.gif-image-container img {
+			max-width: 100%;
+		}
 	}
 
 }

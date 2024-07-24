@@ -491,6 +491,14 @@ function bp_version_updater() {
 			bb_update_to_2_6_10();
 		}
 
+		if ( $raw_db_version < 21121 ) {
+			bb_update_to_2_6_20();
+		}
+
+		if ( $raw_db_version < 21151 ) {
+			bb_update_to_2_6_51();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -1201,6 +1209,8 @@ function bp_add_activation_redirect() {
 
 		}
 	}
+
+	bb_remove_deleted_user_last_activities();
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
@@ -3602,4 +3612,112 @@ function bb_remove_symlinks( $folder_path ) {
 		// Close the folder handle.
 		closedir( $handle );
 	}
+}
+
+/**
+ * Add keys for user_suspended, hide_parent, hide_sitewide columns.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @return void
+ */
+function bb_update_to_2_6_20() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_suspend' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
+	if ( $table_exists ) {
+
+		// Get all existing indexes for the table.
+		$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_suspend' ) );
+
+		// Array to store parts of the ALTER TABLE query.
+		$alter_statements = array();
+
+		// Add key for user_suspended if it doesn't exist.
+		if ( ! in_array( 'user_suspended', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY user_suspended (user_suspended)';
+		}
+
+		// Add key for hide_parent if it doesn't exist.
+		if ( ! in_array( 'hide_parent', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY hide_parent (hide_parent)';
+		}
+
+		// Add key for hide_sitewide if it doesn't exist.
+		if ( ! in_array( 'hide_sitewide', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY hide_sitewide (hide_sitewide)';
+		}
+
+		// If there are any statements to execute, run the ALTER TABLE query.
+		if ( ! empty( $alter_statements ) ) {
+			$alter_query = "ALTER TABLE {$bp_prefix}bp_suspend " . implode( ', ', $alter_statements );
+			$wpdb->query( $alter_query ); //phpcs:ignore
+		}
+	}
+
+	// Run migration.
+	$is_already_run = get_transient( 'bb_migrate_xprofile_visibility' );
+	if ( ! $is_already_run ) {
+
+		// Remove deleted user last_activity on update.
+		bb_remove_deleted_user_last_activities();
+
+		// Migrate xprofile visibility data.
+		bb_core_install_xprofile_visibility();
+		bb_migrate_xprofile_visibility( true );
+		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
+	}
+
+}
+
+/**
+ * Remove duplicate last_activity entries from activity table.
+ * For count fix, create the last_activity entries for the users based on the registered date.
+ *
+ * @since BuddyBoss 2.6.51
+ *
+ * @return void
+ */
+function bb_update_to_2_6_51() {
+	// Remove deleted user last_activity on update.
+	bb_remove_deleted_user_last_activities();
+
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+
+	$insert_query = "INSERT INTO {$bp_prefix}bp_activity (user_id, component, type, action, content, primary_link, item_id, secondary_item_id, date_recorded, hide_sitewide, mptt_left, mptt_right, is_spam)
+		SELECT
+		    u.ID AS user_id,
+		    'members' AS component,
+		    'last_activity' AS type,
+		    '' AS action,
+		    '' AS content,
+		    '' AS primary_link,
+		    0 AS item_id,
+		    0 AS secondary_item_id,
+		    u.user_registered AS date_recorded,
+		    0 AS hide_sitewide,
+		    0 AS mptt_left,
+		    0 AS mptt_right,
+		    0 AS is_spam
+		FROM
+		    {$bp_prefix}users u
+		LEFT JOIN
+		    {$bp_prefix}bp_activity a ON u.ID = a.user_id AND a.component = 'members' AND a.type = 'last_activity'
+		WHERE
+		    u.user_status = 0
+		    AND a.user_id IS NULL;
+		";
+
+	// Insert the last_activity entries for the users based on the registered date.
+	$wpdb->query( $insert_query ); // phpcs:ignore
+
+	// Insert query to add 'last_activity' meta for users who don't have it.
+	$insert_query = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) SELECT u.ID, 'last_activity', u.user_registered FROM {$wpdb->users} u LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'last_activity' AND u.user_status = 0 WHERE um.user_id IS NULL;";
+
+	// Insert the last_activity meta for the users who don't have it.
+	$wpdb->query($insert_query); // phpcs:ignore
 }
