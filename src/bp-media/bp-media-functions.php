@@ -4044,7 +4044,7 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 		$use_caching = true;
 
 		// Remove old cache if empty key saved.
-		if ( ! array_key_exists( $saved_key, $cache ) ) {
+		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
 			delete_transient( $cache_key );
 		}
 	}
