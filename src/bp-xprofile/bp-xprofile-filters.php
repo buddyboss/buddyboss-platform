@@ -127,6 +127,8 @@ add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name
 // Repair repeater field repeated in admin side.
 add_filter( 'bp_repair_list', 'bb_xprofile_repeater_field_repair' );
 
+add_filter( 'bp_repair_list', 'bb_xprofile_repair_xprofile_visibility', 11 );
+
 // Repair user nicknames.
 add_filter( 'bp_repair_list', 'bb_xprofile_repair_user_nicknames' );
 
@@ -148,6 +150,8 @@ add_action( 'update_xprofile_field_metadata', 'bb_xprofile_remove_default_png_av
 
 // When visibility settings changed by the user, then delete the user default PNG avatar.
 add_filter( 'update_user_metadata', 'bb_xprofile_remove_default_png_avatar_on_user_update_visibility', 10, 5 );
+
+add_action( 'xprofile_visibility_before_save', 'bb_xprofile_remove_default_png_avatar_on_update_xprofile_visibility', 10 );
 
 /**
  * Sanitize each field option name for saving to the database.
@@ -1731,4 +1735,46 @@ function bb_validate_field_value_length( $errors, $update, $user ) {
 			$errors->add( 'last_name', esc_html( $invalid ) );
 		}
 	}
+}
+
+/**
+ * Remove default PNG when update visibility.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @param BB_XProfile_Visibility $obj_xprofile_visibility BB_XProfile_Visibility object.
+ */
+function bb_xprofile_remove_default_png_avatar_on_update_xprofile_visibility( BB_XProfile_Visibility $obj_xprofile_visibility ) {
+
+	if (
+		! empty( $obj_xprofile_visibility ) &&
+		$obj_xprofile_visibility->field_id === bp_xprofile_lastname_field_id() &&
+		function_exists( 'bb_delete_default_user_png_avatar' )
+	) {
+
+		$old_xprofile_visibility = new BB_XProfile_Visibility( $obj_xprofile_visibility->field_id, $obj_xprofile_visibility->user_id );
+		if ( ! empty( $old_xprofile_visibility ) && $old_xprofile_visibility->value !== $obj_xprofile_visibility->value ) {
+			bb_delete_default_user_png_avatar( array( $obj_xprofile_visibility->user_id ) );
+		}
+	}
+
+}
+
+/**
+ * Add xprofile visibility repair list item.
+ *
+ * @param array $repair_list Repair list items.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @return array Repair list items.
+ */
+function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
+	$repair_list[] = array(
+		'bb-xprofile-visibility-field-migrate',
+		esc_html__( 'Migrate visibility settings of profile fields to the new structure', 'buddyboss' ),
+		'bb_migrate_xprofile_visibility',
+	);
+
+	return $repair_list;
 }
