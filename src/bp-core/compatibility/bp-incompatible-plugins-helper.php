@@ -1144,7 +1144,7 @@ add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
 /**
  * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.60
  *
  * @param array $allow_handle Allowed handles.
  *
