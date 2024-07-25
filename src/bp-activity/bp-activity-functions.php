@@ -139,6 +139,8 @@ function bp_activity_find_mention_by_at_sign( $mentioned_users, $content ) {
 		return $mentioned_users;
 	}
 
+	unset( $usernames, $username, $user_id );
+
 	return $mentioned_users;
 }
 
@@ -199,6 +201,8 @@ function bp_activity_adjust_mention_count( $activity_id = 0, $action = 'add' ) {
 	foreach ( (array) array_keys( $usernames ) as $user_id ) {
 		bp_activity_update_mention_count_for_user( $user_id, $activity_id, $action );
 	}
+
+	unset( $usernames, $user_id, $activity );
 }
 
 /**
@@ -255,6 +259,7 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
 	bp_update_user_meta( $user_id, 'bp_new_mention_count', $new_mention_count );
 	bp_update_user_meta( $user_id, 'bp_new_mentions', $new_mentions );
 
+	unset( $new_mention_count, $new_mentions, $key );
 	return true;
 }
 
@@ -1198,6 +1203,8 @@ function bp_activity_favorites_upgrade_data() {
 			bp_update_option( 'bp_activity_favorites', true );
 		}
 	}
+
+	unset( $bp_activity_favorites, $user_query, $user_id, $user_favs, $fav, $activity_metas, $users );
 }
 
 /**
@@ -1321,6 +1328,7 @@ function bp_activity_delete_meta( $activity_id, $meta_key = '', $meta_value = ''
 	}
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
+	unset( $keys, $all_meta );
 	return $retval;
 }
 
@@ -1514,6 +1522,8 @@ function bp_activity_spam_all_user_data( $user_id = 0 ) {
 	 * @param array $activities Array of activity items being marked as spam.
 	 */
 	do_action( 'bp_activity_spam_all_user_data', $user_id, $activities['activities'] );
+
+	unset( $activities, $activity );
 }
 add_action( 'bp_make_spam_user', 'bp_activity_spam_all_user_data' );
 
@@ -1586,6 +1596,8 @@ function bp_activity_ham_all_user_data( $user_id = 0 ) {
 	 * @param array $activities Array of activity items being marked as ham.
 	 */
 	do_action( 'bp_activity_ham_all_user_data', $user_id, $activities['activities'] );
+
+	unset( $activities, $activity );
 }
 add_action( 'bp_make_ham_user', 'bp_activity_ham_all_user_data' );
 
@@ -1715,6 +1727,8 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 	} else {
 		$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 	}
+
+	unset( $mentioned_users, $mentioned_users_link, $last_user_link );
 
 	/**
 	 * Filters the formatted activity action update string.
@@ -2016,6 +2030,8 @@ function bp_activity_get_specific( $args = '' ) {
 		'status'            => $r['status'],
 	);
 
+	unset( $r );
+
 	/**
 	 * Filters the requested specific activity item.
 	 *
@@ -2171,6 +2187,8 @@ function bp_activity_add( $args = '' ) {
 	 * @param array $r Array of parsed arguments for the activity item being added.
 	 */
 	do_action( 'bp_activity_add', $r );
+
+	unset( $comments, $descendants, $r );
 
 	return $activity->id;
 }
@@ -2356,6 +2374,8 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	do_action( 'bp_activity_posted_update', $r['content'], $r['user_id'], $activity_id );
 
+	unset( $r, $activity_content, $add_content, $add_primary_link );
+
 	return $activity_id;
 }
 
@@ -2482,6 +2502,8 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 	 */
 	do_action( 'bp_activity_post_type_published', $activity_id, $post, $activity_args );
 
+	unset( $activity_args, $activity_content, $activity_primary_link, $activity_summary );
+
 	return $activity_id;
 }
 
@@ -2554,6 +2576,8 @@ function bp_activity_post_type_update( $post = null ) {
 	 */
 	do_action( 'bp_activity_post_type_updated', $post, $activity, $activity_post_object );
 
+	unset( $activity, $activity_summary );
+
 	return $updated;
 }
 
@@ -2603,6 +2627,8 @@ function bp_activity_post_type_unpublish( $post_id = 0, $post = null ) {
 	 * @param bool    $activity             Whether or not the activity was successfully deleted.
 	 */
 	do_action( 'bp_activity_post_type_unpublished', $delete_activity_args, $post, $deleted );
+
+	unset( $delete_activity_args );
 
 	return $deleted;
 }
@@ -2780,6 +2806,9 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 	 */
 	do_action_ref_array( 'bp_activity_post_type_comment', array( &$activity_id, $post_type_comment, $activity_args, $activity_post_object ) );
 
+
+	unset( $activity_args, $activity_content, $activity_primary_link, $activity_summary );
+
 	return $activity_id;
 }
 add_action( 'comment_post', 'bp_activity_post_type_comment', 10, 2 );
@@ -2864,10 +2893,10 @@ function bp_activity_post_type_remove_comment( $comment_id = 0, $activity_post_o
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param bool       $deleted              True if the activity was deleted false otherwise
-	 * @param WP_Comment $comment              Comment object.
-	 * @param object     $activity_post_object The post type tracking args object.
-	 * @param string     $value                The post type comment activity type.
+	 * @param bool   $deleted              True if the activity was deleted false otherwise
+	 * @param int    $comment_id           Comment ID.
+	 * @param object $activity_post_object The post type tracking args object.
+	 * @param string $value                The post type comment activity type.
 	 */
 	do_action( 'bp_activity_post_type_remove_comment', $deleted, $comment_id, $activity_post_object, $activity_comment_object->action_id );
 
@@ -3360,6 +3389,8 @@ function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
 		}
 	}
 
+	unset( $activity_ids, $activity_id, $activity, $activity_metas, $users, $found_user, $fav_count );
+
 	return true;
 }
 	/**
@@ -3522,6 +3553,8 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	 */
 	do_action( 'bp_activity_delete_comment', $activity_id, $comment_id );
 
+	unset( $comment );
+
 	return $deleted;
 }
 
@@ -3559,6 +3592,8 @@ function bp_activity_delete_children( $activity_id, $comment_id ) {
 			'item_id'           => $activity_id,
 		)
 	);
+
+	unset( $comment, $children, $child );
 }
 
 /**
@@ -3607,6 +3642,8 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
 			$link = bp_get_root_domain() . '/' . bp_get_activity_root_slug() . '/p/' . $activity_obj->id . '/';
 		}
 	}
+
+	unset( $use_primary_links );
 
 	/**
 	 * Filters the activity permalink for the specified activity item.
@@ -3663,6 +3700,8 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		$retval = true;
 	}
+
+	unset( $group );
 
 	/**
 	 * Filters whether the current user has access to an activity item.
@@ -3754,6 +3793,8 @@ function bp_activity_thumbnail_content_images( $content, $link = false, $args = 
 			$content = $image . $content;
 		}
 	}
+
+	unset( $src, $height, $width, $ratio, $new_height, $new_width, $image );
 
 	/**
 	 * Filters the activity content that had a thumbnail replace images.
@@ -3946,6 +3987,8 @@ function bp_activity_create_summary( $content, $activity ) {
 		$summary .= PHP_EOL . PHP_EOL . $extracted_media['original'];  // Full shortcode.
 	}
 
+	unset( $args, $extractor, $media, $para_count, $has_audio, $has_videos, $has_feat_image, $has_galleries, $has_images, $has_embeds, $use_media_type, $image_source, $extracted_media_url );
+
 	/**
 	 * Filters the newly-generated summary for the activity item.
 	 *
@@ -4016,6 +4059,8 @@ function bp_activity_mark_as_spam( &$activity, $source = 'by_a_person' ) {
 		add_action( 'bp_activity_after_save', array( $bp->activity->akismet, 'update_activity_spam_meta' ), 1, 1 );
 	}
 
+	unset( $activity_data );
+
 	/**
 	 * Fires at the end of the process to mark an activity item as spam.
 	 *
@@ -4063,6 +4108,8 @@ function bp_activity_mark_as_ham( &$activity, $source = 'by_a_person' ) {
 		// Update meta.
 		add_action( 'bp_activity_after_save', array( $bp->activity->akismet, 'update_activity_ham_meta' ), 1, 1 );
 	}
+
+	unset( $activity_data );
 
 	/**
 	 * Fires at the end of the process to mark an activity item as ham.
@@ -4189,6 +4236,8 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 		bp_send_email( $email_type, $receiver_user_id, $args );
 	}
 
+	unset( $args, $content, $email_type, $group_name, $message_link, $poster_name, $title_text, $unsubscribe_args );
+
 	/**
 	 * Fires after the sending of an @mention email notification.
 	 *
@@ -4255,6 +4304,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 				! groups_is_user_member( $original_activity->user_id, $original_activity->item_id )
 			)
 		) {
+			unset( $original_activity );
 			return;
 		}
 
@@ -4312,6 +4362,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 	 * author of the immediate parent comment.
 	 */
 	if ( empty( $params['parent_id'] ) || ( $params['activity_id'] == $params['parent_id'] ) ) {
+		unset( $original_activity );
 		return;
 	}
 
@@ -4336,6 +4387,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 				! groups_is_user_member( $parent_comment->user_id, $parent_comment->item_id )
 			)
 		) {
+			unset( $original_activity, $parent_comment );
 			return;
 		}
 
@@ -4374,6 +4426,8 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 			bp_send_email( 'activity-comment-author', $parent_comment->user_id, $args );
 		}
+
+		unset( $args, $content, $poster_name, $thread_link, $unsubscribe_args, $original_activity );
 
 		/**
 		 * Fires at the point that notifications should be sent for comments on activity replies.
@@ -4536,6 +4590,7 @@ function bp_embed_activity_cache( $cache, $id, $cachekey ) {
 	$activity_metas = bb_activity_get_metadata( $id );
 
 	$data = $activity_metas[ $cachekey ][0] ?? '';
+	unset( $activity_metas );
 	if (
 		! empty( $data ) &&
 		false !== strpos( $data, 'loom.com' ) &&
@@ -4857,6 +4912,8 @@ function bp_activity_transition_post_type_comment_status( $new_status, $old_stat
 
 	// Remove the "new_blog_comment" activity type whitelist so we don't break anything
 	remove_filter( 'bp_akismet_get_activity_types', $comment_akismet_history );
+
+	unset( $activity, $activity_post_object );
 }
 add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comment_status', 10, 3 );
 
@@ -4895,6 +4952,8 @@ function bp_start_following( $args = '' ) {
 
 	do_action_ref_array( 'bp_start_following', array( &$follow ) );
 
+	unset( $follow );
+
 	return true;
 }
 
@@ -4932,6 +4991,8 @@ function bp_stop_following( $args = '' ) {
 	 * @since BuddyBoss 1.0.0
 	 */
 	do_action_ref_array( 'bp_stop_following', array( &$follow ) );
+
+	unset( $follow );
 
 	return true;
 }
@@ -5354,6 +5415,8 @@ function bp_activity_directory_page_content() {
 		$activity_page_content = get_post_field( 'post_content', $page_ids['activity'] );
 		echo apply_filters( 'the_content', $activity_page_content );
 	}
+
+	unset( $activity_page_content, $page_ids );
 }
 
 add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
@@ -5531,6 +5594,8 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		// Set meta data to cache.
 		wp_cache_set( $activity->id, $edit_data, 'activity_edit_data' );
 	}
+
+	unset( $activity, $activity_metas, $can_edit_privacy, $album_id, $folder_id, $group_id, $group_name, $album_activity_id, $album_video_activity_id, $link_image_index_save, $group_avatar, $link_preview_data );
 
 	/**
 	 * Filter here to edit the activity edit data.
@@ -5762,6 +5827,7 @@ function bb_acivity_is_topic_comment( $activity_id ) {
 
 	// Get the current action name.
 	$action_name = $item_activity->type;
+	unset( $item_activity );
 
 	// Setup the array of possibly disabled actions.
 	$disabled_actions = array(
@@ -5951,6 +6017,8 @@ function bb_activity_following_post_notification( $args ) {
 		}
 	}
 
+	unset( $item_activity, $follower_users, $activity_id, $activity_user_id, $activity_link, $activity_metas, $media_ids, $document_ids, $video_ids, $text, $args, $user_id, $send_mail, $send_notification, $unsubscribe_args, $poster_name );
+
 	$r['paged'] = $r['paged'] + 1;
 	bb_activity_create_following_post_notification( $r );
 }
@@ -5991,9 +6059,12 @@ function bb_is_group_activity_comment( $comment = 0 ) {
 			! empty( $main_activity->component ) &&
 			'groups' === $main_activity->component
 		) {
+			unset( $main_activity, $comment );
 			return true;
 		}
 	}
+
+	unset( $comment );
 
 	return false;
 }
@@ -6059,6 +6130,8 @@ function bp_activity_get_types_list() {
 
 		$types = array_merge( $types, $new_types );
 	}
+
+	unset( $actions_object, $actions_array, $component, $actions, $new_types );
 
 	/**
 	 * Filter here to edit the activity types list.
@@ -6341,7 +6414,11 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
 		);
+
+		unset( $activity_comment, $activity_comment_metas, $can_edit_privacy, $album_id, $folder_id, $album_activity_comment__id, $album_video_activity_comment_id, $folder_activity_comment_id );
 	}
+
+	unset( $activity_comment );
 
 	/**
 	 * Filter here to edit the activity comment edit data.
@@ -6399,6 +6476,8 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 		default:
 			$supports_comments = true;
 	}
+
+	unset( $sfwd_courses_settings, $sfwd_lesson_settings, $sfwd_topic_settings, $sfwd_quiz_settings, $sfwd_group_settings, $sfwd_assignment_settings, $tutor_lesson_settings );
 
 	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
 }
@@ -6479,6 +6558,8 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 		 */
 		do_action( 'bb_activity_pin_unpin_post', $activity->id, $r['action'] );
 	}
+
+	unset( $activity, $updated_value, $old_value, $is_admin, $is_mod );
 
 	if ( 'bool' === $r['retval'] ) {
 
@@ -6689,6 +6770,8 @@ function bb_activity_close_unclose_comments( $args = array() ) {
 		do_action( 'bb_activity_close_unclose_comments', $activity->id, $r['action'] );
 	}
 
+	unset( $activity, $updated_value, $check_args );
+
 	if ( 'bool' === $r['retval'] ) {
 		if ( $close_comments_updated ) {
 			$retval = true;
@@ -6822,6 +6905,8 @@ function bb_activity_comments_close_action_allowed( $args = array() ) {
 		}
 	}
 
+	unset( $activity, $group, $is_admin, $is_mod, $prev_closer_id );
+
 	return $retval;
 }
 
@@ -6862,6 +6947,8 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 			$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 		}
 	}
+
+	unset( $activity, $group, $closer_id );
 
 	return $closed_notice;
 }
@@ -7043,6 +7130,8 @@ function bb_toggle_activity_notification_status( $args = array() ) {
 		do_action( 'bb_activity_mute_unmute_notification', $activity->id, $r['action'], $retval );
 	}
 
+	unset( $activity, $activity_mute_notification_meta );
+
 	return $retval;
 }
 
@@ -7109,6 +7198,8 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 			}
 		}
 	}
+
+	unset( $activity_meta, $mute_activity_meta );
 
 	return $is_muted;
 }
@@ -7251,6 +7342,8 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 				}
 			}
 		}
+
+		unset( $main_activity, $media, $media_activity );
 	}
 }
 
@@ -7302,6 +7395,8 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 				}
 			}
 		}
+
+		unset( $main_activity, $video, $video_activity );
 	}
 }
 
@@ -7353,5 +7448,7 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 				}
 			}
 		}
+
+		unset( $main_activity, $document, $document_activity );
 	}
 }

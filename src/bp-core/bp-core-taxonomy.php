@@ -157,6 +157,8 @@ function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 		}
 	}
 
+	unset( $taxonomy_site_map, $site_terms, $site_taxonomies, $taxonomy_site_id );
+
 	return $retval;
 }
 
@@ -244,6 +246,8 @@ function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
 			restore_current_blog();
 		}
 	}
+
+	unset( $taxonomy_site_map, $site_objects, $site_taxonomies, $taxonomy_site_id );
 
 	return $retval;
 }

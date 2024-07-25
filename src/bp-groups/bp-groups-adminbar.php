@@ -95,6 +95,8 @@ function bp_groups_group_admin_menu() {
 			);
 		}
 	}
+
+	unset( $secondary_nav_items );
 }
 add_action( 'admin_bar_menu', 'bp_groups_group_admin_menu', 99 );
 

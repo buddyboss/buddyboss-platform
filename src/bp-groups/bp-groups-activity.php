@@ -111,6 +111,8 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 
 	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
+	unset( $user_link, $group, $group_link );
+
 	/**
 	 * Filters the 'created_group' activity actions.
 	 *
@@ -150,6 +152,8 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 		$action = apply_filters_ref_array( 'groups_activity_accepted_invite_action', array( $action, $activity->user_id, &$group ) );
 	}
 
+	unset( $user_link, $group, $group_link );
+
 	/**
 	 * Filters the 'joined_group' activity actions.
 	 *
@@ -177,6 +181,8 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . bp_get_group_name( $group ) . '</a>';
 
 	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
+
+	unset( $user_link, $group, $group_link );
 
 	/**
 	 * Filters the groups 'activity_update' activity actions.
@@ -230,6 +236,8 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
 
 	}
+
+	unset( $user_link, $group, $group_link, $changed );
 
 	/**
 	 * Filters the 'group_details_updated' activity actions.
@@ -289,6 +297,8 @@ function bp_groups_prefetch_activity_object_data( $activities ) {
 			}
 		}
 	}
+
+	unset( $group_ids, $uncached_ids, $uncached_ids_sql, $groups );
 
 	return $activities;
 }
@@ -421,6 +431,8 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		),
 	);
 
+	unset( $public_groups, $private_group, $groups, $show_hidden );
+
 	return $retval;
 }
 add_filter( 'bp_activity_set_groups_scope_args', 'bp_groups_filter_activity_scope', 10, 2 );
@@ -533,6 +545,8 @@ function groups_record_activity( $args = '' ) {
 		'groups_record_activity'
 	);
 
+	unset( $hide_sitewide, $group, $activity );
+
 	return bp_activity_add( $r );
 }
 
@@ -575,6 +589,8 @@ function bp_groups_filter_activity_can_comment( $retval, $activity = null ) {
 	) {
 		$retval = false;
 	}
+
+	unset( $component, $group_id );
 
 	return $retval;
 }
@@ -644,6 +660,8 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 			'user_id' => $user_id,
 		)
 	);
+
+	unset( $group, $action );
 }
 add_action( 'groups_membership_accepted', 'bp_groups_membership_accepted_add_activity', 10, 2 );
 
@@ -719,6 +737,8 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 
 	$time = bp_core_current_time();
 	groups_update_groupmeta( $group_id, 'updated_details_' . $time, $changed );
+
+	unset( $changed );
 
 	// Record in activity feeds.
 	return groups_record_activity(

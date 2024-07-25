@@ -135,6 +135,8 @@ function bp_activity_action_my_groups_feed() {
 			),
 		)
 	);
+
+	unset( $groups );
 }
 add_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
 
@@ -209,5 +211,7 @@ function bp_activity_action_favorites_feed() {
 			'activity_args' => 'include=' . $fav_ids,
 		)
 	);
+
+	unset( $favs, $fav_ids );
 }
 add_action( 'bp_actions', 'bp_activity_action_favorites_feed' );

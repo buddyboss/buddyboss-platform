@@ -181,6 +181,8 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 	 */
 	do_action( 'activity_format_notifications', $action, $item_id, $secondary_item_id, $total_items );
 
+	unset( $action_filter, $activity_id, $user_id, $user_fullname, $amount, $text, $link );
+
 	return $return;
 }
 
@@ -301,6 +303,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity_comment->user_id !== $commenter_id ) {
 		if ( bb_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
+			unset( $original_activity );
 			return;
 		}
 	}
@@ -316,6 +319,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 			)
 		)
 	) {
+		unset( $original_activity );
 		return;
 	}
 
@@ -341,6 +345,8 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	);
 	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
+
+	unset( $original_activity );
 }
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
 
@@ -664,6 +670,8 @@ function bb_activity_add_notification_metas( $notification ) {
 	} else {
 		bp_notifications_update_meta( $notification->id, 'type', 'activity_post' );
 	}
+
+	unset( $activity, $parent_activity );
 }
 
 /**
