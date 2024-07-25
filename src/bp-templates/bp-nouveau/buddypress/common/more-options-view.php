@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/common/more-options-view.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.6.60
  * @version 1.0.0
  */
 
