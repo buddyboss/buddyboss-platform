@@ -6022,6 +6022,9 @@ window.bp = window.bp || {};
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();
+							
+							// Loose post form textarea focus for Safari.
+							$( 'input' ).focus().blur();
 
 							if ( link_embed ) {
 								if ( ! _.isUndefined( window.instgrm ) ) {
