@@ -1140,3 +1140,23 @@ function bb_wp_gravity_forms_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+/**
+ * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
+ *
+ * @since BuddyBoss 2.6.60
+ *
+ * @param array $allow_handle Allowed handles.
+ *
+ * @return array
+ */
+function mpcs_add_buddyboss_style( $allow_handle ) {
+	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
+		$allow_handle[] = 'bp-nouveau';
+	}
+
+	return $allow_handle;
+
+}
+
+add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
