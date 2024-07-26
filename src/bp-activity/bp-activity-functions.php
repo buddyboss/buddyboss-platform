@@ -5400,6 +5400,7 @@ function bp_activity_default_scope( $scope = 'all' ) {
 
 			if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
 				$new_scope[] = 'media';
+				$new_scope[] = 'video';
 				$new_scope[] = 'document';
 			}
 		} elseif ( bp_is_user_activity() ) {
