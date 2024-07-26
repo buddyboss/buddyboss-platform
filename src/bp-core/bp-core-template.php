@@ -938,8 +938,10 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	}
 
 	// Remove all matched wp block comments from the content.
-	$pattern = '/<!--\s*\/?wp:[^>]+-->/';
-	$text    = preg_replace( $pattern, '', $text );
+	if ( function_exists( 'has_blocks' ) && has_blocks( $text ) ) {
+		$pattern = '/<!--\s*\/?wp:[^>]+-->/';
+		$text    = preg_replace( $pattern, '', $text );
+	}
 
 	// When $html is true, the excerpt should be created without including HTML tags in the
 	// excerpt length.
