@@ -3265,15 +3265,27 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				if ( $( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
-					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+					$( '.bb_more_options' ).removeClass( 'more_option_active' );
+					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
+					$( 'body' ).removeClass( 'user_more_option_open' );
 				} else {
-					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
-					$( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible' );
+					$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
+					$( event.target ).closest( '.bb_more_options' ).addClass( 'more_option_active' );
+					$( event.target ).closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible open' );
+					$( 'body' ).addClass( 'user_more_option_open' );
 				}
 
 			} else {
-				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible' );
+				$( '.bb_more_options' ).removeClass( 'more_option_active' );
+				$( '.bb_more_options' ).find( '.bb_more_options_list' ).removeClass( 'is_visible open' );
+				$( 'body' ).removeClass( 'user_more_option_open' );
 				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
+			}
+
+			if ( $( event.target ).closest( '.bs-dropdown-link' ).length > 0 ) {
+				$( 'body' ).addClass( 'bbpress_more_option_open' );
+			} else {
+				$( 'body' ).removeClass( 'bbpress_more_option_open' );
 			}
 		},
 
