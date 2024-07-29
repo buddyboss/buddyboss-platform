@@ -5201,7 +5201,7 @@ window.bp = window.bp || {};
 
 								// It's the very first media, let's make sure the container can welcome it!
 								if ( !$( '#media-stream ul.media-list' ).length ) {
-									$( '#media-stream' ).html( $( '<ul></ul>' ).addClass( 'media-list item-list bp-list bb-photo-list grid' ) );
+									location.reload( true );
 								}
 
 								if ( $( '.bb-photos-actions' ).length > 0 ) {
