@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.5.5
 Requires PHP: 5.6.20
-Stable tag: 2.6.41
+Stable tag: 2.6.60
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,29 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.60 =
+* Enhancement: Styling - We have updated to show a modal instead of dropdown for ellipsis in responsive view across the network
+* Bug: Activity - Multilevel activity replies graph is now displayed for betting viewing in the mobile view
+* Bug: Activity - The large space above a Gif post has now been reduced for better post styling
+* Bug: Core - Using reactions from a ‘View as’ account was showing an undefined error
+* Bug: MemberPress - The moderation content is no longer showing in the MemberPress single/archive course page
+* Bug: Profiles - The conditional profile fields were no longer being cleared when submitting the registration form while the entered data on the profile fields was invalid
+* Bug: Styling - Link preview images were showing too large in some cases
+* Bug: Styling - Removed the extra spacing after Group Visibility from the Group cards
+
+= 2.6.51 =
+* Bug: Core - Count was not loading correctly on Members page on the initial page load due to the performance tab page load option set to 2
+
+= 2.6.50 =
+* Enhancement: Members - Updated the member directory loading & filtering filtering logic to provide a much faster loading experience
+* Bug: Activity - GIF on multi level comment could not be posted without text
+* Bug: Activity - The Pin to feed option for published blog posts was not working correctly
+* Bug: Core - The Send button in the messaging screen is now showing when using a default WP Theme
+* Bug: Groups - The request option found on the group’s manage tab was not loading when the page request from Performance settings was set to 1
+* Bug: Messages - Messages were incorrectly sent to new registered users after account setup
+* Bug: Moderation - The Blocked/Reported member is no longer getting automatically suspended without the auto-suspend being configured
+* Bug: Profiles - Paragraph text profile field was not centering the text correctly
 
 = 2.6.41 =
 * Bug: Core - Security Issue for the Forum component updated
