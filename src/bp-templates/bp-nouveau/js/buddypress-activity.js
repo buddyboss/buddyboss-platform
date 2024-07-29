@@ -1357,6 +1357,7 @@ window.bp = window.bp || {};
 				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
 
 				var activity_data_nickname;
+				var current_user_nickname;
 
 				if ( ! _.isNull( activity_comment_data ) ) {
 					activity_data_nickname = activity_comment_data.nickname;
@@ -1367,7 +1368,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.user_domain ) ) {
 					var user_domain = BP_Nouveau.activity.params.user_domain;
 					var segments = user_domain.split( '/' );
-					var current_user_nickname = segments[segments.length - 1] || segments[segments.length - 2];
+					current_user_nickname = segments[segments.length - 1] || segments[segments.length - 2];
 				}
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
