@@ -5800,6 +5800,8 @@ window.bp = window.bp || {};
 							}
 						}
 
+						// Loose post form textarea focus for Safari.
+						$( 'input' ).focus().blur();
 					}
 				).fail(
 					function ( response ) {
