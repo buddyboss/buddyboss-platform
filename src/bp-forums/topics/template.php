@@ -143,7 +143,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 					}
 				} elseif ( bbp_is_topic_archive() ) {
 					$base = bbp_get_topics_url();
-                    
+
 					// Page or single post.
 				} else {
 					$base = get_permalink();
@@ -2922,20 +2922,38 @@ function bbp_get_topic_trash_link( $args = '' ) {
 	$actions = array();
 	$topic   = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );
 
-	// Check if the current user is a moderator or if the topic is empty.
-	if ( empty( $topic ) || user_can( bp_loggedin_user_id(), 'moderate' ) ) {
-		// Check if the current user is not an administrator.
-		if ( ! current_user_can( 'administrator' ) ) {
+	if ( empty( $topic ) ) {
+		return;
+	} elseif ( ! current_user_can( 'delete_topic', $topic->ID ) ) {
+
+		// Is groups component active.
+		if ( bp_is_active( 'groups' ) ) {
 			$topic_author_id = bbp_get_topic_author_id( $topic->ID );
-			// Check if the topic author is also an admin using BuddyPress functions.
-			if ( user_can( $topic_author_id, 'bp_moderate' ) ) {
-				// If the topic author is an admin, exit the function.
+			$group_id        = bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) );
+			$group_id        = ! empty( $group_id ) ? current( $group_id ) : 0;
+			$current_user_id = get_current_user_id();
+
+			// If group moderator then no delete link, if topic author is admin/group organizer/moderator.
+			if (
+				! empty( $group_id ) &&
+				groups_is_user_mod( $current_user_id, $group_id )
+			) {
+				if (
+					(
+						groups_is_user_admin( $topic_author_id, $group_id ) ||
+						groups_is_user_mod( $topic_author_id, $group_id ) ||
+						user_can( $topic_author_id, 'administrator' )
+					)
+					&& $topic_author_id !== $current_user_id
+				) {
+					return;
+				}
+			} else {
 				return;
 			}
+		} else {
+			return;
 		}
-	} else {
-		// If the current user is not a moderator and the topic is not empty, exit the function.
-		return;
 	}
 
 	if ( bbp_is_topic_trash( $topic->ID ) ) {

@@ -1703,8 +1703,40 @@ function bbp_toggle_reply_handler( $action = '' ) {
 
 	// What is the user doing here?
 	if ( ! current_user_can( 'edit_reply', $reply->ID ) || ( 'bbp_toggle_reply_trash' === $action && ! current_user_can( 'delete_reply', $reply->ID ) ) ) {
-		bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
-		return;
+
+		if ( 'bbp_toggle_reply_trash' === $action && bp_is_active( 'groups' ) ) {
+			$group_id        = bbp_get_forum_group_ids( bbp_get_reply_forum_id( $reply->ID ) );
+			$group_id        = ! empty( $group_id ) ? current( $group_id ) : 0;
+			$current_user_id = get_current_user_id();
+
+			// If group moderator then no delete link, if reply author is admin/group organizer/moderator.
+			if (
+				! empty( $group_id ) &&
+				groups_is_user_mod( $current_user_id, $group_id )
+			) {
+				$reply_author_id = bbp_get_reply_author_id( $reply->ID );
+				if (
+					(
+						groups_is_user_admin( $reply_author_id, $group_id ) ||
+						groups_is_user_mod( $reply_author_id, $group_id ) ||
+						user_can( $reply_author_id, 'administrator' )
+					)
+					&& $reply_author_id !== $current_user_id
+				) {
+					bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+					return;
+				}
+			} else {
+				bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+				return;
+			}
+		} else {
+			bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+			return;
+		}
 	}
 
 	// What action are we trying to perform?

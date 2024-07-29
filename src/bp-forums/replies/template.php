@@ -2250,21 +2250,39 @@ function bbp_get_reply_trash_link( $args = '' ) {
 
 	$actions = array();
 	$reply   = bbp_get_reply( bbp_get_reply_id( (int) $r['id'] ) );
-	
-	// Check if the current user is a moderator or if the reply is empty.
-	if ( empty( $reply ) || user_can( bp_loggedin_user_id(), 'moderate' ) ) {
-		// Check if the current user is not an administrator.
-		if ( ! current_user_can( 'administrator' ) ) {
-			$reply_author_id = bbp_get_reply_author_id( $reply->ID );
-			// Check if the reply author is also an admin using BuddyPress functions.
-			if ( user_can( $reply_author_id, 'bp_moderate' ) ) {
-				// If the reply author is an admin, exit the function.
+
+	if ( empty( $reply ) ) {
+		return;
+	} elseif ( ! current_user_can( 'delete_reply', $reply->ID ) ) {
+
+		// Is groups component active.
+		if ( bp_is_active( 'groups' ) ) {
+			$group_id        = bbp_get_forum_group_ids( bbp_get_reply_forum_id( $reply->ID ) );
+			$group_id        = ! empty( $group_id ) ? current( $group_id ) : 0;
+			$current_user_id = get_current_user_id();
+
+			// If group moderator then no delete link, if reply author is admin/group organizer/moderator.
+			if (
+				! empty( $group_id ) &&
+				groups_is_user_mod( $current_user_id, $group_id )
+			) {
+				$reply_author_id = bbp_get_reply_author_id( $reply->ID );
+				if (
+					(
+						groups_is_user_admin( $reply_author_id, $group_id ) ||
+						groups_is_user_mod( $reply_author_id, $group_id ) ||
+						user_can( $reply_author_id, 'administrator' )
+					)
+					&& $reply_author_id !== $current_user_id
+				) {
+					return;
+				}
+			} else {
 				return;
 			}
+		} else {
+			return;
 		}
-	} else {
-		// If the current user is not a moderator and the reply is not empty, exit the function.
-		return;
 	}
 
 	if ( bbp_is_reply_trash( $reply->ID ) ) {
