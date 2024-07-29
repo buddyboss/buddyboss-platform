@@ -1406,7 +1406,7 @@ window.bp = window.bp || {};
 				// Tag user on comment replies.
 				if (
 					! target.hasClass( 'acomment-edit' ) &&
-					! target.hasClass( 'button') &&
+					! target.hasClass( 'button' ) &&
 					! target.hasClass( 'activity-state-comments' )
 				) {
 					$( hasParentModal + '#ac-input-' + activity_id ).html( atWho );
