@@ -1364,6 +1364,12 @@ window.bp = window.bp || {};
 
 				var atWho = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;';
 
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.user_domain ) ) {
+					var user_domain = BP_Nouveau.activity.params.user_domain;
+					var segments = user_domain.split( '/' );
+					var current_user_nickname = segments[segments.length - 1] || segments[segments.length - 2];
+				}
+
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
 				var scrollOptions = {
@@ -1407,7 +1413,8 @@ window.bp = window.bp || {};
 				if (
 					! target.hasClass( 'acomment-edit' ) &&
 					! target.hasClass( 'button' ) &&
-					! target.hasClass( 'activity-state-comments' )
+					! target.hasClass( 'activity-state-comments' ) &&
+					current_user_nickname !== activity_data_nickname
 				) {
 					$( hasParentModal + '#ac-input-' + activity_id ).html( atWho );
 					form.addClass( 'has-content' );
