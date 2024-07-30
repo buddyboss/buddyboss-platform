@@ -2848,7 +2848,7 @@ function bp_get_activity_css_class() {
 	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 
 	if (
-		'0' !== $link_embed ||
+		( '0' !== $link_embed && '' !== $link_embed ) ||
 		! empty( $link_preview_data )
 	) {
 		$class .= ' wp-link-embed';
