@@ -2257,27 +2257,11 @@ function bbp_get_reply_trash_link( $args = '' ) {
 
 		// Is groups component active.
 		if ( bp_is_active( 'groups' ) ) {
-			$group_id        = bbp_get_forum_group_ids( bbp_get_reply_forum_id( $reply->ID ) );
-			$group_id        = ! empty( $group_id ) ? current( $group_id ) : 0;
-			$current_user_id = get_current_user_id();
-
-			// If group moderator then no delete link, if reply author is admin/group organizer/moderator.
-			if (
-				! empty( $group_id ) &&
-				groups_is_user_mod( $current_user_id, $group_id )
-			) {
-				$reply_author_id = bbp_get_reply_author_id( $reply->ID );
-				if (
-					(
-						groups_is_user_admin( $reply_author_id, $group_id ) ||
-						groups_is_user_mod( $reply_author_id, $group_id ) ||
-						user_can( $reply_author_id, 'administrator' )
-					)
-					&& $reply_author_id !== $current_user_id
-				) {
-					return;
-				}
-			} else {
+			$author_id    = bbp_get_reply_author_id( $reply->ID );
+			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
+			if ( ! $allow_delete ) {
 				return;
 			}
 		} else {
