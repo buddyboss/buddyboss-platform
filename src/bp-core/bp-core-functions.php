@@ -9608,7 +9608,7 @@ function bb_generate_default_avatar( $args ) {
 		$property->setAccessible( true );
 		$image = $property->getValue( $image_editor );
 
-		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
+		if ( 'WP_Image_Editor_GD' === $chose_editor || 'Photon_Subsizes_WP_Image_Editor_GD' === $chose_editor ) {
 			// Define the background color.
 			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
 			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
@@ -9821,6 +9821,7 @@ function bb_is_gd_or_imagick_library_enabled() {
 				! is_wp_error( $lib_loaded  ) &&
 				(
 					'WP_Image_Editor_GD' === $lib_loaded ||
+					'Photon_Subsizes_WP_Image_Editor_GD' === $lib_loaded ||
 					'WP_Image_Editor_Imagick' === $lib_loaded
 				)
 			) {
