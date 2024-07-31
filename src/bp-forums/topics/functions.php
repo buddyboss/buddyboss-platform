@@ -2332,7 +2332,6 @@ function bbp_toggle_topic_handler( $action = '' ) {
 
 				return;
 			}
-			// If group moderator then no delete link, if topic author is admin/group organizer/moderator.
 		} else {
 			bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
 
