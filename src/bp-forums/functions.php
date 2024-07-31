@@ -1306,8 +1306,8 @@ function bb_update_groups_discussion_subscriptions_background_process( $subscrip
  * @param object $obj  Topic or reply data.
  * @param array  $args {
  *     An associative array of topic or reply parameters.
- *     @type integer $author_id Author id of the topic or reply.
- *     @type integer $forum_id  Forum id of the topic or reply.
+ *     @type int $author_id Author id of the topic or reply.
+ *     @type int $forum_id  Forum id of the topic or reply.
  * }
  *
  * @return bool
@@ -1322,7 +1322,7 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 			'forum_id'  => bbp_get_topic_forum_id( $obj->ID ),
 		)
 	);
-	
+
 	if ( empty( $r['author_id'] ) || empty( $r['forum_id'] ) ) {
 		return false;
 	}
