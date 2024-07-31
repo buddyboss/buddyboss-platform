@@ -174,7 +174,7 @@ function bbp_dashboard_widget_right_now() {
 						'<span class="b b-hidden-topics">' . number_format_i18n( $num ) . '</span>'
 					);
 
-					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
 					}
@@ -199,7 +199,7 @@ function bbp_dashboard_widget_right_now() {
 						'<span class="b b-hidden-replies">' . number_format_i18n( $num ) . '</span>'
 					);
 
-					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
 					}
@@ -229,7 +229,7 @@ function bbp_dashboard_widget_right_now() {
 							'taxonomy'  => bbp_get_topic_tag_tax_id(),
 							'post_type' => bbp_get_topic_post_type(),
 						),
-						admin_url( null, 'edit-tags.php' )
+						admin_url( 'edit-tags.php' )
 					);
 
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
