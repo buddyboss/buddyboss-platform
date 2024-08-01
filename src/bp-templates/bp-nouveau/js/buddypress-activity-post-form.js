@@ -562,6 +562,7 @@ window.bp = window.bp || {};
 					allow_new_option: activity_data.poll.allow_new_option || false,
 					duration: activity_data.poll.duration || 7,
 					total_votes: activity_data.poll.total_votes,
+					edit_poll: activity_data.edit_poll,
 				};
 
 				self.postForm.model.set( 'poll', pollObject );
