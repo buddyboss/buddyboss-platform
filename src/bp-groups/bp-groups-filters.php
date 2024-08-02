@@ -439,7 +439,8 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 			(
 				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
 				groups_is_user_admin( get_current_user_id(), $activity->item_id )
-			)
+			) &&
+			! groups_is_user_admin( bp_get_activity_user_id(), $activity->item_id )
 		) {
 			$can_delete = true;
 		}
