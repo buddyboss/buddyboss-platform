@@ -125,6 +125,10 @@ class BP_Core_Suspend {
 		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
+
+		// Intersect the original array with the keys to keep.
+		$args = array_intersect_key( $args, array_flip( self::db_columns() ) );
+
 		if ( ! empty( $recode ) ) {
 			$where = array(
 				'item_id'   => $args['item_id'],
@@ -305,6 +309,10 @@ class BP_Core_Suspend {
 		do_action( 'bb_suspend_before_remove_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
+
+		// Intersect the original array with the keys to keep.
+		$args = array_intersect_key( $args, array_flip( self::db_columns() ) );
+
 		if ( ! empty( $recode ) ) {
 
 			$where = array(
@@ -590,5 +598,18 @@ class BP_Core_Suspend {
 			 */
 			do_action( 'suspend_after_delete', $recode );
 		}
+	}
+
+	protected static function db_columns() {
+		return array(
+			'item_id',
+			'item_type',
+			'hide_sitewide',
+			'hide_parent',
+			'user_suspended',
+			'reported',
+			'blog_id',
+			'user_report',
+		);
 	}
 }

@@ -180,24 +180,7 @@ abstract class BP_Suspend_Abstract {
 				if ( ! empty( $content_ids ) ) {
 					foreach ( $content_ids as $content_id ) {
 
-						if (
-							BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-							(
-								(
-									! empty( $args['action_suspend'] ) ||
-									! empty( $args['user_suspended'] )
-								) &&
-								BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
-							)
-						) {
-							continue;
-						}
-
-						if (
-							! empty( $blocked_user ) &&
-							empty( $suspended_user ) &&
-							BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
-						) {
+						if ( $this->bb_moderation_item_hidden( $content_id, $content_type, $args ) ) {
 							continue;
 						}
 
@@ -339,30 +322,7 @@ abstract class BP_Suspend_Abstract {
 				if ( ! empty( $content_ids ) ) {
 					foreach ( $content_ids as $content_id ) {
 
-						if (
-							! empty( $blocked_user ) &&
-							empty( $action_suspend ) &&
-							! BP_Core_Suspend::check_blocked_user_content( $content_id, $content_type, $blocked_user )
-						) {
-							continue;
-						}
-
-						if (
-							(
-								! empty( $action_suspend )
-								|| empty( $hide_parent )
-							) &&
-							! (
-								BP_Core_Suspend::check_hidden_content( $content_id, $content_type ) ||
-								(
-									(
-										! empty( $args['action_suspend'] ) ||
-										! empty( $args['user_suspended'] )
-									) &&
-									BP_Core_Suspend::check_suspended_content( $content_id, $content_type )
-								)
-							)
-						) {
+						if ( $this->bb_moderation_item_unhidden( $content_id, $content_type, $args ) ) {
 							continue;
 						}
 
@@ -569,6 +529,69 @@ abstract class BP_Suspend_Abstract {
 		}
 
 		return 'bb_moderation_' . $type . '_' . $args['item_type'] . '_' . $args['item_id'];
+	}
+
+	public function bb_moderation_item_hidden( $item_id, $item_type, $args ) {
+		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$suspended_user = ! empty( $args['user_suspended'] ) ? $args['user_suspended'] : '';
+
+		if (
+			BP_Core_Suspend::check_hidden_content( $item_id, $item_type ) ||
+			(
+				(
+					! empty( $args['action_suspend'] ) ||
+					! empty( $args['user_suspended'] )
+				) &&
+				BP_Core_Suspend::check_suspended_content( $item_id, $item_type )
+			)
+		) {
+			return true;
+		}
+
+		if (
+			! empty( $blocked_user ) &&
+			empty( $suspended_user ) &&
+			BP_Core_Suspend::check_blocked_user_content( $item_id, $item_type, $blocked_user )
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function bb_moderation_item_unhidden( $item_id, $item_type, $args ) {
+		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$action_suspend = ! empty( $args['action_suspend'] ) ? $args['action_suspend'] : '';
+		$hide_parent    = ! empty( $args['hide_parent'] ) ? $args['hide_parent'] : '';
+
+		if (
+			! empty( $blocked_user ) &&
+			empty( $action_suspend ) &&
+			! BP_Core_Suspend::check_blocked_user_content( $item_id, $item_type, $blocked_user )
+		) {
+			return true;
+		}
+
+		if (
+			(
+				! empty( $action_suspend )
+				|| empty( $hide_parent )
+			) &&
+			! (
+				BP_Core_Suspend::check_hidden_content( $item_id, $item_type ) ||
+				(
+					(
+						! empty( $args['action_suspend'] ) ||
+						! empty( $args['user_suspended'] )
+					) &&
+					BP_Core_Suspend::check_suspended_content( $item_id, $item_type )
+				)
+			)
+		) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
