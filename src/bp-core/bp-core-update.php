@@ -3721,3 +3721,23 @@ function bb_update_to_2_6_51() {
 	// Insert the last_activity meta for the users who don't have it.
 	$wpdb->query($insert_query); // phpcs:ignore
 }
+
+/**
+ * Delete all existing groups entries from suspended table added when user suspended.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_70() {
+	global $wpdb;
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_suspend' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
+	if ( $table_exists ) {
+
+		// Delete all existing groups entries added when user suspended.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM %s WHERE item_type = 'groups' AND reposted = 0", $bp_prefix . 'bp_suspend' ) );
+	}
+}
