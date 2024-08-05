@@ -28,7 +28,7 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @var integer
 	 */
-	public static $item_per_page = 10;
+	public static $item_per_page = (int) apply_filters( 'bb_suspend_item_per_page', 50 ); // phpcs:ignore
 
 	/**
 	 * Item type
