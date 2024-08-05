@@ -684,7 +684,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$friend_ids = friends_get_friend_user_ids( $member_id );
 
 			if ( ! empty( $friend_ids ) ) {
-				if ( $this->background_disabled ) {
+				if ( $this->background_disabled || count( $friend_ids ) < 50 ) {
 					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
 				} else {
 					$min_count     = (int) apply_filters( 'bb_update_member_friend_count', 50 );
@@ -712,7 +712,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'groups' ) ) {
 			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
-			$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+			$min_count = (int) apply_filters( 'bb_update_group_member_count', 50 );
 
 			if ( count( $group_ids ) > $min_count ) {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
@@ -990,6 +990,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
 				}
+
+				unset( $friend_ids, $total_friend_count );
 			}
 		}
 	}
