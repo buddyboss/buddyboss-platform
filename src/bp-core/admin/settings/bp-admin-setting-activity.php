@@ -65,8 +65,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 	public function register_fields() {
 
-		$pro_class = bb_get_pro_fields_class( 'schedule_posts' );
-
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
 		// Allow Activity edit setting.
@@ -90,6 +88,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow pinned posts.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
+		// Allow Poll.
+		$polls_pro_class     = bb_get_pro_fields_class( 'polls' );
+		$polls_notice        = bb_get_pro_label_notice( 'polls' );
+		$poll_args           = array();
+		$poll_args['class']  = esc_attr( $polls_pro_class );
+		$poll_args['notice'] = $polls_notice;
+		$this->add_field( '_bb_enable_activity_post_polls', __( 'Polls', 'buddyboss' ) . $polls_notice, array( $this, 'bb_admin_setting_callback_enable_activity_post_polls' ), 'intval', $poll_args );
+
+		$pro_class     = bb_get_pro_fields_class( 'schedule_posts' );
 		$args          = array();
 		$args['class'] = esc_attr( $pro_class );
 
@@ -389,6 +396,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		?>
 			<input id="bb_enable_activity_schedule_posts" name="<?php echo empty( $notice ) ? '_bb_enable_activity_schedule_posts' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
 			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow Group Organizers and Moderators to schedule their posts', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Allow activity poll.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_activity_post_polls( $args ) {
+		$val    = function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls( false ) : false;
+		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
+		?>
+		<input id="bb_enable_activity_post_polls" name="<?php echo empty( $notice ) ? '_bb_enable_activity_post_polls' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+		<label for="bb_enable_activity_post_polls"><?php esc_html_e( 'Allow group owners and moderators to post polls', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
