@@ -499,6 +499,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_51();
 		}
 
+		if ( $raw_db_version < 21161 ) {
+			bb_update_to_2_6_70();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3731,13 +3735,14 @@ function bb_update_to_2_6_51() {
  */
 function bb_update_to_2_6_70() {
 	global $wpdb;
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix     = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$suspend_table = $bp_prefix . 'bp_suspend';
 
 	// Check if the 'bp_suspend' table exists.
-	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $suspend_table ) );
 	if ( $table_exists ) {
 
 		// Delete all existing groups entries added when user suspended.
-		$wpdb->query( $wpdb->prepare( "DELETE FROM %s WHERE item_type = 'groups' AND reposted = 0", $bp_prefix . 'bp_suspend' ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$suspend_table} WHERE item_type = %s AND reported = 0", 'groups' ) );
 	}
 }
