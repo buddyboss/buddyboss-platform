@@ -867,7 +867,7 @@ function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value 
 
 	// Must be shorter than 32 characters.
 	$field_length = (int) apply_filters( 'bb_xprofile_field_character_max_length', 32 );
-	if ( strlen( $value ) > $field_length ) {
+	if ( mb_strlen( $value ) > $field_length ) {
 		return sprintf(
 			/* translators: 1. Field Name, 2. character length. */
 			__( '%1$s must be shorter than %2$d characters.', 'buddyboss' ),
@@ -932,12 +932,12 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	// must be shorter then 32 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
-	if ( strlen( $value ) > $nickname_length ) {
+	if ( mb_strlen( $value ) > $nickname_length ) {
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
 	// Minimum of 3 characters.
-	if ( strlen( $value ) < 3 ) {
+	if ( mb_strlen( $value ) < 3 ) {
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
 
