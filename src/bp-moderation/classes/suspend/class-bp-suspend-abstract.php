@@ -28,7 +28,7 @@ abstract class BP_Suspend_Abstract {
 	 *
 	 * @var integer
 	 */
-	public static $item_per_page = (int) apply_filters( 'bb_suspend_item_per_page', 50 ); // phpcs:ignore
+	public static $item_per_page; // phpcs:ignore
 
 	/**
 	 * Item type
@@ -62,6 +62,13 @@ abstract class BP_Suspend_Abstract {
 		'blocked_user',
 		'action_suspend',
 	);
+
+	/**
+	 * BP_Suspend_Abstract constructor.
+	 */
+	public function __construct() {
+		self::$item_per_page = (int) apply_filters( 'bb_suspend_item_per_page', 50 );
+	}
 
 	/**
 	 * Check whether bypass argument pass for admin user or not.

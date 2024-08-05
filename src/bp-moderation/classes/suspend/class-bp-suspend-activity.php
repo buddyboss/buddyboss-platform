@@ -29,7 +29,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -85,6 +85,9 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				'user_id' => $member_id,
 			),
 		);
+
+		error_log( print_r( '-----', 1 ) );
+		error_log( print_r( self::$item_per_page, 1 ) );
 
 		if ( $page > 0 ) {
 			$args['per_page'] = self::$item_per_page;
