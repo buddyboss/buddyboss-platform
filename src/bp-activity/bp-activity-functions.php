@@ -6342,6 +6342,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
+			'user_id'          => $activity_comment_user_id,
 			'nickname'         => $activity_comment_nickname,
 		);
 	}

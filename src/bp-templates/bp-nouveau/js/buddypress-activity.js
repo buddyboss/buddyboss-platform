@@ -1357,18 +1357,21 @@ window.bp = window.bp || {};
 				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
 
 				var activity_data_nickname;
-				var current_user_nickname;
+				var activity_user_id;
+				var current_user_id;
 
 				if ( ! _.isNull( activity_comment_data ) ) {
 					activity_data_nickname = activity_comment_data.nickname;
 				}
 
+				if ( ! _.isNull( activity_comment_data ) ) {
+					activity_user_id = activity_comment_data.user_id;
+				}
+
 				var atWho = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;';
 
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.user_domain ) ) {
-					var user_domain = BP_Nouveau.activity.params.user_domain;
-					var segments = user_domain.split( '/' );
-					current_user_nickname = segments[segments.length - 1] || segments[segments.length - 2];
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+					current_user_id = BP_Nouveau.activity.params.user_id;
 				}
 
 				var peak_offset = ( $( window ).height() / 2 - 75 );
@@ -1415,7 +1418,7 @@ window.bp = window.bp || {};
 					! target.hasClass( 'acomment-edit' ) &&
 					! target.hasClass( 'button' ) &&
 					! target.hasClass( 'activity-state-comments' ) &&
-					current_user_nickname !== activity_data_nickname
+					current_user_id !== activity_user_id
 				) {
 					$( hasParentModal + '#ac-input-' + activity_id ).html( atWho );
 					form.addClass( 'has-content' );
