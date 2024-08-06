@@ -4555,7 +4555,12 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 
 	// Get activity metas.
 	$activity_metas = bb_activity_get_metadata( $activity->id );
-	$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+	$video_ids      = '';
+	if ( ! empty( $activity_metas['bp_video_ids'][0] ) ) {
+		$video_ids = $activity_metas['bp_video_ids'][0];
+	} elseif ( ! empty( $activity_metas['bp_video_id'][0] ) ) {
+		$video_ids = $activity_metas['bp_video_id'][0];
+	}
 
 	if ( empty( $video_ids ) ) {
 		return false;
