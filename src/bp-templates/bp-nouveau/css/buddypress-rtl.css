@@ -4777,12 +4777,12 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 }
 
 .activity-list .activity-item .acomment-display .ac-emotions_list.active {
-  bottom: 20px;
+  bottom: 35px;
   right: -30px;
 }
 
 body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
-  bottom: 20px;
+  bottom: 35px;
   right: -30px;
 }
 
