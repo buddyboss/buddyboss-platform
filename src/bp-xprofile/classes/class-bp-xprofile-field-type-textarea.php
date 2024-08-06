@@ -70,7 +70,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-		
+
 		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 			<?php
@@ -96,10 +96,38 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 
 		} else {
 
+			// Define an array of toolbar options.
+			$toolbar_buttons = array(
+				'bold',
+				'italic',
+				'underline',
+				'blockquote',
+				'strikethrough',
+				'bullist',
+				'numlist',
+				'undo',
+				'redo',
+				'link',
+				'fullscreen',
+			);
+
+			if ( current_user_can( 'unfiltered_html' ) ) {
+				$align_buttons = array( 'alignleft', 'aligncenter', 'alignright' );
+
+				$position = array_search( 'numlist', $toolbar_buttons, true );
+				if ( false !== $position ) {
+					array_splice( $toolbar_buttons, $position + 1, 0, $align_buttons );
+				} else {
+					$toolbar_buttons = array_merge( $toolbar_buttons, $align_buttons );
+				}
+			}
+
 			/**
 			 * Filters the arguments passed to `wp_editor()` in richtext xprofile fields.
 			 *
 			 * @since BuddyPress 2.4.0
+			 * @since BuddyBoss 2.6.50
+			 * Remove align button for non-admin members.
 			 *
 			 * @param array $args {
 			 *     Array of optional arguments. See `wp_editor()`.
@@ -108,6 +136,10 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			 *     @type bool $quicktags     Whether to show the quicktags buttons. Default true.
 			 *     @type int  $textarea_rows Number of rows to display in the editor. Defaults to 1 in the
 			 *                               'admin' context, and 10 in the 'edit' context.
+			 *     @type array $tinymce {
+			 *       Array of TinyMCE arguments.
+			 *          @type string $toolbar1 Comma-separated list of buttons to display in the first row of the toolbar.
+			 *      }
 			 * }
 			 * @param string $context The display context. 'edit' when the markup is intended for the
 			 *                        profile edit screen, 'admin' when intended for the Profile Fields
@@ -120,6 +152,9 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 					'media_buttons' => false,
 					'quicktags'     => true,
 					'textarea_rows' => 10,
+					'tinymce'       => array(
+						'toolbar1' => implode( ',', $toolbar_buttons ),
+					),
 				),
 				'edit'
 			);

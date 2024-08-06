@@ -930,6 +930,14 @@
 			transform: translateY(calc(-50% - 24px));
 			z-index: 11;
 
+			@media screen and (max-width: 980px) {
+				transform: none;
+
+				.bb-activity-more-options-action {
+					transform: translateY(calc(-50% - 24px));
+				}
+			}
+
 			.bb-activity-more-options-action {
 				border-radius: $block-radius-inner;
 
@@ -949,7 +957,7 @@
 			}
 
 			&:has(.bb-activity-more-options.is_visible) {
-				z-index: 111;
+				z-index: 119;
 
 				.bb-activity-more-options-action {
 					background-color: $light-grey;
@@ -1403,23 +1411,6 @@
 
 			body:not(.bb-is-mobile) & {
 				left: -10px;
-			}
-		}
-	}
-}
-
-@media screen and (max-width: 480px) {
-
-	.activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list {
-
-		&.active {
-			left: -40px;
-		}
-
-		&:hover {
-
-			body:not(.bb-is-mobile) & {
-				left: -40px;
 			}
 		}
 	}
@@ -2303,6 +2294,7 @@ ul.medium-editor-toolbar-actions {
 		border-radius: 4px 4px 0 0;
 		object-fit: cover;
 		object-position: center;
+		max-width: 100%;
 	}
 }
 
@@ -2881,7 +2873,9 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity,
-.bb-activity-media-wrap .bb-activity-video-elem {
+.bb-activity-media-wrap .bb-activity-video-elem,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity {
 	position: relative;
 
 	&.is-visible,
@@ -3001,6 +2995,17 @@ span.dashicons.dashicons-admin-file:before {
 			border-radius: 4px;
 			width: 198px;
 			z-index: 1;
+
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					width: auto;
+					z-index: 999;
+				}
+			}
 
 			ul {
 				list-style: none;
@@ -3284,6 +3289,16 @@ span.dashicons.dashicons-admin-file:before {
 			width: 198px;
 			z-index: 1;
 
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					z-index: 999;
+				}
+			}
+
 			ul {
 				list-style: none;
 				margin: 0;
@@ -3422,6 +3437,12 @@ span.dashicons.dashicons-admin-file:before {
 			display: none;
 		}
 
+		@media screen and (max-width: 980px) {
+
+			.item-action-wrap {
+				z-index: 999;
+			}
+		}
 	}
 
 	/* smartphones, touchscreens */
