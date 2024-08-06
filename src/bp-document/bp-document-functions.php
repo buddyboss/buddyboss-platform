@@ -5195,7 +5195,12 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 
 	// Get activity metas.
 	$activity_metas = bb_activity_get_metadata( $activity->id );
-	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+	$document_ids   = '';
+	if ( ! empty( $activity_metas['bp_document_ids'][0] ) ) {
+		$document_ids = $activity_metas['bp_document_ids'][0];
+	} elseif ( ! empty( $activity_metas['bp_document_id'][0] ) ) {
+		$document_ids = $activity_metas['bp_document_id'][0];
+	}
 
 	if ( empty( $document_ids ) ) {
 		return false;
