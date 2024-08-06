@@ -55,7 +55,8 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
-				<div class="video-action_list item-action_list">
+				<div class="video-action_list item-action_list bb_more_dropdown">
+					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
 						if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
@@ -125,6 +126,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 						?>
 					</ul>
 				</div>
+				<div class="bb_more_dropdown_overlay"></div>
 			<?php } ?>
 		</div>
 
