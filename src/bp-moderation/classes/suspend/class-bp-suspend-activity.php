@@ -349,20 +349,22 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $activity_id;
 
-		if ( $this->background_disabled ) {
-			$this->hide_related_content( $activity_id, $hide_sitewide, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $activity_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $activity_id, $hide_sitewide, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->hide_related_content( $activity_id, $hide_sitewide, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $activity_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $activity_id, $hide_sitewide, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -473,6 +475,64 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
 		}
 
+		if (
+			! empty( $args['parent_id'] ) &&
+			'activity_' . $activity_id === $args['parent_id'] &&
+			(
+				empty( $args['page'] ) ||
+				( ! empty( $args['page'] ) && 1 === $args['page'] )
+			)
+		) {
+			$child_comments = $this->fetch_all_child_activity( $activity_id );
+			$document_ids   = array();
+			$media_ids      = array();
+			$video_ids      = array();
+
+			if ( ! empty( $child_comments ) ) {
+				foreach ( $child_comments as $child_comment ) {
+					if ( 'activity_comment' === $child_comment->type ) {
+						$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $child_comment->id;
+					} else {
+						$related_contents[ self::$type ][] = $child_comment->id;
+					}
+
+					if ( bp_is_active( 'document' ) ) {
+						$document_ids = array_merge( $document_ids, BP_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+					if ( bp_is_active( 'media' ) ) {
+						$media_ids = array_merge( $media_ids, BP_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+					if ( bp_is_active( 'video' ) ) {
+						$video_ids = array_merge( $video_ids, BP_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+				}
+				unset( $child_comments );
+			}
+
+			if ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
+				$related_contents[ BP_Suspend_Document::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Document::$type ], $document_ids ) );
+				unset( $document_ids );
+			}
+
+			if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+				$related_contents[ BP_Suspend_Media::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Media::$type ], $media_ids ) );
+				unset( $media_ids );
+			}
+
+			if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
+				$related_contents[ BP_Suspend_Video::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Video::$type ], $video_ids ) );
+				unset( $video_ids );
+			}
+
+			$hide_sitewide = $args['hide_sitewide'] ?? 0;
+
+			$args['disable_background'] = true;
+
+			$this->loop_hide_related_content( $related_contents, $activity_id, $hide_sitewide, $args );
+			unset( $related_contents );
+			$related_contents = array();
+		}
+
 		return $related_contents;
 	}
 
@@ -566,5 +626,22 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 */
 	public function add_pre_validate_check() {
 		add_filter( 'bp_activity_activity_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
+	}
+
+	/**
+	 * Fetch all child activity
+	 *
+	 * @param int $activity_id Activity ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array
+	 */
+	public function fetch_all_child_activity( $activity_id ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_results( $wpdb->prepare( "SELECT id, type FROM {$bp->activity->table_name} WHERE secondary_item_id = %d OR (item_id = %d and type = 'activity_comment')", $activity_id, $activity_id ) );
 	}
 }
