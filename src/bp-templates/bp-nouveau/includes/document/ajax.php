@@ -442,7 +442,8 @@ function bp_nouveau_ajax_document_get_document_description() {
 								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
 									<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 								</span>
-							<div class="bb-activity-more-options">
+							<div class="bb-activity-more-options bb_more_dropdown">
+								<?php bp_get_template_part( 'common/more-options-view' ); ?>
 								<div class="generic-button">
 									<a id="activity-document-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-document-download download-activity">
 										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
