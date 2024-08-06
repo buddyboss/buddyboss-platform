@@ -3146,6 +3146,10 @@ window.bp = window.bp || {};
 				// parse html now to get the url.
 				urlText = doc.body.innerHTML;
 
+				if ( urlText.indexOf( '<img' ) >= 0 ) {
+					urlText = urlText.replace( /<img .*?>/g, '' );
+				}
+
 				if ( urlText.indexOf( 'http://' ) >= 0 ) {
 					urlString = this.getURL( 'http://', urlText );
 				} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
