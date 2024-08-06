@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.6.51\n"
+"Project-Id-Version: BuddyBoss Platform 2.6.60\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-07-11 10:58:05+00:00\n"
+"POT-Creation-Date: 2024-08-06 06:22:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,8 +25,8 @@ msgstr ""
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: bp-activity/actions/delete.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:358
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1694
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:363
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1699
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:712
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:717
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -126,7 +126,7 @@ msgstr ""
 #: bp-activity/actions/reply.php:43
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:355
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:1077
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:497
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:502
 msgid "Please do not leave the comment area blank."
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 #: bp-core/classes/class-bb-reaction.php:263
 #: bp-core/classes/class-bb-reaction.php:264
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:991
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:198
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:201
 #: bp-templates/bp-nouveau/includes/activity/functions.php:344
 msgid "Reactions"
 msgstr ""
@@ -186,7 +186,7 @@ msgstr ""
 #: bp-activity/bb-activity-reactions.php:478
 #: bp-core/admin/bp-core-admin-settings.php:3545
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:991
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:198
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:201
 #: bp-templates/bp-nouveau/includes/activity/functions.php:344
 msgid "Likes"
 msgstr ""
@@ -494,11 +494,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1477
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1537
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1590
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1744
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2289
-#: bp-templates/bp-nouveau/includes/document/ajax.php:476
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1349
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1341
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1760
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2321
+#: bp-templates/bp-nouveau/includes/document/ajax.php:477
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1350
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1342
 #: bp-xprofile/bp-xprofile-admin.php:915
 #: bp-xprofile/bp-xprofile-repeaters.php:881
 #: bp-xprofile/bp-xprofile-repeaters.php:883
@@ -646,11 +646,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:228
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:173
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:90
-#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:237
+#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:239
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:26
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:27
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:48
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:282
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:284
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:102
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:288
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:237
@@ -661,9 +661,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1493
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1546
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1599
-#: bp-templates/bp-nouveau/includes/document/ajax.php:486
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1359
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1351
+#: bp-templates/bp-nouveau/includes/document/ajax.php:487
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1360
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1352
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1522
 #: bp-xprofile/classes/class-bp-xprofile-group.php:1000
 msgid "Cancel"
@@ -671,8 +671,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
 #: bp-core/admin/settings/bp-admin-setting-activity.php:73
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1739
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1743
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1755
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1759
 msgid "Edit Activity"
 msgstr ""
 
@@ -864,8 +864,8 @@ msgstr ""
 #: bp-activity/bp-activity-functions.php:987
 #: bp-activity/bp-activity-functions.php:1079
 #: bp-activity/bp-activity-functions.php:1099
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:161
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:232
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:164
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:237
 msgid "Reactions are temporarily disabled by site admin, please try again later"
 msgstr ""
 
@@ -957,7 +957,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2933
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:470
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:475
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
@@ -1090,7 +1090,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6849
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1772
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1367
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1372
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -1279,18 +1279,18 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:805
 #: bp-notifications/bp-notifications-template.php:1056
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:80
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:355
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:81
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:356
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:41
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:86
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:127
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:285
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:87
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:128
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:288
 #: bp-templates/bp-nouveau/buddypress/video/actions.php:46
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:146
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:120
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1843
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1844
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2320
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:147
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:121
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1859
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1860
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2352
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:253
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:920
@@ -2483,7 +2483,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:846
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1183
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1213
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:875
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:880
 msgid "Schedule activity settings disabled."
 msgstr ""
 
@@ -2493,8 +2493,8 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:867
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1205
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:844
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:864
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:849
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:869
 msgid "Please set a minimum schedule time for at least 1 hour later."
 msgstr ""
 
@@ -2555,21 +2555,21 @@ msgid "Your post has been unpinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1605
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1300
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1305
 msgid "Your post has been pinned"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1607
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1304
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1309
 msgid "Your pinned post has been updated"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1612
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1779
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3539
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1260
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1326
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1563
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1265
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1331
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1568
 #: bp-templates/bp-nouveau/includes/activity/functions.php:254
 #: bp-templates/bp-nouveau/includes/activity/functions.php:255
 #: bp-templates/bp-nouveau/includes/activity/functions.php:258
@@ -2591,12 +2591,12 @@ msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1770
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1365
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1370
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1774
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1369
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1374
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -2920,17 +2920,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3530
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1596
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1601
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3532
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1598
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1603
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3534
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1600
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1605
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -3388,17 +3388,19 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:1248 bp-forums/admin/tools.php:1985
 #: bp-forums/functions.php:889
 #: bp-integrations/recaptcha/bb-recaptcha-actions.php:33
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:148
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:217
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
-#: bp-templates/bp-nouveau/includes/document/ajax.php:555
-#: bp-templates/bp-nouveau/includes/document/ajax.php:639
-#: bp-templates/bp-nouveau/includes/document/ajax.php:754
-#: bp-templates/bp-nouveau/includes/document/ajax.php:860
-#: bp-templates/bp-nouveau/includes/document/ajax.php:997
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1118
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1205
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1345
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1527
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1597
+#: bp-templates/bp-nouveau/includes/document/ajax.php:556
+#: bp-templates/bp-nouveau/includes/document/ajax.php:640
+#: bp-templates/bp-nouveau/includes/document/ajax.php:755
+#: bp-templates/bp-nouveau/includes/document/ajax.php:861
+#: bp-templates/bp-nouveau/includes/document/ajax.php:998
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1119
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1206
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1346
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1528
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1598
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:52
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:70
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:118
@@ -3409,17 +3411,17 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:547
 #: bp-templates/bp-nouveau/includes/media/ajax.php:662
 #: bp-templates/bp-nouveau/includes/media/ajax.php:786
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1428
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1429
 #: bp-templates/bp-nouveau/includes/video/ajax.php:155
 #: bp-templates/bp-nouveau/includes/video/ajax.php:325
 #: bp-templates/bp-nouveau/includes/video/ajax.php:441
 #: bp-templates/bp-nouveau/includes/video/ajax.php:636
 #: bp-templates/bp-nouveau/includes/video/ajax.php:741
 #: bp-templates/bp-nouveau/includes/video/ajax.php:846
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1430
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1504
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1606
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1676
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1431
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1505
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1607
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1677
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -5455,7 +5457,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-component.php:38
 #: bp-moderation/bp-moderation-functions.php:1250
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:516
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:340
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:344
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:20
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1065
 #: bp-templates/bp-nouveau/includes/groups/classes.php:269
@@ -7102,9 +7104,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:50
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:66
 #: bp-templates/bp-nouveau/buddypress/video/video-loop.php:38
-#: bp-templates/bp-nouveau/includes/document/ajax.php:960
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1306
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1464
+#: bp-templates/bp-nouveau/includes/document/ajax.php:961
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1307
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1465
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
 #: bp-templates/bp-nouveau/includes/media/ajax.php:455
 #: bp-templates/bp-nouveau/includes/media/ajax.php:498
@@ -7355,11 +7357,11 @@ msgid "Invalid object."
 msgstr ""
 
 #: bp-core/bp-core-actions.php:1121 bp-core/classes/class-bb-reaction.php:928
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1402
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1411
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1441
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1510
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1519
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1407
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1416
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1446
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1515
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1524
 msgid "Invalid request."
 msgstr ""
 
@@ -8994,9 +8996,9 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:49
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:104
-#: bp-templates/bp-nouveau/includes/document/ajax.php:923
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1268
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1426
+#: bp-templates/bp-nouveau/includes/document/ajax.php:924
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1269
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1427
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr ""
@@ -9044,6 +9046,8 @@ msgid "BuddyBoss email types"
 msgstr ""
 
 #: bp-core/bp-core-template.php:119 bp-forums/admin/settings.php:1307
+#: bp-moderation/classes/class-bp-moderation-comment.php:334
+#: bp-templates/bp-nouveau/buddypress/common/more-options-view.php:13
 msgid "Options"
 msgstr ""
 
@@ -12092,22 +12096,22 @@ msgstr ""
 #: bp-document/bp-document-filters.php:300
 #: bp-messages/bp-messages-functions.php:2531
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:37
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:269
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2027
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2028
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2061
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2062
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2095
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2096
-#: bp-templates/bp-nouveau/includes/document/ajax.php:448
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:270
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2043
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2044
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2077
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2078
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2111
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2112
 #: bp-templates/bp-nouveau/includes/document/ajax.php:449
+#: bp-templates/bp-nouveau/includes/document/ajax.php:450
 #: bp-templates/bp-nouveau/includes/document/functions.php:102
 #: bp-templates/bp-nouveau/includes/document/functions.php:105
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1321
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1322
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1323
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2737
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1313
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1314
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1315
 msgid "Download"
 msgstr ""
 
@@ -12146,8 +12150,8 @@ msgid "Error while uploading document."
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2052
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:163
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:247
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:164
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:250
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
 #: bp-video/bp-video-functions.php:2592
 msgid "Archive"
@@ -12712,7 +12716,7 @@ msgid "You don't have a permission to create a folder inside this group."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:525
-#: bp-templates/bp-nouveau/includes/document/ajax.php:699
+#: bp-templates/bp-nouveau/includes/document/ajax.php:700
 msgid "You don't have a permission to create a folder inside this folder."
 msgstr ""
 
@@ -16772,8 +16776,8 @@ msgstr ""
 
 #: bp-forums/common/locale.php:55 bp-moderation/bp-moderation-functions.php:252
 #: bp-moderation/classes/class-bp-moderation-list-table.php:289
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:186
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:274
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:187
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:277
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:114
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:32
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:3146
@@ -17656,23 +17660,23 @@ msgid "Unspam"
 msgstr ""
 
 #: bp-forums/replies/template.php:2430
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:59
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:66
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:60
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:67
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:30
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:31
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:320
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:331
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:67
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:73
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:93
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:109
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:242
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:258
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:321
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:332
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:68
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:74
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:94
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:110
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:245
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:261
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:28
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:112
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:127
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:79
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:94
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:113
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:128
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:80
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:95
 #: bp-templates/bp-nouveau/buddypress/video/video-move.php:30
 msgid "Move"
 msgstr ""
@@ -17933,9 +17937,9 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:97
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:74
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:40
-#: bp-templates/bp-nouveau/includes/document/ajax.php:937
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1282
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1440
+#: bp-templates/bp-nouveau/includes/document/ajax.php:938
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1283
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1441
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1696
 msgid "Visibility"
 msgstr ""
@@ -18203,7 +18207,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:312
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:313
 msgid "Rename"
 msgstr ""
 
@@ -19033,8 +19037,8 @@ msgid "Connected"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:458
-#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:220
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:265
+#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:222
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:267
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:271
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:220
 msgid "Remove Connection"
@@ -19578,8 +19582,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:154
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:229
 #: bp-templates/bp-nouveau/buddypress/groups/single/group-header.php:174
-#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:238
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:283
+#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:240
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:285
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:289
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:238
 msgid "Confirm"
@@ -20308,8 +20312,8 @@ msgid "This is a hidden group. You must be invited to join."
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:5290
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:860
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:1222
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:864
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:1226
 #. translators: %s: Last joined date of member in the group.
 #. translators: %s: Member joined date.
 #. translators: 1: User registered date.
@@ -21602,12 +21606,12 @@ msgid "Group Name (required)"
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:565
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1612
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1616
 msgid "Notify group members of these changes via email"
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:572
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1603
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1607
 msgid "Notify group members of these changes"
 msgstr ""
 
@@ -26861,8 +26865,8 @@ msgid "Collapse"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2534
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:50
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:272
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:51
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:273
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2740
 msgid "Copy Download Link"
 msgstr ""
@@ -26871,7 +26875,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:41
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:57
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:68
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:233
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:235
 #: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:88
 #: bp-templates/bp-nouveau/buddypress/video/entry.php:55
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2741
@@ -27021,11 +27025,11 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1019
 #: bp-templates/bp-nouveau/buddypress/document/entry.php:24
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:196
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:334
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:156
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:198
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:338
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:158
 #: bp-templates/bp-nouveau/includes/media/functions.php:185
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1552
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1553
 #: bp-templates/bp-nouveau/includes/video/functions.php:147
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
@@ -28304,8 +28308,8 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-comment.php:334
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:230
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1674
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2213
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1687
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2242
 #: bp-templates/bp-nouveau/includes/document/ajax.php:442
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1315
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1307
@@ -28869,8 +28873,8 @@ msgstr ""
 #: bp-moderation/screens/block-member-form.php:17
 #: bp-moderation/screens/content-report-form.php:17
 #: bp-moderation/screens/reported-content-popup.php:19
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:325
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:341
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:329
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:345
 #: bp-templates/bp-nouveau/includes/template-tags.php:2609
 #: bp-templates/bp-nouveau/includes/template-tags.php:2617
 #: bp-templates/bp-nouveau/includes/template-tags.php:2641
@@ -30162,75 +30166,75 @@ msgstr ""
 msgid "Started"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:154
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:233
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:155
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:236
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:80
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:82
 msgid "Mark as read"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:154
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:233
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:234
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:155
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:236
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:237
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:80
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:84
 msgid "Mark as unread"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:158
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:240
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:159
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:243
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:91
 msgid "Unarchive"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:176
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:264
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:177
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:267
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:103
 msgid "View members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:182
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:270
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:324
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:183
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:273
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:328
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:110
 msgid "Block a Member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:182
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:270
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:183
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:273
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:110
 msgid "Block a member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:190
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:278
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:191
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:281
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:118
 msgid "Block member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:198
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:286
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:199
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:289
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:126
 msgid "Report a member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:202
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:206
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:290
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:294
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:203
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:207
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:293
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:297
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:130
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:134
 msgid "Report member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:212
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:300
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:213
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:303
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:141
 msgid "Delete your messages"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:215
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:306
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:216
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:309
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:157
 msgid "Delete conversation"
 msgstr ""
@@ -30353,8 +30357,8 @@ msgstr ""
 msgid "Please add fields to search members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:58
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:319
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:59
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:320
 msgid "Document inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
 
@@ -30442,20 +30446,20 @@ msgstr ""
 msgid "Based on group privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:280
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:281
 msgid "Edit Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:292
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:293
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1348
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1370
 msgid "Edit Post Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:55
-#: bp-templates/bp-nouveau/includes/document/ajax.php:930
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1275
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1433
+#: bp-templates/bp-nouveau/includes/document/ajax.php:931
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1276
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1434
 msgid "Modified"
 msgstr ""
 
@@ -30483,7 +30487,7 @@ msgid "Done"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:27
-#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:99
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:100
 msgid "Edit Folder"
 msgstr ""
 
@@ -30504,7 +30508,7 @@ msgstr ""
 msgid "Search Documents…"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:108
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:109
 msgid "Delete Folder"
 msgstr ""
 
@@ -30677,7 +30681,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:112
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:944
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:948
 msgid "Promote to co-%s"
 msgstr ""
 
@@ -30733,8 +30737,8 @@ msgstr ""
 msgid "Customize the message of your invite."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:230
-#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:275
+#: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:232
+#: bp-templates/bp-nouveau/buddypress/members/members-loop.php:277
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:281
 #: bp-templates/bp-nouveau/buddypress/members/single/member-header.php:230
 #. translators: %s: The member name with HTML tags
@@ -30835,12 +30839,12 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:66
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:241
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:67
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:244
 msgid "Photo inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:115
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:117
 msgid "More Photos"
 msgstr ""
 
@@ -30873,19 +30877,19 @@ msgstr ""
 msgid "Enter Album Title"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:85
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:102
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:86
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:103
 #: bp-templates/bp-nouveau/buddypress/video/add-video-thumbnail.php:22
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:71
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1781
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1782
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:72
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1797
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1798
 #: bp-templates/bp-nouveau/includes/video/functions.php:153
 msgid "Change Thumbnail"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:92
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:111
-#: bp-templates/bp-nouveau/buddypress/video/entry.php:78
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:93
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:112
+#: bp-templates/bp-nouveau/buddypress/video/entry.php:79
 msgid "Video inherits activity privacy in comment. You are not allowed to move."
 msgstr ""
 
@@ -31381,12 +31385,12 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:196
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:222
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:198
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:224
 msgid "More Video"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:226
+#: bp-templates/bp-nouveau/buddypress/video/activity-entry.php:228
 msgid "More Videos"
 msgstr ""
 
@@ -31433,24 +31437,24 @@ msgid ""
 "unsubscribed to any subgroups relating to this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:224
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:229
 msgid "No item id"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:260
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:265
 #: bp-templates/bp-nouveau/includes/functions.php:840
 msgid "Sorry, there was no activity found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:299
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1621
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:304
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1626
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:396
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:401
 #: bp-templates/bp-nouveau/includes/document/ajax.php:257
 #: bp-templates/bp-nouveau/includes/document/ajax.php:336
-#: bp-templates/bp-nouveau/includes/document/ajax.php:516
+#: bp-templates/bp-nouveau/includes/document/ajax.php:517
 #: bp-templates/bp-nouveau/includes/media/ajax.php:860
 #: bp-templates/bp-nouveau/includes/media/ajax.php:939
 #: bp-templates/bp-nouveau/includes/media/ajax.php:982
@@ -31463,102 +31467,102 @@ msgstr ""
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:673
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:678
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:727
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:732
 msgid "The comments are closed for the activity. The activity cannot be edited."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:767
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:790
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:772
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:795
 #. translators: 1: string or media and medias. 2: group text.
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:768
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:773
 msgid "media"
 msgid_plural "medias"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:769
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:792
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:774
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:797
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:791
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:796
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:853
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:858
 msgid "Please set a schedule date between next three months."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:885
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:890
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:898
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:903
 msgid "You don't have access to schedule the activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:944
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:949
 msgid "You don't have permission to schedule activity in particular group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:985
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:990
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1019
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1024
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1019
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1024
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1150
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1155
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1199
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1204
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1298
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1303
 msgid "Your pinned post has been removed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1302
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1307
 msgid "Your are not allowed to pinned or unpinned the post"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1332
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1337
 msgid ""
 "There was a problem marking this operation. Close comments setting is "
 "disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1419
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1527
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1424
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1532
 msgid "Activity id cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1427
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1432
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1461
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1487
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1466
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1492
 msgid "No more items to load."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1667
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1672
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 
@@ -31616,32 +31620,32 @@ msgid "Loading..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:250
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1966
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1982
 msgid "Pin to Feed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:251
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1976
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1992
 msgid "Unpin from Feed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:252
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1966
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1982
 msgid "Pin to Group"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:253
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1976
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1992
 msgid "Unpin from Group"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:256
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1881
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1897
 msgid "Turn off commenting"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:257
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1898
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1914
 msgid "Turn on commenting"
 msgstr ""
 
@@ -31650,12 +31654,12 @@ msgid "There was a problem posting your comment."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:260
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2108
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2124
 msgid "Turn off notifications"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:261
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2112
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2128
 msgid "Turn on notifications"
 msgstr ""
 
@@ -31706,7 +31710,7 @@ msgid "Edit Folder Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1429
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2461
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2493
 msgid "(edited)"
 msgstr ""
 
@@ -31716,30 +31720,30 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1541
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1589
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1594
-#: bp-templates/bp-nouveau/includes/document/ajax.php:475
-#: bp-templates/bp-nouveau/includes/document/ajax.php:481
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1348
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1354
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1340
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1346
+#: bp-templates/bp-nouveau/includes/document/ajax.php:476
+#: bp-templates/bp-nouveau/includes/document/ajax.php:482
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1349
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1355
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1341
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1347
 msgid "Add a description"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1492
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1545
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1598
-#: bp-templates/bp-nouveau/includes/document/ajax.php:485
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1358
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1350
+#: bp-templates/bp-nouveau/includes/document/ajax.php:486
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1359
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1351
 msgid "Done Editing"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2284
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2288
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2316
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2320
 msgid "Edit Comment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2515
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:2547
 #. translators: 1: activity permalink, 2: activity recorded date, 3: activity
 #. timestamp, 4: activity timestamp, 5: activity human time since
 msgid ""
@@ -31867,109 +31871,109 @@ msgstr ""
 msgid "You do not have permission to delete this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:464
+#: bp-templates/bp-nouveau/includes/document/ajax.php:465
 msgid "uploaded a document"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:529
+#: bp-templates/bp-nouveau/includes/document/ajax.php:530
 #: bp-templates/bp-nouveau/includes/media/ajax.php:957
 #: bp-templates/bp-nouveau/includes/video/ajax.php:300
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1042
 msgid "Please provide attachment id to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:577
+#: bp-templates/bp-nouveau/includes/document/ajax.php:578
 msgid "Please upload a document before saving."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:586
+#: bp-templates/bp-nouveau/includes/document/ajax.php:587
 msgid "Please login to upload a document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:657
-#: bp-templates/bp-nouveau/includes/document/ajax.php:779
+#: bp-templates/bp-nouveau/includes/document/ajax.php:658
+#: bp-templates/bp-nouveau/includes/document/ajax.php:780
 msgid "Please login to create a folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:664
-#: bp-templates/bp-nouveau/includes/document/ajax.php:774
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1141
+#: bp-templates/bp-nouveau/includes/document/ajax.php:665
+#: bp-templates/bp-nouveau/includes/document/ajax.php:775
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1142
 msgid "Please enter title of folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:670
-#: bp-templates/bp-nouveau/includes/document/ajax.php:784
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1077
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1150
+#: bp-templates/bp-nouveau/includes/document/ajax.php:671
+#: bp-templates/bp-nouveau/includes/document/ajax.php:785
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1078
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1151
 msgid "Invalid folder name"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:715
-#: bp-templates/bp-nouveau/includes/document/ajax.php:818
+#: bp-templates/bp-nouveau/includes/document/ajax.php:716
+#: bp-templates/bp-nouveau/includes/document/ajax.php:819
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:802
+#: bp-templates/bp-nouveau/includes/document/ajax.php:803
 msgid "You don't have permission to create folder inside this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:889
-#: bp-templates/bp-nouveau/includes/document/ajax.php:897
+#: bp-templates/bp-nouveau/includes/document/ajax.php:890
+#: bp-templates/bp-nouveau/includes/document/ajax.php:898
 msgid "You don't have permission to move this document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:920
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1265
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1423
+#: bp-templates/bp-nouveau/includes/document/ajax.php:921
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1266
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1424
 msgid "Sort By:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1027
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1028
 msgid "You don't have a permission to rename the document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1084
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1085
 msgid "You don't have permission to rename folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1163
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1164
 msgid "You don't have permission to rename this folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1183
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1184
 msgid "There was a problem when trying to rename the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1370
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1378
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1371
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1379
 msgid "You don't have permission to move this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1391
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1392
 msgid "Couldn’t move item. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1403
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1404
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1506
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1507
 msgid " Documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1537
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1538
 msgid "Please login to edit a privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1558
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1559
 msgid "You don't have permission to update this folder privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1566
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1567
 msgid "You don't have permission to update this document privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1573
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1574
 #: bp-templates/bp-nouveau/includes/media/ajax.php:717
 #: bp-templates/bp-nouveau/includes/video/ajax.php:788
 msgid "Invalid privacy status."
@@ -32947,38 +32951,38 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:771
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:826
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:368
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:775
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:830
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:372
 msgid "Accept"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:798
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:853
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:802
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:857
 msgid "Reject"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:887
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:891
 msgid "Remove Ban"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:906
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:910
 msgid "Kick &amp; Ban"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:935
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:939
 msgid "Promote to %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:964
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:968
 msgid "Remove from group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1540
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1544
 msgid "Groups default front page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1558
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1562
 msgid "widgets (content blocks)"
 msgstr ""
 
@@ -33057,16 +33061,16 @@ msgstr ""
 msgid "There was an error in updating a description. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1337
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1338
 msgid "uploaded an image"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1399
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1400
 msgid " Medias"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1462
-#: bp-templates/bp-nouveau/includes/media/ajax.php:1470
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1463
+#: bp-templates/bp-nouveau/includes/media/ajax.php:1471
 msgid "You don't have permission to move this media."
 msgstr ""
 
@@ -33169,7 +33173,7 @@ msgstr ""
 msgid "There was a problem subscribing to "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:394
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:398
 msgid "Ignore"
 msgstr ""
 
@@ -33490,16 +33494,16 @@ msgstr ""
 msgid "Please provide video id to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1329
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1330
 msgid "uploaded an video"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1405
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1406
 msgid " Videos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1464
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1472
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1465
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1473
 msgid "You don't have permission to move this video."
 msgstr ""
 
