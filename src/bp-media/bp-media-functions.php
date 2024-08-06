@@ -4099,7 +4099,12 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 
 	// Get activity metas.
 	$activity_metas = bb_activity_get_metadata( $activity->id );
-	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+	$media_ids      = '';
+	if ( ! empty( $activity_metas['bp_media_ids'][0] ) ) {
+		$media_ids = $activity_metas['bp_media_ids'][0];
+	} elseif ( ! empty( $activity_metas['bp_media_id'][0] ) ) {
+		$media_ids = $activity_metas['bp_media_id'][0];
+	}
 
 	if ( empty( $media_ids ) ) {
 		return false;
