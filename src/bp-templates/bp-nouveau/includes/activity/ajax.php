@@ -144,13 +144,16 @@ add_action(
  * @return string JSON reply
  */
 function bp_nouveau_ajax_mark_activity_favorite() {
+
+	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' );
+
 	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
+		wp_send_json_error( $error_message );
 	}
 
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error();
+		wp_send_json_error( $error_message );
 	}
 
 	$item_id   = sanitize_text_field( $_POST['item_id'] );
@@ -211,13 +214,15 @@ function bp_nouveau_ajax_mark_activity_favorite() {
  */
 function bp_nouveau_ajax_unmark_activity_favorite() {
 
+	$error_message = esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' );
+
 	if ( ! bp_is_post_request() ) {
-		wp_send_json_error();
+		wp_send_json_error( $error_message );
 	}
 
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error();
+		wp_send_json_error( $error_message );
 	}
 
 	if ( empty( $_POST['item_id'] ) ) {
@@ -929,7 +934,7 @@ function bp_nouveau_ajax_post_update() {
 
 			if (
 				$is_scheduled &&
-				( 
+				(
 					! function_exists( 'bb_can_user_schedule_activity' ) ||
 					! bb_can_user_schedule_activity(
 						array(
