@@ -423,20 +423,22 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $activity_id;
 
-		if ( $this->background_disabled ) {
-			$this->unhide_related_content( $activity_id, $hide_sitewide, $force_all, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $activity_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $activity_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->unhide_related_content( $activity_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $activity_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $activity_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -481,7 +483,9 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 			(
 				empty( $args['page'] ) ||
 				( ! empty( $args['page'] ) && 1 === $args['page'] )
-			)
+			) &&
+			! empty( $args['action'] ) &&
+			in_array( $args['action'], array( 'hide', 'unhide' ), true )
 		) {
 			$child_comments = self::fetch_all_child_activity( $activity_id );
 			$document_ids   = array();
@@ -528,7 +532,12 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 			$args['disable_background'] = true;
 
-			$this->loop_hide_related_content( $related_contents, $activity_id, $hide_sitewide, $args );
+			if ( 'hide' === $args['action'] ) {
+				$this->loop_hide_related_content( $related_contents, $activity_id, $hide_sitewide, $args );
+			} elseif ( 'unhide' === $args['action'] ) {
+				$this->loop_unhide_related_content( $related_contents, $activity_id, $hide_sitewide, 0, $args );
+			}
+
 			unset( $related_contents );
 			$related_contents = array();
 		}

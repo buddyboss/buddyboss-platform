@@ -374,20 +374,22 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $document_id;
 
-		if ( $this->background_disabled ) {
-			$this->unhide_related_content( $document_id, $hide_sitewide, $force_all, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $document_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $document_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->unhide_related_content( $document_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $document_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $document_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
