@@ -501,7 +501,7 @@ abstract class BP_Suspend_Abstract {
 
 			unset( $related_contents );
 
-			if ( empty( $args['disable_background'] ) ) {
+			if ( empty( $args['disable_background'] ) || ! empty( $args['next_page'] ) ) {
 				if ( $this->background_disabled ) {
 					$args['page'] = ++ $page;
 					$this->hide_related_content( $item_id, $hide_sitewide, $args );
@@ -585,7 +585,7 @@ abstract class BP_Suspend_Abstract {
 
 			unset( $related_contents );
 
-			if ( empty( $args['disable_background'] ) ) {
+			if ( empty( $args['disable_background'] ) || ! empty( $args['next_page'] ) ) {
 				if ( $this->background_disabled ) {
 					$args['page'] = ++ $page;
 					$this->unhide_related_content( $item_id, $hide_sitewide, $force_all, $args );

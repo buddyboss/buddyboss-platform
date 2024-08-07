@@ -453,47 +453,43 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $activity_id, $args = array() ) {
-		$action       = ! empty( $args['action'] ) ? $args['action'] : '';
-		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
-		$page         = ! empty( $args['page'] ) ? $args['page'] : - 1;
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
+		$blocked_user     = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
+		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
+		$related_contents = array();
 
-		if ( $page > 1 ) {
-			return array();
-		}
+		if ( $page <= 1 ) {
+			$related_contents = array(
+				BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
+			);
 
-		$related_contents = array(
-			BP_Suspend_Activity_Comment::$type => BP_Suspend_Activity_Comment::get_activity_comment_ids( $activity_id ),
-		);
+			if ( bp_is_active( 'document' ) ) {
+				$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
+			}
 
-		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
-		}
+			if ( bp_is_active( 'media' ) ) {
+				$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
+			}
 
-		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
-		}
-
-		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
+			if ( bp_is_active( 'video' ) ) {
+				$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $activity_id, 'bp_activity_get_meta', $action );
+			}
 		}
 
 		if (
 			! empty( $args['parent_id'] ) &&
 			self::$type . '_' . $activity_id === $args['parent_id'] &&
-			(
-				empty( $args['page'] ) ||
-				( ! empty( $args['page'] ) && 1 === $args['page'] )
-			) &&
 			! empty( $args['action'] ) &&
 			in_array( $args['action'], array( 'hide', 'unhide' ), true )
 		) {
-			$child_comments = self::fetch_all_child_activity( $activity_id );
+			$page           = $args['page'] ?? 1;
+			$child_comments = self::fetch_all_child_activity( $activity_id, $page );
 			$document_ids   = array();
 			$media_ids      = array();
 			$video_ids      = array();
 
-			if ( ! empty( $child_comments ) ) {
-				foreach ( $child_comments as $child_comment ) {
+			if ( ! empty( $child_comments['comments'] ) ) {
+				foreach ( $child_comments['comments'] as $child_comment ) {
 					if ( 'activity_comment' === $child_comment->type ) {
 						$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $child_comment->id;
 					} else {
@@ -510,21 +506,32 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 						$video_ids = array_merge( $video_ids, BP_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
 					}
 				}
+
+				$args['next_page'] = $child_comments['has_more'] ?? false;
+
+				if ( ! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) ) {
+					$related_contents[ BP_Suspend_Activity_Comment::$type ] = array_unique( $related_contents[ BP_Suspend_Activity_Comment::$type ] );
+				}
+
+				if ( ! empty( $related_contents[ self::$type ] ) ) {
+					$related_contents[ self::$type ] = array_unique( $related_contents[ self::$type ] );
+				}
+
 				unset( $child_comments );
 			}
 
 			if ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
-				$related_contents[ BP_Suspend_Document::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Document::$type ], $document_ids ) );
+				$related_contents[ BP_Suspend_Document::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Document::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $document_ids ) : $document_ids ) );
 				unset( $document_ids );
 			}
 
 			if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
-				$related_contents[ BP_Suspend_Media::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Media::$type ], $media_ids ) );
+				$related_contents[ BP_Suspend_Media::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Media::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $media_ids ) : $media_ids ) );
 				unset( $media_ids );
 			}
 
 			if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
-				$related_contents[ BP_Suspend_Video::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Video::$type ], $video_ids ) );
+				$related_contents[ BP_Suspend_Video::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Video::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $video_ids ) : $video_ids ) );
 				unset( $video_ids );
 			}
 
@@ -640,36 +647,52 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Fetch all child activity
 	 *
-	 * @param int $activity_id Activity ID.
-	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $activity_id Activity ID.
+	 * @param int $page        Current page number.
+	 * @param int $per_page    Per page item limit.
 	 *
 	 * @return array
 	 */
-	public static function fetch_all_child_activity( $activity_id ) {
+	public static function fetch_all_child_activity( $activity_id, $page = 1, $per_page = 20 ) {
 		global $wpdb;
 		$bp       = buddypress();
 		$comments = array();
 
 		// Initialize with the root activity_id.
-		$to_process = array( $activity_id );
+		$to_process       = array( $activity_id );
+		$offset           = ( $page - 1 ) * $per_page;
+		$fetched_comments = 0;
+		$total_comments   = 0;
 
-		while ( ! empty( $to_process ) ) {
+		while ( ! empty( $to_process ) && $fetched_comments < $per_page ) {
 			$current_id = array_pop( $to_process );
 
+			// Get the child activities with pagination.
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$results = $wpdb->get_results( $wpdb->prepare( "SELECT id, type FROM {$bp->activity->table_name} WHERE secondary_item_id = %d OR (item_id = %d and type = 'activity_comment')", $current_id, $current_id ) );
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT id, type FROM {$bp->activity->table_name} WHERE (secondary_item_id = %d OR (item_id = %d AND type = 'activity_comment'))", $current_id, $current_id ) );
 
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $row ) {
 					if ( ! in_array( $row->id, wp_list_pluck( $comments, 'id' ), true ) ) {
-						$comments[]   = $row;
+						++$total_comments;
+						if ( $total_comments > $offset && $fetched_comments < $per_page ) {
+							$comments[] = $row;
+							++$fetched_comments;
+						}
 						$to_process[] = $row->id;
 					}
 				}
 			}
 		}
 
-		return $comments;
+		// Determine if there's a next page.
+		$has_more = $total_comments > ( $page * $per_page );
+
+		return array(
+			'comments' => $comments,
+			'has_more' => $has_more,
+		);
 	}
 }
