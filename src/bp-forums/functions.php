@@ -1301,7 +1301,7 @@ function bb_update_groups_discussion_subscriptions_background_process( $subscrip
 /**
  * Function to check if the moderator can delete the topic/reply.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.6.70
  *
  * @param object $obj  Topic or reply data.
  * @param array  $args {
