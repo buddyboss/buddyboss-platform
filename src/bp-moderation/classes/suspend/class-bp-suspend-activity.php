@@ -477,7 +477,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 
 		if (
 			! empty( $args['parent_id'] ) &&
-			'activity_' . $activity_id === $args['parent_id'] &&
+			self::$type . '_' . $activity_id === $args['parent_id'] &&
 			(
 				empty( $args['page'] ) ||
 				( ! empty( $args['page'] ) && 1 === $args['page'] )

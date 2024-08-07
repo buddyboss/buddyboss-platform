@@ -380,6 +380,64 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
 		}
 
+		if (
+			! empty( $args['parent_id'] ) &&
+			self::$type . '_' . $acomment_id === $args['parent_id'] &&
+			(
+				empty( $args['page'] ) ||
+				( ! empty( $args['page'] ) && 1 === $args['page'] )
+			)
+		) {
+			$child_comments = self::fetch_all_child_activity( $acomment_id );
+			$document_ids   = array();
+			$media_ids      = array();
+			$video_ids      = array();
+
+			if ( ! empty( $child_comments ) ) {
+				foreach ( $child_comments as $child_comment ) {
+					if ( 'activity_comment' === $child_comment->type ) {
+						$related_contents[ self::$type ][] = $child_comment->id;
+					} else {
+						$related_contents[ BP_Suspend_Activity::$type ][] = $child_comment->id;
+					}
+
+					if ( bp_is_active( 'document' ) ) {
+						$document_ids = array_merge( $document_ids, BP_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+					if ( bp_is_active( 'media' ) ) {
+						$media_ids = array_merge( $media_ids, BP_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+					if ( bp_is_active( 'video' ) ) {
+						$video_ids = array_merge( $video_ids, BP_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+				}
+				unset( $child_comments );
+			}
+
+			if ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
+				$related_contents[ BP_Suspend_Document::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Document::$type ], $document_ids ) );
+				unset( $document_ids );
+			}
+
+			if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+				$related_contents[ BP_Suspend_Media::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Media::$type ], $media_ids ) );
+				unset( $media_ids );
+			}
+
+			if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
+				$related_contents[ BP_Suspend_Video::$type ] = array_unique( array_merge( $related_contents[ BP_Suspend_Video::$type ], $video_ids ) );
+				unset( $video_ids );
+			}
+
+			$hide_sitewide = $args['hide_sitewide'] ?? 0;
+
+			$args['disable_background'] = true;
+
+			$this->loop_hide_related_content( $related_contents, $acomment_id, $hide_sitewide, $args );
+			unset( $related_contents );
+			$related_contents = array();
+		}
+
 		return $related_contents;
 	}
 
