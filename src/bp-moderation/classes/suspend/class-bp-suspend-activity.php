@@ -483,7 +483,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 				( ! empty( $args['page'] ) && 1 === $args['page'] )
 			)
 		) {
-			$child_comments = $this->fetch_all_child_activity( $activity_id );
+			$child_comments = self::fetch_all_child_activity( $activity_id );
 			$document_ids   = array();
 			$media_ids      = array();
 			$video_ids      = array();
@@ -637,11 +637,30 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	 *
 	 * @return array
 	 */
-	public function fetch_all_child_activity( $activity_id ) {
+	public static function fetch_all_child_activity( $activity_id ) {
 		global $wpdb;
-		$bp = buddypress();
+		$bp       = buddypress();
+		$comments = array();
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		return $wpdb->get_results( $wpdb->prepare( "SELECT id, type FROM {$bp->activity->table_name} WHERE secondary_item_id = %d OR (item_id = %d and type = 'activity_comment')", $activity_id, $activity_id ) );
+		// Initialize with the root activity_id.
+		$to_process = array( $activity_id );
+
+		while ( ! empty( $to_process ) ) {
+			$current_id = array_pop( $to_process );
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT id, type FROM {$bp->activity->table_name} WHERE secondary_item_id = %d OR (item_id = %d and type = 'activity_comment')", $current_id, $current_id ) );
+
+			if ( ! empty( $results ) ) {
+				foreach ( $results as $row ) {
+					if ( ! in_array( $row->id, wp_list_pluck( $comments, 'id' ), true ) ) {
+						$comments[]   = $row;
+						$to_process[] = $row->id;
+					}
+				}
+			}
+		}
+
+		return $comments;
 	}
 }
