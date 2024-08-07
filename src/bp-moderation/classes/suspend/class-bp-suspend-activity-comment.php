@@ -382,7 +382,12 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		if (
 			! empty( $args['parent_id'] ) &&
-			self::$type . '_' . $acomment_id === $args['parent_id'] &&
+			(
+				self::$type . '_' . $acomment_id === $args['parent_id'] ||
+				strpos( $args['parent_id'], BP_Suspend_Document::$type . '_' ) !== 0 ||
+				strpos( $args['parent_id'], BP_Suspend_Media::$type . '_' ) !== 0 ||
+				strpos( $args['parent_id'], BP_Suspend_Video::$type . '_' ) !== 0
+			) &&
 			! empty( $args['action'] ) &&
 			in_array( $args['action'], array( 'hide', 'unhide' ), true )
 		) {
