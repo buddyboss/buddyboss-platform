@@ -45,8 +45,6 @@ function bb_admin_recaptcha_class( $classes ) {
  *                               authenticated.
  */
 function bb_recaptcha_validate_login( $user ) {
-	error_log( 'bb_recaptcha_validate_login 1');
-	error_log( print_r( $_POST, true ) );
 	// Apply only on WordPress login page and bypass recaptcha for rest api.
 	$bb_wp_login = bb_filter_input_string( INPUT_POST, 'log' );
 	if (
