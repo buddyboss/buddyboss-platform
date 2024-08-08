@@ -35,40 +35,42 @@ class BP_Core_Suspend {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function load_on_bp_dependency() {
-		new BP_Suspend_Member();
-		new BP_Suspend_Comment();
+		global $moderation_suspend;
+
+		$moderation_suspend['user']    = new BP_Suspend_Member();
+		$moderation_suspend['comment'] = new BP_Suspend_Comment();
 
 		if ( bp_is_active( 'activity' ) ) {
-			new BP_Suspend_Activity();
-			new BP_Suspend_Activity_Comment();
+			$moderation_suspend['activity']         = new BP_Suspend_Activity();
+			$moderation_suspend['activity_comment'] = new BP_Suspend_Activity_Comment();
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
-			new BP_Suspend_Group();
+			$moderation_suspend['groups'] = new BP_Suspend_Group();
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			new BP_Suspend_Forum();
-			new BP_Suspend_Forum_Topic();
-			new BP_Suspend_Forum_Reply();
+			$moderation_suspend['forum']       = new BP_Suspend_Forum();
+			$moderation_suspend['forum_topic'] = new BP_Suspend_Forum_Topic();
+			$moderation_suspend['forum_reply'] = new BP_Suspend_Forum_Reply();
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			new BP_Suspend_Folder();
-			new BP_Suspend_Document();
+			$moderation_suspend['document_folder'] = new BP_Suspend_Folder();
+			$moderation_suspend['document']        = new BP_Suspend_Document();
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			new BP_Suspend_Album();
-			new BP_Suspend_Media();
+			$moderation_suspend['media_album'] = new BP_Suspend_Album();
+			$moderation_suspend['media']       = new BP_Suspend_Media();
 		}
 
 		if ( bp_is_active( 'video' ) ) {
-			new BP_Suspend_Video();
+			$moderation_suspend['video'] = new BP_Suspend_Video();
 		}
 
 		if ( bp_is_active( 'messages' ) ) {
-			new BP_Suspend_Message();
+			$moderation_suspend['message_thread'] = new BP_Suspend_Message();
 		}
 
 		/**
@@ -77,7 +79,7 @@ class BP_Core_Suspend {
 		 * @since BuddyBoss 2.0.3
 		 */
 		if ( bp_is_active( 'notifications' ) ) {
-			new BP_Suspend_Notification();
+			$moderation_suspend['notification'] = new BP_Suspend_Notification();
 		}
 	}
 
