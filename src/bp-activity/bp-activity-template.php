@@ -1646,7 +1646,7 @@ function bp_activity_user_can_delete( $activity = false ) {
 		}
 
 		// Viewing a single item, and this user is an admin of that item.
-		if ( bp_is_single_item() && bp_is_item_admin() ) {
+		if ( 'groups' !== $activity->component && bp_is_single_item() && bp_is_item_admin() ) {
 			$can_delete = true;
 		}
 	}
@@ -2848,7 +2848,7 @@ function bp_get_activity_css_class() {
 	$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
 
 	if (
-		'0' !== $link_embed ||
+		! empty( $link_embed ) ||
 		! empty( $link_preview_data )
 	) {
 		$class .= ' wp-link-embed';

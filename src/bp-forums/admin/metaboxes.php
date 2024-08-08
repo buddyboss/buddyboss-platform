@@ -51,7 +51,7 @@ function bbp_dashboard_widget_right_now() {
 					'<span class="b b-forums">' . number_format_i18n( $num ) . '</span>'
 				);
 				if ( current_user_can( 'publish_forums' ) ) {
-					$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), admin_url( 'edit.php' ) );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
@@ -71,7 +71,7 @@ function bbp_dashboard_widget_right_now() {
 				);
 
 				if ( current_user_can( 'publish_topics' ) ) {
-					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
@@ -97,7 +97,7 @@ function bbp_dashboard_widget_right_now() {
 								'taxonomy'  => bbp_get_topic_tag_tax_id(),
 								'post_type' => bbp_get_topic_post_type(),
 							),
-							admin_url( null, 'edit-tags.php' )
+							admin_url( 'edit-tags.php' )
 						);
 						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 					}
@@ -120,7 +120,7 @@ function bbp_dashboard_widget_right_now() {
 				);
 
 				if ( current_user_can( 'publish_replies' ) ) {
-					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
@@ -153,7 +153,7 @@ function bbp_dashboard_widget_right_now() {
 				);
 
 				if ( current_user_can( 'edit_users' ) ) {
-					$link = admin_url( null, 'users.php' );
+					$link = admin_url( 'users.php' );
 					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
 				}
 				?>
@@ -174,7 +174,7 @@ function bbp_dashboard_widget_right_now() {
 						'<span class="b b-hidden-topics">' . number_format_i18n( $num ) . '</span>'
 					);
 
-					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
 					}
@@ -199,7 +199,7 @@ function bbp_dashboard_widget_right_now() {
 						'<span class="b b-hidden-replies">' . number_format_i18n( $num ) . '</span>'
 					);
 
-					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( null, 'edit.php' ) );
+					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), admin_url( 'edit.php' ) );
 					if ( '0' !== $num ) {
 						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
 					}
@@ -229,7 +229,7 @@ function bbp_dashboard_widget_right_now() {
 							'taxonomy'  => bbp_get_topic_tag_tax_id(),
 							'post_type' => bbp_get_topic_post_type(),
 						),
-						admin_url( null, 'edit-tags.php' )
+						admin_url( 'edit-tags.php' )
 					);
 
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
