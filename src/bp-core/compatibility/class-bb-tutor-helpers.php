@@ -56,7 +56,7 @@ class BB_Tutor_Plugin_Compatibility {
 	 */
 	public function compatibility_init() {
 		add_action( 'login_form', array( $this, 'bb_remove_tutor_login_recaptcha' ) );
-		add_filter( 'authenticate', array( $this, 'bb_remove_tutor_login_authentication' ), 1 );
+		add_filter( 'authenticate', array( $this, 'bb_remove_tutor_login_authentication' ) );
 	}
 
 	/**
@@ -76,6 +76,8 @@ class BB_Tutor_Plugin_Compatibility {
 
 	/**
 	 * Remove BuddyBoss reCAPTCHA authentication from the Tutor LMS login page.
+	 * When enable 'Authentication → Enable Fraud Protection',
+	 * then need to remove BuddyBoss authentication for tutor login page.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
