@@ -54,7 +54,6 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 	 */
 	public function compatibility_init() {
 		add_action( 'bp_init', array( $this, 'check_current_action' ) );
-		add_action( 'tutor_login_form_middle', array( $this, 'bb_remove_tutor_login_recaptcha' ), 99 );
 	}
 
 	/**
@@ -82,17 +81,6 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 		wp_dequeue_script( 'tutor_zoom_timepicker_js' );
 		wp_deregister_style( 'tutor_zoom_timepicker_css' );
 		wp_dequeue_style( 'tutor_zoom_timepicker_css' );
-	}
-
-	/**
-	 * Remove recaptcha from tutor login form.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function bb_remove_tutor_login_recaptcha() {
-		remove_action( 'login_form', 'bb_recaptcha_login', 99 );
 	}
 
 }
