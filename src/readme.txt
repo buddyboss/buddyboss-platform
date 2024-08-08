@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.71 =
+* Bug: Activity - When viewing a comment with many replies that paginate on scroll then the replies where starting to show duplicates of earlier replies
+
 = 2.6.70 =
 * Bug: Activity - Removed moderator access to be able to delete organizer posts
 * Bug: Activity - When saving a draft post that has an emoji in would show a Wordpress link preview to Wordpress
