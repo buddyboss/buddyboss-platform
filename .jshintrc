@@ -24,7 +24,7 @@
 		"BP_Nouveau": false,
 		"grecaptcha": false,
 		"define": true,
-    	"require": true,
+		"require": true,
 		"module": true
 	}
 }
