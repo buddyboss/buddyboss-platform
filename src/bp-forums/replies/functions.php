@@ -1703,8 +1703,22 @@ function bbp_toggle_reply_handler( $action = '' ) {
 
 	// What is the user doing here?
 	if ( ! current_user_can( 'edit_reply', $reply->ID ) || ( 'bbp_toggle_reply_trash' === $action && ! current_user_can( 'delete_reply', $reply->ID ) ) ) {
-		bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
-		return;
+
+		if ( 'bbp_toggle_reply_trash' === $action && bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_reply_author_id( $reply->ID );
+			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
+			if ( ! $allow_delete ) {
+				bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+				return;
+			}
+		} else {
+			bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+			return;
+		}
 	}
 
 	// What action are we trying to perform?
