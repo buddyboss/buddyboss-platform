@@ -3735,7 +3735,7 @@ function bb_update_to_2_6_51() {
  */
 function bb_update_to_2_6_70() {
 	global $wpdb;
-	$bp_prefix     = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$bp_prefix             = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 	$suspend_table         = $bp_prefix . 'bp_suspend';
 	$suspend_details_table = $bp_prefix . 'bp_suspend_details';
 	$moderation_table      = $bp_prefix . 'bp_moderation';
