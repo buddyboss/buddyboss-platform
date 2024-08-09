@@ -3727,7 +3727,7 @@ function bb_update_to_2_6_51() {
 }
 
 /**
- * Delete all existing groups entries from suspended table added when user suspended.
+ * Delete all existing group entries from the suspended table that were added when a user was suspended.
  *
  * @since BuddyBoss [BBVERSION]
  *
