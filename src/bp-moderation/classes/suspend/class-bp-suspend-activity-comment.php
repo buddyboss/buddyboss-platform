@@ -392,7 +392,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 			in_array( $args['action'], array( 'hide', 'unhide' ), true )
 		) {
 			$page           = $args['page'] ?? 1;
-			$child_comments = self::fetch_all_child_activity( $acomment_id, $page );
+			$child_comments = BP_Suspend_Activity::fetch_all_child_activity( $acomment_id, $page );
 			$document_ids   = array();
 			$media_ids      = array();
 			$video_ids      = array();

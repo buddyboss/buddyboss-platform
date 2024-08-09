@@ -565,7 +565,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			if (
 				! empty( $args['parent_id'] ) &&
 				(
-					self::$type . '_' . $video === $args['parent_id'] ||
+					self::$type . '_' . $video_id === $args['parent_id'] ||
 					strpos( $args['parent_id'], BP_Suspend_Activity::$type . '_' ) !== 0 ||
 					strpos( $args['parent_id'], BP_Suspend_Activity_Comment::$type . '_' ) !== 0
 				) &&
