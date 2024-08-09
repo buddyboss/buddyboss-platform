@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.1
 Requires PHP: 5.6.20
-Stable tag: 2.6.70
+Stable tag: 2.6.71
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.71 =
+* Bug: Activity - When viewing a comment with many replies that paginate on scroll then the replies where starting to show duplicates of earlier replies
 
 = 2.6.70 =
 * Bug: Activity - Removed moderator access to be able to delete organizer posts
