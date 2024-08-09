@@ -22,6 +22,9 @@
 		"jQuery": false,
 		"wp": false,
 		"BP_Nouveau": false,
-		"grecaptcha": false
+		"grecaptcha": false,
+		"define": true,
+    	"require": true,
+		"module": true
 	}
 }
