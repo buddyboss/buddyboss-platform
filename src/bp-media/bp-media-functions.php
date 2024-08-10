@@ -589,11 +589,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			// Update media if existing
+			// Update media if existing.
 			if ( ! empty( $media['media_id'] ) ) {
 				$bp_media = new BP_Media( $media['media_id'] );
 
-				if ( ! empty( $bp_media->id ) ) {
+				if ( ! empty( $bp_media->id ) && bp_loggedin_user_id() === $bp_media->user_id ) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_media->activity_id );
@@ -618,6 +618,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 					);
 				}
 			} else {
+
+				// Check if a media is already saved.
+				if ( get_post_meta( $media['id'], 'bp_media_id', true ) ) {
+					continue;
+				}
 
 				$media_id = bp_media_add(
 					array(
