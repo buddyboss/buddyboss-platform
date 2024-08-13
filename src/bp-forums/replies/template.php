@@ -154,7 +154,7 @@ function bbp_has_replies( $args = '' ) {
 		's'                        => $default_reply_search,      // Maybe search
 		'moderation_query'         => false,
 		'update_post_family_cache' => true,
-		
+
 	);
 
 	// What are the default allowed statuses (based on user caps)
@@ -2251,8 +2251,22 @@ function bbp_get_reply_trash_link( $args = '' ) {
 	$actions = array();
 	$reply   = bbp_get_reply( bbp_get_reply_id( (int) $r['id'] ) );
 
-	if ( empty( $reply ) || ! current_user_can( 'delete_reply', $reply->ID ) ) {
+	if ( empty( $reply ) ) {
 		return;
+	} elseif ( ! current_user_can( 'delete_reply', $reply->ID ) ) {
+
+		// Is groups component active.
+		if ( bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_reply_author_id( $reply->ID );
+			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
+			if ( ! $allow_delete ) {
+				return;
+			}
+		} else {
+			return;
+		}
 	}
 
 	if ( bbp_is_reply_trash( $reply->ID ) ) {
