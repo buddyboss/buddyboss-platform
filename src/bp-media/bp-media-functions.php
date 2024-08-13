@@ -575,6 +575,7 @@ function bp_media_add( $args = '' ) {
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
 	$media_ids = array();
+	$media_id  = 0;
 
 	$privacy = in_array( $privacy, array_keys( bp_media_get_visibility_levels() ) ) ? $privacy : 'public';
 
@@ -589,11 +590,17 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			// Update media if existing
+			// Update media if existing.
 			if ( ! empty( $media['media_id'] ) ) {
 				$bp_media = new BP_Media( $media['media_id'] );
 
-				if ( ! empty( $bp_media->id ) ) {
+				if (
+					! empty( $bp_media->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_media->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_media->activity_id );
@@ -618,6 +625,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 					);
 				}
 			} else {
+
+				// Check if a media is already saved.
+				if ( get_post_meta( $media['id'], 'bp_media_id', true ) ) {
+					continue;
+				}
 
 				$media_id = bp_media_add(
 					array(
