@@ -697,6 +697,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 	global $bp_video_upload_count, $bp_video_upload_activity_content;
 	$video_ids = array();
 	$video_id  = 0;
+
 	$privacy = in_array( $privacy, array_keys( bp_video_get_visibility_levels() ), true ) ? $privacy : 'public';
 
 	if ( ! empty( $videos ) && is_array( $videos ) ) {
@@ -714,7 +715,13 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 			if ( ! empty( $video['video_id'] ) ) {
 				$bp_video = new BP_Video( $video['video_id'] );
 
-				if ( ! empty( $bp_video->id ) && bp_loggedin_user_id() === $bp_video->user_id ) {
+				if (
+					! empty( $bp_video->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_video->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_video->activity_id );

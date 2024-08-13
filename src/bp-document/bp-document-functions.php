@@ -611,7 +611,13 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 
 				$bp_document = new BP_Document( $document['document_id'] );
 
-				if ( ! empty( $bp_document->id ) && bp_loggedin_user_id() === $bp_document->user_id ) {
+				if (
+					! empty( $bp_document->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_document->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_document->activity_id );
