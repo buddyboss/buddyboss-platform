@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.72 =
+* Bug: Coding Standards - Security issue located when users are uploading documents, we have updated our code to solve this issue
+
 = 2.6.71 =
 * Bug: Activity - When viewing a comment with many replies that paginate on scroll then the replies where starting to show duplicates of earlier replies
 
