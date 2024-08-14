@@ -627,6 +627,15 @@ function bp_nouveau_ajax_document_document_save() {
 		ob_end_clean();
 	}
 
+	// Check if the document is empty return error.
+	if ( empty( $document ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem when trying to save the document.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	wp_send_json_success( array( 'document' => $document ) );
 }
 
