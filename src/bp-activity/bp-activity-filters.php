@@ -2836,13 +2836,25 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	// Get the main activity.
 	$main_activity = new BP_Activity_Activity( $comment->item_id );
 
-	// Disallow replies if threading disabled.
+	// Disallow replies if threading disabled or depth condition is matched.
 	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
-		if ( empty( get_option( 'thread_comments' ) ) ) {
+		if (
+			empty( get_option( 'thread_comments' ) ) ||
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= get_option( 'thread_comments_depth' )
+			)
+		) {
 			$can_comment = false;
 		}
 	} else {
-		if ( false === bb_is_activity_comment_threading_enabled() ) {
+		if (
+			false === bb_is_activity_comment_threading_enabled() ||
+			(
+				isset( $comment->depth ) &&
+				$comment->depth >= bb_get_activity_comment_threading_depth()
+			)
+		) {
 			$can_comment = false;
 		}
 	}
