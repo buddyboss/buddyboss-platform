@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.5.3
+Tested up to: 6.6.1
 Requires PHP: 5.6.20
-Stable tag: 2.6.21
+Stable tag: 2.6.71
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,74 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.71 =
+* Bug: Activity - When viewing a comment with many replies that paginate on scroll then the replies where starting to show duplicates of earlier replies
+
+= 2.6.70 =
+* Bug: Activity - Removed moderator access to be able to delete organizer posts
+* Bug: Activity - When saving a draft post that has an emoji in would show a Wordpress link preview to Wordpress
+* Bug: Core - GIPHY key logic updated to check valid keys monthly and invalid keys weekly
+* Bug: Core - Image and videos would not showing post comments if redirecting to them from clicking a notification
+* Bug: Core - Pressing on the reactions menu in mobile view would trigger the app browser menu
+* Bug: Core - The .wp-link-embed class value was showing when adding a user to a group in the backend settings
+* Bug: Core - The cursor stopped showing in the text form after publishing or editing a post when using Safari browser
+* Bug: Core - The Move photo modal is now showing up after clicking the move option from the very first uploaded photo in the photos tab
+* Bug: Core - Turn off the notification icon on a single post page with the attached media file was not aligning correctly
+* Bug: Core - When entering the Confirm Email on the signup form, case sensitivity detected between emails would create an error
+* Bug: Core - “Right now in forums“ wp-admin dashboard widget was not showing correct numbers for Forum discussions
+* Bug: GIF picker was being cut off in mobile view for activity feed pages
+* Bug: LearnDash - The New Course Activity update that contained a multiple list block with an indent, no longer breaks the UI in the newsfeed
+
+= 2.6.60 =
+* Enhancement: Styling - We have updated to show a modal instead of dropdown for ellipsis in responsive view across the network
+* Bug: Activity - Multilevel activity replies graph is now displayed for betting viewing in the mobile view
+* Bug: Activity - The large space above a Gif post has now been reduced for better post styling
+* Bug: Core - Using reactions from a ‘View as’ account was showing an undefined error
+* Bug: MemberPress - The moderation content is no longer showing in the MemberPress single/archive course page
+* Bug: Profiles - The conditional profile fields were no longer being cleared when submitting the registration form while the entered data on the profile fields was invalid
+* Bug: Styling - Link preview images were showing too large in some cases
+* Bug: Styling - Removed the extra spacing after Group Visibility from the Group cards
+
+= 2.6.51 =
+* Bug: Core - Count was not loading correctly on Members page on the initial page load due to the performance tab page load option set to 2
+
+= 2.6.50 =
+* Enhancement: Members - Updated the member directory loading & filtering filtering logic to provide a much faster loading experience
+* Bug: Activity - GIF on multi level comment could not be posted without text
+* Bug: Activity - The Pin to feed option for published blog posts was not working correctly
+* Bug: Core - The Send button in the messaging screen is now showing when using a default WP Theme
+* Bug: Groups - The request option found on the group’s manage tab was not loading when the page request from Performance settings was set to 1
+* Bug: Messages - Messages were incorrectly sent to new registered users after account setup
+* Bug: Moderation - The Blocked/Reported member is no longer getting automatically suspended without the auto-suspend being configured
+* Bug: Profiles - Paragraph text profile field was not centering the text correctly
+
+= 2.6.41 =
+* Bug: Core - Security Issue for the Forum component updated
+
+= 2.6.40 =
+* Bug: Activity - When creating a group post via the news feed page, the user was unable to create another post to the same group as the last post
+* Bug: Core - Fatal error occurred when GD and Imagick libraries were disabled from the servers
+* Bug: Core - Logs from the background process when migrating reactions were showing on the debug log even without turning on DEBUG in the wp-config file
+* Bug: Core - Profile details fields have now been given a maximum of 32 character validation limit
+* Bug: Email Invites - Users can now send multiple invites multiple times to a single email address
+* Bug: Groups - Group header title would change to show the first subgroup title even it was not selected
+* Bug: Integration - AffiliateWP was encountering a critical error when activating BuddyBoss
+* Bug: Messages - Updated the text in messages to show Shift+Return to add new line
+* Bug: Styling - The emoji/gif picker was cropped in mobile view and was not displaying properly on the view more comments modal
+
+= 2.6.30 =
+* Enhancement: Core - We have added a new namespace (BuddyBossPlatform) in the composer library (vendor folder) so if existing plugins use the same composer library, it will work fine with our new namespace
+* Enhancement: Platform - We have added a new Platform plugin menu option called upgrade, where you can now more easily access and track, Platform, Server and Integrations knowledge
+* Bug: Activity - User timeline URL was redirected users to the main activity feed once WPML plugin was activated
+* Bug: Activity - When setting the page request from performance to option 1, the posts on the user timeline were being duplicated
+* Bug: Core - The Favicon was not displaying on the Messages page
+* Bug: Core - When using Windows inbuilt emoji’s in Edge or Chrome browser was causing the emoji to duplicate
+* Bug: Email - Mention email was not showing correct content which meant the View post button then also redirected to the wrong location
+* Bug: Email - Play icon on videos within a transactional email notification was broken
+* Bug: Forums - The GIF picker and preview in the Forum Discussion and replies are now showing properly on mobile responsive view
+* Bug: Platform - When the Media Uploading component was not enabled then the 3 dots (ellipses) drop-down menu on activity posts was not clickable
+* Bug: Styling - The mobile view display of multiple images uploaded on the activity feed was not displaying correctly
 
 = 2.6.21 =
 * Bug: Performance - When page load is set to 1 this caused the members page in groups to stop loading

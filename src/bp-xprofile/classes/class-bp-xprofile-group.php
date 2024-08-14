@@ -222,6 +222,18 @@ class BP_XProfile_Group {
 			return false;
 		}
 
+		if ( ! empty( $this->fields ) ) {
+			$cache_key       = 'bp_xprofile_delete_for_group_' . $this->id;
+			$group_field_ids = wp_cache_get( $cache_key, 'bp_xprofile' );
+
+			if ( false === $group_field_ids ) {
+				$group_field_ids = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $this->id ) );
+				wp_cache_set( $cache_key, $group_field_ids, 'bp_xprofile' );
+			}
+
+			$this->fields = $group_field_ids;
+		}
+
 		// Remove the group's fields.
 		if ( BP_XProfile_Field::delete_for_group( $this->id ) ) {
 
@@ -229,6 +241,7 @@ class BP_XProfile_Group {
 			if ( ! empty( $this->fields ) ) {
 				for ( $i = 0, $count = count( $this->fields ); $i < $count; ++$i ) {
 					BP_XProfile_ProfileData::delete_for_field( $this->fields[ $i ]->id );
+					BB_XProfile_Visibility::delete_for_field( $this->fields[ $i ]->id );
 				}
 			}
 		}

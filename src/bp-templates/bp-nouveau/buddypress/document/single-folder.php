@@ -89,7 +89,8 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											<a href="#" class="media-folder_action__anchor">
 												<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 											</a>
-											<div class="media-folder_action__list">
+											<div class="media-folder_action__list bb_more_dropdown">
+												<?php bp_get_template_part( 'common/more-options-view' ); ?>
 												<ul>
 													<?php
 													if ( $can_edit_btn ) {
@@ -113,6 +114,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 													?>
 												</ul>
 											</div>
+											<div class="bb_more_dropdown_overlay"></div>
 										</div>
 									</div> <!-- .media-folder_items -->
 									<?php

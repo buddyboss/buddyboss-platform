@@ -7681,7 +7681,7 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 /**
  * Convert Media to base64 from attachment id.
  *
- * @since buddyboss 2.0.0
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $attachment_id Attachment id.
  * @param string $size          Image size.
@@ -9775,4 +9775,108 @@ function bb_mention_add_user_dynamic_link( $content ) {
  */
 function bb_pro_schedule_posts_version() {
 	return '2.5.20';
+}
+
+/**
+ * Function for writing logs to debug.log
+ *
+ * @param [mixed] $log The log entry that needs to be written into the debug.log.
+ * @param [boolean] $always_print Optional. True then always print the log. Default false.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @return void
+ */
+function bb_error_log( $log = '', $always_print = false ) {
+	if (
+		(
+			defined( 'BB_DEBUG_LOG' ) &&
+			true === BB_DEBUG_LOG
+		) ||
+		true === $always_print
+	) {
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} else {
+			error_log( $log );
+		}
+	}
+}
+
+/**
+ * Function to check if GD or Imagick library is enabled.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @return bool
+ */
+function bb_is_gd_or_imagick_library_enabled() {
+	static $is_enabled = '';
+
+	if ( '' === $is_enabled ) {
+
+		// Check if editor loaded successfully.
+		if ( function_exists( '_wp_image_editor_choose' ) ) {
+			$lib_loaded = _wp_image_editor_choose();
+			if (
+				! empty( $lib_loaded  ) &&
+				! is_wp_error( $lib_loaded  ) &&
+				(
+					'WP_Image_Editor_GD' === $lib_loaded ||
+					'WP_Image_Editor_Imagick' === $lib_loaded
+				)
+			) {
+				$is_enabled = true;
+			} else {
+				$is_enabled = false;
+			}
+		} else {
+			$is_enabled = extension_loaded( 'gd' ) || extension_loaded( 'imagick' );
+		}
+	}
+
+	/**
+	 * Filters the enabled/disabled value for image library.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 *
+	 * @param bool $is_enabled True if enabled else false.
+	 */
+	return apply_filters( 'bb_is_gd_or_imagick_library_enabled', (bool) $is_enabled );
+}
+
+
+/**
+ * Remove deleted user's last_activity entries from activity table.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @return void
+ */
+function bb_remove_deleted_user_last_activities() {
+	global $wpdb;
+
+	// Get the BuddyPress table prefix if available, otherwise use the base prefix.
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_activity' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
+
+	if ( $table_exists ) {
+		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE u.ID IS NULL AND a.component = 'members' AND a.type = 'last_activity'";
+		$wpdb->query( $sql ); // phpcs:ignore
+
+		// Also remove duplicates last_activity per user if any.
+		$duplicate_query = "DELETE a1 FROM {$bp_prefix}bp_activity a1 INNER JOIN {$bp_prefix}bp_activity a2 ON a1.user_id = a2.user_id AND a1.component = 'members' AND a1.type = 'last_activity' AND a1.id < a2.id AND a1.type = a2.type AND a1.component = a2.component";
+		$wpdb->query( $duplicate_query ); // phpcs:ignore
+
+		// Remove user meta entries for deleted users.
+		$delete_query = "DELETE um FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id = u.ID WHERE um.meta_key = 'last_activity' AND u.ID IS NULL;";
+		$wpdb->query( $delete_query ); // phpcs:ignore
+
+		// Remove duplicate last_activity on user meta.
+		$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
+		$wpdb->query( $delete_query ); // phpcs:ignore
+	}
 }
