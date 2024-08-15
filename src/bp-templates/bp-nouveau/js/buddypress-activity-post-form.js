@@ -1574,6 +1574,9 @@ window.bp = window.bp || {};
 				// selected_item.find( '.bp-activity-object__radio' ).prop('checked', false);
 				// selected_item.removeClass( 'selected' );
 
+				// Loose post form textarea focus for Safari.
+				$( 'input' ).focus().blur();
+
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
 
@@ -3142,6 +3145,10 @@ window.bp = window.bp || {};
 
 				// parse html now to get the url.
 				urlText = doc.body.innerHTML;
+
+				if ( urlText.indexOf( '<img' ) >= 0 ) {
+					urlText = urlText.replace( /<img .*?>/g, '' );
+				}
 
 				if ( urlText.indexOf( 'http://' ) >= 0 ) {
 					urlString = this.getURL( 'http://', urlText );
@@ -5800,6 +5807,8 @@ window.bp = window.bp || {};
 							}
 						}
 
+						// Loose post form textarea focus for Safari.
+						$( 'input' ).focus().blur();
 					}
 				).fail(
 					function ( response ) {

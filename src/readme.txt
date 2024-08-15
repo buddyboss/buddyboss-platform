@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.5.5
+Tested up to: 6.6.1
 Requires PHP: 5.6.20
-Stable tag: 2.6.51
+Stable tag: 2.6.72
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,37 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.72 =
+* Bug: Coding Standards - Security issue located when users are uploading documents, we have updated our code to solve this issue
+
+= 2.6.71 =
+* Bug: Activity - When viewing a comment with many replies that paginate on scroll then the replies where starting to show duplicates of earlier replies
+
+= 2.6.70 =
+* Bug: Activity - Removed moderator access to be able to delete organizer posts
+* Bug: Activity - When saving a draft post that has an emoji in would show a Wordpress link preview to Wordpress
+* Bug: Core - GIPHY key logic updated to check valid keys monthly and invalid keys weekly
+* Bug: Core - Image and videos would not showing post comments if redirecting to them from clicking a notification
+* Bug: Core - Pressing on the reactions menu in mobile view would trigger the app browser menu
+* Bug: Core - The .wp-link-embed class value was showing when adding a user to a group in the backend settings
+* Bug: Core - The cursor stopped showing in the text form after publishing or editing a post when using Safari browser
+* Bug: Core - The Move photo modal is now showing up after clicking the move option from the very first uploaded photo in the photos tab
+* Bug: Core - Turn off the notification icon on a single post page with the attached media file was not aligning correctly
+* Bug: Core - When entering the Confirm Email on the signup form, case sensitivity detected between emails would create an error
+* Bug: Core - “Right now in forums“ wp-admin dashboard widget was not showing correct numbers for Forum discussions
+* Bug: GIF picker was being cut off in mobile view for activity feed pages
+* Bug: LearnDash - The New Course Activity update that contained a multiple list block with an indent, no longer breaks the UI in the newsfeed
+
+= 2.6.60 =
+* Enhancement: Styling - We have updated to show a modal instead of dropdown for ellipsis in responsive view across the network
+* Bug: Activity - Multilevel activity replies graph is now displayed for betting viewing in the mobile view
+* Bug: Activity - The large space above a Gif post has now been reduced for better post styling
+* Bug: Core - Using reactions from a ‘View as’ account was showing an undefined error
+* Bug: MemberPress - The moderation content is no longer showing in the MemberPress single/archive course page
+* Bug: Profiles - The conditional profile fields were no longer being cleared when submitting the registration form while the entered data on the profile fields was invalid
+* Bug: Styling - Link preview images were showing too large in some cases
+* Bug: Styling - Removed the extra spacing after Group Visibility from the Group cards
 
 = 2.6.51 =
 * Bug: Core - Count was not loading correctly on Members page on the initial page load due to the performance tab page load option set to 2
