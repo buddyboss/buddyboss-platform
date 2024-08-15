@@ -1734,7 +1734,9 @@ window.bp = window.bp || {};
 				// selected_item.removeClass( 'selected' );
 
 				// Loose post form textarea focus for Safari.
-				$( 'input' ).focus().blur();
+				if ( navigator.userAgent.includes( 'Safari' ) && ! navigator.userAgent.includes( 'Chrome' ) ) {
+					$( 'input' ).focus().blur();
+				}
 
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
