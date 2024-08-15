@@ -59,7 +59,7 @@ if ( $bp_is_multisite ) {
 		$bp_sitewide_plugins[] = $key;
 	}
 }
-$bp_plugins   = array_merge( $bp_sitewide_plugins, get_option( 'active_plugins' ) );
+$bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
 // check if BuddyPress is activated.
