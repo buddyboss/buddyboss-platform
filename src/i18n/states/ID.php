@@ -1,0 +1,41 @@
+<?php
+/**
+ * Indonesia Provinces
+ */
+$states['ID'] = array(
+	'AC' => _x( 'Daerah Istimewa Aceh', 'ui', 'buddyboss' ),
+	'SU' => _x( 'Sumatera Utara', 'ui', 'buddyboss' ),
+	'SB' => _x( 'Sumatera Barat', 'ui', 'buddyboss' ),
+	'RI' => _x( 'Riau', 'ui', 'buddyboss' ),
+	'KR' => _x( 'Kepulauan Riau', 'ui', 'buddyboss' ),
+	'JA' => _x( 'Jambi', 'ui', 'buddyboss' ),
+	'SS' => _x( 'Sumatera Selatan', 'ui', 'buddyboss' ),
+	'BB' => _x( 'Bangka Belitung', 'ui', 'buddyboss' ),
+	'BE' => _x( 'Bengkulu', 'ui', 'buddyboss' ),
+	'LA' => _x( 'Lampung', 'ui', 'buddyboss' ),
+	'JK' => _x( 'DKI Jakarta', 'ui', 'buddyboss' ),
+	'JB' => _x( 'Jawa Barat', 'ui', 'buddyboss' ),
+	'BT' => _x( 'Banten', 'ui', 'buddyboss' ),
+	'JT' => _x( 'Jawa Tengah', 'ui', 'buddyboss' ),
+	'JI' => _x( 'Jawa Timur', 'ui', 'buddyboss' ),
+	'YO' => _x( 'Daerah Istimewa Yogyakarta', 'ui', 'buddyboss' ),
+	'BA' => _x( 'Bali', 'ui', 'buddyboss' ),
+	'NB' => _x( 'Nusa Tenggara Barat', 'ui', 'buddyboss' ),
+	'NT' => _x( 'Nusa Tenggara Timur', 'ui', 'buddyboss' ),
+	'KB' => _x( 'Kalimantan Barat', 'ui', 'buddyboss' ),
+	'KT' => _x( 'Kalimantan Tengah', 'ui', 'buddyboss' ),
+	'KI' => _x( 'Kalimantan Timur', 'ui', 'buddyboss' ),
+	'KS' => _x( 'Kalimantan Selatan', 'ui', 'buddyboss' ),
+	'KU' => _x( 'Kalimantan Utara', 'ui', 'buddyboss' ),
+	'SA' => _x( 'Sulawesi Utara', 'ui', 'buddyboss' ),
+	'ST' => _x( 'Sulawesi Tengah', 'ui', 'buddyboss' ),
+	'SG' => _x( 'Sulawesi Tenggara', 'ui', 'buddyboss' ),
+	'SR' => _x( 'Sulawesi Barat', 'ui', 'buddyboss' ),
+	'SN' => _x( 'Sulawesi Selatan', 'ui', 'buddyboss' ),
+	'GO' => _x( 'Gorontalo', 'ui', 'buddyboss' ),
+	'MA' => _x( 'Maluku', 'ui', 'buddyboss' ),
+	'MU' => _x( 'Maluku Utara', 'ui', 'buddyboss' ),
+	'PA' => _x( 'Papua', 'ui', 'buddyboss' ),
+	'PB' => _x( 'Papua Barat', 'ui', 'buddyboss' ),
+);
+

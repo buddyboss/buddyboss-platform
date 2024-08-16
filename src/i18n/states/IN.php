@@ -1,0 +1,43 @@
+<?php
+/**
+ * Indian states
+ */
+$states['IN'] = array(
+	'AP' => _x( 'Andra Pradesh', 'ui', 'buddyboss' ),
+	'AR' => _x( 'Arunachal Pradesh', 'ui', 'buddyboss' ),
+	'AS' => _x( 'Assam', 'ui', 'buddyboss' ),
+	'BR' => _x( 'Bihar', 'ui', 'buddyboss' ),
+	'CT' => _x( 'Chhattisgarh', 'ui', 'buddyboss' ),
+	'GA' => _x( 'Goa', 'ui', 'buddyboss' ),
+	'GJ' => _x( 'Gujarat', 'ui', 'buddyboss' ),
+	'HR' => _x( 'Haryana', 'ui', 'buddyboss' ),
+	'HP' => _x( 'Himachal Pradesh', 'ui', 'buddyboss' ),
+	'JK' => _x( 'Jammu and Kashmir', 'ui', 'buddyboss' ),
+	'JH' => _x( 'Jharkhand', 'ui', 'buddyboss' ),
+	'KA' => _x( 'Karnataka', 'ui', 'buddyboss' ),
+	'KL' => _x( 'Kerala', 'ui', 'buddyboss' ),
+	'MP' => _x( 'Madhya Pradesh', 'ui', 'buddyboss' ),
+	'MH' => _x( 'Maharashtra', 'ui', 'buddyboss' ),
+	'MN' => _x( 'Manipur', 'ui', 'buddyboss' ),
+	'ML' => _x( 'Meghalaya', 'ui', 'buddyboss' ),
+	'MZ' => _x( 'Mizoram', 'ui', 'buddyboss' ),
+	'NL' => _x( 'Nagaland', 'ui', 'buddyboss' ),
+	'OR' => _x( 'Orissa', 'ui', 'buddyboss' ),
+	'PB' => _x( 'Punjab', 'ui', 'buddyboss' ),
+	'RJ' => _x( 'Rajasthan', 'ui', 'buddyboss' ),
+	'SK' => _x( 'Sikkim', 'ui', 'buddyboss' ),
+	'TN' => _x( 'Tamil Nadu', 'ui', 'buddyboss' ),
+	'TS' => _x( 'Telangana', 'ui', 'buddyboss' ),
+	'TR' => _x( 'Tripura', 'ui', 'buddyboss' ),
+	'UK' => _x( 'Uttarakhand', 'ui', 'buddyboss' ),
+	'UP' => _x( 'Uttar Pradesh', 'ui', 'buddyboss' ),
+	'WB' => _x( 'West Bengal', 'ui', 'buddyboss' ),
+	'AN' => _x( 'Andaman and Nicobar Islands', 'ui', 'buddyboss' ),
+	'CH' => _x( 'Chandigarh', 'ui', 'buddyboss' ),
+	'DN' => _x( 'Dadar and Nagar Haveli', 'ui', 'buddyboss' ),
+	'DD' => _x( 'Daman and Diu', 'ui', 'buddyboss' ),
+	'DL' => _x( 'Delhi', 'ui', 'buddyboss' ),
+	'LD' => _x( 'Lakshadeep', 'ui', 'buddyboss' ),
+	'PY' => _x( 'Pondicherry (Puducherry)', 'ui', 'buddyboss' ),
+);
+
