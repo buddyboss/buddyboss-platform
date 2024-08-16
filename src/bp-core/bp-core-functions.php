@@ -1331,11 +1331,15 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					);
 					break;
 				default:
-					$output = $count < 2 ? $right_now_text : sprintf(
-						/* translators: The display seconds count from the older date.. */
-						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
-						$count
-					);
+					if ( $count >= 1 && $count <= 59 ) {
+						$output = $right_now_text;
+					} else {
+						$output = sprintf(
+							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+							$count
+						);
+					}
+					break;
 			}
 
 			// No output, so happened right now.
