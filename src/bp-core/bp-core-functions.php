@@ -1346,9 +1346,9 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	if ($output !== $right_now_text) {
-        $output = sprintf( $ago_text, $output );
-    }
+	if ( $output !== $right_now_text ) {
+		$output = sprintf( $ago_text, $output );
+	}
 
 	/**
 	 * Filters the English-language representation of the time elapsed since a given date.
