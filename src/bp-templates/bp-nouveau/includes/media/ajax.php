@@ -289,6 +289,14 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
+	if ( empty( $media ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	$media_personal_count = 0;
 	$media_group_count    = 0;
 	$media_all_count      = 0;
