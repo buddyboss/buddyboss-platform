@@ -437,9 +437,9 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $comment_id, $args = array() ) {
-
 		$related_contents = array();
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
+		$action           = ! empty( $args['action'] ) ? $args['action'] : '';
 
 		if ( $page > 1 ) {
 			return $related_contents;
