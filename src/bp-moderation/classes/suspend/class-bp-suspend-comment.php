@@ -444,6 +444,79 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		if ( bp_is_active( 'activity' ) ) {
 			$a_comment_id = get_comment_meta( $comment_id, 'bp_activity_comment_id', true );
 			$related_contents[ BP_Suspend_Activity_Comment::$type ] = array( $a_comment_id );
+
+			if (
+				! empty( $a_comment_id ) &&
+				! empty( $args['action'] ) &&
+				in_array( $args['action'], array( 'hide', 'unhide' ), true )
+			) {
+				$activity_comment = new BP_Activity_Activity( $a_comment_id );
+				$parent_activity  = new BP_Activity_Activity( $activity_comment->item_id );
+				$post_type        = '';
+
+				if ( ! empty( $parent_activity->type ) ) {
+					$post_type = str_replace( 'new_blog_', '', $parent_activity->type );
+				}
+
+				$page           = $args['page'] ?? 1;
+				$child_comments = BP_Suspend_Activity::fetch_all_child_activity( $a_comment_id, $page );
+
+				$document_ids = array();
+				$media_ids    = array();
+				$video_ids    = array();
+
+				if ( ! empty( $child_comments['comments'] ) ) {
+					foreach ( $child_comments['comments'] as $child_comment ) {
+						if ( 'activity_comment' === $child_comment->type ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $child_comment->id;
+						} else {
+							$related_contents[ BP_Suspend_Activity::$type ][] = $child_comment->id;
+						}
+
+						if ( ! empty( $post_type ) ) {
+							$blog_comment_id = bp_activity_get_meta( $child_comment->id, "bp_blogs_{$post_type}_comment_id", true );
+							if ( ! empty( $blog_comment_id ) ) {
+								$related_contents[ self::$type ][] = $blog_comment_id;
+							}
+						}
+
+						if ( bp_is_active( 'document' ) ) {
+							$document_ids = array_merge( $document_ids, BP_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+						}
+						if ( bp_is_active( 'media' ) ) {
+							$media_ids = array_merge( $media_ids, BP_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+						}
+						if ( bp_is_active( 'video' ) ) {
+							$video_ids = array_merge( $video_ids, BP_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+						}
+					}
+
+					$args['next_page'] = $child_comments['has_more'] ?? false;
+
+					if ( ! empty( $related_contents[ BP_Suspend_Activity::$type ] ) ) {
+						$related_contents[ BP_Suspend_Activity::$type ] = array_unique( $related_contents[ BP_Suspend_Activity::$type ] );
+					}
+
+					if ( ! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) ) {
+						$related_contents[ BP_Suspend_Activity_Comment::$type ] = array_unique( $related_contents[ BP_Suspend_Activity_Comment::$type ] );
+					}
+
+					unset( $child_comments );
+
+					$hide_sitewide = $args['hide_sitewide'] ?? 0;
+
+					$args['disable_background'] = true;
+
+					if ( 'hide' === $args['action'] ) {
+						$this->loop_hide_related_content( $related_contents, $comment_id, $hide_sitewide, $args );
+					} elseif ( 'unhide' === $args['action'] ) {
+						$this->loop_unhide_related_content( $related_contents, $comment_id, $hide_sitewide, 0, $args );
+					}
+
+					unset( $related_contents );
+					$related_contents = array();
+				}
+			}
 		}
 
 		return $related_contents;
