@@ -4,7 +4,7 @@
  * File contains a script to add prefix to below files.
  *
  * @since   BuddyBoss [BBVERSION]
- * @package BuddyBossPro
+ * @package BuddyBoss
  */
 $files = array(
 	'vendor/composer/autoload_static.php',
