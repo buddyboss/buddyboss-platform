@@ -57,6 +57,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.80 =
+* Enhancement: Activity - When replying to a comment we have added in the users tag to whom the reply is to to start the reply
+* Bug: Activity - When using the news feed that was added through the iframe, the tagging display was not properly displayed
+* Bug: Core - No Fatal error warning while the GD library and Imagick are disabled gets triggered
+* Bug: Core - Saving changes from the Appearance - Customize screen was not working while the Query monitor was enabled
+* Bug: Core - The fatal error has now been resolved when deleting the active_plugins from the Database
+* Bug: Core - The Georgian Unicode character numeric value is now correct, If the value reaches the maximum limit it will trigger an error, while if it's under 32 characters, it will be accepted
+* Bug: Groups - After suspending a group creator then trying to edit the group details with an admin it led to a 404 error page
+* Bug: TutorLMS - TutorLMS login widget is now working while reCAPTCHA is enabled
+
 = 2.6.72 =
 * Bug: Coding Standards - Security issue located when users are uploading documents, we have updated our code to solve this issue
 
