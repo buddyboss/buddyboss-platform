@@ -677,10 +677,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
 
-		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
-
 		// Update friend count.
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bp_is_active( 'friends' ) && $page <= 1 ) {
 			$friend_ids = friends_get_friend_user_ids( $member_id );
 
 			if ( ! empty( $friend_ids ) ) {
@@ -709,7 +707,19 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		// return the loop when the user is blocked/unblocked but not suspended/unsuspended.
+		if (
+			! empty( $args['blocked_user'] ) &&
+			empty( $args['action_suspend'] ) &&
+			! empty( $args['parent_id'] ) &&
+			self::$type . '_' . $member_id === $args['parent_id']
+		) {
+			return $related_contents;
+		}
+
+		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
+
+		if ( bp_is_active( 'groups' ) && $page <= 1 ) {
 			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
 			$min_count = (int) apply_filters( 'bb_update_group_member_count', 50 );
