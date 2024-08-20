@@ -5970,7 +5970,9 @@ window.bp = window.bp || {};
 						}
 
 						// Loose post form textarea focus for Safari.
-						$( 'input' ).focus().blur();
+						if ( navigator.userAgent.includes( 'Safari' ) && ! navigator.userAgent.includes( 'Chrome' ) ) {
+							$( 'input' ).focus().blur();
+						}
 					}
 				).fail(
 					function ( response ) {
