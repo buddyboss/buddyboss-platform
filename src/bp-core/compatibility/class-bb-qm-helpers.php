@@ -62,6 +62,9 @@ class BB_QM_Helpers {
 	 * @return void
 	 */
 	public function bb_hide_querymonitor_dispatchers() {
+		if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
+			return;
+		}
 		ob_start(); ?>
 		<style>
 			#wp-admin-bar-query-monitor,

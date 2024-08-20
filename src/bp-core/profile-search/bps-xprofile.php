@@ -388,7 +388,7 @@ add_filter( 'bp_ps_add_fields', 'bp_ps_learndash_course_setup' );
 function bp_ps_learndash_course_setup( $fields ) {
 
 	// check is LearnDash plugin is activated or not.
-	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
 
 		global $wpdb;
 
@@ -535,7 +535,7 @@ function bp_ps_xprofile_gender_users_search( $f ) {
 function bp_ps_learndash_course_users_search( $f ) {
 
 	// check for learndash plugin is activated or not.
-	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
 
 		$course_id = $f->value;
 		if ( isset( $course_id ) && ! empty( $course_id ) ) {
