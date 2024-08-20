@@ -711,6 +711,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if (
 			! empty( $args['blocked_user'] ) &&
 			empty( $args['action_suspend'] ) &&
+			empty( $args['user_suspended'] ) &&
 			! empty( $args['parent_id'] ) &&
 			self::$type . '_' . $member_id === $args['parent_id']
 		) {
