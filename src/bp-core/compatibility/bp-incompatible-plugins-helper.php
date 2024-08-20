@@ -288,6 +288,13 @@ function bp_helper_plugins_loaded_callback() {
 		remove_action( 'init', 'affwp_do_actions', 9 );
 		add_action( 'init', 'affwp_do_actions', 10 );
 	}
+
+	/**
+	 * Tutor plugin is activated.
+	 */
+	if ( function_exists( 'tutor' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
