@@ -6310,7 +6310,9 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
 	if ( false === $edit_data ) {
 		// Get activity metas.
-		$activity_comment_metas = bb_activity_get_metadata( $activity_comment_id );
+		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
+		$activity_comment_user_id  = bp_get_activity_comment_user_id();
+		$activity_comment_nickname = bp_activity_get_user_mentionname( $activity_comment_user_id );
 
 		$can_edit_privacy                = true;
 		$album_id                        = 0;
@@ -6341,6 +6343,8 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
+			'user_id'          => $activity_comment_user_id,
+			'nickname'         => $activity_comment_nickname,
 		);
 	}
 
