@@ -611,7 +611,13 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 
 				$bp_document = new BP_Document( $document['document_id'] );
 
-				if ( ! empty( $bp_document->id ) ) {
+				if (
+					! empty( $bp_document->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_document->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_document->activity_id );
@@ -646,6 +652,12 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 					}
 				}
 			} else {
+
+				// Check if a document is already saved.
+				if ( get_post_meta( $document['id'], 'bp_document_id', true ) ) {
+					continue;
+				}
+
 				$file      = get_attached_file( $document['id'] );
 				$file_type = wp_check_filetype( $file );
 				$file_name = basename( $file );

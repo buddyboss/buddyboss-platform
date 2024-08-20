@@ -67,6 +67,7 @@ module.exports = function (grunt) {
 						'!**/emojione-edited.js',
 						'!**/emojionearea-edited.js',
 						'!**/node_modules/**/*.js',
+						'!**/jquery.atwho.js',
 						]
 					),
 

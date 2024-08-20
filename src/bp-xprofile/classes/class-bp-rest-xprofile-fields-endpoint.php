@@ -1080,6 +1080,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		// Reset the global before returning the value.
 		$field = $reset_global;
 
+		if ( 'textarea' === $profile_field->type ) {
+			return $value;
+		}
+
 		return wp_specialchars_decode( $value );
 	}
 
@@ -1108,6 +1112,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			if ( 'telephone' === $profile_field->type ) {
 				$value = wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 			}
+		}
+
+		if ( 'textarea' === $profile_field->type ) {
+			return $value;
 		}
 
 		return wp_specialchars_decode( $value );
@@ -1141,7 +1149,11 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		$unserialized_value = maybe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
-			$unserialized_value = (array) wp_specialchars_decode( $unserialized_value, ENT_QUOTES );
+			if ( 'textarea' === $profile_field->type ) {
+				$unserialized_value = (array) $unserialized_value;
+			} else {
+				$unserialized_value = (array) wp_specialchars_decode( $unserialized_value, ENT_QUOTES );
+			}
 		} elseif ( ! empty( $unserialized_value ) && is_array( $unserialized_value ) ) {
 			foreach ( $unserialized_value as $k => $v ) {
 				$unserialized_value[ $k ] = wp_specialchars_decode( $v, ENT_QUOTES );
