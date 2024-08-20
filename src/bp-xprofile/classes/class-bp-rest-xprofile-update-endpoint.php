@@ -161,7 +161,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 									unset( $value[ $key ] );
 								}
 							}
-					
+
 							if ( ! empty( $value ) ) {
 								xprofile_set_field_data( $field_id, $user_id, $value, $field->is_required );
 							}
