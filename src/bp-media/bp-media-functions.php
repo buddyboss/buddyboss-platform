@@ -575,6 +575,7 @@ function bp_media_add( $args = '' ) {
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
 	$media_ids = array();
+	$media_id  = 0;
 
 	$privacy = in_array( $privacy, array_keys( bp_media_get_visibility_levels() ) ) ? $privacy : 'public';
 
@@ -589,11 +590,17 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			// Update media if existing
+			// Update media if existing.
 			if ( ! empty( $media['media_id'] ) ) {
 				$bp_media = new BP_Media( $media['media_id'] );
 
-				if ( ! empty( $bp_media->id ) ) {
+				if (
+					! empty( $bp_media->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_media->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_media->activity_id );
@@ -618,6 +625,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 					);
 				}
 			} else {
+
+				// Check if a media is already saved.
+				if ( get_post_meta( $media['id'], 'bp_media_id', true ) ) {
+					continue;
+				}
 
 				$media_id = bp_media_add(
 					array(
@@ -4033,7 +4045,23 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
 function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 
 	static $cache = array();
-	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
+	$cache_key    = 'bb_check_valid_giphy_api_key';
+	$saved_key    = bp_media_get_gif_api_key();
+	$use_caching  = false;
+
+	if ( empty( $api_key ) && empty( $cache ) ) {
+
+		// Use caching if not user action.
+		$cache       = get_transient( $cache_key );
+		$use_caching = true;
+
+		// Remove old cache if empty key saved.
+		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
+			delete_transient( $cache_key );
+		}
+	}
+
+	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
 	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
 		if ( true === $message ) {
 			return $cache[ $api_key ];
@@ -4048,6 +4076,13 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
 	if ( $output ) {
 		$cache[ $api_key ] = $output;
+		if ( $use_caching ) {
+			$cache_expiry = MONTH_IN_SECONDS;
+			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
+				$cache_expiry = WEEK_IN_SECONDS;
+			}
+			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
+		}
 	}
 	if ( true === $message ) {
 		return $cache[ $api_key ];
@@ -4099,7 +4134,12 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 
 	// Get activity metas.
 	$activity_metas = bb_activity_get_metadata( $activity->id );
-	$media_ids      = ! empty( $activity_metas['bp_media_ids'][0] ) ? $activity_metas['bp_media_ids'][0] : '';
+	$media_ids      = '';
+	if ( ! empty( $activity_metas['bp_media_ids'][0] ) ) {
+		$media_ids = $activity_metas['bp_media_ids'][0];
+	} elseif ( ! empty( $activity_metas['bp_media_id'][0] ) ) {
+		$media_ids = $activity_metas['bp_media_id'][0];
+	}
 
 	if ( empty( $media_ids ) ) {
 		return false;
