@@ -19,7 +19,7 @@ class BB_Tutor_Plugin_Compatibility {
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since BuddyBoss[BBVERSION]
+	 * @since BuddyBoss2.6.80
 	 *
 	 * @var self
 	 */
@@ -35,7 +35,7 @@ class BB_Tutor_Plugin_Compatibility {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.80
 	 *
 	 * @return Controller|null
 	 */
@@ -50,7 +50,7 @@ class BB_Tutor_Plugin_Compatibility {
 	/**
 	 * Register the compatibility hooks for the plugin.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.80
 	 *
 	 * @return void
 	 */
@@ -62,7 +62,7 @@ class BB_Tutor_Plugin_Compatibility {
 	/**
 	 * Remove BuddyBoss reCAPTCHA from the Tutor LMS login page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.80
 	 *
 	 * @return void
 	 */
@@ -79,7 +79,7 @@ class BB_Tutor_Plugin_Compatibility {
 	 * When enable 'Authentication → Enable Fraud Protection',
 	 * then need to remove BuddyBoss authentication for tutor login page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.80
 	 *
 	 * @param WP_User|WP_Error $user WP_User or WP_Error object if a previous
 	 *                               callback failed authentication.
