@@ -499,6 +499,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_51();
 		}
 
+		if ( $raw_db_version < 21161 ) {
+			bb_update_to_2_6_70();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3720,4 +3724,83 @@ function bb_update_to_2_6_51() {
 
 	// Insert the last_activity meta for the users who don't have it.
 	$wpdb->query($insert_query); // phpcs:ignore
+}
+
+/**
+ * Delete all existing group entries from the suspended table that were added when a user was suspended.
+ *
+ * @since BuddyBoss 2.6.80
+ *
+ * @return void
+ */
+function bb_update_to_2_6_70() {
+	global $wpdb;
+	$bp_prefix             = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$suspend_table         = $bp_prefix . 'bp_suspend';
+	$suspend_details_table = $bp_prefix . 'bp_suspend_details';
+	$moderation_table      = $bp_prefix . 'bp_moderation';
+	$moderation_meta_table = $bp_prefix . 'bp_moderation_meta';
+
+	// Check if the 'bp_suspend' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $suspend_table ) );
+	if ( $table_exists ) {
+
+		// Get the IDs of the rows that will be deleted.
+		$ids_to_delete = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$suspend_table} WHERE item_type = %s AND reported = 0",
+				'groups'
+			)
+		);
+
+		if ( ! empty( $ids_to_delete ) ) {
+
+			// Convert IDs array to a comma-separated list for the IN clause.
+			$ids_placeholder = implode( ',', array_fill( 0, count( $ids_to_delete ), '%d' ) );
+
+			$suspend_details_table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $suspend_details_table ) );
+			if ( $suspend_details_table_exists ) {
+
+				// Delete related entries from the suspend details table.
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$suspend_details_table} WHERE suspend_id IN ($ids_placeholder)",
+						$ids_to_delete
+					)
+				);
+			}
+
+			$moderation_table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $moderation_table ) );
+			if ( $moderation_table_exists ) {
+
+				// Delete related entries from the moderation table.
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$moderation_table} WHERE moderation_id IN ($ids_placeholder)",
+						$ids_to_delete
+					)
+				);
+			}
+
+			$moderation_meta_table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $moderation_meta_table ) );
+			if ( $moderation_meta_table_exists ) {
+
+				// Delete related entries from the moderation meta table.
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$moderation_meta_table} WHERE moderation_id IN ($ids_placeholder)",
+						$ids_to_delete
+					)
+				);
+			}
+
+			// Delete the rows from the suspend table.
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$suspend_table} WHERE ID IN ($ids_placeholder)",
+					$ids_to_delete
+				)
+			);
+		}
+	}
 }

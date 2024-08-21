@@ -611,7 +611,13 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 
 				$bp_document = new BP_Document( $document['document_id'] );
 
-				if ( ! empty( $bp_document->id ) ) {
+				if (
+					! empty( $bp_document->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_document->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_document->activity_id );
@@ -646,6 +652,12 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 					}
 				}
 			} else {
+
+				// Check if a document is already saved.
+				if ( get_post_meta( $document['id'], 'bp_document_id', true ) ) {
+					continue;
+				}
+
 				$file      = get_attached_file( $document['id'] );
 				$file_type = wp_check_filetype( $file );
 				$file_name = basename( $file );
@@ -5195,7 +5207,12 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 
 	// Get activity metas.
 	$activity_metas = bb_activity_get_metadata( $activity->id );
-	$document_ids   = ! empty( $activity_metas['bp_document_ids'][0] ) ? $activity_metas['bp_document_ids'][0] : '';
+	$document_ids   = '';
+	if ( ! empty( $activity_metas['bp_document_ids'][0] ) ) {
+		$document_ids = $activity_metas['bp_document_ids'][0];
+	} elseif ( ! empty( $activity_metas['bp_document_id'][0] ) ) {
+		$document_ids = $activity_metas['bp_document_id'][0];
+	}
 
 	if ( empty( $document_ids ) ) {
 		return false;

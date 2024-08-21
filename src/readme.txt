@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.5.5
+Tested up to: 6.6.1
 Requires PHP: 5.6.20
-Stable tag: 2.6.60
+Stable tag: 2.6.80
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,37 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.80 =
+* Enhancement: Activity - When replying to a comment we have added in the users tag to whom the reply is to to start the reply
+* Bug: Activity - When using the news feed that was added through the iframe, the tagging display was not properly displayed
+* Bug: Core - No Fatal error warning while the GD library and Imagick are disabled gets triggered
+* Bug: Core - Saving changes from the Appearance - Customize screen was not working while the Query monitor was enabled
+* Bug: Core - The fatal error has now been resolved when deleting the active_plugins from the Database
+* Bug: Core - The Georgian Unicode character numeric value is now correct, If the value reaches the maximum limit it will trigger an error, while if it's under 32 characters, it will be accepted
+* Bug: Groups - After suspending a group creator then trying to edit the group details with an admin it led to a 404 error page
+* Bug: TutorLMS - TutorLMS login widget is now working while reCAPTCHA is enabled
+
+= 2.6.72 =
+* Bug: Coding Standards - Security issue located when users are uploading documents, we have updated our code to solve this issue
+
+= 2.6.71 =
+* Bug: Activity - When viewing a comment with many replies that paginate on scroll then the replies where starting to show duplicates of earlier replies
+
+= 2.6.70 =
+* Bug: Activity - Removed moderator access to be able to delete organizer posts
+* Bug: Activity - When saving a draft post that has an emoji in would show a Wordpress link preview to Wordpress
+* Bug: Core - GIPHY key logic updated to check valid keys monthly and invalid keys weekly
+* Bug: Core - Image and videos would not showing post comments if redirecting to them from clicking a notification
+* Bug: Core - Pressing on the reactions menu in mobile view would trigger the app browser menu
+* Bug: Core - The .wp-link-embed class value was showing when adding a user to a group in the backend settings
+* Bug: Core - The cursor stopped showing in the text form after publishing or editing a post when using Safari browser
+* Bug: Core - The Move photo modal is now showing up after clicking the move option from the very first uploaded photo in the photos tab
+* Bug: Core - Turn off the notification icon on a single post page with the attached media file was not aligning correctly
+* Bug: Core - When entering the Confirm Email on the signup form, case sensitivity detected between emails would create an error
+* Bug: Core - “Right now in forums“ wp-admin dashboard widget was not showing correct numbers for Forum discussions
+* Bug: GIF picker was being cut off in mobile view for activity feed pages
+* Bug: LearnDash - The New Course Activity update that contained a multiple list block with an indent, no longer breaks the UI in the newsfeed
 
 = 2.6.60 =
 * Enhancement: Styling - We have updated to show a modal instead of dropdown for ellipsis in responsive view across the network

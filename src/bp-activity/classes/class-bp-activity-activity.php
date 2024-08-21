@@ -1790,7 +1790,7 @@ class BP_Activity_Activity {
 							) ",
 							$args['last_comment_id'],
 							$args['last_comment_id'],
-							date_i18n( 'Y-m-d H:i:s', $args['last_comment_timestamp'] )
+							date_i18n( 'Y-m-d H:i:s', strtotime( $args['last_comment_timestamp'] ) )
 						);
 					}
 
