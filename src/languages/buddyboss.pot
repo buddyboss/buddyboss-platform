@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.6.72\n"
+"Project-Id-Version: BuddyBoss Platform 2.6.80\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-08-15 12:50:40+00:00\n"
+"POT-Creation-Date: 2024-08-21 04:19:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -193,7 +193,7 @@ msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:536
 #: bp-activity/classes/class-bp-activity-list-table.php:347
-#: bp-core/admin/templates/upgrade-integrations-screen.php:43
+#: bp-core/admin/templates/upgrade-integrations-screen.php:45
 #: bp-core/bp-core-functions.php:7418
 #: bp-groups/classes/class-bp-groups-list-table.php:370
 #: bp-messages/bp-messages-template.php:1022
@@ -7096,26 +7096,26 @@ msgstr ""
 msgid "Changes:"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:30
+#: bp-core/admin/templates/upgrade-integrations-screen.php:32
 msgid ""
 "Integrate your BuddyBoss site with hundreds of apps and plugins for "
 "limitless possibilities."
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:94
+#: bp-core/admin/templates/upgrade-integrations-screen.php:96
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:82
 msgid "Learn more"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:100
+#: bp-core/admin/templates/upgrade-integrations-screen.php:102
 msgid "No Results Found"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:101
+#: bp-core/admin/templates/upgrade-integrations-screen.php:103
 msgid "Sorry, there was no result found"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:107
+#: bp-core/admin/templates/upgrade-integrations-screen.php:109
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:29
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:96
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:69
@@ -7137,17 +7137,17 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:114
+#: bp-core/admin/templates/upgrade-integrations-screen.php:116
 msgid "Get Platform Pro for <br/>as low as $99"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:115
+#: bp-core/admin/templates/upgrade-integrations-screen.php:117
 msgid ""
 "If you are unsatisfied for any reason for up to 14 days following your "
 "<br/>purchase, contact us for a full refund. No questions asked."
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-integrations-screen.php:121
+#: bp-core/admin/templates/upgrade-integrations-screen.php:123
 #: bp-core/classes/class-bp-admin.php:656
 msgid "Upgrade Now"
 msgstr ""
@@ -12833,11 +12833,11 @@ msgstr ""
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1216
+#: bp-forums/activity.php:1218
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1217
+#: bp-forums/activity.php:1219
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
