@@ -786,6 +786,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -798,6 +800,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -809,6 +813,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -820,6 +826,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -831,6 +839,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -842,6 +852,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -853,6 +865,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -864,6 +878,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -875,6 +891,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 
@@ -886,6 +904,8 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$meta_value[] = $current_process;
 				}
 				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
 			}
 		}
 

@@ -79,12 +79,12 @@ abstract class BP_Suspend_Abstract {
 			'activity_comment',
 		),
 		'document' => array(
-			'document',
 			'document_folder',
+			'document',
 		),
 		'media'    => array(
-			'media',
 			'media_album',
+			'media',
 		),
 		'video'    => array(
 			'video',
