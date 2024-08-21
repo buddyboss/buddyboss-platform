@@ -862,12 +862,21 @@ function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value 
 		return $retval;
 	}
 
-	$value      = strtolower( $value );
+	$value = strtolower( $value );
+
+	if ( class_exists( 'Normalizer' ) ) {
+
+		// Ensures that the combined characters are treated as a single character.
+		$value = Normalizer::normalize( $value, 16 );
+	}
+
 	$field_name = xprofile_get_field( $field_id )->name;
 
 	// Must be shorter than 32 characters.
 	$field_length = (int) apply_filters( 'bb_xprofile_field_character_max_length', 32 );
-	if ( strlen( $value ) > $field_length ) {
+	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
+
+	if ( $value_length > $field_length ) {
 		return sprintf(
 			/* translators: 1. Field Name, 2. character length. */
 			__( '%1$s must be shorter than %2$d characters.', 'buddyboss' ),
@@ -932,12 +941,28 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	// must be shorter then 32 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
-	if ( strlen( $value ) > $nickname_length ) {
+
+	if ( class_exists( 'Normalizer' ) ) {
+
+		// Ensures that the combined characters are treated as a single character.
+		$value = Normalizer::normalize( $value, 16 );
+	}
+
+	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
+	if ( $value_length > $nickname_length ) {
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
+	if ( class_exists( 'Normalizer' ) ) {
+
+		// Ensures that the combined characters are treated as a single character.
+		$value = Normalizer::normalize( $value, 16 );
+	}
+
+	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
+
 	// Minimum of 3 characters.
-	if ( strlen( $value ) < 3 ) {
+	if ( $value_length < 3 ) {
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
 

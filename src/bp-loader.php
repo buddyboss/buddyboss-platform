@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     2.6.72
+ * Version:     2.6.80
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -24,7 +24,7 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '2.6.72' );
+	define( 'BP_PLATFORM_VERSION', '2.6.80' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -59,7 +59,7 @@ if ( $bp_is_multisite ) {
 		$bp_sitewide_plugins[] = $key;
 	}
 }
-$bp_plugins   = array_merge( $bp_sitewide_plugins, get_option( 'active_plugins' ) );
+$bp_plugins   = array_merge( $bp_sitewide_plugins, (array) get_option( 'active_plugins', array() ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
 // check if BuddyPress is activated.
