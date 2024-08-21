@@ -64,6 +64,34 @@ abstract class BP_Suspend_Abstract {
 	);
 
 	/**
+	 * Components and its moderation types.
+	 *
+	 * @var array[] $components
+	 */
+	public static $components = array(
+		'forums'   => array(
+			'forum',
+			'forum_topic',
+			'forum_reply',
+		),
+		'activity' => array(
+			'activity',
+			'activity_comment',
+		),
+		'document' => array(
+			'document',
+			'document_folder',
+		),
+		'media'    => array(
+			'media',
+			'media_album',
+		),
+		'video'    => array(
+			'video',
+		),
+	);
+
+	/**
 	 * BP_Suspend_Abstract constructor.
 	 */
 	public function __construct() {

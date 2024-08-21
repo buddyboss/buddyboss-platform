@@ -334,7 +334,7 @@ class BP_Core_Suspend {
 			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 
 			// Remove suspend record if item is not hidden.
-			self::maybe_delete( $where['item_id'], $where['item_type'] );
+			// self::maybe_delete( $where['item_id'], $where['item_type'] );
 
 			/**
 			 * Hook fire when item unsuspended
@@ -613,5 +613,24 @@ class BP_Core_Suspend {
 			'blog_id',
 			'user_report',
 		);
+	}
+
+	/**
+	 * Fetch suspend ID by item ID and item type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
+	 *
+	 * @return bool
+	 */
+	public static function get_suspend_id( $item_id, $item_type ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+
+		return $result;
 	}
 }

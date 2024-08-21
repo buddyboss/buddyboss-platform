@@ -1246,6 +1246,16 @@ function bp_core_install_suspend() {
 	   KEY suspend_details_id (suspend_id,user_id)
     ) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		suspend_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
+		KEY suspend_id (suspend_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
 	dbDelta( $sql );
 }
 
