@@ -567,8 +567,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$user_action_type  = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
 			$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
 
+			$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+			$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
+			$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+
 			$actions['suspend'] = sprintf(
-				'<a href="javascript:void(0);" class="bp-block-user delete content-author" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+				'<a href="javascript:void(0);" class="bp-block-user delete content-author %s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>',
+				! empty( $meta_value ) ? ' disabled' : '',
 				esc_attr( $user_id ),
 				esc_attr( BP_Moderation_Members::$moderation_type ),
 				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
