@@ -9887,5 +9887,5 @@ function bb_remove_deleted_user_last_activities() {
  * @return string
  */
 function bb_pro_poll_version() {
-	return '2.5.70'; // @todo: update when release.
+	return '2.5.90'; // @todo: update when release.
 }
