@@ -583,13 +583,14 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
 
 			$actions['suspend'] = sprintf(
-				'<a href="javascript:void(0);" class="bp-block-user delete content-author %s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s" data-bp-tooltip-pos="up" data-bp-tooltip="The background process is currently in the queue. Please refresh the page after a short while">%s</a>',
+				'<a href="javascript:void(0);" class="bp-block-user delete content-author %s" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s" data-bp-tooltip-pos="up" %s>%s</a>',
 				! empty( $meta_value ) ? ' disabled' : '',
 				esc_attr( $user_id ),
 				esc_attr( BP_Moderation_Members::$moderation_type ),
 				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
 				esc_attr( $user_action_type ),
 				esc_attr( $user_action_label ),
+				! empty( $meta_value ) ? 'data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '',
 				esc_html( $user_action_label )
 			);
 		}
@@ -636,7 +637,16 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
 
 		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Report', 'buddyboss' ) );
-		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user %s" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s" data-bp-tooltip-pos="up" data-bp-tooltip="The background process is currently in the queue. Please refresh the page after a short while">%s</a>', ( ! empty( $meta_value ) ? ' disabled' : '' ), esc_attr( $item['item_id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
+		$actions['suspend']     = sprintf(
+			'<a href="" class="bp-block-user %s" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s" data-bp-tooltip-pos="up" %s>%s</a>',
+			( ! empty( $meta_value ) ? ' disabled' : '' ),
+			esc_attr( $item['item_id'] ),
+			esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
+			esc_attr( $user_action_type ),
+			esc_attr( $action_label ),
+			! empty( $meta_value ) ? 'data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '',
+			esc_html( $action_label )
+		);
 		printf( '<strong><a target="_blank" href="%s">%s %s</a></strong> %s', esc_url( BP_Moderation_Members::get_permalink( $item['item_id'] ) ), get_avatar( $item['item_id'], '32' ), esc_html( bp_core_get_userlink( $item['item_id'], true ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}
 
