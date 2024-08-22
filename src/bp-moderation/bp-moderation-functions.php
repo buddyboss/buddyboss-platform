@@ -1268,7 +1268,7 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
  */
 function bp_moderation_item_count( $args = array() ) {
 	$moderation_request_args = array(
-		'per_page'    => - 1,
+		'per_page'    => 1,
 		'count_total' => true,
 	);
 

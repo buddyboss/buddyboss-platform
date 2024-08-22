@@ -157,9 +157,15 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			}
 		}
 
-		add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+		if ( 'reported-content' !== $current_tab && 'all' === $this->view ) {
+			add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+		}
+
 		$moderation_requests = BP_Moderation::get( $moderation_request_args );
-		remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+
+		if ( 'reported-content' !== $current_tab && 'all' === $this->view ) {
+			remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+		}
 
 		// Set raw data to display.
 		$this->items = $moderation_requests['moderations'];
@@ -372,10 +378,15 @@ class BP_Moderation_List_Table extends WP_List_Table {
 						$moderation_args['user_report'] = 1;
 					}
 
-					add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
-					$record_count = bp_moderation_item_count( $moderation_args );
-					remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+					if ( 'all' === $key ) {
+						add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+					}
 
+					$record_count = bp_moderation_item_count( $moderation_args );
+
+					if ( 'all' === $key ) {
+						remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+					}
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
 						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
@@ -741,9 +752,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @return mixed
 	 */
 	public function update_moderation_where_conditions( $where_conditions, $r ) {
-		if ( empty( $r['reported'] ) ) {
-			$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0';
-		}
+		$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0';
 
 		return $where_conditions;
 	}
