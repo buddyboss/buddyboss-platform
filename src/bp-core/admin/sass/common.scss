@@ -3651,7 +3651,7 @@ table.moderations {
 	.bp-block-user {
 
 		&.disabled {
-			pointer-events: none;
+			cursor: default;
 		}
 
 		&[data-bp-tooltip] {

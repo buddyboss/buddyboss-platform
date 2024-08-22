@@ -3380,7 +3380,7 @@ table.moderations tbody tr .column-suspend .dashicons {
 }
 
 table.moderations .bp-block-user.disabled {
-  pointer-events: none;
+  cursor: default;
 }
 
 table.moderations .bp-block-user[data-bp-tooltip] {
