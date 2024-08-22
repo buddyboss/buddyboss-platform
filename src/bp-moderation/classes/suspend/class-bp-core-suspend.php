@@ -602,6 +602,13 @@ class BP_Core_Suspend {
 		}
 	}
 
+	/**
+	 * Return list of the DB columns.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string[]
+	 */
 	protected static function db_columns() {
 		return array(
 			'item_id',
@@ -612,6 +619,7 @@ class BP_Core_Suspend {
 			'reported',
 			'blog_id',
 			'user_report',
+			'last_updated',
 		);
 	}
 
