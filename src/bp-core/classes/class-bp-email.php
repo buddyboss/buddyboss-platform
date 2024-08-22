@@ -844,15 +844,18 @@ class BP_Email {
 	 * the value is the name.
 	 *
 	 * @since BuddyPress 2.5.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string|array|int|WP_User $to_address Either an email address, user ID, WP_User object,
 	 *                                             or an array containing any combination of the above.
-	 * @param string                   $name Optional. If $to_address is a string, this is the recipient's name.
-	 * @param string                   $operation Optional. If "replace", $to_address replaces current setting (default).
-	 *                                            If "add", $to_address is added to the current setting.
+	 * @param string                   $name       Optional. If $to_address is a string, this is the recipient's name.
+	 * @param string                   $operation  Optional. If "replace", $to_address replaces current setting
+	 *                                             (default). If "add", $to_address is added to the current setting.
+	 * @param array                    $tokens     Optional. Tokens.
+	 *
 	 * @return BP_Email
 	 */
-	public function set_to( $to_address, $name = '', $operation = 'replace' ) {
+	public function set_to( $to_address, $name = '', $operation = 'replace', $tokens = array() ) {
 		$to = ( $operation !== 'replace' ) ? $this->to : array();
 
 		if ( is_array( $to_address ) ) {
@@ -860,7 +863,7 @@ class BP_Email {
 				$to[] = new BP_Email_Recipient( $address );
 			}
 		} else {
-			$to[] = new BP_Email_Recipient( $to_address, $name );
+			$to[] = new BP_Email_Recipient( $to_address, $name, $tokens );
 		}
 
 		/**
