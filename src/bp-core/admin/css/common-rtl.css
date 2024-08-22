@@ -3379,6 +3379,20 @@ table.moderations tbody tr .column-suspend .dashicons {
   font-size: 24px;
 }
 
+table.moderations .bp-block-user.disabled {
+  pointer-events: none;
+}
+
+table.moderations .bp-block-user[data-bp-tooltip] {
+  display: inline-block;
+}
+
+table.moderations .bp-block-user[data-bp-tooltip]:after {
+  white-space: normal;
+  width: 210px;
+  text-align: center;
+}
+
 .buddyboss_page_bp-moderation .dashicons {
   font-weight: 700;
 }
