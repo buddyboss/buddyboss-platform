@@ -131,8 +131,10 @@ $admins            = array_map(
 												$classes   = array();
 												$classes[] = ! empty( $meta_value ) ? 'disabled' : '';
 												$classes[] = ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : '';
+
+												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '';
 												?>
-												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>" <?php echo wp_kses_post( $tooltip ); ?>>
 													<?php
 													echo esc_html( $user_action_text );
 													?>
@@ -183,8 +185,10 @@ $admins            = array_map(
 												$classes[] = ! empty( $meta_value ) ? 'disabled' : '';
 												$classes[] = ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : '';
 
+												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '';
+
 												?>
-												<a href="javascript:void(0);" class="button report-header_button <?php echo esc_attr( implode( ' ', $classes ) ); ?> bp-block-user single-report-btn123 content-author123" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button <?php echo esc_attr( implode( ' ', $classes ) ); ?> bp-block-user single-report-btn123 content-author123" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>" <?php echo wp_kses_post( $tooltip ); ?>>
 													<?php
 													echo esc_html( $user_action_text );
 													?>
