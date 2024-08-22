@@ -148,7 +148,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$moderation_request_args['hidden'] = 1;
 			} elseif ( 'blocked' === $moderation_status ) {
 				$this->view = 'blocked';
-				unset($moderation_request_args['reported']);
+				unset( $moderation_request_args['reported'] );
 			} elseif ( 'reported' === $moderation_status ) {
 				$this->view                             = 'reported';
 				$moderation_request_args['user_report'] = 1;
@@ -157,7 +157,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			}
 		}
 
+		add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
 		$moderation_requests = BP_Moderation::get( $moderation_request_args );
+		remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
 
 		// Set raw data to display.
 		$this->items = $moderation_requests['moderations'];
@@ -195,7 +197,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			</thead>
 
 			<tbody id="the-moderation-request-list">
-			<?php $this->display_rows_or_placeholder(); ?>
+				<?php $this->display_rows_or_placeholder(); ?>
 			</tbody>
 
 			<tfoot>
@@ -231,11 +233,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			);
 		} else {
 			$columns = array(
-				'cb'            => '<input name type="checkbox" />',
-				'member'        => esc_html__( 'Member', 'buddyboss' ),
-				'blocked'       => esc_html__( 'Blocks', 'buddyboss' ),
-				'count_report'  => esc_html__( 'Reports', 'buddyboss' ),
-				'suspend'       => esc_html__( 'Suspended', 'buddyboss' ),
+				'cb'           => '<input name type="checkbox" />',
+				'member'       => esc_html__( 'Member', 'buddyboss' ),
+				'blocked'      => esc_html__( 'Blocks', 'buddyboss' ),
+				'count_report' => esc_html__( 'Reports', 'buddyboss' ),
+				'suspend'      => esc_html__( 'Suspended', 'buddyboss' ),
 			);
 		}
 
@@ -365,12 +367,15 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					if ( 'suspended' === $key ) {
 						$moderation_args['hidden'] = 1;
 					} elseif ( 'blocked' === $key ) {
-						unset($moderation_args['reported']);
+						unset( $moderation_args['reported'] );
 					} elseif ( 'reported' === $key ) {
 						$moderation_args['user_report'] = 1;
 					}
 
+					add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
 					$record_count = bp_moderation_item_count( $moderation_args );
+					remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
 						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
@@ -714,5 +719,23 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		 * @param array  $item        The current moderation item in the loop.
 		 */
 		return apply_filters( 'bp_moderation_admin_get_custom_column', '', $column_name, $item );
+	}
+
+	/**
+	 * Filters the MySQL WHERE conditions for the Moderation items get method.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $where_conditions Current conditions for MySQL WHERE statement.
+	 * @param array $r                Parsed arguments passed into method.
+	 *
+	 * @return mixed
+	 */
+	public function update_moderation_where_conditions( $where_conditions, $r ) {
+		if ( empty( $r['reported'] ) ) {
+			$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0';
+		}
+
+		return $where_conditions;
 	}
 }
