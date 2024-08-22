@@ -615,8 +615,12 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// Build actions URL.
 		$view_url = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
 
+		$suspend_id = BP_Core_Suspend::get_suspend_id( $item['item_id'], $item['item_type'] );
+		$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
+		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+
 		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Report', 'buddyboss' ) );
-		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $item['item_id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
+		$actions['suspend']     = sprintf( '<a href="" class="bp-block-user %s" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', ( ! empty( $meta_value ) ? ' disabled' : '' ), esc_attr( $item['item_id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
 		printf( '<strong><a target="_blank" href="%s">%s %s</a></strong> %s', esc_url( BP_Moderation_Members::get_permalink( $item['item_id'] ) ), get_avatar( $item['item_id'], '32' ), esc_html( bp_core_get_userlink( $item['item_id'], true ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}
 
