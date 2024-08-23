@@ -844,7 +844,7 @@ class BP_Email {
 	 * the value is the name.
 	 *
 	 * @since BuddyPress 2.5.0
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss [BBVERSION] Added $tokens parameter.
 	 *
 	 * @param string|array|int|WP_User $to_address Either an email address, user ID, WP_User object,
 	 *                                             or an array containing any combination of the above.
