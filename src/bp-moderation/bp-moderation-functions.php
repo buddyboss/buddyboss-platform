@@ -2162,4 +2162,36 @@ function bb_moderation_migration_on_update() {
 
 		bp_update_option( 'bb_moderation_migration_run', true );
 	}
+
+	/**
+	 * Create new database table for suspend meta.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$bp_prefix  = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$table_name = $bp_prefix . 'bp_suspend_meta';
+	// Check if the 'bp_suspend_meta' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name  ) ); // phpcs:ignore
+
+	if ( $table_exists !== $table_name ) {
+		$sql             = array();
+		$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+		$bp_prefix       = bp_core_get_table_prefix();
+
+		$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
+			id bigint(20) NOT NULL AUTO_INCREMENT,
+			suspend_id bigint(20) NOT NULL,
+			meta_key varchar(255) DEFAULT NULL,
+			meta_value longtext DEFAULT NULL,
+			PRIMARY KEY  (id),
+			KEY suspend_id (suspend_id),
+			KEY meta_key (meta_key(191))
+		) {$charset_collate};";
+
+		if ( ! function_exists( 'dbDelta' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		}
+
+		dbDelta( $sql );
+	}
 }
