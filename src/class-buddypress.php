@@ -254,10 +254,6 @@ class BuddyPress {
 			require WP_PLUGIN_DIR . '/bp-custom.php';
 		}
 
-		if ( ! defined( 'BB_CORE_OPTIONS_SLUG' ) ) {
-			define( 'BB_CORE_OPTIONS_SLUG', 'bb_options' );
-		}
-
 		// Path and URL.
 		if ( ! defined( 'BP_PLUGIN_DIR' ) ) {
 			define( 'BP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -606,9 +602,6 @@ class BuddyPress {
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
 		}
-
-		// Load the usage tracking class.
-		new BB_Core_Usage_Ctrl();
 	}
 
 	/**
