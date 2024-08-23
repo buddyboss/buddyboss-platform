@@ -3616,8 +3616,11 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		return $email;
 	}
 
+	// Set all original token are used for email without a replacement.
+	$email->bb_set_original_tokens( $args['tokens'] );
+
 	// From, subject, content are set automatically.
-	$email->set_to( $to, '', '', $args['tokens'] );
+	$email->set_to( $to );
 	$email->set_tokens( $args['tokens'] );
 
 	/**
