@@ -54,7 +54,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'jquery-atwho'        => array(
-			'file'         => "{$url}vendor/jquery.atwho{$min}.js",
+			'file'         => "{$url}jquery.atwho{$min}.js",
 			'dependencies' => array( 'jquery', 'jquery-caret' ),
 			'footer'       => true,
 		),
