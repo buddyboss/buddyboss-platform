@@ -110,8 +110,15 @@ class BP_Email_Recipient {
 		// We have a user object; so set address and name from DB.
 		if ( $this->user_object ) {
 			// This is escaped with esc_html in bp_core_get_user_displayname()
-			$sender_id = ! empty( $tokens['sender.id'] ) ? $tokens['sender.id'] : 0;
-			$wp_name   = wp_specialchars_decode( bp_core_get_user_displayname( $this->user_object->ID, $sender_id ), ENT_QUOTES );
+			if ( ! empty( $tokens['sender.id'] ) ) {
+				$sender_id = $tokens['sender.id'];
+			} elseif ( empty( $tokens['sender_id'] ) && ! empty( $tokens['message'] ) ) {
+				$sender_ids = array_column( $tokens['message'], 'sender_id' );
+				$sender_id  = $sender_ids[0];
+			} else {
+				$sender_id = 0;
+			}
+			$wp_name = wp_specialchars_decode( bp_core_get_user_displayname( $this->user_object->ID, $sender_id ), ENT_QUOTES );
 
 			$this->address = $this->user_object->user_email;
 			$this->name    = sanitize_text_field( $wp_name );
