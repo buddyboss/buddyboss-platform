@@ -1254,7 +1254,7 @@ function bb_clear_group_thread_cache( $thread_id ) {
  */
 function bb_bypass_name_privacy_for_admin( $hidden_levels, $displayed_user_id, $current_user_id ) {
 	if ( empty( $current_user_id ) ) {
-		$hidden_levels = array();
+		return array();
 	}
 
 	$current_user_data = get_userdata( $current_user_id );
