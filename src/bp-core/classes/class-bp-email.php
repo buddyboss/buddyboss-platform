@@ -142,7 +142,7 @@ class BP_Email {
 	protected $tokens = array();
 
 	/**
-	 * Original token names and replacement values for this email.
+	 * Original token names and values for this email.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -968,7 +968,7 @@ class BP_Email {
 	}
 
 	/**
-	 * Set the original tokens for this email.
+	 * Original tokens for this email.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
