@@ -5085,9 +5085,28 @@ window.bp = window.bp || {};
 									emojibtn_click: function () {
 										$( '#whats-new' )[0].emojioneArea.hidePicker();
 										if ( window.getSelection && document.createRange ) { //Get caret position when user adds emoji
-											var sel = window.getSelection && window.getSelection();
+											var sel = window.getSelection();
 											if ( sel && sel.rangeCount > 0 ) {
-												window.activityCaretPosition = sel.getRangeAt( 0 );
+												var range = sel.getRangeAt( 0 );
+												
+												// Check if range is in the parent div container instead of a child node
+												if ( range.commonAncestorContainer === $( '#whats-new' )[0] ) {
+													// Set caret in the nearest text node or valid element
+													var childNodes = $( '#whats-new' )[0].childNodes;
+													
+													// Position the caret within the first text node/element
+													if ( childNodes.length > 0 ) {
+														for ( var i = 0; i < childNodes.length; i++ ) {
+															if ( childNodes[i].nodeType === Node.TEXT_NODE || childNodes[i].nodeType === Node.ELEMENT_NODE ) {
+																range.setStart( childNodes[i], 0 );
+																range.setEnd( childNodes[i], 0 );
+																break;
+															}
+														}
+													}
+												}
+												
+												window.activityCaretPosition = range;
 											}
 										} else {
 											window.activityCaretPosition = document.selection.createRange();
