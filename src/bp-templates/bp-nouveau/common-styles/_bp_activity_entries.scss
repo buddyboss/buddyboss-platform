@@ -644,6 +644,44 @@
 		margin-right: 35px;
 	}
 
+	.bb-pin-action {
+
+		.bb-media-model-container & {
+
+			.bb-pin-action_button,
+			.bb-mute-action_button {
+
+				&[data-balloon][data-balloon-pos="up"]:after {
+					margin-right: 11px;
+					right: 100%;
+					top: 50%;
+					-webkit-transform: translate(10px, -50%);
+					-ms-transform: translate(10px, -50%);
+					transform: translate(10px, -50%);
+					left: inherit;
+					bottom: inherit;
+				}
+
+				&[data-balloon][data-balloon-pos="up"]:before {
+					background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba( 18,43,70,0.95 )%22%20transform%3D%22rotate(90 6 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");/* stylelint-disable-line */
+					background-size: 100% auto;
+					transform: translate(0, -50%) rotate(180deg);
+					left: inherit;
+					bottom: inherit;
+					display: inline-block;
+					width: 6px;
+					height: 18px;
+					margin-right: -5px;
+					right: 100%;
+					top: 100%;
+					margin-top: 7px;
+				}
+
+			}
+
+		}
+	}
+
 	.bb-activity-more-options-wrap {
 		position: absolute;
 		right: 15px;
@@ -698,7 +736,7 @@
 					margin-right: -5px;
 					right: 100%;
 					top: 100%;
-					margin-top: 3px;
+					margin-top: 7px;
 				}
 
 			}
@@ -859,7 +897,7 @@
 		right: 20px;
 		font-size: 22px;
 		line-height: 1;
-		top: 10px;
+		top: 8px;
 
 		.bb-mute-action_button,
 		.bb-pin-action_button {
@@ -930,6 +968,14 @@
 			transform: translateY(calc(-50% - 24px));
 			z-index: 11;
 
+			@media screen and (max-width: 980px) {
+				transform: none;
+
+				.bb-activity-more-options-action {
+					transform: translateY(calc(-50% - 24px));
+				}
+			}
+
 			.bb-activity-more-options-action {
 				border-radius: $block-radius-inner;
 
@@ -949,7 +995,7 @@
 			}
 
 			&:has(.bb-activity-more-options.is_visible) {
-				z-index: 111;
+				z-index: 119;
 
 				.bb-activity-more-options-action {
 					background-color: $light-grey;
@@ -1310,14 +1356,14 @@
 		.acomment-display .ac-emotions_list {
 
 			&.active {
-				bottom: 20px;
+				bottom: 35px;
 				left: -30px;
 			}
 
 			&:hover {
 
 				body:not(.bb-is-mobile) & {
-					bottom: 20px;
+					bottom: 35px;
 					left: -30px;
 				}
 			}
@@ -1403,23 +1449,6 @@
 
 			body:not(.bb-is-mobile) & {
 				left: -10px;
-			}
-		}
-	}
-}
-
-@media screen and (max-width: 480px) {
-
-	.activity-list .activity-item .activity-comments > ul > li > ul > li > ul > li > ul .acomment-display .ac-emotions_list {
-
-		&.active {
-			left: -40px;
-		}
-
-		&:hover {
-
-			body:not(.bb-is-mobile) & {
-				left: -40px;
 			}
 		}
 	}
@@ -2303,6 +2332,7 @@ ul.medium-editor-toolbar-actions {
 		border-radius: 4px 4px 0 0;
 		object-fit: cover;
 		object-position: center;
+		max-width: 100%;
 	}
 }
 
@@ -2881,7 +2911,9 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity,
-.bb-activity-media-wrap .bb-activity-video-elem {
+.bb-activity-media-wrap .bb-activity-video-elem,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-video-elem,
+#bbpress-forums .bb-activity-media-wrap .bb-activity-media-elem.media-activity {
 	position: relative;
 
 	&.is-visible,
@@ -3001,6 +3033,17 @@ span.dashicons.dashicons-admin-file:before {
 			border-radius: 4px;
 			width: 198px;
 			z-index: 1;
+
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					width: auto;
+					z-index: 999;
+				}
+			}
 
 			ul {
 				list-style: none;
@@ -3284,6 +3327,16 @@ span.dashicons.dashicons-admin-file:before {
 			width: 198px;
 			z-index: 1;
 
+			@media screen and (max-width: 980px) {
+
+				&.bb_more_dropdown.open {
+					position: fixed;
+					top: 50%;
+					right: inherit;
+					z-index: 999;
+				}
+			}
+
 			ul {
 				list-style: none;
 				margin: 0;
@@ -3422,6 +3475,12 @@ span.dashicons.dashicons-admin-file:before {
 			display: none;
 		}
 
+		@media screen and (max-width: 980px) {
+
+			.item-action-wrap {
+				z-index: 999;
+			}
+		}
 	}
 
 	/* smartphones, touchscreens */

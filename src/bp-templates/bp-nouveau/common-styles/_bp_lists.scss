@@ -234,6 +234,15 @@
 			display: inline;
 			float: none;
 
+			&.group-details {
+				font-size: 0;
+
+				> span {
+
+					@include font-size(12);
+				}
+			}
+
 			+ .item-meta.last-activity:before,
 			.group-visibility + .group-type:before {
 				background-color: #8d8f97;
@@ -241,7 +250,7 @@
 				content: "";
 				display: inline-block;
 				height: 4px;
-				margin: 0 6px 0 5px;
+				margin: 0 6px;
 				vertical-align: middle;
 				width: 4px;
 			}

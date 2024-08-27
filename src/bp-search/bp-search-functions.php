@@ -597,7 +597,7 @@ function bp_search_is_search() {
 	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
 }
 
-if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
 
 	function bps_get_request( $type, $form = 0 ) {
 		$current        = bps_current_page();

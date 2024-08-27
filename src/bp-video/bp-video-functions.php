@@ -696,6 +696,7 @@ function bp_video_add( $args = '' ) {
 function bp_video_add_handler( $videos = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_video_upload_count, $bp_video_upload_activity_content;
 	$video_ids = array();
+	$video_id  = 0;
 
 	$privacy = in_array( $privacy, array_keys( bp_video_get_visibility_levels() ), true ) ? $privacy : 'public';
 
@@ -707,14 +708,20 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 		// update the content of videos for later use.
 		$bp_video_upload_activity_content = $content;
 
-		// save  video.
+		// save video.
 		foreach ( $videos as $video ) {
 
 			// Update video if existing.
 			if ( ! empty( $video['video_id'] ) ) {
 				$bp_video = new BP_Video( $video['video_id'] );
 
-				if ( ! empty( $bp_video->id ) ) {
+				if (
+					! empty( $bp_video->id ) &&
+					(
+						bp_loggedin_user_id() === $bp_video->user_id ||
+						bp_current_user_can( 'bp_moderate' )
+					)
+				) {
 
 					if ( bp_is_active( 'activity' ) ) {
 						$obj_activity = new BP_Activity_Activity( $bp_video->activity_id );
@@ -739,6 +746,11 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 					);
 				}
 			} else {
+
+				// Check if a video is already saved.
+				if ( get_post_meta( $video['id'], 'bp_video_id', true ) ) {
+					continue;
+				}
 
 				$video_id = bp_video_add(
 					array(
@@ -766,7 +778,6 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 			if ( $video_id ) {
 				$video_ids[] = $video_id;
 			}
-
 		}
 	}
 
@@ -4188,7 +4199,7 @@ function bb_video_check_is_ffprobe_binary() {
 			class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ||
 			class_exists( 'FFMpeg\FFMpeg' )
 		) &&
-		( 
+		(
 			class_exists( 'BuddyBossPlatform\FFMpeg\FFProbe' ) ||
 			class_exists( 'FFMpeg\FFProbe' )
 		)
@@ -4555,7 +4566,12 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 
 	// Get activity metas.
 	$activity_metas = bb_activity_get_metadata( $activity->id );
-	$video_ids      = ! empty( $activity_metas['bp_video_ids'][0] ) ? $activity_metas['bp_video_ids'][0] : '';
+	$video_ids      = '';
+	if ( ! empty( $activity_metas['bp_video_ids'][0] ) ) {
+		$video_ids = $activity_metas['bp_video_ids'][0];
+	} elseif ( ! empty( $activity_metas['bp_video_id'][0] ) ) {
+		$video_ids = $activity_metas['bp_video_id'][0];
+	}
 
 	if ( empty( $video_ids ) ) {
 		return false;
@@ -4623,7 +4639,7 @@ function bb_video_get_activity_video( $activity = '', $args = array() ) {
 		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
 		&& bp_is_forums_video_support_enabled()
 	) {
-		$is_forum_activity = true;
+		$is_forum_activity       = true;
 		$video_args['privacy'][] = 'forums';
 	}
 
