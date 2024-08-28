@@ -5105,6 +5105,12 @@ window.bp = window.bp || {};
 														}
 													}
 												}
+
+												// Move caret after the inserted emoji
+												sel.removeAllRanges();
+												range.setStart(range.endContainer, range.endOffset);
+												range.setEnd(range.endContainer, range.endOffset);
+												sel.addRange(range);
 												
 												window.activityCaretPosition = range;
 											}
