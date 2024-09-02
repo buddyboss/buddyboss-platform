@@ -9910,7 +9910,7 @@ function bb_is_course_component_available() {
 		$available = ( 
 			function_exists( 'bbp_pro_is_license_valid' ) &&
 			bbp_pro_is_license_valid() &&
-			class_exists( 'BuddyBoss_LMS' ) &&
+			class_exists( 'BuddyBoss_LMS_Root' ) &&
 			function_exists( 'is_plugin_active' ) &&
 			is_plugin_active( 'buddyboss-lms/buddyboss-lms.php' )
 		);
