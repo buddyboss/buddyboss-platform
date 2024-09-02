@@ -1,0 +1,261 @@
+#buddyboss-notifications {
+  position: fixed;
+  min-height: 48px;
+  margin: 0 0 14px 0;
+  top: 0;
+  width: 100%;
+  max-width: 440px;
+  max-height: 100vh;
+  overflow-y: scroll;
+  background: #FFFFFF;
+  box-shadow: 0px 5px 15px #0000000D;
+  transform: translate3d(100%, 0, 0);
+  transition: transform .3s ease-in-out;
+  z-index: -9;
+  visibility: hidden;
+  right: -9999999999px;
+}
+
+#buddyboss-notifications.visible {
+  transform: translate3d(0, 0, 0);
+  z-index: 9999;
+  visibility: visible;
+  right: 0;
+}
+
+.admin-bar #buddyboss-notifications {
+  top: 32px;
+  max-height: calc( 100vh - 32px );
+}
+
+#buddyboss-notifications * {
+  box-sizing: border-box;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title {
+  background-color: #2679c1;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title h3 {
+  color: #fff;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title > div {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title svg {
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title .actions a {
+  color: #fff;
+  margin-right: 10px;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title .actions a.close {
+  text-decoration: none;
+  margin-right: 0;
+}
+
+#buddyboss-notifications .buddyboss-notifications-top-title .actions a.close svg {
+  margin-right: 0;
+}
+
+#buddyboss-notifications .buddyboss-notification-icon-title {
+  display: flex;
+  align-items: center;
+}
+
+#buddyboss-notifications .buddyboss-notification-icon-title img {
+  margin-right: 10px;
+  max-width: 32px;
+}
+
+#buddyboss-notifications .buddyboss-notification-icon-title time {
+  margin-left: auto;
+  font-size: 13px;
+  color: #7f899f;
+  min-width: 100px;
+  text-align: right;
+}
+
+#buddyboss-notifications .buddyboss-notifications-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(204, 208, 212, 0.5);
+}
+
+#buddyboss-notifications .dismiss-all {
+  text-decoration: underline;
+  color: #99a1b3;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+#buddyboss-notifications .buddyboss-notifications-header-bell {
+  display: flex;
+  align-items: center;
+}
+
+#buddyboss-notifications .buddyboss-notifications-header .buddyboss-notifications-bell {
+  position: relative;
+  top: 2px;
+  margin-right: 10px;
+}
+
+#buddyboss-notifications .buddyboss-notifications-header .buddyboss-notifications-bell svg {
+  max-width: 30px;
+}
+
+#buddyboss-notifications .buddyboss-notifications-header .buddyboss-notifications-title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #23282D;
+}
+
+.buddyboss-notifications-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #eb5757;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+}
+
+#buddyboss-notifications .dismissed-messages,
+#buddyboss-notifications #viewActive {
+  display: none;
+}
+
+#buddyboss-notifications .dismissed-messages .bb-in-plugin-admin-notifications-notice-dismiss {
+  display: none;
+}
+
+#buddyboss-notifications .buddyboss-notifications-header.single-digit .buddyboss-notifications-count {
+  font-size: 12px;
+}
+
+#buddyboss-notifications .buddyboss-notifications-body {
+  position: relative;
+  padding: 16px;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages {
+
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-message {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  position: relative;
+  border-bottom: 1px solid rgba(204, 208, 212, 0.5);
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .active-messages .buddyboss-notifications-message:last-of-type,
+#buddyboss-notifications .buddyboss-notifications-messages .dismissed-messages .buddyboss-notifications-message:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-title {
+  font-weight: bold;
+  font-size: 17px;
+  line-height: 17px;
+  margin: 0;
+  color: #444;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-content {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  margin: 8px 0 41px 0;
+  color: #777777;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-buttons {
+  margin: -30px 80px 0 0;
+  display: flex;
+  align-items: center;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-buttons a {
+  margin: 0 10px 0 0;
+  min-height: unset;
+}
+
+.buddyboss-notifications-buttons button.bb-in-plugin-admin-notifications-notice-dismiss {
+  font-size: 13px;
+  color: #7f899f;
+  background: none;
+  padding: 0;
+  border: 0;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-buttons button.bb-in-plugin-admin-notifications-notice-dismiss:hover {
+  cursor: pointer;
+}
+
+#buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-buttons button.bb-in-plugin-admin-notifications-notice-dismiss[disabled] {
+  cursor: not-allowed;
+}
+
+.buddyboss-admin-header-actions {
+  float: right;
+}
+
+@media screen and (max-width: 768px) {
+  #buddyboss-notifications .buddyboss-notifications-messages {
+    padding: 15px 50px 20px 16px;
+  }
+  #buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-message .buddyboss-notifications-title {
+    margin: 0 30px 0 0;
+    line-height: 22px;
+  }
+  #buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-message .buddyboss-notifications-content {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  #buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-message .buddyboss-notifications-buttons {
+    margin: -30px 80px 0 0;
+  }
+  #buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-message .buddyboss-notifications-buttons a {
+    margin: 0;
+    display: table;
+  }
+  #buddyboss-notifications .buddyboss-notifications-messages .buddyboss-notifications-message .buddyboss-notifications-buttons .button-secondary {
+    margin-top: 6px;
+  }
+}
