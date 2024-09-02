@@ -70,6 +70,10 @@ function bp_core_admin_components_options() {
 	unset( $optional_components['document'] );
 	unset( $optional_components['video'] );
 
+	if ( ! bb_is_course_component_available() ) {
+		unset( $active_components[ 'courses' ] );
+	}
+
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
@@ -132,6 +136,7 @@ function bp_core_admin_components_options() {
 			$current_components = $required_components;
 			break;
 	}
+
 	?>
 
 	<h3 class="screen-reader-text">
@@ -268,7 +273,16 @@ function bp_core_admin_components_options() {
 						class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<th scope="row" class="check-column">
 							<?php
-							if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
+							if (
+								(
+									(
+										'courses' === $name &&
+										bb_is_course_component_available()
+									) ||
+									'courses' !== $name
+								) &&
+								! in_array( $name, array( 'core', 'members', 'xprofile' ), true )
+							) :
 								if ( isset( $active_components[ esc_attr( $name ) ] ) ) {
 									?>
 									<input class="<?php echo esc_attr( ( true === $deactivate_confirm ) ? 'mass-check-deactivate' : '' ); ?>"
@@ -312,9 +326,7 @@ function bp_core_admin_components_options() {
 										<?php _e( 'Required', 'buddyboss' ); ?>
 									</span>
 								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-									<?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
-										<span class="deactivate <?php echo esc_attr( ( true === $deactivate_confirm ) ? 'bp-show-deactivate-popup' : '' ); ?>"
-											  data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
+									<?php if ( 'courses' === $name && ! bb_is_course_component_available() ) : ?>
 											<a href="
 											<?php
 											echo wp_nonce_url(
@@ -325,6 +337,30 @@ function bp_core_admin_components_options() {
 															'action' => $action,
 															'bp_component' => $name,
 															'do_action' => 'deactivate',
+														),
+														$page
+													)
+												),
+												'bp-admin-component-activation'
+											);
+											?>
+											">
+												<?php _e( 'Upgrade', 'buddyboss' ); ?>
+											</a>
+										<?php
+										elseif ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
+										<span class="deactivate <?php echo esc_attr( ( true === $deactivate_confirm ) ? 'bp-show-deactivate-popup' : '' ); ?>"
+											  data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
+											<a href="
+											<?php
+											echo wp_nonce_url(
+												bp_get_admin_url(
+													add_query_arg(
+														array(
+															'page'         => 'bp-components',
+															'action'       => $action,
+															'bp_component' => $name,
+															'do_action'    => 'deactivate',
 														),
 														$page
 													)
@@ -368,7 +404,8 @@ function bp_core_admin_components_options() {
 										</span>
 									<?php endif; ?>
 								<?php endif; ?>
-								<?php if ( isset( $active_components[ esc_attr( $name ) ] ) && ! empty( $labels['settings'] ) ) : ?>
+								<?php
+								if ( isset( $active_components[ esc_attr( $name ) ] ) && ! empty( $labels['settings'] ) ) : ?>
 									<span><?php _e( '|', 'buddyboss' ); ?></span>
 									<span class="settings">
 										<a href="<?php echo esc_url( $labels['settings'] ); ?>">

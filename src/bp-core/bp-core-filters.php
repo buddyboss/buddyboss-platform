@@ -76,6 +76,10 @@ add_action( 'bp_admin_init', 'bb_updated_component_emails' );
 add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
 
+add_filter( 'bp_is_active', 'bb_courses_component_active_filter', PHP_INT_MAX, 2 );
+add_action( 'admin_menu', 'bb_remove_buddybosslms_menu', PHP_INT_MAX );
+
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -2649,4 +2653,30 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 	}
 
 	return $hosts;
+}
+
+/**
+ * Function to filter the course component active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_courses_component_active_filter( $retval, $component ) {
+	if ( 'courses' === $component && $retval ) {
+		$retval = bb_is_course_component_available();
+	}
+
+	return $retval;
+}
+
+/**
+ * Function to remove the buddyboss lms menu.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_remove_buddybosslms_menu() {
+	if ( ! bp_is_active( 'courses' ) ) {
+		remove_menu_page( 'buddyboss-lms' );
+	}
 }

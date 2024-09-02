@@ -2518,7 +2518,6 @@ function bp_core_get_minified_asset_suffix() {
  * @return array Requested components' data.
  */
 function bp_core_get_components( $type = 'all' ) {
-
 	$required_components = array(
 		'members'  => array(
 			'title'       => __( 'Member Profiles', 'buddyboss' ),
@@ -2728,6 +2727,12 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'courses'        => array(
+			'title'       => __( 'Courses', 'buddyboss' ),
+			'settings'    => false,
+			'description' => __( 'Buddyboss Learning Management System', 'buddyboss' ),
+			'default'     => false,
+		),
 	);
 
 	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
@@ -2743,6 +2748,18 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			);
+		}
+
+		if ( bb_is_course_component_available() ) {
+			$optional_components['courses']['settings'] = bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'buddyboss-lms-settings',
+					),
+					'admin.php'
+				)
+			);
+
 		}
 	}
 
@@ -9877,4 +9894,27 @@ function bb_remove_deleted_user_last_activities() {
 		$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
 		$wpdb->query( $delete_query ); // phpcs:ignore
 	}
+}
+
+/**
+ * Check if buddyboss lms available.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_is_course_component_available() {
+
+	static $available = '';
+	if ( '' === $available ) {
+		$available = ( 
+			function_exists( 'bbp_pro_is_license_valid' ) &&
+			bbp_pro_is_license_valid() &&
+			class_exists( 'BuddyBoss_LMS_Root' ) &&
+			function_exists( 'is_plugin_active' ) &&
+			is_plugin_active( 'buddyboss-lms/buddyboss-lms.php' )
+		);
+	}
+
+	return $available;
 }
