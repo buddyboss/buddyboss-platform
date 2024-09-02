@@ -7,14 +7,14 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define(["jquery"], function (a0) {
+    define(['jquery'], function (a0) {
       return (factory(a0));
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory(require("jquery"));
+    module.exports = factory(require('jquery'));
   } else {
     factory(jQuery);
   }
@@ -43,14 +43,14 @@ DEFAULT_CALLBACKS = {
   },
   matcher: function(flag, subtext, should_startWithSpace, acceptSpaceBar) {
     var _a, _y, match, regexp, space;
-    flag = flag.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    flag = flag.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     if (should_startWithSpace) {
       flag = '(?:^|\\s)' + flag;
     }
-    _a = decodeURI("%C3%80");
-    _y = decodeURI("%C3%BF");
-    space = acceptSpaceBar ? "\ " : "";
-    regexp = new RegExp(flag + "([A-Za-z" + _a + "-" + _y + "0-9_" + space + "\'\.\+\-]*)$|" + flag + "([^\\x00-\\xff]*)$", 'gi');
+    _a = decodeURI('%C3%80');
+    _y = decodeURI('%C3%BF');
+    space = acceptSpaceBar ? '\ ' : '';
+    regexp = new RegExp(flag + '([A-Za-z' + _a + '-' + _y + '0-9_' + space + '\'\.\+\-]*)$|' + flag + '([^\\x00-\\xff]*)$', 'gi');
     match = regexp.exec(subtext);
     if (match) {
       return match[2] || match[1];
@@ -63,7 +63,7 @@ DEFAULT_CALLBACKS = {
     _results = [];
     for (i = 0, len = data.length; i < len; i++) {
       item = data[i];
-      if (~new String(item[searchKey]).toLowerCase().indexOf(query.toLowerCase())) {
+      if (~String(item[searchKey]).toLowerCase().indexOf(query.toLowerCase())) {
         _results.push(item);
       }
     }
@@ -78,7 +78,7 @@ DEFAULT_CALLBACKS = {
     _results = [];
     for (i = 0, len = items.length; i < len; i++) {
       item = items[i];
-      item.atwho_order = new String(item[searchKey]).toLowerCase().indexOf(query.toLowerCase());
+      item.atwho_order = String(item[searchKey]).toLowerCase().indexOf(query.toLowerCase());
       if (item.atwho_order > -1) {
         _results.push(item);
       }
@@ -88,18 +88,18 @@ DEFAULT_CALLBACKS = {
     });
   },
   tplEval: function(tpl, map) {
-    var error, error1, template;
+    var error, template;
     template = tpl;
     try {
       if (typeof tpl !== 'string') {
         template = tpl(map);
       }
-      return template.replace(/\$\{([^\}]*)\}/g, function(tag, key, pos) {
+      return template.replace(/\$\{([^\}]*)\}/g, function(tag, key) {
         return map[key];
       });
-    } catch (error1) {
-      error = error1;
-      return "";
+    } catch (e) {
+      error = e;
+      return '';
     }
   },
   highlighter: function(li, query) {
@@ -107,18 +107,18 @@ DEFAULT_CALLBACKS = {
     if (!query) {
       return li;
     }
-    regexp = new RegExp(">\\s*([^\<]*?)(" + query.replace("+", "\\+") + ")([^\<]*)\\s*<", 'ig');
+    regexp = new RegExp('>\\s*([^\<]*?)(' + query.replace('+', '\\+') + ')([^\<]*)\\s*<', 'ig');
     return li.replace(regexp, function(str, $1, $2, $3) {
       return '> ' + $1 + '<strong>' + $2 + '</strong>' + $3 + ' <';
     });
   },
-  beforeInsert: function(value, $li, e) {
+  beforeInsert: function(value) {
     return value;
   },
   beforeReposition: function(offset) {
     return offset;
   },
-  afterMatchFailed: function(at, el) {}
+  afterMatchFailed: function() {}
 };
 
 var App;
@@ -138,11 +138,11 @@ App = (function() {
     if ((ref = this.$el) != null) {
       ref.remove();
     }
-    return $(doc.body).append(this.$el = $("<div class='atwho-container'></div>"));
+    return $(doc.body).append(this.$el = $('<div class="atwho-container"></div>'));
   };
 
   App.prototype.setupRootElement = function(iframe, asRoot) {
-    var error, error1;
+    var error;
     if (asRoot == null) {
       asRoot = false;
     }
@@ -155,11 +155,11 @@ App = (function() {
       this.window = this.document.defaultView || this.document.parentWindow;
       try {
         this.iframe = this.window.frameElement;
-      } catch (error1) {
-        error = error1;
+      } catch (e) {
+        error = e;
         this.iframe = null;
         if ($.fn.atwho.debug) {
-          throw new Error("iframe auto-discovery is failed.\nPlease use `setIframe` to set the target iframe manually.\n" + error);
+          throw new Error('iframe auto-discovery is failed.\nPlease use `setIframe` to set the target iframe manually.\n' + error);
         }
       }
     }
@@ -204,7 +204,7 @@ App = (function() {
 
   App.prototype.listen = function() {
     return this.$inputor.on('compositionstart', (function(_this) {
-      return function(e) {
+      return function() {
         var ref;
         if ((ref = _this.controller()) != null) {
           ref.view.hide();
@@ -213,7 +213,7 @@ App = (function() {
         return null;
       };
     })(this)).on('compositionend', (function(_this) {
-      return function(e) {
+      return function() {
         _this.isComposing = false;
         setTimeout(function(e) {
           return _this.dispatch(e);
@@ -233,7 +233,7 @@ App = (function() {
         var c;
         if (c = _this.controller()) {
           c.expectedQueryCBId = null;
-          return c.view.hide(e, c.getOpt("displayTimeout"));
+          return c.view.hide(e, c.getOpt('displayTimeout'));
         }
       };
     })(this)).on('click.atwhoInner', (function(_this) {
@@ -374,7 +374,7 @@ var Controller,
 
 Controller = (function() {
   Controller.prototype.uid = function() {
-    return (Math.random().toString(16) + "000000000").substr(2, 8) + (new Date().getTime());
+    return (Math.random().toString(16) + '000000000').substr(2, 8) + (new Date().getTime());
   };
 
   function Controller(app, at1) {
@@ -387,15 +387,15 @@ Controller = (function() {
     this.query = null;
     this.pos = 0;
     this.range = null;
-    if ((this.$el = $("#atwho-ground-" + this.id, this.app.$el)).length === 0) {
-      this.app.$el.append(this.$el = $("<div id='atwho-ground-" + this.id + "'></div>"));
+    if ((this.$el = $('#atwho-ground-' + this.id, this.app.$el)).length === 0) {
+      this.app.$el.append(this.$el = $('<div id="atwho-ground-' + this.id + '"></div>'));
     }
     this.model = new Model(this);
     this.view = new View(this);
   }
 
   Controller.prototype.init = function(setting) {
-    this.setting = $.extend({}, this.setting || $.fn.atwho["default"], setting);
+    this.setting = $.extend({}, this.setting || $.fn.atwho['default'], setting);
     this.view.init();
     return this.model.reload(this.setting.data);
   };
@@ -408,13 +408,13 @@ Controller = (function() {
   };
 
   Controller.prototype.callDefault = function() {
-    var args, error, error1, funcName;
+    var args, error, funcName;
     funcName = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
     try {
       return DEFAULT_CALLBACKS[funcName].apply(this, args);
-    } catch (error1) {
-      error = error1;
-      return $.error(error + " Or maybe At.js doesn't have function " + funcName);
+    } catch (e) {
+      error = e;
+      return $.error(error + ' Or maybe At.js doesn\'t have function ' + funcName);
     }
   };
 
@@ -425,20 +425,20 @@ Controller = (function() {
     }
     data.push(this);
     alias = this.getOpt('alias');
-    eventName = alias ? name + "-" + alias + ".atwho" : name + ".atwho";
+    eventName = alias ? name + '-' + alias + '.atwho' : name + '.atwho';
     return this.$inputor.trigger(eventName, data);
   };
 
   Controller.prototype.callbacks = function(funcName) {
-    return this.getOpt("callbacks")[funcName] || DEFAULT_CALLBACKS[funcName];
+    return this.getOpt('callbacks')[funcName] || DEFAULT_CALLBACKS[funcName];
   };
 
-  Controller.prototype.getOpt = function(at, default_value) {
-    var e, error1;
+  Controller.prototype.getOpt = function(at) {
+    var e;
     try {
       return this.setting[at];
-    } catch (error1) {
-      e = error1;
+    } catch (err) {
+      e = err;
       return null;
     }
   };
@@ -449,13 +449,13 @@ Controller = (function() {
     data = $.extend({}, $li.data('item-data'), {
       'atwho-at': this.at
     });
-    return this.callbacks("tplEval").call(this, tpl, data, "onInsert");
+    return this.callbacks('tplEval').call(this, tpl, data, 'onInsert');
   };
 
   Controller.prototype.renderView = function(data) {
     var searchKey;
-    searchKey = this.getOpt("searchKey");
-    data = this.callbacks("sorter").call(this, this.query.text, data.slice(0, 1001), searchKey);
+    searchKey = this.getOpt('searchKey');
+    data = this.callbacks('sorter').call(this, this.query.text, data.slice(0, 1001), searchKey);
     return this.view.render(data.slice(0, this.getOpt('limit')));
   };
 
@@ -555,11 +555,26 @@ Controller = (function() {
 
 })();
 
-var TextareaController,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var extend, hasProp;
 
-TextareaController = (function(superClass) {
+hasProp = {}.hasOwnProperty;
+
+extend = function(child, parent) {
+  for (var key in parent) {
+    if (hasProp.call(parent, key)) {
+      child[key] = parent[key];
+    }
+  }
+  function ctor() {
+    this.constructor = child;
+  }
+  ctor.prototype = parent.prototype;
+  child.prototype = new ctor();
+  child.__super__ = parent.prototype;
+  return child;
+};
+
+var TextareaController = (function(superClass) {
   extend(TextareaController, superClass);
 
   function TextareaController() {
@@ -573,7 +588,7 @@ TextareaController = (function(superClass) {
       iframe: this.app.iframe
     });
     subtext = content.slice(0, caretPos);
-    query = this.callbacks("matcher").call(this, this.at, subtext, this.getOpt('startWithSpace'), this.getOpt("acceptSpaceBar"));
+    query = this.callbacks('matcher').call(this, this.at, subtext, this.getOpt('startWithSpace'), this.getOpt('acceptSpaceBar'));
     isString = typeof query === 'string';
     if (isString && query.length < this.getOpt('minLen', 0)) {
       return;
@@ -587,7 +602,7 @@ TextareaController = (function(superClass) {
         'headPos': start,
         'endPos': end
       };
-      this.trigger("matched", [this.at, query.text]);
+      this.trigger('matched', [this.at, query.text]);
     } else {
       query = null;
       this.view.hide();
@@ -615,14 +630,14 @@ TextareaController = (function(superClass) {
     };
   };
 
-  TextareaController.prototype.insert = function(content, $li) {
+  TextareaController.prototype.insert = function(content) {
     var $inputor, source, startStr, suffix, text;
     $inputor = this.$inputor;
     source = $inputor.val();
     startStr = source.slice(0, Math.max(this.query.headPos - this.at.length, 0));
-    suffix = (suffix = this.getOpt('suffix')) === "" ? suffix : suffix || " ";
+    suffix = (suffix = this.getOpt('suffix')) === '' ? suffix : suffix || ' ';
     content += suffix;
-    text = "" + startStr + content + (source.slice(this.query['endPos'] || 0));
+    text = '' + startStr + content + (source.slice(this.query.endPos || 0));
     $inputor.val(text);
     $inputor.caret('pos', startStr.length + content.length, {
       iframe: this.app.iframe
@@ -637,11 +652,7 @@ TextareaController = (function(superClass) {
 
 })(Controller);
 
-var EditableController,
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
-
-EditableController = (function(superClass) {
+var EditableController = (function(superClass) {
   extend(EditableController, superClass);
 
   function EditableController() {
@@ -718,7 +729,7 @@ EditableController = (function(superClass) {
       if ($query.is(':empty')) {
         $query.remove();
       }
-      ($query = $(".atwho-query", this.app.document)).text($query.text()).contents().last().unwrap();
+      ($query = $('.atwho-query', this.app.document)).text($query.text()).contents().last().unwrap();
       this._clearRange();
       return;
     }
@@ -742,7 +753,7 @@ EditableController = (function(superClass) {
       }
     }
     $(range.startContainer).closest('.atwho-inserted').addClass('atwho-query').siblings().removeClass('atwho-query');
-    if (($query = $(".atwho-query", this.app.document)).length > 0 && $query.is(':empty') && $query.text().length === 0) {
+    if (($query = $('.atwho-query', this.app.document)).length > 0 && $query.is(':empty') && $query.text().length === 0) {
       $query.remove();
     }
     if (!this._movingEvent(e)) {
@@ -766,11 +777,11 @@ EditableController = (function(superClass) {
     }
     _range = range.cloneRange();
     _range.setStart(range.startContainer, 0);
-    matched = this.callbacks("matcher").call(this, this.at, _range.toString(), this.getOpt('startWithSpace'), this.getOpt("acceptSpaceBar"));
+    matched = this.callbacks('matcher').call(this, this.at, _range.toString(), this.getOpt('startWithSpace'), this.getOpt('acceptSpaceBar'));
     isString = typeof matched === 'string';
     if ($query.length === 0 && isString && (index = range.startOffset - this.at.length - matched.length) >= 0) {
       range.setStart(range.startContainer, index);
-      $query = $('<span/>', this.app.document).attr(this.getOpt("editableAtwhoQueryAttrs")).addClass('atwho-query');
+      $query = $('<span/>', this.app.document).attr(this.getOpt('editableAtwhoQueryAttrs')).addClass('atwho-query');
       range.surroundContents($query.get(0));
       lastNode = $query.contents().last().get(0);
       if (lastNode) {
@@ -791,7 +802,7 @@ EditableController = (function(superClass) {
         text: matched,
         el: $query
       };
-      this.trigger("matched", [this.at, query.text]);
+      this.trigger('matched', [this.at, query.text]);
       return this.query = query;
     } else {
       this.view.hide();
@@ -802,7 +813,7 @@ EditableController = (function(superClass) {
         if (this._movingEvent(e) && $query.hasClass('atwho-inserted')) {
           $query.removeClass('atwho-query');
         } else if (false !== this.callbacks('afterMatchFailed').call(this, this.at, $query)) {
-          this._setRange("after", this._unwrap($query.text($query.text()).contents().first()));
+          this._setRange('after', this._unwrap($query.text($query.text()).contents().first()));
         }
       }
       return null;
@@ -833,15 +844,15 @@ EditableController = (function(superClass) {
     if (overrides.insert) {
       return overrides.insert.call(this, content, $li);
     }
-    suffix = (suffix = this.getOpt('suffix')) === "" ? suffix : suffix || "\u00A0";
+    suffix = (suffix = this.getOpt('suffix')) === '' ? suffix : suffix || '\u00A0';
     data = $li.data('item-data');
-    this.query.el.removeClass('atwho-query').addClass('atwho-inserted').html(content).attr('data-atwho-at-query', "" + data['atwho-at'] + this.query.text).attr('contenteditable', "false");
+    this.query.el.removeClass('atwho-query').addClass('atwho-inserted').html(content).attr('data-atwho-at-query', '' + data['atwho-at'] + this.query.text).attr('contenteditable', 'false');
     if (range = this._getRange()) {
       if (this.query.el.length) {
         range.setEndAfter(this.query.el[0]);
       }
       range.collapse(false);
-      range.insertNode(suffixNode = this.app.document.createTextNode("" + suffix));
+      range.insertNode(suffixNode = this.app.document.createTextNode('' + suffix));
       this._setRange('after', suffixNode, range);
     }
     if (!this.$inputor.is(':focus')) {
@@ -874,7 +885,7 @@ Model = (function() {
   Model.prototype.query = function(query, callback) {
     var _remoteFilter, data, searchKey;
     data = this.fetch();
-    searchKey = this.context.getOpt("searchKey");
+    searchKey = this.context.getOpt('searchKey');
     data = this.context.callbacks('filter').call(this.context, query, data, searchKey) || [];
     _remoteFilter = this.context.callbacks('remoteFilter');
     if (data.length > 0 || (!_remoteFilter && data.length === 0)) {
@@ -889,7 +900,7 @@ Model = (function() {
   };
 
   Model.prototype.save = function(data) {
-    return this.storage.data(this.at, this.context.callbacks("beforeSave").call(this.context, data || []));
+    return this.storage.data(this.at, this.context.callbacks('beforeSave').call(this.context, data || []));
   };
 
   Model.prototype.load = function(data) {
@@ -903,9 +914,9 @@ Model = (function() {
   };
 
   Model.prototype._load = function(data) {
-    if (typeof data === "string") {
+    if (typeof data === 'string') {
       return $.ajax(data, {
-        dataType: "json"
+        dataType: 'json'
       }).done((function(_this) {
         return function(data) {
           return _this.save(data);
@@ -925,7 +936,7 @@ var View;
 View = (function() {
   function View(context) {
     this.context = context;
-    this.$el = $("<div class='atwho-view'><ul class='atwho-view-ul'></ul></div>");
+    this.$el = $('<div class="atwho-view"><ul class="atwho-view-ul"></ul></div>');
     this.$elUl = this.$el.children();
     this.timeoutID = null;
     this.context.$el.append(this.$el);
@@ -934,13 +945,13 @@ View = (function() {
 
   View.prototype.init = function() {
     var header_tpl, id;
-    id = this.context.getOpt("alias") || this.context.at.charCodeAt(0);
-    header_tpl = this.context.getOpt("headerTpl");
+    id = this.context.getOpt('alias') || this.context.at.charCodeAt(0);
+    header_tpl = this.context.getOpt('headerTpl');
     if (header_tpl && this.$el.children().length === 1) {
       this.$el.prepend(header_tpl);
     }
     return this.$el.attr({
-      'id': "at-view-" + id
+      'id': 'at-view-' + id
     });
   };
 
@@ -953,7 +964,7 @@ View = (function() {
     $menu = this.$el.find('ul');
     lastCoordX = 0;
     lastCoordY = 0;
-    return $menu.on('mousemove.atwho-view', 'li', (function(_this) {
+    $menu.on('mousemove.atwho-view', 'li', (function() {
       return function(e) {
         var $cur;
         if (lastCoordX === e.clientX && lastCoordY === e.clientY) {
@@ -983,41 +994,58 @@ View = (function() {
   };
 
   View.prototype.highlighted = function() {
-    return this.$el.find(".cur").length > 0;
+    return this.$el.find('.cur').length > 0;
   };
 
   View.prototype.choose = function(e) {
     var $li, content;
-    if (($li = this.$el.find(".cur")).length) {
+    if (($li = this.$el.find('.cur')).length) {
       content = this.context.insertContentFor($li);
       this.context._stopDelayedCall();
-      this.context.insert(this.context.callbacks("beforeInsert").call(this.context, content, $li, e), $li);
-      this.context.trigger("inserted", [$li, e]);
+      this.context.insert(this.context.callbacks('beforeInsert').call(this.context, content, $li, e), $li);
+      this.context.trigger('inserted', [$li, e]);
       this.hide(e);
     }
-    if (this.context.getOpt("hideWithoutSuffix")) {
+    if (this.context.getOpt('hideWithoutSuffix')) {
       return this.stopShowing = true;
     }
   };
 
   View.prototype.reposition = function(rect) {
     var _window, offset, overflowOffset, ref;
-    _window = this.context.app.iframeAsRoot ? this.context.app.window : window;
-    if (rect.bottom + this.$el.height() - $(_window).scrollTop() > $(_window).height()) {
-      rect.bottom = rect.top - this.$el.height();
+
+    var isInIframe = window !== window.top;
+
+    _window = isInIframe ? window : window.top;
+    var $window = $(_window);
+
+    if (isInIframe) {
+        var iframeOffset = $(window.frameElement).offset();
+        rect.top += iframeOffset.top;
+        rect.bottom -= iframeOffset.top;
+        rect.left -= iframeOffset.left;
     }
-    if (rect.left > (overflowOffset = $(_window).width() - this.$el.width() - 5)) {
-      rect.left = overflowOffset;
+
+    if (rect.bottom + this.$el.height() - $window.scrollTop() > $window.height()) {
+        rect.bottom = rect.top - this.$el.height();
     }
+
+    if (rect.left > (overflowOffset = $window.width() - this.$el.width() - 5)) {
+        rect.left = overflowOffset;
+    }
+
     offset = {
-      left: rect.left,
-      top: rect.bottom
+        left: rect.left,
+        top: rect.bottom
     };
-    if ((ref = this.context.callbacks("beforeReposition")) != null) {
-      ref.call(this.context, offset);
+
+    if ((ref = this.context.callbacks('beforeReposition')) != null) {
+        ref.call(this.context, offset);
     }
+
     this.$el.offset(offset);
-    return this.context.trigger("reposition", [offset]);
+
+    return this.context.trigger('reposition', [offset]);
   };
 
   View.prototype.next = function() {
@@ -1107,14 +1135,14 @@ View = (function() {
       item = $.extend({}, item, {
         'atwho-at': this.context.at
       });
-      li = this.context.callbacks("tplEval").call(this.context, tpl, item, "onDisplay");
-      $li = $(this.context.callbacks("highlighter").call(this.context, li, this.context.query.text));
-      $li.data("item-data", item);
+      li = this.context.callbacks('tplEval').call(this.context, tpl, item, 'onDisplay');
+      $li = $(this.context.callbacks('highlighter').call(this.context, li, this.context.query.text));
+      $li.data('item-data', item);
       $ul.append($li);
     }
     this.show();
     if (this.context.getOpt('highlightFirst')) {
-      return $ul.find("li:first").addClass("cur");
+      return $ul.find('li:first').addClass('cur');
     }
   };
 
@@ -1164,7 +1192,7 @@ $.fn.atwho = function(method) {
   result = null;
   this.filter('textarea, input, [contenteditable=""], [contenteditable=true]').each(function() {
     var $this, app;
-    if (!(app = ($this = $(this)).data("atwho"))) {
+    if (!(app = ($this = $(this)).data('atwho'))) {
       $this.data('atwho', (app = new App(this)));
     }
     if (typeof method === 'object' || !method) {
@@ -1172,7 +1200,7 @@ $.fn.atwho = function(method) {
     } else if (Api[method] && app) {
       return result = Api[method].apply(app, Array.prototype.slice.call(_args, 1));
     } else {
-      return $.error("Method " + method + " does not exist on jQuery.atwho");
+      return $.error('Method ' + method + ' does not exist on jQuery.atwho');
     }
   });
   if (result != null) {
@@ -1182,16 +1210,16 @@ $.fn.atwho = function(method) {
   }
 };
 
-$.fn.atwho["default"] = {
+$.fn.atwho['default'] = {
   at: void 0,
   alias: void 0,
   data: null,
-  displayTpl: "<li>${name}</li>",
-  insertTpl: "${atwho-at}${name}",
+  displayTpl: '<li>${name}</li>',
+  insertTpl: '${atwho-at}${name}',
   headerTpl: null,
   callbacks: DEFAULT_CALLBACKS,
   functionOverrides: {},
-  searchKey: "name",
+  searchKey: 'name',
   suffix: void 0,
   hideWithoutSuffix: false,
   startWithSpace: true,

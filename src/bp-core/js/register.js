@@ -337,8 +337,8 @@ jQuery( document ).ready( function() {
 
 
 	function bp_register_validate_email() {
-		var email1 				 = emailSelector.val(),
-			email2 				 = confirmEmailSelector.val(),
+		var email1 				 = emailSelector.val().toLowerCase(),
+			email2 				 = confirmEmailSelector.val().toLowerCase(),
 		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			errorMessageSelector = jQuery( '#email-strength-result' );
 
@@ -366,8 +366,8 @@ jQuery( document ).ready( function() {
 			return;
 		}
 
-		var email1 				 = emailSelector.val(),
-		    email2 				 = confirmEmailSelector.val(),
+		var email1 				 = emailSelector.val().toLowerCase(),
+		    email2 				 = confirmEmailSelector.val().toLowerCase(),
 		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			errorMessageSelector = jQuery( '#email-strength-result' );
 

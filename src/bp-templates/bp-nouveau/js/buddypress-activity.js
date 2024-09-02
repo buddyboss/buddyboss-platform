@@ -1275,7 +1275,7 @@ window.bp = window.bp || {};
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				if ( target.hasClass( 'acomment-edit' ) && target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
+				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
 					activity_comment_data = target.closest( 'li' ).data( 'bp-activity-comment' );
 				}
 
@@ -1283,6 +1283,7 @@ window.bp = window.bp || {};
 
 				form.removeClass( 'root' );
 				$( '.ac-form' ).addClass( 'not-initialized' );
+				$( '.ac-form' ).find( '.ac-input' ).html( '' );
 
 				bp.Nouveau.Activity.clearFeedbackNotice( form );
 
@@ -1356,6 +1357,24 @@ window.bp = window.bp || {};
 				target.closest( '.acomment-display' ).addClass( 'display-focus' );
 				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
 
+				var activity_data_nickname;
+				var activity_user_id;
+				var current_user_id;
+
+				if ( ! _.isNull( activity_comment_data ) ) {
+					activity_data_nickname = activity_comment_data.nickname;
+				}
+
+				if ( ! _.isNull( activity_comment_data ) ) {
+					activity_user_id = activity_comment_data.user_id;
+				}
+
+				var atWho = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;';
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+					current_user_id = BP_Nouveau.activity.params.user_id;
+				}
+
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
 				var scrollOptions = {
@@ -1395,11 +1414,22 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Tag user on comment replies.
+				if (
+					! target.hasClass( 'acomment-edit' ) &&
+					! target.hasClass( 'button' ) &&
+					! target.hasClass( 'activity-state-comments' ) &&
+					current_user_id !== activity_user_id
+				) {
+					$( hasParentModal + '#ac-input-' + activity_id ).html( atWho );
+					form.addClass( 'has-content' );
+				}
+
 				// Place caret at the end of the content.
 				if (
 					'undefined' !== typeof window.getSelection &&
 					'undefined' !== typeof document.createRange &&
-					( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) )
+					! _.isNull( activity_comment_data )
 				) {
 					var range = document.createRange();
 					range.selectNodeContents( $( hasParentModal + '#ac-input-' + activity_id )[0] );

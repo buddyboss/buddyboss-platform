@@ -143,7 +143,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 					}
 				} elseif ( bbp_is_topic_archive() ) {
 					$base = bbp_get_topics_url();
-                    
+
 					// Page or single post.
 				} else {
 					$base = get_permalink();
@@ -2922,8 +2922,22 @@ function bbp_get_topic_trash_link( $args = '' ) {
 	$actions = array();
 	$topic   = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );
 
-	if ( empty( $topic ) || ! current_user_can( 'delete_topic', $topic->ID ) ) {
+	if ( empty( $topic ) ) {
 		return;
+	} elseif ( ! current_user_can( 'delete_topic', $topic->ID ) ) {
+
+		// Is groups component active.
+		if ( bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_topic_author_id( $topic->ID );
+			$forum_id     = bbp_get_topic_forum_id( $topic->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $topic, $args );
+			if ( ! $allow_delete ) {
+				return;
+			}
+		} else {
+			return;
+		}
 	}
 
 	if ( bbp_is_topic_trash( $topic->ID ) ) {
