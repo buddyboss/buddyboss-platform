@@ -26,6 +26,8 @@ class BB_In_Plugin_Notifications {
 	 *
 	 * @var string
 	 */
+
+	// @todo We need to change this URL to the correct one.
 	const SOURCE_URL      = 'https://a.omwpapi.com/production/wp/notifications.json';
 	const SOURCE_URL_ARGS = array();
 
