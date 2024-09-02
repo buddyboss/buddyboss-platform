@@ -1205,3 +1205,16 @@ function bb_load_web_performance_tester() {
 		bb_web_performance_tester();
 	}
 }
+
+/**
+ * Function to load in-plugin notification class.
+ *
+ * @since BuddyBoss [BB_VERSION]
+ */
+function bb_in_plugn_notification_load() {
+	if ( class_exists( 'BB_In_Plugin_Notifications' ) ) {
+		BB_In_Plugin_Notifications::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_in_plugn_notification_load' );
