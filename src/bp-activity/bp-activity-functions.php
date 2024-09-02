@@ -2221,6 +2221,11 @@ function bp_activity_post_update( $args = '' ) {
 	}
 
 	$bp_activity_edit = false;
+	// Set the activity edit true when the $_POST['edit_activity'] is set to true.
+	$edit_activity = filter_input( INPUT_POST, 'edit_activity', FILTER_VALIDATE_BOOLEAN );
+	if ( $edit_activity ) {
+		$bp_activity_edit = true;
+	}
 	$activity_id      = false;
 
 	// Record this on the user's profile.
