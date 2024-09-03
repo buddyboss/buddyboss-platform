@@ -1687,8 +1687,12 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		$cu_post_types = get_post_types( $args, $output );
 
-		foreach ( $cu_post_types as $cu ) {
-			$singular_label_name = strtolower( $cu->labels->singular_name );
+		if ( ! empty( $cu_post_types ) ) {
+			foreach ( $cu_post_types as $cu ) {
+				$singular_label_name = strtolower( $cu->labels->singular_name );
+			}
+		} else {
+			$singular_label_name = str_replace( '-', ' ', $post_type );
 		}
 
 		// Build the complete activity action string.

@@ -1661,7 +1661,18 @@ function bp_activity_generate_action_string( $activity ) {
 
 	// Check for registered format callback.
 	$actions = bp_activity_get_actions();
-	if ( empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
+
+	// Handle missing format_callback for blogs component.
+	if ( 'blogs' === $activity->component && empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
+		$actions->{$activity->component}->{$activity->type} = array(
+			'key'             => $activity->type,
+			'value'           => sprintf( __( 'New %s published', 'buddyboss' ), str_replace( 'new_blog_', '', $activity->type ) ),
+			'format_callback' => 'bp_blogs_format_activity_action_new_custom_post_type_feed',
+			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
+			'context'         => array( 'activity', 'member' ),
+			'position'        => 5,
+		);
+	} elseif ( empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
 		return false;
 	}
 
