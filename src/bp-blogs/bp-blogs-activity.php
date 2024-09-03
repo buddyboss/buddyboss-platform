@@ -1692,7 +1692,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 				$singular_label_name = strtolower( $cu->labels->singular_name );
 			}
 		} else {
-			$singular_label_name = str_replace( '-', ' ', $post_type );
+			$singular_label_name = 'post';
 		}
 
 		// Build the complete activity action string.
