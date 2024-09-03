@@ -933,10 +933,10 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
-			}
 
-			if ( empty( $activity->action ) ) {
-				$activity->action = bp_activity_generate_action_string( $activity );
+				if ( empty( $activity->action ) ) {
+					$activity->action = bp_activity_generate_action_string( $activity );
+				}
 			}
 
 			$activities[] = $activity;
