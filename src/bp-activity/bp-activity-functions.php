@@ -1662,7 +1662,11 @@ function bp_activity_generate_action_string( $activity ) {
 	// Check for registered format callback.
 	$actions = bp_activity_get_actions();
 
-	// Handle missing format_callback for blogs component.
+	/**
+	 * Handle the case where a format_callback is missing for the 'blogs' component.
+	 * This situation can occur when a custom post type (CPT) associated with the activity
+	 * is no longer registered, possibly due to deactivating a third-party plugin that provided the CPT.
+	 */
 	if ( 'blogs' === $activity->component && empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
 		$actions->{$activity->component}->{$activity->type} = array(
 			'key'             => $activity->type,
