@@ -2890,34 +2890,34 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
  * @return bool
  */
 function bb_check_field_visibility( $field_id, $displayed_user_id = 0 ) {
-    $current_user_id = get_current_user_id();
+	$current_user_id = get_current_user_id();
 
 	if ( empty( $displayed_user_id ) ) {
 		$displayed_user_id = bp_displayed_user_id();
 	}
 
-    // Get the privacy setting for the profile field.
-    $field_visibility = new BB_XProfile_Visibility( $field_id, $displayed_user_id );
-    $field_privacy     = $field_visibility->value;
+	// Get the privacy setting for the profile field.
+	$field_visibility = new BB_XProfile_Visibility( $field_id, $displayed_user_id );
+	$field_privacy    = $field_visibility->value;
 
-    if ( $current_user_id === $displayed_user_id ) {
-        return true;
-    }
+	if ( $current_user_id === $displayed_user_id ) {
+		return true;
+	}
 
-    switch ( $field_privacy ) {
-        case 'public':
-            return true;
+	switch ( $field_privacy ) {
+		case 'public':
+			return true;
 
-        case 'adminsonly':
-            return current_user_can( 'administrator' ) ? true : false;
+		case 'adminsonly':
+			return current_user_can( 'administrator' ) ? true : false;
 
-        case 'loggedin':
-            return is_user_logged_in() ? true : false;
+		case 'loggedin':
+			return is_user_logged_in() ? true : false;
 
-        case 'friends':
-            return bp_is_active( 'friends' ) && friends_is_friend( $current_user_id, $displayed_user_id ) ? true : false;
+		case 'friends':
+			return bp_is_active( 'friends' ) && friends_is_friend( $current_user_id, $displayed_user_id ) ? true : false;
 
-        default:
-            return true;
-    }
+		default:
+			return true;
+	}
 }
