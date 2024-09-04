@@ -3946,7 +3946,10 @@ function bp_get_user_member_type( $user_id ) {
 
 	$member_type = __( 'Member', 'buddyboss' );
 
-	if ( true === bp_member_type_enable_disable() ) {
+	// Check if member type visiblity level of current user.
+	$is_member_type_visible = bb_check_field_visibility( bp_get_xprofile_member_type_field_id(), $user_id );
+
+	if ( true === bp_member_type_enable_disable() && $is_member_type_visible ) {
 		if ( true === bp_member_type_display_on_profile() ) {
 
 			// Get the profile type.
