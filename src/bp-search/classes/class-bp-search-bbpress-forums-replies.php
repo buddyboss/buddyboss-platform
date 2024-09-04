@@ -96,7 +96,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			$where   = array();
 			$where[] = '1=1';
-			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+			$where[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
 			$where[] = '(' . $group_query . '
@@ -112,6 +112,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			 */
 			$where = apply_filters( 'bp_forum_reply_search_where_sql', $where );
 
+			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 

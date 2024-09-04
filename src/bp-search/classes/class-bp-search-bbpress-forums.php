@@ -44,7 +44,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$where   = array();
 			$where[] = '1=1';
-			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+			$where[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -103,6 +103,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$where[] = $where_sql;
 
+			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
