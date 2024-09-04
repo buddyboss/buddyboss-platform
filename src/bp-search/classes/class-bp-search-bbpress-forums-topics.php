@@ -190,7 +190,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$where   = array();
 			$where[] = '1=1';
-			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+			$where[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
 			if ( ! empty( $forum_ids ) ) {
@@ -198,6 +198,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 				$where[]     = " p.post_parent IN ( $forum_id_in ) ";
 			}
 
+			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
