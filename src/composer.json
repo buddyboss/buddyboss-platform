@@ -40,7 +40,8 @@
 			"cp -r scoped_vendor/includes/Library/Composer/Src/* includes/Library/Composer",
 			"rm -rf scoped_vendor",
 			"composer remove-ffmpeg-docs",
-			"composer dumpautoload --optimize"
+			"composer dumpautoload --optimize",
+			"php ../bin/bb-scoper-prefixer.php"
 		]
     },
     "config": {
