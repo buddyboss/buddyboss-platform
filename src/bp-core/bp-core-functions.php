@@ -1200,7 +1200,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1331,11 +1331,15 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					);
 					break;
 				default:
-					$output = $count < 2 ? $right_now_text : sprintf(
-						/* translators: The display seconds count from the older date.. */
-						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
-						$count
-					);
+					if ( $count >= 1 && $count <= 59 ) {
+						$output = $right_now_text;
+					} else {
+						$output = sprintf(
+							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+							$count
+						);
+					}
+					break;
 			}
 
 			// No output, so happened right now.
@@ -1346,7 +1350,9 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	$output = sprintf( $ago_text, $output );
+	if ( $output !== $right_now_text ) {
+		$output = sprintf( $ago_text, $output );
+	}
 
 	/**
 	 * Filters the English-language representation of the time elapsed since a given date.
