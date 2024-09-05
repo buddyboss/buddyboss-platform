@@ -3,7 +3,7 @@
 /**
  * File contains a script to add prefix to below files.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.6.90
  * @package BuddyBoss
  */
 $files = array(
