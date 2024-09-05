@@ -1668,10 +1668,13 @@ function bp_activity_generate_action_string( $activity ) {
 	 * is no longer registered, possibly due to deactivating a third-party plugin that provided the CPT.
 	 */
 	if ( 'blogs' === $activity->component && empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
+		if ( ! bp_is_active( 'blogs' ) ) {
+			$actions->{$activity->component} = new stdClass();
+		}
 		$actions->{$activity->component}->{$activity->type} = array(
 			'key'             => $activity->type,
 			'value'           => sprintf( __( 'New %s published', 'buddyboss' ), str_replace( 'new_blog_', '', $activity->type ) ),
-			'format_callback' => 'bp_blogs_format_activity_action_new_custom_post_type_feed',
+			'format_callback' => 'bb_blogs_format_activity_action_disabled_post_type_feed',
 			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
 			'context'         => array( 'activity', 'member' ),
 			'position'        => 5,
@@ -7374,4 +7377,36 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 			}
 		}
 	}
+}
+
+/**
+ * If a blog component is disabled, then display activity action for existing blog activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $action   Constructed activity action.
+ * @param object $activity Activity data object.
+ *
+ * @return string
+ */
+function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $activity ) {
+	$blog_url  = get_home_url( $activity->item_id );
+	$blog_name = get_blog_option( $activity->item_id, 'blogname' );
+	$user_link = bp_core_get_userlink( $activity->user_id );
+
+	if ( is_multisite() ) {
+		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+	} else {
+		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
+	}
+
+	/**
+	 * Filters the blog post action for the existing blog activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $action   Constructed activity action.
+	 * @param object $activity Activity data object.
+	 */
+	return apply_filters( 'bb_blogs_format_activity_action_disabled_post_type_feed', $action, $activity );
 }
