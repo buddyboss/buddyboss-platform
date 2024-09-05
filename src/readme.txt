@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.6.90 =
+* New Feature! - In this update we have introduced Polls. Polls is a highly requested feature that allows Admins and group Owners & Moderators make use use of Polls either in the main activity feed or group activity feed.
+* Bug: Activity - UI issues in the activity feed model updated
+* Bug: Core - A fatal error occurred when using the SureCart plugin and running the WP plugin list command
+
 = 2.6.80 =
 * Enhancement: Activity - When replying to a comment we have added in the users tag to whom the reply is to to start the reply
 * Bug: Activity - When using the news feed that was added through the iframe, the tagging display was not properly displayed
