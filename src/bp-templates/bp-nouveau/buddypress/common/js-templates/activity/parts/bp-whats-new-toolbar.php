@@ -16,7 +16,7 @@
 	/**
 	 * Fires at the beginning of the whats new toolbar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.90
 	 */
 	do_action( 'bb_whats_new_toolbar_before' );
 
@@ -60,7 +60,7 @@
 	/**
 	 * Fires at the end of the whats new toolbar.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.90
 	 */
 	do_action( 'bb_whats_new_toolbar_after' );
 	?>

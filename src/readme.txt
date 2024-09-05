@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.1
 Requires PHP: 5.6.20
-Stable tag: 2.6.80
+Stable tag: 2.6.90
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.6.90 =
+* New Feature! - In this update we have introduced Polls. Polls is a highly requested feature that allows Admins and group Owners & Moderators make use use of Polls either in the main activity feed or group activity feed.
+* Bug: Activity - UI issues in the activity feed model updated
+* Bug: Core - A fatal error occurred when using the SureCart plugin and running the WP plugin list command
 
 = 2.6.80 =
 * Enhancement: Activity - When replying to a comment we have added in the users tag to whom the reply is to to start the reply
