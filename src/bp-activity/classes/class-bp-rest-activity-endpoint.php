@@ -3233,6 +3233,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				&& empty( $request['bp_documents'] )
 				&& empty( $request['bp_videos'] )
 			)
+			&& empty( $request['bb_poll_id'] )
 		);
 
 		return $toolbar_option;
@@ -3374,7 +3375,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $edit_activity_data ) ) {
 			// Removed unwanted data.
-			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document', 'video' );
+			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document', 'video', 'poll' );
 			foreach ( $unset_keys as $key ) {
 				if ( array_key_exists( $key, $edit_activity_data ) ) {
 					unset( $edit_activity_data[ $key ] );
