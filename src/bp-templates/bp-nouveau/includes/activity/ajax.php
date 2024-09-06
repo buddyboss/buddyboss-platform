@@ -709,6 +709,8 @@ function bp_nouveau_ajax_post_update() {
 			$toolbar_option = true;
 		} elseif ( bp_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
 			$toolbar_option = true;
+		} elseif ( ! empty( sanitize_text_field( wp_unslash( (int) $_POST['poll_id'] ) ) ) ) {
+			$toolbar_option = true;
 		}
 
 		if ( ! $toolbar_option ) {

@@ -45,7 +45,14 @@ class BB_Activity extends Integration_Abstract {
 			'bp_suspend_activity_comment_unsuspended', // Any Activity Comment Unsuspended.
 
 			'bp_moderation_after_save',     // Hide activity when member blocked.
-			'bb_moderation_after_delete'    // Unhide activity when member unblocked.
+			'bb_moderation_after_delete',    // Unhide activity when member unblocked.
+
+			'bb_poll_after_add_poll',     // Add/Update poll
+			'bb_poll_after_remove_poll',     // Remove poll
+			'bb_poll_after_add_poll_option', // Add poll options
+			'bb_poll_after_remove_poll_options', // Remove poll options
+			'bb_poll_after_add_poll_vote',   // Add a poll vote
+			'bb_poll_after_remove_poll_votes', // Remove poll votes
 		);
 
 		$this->purge_event( 'bp-activity', $purge_events );
@@ -93,6 +100,13 @@ class BB_Activity extends Integration_Abstract {
 			// When create user reaction via reaction API.
 			'bb_reaction_after_add_user_item_reaction'    => 2, // When enabled/disabled the reactions.
 			'bb_reaction_after_remove_user_item_reaction' => 3, // When enabled/disabled the reactions.
+
+			'bb_poll_after_add_poll'            => 1, // Add/Update poll.
+			'bb_poll_after_remove_poll'         => 1, // Remove poll.
+			'bb_poll_after_add_poll_option'     => 2, // Add poll options.
+			'bb_poll_after_remove_poll_options' => 2, // Remove poll options.
+			'bb_poll_after_add_poll_vote'       => 2, // Add a poll vote.
+			'bb_poll_after_remove_poll_votes'   => 2, // Remove poll votes.
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -459,5 +473,130 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_bb_activity_close_unclose_comments( $activity_id ) {
 		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Update poll.
+	 *
+	 * @param int $poll_id Poll id.
+	 */
+	public function event_bb_poll_after_add_poll( $poll_id ) {
+		$activity_id = $this->get_activity_id_by_poll_id( $poll_id );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Remove poll.
+	 *
+	 * @param int $poll_id Poll id.
+	 */
+	public function event_bb_poll_after_remove_poll( $poll_id ) {
+		$activity_id = $this->get_activity_id_by_poll_id( $poll_id );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Add/Update a poll option.
+	 *
+	 * @param int   $option_id Option id.
+	 * @param array $args      Arguments array.
+	 */
+	public function event_bb_poll_after_add_poll_option( $option_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Remove a poll option.
+	 *
+	 * @param int   $option_id Option id.
+	 * @param array $args      Arguments array.
+	 */
+	public function event_bb_poll_after_remove_poll_options( $option_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Add/Update a poll vote.
+	 *
+	 * @param int   $vote_id Vote id.
+	 * @param array $args    Arguments array.
+	 */
+	public function event_bb_poll_after_add_poll_vote( $vote_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Remove a poll vote.
+	 *
+	 * @param int   $vote_id Vote id.
+	 * @param array $args    Arguments array.
+	 */
+	public function event_bb_poll_after_remove_poll_votes( $vote_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Get Activity id based on poll ID.
+	 *
+	 * @param int $poll_id Poll ID.
+	 *
+	 * @return string
+	 */
+	private function get_activity_id_by_poll_id( $poll_id ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_var( $wpdb->prepare( "SELECT activity_id FROM {$bp->activity->table_name_meta} WHERE meta_key = %s AND meta_value = %d", "bb_poll_id", $poll_id ) );
 	}
 }
