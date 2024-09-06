@@ -402,7 +402,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Allow activity poll.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.6.90
 	 */
 	public function bb_admin_setting_callback_enable_activity_post_polls( $args ) {
 		$val    = function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls( false ) : false;
