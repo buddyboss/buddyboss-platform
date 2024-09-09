@@ -1200,7 +1200,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1331,11 +1331,15 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					);
 					break;
 				default:
-					$output = $count < 2 ? $right_now_text : sprintf(
-						/* translators: The display seconds count from the older date.. */
-						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
-						$count
-					);
+					if ( $count >= 1 && $count <= 59 ) {
+						$output = $right_now_text;
+					} else {
+						$output = sprintf(
+							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+							$count
+						);
+					}
+					break;
 			}
 
 			// No output, so happened right now.
@@ -1346,7 +1350,9 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	$output = sprintf( $ago_text, $output );
+	if ( $output !== $right_now_text ) {
+		$output = sprintf( $ago_text, $output );
+	}
 
 	/**
 	 * Filters the English-language representation of the time elapsed since a given date.
@@ -9608,7 +9614,7 @@ function bb_generate_default_avatar( $args ) {
 		$property->setAccessible( true );
 		$image = $property->getValue( $image_editor );
 
-		if ( 'WP_Image_Editor_GD' === $chose_editor ) {
+		if ( strpos( $chose_editor, 'WP_Image_Editor_GD' ) !== false ) {
 			// Define the background color.
 			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
 			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
@@ -9820,7 +9826,7 @@ function bb_is_gd_or_imagick_library_enabled() {
 				! empty( $lib_loaded  ) &&
 				! is_wp_error( $lib_loaded  ) &&
 				(
-					'WP_Image_Editor_GD' === $lib_loaded ||
+					strpos( $lib_loaded, 'WP_Image_Editor_GD' ) !== false ||
 					'WP_Image_Editor_Imagick' === $lib_loaded
 				)
 			) {
@@ -9877,4 +9883,15 @@ function bb_remove_deleted_user_last_activities() {
 		$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
 		$wpdb->query( $delete_query ); // phpcs:ignore
 	}
+}
+
+/**
+ * Function to return the minimum pro version to show notice for poll.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_poll_version() {
+	return '2.6.00';
 }

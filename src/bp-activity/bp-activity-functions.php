@@ -5854,6 +5854,7 @@ function bb_activity_following_post_notification( $args ) {
 	$media_ids        = $activity_metas['bp_media_ids'][0] ?? '';
 	$document_ids     = $activity_metas['bp_document_ids'][0] ?? '';
 	$video_ids        = $activity_metas['bp_video_ids'][0] ?? '';
+	$poll_id          = $activity_metas['bb_poll_id'][0] ?? 0;
 
 	if ( $media_ids ) {
 		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
@@ -5876,6 +5877,8 @@ function bb_activity_following_post_notification( $args ) {
 		} else {
 			$text = __( 'a video', 'buddyboss' );
 		}
+	} elseif ( ! empty( $poll_id ) ) {
+		$text = __( 'a new poll', 'buddyboss' );
 	} else {
 		$text = __( 'an update', 'buddyboss' );
 	}
@@ -5925,7 +5928,7 @@ function bb_activity_following_post_notification( $args ) {
 				'user_id'           => $user_id,
 				'notification_type' => 'new-activity-following',
 			);
-			$poster_name = bp_core_get_user_displayname( $activity_user_id, $user_id );
+			$poster_name      = bp_core_get_user_displayname( $activity_user_id, $user_id );
 
 			$args['tokens']['poster.name']      = $poster_name;
 			$args['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
@@ -6310,7 +6313,9 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
 	if ( false === $edit_data ) {
 		// Get activity metas.
-		$activity_comment_metas = bb_activity_get_metadata( $activity_comment_id );
+		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
+		$activity_comment_user_id  = bp_get_activity_comment_user_id();
+		$activity_comment_nickname = bp_activity_get_user_mentionname( $activity_comment_user_id );
 
 		$can_edit_privacy                = true;
 		$album_id                        = 0;
@@ -6341,6 +6346,8 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'item_id'          => $activity_comment->item_id,
 			'object'           => $activity_comment->component,
 			'privacy'          => $activity_comment->privacy,
+			'user_id'          => $activity_comment_user_id,
+			'nickname'         => $activity_comment_nickname,
 		);
 	}
 
