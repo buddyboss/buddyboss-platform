@@ -2129,7 +2129,13 @@ class BP_Email_Tokens {
 															}
 															?>
 														</div>
-														<?php echo $this->get_email_media( $activity->id, $tokens ); ?>
+														<?php
+														$poll_id = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
+														if ( ! empty( $poll_id ) && function_exists( 'get_email_poll' ) ) {
+															echo get_email_poll( $activity->id, $poll_id, $tokens );
+														}
+														echo $this->get_email_media( $activity->id, $tokens );
+														?>
 													</td>
 												</tr>
 												<tr>
