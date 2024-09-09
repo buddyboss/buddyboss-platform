@@ -38,7 +38,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
 				'text'      => __( 'My Connections', 'buddyboss' ),
-				'count'     => bp_get_total_friend_count( bp_loggedin_user_id() ),
+				'count'     => count( BP_Friends_Friendship::get_friendship_ids_for_user( bp_loggedin_user_id() ) ),
 				'position'  => 15,
 			);
 		}

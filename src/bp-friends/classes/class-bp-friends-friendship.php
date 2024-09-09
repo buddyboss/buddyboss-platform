@@ -380,7 +380,28 @@ class BP_Friends_Friendship {
 		$friendship_ids = wp_cache_get( $cache_key, 'bp_friends_friendships_for_user' );
 
 		if ( false === $friendship_ids ) {
-			$friendship_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d OR friend_user_id = %d) ORDER BY date_created DESC", $user_id, $user_id ) );
+			$where_clause = $wpdb->prepare(
+				'WHERE (initiator_user_id = %d OR friend_user_id = %d)',
+				$user_id, 
+				$user_id
+			);
+
+			if ( bp_is_active( 'moderation' ) ) {
+				$suspended_user_ids = bb_moderation_get_suspended_user_ids();
+
+				if ( ! empty( $suspended_user_ids ) ) {
+					// Use prepare to safely include suspended user IDs.
+					$placeholders = implode( ', ', array_fill( 0, count( $suspended_user_ids ), '%d' ) );
+					$where_clause .= $wpdb->prepare(
+						" AND friend_user_id NOT IN ( {$placeholders} )",
+						...$suspended_user_ids
+					);
+				}
+			}
+
+			$sql = "SELECT id FROM {$bp->friends->table_name} {$where_clause} ORDER BY date_created DESC";
+			$friendship_ids = $wpdb->get_col( $sql );
+
 			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
 		}
 

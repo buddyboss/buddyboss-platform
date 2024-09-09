@@ -250,7 +250,23 @@ class BP_Activity_Follow {
 		$following = wp_cache_get( 'bp_total_following_for_user_' . $user_id, 'bp' );
 
 		if ( false === $following ) {
-			$following = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id ) );
+			$following_where_sql = $wpdb->prepare( "WHERE follower_id = %d", $user_id );
+
+			if ( bp_is_active( 'moderation' ) ) {
+				$suspended_user_ids = bb_moderation_get_suspended_user_ids();
+
+				if ( ! empty( $suspended_user_ids ) ) {
+					// Use prepare to safely include suspended user IDs.
+					$placeholders = implode( ', ', array_fill( 0, count( $suspended_user_ids ), '%d' ) );
+					$following_where_sql .= $wpdb->prepare(
+						" AND leader_id NOT IN ( {$placeholders} ) ",
+						...$suspended_user_ids
+					);
+				}
+			}
+
+			$following_sql = "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} {$following_where_sql}";
+			$following = $wpdb->get_var( $following_sql );
 			wp_cache_set( 'bp_total_following_for_user_' . $user_id, $following, 'bp' );
 		}
 
