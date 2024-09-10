@@ -423,6 +423,16 @@ window.bp = window.bp || {};
 				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 			}
 
+			// Display poll button icon when privacy is not group for admin.
+			if (
+				'group' !== activity_data.privacy &&
+				! _.isUndefined( BP_Nouveau.activity_polls ) &&
+				! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+				true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+			) {
+				$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+			}
+
 			// Show Hide Schedule post button according to group privacy.
 			if ( 'group' === activity_data.privacy ) {
 				var whatsNewForm = $( '#whats-new-form' );
@@ -459,6 +469,52 @@ window.bp = window.bp || {};
 					self.postForm.model.set( 'schedule_allowed', 'disabled' );
 					whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 				}
+
+				// Poll data.
+				var polls_allowed = whatsNewForm.find( '#bp-item-opt-' + activity_data.item_id ).data( 'allow-polls' );
+				if ( _.isUndefined( polls_allowed ) ) {
+					// When change group from news feed.
+					if ( ! _.isUndefined( activity_data.polls_allowed ) && 'enabled' === activity_data.polls_allowed ) {
+						polls_allowed = activity_data.polls_allowed;
+						self.postForm.model.set( 'polls_allowed', activity_data.polls_allowed );
+					} else if ( ! _.isUndefined( activity_data.polls_allowed ) && 'disabled' === activity_data.polls_allowed ) {
+						polls_allowed = 'disabled';
+						self.postForm.model.set( 'polls_allowed', activity_data.polls_allowed );
+					} else if (
+						// On group page.
+						! _.isUndefined( BP_Nouveau.activity_polls ) &&
+						! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+						true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+					) {
+						polls_allowed = 'enabled';
+					}
+				}
+
+				if ( ! _.isUndefined( polls_allowed ) && 'enabled' === polls_allowed ) {
+					whatsNewForm.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+				} else {
+					whatsNewForm.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
+				}
+			}
+
+			// Set poll data.
+			if ( ! _.isUndefined( activity_data.poll ) && ! $.isEmptyObject( activity_data.poll ) ) {
+				var pollObject = {
+					id: activity_data.poll.id,
+					user_id: parseInt( activity_data.poll.user_id ),
+					item_id: ! _.isUndefined( activity_data.poll.item_id ) ? activity_data.poll.item_id : 0,
+					vote_disabled_date: activity_data.poll.vote_disabled_date,
+					question: activity_data.poll.question,
+					options: activity_data.poll.options,
+					allow_multiple_options: activity_data.poll.allow_multiple_options || false,
+					allow_new_option: activity_data.poll.allow_new_option || false,
+					duration: activity_data.poll.duration || 3,
+					total_votes: activity_data.poll.total_votes,
+					edit_poll: activity_data.edit_poll,
+				};
+
+				self.postForm.model.set( 'poll', pollObject );
+				self.postForm.model.set( 'poll_id', activity_data.poll.id );
 			}
 
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
@@ -1034,7 +1090,10 @@ window.bp = window.bp || {};
 				self.postForm.$el.serializeArray(),
 				function( pair ) {
 					pair.name = pair.name.replace( '[]', '' );
-					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field'], pair.name ) ) {
+					if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
+						pair.name = pair.name.replace( /\[\d+\]/, '' );
+					}
+					if ( - 1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option'], pair.name ) ) {
 						if ( _.isUndefined( meta[ pair.name ] ) ) {
 							meta[ pair.name ] = pair.value;
 						} else {
@@ -1102,7 +1161,21 @@ window.bp = window.bp || {};
 			}
 
 			// validation for content editor.
-			if ( '' === filtered_content && ( ( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) && ( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) ) ) {
+			if ( '' === filtered_content && (
+				( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) &&
+				( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) &&
+				( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) &&
+				( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) )
+			) &&
+				(
+					(
+						! _.isUndefined( self.postForm.model.get( 'poll' ) ) &&
+						! $.isEmptyObject( self.postForm.model.get( 'poll' ) ) &&
+						! Object.keys( self.postForm.model.get( 'poll' ) ).length
+					) ||
+					_.isUndefined( self.postForm.model.get( 'poll' ) )
+				)
+			) {
 				if ( bp.draft_content_changed ) {
 					localStorage.removeItem( bp.draft_activity.data_key );
 					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
@@ -1204,6 +1277,9 @@ window.bp = window.bp || {};
 				'activity_schedule_time',
 				'activity_schedule_meridiem',
 				'schedule_allowed',
+				'poll',
+				'poll_id',
+				'polls_allowed',
 			];
 
 			_.each(
@@ -1346,6 +1422,15 @@ window.bp = window.bp || {};
 				true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 			) {
 				$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+			}
+
+			// Check if user can create poll in feed after discard draft.
+			if (
+				! _.isUndefined( BP_Nouveau.activity_polls ) &&
+				! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+				true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+			) {
+				$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 			}
 		},
 
@@ -1575,7 +1660,9 @@ window.bp = window.bp || {};
 				// selected_item.removeClass( 'selected' );
 
 				// Loose post form textarea focus for Safari.
-				$( 'input' ).focus().blur();
+				if ( navigator.userAgent.includes( 'Safari' ) && ! navigator.userAgent.includes( 'Chrome' ) ) {
+					$( 'input' ).focus().blur();
+				}
 
 				// Reset privacy status submit button
 				this.$el.closest( '#whats-new-form' ).removeClass( 'focus-in--blank-group' );
@@ -4010,6 +4097,19 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
 
+					// Check poll is allowed in this group or not.
+					var polls_allowed = whats_new_form.find( '#bp-item-opt-' + group_item_id ).data( 'allow-polls' );
+					if ( ! _.isUndefined( polls_allowed ) && 'enabled' === polls_allowed ) {
+						this.model.set( 'polls_allowed', polls_allowed );
+						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+						Backbone.trigger( 'cleanFeedBack' );
+					} else {
+						this.model.set( 'polls_allowed', 'disabled' );
+						this.model.set( 'poll', {} );
+						this.model.set( 'poll_id', '' );
+						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
+					}
+
 				} else {
 
 					// Clear schedule post data when change privacy.
@@ -4029,6 +4129,21 @@ window.bp = window.bp || {};
 						this.model.set( 'schedule_allowed', 'disabled' );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
+
+					// Clear poll data when change privacy.
+					if (
+						! _.isUndefined( BP_Nouveau.activity_polls ) &&
+						! _.isUndefined( BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+						true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+					) {
+						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
+					} else {
+						this.model.set( 'polls_allowed', 'disabled' );
+						this.model.set( 'poll', {} );
+						this.model.set( 'poll_id', '' );
+						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
+					}
+
 					Backbone.trigger( 'cleanFeedBack' );
 
 					var privacy       = this.model.attributes.privacy;
@@ -4719,6 +4834,11 @@ window.bp = window.bp || {};
 					this.views.add( this.activityLinkPreview );
 				}
 
+				if ( ! _.isUndefined( bp.Views.activityPollView ) ) {
+					this.activityPollView = new bp.Views.activityPollView( { model: this.model } );
+					this.views.add( this.activityPollView );
+				}
+
 				if ( ! _.isUndefined( window.Dropzone ) ) {
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
@@ -4966,6 +5086,11 @@ window.bp = window.bp || {};
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
+				// Add BB Poll View.
+				if ( ! _.isUndefined( bp.Views.activityPollForm ) ) {
+					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+				}
+
 				this.views.add( new bp.Views.ActivityInput(
 					{
 						model: this.model,
@@ -5021,6 +5146,16 @@ window.bp = window.bp || {};
 					);
 
 					activityParams = _.extend( activityParams, scheduleParams );
+				}
+
+				// Pick parameters from BP_Nouveau.activity_polls.params.
+				if ( ! _.isUndefined( BP_Nouveau.activity_polls ) ) {
+					var pollParams = _.pick(
+						BP_Nouveau.activity_polls.params,
+						[ 'can_create_poll_activity' ]
+					);
+
+					activityParams = _.extend( activityParams, pollParams );
 				}
 
 				// Create the model with the merged parameters
@@ -5120,7 +5255,7 @@ window.bp = window.bp || {};
 					$whatsNew[0].innerHTML = '';
 				}
 
-				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
 					this.$el.removeClass( 'focus-in--empty' );
 				} else {
 					this.$el.addClass( 'focus-in--empty' );
@@ -5218,6 +5353,15 @@ window.bp = window.bp || {};
 						true === BP_Nouveau.activity_schedule.params.can_schedule_in_feed
 					) {
 						$( '#whats-new-form' ).find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
+					}
+
+					// Add Poll button.
+					if (
+						! _.isUndefined( BP_Nouveau.activity_polls ) &&
+						! _.isUndefined( typeof BP_Nouveau.activity_polls.params.can_create_poll_activity ) &&
+						true === BP_Nouveau.activity_polls.params.can_create_poll_activity
+					) {
+						$( '#whats-new-form' ).find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 					}
 				}
 
@@ -5452,7 +5596,10 @@ window.bp = window.bp || {};
 					self.$el.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
-						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in' ], pair.name ) ) {
+						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
+							pair.name = pair.name.replace( /\[\d+\]/, '' );
+						}
+						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
 								meta[ pair.name ] = pair.value;
 							} else {
@@ -5525,7 +5672,17 @@ window.bp = window.bp || {};
 				}
 
 				// validation for content editor.
-				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true !== this.model.get( 'link_success' ) ) && ( ( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) && ( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) && ( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) && ( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+				if (
+					$( $.parseHTML( content ) ).text().trim() === '' &&
+					( ! _.isUndefined( this.model.get( 'link_success' ) ) && true !== this.model.get( 'link_success' ) ) &&
+					(
+						( ! _.isUndefined( self.model.get( 'video' ) ) && ! self.model.get( 'video' ).length ) &&
+						( ! _.isUndefined( self.model.get( 'document' ) ) && ! self.model.get( 'document' ).length ) &&
+						( ! _.isUndefined( self.model.get( 'media' ) ) && ! self.model.get( 'media' ).length ) &&
+						( ! _.isUndefined( self.model.get( 'gif_data' ) ) && ! Object.keys( self.model.get( 'gif_data' ) ).length ) &&
+						( ! _.isUndefined( self.model.get( 'poll' ) ) && ! Object.keys( self.model.get( 'poll' ) ).length )
+					)
+				) {
 					self.model.set(
 						'errors',
 						{
@@ -5560,7 +5717,12 @@ window.bp = window.bp || {};
 						'link_error_msg',
 						'link_scrapping',
 						'link_loading',
-						'posting'
+						'posting',
+						'group_image',
+						'can_schedule_in_feed',
+						'can_create_poll_activity',
+						'bb-poll-question-option',
+						'poll'
 					]
 				);
 
@@ -5808,7 +5970,9 @@ window.bp = window.bp || {};
 						}
 
 						// Loose post form textarea focus for Safari.
-						$( 'input' ).focus().blur();
+						if ( navigator.userAgent.includes( 'Safari' ) && ! navigator.userAgent.includes( 'Chrome' ) ) {
+							$( 'input' ).focus().blur();
+						}
 					}
 				).fail(
 					function ( response ) {
