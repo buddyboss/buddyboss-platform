@@ -71,6 +71,8 @@ add_action( 'user_profile_update_errors', 'bb_validate_restricted_email_on_regis
 add_action( 'personal_options_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit the login user profile from backend.
 add_action( 'edit_user_profile_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit other users profile from backend.
 
+add_action( 'admin_notices', 'bb_pro_upgrade_notice', 1 );
+
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
@@ -454,3 +456,37 @@ function bb_core_settings_saved_notice() {
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
+
+/**
+ * Function to display upgrade notice for platform pro.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_pro_upgrade_notice() {
+	$current_screen = get_current_screen();
+
+	// Check if the current page is under the BuddyBoss menu.
+	if (
+		$current_screen &&
+		false !== strpos( $current_screen->parent_base, 'buddyboss' ) &&
+		(
+			! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid()
+		)
+	) {
+		?>
+		<div style="background: #f1f1f1; padding: 10px; text-align: center; border-bottom: 1px solid #ddd;">
+			<span style="font-size: 16px; color: #333;">
+				<?php
+				echo sprintf(
+				/* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
+					'%1$s <a href="%2$s" style="font-weight: bold;" target="_blank">%3$s</a>',
+					__( 'Upgrade to pro and unlock more exciting community features!', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/bbwebupgrade' ),
+					__( 'Upgrade to pro', 'buddyboss' )
+				);
+				?>
+			</span>
+		</div>
+		<?php
+	}
+}
