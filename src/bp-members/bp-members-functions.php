@@ -3946,11 +3946,19 @@ function bp_get_user_member_type( $user_id ) {
 
 	$member_type = __( 'Member', 'buddyboss' );
 
-	// Check if member type visiblity level.
-	$is_member_type_visible = bb_check_field_visibility( bp_get_xprofile_member_type_field_id(), $user_id );
+	if ( true === bp_member_type_enable_disable() ) {
+		$is_member_type_visible = true;
 
-	if ( true === bp_member_type_enable_disable() && $is_member_type_visible ) {
-		if ( true === bp_member_type_display_on_profile() ) {
+		// Check if the member type is hidden.
+		if (
+			function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
+			function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
+			in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user_id ), true )
+		) {
+			$is_member_type_visible = false;
+		}
+
+		if ( true === bp_member_type_display_on_profile() && $is_member_type_visible ) {
 
 			// Get the profile type.
 			$type = bp_get_member_type( $user_id );
