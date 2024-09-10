@@ -3946,32 +3946,21 @@ function bp_get_user_member_type( $user_id ) {
 
 	$member_type = __( 'Member', 'buddyboss' );
 
-	if ( true === bp_member_type_enable_disable() ) {
-		$is_member_type_visible = true;
+	if (
+		true === bp_member_type_enable_disable() &&
+		true === bp_member_type_display_on_profile() &&
+		! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user_id ), true )
+	) {
+		// Get the profile type.
+		$type     = bp_get_member_type( $user_id );
+		$type_obj = bp_get_member_type_object( $type );
 
-		// Check if the member type is hidden.
-		if (
-			function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
-			function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
-			in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user_id ), true )
-		) {
-			$is_member_type_visible = false;
+		// Output the.
+		if ( ! empty( $type_obj ) && isset( $type_obj->labels ) ) {
+			$member_type = $type_obj->labels['singular_name'];
 		}
 
-		if ( true === bp_member_type_display_on_profile() && $is_member_type_visible ) {
-
-			// Get the profile type.
-			$type = bp_get_member_type( $user_id );
-
-			// Output the.
-			if ( $type_obj = bp_get_member_type_object( $type ) ) {
-				$member_type = $type_obj->labels['singular_name'];
-			}
-
-			$string = '<span class="bp-member-type bb-current-member-' . esc_attr( $type ) . '">' . $member_type . '</span>';
-		} else {
-			$string = '<span class="bp-member-type">' . $member_type . '</span>';
-		}
+		$string = '<span class="bp-member-type bb-current-member-' . esc_attr( $type ) . '">' . $member_type . '</span>';
 	} else {
 		$string = '<span class="bp-member-type">' . $member_type . '</span>';
 	}
