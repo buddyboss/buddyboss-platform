@@ -9895,3 +9895,90 @@ function bb_remove_deleted_user_last_activities() {
 function bb_pro_poll_version() {
 	return '2.6.00';
 }
+
+/**
+ * Generates a JWT (JSON Web Token) that includes a URL, issued-at time, and expiration time.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $payload {
+ * Array containing the payload data for the JWT.
+ *
+ * @type string $url  The current URL for which the preview is being generated.
+ * @type int    $iat  The issued-at time for the token, typically the current time.
+ * @type int    $exp  The expiration time for the token, usually set to 2 minutes after creation.
+ * }
+ * @return string The generated JWT token as a string.
+ */
+function bb_create_jwt( $payload ) {
+	$secretKey        = wp_salt( 'nonce' );
+	$header           = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$encodedHeader    = base64_encode( $header );
+	$encodedPayload   = base64_encode( json_encode( $payload ) );
+	$signature        = hash_hmac( 'sha256', $encodedHeader . '.' . $encodedPayload, $secretKey, true );
+	$encodedSignature = base64_encode( $signature );
+
+	return $encodedHeader . '.' . $encodedPayload . '.' . $encodedSignature;
+}
+
+/**
+ * Validates a JWT (JSON Web Token) to check the signature of the provided JWT token and validates its payload,
+ * including checking if the token is expired, and if the URL within the token matches the site's URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $token The JWT token string to be validated.
+ *
+ * @return bool True if the token is valid, false if the token is invalid or expired.
+ */
+function bb_validate_jwt( $token ) {
+	$secretKey      = wp_salt( 'nonce' );
+	$tokenParts     = explode( '.', $token );
+	$header         = base64_decode( $tokenParts[0] );
+	$payload        = base64_decode( $tokenParts[1] );
+	$signature      = base64_decode( $tokenParts[2] );
+	$validSignature = hash_hmac( 'sha256', $tokenParts[0] . '.' . $tokenParts[1], $secretKey, true );
+
+	if ( $signature === $validSignature ) {
+		$decodedPayload = json_decode( $payload, true );
+		$currentTime    = time();
+
+		if (
+			! empty( $decodedPayload['exp'] ) &&
+			$decodedPayload['exp'] >= $currentTime &&
+			! empty( $decodedPayload['url'] ) &&
+			bb_is_same_site_url( $decodedPayload['url'] )
+		) {
+			return true; // JWT is valid
+		}
+	}
+
+	return false; // JWT is invalid
+}
+
+/**
+ * Retrieves all HTTP headers from the current request.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array An associative array of all HTTP headers from the current request.
+ */
+function bb_get_all_headers() {
+
+	if ( function_exists( 'getallheaders' ) ) {
+		return getallheaders();
+	}
+
+	if ( ! is_array( $_SERVER ) ) {
+		return array();
+	}
+
+	$headers = array();
+	foreach ( $_SERVER as $name => $value ) {
+		if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
+			$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+		}
+	}
+
+	return $headers;
+}
