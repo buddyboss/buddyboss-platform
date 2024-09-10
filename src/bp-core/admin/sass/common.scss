@@ -5129,6 +5129,28 @@ h1.bb-advance-heading {
 	}
 }
 
+.bb-upgrade-notice {
+	background-color: #F6EFE8;
+	padding: 8px;
+	text-align: center;
+	border-bottom: 1px solid #C5BFBA;
+	margin: 0 -20px;
+
+	.bb-upgrade-point {
+		font-size: 1rem;
+		font-weight: 500;
+		color: #000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		i {
+			font-size: 24px;
+			margin-right: 4px;
+		}
+	}
+}
+
 .wrap.wrap--performance {
 
 	> h2:first-child {

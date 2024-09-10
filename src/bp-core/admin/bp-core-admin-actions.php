@@ -474,8 +474,9 @@ function bb_pro_upgrade_notice() {
 		)
 	) {
 		?>
-		<div style="background: #f1f1f1; padding: 10px; text-align: center; border-bottom: 1px solid #ddd;">
-			<span style="font-size: 16px; color: #333;">
+		<div class="bb-upgrade-notice">
+			<span class="bb-upgrade-point">
+				<i class="bb-icon-f bb-icon-crown"></i>
 				<?php
 				echo sprintf(
 				/* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
