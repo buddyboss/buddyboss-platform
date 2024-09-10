@@ -176,7 +176,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'manage_' . bp_get_email_post_type() . '_posts_custom_column', array( $this, 'emails_display_situation_column_data' ), 10, 2 );
 
 			// Hello BuddyBoss/App.
-			add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
 			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
 			add_action( 'admin_footer', array( $this, 'video_extension_mime_type_check_screen' ) );
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
@@ -907,20 +906,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
-
-		/**
-		 * Output the Hello BuddyBoss template.
-		 *
-		 * @since BuddyPress 1.7.0 Screen content.
-		 * @since BuddyBoss 1.0.0 Now outputs Hello BuddyBoss template.
-		 */
-		public function about_buddyboss_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || 'buddyboss' !== $_GET['hello'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return;
-			}
-
-			include $this->admin_dir . 'templates/about-buddyboss.php';
-		}
 
 		/**
 		 * Output the document mime type checker screen.
