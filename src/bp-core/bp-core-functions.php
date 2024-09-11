@@ -4869,7 +4869,7 @@ function bp_core_parse_url( $url ) {
 		if ( bb_is_same_site_url( $url ) ) {
 			// Add the custom header with the JWT token.
 			$args['headers']   = array(
-				'BBPreviewToken' => bb_create_jwt(
+				'Bbpreviewtoken' => bb_create_jwt(
 					array(
 						'url' => $url,
 						'iat' => time(),
