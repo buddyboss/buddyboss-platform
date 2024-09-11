@@ -4867,16 +4867,18 @@ function bp_core_parse_url( $url ) {
 		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
 
 		if ( bb_is_same_site_url( $url ) ) {
-			// Add the custom header with the JWT token.
-			$args['headers']   = array(
-				'Bbpreviewtoken' => bb_create_jwt(
-					array(
-						'url' => $url,
-						'iat' => time(),
-						'exp' => time() + 120, // Token validity 2 minutes.
-					)
-				),
-			);
+			if ( ! bp_enable_private_network() ) {
+				// Add the custom header with the JWT token.
+				$args['headers'] = array(
+					'Bbpreviewtoken' => bb_create_jwt(
+						array(
+							'url' => $url,
+							'iat' => time(),
+							'exp' => time() + 120, // Token validity 2 minutes.
+						)
+					),
+				);
+			}
 			$args['sslverify'] = false;
 		}
 
