@@ -342,7 +342,12 @@ class BP_Embed extends WP_Embed {
 		}
 
 		// Check if blog or CPT post activity has link/video embed.
-		if ( is_object( $type ) && ! empty( $type->component ) && 'blogs' === $type->component ) {
+		if (
+			is_object( $type ) &&
+			! empty( $type->component ) &&
+			'blogs' === $type->component &&
+			preg_match( '#(^|\s|>)https?://#i', $content )
+		) {
 			$link_embed = true;
 		}
 
