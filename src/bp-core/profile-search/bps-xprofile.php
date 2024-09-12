@@ -673,10 +673,32 @@ function bp_ps_anyfield_search( $f ) {
 
 	}
 
+	if ( in_array( $filter, array( 'contains', 'like' ) ) ) {
+		$every_word_clauses = array();
+		$query_placeholder  = array();
+		$search_term_array  = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
+		if ( ! empty( $search_term_array ) ) {
+			foreach ( $search_term_array as $term ) {
+				$every_word_clauses[] = "(xpd.value LIKE %s)";
+				if ( 'like' === $filter ) {
+					$term                 = str_replace( '\\\\%', '\\%', $term );
+					$term                 = str_replace( '\\\\_', '\\_', $term );
+					$query_placeholder[]  = '%' . $term . '%';
+				} else {
+					$query_placeholder[]  = '%' . bp_ps_esc_like( $term ) . '%';
+				}
+				
+			}
+		}
+	}
+
 	switch ( $filter ) {
 		case 'contains':
-			$escaped                 = '%' . bp_ps_esc_like( $value ) . '%';
-			$sql['where'][ $filter ] = $wpdb->prepare( 'xpd.value LIKE %s', $escaped );
+			if ( ! empty( $every_word_clauses ) ) {
+				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
+			} else {
+				$sql['where'][ $filter ] = '1=1';
+			}
 			break;
 
 		case '':
@@ -684,9 +706,12 @@ function bp_ps_anyfield_search( $f ) {
 			break;
 
 		case 'like':
-			$value                   = str_replace( '\\\\%', '\\%', $value );
-			$value                   = str_replace( '\\\\_', '\\_', $value );
-			$sql['where'][ $filter ] = $wpdb->prepare( 'xpd.value LIKE %s', $value );
+
+			if ( false && ! empty( $every_word_clauses ) ) {
+				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
+			} else {
+				$sql['where'][ $filter ] = '1=1';
+			}
 			break;
 	}
 
