@@ -950,7 +950,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		$params['id'] = array(
 			'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 			'type'        => 'integer',
-			'reqiured'    => true,
+			'required'    => true,
 		);
 
 		$params['display_comments'] = array(
