@@ -864,10 +864,17 @@ function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value 
 
 	$value = strtolower( $value );
 
-	if ( class_exists( 'Normalizer' ) ) {
-
-		// Ensures that the combined characters are treated as a single character.
-		$value = Normalizer::normalize( $value, 16 );
+	if ( function_exists( 'normalizer_is_normalized' )
+  	  && function_exists( 'normalizer_normalize' )
+	) {
+		try {
+			// Ensures that the combined characters are treated as a single character.
+			if ( ! normalizer_is_normalized( $value ) ) {
+				$value = normalizer_normalize( $value );
+			}
+		} catch ( Exception $e ) {
+			// Ignore the exception, continue execution.
+		}
 	}
 
 	$field_name = xprofile_get_field( $field_id )->name;
