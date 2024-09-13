@@ -341,20 +341,10 @@ class BP_Embed extends WP_Embed {
 			}
 		}
 
-		// Check if blog or CPT post activity has link/video embed.
-		if (
-			is_object( $type ) &&
-			! empty( $type->component ) &&
-			'blogs' === $type->component &&
-			preg_match( '#(^|\s|>)https?://#i', $content )
-		) {
-			$link_embed = true;
-		}
-
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 
-		if ( ! empty( $link_embed ) && preg_match( '#(^|\s|>)https?://#i', $content ) && ! ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) ) {
+		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) && ! ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) ) {
 			// Find URLs on their own line.
 			if ( ! $is_activity ) {
 				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
