@@ -967,21 +967,6 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
-	if ( function_exists( 'normalizer_is_normalized' )
-		&& function_exists( 'normalizer_normalize' )
-	) {
-		try {
-			// Ensures that the combined characters are treated as a single character.
-			if ( ! normalizer_is_normalized( $value ) ) {
-				$value = normalizer_normalize( $value );
-			}
-		} catch ( Exception $e ) {
-			// Ignore the exception, continue execution.
-		}
-	}
-
-	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
-
 	// Minimum of 3 characters.
 	if ( $value_length < 3 ) {
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
