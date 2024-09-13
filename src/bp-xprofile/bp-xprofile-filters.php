@@ -864,8 +864,9 @@ function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value 
 
 	$value = strtolower( $value );
 
-	if ( function_exists( 'normalizer_is_normalized' )
-  	  && function_exists( 'normalizer_normalize' )
+	if (
+		function_exists( 'normalizer_is_normalized' )
+		&& function_exists( 'normalizer_normalize' )
 	) {
 		try {
 			// Ensures that the combined characters are treated as a single character.
@@ -949,7 +950,8 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	// must be shorter then 32 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
 
-	if ( function_exists( 'normalizer_is_normalized' )
+	if (
+		function_exists( 'normalizer_is_normalized' )
 		&& function_exists( 'normalizer_normalize' )
 	) {
 		try {
