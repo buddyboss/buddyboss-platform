@@ -2926,7 +2926,10 @@ function bp_get_member_type( $user_id, $single = true ) {
 	}
 
 	$type = false;
-	if ( ! empty( $types ) ) {
+	if (
+		! empty( $types ) &&
+		! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user_id ), true )
+	) {
 		if ( $single ) {
 			$type = array_pop( $types );
 		} else {
