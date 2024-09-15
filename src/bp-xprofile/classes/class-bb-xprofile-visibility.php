@@ -160,31 +160,39 @@ class BB_XProfile_Visibility {
 	public static function user_data_exists( $user_id = 0 ) {
 		global $wpdb;
 		$bp = buddypress();
+		
+		static $retval = array();
+		static $table_exists = '';
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
-		if ( $table_exists ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$retval = $wpdb->get_row(
-				$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d limit 0, 1",
-					$user_id
-				)
-			);
-		} else {
-			$retval = false;
+		if ( ! array_key_exists( $user_id, $retval ) ) {
+			if ( '' == $table_exists ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
+			}
+			
+			if ( $table_exists ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$retval[$user_id] = $wpdb->get_row(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+						"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d limit 0, 1",
+						$user_id
+					)
+				);
+			} else {
+				$retval[$user_id] = false;
+			}
 		}
 
 		/**
 		 * Filters whether any data already exists for the user.
-		 *
-		 * @since BuddyBoss 2.6.50
-		 *
-		 * @param bool $retval  Whether data already exists.
-		 * @param int  $user_id User id.
-		 */
-		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval ), $user_id ) );
+		*
+		* @since BuddyBoss 2.6.50
+		*
+		* @param bool $retval  Whether data already exists.
+		* @param int  $user_id User id.
+		*/
+		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval[$user_id] ), $user_id ) );
 	}
 
 	/**
