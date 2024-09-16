@@ -503,6 +503,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
+		if ( $raw_db_version < 21171 ) {
+			bb_update_to_2_6_91();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3803,4 +3807,113 @@ function bb_update_to_2_6_70() {
 			);
 		}
 	}
+}
+
+/**
+ * Fixed count for my connection and following.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_6_91() {
+	$is_already_run = get_transient( 'bb_update_to_2_6_91' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	// Set a transient to avoid running the update multiple times within an hour.
+	set_transient( 'bb_update_to_2_6_91', 'yes', HOUR_IN_SECONDS );
+
+	bb_create_background_member_friends_and_follow_count();
+}
+
+/**
+ * Initiates a background process to update member friendship counts and remove suspended members from follow table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $paged Current page of users to process. Defaults to 1.
+ */
+function bb_create_background_member_friends_and_follow_count( $paged = 1 ) {
+	global $bb_background_updater;
+
+	$per_page = apply_filters( 'bb_create_background_member_friends_and_follow_count_limit', 100 );
+	$paged    = empty( $paged ) ? 1 : $paged;
+	$offset   = ( ( $paged - 1 ) * $per_page );
+
+	// Fetch user IDs without restricting based on meta (get all users).
+	$user_ids = get_users(
+		array(
+			'fields'  => 'ids',
+			'number'  => $per_page,
+			'offset'  => $offset,
+			'orderby' => 'ID',
+			'order'   => 'DESC',
+		)
+	);
+
+	// If no more users to process, exit.
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	// Queue background process for friendship count and removing suspended follow data.
+	$bb_background_updater->data(
+		array(
+			'type'     => 'update_member_friends_and_follow_count',
+			'group'    => 'bb_migrate_member_friends_and_follow_count',
+			'priority' => 5,
+			'callback' => 'bb_migrate_member_friends_and_follow_count_callback',
+			'args'     => array( $user_ids, $paged ),
+		)
+	);
+	$bb_background_updater->save()->schedule_event();
+}
+
+/**
+ * Callback function for updating member friendship count and removing suspended members from follow table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids Array of user IDs to process.
+ * @param int   $paged    Current page for processing.
+ */
+function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged ) {
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	foreach ( $user_ids as $user_id ) {
+		// Update friendship count if the user has the friend component active.
+		if ( bp_is_active( 'friends' ) ) {
+			$friends = bp_core_get_users(
+				array(
+					'type'            => 'alphabetical',
+					'user_id'         => $user_id,
+					'per_page'        => 1,
+					'populate_extras' => false,
+				)
+			);
+
+			// Update the total friend count only if the user has friends.
+			if ( ! empty( $friends ) && (int) $friends['total'] > 0 ) {
+				bp_update_user_meta( $user_id, 'total_friend_count', (int) $friends['total'] );
+			}
+		}
+
+		// Remove follow data for suspended members.
+		if (
+			function_exists( 'bp_get_followers' ) &&
+			bp_get_followers(
+				array(
+					'user_id' => $user_id,
+				)
+			)
+		) {
+			bp_remove_follow_data( $user_id );
+		}
+	}
+
+	// Recursively call the function to process the next page of users.
+	$paged++;
+	bb_create_background_member_friends_and_follow_count( $paged );
 }
