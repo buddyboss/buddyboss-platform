@@ -710,17 +710,44 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		// Remove following once member suspend.
+		// Update following once member suspend/unsuspend.
 		if (
-			! empty( $args['user_suspended'] ) &&
-			function_exists( 'bp_get_followers' ) &&
-			bp_get_followers(
+			'hide' === $action &&
+			(
+				! empty( $args['user_suspended'] ) ||
+				! empty( $args['action_suspend'] )
+			) &&
+			function_exists( 'bp_get_followers' )
+		) {
+			$get_followers = bp_get_followers(
 				array(
 					'user_id' => $member_id,
 				)
-			)
-		) {
-			bp_remove_follow_data( $member_id );
+			);
+			if ( ! empty( $get_followers ) ) {
+				if ( $this->background_disabled ) {
+					$this->bb_update_following_for_suspend_member( $member_id, $get_followers );
+				} else {
+					$min_count     = (int) apply_filters( 'bb_update_following_for_suspend_member', 200 );
+					$chunk_results = array_chunk( $get_followers, $min_count );
+					if ( ! empty( $chunk_results ) ) {
+						foreach ( $chunk_results as $chunk_result ) {
+							$bb_background_updater->data(
+								array(
+									'type'              => 'suspend_following',
+									'group'             => 'bb_update_following_for_suspend_member',
+									'data_id'           => $member_id,
+									'secondary_data_id' => $member_id,
+									'callback'          => array( $this, 'bb_update_following_for_suspend_member' ),
+									'args'              => array( $member_id, $chunk_result ),
+								),
+							);
+
+							$bb_background_updater->save()->dispatch();
+						}
+					}
+				}
+			}
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
@@ -1146,5 +1173,35 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$domain       = trailingslashit( bp_get_root_domain() . '/' . $after_domain );
 
 		return $domain;
+	}
+
+	/**
+	 * Update following for suspend member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $user_id    User ID.
+	 * @param array $member_ids Array member friend IDs.
+	 */
+	public static function bb_update_following_for_suspend_member( $user_id, $member_ids ) {
+		if ( ! empty( $member_ids ) ) {
+			foreach ( $member_ids as $follower ) {
+				if (
+					bp_is_following(
+						array(
+							'leader_id'   => $follower,
+							'follower_id' => $user_id,
+						)
+					)
+				) {
+					bp_stop_following(
+						array(
+							'leader_id'   => $user_id,
+							'follower_id' => $follower,
+						)
+					);
+				}
+			}
+		}
 	}
 }

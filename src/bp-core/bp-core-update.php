@@ -3815,6 +3815,9 @@ function bb_update_to_2_6_70() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_2_6_91() {
+	if ( ! bp_is_active( 'moderation' ) ) {
+		return;
+	}
 	$is_already_run = get_transient( 'bb_update_to_2_6_91' );
 	if ( $is_already_run ) {
 		return;
@@ -3878,13 +3881,18 @@ function bb_create_background_member_friends_and_follow_count( $paged = 1 ) {
  * @param int   $paged    Current page for processing.
  */
 function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged ) {
+	global $bb_background_updater;
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
+	$is_friends_active    = bp_is_active( 'friends' );
+	$is_moderation_active = bp_is_active( 'moderation' );
+	$min_count            = (int) apply_filters( 'bb_migration_update_following_for_suspend_member', 50 );
+
 	foreach ( $user_ids as $user_id ) {
 		// Update friendship count if the user has the friend component active.
-		if ( bp_is_active( 'friends' ) ) {
+		if ( $is_friends_active ) {
 			$friends = bp_core_get_users(
 				array(
 					'type'            => 'alphabetical',
@@ -3902,16 +3910,38 @@ function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged 
 
 		// Remove follow data for suspended members.
 		if (
-			bp_is_active( 'moderation' ) &&
+			$is_moderation_active &&
 			bp_moderation_is_user_suspended( $user_id ) &&
-			function_exists( 'bp_get_followers' ) &&
-			bp_get_followers(
+			function_exists( 'bp_get_followers' )
+		) {
+			$followers = bp_get_followers(
 				array(
 					'user_id' => $user_id,
 				)
-			)
-		) {
-			bp_remove_follow_data( $user_id );
+			);
+			if ( ! empty( $followers ) ) {
+				if ( count( $followers ) > $min_count ) {
+					$chunked_followers = array_chunk( $followers, $min_count );
+					if ( ! empty( $chunked_followers ) ) {
+						foreach ( $chunked_followers as $chunk ) {
+							$bb_background_updater->data(
+								array(
+									'type'              => 'suspend_following',
+									'group'             => 'bb_update_following_for_suspend_member',
+									'data_id'           => $user_id,
+									'secondary_data_id' => $user_id,
+									'callback'          => 'BP_Suspend_Member::bb_update_following_for_suspend_member',
+									'args'              => array( $user_id, $chunk, 'hide' ),
+								),
+							);
+
+							$bb_background_updater->save()->dispatch();
+						}
+					}
+				} else {
+					BP_Suspend_Member::bb_update_following_for_suspend_member( $user_id, $followers );
+				}
+			}
 		}
 	}
 
