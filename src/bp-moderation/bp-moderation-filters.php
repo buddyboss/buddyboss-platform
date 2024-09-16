@@ -1076,3 +1076,32 @@ function bb_moderation_async_request_batch_process( $batch ) {
 }
 add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
 
+/**
+ * Filters the WHERE clause for friendship IDs to exclude suspended users.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where   Array of WHERE clause conditions.
+ * @param int   $user_id The user ID for whom friendship IDs are being fetched.
+ *
+ * @return array Modified array of WHERE clause conditions.
+ */
+function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
+	global $wpdb;
+	$moderated_user_ids = bb_moderation_moderated_user_ids();
+
+	// If there are any suspended users, add conditions to exclude them.
+	if ( ! empty( $moderated_user_ids ) ) {
+		$placeholders = implode( ', ', array_fill( 0, count( $moderated_user_ids ), '%d' ) );
+
+		$where[] = $wpdb->prepare(
+			"(initiator_user_id NOT IN ( {$placeholders} ) AND friend_user_id NOT IN ( {$placeholders} ))",
+			...$moderated_user_ids,
+			...$moderated_user_ids
+		);
+	}
+
+	return $where;
+}
+
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
