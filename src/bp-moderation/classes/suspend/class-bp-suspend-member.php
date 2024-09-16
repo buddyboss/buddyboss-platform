@@ -709,6 +709,19 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
+		// Remove following once member suspend.
+		if (
+			! empty( $args['user_suspended'] ) &&
+			function_exists( 'bp_get_followers' ) &&
+			bp_get_followers(
+				array(
+					'user_id' => $member_id,
+				)
+			)
+		) {
+			bp_remove_follow_data( $member_id );
+		}
+
 		if ( bp_is_active( 'groups' ) ) {
 			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
