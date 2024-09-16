@@ -3902,6 +3902,8 @@ function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged 
 
 		// Remove follow data for suspended members.
 		if (
+			bp_is_active( 'moderation' ) &&
+			bp_moderation_is_user_suspended( $user_id ) &&
 			function_exists( 'bp_get_followers' ) &&
 			bp_get_followers(
 				array(
