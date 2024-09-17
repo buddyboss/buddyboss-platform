@@ -719,6 +719,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			) &&
 			function_exists( 'bp_get_followers' )
 		) {
+			// Get followers for suspend member.
 			$get_followers = bp_get_followers(
 				array(
 					'user_id' => $member_id,
@@ -1186,21 +1187,13 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	public static function bb_update_following_for_suspend_member( $user_id, $member_ids ) {
 		if ( ! empty( $member_ids ) ) {
 			foreach ( $member_ids as $follower ) {
-				if (
-					bp_is_following(
-						array(
-							'leader_id'   => $follower,
-							'follower_id' => $user_id,
-						)
+				// Stop following to that user who follows to suspend member.
+				bp_stop_following(
+					array(
+						'leader_id'   => $user_id,
+						'follower_id' => $follower,
 					)
-				) {
-					bp_stop_following(
-						array(
-							'leader_id'   => $user_id,
-							'follower_id' => $follower,
-						)
-					);
-				}
+				);
 			}
 		}
 	}
