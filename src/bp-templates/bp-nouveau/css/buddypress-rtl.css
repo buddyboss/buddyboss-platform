@@ -21970,11 +21970,13 @@ ul.bb-albums-list .load-more {
   -ms-flex-preferred-size: 100%;
   flex-basis: 100%;
   max-width: 100%;
+  pointer-events: none;
 }
 
 #buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a {
   max-width: 33%;
+  pointer-events: auto;
 }
 
 .bb-album-list-item .bs-cover-wrap {
