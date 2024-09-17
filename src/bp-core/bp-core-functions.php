@@ -6138,16 +6138,32 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
-	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
-	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
-	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
+	$current_endpoint_path  = parse_url( $current_endpoint, PHP_URL_PATH );
+	$current_endpoint_query = parse_url( $current_endpoint, PHP_URL_QUERY );
+	$current_endpoint       = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+	$exploded_endpoint      = explode( 'wp-json', $current_endpoint );
+	$exclude_endpoints      = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
 				if ( ! empty( $endpoints ) ) {
-					$endpoints = untrailingslashit( trim( $endpoints ) );
-					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
+					$endpoints       = untrailingslashit( trim( $endpoints ) );
+					$endpoints_path  = parse_url( $endpoints, PHP_URL_PATH );
+					$endpoints_query = parse_url( $endpoints, PHP_URL_QUERY );
+					if (
+						empty( $endpoints_query ) &&
+						strpos( $current_endpoint, $endpoints ) !== false
+					) {
+						return true;
+					} elseif (
+						! empty( $current_endpoint_path ) &&
+						! empty( $endpoints_path ) &&
+						strpos( $current_endpoint_path, $endpoints_path ) !== false &&
+						! empty( $current_endpoint_query ) &&
+						! empty( $endpoints_query ) &&
+						$current_endpoint_query === $endpoints_query
+					) {
 						return true;
 					} else {
 						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
@@ -6159,7 +6175,8 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 						$endpoints                = str_replace( '//', '/', $endpoints );
 						$endpoints                = str_replace( '///', '/', $endpoints );
 						$endpoints                = '/' . ltrim( $endpoints, '/' );
-						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+//						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						$current_endpoint_allowed = preg_match( '@' . preg_quote( $endpoints, '@' ) . '$@i', end( $exploded_endpoint ) );
 						if ( $current_endpoint_allowed ) {
 							return true;
 						}
