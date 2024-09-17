@@ -6099,6 +6099,11 @@ function bb_restricate_rss_feed() {
 function bb_restricate_rest_api( $response, $handler, $request ) {
 	// Get current route.
 	$current_endpoint = $request->get_route();
+	// Get the query parameters.
+	$query_params = $request->get_query_params();
+	if ( ! empty( $query_params ) ) { // If query parameters exist, append them to the current endpoint.
+		$current_endpoint .= '?' . urldecode( http_build_query( $query_params ) );
+	}
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
 	// ex: /buddyboss-app/auth/v1/jwt/token.
 	$default_exclude_endpoint   = array(
