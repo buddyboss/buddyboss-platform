@@ -710,7 +710,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		// Update following once member suspend/unsuspend.
+		// Update following once member suspend.
 		if (
 			'hide' === $action &&
 			(
