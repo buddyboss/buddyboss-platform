@@ -3888,7 +3888,7 @@ function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged 
 
 	$is_friends_active    = bp_is_active( 'friends' );
 	$is_moderation_active = bp_is_active( 'moderation' );
-	$min_count            = (int) apply_filters( 'bb_migration_update_following_for_suspend_member', 50 );
+	$min_count            = (int) apply_filters( 'bb_migration_update_following_for_suspend_member', 100 );
 
 	foreach ( $user_ids as $user_id ) {
 		// Update friendship count if the user has the friend component active.

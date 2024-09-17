@@ -728,7 +728,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				if ( $this->background_disabled ) {
 					$this->bb_update_following_for_suspend_member( $member_id, $get_followers );
 				} else {
-					$min_count     = (int) apply_filters( 'bb_update_following_for_suspend_member', 200 );
+					$min_count     = (int) apply_filters( 'bb_update_following_for_suspend_member', 100 );
 					$chunk_results = array_chunk( $get_followers, $min_count );
 					if ( ! empty( $chunk_results ) ) {
 						foreach ( $chunk_results as $chunk_result ) {
