@@ -9912,6 +9912,8 @@ function bb_uuid() {
 		bp_update_option( $uuid_key, $uuid );
 	}
 
+	unset( $uuid_key );
+
 	return $uuid;
 }
 
@@ -9944,6 +9946,8 @@ function bb_collect_site_data() {
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	$buddyboss_options = $wpdb->get_results( $query, ARRAY_A );
 
+	unset( $bp_prefix, $query );
+
 	/**
 	 * This filter allows other plugins or themes to modify or add additional data to the array that is
 	 * sent to the analytics site.
@@ -9954,8 +9958,12 @@ function bb_collect_site_data() {
 	 */
 	$buddyboss_options = apply_filters( 'bb_usage_analytics_data', $buddyboss_options );
 
-	return array(
+	$site_data = array(
 		'uuid' => bb_uuid(),
 		'data' => $buddyboss_options,
 	);
+
+	unset( $buddyboss_options );
+
+	return $site_data;
 }
