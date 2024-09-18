@@ -210,7 +210,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				'php_version'         => PHP_VERSION,
 				'server_architecture' => sprintf( '%s %s %s', php_uname( 's' ), php_uname( 'r' ), php_uname( 'm' ) ),
 				'web_server'          => ( $_SERVER['SERVER_SOFTWARE'] ?? '' ),
-				'db_server_ver'       => $wpdb->dbhost,
+				'db_server_ver'       => $wpdb->get_var( 'SELECT VERSION()' ),
 				'db_client_ver'       => $wpdb->dbh->client_info,
 				'db_charset'          => $wpdb->charset,
 			);
