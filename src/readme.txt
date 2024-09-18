@@ -65,7 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Bug: Core - Fixed a fatal error caused by the Normalizer
 * Bug: Core - Fixed the inconsistency in search result counts between the backend and frontend
 * Bug: Email - Fixed the issue where last name privacy was not honored in email notifications when the delayed email notification setting was enabled.
-* Bug: Styling - Resolved UI issues in the Mutual Connection tab 
+* Bug: Styling - Resolved UI issues in the Mutual Connection tab
 
 = 2.6.90 =
 * New Feature! - In this update we have introduced Polls. Polls is a highly requested feature that allows Admins and group Owners & Moderators make use use of Polls either in the main activity feed or group activity feed.
