@@ -9895,3 +9895,67 @@ function bb_remove_deleted_user_last_activities() {
 function bb_pro_poll_version() {
 	return '2.6.00';
 }
+
+/**
+ * Generate or retrieve a unique UUID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The unique UUID.
+ */
+function bb_uuid() {
+	$uuid_key = 'bb-usage-uuid';
+	$uuid     = bp_get_option( $uuid_key );
+
+	if ( empty( $uuid ) ) {
+		$uuid = md5( uniqid() . site_url() );
+		bp_update_option( $uuid_key, $uuid );
+	}
+
+	return $uuid;
+}
+
+/**
+ * Collect site data for anonymous usage reporting.
+ *
+ * This function gathers relevant data for sending to the analytics site.
+ * It includes BuddyBoss-related options from the database, the site's UUID,
+ * and any additional data added via the 'bb_usage_analytics_data' filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array An array of collected site data.
+ */
+function bb_collect_site_data() {
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+
+	$query = "
+        SELECT *
+        FROM {$bp_prefix}options
+        WHERE option_name LIKE 'bb_%'
+        OR option_name LIKE '_bb_%'
+        OR option_name LIKE 'bp_%'
+        OR option_name LIKE '_bp_%'
+        OR option_name LIKE 'bbapp_%'
+        OR option_name LIKE '_bbapp_%'
+    ";
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$buddyboss_options = $wpdb->get_results( $query, ARRAY_A );
+
+	/**
+	 * This filter allows other plugins or themes to modify or add additional data to the array that is
+	 * sent to the analytics site.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $data The array of collected site data for BuddyBoss options.
+	 */
+	$buddyboss_options = apply_filters( 'bb_usage_analytics_data', $buddyboss_options );
+
+	return array(
+		'uuid' => bb_uuid(),
+		'data' => $buddyboss_options,
+	);
+}
