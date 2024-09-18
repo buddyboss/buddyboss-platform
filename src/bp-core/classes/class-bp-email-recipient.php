@@ -55,7 +55,7 @@ class BP_Email_Recipient {
 	 * Constructor.
 	 *
 	 * @since BuddyPress 2.5.0
-	 * @since BuddyBoss [BBVERSION] Added new param $tokens.
+	 * @since BuddyBoss 2.7.00 Added new param $tokens.
 	 *
 	 * @param string|array|int|WP_User $email_or_user Either an email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.

@@ -1244,7 +1244,7 @@ function bb_clear_group_thread_cache( $thread_id ) {
 /**
  * Function to bypass the name privacy for admin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.00
  *
  * @param array $hidden_levels     Hidden levels.
  * @param int   $displayed_user_id Displayed user id.

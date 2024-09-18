@@ -7390,7 +7390,7 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 /**
  * If a blog component is disabled, then display activity action for existing blog activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.00
  *
  * @param string $action   Constructed activity action.
  * @param object $activity Activity data object.
@@ -7411,7 +7411,7 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	/**
 	 * Filters the blog post action for the existing blog activity.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.00
 	 *
 	 * @param string $action   Constructed activity action.
 	 * @param object $activity Activity data object.
