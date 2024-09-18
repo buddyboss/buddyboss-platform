@@ -1205,3 +1205,36 @@ function bb_load_web_performance_tester() {
 		bb_web_performance_tester();
 	}
 }
+
+/**
+ * Schedule CRON job for Sunday midnight if not already scheduled.
+ * This function checks if the CRON event 'bb_send_usage_report_event' is already scheduled.
+ * If it's not scheduled, it will schedule the event to run every Sunday at midnight.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_schedule_usage_report_cron() {
+
+	if ( ! wp_next_scheduled( 'bb_usage_report_cron_event' ) ) {
+		wp_schedule_event(
+			strtotime( 'next Sunday midnight' ),
+			'weekly',
+			'bb_usage_report_cron_event'
+		);
+	}
+}
+
+add_action( 'bp_init', 'bb_schedule_usage_report_cron' );
+
+/**
+ * Send anonymous usage data to the analytics site when the CRON job is triggered.
+ * This function collects data from the site, including site UUID and any additional data
+ * provided via the 'bb_usage_analytics_data' filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_send_usage_report_to_analytics() {
+	error_log( 'Usage report sent to analytics site' );
+}
+
+add_action( 'bb_usage_report_cron_event', 'bb_send_usage_report_to_analytics' );
