@@ -1234,7 +1234,36 @@ add_action( 'bp_init', 'bb_schedule_usage_report_cron' );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_send_usage_report_to_analytics() {
-	error_log( 'Usage report sent to analytics site' );
+	$data             = bb_collect_site_data();
+	$site_url         = get_site_url();
+	$data['site_url'] = $site_url;
+
+	$args = array(
+		'headers'   => array(
+			'Content-Type' => 'application/json',
+			'Site-URL'     => $site_url,
+		),
+		'timeout'   => 10,
+		'blocking'  => true,
+		'body'      => wp_json_encode( $data ),
+		'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests, fine to pass false.
+	);
+
+	// Send the data to the analytics site.
+	$raw_response = '';
+
+	unset( $data, $site_url, $args );
+
+	if ( is_wp_error( $raw_response ) ) {
+		return $raw_response;
+
+		// Handle http error.
+	} elseif ( wp_remote_retrieve_response_code( $raw_response ) != 200 ) {
+
+		return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
+	}
+
+	unset( $raw_response );
 }
 
 add_action( 'bb_usage_report_cron_event', 'bb_send_usage_report_to_analytics' );
