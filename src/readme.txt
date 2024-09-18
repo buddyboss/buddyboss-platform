@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.6.90
+Stable tag: 2.7.00
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
