@@ -4797,7 +4797,7 @@ h1.bb-advance-heading {
   padding: 8px;
   text-align: center;
   border-bottom: 1px solid #C5BFBA;
-  margin: 0 -20px;
+  margin-left: -20px;
 }
 
 .bb-upgrade-notice .bb-upgrade-point {
@@ -4812,6 +4812,22 @@ h1.bb-advance-heading {
 .bb-upgrade-notice .bb-upgrade-point i {
   font-size: 24px;
   margin-right: 4px;
+}
+
+.bb-upgrade-notice .bb-upgrade-point .bb-upgrade-notice__link {
+  font-weight: 600;
+  color: inherit;
+  margin-left: 16px;
+}
+
+.bb-upgrade-notice .bb-upgrade-point .bb-upgrade-notice__link:focus {
+  box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+  .bb-upgrade-notice {
+    margin: 0 0 0 -10px;
+  }
 }
 
 .wrap.wrap--performance > h2:first-child {

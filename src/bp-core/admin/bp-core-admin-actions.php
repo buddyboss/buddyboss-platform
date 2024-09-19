@@ -480,7 +480,7 @@ function bb_pro_upgrade_notice() {
 				<?php
 				echo sprintf(
 				/* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
-					'%1$s <a href="%2$s" style="font-weight: bold;" target="_blank">%3$s</a>',
+					'%1$s <a href="%2$s" class="bb-upgrade-notice__link" target="_blank">%3$s</a>',
 					__( 'Upgrade to pro and unlock more exciting community features!', 'buddyboss' ),
 					esc_url( 'https://www.buddyboss.com/bbwebupgrade' ),
 					__( 'Upgrade to pro', 'buddyboss' )
