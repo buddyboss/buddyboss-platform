@@ -468,13 +468,19 @@ function bb_pro_upgrade_notice() {
 	// Check if the current page is under the BuddyBoss menu.
 	if (
 		$current_screen &&
-		false !== strpos( $current_screen->parent_base, 'buddyboss' ) &&
 		(
-			! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid()
+			false !== strpos( $current_screen->parent_base, 'buddyboss' ) ||
+			false !== strpos( $current_screen->id, 'edit-bpm_category' ) ||
+			false !== strpos( $current_screen->id, 'buddyboss_fonts' )
+		)
+		&&
+		(
+			! function_exists( 'bb_platform_pro' ) ||
+			! bbp_pro_is_license_valid()
 		)
 	) {
 		?>
-		<div class="bb-upgrade-notice">
+		<div class="bb-upgrade-notice bb-is-dismissible">
 			<span class="bb-upgrade-point">
 				<i class="bb-icon-f bb-icon-crown"></i>
 				<?php
