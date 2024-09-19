@@ -9934,15 +9934,16 @@ function bb_uuid() {
 function bb_collect_site_data() {
 	global $wpdb;
 
-	$analytics_data                  = array();
-	$analytics_data['site_url']      = site_url();
-	$analytics_data['admin_url']     = admin_url();
-	$analytics_data['admin_email']   = get_option( 'admin_email' );
-	$analytics_data['php_version']   = phpversion();
-	$analytics_data['mysql_version'] = $wpdb->db_version();
-	$analytics_data['db_provider']   = $wpdb->db_server_info();
-	$analytics_data['os']            = ( function_exists( 'php_uname' ) ) ? php_uname( 's' ) : '';
-	$analytics_data['webserver']     = $_SERVER['SERVER_SOFTWARE'];
+	$analytics_data = array(
+		'site_url'      => site_url(),
+		'admin_url'     => admin_url(),
+		'admin_email'   => get_option( 'admin_email' ),
+		'php_version'   => phpversion(),
+		'mysql_version' => $wpdb->db_version(),
+		'db_provider'   => $wpdb->db_server_info(),
+		'os'            => ( function_exists( 'php_uname' ) ) ? php_uname( 's' ) : '',
+		'webserver'     => $_SERVER['SERVER_SOFTWARE'],
+	);
 
 	// Fetch data for all BuddyBoss options.
 	$bp_prefix = bp_core_get_table_prefix();
