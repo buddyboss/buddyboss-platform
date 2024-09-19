@@ -1234,14 +1234,12 @@ add_action( 'bp_init', 'bb_schedule_usage_report_cron' );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_send_usage_report_to_analytics() {
-	$data             = bb_collect_site_data();
-	$site_url         = get_site_url();
-	$data['site_url'] = $site_url;
+	$data = bb_collect_site_data();
 
 	$args = array(
 		'headers'   => array(
 			'Content-Type' => 'application/json',
-			'Site-URL'     => $site_url,
+			'Site-URL'     => get_site_url(),
 		),
 		'timeout'   => 10,
 		'blocking'  => true,
@@ -1252,7 +1250,7 @@ function bb_send_usage_report_to_analytics() {
 	// Send the data to the analytics site.
 	$raw_response = '';
 
-	unset( $data, $site_url, $args );
+	unset( $data, $args );
 
 	if ( is_wp_error( $raw_response ) ) {
 		return $raw_response;
