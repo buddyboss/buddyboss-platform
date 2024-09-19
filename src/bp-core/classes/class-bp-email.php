@@ -144,7 +144,7 @@ class BP_Email {
 	/**
 	 * Original token names and values for this email.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.00
 	 *
 	 * @var string[] Associative pairing of token name (key) and replacement value (value).
 	 */
@@ -970,7 +970,7 @@ class BP_Email {
 	/**
 	 * Original tokens for this email.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.00
 	 *
 	 * @param string[] $tokens Associative array, contains key/value pairs of token name/value.
 	 *                         Values are a string or a callable function.
@@ -981,7 +981,7 @@ class BP_Email {
 		/**
 		 * Filters the new value of the email's "original tokens" property.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.00
 		 *
 		 * @param string[] $tokens Associative pairing of token names (key) and replacement values (value).
 		 * @param BP_Email $this   Current instance of the email type class.
