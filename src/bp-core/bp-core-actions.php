@@ -1207,61 +1207,14 @@ function bb_load_web_performance_tester() {
 }
 
 /**
- * Schedule CRON job for Sunday midnight if not already scheduled.
- * This function checks if the CRON event 'bb_send_usage_report_event' is already scheduled.
- * If it's not scheduled, it will schedule the event to run every Sunday at midnight.
+ * Function to load analytics usage class.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_schedule_usage_report_cron() {
-
-	if ( ! wp_next_scheduled( 'bb_usage_report_cron_event' ) ) {
-		wp_schedule_event(
-			strtotime( 'next Sunday midnight' ),
-			'weekly',
-			'bb_usage_report_cron_event'
-		);
+function bb_analytics_usage_load() {
+	if ( class_exists( 'BB_Analytics_Usage' ) ) {
+		BB_Analytics_Usage::instance();
 	}
 }
 
-add_action( 'bp_init', 'bb_schedule_usage_report_cron' );
-
-/**
- * Send anonymous usage data to the analytics site when the CRON job is triggered.
- * This function collects data from the site, including site UUID and any additional data
- * provided via the 'bb_usage_analytics_data' filter.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_send_usage_report_to_analytics() {
-	$data = bb_collect_site_data();
-
-	$args = array(
-		'headers'   => array(
-			'Content-Type' => 'application/json',
-			'Site-URL'     => get_site_url(),
-		),
-		'timeout'   => 10,
-		'blocking'  => true,
-		'body'      => wp_json_encode( $data ),
-		'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests, fine to pass false.
-	);
-
-	// Send the data to the analytics site.
-	$raw_response = '';
-
-	unset( $data, $args );
-
-	if ( is_wp_error( $raw_response ) ) {
-		return $raw_response;
-
-		// Handle http error.
-	} elseif ( wp_remote_retrieve_response_code( $raw_response ) != 200 ) {
-
-		return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
-	}
-
-	unset( $raw_response );
-}
-
-add_action( 'bb_usage_report_cron_event', 'bb_send_usage_report_to_analytics' );
+add_action( 'bp_init', 'bb_analytics_usage_load' );
