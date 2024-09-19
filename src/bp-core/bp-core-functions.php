@@ -9933,9 +9933,20 @@ function bb_uuid() {
  */
 function bb_collect_site_data() {
 	global $wpdb;
-	$bp_prefix = bp_core_get_table_prefix();
 
-	$query = "
+	$analytics_data                  = array();
+	$analytics_data['site_url']      = site_url();
+	$analytics_data['admin_url']     = admin_url();
+	$analytics_data['admin_email']   = get_option( 'admin_email' );
+	$analytics_data['php_version']   = phpversion();
+	$analytics_data['mysql_version'] = $wpdb->db_version();
+	$analytics_data['db_provider']   = $wpdb->db_server_info();
+	$analytics_data['os']            = ( function_exists( 'php_uname' ) ) ? php_uname( 's' ) : '';
+	$analytics_data['webserver']     = $_SERVER['SERVER_SOFTWARE'];
+
+	// Fetch data for all BuddyBoss options.
+	$bp_prefix = bp_core_get_table_prefix();
+	$query     = "
         SELECT *
         FROM {$bp_prefix}options
         WHERE option_name LIKE 'bb_%'
@@ -9947,7 +9958,12 @@ function bb_collect_site_data() {
     ";
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	$buddyboss_options = $wpdb->get_results( $query, ARRAY_A );
+	$results = $wpdb->get_results( $query, ARRAY_A );
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $result ) {
+			$analytics_data[ $result['option_name'] ] = $result['option_value'];
+		}
+	}
 
 	unset( $bp_prefix, $query );
 
@@ -9957,16 +9973,16 @@ function bb_collect_site_data() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $data The array of collected site data for BuddyBoss options.
+	 * @param array $analytics_data The array of collected site data for BuddyBoss options.
 	 */
-	$buddyboss_options = apply_filters( 'bb_usage_analytics_data', $buddyboss_options );
+	$analytics_data = apply_filters( 'bb_usage_analytics_data', $analytics_data );
 
 	$site_data = array(
 		'uuid' => bb_uuid(),
-		'data' => $buddyboss_options,
+		'data' => $analytics_data,
 	);
 
-	unset( $buddyboss_options );
+	unset( $analytics_data );
 
 	return $site_data;
 }
