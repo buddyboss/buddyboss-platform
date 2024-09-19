@@ -55,12 +55,15 @@ class BP_Email_Recipient {
 	 * Constructor.
 	 *
 	 * @since BuddyPress 2.5.0
+	 * @since BuddyBoss 2.7.00 Added new param $tokens.
 	 *
 	 * @param string|array|int|WP_User $email_or_user Either an email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.
-	 * @param string                   $name Optional. If $email_or_user is a string, this is the recipient's name.
+	 * @param string                   $name          Optional. If $email_or_user is a string, this is the recipient's
+	 *                                                name.
+	 * @param array                    $tokens        Optional. Array of tokens to pass to the recipient.
 	 */
-	public function __construct( $email_or_user, $name = '' ) {
+	public function __construct( $email_or_user, $name = '', $tokens = array() ) {
 		$name = sanitize_text_field( $name );
 
 		// User ID, email address or WP_User object.
@@ -107,7 +110,15 @@ class BP_Email_Recipient {
 		// We have a user object; so set address and name from DB.
 		if ( $this->user_object ) {
 			// This is escaped with esc_html in bp_core_get_user_displayname()
-			$wp_name = wp_specialchars_decode( bp_core_get_user_displayname( $this->user_object->ID ), ENT_QUOTES );
+			if ( ! empty( $tokens['sender.id'] ) ) {
+				$sender_id = $tokens['sender.id'];
+			} elseif ( empty( $tokens['sender_id'] ) && ! empty( $tokens['message'] ) ) {
+				$sender_ids = array_column( $tokens['message'], 'sender_id' );
+				$sender_id  = $sender_ids[0];
+			} else {
+				$sender_id = 0;
+			}
+			$wp_name = wp_specialchars_decode( bp_core_get_user_displayname( $this->user_object->ID, $sender_id ), ENT_QUOTES );
 
 			$this->address = $this->user_object->user_email;
 			$this->name    = sanitize_text_field( $wp_name );

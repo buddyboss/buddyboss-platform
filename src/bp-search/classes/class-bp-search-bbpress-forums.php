@@ -44,7 +44,17 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$where   = array();
 			$where[] = '1=1';
-			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+
+			$search_term_array  = bb_search_get_search_keywords_by_term( $search_term, $this->type );
+			$every_word_clauses = array();
+			foreach ( $search_term_array as $term ) {
+				$every_word_clauses[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+				$query_placeholder[]  = '%' . $term . '%';
+				$query_placeholder[]  = '%' . $term . '%';
+				$query_placeholder[]  = '%' . $term . '%';
+			}
+			$where[] = implode( ' AND ', $every_word_clauses );
+
 			$where[] = "post_type = '{$this->type}'";
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -102,9 +112,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 			$where_sql .= ')';
 
 			$where[] = $where_sql;
-
-			$query_placeholder[] = '%' . $search_term . '%';
-			$query_placeholder[] = '%' . $search_term . '%';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the forum Search query.

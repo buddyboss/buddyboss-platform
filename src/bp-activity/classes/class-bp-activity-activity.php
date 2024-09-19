@@ -933,10 +933,10 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
-			}
 
-			if ( empty( $activity->action ) ) {
-				$activity->action = bp_activity_generate_action_string( $activity );
+				if ( empty( $activity->action ) ) {
+					$activity->action = bp_activity_generate_action_string( $activity );
+				}
 			}
 
 			$activities[] = $activity;
@@ -1569,7 +1569,7 @@ class BP_Activity_Activity {
 
 		// Merge the comments with the activity items.
 		foreach ( (array) $activities as $key => $activity ) {
-			if ( isset( $activity_comments[ $activity->id ] ) ) {
+			if ( ! empty( $activity ) && isset( $activity_comments[ $activity->id ] ) ) {
 
 				$activities[ $key ]->children        = $activity_comments[ $activity->id ];
 				$comments_count                      = self::bb_get_all_activity_comment_children_count(
