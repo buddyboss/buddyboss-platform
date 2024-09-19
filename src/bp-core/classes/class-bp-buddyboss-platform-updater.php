@@ -194,7 +194,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 		/**
 		 * Get the license stats.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.00
 		 *
 		 * @param string $main_file Plugin path.
 		 *
