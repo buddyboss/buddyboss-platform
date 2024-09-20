@@ -5135,6 +5135,7 @@ h1.bb-advance-heading {
 	text-align: center;
 	border-bottom: 1px solid #C5BFBA;
 	margin-left: -20px;
+	position: relative;
 
 	.bb-upgrade-point {
 		font-size: 1rem;
@@ -5160,8 +5161,38 @@ h1.bb-advance-heading {
 		}
 	}
 
+	.bb-dismiss-upgrade-notice {
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		position: absolute;
+		color: rgba(0, 0, 0, 0.6);
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+
+		i {
+			font-size: 20px;
+
+			&::before {
+				margin: 0;
+			}
+		}
+
+		&:hover {
+			color: rgba(0, 0, 0, 1);
+		}
+
+		&:focus,
+		&:active {
+			outline: 0;
+			box-shadow: none;
+		}
+	}
+
 	@media screen and (max-width: 768px) {
 		margin: 0 0 0 -10px;
+		padding-right: 35px;
 	}
 }
 

@@ -489,10 +489,11 @@ function bb_pro_upgrade_notice() {
 					'%1$s <a href="%2$s" class="bb-upgrade-notice__link" target="_blank">%3$s</a>',
 					__( 'Upgrade to pro and unlock more exciting community features!', 'buddyboss' ),
 					esc_url( 'https://www.buddyboss.com/bbwebupgrade' ),
-					__( 'Upgrade to pro', 'buddyboss' )
+					__( 'Upgrade to Pro', 'buddyboss' )
 				);
 				?>
 			</span>
+			<a href="#" class="bb-dismiss-upgrade-notice"><i class="bb-icon-l bb-icon-times"></i></a>
 		</div>
 		<?php
 	}
