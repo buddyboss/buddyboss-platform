@@ -675,25 +675,25 @@ function bp_ps_anyfield_search( $f ) {
 
 	$every_word_clauses = array();
 	$query_placeholder  = array();
-	if ( in_array( $filter, array( 'contains', 'like' ), true ) ) {
-		$search_term_array  = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
-		if ( ! empty( $search_term_array ) ) {
-			foreach ( $search_term_array as $term ) {
-				$every_word_clauses[] = "(xpd.value LIKE %s)";
-				if ( 'like' === $filter ) {
-					$term                = str_replace( '\\\\%', '\\%', $term );
-					$term                = str_replace( '\\\\_', '\\_', $term );
-					$query_placeholder[] = '%' . $term . '%';
-				} else {
-					$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
-				}
-				
-			}
-		}
-	}
+	
 
 	switch ( $filter ) {
 		case 'contains':
+		case 'like':
+			$search_term_array  = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
+			if ( ! empty( $search_term_array ) ) {
+				foreach ( $search_term_array as $term ) {
+					$every_word_clauses[] = "(xpd.value LIKE %s)";
+					if ( 'like' === $filter ) {
+						$term                = str_replace( '\\\\%', '\\%', $term );
+						$term                = str_replace( '\\\\_', '\\_', $term );
+						$query_placeholder[] = '%' . $term . '%';
+					} else {
+						$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
+					}
+					
+				}
+			}
 			if ( ! empty( $every_word_clauses ) ) {
 				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
 			} else {
@@ -705,14 +705,6 @@ function bp_ps_anyfield_search( $f ) {
 			$sql['where'][ $filter ] = $wpdb->prepare( 'xpd.value = %s', $value );
 			break;
 
-		case 'like':
-
-			if ( ! empty( $every_word_clauses ) ) {
-				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
-			} else {
-				$sql['where'][ $filter ] = '1=1';
-			}
-			break;
 	}
 
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
