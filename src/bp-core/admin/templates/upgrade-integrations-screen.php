@@ -9,6 +9,8 @@
  * @package BuddyBoss
  */
 
+// phpcs:disable PHPCompatibility
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -127,3 +129,6 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 	</div>
 
 </div>
+<?php
+// phpcs:enable PHPCompatibility
+?>
