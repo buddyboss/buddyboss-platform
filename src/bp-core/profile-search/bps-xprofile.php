@@ -681,7 +681,7 @@ function bp_ps_anyfield_search( $f ) {
 				$every_word_clauses = array();
 				$query_placeholder  = array();
 				foreach ( $search_term_array as $term ) {
-					$every_word_clauses[] = "(xpd.value LIKE %s)";
+					$every_word_clauses[] = "( xpd.value LIKE %s )";
 					if ( 'like' === $filter ) {
 						$term                = str_replace( '\\\\%', '\\%', $term );
 						$term                = str_replace( '\\\\_', '\\_', $term );
