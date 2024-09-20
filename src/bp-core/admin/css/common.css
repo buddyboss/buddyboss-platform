@@ -4834,14 +4834,22 @@ h1.bb-advance-heading {
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
+  border: 0;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
 }
 
-.bb-upgrade-notice .bb-dismiss-upgrade-notice i {
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:before {
+  content: '\e828';
+  font-family: "bb-icons";
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 20px;
+  height: 20px;
   font-size: 20px;
-}
-
-.bb-upgrade-notice .bb-dismiss-upgrade-notice i::before {
-  margin: 0;
+  text-decoration: none;
 }
 
 .bb-upgrade-notice .bb-dismiss-upgrade-notice:hover {

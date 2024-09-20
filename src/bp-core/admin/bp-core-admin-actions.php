@@ -495,7 +495,11 @@ function bb_pro_upgrade_notice() {
 				);
 				?>
 			</span>
-			<a href="#" class="bb-dismiss-upgrade-notice"><i class="bb-icon-l bb-icon-times"></i></a>
+			<button type="button" class="bb-dismiss-upgrade-notice">
+				<span class="screen-reader-text">
+					<?php esc_html_e( 'Dismiss this notice.', 'buddyboss' ); ?>
+				</span>
+			</button>
 		</div>
 		<?php
 	}

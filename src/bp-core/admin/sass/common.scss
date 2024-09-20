@@ -5170,13 +5170,21 @@ h1.bb-advance-heading {
 		right: 8px;
 		top: 50%;
 		transform: translateY(-50%);
+		border: 0;
+		padding: 0;
+		outline: none;
+		cursor: pointer;
 
-		i {
+		&:before {
+			content: '\e828';
+			font-family: "bb-icons";
+			font-style: normal;
+			display: inline-block;
+			text-decoration: inherit;
+			width: 20px;
+			height: 20px;
 			font-size: 20px;
-
-			&::before {
-				margin: 0;
-			}
+			text-decoration: none;
 		}
 
 		&:hover {
