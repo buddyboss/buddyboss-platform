@@ -1196,8 +1196,8 @@ window.bp = window.bp || {};
 							content.after( response.data.feedback );
 							content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
-							if( $( content ).children( '.bb-poll-view' ).length ) {
-								// Make sure to replace content but not not .bb-poll-view
+							if ( $( content ).children( '.bb-poll-view' ).length ) {
+								// Make sure to replace content but not .bb-poll-view.
 								$( content ).children( ':not(.bb-poll-view)' ).remove();
 								$( content ).prepend( response.data.contents ).slideDown( 300 );
 
