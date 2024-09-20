@@ -673,15 +673,13 @@ function bp_ps_anyfield_search( $f ) {
 
 	}
 
-	$every_word_clauses = array();
-	$query_placeholder  = array();
-	
-
 	switch ( $filter ) {
 		case 'contains':
 		case 'like':
-			$search_term_array  = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
+			$search_term_array = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
 			if ( ! empty( $search_term_array ) ) {
+				$every_word_clauses = array();
+				$query_placeholder  = array();
 				foreach ( $search_term_array as $term ) {
 					$every_word_clauses[] = "(xpd.value LIKE %s)";
 					if ( 'like' === $filter ) {
@@ -691,9 +689,8 @@ function bp_ps_anyfield_search( $f ) {
 					} else {
 						$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
 					}
-					
 				}
-				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
+				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder );
 			} else {
 				$sql['where'][ $filter ] = '1=1';
 			}
