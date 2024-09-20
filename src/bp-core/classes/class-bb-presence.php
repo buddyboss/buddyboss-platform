@@ -34,7 +34,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var object
 		 */
-		public static object $wpdb;
+		public static $wpdb;
 
 		/**
 		 * This will use for last activity cache time.
@@ -43,7 +43,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var int
 		 */
-		public static int $cache_time;
+		public static $cache_time;
 
 		/**
 		 * Activity table name to store last activity.
@@ -52,7 +52,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var string
 		 */
-		public static string $table_name;
+		public static $table_name;
 
 		/**
 		 * Download plugin text which appears on admin side.
@@ -61,7 +61,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var string
 		 */
-		public static string $download_plugin_text;
+		public static $download_plugin_text;
 
 		/**
 		 * Get the instance of this class.

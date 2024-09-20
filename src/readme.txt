@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.6.90
+Stable tag: 2.7.00
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.00 =
+* Enhancement: Coding Standards - Fixed all warnings and errors for PHP versions 7.3 to 8.3
+* Bug: Activity - Fixed an issue where notifications were incorrectly triggered when editing posts or adding/updating media in activity feeds
+* Bug: Activity - Fixed the issue where user names from the custom post type were not displaying after disabling the custom post setting in the backend
+* Bug: Core - Code improvements completed for the activity feed
+* Bug: Core - Fixed a fatal error caused by the Normalizer
+* Bug: Core - Fixed the inconsistency in search result counts between the backend and frontend
+* Bug: Email - Fixed the issue where last name privacy was not honored in email notifications when the delayed email notification setting was enabled.
+* Bug: Styling - Resolved UI issues in the Mutual Connection tab
 
 = 2.6.90 =
 * New Feature! - In this update we have introduced Polls. Polls is a highly requested feature that allows Admins and group Owners & Moderators make use use of Polls either in the main activity feed or group activity feed.
