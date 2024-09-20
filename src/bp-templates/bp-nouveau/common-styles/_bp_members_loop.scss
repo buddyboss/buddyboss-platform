@@ -3,7 +3,8 @@
 
 .buddypress-wrap {
 
-	.members-list { // ul
+	.members-list,
+	.friends-mutual-list { // ul
 
 		li {
 
@@ -198,7 +199,8 @@
 }
 
 // More option on memeber listing
-#buddypress .members-list > li {
+#buddypress .members-list > li,
+#buddypress .friends-mutual-list > li {
 	min-width: 275px;
 
 	.bb_more_options.member-dropdown {
