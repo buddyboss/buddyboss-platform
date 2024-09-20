@@ -673,19 +673,19 @@ function bp_ps_anyfield_search( $f ) {
 
 	}
 
-	if ( in_array( $filter, array( 'contains', 'like' ) ) ) {
-		$every_word_clauses = array();
-		$query_placeholder  = array();
+	$every_word_clauses = array();
+	$query_placeholder  = array();
+	if ( in_array( $filter, array( 'contains', 'like' ), true ) ) {
 		$search_term_array  = bb_search_get_search_keywords_by_term( $value, 'anyfield' );
 		if ( ! empty( $search_term_array ) ) {
 			foreach ( $search_term_array as $term ) {
 				$every_word_clauses[] = "(xpd.value LIKE %s)";
 				if ( 'like' === $filter ) {
-					$term                 = str_replace( '\\\\%', '\\%', $term );
-					$term                 = str_replace( '\\\\_', '\\_', $term );
-					$query_placeholder[]  = '%' . $term . '%';
+					$term                = str_replace( '\\\\%', '\\%', $term );
+					$term                = str_replace( '\\\\_', '\\_', $term );
+					$query_placeholder[] = '%' . $term . '%';
 				} else {
-					$query_placeholder[]  = '%' . bp_ps_esc_like( $term ) . '%';
+					$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
 				}
 				
 			}
