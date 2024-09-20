@@ -9949,12 +9949,12 @@ function bb_create_jwt( $payload ) {
 function bb_validate_jwt( $token ) {
 	$secret_key      = wp_salt( 'nonce' );
 	$token_parts     = explode( '.', $token );
-	$header          = base64_decode( $token_parts[0] );
-	$payload         = base64_decode( $token_parts[1] );
-	$signature       = base64_decode( $token_parts[2] );
-	$valid_signature = hash_hmac( 'sha256', $token_parts[0] . '.' . $token_parts[1], $secret_key, true );
+	$header          = ! empty( $token_parts[0] ) ? base64_decode( $token_parts[0] ) : array();
+	$payload         = ! empty( $token_parts[1] ) ? base64_decode( $token_parts[1] ) : array();
+	$signature       = ! empty( $token_parts[2] ) ? base64_decode( $token_parts[2] ) : '';
+	$valid_signature = ! empty( $token_parts[0] ) && ! empty( $token_parts[1] ) ? hash_hmac( 'sha256', $token_parts[0] . '.' . $token_parts[1], $secret_key, true ) : '';
 
-	if ( $signature === $valid_signature ) {
+	if ( ! empty( $signature ) && ! empty( $valid_signature ) && hash_equals( $signature, $valid_signature ) ) {
 		$decoded_payload = json_decode( $payload, true );
 		$currentTime     = time();
 
