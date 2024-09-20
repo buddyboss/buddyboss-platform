@@ -707,7 +707,7 @@ function bp_ps_anyfield_search( $f ) {
 
 		case 'like':
 
-			if ( false && ! empty( $every_word_clauses ) ) {
+			if ( ! empty( $every_word_clauses ) ) {
 				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
 			} else {
 				$sql['where'][ $filter ] = '1=1';
