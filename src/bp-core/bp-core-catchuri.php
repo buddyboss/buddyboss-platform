@@ -1175,8 +1175,8 @@ function bp_private_network_template_redirect() {
 		// Check for a valid JWT token in the request headers.
 		$headers = bb_get_all_headers();
 		if (
-			! empty( $headers['Bbpreviewtoken'] ) &&
-			bb_validate_jwt( $headers['Bbpreviewtoken'] )
+			! empty( $headers['bb-preview-token'] ) &&
+			bb_validate_jwt( $headers['bb-preview-token'] )
 		) {
 			return; // Bypass restriction for internal sharing with a valid JWT token.
 		}

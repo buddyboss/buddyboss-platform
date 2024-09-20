@@ -4873,7 +4873,7 @@ function bp_core_parse_url( $url ) {
 			if ( ! bp_enable_private_network() ) {
 				// Add the custom header with the JWT token.
 				$args['headers'] = array(
-					'Bbpreviewtoken' => bb_create_jwt(
+					'bb-preview-token' => bb_create_jwt(
 						array(
 							'url' => $url,
 							'iat' => time(),
@@ -9926,14 +9926,14 @@ function bb_pro_poll_version() {
  * @return string The generated JWT token as a string.
  */
 function bb_create_jwt( $payload ) {
-	$secretKey        = wp_salt( 'nonce' );
-	$header           = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
-	$encodedHeader    = base64_encode( $header );
-	$encodedPayload   = base64_encode( json_encode( $payload ) );
-	$signature        = hash_hmac( 'sha256', $encodedHeader . '.' . $encodedPayload, $secretKey, true );
-	$encodedSignature = base64_encode( $signature );
+	$secret_key        = wp_salt( 'nonce' );
+	$header            = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$encoded_header    = base64_encode( $header );
+	$encoded_payload   = base64_encode( json_encode( $payload ) );
+	$signature         = hash_hmac( 'sha256', $encoded_header . '.' . $encoded_payload, $secret_key, true );
+	$encoded_signature = base64_encode( $signature );
 
-	return $encodedHeader . '.' . $encodedPayload . '.' . $encodedSignature;
+	return $encoded_header . '.' . $encoded_payload . '.' . $encoded_signature;
 }
 
 /**
@@ -9947,22 +9947,22 @@ function bb_create_jwt( $payload ) {
  * @return bool True if the token is valid, false if the token is invalid or expired.
  */
 function bb_validate_jwt( $token ) {
-	$secretKey      = wp_salt( 'nonce' );
-	$tokenParts     = explode( '.', $token );
-	$header         = base64_decode( $tokenParts[0] );
-	$payload        = base64_decode( $tokenParts[1] );
-	$signature      = base64_decode( $tokenParts[2] );
-	$validSignature = hash_hmac( 'sha256', $tokenParts[0] . '.' . $tokenParts[1], $secretKey, true );
+	$secret_key      = wp_salt( 'nonce' );
+	$token_parts     = explode( '.', $token );
+	$header          = base64_decode( $token_parts[0] );
+	$payload         = base64_decode( $token_parts[1] );
+	$signature       = base64_decode( $token_parts[2] );
+	$valid_signature = hash_hmac( 'sha256', $token_parts[0] . '.' . $token_parts[1], $secret_key, true );
 
-	if ( $signature === $validSignature ) {
-		$decodedPayload = json_decode( $payload, true );
-		$currentTime    = time();
+	if ( $signature === $valid_signature ) {
+		$decoded_payload = json_decode( $payload, true );
+		$currentTime     = time();
 
 		if (
-			! empty( $decodedPayload['exp'] ) &&
-			$decodedPayload['exp'] >= $currentTime &&
-			! empty( $decodedPayload['url'] ) &&
-			bb_is_same_site_url( $decodedPayload['url'] )
+			! empty( $decoded_payload['exp'] ) &&
+			$decoded_payload['exp'] >= $currentTime &&
+			! empty( $decoded_payload['url'] ) &&
+			bb_is_same_site_url( $decoded_payload['url'] )
 		) {
 			return true; // JWT is valid
 		}
@@ -9991,7 +9991,7 @@ function bb_get_all_headers() {
 	$headers = array();
 	foreach ( $_SERVER as $name => $value ) {
 		if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
-			$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+			$headers[ str_replace( ' ', '-', strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ] = $value;
 		}
 	}
 
