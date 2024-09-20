@@ -693,8 +693,6 @@ function bp_ps_anyfield_search( $f ) {
 					}
 					
 				}
-			}
-			if ( ! empty( $every_word_clauses ) ) {
 				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), $query_placeholder );
 			} else {
 				$sql['where'][ $filter ] = '1=1';
