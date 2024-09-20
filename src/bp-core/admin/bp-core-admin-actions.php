@@ -464,9 +464,11 @@ add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
  */
 function bb_pro_upgrade_notice() {
 	$current_screen = get_current_screen();
+	$dismissed      = get_transient( 'bb_pro_upgrade_notice_dismissed' );
 
 	// Check if the current page is under the BuddyBoss menu.
 	if (
+		! $dismissed &&
 		$current_screen &&
 		(
 			false !== strpos( $current_screen->parent_base, 'buddyboss' ) ||
@@ -480,7 +482,7 @@ function bb_pro_upgrade_notice() {
 		)
 	) {
 		?>
-		<div class="bb-upgrade-notice bb-is-dismissible">
+		<div class="bb-upgrade-notice bb-is-dismissible" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-upgrade-notice-nonce' ) ); ?>">
 			<span class="bb-upgrade-point">
 				<i class="bb-icon-f bb-icon-crown"></i>
 				<?php

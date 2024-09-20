@@ -2847,6 +2847,37 @@ window.bp = window.bp || {};
 		validateDuplicateEmailRuleEntry( e );
 	} );
 
+	/**
+	 * Handles the dismissal of the "Upgrade to Pro" notice via AJAX.
+	 *
+	 * @param {Event} e The click event triggered when the dismiss button is clicked.
+	 */
+	$( document ).on( 'click', '.bb-dismiss-upgrade-notice', function ( e ) {
+		e.preventDefault();
+
+		// Retrieve the nonce from the notice element.
+		var nonce = jQuery( this ).closest( '.bb-upgrade-notice' ).data( 'nonce' );
+		if ( 'undefined' === typeof nonce ) {
+			return;
+		}
+
+		$.ajax(
+			{
+				type   : 'POST',
+				url    : BP_ADMIN.ajax_url,
+				data   : {
+					'action': 'bb_upgrade_dismiss_notice',
+					'nonce' : nonce
+				},
+				success: function ( response ) {
+					if ( response.success ) {
+						jQuery( '.bb-upgrade-notice' ).fadeOut();
+					}
+				},
+			}
+		);
+	} );
+
 	function bb_unique( array ) {
 		return $.grep( array, function ( el, index ) {
 			return index === $.inArray( el, array );
