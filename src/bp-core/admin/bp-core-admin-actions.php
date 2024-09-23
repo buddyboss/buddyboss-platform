@@ -484,7 +484,7 @@ function bb_pro_upgrade_notice() {
 		?>
 		<div class="bb-upgrade-notice bb-is-dismissible" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-upgrade-notice-nonce' ) ); ?>">
 			<span class="bb-upgrade-point">
-				<i class="bb-icon-f bb-icon-crown"></i>
+				<i class="bb-icon-f bb-icon-brand-buddyboss"></i>
 				<?php
 				echo sprintf(
 				/* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
