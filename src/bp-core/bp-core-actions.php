@@ -1207,7 +1207,7 @@ function bb_load_web_performance_tester() {
 }
 
 /**
- * Reset the upgrade notice transient on user logout for administrators.
+ * Delete the upgrade notice transient when administrators logout.
  *
  * @since BuddyBoss [BBVERSION]
  *
