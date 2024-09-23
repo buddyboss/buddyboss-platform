@@ -696,10 +696,32 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 */
 		public function bb_readylaunch_screen() {
 			?>
-
 			<div class="wrap">
 				<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'ReadyLaunch™', 'buddyboss' ) ); ?></h2>
-				<?php include $this->admin_dir . 'templates/readylaunch-screen.php'; ?>
+				<form action="" method="post">
+					<?php
+					settings_fields( 'bb-readylaunch' );
+					bp_custom_pages_do_settings_sections( 'bb-readylaunch' );
+
+					// Check WPML Active.
+					if ( class_exists( 'SitePress' ) ) {
+						$wpml_options = get_option( 'icl_sitepress_settings' );
+						$default_lang = $wpml_options['default_language'];
+						$current_lang = ICL_LANGUAGE_CODE;
+
+						if ( $current_lang === $default_lang ) {
+							// Show the "Save Settings" button only if the current language is the default language.
+							printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+						} else {
+							// Show a disabled "Save Settings" button if the current language is not the default language.
+							printf( '<div class="submit"><p class="button-primary disabled">%s</p></div>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+							printf( '<p class="description">%s</p>', esc_attr__( 'You need to switch to your Default language in WPML to save these settings.', 'buddyboss' ) );
+						}
+					} else {
+						printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+					}
+					?>
+				</form>
 			</div>
 
 			<?php
