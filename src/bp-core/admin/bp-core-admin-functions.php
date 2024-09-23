@@ -3891,7 +3891,7 @@ function bb_upgrade_dismiss_notice() {
 		wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
 	}
 
-	set_transient( "bb_pro_upgrade_notice_dismissed", true, WEEK_IN_SECONDS );
+	set_transient( "bb_pro_upgrade_notice_dismissed", true, DAY_IN_SECONDS );
 
 	wp_send_json_success();
 }
