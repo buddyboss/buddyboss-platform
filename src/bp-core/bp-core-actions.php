@@ -1205,3 +1205,21 @@ function bb_load_web_performance_tester() {
 		bb_web_performance_tester();
 	}
 }
+
+/**
+ * Reset the upgrade notice transient on user logout for administrators.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id The ID of the user who is logging out.
+ *
+ * @return void
+ */
+function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
+	$user = get_userdata( $user_id );
+	if ( user_can( $user, 'manage_options' ) ) {
+		delete_transient( 'bb_pro_upgrade_notice_dismissed' );
+	}
+}
+
+add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
