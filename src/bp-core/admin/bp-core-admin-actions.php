@@ -71,8 +71,6 @@ add_action( 'user_profile_update_errors', 'bb_validate_restricted_email_on_regis
 add_action( 'personal_options_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit the login user profile from backend.
 add_action( 'edit_user_profile_update', 'bb_validate_restricted_email_on_profile_update', 1 ); // Edit other users profile from backend.
 
-add_action( 'admin_notices', 'bb_pro_upgrade_notice', 1 );
-
 /**
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
@@ -458,49 +456,75 @@ function bb_core_settings_saved_notice() {
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
 
 /**
- * Function to display upgrade notice for platform pro.
+ * Display an upgrade notice for free users on BuddyBoss screens.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_pro_upgrade_notice() {
+	// If a user is not on a relevant screen, don't show the notice.
 	$current_screen = get_current_screen();
-	$dismissed      = get_transient( 'bb_pro_upgrade_notice_dismissed' );
-
-	// Check if the current page is under the BuddyBoss menu.
 	if (
-		! $dismissed &&
-		$current_screen &&
+		! $current_screen ||
 		(
-			false !== strpos( $current_screen->parent_base, 'buddyboss' ) ||
-			false !== strpos( $current_screen->id, 'edit-bpm_category' ) ||
-			false !== strpos( $current_screen->id, 'buddyboss_fonts' )
-		)
-		&&
-		(
-			! function_exists( 'bb_platform_pro' ) ||
-			! bbp_pro_is_license_valid()
+			false === strpos( $current_screen->parent_base, 'buddyboss' ) &&
+			false === strpos( $current_screen->id, 'edit-bpm_category' ) &&
+			false === strpos( $current_screen->id, 'buddyboss_fonts' )
 		)
 	) {
-		?>
-		<div class="bb-upgrade-notice bb-is-dismissible" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-upgrade-notice-nonce' ) ); ?>">
-			<span class="bb-upgrade-point">
-				<i class="bb-icon-f bb-icon-brand-buddyboss"></i>
-				<?php
-				echo sprintf(
-				/* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
-					'%1$s <a href="%2$s" class="bb-upgrade-notice__link" target="_blank">%3$s</a>',
-					__( 'Upgrade to pro and unlock more exciting community features!', 'buddyboss' ),
-					esc_url( 'https://www.buddyboss.com/bbwebupgrade' ),
-					__( 'Upgrade to Pro', 'buddyboss' )
-				);
-				?>
-			</span>
-			<button type="button" class="bb-dismiss-upgrade-notice">
-				<span class="screen-reader-text">
-					<?php esc_html_e( 'Dismiss this notice.', 'buddyboss' ); ?>
-				</span>
-			</button>
-		</div>
-		<?php
+		return;
 	}
+
+	// If a user has dismissed the notice, has a valid Pro license, don't show the notice.
+	$dismissed            = get_transient( 'bb_pro_upgrade_notice_dismissed' );
+	$is_pro_license_valid = function_exists( 'bb_platform_pro' ) && bbp_pro_is_license_valid();
+	if ( $dismissed || $is_pro_license_valid ) {
+		return;
+	}
+	?>
+	<div class="bb-upgrade-notice bb-is-dismissible" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-upgrade-notice-nonce' ) ); ?>">
+		<span class="bb-upgrade-point">
+           <i class="bb-icon-f bb-icon-brand-buddyboss"></i>
+              <?php
+              echo sprintf(
+              /* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
+	              '%1$s <a href="%2$s" class="bb-upgrade-notice__link" target="_blank">%3$s</a>',
+	              __( 'Upgrade to pro and unlock more exciting community features!', 'buddyboss' ),
+	              esc_url( 'https://www.buddyboss.com/bbwebupgrade' ),
+	              __( 'Upgrade to Pro', 'buddyboss' )
+              );
+              ?>
+		</span>
+		<button type="button" class="bb-dismiss-upgrade-notice">
+                <span class="screen-reader-text">
+                    <?php esc_html_e( 'Dismiss this notice.', 'buddyboss' ); ?>
+                </span>
+		</button>
+	</div>
+	<?php
 }
+
+add_action( 'admin_notices', 'bb_pro_upgrade_notice', 1 );
+
+/**
+ * Handles the dismissal of the "Upgrade to Pro" notice.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_upgrade_dismiss_notice() {
+	$bb_upgrade_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+
+	// Nonce check!
+	if ( empty( $bb_upgrade_nonce ) || ! wp_verify_nonce( $bb_upgrade_nonce, 'bb-upgrade-notice-nonce' ) ) {
+		wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
+	}
+
+	set_transient( "bb_pro_upgrade_notice_dismissed", true, DAY_IN_SECONDS );
+
+	wp_send_json_success();
+}
+
+add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );

@@ -3875,25 +3875,3 @@ function bb_web_performance_tester() {
 
 	return $bb_wpt;
 }
-
-/**
- * Handles the dismissal of the "Upgrade to Pro" notice.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_upgrade_dismiss_notice() {
-	$bb_upgrade_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
-
-	// Nonce check!
-	if ( empty( $bb_upgrade_nonce ) || ! wp_verify_nonce( $bb_upgrade_nonce, 'bb-upgrade-notice-nonce' ) ) {
-		wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
-	}
-
-	set_transient( "bb_pro_upgrade_notice_dismissed", true, DAY_IN_SECONDS );
-
-	wp_send_json_success();
-}
-
-add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
