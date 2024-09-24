@@ -53,6 +53,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function __construct() {
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
+			add_filter( 'template_include', array( $this, 'override_page_templates' ), 999999 ); // High priority so we have the last say here
 		}
 
 		public function bb_core_admin_readylaunch_page_fields() {
@@ -68,9 +69,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$wp_settings_sections['bb-readylaunch']['bb_readylaunch']['icon'] = bb_admin_icons( 'bb_readylaunch' );
 			}
 
-			$enabled_pages  = bb_get_enabled_readylaunch();
-			$bp_pages = bp_core_get_directory_page_ids( 'all' );
-			$description = '';
+			$enabled_pages = bb_get_enabled_readylaunch();
+			$bp_pages      = bp_core_get_directory_page_ids( 'all' );
+			$description   = '';
 
 			foreach ( $directory_pages as $name => $label ) {
 				if (
@@ -84,11 +85,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					register_setting( 'bb-readylaunch', $name, array() );
 				}
 			}
-
 		}
 
 		public function bb_admin_readylaunch_pages_description() {
-
 		}
 
 		/**
@@ -105,15 +104,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				switch_to_blog( bp_get_root_blog_id() );
 			}
 
-			$checked = ! empty( $enabled_pages ) && isset( $enabled_pages[ $name ] );
+			$bp_pages = bp_core_get_directory_page_ids( 'all' );
+			$checked  = ! empty( $enabled_pages ) && isset( $enabled_pages[ $name ] );
+
+			if ( 'new_forums_page' === $name ) {
+				$val = bp_get_forum_page_id();
+			} else {
+				$val = ! empty( $bp_pages ) && isset( $bp_pages[ $name ] ) ? $bp_pages[ $name ] : '';
+			}
 
 			// For the button.
 			if ( 'button' === $name ) {
-
 				printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );
 				// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`.
 			} else {
-				echo '<input type="checkbox" value="1" name="' . 'bb-readylaunch[' . esc_attr( $name ) . ']' . '" ' . checked( $checked, true, false )  . '/>';
+				echo '<input type="checkbox" value="' . esc_attr( $val ) . '" name="' . 'bb-readylaunch[' . esc_attr( $name ) . ']' . '" ' . checked( $checked, true, false ) . '/>';
 			}
 
 			if ( ! bp_is_root_blog() ) {
@@ -149,6 +154,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					)
 				)
 			);
+		}
+
+		public function override_page_templates( $template ) {
+			global $post;
+			$enabled_pages = bb_get_enabled_readylaunch();
+			$enabled_pages = wp_parse_id_list( $enabled_pages );
+
+			if (
+				! empty( $post->ID ) &&
+				in_array( $post->ID, $enabled_pages, true )
+			) {
+				$compponent = array_search( $post->ID, $enabled_pages, true );
+				if ( ! empty( $compponent ) && bp_is_active( $compponent ) ) {
+					$template = bp_locate_template( 'readylaunch/layout.php' );
+					if ( $template ) {
+						return $template;
+					}
+				}
+			}
+
+			return $template;
 		}
 	}
 }
