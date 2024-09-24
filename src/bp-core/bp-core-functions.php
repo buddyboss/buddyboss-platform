@@ -7904,6 +7904,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_performance_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_performance_usage':
+			$meta_icon = $bb_icon_bf . ' bb-icon-file-exclamation';
+			break;
 		default:
 			$meta_icon = '';
 	}
