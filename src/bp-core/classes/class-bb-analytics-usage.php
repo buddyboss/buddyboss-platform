@@ -168,8 +168,6 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				'is_multisite'  => is_multisite(),
 			);
 
-			unset( $_SERVER['SERVER_SOFTWARE'] );
-
 			$platform_options = self::bb_analytics_usage_options();
 			if ( ! empty( $platform_options ) ) {
 				$analytics_data = array_merge( $analytics_data, $platform_options );
