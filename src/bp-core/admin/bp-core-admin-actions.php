@@ -473,6 +473,8 @@ function bb_pro_upgrade_notice() {
 			false === strpos( $current_screen->id, 'buddyboss_fonts' )
 		)
 	) {
+		unset( $current_screen );
+
 		return;
 	}
 
@@ -480,8 +482,12 @@ function bb_pro_upgrade_notice() {
 	$dismissed            = get_transient( 'bb_pro_upgrade_notice_dismissed' );
 	$is_pro_license_valid = function_exists( 'bb_platform_pro' ) && bbp_pro_is_license_valid();
 	if ( $dismissed || $is_pro_license_valid ) {
+		unset( $current_screen, $dismissed, $is_pro_license_valid );
+
 		return;
 	}
+
+	unset( $current_screen, $dismissed, $is_pro_license_valid );
 	?>
 	<div class="bb-upgrade-notice bb-is-dismissible" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-upgrade-notice-nonce' ) ); ?>">
 		<span class="bb-upgrade-point">
@@ -520,11 +526,14 @@ function bb_upgrade_dismiss_notice() {
 	// Nonce check!
 	if ( empty( $bb_upgrade_nonce ) || ! wp_verify_nonce( $bb_upgrade_nonce, 'bb-upgrade-notice-nonce' ) ) {
 		wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
+		unset( $bb_upgrade_nonce );
+
 	}
 
 	set_transient( "bb_pro_upgrade_notice_dismissed", true, DAY_IN_SECONDS );
 
 	wp_send_json_success();
+	unset( $bb_upgrade_nonce );
 }
 
 add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );

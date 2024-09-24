@@ -1220,6 +1220,8 @@ function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
 	if ( user_can( $user, 'manage_options' ) ) {
 		delete_transient( 'bb_pro_upgrade_notice_dismissed' );
 	}
+
+	unset( $user );
 }
 
 add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
