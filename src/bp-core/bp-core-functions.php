@@ -9898,3 +9898,7 @@ function bb_remove_deleted_user_last_activities() {
 function bb_pro_poll_version() {
 	return '2.6.00';
 }
+
+function bb_get_enabled_readylaunch() {
+	return bp_get_option( 'bb_readylaunch', array() );
+}

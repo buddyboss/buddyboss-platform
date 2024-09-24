@@ -1205,3 +1205,17 @@ function bb_load_web_performance_tester() {
 		bb_web_performance_tester();
 	}
 }
+
+
+/**
+ * Function to load readylaunch class.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_readylaunch() {
+	if ( class_exists( 'BB_Readylaunch' ) ) {
+		BB_Readylaunch::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_load_readylaunch' );
