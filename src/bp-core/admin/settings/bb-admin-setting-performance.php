@@ -25,7 +25,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	 * @return void
 	 */
 	public function initialize() {
-		$this->tab_label = esc_html__( 'Performance', 'buddyboss' );
+		$this->tab_label = esc_html__( 'Advanced', 'buddyboss' );
 		$this->tab_name  = 'bp-performance';
 		$this->tab_order = 90;
 	}
