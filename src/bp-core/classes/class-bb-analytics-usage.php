@@ -86,13 +86,21 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_send_usage_report_to_analytics() {
-			$data = $this->bb_collect_site_data();
-
+			$data     = $this->bb_collect_site_data();
+			$auth_key = '';
+			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) {
+				$auth_key = BB_TEST_ANALYTICS_AUTH;
+			}
+			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v2/bb_analytics';
+			if ( defined( 'BB_TEST_ANALYTICS_URL' ) ) {
+				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v2/bb_analytics';
+			}
 			$args = array(
 				'headers'   => array(
-					'Content-Type'  => 'application/json',
+					'Authorization' => 'Bearer ' . $auth_key,
+					'Accept'        => 'application/json;ver=1.0',
+					'Content-Type'  => 'application/json; charset=UTF-8',
 					'Site-URL'      => get_site_url(),
-					'Authorization' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsIm5hbWUiOiJXZWIgTmluamEiLCJpYXQiOjE3MjY3NDM4NDYsImV4cCI6MTg4NDQyMzg0Nn0.O3XqtFyNLig06SbQisoVQkBLqzUgmjh7AAKMNs5rSlA',
 				),
 				'timeout'   => 10,
 				'blocking'  => true,
@@ -100,15 +108,21 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
 			);
 
-			$raw_response = wp_remote_post( 'https://bbtesting2:8890/wp-json/wp/v2/analytics', $args );
+			$raw_response = wp_remote_post( $api_url, $args );
 
-			if ( is_wp_error( $raw_response ) ) {
+			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
+				unset( $data, $auth_key, $api_url, $args );
+
 				return $raw_response;
-			} elseif ( wp_remote_retrieve_response_code( $raw_response ) != 200 ) {
-				return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
-			}
+			} elseif ( ! empty( $raw_response ) && 200 !== wp_remote_retrieve_response_code( $raw_response ) ) {
+				unset( $data, $auth_key, $api_url, $args );
 
-			unset( $data, $args, $raw_response );
+				return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
+			} else {
+				unset( $data, $auth_key, $api_url, $args, $raw_response );
+
+				return new WP_Error( 'server_error', __( 'An error occurred while sending the usage report.', 'buddyboss' ) );
+			}
 		}
 
 		/**
