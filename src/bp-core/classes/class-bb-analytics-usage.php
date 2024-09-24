@@ -107,6 +107,8 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 			} elseif ( wp_remote_retrieve_response_code( $raw_response ) != 200 ) {
 				return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
 			}
+
+			unset( $data, $args, $raw_response );
 		}
 
 		/**
@@ -124,6 +126,8 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				$uuid = md5( uniqid() . site_url() );
 				bp_update_option( $uuid_key, $uuid );
 			}
+
+			unset( $uuid_key );
 
 			return $uuid;
 		}
@@ -150,22 +154,32 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				'is_multisite'  => is_multisite(),
 			);
 
+			unset( $_SERVER['SERVER_SOFTWARE'] );
+
 			$platform_options = self::bb_analytics_usage_options();
 			if ( ! empty( $platform_options ) ) {
 				$analytics_data = array_merge( $analytics_data, $platform_options );
 			}
 
+			unset( $platform_options );
+
 			/**
 			 * Allow plugins or themes to modify the analytics data.
 			 *
 			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $analytics_data The collected analytics data.
 			 */
 			$analytics_data = apply_filters( 'bb_usage_analytics_data', $analytics_data );
 
-			return array(
+			$result = array(
 				'uuid' => $this->bb_uuid(),
 				'data' => $analytics_data,
 			);
+
+			unset( $analytics_data );
+
+			return $result;
 		}
 
 		/**
@@ -191,6 +205,8 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				}
 			}
 
+			unset( $plugin_list );
+
 			return $plugins;
 		}
 
@@ -209,6 +225,8 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 			if ( function_exists( 'is_child_theme' ) && is_child_theme() && $theme ) {
 				$themes[] = $this->get_theme_data( wp_get_theme( $theme->get( 'Template' ) ) );
 			}
+
+			unset( $theme );
 
 			return $themes;
 		}
@@ -359,11 +377,13 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 
 				$bb_platform_db_options = array_merge( $bb_platform_db_options, $bb_pro_db_options );
 
-				// Added those options which is not available in the options table.
+				// Added those options that are not available in the option table.
 				$bb_analytics_data['bb_platform_pro_version'] = bb_platform_pro()->version;
+
+				unset( $bb_pro_db_options );
 			}
 
-			// Added those options which is not available in the options table.
+			// Added those options that are not available in the option table.
 			$bb_analytics_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_analytics_data['active_integrations'] = '';
 
@@ -377,6 +397,8 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 					$bb_analytics_data[ $result['option_name'] ] = $result['option_value'];
 				}
 			}
+
+			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 			// Merge theme options if the theme is active.
 			if ( class_exists( 'BB_Theme_Analytics_Usage' ) ) {
