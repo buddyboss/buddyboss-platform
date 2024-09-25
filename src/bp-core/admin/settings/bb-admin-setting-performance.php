@@ -56,8 +56,8 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 			$this->add_field( 'bb_load_activity_per_request', __( 'Activity loading', 'buddyboss' ), 'bb_admin_performance_setting_activity_callback', 'intval' );
 		}
 
-		$this->add_section( 'bb_performance_usage', __( 'Usage', 'buddyboss' ), '', array( $this, 'bb_admin_performance_usage_setting_tutorial' ) );
-		$this->add_field( 'bb_performance_usage_reporting', __( 'Disable usage reporting', 'buddyboss' ), array( $this, 'bb_admin_performance_setting_usage_callback' ), 'string' );
+		$this->add_section( 'bb_performance_telemetry', __( 'Telemetry', 'buddyboss' ), '', array( $this, 'bb_admin_performance_telemetry_setting_tutorial', ) );
+		$this->add_field( 'bb_performance_telemetry_reporting', __( 'Telemetry', 'buddyboss' ), array( $this, 'bb_admin_performance_setting_telemetry_callback', ), 'string' );
 
 		/**
 		 * Fires to register Performance tab settings fields and section.
@@ -70,11 +70,11 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Displays a tutorial link for usage settings.
+	 * Displays a tutorial link for telemetry settings.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_admin_performance_usage_setting_tutorial() {
+	public function bb_admin_performance_telemetry_setting_tutorial() {
 		?>
 		<p>
 			<a class="button" href="
@@ -83,7 +83,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				bp_get_admin_url(
 					add_query_arg(
 						array(
-							'page'    => 'bp-help',
+							'page' => 'bp-help',
 							'article' => 127427,
 						),
 						'admin.php'
@@ -97,43 +97,51 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Outputs the usage reporting setting fields.
+	 * Outputs the telemetry setting fields.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_admin_performance_setting_usage_callback() {
-		$bb_performance_usage_reporting = bp_get_option( 'bb_performance_usage_reporting', 'full' );
+	public function bb_admin_performance_setting_telemetry_callback() {
+		$bb_performance_telemetry_reporting = bp_get_option( 'bb_performance_telemetry_reporting', 'complete' );
 		?>
 		<fieldset>
 			<legend class="screen-reader-text">
-				<span><?php echo __( 'Disable usage reporting', 'buddyboss' ); ?></span>
+				<span><?php echo __( 'Complete Reporting', 'buddyboss' ); ?></span>
 			</legend>
 			<label for="full_reporting_feedback" class="">
-				<input name="bb_performance_usage_reporting" id="full_reporting_feedback" type="radio" value="full" <?php checked( $bb_performance_usage_reporting, 'full' ); ?>/>
-				<?php esc_html_e( 'Full reporting feedback', 'buddyboss' ); ?>
+				<input name="bb_performance_telemetry_reporting" id="complete_reporting" type="radio" value="complete" <?php checked( $bb_performance_telemetry_reporting, 'complete' ); ?>/>
+				<?php esc_html_e( 'Complete reporting', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
-				<?php esc_html_e( 'Full reporting allows us to pull your site setup and health data so we can
-				 see what features and functions you are using including your information so that we can connect 
-				 with you in the future about new upcoming features.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Telemetry helps us gather usage statistics and information about your 
+				configuration and the features and functionality you use. We aggregate this information to help us 
+				improve our product and associate it with your customer record to help us serve you better. 
+				We do not gather or send any of your users\' personally identifiable information. 
+				To stop contributing towards improving the product you can disable telemetry.', 'buddyboss' ); ?>
 			</p>
 			<br>
 			<label for="anonymous_reporting" class="">
-				<input name="bb_performance_usage_reporting" id="anonymous_reporting" type="radio" value="anonymous" <?php checked( $bb_performance_usage_reporting, 'anonymous' ); ?>/>
+				<input name="bb_performance_telemetry_reporting" id="anonymous_reporting" type="radio" value="anonymous" <?php checked( $bb_performance_telemetry_reporting, 'anonymous' ); ?>/>
 				<?php esc_html_e( 'Anonymous reporting', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
-				<?php esc_html_e( 'This allows us just to pull your site setup and health data so we can see 
-				what features and functions you are using only with no contact information.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Telemetry helps us gather usage statistics and information about your 
+				configuration and the features and functionality you use. We aggregate this information to help us 
+				improve our product. By choosing anonymous reporting, your data will not be associated with your 
+				customer record, and the way we serve you will be less relevant to you. We do not gather or 
+				send any of your users\' personally identifiable information. If you stop contributing towards 
+				improving the product, you can disable telemetry.', 'buddyboss' ); ?>
 			</p>
 			<br>
 			<label for="no_reporting" class="">
-				<input name="bb_performance_usage_reporting" id="no_reporting" type="radio" value="none" <?php checked( $bb_performance_usage_reporting, 'none' ); ?>/>
-				<?php esc_html_e( 'None', 'buddyboss' ); ?>
+				<input name="bb_performance_telemetry_reporting" id="disable_reporting" type="radio" value="disable" <?php checked( $bb_performance_telemetry_reporting, 'disable' ); ?>/>
+				<?php esc_html_e( 'Disable telemetry', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
-				<?php esc_html_e( 'This will turn off reporting completely, sharing no information back 
-				to BuddyBoss.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Disabling telemetry will stop gathering and reporting usage statistics 
+				about your configuration and the features and functionality you use. By disabling telemetry, 
+				you will not be contributing towards the improvement of the product and the way we serve 
+				you will be less relevant to you.', 'buddyboss' ); ?>
 			</p>
 		</fieldset>
 		<?php
