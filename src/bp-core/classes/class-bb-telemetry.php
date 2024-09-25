@@ -1,6 +1,6 @@
 <?php
 /**
- * Analytics Usage class.
+ * Telemetry class.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
@@ -8,14 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
+if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 	/**
-	 * BuddyBoss Analytics Usage object.
+	 * BuddyBoss Telemetry object.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	class BB_Analytics_Usage {
+	class BB_Telemetry {
 
 		/**
 		 * The single instance of the class.
@@ -40,7 +40,7 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return BB_Analytics_Usage|null
+		 * @return BB_Telemetry|null
 		 */
 		public static function instance() {
 			if ( null === self::$instance ) {
@@ -60,11 +60,11 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 			self::$wpdb = $wpdb;
 
 			// Schedule the CRON event only if it's not already scheduled.
-			if ( ! wp_next_scheduled( 'bb_usage_report_cron_event' ) ) {
+			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
 				wp_schedule_event(
 					strtotime( 'next Sunday midnight' ),
 					'weekly',
-					'bb_usage_report_cron_event'
+					'bb_telemetry_report_cron_event'
 				);
 			}
 
@@ -72,20 +72,20 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 		}
 
 		/**
-		 * Setup actions for analytics usage.
+		 * Setup actions for telemetry reporting.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function setup_actions() {
-			add_action( 'bb_usage_report_cron_event', array( $this, 'bb_send_usage_report_to_analytics' ) );
+			add_action( 'bb_telemetry_report_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 		}
 
 		/**
-		 * Send anonymous usage data to the analytics site when the CRON job is triggered.
+		 * Send telemetry data to the analytics site when the CRON job is triggered.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function bb_send_usage_report_to_analytics() {
+		public function bb_send_telemetry_report_to_analytics() {
 			$data     = $this->bb_collect_site_data();
 			$auth_key = '';
 			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) {
@@ -121,7 +121,7 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 			} else {
 				unset( $data, $auth_key, $api_url, $args, $raw_response );
 
-				return new WP_Error( 'server_error', __( 'An error occurred while sending the usage report.', 'buddyboss' ) );
+				return new WP_Error( 'server_error', __( 'An error occurred while sending the telemetry report.', 'buddyboss' ) );
 			}
 		}
 
@@ -133,7 +133,7 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 		 * @return string The unique UUID.
 		 */
 		public function bb_uuid() {
-			$uuid_key = 'bb-usage-uuid';
+			$uuid_key = 'bb-telemetry-uuid';
 			$uuid     = bp_get_option( $uuid_key );
 
 			if ( empty( $uuid ) ) {
@@ -147,14 +147,14 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 		}
 
 		/**
-		 * Collect site data for anonymous usage reporting.
+		 * Collect site data for telemetry reporting.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return array An array of collected site data.
 		 */
 		public function bb_collect_site_data() {
-			$analytics_data = array(
+			$bb_telemetry_data = array(
 				'site_url'      => site_url(),
 				'admin_url'     => admin_url(),
 				'admin_email'   => get_option( 'admin_email' ),
@@ -168,28 +168,28 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				'is_multisite'  => is_multisite(),
 			);
 
-			$platform_options = self::bb_analytics_usage_options();
+			$platform_options = self::bb_telemetry_options();
 			if ( ! empty( $platform_options ) ) {
-				$analytics_data = array_merge( $analytics_data, $platform_options );
+				$bb_telemetry_data = array_merge( $bb_telemetry_data, $platform_options );
 			}
 
 			unset( $platform_options );
 
 			/**
-			 * Allow plugins or themes to modify the analytics data.
+			 * Allow plugins or themes to modify the telemetry data.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param array $analytics_data The collected analytics data.
+			 * @param array $bb_telemetry_data The collected telemetry data.
 			 */
-			$analytics_data = apply_filters( 'bb_usage_analytics_data', $analytics_data );
+			$bb_telemetry_data = apply_filters( 'bb_telemetry_data', $bb_telemetry_data );
 
 			$result = array(
 				'uuid' => $this->bb_uuid(),
-				'data' => $analytics_data,
+				'data' => $bb_telemetry_data,
 			);
 
-			unset( $analytics_data );
+			unset( $bb_telemetry_data );
 
 			return $result;
 		}
@@ -266,21 +266,18 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 		}
 
 		/**
-		 * Retrieves options for analytics usage.
-		 *
-		 * This function fetches various options related to the BuddyBoss, ensuring
-		 * that specific options are fetched only if the related theme or plugin is active.
+		 * Get the telemetry options.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @return array Analytics data including platform, pro and theme options, if pro and theme are active.
+		 * @return array Telemetry options.
 		 */
-		public static function bb_analytics_usage_options() {
-			$bb_analytics_data = array();
+		public static function bb_telemetry_options() {
+			$bb_telemetry_data = array();
 
 			// Filterable list of BuddyBoss Platform options to fetch from the database.
 			$bb_platform_db_options = apply_filters(
-				'bb_analytics_usage_platform_options',
+				'bb_telemetry_platform_options',
 				array(
 					'bb_presence_interval_mu',
 					'bb_presence_time_span_mu',
@@ -369,7 +366,7 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 			// Filterable list of BuddyBoss Platform Pro options to fetch from the database if the pro is active.
 			if ( function_exists( 'bb_platform_pro' ) ) {
 				$bb_pro_db_options = apply_filters(
-					'bb_analytics_usage_pro_options',
+					'bb_telemetry_pro_options',
 					array(
 						'bb-pusher-enabled',
 						'bp-force-friendship-to-message',
@@ -390,14 +387,14 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 				$bb_platform_db_options = array_merge( $bb_platform_db_options, $bb_pro_db_options );
 
 				// Added those options that are not available in the option table.
-				$bb_analytics_data['bb_platform_pro_version'] = bb_platform_pro()->version;
+				$bb_telemetry_data['bb_platform_pro_version'] = bb_platform_pro()->version;
 
 				unset( $bb_pro_db_options );
 			}
 
 			// Added those options that are not available in the option table.
-			$bb_analytics_data['bb_platform_version'] = BP_PLATFORM_VERSION;
-			$bb_analytics_data['active_integrations'] = '';
+			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
+			$bb_telemetry_data['active_integrations'] = '';
 
 			// Fetch options from the database.
 			$bp_prefix = bp_core_get_table_prefix();
@@ -406,18 +403,18 @@ if ( ! class_exists( 'BB_Analytics_Usage' ) ) {
 
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $result ) {
-					$bb_analytics_data[ $result['option_name'] ] = $result['option_value'];
+					$bb_telemetry_data[ $result['option_name'] ] = $result['option_value'];
 				}
 			}
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 			// Merge theme options if the theme is active.
-			if ( class_exists( 'BB_Theme_Analytics_Usage' ) ) {
-				$bb_analytics_data = array_merge( $bb_analytics_data, BB_Theme_Analytics_Usage::bb_analytics_usage_theme_options() );
+			if ( class_exists( 'BB_Theme_Telemetry' ) ) {
+				$bb_telemetry_data = array_merge( $bb_telemetry_data, BB_Theme_Telemetry::bb_telemetry_theme_options() );
 			}
 
-			return $bb_analytics_data;
+			return $bb_telemetry_data;
 		}
 	}
 }

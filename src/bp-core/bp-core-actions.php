@@ -1207,14 +1207,14 @@ function bb_load_web_performance_tester() {
 }
 
 /**
- * Function to load analytics usage class.
+ * Function to load telemetry class.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_analytics_usage_load() {
-	if ( class_exists( 'BB_Analytics_Usage' ) ) {
-		BB_Analytics_Usage::instance();
+function bb_telemetry_load() {
+	if ( class_exists( 'BB_Telemetry' ) ) {
+		BB_Telemetry::instance();
 	}
 }
 
-add_action( 'bp_init', 'bb_analytics_usage_load' );
+add_action( 'bp_init', 'bb_telemetry_load' );
