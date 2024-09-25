@@ -99,7 +99,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 127427,
+							'article' => 127427, // @todo: update when release.
 						),
 						'admin.php'
 					)
