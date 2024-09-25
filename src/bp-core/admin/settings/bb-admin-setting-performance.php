@@ -123,7 +123,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 			<legend class="screen-reader-text">
 				<span><?php echo __( 'Complete Reporting', 'buddyboss' ); ?></span>
 			</legend>
-			<label for="full_reporting_feedback" class="">
+			<label for="full_reporting_feedback">
 				<input name="bb_advanced_telemetry_reporting" id="complete_reporting" type="radio" value="complete" <?php checked( $bb_advanced_telemetry_reporting, 'complete' ); ?>/>
 				<?php esc_html_e( 'Complete reporting', 'buddyboss' ); ?>
 			</label>
@@ -135,7 +135,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				To stop contributing towards improving the product you can disable telemetry.', 'buddyboss' ); ?>
 			</p>
 			<br>
-			<label for="anonymous_reporting" class="">
+			<label for="anonymous_reporting">
 				<input name="bb_advanced_telemetry_reporting" id="anonymous_reporting" type="radio" value="anonymous" <?php checked( $bb_advanced_telemetry_reporting, 'anonymous' ); ?>/>
 				<?php esc_html_e( 'Anonymous reporting', 'buddyboss' ); ?>
 			</label>
@@ -148,7 +148,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				improving the product, you can disable telemetry.', 'buddyboss' ); ?>
 			</p>
 			<br>
-			<label for="no_reporting" class="">
+			<label for="no_reporting">
 				<input name="bb_advanced_telemetry_reporting" id="disable_reporting" type="radio" value="disable" <?php checked( $bb_advanced_telemetry_reporting, 'disable' ); ?>/>
 				<?php esc_html_e( 'Disable telemetry', 'buddyboss' ); ?>
 			</label>
