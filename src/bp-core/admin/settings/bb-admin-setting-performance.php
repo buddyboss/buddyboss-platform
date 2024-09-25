@@ -56,8 +56,23 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 			$this->add_field( 'bb_load_activity_per_request', __( 'Activity loading', 'buddyboss' ), 'bb_admin_performance_setting_activity_callback', 'intval' );
 		}
 
-		$this->add_section( 'bb_performance_telemetry', __( 'Telemetry', 'buddyboss' ), '', array( $this, 'bb_admin_performance_telemetry_setting_tutorial', ) );
-		$this->add_field( 'bb_performance_telemetry_reporting', __( 'Telemetry', 'buddyboss' ), array( $this, 'bb_admin_performance_setting_telemetry_callback', ), 'string' );
+		$this->add_section(
+			'bb_advanced_telemetry',
+			__( 'Telemetry', 'buddyboss' ), '',
+			array(
+				$this,
+				'bb_admin_advanced_telemetry_setting_tutorial',
+			)
+		);
+		$this->add_field(
+			'bb_advanced_telemetry_reporting',
+			__( 'Telemetry', 'buddyboss' ),
+			array(
+				$this,
+				'bb_admin_advanced_setting_telemetry_callback',
+			),
+			'string'
+		);
 
 		/**
 		 * Fires to register Performance tab settings fields and section.
@@ -74,7 +89,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_admin_performance_telemetry_setting_tutorial() {
+	public function bb_admin_advanced_telemetry_setting_tutorial() {
 		?>
 		<p>
 			<a class="button" href="
@@ -83,7 +98,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				bp_get_admin_url(
 					add_query_arg(
 						array(
-							'page' => 'bp-help',
+							'page'    => 'bp-help',
 							'article' => 127427,
 						),
 						'admin.php'
@@ -101,15 +116,15 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_admin_performance_setting_telemetry_callback() {
-		$bb_performance_telemetry_reporting = bp_get_option( 'bb_performance_telemetry_reporting', 'complete' );
+	public function bb_admin_advanced_setting_telemetry_callback() {
+		$bb_advanced_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
 		?>
 		<fieldset>
 			<legend class="screen-reader-text">
 				<span><?php echo __( 'Complete Reporting', 'buddyboss' ); ?></span>
 			</legend>
 			<label for="full_reporting_feedback" class="">
-				<input name="bb_performance_telemetry_reporting" id="complete_reporting" type="radio" value="complete" <?php checked( $bb_performance_telemetry_reporting, 'complete' ); ?>/>
+				<input name="bb_advanced_telemetry_reporting" id="complete_reporting" type="radio" value="complete" <?php checked( $bb_advanced_telemetry_reporting, 'complete' ); ?>/>
 				<?php esc_html_e( 'Complete reporting', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
@@ -121,7 +136,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 			</p>
 			<br>
 			<label for="anonymous_reporting" class="">
-				<input name="bb_performance_telemetry_reporting" id="anonymous_reporting" type="radio" value="anonymous" <?php checked( $bb_performance_telemetry_reporting, 'anonymous' ); ?>/>
+				<input name="bb_advanced_telemetry_reporting" id="anonymous_reporting" type="radio" value="anonymous" <?php checked( $bb_advanced_telemetry_reporting, 'anonymous' ); ?>/>
 				<?php esc_html_e( 'Anonymous reporting', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
@@ -134,7 +149,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 			</p>
 			<br>
 			<label for="no_reporting" class="">
-				<input name="bb_performance_telemetry_reporting" id="disable_reporting" type="radio" value="disable" <?php checked( $bb_performance_telemetry_reporting, 'disable' ); ?>/>
+				<input name="bb_advanced_telemetry_reporting" id="disable_reporting" type="radio" value="disable" <?php checked( $bb_advanced_telemetry_reporting, 'disable' ); ?>/>
 				<?php esc_html_e( 'Disable telemetry', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
