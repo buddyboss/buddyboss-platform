@@ -855,6 +855,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 */
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
+			wp_enqueue_style( 'bp-notice-system-header-css' );
 
 			wp_enqueue_script( 'bp-fitvids-js' );
 
@@ -1100,6 +1101,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					// 3.0
 					'bp-hello-css'           => array(
 						'file'         => "{$url}hello{$min}.css",
+						'dependencies' => array( 'bp-admin-common-css' ),
+					),
+
+					// 1.0
+					'bp-notice-system-header-css'           => array(
+						'file'         => "{$url}notice-system-header{$min}.css",
 						'dependencies' => array( 'bp-admin-common-css' ),
 					),
 				)

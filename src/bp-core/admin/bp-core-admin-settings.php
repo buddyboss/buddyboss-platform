@@ -1605,6 +1605,10 @@ function bp_core_admin_settings() {
 	$form_action = bp_core_admin_setting_url( $active_tab );
 	?>
 
+	<?php
+	require_once trailingslashit( buddypress()->plugin_dir . 'bp-core/admin/templates' ) . '/notification-header.php';
+	?>
+
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddyboss' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">

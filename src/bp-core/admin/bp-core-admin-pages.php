@@ -21,6 +21,11 @@ function bp_core_admin_pages_settings() {
 		flush_rewrite_rules( true );
 	}
 	?>
+
+	<?php
+	require_once trailingslashit( buddypress()->plugin_dir . 'bp-core/admin/templates' ) . '/notification-header.php';
+	?>
+
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddyboss' ) ); ?></h2>
 		<form action="" method="post">

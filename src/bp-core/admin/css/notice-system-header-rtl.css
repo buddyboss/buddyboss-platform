@@ -1,0 +1,64 @@
+:root {
+  --bb-notice-sys-white: #fff;
+  --bb-notice-sys-text-color: rgba(0, 0, 0, 0.6);
+  --bb-notice-sys-grey-shade-01: rgba(0, 0, 0, 0.05);
+  --bb-notice-sys-grey-shade-02: rgba(0, 0, 0, 0.01);
+}
+
+.bb-notice-header-wrapper {
+  box-sizing: border-box;
+}
+
+.bb-notice-header-wrapper *,
+.bb-notice-header-wrapper *::before,
+.bb-notice-header-wrapper *::after {
+  box-sizing: inherit;
+}
+
+.bb-notice-header-wrapper {
+  background-color: var(--bb-notice-sys-white);
+  padding: 8px 20px;
+  margin: 0 -20px 0 0;
+  border-bottom: 1px solid var(--bb-notice-sys-grey-shade-01);
+}
+
+.bb-admin-header {
+  display: flex;
+  align-items: center;
+}
+
+.bb-admin-header__logo {
+  margin-left: auto;
+}
+
+.bb-admin-header__logo img {
+  width: 124px;
+  height: auto;
+}
+
+.bb-admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bb-admin-nav__button > i {
+  font-size: 24px;
+  color: var(--bb-notice-sys-text-color);
+}
+
+.bb-admin-nav__button > i::before {
+  margin: 0;
+}
+
+.bb-admin-nav__button.bb-admin-nav__notice {
+  background-color: var(--bb-notice-sys-grey-shade-01);
+  border: 1px solid var(--bb-notice-sys-grey-shade-02);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
