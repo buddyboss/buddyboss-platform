@@ -36,6 +36,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public static $wpdb;
 
 		/**
+		 * Telemetry Reporting.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var bb_telemetry_reporting
+		 */
+		public static $bb_telemetry_reporting;
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -58,6 +67,13 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function __construct() {
 			global $wpdb;
 			self::$wpdb = $wpdb;
+
+			self::$bb_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
+			if ( 'disable' === self::$bb_telemetry_reporting ) {
+				wp_clear_scheduled_hook( 'bb_telemetry_report_cron_event' );
+
+				return;
+			}
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -157,7 +173,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_telemetry_data = array(
 				'site_url'      => site_url(),
 				'admin_url'     => admin_url(),
-				'admin_email'   => get_option( 'admin_email' ),
 				'php_version'   => phpversion(),
 				'mysql_version' => self::$wpdb->db_version(),
 				'db_provider'   => self::$wpdb->db_server_info(),
@@ -167,6 +182,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'themes'        => $this->bb_get_themes_data(),
 				'is_multisite'  => is_multisite(),
 			);
+
+			if ( 'complete' === self::$bb_telemetry_reporting ) {
+				$bb_telemetry_data['admin_email'] = get_option( 'admin_email' );
+			}
 
 			$platform_options = self::bb_telemetry_options();
 			if ( ! empty( $platform_options ) ) {
