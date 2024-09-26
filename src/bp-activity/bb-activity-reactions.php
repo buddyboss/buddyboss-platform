@@ -389,7 +389,14 @@ function bb_activity_get_reacted_users_data( $args ) {
 			$type_obj      = function_exists( 'bp_get_member_type_object' ) && ! empty( $type ) ? bp_get_member_type_object( $type ) : '';
 			$color_data    = function_exists( 'bb_get_member_type_label_colors' ) && ! empty( $type ) ? bb_get_member_type_label_colors( $type ) : '';
 			$member_type   = '';
-			if ( ! empty( $type_obj ) ) {
+
+			// Check if the user has a member type and profile type is not hidden.
+			if (
+				! empty( $type_obj ) &&
+				function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
+				function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
+				! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $reaction->user_id ), true )
+			) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
 
