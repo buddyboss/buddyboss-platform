@@ -17,46 +17,46 @@
 
 		showNotifications: function () {
 			$( document ).on( 'click', '#bb-notifications-button', function ( e ) {
-                e.preventDefault();
+				e.preventDefault();
 
-                var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
-                
+				var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
+
 				$wrapper.toggleClass( 'active' );
 
 				BuddyBossNoticeSystem.checkNoticesCount();
-            } );
+			} );
 
 			$( document ).on( 'click', '.close-panel-header', function ( e ) {
-                e.preventDefault();
+				e.preventDefault();
 
-                var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
-                
+				var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
+
 				$wrapper.removeClass( 'active' );
-            } );
+			} );
 		},
 
 		switchNotices: function () {
 			$( document ).on( 'click', '.panel-nav-list .switch-notices', function ( e ) {
-                e.preventDefault();
+				e.preventDefault();
 
 				var $this = $( this );
 				var status = $this.data( 'status' );
-                var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
+				var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
 				var $notificationsList = $notificationsPanel.find( '.bb-panel-body' );
-                
+
 				$this.closest( 'li' ).siblings().find( '.switch-notices' ).removeClass('active');
 				$this.addClass( 'active' );
 				$notificationsList.removeClass( 'all dismissed active' );
 				$notificationsList.addClass( status );
 
 				BuddyBossNoticeSystem.checkNoticesStatus();
-            } );
+			} );
 
 			$( document ).on( 'click', '.panel-nav-dismiss-all', function ( e ) {
 				e.preventDefault();
 
 				var $this = $( this );
-                var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
+				var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
 
 				$notificationsPanel.find( '.bb-notice-block' ).removeClass( 'dismissed active' );
 				$notificationsPanel.find( '.bb-notice-block' ).addClass( 'dismissed' );
@@ -70,17 +70,17 @@
 
 		dismissNotice: function () {
 			$( document ).on( 'click', '.bb-dismiss-notice', function ( e ) {
-                e.preventDefault();
+				e.preventDefault();
 
 				var $this = $( this );
-                var $noticeContainer = $this.closest( '.bb-notice-block' );
-                
+				var $noticeContainer = $this.closest( '.bb-notice-block' );
+
 				$noticeContainer.removeClass( 'dismissed active' );
 				$noticeContainer.addClass( 'dismissed' );
 
 				BuddyBossNoticeSystem.checkNoticesStatus();
 				BuddyBossNoticeSystem.checkNoticesCount();
-            } );
+			} );
 		},
 
 		checkNoticesStatus: function () {
