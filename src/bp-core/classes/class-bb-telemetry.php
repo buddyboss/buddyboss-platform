@@ -107,9 +107,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) {
 				$auth_key = BB_TEST_ANALYTICS_AUTH;
 			}
-			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v2/bb_analytics';
+			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v2/bb_telemetry';
 			if ( defined( 'BB_TEST_ANALYTICS_URL' ) ) {
-				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v2/bb_analytics';
+				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v2/bb_telemetry';
 			}
 			$args = array(
 				'headers'   => array(
@@ -194,7 +194,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 *
 			 * @param array $bb_telemetry_data The collected telemetry data.
 			 */
-			$bb_telemetry_data = apply_filters( 'bb_telemetry_data', $bb_telemetry_data );
+			$bb_telemetry_data = apply_filters( 'bb_usage_telematery_data', $bb_telemetry_data );
 
 			$result = array(
 				'uuid' => $this->bb_uuid(),

@@ -2770,4 +2770,4 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 	return $bb_telemetry_data;
 }
 
-add_filter( 'bb_telemetry_data', 'bb_telemetry_platform_data' );
+add_filter( 'bb_usage_telematery_data', 'bb_telemetry_platform_data' );
