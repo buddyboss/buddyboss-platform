@@ -107,9 +107,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) {
 				$auth_key = BB_TEST_ANALYTICS_AUTH;
 			}
-			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v2/bb_telemetry';
+			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry';
 			if ( defined( 'BB_TEST_ANALYTICS_URL' ) ) {
-				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v2/bb_telemetry';
+				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v1/bb-telemetry';
 			}
 			$args = array(
 				'headers'   => array(
