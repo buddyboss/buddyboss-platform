@@ -856,8 +856,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function enqueue_scripts( $hook ) {
 			wp_enqueue_style( 'bp-admin-common-css' );
 
-			wp_enqueue_style( 'bb-notice-system-header-css' );
-			wp_enqueue_script( 'bb-notice-system-js' );
+			wp_enqueue_style( 'bb-admin-notifications-css' );
+			wp_enqueue_script( 'bb-admin-notifications-js' );
 
 			wp_enqueue_script( 'bp-fitvids-js' );
 
@@ -1107,8 +1107,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					),
 
 					// 1.0
-					'bb-notice-system-header-css'           => array(
-						'file'         => "{$url}notice-system-header{$min}.css",
+					'bb-admin-notifications-css'           => array(
+						'file'         => "{$url}bb-admin-notifications{$min}.css",
 						'dependencies' => array( 'bp-admin-common-css' ),
 					),
 				)
@@ -1180,8 +1180,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					),
 
 					// 1.0
-					'bb-notice-system-js'             => array(
-						'file'         => "{$url}notice-system{$min}.js",
+					'bb-admin-notifications-js'             => array(
+						'file'         => "{$url}bb-admin-notifications{$min}.js",
 						'dependencies' => array( 'jquery' ),
 						'footer'       => true,
 					),

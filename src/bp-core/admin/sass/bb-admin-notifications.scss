@@ -98,11 +98,16 @@
 	top: 58px;
 	right: 40px;
 	max-width: 520px;
-	min-width: 360px;
+	min-width: 520px;
 	background-color: var(--bb-notice-sys-white);
 	border: 1px solid var(--bb-notice-sys-grey-shade-02);
 	box-shadow: -8px 12px 28px 0 rgba(0, 0, 0, 0.12);
 	max-height: 85vh;
+
+	@media screen and (max-width: 768px) {
+		min-width: 360px;
+		max-width: 360px;
+	}
 
 	.bb-notifications-wrapepr.active & {
 		display: flex;
@@ -141,6 +146,20 @@
 	.bb-panel-body {
 		overflow-y: auto;
 		overflow-x: hidden;
+
+		&.active {
+
+			.bb-notice-block.dismissed {
+				display: none;
+			}
+		}
+
+		&.dismissed {
+
+			.bb-notice-block.active {
+				display: none;
+			}
+		}
 	}
 }
 
@@ -178,16 +197,45 @@
 					color: var(--bb-notice-sys-link-color);
 					border-bottom: 1px solid var(--bb-notice-sys-link-color);
 				}
+
+				&:active,
+				&:focus {
+					color: var(--bb-notice-sys-link-color);
+					border-bottom: 1px solid var(--bb-notice-sys-link-color);
+					outline: none;
+					box-shadow: none;
+				}
 			}
 		}
 	}
 
-	.panel-nav-mark-read {
+	.panel-nav-dismiss-all {
 		display: inline-block;
 		color: var(--bb-notice-sys-link-color);
 		text-decoration: none;
 		padding: 0;
 		border-bottom: 1px solid transparent;
+
+		&:active,
+		&:focus {
+			outline: none;
+			box-shadow: none;
+		}
+	}
+}
+
+.bb-notices-blocks-blank {
+	padding: 16px;
+	display: none;
+
+	.empty &,
+	.all-dismissed.active & {
+		display: block;
+	}
+
+	p {
+		margin: 0;
+		color: var(--bb-notice-sys-text-color);
 	}
 }
 
@@ -303,7 +351,7 @@
 		}
 	}
 
-	.dismiss-notice {
+	.bb-dismiss-notice {
 		width: 20px;
 		flex: 0 0 20px;
 		position: relative;

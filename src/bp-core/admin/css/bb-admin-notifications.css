@@ -94,11 +94,18 @@
   top: 58px;
   right: 40px;
   max-width: 520px;
-  min-width: 360px;
+  min-width: 520px;
   background-color: var(--bb-notice-sys-white);
   border: 1px solid var(--bb-notice-sys-grey-shade-02);
   box-shadow: -8px 12px 28px 0 rgba(0, 0, 0, 0.12);
   max-height: 85vh;
+}
+
+@media screen and (max-width: 768px) {
+  .bb-notifications-panel {
+    min-width: 360px;
+    max-width: 360px;
+  }
 }
 
 .bb-notifications-wrapepr.active .bb-notifications-panel {
@@ -140,6 +147,14 @@
   overflow-x: hidden;
 }
 
+.bb-notifications-panel .bb-panel-body.active .bb-notice-block.dismissed {
+  display: none;
+}
+
+.bb-notifications-panel .bb-panel-body.dismissed .bb-notice-block.active {
+  display: none;
+}
+
 .bb-panel-nav {
   display: flex;
   align-items: center;
@@ -179,12 +194,39 @@
   border-bottom: 1px solid var(--bb-notice-sys-link-color);
 }
 
-.bb-panel-nav .panel-nav-mark-read {
+.bb-panel-nav .panel-nav-list li a:active, .bb-panel-nav .panel-nav-list li a:focus {
+  color: var(--bb-notice-sys-link-color);
+  border-bottom: 1px solid var(--bb-notice-sys-link-color);
+  outline: none;
+  box-shadow: none;
+}
+
+.bb-panel-nav .panel-nav-dismiss-all {
   display: inline-block;
   color: var(--bb-notice-sys-link-color);
   text-decoration: none;
   padding: 0;
   border-bottom: 1px solid transparent;
+}
+
+.bb-panel-nav .panel-nav-dismiss-all:active, .bb-panel-nav .panel-nav-dismiss-all:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.bb-notices-blocks-blank {
+  padding: 16px;
+  display: none;
+}
+
+.empty .bb-notices-blocks-blank,
+.all-dismissed.active .bb-notices-blocks-blank {
+  display: block;
+}
+
+.bb-notices-blocks-blank p {
+  margin: 0;
+  color: var(--bb-notice-sys-text-color);
 }
 
 .bb-notice-block {
@@ -300,19 +342,19 @@
   padding: 6px 0;
 }
 
-.bb-notice-header .dismiss-notice {
+.bb-notice-header .bb-dismiss-notice {
   width: 20px;
   flex: 0 0 20px;
   position: relative;
   bottom: 2px;
 }
 
-.bb-notice-header .dismiss-notice i {
+.bb-notice-header .bb-dismiss-notice i {
   font-size: 20px;
   color: #8c8f94;
 }
 
-.bb-notice-header .dismiss-notice i::before {
+.bb-notice-header .bb-dismiss-notice i::before {
   margin: 0;
 }
 

@@ -33,19 +33,19 @@ defined( 'ABSPATH' ) || exit;
                         <div class="bb-panel-nav">
                             <div class="nav-list-container">
                                 <ul class="panel-nav-list">
-                                    <li><a href="#" class="active">All</a></li>
-                                    <li><a href="#">Read</a></li>
-                                    <li><a href="#">Unread <span>(2)</span></a></li>
+                                    <li><a href="#" id="show-all" class="switch-notices active" data-status="all">All</a></li>
+                                    <li><a href="#" id="show-dismissed" class="switch-notices" data-status="dismissed">Read</a></li>
+                                    <li><a href="#" id="show-active" class="switch-notices" data-status="active">Unread <span class="count-active">(2)</span></a></li>
                                 </ul>
                             </div>
                             <div class="panel-nav-check">
-                                <a href="#" class="panel-nav-mark-read">Mark all read</a>
+                                <a href="#" class="panel-nav-dismiss-all">Mark all read</a>
                             </div>
                         </div>
                         <div class="bb-panel-body">
-                            <div class="bb-notice-blocks-container">
+                            <div class="bb-notices-blocks-container">
 
-                                <div class="bb-notice-block bb-notice-block--alert">
+                                <div class="bb-notice-block bb-notice-block--alert dismissed">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">
@@ -53,7 +53,7 @@ defined( 'ABSPATH' ) || exit;
                                                 <h5>Unread notification title (Alert)</h5>
                                                 <div class="notice-timestamp">Today at 9:00 AM</div>
                                             </div>
-                                            <div class="dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
+                                            <div class="bb-dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
                                         </div>
                                         <div class="bb-notice-body">
                                             <div class="notice-content">
@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
-                                <div class="bb-notice-block bb-notice-block--info">
+                                <div class="bb-notice-block bb-notice-block--info active">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">
@@ -74,7 +74,7 @@ defined( 'ABSPATH' ) || exit;
                                                 <h5>Unread notification title (New Feature)</h5>
                                                 <div class="notice-timestamp">Yesterday at 4:00 PM</div>
                                             </div>
-                                            <div class="dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
+                                            <div class="bb-dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
                                         </div>
                                         <div class="bb-notice-body">
                                             <div class="notice-content">
@@ -87,7 +87,7 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
-                                <div class="bb-notice-block bb-notice-block--warning">
+                                <div class="bb-notice-block bb-notice-block--warning active">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">
@@ -95,7 +95,7 @@ defined( 'ABSPATH' ) || exit;
                                                 <h5>Read notification title (Status Alert)</h5>
                                                 <div class="notice-timestamp">Yesterday at 10:00 AM</div>
                                             </div>
-                                            <div class="dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
+                                            <div class="bb-dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
                                         </div>
                                         <div class="bb-notice-body">
                                             <div class="notice-content">
@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
-                                <div class="bb-notice-block bb-notice-block--promo">
+                                <div class="bb-notice-block bb-notice-block--promo active">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">
@@ -120,7 +120,7 @@ defined( 'ABSPATH' ) || exit;
                                                 <h5>Read notification title (Promo)</h5>
                                                 <div class="notice-timestamp">Yesterday at 10:00 AM</div>
                                             </div>
-                                            <div class="dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
+                                            <div class="bb-dismiss-notice"><i class="bb-icon-l bb-icon-times"></i></div>
                                         </div>
                                         <div class="bb-notice-body">
                                             <div class="notice-content">
@@ -133,6 +133,9 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
+                            </div>
+                            <div class="bb-notices-blocks-blank">
+                                <p>There are no messages.</p>
                             </div>
                         </div>
                     </div>
