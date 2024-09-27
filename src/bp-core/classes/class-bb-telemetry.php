@@ -194,7 +194,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 *
 			 * @param array $bb_telemetry_data The collected telemetry data.
 			 */
-			$bb_telemetry_data = apply_filters( 'bb_usage_telematery_data', $bb_telemetry_data );
+			$bb_telemetry_data = apply_filters( 'bb_usage_telemetery_data', $bb_telemetry_data );
 
 			$result = array(
 				'uuid' => $this->bb_uuid(),
