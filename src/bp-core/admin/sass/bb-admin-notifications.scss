@@ -221,7 +221,7 @@
 			margin: 0;
 
 			a {
-				color: #1d2327;
+				color: #787c82;
 				text-decoration: none;
 				padding: 0 0 8px;
 				border-bottom: 1px solid transparent;
@@ -382,6 +382,11 @@
 			line-height: 16px;
 			font-weight: 600;
 			margin: 0 0 5px;
+			color: var(--bb-notice-sys-black);
+
+			.bb-notice-block.dismissed & {
+				color: #646970;
+			}
 		}
 
 		.notice-timestamp {
@@ -424,6 +429,10 @@
 	.notice-content {
 		color: #101517;
 		margin: 0 0 16px;
+
+		.bb-notice-block.dismissed & {
+			color: #646970;
+		}
 
 		ul {
 			list-style: disc;
