@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
                 <div class="bb-notifications-wrapepr">
                     <a href="" class="bb-admin-nav__button bb-admin-nav__notice" id="bb-notifications-button">
                         <i class="bb-icon-l bb-icon-bell"></i>
-                        <span class="bb-notice-count">2</span>
+                        <span class="bb-notice-count">123</span>
                     </a>
                     <div class="bb-notifications-panel">
                         <div class="bb-panel-header">
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
                                 <ul class="panel-nav-list">
                                     <li><a href="#" id="show-all" class="switch-notices active" data-status="all">All</a></li>
                                     <li><a href="#" id="show-dismissed" class="switch-notices" data-status="dismissed">Read</a></li>
-                                    <li><a href="#" id="show-active" class="switch-notices" data-status="active">Unread <span class="count-active">(2)</span></a></li>
+                                    <li><a href="#" id="show-active" class="switch-notices" data-status="unread">Unread <span class="count-active">(2)</span></a></li>
                                 </ul>
                             </div>
                             <div class="panel-nav-check">
@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
-                                <div class="bb-notice-block bb-notice-block--info active">
+                                <div class="bb-notice-block bb-notice-block--info unread">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">
@@ -87,7 +87,7 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
-                                <div class="bb-notice-block bb-notice-block--warning active">
+                                <div class="bb-notice-block bb-notice-block--warning unread">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">
@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) || exit;
                                     </div>
                                 </div>
 
-                                <div class="bb-notice-block bb-notice-block--promo active">
+                                <div class="bb-notice-block bb-notice-block--promo unread">
                                     <div class="bb-notice-icon"><span class="notice-icon"></span></div>
                                     <div class="bb-notice-card">
                                         <div class="bb-notice-header">

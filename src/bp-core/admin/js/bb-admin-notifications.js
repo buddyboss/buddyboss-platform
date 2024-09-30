@@ -21,7 +21,7 @@
 
 				var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
 
-				$wrapper.toggleClass( 'active' );
+				$wrapper.toggleClass( 'expanded' );
 
 				BuddyBossNoticeSystem.checkNoticesCount();
 			} );
@@ -31,7 +31,7 @@
 
 				var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
 
-				$wrapper.removeClass( 'active' );
+				$wrapper.removeClass( 'expanded' );
 			} );
 		},
 
@@ -42,12 +42,11 @@
 				var $this = $( this );
 				var status = $this.data( 'status' );
 				var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
-				var $notificationsList = $notificationsPanel.find( '.bb-panel-body' );
 
 				$this.closest( 'li' ).siblings().find( '.switch-notices' ).removeClass('active');
 				$this.addClass( 'active' );
-				$notificationsList.removeClass( 'all dismissed active' );
-				$notificationsList.addClass( status );
+				$notificationsPanel.removeClass( 'all dismissed unread' );
+				$notificationsPanel.addClass( status );
 
 				BuddyBossNoticeSystem.checkNoticesStatus();
 			} );
@@ -58,7 +57,7 @@
 				var $this = $( this );
 				var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
 
-				$notificationsPanel.find( '.bb-notice-block' ).removeClass( 'dismissed active' );
+				$notificationsPanel.find( '.bb-notice-block' ).removeClass( 'dismissed unread' );
 				$notificationsPanel.find( '.bb-notice-block' ).addClass( 'dismissed' );
 
 				BuddyBossNoticeSystem.checkNoticesStatus();
@@ -75,7 +74,7 @@
 				var $this = $( this );
 				var $noticeContainer = $this.closest( '.bb-notice-block' );
 
-				$noticeContainer.removeClass( 'dismissed active' );
+				$noticeContainer.removeClass( 'dismissed unread' );
 				$noticeContainer.addClass( 'dismissed' );
 
 				BuddyBossNoticeSystem.checkNoticesStatus();
@@ -111,7 +110,7 @@
 		checkNoticesCount: function () {
 			var $noticesContainer = $( '.bb-notices-blocks-container' );
 			var $noticeBlocks = $noticesContainer.find( '.bb-notice-block' );
-			var $noticesCount = $( '#show-active .count-active' );
+			var $noticesCount = $( '#show-active .count-unread' );
 
 			var activeCount = 0;
 
@@ -119,7 +118,7 @@
 				activeCount = 0;
 			} else {
 				$noticeBlocks.each( function () {
-					if ( $( this ).hasClass( 'active' ) ) {
+					if ( $( this ).hasClass( 'unread' ) ) {
 						activeCount++;
 					}
 				} );
