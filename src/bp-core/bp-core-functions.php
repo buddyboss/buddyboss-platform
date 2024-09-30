@@ -9907,6 +9907,8 @@ function bb_pro_poll_version() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param array $bb_telemetry_data Telemetry options.
+ *
  * @return array Telemetry options.
  */
 function bb_telemetry_platform_data( $bb_telemetry_data ) {
