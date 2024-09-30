@@ -55,6 +55,8 @@ class BB_The_Event_Calendar_Helpers {
 	public function compatibility_init() {
 		add_filter( 'parse_query', array( $this, 'bb_core_tribe_events_parse_query' ) );
 		add_filter( 'tribe_rewrite_parse_query_vars', array( $this, 'bb_core_tribe_events_set_query_vars' ) );
+		add_filter( 'tribe_get_single_ical_link', array( $this, 'bb_core_tribe_get_single_ical_link' ) );
+		add_filter( 'bp_private_network_pre_check', array( $this, 'bb_private_network_pre_check_event_ical' ) );
 	}
 
 	/**
@@ -115,6 +117,59 @@ class BB_The_Event_Calendar_Helpers {
 		}
 
 		return $query_vars;
+	}
+
+	/**
+	 * Update a single event iCal link for the given link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $link The original event iCal link.
+	 *
+	 * @return string
+	 */
+	public function bb_core_tribe_get_single_ical_link( $link ) {
+
+		if ( ! empty( $link ) && strpos( $link, 'ical=1' ) ) {
+
+			$bb_event_ical_token = bin2hex( random_bytes( 4 ) );
+
+			$link = add_query_arg(
+				array(
+					'bb-event-ical-token' => $bb_event_ical_token,
+				),
+				$link
+			);
+
+			set_transient( 'bb_event_ical_token', $bb_event_ical_token );
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Checks if the event ical is accessible in a private network.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $is_public Whether the network is public or not.
+	 *
+	 * @return bool
+	 */
+	public function bb_private_network_pre_check_event_ical( $is_public ) {
+
+		// Check if the private site is enabled, the user is not logged in, and it's an iCal request with the iCal token.
+		if (
+			! $is_public &&
+			! is_user_logged_in() &&
+			! empty( $_GET['ical'] ) &&
+			! empty( $_GET['bb-event-ical-token'] ) &&
+			get_transient( 'bb_event_ical_token' ) === $_GET['bb-event-ical-token']
+		) {
+			$is_public = true;
+		}
+
+		return $is_public;
 	}
 
 }
