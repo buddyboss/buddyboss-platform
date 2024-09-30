@@ -199,6 +199,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				$bb_telemetry_data = bb_telemetry_theme_data( $bb_telemetry_data );
 			}
 
+			if ( function_exists( 'bbapp_telemetry_data' ) ) {
+				$bb_telemetry_data = bbapp_telemetry_data( $bb_telemetry_data );
+			}
+
 			$result = array(
 				'uuid' => $this->bb_uuid(),
 				'data' => $bb_telemetry_data,
