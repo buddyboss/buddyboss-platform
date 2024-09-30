@@ -187,14 +187,17 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				$bb_telemetry_data['admin_email'] = get_option( 'admin_email' );
 			}
 
-			/**
-			 * Allow plugins or themes to modify the telemetry data.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 *
-			 * @param array $bb_telemetry_data The collected telemetry data.
-			 */
-			$bb_telemetry_data = apply_filters( 'bb_usage_telemetry_data', $bb_telemetry_data );
+			if ( function_exists( 'bb_telemetry_platform_data' ) ) {
+				$bb_telemetry_data = bb_telemetry_platform_data( $bb_telemetry_data );
+			}
+
+			if ( function_exists( 'bb_telemetry_platform_pro_data' ) ) {
+				$bb_telemetry_data = bb_telemetry_platform_pro_data( $bb_telemetry_data );
+			}
+
+			if ( function_exists( 'bb_telemetry_theme_data' ) ) {
+				$bb_telemetry_data = bb_telemetry_theme_data( $bb_telemetry_data );
+			}
 
 			$result = array(
 				'uuid' => $this->bb_uuid(),
