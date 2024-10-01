@@ -454,3 +454,16 @@ function bb_core_settings_saved_notice() {
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
+
+/**
+ * Function to load in-plugin notification class.
+ *
+ * @since BuddyBoss [BB_VERSION]
+ */
+function bb_in_plugin_notification() {
+	if ( class_exists( 'BB_In_Plugin_Notifications' ) ) {
+		return new BB_In_Plugin_Notifications();
+	}
+}
+
+add_action( 'bp_init', 'bb_in_plugin_notification' );

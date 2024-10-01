@@ -22,10 +22,6 @@ function bp_core_admin_components_settings() {
 	}
 	?>
 
-	<?php
-	require_once trailingslashit( buddypress()->plugin_dir . 'bp-core/admin/templates' ) . '/in-plugin-notifications.php';
-	?>
-
 	<div class="wrap">
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Components', 'buddyboss' ) ); ?></h2>
