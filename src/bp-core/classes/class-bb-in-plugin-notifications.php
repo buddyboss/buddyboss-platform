@@ -74,7 +74,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		public function bb_admin_notification_header() {
 			global $bp;
-			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-notification-header.php';
+			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-in-plugin-notifications.php';
 		}
 
 		/**
