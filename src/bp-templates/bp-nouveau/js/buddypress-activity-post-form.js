@@ -23,7 +23,7 @@ window.bp = window.bp || {};
 	bp.album_id              = 0;
 	bp.folder_id             = 0;
 	bp.group_id              = 0;
-	bp.privacy               = 'public';
+	bp.privacy               = BP_Nouveau.activity.params.default_privacy;
 	bp.draft_ajax_request    = null;
 	bp.old_draft_data        = false;
 	bp.draft_activity        = {
@@ -309,7 +309,7 @@ window.bp = window.bp || {};
 			bp.album_id        = 0;
 			bp.folder_id       = 0;
 			bp.group_id        = 0;
-			bp.privacy         = 'public';
+			bp.privacy         = BP_Nouveau.activity.params.default_privacy;
 
 			$( '.activity-update-form.modal-popup' ).removeClass( 'modal-popup group-activity' ).closest( 'body' ).removeClass( 'activity-modal-open' );
 
@@ -1514,7 +1514,7 @@ window.bp = window.bp || {};
 				link_description: '',
 				link_url: '',
 				gif_data: {},
-				privacy: 'public',
+				privacy: BP_Nouveau.activity.params.default_privacy,
 				privacy_modal: 'general',
 				edit_activity: false,
 				group_image: '',
@@ -1645,7 +1645,7 @@ window.bp = window.bp || {};
 				bp.album_id        = 0;
 				bp.folder_id       = 0;
 				bp.group_id        = 0;
-				bp.privacy         = 'public';
+				bp.privacy         = BP_Nouveau.activity.params.default_privacy;
 
 				e.preventDefault();
 

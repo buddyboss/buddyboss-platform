@@ -110,6 +110,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
 			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
 		),
+		'default_privacy'   => apply_filters( 'bb_activity_default_privacy', 'public' ),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
