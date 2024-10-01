@@ -1,6 +1,6 @@
 <?php
 /**
- * Holds Background process log functionality.
+ * BuddyBoss In-Plugin Notifications.
  *
  * @since   BuddyBoss [BBVERSION]
  *
@@ -8,7 +8,7 @@
  */
 
 // Exit if accessed directly.
-//defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
@@ -18,39 +18,27 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 	 * Class for logging in-plugin notifications.
 	 * Includes:
 	 *     Notifications from our remote feed
-	 *     Plugin-related notifications (e.g. recent sales performances)
+	 *     Plugin-related notifications (i.e. - recent sales performances)
 	 */
 	class BB_In_Plugin_Notifications {
 
+		// @todo We need to change this URL to the correct one.
 		const SOURCE_URL = 'https://a.omwpapi.com/production/wp/notifications.json';
-
-		/**
-		 * Source of notifications content.
-		 *
-		 * @var string
-		 */
-
-		// @todo We need to change this URL to the correct one.	const SOURCE_URL_ARGS = array();
-		/**
-		 * Class instance.
-		 *
-		 * @since BuddyBoss [BB_VERSION]
-		 *
-		 * @var $instance
-		 */
-		private static $instance;
+		const SOURCE_URL_ARGS = array();
 
 		/**
 		 * Option value.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @var bool|array
 		 */
 		public $option = false;
 
 		/**
-		 * Using Singleton, see instance().
+		 * BB_In_Plugin_Notifications constructor.
 		 *
-		 * @since BuddyBoss 2.5.60
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
 			$this->hooks();
@@ -58,20 +46,26 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		/**
 		 * Register hooks.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function hooks() {
-
 			add_action( 'in_admin_header', array( $this, 'bb_admin_notification_header' ), 0 );
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueues' ) );
 			add_action( 'admin_footer', array( $this, 'admin_menu_append_count' ) );
 			add_action( 'admin_init', array( $this, 'schedule_fetch' ) );
-
 			add_action( 'bb_in_plugin_admin_header_notifications', array( $this, 'output' ) );
-
 			add_action( 'buddyboss_in_plugin_admin_notifications_update', array( $this, 'update' ) );
 			add_action( 'wp_ajax_buddyboss_in_plugin_notification_dismiss', array( $this, 'dismiss' ) );
 		}
 
+		/**
+		 * Load the admin notification header template.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
 		public function bb_admin_notification_header() {
 			global $bp;
 			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-in-plugin-notifications.php';

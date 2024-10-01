@@ -13,10 +13,9 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="bb-notice-header-wrapper">
-
 	<div class="bb-admin-header">
 		<div class="bb-admin-header__logo">
-			<img alt="" class="gravatar" src="<?php echo buddypress()->plugin_url; ?>bp-core/images/admin/bb-logo.png" />
+			<img alt="" class="gravatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/bb-logo.png' ); ?>" />
 		</div>
 		<div class="bb-admin-header__nav">
 			<div class="bb-admin-nav">
@@ -27,28 +26,31 @@ defined( 'ABSPATH' ) || exit;
 					</a>
 					<div class="bb-notifications-panel">
 						<div class="bb-panel-header">
-							<h4>Notifications</h4>
+							<h4><?php _e( 'Notifications', 'buddyboss' ); ?></h4>
 							<span class="close-panel-header"><i class="bb-icon-l bb-icon-times"></i></span>
 						</div>
 						<div class="bb-panel-nav">
 							<div class="nav-list-container">
 								<ul class="panel-nav-list">
 									<li>
-										<a href="#" id="show-all" class="switch-notices active" data-status="all">All</a>
+										<a href="#" id="show-all" class="switch-notices active" data-status="all"><?php _e( 'All', 'buddyboss' ); ?></a>
 									</li>
-									<li><a href="#" id="show-dismissed" class="switch-notices" data-status="dismissed">Read</a>
+									<li>
+										<a href="#" id="show-dismissed" class="switch-notices" data-status="dismissed"><?php _e( 'Read', 'buddyboss' ); ?></a>
 									</li>
-									<li><a href="#" id="show-active" class="switch-notices" data-status="unread">Unread
-											<span class="count-active">(2)</span></a></li>
+									<li>
+										<a href="#" id="show-active" class="switch-notices" data-status="unread"><?php _e( 'Unread', 'buddyboss' ); ?>
+											<span class="count-active">(2)</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 							<div class="panel-nav-check">
-								<a href="#" class="panel-nav-dismiss-all">Mark all read</a>
+								<a href="#" class="panel-nav-dismiss-all"><?php _e( 'Mark all read', 'buddyboss' ); ?></a>
 							</div>
 						</div>
 						<div class="bb-panel-body">
 							<div class="bb-notices-blocks-container">
-
 								<div class="bb-notice-block bb-notice-block--alert dismissed">
 									<div class="bb-notice-icon"><span class="notice-icon"></span></div>
 									<div class="bb-notice-card">
@@ -148,7 +150,7 @@ defined( 'ABSPATH' ) || exit;
 
 							</div>
 							<div class="bb-notices-blocks-blank">
-								<p>There are no messages.</p>
+								<p><?php _e( 'There are no messages.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 					</div>
