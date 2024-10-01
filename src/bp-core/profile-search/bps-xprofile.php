@@ -118,17 +118,19 @@ function bp_ps_xprofile_search( $f ) {
 
 		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
 
-		$sql_where_condition = 'xpd.field_id IN (
-		            SELECT xpv.field_id
-		            FROM ' . $bp->profile->table_name_visibility . ' as xpv
-		            WHERE xpv.user_id = xpd.user_id
-		            AND (
-		                xpv.value IN (\'' . $visibility_values . '\')
-		                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( xpv.value = \'friends\' AND xpv.user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
-		                ' . ( ! empty( $loggin_user_id ) ? 'OR ( xpv.user_id = ' . $loggin_user_id . ' )' : '' ) . '
-		            )
-		        )';
-
+		$sql_where_condition = 'xpd.user_id IN (
+			SELECT DISTINCT inner_xpd.user_id
+			FROM ' . $bp->profile->table_name_data . ' inner_xpd
+			LEFT JOIN ' . $bp->profile->table_name_visibility . ' xpv
+				ON inner_xpd.field_id = xpv.field_id
+				AND inner_xpd.user_id = xpv.user_id
+			WHERE (
+				xpv.value IS NULL
+				OR xpv.value IN (\'' . $visibility_values . '\')
+				' . ( ! empty( $friend_ids_sql ) ? 'OR (xpv.value = \'friends\' AND xpv.user_id IN (' . $friend_ids_sql . '))' : '' ) . '
+				' . ( ! empty( $loggin_user_id ) ? 'OR (xpv.user_id = ' . $loggin_user_id . ')' : '' ) . '
+			)
+		)';
 		$sql['where'][] = $sql_where_condition;
 
 	}
