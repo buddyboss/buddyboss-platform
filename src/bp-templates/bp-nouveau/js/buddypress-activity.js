@@ -1290,7 +1290,7 @@ window.bp = window.bp || {};
 
 				form.removeClass( 'root' );
 				$( '.ac-form' ).addClass( 'not-initialized' );
-				$( '.ac-form' ).find( '.ac-input' ).html( '' );
+				$( '.ac-form' ).find( '.ac-input:not(.emojionearea)' ).html( '' );
 
 				bp.Nouveau.Activity.clearFeedbackNotice( form );
 

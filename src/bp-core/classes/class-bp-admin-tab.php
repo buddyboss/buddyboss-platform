@@ -59,7 +59,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$this->register_tab();
 			$this->register_hook();
 
-			if ( $this->is_active() ) {
+			if ( $this->is_active() && is_admin() && ! wp_doing_ajax() ) {
 				$this->register_fields();
 				do_action( 'bp_admin_tab_fields_registered', $this->tab_name, $this );
 				add_action( 'bp_admin_init', array( $this, 'maybe_save_admin_settings' ), 100 );
