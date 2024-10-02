@@ -537,16 +537,3 @@ function bb_upgrade_dismiss_notice() {
 }
 
 add_action( 'wp_ajax_bb_upgrade_dismiss_notice', 'bb_upgrade_dismiss_notice' );
-
-/**
- * Function to load in-plugin notification class.
- *
- * @since BuddyBoss [BB_VERSION]
- */
-function bb_in_plugin_notification() {
-	if ( class_exists( 'BB_In_Plugin_Notifications' ) ) {
-		return new BB_In_Plugin_Notifications();
-	}
-}
-
-add_action( 'bp_init', 'bb_in_plugin_notification' );
