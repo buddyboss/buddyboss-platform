@@ -57,6 +57,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.10 =
+* Enhanced: Activity - Enhanced the ability to generate link previews when the BuddyBoss Platform is set to Private mode
+* Bug: Activity - Fixed an issue where embedded videos were not displaying in blog custom posts on the activity feed
+* Bug: Activity - Resolved the emoji icon inconsistency when adding comments or replies
+* Bug: Activity - Resolved the issue with adding reactions to comments
+* Bug: Activity - Resolved the issue with the “Read more” link in Polls
+* Bug: Core - Resolved issues with the “Load More” button on the Photo page
+* Bug: Core - Resolved the search error with Divi Builder
+* Bug: Performance - Improvement on Members, Groups, and News Feed pages
+* Bug: Profiles - Fixed an issue where Profile Type visibility set to “Only me” was still visible to non-admin users
+* Bug: Profiles - Resolved an issue with profile search when using first and last names.
+
 = 2.7.00 =
 * Enhancement: Coding Standards - Fixed all warnings and errors for PHP versions 7.3 to 8.3
 * Bug: Activity - Fixed an issue where notifications were incorrectly triggered when editing posts or adding/updating media in activity feeds
