@@ -1170,11 +1170,21 @@ function bp_core_filter_wp_query( $retval, $query ) {
  */
 function bp_private_network_template_redirect() {
 
+	$enable_private_network = bp_enable_private_network();
+	if ( ! $enable_private_network ) {
+		// Check for a valid JWT token in the request headers.
+		$headers = bb_get_all_headers();
+		if (
+			! empty( $headers['bb-preview-token'] ) &&
+			bb_validate_jwt( $headers['bb-preview-token'] )
+		) {
+			return; // Bypass restriction for internal sharing with a valid JWT token.
+		}
+	}
+
 	global $wp_query, $wp;
 
 	if ( ! is_user_logged_in() ) {
-
-		$enable_private_network = bp_enable_private_network();
 
 		$page_ids            = bp_core_get_directory_page_ids();
 		$terms               = false;
