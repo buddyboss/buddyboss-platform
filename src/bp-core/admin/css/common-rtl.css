@@ -4792,6 +4792,81 @@ h1.bb-advance-heading {
   color: #e0613c;
 }
 
+.bb-upgrade-notice {
+  background-color: #f6efe8;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #c5bfba;
+  margin-right: -20px;
+  position: relative;
+}
+
+.bb-upgrade-notice .bb-upgrade-point {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-upgrade-notice .bb-upgrade-point i {
+  font-size: 24px;
+  margin-left: 4px;
+}
+
+.bb-upgrade-notice .bb-upgrade-point .bb-upgrade-notice__link {
+  font-weight: 600;
+  color: inherit;
+  margin-right: 16px;
+}
+
+.bb-upgrade-notice .bb-upgrade-point .bb-upgrade-notice__link:focus {
+  box-shadow: none;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  color: rgba(0, 0, 0, 0.6);
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:before {
+  content: "\e828";
+  font-family: bb-icons;
+  font-style: normal;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:hover {
+  color: black;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:focus, .bb-upgrade-notice .bb-dismiss-upgrade-notice:active {
+  outline: 0;
+  box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+  .bb-upgrade-notice {
+    margin: 0 -10px 0 0;
+    padding-left: 35px;
+  }
+}
+
 .wrap.wrap--performance > h2:first-child {
   font-weight: 500;
   font-size: 24px;

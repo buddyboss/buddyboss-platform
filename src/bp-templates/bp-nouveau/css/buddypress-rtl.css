@@ -4777,12 +4777,12 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 }
 
 .activity-list .activity-item .acomment-display .ac-emotions_list.active {
-  bottom: 35px;
+  bottom: 31px;
   right: -30px;
 }
 
 body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
-  bottom: 35px;
+  bottom: 31px;
   right: -30px;
 }
 
@@ -22209,11 +22209,13 @@ ul.bb-albums-list .load-more {
   -ms-flex-preferred-size: 100%;
   flex-basis: 100%;
   max-width: 100%;
+  pointer-events: none;
 }
 
 #buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a {
   max-width: 33%;
+  pointer-events: auto;
 }
 
 .bb-album-list-item .bs-cover-wrap {
