@@ -9914,7 +9914,7 @@ function bb_pro_poll_version() {
 /**
  * Generates a JWT (JSON Web Token) that includes a URL, issued-at time, and expiration time.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.10
  *
  * @param array $payload {
  * Array containing the payload data for the JWT.
@@ -9940,7 +9940,7 @@ function bb_create_jwt( $payload ) {
  * Validates a JWT (JSON Web Token) to check the signature of the provided JWT token and validates its payload,
  * including checking if the token is expired, and if the URL within the token matches the site's URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.10
  *
  * @param string $token The JWT token string to be validated.
  *
@@ -9974,7 +9974,7 @@ function bb_validate_jwt( $token ) {
 /**
  * Retrieves all HTTP headers from the current request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.10
  *
  * @return array An associative array of all HTTP headers from the current request.
  */

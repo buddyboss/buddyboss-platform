@@ -5130,10 +5130,10 @@ h1.bb-advance-heading {
 }
 
 .bb-upgrade-notice {
-	background-color: #F6EFE8;
+	background-color: #f6efe8;
 	padding: 8px;
 	text-align: center;
-	border-bottom: 1px solid #C5BFBA;
+	border-bottom: 1px solid #c5bfba;
 	margin-left: -20px;
 	position: relative;
 
@@ -5176,11 +5176,10 @@ h1.bb-advance-heading {
 		cursor: pointer;
 
 		&:before {
-			content: '\e828';
-			font-family: "bb-icons";
+			content: "\e828";
+			font-family: bb-icons;
 			font-style: normal;
 			display: inline-block;
-			text-decoration: inherit;
 			width: 20px;
 			height: 20px;
 			font-size: 20px;
