@@ -14,21 +14,25 @@ defined( 'ABSPATH' ) || exit;
 // Combine both active and dismissed notifications with a marker.
 $all_notifications = array();
 
+$active_notifications = false;
 if ( ! empty( $notifications['active'] ) ) {
+	$active_notifications = true;
 	foreach ( $notifications['active'] as $active_notification ) {
 		$all_notifications[] = array_merge( $active_notification, array( 'status' => 'active' ) );
 	}
 }
 
+$dismissed_notifications = false;
 if ( ! empty( $notifications['dismissed'] ) ) {
+	$dismissed_notifications = true;
 	foreach ( $notifications['dismissed'] as $dismissed_notification ) {
 		$all_notifications[] = array_merge( $dismissed_notification, array( 'status' => 'dismissed' ) );
 	}
 }
 
 $total_notifications           = ! empty( $all_notifications ) ? count( $all_notifications ) : 0;
-$total_active_notifications    = ! empty( $notifications['active'] ) ? count( $notifications['active'] ) : 0;
-$total_dismissed_notifications = ! empty( $notifications['dismissed'] ) ? count( $notifications['dismissed'] ) : 0;
+$total_active_notifications    = $active_notifications ? count( $notifications['active'] ) : 0;
+$total_dismissed_notifications = $dismissed_notifications ? count( $notifications['dismissed'] ) : 0;
 ?>
 <div class="bb-notice-header-wrapper">
 	<div class="bb-admin-header">
@@ -76,9 +80,15 @@ $total_dismissed_notifications = ! empty( $notifications['dismissed'] ) ? count(
 									</li>
 								</ul>
 							</div>
-							<div class="panel-nav-check">
-								<a href="#" class="panel-nav-dismiss-all"><?php _e( 'Mark all read', 'buddyboss' ); ?></a>
-							</div>
+							<?php
+							if ( $active_notifications ) {
+								?>
+								<div class="panel-nav-check">
+									<a href="#" class="panel-nav-dismiss-all"><?php _e( 'Mark all read', 'buddyboss' ); ?></a>
+								</div>
+								<?php
+							}
+							?>
 						</div>
 						<div class="bb-panel-body">
 							<div class="bb-notices-blocks-container">
