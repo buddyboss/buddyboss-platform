@@ -1169,7 +1169,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$args['content'] = array(
 			'description'       => __( 'Document Content.', 'buddyboss' ),
 			'type'              => 'string',
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'sanitize_textarea_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 

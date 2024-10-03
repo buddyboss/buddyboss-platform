@@ -1209,7 +1209,7 @@ function bb_load_web_performance_tester() {
 /**
  * Delete the upgrade notice transient when administrators logout.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.10
  *
  * @param int $user_id The ID of the user who is logging out.
  *
