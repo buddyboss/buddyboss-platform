@@ -16,13 +16,13 @@ $all_notifications = array();
 
 if ( ! empty( $notifications['active'] ) ) {
 	foreach ( $notifications['active'] as $active_notification ) {
-		$all_notifications[] = array_merge( $active_notification, [ 'status' => 'active' ] );
+		$all_notifications[] = array_merge( $active_notification, array( 'status' => 'active' ) );
 	}
 }
 
 if ( ! empty( $notifications['dismissed'] ) ) {
 	foreach ( $notifications['dismissed'] as $dismissed_notification ) {
-		$all_notifications[] = array_merge( $dismissed_notification, [ 'status' => 'dismissed' ] );
+		$all_notifications[] = array_merge( $dismissed_notification, array( 'status' => 'dismissed' ) );
 	}
 }
 
