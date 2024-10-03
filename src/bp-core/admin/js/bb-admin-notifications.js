@@ -52,18 +52,60 @@
 				BuddyBossNoticeSystem.checkNoticesStatus( status );
 			} );
 
-			$( document ).on( 'click', '.panel-nav-dismiss-all', function ( e ) {
-				e.preventDefault();
+			$( document ).on(
+				'click',
+				'.panel-nav-dismiss-all',
+				function ( event ) {
 
-				var $this               = $( this );
-				var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
+					event.preventDefault();
 
-				$notificationsPanel.find( '.bb-notice-block' ).removeClass( 'dismissed unread' );
-				$notificationsPanel.find( '.bb-notice-block' ).addClass( 'dismissed' );
+					var $this          = $( this );
+					var countEl        = $( '.count-active' );
+					var countData          = countEl.text().trim().match(/\d+/);
+					var count = countData ? parseInt(countData[0], 10) : 0;
+					var adminMenuCount = $( '#BBInPluginAdminMenuUnreadCount' );
 
-				BuddyBossNoticeSystem.checkNoticesStatus();
-				BuddyBossNoticeSystem.checkNoticesCount();
-			} );
+					var data = {
+						action: 'buddyboss_in_plugin_notification_dismiss',
+						nonce : BBInPluginAdminNotifications.nonce,
+						id    : 'all',
+					};
+
+					$this.prop( 'disabled', 'disabled' );
+
+					$.post(
+						BBInPluginAdminNotifications.ajax_url,
+						data,
+						function ( res ) {
+
+							if ( ! res.success ) {
+								console.log( res );
+							} else {
+								$this.closest( '.bb-notifications-panel' ).find( '.bb-notices-blocks-container .bb-notice-block' ).each( function () {
+									$( this ).removeClass( 'unread' ).addClass( 'dismissed' );
+								} );
+								count = 0;
+								if ( 0 === count ) {
+									countEl.hide();
+									$this.closest('.panel-nav-check').hide();
+									adminMenuCount.closest( '.awaiting-mod' ).remove();
+								} else if ( count < 10 ) {
+									countEl.addClass( 'single-digit' );
+									countEl.html( '(' + count + ')' );
+									adminMenuCount.html( count );
+								} else {
+									countEl.html( '(' + count + ')' );
+									adminMenuCount.html( count );
+								}
+							}
+						}
+					).fail(
+						function () {
+							alert( 'Messages could not be dismissed.' );
+						}
+					);
+				}
+			);
 
 			BuddyBossNoticeSystem.checkNoticesStatus();
 		},
