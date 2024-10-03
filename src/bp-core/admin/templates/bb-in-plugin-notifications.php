@@ -44,9 +44,15 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 				<div class="bb-notifications-wrapepr">
 					<a href="" class="bb-admin-nav__button bb-admin-nav__notice" id="bb-notifications-button">
 						<i class="bb-icon-l bb-icon-bell"></i>
-						<span class="bb-notice-count">
-							<?php echo $total_notifications; ?>
-						</span>
+						<?php
+						if ( $total_active_notifications > 0 ) {
+							?>
+							<span class="bb-notice-count">
+								<?php echo $total_active_notifications; ?>
+							</span>
+							<?php
+						}
+						?>
 					</a>
 					<div class="bb-notifications-panel">
 						<div class="bb-panel-header">
@@ -70,11 +76,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 										<a href="#" id="show-active" class="switch-notices" data-status="unread">
 											<?php _e( 'Unread', 'buddyboss' ); ?>
 											<span class="count-active">
-												<?php
-												if ( $total_active_notifications > 0 ) {
-													echo '(' . $total_active_notifications . ')';
-												}
-												?>
+												<?php echo $total_active_notifications > 0 ? '(' . $total_active_notifications . ')' : ''; ?>
 											</span>
 										</a>
 									</li>
@@ -165,7 +167,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 								?>
 							</div>
 							<div class="bb-notices-blocks-blank">
-								<p><?php _e( 'There are no notifications.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'There are no messages.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 					</div>
