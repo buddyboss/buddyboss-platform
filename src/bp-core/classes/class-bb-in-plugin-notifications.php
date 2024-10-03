@@ -22,9 +22,23 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 	 */
 	class BB_In_Plugin_Notifications {
 
-		// @todo We need to change this URL to the correct one.
-		const SOURCE_URL = 'https://a.omwpapi.com/production/wp/notifications.json';
-		const SOURCE_URL_ARGS = array();
+		/**
+		 * Source URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		public $source_url = '';
+
+		/**
+		 * Source URL Args.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		public $source_url_args = array();
 
 		/**
 		 * Option value.
@@ -41,6 +55,10 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
+			$this->source_url      = defined( 'BB_TEST_IN_PLUGIN_NOTIFICATION_URL' ) ? BB_TEST_IN_PLUGIN_NOTIFICATION_URL : 'https://buddyboss.com/inpns/notifications.json';
+			$this->source_url_args = array(
+				'sslverify' => false,
+			);
 			$this->hooks();
 		}
 
@@ -53,9 +71,9 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			add_action( 'in_admin_header', array( $this, 'bb_admin_notification_header' ), 0 );
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueues' ) );
 			add_action( 'admin_footer', array( $this, 'admin_menu_append_count' ) );
-			add_action( 'admin_init', array( $this, 'schedule_fetch' ) );
+			add_action( 'bp_admin_init', array( $this, 'schedule_fetch' ) );
 			add_action( 'bb_in_plugin_admin_header_notifications', array( $this, 'output' ) );
-			add_action( 'buddyboss_in_plugin_admin_notifications_update', array( $this, 'update' ) );
+			add_action( 'bb_in_plugin_admin_notifications_update', array( $this, 'update' ) );
 			add_action( 'wp_ajax_buddyboss_in_plugin_notification_dismiss', array( $this, 'dismiss' ) );
 		}
 
@@ -68,6 +86,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 */
 		public function bb_admin_notification_header() {
 			global $bp;
+			$notifications = $this->get();
 			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-in-plugin-notifications.php';
 		}
 
@@ -82,12 +101,10 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 			// Update notifications using an async task.
 			if ( empty( $option['update'] ) || time() > $option['update'] + 3 * HOUR_IN_SECONDS ) {
-				if ( false === wp_next_scheduled( 'bb_in_plugin_admin_notifications_update' ) ) {
-					wp_schedule_single_event( time() + 10, 'buddyboss_in_plugin_admin_notifications_update' );
+				if ( ! wp_next_scheduled( 'bb_in_plugin_admin_notifications_update' ) ) {
+					wp_schedule_single_event( time() + 10, 'bb_in_plugin_admin_notifications_update' );
 				}
 			}
-
-			// $this->update();
 		}
 
 		/**
@@ -288,7 +305,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * @return array
 		 */
 		public function verify( $notifications ) {
-
 			$data = array();
 
 			if ( ! is_array( $notifications ) || empty( $notifications ) ) {
@@ -352,8 +368,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				'bb_in_plugin_admin_notifications',
 				array(
 					'update'    => time(),
-					'feed'      => $feed,
 					'events'    => $option['events'],
+					'feed'      => $feed,
 					'dismissed' => $option['dismissed'],
 				)
 			);
@@ -365,8 +381,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * @return array
 		 */
 		public function fetch_feed() {
-
-			$res = wp_remote_get( self::SOURCE_URL, self::SOURCE_URL_ARGS );
+			$res = wp_remote_get( $this->source_url, $this->source_url_args );
 
 			if ( is_wp_error( $res ) ) {
 				return array();
