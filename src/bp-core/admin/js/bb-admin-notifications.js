@@ -106,7 +106,7 @@
 									count = 0;
 									countEl.hide();
 									adminMenuCount.closest( '.awaiting-mod' ).remove();
-								} else if ( 0 == count ) {
+								} else if ( 0 === count ) {
 									countEl.hide();
 									$( '.buddyboss-notifications-none' ).show();
 									$( '.dismiss-all' ).hide();
@@ -136,12 +136,6 @@
 			var $noticesContainer = $( '.bb-notices-blocks-container' );
 			var $noticeBlocks = $noticesContainer.find( '.bb-notice-block' );
 
-			if ( $noticesContainer.find( '.bb-notice-block' ).length === 0 ) {
-				$noticesContainer.closest( '.bb-panel-body' ).addClass( 'empty' );
-			} else {
-				$noticesContainer.closest( '.bb-panel-body' ).removeClass( 'empty' );
-			}
-
 			var diffStatus = [];
 			$noticeBlocks.each( function () {
 				if ( 'all' !== status && ! $( this ).hasClass( status ) ) {
@@ -153,9 +147,11 @@
 			if ( diffStatus.length > 0 && diffStatus.includes( true ) ) {
 				$noticesContainer.removeClass( 'bp-hide' );
 				$noticesContainer.closest( '.bb-panel-body' ).find( '.bb-notices-blocks-blank' ).hide();
+				$noticesContainer.closest( '.bb-panel-body' ).removeClass( 'empty' );
 			} else {
-				$noticesContainer.addClass( 'bp-hide' );
 				$noticesContainer.closest( '.bb-panel-body' ).find( '.bb-notices-blocks-blank' ).show();
+				$noticesContainer.closest( '.bb-panel-body' ).addClass( 'empty' );
+				$noticesContainer.addClass( 'bp-hide' );
 			}
 
 			var allDismissed = true;
