@@ -64,7 +64,9 @@
 						var countEl        = $( '.count-active' );
 						var countData      = countEl.text().trim().match( /\d+/ );
 						var count          = countData ? parseInt( countData[0], 10 ) : 0;
+						var iconCountEl    = $( '.bb-notice-count' );
 						var adminMenuCount = $( '#BBInPluginAdminMenuUnreadCount' );
+						var status         = $this.closest( '.bb-panel-nav' ).find( '.panel-nav-list li > a.active' ).data( 'status' );
 
 						var data = {
 							action: 'buddyboss_in_plugin_notification_dismiss',
@@ -89,15 +91,20 @@
 									if ( 0 === count ) {
 										countEl.hide();
 										$this.closest( '.panel-nav-check' ).hide();
+										iconCountEl.hide();
 										adminMenuCount.closest( '.awaiting-mod' ).remove();
 									} else if ( count < 10 ) {
 										countEl.addClass( 'single-digit' );
 										countEl.html( '(' + count + ')' );
+										iconCountEl.html( count );
 										adminMenuCount.html( count );
 									} else {
 										countEl.html( '(' + count + ')' );
+										iconCountEl.html( count );
 										adminMenuCount.html( count );
 									}
+
+									BuddyBossNoticeSystem.checkNoticesStatus( status );
 								}
 							}
 						).fail(
@@ -125,7 +132,9 @@
 						var countEl        = $( '.count-active' );
 						var countData      = countEl.text().trim().match( /\d+/ );
 						var count          = countData ? parseInt( countData[0], 10 ) : 0;
+						var iconCountEl    = $( '.bb-notice-count' );
 						var adminMenuCount = $( '#BBInPluginAdminMenuUnreadCount' );
+						var status         = $this.closest( '.bb-notifications-panel' ).find( '.panel-nav-list li > a.active' ).data( 'status' );
 
 						var data = {
 							action: 'buddyboss_in_plugin_notification_dismiss',
@@ -148,20 +157,26 @@
 									if ( count < 0 ) {
 										count = 0;
 										countEl.hide();
+										iconCountEl.hide();
 										adminMenuCount.closest( '.awaiting-mod' ).remove();
 									} else if ( 0 === count ) {
 										countEl.hide();
 										$( '.buddyboss-notifications-none' ).show();
 										$( '.dismiss-all' ).hide();
+										iconCountEl.hide();
 										adminMenuCount.closest( '.awaiting-mod' ).remove();
 									} else if ( count < 10 ) {
 										countEl.addClass( 'single-digit' );
 										countEl.html( '(' + count + ')' );
+										iconCountEl.html( count );
 										adminMenuCount.html( count );
 									} else {
 										countEl.html( '(' + count + ')' );
+										iconCountEl.html( count );
 										adminMenuCount.html( count );
 									}
+
+									BuddyBossNoticeSystem.checkNoticesStatus( status );
 								}
 
 							}
