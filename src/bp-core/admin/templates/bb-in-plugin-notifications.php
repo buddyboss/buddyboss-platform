@@ -146,11 +146,11 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 																if ( empty( $button['url'] ) || empty( $button['text'] ) ) {
 																	continue;
 																}
-																$primary = isset( $button['type']['value'] ) && 'primary' === $button['type']['value'] ? 'primary' : '';
+																$primary = isset( $button['type']['value'] ) ? $button['type']['value'] : 'primary';
 																$label   = $button['type']['label'] ?? '';
 																?>
 																<a href="<?php echo esc_url( $button['url'] ); ?>"
-																   class="button button-<?php echo esc_attr( $primary ); ?> bb-notice-action-button">
+																   class="button button-<?php echo esc_attr( $primary ); ?>">
 																	<?php echo esc_html( $label ); ?>
 																</a>
 																<?php
