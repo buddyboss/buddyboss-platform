@@ -458,7 +458,7 @@ add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
 /**
  * Display an upgrade notice for free users on BuddyBoss screens.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.10
  *
  * @return void
  */
@@ -516,7 +516,7 @@ add_action( 'admin_notices', 'bb_pro_upgrade_notice', 1 );
 /**
  * Handles the dismissal of the "Upgrade to Pro" notice.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.10
  *
  * @return void
  */
