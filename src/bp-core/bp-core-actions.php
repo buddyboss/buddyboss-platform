@@ -1225,3 +1225,16 @@ function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
 }
 
 add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
+
+/**
+ * Function to load in-plugin notification class.
+ *
+ * @since BuddyBoss [BB_VERSION]
+ */
+function bb_in_plugin_notification() {
+	if ( class_exists( 'BB_In_Plugin_Notifications' ) ) {
+		return new BB_In_Plugin_Notifications();
+	}
+}
+
+add_action( 'bp_init', 'bb_in_plugin_notification' );
