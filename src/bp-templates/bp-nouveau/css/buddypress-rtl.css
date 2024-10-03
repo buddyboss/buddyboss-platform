@@ -8872,7 +8872,7 @@ form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   border: 1px solid #ccc;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio: 2) {
+@media screen and (max-device-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
   form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
     font-size: 16px;
     /* Prevent iPhones zoom in */
