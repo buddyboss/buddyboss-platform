@@ -36,6 +36,10 @@ form.ac-form {
 				border-radius: 3px;
 				border: 1px solid #ccc;
 
+				@media screen and (-webkit-min-device-pixel-ratio: 2) {
+					font-size: 16px; /* Prevent iPhones zoom in */
+				}
+
 				&.medium-editor-element {
 					min-height: auto;
 
