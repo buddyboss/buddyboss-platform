@@ -4777,12 +4777,12 @@ body:not(.bb-is-mobile) .activity-list .activity-item .ac-emotions_list:hover .a
 }
 
 .activity-list .activity-item .acomment-display .ac-emotions_list.active {
-  bottom: 35px;
+  bottom: 31px;
   right: -30px;
 }
 
 body:not(.bb-is-mobile) .activity-list .activity-item .acomment-display .ac-emotions_list:hover {
-  bottom: 35px;
+  bottom: 31px;
   right: -30px;
 }
 
@@ -9678,11 +9678,13 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 * @section 3.2 - Members Loop
 *----------------------------------------------------------
 */
-.buddypress-wrap .members-list li .member-name {
+.buddypress-wrap .members-list li .member-name,
+.buddypress-wrap .friends-mutual-list li .member-name {
   margin-bottom: 10px;
 }
 
-.buddypress-wrap .members-list li .user-update {
+.buddypress-wrap .members-list li .user-update,
+.buddypress-wrap .friends-mutual-list li .user-update {
   border: 1px solid #eaeaea;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -9697,12 +9699,14 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .members-list li .user-update {
+  .buddypress-wrap .members-list li .user-update,
+  .buddypress-wrap .friends-mutual-list li .user-update {
     font-size: 16px;
   }
 }
 
-.buddypress-wrap .members-list li .user-update .activity-read-more {
+.buddypress-wrap .members-list li .user-update .activity-read-more,
+.buddypress-wrap .friends-mutual-list li .user-update .activity-read-more {
   display: block;
   font-size: 12px;
   font-style: normal;
@@ -9711,66 +9715,83 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .members-list li .last-activity {
+  .buddypress-wrap .members-list li .last-activity,
+  .buddypress-wrap .friends-mutual-list li .last-activity {
     clear: right;
     margin-top: -10px;
   }
 }
 
 .buddypress-wrap .members-list li .list-wrap .followers-wrap,
-.buddypress-wrap .members-list li .list-wrap .member-type {
+.buddypress-wrap .members-list li .list-wrap .member-type,
+.buddypress-wrap .friends-mutual-list li .list-wrap .followers-wrap,
+.buddypress-wrap .friends-mutual-list li .list-wrap .member-type {
   font-size: 14px;
   color: #767676;
   margin-bottom: 15px;
 }
 
-.buddypress-wrap .members-list li .list-wrap .member-type {
+.buddypress-wrap .members-list li .list-wrap .member-type,
+.buddypress-wrap .friends-mutual-list li .list-wrap .member-type {
   margin-bottom: 5px;
 }
 
-.buddypress-wrap .members-list li .list-wrap .member-name {
+.buddypress-wrap .members-list li .list-wrap .member-name,
+.buddypress-wrap .friends-mutual-list li .list-wrap .member-name {
   font-size: 20px;
   margin: 0 0 10px 0;
   padding: 0;
 }
 
-.buddypress-wrap .members-list li .list-wrap .member-name a {
+.buddypress-wrap .members-list li .list-wrap .member-name a,
+.buddypress-wrap .friends-mutual-list li .list-wrap .member-name a {
   text-decoration: none;
 }
 
-.buddypress-wrap .members-list li .list-wrap .last-activity {
+.buddypress-wrap .members-list li .list-wrap .last-activity,
+.buddypress-wrap .friends-mutual-list li .list-wrap .last-activity {
   color: #767676;
   font-size: 13px;
   margin: 0 0 12px 0;
 }
 
-.buddypress-wrap .members-list li .list-wrap .item-meta .separator {
+.buddypress-wrap .members-list li .list-wrap .item-meta .separator,
+.buddypress-wrap .friends-mutual-list li .list-wrap .item-meta .separator {
   margin: 0 5px;
 }
 
-.buddypress-wrap .members-list li .item .primary-action .generic-button {
+.buddypress-wrap .members-list li .item .primary-action .generic-button,
+.buddypress-wrap .friends-mutual-list li .item .primary-action .generic-button {
   width: 100%;
 }
 
 .buddypress-wrap .members-list li .primary-action .generic-button,
 .buddypress-wrap .members-list li .footer-button-wrap .generic-button,
-.buddypress-wrap .members-list li .member-button-wrap .generic-button {
+.buddypress-wrap .members-list li .member-button-wrap .generic-button,
+.buddypress-wrap .friends-mutual-list li .primary-action .generic-button,
+.buddypress-wrap .friends-mutual-list li .footer-button-wrap .generic-button,
+.buddypress-wrap .friends-mutual-list li .member-button-wrap .generic-button {
   padding: 0 15px;
 }
 
 .buddypress-wrap .members-list li .primary-action .generic-button > *,
 .buddypress-wrap .members-list li .footer-button-wrap .generic-button > *,
-.buddypress-wrap .members-list li .member-button-wrap .generic-button > * {
+.buddypress-wrap .members-list li .member-button-wrap .generic-button > *,
+.buddypress-wrap .friends-mutual-list li .primary-action .generic-button > *,
+.buddypress-wrap .friends-mutual-list li .footer-button-wrap .generic-button > *,
+.buddypress-wrap .friends-mutual-list li .member-button-wrap .generic-button > * {
   display: block;
   margin-bottom: 10px;
 }
 
-.buddypress-wrap .members-list li .item-avatar a {
+.buddypress-wrap .members-list li .item-avatar a,
+.buddypress-wrap .friends-mutual-list li .item-avatar a {
   display: inline-block;
   position: relative;
 }
 
-.buddypress-wrap .members-list li .member-status.online {
+.buddypress-wrap .members-list li .member-status.online,
+.buddypress-wrap .friends-mutual-list li .member-status.online {
   position: absolute;
   width: 12px;
   height: 12px;
@@ -9778,42 +9799,50 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   top: 12px;
 }
 
-.buddypress-wrap .members-list.grid li .only-list-view {
+.buddypress-wrap .members-list.grid li .only-list-view,
+.buddypress-wrap .friends-mutual-list.grid li .only-list-view {
   display: none;
 }
 
-.buddypress-wrap .members-list.grid.bp-list > li .item-avatar img.avatar {
+.buddypress-wrap .members-list.grid.bp-list > li .item-avatar img.avatar,
+.buddypress-wrap .friends-mutual-list.grid.bp-list > li .item-avatar img.avatar {
   width: 100%;
   max-width: 126px;
 }
 
-.buddypress-wrap .members-list:not(.grid) li {
+.buddypress-wrap .members-list:not(.grid) li,
+.buddypress-wrap .friends-mutual-list:not(.grid) li {
   margin: 0;
   padding: 0;
 }
 
-.buddypress-wrap .members-list:not(.grid) li .member-status.online {
+.buddypress-wrap .members-list:not(.grid) li .member-status.online,
+.buddypress-wrap .friends-mutual-list:not(.grid) li .member-status.online {
   top: 4px;
   bottom: 4px;
 }
 
-.buddypress-wrap .members-list:not(.grid) .list-wrap {
+.buddypress-wrap .members-list:not(.grid) .list-wrap,
+.buddypress-wrap .friends-mutual-list:not(.grid) .list-wrap {
   background: #fafafa;
   border: 1px solid #eee;
   padding: 20px;
   position: relative;
 }
 
-.buddypress-wrap .members-list:not(.grid) .list-wrap-inner .item-avatar img {
+.buddypress-wrap .members-list:not(.grid) .list-wrap-inner .item-avatar img,
+.buddypress-wrap .friends-mutual-list:not(.grid) .list-wrap-inner .item-avatar img {
   border-radius: 50%;
   max-width: 70px;
 }
 
-.buddypress-wrap .members-list:not(.grid) .only-grid-view {
+.buddypress-wrap .members-list:not(.grid) .only-grid-view,
+.buddypress-wrap .friends-mutual-list:not(.grid) .only-grid-view {
   display: none;
 }
 
-.buddypress-wrap .members-list:not(.grid) .member-button-wrap.footer-button-wrap {
+.buddypress-wrap .members-list:not(.grid) .member-button-wrap.footer-button-wrap,
+.buddypress-wrap .friends-mutual-list:not(.grid) .member-button-wrap.footer-button-wrap {
   display: block;
 }
 
@@ -9844,17 +9873,20 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   display: none !important;
 }
 
-#buddypress .members-list > li {
+#buddypress .members-list > li,
+#buddypress .friends-mutual-list > li {
   min-width: 275px;
 }
 
-#buddypress .members-list > li .bb_more_options.member-dropdown {
+#buddypress .members-list > li .bb_more_options.member-dropdown,
+#buddypress .friends-mutual-list > li .bb_more_options.member-dropdown {
   position: absolute;
   left: 15px;
   top: 5px;
 }
 
-#buddypress .members-list > li .bb_more_options.member-dropdown .bb_more_options_action {
+#buddypress .members-list > li .bb_more_options.member-dropdown .bb_more_options_action,
+#buddypress .friends-mutual-list > li .bb_more_options.member-dropdown .bb_more_options_action {
   text-decoration: none;
 }
 
@@ -22177,11 +22209,13 @@ ul.bb-albums-list .load-more {
   -ms-flex-preferred-size: 100%;
   flex-basis: 100%;
   max-width: 100%;
+  pointer-events: none;
 }
 
 #buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a {
   max-width: 33%;
+  pointer-events: auto;
 }
 
 .bb-album-list-item .bs-cover-wrap {
