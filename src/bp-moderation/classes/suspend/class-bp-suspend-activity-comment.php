@@ -362,7 +362,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		$related_contents = array();
 
 		if ( $page <= 1 ) {
-			// related activity comment only hide if parent activity hide or comment's/parent activity's author blocked or suspended.
+			// Related activity comment only hide if parent activity hides or comment's/parent activity's author blocked or suspended.
 			if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
 				$related_contents[ self::$type ] = self::get_activity_comment_ids( $acomment_id );
 			}

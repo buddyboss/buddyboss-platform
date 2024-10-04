@@ -631,7 +631,7 @@ class BP_Core_Suspend {
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
 	 *
-	 * @return bool
+	 * @return string|null
 	 */
 	public static function get_suspend_id( $item_id, $item_type ) {
 		global $wpdb;

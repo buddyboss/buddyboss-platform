@@ -418,9 +418,9 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		$meta_key = (
-						! empty( $suspend_args['action_suspend'] ) ||
-						! empty( $suspend_args['user_suspended'] )
-					) ? 'suspend' : '';
+			! empty( $suspend_args['action_suspend'] ) ||
+			! empty( $suspend_args['user_suspended'] )
+		) ? 'suspend' : '';
 
 		$suspend_id = BP_Core_Suspend::get_suspend_id( $member_id, self::$type );
 		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
@@ -746,7 +746,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		// return the loop when the user is blocked/unblocked but not suspended/unsuspended.
+		// Return the loop when the user is blocked/unblocked but not suspended/unsuspended.
 		if (
 			! empty( $args['blocked_user'] ) &&
 			empty( $args['action_suspend'] ) &&
@@ -1337,6 +1337,16 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		return $domain;
 	}
 
+	/**
+	 * Finds the next active component item after the current process.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $components      An associative array of components and their items.
+	 * @param string $current_process The current process or item to match against.
+	 *
+	 * @return string|null The next item in the component after the current process, or null if not found.
+	 */
 	public static function find_active_component( $components, $current_process ) {
 		$found_current = false;
 

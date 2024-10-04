@@ -47,6 +47,8 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * White listed DB Fields.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var array
 	 */
 	public static $white_list_keys = array(
@@ -93,6 +95,8 @@ abstract class BP_Suspend_Abstract {
 
 	/**
 	 * BP_Suspend_Abstract constructor.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
 		self::$item_per_page = (int) apply_filters( 'bb_suspend_item_per_page', 50 );
@@ -172,8 +176,6 @@ abstract class BP_Suspend_Abstract {
 	 * @param array    $args          parent args.
 	 */
 	public function hide_related_content( $item_id, $hide_sitewide = 0, $args = array() ) {
-		global $bb_background_updater;
-
 		$args = $this->prepare_suspend_args( $item_id, $hide_sitewide, $args );
 
 		if ( empty( $args['action'] ) ) {
@@ -417,6 +419,17 @@ abstract class BP_Suspend_Abstract {
 		return 'bb_moderation_' . $type . '_' . $args['item_type'] . '_' . $args['item_id'];
 	}
 
+	/**
+	 * Checks if a moderation item is hidden based on the suspended or blocked user status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $item_id   The ID of the item to check.
+	 * @param string $item_type The type of the item.
+	 * @param array  $args      Arguments passed for moderation check.
+	 *
+	 * @return bool True if the item should be hidden, false otherwise.
+	 */
 	public function bb_moderation_item_hidden( $item_id, $item_type, $args ) {
 		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$suspended_user = ! empty( $args['user_suspended'] ) ? $args['user_suspended'] : '';
@@ -445,6 +458,17 @@ abstract class BP_Suspend_Abstract {
 		return false;
 	}
 
+	/**
+	 * Checks if a moderation item is unhidden based on the blocked or suspended user status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $item_id   The ID of the item to check.
+	 * @param string $item_type The type of the item (e.g., post, activity).
+	 * @param array  $args      Arguments passed for the unhidden check.
+	 *
+	 * @return bool True if the item should be unhidden, false otherwise.
+	 */
 	public function bb_moderation_item_unhidden( $item_id, $item_type, $args ) {
 		$blocked_user   = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$action_suspend = ! empty( $args['action_suspend'] ) ? $args['action_suspend'] : '';
@@ -480,6 +504,19 @@ abstract class BP_Suspend_Abstract {
 		return false;
 	}
 
+	/**
+	 * Loops through and hides related content for a moderated item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $related_contents List of related content types and their respective content IDs.
+	 * @param int   $item_id          The ID of the main item being moderated.
+	 * @param int   $hide_sitewide    Flag indicating whether the content is hidden sitewide (1) or
+	 *                                user-specific (0).
+	 * @param array $args             Additional arguments for hiding related content.
+	 *
+	 * @return void
+	 */
 	public function loop_hide_related_content( $related_contents, $item_id, $hide_sitewide = 0, $args = array() ) {
 		global $bb_background_updater;
 
@@ -564,6 +601,20 @@ abstract class BP_Suspend_Abstract {
 		}
 	}
 
+	/**
+	 * Loops through and unhides related content for a moderated item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $related_contents List of related content types and their respective content IDs.
+	 * @param int   $item_id          The ID of the main item being moderated.
+	 * @param int   $hide_sitewide    Flag indicating whether the content is hidden sitewide (1) or
+	 *                                user-specific (0).
+	 * @param int   $force_all        Flag to force unhide of all content items, bypassing normal checks.
+	 * @param array $args             Additional arguments for unhiding related content.
+	 *
+	 * @return void
+	 */
 	public function loop_unhide_related_content( $related_contents, $item_id, $hide_sitewide = 0, $force_all = 0, $args = array() ) {
 		global $bb_background_updater;
 

@@ -788,7 +788,8 @@ function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $pre
  *
  * @since BuddyBoss 1.5.6
  *
- * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
+ * @global wpdb  $wpdb          WordPress database abstraction object.
+ *
  * @param string $meta_key      Optional. The key of the metadata being deleted. If
  *                              omitted, all metadata associated with the moderation
  *                              item will be deleted.
@@ -798,9 +799,11 @@ function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $pre
  *                              for all objects, ignoring the specified object_id. Otherwise,
  *                              only delete matching metadata entries for the specified
  *                              moderation item. Default: false.
+ * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
+ *
+ * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
  *
  * @return bool True on success, false on failure.
- * @global wpdb  $wpdb          WordPress database abstraction object.
  */
 function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
@@ -831,13 +834,13 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $suspend_id    ID of the suspend item whose metadata is being requested.
- * @param string $meta_key      Optional. If present, only the metadata matching
- *                              that meta key will be returned. Otherwise, all metadata for the
- *                              moderation item will be fetched.
- * @param bool   $single        Optional. If true, return only the first value of the
- *                              specified meta_key. This parameter has no effect if meta_key is not
- *                              specified. Default: true.
+ * @param int    $suspend_id ID of the suspend item whose metadata is being requested.
+ * @param string $meta_key   Optional. If present, only the metadata matching
+ *                           that meta key will be returned. Otherwise, all metadata for the
+ *                           moderation item will be fetched.
+ * @param bool   $single     Optional. If true, return only the first value of the
+ *                           specified meta_key. This parameter has no effect if meta_key is not
+ *                           specified. Default: true.
  *
  * @return mixed The meta value(s) being requested.
  */
@@ -856,7 +859,7 @@ function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) 
 	 * @param string $meta_key   Meta key for the value being requested.
 	 * @param bool   $single     Whether to return one matched meta key row or all.
 	 */
-	return apply_filters( 'bp_suspend_get_meta', $retval, $suspend_id, $meta_key, $single );
+	return apply_filters( 'bb_suspend_get_meta', $retval, $suspend_id, $meta_key, $single );
 }
 
 /**
@@ -864,12 +867,12 @@ function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) 
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $suspend_id    ID of the suspend item.
- * @param string $meta_key      Metadata key.
- * @param mixed  $meta_value    Metadata value.
- * @param bool   $unique        Optional. Whether to enforce a single metadata value for the
- *                              given key. If true, and the object already has a value for
- *                              the key, no change will be made. Default: false.
+ * @param int    $suspend_id ID of the suspend item.
+ * @param string $meta_key   Metadata key.
+ * @param mixed  $meta_value Metadata value.
+ * @param bool   $unique     Optional. Whether to enforce a single metadata value for the
+ *                           given key. If true, and the object already has a value for
+ *                           the key, no change will be made. Default: false.
  *
  * @return int|bool The meta ID on successful update, false on failure.
  */
@@ -886,14 +889,14 @@ function bb_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = fal
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $suspend_id    ID of the suspend item whose metadata is being updated.
- * @param string $meta_key      Key of the metadata being updated.
- * @param mixed  $meta_value    Value to be set.
- * @param mixed  $prev_value    Optional. If specified, only update existing metadata entries
- *                              with the specified value. Otherwise, update all entries.
+ * @param int    $suspend_id ID of the suspend item whose metadata is being updated.
+ * @param string $meta_key   Key of the metadata being updated.
+ * @param mixed  $meta_value Value to be set.
+ * @param mixed  $prev_value Optional. If specified, only update existing metadata entries
+ *                           with the specified value. Otherwise, update all entries.
  *
  * @return bool|int Returns false on failure. On successful update of existing
- *                  metadata, returns true. On successful creation of new metadata,
+ *                  metadata returns true. On successful creation of new metadata,
  *                  returns the integer ID of the new metadata row.
  */
 function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_value = '' ) {
@@ -905,23 +908,27 @@ function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_valu
 }
 
 /**
- * Delete a meta entry from the DB for an suspend item.
+ * Delete a meta entry from the DB for a suspend item.
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @global wpdb  $wpdb       WordPress database abstraction object.
+ *
+ * @param string $meta_key   Optional. The key of the metadata being deleted. If
+ *                           omitted, all metadata associated with the suspend
+ *                           item will be deleted.
+ * @param string $meta_value Optional. If present, the metadata will only be
+ *                           deleted if the meta_value matches this parameter.
+ * @param bool   $delete_all Optional. If true, delete matching metadata entries
+ *                           for all objects, ignore the specified object_id.
+ *                           Otherwise,
+ *                           only delete matching metadata entries for the specified
+ *                           moderation item.
+ *                           Default: false.
+ *
  * @param int    $suspend_id ID of the suspend item whose metadata is being deleted.
- * @param string $meta_key      Optional. The key of the metadata being deleted. If
- *                              omitted, all metadata associated with the suspend
- *                              item will be deleted.
- * @param string $meta_value    Optional. If present, the metadata will only be
- *                              deleted if the meta_value matches this parameter.
- * @param bool   $delete_all    Optional. If true, delete matching metadata entries
- *                              for all objects, ignoring the specified object_id. Otherwise,
- *                              only delete matching metadata entries for the specified
- *                              moderation item. Default: false.
  *
  * @return bool True on success, false on failure.
- * @global wpdb  $wpdb          WordPress database abstraction object.
  */
 function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 	// Legacy - if no meta_key is passed, delete all for the item.
@@ -2169,16 +2176,16 @@ function bb_moderation_migration_on_update() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	$bp_prefix  = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
-	$table_name = $bp_prefix . 'bp_suspend_meta';
-	// Check if the 'bp_suspend_meta' table exists.
-	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name  ) ); // phpcs:ignore
+	$table_name = $bp_prefix . 'bb_suspend_meta';
+	// Check if the 'bb_suspend_meta' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // phpcs:ignore
 
 	if ( $table_exists !== $table_name ) {
 		$sql             = array();
 		$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 		$bp_prefix       = bp_core_get_table_prefix();
 
-		$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
+		$sql[] = "CREATE TABLE {$bp_prefix}bb_suspend_meta (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			suspend_id bigint(20) NOT NULL,
 			meta_key varchar(255) DEFAULT NULL,

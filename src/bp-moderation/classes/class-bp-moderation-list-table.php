@@ -759,7 +759,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $where_conditions Current conditions for MySQL WHERE statement.
 	 * @param array $r                Parsed arguments passed into method.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	public function update_moderation_where_conditions( $where_conditions, $r ) {
 		$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0';
