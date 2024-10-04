@@ -1200,7 +1200,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1331,11 +1331,15 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					);
 					break;
 				default:
-					$output = $count < 2 ? $right_now_text : sprintf(
-						/* translators: The display seconds count from the older date.. */
-						_n( '%s second', '%s seconds', $count, 'buddyboss' ),
-						$count
-					);
+					if ( $count >= 1 && $count <= 59 ) {
+						$output = $right_now_text;
+					} else {
+						$output = sprintf(
+							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+							$count
+						);
+					}
+					break;
 			}
 
 			// No output, so happened right now.
@@ -1346,7 +1350,9 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	$output = sprintf( $ago_text, $output );
+	if ( $output !== $right_now_text ) {
+		$output = sprintf( $ago_text, $output );
+	}
 
 	/**
 	 * Filters the English-language representation of the time elapsed since a given date.
@@ -3616,6 +3622,9 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		return $email;
 	}
 
+	// Set all original token are used for email without a replacement.
+	$email->bb_set_original_tokens( $args['tokens'] );
+
 	// From, subject, content are set automatically.
 	$email->set_to( $to );
 	$email->set_tokens( $args['tokens'] );
@@ -4861,6 +4870,18 @@ function bp_core_parse_url( $url ) {
 		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
 
 		if ( bb_is_same_site_url( $url ) ) {
+			if ( ! bp_enable_private_network() ) {
+				// Add the custom header with the JWT token.
+				$args['headers'] = array(
+					'bb-preview-token' => bb_create_jwt(
+						array(
+							'url' => $url,
+							'iat' => time(),
+							'exp' => time() + 120, // Token validity 2 minutes.
+						)
+					),
+				);
+			}
 			$args['sslverify'] = false;
 		}
 
@@ -9877,4 +9898,102 @@ function bb_remove_deleted_user_last_activities() {
 		$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
 		$wpdb->query( $delete_query ); // phpcs:ignore
 	}
+}
+
+/**
+ * Function to return the minimum pro version to show notice for poll.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return string
+ */
+function bb_pro_poll_version() {
+	return '2.6.00';
+}
+
+/**
+ * Generates a JWT (JSON Web Token) that includes a URL, issued-at time, and expiration time.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @param array $payload {
+ * Array containing the payload data for the JWT.
+ *
+ * @type string $url  The current URL for which the preview is being generated.
+ * @type int    $iat  The issued-at time for the token, typically the current time.
+ * @type int    $exp  The expiration time for the token, usually set to 2 minutes after creation.
+ * }
+ * @return string The generated JWT token as a string.
+ */
+function bb_create_jwt( $payload ) {
+	$secret_key        = wp_salt( 'nonce' );
+	$header            = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$encoded_header    = base64_encode( $header );
+	$encoded_payload   = base64_encode( json_encode( $payload ) );
+	$signature         = hash_hmac( 'sha256', $encoded_header . '.' . $encoded_payload, $secret_key, true );
+	$encoded_signature = base64_encode( $signature );
+
+	return $encoded_header . '.' . $encoded_payload . '.' . $encoded_signature;
+}
+
+/**
+ * Validates a JWT (JSON Web Token) to check the signature of the provided JWT token and validates its payload,
+ * including checking if the token is expired, and if the URL within the token matches the site's URL.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @param string $token The JWT token string to be validated.
+ *
+ * @return bool True if the token is valid, false if the token is invalid or expired.
+ */
+function bb_validate_jwt( $token ) {
+	$secret_key      = wp_salt( 'nonce' );
+	$token_parts     = explode( '.', $token );
+	$header          = ! empty( $token_parts[0] ) ? base64_decode( $token_parts[0] ) : array();
+	$payload         = ! empty( $token_parts[1] ) ? base64_decode( $token_parts[1] ) : array();
+	$signature       = ! empty( $token_parts[2] ) ? base64_decode( $token_parts[2] ) : '';
+	$valid_signature = ! empty( $token_parts[0] ) && ! empty( $token_parts[1] ) ? hash_hmac( 'sha256', $token_parts[0] . '.' . $token_parts[1], $secret_key, true ) : '';
+
+	if ( ! empty( $signature ) && ! empty( $valid_signature ) && hash_equals( $signature, $valid_signature ) ) {
+		$decoded_payload = json_decode( $payload, true );
+		$currentTime     = time();
+
+		if (
+			! empty( $decoded_payload['exp'] ) &&
+			$decoded_payload['exp'] >= $currentTime &&
+			! empty( $decoded_payload['url'] ) &&
+			bb_is_same_site_url( $decoded_payload['url'] )
+		) {
+			return true; // JWT is valid
+		}
+	}
+
+	return false; // JWT is invalid
+}
+
+/**
+ * Retrieves all HTTP headers from the current request.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @return array An associative array of all HTTP headers from the current request.
+ */
+function bb_get_all_headers() {
+
+	if ( function_exists( 'getallheaders' ) ) {
+		return getallheaders();
+	}
+
+	if ( ! is_array( $_SERVER ) ) {
+		return array();
+	}
+
+	$headers = array();
+	foreach ( $_SERVER as $name => $value ) {
+		if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
+			$headers[ str_replace( ' ', '-', strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ] = $value;
+		}
+	}
+
+	return $headers;
 }

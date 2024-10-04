@@ -452,9 +452,6 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
-
-	// Redirect to dashboard and trigger the Hello screen.
-	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddyboss' ) ) );
 }
 
 /**
@@ -3409,9 +3406,21 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.50', '<' ) &&
 		! empty( $type ) &&
-		'reaction' === $type
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			)
+		)
 	) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
@@ -3419,19 +3428,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} elseif (
-		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' ) &&
-		! empty( $type ) &&
-		'schedule_posts' === $type
-	) {
-		$bb_pro_notice = sprintf(
-			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update', 'buddyboss' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			esc_html__( 'to unlock', 'buddyboss' )
-		);
-	} elseif( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
+	} elseif ( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),
@@ -3472,19 +3469,22 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 	}
 
 	if (
-		! empty( $type ) &&
-		'reaction' === $type &&
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.50', '<' )
-	) {
-		$pro_class = 'bb-pro-inactive';
-	}
-
-	if (
 		! empty( $type ) &&
-		'schedule_posts' === $type &&
-		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			)
+		)
 	) {
 		$pro_class = 'bb-pro-inactive';
 	}

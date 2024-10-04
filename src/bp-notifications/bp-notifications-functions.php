@@ -1393,6 +1393,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 			$video_ids      = $activity_metas['bp_video_ids'][0] ?? '';
 			$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 			$excerpt        = wp_strip_all_tags( $activity->content );
+			$bb_poll_id     = $activity_metas['bb_poll_id'][0] ?? '';
 
 			if ( '&nbsp;' === $excerpt ) {
 				$excerpt = '';
@@ -1419,6 +1420,8 @@ function bb_get_notification_conditional_icon( $notification ) {
 				$icon_class = 'bb-icon-f bb-icon-video';
 			} elseif ( ! empty( $gif_data ) ) {
 				$icon_class = 'bb-icon-f bb-icon-activity';
+			} elseif ( ! empty( $bb_poll_id ) ) {
+				$icon_class = 'bb-icon-f bb-icon-poll';
 			} else {
 				$icon_class = 'bb-icon-f bb-icon-activity';
 			}

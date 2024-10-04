@@ -1196,7 +1196,14 @@ window.bp = window.bp || {};
 							content.after( response.data.feedback );
 							content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
-							$( content ).html( response.data.contents ).slideDown( 300 );
+							if ( $( content ).children( '.bb-poll-view' ).length ) {
+								// Make sure to replace content but not .bb-poll-view.
+								$( content ).children( ':not(.bb-poll-view)' ).remove();
+								$( content ).prepend( response.data.contents ).slideDown( 300 );
+
+							} else {
+								$( content ).html( response.data.contents ).slideDown( 300 );
+							}
 
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
@@ -1283,7 +1290,7 @@ window.bp = window.bp || {};
 
 				form.removeClass( 'root' );
 				$( '.ac-form' ).addClass( 'not-initialized' );
-				$( '.ac-form' ).find( '.ac-input' ).html( '' );
+				$( '.ac-form' ).find( '.ac-input:not(.emojionearea)' ).html( '' );
 
 				bp.Nouveau.Activity.clearFeedbackNotice( form );
 
