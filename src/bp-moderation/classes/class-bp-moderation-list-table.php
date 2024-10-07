@@ -158,13 +158,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		if ( 'reported-content' !== $current_tab && 'all' === $this->view ) {
-			add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+			add_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_moderation_where_conditions' ), 10, 2 );
 		}
 
 		$moderation_requests = BP_Moderation::get( $moderation_request_args );
 
 		if ( 'reported-content' !== $current_tab && 'all' === $this->view ) {
-			remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+			remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_moderation_where_conditions' ), 10, 2 );
 		}
 
 		// Set raw data to display.
@@ -379,13 +379,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					}
 
 					if ( 'all' === $key ) {
-						add_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+						add_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_moderation_where_conditions' ), 10, 2 );
 					}
 
 					$record_count = bp_moderation_item_count( $moderation_args );
 
 					if ( 'all' === $key ) {
-						remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'update_moderation_where_conditions' ), 10, 2 );
+						remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_moderation_where_conditions' ), 10, 2 );
 					}
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
@@ -761,7 +761,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * @return array
 	 */
-	public function update_moderation_where_conditions( $where_conditions, $r ) {
+	public function bb_update_moderation_where_conditions( $where_conditions, $r ) {
 		$where_conditions['reported'] = 'ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0';
 
 		return $where_conditions;
