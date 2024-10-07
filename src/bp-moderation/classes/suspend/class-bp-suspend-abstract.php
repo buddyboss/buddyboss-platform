@@ -47,8 +47,6 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * White listed DB Fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @var array
 	 */
 	public static $white_list_keys = array(
@@ -67,6 +65,8 @@ abstract class BP_Suspend_Abstract {
 
 	/**
 	 * Components and its moderation types.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var array[] $components
 	 */

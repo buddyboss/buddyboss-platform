@@ -637,8 +637,6 @@ class BP_Core_Suspend {
 		global $wpdb;
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
-
-		return $result;
+		return $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s", $item_id, $item_type ) );
 	}
 }
