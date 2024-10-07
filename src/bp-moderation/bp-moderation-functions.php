@@ -938,6 +938,8 @@ function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', 
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
+
+		unset( $all_meta );
 	} else {
 		$keys = array( $meta_key );
 	}
@@ -949,6 +951,8 @@ function bb_suspend_delete_meta( $suspend_id, $meta_key = '', $meta_value = '', 
 		$retval = delete_metadata( 'suspend', $suspend_id, $key, $meta_value, $delete_all );
 	}
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	unset( $keys );
 
 	return $retval;
 }

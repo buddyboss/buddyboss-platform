@@ -599,6 +599,8 @@ abstract class BP_Suspend_Abstract {
 				}
 			}
 		}
+
+		unset( $content_type, $content_ids, $content_id );
 	}
 
 	/**
@@ -697,6 +699,8 @@ abstract class BP_Suspend_Abstract {
 				}
 			}
 		}
+
+		unset( $content_type, $content_ids, $content_id );
 	}
 
 }

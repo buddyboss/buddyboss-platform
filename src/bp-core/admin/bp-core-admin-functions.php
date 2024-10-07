@@ -1583,6 +1583,8 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 					esc_html__( 'Suspend', 'buddyboss' )
 				);
 			}
+
+			unset( $suspend_link, $suspend_id, $meta_value );
 		}
 	}
 
