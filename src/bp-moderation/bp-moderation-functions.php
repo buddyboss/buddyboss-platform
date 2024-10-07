@@ -2190,7 +2190,7 @@ function bb_moderation_migration_on_update() {
 			suspend_id bigint(20) NOT NULL,
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
-			PRIMARY KEY  (id),
+			PRIMARY KEY (id),
 			KEY suspend_id (suspend_id),
 			KEY meta_key (meta_key(191))
 		) {$charset_collate};";
