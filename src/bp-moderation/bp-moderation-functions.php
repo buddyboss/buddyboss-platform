@@ -2176,8 +2176,8 @@ function bb_moderation_migration_on_update() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	$bp_prefix  = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
-	$table_name = $bp_prefix . 'bb_suspend_meta';
-	// Check if the 'bb_suspend_meta' table exists.
+	$table_name = $bp_prefix . 'bp_suspend_meta';
+	// Check if the 'bp_suspend_meta' table exists.
 	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // phpcs:ignore
 
 	if ( $table_exists !== $table_name ) {
@@ -2185,7 +2185,7 @@ function bb_moderation_migration_on_update() {
 		$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 		$bp_prefix       = bp_core_get_table_prefix();
 
-		$sql[] = "CREATE TABLE {$bp_prefix}bb_suspend_meta (
+		$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			suspend_id bigint(20) NOT NULL,
 			meta_key varchar(255) DEFAULT NULL,
