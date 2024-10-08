@@ -2205,4 +2205,19 @@ function bb_moderation_migration_on_update() {
 
 		dbDelta( $sql );
 	}
+
+	/**
+	 * Add indexes for performance improvement.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	$index_exists = $wpdb->get_var( "SHOW INDEX FROM {$bp_prefix}bp_suspend_details WHERE Key_name = 'user_id'" );
+	if ( empty( $index_exists ) ) {
+		$wpdb->query( "CREATE INDEX user_id ON {$bp_prefix}bp_suspend_details(user_id)" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+
+	$index_exists = $wpdb->get_var( "SHOW INDEX FROM {$bp_prefix}bp_suspend WHERE Key_name = 'suspend_conditions'" );
+	if ( empty( $index_exists ) ) {
+		$wpdb->query( "CREATE INDEX suspend_conditions ON {$bp_prefix}bp_suspend(user_suspended, hide_parent, hide_sitewide)" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
 }
