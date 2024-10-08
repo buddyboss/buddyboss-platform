@@ -1235,7 +1235,8 @@ function bp_core_install_suspend() {
 	   KEY item_id (item_id),
 	   KEY user_suspended (user_suspended),
 	   KEY hide_parent (hide_parent),
-	   KEY hide_sitewide (hide_sitewide)
+	   KEY hide_sitewide (hide_sitewide),
+	   KEY user_suspend_hide (user_suspended, hide_parent, hide_sitewide),
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (
@@ -1243,7 +1244,8 @@ function bp_core_install_suspend() {
 	   suspend_id bigint(20) NOT NULL,
 	   user_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
-	   KEY suspend_details_id (suspend_id,user_id)
+	   KEY suspend_details_id (suspend_id,user_id),
+	   KEY user_id (user_id)
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
