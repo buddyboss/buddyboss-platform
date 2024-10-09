@@ -3881,14 +3881,11 @@ function bb_create_background_member_friends_and_follow_count( $paged = 1 ) {
  * @param int   $paged    Current page for processing.
  */
 function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged ) {
-	global $bb_background_updater;
 	if ( empty( $user_ids ) ) {
 		return;
 	}
 
-	$is_friends_active    = bp_is_active( 'friends' );
-	$is_moderation_active = bp_is_active( 'moderation' );
-	$min_count            = (int) apply_filters( 'bb_migration_update_following_for_suspend_member', 100 );
+	$is_friends_active = bp_is_active( 'friends' );
 
 	foreach ( $user_ids as $user_id ) {
 		// Update friendship count if the user has the friend component active.
@@ -3905,42 +3902,6 @@ function bb_migrate_member_friends_and_follow_count_callback( $user_ids, $paged 
 			// Update the total friend count only if the user has friends.
 			if ( ! empty( $friends ) && (int) $friends['total'] > 0 ) {
 				bp_update_user_meta( $user_id, 'total_friend_count', (int) $friends['total'] );
-			}
-		}
-
-		// Remove follow data for suspended members.
-		if (
-			$is_moderation_active &&
-			bp_moderation_is_user_suspended( $user_id ) &&
-			function_exists( 'bp_get_followers' )
-		) {
-			$followers = bp_get_followers(
-				array(
-					'user_id' => $user_id,
-				)
-			);
-			if ( ! empty( $followers ) ) {
-				if ( count( $followers ) > $min_count ) {
-					$chunked_followers = array_chunk( $followers, $min_count );
-					if ( ! empty( $chunked_followers ) ) {
-						foreach ( $chunked_followers as $chunk ) {
-							$bb_background_updater->data(
-								array(
-									'type'              => 'suspend_following',
-									'group'             => 'bb_update_following_for_suspend_member',
-									'data_id'           => $user_id,
-									'secondary_data_id' => $user_id,
-									'callback'          => 'BP_Suspend_Member::bb_update_following_for_suspend_member',
-									'args'              => array( $user_id, $chunk, 'hide' ),
-								),
-							);
-
-							$bb_background_updater->save()->dispatch();
-						}
-					}
-				} else {
-					BP_Suspend_Member::bb_update_following_for_suspend_member( $user_id, $followers );
-				}
 			}
 		}
 	}

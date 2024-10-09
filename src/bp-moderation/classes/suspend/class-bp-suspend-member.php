@@ -710,47 +710,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		// Update following once member suspend.
-		if (
-			'hide' === $action &&
-			(
-				! empty( $args['user_suspended'] ) ||
-				! empty( $args['action_suspend'] )
-			) &&
-			function_exists( 'bp_get_followers' )
-		) {
-			// Get followers for suspend member.
-			$get_followers = bp_get_followers(
-				array(
-					'user_id' => $member_id,
-				)
-			);
-			if ( ! empty( $get_followers ) ) {
-				if ( $this->background_disabled ) {
-					$this->bb_update_following_for_suspend_member( $member_id, $get_followers );
-				} else {
-					$min_count     = (int) apply_filters( 'bb_update_following_for_suspend_member', 100 );
-					$chunk_results = array_chunk( $get_followers, $min_count );
-					if ( ! empty( $chunk_results ) ) {
-						foreach ( $chunk_results as $chunk_result ) {
-							$bb_background_updater->data(
-								array(
-									'type'              => 'suspend_following',
-									'group'             => 'bb_update_following_for_suspend_member',
-									'data_id'           => $member_id,
-									'secondary_data_id' => $member_id,
-									'callback'          => array( $this, 'bb_update_following_for_suspend_member' ),
-									'args'              => array( $member_id, $chunk_result ),
-								),
-							);
-
-							$bb_background_updater->save()->dispatch();
-						}
-					}
-				}
-			}
-		}
-
 		if ( bp_is_active( 'groups' ) ) {
 			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
