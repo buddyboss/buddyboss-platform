@@ -1134,26 +1134,4 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		return $domain;
 	}
-
-	/**
-	 * Update following for suspend member.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int   $user_id    User ID.
-	 * @param array $member_ids Array member friend IDs.
-	 */
-	public static function bb_update_following_for_suspend_member( $user_id, $member_ids ) {
-		if ( ! empty( $member_ids ) ) {
-			foreach ( $member_ids as $follower ) {
-				// Stop following to that user who follows to suspend member.
-				bp_stop_following(
-					array(
-						'leader_id'   => $user_id,
-						'follower_id' => $follower,
-					)
-				);
-			}
-		}
-	}
 }
