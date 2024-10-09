@@ -3810,7 +3810,7 @@ function bb_update_to_2_6_70() {
 }
 
 /**
- * Fixed count for my connection and following.
+ * Fixed count for my connection.
  *
  * @since BuddyBoss [BBVERSION]
  */
