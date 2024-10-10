@@ -503,6 +503,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
+		if ( $raw_db_version < 21181 ) {
+			bb_update_to_2_6_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3803,4 +3807,16 @@ function bb_update_to_2_6_70() {
 			);
 		}
 	}
+}
+
+/**
+ * Enable the member and group directory count option for existing installations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_80() {
+	bp_update_option( 'bb-member-directory-count', 1 );
+	bp_update_option( 'bb-group-directory-count', 1 );
 }
