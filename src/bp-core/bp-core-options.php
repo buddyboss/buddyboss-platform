@@ -2755,3 +2755,47 @@ function bb_get_load_activity_per_request( $default = 10 ) {
 function bb_is_send_ajax_request() {
 	return (bool) ( 2 === bb_get_ajax_request_page_load() );
 }
+
+/**
+ * Determines whether to show group counts at the top of the page for All Groups & My Groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Default value to use if the option is not set. Default false.
+ *
+ * @return bool True if group counts should be displayed, false otherwise.
+ */
+function bb_group_directory_count_enable( $default = false ) {
+
+	/**
+	 * Filter to modify the behavior of the group counts feature.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
+	 * @param bool $default     The default value if the setting is not configured. Default false.
+	 */
+	return (bool) apply_filters( 'bb_group_directory_count_enable', (bool) bp_get_option( 'bb-group-directory-count-enable', $default ) );
+}
+
+/**
+ * Determines whether to show member counts at the top of the page for All Members, My Connections & Followers.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Default value to use if the option is not set. Default false.
+ *
+ * @return bool True if group counts should be displayed, false otherwise.
+ */
+function bb_member_directory_count_enable( $default = false ) {
+
+	/**
+	 * Filter to modify the behavior of the member counts feature.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $show_counts Whether to show member counts. Default is the value retrieved from the settings.
+	 * @param bool $default     The default value if the setting is not configured. Default false.
+	 */
+	return (bool) apply_filters( 'bb_member_directory_count_enable', (bool) bp_get_option( 'bb-member-directory-count-enable', $default ) );
+}
