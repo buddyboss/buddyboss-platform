@@ -2775,7 +2775,7 @@ function bb_group_directory_count_enable( $default = false ) {
 	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
 	 * @param bool $default     The default value if the setting is not configured. Default false.
 	 */
-	return (bool) apply_filters( 'bb_group_directory_count_enable', (bool) bp_get_option( 'bb-group-directory-count-enable', $default ) );
+	return (bool) apply_filters( 'bb_group_directory_count_enable', (bool) bp_get_option( 'bb-group-directory-count', $default ) );
 }
 
 /**
@@ -2797,5 +2797,5 @@ function bb_member_directory_count_enable( $default = false ) {
 	 * @param bool $show_counts Whether to show member counts. Default is the value retrieved from the settings.
 	 * @param bool $default     The default value if the setting is not configured. Default false.
 	 */
-	return (bool) apply_filters( 'bb_member_directory_count_enable', (bool) bp_get_option( 'bb-member-directory-count-enable', $default ) );
+	return (bool) apply_filters( 'bb_member_directory_count_enable', (bool) bp_get_option( 'bb-member-directory-count', $default ) );
 }
