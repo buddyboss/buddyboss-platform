@@ -142,7 +142,10 @@ function bp_nouveau_ajax_object_template_loader() {
 	ob_end_clean();
 
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
-		$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		$enable_count = bb_member_directory_count_enable();
+		if ( $enable_count ) {
+			$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		}
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
 		$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
 	}
@@ -164,25 +167,28 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		return $results;
 	}
 
+	$enable_count      = bb_member_directory_count_enable();
 	$results['scopes'] = array();
 
-	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
-	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+	if ( $enable_count ) {
+		add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+		bp_has_members( bp_ajax_querystring( 'members' ) );
+		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
-	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
+		add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
+		bp_has_members( bp_ajax_querystring( 'members' ) );
+		$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-		$counts = bp_total_follow_counts();
-		if ( ! empty( $counts['following'] ) ) {
-			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
-			bp_has_members( bp_ajax_querystring( 'members' ) );
-			$results['scopes']['following'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+			$counts = bp_total_follow_counts();
+			if ( ! empty( $counts['following'] ) ) {
+				add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
+				bp_has_members( bp_ajax_querystring( 'members' ) );
+				$results['scopes']['following'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+				remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
+			}
 		}
 	}
 
