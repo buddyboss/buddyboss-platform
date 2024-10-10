@@ -844,8 +844,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function bb_admin_setting_member_directory_count() {
 		?>
-		<input id="bb-member-directory-count-enable" name="bb-member-directory-count-enable" type="checkbox" value="1" <?php checked( bb_member_directory_count_enable() ); ?> />
-		<label for="bb-member-directory-count-enable">
+		<input id="bb-member-directory-count" name="bb-member-directory-count" type="checkbox" value="1" <?php checked( bb_member_directory_count_enable() ); ?> />
+		<label for="bb-member-directory-count">
 			<?php esc_html_e( 'Show user counts at the top of the page for All Members, My Connections & Followers.', 'buddyboss' ); ?>
 		</label>
 		<?php
