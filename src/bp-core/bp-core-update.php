@@ -504,7 +504,7 @@ function bp_version_updater() {
 		}
 
 		if ( $raw_db_version < 21311 ) {
-			bb_update_to_2_7_21();
+			bb_update_to_2_6_80();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3814,17 +3814,17 @@ function bb_update_to_2_6_70() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_2_7_21() {
+function bb_update_to_2_6_80() {
 	if ( ! bp_is_active( 'moderation' ) ) {
 		return;
 	}
-	$is_already_run = get_transient( 'bb_update_to_2_7_21' );
+	$is_already_run = get_transient( 'bb_update_to_2_6_80' );
 	if ( $is_already_run ) {
 		return;
 	}
 
 	// Set a transient to avoid running the update multiple times within an hour.
-	set_transient( 'bb_update_to_2_7_21', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
 
 	bb_create_background_member_friends_count();
 }
