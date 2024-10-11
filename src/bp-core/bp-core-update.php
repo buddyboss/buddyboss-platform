@@ -3819,4 +3819,17 @@ function bb_update_to_2_6_70() {
 function bb_update_to_2_6_80() {
 	bp_update_option( 'bb-member-directory-count', 1 );
 	bp_update_option( 'bb-group-directory-count', 1 );
+
+	if ( ! bp_is_active( 'moderation' ) ) {
+		return;
+	}
+	$is_already_run = get_transient( 'bb_update_to_2_6_80' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	// Set a transient to avoid running the update multiple times within an hour.
+	set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
+
+	bb_create_background_member_friends_count();
 }
