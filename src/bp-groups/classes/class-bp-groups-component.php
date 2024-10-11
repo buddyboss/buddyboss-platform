@@ -646,8 +646,13 @@ class BP_Groups_Component extends BP_Component {
 			$group_link = bp_get_group_permalink( $this->current_group );
 
 			// Add the "Members" subnav item, as this will always be present.
+			$enable_count = bb_member_directory_count_enable();
+			$count_label  = $enable_count ? sprintf(
+				__( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>'
+			) : '';
+
 			$sub_nav[] = array(
-				'name'            => sprintf( apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . __( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
+				'name'            => apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . $count_label,
 				'slug'            => 'members',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
