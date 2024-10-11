@@ -831,7 +831,11 @@ function bp_media_forums_save_gif_data( $post_id ) {
 			bp_activity_update_meta( $main_activity_id, '_gif_data', $gdata );
 			bp_activity_update_meta( $main_activity_id, '_gif_raw_data', $gif_data );
 		}
-	} else {
+	} elseif (
+		isset( $_POST['action'] ) &&
+		in_array( $_POST['action'], array( 'bbp-edit-reply', 'bbp-edit-topic', 'bbp-edit-forum' ), true ) &&
+		empty( $_POST['bbp_media_gif'] )
+	) {
 		delete_post_meta( $post_id, '_gif_data' );
 		delete_post_meta( $post_id, '_gif_raw_data' );
 
