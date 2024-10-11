@@ -503,7 +503,7 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
-		if ( $raw_db_version < 21171 ) {
+		if ( $raw_db_version < 21311 ) {
 			bb_update_to_2_7_21();
 		}
 
