@@ -76,6 +76,38 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
+		// SSO.
+		$sso_pro_class      = bb_get_pro_fields_class( 'sso' );
+		$sso_notice         = bb_get_pro_label_notice( 'sso' );
+		$sso_args           = array();
+		$sso_args['class']  = esc_attr( $sso_pro_class );
+		$sso_args['notice'] = $sso_notice;
+		$this->add_field(
+			'bb_enable_sso',
+			__( 'Enable Social Login', 'buddyboss' ) . $sso_notice,
+			array(
+				$this,
+				'bb_admin_setting_callback_enable_sso_registration',
+			),
+			'intval',
+			$sso_args
+		);
+
+		if ( bb_enable_sso() ) {
+			$sso_list_args          = array();
+			$sso_list_args['class'] = 'child-no-padding sso-lists ' . function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ? '' : 'hidden';
+			$this->add_field(
+				'bb_enable_sso_lists',
+				'',
+				array(
+					$this,
+					'bb_admin_setting_callback_enable_sso_lists',
+				),
+				'intval',
+				$sso_list_args
+			);
+		}
+
 		// Redirection Settings Section.
 		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
 
@@ -157,6 +189,37 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		 * @param Object $this BP_Admin_Setting_General.
 		 */
 		do_action( 'bp_admin_setting_general_register_fields', $this );
+	}
+
+	/**
+	 * Add SSO settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_sso_registration( $args ) {
+		$val    = function_exists( 'bb_enable_sso' ) ? bb_enable_sso() : false;
+		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
+		?>
+		<input id="bb_enable_sso" name="<?php echo empty( $notice ) ? 'bb_enable_sso' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+		<label for="bb_enable_sso"><?php esc_html_e( 'Allow user to sign in with social login', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Add SSO lists settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_sso_lists( $args ) {
+
+		/**
+		 * Fires to register SSO lists settings fields and section.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Arguments.
+		 */
+		do_action( 'bb_admin_setting_enable_sso_lists', $args );
 	}
 }
 
