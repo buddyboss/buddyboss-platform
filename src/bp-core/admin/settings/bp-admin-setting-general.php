@@ -82,7 +82,16 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$sso_args           = array();
 		$sso_args['class']  = esc_attr( $sso_pro_class );
 		$sso_args['notice'] = $sso_notice;
-		$this->add_field( '_bb_enable_sso', __( 'Enable Social Login', 'buddyboss' ) . $sso_notice, array( $this, 'bb_admin_setting_callback_enable_sso_registration', ), 'intval', $sso_args );
+		$this->add_field(
+			'_bb_enable_sso',
+			__( 'Enable Social Login', 'buddyboss' ) . $sso_notice,
+			array(
+				$this,
+				'bb_admin_setting_callback_enable_sso_registration',
+			),
+			'intval',
+			$sso_args
+		);
 
 		// Redirection Settings Section.
 		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
