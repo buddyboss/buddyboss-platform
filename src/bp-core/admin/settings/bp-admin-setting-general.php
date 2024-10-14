@@ -211,7 +211,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_enable_sso_lists( $args ) {
-		
+
 		/**
 		 * Fires to register SSO lists settings fields and section.
 		 *
