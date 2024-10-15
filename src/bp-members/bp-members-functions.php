@@ -2298,9 +2298,20 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 		$lastname  = bp_get_user_meta( $user_id, 'last_name', true );
 		$nickname  = $user->nickname;
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $firstname );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $lastname );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
+		$firstname_field_id = bp_xprofile_firstname_field_id();
+		$visibility         = xprofile_get_field_visibility_level( $firstname_field_id, $user_id );
+		xprofile_set_field_data( $firstname_field_id, $user_id, $firstname );
+		xprofile_set_field_visibility_level( $firstname_field_id, $user_id, $visibility );
+
+		$lastname_field_id = bp_xprofile_lastname_field_id();
+		$visibility        = xprofile_get_field_visibility_level( $lastname_field_id, $user_id );
+		xprofile_set_field_data( $lastname_field_id, $user_id, $lastname );
+		xprofile_set_field_visibility_level( $lastname_field_id, $user_id, $visibility );
+
+		$nickname_field_id = bp_xprofile_nickname_field_id();
+		$visibility        = xprofile_get_field_visibility_level( $nickname_field_id, $user_id );
+		xprofile_set_field_data( $nickname_field_id, $user_id, $nickname );
+		xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
 
 		bp_xprofile_update_display_name( $user_id );
 	}
