@@ -2737,12 +2737,6 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	$args = array(
 		'number'     => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
 		'paged'      => $page,
-		'meta_query' => array(
-			array(
-				'key'     => 'bp_xprofile_visibility_levels',
-				'compare' => 'EXISTS',
-			),
-		),
 		'fields'     => 'ID',
 	);
 
@@ -2771,6 +2765,37 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	}
 
 	foreach ( $users as $user_id ) {
+
+		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+
+		if ( ! empty( $visibility_levels ) ) {
+			$visibility_field_ids = array_keys( $visibility_levels );
+
+			// Check if visibility levels exist but default fields are not set.
+			if ( ! empty( $visibility_field_ids ) && ! in_array( bp_xprofile_firstname_field_id(), $visibility_field_ids ) ) {
+				$default_field_ids    = array(
+					bp_xprofile_firstname_field_id(),
+					bp_xprofile_lastname_field_id(),
+					bp_xprofile_nickname_field_id(),
+				);
+
+				foreach ( $default_field_ids as $default_field_id ) {
+					$field = xprofile_get_field( $default_field_id );
+					$visibility_level = $field->default_visibility ? $field->default_visibility : 'public';
+					xprofile_set_field_visibility_level( $default_field_id, $user_id, $visibility_level );
+				}
+			}
+		} else {
+			// Get all profile field data for the user and set the visibility levels.
+			$profile_data = BP_XProfile_ProfileData::get_all_for_user( $user_id );
+			foreach ( $profile_data as $field_name => $field_data ) {
+				if ( ! empty( $field_data ) && ! empty( $field_data[ 'field_id' ] ) ) {
+					$field = xprofile_get_field( $field_data[ 'field_id' ] );
+					$visibility_level = $field->default_visibility ? $field->default_visibility : 'public';
+					xprofile_set_field_visibility_level( $field_data[ 'field_id' ], $user_id, $visibility_level );
+				}
+			}
+		}
 
 		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		if ( ! empty( $visibility_levels ) ) {
