@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.7.00
+Stable tag: 2.7.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.10 =
+* Enhanced: Activity - Enhanced the ability to generate link previews when the BuddyBoss Platform is set to Private mode
+* Bug: Activity - Fixed an issue where embedded videos were not displaying in blog custom posts on the activity feed
+* Bug: Activity - Resolved the emoji icon inconsistency when adding comments or replies
+* Bug: Activity - Resolved the issue with adding reactions to comments
+* Bug: Activity - Resolved the issue with the “Read more” link in Polls
+* Bug: Core - Resolved issues with the “Load More” button on the Photo page
+* Bug: Core - Resolved the search error with Divi Builder
+* Bug: Performance - Improvement on Members, Groups, and News Feed pages
+* Bug: Profiles - Fixed an issue where Profile Type visibility set to “Only me” was still visible to non-admin users
+* Bug: Profiles - Resolved an issue with profile search when using first and last names.
 
 = 2.7.00 =
 * Enhancement: Coding Standards - Fixed all warnings and errors for PHP versions 7.3 to 8.3
