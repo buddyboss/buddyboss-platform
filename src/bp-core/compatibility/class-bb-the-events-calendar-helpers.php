@@ -55,6 +55,7 @@ class BB_The_Event_Calendar_Helpers {
 	public function compatibility_init() {
 		add_filter( 'parse_query', array( $this, 'bb_core_tribe_events_parse_query' ) );
 		add_filter( 'tribe_rewrite_parse_query_vars', array( $this, 'bb_core_tribe_events_set_query_vars' ) );
+		add_filter( 'bp_private_network_pre_check', array( $this, 'bb_private_network_pre_check_event_ical' ) );
 	}
 
 	/**
@@ -115,6 +116,32 @@ class BB_The_Event_Calendar_Helpers {
 		}
 
 		return $query_vars;
+	}
+
+	/**
+	 * Allows access to event iCal for non-logged-in users on a private network.
+	 *
+	 * This function is hooked into the `bp_private_network_pre_check` filter and
+	 * modifies the privacy check for the site when an iCal request is made.
+	 * It ensures that the iCal feed remains accessible even if the site is private
+	 * and the user is not logged in if the request includes the `ical`
+	 * query parameter.
+	 *
+	 * @since BuddyBoss 2.7.20
+	 *
+	 * @param bool $is_public Whether the network is currently considered public or not.
+	 *                        Default is `false` for private networks.
+	 *
+	 * @return bool True if the iCal feed should be publicly accessible, otherwise false.
+	 */
+	public function bb_private_network_pre_check_event_ical( $is_public ) {
+
+		// Check if the private site is enabled and it's an iCal request.
+		if ( ! $is_public && ! empty( $_GET['ical'] ) ) {
+			$is_public = true;
+		}
+
+		return $is_public;
 	}
 
 }
