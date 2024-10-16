@@ -2054,18 +2054,40 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 		return;
 	}
 
-	$user = get_user_by( 'id', $user_id );
+	$user              = get_user_by( 'id', $user_id );
+	$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 	if ( isset( $user->first_name ) ) {
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+		$firstname_field_id = bp_xprofile_firstname_field_id();
+		xprofile_set_field_data( $firstname_field_id, $user->ID, $user->first_name );
+
+		// Check if firstname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $firstname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $firstname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $firstname_field_id, $user_id, $visibility );
+		}
 	}
 
 	if ( isset( $user->last_name ) ) {
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
+		$lastname_field_id  = bp_xprofile_lastname_field_id();
+		xprofile_set_field_data( $lastname_field_id, $user->ID, $user->first_name );
+
+		// Check if lastname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $lastname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $lastname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $lastname_field_id, $user_id, $visibility );
+		}
 	}
 
 	if ( isset( $user->nickname ) ) {
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
+		$nickname_field_id  = bp_xprofile_nickname_field_id();
+		xprofile_set_field_data( $nickname_field_id, $user->ID, $user->first_name );
+
+		// Check if nickname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $nickname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $nickname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
+		}
 	}
 }
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
