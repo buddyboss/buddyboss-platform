@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.20 =
+* Bug: Discussion - Fixed an issue where replying to a GIF in a discussion disappeared after restoring it from the trash
+* Bug: Learndash - Removed the Course tab from the Group Creation process on the front end when Social Group to LearnDash Group sync is disabled
+* Bug: The Events Calendar - Fixed the insecure connection prompt when opening Events in iCalendar
+
 = 2.7.10 =
 * Enhanced: Activity - Enhanced the ability to generate link previews when the BuddyBoss Platform is set to Private mode
 * Bug: Activity - Fixed an issue where embedded videos were not displaying in blog custom posts on the activity feed
