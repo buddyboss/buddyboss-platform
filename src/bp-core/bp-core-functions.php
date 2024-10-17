@@ -10105,7 +10105,7 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 
 	// Added those options that are not available in the option table.
 	$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
-	$bb_telemetry_data['active_integrations'] = '';
+	$bb_telemetry_data['active_integrations'] = bb_active_integrations();
 
 	// Fetch options from the database.
 	$bp_prefix = bp_core_get_table_prefix();
@@ -10121,4 +10121,37 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 	unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 	return $bb_telemetry_data;
+}
+
+/**
+ * Get the status of integrations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array list of integrations status.
+ */
+function bb_active_integrations() {
+
+	$active_integrations = array(
+		'bb-learndash' => false,
+		'bb-recaptcha' => false,
+	);
+	if ( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
+		$options = bp_get_option( 'bp_ld_sync_settings', array() );
+		if (
+			! empty( $options['buddypress']['enabled'] ) ||
+			! empty( $options['learndash']['enabled'] )
+		) {
+			$active_integrations['bp-learndash'] = true;
+		}
+	}
+	if ( function_exists( 'bb_recaptcha_site_key' ) && ! empty( bb_recaptcha_site_key() ) ) {
+		$active_integrations['bb-recaptcha'] = true;
+	}
+
+	if ( function_exists( 'bb_pro_active_integrations' ) ) {
+		$active_integrations = bb_pro_active_integrations( $active_integrations );
+	}
+
+	return $active_integrations;
 }
