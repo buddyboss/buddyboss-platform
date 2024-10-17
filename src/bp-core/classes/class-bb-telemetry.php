@@ -173,9 +173,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_telemetry_data = array(
 				'site_url'      => site_url(),
 				'admin_url'     => admin_url(),
+				'wp_version'    => get_bloginfo( 'version' ),
 				'php_version'   => phpversion(),
 				'mysql_version' => self::$wpdb->db_version(),
-				'db_provider'   => self::$wpdb->db_server_info(),
+				'db_provider'   => self::$wpdb->dbhost,
 				'os'            => php_uname( 's' ),
 				'webserver'     => $_SERVER['SERVER_SOFTWARE'],
 				'plugins'       => $this->bb_get_plugins_data(),
