@@ -127,7 +127,7 @@ class BB_The_Event_Calendar_Helpers {
 	 * and the user is not logged in if the request includes the `ical`
 	 * query parameter.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.20
 	 *
 	 * @param bool $is_public Whether the network is currently considered public or not.
 	 *                        Default is `false` for private networks.
