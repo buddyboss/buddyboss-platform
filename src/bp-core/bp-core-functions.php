@@ -10133,7 +10133,7 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 function bb_active_integrations() {
 
 	$active_integrations = array(
-		'bb-learndash' => false,
+		'bp-learndash' => false,
 		'bb-recaptcha' => false,
 	);
 	if ( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
