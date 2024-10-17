@@ -10100,7 +10100,6 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 			'bp_document_allowed_size',
 			'bp_media_allowed_size',
 			'_bb_enable_activity_post_polls',
-			'_bb_enable_activity_post_polls'
 		)
 	);
 
