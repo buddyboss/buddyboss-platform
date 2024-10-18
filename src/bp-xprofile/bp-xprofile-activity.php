@@ -58,7 +58,7 @@ add_action( 'bp_register_activity_actions', 'xprofile_register_activity_actions'
  */
 function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
 	$userlink = bp_core_get_userlink( $activity->user_id );
-	$action   = sprintf( __( '%1$s changed %2$s photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $activity->user_id ) );
+	$action   = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_xprofile_new_avatar_action' ) ) {
