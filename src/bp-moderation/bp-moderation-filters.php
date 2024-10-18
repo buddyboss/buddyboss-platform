@@ -1072,6 +1072,11 @@ add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch
 function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
 	global $wpdb;
 	$moderated_user_ids = bb_moderation_moderated_user_ids();
+	
+	// If user ID is also in fetched modarated user ids, remove it.
+	if ( in_array( $user_id, $moderated_user_ids, true ) ) {
+		$moderated_user_ids = array_diff( $moderated_user_ids, array( $user_id ) );
+	}
 
 	// If there are any suspended users, add conditions to exclude them.
 	if ( ! empty( $moderated_user_ids ) ) {
