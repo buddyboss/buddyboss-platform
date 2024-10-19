@@ -10045,7 +10045,6 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 			'bp-disable-group-type-creation',
 			'bp-disable-account-deletion',
 			'bp-enable-private-network',
-			'bp-active-components',
 			'bp_activity_favorites',
 			'bp-enable-site-registration',
 			'_bp_enable_activity_autoload',
@@ -10106,6 +10105,17 @@ function bb_telemetry_platform_data( $bb_telemetry_data ) {
 	// Added those options that are not available in the option table.
 	$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 	$bb_telemetry_data['active_integrations'] = bb_active_integrations();
+
+	// Pass active or inactive components.
+	$components          = bp_core_get_components();
+	$active_components   = bp_get_option( 'bp-active-components' );
+	$inactive_components = array_diff( array_keys( $components ), array_keys( $active_components ) );
+	if ( ! empty( $inactive_components ) ) {
+		foreach ( $inactive_components as $component ) {
+			$active_components[ $component ] = 0;
+		}
+	}
+	$bb_telemetry_data['bp-active-components'] = $active_components;
 
 	// Fetch options from the database.
 	$bp_prefix = bp_core_get_table_prefix();
