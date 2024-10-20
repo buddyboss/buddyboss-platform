@@ -599,7 +599,8 @@ function bp_nouveau_groups_screen_invites_restriction() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_groups_directory_nav_items() {
-	$nav_items = array();
+	$enable_count = bb_group_directory_count_enable();
+	$nav_items    = array();
 
 	$nav_items['all'] = array(
 		'component' => 'groups',
@@ -607,9 +608,12 @@ function bp_nouveau_get_groups_directory_nav_items() {
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_groups_directory_permalink(),
 		'text'      => __( 'All Groups', 'buddyboss' ),
-		'count'     => bp_get_total_group_count(),
 		'position'  => 5,
 	);
+
+	if ( $enable_count ) {
+		$nav_items['all']['count'] = bp_get_total_group_count();
+	}
 
 	if ( is_user_logged_in() ) {
 
@@ -636,9 +640,12 @@ function bp_nouveau_get_groups_directory_nav_items() {
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_groups_slug() . '/my-groups/',
 				'text'      => __( 'My Groups', 'buddyboss' ),
-				'count'     => $my_groups_count,
 				'position'  => 15,
 			);
+
+			if ( $enable_count ) {
+				$nav_items['personal']['count'] = $my_groups_count;
+			}
 		}
 
 		// If the user can create groups, add the create nav

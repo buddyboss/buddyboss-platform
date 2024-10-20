@@ -17,7 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * @return array An associative array of nav items.
  */
 function bp_nouveau_get_members_directory_nav_items() {
-	$nav_items = array();
+	$enable_count = bb_member_directory_count_enable();
+	$nav_items    = array();
 
 	$nav_items['all'] = array(
 		'component' => 'members',
@@ -25,9 +26,12 @@ function bp_nouveau_get_members_directory_nav_items() {
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
-		'count'     => bp_core_get_all_member_count(),
 		'position'  => 5,
 	);
+
+	if ( $enable_count ) {
+		$nav_items['all']['count'] = bp_core_get_all_member_count();
+	}
 
 	if ( is_user_logged_in() ) {
 		// If friends component is active and the user has friends
@@ -38,9 +42,11 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
 				'text'      => __( 'My Connections', 'buddyboss' ),
-				'count'     => bp_get_total_friend_count( bp_loggedin_user_id() ),
 				'position'  => 15,
 			);
+			if ( $enable_count ) {
+				$nav_items['personal']['count'] = bp_get_total_friend_count( bp_loggedin_user_id() );
+			}
 		}
 
 		// If follow component is active and the user is following
@@ -54,9 +60,12 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'li_class'  => array(),
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
 					'text'      => __( 'Following', 'buddyboss' ),
-					'count'     => $counts['following'],
 					'position'  => 16,
 				);
+
+				if ( $enable_count ) {
+					$nav_items['following']['count'] = $counts['following'];
+				}
 			}
 		}
 	}
