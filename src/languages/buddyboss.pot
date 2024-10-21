@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.7.10\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-10-02 13:20:04+00:00\n"
+"POT-Creation-Date: 2024-10-21 12:05:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33938,8 +33938,8 @@ msgstr ""
 msgid "Profile Updates"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-activity.php:61
-msgid "%1$s changed %2$s photo"
+#: bp-xprofile/bp-xprofile-activity.php:61 cli/components/activity.php:964
+msgid "%1$s changed %2$s profile photo"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:95 cli/components/activity.php:972
@@ -35162,10 +35162,6 @@ msgstr ""
 
 #: cli/components/activity.php:840
 msgid "%1$s wrote a new post, %2$s"
-msgstr ""
-
-#: cli/components/activity.php:964
-msgid "%1$s changed %2$s profile photo"
 msgstr ""
 
 #. Author URI of the plugin/theme
