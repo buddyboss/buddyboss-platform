@@ -548,6 +548,11 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_group_migration' ) ) {
 				bb_group_migration();
 			}
+
+			// Run migration about profile fields visibility.
+			if ( function_exists( 'bb_migrate_xprofile_visibility' ) ) {
+				bb_migrate_xprofile_visibility( true );
+			}
 		}
 	}
 
