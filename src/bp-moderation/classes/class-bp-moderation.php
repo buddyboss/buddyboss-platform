@@ -1128,7 +1128,7 @@ class BP_Moderation {
 			} else {
 				$this->count += 1;
 			}
-			
+
 			if (
 				! empty( $threshold ) &&
 				$this->count >= $threshold &&

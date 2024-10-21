@@ -3379,6 +3379,20 @@ table.moderations tbody tr .column-suspend .dashicons {
   font-size: 24px;
 }
 
+table.moderations .bp-block-user.disabled {
+  cursor: default;
+}
+
+table.moderations .bp-block-user[data-bp-tooltip] {
+  display: inline-block;
+}
+
+table.moderations .bp-block-user[data-bp-tooltip]:after {
+  white-space: normal;
+  width: 210px;
+  text-align: center;
+}
+
 .buddyboss_page_bp-moderation .dashicons {
   font-weight: 700;
 }
@@ -3576,6 +3590,24 @@ table.moderations .column-member img {
 
 .bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   content: "\ee6a";
+}
+
+table.users .suspend a.disabled,
+table.users .unsuspend a.disabled {
+  cursor: default;
+}
+
+table.users .suspend a.disabled[data-bp-tooltip],
+table.users .unsuspend a.disabled[data-bp-tooltip] {
+  display: inline-block;
+}
+
+table.users .suspend a.disabled[data-bp-tooltip]:after,
+table.users .unsuspend a.disabled[data-bp-tooltip]:after {
+  white-space: normal;
+  width: 210px;
+  text-align: center;
+  z-index: 9999;
 }
 
 /*------------------------------------------------------------------------------
