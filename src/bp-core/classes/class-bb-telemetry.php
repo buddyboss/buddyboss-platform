@@ -104,11 +104,11 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_send_telemetry_report_to_analytics() {
 			$data     = $this->bb_collect_site_data();
 			$auth_key = '';
-			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) {
+			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) { // @todo: update when release.
 				$auth_key = BB_TEST_ANALYTICS_AUTH;
 			}
 			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry';
-			if ( defined( 'BB_TEST_ANALYTICS_URL' ) ) {
+			if ( defined( 'BB_TEST_ANALYTICS_URL' ) ) { // @todo: update when release.
 				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v1/bb-telemetry';
 			}
 			$args = array(
