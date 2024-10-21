@@ -803,7 +803,7 @@ add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity',
  */
 function bb_groups_get_join_sql_for_activity( $sql, $r ) {
 	$bp_prefix = bp_core_get_table_prefix();
-	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id )';
+	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id AND mt.meta_key = "activity_feed_status" )';
 
 	return $sql;
 }
@@ -820,11 +820,14 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
  */
 function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
 	$where_conditions['exclude_where'] = ' (
-		mt.meta_key = "activity_feed_status" AND
+		mt.meta_key IS NULL OR
 		(
-			( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR
-			( mt.meta_value = "admins" AND m.is_admin = "1" ) OR
-			( mt.meta_value = "members" )
+			mt.meta_key = "activity_feed_status" AND
+			(
+				( mt.meta_value = "mods" AND ( m.is_mod = "1" OR m.is_admin = "1" ) ) OR
+				( mt.meta_value = "admins" AND m.is_admin = "1" ) OR
+				( mt.meta_value = "members" )
+			)
 		)
 	)';
 
