@@ -175,7 +175,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			if ( $qry->have_posts() ) {
 
 				// Remove Boots Frond End Builder App.
-				if ( class_exists( 'ET_Builder_Plugin' ) ) {
+				if ( class_exists( 'ET_Builder_Plugin' ) && function_exists( 'et_fb_app_boot' ) ) {
 					remove_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 
@@ -192,7 +192,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				}
 
 				// Add Boots Frond End Builder App.
-				if ( class_exists( 'ET_Builder_Plugin' ) ) {
+				if ( class_exists( 'ET_Builder_Plugin' ) && function_exists( 'et_fb_app_boot' ) ) {
 					add_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 			}

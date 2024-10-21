@@ -5129,6 +5129,80 @@ h1.bb-advance-heading {
 	}
 }
 
+.bb-upgrade-notice {
+	background-color: #f6efe8;
+	padding: 8px;
+	text-align: center;
+	border-bottom: 1px solid #c5bfba;
+	margin-left: -20px;
+	position: relative;
+
+	.bb-upgrade-point {
+		font-size: 1rem;
+		font-weight: 500;
+		color: #000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		i {
+			font-size: 24px;
+			margin-right: 4px;
+		}
+
+		.bb-upgrade-notice__link {
+			font-weight: 600;
+			color: inherit;
+			margin-left: 16px;
+
+			&:focus {
+				box-shadow: none;
+			}
+		}
+	}
+
+	.bb-dismiss-upgrade-notice {
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		position: absolute;
+		color: rgba(0, 0, 0, 0.6);
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		border: 0;
+		padding: 0;
+		outline: none;
+		cursor: pointer;
+
+		&:before {
+			content: "\e828";
+			font-family: bb-icons;
+			font-style: normal;
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			font-size: 20px;
+			text-decoration: none;
+		}
+
+		&:hover {
+			color: rgba(0, 0, 0, 1);
+		}
+
+		&:focus,
+		&:active {
+			outline: 0;
+			box-shadow: none;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		margin: 0 0 0 -10px;
+		padding-right: 35px;
+	}
+}
+
 .wrap.wrap--performance {
 
 	> h2:first-child {
