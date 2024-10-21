@@ -3607,6 +3607,8 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   white-space: normal;
   width: 210px;
   text-align: center;
+  z-index: 9999;
+  background-color: red;
 }
 
 /*------------------------------------------------------------------------------
