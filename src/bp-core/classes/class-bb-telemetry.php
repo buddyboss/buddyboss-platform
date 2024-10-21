@@ -103,7 +103,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		public function bb_send_telemetry_report_to_analytics() {
 			$data     = $this->bb_collect_site_data();
-			$auth_key = '';
+			$auth_key = ''; // @todo: update when release.
 			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) { // @todo: update when release.
 				$auth_key = BB_TEST_ANALYTICS_AUTH;
 			}
