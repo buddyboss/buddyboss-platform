@@ -2302,6 +2302,18 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $lastname );
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
 
+		$default_field_ids = array(
+			bp_xprofile_firstname_field_id(),
+			bp_xprofile_lastname_field_id(),
+			bp_xprofile_nickname_field_id(),
+		);
+
+		// Set visibility levels for the default fields.
+		foreach ( $default_field_ids as $field_id ) {
+			$visibility = xprofile_get_field_visibility_level( $field_id, $user_id );
+			xprofile_set_field_visibility_level( $field_id, $user_id, $visibility );
+		}
+
 		bp_xprofile_update_display_name( $user_id );
 	}
 
