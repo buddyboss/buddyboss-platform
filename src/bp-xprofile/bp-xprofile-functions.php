@@ -2757,9 +2757,9 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
 	$bp   = buddypress();
 	$args = array(
-		'number'     => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
-		'paged'      => $page,
-		'fields'     => 'ID',
+		'number' => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
+		'paged'  => $page,
+		'fields' => 'ID',
 	);
 
 	$users = get_users( $args );
