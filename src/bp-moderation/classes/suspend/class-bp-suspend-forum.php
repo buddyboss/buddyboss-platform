@@ -34,6 +34,8 @@ class BP_Suspend_Forum extends BP_Suspend_Abstract {
 			return;
 		}
 
+		parent::__construct();
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.

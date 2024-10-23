@@ -30,6 +30,8 @@ class BP_Suspend_Notification extends BP_Suspend_Abstract {
 	 */
 	public function __construct() {
 
+		parent::__construct();
+
 		$this->item_type = self::$type;
 		/**
 		 * Suspend code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin

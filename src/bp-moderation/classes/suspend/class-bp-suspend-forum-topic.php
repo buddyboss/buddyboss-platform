@@ -34,6 +34,8 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 			return;
 		}
 
+		parent::__construct();
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -319,20 +321,22 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $topic_id;
 
-		if ( $this->background_disabled ) {
-			$this->hide_related_content( $topic_id, $hide_sitewide, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $topic_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $topic_id, $hide_sitewide, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->hide_related_content( $topic_id, $hide_sitewide, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $topic_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $topic_id, $hide_sitewide, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -391,20 +395,22 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $topic_id;
 
-		if ( $this->background_disabled ) {
-			$this->unhide_related_content( $topic_id, $hide_sitewide, $force_all, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $topic_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $topic_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->unhide_related_content( $topic_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $topic_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $topic_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -443,6 +449,49 @@ class BP_Suspend_Forum_Topic extends BP_Suspend_Abstract {
 
 		if ( bp_is_active( 'video' ) && $page < 2 ) {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $topic_id, 'get_post_meta', $action );
+		}
+
+		if (
+			! empty( $related_contents[ BP_Suspend_Forum_Reply::$type ] ) &&
+			! empty( $args['parent_id'] ) &&
+			(
+				self::$type . '_' . $topic_id === $args['parent_id'] ||
+				strpos( $args['parent_id'], BP_Suspend_Forum::$type . '_' ) !== 0
+			) &&
+			! empty( $args['action'] ) &&
+			in_array( $args['action'], array( 'hide', 'unhide' ), true )
+		) {
+			global $moderation_suspend;
+			$related_reply_contents = array();
+			if ( ! empty( $moderation_suspend[ BP_Suspend_Forum_Reply::$type ] ) ) {
+				foreach ( $related_contents[ BP_Suspend_Forum_Reply::$type ] as $reply_id ) {
+					$inner_arg         = $args;
+					$inner_arg['page'] = 1;
+
+					$reply_items = $moderation_suspend[ BP_Suspend_Forum_Reply::$type ]->get_related_contents( $reply_id, $inner_arg );
+					if ( ! empty( $related_reply_contents ) ) {
+						$related_reply_contents = array_merge_recursive( $related_reply_contents, $reply_items );
+					} else {
+						$related_reply_contents = $reply_items;
+					}
+				}
+			}
+
+			if ( ! empty( $related_reply_contents ) ) {
+				$related_contents           = array_merge_recursive( $related_reply_contents, $related_contents );
+				$hide_sitewide              = $args['hide_sitewide'] ?? 0;
+				$args['disable_background'] = true;
+				$args['next_page']          = true;
+
+				if ( 'hide' === $args['action'] ) {
+					$this->loop_hide_related_content( $related_contents, $topic_id, $hide_sitewide, $args );
+				} elseif ( 'unhide' === $args['action'] ) {
+					$this->loop_unhide_related_content( $related_contents, $topic_id, $hide_sitewide, 0, $args );
+				}
+
+				unset( $related_contents );
+				$related_contents = array();
+			}
 		}
 
 		return $related_contents;
