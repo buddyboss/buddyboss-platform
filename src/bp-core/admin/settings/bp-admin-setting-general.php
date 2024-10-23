@@ -93,20 +93,18 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 			$sso_args
 		);
 
-		if ( function_exists( 'bb_enable_sso' ) && bb_enable_sso() ) {
-			$sso_list_args          = array();
-			$sso_list_args['class'] = 'child-no-padding sso-lists ' . function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ? '' : 'hidden';
-			$this->add_field(
-				'bb_enable_sso_lists',
-				'',
-				array(
-					$this,
-					'bb_admin_setting_callback_enable_sso_lists',
-				),
-				'intval',
-				$sso_list_args
-			);
-		}
+		$sso_list_args          = array();
+		$sso_list_args['class'] = 'child-no-padding sso-lists ' . ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ? '' : 'hidden' ) . ( function_exists( 'bb_enable_sso' ) && bb_enable_sso() ? '' : 'sso-disable' );
+		$this->add_field(
+			'bb_enable_sso_lists',
+			'',
+			array(
+				$this,
+				'bb_admin_setting_callback_enable_sso_lists',
+			),
+			'intval',
+			$sso_list_args
+		);
 
 		// Redirection Settings Section.
 		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
