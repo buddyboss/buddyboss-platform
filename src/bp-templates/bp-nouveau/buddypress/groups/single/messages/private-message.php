@@ -277,7 +277,7 @@ if ( 0 === $total_count ) {
 						">
 							<?php if ( $is_media_active ) : ?>
 								<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
-									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
 										<span class="bb-icon-l bb-icon-font"></span>
 									</a>
 								</div>

@@ -144,6 +144,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			data-album-id="<?php bp_video_album_id(); ?>"
 			data-group-id="<?php bp_video_group_id(); ?>"
 			data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
+			aria-label="<?php esc_attr_e( 'Open video in media theatre', 'buddyboss' ); ?>"
 			href="#">
 				<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy"/>
 		</a>
