@@ -93,7 +93,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 			$sso_args
 		);
 
-		if ( bb_enable_sso() ) {
+		if ( function_exists( 'bb_enable_sso' ) && bb_enable_sso() ) {
 			$sso_list_args          = array();
 			$sso_list_args['class'] = 'child-no-padding sso-lists ' . function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ? '' : 'hidden';
 			$this->add_field(
