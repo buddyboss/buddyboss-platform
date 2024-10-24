@@ -93,18 +93,14 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 			$sso_args
 		);
 
-		$sso_list_args          = array();
-		$sso_list_args['class'] = 'child-no-padding sso-lists ' . ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ? '' : 'hidden' ) . ( function_exists( 'bb_enable_sso' ) && bb_enable_sso() ? '' : 'sso-fields-disable' );
-		$this->add_field(
-			'bb_enable_sso_lists',
-			'',
-			array(
-				$this,
-				'bb_admin_setting_callback_enable_sso_lists',
-			),
-			'intval',
-			$sso_list_args
-		);
+		/**
+		 * Fires to register SSO settings fields.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param Object $this BP_Admin_Setting_General.
+		 */
+		do_action( 'bb_admin_setting_general_registration_fields', $this );
 
 		// Redirection Settings Section.
 		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
@@ -195,7 +191,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_enable_sso_registration( $args ) {
-		$val    = function_exists( 'bb_enable_sso' ) ? bb_enable_sso() : false;
+		$val    = function_exists( 'bb_enable_sso' ) && bb_enable_sso();
 		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
 		?>
 		<input id="bb_enable_sso" name="<?php echo empty( $notice ) ? 'bb_enable_sso' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
@@ -203,22 +199,6 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		<?php
 	}
 
-	/**
-	 * Add SSO lists settings.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function bb_admin_setting_callback_enable_sso_lists( $args ) {
-
-		/**
-		 * Fires to register SSO lists settings fields and section.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $args Arguments.
-		 */
-		do_action( 'bb_admin_setting_enable_sso_lists', $args );
-	}
 }
 
 return new BP_Admin_Setting_General();
