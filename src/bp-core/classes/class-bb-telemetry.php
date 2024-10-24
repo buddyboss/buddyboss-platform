@@ -69,11 +69,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			self::$wpdb = $wpdb;
 
 			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
-			if ( 'disable' === self::$bb_telemetry_option ) {
-				wp_clear_scheduled_hook( 'bb_telemetry_report_cron_event' );
-
-				return;
-			}
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -102,8 +97,13 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_send_telemetry_report_to_analytics() {
+			if ( 'disable' === self::$bb_telemetry_option ) {
+
+				return;
+			}
+
 			$data     = $this->bb_collect_site_data();
-			$auth_key = ''; // @todo: update when release.
+			$auth_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsIm5hbWUiOiJXZWIgTmluamEiLCJpYXQiOjE3MjkwNjM5NjMsImV4cCI6MTg4Njc0Mzk2M30.6Yy2KQqwEHQEOXmtK9SvCjzjUh2Ie62_2qw4A5ATq2I'; // @todo: update when release.
 			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) { // @todo: update when release.
 				$auth_key = BB_TEST_ANALYTICS_AUTH;
 			}
