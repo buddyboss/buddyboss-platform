@@ -305,6 +305,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'localhost',
 				'.local',
 				'.rapydapps.cloud',
+				'ddev.site',
 			);
 
 			// Check for the test domain.
