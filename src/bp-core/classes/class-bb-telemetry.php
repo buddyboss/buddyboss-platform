@@ -97,7 +97,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_send_telemetry_report_to_analytics() {
-			if ( 'disable' === self::$bb_telemetry_option ) {
+			if (
+				'disable' === self::$bb_telemetry_option ||
+				! $this->bb_whitelist_domain_for_telemetry()
+			) {
 
 				return;
 			}
@@ -283,6 +286,40 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'version'    => $theme->get( 'Version' ),
 				'template'   => $theme->get( 'Template' ),
 			);
+		}
+
+		/**
+		 * Check if the domain is allowlisted for telemetry data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the domain is not allowlisted, false otherwise.
+		 */
+		public function bb_whitelist_domain_for_telemetry() {
+			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? wp_unslash( $_SERVER['SERVER_NAME'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+			$whitelist_domain = array(
+				'.test',
+				'.dev',
+				'staging.',
+				'localhost',
+				'.local',
+				'.rapydapps.cloud',
+			);
+
+			// Check for the test domain.
+			if ( defined( 'WP_TESTS_DOMAIN' ) && WP_TESTS_DOMAIN === $server_name ) {
+				return false;
+			}
+
+			// Check if the server name matches any whitelisted domain
+			foreach ( $whitelist_domain as $domain ) {
+				if ( false !== strpos( $server_name, $domain ) ) {
+					return false; // Exclude allowlisted domains
+				}
+			}
+
+			return true; // Allow telemetry data to be sent for non-allowlisted domains
 		}
 	}
 }
