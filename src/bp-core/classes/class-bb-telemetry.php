@@ -294,6 +294,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return bool True if the domain is not allowlisted, false otherwise.
 		 */
 		public function bb_whitelist_domain_for_telemetry() {
+			return true;
 			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? wp_unslash( $_SERVER['SERVER_NAME'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			$whitelist_domain = array(
