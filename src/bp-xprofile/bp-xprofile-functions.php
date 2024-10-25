@@ -2070,7 +2070,7 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 
 	if ( isset( $user->last_name ) ) {
 		$lastname_field_id  = bp_xprofile_lastname_field_id();
-		xprofile_set_field_data( $lastname_field_id, $user->ID, $user->first_name );
+		xprofile_set_field_data( $lastname_field_id, $user->ID, $user->last_name );
 
 		// Check if lastname field visibility level is not set.
 		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $lastname_field_id ] ) ) {
@@ -2081,7 +2081,7 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 
 	if ( isset( $user->nickname ) ) {
 		$nickname_field_id  = bp_xprofile_nickname_field_id();
-		xprofile_set_field_data( $nickname_field_id, $user->ID, $user->first_name );
+		xprofile_set_field_data( $nickname_field_id, $user->ID, $user->nickname );
 
 		// Check if nickname field visibility level is not set.
 		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $nickname_field_id ] ) ) {
