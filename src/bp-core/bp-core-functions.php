@@ -10000,4 +10000,3 @@ function bb_get_all_headers() {
 
 	return $headers;
 }
-
