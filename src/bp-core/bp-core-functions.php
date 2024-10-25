@@ -7916,6 +7916,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_performance_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_advanced_telemetry':
+			$meta_icon = $bb_icon_bf . ' bb-icon-box';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -9996,4 +9999,169 @@ function bb_get_all_headers() {
 	}
 
 	return $headers;
+}
+
+/**
+ * Get the telemetry platform options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $bb_telemetry_data Telemetry options.
+ *
+ * @return array Telemetry options.
+ */
+function bb_telemetry_platform_data( $bb_telemetry_data ) {
+	global $wpdb;
+	$bb_telemetry_data = ! empty( $bb_telemetry_data ) ? $bb_telemetry_data : array();
+
+	// Filterable list of BuddyBoss Platform options to fetch from the database.
+	$bb_platform_db_options = apply_filters(
+		'bb_telemetry_platform_options',
+		array(
+			'bb_presence_interval_mu',
+			'bb_presence_time_span_mu',
+			'bb_profile_slug_format',
+			'_bp_community_visibility',
+			'bb_reaction_mode',
+			'_bb_enable_activity_schedule_posts',
+			'_bb_enable_activity_comment_threading',
+			'_bb_activity_comment_threading_depth',
+			'_bb_enable_activity_comments',
+			'_bb_activity_comment_visibility',
+			'_bb_activity_comment_loading',
+			'bb_activity_load_type',
+			'bb_ajax_request_page_load',
+			'bb_load_activity_per_request',
+			'_bp_enable_activity_like',
+			'_bb_enable_activity_pinned_posts',
+			'_bbp_db_version',
+			'bp-display-name-format',
+			'bp-member-type-enable-disable',
+			'bp-member-type-display-on-profile',
+			'bp-disable-avatar-uploads',
+			'bp-disable-cover-image-uploads',
+			'bp-disable-group-avatar-uploads',
+			'bp-disable-group-cover-image-uploads',
+			'bp-disable-group-type-creation',
+			'bp-disable-account-deletion',
+			'bp-enable-private-network',
+			'bp_activity_favorites',
+			'bp-enable-site-registration',
+			'_bp_enable_activity_autoload',
+			'_bp_enable_activity_follow',
+			'_bp_enable_activity_link_preview',
+			'_bp_enable_activity_emoji',
+			'_bp_enable_activity_gif',
+			'bp_search_members',
+			'bp_search_number_of_results',
+			'bp_media_profile_media_support',
+			'bp_media_profile_albums_support',
+			'bp_media_group_media_support',
+			'bp_media_group_albums',
+			'bp_media_forums_media_support',
+			'bp_media_messages_media_support',
+			'_bbp_enable_favorites',
+			'_bbp_enable_subscriptions',
+			'_bbp_allow_topic_tags',
+			'_bbp_thread_replies_depth',
+			'_bbp_forums_per_page',
+			'_bbp_topics_per_page',
+			'_bbp_replies_per_page',
+			'_bbp_enable_group_forums',
+			'bp-disable-group-messages',
+			'bp_media_symlink_support',
+			'_bbp_pro_db_version',
+			'_bp_enable_activity_edit',
+			'bp_media_allowed_per_batch',
+			'bp_document_allowed_per_batch',
+			'bp_video_profile_video_support',
+			'bp_video_group_video_support',
+			'bp_video_messages_video_support',
+			'bp_video_forums_video_support',
+			'bp_video_allowed_size',
+			'bp_video_allowed_per_batch',
+			'bp_video_extension_video_support',
+			'bp_media_symlink_direct_access',
+			'bp_video_extensions_support',
+			'_bp_on_screen_notifications_enable',
+			'_bp_on_screen_notification_position',
+			'_bp_on_screen_notification_mobile_support',
+			'_bp_on_screen_notification_visibility',
+			'_bp_on_screen_notification_browser_tab',
+			'_bp_db_version',
+			'bb_pinned_post',
+			'bp_document_extensions_support',
+			'bp_media_profile_document_support',
+			'bp_media_group_document_support',
+			'bp_media_messages_document_support',
+			'bp_media_forums_document_support',
+			'bp_media_extension_document_support',
+			'bp_document_allowed_size',
+			'bp_media_allowed_size',
+			'_bb_enable_activity_post_polls',
+		)
+	);
+
+	// Added those options that are not available in the option table.
+	$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
+	$bb_telemetry_data['active_integrations'] = bb_active_integrations();
+
+	// Pass active or inactive components.
+	$components          = bp_core_get_components();
+	$active_components   = bp_get_option( 'bp-active-components' );
+	$inactive_components = array_diff( array_keys( $components ), array_keys( $active_components ) );
+	if ( ! empty( $inactive_components ) ) {
+		foreach ( $inactive_components as $component ) {
+			$active_components[ $component ] = 0;
+		}
+	}
+	$bb_telemetry_data['bp-active-components'] = $active_components;
+
+	// Fetch options from the database.
+	$bp_prefix = bp_core_get_table_prefix();
+	$query     = "SELECT option_name, option_value FROM {$bp_prefix}options WHERE option_name IN ('" . implode( "','", $bb_platform_db_options ) . "');";
+	$results   = $wpdb->get_results( $query, ARRAY_A );
+
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $result ) {
+			$bb_telemetry_data[ $result['option_name'] ] = $result['option_value'];
+		}
+	}
+
+	unset( $bp_prefix, $query, $results, $bb_platform_db_options );
+
+	return $bb_telemetry_data;
+}
+
+/**
+ * Get the status of integrations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array list of integrations status.
+ */
+function bb_active_integrations() {
+
+	$active_integrations = array(
+		'bp-learndash' => false,
+		'bb-recaptcha' => false,
+	);
+	if ( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
+		$options = bp_get_option( 'bp_ld_sync_settings', array() );
+		if (
+			! empty( $options['buddypress']['enabled'] ) ||
+			! empty( $options['learndash']['enabled'] )
+		) {
+			$active_integrations['bp-learndash'] = true;
+		}
+	}
+	if ( function_exists( 'bb_recaptcha_site_key' ) && ! empty( bb_recaptcha_site_key() ) ) {
+		$active_integrations['bb-recaptcha'] = true;
+	}
+
+	if ( function_exists( 'bb_pro_active_integrations' ) ) {
+		$active_integrations = bb_pro_active_integrations( $active_integrations );
+	}
+
+	return $active_integrations;
 }
