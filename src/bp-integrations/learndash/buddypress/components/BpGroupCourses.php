@@ -182,6 +182,6 @@ class BpGroupCourses extends BP_Group_Extension {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function showTabOnCreate() {
-		return bp_ld_sync( 'settings' )->get( 'buddypress.show_in_bp_create', true );
+		return bp_ld_sync( 'settings' )->get( 'buddypress.enabled' ) && bp_ld_sync( 'settings' )->get( 'buddypress.show_in_bp_create', true );
 	}
 }
