@@ -11,7 +11,8 @@ window.addEventListener('DOMContentLoaded', function() {
 	if ('undefined' !== typeof wp.data && 'undefined' !== typeof wp.data.subscribe) {
 		var wasSaving = false;
 		wp.data.subscribe( function() {
-			var isSaving = wp.data.select('core/edit-post').isSavingMetaBoxes();
+			var editPost = wp.data.select('core/edit-post');
+            var isSaving = editPost && typeof editPost.isSavingMetaBoxes === 'function' ? editPost.isSavingMetaBoxes() : false;
 
 			// Started finished saving. 
 			if ( wasSaving && ! isSaving ) {
