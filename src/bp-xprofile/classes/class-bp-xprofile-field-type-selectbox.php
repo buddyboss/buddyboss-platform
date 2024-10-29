@@ -162,10 +162,10 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		 *
 		 * @since [BBVERSION]
 		 *
-		 * @param string $value    HTML output for options in a select input.
-		 * @param array  $options  Array of options to be rendered.
+		 * @param string $html      HTML output for options in a select input.
+		 * @param object $field_obj Current field object.
 		 */
-		$html = apply_filters( 'bb_get_the_profile_field_options_select_html', $html, $options );
+		$html = apply_filters( 'bb_get_the_profile_field_options_select_html', $html, $this->field_obj );
 
 		echo $html;
 	}
