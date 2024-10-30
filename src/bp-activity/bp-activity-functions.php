@@ -7171,8 +7171,8 @@ function bb_validate_activity_privacy( $args ) {
 			) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss' ) );
 			}
-			if ( 'read_comments' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot read comments on `Only Me` activity.', 'buddyboss' ) );
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on `Only Me` activity.', 'buddyboss' ) );
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
@@ -7191,12 +7191,12 @@ function bb_validate_activity_privacy( $args ) {
 			) {
 				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss' ) );
 			}
-			if ( 'read_comments' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to read comments.', 'buddyboss' ) );
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss' ) );
 			}
 		} elseif ( 'loggedin' === $activity->privacy && ! is_user_logged_in() ) {
-			if ( 'read_comments' === $args['validate_action'] ) {
-				return new WP_Error( 'error', __( 'Sorry, You cannot read comments on this activity.', 'buddyboss' ) );
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss' ) );
 			}
 		}
 	}

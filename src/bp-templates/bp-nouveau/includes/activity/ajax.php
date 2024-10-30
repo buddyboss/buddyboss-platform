@@ -1443,7 +1443,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	$privacy_check = bb_validate_activity_privacy(
 		array(
 			'activity_id'     => $activity_id,
-			'validate_action' => 'read_comments',
+			'validate_action' => 'view_activity',
 		)
 	);
 
