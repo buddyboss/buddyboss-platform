@@ -802,6 +802,10 @@ add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity',
  * @return string
  */
 function bb_groups_get_join_sql_for_activity( $sql, $r ) {
+	if ( empty( $r['user_id'] ) ) {
+		return $sql;
+	}
+
 	$bp_prefix = bp_core_get_table_prefix();
 	$sql      .= ' LEFT JOIN ' . $bp_prefix . 'bp_groups_groupmeta mt ON ( g.id = mt.group_id AND mt.meta_key = "activity_feed_status" )';
 
@@ -819,6 +823,10 @@ function bb_groups_get_join_sql_for_activity( $sql, $r ) {
  * @return mixed
  */
 function bb_groups_get_where_conditions_for_activity( $where_conditions, $r ) {
+	if ( empty( $r['user_id'] ) ) {
+		return $where_conditions;
+	}
+
 	$where_conditions['exclude_where'] = ' (
 		mt.meta_key IS NULL OR
 		(
