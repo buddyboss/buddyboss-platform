@@ -1942,8 +1942,15 @@
 .bb-is-mobile.bb-reactions-mode {
 
 	&.activity * {
-		-webkit-user-select: none; // To prevent IOS to show context menu on long press
-		user-select: none;
+		-webkit-touch-callout: none; // To prevent IOS to show context menu on long press
+	}
+
+	&.activity {
+
+		.activity-meta .generic-button * {
+			-webkit-user-select: none; // To prevent IOS to show context menu on long press
+			user-select: none;
+		}
 	}
 
 }
