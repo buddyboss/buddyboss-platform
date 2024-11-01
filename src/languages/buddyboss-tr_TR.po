@@ -4,153 +4,137 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform\n"
 "POT-Creation-Date: 2020-04-16 16:05-0400\n"
 "PO-Revision-Date: 2021-02-17 15:32+0530\n"
-"Language-Team: Jean-Pierre Michaud <unpapapro@icloud.com>\n"
+"Language-Team: Ali Çömez <sys@rootali.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
-"X-Poedit-WPHeader: bp-loader.php\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: BuddyBoss <support@buddyboss.com>\n"
-"Language: fr_FR\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"Language: tr_TR\n"
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:257
 msgid "Activity deleted successfully"
-msgstr "Activité supprimée avec succès"
+msgstr "Etkinlik başarıyla silindi"
 
 #: bp-activity/actions/delete.php:62
 msgid "There was an error when deleting that activity"
-msgstr "Une erreur est survenue pendant la suppression de cette activité"
+msgstr "Etkinliği silerken bir hata oluştu"
 
 #: bp-activity/actions/favorite.php:25
 msgid "Activity post saved."
-msgstr "Publication sauvegardée."
+msgstr "Etkinlik gönderisi kaydedildi."
 
 #: bp-activity/actions/favorite.php:27
 msgid "There was an error saving that post. Please try again."
-msgstr "Il y a eu une erreur en sauvegardant cette publication. Veuillez réessayer."
+msgstr "Gönderiyi kaydederken bir hata oluştu. Lütfen tekrar deneyin."
 
 #. translators: Sitewide activity RSS title - "[Site Name] | Site Wide Activity"
 #: bp-activity/actions/feeds.php:29
 #, php-format
 msgid "%s | Site-Wide Activity"
-msgstr "%s | Contributions à l'échelle du site"
+msgstr "%s | Site Genelindeki Etkinlikler"
 
 #: bp-activity/actions/feeds.php:32
 msgid "Activity feed for the entire site."
-msgstr "Fil d'activité de tout le site."
+msgstr "Site genelindeki etkinlik akışı."
 
 #. translators: Personal activity RSS title - "[Site Name] | [User Display Name] | Activity"
 #. translators: Group activity RSS title - "[Site Name] | [Group Name] | Activity"
 #: bp-activity/actions/feeds.php:57 bp-groups/actions/feed.php:37
 #, php-format
 msgid "%1$s | %2$s | Activity"
-msgstr "%1$s | %2$s | Activité"
+msgstr "%1$s | %2$s | Etkinlik"
 
 #. translators: Activity feed for [User Display Name].
 #: bp-activity/actions/feeds.php:61
 #, php-format
 msgid "Activity feed for %s."
-msgstr "Activités de %s."
+msgstr "%s için etkinlik akışı."
 
 #. translators: Connections activity RSS title - "[Site Name] | [User Display Name] | Connections Activity"
 #: bp-activity/actions/feeds.php:86
 #, php-format
 msgid "%1$s | %2$s | Connections Activity"
-msgstr "%1$s | %2$s | Activité de Connections"
+msgstr "%1$s | %2$s | Bağlantıların Etkinlikleri"
 
 #. translators: Activity feed for [User Display Name]'s connections.
 #: bp-activity/actions/feeds.php:90
 #, php-format
 msgid "Activity feed for %s's connections."
-msgstr "Fil d'activité pour les connexions %s."
+msgstr "%s'nin bağlantıları için etkinlik akışı."
 
 #. translators: Member groups activity RSS title - "[Site Name] | [User Display Name] | Groups Activity"
 #: bp-activity/actions/feeds.php:119
 #, php-format
 msgid "%1$s | %2$s | Group Activity"
-msgstr "%1$s | %2$s | Activité de groupe"
+msgstr "%1$s | %2$s | Grup Etkinlikleri"
 
 #. translators: Public group activity feed of which [User Display Name] is a member.
 #: bp-activity/actions/feeds.php:124
 #, php-format
 msgid "Public group activity feed of which %s is a member."
-msgstr "Fil d'activité du groupe public dont %s est membre."
+msgstr "%s'nin üyesi olduğu halka açık grup etkinlikleri akışı."
 
 #. translators: User mentions activity RSS title - "[Site Name] | [User Display Name] | Mentions"
 #: bp-activity/actions/feeds.php:157
 #, php-format
 msgid "%1$s | %2$s | Mentions"
-msgstr "%1$s | %2$s | Mentions"
+msgstr "%1$s | %2$s | Bahsedenler"
 
 #. translators: Activity feed mentioning [User Display Name].
 #: bp-activity/actions/feeds.php:162
 #, php-format
 msgid "Activity feed mentioning %s."
-msgstr "Fil d'activité mentionnant %s."
+msgstr "%s'yi içeren etkinlik akışı."
 
 #. translators: User activity saved RSS title - "[Site Name] | [User Display Name] | Favorites"
 #: bp-activity/actions/feeds.php:193
 #, php-format
 msgid "%1$s | %2$s | Favorites"
-msgstr "%1$s | %2$s | Favoris"
+msgstr "%1$s | %2$s | Favoriler"
 
 #. translators: Activity feed of [User Display Name]'s saved posts.
 #: bp-activity/actions/feeds.php:198
 #, php-format
 msgid "Activity feed of %s's saved posts."
-msgstr "Flux d'activité des publications enregistrées de %s."
+msgstr "%s'nin kaydedilen gönderileri için etkinlik akışı."
 
 #: bp-activity/actions/post.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:502
 msgid "Please enter some content to post."
-msgstr "Veuillez entrer le contenu à poster."
+msgstr "Gönderi için içerik girin."
 
 #: bp-activity/actions/post.php:94
 msgid "Update Posted!"
-msgstr "Mise à jour publiée!"
+msgstr "Güncelleme yayınlandı!"
 
 #: bp-activity/actions/post.php:96
 msgid "There was an error when posting your update. Please try again."
-msgstr ""
-"Une erreur s'est produite pendant l'envoi de la publication. Veuillez recommencer."
+msgstr "Güncellemenizi gönderirken bir hata oluştu. Lütfen tekrar deneyin."
 
 #: bp-activity/actions/reply.php:43
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:361
 msgid "Please do not leave the comment area blank."
-msgstr "Veuillez ne pas laisser le commentaire vide."
+msgstr "Lütfen yorum alanını boş bırakmayın."
 
 #: bp-activity/actions/reply.php:56
 msgid "Reply Posted!"
-msgstr "Réponse envoyée!"
+msgstr "Yanıt gönderildi!"
 
 #: bp-activity/actions/reply.php:58
 msgid "There was an error posting that reply. Please try again."
-msgstr ""
-"Une erreur s’est produite lors de la publication de cette réponse, veuillez "
-"réessayer."
+msgstr "Yanıt gönderilirken bir hata oluştu. Lütfen tekrar deneyin."
 
 #: bp-activity/actions/spam.php:63
 msgid "The activity item has been marked as spam and is no longer visible."
-msgstr "L’élément d’activité a été marqué comme spam et n’est plus visible."
+msgstr "Etkinlik öğesi spam olarak işaretlendi ve artık görünmüyor."
 
 #: bp-activity/actions/unfavorite.php:26
 msgid "Post unsaved."
-msgstr "Publication non sauvegardée."
+msgstr "Gönderi kaydedilmedi."
 
 #: bp-activity/actions/unfavorite.php:28
 msgid "There was an error unsaving that post. Please try again."
-msgstr ""
-"Il y a eu une erreur lors de la suppression de cette publication. Veuillez "
-"réessayer."
+msgstr "Gönderi kaydını kaldırırken bir hata oluştu. Lütfen tekrar deneyin."
 
 #: bp-activity/bp-activity-admin.php:35 bp-activity/bp-activity-admin.php:36
 #: bp-activity/bp-activity-admin.php:291 bp-activity/bp-activity-admin.php:1107
@@ -160,18 +144,15 @@ msgstr ""
 #: bp-core/bp-core-cssjs.php:253 bp-search/bp-search-functions.php:376
 #: bp-search/bp-search-settings.php:726
 msgid "Activity"
-msgstr "Activité"
+msgstr "Etkinlik"
 
 #: bp-activity/bp-activity-admin.php:92
 msgid "ERROR: Please type a reply."
-msgstr "ERREUR: Veuillez saisir une réponse."
+msgstr "HATA: Lütfen bir yanıt girin."
 
 #: bp-activity/bp-activity-admin.php:98
-msgid ""
-"ERROR: The item you are trying to reply to cannot be found, or it has been "
-"deleted."
-msgstr ""
-"ERREUR: Le sujet auquel vous tentez de répondre n'existe pas ou a été supprimé."
+msgid "ERROR: The item you are trying to reply to cannot be found, or it has been deleted."
+msgstr "HATA: Yanıt vermeye çalıştığınız öğe bulunamıyor veya silinmiş."
 
 #: bp-activity/bp-activity-admin.php:241 bp-activity/bp-activity-admin.php:297
 #: bp-core/admin/bp-core-admin-functions.php:901
@@ -184,7 +165,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:906
 #: bp-members/classes/class-bp-members-admin.php:1742
 msgid "Overview"
-msgstr "Aperçu"
+msgstr "Genel Bakış"
 
 #: bp-activity/bp-activity-admin.php:243
 msgid ""
@@ -192,9 +173,9 @@ msgid ""
 "is useful if you need to change which page the activity links to, or when you "
 "notice that the author has made a typographical error."
 msgstr ""
-"Vous éditez les activités sur votre site de la façon dont vous modifiez un "
-"commentaire. Ceci est utile si vous devez changer à quelle page elle est liée ou "
-"si vous remarquez que l’auteur a fait une erreur typographique."
+"Site üzerindeki etkinlikleri, bir yorumu düzenlediğiniz şekilde düzenleyebilirsiniz. "
+"Bu, etkinliğin yönlendirdiği sayfayı değiştirmek veya yazarın yazım hatası yaptığını fark ettiğinizde "
+"kullanışlıdır."
 
 #: bp-activity/bp-activity-admin.php:244
 msgid ""
@@ -204,24 +185,22 @@ msgid ""
 "to unhide more boxes (Primary Item/Secondary Item, Link, Type, Author ID) or to "
 "choose a 1- or 2-column layout for this screen."
 msgstr ""
-"Les deux zones d'éditions que sont le titre et le contenu de l'activité sont "
-"figées, mais vous pouvez déplacer les autres boîtes de saisie par copier-coller ; "
-"vous pouvez aussi les réduire ou les agrandir en cliquant sur la barre de titre "
-"de chaque boîte. Utilisez l'onglet Options Écran du coin supérieur droit pour "
-"afficher des boîtes supplémentaires (élément primaire, secondaire, liens, type, "
-"ID auteur) ou pour sélectionner un affichage écran sur une ou plusieurs colonnes."
+"Etkinlik başlığı ve içeriği için ayrılmış iki büyük düzenleme alanı sabitlenmiştir, "
+"ancak diğer kutuları sürükleyip bırakarak yeniden konumlandırabilirsiniz ve her kutunun başlık çubuğuna tıklayarak "
+"onları küçültüp genişletebilirsiniz. Ekran Seçenekleri sekmesini kullanarak daha fazla kutuyu "
+"(Birincil Öğe/İkincil Öğe, Bağlantı, Tür, Yazar ID'si) açabilir veya bu ekran için 1 veya 2 sütunlu bir düzen seçebilirsiniz."
 
 #: bp-activity/bp-activity-admin.php:245
 msgid ""
 "You can also moderate the activity from this screen using the Status box, where "
 "you can also change the timestamp of the activity."
 msgstr ""
-"Vous pouvez aussi gérer les activités depuis cet écran à l'aide de la boîte "
-"Statut, ainsi que modifier l'horodatage de l'activité."
+"Aynı ekrandaki Durum kutusunu kullanarak etkinliği yönetebilir ve etkinliğin "
+"zaman damgasını değiştirebilirsiniz."
 
 #: bp-activity/bp-activity-admin.php:252
 msgid "Item, Link, Type"
-msgstr "Élément, lien, type"
+msgstr "Öğe, Bağlantı, Tür"
 
 #: bp-activity/bp-activity-admin.php:254
 msgid ""
@@ -229,18 +208,17 @@ msgid ""
 "created the activity. For example, the fields could reference a comment left on a "
 "specific site. Some types of activity may only use one, or none, of these fields."
 msgstr ""
-"<strong>Élément primaire / secondaire</strong> - Ceci identifie l'objet créateur "
-"d'activité. Par exemple, ce champ peut référencer un commentaire déposé sur un "
-"site spécifique. Certains types d'activités peuvent seulement utiliser l'un, ou "
-"aucun, de ces champs."
+"<strong>Birincil Öğe/İkincil Öğe</strong> - Bunlar, etkinliği oluşturan nesneyi "
+"belirler. Örneğin, alanlar belirli bir sitede bırakılan bir yorumu "
+"referans alabilir. Bazı etkinlik türleri sadece birini veya hiçbirini kullanabilir."
 
 #: bp-activity/bp-activity-admin.php:255
 msgid ""
 "<strong>Link</strong> - Used by some types of activity (blog posts and comments) "
 "to store a link back to the original content."
 msgstr ""
-"<strong>Lien </strong>- Utilisé par certains types d'activité (publications de "
-"blog et commentaires) pour stocker un lien vers le contenu original."
+"<strong>Bağlantı</strong> - Bazı etkinlik türleri (blog gönderileri ve yorumlar) "
+"tarafından orijinal içeriğe bir bağlantı depolamak için kullanılır."
 
 #: bp-activity/bp-activity-admin.php:256
 msgid ""
@@ -248,9 +226,9 @@ msgid ""
 "example, <code>created_group</code> is used when a group is created and "
 "<code>joined_group</code> is used when a user joins a group."
 msgstr ""
-"<strong>Tapez</strong> - Chaque type d’activité distinct a son propre type. Par "
-"exemple: <code>created_group</code> est utilisé quand un groupe est créé et "
-"<code>joined_group</code> quand un usager se joint à un groupe."
+"<strong>Tür</strong> - Her farklı etkinlik türünün kendi tipi vardır. Örneğin, "
+"<code>created_group</code> bir grup oluşturulduğunda kullanılır ve "
+"<code>joined_group</code> bir kullanıcı gruba katıldığında kullanılır."
 
 #: bp-activity/bp-activity-admin.php:262 bp-activity/bp-activity-admin.php:317
 #: bp-core/admin/bp-core-admin-functions.php:908
@@ -264,7 +242,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:916
 #: bp-members/classes/class-bp-members-admin.php:1766
 msgid "For more information:"
-msgstr "Pour plus d'informations:"
+msgstr "Daha fazla bilgi için:"
 
 #: bp-activity/bp-activity-admin.php:263 bp-activity/bp-activity-admin.php:318
 #: bp-core/admin/bp-core-admin-functions.php:909
@@ -278,7 +256,7 @@ msgstr "Pour plus d'informations:"
 #: bp-members/classes/class-bp-members-admin.php:917
 #: bp-members/classes/class-bp-members-admin.php:1767
 msgid "<a href=\"https://www.buddyboss.com/resources/\">Documentation</a>"
-msgstr "<a href=\"https://www.buddyboss.com/resources/\">Documentation</a>"
+msgstr "<a href=\"https://www.buddyboss.com/resources/\">Dokümantasyon</a>"
 
 #: bp-activity/bp-activity-admin.php:267
 #: bp-forums/templates/default/bbpress/form-forum.php:88
@@ -288,26 +266,26 @@ msgstr "<a href=\"https://www.buddyboss.com/resources/\">Documentation</a>"
 #: bp-members/classes/class-bp-members-admin.php:923
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:68
 msgid "Status"
-msgstr "Statut"
+msgstr "Durum"
 
 #: bp-activity/bp-activity-admin.php:268
 msgid "Primary Item/Secondary Item"
-msgstr "Article principal/article secondaire"
+msgstr "Birincil Öğe/İkincil Öğe"
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:269 bp-activity/bp-activity-admin.php:883
 msgid "Link"
-msgstr "Lien"
+msgstr "Bağlantı"
 
 #: bp-activity/bp-activity-admin.php:270 bp-forums/admin/metaboxes.php:362
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1733
 msgid "Type"
-msgstr "Type"
+msgstr "Tür"
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:271 bp-activity/bp-activity-admin.php:905
 msgid "Author ID"
-msgstr "ID de l'auteur"
+msgstr "Yazar ID"
 
 #: bp-activity/bp-activity-admin.php:299
 msgid ""
@@ -316,10 +294,9 @@ msgid ""
 "management screens, and you can act on activities using the on-hover action links "
 "or the Bulk Actions."
 msgstr ""
-"Vous pouvez gérer les activités de l'intranet de la même manière que vous gérez "
-"les commentaires ou les autres contenus. Cet écran est configurable comme les "
-"autres écrans de gestion, et vous pouvez agir sur les activités en sélectionnant "
-"par survol un ou plusieurs liens."
+"Site üzerindeki etkinlikleri, yorumlar ve diğer içerikleri yönettiğiniz şekilde "
+"yönetebilirsiniz. Bu ekran, diğer yönetim ekranları gibi özelleştirilebilir ve "
+"etkinlikler üzerinde imleçle gezinme işlemleri veya Toplu İşlemler ile işlem yapabilirsiniz."
 
 #: bp-activity/bp-activity-admin.php:300
 msgid ""
@@ -328,15 +305,14 @@ msgid ""
 "the form of status update. To help manage the different activity types, use the "
 "filter dropdown box to switch between them."
 msgstr ""
-"Il existe de nombreux types d'activités différentes. Certaines sont générées "
-"automatiquement par BuddyBoss Platform et d'autres plugins, d'autres sont saisis "
-"directement par un usager sous forme de mise à jour du Statut. Pour vous aider à "
-"gérer les différents types d'activités, utilisez le menu déroulant Filtre pour "
-"passer d'un type d'activité à l'autre."
+"Birçok farklı etkinlik türü vardır. Bazıları BuddyBoss Platform ve diğer eklentiler "
+"tarafından otomatik olarak oluşturulur, bazıları ise kullanıcı tarafından doğrudan "
+"durum güncellemesi şeklinde girilir. Farklı etkinlik türlerini yönetmek için, "
+"filtre açılır kutusunu kullanarak aralarında geçiş yapabilirsiniz."
 
 #: bp-activity/bp-activity-admin.php:308
 msgid "Moderating Activity"
-msgstr "Modération d’activité"
+msgstr "Etkinlik Yönetimi"
 
 #: bp-activity/bp-activity-admin.php:310
 msgid ""
@@ -346,12 +322,11 @@ msgid ""
 "Hovering over any activity gives you options to reply, edit, spam mark, or delete "
 "that activity."
 msgstr ""
-"Dans la colonne <strong>Activité</strong>, au-dessus de chaque activité, il est "
-"indiqué \"Publié(e) le\" suivi de la date et de l'heure auxquelles l'élément "
-"d'activité a été généré sur votre site. En cliquant sur le lien date/heure, vous "
-"accédez à cette activité sur votre site en direct. Le survol d'une activité vous "
-"donne la possibilité de répondre, d'éditer, de marquer un spam ou de supprimer "
-"cette activité."
+"<strong>Etkinlik</strong> sütununda, her etkinliğin üzerinde \"Gönderildiği Tarih\" "
+"yazısı ve etkinliğin oluşturulduğu tarih ve saat bilgisi yer alır. Tarih/saat "
+"bağlantısına tıklamak sizi o etkinliğe site üzerinde yönlendirir. Herhangi bir etkinlik "
+"üzerinde gezinirken yanıtla, düzenle, spam olarak işaretle veya sil gibi seçenekler "
+"görürsünüz."
 
 #: bp-activity/bp-activity-admin.php:311
 msgid ""
@@ -362,61 +337,59 @@ msgid ""
 "comments. Clicking the bubble will filter the activity screen to show only "
 "related activity items."
 msgstr ""
-"Dans la colonne <strong>En réponse à</strong>, si l'activité est une réponse à "
-"une autre activité, l'avatar, le nom de l'auteur de cette activité et un lien "
-"vers cette activité sur le site s'afficheront. Un chiffre dans une bulle indique "
-"le nombre d'activités en relations à cet instant - généralement il s'agit de "
-"commentaires. En cliquant sur la bulle, seules les activités en rapport avec cet "
-"item s'afficheront."
+"<strong>Cevap Olarak</strong> sütununda, etkinlik başka bir etkinliğe yanıt olarak yapılmışsa, "
+"o etkinliğin yazarının resmini, adını ve canlı sitenizdeki etkinliğe bir bağlantı gösterir. "
+"Küçük bir baloncuk varsa, içindeki sayı bu etkinlikle ilişkili olan diğer etkinliklerin sayısını gösterir; "
+"bunlar genellikle yorumlardır. Baloncuğa tıklayarak yalnızca ilişkili etkinlik öğelerini gösterecek şekilde etkinlik ekranını filtreleyebilirsiniz."
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:325
 msgid "Activity list navigation"
-msgstr "Navigation dans la liste des activités"
+msgstr "Etkinlik listesi gezintisi"
 
 #: bp-activity/bp-activity-admin.php:719
 #, php-format
 msgid "Editing Activity (ID #%s)"
-msgstr "Editer l'activité (ID #%s)"
+msgstr "Etkinlik Düzenleniyor (ID #%s)"
 
 #: bp-activity/bp-activity-admin.php:730
 #: bp-activity/classes/class-bp-activity-list-table.php:417
 msgid "Action"
-msgstr "Action"
+msgstr "Eylem"
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:735
 msgid "Edit activity action"
-msgstr "Éditer l'action de l'activité"
+msgstr "Etkinlik eylemini düzenle"
 
 #: bp-activity/bp-activity-admin.php:754
 #: bp-messages/classes/class-bp-messages-notices-admin.php:211
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:84
 msgid "Content"
-msgstr "Contenu"
+msgstr "İçerik"
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:759
 msgid "Edit activity content"
-msgstr "Éditer le contenu de l'activité"
+msgstr "Etkinlik içeriğini düzenle"
 
 #: bp-activity/bp-activity-admin.php:800
 msgid "No activity found with this ID."
-msgstr "Aucune activité portant cet ID n'a été trouvée."
+msgstr "Bu ID ile bir etkinlik bulunamadı."
 
 #: bp-activity/bp-activity-admin.php:802 bp-groups/bp-groups-admin.php:809
 #: bp-members/classes/class-bp-members-admin.php:1164
 msgid "Go back and try again."
-msgstr "Revenir en arrière et réessayer."
+msgstr "Geri dön ve tekrar dene."
 
 #: bp-activity/bp-activity-admin.php:829
 #: bp-activity/classes/class-bp-activity-list-table.php:763
 msgid "View Activity"
-msgstr "Afficher l'activité"
+msgstr "Etkinliği Görüntüle"
 
 #: bp-activity/bp-activity-admin.php:837
 msgid "Approved"
-msgstr "Approuvé"
+msgstr "Onaylandı"
 
 #: bp-activity/bp-activity-admin.php:838
 #: bp-activity/classes/class-bp-activity-list-table.php:678
@@ -435,12 +408,12 @@ msgstr "Spam"
 #: bp-activity/bp-activity-admin.php:844 bp-forums/admin/forums.php:653
 #: bp-forums/admin/replies.php:956 bp-forums/admin/topics.php:1048
 msgid "M j, Y @ G:i"
-msgstr "M j, Y @ G:i"
+msgstr "G j, Y @ S:d"
 
 #: bp-activity/bp-activity-admin.php:847
 #, php-format
 msgid "Submitted on: %s"
-msgstr "Soumis sur: %s"
+msgstr "Gönderildiği Tarih: %s"
 
 #: bp-activity/bp-activity-admin.php:847
 #: bp-activity/classes/class-bp-activity-list-table.php:671
@@ -456,22 +429,22 @@ msgstr "Soumis sur: %s"
 #: bp-xprofile/classes/class-bp-xprofile-component.php:273
 #: bp-xprofile/classes/class-bp-xprofile-component.php:390
 msgid "Edit"
-msgstr "Editer"
+msgstr "Düzenle"
 
 #: bp-activity/bp-activity-admin.php:860
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1300
 #: bp-xprofile/classes/class-bp-xprofile-group.php:828
 msgid "Update"
-msgstr "Mettre à jour"
+msgstr "Güncelle"
 
 #: bp-activity/bp-activity-admin.php:887
 msgid ""
 "Activity generated by posts and comments uses the link field for a permalink back "
 "to the content item."
 msgstr ""
-"L'activité générée par les publications et les commentaires utilise le champ lien "
-"pour un accès permanent à l'élément de contenu."
+"Gönderiler ve yorumlarla oluşturulan etkinlikler, içerik öğesine kalıcı bir "
+"bağlantı sağlamak için bağlantı alanını kullanır."
 
 #: bp-activity/bp-activity-admin.php:977
 #, php-format
@@ -479,47 +452,45 @@ msgid ""
 "This activity item has a type (%s) that is not registered using "
 "bp_activity_set_action(), so no label is available."
 msgstr ""
-"Cet élément d'activité présente un type (%s) qui n'a pas été enregistré à l'aide "
-"de bp_activity_set_action(); par conséquent aucune étiquette n'est disponible."
+"Bu etkinlik öğesi, bp_activity_set_action() kullanılarak kaydedilmeyen bir tür (%s) "
+"içeriyor, bu nedenle herhangi bir etiket mevcut değil."
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:986
 msgid "Select activity type"
-msgstr "Sélectionnez le type d’activité"
+msgstr "Etkinlik türünü seçin"
 
 #: bp-activity/bp-activity-admin.php:1008
 msgid "Primary Item ID"
-msgstr "Identifiant de l'élément primaire"
+msgstr "Birincil Öğe ID"
 
 #: bp-activity/bp-activity-admin.php:1012
 msgid "Secondary Item ID"
-msgstr "Identifiant de l'élément secondaire"
+msgstr "İkincil Öğe ID"
 
 #: bp-activity/bp-activity-admin.php:1015
 msgid ""
 "These identify the object that created this activity. For example, the fields "
 "could reference a pair of site and comment IDs."
 msgstr ""
-"Ceci identifie l'objet à l'origine de l'activité. Par exemple, ce champ peut "
-"référencer une paire ID site - ID commentaire."
+"Bunlar, bu etkinliği oluşturan nesneyi tanımlar. Örneğin, alanlar site ve yorum "
+"ID'lerinden oluşan bir çifti referans alabilir."
 
 #: bp-activity/bp-activity-admin.php:1054
 #, php-format
 msgid "%s activity item has been permanently deleted."
 msgid_plural "%s activity items have been permanently deleted."
-msgstr[0] "l'élément d'activité %s a été définitivement supprimé."
-msgstr[1] "les éléments d'activité %s ont été définitivement supprimés."
+msgstr[0] "%s etkinlik öğesi kalıcı olarak silindi."
+msgstr[1] "%s etkinlik öğeleri kalıcı olarak silindi."
 
 #: bp-activity/bp-activity-admin.php:1059
 #, php-format
 msgid "An error occurred when trying to update activity ID #%s."
-msgstr ""
-"Une erreur s'est produite lors de la tentative de mise à jour de l’activité ID #"
-"%s."
+msgstr "Etkinlik ID #%s güncellenirken bir hata oluştu."
 
 #: bp-activity/bp-activity-admin.php:1062
 msgid "Errors occurred when trying to update these activity items:"
-msgstr "Des erreurs se sont produites pendant la mise à jour de ces activités:"
+msgstr "Bu etkinlik öğelerini güncellerken hatalar oluştu:"
 
 #: bp-activity/bp-activity-admin.php:1068
 #, php-format
@@ -530,24 +501,24 @@ msgstr "#%s"
 #, php-format
 msgid "%s activity item has been successfully spammed."
 msgid_plural "%s activity items have been successfully spammed."
-msgstr[0] "l'élément d'activité %s a été signalé spam avec succès."
-msgstr[1] "ces activités %s ont été signalées comme spam avec succès."
+msgstr[0] "%s etkinlik öğesi başarıyla spam olarak işaretlendi."
+msgstr[1] "%s etkinlik öğeleri başarıyla spam olarak işaretlendi."
 
 #: bp-activity/bp-activity-admin.php:1081
 #, php-format
 msgid "%s activity item has been successfully unspammed."
 msgid_plural "%s activity items have been successfully unspammed."
-msgstr[0] "l'élément d'activité %s a été correctement retiré du  spam."
-msgstr[1] "ces activités %s ont été correctement retirées du spam."
+msgstr[0] "%s etkinlik öğesi başarıyla spamdan çıkarıldı."
+msgstr[1] "%s etkinlik öğeleri başarıyla spamdan çıkarıldı."
 
 #: bp-activity/bp-activity-admin.php:1085
 msgid "The activity item has been updated successfully."
-msgstr "L'activité a été actualisée avec succès."
+msgstr "Etkinlik öğesi başarıyla güncellendi."
 
 #: bp-activity/bp-activity-admin.php:1105
 #, php-format
 msgid "Activity related to ID #%s"
-msgstr "Activité en relation avec l'ID #%s"
+msgstr "ID #%s ile ilişkili etkinlik"
 
 #: bp-activity/bp-activity-admin.php:1111 bp-groups/bp-groups-admin.php:1105
 #: bp-groups/bp-groups-admin.php:1133
@@ -555,15 +526,15 @@ msgstr "Activité en relation avec l'ID #%s"
 #: bp-members/classes/class-bp-members-admin.php:2224
 #, php-format
 msgid "Search results for \"%s\""
-msgstr "Résultats de recherche pour \"%s\""
+msgstr "\"%s\" için arama sonuçları"
 
 #: bp-activity/bp-activity-admin.php:1124
 msgid "Search all Activity"
-msgstr "Rechercher toute activité"
+msgstr "Tüm etkinliklerde ara"
 
 #: bp-activity/bp-activity-admin.php:1135
 msgid "Reply to Activity"
-msgstr "Répondre à l’activité"
+msgstr "Etkinliğe Yanıt Ver"
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:1139 bp-activity/bp-activity-admin.php:1157
@@ -578,8 +549,8 @@ msgstr "Répondre à l’activité"
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:831
 msgid "Reply"
 msgid_plural "Replies"
-msgstr[0] "Répondre"
-msgstr[1] "Réponses"
+msgstr[0] "Yanıt"
+msgstr[1] "Yanıtlar"
 
 #: bp-activity/bp-activity-admin.php:1156 bp-forums/replies/template.php:1756
 #: bp-groups/bp-groups-admin.php:1037
@@ -592,34 +563,34 @@ msgstr[1] "Réponses"
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:935
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "İptal"
 
 #: bp-activity/bp-activity-adminbar.php:46
 msgid "Edit Activity"
-msgstr "Editer l'Activité"
+msgstr "Etkinliği Düzenle"
 
 #. translators: By [oEmbed author] on [oEmbed provider]. eg. By BuddyPress on YouTube.
 #: bp-activity/bp-activity-embeds.php:292
 #, php-format
 msgid "By %1$s on %2$s"
-msgstr "Par %1$s sur %2$s"
+msgstr "%1$s tarafından %2$s üzerinde"
 
 #: bp-activity/bp-activity-embeds.php:295
 #, php-format
 msgid "View on %s"
-msgstr "Aperçu sur %s"
+msgstr "%s üzerinde görüntüle"
 
 #: bp-activity/bp-activity-embeds.php:343
 msgid "Your browser does not support HTML5 video"
-msgstr "Votre navigateur ne supporte pas la fonction vidéo HTML5"
+msgstr "Tarayıcınız HTML5 video desteğini desteklemiyor"
 
 #: bp-activity/bp-activity-embeds.php:351
 msgid "Your browser does not support HTML5 audio"
-msgstr "Votre navigateur ne supporte pas les lecteurs musicaux HTML5"
+msgstr "Tarayıcınız HTML5 ses desteğini desteklemiyor"
 
 #: bp-activity/bp-activity-filters.php:510
 msgid " Read more"
-msgstr " En savoir plus"
+msgstr " Daha fazlasını oku"
 
 #: bp-activity/bp-activity-filters.php:514
 msgid "&hellip;"
@@ -627,27 +598,28 @@ msgstr "&hellip;"
 
 #: bp-activity/bp-activity-filters.php:571
 msgid "Continue reading"
-msgstr "Continuer la lecture"
+msgstr "Okumaya devam et"
+
 
 #: bp-activity/bp-activity-filters.php:833
 msgid "Load Newest"
-msgstr "Charger le plus récent"
+msgstr "En Yeniyi Yükle"
 
 #: bp-activity/bp-activity-functions.php:508
 msgid "New item published"
-msgstr "Nouvel élément publié"
+msgstr "Yeni öğe yayınlandı"
 
 #: bp-activity/bp-activity-functions.php:541
 msgid "New item comment posted"
-msgstr "Nouvel élément commentaire posté"
+msgstr "Yeni öğe yorumu gönderildi"
 
 #: bp-activity/bp-activity-functions.php:552
 msgid "Item comments"
-msgstr "Commentaires"
+msgstr "Öğe yorumları"
 
 #: bp-activity/bp-activity-functions.php:1133
 msgid "You like this"
-msgstr "Vous aimez"
+msgstr "Bunu beğendiniz"
 
 #: bp-activity/bp-activity-functions.php:1136
 #: bp-activity/bp-activity-functions.php:1144
@@ -660,20 +632,20 @@ msgstr "Vous aimez"
 #: bp-activity/bp-activity-functions.php:1189
 #: bp-activity/bp-activity-functions.php:1193
 msgid "Unknown"
-msgstr "Inconnu"
+msgstr "Bilinmiyor"
 
 #: bp-activity/bp-activity-functions.php:1137
 msgid "likes this"
-msgstr "aime cela"
+msgstr "bunu beğendi"
 
 #: bp-activity/bp-activity-functions.php:1141
 msgid "You and"
-msgstr "Vous et"
+msgstr "Siz ve"
 
 #: bp-activity/bp-activity-functions.php:1145
 #: bp-activity/bp-activity-functions.php:1153
 msgid "like this"
-msgstr "aime ça"
+msgstr "bunu beğendi"
 
 #: bp-activity/bp-activity-functions.php:1149
 #: bp-activity/bp-activity-functions.php:1162
@@ -681,143 +653,141 @@ msgstr "aime ça"
 #: bp-activity/bp-activity-functions.php:1186
 #: bp-activity/bp-activity-functions.php:1194
 msgid "and"
-msgstr "et"
+msgstr "ve"
 
 #: bp-activity/bp-activity-functions.php:1158
 #: bp-activity/bp-activity-functions.php:1182
 msgid "You,"
-msgstr "Vous,"
+msgstr "Siz,"
 
 #: bp-activity/bp-activity-functions.php:1164
 #: bp-activity/bp-activity-functions.php:1175
 msgid "1 other like this"
-msgstr "Une autre personne aime cela"
+msgstr "1 kişi daha bunu beğendi"
 
 #: bp-activity/bp-activity-functions.php:1198
 msgid "others like this"
-msgstr "d'autres personnes aiment cela"
+msgstr "diğerleri bunu beğendi"
 
 #: bp-activity/bp-activity-functions.php:1200
 msgid "other like this"
-msgstr "d'autres personnes aiment cela"
+msgstr "diğer kişi bunu beğendi"
 
 #: bp-activity/bp-activity-functions.php:1682 bp-groups/bp-groups-activity.php:33
 msgid "Posted a status update"
-msgstr "Publié une mise à jour de statut"
+msgstr "Bir durum güncellemesi yayınladı"
 
 #: bp-activity/bp-activity-functions.php:1684 bp-groups/bp-groups-activity.php:35
 msgid "Updates"
-msgstr "Mises à jour"
+msgstr "Güncellemeler"
 
 #: bp-activity/bp-activity-functions.php:1691
 msgid "Replied to a status update"
-msgstr "A répondu à une mise à jour d'état"
+msgstr "Bir durum güncellemesine yanıt verdi"
 
 #: bp-activity/bp-activity-functions.php:1693 bp-search/bp-search-functions.php:389
 #: bp-search/bp-search-settings.php:761
 msgid "Activity Comments"
-msgstr "Commentaires d’activité"
+msgstr "Etkinlik Yorumları"
 
 #: bp-activity/bp-activity-functions.php:1773
 #, php-format
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s"
-msgstr "%1$s <span class=\"activity-to\">de</span> %2$s%3$s%3$s%4$s"
+msgstr "%1$s <span class=\"activity-to\">olarak</span> %2$s%3$s%4$s"
 
 #: bp-activity/bp-activity-functions.php:1776
 msgid " and "
-msgstr " et "
+msgstr " ve "
 
 #: bp-activity/bp-activity-functions.php:1780 cli/components/activity.php:766
 #, php-format
 msgid "%s posted an update"
-msgstr "%s a publié un message"
+msgstr "%s bir güncelleme yayınladı"
 
 #: bp-activity/bp-activity-functions.php:1804 cli/components/activity.php:790
 #, php-format
 msgid "%s posted a new activity comment"
-msgstr "%s a commenté une publication"
+msgstr "%s yeni bir etkinlik yorumu gönderdi"
 
 #: bp-activity/bp-activity-functions.php:1853
 #, php-format
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>, on the site %3$s"
-msgstr "%1$s a écrit <a href=\"%2$s\">une nouvelle idée</a> sur le site %3$s"
+msgstr "%1$s yeni bir <a href=\"%2$s\">öğe</a> yazdı, site: %3$s"
 
 #: bp-activity/bp-activity-functions.php:1859
 #, php-format
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>"
-msgstr "%1$s a publié <a href=\"%2$s\">une nouvelle idée</a>"
+msgstr "%1$s yeni bir <a href=\"%2$s\">öğe</a> yazdı"
 
 #: bp-activity/bp-activity-functions.php:1904
 #, php-format
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>, on the site %3$s"
-msgstr "%1$s a commenté l'idée <a href=\"%2$s\"></a>, sur le site %3$s"
+msgstr "%1$s öğe üzerinde yorum yaptı: <a href=\"%2$s\"></a>, site: %3$s"
 
 #: bp-activity/bp-activity-functions.php:1910
 #, php-format
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
-msgstr "%1$s commenté sur l'<a href=\"%2$s\" >élément</a>"
+msgstr "%1$s öğe üzerinde yorum yaptı: <a href=\"%2$s\"></a>"
 
 #: bp-activity/bp-activity-functions.php:2897
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:340
 msgid "There was an error posting your reply. Please try again."
-msgstr ""
-"Une erreur s’est produite lors de la publication de votre réponse, veuillez "
-"réessayer."
+msgstr "Yanıtınızı gönderirken bir hata oluştu. Lütfen tekrar deneyin."
 
 #: bp-activity/bp-activity-functions.php:2925
 msgid "The item you were replying to no longer exists."
-msgstr "L'élément auquel vous répondiez n'existe plus."
+msgstr "Yanıt verdiğiniz öğe artık mevcut değil."
 
 #: bp-activity/bp-activity-functions.php:3607
 msgid "Thumbnail"
-msgstr "Taille de la vignette"
+msgstr "Küçük Resim"
 
 #: bp-activity/bp-activity-notifications.php:36
 #, php-format
 msgid "@%s Mentions"
-msgstr "@%s Mentions"
+msgstr "@%s Bahsedenler"
 
 #: bp-activity/bp-activity-notifications.php:55
 #, php-format
 msgid "You have %1$d new mentions"
-msgstr "Vous avez %1$d nouvelles mentions"
+msgstr "%1$d yeni bahsedilme var"
 
 #: bp-activity/bp-activity-notifications.php:58
 #, php-format
 msgid "%1$s mentioned you"
-msgstr "%1$s vous a mentionné"
+msgstr "%1$s sizi bahsetti"
 
 #: bp-activity/bp-activity-notifications.php:64
 msgid "New Activity reply"
-msgstr "Nouvelle réponse d'activité"
+msgstr "Yeni Etkinlik Yanıtı"
 
 #: bp-activity/bp-activity-notifications.php:69
 #, php-format
 msgid "You have %1$d new replies"
-msgstr "Vous avez %1$d nouvelles réponses"
+msgstr "%1$d yeni yanıtınız var"
 
 #: bp-activity/bp-activity-notifications.php:73
 #, php-format
 msgid "%1$s commented on one of your updates"
-msgstr "%1$s commenté l'une de vos mises à jour"
+msgstr "%1$s güncellemelerinizden birine yorum yaptı"
 
 #: bp-activity/bp-activity-notifications.php:79
 msgid "New Activity comment reply"
-msgstr "Nouvelle réponse de commentaire d'activité"
+msgstr "Yeni Etkinlik Yorum Yanıtı"
 
 #: bp-activity/bp-activity-notifications.php:84
 #, php-format
 msgid "You have %1$d new comment replies"
-msgstr "Vous avez %1$d nouvelles réponses de commentaire"
+msgstr "%1$d yeni yorum yanıtınız var"
 
 #: bp-activity/bp-activity-notifications.php:88
 #, php-format
 msgid "%1$s replied to one of your activity comments"
-msgstr "%1$s a répondu à l'un de vos commentaires d'activité"
+msgstr "%1$s etkinlik yorumlarınızdan birine yanıt verdi"
 
 #: bp-activity/bp-activity-notifications.php:420
 msgid "Activity Feed"
-msgstr "Flux D’activité"
+msgstr "Etkinlik Akışı"
 
 #: bp-activity/bp-activity-notifications.php:421 bp-blogs/bp-blogs-template.php:1146
 #: bp-core/gdpr/class-bp-friendship-export.php:93
@@ -832,7 +802,7 @@ msgstr "Flux D’activité"
 #: bp-templates/bp-nouveau/includes/functions.php:1220
 #: bp-templates/bp-nouveau/includes/functions.php:1275
 msgid "Yes"
-msgstr "Oui"
+msgstr "Evet"
 
 #: bp-activity/bp-activity-notifications.php:422 bp-blogs/bp-blogs-template.php:1154
 #: bp-core/gdpr/class-bp-friendship-export.php:93
@@ -847,12 +817,12 @@ msgstr "Oui"
 #: bp-templates/bp-nouveau/includes/functions.php:1228
 #: bp-templates/bp-nouveau/includes/functions.php:1283
 msgid "No"
-msgstr "Non"
+msgstr "Hayır"
 
 #: bp-activity/bp-activity-notifications.php:431
 #, php-format
 msgid "A member mentions you in an update using \"@%s\""
-msgstr "Un membre vous cite dans une publication avec \"@%s\""
+msgstr "Bir üye \"@%s\" kullanarak bir güncellemede sizi bahsediyor"
 
 #: bp-activity/bp-activity-notifications.php:435
 #: bp-activity/bp-activity-notifications.php:453
@@ -866,7 +836,7 @@ msgstr "Un membre vous cite dans une publication avec \"@%s\""
 #: bp-groups/bp-groups-notifications.php:1281
 #: bp-messages/bp-messages-notifications.php:315
 msgid "Yes, send email"
-msgstr "Oui, envoyer le courriel"
+msgstr "Evet, e-posta gönder"
 
 #: bp-activity/bp-activity-notifications.php:441
 #: bp-activity/bp-activity-notifications.php:459
@@ -880,21 +850,20 @@ msgstr "Oui, envoyer le courriel"
 #: bp-groups/bp-groups-notifications.php:1287
 #: bp-messages/bp-messages-notifications.php:321
 msgid "No, do not send email"
-msgstr "N'envoyer pas d'email"
+msgstr "Hayır, e-posta gönderme"
 
 #: bp-activity/bp-activity-notifications.php:449
 #: bp-core/gdpr/class-bp-settings-export.php:155
 msgid "A member replies to an update or comment you've posted"
-msgstr ""
-"Quelqu'un a répondu à une publication ou à un commentaire que vous avez publié"
+msgstr "Bir üye gönderdiğiniz güncellemeye veya yoruma yanıt verdi"
 
 #: bp-activity/bp-activity-template.php:467 bp-media/bp-media-template.php:349
 #: bp-media/bp-media-template.php:1149
 #, php-format
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
-msgstr[0] "Aperçu: 1 élément"
-msgstr[1] "Aperçu de %1$s - %2$s sur %3$s éléments"
+msgstr[0] "1 öğe görüntüleniyor"
+msgstr[1] "%1$s - %2$s arasında %3$s öğe görüntüleniyor"
 
 #. translators: %s = member name
 #: bp-activity/bp-activity-template.php:1036
@@ -928,15 +897,15 @@ msgstr[1] "Aperçu de %1$s - %2$s sur %3$s éléments"
 #: bp-xprofile/classes/class-bp-xprofile-component.php:446
 #, php-format
 msgid "Profile photo of %s"
-msgstr "Photo de Profil de %s"
+msgstr "%s'nin profil fotoğrafı"
 
 #: bp-activity/bp-activity-template.php:1036
 msgid "Profile photo"
-msgstr "Photo de profil"
+msgstr "Profil fotoğrafı"
 
 #: bp-activity/bp-activity-template.php:1189
 msgid "Group logo"
-msgstr "Logo du groupe"
+msgstr "Grup logosu"
 
 #: bp-activity/bp-activity-template.php:1192 bp-groups/bp-groups-template.php:909
 #: bp-groups/classes/class-bp-groups-list-table.php:598
@@ -947,12 +916,12 @@ msgstr "Logo du groupe"
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1539
 #, php-format
 msgid "Group logo of %s"
-msgstr "Logo du groupe %s"
+msgstr "%s grubunun logosu"
 
 #: bp-activity/bp-activity-template.php:1203
 #, php-format
 msgid "Profile photo of the author of the site %s"
-msgstr "Photo du profil de l'auteur(e) du site %s"
+msgstr "%s sitesinin yazarının profil fotoğrafı"
 
 #: bp-activity/bp-activity-template.php:2192
 #, php-format
@@ -960,8 +929,8 @@ msgid ""
 "%1$s no longer accepts arguments. See the inline documentation at %2$s for more "
 "details."
 msgstr ""
-"%1$s n’accepte pas d'arguments. Consultez la documentation en ligne à %2$s pour "
-"plus de détails."
+"%1$s artık argüman kabul etmiyor. Daha fazla bilgi için %2$s adresindeki "
+"dahili belgeleri inceleyin."
 
 #: bp-activity/bp-activity-template.php:2685 bp-core/bp-core-attachments.php:810
 #: bp-forums/replies/template.php:2120
@@ -992,7 +961,7 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:300
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:417
 msgid "Delete"
-msgstr "Supprimer"
+msgstr "Sil"
 
 #: bp-activity/bp-activity-template.php:2788
 #: bp-core/admin/bp-core-admin-functions.php:1493
@@ -1006,35 +975,35 @@ msgstr "Supprimer"
 #: bp-xprofile/classes/class-bp-xprofile-component.php:263
 #: bp-xprofile/classes/class-bp-xprofile-component.php:381
 msgid "View"
-msgstr "Voir"
+msgstr "Görüntüle"
 
 #: bp-activity/bp-activity-template.php:2899
 msgid "Clear Filter"
-msgstr "Effacer le filtre"
+msgstr "Filtreyi Temizle"
 
 #: bp-activity/bp-activity-template.php:3204
 msgid "a user"
-msgstr "un usager"
+msgstr "bir kullanıcı"
 
 #: bp-activity/bp-activity-template.php:3797
 msgid "Site Wide Activity RSS Feed"
-msgstr "Activité du flux RSS à l'échelle du site"
+msgstr "Site Geneli Etkinlik RSS Akışı"
 
 #: bp-activity/bp-activity-template.php:4025
 #: bp-activity/bp-activity-template.php:4031
 #: bp-templates/bp-nouveau/includes/activity/functions.php:322
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
-msgstr "Abonnements"
+msgstr "Takip Edilenler"
 
 #: bp-activity/bp-activity-template.php:4030
 msgid "Unfollow"
-msgstr "Ne plus suivre"
+msgstr "Takibi Bırak"
 
 #: bp-activity/bp-activity-template.php:4047
 #: bp-core/admin/settings/bp-admin-setting-activity.php:88
 msgid "Follow"
-msgstr "Suivre"
+msgstr "Takip Et"
 
 #: bp-activity/classes/class-bp-activity-activity.php:375
 #: bp-activity/classes/class-bp-activity-template.php:143
@@ -1052,74 +1021,74 @@ msgid ""
 "Arguments passed to %1$s should be in an associative array. See the inline "
 "documentation at %2$s for more details."
 msgstr ""
-"Les arguments passés à %1$s devraient être placés dans un tableau associatif. "
-"Voir la documentation à ce sujet sur %2$s ."
+"%1$s'e iletilen argümanlar bir ilişkisel dizi içinde olmalıdır. Daha fazla bilgi "
+"için %2$s adresindeki dahili belgelere bakın."
 
 #: bp-activity/classes/class-bp-activity-component.php:29
 #: bp-core/bp-core-functions.php:2557
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:86
 msgid "Activity Feeds"
-msgstr "Fil d'actualités"
+msgstr "Etkinlik Akışları"
 
 #: bp-activity/classes/class-bp-activity-component.php:189
 msgid "Search Feed&hellip;"
-msgstr "Recherche Feed&hellip;"
+msgstr "Akışta Ara&hellip;"
 
 #: bp-activity/classes/class-bp-activity-component.php:266
 #: bp-activity/classes/class-bp-activity-component.php:401
 #: bp-templates/bp-nouveau/includes/customizer.php:164
 msgid "Timeline"
-msgstr "Chronologie"
+msgstr "Zaman Çizelgesi"
 
 #: bp-activity/classes/class-bp-activity-component.php:277
 msgctxt "Profile activity screen nav"
 msgid "Timeline"
-msgstr "Chronologie"
+msgstr "Zaman Çizelgesi"
 
 #: bp-activity/classes/class-bp-activity-component.php:287
 msgctxt "Profile activity screen sub nav"
 msgid "Personal"
-msgstr "Personnel"
+msgstr "Kişisel"
 
 #: bp-activity/classes/class-bp-activity-component.php:298
 msgctxt "Profile activity screen sub nav"
 msgid "Likes"
-msgstr "Likes"
+msgstr "Beğeniler"
 
 #: bp-activity/classes/class-bp-activity-component.php:311
 msgctxt "Profile activity screen sub nav"
 msgid "Connections"
-msgstr "Connections"
+msgstr "Bağlantılar"
 
 #: bp-activity/classes/class-bp-activity-component.php:324
 msgctxt "Profile activity screen sub nav"
 msgid "Groups"
-msgstr "Groupes"
+msgstr "Gruplar"
 
 #: bp-activity/classes/class-bp-activity-component.php:337
 msgctxt "Profile activity screen sub nav"
 msgid "Mentions"
-msgstr "Mentions"
+msgstr "Bahsetmeler"
 
 #: bp-activity/classes/class-bp-activity-component.php:350
 msgctxt "Profile activity screen sub nav"
 msgid "Following"
-msgstr "Abonnements"
+msgstr "Takip Edilenler"
 
 #. translators: %s: Unread mention count for the current user
 #: bp-activity/classes/class-bp-activity-component.php:389
 #, php-format
 msgid "Mentions %s"
-msgstr "Mentions %s"
+msgstr "Bahsetmeler %s"
 
 #: bp-activity/classes/class-bp-activity-component.php:393
 #: bp-templates/bp-nouveau/includes/activity/functions.php:308
 msgid "Mentions"
-msgstr "Mentions"
+msgstr "Bahsetmeler"
 
 #: bp-activity/classes/class-bp-activity-component.php:409
 msgid "Personal"
-msgstr "Personnel"
+msgstr "Kişisel"
 
 #: bp-activity/classes/class-bp-activity-component.php:409
 #: bp-blogs/bp-blogs-activity.php:80 bp-core/bp-core-template.php:572
@@ -1129,7 +1098,7 @@ msgstr "Personnel"
 #: bp-forums/templates/default/bbpress/loop-replies.php:68
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
 msgid "Posts"
-msgstr "Articles"
+msgstr "Gönderiler"
 
 #: bp-activity/classes/class-bp-activity-component.php:421
 msgctxt "My Account Activity sub nav"
