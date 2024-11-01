@@ -250,6 +250,19 @@ button[data-bp-close]:hover {
 			}
 		}
 
+		> p {
+			padding: 0;
+			margin: 0;
+
+			.bp-admin-card .form-table td & {
+				margin-top: 0;
+			}
+		}
+
+		> p + p {
+			margin-top: 10px;
+		}
+
 		&.info {
 			border-color: #2271b1;
 			background-color: #f0f6fc;
@@ -263,6 +276,19 @@ button[data-bp-close]:hover {
 					font-weight: 200;
 				}
 			}
+
+			> p {
+				color: #3c434a;
+
+				.bp-admin-card .form-table td & {
+					margin-top: 0;
+					color: #3c434a;
+				}
+			}
+		}
+
+		&.bp-feedback--vmiddle {
+			align-items: center;
 		}
 	}
 }

@@ -2776,7 +2776,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	<?php
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
 		?>
-		<div class="bp-feedback info">
+		<div class="bp-feedback info bp-feedback--clean bp-feedback--vmiddle">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
 				<?php
