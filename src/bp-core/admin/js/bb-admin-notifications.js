@@ -65,7 +65,7 @@
 						var countData      = countEl.text().trim().match( /\d+/ );
 						var count          = countData ? parseInt( countData[0], 10 ) : 0;
 						var iconCountEl    = $( '.bb-notice-count' );
-						var adminMenuCount = $( '#BBInPluginAdminMenuUnreadCount' );
+						var adminMenuCount = $( '#bb_in_plugin_admin_menu_unread_count' );
 						var status         = $this.closest( '.bb-panel-nav' ).find( '.panel-nav-list li > a.active' ).data( 'status' );
 
 						var data = {
@@ -133,7 +133,7 @@
 						var countData      = countEl.text().trim().match( /\d+/ );
 						var count          = countData ? parseInt( countData[0], 10 ) : 0;
 						var iconCountEl    = $( '.bb-notice-count' );
-						var adminMenuCount = $( '#BBInPluginAdminMenuUnreadCount' );
+						var adminMenuCount = $( '#bb_in_plugin_admin_menu_unread_count' );
 						var status         = $this.closest( '.bb-notifications-panel' ).find( '.panel-nav-list li > a.active' ).data( 'status' );
 
 						var data = {

@@ -199,9 +199,23 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 			// Remove notifications that are not active.
 			foreach ( $notifications as $key => $notification ) {
+
+				// Set the timezone to Hong Kong (UTC+8).
+				$hong_kong_tz = new DateTimeZone( 'Asia/Hong_Kong' );
+
+				// Parse the notification start date in Hong Kong time.
+				$start_date = ! empty( $notification['start'] ) ? DateTime::createFromFormat( 'Y:m:d H:i:s', $notification['start'], $hong_kong_tz ) : null;
+
+				// Parse the notification end date in Hong Kong time.
+				$end_date = ! empty( $notification['end'] ) ? DateTime::createFromFormat( 'Y:m:d H:i:s', $notification['end'], $hong_kong_tz ) : null;
+
+				// Get current time in Hong Kong timezone.
+				$current_date = new DateTime( 'now', $hong_kong_tz );
+
+				// Conditions to check if the notification should be removed.
 				if (
-					( ! empty( $notification['start'] ) && strtotime( $notification['start'] . ' America/New_York' ) > strtotime( date( 'F j, Y' ) . ' America/New_York' ) ) ||
-					( ! empty( $notification['end'] ) && strtotime( $notification['end'] . ' America/New_York' ) < strtotime( date( 'F j, Y' ) . ' America/New_York' ) )
+					( $start_date && $start_date > $current_date ) ||
+					( $end_date && $end_date < $current_date )
 				) {
 					unset( $notifications[ $key ] );
 				}
@@ -226,8 +240,11 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					continue;
 				}
 
-				// Translators: Readable time to display.
-				$modified_start_time            = sprintf( __( '%1$s ago', 'buddyboss' ), human_time_diff( strtotime( $notification['start'] ), current_time( 'timestamp' ) ) );
+				$modified_start_time = sprintf(
+				/* Translators: %s is the human-readable time difference (e.g., "2 hours ago"). */
+					__( '%1$s ago', 'buddyboss' ),
+					human_time_diff( strtotime( $notification['start'] ), time() )
+				);
 				$notifications[ $key ]['start'] = $modified_start_time;
 			}
 
@@ -320,9 +337,21 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					continue;
 				}
 
-				// Ignore if expired.
-				if ( ! empty( $notification['end'] ) && time() > strtotime( $notification['end'] ) ) {
-					continue;
+				// Check the format of 'end' before processing.
+				if ( ! empty( $notification['end'] ) ) {
+					// Convert 'end' to a proper format if necessary.
+					if ( preg_match( '/^\d{4}:\d{2}:\d{2}$/', $notification['end'] ) ) {
+						// Convert to `Y-m-d` format
+						$notification['end'] = str_replace( ':', '-', $notification['end'] );
+					}
+
+					// Parse the date and compare.
+					$notification['end'] = gmdate( 'Y-m-d H:i:s', strtotime( $notification['end'] ) );
+
+					// Ignore if expired.
+					if ( time() > strtotime( $notification['end'] ) ) {
+						continue;
+					}
 				}
 
 				// Ignore if notification has already been dismissed.
@@ -331,13 +360,24 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				}
 
 				$activated = time();
+				if ( ! empty( $notification['start'] ) ) {
 
-				if (
-					! empty( $activated ) &&
-					! empty( $notification['start'] ) &&
-					$activated > strtotime( $notification['start'] )
-				) {
-					continue;
+					// Convert 'end' to a proper format if necessary.
+					if ( preg_match( '/^\d{4}:\d{2}:\d{2}$/', $notification['start'] ) ) {
+						// Convert to `Y-m-d` format.
+						$notification['start'] = str_replace( ':', '-', $notification['start'] );
+					}
+
+					// Parse the date and compare.
+					$notification['start'] = gmdate( 'Y-m-d H:i:s', strtotime( $notification['start'] ) );
+
+					if (
+						! empty( $activated ) &&
+						! empty( $notification['start'] ) &&
+						$activated > strtotime( $notification['start'] )
+					) {
+						continue;
+					}
 				}
 
 				$data[ $id ] = $notification;
@@ -452,15 +492,32 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			?>
 
 			<span class="awaiting-mod">
-		  <span class="pending-count" id="BBInPluginAdminMenuUnreadCount" aria-hidden="true"><?php echo count( $notifications['active'] ); ?></span>
-		  <span class="comments-in-moderation-text screen-reader-text"><?php printf( _n( '%s unread message', '%s unread messages', count( $notifications['active'] ), 'buddyboss' ), count( $notifications['active'] ) ); ?></span>
-		</span>
+				<span class="pending-count" id="bb_in_plugin_admin_menu_unread_count" aria-hidden="true">
+					<?php echo count( $notifications['active'] ); ?>
+				</span>
+				<span class="comments-in-moderation-text screen-reader-text">
+					<?php
+					printf(
+						esc_html(
+						// Translators: %s is the number of unread messages in the user's notifications.
+							_n(
+								'%s unread message',
+								'%s unread messages',
+								count( $notifications['active'] ),
+								'buddyboss'
+							)
+						),
+						esc_html( count( $notifications['active'] ) )
+					);
+					?>
+				</span>
+			</span>
 
 			<?php $output = ob_get_clean(); ?>
 
 			<script>
 				jQuery( document ).ready( function ( $ ) {
-					$( 'li.toplevel_page_buddyboss-platform .wp-menu-name' ).append( `<?php echo $output; ?>` );
+					$( 'li.toplevel_page_buddyboss-platform .wp-menu-name' ).append( `<?php echo wp_kses_post( $output ); ?>` );
 				} );
 			</script>
 
@@ -492,13 +549,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							$buttons_html .= sprintf(
 								'<a href="%1$s" class="button button-%2$s"%3$s>%4$s</a>',
 								! empty( $btn['url'] ) ? esc_url( $btn['url'] ) : '',
-								$btn_type === 'main' ? 'primary' : 'secondary',
-								! empty( $btn['target'] ) && $btn['target'] === '_blank' ? ' target="_blank" rel="noopener noreferrer"' : '',
+								'main' === $btn_type ? 'primary' : 'secondary',
+								! empty( $btn['target'] ) && '_blank' === $btn['target'] ? ' target="_blank" rel="noopener noreferrer"' : '',
 								! empty( $btn['text'] ) ? sanitize_text_field( $btn['text'] ) : ''
 							);
 						}
 						$buttons_html .= sprintf( '<button class="bb-in-plugin-admin-notifications-notice-dismiss" data-message-id="%s">%s</button>', $notification['id'], __( 'Dismiss', 'buddyboss' ) );
-						$buttons_html = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
+						$buttons_html  = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
 					}
 
 					// Icon HTML
@@ -507,22 +564,49 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 						$icon_html = '<img src="' . esc_url( sanitize_text_field( $notification['icon'] ) ) . '" width="32" height="32">';
 					}
 
-					$time_diff        = ceil( ( time() - $notification['saved'] ) );
-					$time_diff_string = '';
+					$time_diff = ceil( ( time() - $notification['saved'] ) );
 					if ( $time_diff < MINUTE_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s second ago', '%s seconds ago', $time_diff, 'buddyboss' ), $time_diff );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of seconds */
+							_n( '%s second ago', '%s seconds ago', $time_diff, 'buddyboss' ),
+							$time_diff
+						);
 					} elseif ( $time_diff < HOUR_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s minute ago', '%s minutes ago', ceil( ( $time_diff / MINUTE_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / MINUTE_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of minutes */
+							_n( '%s minute ago', '%s minutes ago', ceil( ( $time_diff / MINUTE_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / MINUTE_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < DAY_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s hour ago', '%s hours ago', ceil( ( $time_diff / HOUR_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / HOUR_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of hours */
+							_n( '%s hour ago', '%s hours ago', ceil( ( $time_diff / HOUR_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / HOUR_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < WEEK_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s day ago', '%s days ago', ceil( ( $time_diff / DAY_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / DAY_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of days */
+							_n( '%s day ago', '%s days ago', ceil( ( $time_diff / DAY_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / DAY_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < MONTH_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s week ago', '%s weeks ago', ceil( ( $time_diff / WEEK_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / WEEK_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of weeks */
+							_n( '%s week ago', '%s weeks ago', ceil( ( $time_diff / WEEK_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / WEEK_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < YEAR_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s month ago', '%s months ago', ceil( ( $time_diff / MONTH_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / MONTH_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of months */
+							_n( '%s month ago', '%s months ago', ceil( ( $time_diff / MONTH_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / MONTH_IN_SECONDS ) )
+						);
 					} else {
-						$time_diff_string = sprintf( _n( '%s year ago', '%s years ago', ceil( ( $time_diff / YEAR_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / YEAR_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of years */
+							_n( '%s year ago', '%s years ago', ceil( ( $time_diff / YEAR_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / YEAR_IN_SECONDS ) )
+						);
 					}
 					// Notification HTML.
 					$notifications_html .= sprintf(
@@ -540,7 +624,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 						$buttons_html,
 						! empty( $notification['id'] ) ? esc_attr( sanitize_text_field( $notification['id'] ) ) : 0,
 						$icon_html,
-						date( 'Y-m-d G:i a', $notification['saved'] ),
+						gmdate( 'Y-m-d G:i a', $notification['saved'] ),
 						$time_diff_string
 					);
 				}
@@ -562,31 +646,58 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							$buttons_html .= sprintf(
 								'<a href="%1$s" class="button button-%2$s"%3$s>%4$s</a>',
 								! empty( $btn['url'] ) ? esc_url( $btn['url'] ) : '',
-								$btn_type === 'main' ? 'primary' : 'secondary',
-								! empty( $btn['target'] ) && $btn['target'] === '_blank' ? ' target="_blank" rel="noopener noreferrer"' : '',
+								'main' === $btn_type ? 'primary' : 'secondary',
+								! empty( $btn['target'] ) && '_blank' === $btn['target'] ? ' target="_blank" rel="noopener noreferrer"' : '',
 								! empty( $btn['text'] ) ? sanitize_text_field( $btn['text'] ) : ''
 							);
 						}
 						$buttons_html .= sprintf( '<button class="bb-in-plugin-admin-notifications-notice-dismiss" data-message-id="%s">%s</button>', $notification['id'], __( 'Dismiss', 'buddyboss' ) );
-						$buttons_html = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
+						$buttons_html  = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
 					}
 
-					$time_diff        = ceil( ( time() - $notification['saved'] ) );
-					$time_diff_string = '';
+					$time_diff = ceil( ( time() - $notification['saved'] ) );
 					if ( $time_diff < MINUTE_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s second ago', '%s seconds ago', $time_diff, 'buddyboss' ), $time_diff );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of seconds */
+							_n( '%s second ago', '%s seconds ago', $time_diff, 'buddyboss' ),
+							$time_diff
+						);
 					} elseif ( $time_diff < HOUR_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s minute ago', '%s minutes ago', ceil( ( $time_diff / MINUTE_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / MINUTE_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of minutes */
+							_n( '%s minute ago', '%s minutes ago', ceil( ( $time_diff / MINUTE_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / MINUTE_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < DAY_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s hour ago', '%s hours ago', ceil( ( $time_diff / HOUR_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / HOUR_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of hours */
+							_n( '%s hour ago', '%s hours ago', ceil( ( $time_diff / HOUR_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / HOUR_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < WEEK_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s day ago', '%s days ago', ceil( ( $time_diff / DAY_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / DAY_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of days */
+							_n( '%s day ago', '%s days ago', ceil( ( $time_diff / DAY_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / DAY_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < MONTH_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s week ago', '%s weeks ago', ceil( ( $time_diff / WEEK_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / WEEK_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of weeks */
+							_n( '%s week ago', '%s weeks ago', ceil( ( $time_diff / WEEK_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / WEEK_IN_SECONDS ) )
+						);
 					} elseif ( $time_diff < YEAR_IN_SECONDS ) {
-						$time_diff_string = sprintf( _n( '%s month ago', '%s months ago', ceil( ( $time_diff / MONTH_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / MONTH_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of months */
+							_n( '%s month ago', '%s months ago', ceil( ( $time_diff / MONTH_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / MONTH_IN_SECONDS ) )
+						);
 					} else {
-						$time_diff_string = sprintf( _n( '%s year ago', '%s years ago', ceil( ( $time_diff / YEAR_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / YEAR_IN_SECONDS ) ) );
+						$time_diff_string = sprintf(
+						/* translators: %s: number of years */
+							_n( '%s year ago', '%s years ago', ceil( ( $time_diff / YEAR_IN_SECONDS ) ), 'buddyboss' ),
+							ceil( ( $time_diff / YEAR_IN_SECONDS ) )
+						);
 					}
 
 					// Notification HTML.
@@ -605,7 +716,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 						$buttons_html,
 						! empty( $notification['id'] ) ? esc_attr( sanitize_text_field( $notification['id'] ) ) : 0,
 						! empty( $notification['icon'] ) ? esc_url( sanitize_text_field( $notification['icon'] ) ) : '',
-						date( 'Y-m-d G:i a', $notification['saved'] ),
+						gmdate( 'Y-m-d G:i a', $notification['saved'] ),
 						$time_diff_string
 					);
 				}
@@ -622,12 +733,12 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							<svg width="24" height="15" viewBox="0 0 24 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path d="M23.6667 7.03125C23.8889 7.34375 24 7.69531 24 8.08594V13.125C24 13.6458 23.8056 14.0885 23.4167 14.4531C23.0278 14.8177 22.5556 15 22 15H2C1.44444 15 0.972222 14.8177 0.583333 14.4531C0.194444 14.0885 0 13.6458 0 13.125V8.08594C0 7.69531 0.111111 7.34375 0.333333 7.03125L4.75 0.820312C4.86111 0.690104 5 0.559896 5.16667 0.429688C5.36111 0.299479 5.56944 0.195312 5.79167 0.117188C6.01389 0.0390625 6.22222 0 6.41667 0H17.5833C17.8889 0 18.1944 0.0911458 18.5 0.273438C18.8333 0.429688 19.0833 0.611979 19.25 0.820312L23.6667 7.03125ZM6.75 2.5L3.20833 7.5H8.33333L9.66667 10H14.3333L15.6667 7.5H20.7917L17.25 2.5H6.75Z" fill="white"></path>
 							</svg>
-							<h3><?php _e( 'Inbox', 'buddyboss' ); ?></h3>
+							<h3><?php esc_html_e( 'Inbox', 'buddyboss' ); ?></h3>
 						</div>
 						<div class="buddyboss-notifications-top-title__right actions">
-							<a href="#" id="viewDismissed"><?php _e( 'View Dismissed', 'buddyboss' ); ?></a>
-							<a href="#" id="viewActive"><?php _e( 'View Active', 'buddyboss' ); ?></a>
-							<a href="#" id="buddybossNotificationsClose" class="close" title="<?php _e( 'Close', 'buddyboss' ); ?>">
+							<a href="#" id="viewDismissed"><?php esc_html_e( 'View Dismissed', 'buddyboss' ); ?></a>
+							<a href="#" id="viewActive"><?php esc_html_e( 'View Active', 'buddyboss' ); ?></a>
+							<a href="#" id="buddybossNotificationsClose" class="close" title="<?php esc_html_e( 'Close', 'buddyboss' ); ?>">
 								<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M8.28409 6L11.6932 9.40909C11.8977 9.61364 12 9.86364 12 10.1591C12 10.4545 11.8977 10.7159 11.6932 10.9432L10.9432 11.6932C10.7159 11.8977 10.4545 12 10.1591 12C9.86364 12 9.61364 11.8977 9.40909 11.6932L6 8.28409L2.59091 11.6932C2.38636 11.8977 2.13636 12 1.84091 12C1.54545 12 1.28409 11.8977 1.05682 11.6932L0.306818 10.9432C0.102273 10.7159 0 10.4545 0 10.1591C0 9.86364 0.102273 9.61364 0.306818 9.40909L3.71591 6L0.306818 2.59091C0.102273 2.38636 0 2.13636 0 1.84091C0 1.54545 0.102273 1.28409 0.306818 1.05682L1.05682 0.306818C1.28409 0.102273 1.54545 0 1.84091 0C2.13636 0 2.38636 0.102273 2.59091 0.306818L6 3.71591L9.40909 0.306818C9.61364 0.102273 9.86364 0 10.1591 0C10.4545 0 10.7159 0.102273 10.9432 0.306818L11.6932 1.05682C11.8977 1.28409 12 1.54545 12 1.84091C12 2.13636 11.8977 2.38636 11.6932 2.59091L8.28409 6Z" fill="white"></path>
 								</svg>
@@ -648,7 +759,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							<div class="buddyboss-notifications-title"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></div>
 						</div>
 						<?php if ( ! empty( $notifications['active'] ) ) : ?>
-							<button id="dismissAll" class="dismiss-all"><?php _e( 'Dismiss All', 'buddyboss' ); ?></button>
+							<button id="dismissAll" class="dismiss-all"><?php esc_html_e( 'Dismiss All', 'buddyboss' ); ?></button>
 						<?php endif; ?>
 					</div>
 
@@ -704,20 +815,18 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				// If the notification ID includes "event_", we know it's an even notification.
 				$type = false !== strpos( $id, 'event_' ) ? 'events' : 'feed';
 
-				if ( $type == 'events' ) {
+				if ( 'events' === $type ) {
 					if ( ! empty( $option[ $type ] ) ) {
 						foreach ( $option[ $type ] as $index => $event_notification ) {
-							if ( $event_notification['id'] == $id ) {
+							if ( $event_notification['id'] === $id ) {
 								unset( $option[ $type ][ $index ] );
 								break;
 							}
 						}
 					}
-				} else {
-					if ( ! empty( $option[ $type ][ $id ] ) ) {
-						$option['dismissed'][ $id ] = $option[ $type ][ $id ];
-						unset( $option[ $type ][ $id ] );
-					}
+				} elseif ( ! empty( $option[ $type ][ $id ] ) ) {
+					$option['dismissed'][ $id ] = $option[ $type ][ $id ];
+					unset( $option[ $type ][ $id ] );
 				}
 			}
 

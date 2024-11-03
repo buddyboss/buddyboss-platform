@@ -48,7 +48,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 						if ( $total_active_notifications > 0 ) {
 							?>
 							<span class="bb-notice-count">
-								<?php echo $total_active_notifications; ?>
+								<?php echo esc_html( $total_active_notifications ); ?>
 							</span>
 							<?php
 						}
@@ -56,7 +56,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 					</a>
 					<div class="bb-notifications-panel">
 						<div class="bb-panel-header">
-							<h4><?php _e( 'Notifications', 'buddyboss' ); ?></h4>
+							<h4><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></h4>
 							<span class="close-panel-header"><i class="bb-icon-l bb-icon-times"></i></span>
 						</div>
 						<div class="bb-panel-nav">
@@ -64,19 +64,19 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 								<ul class="panel-nav-list">
 									<li>
 										<a href="#" id="show-all" class="switch-notices active" data-status="all">
-											<?php _e( 'All', 'buddyboss' ); ?>
+											<?php esc_html_e( 'All', 'buddyboss' ); ?>
 										</a>
 									</li>
 									<li>
 										<a href="#" id="show-dismissed" class="switch-notices" data-status="dismissed">
-											<?php _e( 'Read', 'buddyboss' ); ?>
+											<?php esc_html_e( 'Read', 'buddyboss' ); ?>
 										</a>
 									</li>
 									<li>
 										<a href="#" id="show-active" class="switch-notices" data-status="unread">
-											<?php _e( 'Unread', 'buddyboss' ); ?>
+											<?php esc_html_e( 'Unread', 'buddyboss' ); ?>
 											<span class="count-active">
-												<?php echo $total_active_notifications > 0 ? '(' . $total_active_notifications . ')' : ''; ?>
+												<?php echo $total_active_notifications > 0 ? esc_html( '(' . $total_active_notifications . ')' ) : ''; ?>
 											</span>
 										</a>
 									</li>
@@ -86,7 +86,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 							if ( $active_notifications ) {
 								?>
 								<div class="panel-nav-check">
-									<a href="#" class="panel-nav-dismiss-all"><?php _e( 'Mark all read', 'buddyboss' ); ?></a>
+									<a href="#" class="panel-nav-dismiss-all"><?php esc_html_e( 'Mark all read', 'buddyboss' ); ?></a>
 								</div>
 								<?php
 							}
@@ -105,31 +105,59 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 										$time_diff        = ceil( ( time() - $notification['saved'] ) );
 										$time_diff_string = '';
 										if ( $time_diff < MINUTE_IN_SECONDS ) {
-											$time_diff_string = sprintf( _n( '%s second ago', '%s seconds ago', $time_diff, 'buddyboss' ), $time_diff );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of seconds */
+												_n( '%s second ago', '%s seconds ago', $time_diff, 'buddyboss' ),
+												$time_diff
+											);
 										} elseif ( $time_diff < HOUR_IN_SECONDS ) {
-											$time_diff_string = sprintf( _n( '%s minute ago', '%s minutes ago', ceil( ( $time_diff / MINUTE_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / MINUTE_IN_SECONDS ) ) );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of minutes */
+												_n( '%s minute ago', '%s minutes ago', ceil( ( $time_diff / MINUTE_IN_SECONDS ) ), 'buddyboss' ),
+												ceil( ( $time_diff / MINUTE_IN_SECONDS ) )
+											);
 										} elseif ( $time_diff < DAY_IN_SECONDS ) {
-											$time_diff_string = sprintf( _n( '%s hour ago', '%s hours ago', ceil( ( $time_diff / HOUR_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / HOUR_IN_SECONDS ) ) );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of hours */
+												_n( '%s hour ago', '%s hours ago', ceil( ( $time_diff / HOUR_IN_SECONDS ) ), 'buddyboss' ),
+												ceil( ( $time_diff / HOUR_IN_SECONDS ) )
+											);
 										} elseif ( $time_diff < WEEK_IN_SECONDS ) {
-											$time_diff_string = sprintf( _n( '%s day ago', '%s days ago', ceil( ( $time_diff / DAY_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / DAY_IN_SECONDS ) ) );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of days */
+												_n( '%s day ago', '%s days ago', ceil( ( $time_diff / DAY_IN_SECONDS ) ), 'buddyboss' ),
+												ceil( ( $time_diff / DAY_IN_SECONDS ) )
+											);
 										} elseif ( $time_diff < MONTH_IN_SECONDS ) {
-											$time_diff_string = sprintf( _n( '%s week ago', '%s weeks ago', ceil( ( $time_diff / WEEK_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / WEEK_IN_SECONDS ) ) );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of weeks */
+												_n( '%s week ago', '%s weeks ago', ceil( ( $time_diff / WEEK_IN_SECONDS ) ), 'buddyboss' ),
+												ceil( ( $time_diff / WEEK_IN_SECONDS ) )
+											);
 										} elseif ( $time_diff < YEAR_IN_SECONDS ) {
-											$time_diff_string = sprintf( _n( '%s month ago', '%s months ago', ceil( ( $time_diff / MONTH_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / MONTH_IN_SECONDS ) ) );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of months */
+												_n( '%s month ago', '%s months ago', ceil( ( $time_diff / MONTH_IN_SECONDS ) ), 'buddyboss' ),
+												ceil( ( $time_diff / MONTH_IN_SECONDS ) )
+											);
 										} else {
-											$time_diff_string = sprintf( _n( '%s year ago', '%s years ago', ceil( ( $time_diff / YEAR_IN_SECONDS ) ), 'buddyboss' ), ceil( ( $time_diff / YEAR_IN_SECONDS ) ) );
+											$time_diff_string = sprintf(
+											/* translators: %s: number of years */
+												_n( '%s year ago', '%s years ago', ceil( ( $time_diff / YEAR_IN_SECONDS ) ), 'buddyboss' ),
+												ceil( ( $time_diff / YEAR_IN_SECONDS ) )
+											);
 										}
 
-										// Determine the class based on notification status
-										$notification_class = ( $notification['status'] === 'dismissed' ) ? 'dismissed' : 'unread';
+										// Determine the class based on notification status.
+										$notification_class = ( 'dismissed' === $notification['status'] ) ? 'dismissed' : 'unread';
 										?>
 										<div id="bb-notifications-message-<?php echo esc_attr( $notification['id'] ); ?>" class="bb-notice-block bb-notice-block--alert <?php echo esc_attr( $notification_class ); ?>" data-message-id="<?php echo esc_attr( $notification['id'] ); ?>">
 											<div class="bb-notice-icon"><span class="notice-icon"></span></div>
 											<div class="bb-notice-card">
 												<div class="bb-notice-header">
 													<div class="notice-header">
-														<h5><?php echo $notification_title; ?></h5>
-														<div class="notice-timestamp"><?php echo $time_diff_string; ?></div>
+														<h5><?php echo esc_html( $notification_title ); ?></h5>
+														<div class="notice-timestamp"><?php echo esc_html( $time_diff_string ); ?></div>
 													</div>
 													<div class="bb-dismiss-notice">
 														<i class="bb-icon-l bb-icon-times"></i>
@@ -150,7 +178,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 																$label   = $button['type']['label'] ?? '';
 																?>
 																<a href="<?php echo esc_url( $button['url'] ); ?>"
-																   class="button button-<?php echo esc_attr( $primary ); ?>">
+																class="button button-<?php echo esc_attr( $primary ); ?>">
 																	<?php echo esc_html( $label ); ?>
 																</a>
 																<?php
@@ -167,7 +195,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 								?>
 							</div>
 							<div class="bb-notices-blocks-blank">
-								<p><?php _e( 'There are no messages.', 'buddyboss' ); ?></p>
+								<p><?php esc_html_e( 'There are no messages.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 					</div>
