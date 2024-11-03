@@ -151,7 +151,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 										// Determine the class based on notification status.
 										$notification_class = ( 'dismissed' === $notification['status'] ) ? 'dismissed' : 'unread';
 										?>
-										<div id="bb-notifications-message-<?php echo esc_attr( $notification['id'] ); ?>" class="bb-notice-block bb-notice-block--alert <?php echo esc_attr( $notification_class ); ?>" data-message-id="<?php echo esc_attr( $notification['id'] ); ?>">
+										<div id="bb-notifications-message-<?php echo esc_attr( $notification['id'] ); ?>" class="bb-notice-block bb-notice-block--<?php echo esc_attr( $notification['type'] ); ?> <?php echo esc_attr( $notification_class ); ?>" data-message-id="<?php echo esc_attr( $notification['id'] ); ?>">
 											<div class="bb-notice-icon"><span class="notice-icon"></span></div>
 											<div class="bb-notice-card">
 												<div class="bb-notice-header">
