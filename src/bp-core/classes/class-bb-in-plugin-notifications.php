@@ -15,6 +15,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 	/**
 	 * BB_In_Plugin_Notifications.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * Class for logging in-plugin notifications.
 	 * Includes:
 	 *     Notifications from our remote feed
@@ -59,7 +61,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			$this->source_url_args = array(
 				'sslverify' => false,
 			);
-			$this->hooks();
+			$this->bb_admin_notification_hooks();
 		}
 
 		/**
@@ -67,14 +69,14 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function hooks() {
+		public function bb_admin_notification_hooks() {
 			add_action( 'in_admin_header', array( $this, 'bb_admin_notification_header' ), 0 );
-			add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueues' ) );
-			add_action( 'admin_footer', array( $this, 'admin_menu_append_count' ) );
-			add_action( 'bp_admin_init', array( $this, 'schedule_fetch' ) );
-			add_action( 'bb_in_plugin_admin_header_notifications', array( $this, 'output' ) );
-			add_action( 'bb_in_plugin_admin_notifications_update', array( $this, 'update' ) );
-			add_action( 'wp_ajax_buddyboss_in_plugin_notification_dismiss', array( $this, 'dismiss' ) );
+			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_admin_notification_enqueues' ) );
+			add_action( 'admin_footer', array( $this, 'bb_admin_notification_menu_append_count' ) );
+			add_action( 'bp_admin_init', array( $this, 'bb_admin_notification_schedule_fetch' ) );
+			add_action( 'bb_in_plugin_admin_header_notifications', array( $this, 'bb_admin_notification_output' ) );
+			add_action( 'bb_in_plugin_admin_notifications_update', array( $this, 'bb_admin_notification_update' ) );
+			add_action( 'wp_ajax_buddyboss_in_plugin_notification_dismiss', array( $this, 'bb_admin_notification_dismiss' ) );
 		}
 
 		/**
@@ -86,18 +88,20 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 */
 		public function bb_admin_notification_header() {
 			global $bp;
-			$notifications = $this->get();
+			$notifications = $this->bb_admin_notification_get();
 			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-in-plugin-notifications.php';
 		}
 
 		/**
 		 * Make sure the feed is fetched when needed.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return void
 		 */
-		public function schedule_fetch() {
+		public function bb_admin_notification_schedule_fetch() {
 
-			$option = $this->get_option();
+			$option = $this->bb_admin_notification_get_option();
 
 			// Update notifications using an async task.
 			if ( empty( $option['update'] ) || time() > $option['update'] + 3 * HOUR_IN_SECONDS ) {
@@ -110,11 +114,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Get option value.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param bool $cache Reference property cache if available.
 		 *
 		 * @return array
 		 */
-		public function get_option( $cache = true ) {
+		public function bb_admin_notification_get_option( $cache = true ) {
 
 			if ( $this->option && $cache ) {
 				return $this->option;
@@ -135,41 +141,49 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Get notification count.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @throws Exception
 		 * @return int
 		 */
 		public function get_count() {
-			return count( $this->get() );
+			return count( $this->bb_admin_notification_get() );
 		}
 
 		/**
 		 * Get notification data.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @throws Exception
 		 * @return array
 		 */
-		public function get() {
+		public function bb_admin_notification_get() {
 
 			if ( ! self::has_access() ) {
 				return array();
 			}
 
-			$option = $this->get_option();
+			$option = $this->bb_admin_notification_get_option();
 
-			$events = ! empty( $option['events'] ) ? $this->verify_active( $option['events'] ) : array();
-			$feed   = ! empty( $option['feed'] ) ? $this->verify_active( $option['feed'] ) : array();
+			$events = ! empty( $option['events'] ) ? $this->bb_admin_notification_verify_active( $option['events'] ) : array();
+			$feed   = ! empty( $option['feed'] ) ? $this->bb_admin_notification_verify_active( $option['feed'] ) : array();
 
 			$notifications              = array();
 			$notifications['active']    = array_merge( $events, $feed );
-			$notifications['active']    = $this->get_notifications_with_human_readeable_start_time( $notifications['active'] );
-			$notifications['active']    = $this->get_notifications_with_formatted_content( $notifications['active'] );
+			$notifications['active']    = $this->bb_get_notifications_with_human_readeable_start_time( $notifications['active'] );
+			$notifications['active']    = $this->bb_get_notifications_with_formatted_content( $notifications['active'] );
 			$notifications['dismissed'] = ! empty( $option['dismissed'] ) ? $option['dismissed'] : array();
-			$notifications['dismissed'] = $this->get_notifications_with_human_readeable_start_time( $notifications['dismissed'] );
-			$notifications['dismissed'] = $this->get_notifications_with_formatted_content( $notifications['dismissed'] );
+			$notifications['dismissed'] = $this->bb_get_notifications_with_human_readeable_start_time( $notifications['dismissed'] );
+			$notifications['dismissed'] = $this->bb_get_notifications_with_formatted_content( $notifications['dismissed'] );
 
 			return $notifications;
 		}
 
 		/**
 		 * Check if user has access and is enabled.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return bool
 		 */
@@ -187,12 +201,14 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Verify saved notification data for active notifications.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param array $notifications Array of notification items to verify.
 		 *
 		 * @throws Exception
 		 * @return array
 		 */
-		public function verify_active( $notifications ) {
+		public function bb_admin_notification_verify_active( $notifications ) {
 
 			if ( ! is_array( $notifications ) || empty( $notifications ) ) {
 				return array();
@@ -226,11 +242,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		}
 
 		/**
-		 * Get notifications start time with human time difference
+		 * Get notifications start time with human time difference.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return void|array $notifications
 		 */
-		public function get_notifications_with_human_readeable_start_time( $notifications ) {
+		public function bb_get_notifications_with_human_readeable_start_time( $notifications ) {
 
 			if ( ! is_array( $notifications ) || empty( $notifications ) ) {
 				return;
@@ -255,11 +273,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Improve the format of the content of notifications before display. By default, run wpautop.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param array $notifications The notifications to be parsed.
 		 *
 		 * @return mixed
 		 */
-		public function get_notifications_with_formatted_content( $notifications ) {
+		public function bb_get_notifications_with_formatted_content( $notifications ) {
 			if ( ! is_array( $notifications ) || empty( $notifications ) ) {
 				return $notifications;
 			}
@@ -278,6 +298,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * Add an event notification. This is NOT for feed notifications.
 		 * Event notifications are for alerting the user to something internally (e.g. recent sales performances).
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param array $notification Notification data.
 		 */
 		public function add( $notification ) {
@@ -286,7 +308,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				return;
 			}
 
-			$option = $this->get_option();
+			$option = $this->bb_admin_notification_get_option();
 
 			// Already dismissed.
 			if ( array_key_exists( $notification['id'], $option['dismissed'] ) ) {
@@ -318,6 +340,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Verify notification data before it is saved.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param array $notifications Array of notification items to verify.
 		 *
 		 * @return array
@@ -329,7 +353,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				return $data;
 			}
 
-			$option = $this->get_option();
+			$option = $this->bb_admin_notification_get_option();
 
 			foreach ( $notifications as $id => $notification ) {
 
@@ -399,11 +423,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Update notification data from feed.
 		 * This pulls the latest notifications from our remote feed.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function update() {
+		public function bb_admin_notification_update() {
 
 			$feed   = $this->fetch_feed();
-			$option = $this->get_option();
+			$option = $this->bb_admin_notification_get_option();
 
 			bp_update_option(
 				'bb_in_plugin_admin_notifications',
@@ -418,6 +444,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		/**
 		 * Fetch notifications from remote feed.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return array
 		 */
@@ -439,14 +467,17 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		/**
 		 * Admin area enqueues.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @throws Exception
 		 */
-		public function enqueues() {
+		public function bb_admin_notification_enqueues() {
 
 			if ( ! self::has_access() ) {
 				return;
 			}
 
-			$notifications = $this->get();
+			$notifications = $this->bb_admin_notification_get();
 
 			if ( empty( $notifications ) ) {
 				return;
@@ -479,10 +510,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		/**
 		 * Admin script for adding notification count to the MemberPress admin menu list item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @throws Exception
 		 */
-		public function admin_menu_append_count() {
+		public function bb_admin_notification_menu_append_count() {
 
-			$notifications = $this->get();
+			$notifications = $this->bb_admin_notification_get();
 
 			if ( empty( $notifications['active'] ) || count( $notifications['active'] ) < 1 ) {
 				return;
@@ -527,10 +561,12 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		/**
 		 * Output notifications in MemberPress admin area.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function output() {
+		public function bb_admin_notification_output() {
 
-			$notifications = $this->get();
+			$notifications = $this->bb_admin_notification_get();
 
 			if ( empty( $notifications['active'] ) && empty( $notifications['dismissed'] ) ) {
 				return;
@@ -778,8 +814,10 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 		/**
 		 * Dismiss notification(s) via AJAX.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 */
-		public function dismiss() {
+		public function bb_admin_notification_dismiss() {
 
 			// Run a security check.
 			check_ajax_referer( 'bb-in-plugin-admin-notifications', 'nonce' );
@@ -790,7 +828,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			}
 
 			$id     = sanitize_text_field( wp_unslash( $_POST['id'] ) );
-			$option = $this->get_option();
+			$option = $this->bb_admin_notification_get_option();
 
 			if ( 'all' === $id ) { // Dismiss all notifications.
 
@@ -834,27 +872,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			bp_update_option( 'bb_in_plugin_admin_notifications', $option );
 
 			wp_send_json_success();
-		}
-
-		public function dismiss_events( $type ) {
-
-			$option = $this->get_option();
-
-			// Event notifications.
-			if ( ! empty( $option['events'] ) ) {
-				$found = 0;
-				foreach ( $option['events'] as $key => $notification ) {
-					// We found event.
-					if ( $type === $notification['type'] ) {
-						unset( $option['events'][ $key ] );
-						$found = 1;
-					}
-				}
-
-				if ( $found ) {
-					bp_update_option( 'bb_in_plugin_admin_notifications', $option );
-				}
-			}
 		}
 	}
 }

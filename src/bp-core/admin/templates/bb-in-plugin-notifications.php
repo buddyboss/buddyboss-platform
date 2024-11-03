@@ -95,13 +95,13 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 						<div class="bb-panel-body">
 							<div class="bb-notices-blocks-container">
 								<?php
-								// Check if we have any notifications to display
+								// Check if we have any notifications to display.
 								if ( ! empty( $all_notifications ) ) {
 									foreach ( $all_notifications as $notification ) {
 										$notification_title   = ! empty( $notification['title'] ) ? sanitize_text_field( $notification['title'] ) : '';
 										$notification_content = ! empty( $notification['content'] ) ? apply_filters( 'the_content', $notification['content'] ) : '';
 
-										// Time difference logic
+										// Time difference logic.
 										$time_diff        = ceil( ( time() - $notification['saved'] ) );
 										$time_diff_string = '';
 										if ( $time_diff < MINUTE_IN_SECONDS ) {
