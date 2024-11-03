@@ -189,6 +189,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 *
 		 * @param array $notifications Array of notification items to verify.
 		 *
+		 * @throws Exception
 		 * @return array
 		 */
 		public function verify_active( $notifications ) {
@@ -227,7 +228,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		/**
 		 * Get notifications start time with human time difference
 		 *
-		 * @return array $notifications
+		 * @return void|array $notifications
 		 */
 		public function get_notifications_with_human_readeable_start_time( $notifications ) {
 
@@ -547,7 +548,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 								continue;
 							}
 							$buttons_html .= sprintf(
-								'<a href="%1$s" class="button button-%2$s"%3$s>%4$s</a>',
+								'<a href="%1$s" class="button button-%2$s" %3$s>%4$s</a>',
 								! empty( $btn['url'] ) ? esc_url( $btn['url'] ) : '',
 								'main' === $btn_type ? 'primary' : 'secondary',
 								! empty( $btn['target'] ) && '_blank' === $btn['target'] ? ' target="_blank" rel="noopener noreferrer"' : '',
@@ -644,7 +645,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 								continue;
 							}
 							$buttons_html .= sprintf(
-								'<a href="%1$s" class="button button-%2$s"%3$s>%4$s</a>',
+								'<a href="%1$s" class="button button-%2$s" %3$s>%4$s</a>',
 								! empty( $btn['url'] ) ? esc_url( $btn['url'] ) : '',
 								'main' === $btn_type ? 'primary' : 'secondary',
 								! empty( $btn['target'] ) && '_blank' === $btn['target'] ? ' target="_blank" rel="noopener noreferrer"' : '',
@@ -704,7 +705,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					$notifications_html .= sprintf(
 						'<div id="buddyboss-notifications-message-%4$s" class="buddyboss-notifications-message" data-message-id="%4$s">
               <div class="buddyboss-notification-icon-title">
-              <img src="%5$s" width="32" height="32">
+              <img src="%5$s" width="32" height="32" alt="">
               <h3 class="buddyboss-notifications-title">%1$s</h3>
               <time datetime="%6$s">%7$s</time>
               </div>
