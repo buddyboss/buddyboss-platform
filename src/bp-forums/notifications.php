@@ -620,7 +620,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
 
-				$args = array(
+				$email_args = array(
 					'tokens' => array(
 						'usermessage'       => wp_strip_all_tags( $topic_content ),
 						'mentioned.url'     => $topic_url,
@@ -638,7 +638,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 					),
 				);
 
-				bp_send_email( $email_type, $user_id, $args );
+				bp_send_email( $email_type, $user_id, $email_args );
 			}
 		}
 	}
