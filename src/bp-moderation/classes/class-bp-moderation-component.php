@@ -98,14 +98,16 @@ class BP_Moderation_Component extends BP_Component {
 
 		// Global tables for activity component.
 		$global_tables = array(
-			'table_name'         => $bp->table_prefix . 'bp_suspend',
-			'table_name_reports' => $bp->table_prefix . 'bp_moderation',
-			'table_name_meta'    => $bp->table_prefix . 'bp_moderation_meta',
+			'table_name'              => $bp->table_prefix . 'bp_suspend',
+			'table_name_reports'      => $bp->table_prefix . 'bp_moderation',
+			'table_name_meta'         => $bp->table_prefix . 'bp_moderation_meta',
+			'table_name_suspend_meta' => $bp->table_prefix . 'bp_suspend_meta',
 		);
 
 		// Metadata tables for groups component.
 		$meta_tables = array(
 			'moderation' => $bp->table_prefix . 'bp_moderation_meta',
+			'suspend'    => $bp->table_prefix . 'bp_suspend_meta',
 		);
 
 		// Fetch the default directory title.
