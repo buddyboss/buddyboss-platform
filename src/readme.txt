@@ -57,6 +57,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.30 =
+* Enhancement: Moderation - Optimized moderation for improved performance
+* Bug: Activity - Fixed an issue where the “View x replies” popup was not displaying correctly in iOS mobile view
+* Bug: Activity - Fixed an issue with translation strings in the Activity news feed related to profile photo updates
+* Bug: Members - Fixed an issue where the member search feature on the member directory page was not functioning correctly for non-admin users
+
 = 2.7.20 =
 * Bug: Discussion - Fixed an issue where replying to a GIF in a discussion disappeared after restoring it from the trash
 * Bug: Learndash - Removed the Course tab from the Group Creation process on the front end when Social Group to LearnDash Group sync is disabled
