@@ -382,6 +382,8 @@ class BP_Friends_Friendship {
 		if ( false === $friendship_ids ) {
 			// Initialize the SQL query components.
 			$sql['select'] = "SELECT id FROM {$bp->friends->table_name}";
+			$sql['join']   = '';
+
 			/**
 			 * Filters the SELECT clause for retrieving friendship IDs.
 			 *
@@ -391,6 +393,16 @@ class BP_Friends_Friendship {
 			 * @param int    $user_id The user ID for whom friendship IDs are being fetched.
 			 */
 			$sql['select'] = apply_filters( 'bb_get_friendship_ids_for_user_select_sql', $sql['select'], $user_id );
+
+			/**
+			 * Filters the JOIN clause for retrieving friendship IDs.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $join  The JOIN clause of the SQL query.
+			 * @param int    $user_id The user ID for whom friendship IDs are being fetched.
+			 */
+			$sql['join'] = apply_filters( 'bb_get_friendship_ids_for_user_join_sql', $sql['join'], $user_id );
 
 			$sql['where'][] = $wpdb->prepare( "(initiator_user_id = %d OR friend_user_id = %d)", $user_id, $user_id );
 			/**
@@ -404,7 +416,7 @@ class BP_Friends_Friendship {
 			$sql['where'] = apply_filters( 'bb_get_friendship_ids_for_user_where_sql', $sql['where'], $user_id );
 			$where_sql    = 'WHERE ' . join( ' AND ', $sql['where'] );
 
-			$sql            = "{$sql['select']} {$where_sql} ORDER BY date_created DESC";
+			$sql            = "{$sql['select']} {$sql['join']} {$where_sql} ORDER BY date_created DESC";
 			$friendship_ids = $wpdb->get_col( $sql );
 
 			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
