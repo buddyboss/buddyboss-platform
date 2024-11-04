@@ -13545,6 +13545,10 @@ body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   border-radius: 50%;
 }
 
+.bp-messages-nav-panel #bb-messages-thread-list-nav .bp-navs.bp-subnavs {
+  overflow: initial;
+}
+
 .messages-wrapper #subnav #compose-personal-li {
   margin-right: 10px;
 }
