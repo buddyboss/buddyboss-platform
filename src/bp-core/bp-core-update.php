@@ -503,6 +503,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
+		if ( $raw_db_version < 21221 ) {
+			bb_update_to_2_7_50();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3808,4 +3812,17 @@ function bb_update_to_2_6_70() {
 			);
 		}
 	}
+}
+
+/**
+ * Remove deleted users's last_activity entries from activity table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_7_50() {
+
+	// Remove deleted user last_activity on update.
+	bb_remove_deleted_user_last_activities();
 }
