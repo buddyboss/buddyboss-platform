@@ -605,7 +605,7 @@ class BP_Core_Suspend {
 	/**
 	 * Return list of the DB columns.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @return string[]
 	 */
@@ -626,7 +626,7 @@ class BP_Core_Suspend {
 	/**
 	 * Fetch suspend ID by item ID and item type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param int    $item_id   item id.
 	 * @param string $item_type item type.
