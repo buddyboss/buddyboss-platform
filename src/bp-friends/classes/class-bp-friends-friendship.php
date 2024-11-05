@@ -418,8 +418,6 @@ class BP_Friends_Friendship {
 
 			$sql            = "{$sql['select']} {$sql['join']} {$where_sql} ORDER BY date_created DESC";
 			$friendship_ids = $wpdb->get_col( $sql );
-
-			error_log( print_r( $friendship_ids, true ) );
 			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
 		}
 
