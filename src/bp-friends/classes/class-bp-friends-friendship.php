@@ -381,7 +381,7 @@ class BP_Friends_Friendship {
 
 		if ( false === $friendship_ids ) {
 			// Initialize the SQL query components.
-			$sql['select'] = "SELECT id FROM {$bp->friends->table_name}";
+			$sql['select'] = "SELECT f.id FROM {$bp->friends->table_name} as f";
 			$sql['join']   = '';
 
 			/**
@@ -404,7 +404,7 @@ class BP_Friends_Friendship {
 			 */
 			$sql['join'] = apply_filters( 'bb_get_friendship_ids_for_user_join_sql', $sql['join'], $user_id );
 
-			$sql['where'][] = $wpdb->prepare( "(initiator_user_id = %d OR friend_user_id = %d)", $user_id, $user_id );
+			$sql['where'][] = $wpdb->prepare( "(f.initiator_user_id = %d OR f.friend_user_id = %d) AND f.is_confirmed = 1", $user_id, $user_id );
 			/**
 			 * Filters the WHERE clause for retrieving friendship IDs.
 			 *
@@ -419,6 +419,7 @@ class BP_Friends_Friendship {
 			$sql            = "{$sql['select']} {$sql['join']} {$where_sql} ORDER BY date_created DESC";
 			$friendship_ids = $wpdb->get_col( $sql );
 
+			error_log( print_r( $friendship_ids, true ) );
 			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
 		}
 
