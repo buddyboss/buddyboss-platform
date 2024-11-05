@@ -1070,8 +1070,8 @@ add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch
  * @return array Modified array of WHERE clause conditions.
  */
 function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
-
-	$where[] = ' s.id IS NULL';
+	$where[] = '(s.user_suspended = 0 OR s.user_suspended IS NULL)';
+	$where[] = '(s.hide_sitewide = 0 OR s.hide_sitewide IS NULL)';
 
 	return $where;
 }
@@ -1083,22 +1083,30 @@ add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_frien
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $join  The JOIN clause of the SQL query.
+ * @param string $join    The JOIN clause of the SQL query.
  * @param int    $user_id The user ID for whom friendship IDs are being fetched.
  *
  * @return string Modified JOIN clause of the SQL query.
  */
 function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
-	$bp = buddypress();
+    $bp = buddypress();
 
-	$join .= " LEFT JOIN {$bp->moderation->table_name} s ON (
-		(f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)
-		AND s.item_type = 'user'
-		AND s.user_suspended = 1
-		AND s.hide_sitewide = 1
-	)";
+    // Join with the wp_bp_suspend table to filter out users based on suspension criteria.
+    $join .= ' LEFT JOIN ' . $bp->moderation->table_name . ' s ON (';
+    $join .= ' (f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)';
+    $join .= ' AND s.item_type = "user"';
+    $join .= ')';
 
-	return $join;
+    // Join with the wp_bp_moderation table to apply moderation checks.
+    $join .= ' LEFT JOIN ' . $bp->moderation->table_name_reports . ' m ON (';
+    $join .= ' s.id = m.moderation_id';
+    $join .= ' AND (';
+    $join .= ' (m.user_id = ' . $user_id . ' AND m.user_report = 0)';
+    $join .= ' OR m.user_report != 1';
+    $join .= ')';
+    $join .= ')';
+
+    return $join;
 }
 
 add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
