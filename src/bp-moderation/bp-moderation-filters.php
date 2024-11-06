@@ -1076,7 +1076,7 @@ function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id )
 	return $where;
 }
 
-//add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
 
 /**
  * Filters the JOIN clause for friendship IDs to exclude suspended users.
@@ -1089,27 +1089,28 @@ function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id )
  * @return string Modified JOIN clause of the SQL query.
  */
 function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
-    $bp = buddypress();
+	$bp = buddypress();
 
-    // Join with the wp_bp_suspend table to filter out users based on suspension criteria.
-    $join .= ' LEFT JOIN ' . $bp->moderation->table_name . ' s ON (';
-    $join .= ' (f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)';
-    $join .= ' AND s.item_type = "user"';
-    $join .= ')';
+	// Join with the wp_bp_suspend table to filter out users based on suspension criteria.
+	$join .= ' LEFT JOIN ' . $bp->moderation->table_name . ' s ON (';
+	$join .= ' (f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)';
+	$join .= ' AND s.item_type = "user"';
+	$join .= ' AND (s.hide_sitewide = 1 OR s.user_suspended = 1)';
+	$join .= ')';
 
-    // Join with the wp_bp_moderation table to apply moderation checks.
-    $join .= ' LEFT JOIN ' . $bp->moderation->table_name_reports . ' m ON (';
-    $join .= ' s.id = m.moderation_id';
-    $join .= ' AND (';
-    $join .= ' (m.user_id = ' . $user_id . ' AND m.user_report = 0)';
-    $join .= ' OR m.user_report != 1';
-    $join .= ')';
-    $join .= ')';
+	// Join with the wp_bp_moderation table to apply moderation checks.
+	$join .= ' LEFT JOIN ' . $bp->moderation->table_name_reports . ' m ON (';
+	$join .= ' s.id = m.moderation_id';
+	$join .= ' AND (';
+	$join .= ' (m.user_id = ' . $user_id . ' AND m.user_report = 0)';
+	$join .= ' OR m.user_report != 1';
+	$join .= ')';
+	$join .= ')';
 
-    return $join;
+	return $join;
 }
 
-//add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
 
 
 function bb_test_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
@@ -1133,4 +1134,4 @@ function bb_test_moderation_get_friendship_ids_for_user_where_sql( $where, $user
 	return $where;
 }
 
-add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_test_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
+//add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_test_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
