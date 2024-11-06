@@ -832,7 +832,7 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 /**
  * Get metadata for a given suspend item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.30
  *
  * @param int    $suspend_id ID of the suspend item whose metadata is being requested.
  * @param string $meta_key   Optional. If present, only the metadata matching
@@ -852,7 +852,7 @@ function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) 
 	/**
 	 * Filters the metadata for a specified suspend item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param mixed  $retval     The meta values for the moderation item.
 	 * @param int    $suspend_id ID of the suspend item.
@@ -865,7 +865,7 @@ function bb_suspend_get_meta( $suspend_id = 0, $meta_key = '', $single = true ) 
 /**
  * Add a piece of suspend metadata.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.30
  *
  * @param int    $suspend_id ID of the suspend item.
  * @param string $meta_key   Metadata key.
@@ -887,7 +887,7 @@ function bb_suspend_add_meta( $suspend_id, $meta_key, $meta_value, $unique = fal
 /**
  * Update a piece of suspend meta.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.30
  *
  * @param int    $suspend_id ID of the suspend item whose metadata is being updated.
  * @param string $meta_key   Key of the metadata being updated.
@@ -910,7 +910,7 @@ function bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value, $prev_valu
 /**
  * Delete a meta entry from the DB for a suspend item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.30
  *
  * @global wpdb  $wpdb       WordPress database abstraction object.
  *
@@ -2177,7 +2177,7 @@ function bb_moderation_migration_on_update() {
 	/**
 	 * Create new database table for suspend meta.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 */
 	$bp_prefix  = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
 	$table_name = $bp_prefix . 'bp_suspend_meta';
@@ -2209,7 +2209,7 @@ function bb_moderation_migration_on_update() {
 	/**
 	 * Add indexes for performance improvement.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 */
 	$index_exists = $wpdb->get_var( "SHOW INDEX FROM {$bp_prefix}bp_suspend_details WHERE Key_name = 'user_id'" );
 	if ( empty( $index_exists ) ) {
