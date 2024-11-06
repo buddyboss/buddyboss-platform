@@ -1076,7 +1076,7 @@ function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id )
 	return $where;
 }
 
-add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
+//add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
 
 /**
  * Filters the JOIN clause for friendship IDs to exclude suspended users.
@@ -1109,4 +1109,28 @@ function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
     return $join;
 }
 
-add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+//add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+
+
+function bb_test_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
+	global $wpdb;
+	$moderated_user_ids = bb_moderation_moderated_user_ids();
+
+	// If user ID is also in fetched modarated user ids, remove it.
+	if ( in_array( $user_id, $moderated_user_ids, true ) ) {
+		$moderated_user_ids = array_diff( $moderated_user_ids, array( $user_id ) );
+	}
+
+	// If there are any suspended users, add conditions to exclude them.
+	if ( ! empty( $moderated_user_ids ) ) {
+		$placeholders = implode( ', ', array_fill( 0, count( $moderated_user_ids ), '%d' ) );
+		$where[] = $wpdb->prepare(
+			"(initiator_user_id NOT IN ( {$placeholders} ) AND friend_user_id NOT IN ( {$placeholders} ))",
+			...$moderated_user_ids,
+			...$moderated_user_ids
+		);
+	}
+	return $where;
+}
+
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_test_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
