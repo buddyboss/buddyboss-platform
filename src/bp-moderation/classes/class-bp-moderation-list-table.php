@@ -754,7 +754,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * Filters the MySQL WHERE conditions for the Moderation items get method.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param array $where_conditions Current conditions for MySQL WHERE statement.
 	 * @param array $r                Parsed arguments passed into method.
