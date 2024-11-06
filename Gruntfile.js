@@ -452,7 +452,8 @@ module.exports = function (grunt) {
 					command: 'composer update; composer scoper;',
 					cwd: SOURCE_DIR,
 					stdout: false
-				}
+				},
+				convert_json_to_php: 'npm run convert-json-to-php'
 			},
 			jsvalidate: {
 				options: {
@@ -493,17 +494,6 @@ module.exports = function (grunt) {
 						includeFilters: ['.*\\.php$'],
 						excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'vendor/', 'src/vendor/', 'src/bp-core/admin/js/lib/'],
 					},
-				}
-			},
-			json2php: {
-				convert: {
-					expand: true,
-					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
-					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
-					ext: '.php',
-					src: [
-						'font-map.json'
-					]
 				}
 			},
 			'string-replace': {
@@ -548,7 +538,7 @@ module.exports = function (grunt) {
 			'exec:fetch_bb_icons',
 			'copy:bb_icons',
 			'clean:bb_icons',
-			'json2php',
+			'exec:convert_json_to_php',
 			'string-replace:icon-translate',
 			'rtlcss',
 			'cssmin'
