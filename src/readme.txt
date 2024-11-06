@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 8.0
-Stable tag: 2.7.20
+Stable tag: 2.7.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.30 =
+* Enhancement: Moderation - Optimized moderation for improved performance
+* Bug: Activity - Fixed an issue where the “View x replies” popup was not displaying correctly in iOS mobile view
+* Bug: Activity - Fixed an issue with translation strings in the Activity news feed related to profile photo updates
+* Bug: Members - Fixed an issue where the member search feature on the member directory page was not functioning correctly for non-admin users
 
 = 2.7.20 =
 * Bug: Discussion - Fixed an issue where replying to a GIF in a discussion disappeared after restoring it from the trash
