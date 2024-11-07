@@ -29,7 +29,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
