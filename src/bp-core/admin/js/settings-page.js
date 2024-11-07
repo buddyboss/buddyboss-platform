@@ -2884,6 +2884,44 @@ window.bp = window.bp || {};
 		} );
 	}
 
+	$( document ).on( 'change', '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]', function( e ) {
+		e.preventDefault();
+		var telemetry_notice = '';
+
+		if ( $( this ).is( ':checked' ) ) {
+			telemetry_notice = $( this ).data( 'notice' );
+			if ( '' !== telemetry_notice ) {
+				$( '.bb-telemetry-mode-description' ).html( telemetry_notice );
+			}
+		}
+	});
+
+	$(document).on( 'click', '.bb-telemetry-notice .notice-dismiss', function( e ) {
+		e.preventDefault();
+
+		// Retrieve the nonce from the notice element.
+		var nonce = jQuery( this ).closest( '.bb-telemetry-notice' ).data( 'nonce' );
+		if ( 'undefined' === typeof nonce ) {
+			return;
+		}
+
+		$.ajax(
+			{
+				type   : 'POST',
+				url    : BP_ADMIN.ajax_url,
+				data   : {
+					'action': 'dismiss_bb_telemetry_notice',
+					'nonce' : nonce
+				},
+				success: function ( response ) {
+					if ( response.success ) {
+						jQuery( '.bb-telemetry-notice' ).fadeOut();
+					}
+				},
+			}
+		);
+	});
+
 	/* jshint ignore:end */
 
 }());

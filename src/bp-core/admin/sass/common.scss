@@ -4148,6 +4148,22 @@ table.moderations .column-member {
 		}
 	}
 }
+
+/*------------------------------------------------------------------------------
+ * Telemetry Settings
+ *----------------------------------------------------------------------------*/
+
+.bb-telemetry-notice.notice-info {
+	border-left-color: #e0623d;
+}
+
+.section-bb_advanced_telemetry {
+
+	label[for="complete_reporting"] {
+		margin-right: 15px;
+	}
+}
+
 // Integrations Listing
 .bb-integrations-section h1.bb-advance-heading {
 	max-width: 900px;
