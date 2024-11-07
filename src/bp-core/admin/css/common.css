@@ -3836,7 +3836,51 @@ table.moderations .column-member img {
  * Telemetry Settings
  *----------------------------------------------------------------------------*/
 .bb-telemetry-notice.notice-info {
+  display: flex;
   border-left-color: #e0623d;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.bb-telemetry-notice.notice-info .bb-telemetry-notice_content {
+  padding-left: 20px;
+}
+
+.bb-telemetry-notice.notice-info .bb-telemetry-notice_logo {
+  background-color: rgba(224, 98, 61, 0.1);
+  padding: 15px 10px;
+  color: #e0623d;
+  font-size: 28px;
+}
+
+.bb-telemetry-notice.notice-info .bb-telemetry-notice_heading {
+  font-size: 16px;
+  margin: 1.2em 0 0.5em;
+}
+
+.bb-telemetry-notice.notice-info p {
+  margin-bottom: 15px;
+}
+
+.bb-telemetry-notice.notice-info a.button {
+  padding: 5px 16px;
+  display: inline-block;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.bb-telemetry-notice.notice-info a.button:after {
+  font-size: 16px;
+  content: "\ee68";
+  font-family: bb-icons;
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.bb-telemetry-notice.notice-info .notice-dismiss:before {
+  font-size: 20px;
+  content: "\e828";
+  font-family: bb-icons;
 }
 
 .section-bb_advanced_telemetry label[for="complete_reporting"] {

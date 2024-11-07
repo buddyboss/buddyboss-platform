@@ -520,29 +520,32 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$telemetry_url = '#';
 			?>
 			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">
-				<p><strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong></p>
-				<p>
-					<?php
-					// Message with link to telemetry settings.
-					printf(
-						wp_kses(
-							/* translators: %1$s and %2$s are links. */
-							__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you’re happy with that, you can dismiss this message; otherwise, you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
-							array(
-								'a' => array(
-									'href' => array(),
-								),
-							)
-						),
-						esc_url( $settings_url )
-					);
-					?>
-				</p>
-				<p>
-					<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary">
-						<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
-					</a>
-				</p>
+				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
+				<div class="bb-telemetry-notice_content">
+					<p class="bb-telemetry-notice_heading"><strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong></p>
+					<p>
+						<?php
+						// Message with link to telemetry settings.
+						printf(
+							wp_kses(
+								/* translators: %1$s and %2$s are links. */
+								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you’re happy with that, you can dismiss this message; otherwise, you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								array(
+									'a' => array(
+										'href' => array(),
+									),
+								)
+							),
+							esc_url( $settings_url )
+						);
+						?>
+					</p>
+					<p>
+						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary">
+							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
+						</a>
+					</p>
+				</div>		
 			</div>
 			<?php
 		}
