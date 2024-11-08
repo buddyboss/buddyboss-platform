@@ -36,9 +36,13 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		$bb_activity_load_type = isset( $_POST['bb_activity_load_type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_activity_load_type'] ) ) : '';
 		bp_update_option( 'bb_activity_load_type', $bb_activity_load_type );
 
-		$this->bb_admin_on_save_check_telementry_complete();
+		// Get old telemetry setting value.
+		$old_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting' );
 
 		parent::settings_save();
+
+		// After settings saved.
+		$this->bb_admin_on_save_check_telemetry_complete( $old_telemetry_reporting );
 	}
 
 	/**
@@ -204,21 +208,24 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Gets old values for DB and check if it changed to complete reporting then send telemetry as well.
+	 * Checks old values and compares if it changed to complete reporting then send telemetry as well.
+	 *
+	 * @param string $old_telemetry_reporting Old telemetry setting value.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_admin_on_save_check_telementry_complete() {
+	public function bb_admin_on_save_check_telemetry_complete( $old_telemetry_reporting ) {
 		check_admin_referer( $this->tab_name . '-options' );
 
-		// Get old values for DB and check if it changed to complete reporting then send telemetry as well.
-		$old_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting' );
-		$new_telemetry_reporting = isset( $_POST['bb_advanced_telemetry_reporting'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_advanced_telemetry_reporting'] ) ) : '';
-		if ( 'complete' === $new_telemetry_reporting && $old_telemetry_reporting !== $new_telemetry_reporting ) {
-			if ( class_exists( 'BB_Telemetry' ) ) {
-				$bb_telemetry = BB_Telemetry::instance();
-				$bb_telemetry::$bb_telemetry_option = $new_telemetry_reporting;
-				$bb_telemetry->bb_send_telemetry_report_to_analytics();
+		if ( ! empty( $old_telemetry_reporting ) ) {
+
+			// Check if it changed to complete reporting then send telemetry as well.
+			$new_telemetry_reporting = isset( $_POST['bb_advanced_telemetry_reporting'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_advanced_telemetry_reporting'] ) ) : '';
+			if ( 'complete' === $new_telemetry_reporting && $old_telemetry_reporting !== $new_telemetry_reporting ) {
+				if ( class_exists( 'BB_Telemetry' ) ) {
+					$bb_telemetry = BB_Telemetry::instance();
+					$bb_telemetry->bb_send_telemetry_report_to_analytics();
+				}
 			}
 		}
 	}

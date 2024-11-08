@@ -106,8 +106,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_send_telemetry_report_to_analytics() {
-			error_log('bb_send_telemetry_report_to_analytics');
-			error_log( self::$bb_telemetry_option );
 			if (
 				'disable' === self::$bb_telemetry_option ||
 				! $this->bb_whitelist_domain_for_telemetry()
