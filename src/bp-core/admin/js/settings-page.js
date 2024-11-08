@@ -2884,16 +2884,26 @@ window.bp = window.bp || {};
 		} );
 	}
 
-	$( document ).on( 'change', '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]', function( e ) {
-		e.preventDefault();
-		var telemetry_notice = '';
+	$( document ).on( 'change', '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]', function() {
+		var telemetry_notice = '',
+			telemetry_mode   = $( this ).val();
 
 		if ( $( this ).is( ':checked' ) ) {
 			telemetry_notice = $( this ).data( 'notice' );
-			if ( '' !== telemetry_notice ) {
+			if ( 'undefined' !== typeof telemetry_notice && '' !== telemetry_notice  ) {
 				$( '.bb-telemetry-mode-description' ).html( telemetry_notice );
 			}
+
+			if ( '' !== telemetry_mode && 'disable' !== telemetry_mode ) {
+				$( '.bb-setting-telemetry-no-reporting' ).addClass( 'bp-hide' );
+			}
 		}
+	});
+
+	$( document ).on( 'click', '.bb-disable-telemetry-link', function( e ) {
+		e.preventDefault();
+		$( '.bb-setting-telemetry-no-reporting' ).removeClass( 'bp-hide' );
+		$( '.bb-setting-telemetry-no-reporting input' ).prop( 'checked', true );
 	});
 
 	$(document).on( 'click', '.bb-telemetry-notice .notice-dismiss', function( e ) {

@@ -36,8 +36,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		$bb_activity_load_type = isset( $_POST['bb_activity_load_type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_activity_load_type'] ) ) : '';
 		bp_update_option( 'bb_activity_load_type', $bb_activity_load_type );
 
-		$bb_disable_advanced_telemetry_reporting = isset( $_POST['bb_disable_advanced_telemetry_reporting'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_disable_advanced_telemetry_reporting'] ) ) : 0;
-		bp_update_option( 'bb_disable_advanced_telemetry_reporting', $bb_disable_advanced_telemetry_reporting );
+		$this->bb_admin_on_save_check_telementry_complete();
 
 		parent::settings_save();
 	}
@@ -128,25 +127,26 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				'value'    => 'complete',
 				'id'       => 'complete_reporting',
 				'checked'  => 'complete' === $bb_advanced_telemetry_reporting,
-				'notice'   => esc_html__( 'Telemetry helps us gather usage statistics and information about your 
-								configuration and the features and functionality you use. We aggregate this information to help us 
-								improve our product and associate it with your customer record to help us serve you better. 
-								We do not gather or send any of your users\' personally identifiable information. 
-								To stop contributing towards improving the product you can disable telemetry.', 'buddyboss' ),
+				/* translators: %1$s and %2$s wrap the phrase "disable telemetry" in a clickable link. */
+				'notice'   => sprintf(
+					esc_html__( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product and associate it with your customer record to help us serve you better. We do not gather or send any of your users\' personally identifiable information. To stop contributing towards improving the product, you can %1$sdisable telemetry%2$s.', 'buddyboss' ),
+					'<a class="bb-disable-telemetry-link" href="#">',
+					'</a>'
+				),
 				'disabled' => false,
 			),
 			'anonymous' => array(
-				'label'    => esc_html__( 'Anonymous reporting', 'buddyboss' ),
-				'name'     => 'bb_advanced_telemetry_reporting',
-				'value'    => 'anonymous',
-				'id'       => 'anonymous_reporting',
-				'checked'  => 'anonymous' === $bb_advanced_telemetry_reporting,
-				'notice'   => esc_html__('Telemetry helps us gather usage statistics and information about your 
-								configuration and the features and functionality you use. We aggregate this information to help us 
-								improve our product. By choosing anonymous reporting, your data will not be associated with your 
-								customer record, and the way we serve you will be less relevant to you. We do not gather or 
-								send any of your users\' personally identifiable information. If you stop contributing towards 
-								improving the product, you can disable telemetry.', 'buddyboss' ),
+				'label'   => esc_html__( 'Anonymous reporting', 'buddyboss' ),
+				'name'    => 'bb_advanced_telemetry_reporting',
+				'value'   => 'anonymous',
+				'id'      => 'anonymous_reporting',
+				'checked' => 'anonymous' === $bb_advanced_telemetry_reporting,
+				/* translators: %1$s and %2$s wrap the phrase "disable telemetry" in a clickable link. */
+				'notice'  => sprintf(
+					esc_html__( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product. By choosing anonymous reporting, your data will not be associated with your customer record, and the way we serve you will be less relevant to you. We do not gather or send any of your users\' personally identifiable information. If you stop contributing towards improving the product, you can %1$sdisable telemetry%2$s.', 'buddyboss' ),
+					'<a class="bb-disable-telemetry-link" href="#">',
+					'</a>'
+				),
 			),
 		);
 
@@ -160,7 +160,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 						type="radio"
 						value="<?php echo $telemetry_mode['value']; ?>"
 						data-current-val="<?php echo esc_attr( $telemetry_mode['value'] ); ?>"
-						data-notice="<?php echo ! empty( $telemetry_mode['notice'] ) ? $telemetry_mode['notice'] : ''; ?>"
+						data-notice="<?php echo ! empty( $telemetry_mode['notice'] ) ? htmlspecialchars( $telemetry_mode['notice'], ENT_QUOTES, 'UTF-8' ) : ''; ?>"
 						<?php
 						checked( $telemetry_mode['checked'] );
 						?>
@@ -168,7 +168,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 					<?php echo $telemetry_mode['label']; ?>
 				</label>
 				<?php
-				if ( ! empty( $telemetry_mode['checked'] ) ) {
+				if ( ! empty( $telemetry_mode['checked'] ) || ( 'disable' === $bb_advanced_telemetry_reporting && 'complete' === $telemetry_mode['value'] ) ) {
 					$notice_text = $telemetry_mode['notice'];
 				}
 			}
@@ -181,11 +181,11 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				<?php
 			}
 		}
-		$bb_disable_advanced_telemetry_reporting = bp_get_option( 'bb_disable_advanced_telemetry_reporting', 0 );
 		?>
+		<div class='bb-setting-telemetry-no-reporting <?php echo ( 'disable' !== $bb_advanced_telemetry_reporting ) ? esc_attr( 'bp-hide' ) : ''; ?>'>
 			<br>
 			<label for="no_reporting">
-				<input name="bb_disable_advanced_telemetry_reporting" id="disable_reporting" value='1' type="checkbox" <?php checked( $bb_disable_advanced_telemetry_reporting, 1 ); ?>/>
+				<input name="bb_advanced_telemetry_reporting" id="disable_reporting" type="radio" value="disable" <?php checked( $bb_advanced_telemetry_reporting, 'disable' ); ?>/>
 				<?php esc_html_e( 'Disable telemetry', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
@@ -199,7 +199,28 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 				);
 				?>
 			</p>
+		</div>
 		<?php
+	}
+
+	/**
+	 * Gets old values for DB and check if it changed to complete reporting then send telemetry as well.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_on_save_check_telementry_complete() {
+		check_admin_referer( $this->tab_name . '-options' );
+
+		// Get old values for DB and check if it changed to complete reporting then send telemetry as well.
+		$old_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting' );
+		$new_telemetry_reporting = isset( $_POST['bb_advanced_telemetry_reporting'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_advanced_telemetry_reporting'] ) ) : '';
+		if ( 'complete' === $new_telemetry_reporting && $old_telemetry_reporting !== $new_telemetry_reporting ) {
+			if ( class_exists( 'BB_Telemetry' ) ) {
+				$bb_telemetry = BB_Telemetry::instance();
+				$bb_telemetry::$bb_telemetry_option = $new_telemetry_reporting;
+				$bb_telemetry->bb_send_telemetry_report_to_analytics();
+			}
+		}
 	}
 }
 

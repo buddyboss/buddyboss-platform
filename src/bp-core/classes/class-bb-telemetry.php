@@ -45,15 +45,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public static $bb_telemetry_option;
 
 		/**
-		 * Telemetry Disabled.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @var bb_telemetry_disabled
-		 */
-		public static $bb_telemetry_disabled;
-
-		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -77,8 +68,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			self::$wpdb = $wpdb;
 
-			self::$bb_telemetry_option   = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
-			self::$bb_telemetry_disabled = bp_get_option( 'bb_disable_advanced_telemetry_reporting', 0 );
+			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -90,9 +80,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Schedule the single event in next 10 minute.
-			if ( ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) && ! bp_get_option( 'bb_telemetry_report_single_cron_event_scheduled' ) ) {
+			if ( ! bp_get_option( 'bb_telemetry_report_single_cron_event_scheduled', 0 ) && ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
 				wp_schedule_single_event( time() + ( 10 * MINUTE_IN_SECONDS ), 'bb_telemetry_report_single_cron_event' );
-				bp_update_option( 'bb_telemetry_report_single_cron_event_scheduled' , 1 );
+				bp_update_option( 'bb_telemetry_report_single_cron_event_scheduled', 1 );
 			}
 
 			$this->setup_actions();
@@ -116,8 +106,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_send_telemetry_report_to_analytics() {
+			error_log('bb_send_telemetry_report_to_analytics');
+			error_log( self::$bb_telemetry_option );
 			if (
-				self::$bb_telemetry_disabled ||
+				'disable' === self::$bb_telemetry_option ||
 				! $this->bb_whitelist_domain_for_telemetry()
 			) {
 				return;
@@ -146,7 +138,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			);
 
 			$raw_response = wp_remote_post( $api_url, $args );
-
 			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
 				unset( $data, $auth_key, $api_url, $args );
 
