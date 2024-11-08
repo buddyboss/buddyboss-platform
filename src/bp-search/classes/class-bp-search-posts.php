@@ -179,6 +179,19 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					remove_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 
+				if ( 
+					class_exists( 'Elementor\Plugin' ) &&
+					class_exists( 'Elementor\Frontend' ) &&
+					defined( 'Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY' ) &&
+					method_exists( Elementor\Plugin::instance()->frontend, 'apply_builder_in_content' )
+				) {
+					// Retrieve the Elementor Frontend instance.
+					$frontend = Elementor\Plugin::instance()->frontend;
+
+					// Remove the filter for `apply_builder_in_content`.
+					remove_filter( 'the_content', [ $frontend, 'apply_builder_in_content' ], Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
+				}
+
 				while ( $qry->have_posts() ) {
 					$qry->the_post();
 					$result = array(
@@ -194,6 +207,19 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				// Add Boots Frond End Builder App.
 				if ( class_exists( 'ET_Builder_Plugin' ) && function_exists( 'et_fb_app_boot' ) ) {
 					add_filter( 'the_content', 'et_fb_app_boot', 1 );
+				}
+
+				if ( 
+					class_exists( 'Elementor\Plugin' ) &&
+					class_exists( 'Elementor\Frontend' ) &&
+					defined( 'Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY' ) &&
+					method_exists( Elementor\Plugin::instance()->frontend, 'apply_builder_in_content' )
+				) {
+					// Retrieve the Elementor Frontend instance.
+					$frontend = Elementor\Plugin::instance()->frontend;
+
+					// Add the filter for `apply_builder_in_content`.
+					add_filter( 'the_content', [ $frontend, 'apply_builder_in_content' ], Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
 				}
 			}
 			wp_reset_postdata();
