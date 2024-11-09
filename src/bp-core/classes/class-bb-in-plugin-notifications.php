@@ -353,56 +353,52 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				return $data;
 			}
 
-			$option = $this->bb_admin_notification_get_option();
+			$license_exists = function_exists( 'bbp_pro_is_license_valid' ) ? bbp_pro_is_license_valid() : false;
+			$option         = $this->bb_admin_notification_get_option();
+			$current_time   = time();
+			$activated_time = bp_get_option( 'bb_activation_time', $current_time );
 
 			foreach ( $notifications as $id => $notification ) {
+				$plans      = ! empty( $notification['plans'] ) ? array_column( $notification['plans'], 'slug' ) : array();
+				$segment    = $notification['segment'] ?? '';
+				$end_time   = ! empty( $notification['end'] ) ? strtotime( $notification['end'] ) : '';
+				$start_time = ! empty( $notification['start'] ) ? strtotime( $notification['start'] ) : '';
 
 				// The message should never be empty - if it is, ignore.
 				if ( empty( $notification['content'] ) ) {
 					continue;
 				}
 
-				// Check the format of 'end' before processing.
-				if ( ! empty( $notification['end'] ) ) {
-					// Convert 'end' to a proper format if necessary.
-					if ( preg_match( '/^\d{4}:\d{2}:\d{2}$/', $notification['end'] ) ) {
-						// Convert to `Y-m-d` format
-						$notification['end'] = str_replace( ':', '-', $notification['end'] );
-					}
-
-					// Parse the date and compare.
-					$notification['end'] = gmdate( 'Y-m-d H:i:s', strtotime( $notification['end'] ) );
-
-					// Ignore if expired.
-					if ( time() > strtotime( $notification['end'] ) ) {
-						continue;
-					}
-				}
-
-				// Ignore if notification has already been dismissed.
-				if ( ! empty( $option['dismissed'] ) && array_key_exists( $notification['id'], $option['dismissed'] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+				// Ignore if segment is for expired licenses, but the license is current.
+				// Ignore if segment is for inactive licenses, but license is active.
+				if (
+					in_array( 'pro', $plans, true ) &&
+					(
+						(
+							'expired' === $segment ||
+							'inactive' === $segment
+						) &&
+						! $license_exists
+					)
+				) {
 					continue;
 				}
 
-				$activated = time();
-				if ( ! empty( $notification['start'] ) ) {
+				// Ignore if expired.
+				if ( $end_time && $current_time > $end_time ) {
+					continue;
+				}
 
-					// Convert 'end' to a proper format if necessary.
-					if ( preg_match( '/^\d{4}:\d{2}:\d{2}$/', $notification['start'] ) ) {
-						// Convert to `Y-m-d` format.
-						$notification['start'] = str_replace( ':', '-', $notification['start'] );
-					}
+				// Ignore if notification has already been dismissed.
+				if (
+					! empty( $option['dismissed'] ) &&
+					array_key_exists( $notification['id'], $option['dismissed'] )
+				) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+					continue;
+				}
 
-					// Parse the date and compare.
-					$notification['start'] = gmdate( 'Y-m-d H:i:s', strtotime( $notification['start'] ) );
-
-					if (
-						! empty( $activated ) &&
-						! empty( $notification['start'] ) &&
-						$activated > strtotime( $notification['start'] )
-					) {
-						continue;
-					}
+				if ( $start_time && $activated_time > $start_time ) {
+					continue;
 				}
 
 				$data[ $id ] = $notification;
