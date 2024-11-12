@@ -151,6 +151,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 					'<a class="bb-disable-telemetry-link" href="#">',
 					'</a>'
 				),
+				'disabled' => false,
 			),
 		);
 
@@ -158,7 +159,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 			$notice_text = '';
 			foreach ( $telemetry_modes as $telemetry_mode ) {
 				?>
-				<label for="<?php echo esc_attr( $telemetry_mode['id'] ); ?>" class="<?php echo esc_attr( ! empty( $reaction_mode['disabled'] ) ? 'disabled' : '' ); ?>">
+				<label for="<?php echo esc_attr( $telemetry_mode['id'] ); ?>" class="<?php echo esc_attr( ! empty( $telemetry_mode['disabled'] ) ? 'disabled' : '' ); ?>">
 					<input name="<?php echo esc_attr( $telemetry_mode['name'] ); ?>"
 						id="<?php echo esc_attr( $telemetry_mode['id'] ); ?>"
 						type="radio"
