@@ -2902,8 +2902,15 @@ window.bp = window.bp || {};
 
 	$( document ).on( 'click', '.bb-disable-telemetry-link', function( e ) {
 		e.preventDefault();
-		$( '.bb-setting-telemetry-no-reporting' ).removeClass( 'bp-hide' );
-		$( '.bb-setting-telemetry-no-reporting input' ).prop( 'checked', true );
+
+		// Show telemetry no-reporting setting and mark as checked.
+		var $no_reporting_setting = jQuery( '.bb-setting-telemetry-no-reporting' );
+		$no_reporting_setting.removeClass( 'bp-hide' );
+		$no_reporting_setting.find( 'input' ).prop( 'checked', true );
+	
+		// Update telemetry mode description with data from the first telemetry input field.
+		var notice_text = jQuery( '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]' ).first().data( 'notice' );
+		jQuery( '.bb-telemetry-mode-description' ).html( notice_text );
 	});
 
 	$(document).on( 'click', '.bb-telemetry-notice .notice-dismiss', function( e ) {

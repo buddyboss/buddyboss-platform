@@ -42,7 +42,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		parent::settings_save();
 
 		// After settings saved.
-		$this->bb_admin_on_save_check_telemetry_complete( $old_telemetry_reporting );
+		$this->bb_admin_send_immediate_telemetry_on_complete( $old_telemetry_reporting );
 	}
 
 	/**
@@ -163,14 +163,14 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 					<input name="<?php echo esc_attr( $telemetry_mode['name'] ); ?>"
 						id="<?php echo esc_attr( $telemetry_mode['id'] ); ?>"
 						type="radio"
-						value="<?php echo $telemetry_mode['value']; ?>"
+						value="<?php echo esc_html( $telemetry_mode['value'] ); ?>"
 						data-current-val="<?php echo esc_attr( $telemetry_mode['value'] ); ?>"
 						data-notice="<?php echo ! empty( $telemetry_mode['notice'] ) ? htmlspecialchars( $telemetry_mode['notice'], ENT_QUOTES, 'UTF-8' ) : ''; ?>"
 						<?php
 						checked( $telemetry_mode['checked'] );
 						?>
 					/>
-					<?php echo $telemetry_mode['label']; ?>
+					<?php echo esc_html( $telemetry_mode['label'] ); ?>
 				</label>
 				<?php
 				if ( ! empty( $telemetry_mode['checked'] ) || ( 'disable' === $bb_advanced_telemetry_reporting && 'complete' === $telemetry_mode['value'] ) ) {
@@ -209,25 +209,35 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Checks old values and compares if it changed to complete reporting then send telemetry as well.
+	 * Checks old values and compares if it changed to complete reporting then send telemetry immediately.
 	 *
 	 * @param string $old_telemetry_reporting Old telemetry setting value.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public function bb_admin_on_save_check_telemetry_complete( $old_telemetry_reporting ) {
+	public function bb_admin_send_immediate_telemetry_on_complete( $old_telemetry_reporting ) {
 		check_admin_referer( $this->tab_name . '-options' );
 
-		if ( ! empty( $old_telemetry_reporting ) ) {
+		// Check if it changed to complete reporting then send telemetry immediately.
+		$new_telemetry_reporting = isset( $_POST['bb_advanced_telemetry_reporting'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_advanced_telemetry_reporting'] ) ) : '';
 
-			// Check if it changed to complete reporting then send telemetry as well.
-			$new_telemetry_reporting = isset( $_POST['bb_advanced_telemetry_reporting'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_advanced_telemetry_reporting'] ) ) : '';
-			if ( 'complete' === $new_telemetry_reporting && $old_telemetry_reporting !== $new_telemetry_reporting ) {
-				if ( class_exists( 'BB_Telemetry' ) ) {
-					$bb_telemetry = BB_Telemetry::instance();
-					$bb_telemetry->bb_send_telemetry_report_to_analytics();
-				}
+		// Check if telemetry reporting has changed.
+		if ( $old_telemetry_reporting === $new_telemetry_reporting ) {
+			return;
+		}
+
+		// Dismiss telemetry notice if reporting status has changed.
+		update_option( 'bb_telemetry_notice_dismissed', 1 );
+
+		if ( 'complete' === $new_telemetry_reporting && class_exists( 'BB_Telemetry' ) ) {
+
+			// Clear single scheduled cron.
+			if ( wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
+				wp_clear_scheduled_hook( 'bb_telemetry_report_single_cron_event' );
 			}
+
+			$bb_telemetry = BB_Telemetry::instance();
+			$bb_telemetry->bb_send_telemetry_report_to_analytics();
 		}
 	}
 }
