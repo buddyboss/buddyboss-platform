@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.31 =
+* Bug: Moderation - Resolved missing wp_bp_suspend table causing frontend pages to fail loading
+
 = 2.7.30 =
 * Enhancement: Moderation - Optimized moderation for improved performance
 * Bug: Activity - Fixed an issue where the “View x replies” popup was not displaying correctly in iOS mobile view
