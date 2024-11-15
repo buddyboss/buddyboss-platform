@@ -164,7 +164,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 					<input name="<?php echo esc_attr( $telemetry_mode['name'] ); ?>"
 						id="<?php echo esc_attr( $telemetry_mode['id'] ); ?>"
 						type="radio"
-						value="<?php echo esc_html( $telemetry_mode['value'] ); ?>"
+						value="<?php echo esc_attr( $telemetry_mode['value'] ); ?>"
 						data-current-val="<?php echo esc_attr( $telemetry_mode['value'] ); ?>"
 						data-notice="<?php /* phpcs:ignore */ echo ! empty( $telemetry_mode['notice'] ) ? htmlspecialchars( $telemetry_mode['notice'], ENT_QUOTES, 'UTF-8' ) : ''; ?>"
 						<?php
