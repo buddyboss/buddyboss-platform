@@ -79,6 +79,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				);
 			}
 
+			// Schedule the single event in next 10 minute.
+			if ( ! bp_get_option( 'bb_telemetry_report_single_cron_event_scheduled', 0 ) && ! wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
+				wp_schedule_single_event( time() + ( 10 * MINUTE_IN_SECONDS ), 'bb_telemetry_report_single_cron_event' );
+				bp_update_option( 'bb_telemetry_report_single_cron_event_scheduled', 1 );
+			}
+
 			$this->setup_actions();
 		}
 
@@ -89,6 +95,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		public function setup_actions() {
 			add_action( 'bb_telemetry_report_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
+			add_action( 'bb_telemetry_report_single_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
+			add_action( 'admin_notices', array( $this, 'bb_telemetry_admin_notice' ) );
+			add_action( 'wp_ajax_dismiss_bb_telemetry_notice', array( $this, 'bb_telemetry_notice_dismissed' ) );
 		}
 
 		/**
@@ -101,7 +110,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'disable' === self::$bb_telemetry_option ||
 				! $this->bb_whitelist_domain_for_telemetry()
 			) {
-
 				return;
 			}
 
@@ -128,7 +136,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			);
 
 			$raw_response = wp_remote_post( $api_url, $args );
-
 			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
 				unset( $data, $auth_key, $api_url, $args );
 
@@ -368,6 +375,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-enable-private-network',
 					'bp_activity_favorites',
 					'bp-enable-site-registration',
+					'allow-custom-registration',
+					'register-page-url',
 					'_bp_enable_activity_autoload',
 					'_bp_enable_activity_follow',
 					'_bp_enable_activity_link_preview',
@@ -485,6 +494,72 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			return $active_integrations;
+		}
+
+		/**
+		 * Telemetry notice.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_telemetry_admin_notice() {
+
+			// Check if the notice has already been dismissed.
+			if ( bp_get_option( 'bb_telemetry_notice_dismissed', 0 ) ) {
+				return; // Do not display the notice if it's been dismissed.
+			}
+			// URL for the telemetry settings page.
+			$settings_url  = admin_url( 'admin.php?page=bp-settings&tab=bp-advanced' );
+			$telemetry_url = '#';
+			?>
+			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">
+				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
+				<div class="bb-telemetry-notice_content">
+					<p class="bb-telemetry-notice_heading"><strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong></p>
+					<p>
+						<?php
+						// Message with link to telemetry settings.
+						printf(
+							wp_kses(
+								/* translators: %1$s and %2$s are links. */
+								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you’re happy with that, you can dismiss this message; otherwise, you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								array(
+									'a' => array(
+										'href' => array(),
+									),
+								)
+							),
+							esc_url( $settings_url )
+						);
+						?>
+					</p>
+					<p>
+						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary">
+							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
+						</a>
+					</p>
+				</div>		
+			</div>
+			<?php
+		}
+
+		/**
+		 * Store the dismissal of the notice.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_telemetry_notice_dismissed() {
+
+			$bb_telemetry_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+
+			// Nonce check.
+			if ( empty( $bb_telemetry_nonce ) || ! wp_verify_nonce( $bb_telemetry_nonce, 'bb-telemetry-notice-nonce' ) ) {
+				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
+				unset( $bb_telemetry_nonce );
+			}
+
+			bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+			wp_send_json_success();
+			unset( $bb_telemetry_nonce );
 		}
 	}
 }
