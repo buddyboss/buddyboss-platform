@@ -375,6 +375,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_activity_favorites',
 					'bp-enable-site-registration',
 					'allow-custom-registration',
+					'register-page-url',
 					'_bp_enable_activity_autoload',
 					'_bp_enable_activity_follow',
 					'_bp_enable_activity_link_preview',
