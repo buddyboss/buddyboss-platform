@@ -567,19 +567,21 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		// Only grab count if we're on a user page.
-		if ( bp_is_user() ) {
-			$enable_count = bb_group_directory_count_enable();
-			$count        = $enable_count ? bp_get_total_group_count_for_user() : 0;
-			$class        = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name     = __( 'Groups', 'buddyboss' );
-			$nav_name    .= sprintf(
-				' <span class="%s">%s</span>',
-				esc_attr( $class ),
-				$count
-			);
-		} else {
-			$nav_name = __( 'Groups', 'buddyboss' );
-		}
+		// if ( bp_is_user() ) {
+		// 	$enable_count = bb_group_directory_count_enable();
+		// 	$count        = $enable_count ? bp_get_total_group_count_for_user() : 0;
+		// 	$class        = ( 0 === $count ) ? 'no-count' : 'count';
+		// 	$nav_name     = __( 'Groups', 'buddyboss' );
+		// 	$nav_name    .= sprintf(
+		// 		' <span class="%s">%s</span>',
+		// 		esc_attr( $class ),
+		// 		$count
+		// 	);
+		// } else {
+		// 	$nav_name = __( 'Groups', 'buddyboss' );
+		// }
+
+		$nav_name = __( 'Groups', 'buddyboss' );
 
 		$slug = bp_get_groups_slug();
 
@@ -646,13 +648,13 @@ class BP_Groups_Component extends BP_Component {
 			$group_link = bp_get_group_permalink( $this->current_group );
 
 			// Add the "Members" subnav item, as this will always be present.
-			$enable_count = bb_member_directory_count_enable();
-			$count_label  = $enable_count ? sprintf(
-				__( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>'
-			) : '';
+			// $enable_count = bb_member_directory_count_enable();
+			// $count_label  = $enable_count ? sprintf(
+			// 	__( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>'
+			// ) : '';
 
 			$sub_nav[] = array(
-				'name'            => apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . $count_label,
+				'name'            => apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ),
 				'slug'            => 'members',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,

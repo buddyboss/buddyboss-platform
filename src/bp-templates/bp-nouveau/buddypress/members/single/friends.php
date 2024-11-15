@@ -11,6 +11,42 @@
 $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_get_template_part( 'members/single/parts/item-subnav' );
+$enable_count = bb_member_directory_count_enable();
+switch ( bp_current_action() ) :
+	case 'my-friends':
+		$count = $enable_count ? friends_get_total_friend_count() : '';
+		if ( '' !== $count ) {
+			?>
+			<div class="bb-item-count">
+				<?php
+				/* translators: %d is the connection count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Connection', '<span "bb-count">%d</span> Connections', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					$count
+				);
+				?>
+			</div>
+			<?php
+		}
+		break;
+	case 'requests':
+		$count = $enable_count ? count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) ) : '';
+		if ( '' !== $count ) {
+			?>
+			<div class="bb-item-count">
+				<?php
+				/* translators: %d is the connection request count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Request', '<span "bb-count">%d</span> Requests', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					$count
+				);
+				?>
+			</div>
+			<?php
+		}
+		break;
+endswitch;
+
 bp_get_template_part( 'common/search-and-filters-bar' );
 
 switch ( bp_current_action() ) :

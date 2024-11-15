@@ -9,8 +9,22 @@
  */
 
 bp_get_template_part( 'groups/single/parts/members-subnav' );
+$enable_count = bb_group_directory_count_enable();
+$count        = $enable_count ? groups_get_total_member_count( bp_get_current_group_id () ) : '';
+if ( '' !== $count ) {
+	?>
+		<div class="bb-item-count">
+			<?php
+			/* translators: %d is the members count */
+			printf(
+				wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span "bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array() ) ),
+				$count
+			);
+			?>
+		</div>
+	<?php
+}
 ?>
-
 <div class="subnav-filters filters clearfix no-subnav">
 	<?php
 	bp_nouveau_search_form();

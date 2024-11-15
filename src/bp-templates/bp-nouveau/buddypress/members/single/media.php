@@ -9,6 +9,38 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
+if ( bp_is_user() ) {
+	switch ( bp_current_action() ) :
+		case 'my-media':
+			$count = bp_media_get_total_media_count();
+			?>
+			<div class="bb-item-count">
+				<?php
+				/* translators: %d is the photo count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					$count
+				);
+				?>
+			</div>
+			<?php
+			break;
+		case 'albums':
+			$count = bp_media_get_total_album_count();
+			?>
+			<div class="bb-item-count">
+				<?php
+				/* translators: %d is the album count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					$count
+				);
+				?>
+			</div>
+			<?php
+			break;
+	endswitch;
+}
 ?>
 <div class="bb-media-container member-media">
 	<?php

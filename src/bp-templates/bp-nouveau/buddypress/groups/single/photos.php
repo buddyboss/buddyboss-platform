@@ -9,6 +9,20 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
+if ( 'photos' === bp_current_action() ) {
+	$count = bp_media_get_total_group_media_count();
+	?>
+	<div class="bb-item-count">
+		<?php
+		/* translators: %d is the photo count */
+		printf(
+			wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span "bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array() ) ),
+			$count
+		);
+		?>
+	</div>
+	<?php
+}
 ?>
 
 <div class="bb-media-container group-media">

@@ -20,9 +20,9 @@
 					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
 						<div class="bb-single-nav-item-point"><?php bp_nouveau_nav_link_text(); ?></div>
 
-						<?php if ( bp_nouveau_nav_has_count() ) : ?>
+						<!-- <?php if ( bp_nouveau_nav_has_count() ) : ?>
 							<span class="count"><?php bp_nouveau_nav_count(); ?></span>
-						<?php endif; ?>
+						<?php endif; ?> -->
 					</a>
 				</li>
 				<?php
