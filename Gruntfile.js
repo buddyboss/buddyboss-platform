@@ -363,6 +363,7 @@ module.exports = function (grunt) {
 						'!**/node_modules/**/*.js',
 						'!**/endpoints/**/*.js',
 						'!**/js/lib/Chart.js',
+						'!**/bb-activity-reacted.js',
 						]
 					)
 				}
