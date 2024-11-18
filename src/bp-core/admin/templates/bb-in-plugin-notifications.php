@@ -159,9 +159,15 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 														<h5><?php echo esc_html( $notification_title ); ?></h5>
 														<div class="notice-timestamp"><?php echo esc_html( $time_diff_string ); ?></div>
 													</div>
-													<div class="bb-dismiss-notice">
-														<i class="bb-icon-l bb-icon-times"></i>
-													</div>
+													<?php
+													if ( 'dismissed' !== $notification['status'] ) {
+														?>
+														<div class="bb-dismiss-notice">
+															<i class="bb-icon-l bb-icon-times"></i>
+														</div>
+														<?php
+													}
+													?>
 												</div>
 												<div class="bb-notice-body">
 													<div class="notice-content">
