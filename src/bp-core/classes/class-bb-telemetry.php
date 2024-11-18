@@ -521,7 +521,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 						printf(
 							wp_kses(
 								/* translators: %1$s and %2$s are links. */
-								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you’re happy with that, you can dismiss this message; otherwise, you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
 								array(
 									'a' => array(
 										'href' => array(),
