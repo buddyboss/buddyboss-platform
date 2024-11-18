@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.7.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-11-06 04:20:56+00:00\n"
+"POT-Creation-Date: 2024-11-18 06:26:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -512,7 +512,7 @@ msgid "Edit"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:860
-#: bp-core/admin/bp-core-admin-functions.php:3437
+#: bp-core/admin/bp-core-admin-functions.php:3441
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1325
 #: bp-xprofile/classes/class-bp-xprofile-group.php:893
@@ -1137,12 +1137,12 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:7406
-#: bp-blogs/bp-blogs-activity.php:279 bp-blogs/bp-blogs-activity.php:1707
+#: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:7408
-#: bp-blogs/bp-blogs-activity.php:281 bp-blogs/bp-blogs-activity.php:1709
+#: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
 msgstr ""
 
@@ -3030,35 +3030,35 @@ msgstr ""
 msgid "%s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:148
+#: bp-blogs/bp-blogs-activity.php:156
 msgid "New post comment posted"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:150
+#: bp-blogs/bp-blogs-activity.php:158
 msgid "Comments"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:173 cli/components/activity.php:822
+#: bp-blogs/bp-blogs-activity.php:181 cli/components/activity.php:822
 msgid "%1$s created the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:255 bp-blogs/bp-blogs-activity.php:1651
+#: bp-blogs/bp-blogs-activity.php:263 bp-blogs/bp-blogs-activity.php:1659
 msgid "(no title)"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:405
+#: bp-blogs/bp-blogs-activity.php:413
 msgid "%1$s commented on the post, %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:407 cli/components/activity.php:869
+#: bp-blogs/bp-blogs-activity.php:415 cli/components/activity.php:869
 msgid "%1$s commented on the post, %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1700
+#: bp-blogs/bp-blogs-activity.php:1708
 msgid "%1$s posted a new %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1702
+#: bp-blogs/bp-blogs-activity.php:1710
 msgid "%1$s posted a new %2$s."
 msgstr ""
 
@@ -3468,7 +3468,7 @@ msgid "Dismiss this notice."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:528
-#: bp-core/classes/class-bb-telemetry.php:553
+#: bp-core/classes/class-bb-telemetry.php:555
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
 msgid "Sorry, something goes wrong please try again."
@@ -3677,7 +3677,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:678
-#: bp-core/admin/bp-core-admin-functions.php:3795
+#: bp-core/admin/bp-core-admin-functions.php:3811
 #: bp-core/admin/bp-core-admin-settings.php:1637
 #: bp-core/classes/class-bp-admin.php:345
 #: bp-core/classes/class-bp-admin.php:506
@@ -3855,7 +3855,7 @@ msgid "WordPress Role"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1726
-#: bp-core/admin/settings/bp-admin-setting-general.php:80
+#: bp-core/admin/settings/bp-admin-setting-general.php:106
 msgid "Redirection"
 msgstr ""
 
@@ -4173,14 +4173,14 @@ msgid "BuddyBoss Platform Pro 1.2.0"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3415
-#: bp-core/admin/bp-core-admin-functions.php:3439
-#: bp-core/admin/bp-core-admin-functions.php:3446
+#: bp-core/admin/bp-core-admin-functions.php:3443
+#: bp-core/admin/bp-core-admin-functions.php:3450
 #: bp-core/admin/bp-core-admin-settings.php:3301
 msgid "to unlock"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3438
-#: bp-core/admin/bp-core-admin-functions.php:3445
+#: bp-core/admin/bp-core-admin-functions.php:3442
+#: bp-core/admin/bp-core-admin-functions.php:3449
 #: bp-core/admin/templates/upgrade-screen.php:72
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
@@ -4189,20 +4189,20 @@ msgstr ""
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3444
+#: bp-core/admin/bp-core-admin-functions.php:3448
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3559
+#: bp-core/admin/bp-core-admin-functions.php:3567
 msgid ""
 "Select which label colors to use for profiles using this profile type. "
 "Profile Type labels are used in places such as member directories and "
 "profile headers."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3562
-#: bp-core/admin/bp-core-admin-functions.php:3627
-#: bp-core/admin/bp-core-admin-functions.php:3666
+#: bp-core/admin/bp-core-admin-functions.php:3570
+#: bp-core/admin/bp-core-admin-functions.php:3635
+#: bp-core/admin/bp-core-admin-functions.php:3674
 #: bp-core/admin/bp-core-admin-settings.php:752
 #: bp-core/admin/bp-core-admin-settings.php:1125
 #: bp-core/admin/bp-core-admin-settings.php:3412
@@ -4212,7 +4212,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3563
+#: bp-core/admin/bp-core-admin-functions.php:3571
 #: bp-core/admin/bp-core-admin-settings.php:482
 #: bp-core/admin/bp-core-admin-settings.php:601
 #: bp-core/admin/bp-core-admin-settings.php:909
@@ -4224,17 +4224,17 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3569
+#: bp-core/admin/bp-core-admin-functions.php:3577
 #: bp-groups/bp-groups-admin.php:2666
 msgid "Background Color"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3573
+#: bp-core/admin/bp-core-admin-functions.php:3581
 #: bp-groups/bp-groups-admin.php:2670
 msgid "Text Color"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3605
+#: bp-core/admin/bp-core-admin-functions.php:3613
 #. translators:
 msgid ""
 "Redirect this profile type. When you change the redirection settings in a "
@@ -4242,27 +4242,27 @@ msgid ""
 "settings in %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3616
+#: bp-core/admin/bp-core-admin-functions.php:3624
 msgid "Buddyboss - Settings - General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3628
-#: bp-core/admin/bp-core-admin-functions.php:3667
+#: bp-core/admin/bp-core-admin-functions.php:3636
+#: bp-core/admin/bp-core-admin-functions.php:3675
 #: bp-core/admin/bp-core-admin-settings.php:2432
 #: bp-core/admin/bp-core-admin-settings.php:3413
 #: bp-core/admin/bp-core-admin-settings.php:3463
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3640
-#: bp-core/admin/bp-core-admin-functions.php:3654
+#: bp-core/admin/bp-core-admin-functions.php:3648
+#: bp-core/admin/bp-core-admin-functions.php:3662
 #: bp-core/admin/bp-core-admin-settings.php:3425
 #: bp-core/admin/bp-core-admin-settings.php:3444
 msgid "Select a page or external link to redirect your members to after they login."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:3679
-#: bp-core/admin/bp-core-admin-functions.php:3693
+#: bp-core/admin/bp-core-admin-functions.php:3687
+#: bp-core/admin/bp-core-admin-functions.php:3701
 #: bp-core/admin/bp-core-admin-settings.php:3475
 #: bp-core/admin/bp-core-admin-settings.php:3494
 msgid ""
@@ -4375,27 +4375,27 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:832
 #: bp-core/admin/bp-core-admin-settings.php:861
 #: bp-core/admin/bp-core-admin-settings.php:1176
-#: bp-core/admin/bp-core-admin-settings.php:1434
-#: bp-core/admin/bp-core-admin-settings.php:1525
-#: bp-core/admin/bp-core-admin-settings.php:1591
-#: bp-core/admin/bp-core-admin-settings.php:1975
-#: bp-core/admin/bp-core-admin-settings.php:2095
-#: bp-core/admin/bp-core-admin-settings.php:2412
-#: bp-core/admin/bp-core-admin-settings.php:2490
-#: bp-core/admin/bp-core-admin-settings.php:2529
-#: bp-core/admin/bp-core-admin-settings.php:2556
-#: bp-core/admin/bp-core-admin-settings.php:2696
-#: bp-core/admin/bp-core-admin-settings.php:3014
-#: bp-core/admin/bp-core-admin-settings.php:3041
-#: bp-core/admin/bp-core-admin-settings.php:3368
-#: bp-core/admin/bp-core-admin-settings.php:3671
-#: bp-core/admin/bp-core-admin-settings.php:3698
+#: bp-core/admin/bp-core-admin-settings.php:1437
+#: bp-core/admin/bp-core-admin-settings.php:1528
+#: bp-core/admin/bp-core-admin-settings.php:1594
+#: bp-core/admin/bp-core-admin-settings.php:1978
+#: bp-core/admin/bp-core-admin-settings.php:2098
+#: bp-core/admin/bp-core-admin-settings.php:2415
+#: bp-core/admin/bp-core-admin-settings.php:2493
+#: bp-core/admin/bp-core-admin-settings.php:2532
+#: bp-core/admin/bp-core-admin-settings.php:2559
+#: bp-core/admin/bp-core-admin-settings.php:2699
+#: bp-core/admin/bp-core-admin-settings.php:3017
+#: bp-core/admin/bp-core-admin-settings.php:3044
+#: bp-core/admin/bp-core-admin-settings.php:3371
+#: bp-core/admin/bp-core-admin-settings.php:3674
+#: bp-core/admin/bp-core-admin-settings.php:3701
 #: bp-core/admin/settings/bb-admin-setting-performance.php:116
 #: bp-core/admin/settings/bp-admin-setting-activity.php:380
 #: bp-core/admin/settings/bp-admin-setting-friends.php:113
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:607
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:663
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:745
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:609
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:665
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:747
 #: bp-core/bp-core-functions.php:9250
 #: bp-core/classes/class-bp-admin-tab.php:550
 #: bp-integrations/learndash/bp-learndash-functions.php:408
@@ -5540,7 +5540,7 @@ msgid "Connections"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:95
-#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2587
+#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2589
 msgid "Activity posts"
 msgstr ""
 
@@ -6172,7 +6172,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:68
-#: bp-core/admin/settings/bp-admin-setting-general.php:150
+#: bp-core/admin/settings/bp-admin-setting-general.php:176
 msgid "Activity Settings"
 msgstr ""
 
@@ -6355,27 +6355,31 @@ msgstr ""
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:82
+#: bp-core/admin/settings/bp-admin-setting-general.php:87
+msgid "Enable Social Login"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:108
 msgid "After Login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:87
+#: bp-core/admin/settings/bp-admin-setting-general.php:113
 msgid "After Logout"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:93
+#: bp-core/admin/settings/bp-admin-setting-general.php:119
 msgid "Registration Restrictions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:98
+#: bp-core/admin/settings/bp-admin-setting-general.php:124
 msgid "Domain Restrictions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:103
+#: bp-core/admin/settings/bp-admin-setting-general.php:129
 msgid "Email Restrictions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:106
+#: bp-core/admin/settings/bp-admin-setting-general.php:132
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:934
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:22
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:22
@@ -6385,37 +6389,41 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:109
+#: bp-core/admin/settings/bp-admin-setting-general.php:135
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:112
+#: bp-core/admin/settings/bp-admin-setting-general.php:138
 msgid "Public Website Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:116
+#: bp-core/admin/settings/bp-admin-setting-general.php:142
 msgid "Private REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:128
+#: bp-core/admin/settings/bp-admin-setting-general.php:154
 msgid "Public REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:132
+#: bp-core/admin/settings/bp-admin-setting-general.php:158
 msgid "Private RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:134
+#: bp-core/admin/settings/bp-admin-setting-general.php:160
 msgid "Public RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:141
+#: bp-core/admin/settings/bp-admin-setting-general.php:167
 #: bp-forums/admin/settings.php:1503
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:147
+#: bp-core/admin/settings/bp-admin-setting-general.php:173
 msgid "Groups Settings"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:198
+msgid "Allow user to sign in with social login"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:124
@@ -9031,27 +9039,27 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1083
+#: bp-core/bp-core-options.php:1085
 msgid "30 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1087
+#: bp-core/bp-core-options.php:1089
 msgid "7 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1091
+#: bp-core/bp-core-options.php:1093
 msgid "1 Day"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1095
+#: bp-core/bp-core-options.php:1097
 msgid "1 Hour"
 msgstr ""
 
-#: bp-core/bp-core-options.php:1099
+#: bp-core/bp-core-options.php:1101
 msgid "10 Minutes"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2592
+#: bp-core/bp-core-options.php:2594
 msgid "Activity comments"
 msgstr ""
 
@@ -10175,11 +10183,11 @@ msgstr ""
 msgid "An error occurred while sending the telemetry report."
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:514
+#: bp-core/classes/class-bb-telemetry.php:516
 msgid "Help us improve BuddyBoss"
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:521
+#: bp-core/classes/class-bb-telemetry.php:523
 #. translators: %1$s and %2$s are links.
 msgid ""
 "We gather statistics about how our users use the product. We aggregate this "
@@ -10189,7 +10197,7 @@ msgid ""
 "read more about what statistics we collect and why, click below."
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:534
+#: bp-core/classes/class-bb-telemetry.php:536
 msgid "About Telemetry"
 msgstr ""
 
@@ -35445,7 +35453,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:144
+#: bp-core/admin/settings/bp-admin-setting-general.php:170
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
