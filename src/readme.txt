@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 8.0
-Stable tag: 2.7.30
+Stable tag: 2.7.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.31 =
+* Bug: Moderation - Resolved missing wp_bp_suspend table causing frontend pages to fail loading
 
 = 2.7.30 =
 * Enhancement: Moderation - Optimized moderation for improved performance

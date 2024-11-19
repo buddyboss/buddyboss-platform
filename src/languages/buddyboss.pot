@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.7.30\n"
+"Project-Id-Version: BuddyBoss Platform 2.7.31\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-11-18 08:20:52+00:00\n"
+"POT-Creation-Date: 2024-11-19 05:07:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3468,7 +3468,7 @@ msgid "Dismiss this notice."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:528
-#: bp-core/classes/class-bb-telemetry.php:555
+#: bp-core/classes/class-bb-telemetry.php:556
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
 msgid "Sorry, something goes wrong please try again."
@@ -6423,7 +6423,7 @@ msgid "Groups Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:198
-msgid "Allow user to sign in with social login"
+msgid "Allow users to sign in with social login"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:124
@@ -10165,11 +10165,11 @@ msgstr ""
 msgid "An error occurred while sending the telemetry report."
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:516
+#: bp-core/classes/class-bb-telemetry.php:517
 msgid "Help us improve BuddyBoss"
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:523
+#: bp-core/classes/class-bb-telemetry.php:524
 #. translators: %1$s and %2$s are links.
 msgid ""
 "We gather statistics about how our users use the product. We aggregate this "
@@ -10179,7 +10179,7 @@ msgid ""
 "about what statistics we collect and why, click below."
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:536
+#: bp-core/classes/class-bb-telemetry.php:537
 msgid "About Telemetry"
 msgstr ""
 
