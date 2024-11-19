@@ -255,6 +255,14 @@ TABLE OF CONTENTS:
   color: #32373c;
 }
 
+.nav-settings-subsubsub {
+  padding-bottom: 0;
+}
+
+.nav-settings-subsubsub .subsubsub {
+  float: none;
+}
+
 @media screen and (max-width: 782px) {
   #bp-admin-component-form .wp-list-table.plugins .plugin-title {
     display: block;
@@ -448,6 +456,13 @@ tr.bp-search-parent-field label {
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none.child-custom-post-type td {
   margin: 10px 0 10px 10px;
+}
+
+@media screen and (max-width: 782px) {
+  .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none td,
+  .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none.child-custom-post-type td {
+    margin-left: 0;
+  }
 }
 
 /* Media */
@@ -1899,6 +1914,13 @@ tr.child-no-padding-first th {
 
 tr.child-no-padding-first td {
   padding: 15px 10px 5px;
+}
+
+@media screen and (max-width: 782px) {
+  .form-table tr.child-no-padding td,
+  .form-table tr.child-no-padding-first td {
+    padding-left: 0;
+  }
 }
 
 td.inviter.column-inviter strong img {
