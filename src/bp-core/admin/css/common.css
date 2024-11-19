@@ -1901,6 +1901,13 @@ tr.child-no-padding-first td {
   padding: 15px 10px 5px;
 }
 
+@media screen and (max-width: 782px) {
+  .section-bp_registration tr.child-no-padding td,
+  .section-bp_registration tr.child-no-padding-first td {
+    padding-left: 0;
+  }
+}
+
 td.inviter.column-inviter strong img {
   float: left;
   margin-right: 10px;
