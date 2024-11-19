@@ -508,7 +508,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 			// URL for the telemetry settings page.
 			$settings_url  = admin_url( 'admin.php?page=bp-settings&tab=bp-advanced' );
-			$telemetry_url = '#';
+			$telemetry_url = 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=app-plugin&utm_campaign=telemetry';
 			?>
 			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">
 				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
