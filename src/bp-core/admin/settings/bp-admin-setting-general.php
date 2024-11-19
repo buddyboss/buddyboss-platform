@@ -195,7 +195,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
 		?>
 		<input id="bb_enable_sso" name="<?php echo empty( $notice ) ? 'bb-enable-sso' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
-		<label for="bb_enable_sso"><?php esc_html_e( 'Allow user to sign in with social login', 'buddyboss' ); ?></label>
+		<label for="bb_enable_sso"><?php esc_html_e( 'Allow users to sign in with social login', 'buddyboss' ); ?></label>
 		<?php
 	}
 
