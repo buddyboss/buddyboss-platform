@@ -21,7 +21,7 @@ switch ( bp_current_action() ) :
 				<?php
 				/* translators: %d is the connection count */
 				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Connection', '<span "bb-count">%d</span> Connections', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					wp_kses( _n( '<span class="bb-count">%d</span> Connection', '<span class="bb-count">%d</span> Connections', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 					$count
 				);
 				?>
@@ -37,7 +37,7 @@ switch ( bp_current_action() ) :
 				<?php
 				/* translators: %d is the connection request count */
 				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Request', '<span "bb-count">%d</span> Requests', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					wp_kses( _n( '<span class="bb-count">%d</span> Request', '<span class="bb-count">%d</span> Requests', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 					$count
 				);
 				?>

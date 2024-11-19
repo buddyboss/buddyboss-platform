@@ -19,7 +19,7 @@ if ( bp_is_user() ) {
 				<?php
 				/* translators: %d is the video count */
 				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span "bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 					$count
 				);
 				?>

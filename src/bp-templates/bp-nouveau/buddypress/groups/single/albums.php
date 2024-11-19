@@ -17,7 +17,7 @@ if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 		<?php
 		/* translators: %d is the album count */
 		printf(
-			wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span "bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array() ) ),
+			wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 			$count
 		);
 		?>

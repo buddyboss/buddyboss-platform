@@ -18,7 +18,7 @@ if ( bp_is_user() ) {
 				<?php
 				/* translators: %d is the photo count */
 				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 					$count
 				);
 				?>
@@ -32,7 +32,7 @@ if ( bp_is_user() ) {
 				<?php
 				/* translators: %d is the album count */
 				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array() ) ),
+					wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 					$count
 				);
 				?>

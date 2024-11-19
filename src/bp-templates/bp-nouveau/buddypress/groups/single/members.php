@@ -17,7 +17,7 @@ if ( '' !== $count ) {
 			<?php
 			/* translators: %d is the members count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span "bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array() ) ),
+				wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span class="bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
 				$count
 			);
 			?>
