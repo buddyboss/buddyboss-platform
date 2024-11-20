@@ -2250,6 +2250,16 @@ h2.has_tutorial_btn .bbapp-tutorial-btn p {
   margin: 0;
 }
 
+h2.has_tutorial_btn .bbapp-tutorial-btn .bb-button_filled {
+  color: #fff;
+  background: #2271b1;
+}
+
+h2.has_tutorial_btn .bbapp-tutorial-btn .bb-button_filled:hover {
+  background: #135e96;
+  border-color: transparent;
+}
+
 @media screen and (max-width: 580px) {
   h2.has_tutorial_btn {
     margin-bottom: 65px;
@@ -3938,8 +3948,21 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   font-family: bb-icons;
 }
 
+#loco-admin.wrap .bb-telemetry-notice.notice-info {
+  border: 1px solid #c3c4c7;
+  border-right: 4px solid #e0623d;
+  padding: 0;
+}
+
 .section-bb_advanced_telemetry label[for="complete_reporting"] {
   margin-left: 15px;
+}
+
+.section-bb_advanced_telemetry .bb-telemetry-tutorial-link:after {
+  content: "\ee68";
+  font-family: bb-icons;
+  font-size: 14px;
+  margin-right: 5px;
 }
 
 .bb-integrations-section h1.bb-advance-heading {
