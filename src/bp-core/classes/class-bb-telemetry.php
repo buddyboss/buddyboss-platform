@@ -509,7 +509,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 			// URL for the telemetry settings page.
 			$settings_url  = admin_url( 'admin.php?page=bp-settings&tab=bp-advanced' );
-			$telemetry_url = '#';
+			$telemetry_url = 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry';
 			?>
 			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">
 				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
@@ -521,7 +521,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 						printf(
 							wp_kses(
 								/* translators: %1$s and %2$s are links. */
-								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you’re happy with that, you can dismiss this message; otherwise, you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
 								array(
 									'a' => array(
 										'href' => array(),

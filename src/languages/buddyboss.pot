@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.7.30\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-11-15 12:15:17+00:00\n"
+"POT-Creation-Date: 2024-11-20 04:25:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4390,7 +4390,6 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3371
 #: bp-core/admin/bp-core-admin-settings.php:3674
 #: bp-core/admin/bp-core-admin-settings.php:3701
-#: bp-core/admin/settings/bb-admin-setting-performance.php:116
 #: bp-core/admin/settings/bp-admin-setting-activity.php:383
 #: bp-core/admin/settings/bp-admin-setting-friends.php:113
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:607
@@ -6123,11 +6122,16 @@ msgstr ""
 msgid "Telemetry"
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:130
+#: bp-core/admin/settings/bb-admin-setting-performance.php:106
+#: bp-core/classes/class-bb-telemetry.php:537
+msgid "About Telemetry"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:120
 msgid "Complete reporting"
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:137
+#: bp-core/admin/settings/bb-admin-setting-performance.php:127
 #. translators: %1$s and %2$s wrap the phrase "disable telemetry" in a
 #. clickable link.
 msgid ""
@@ -6139,11 +6143,11 @@ msgid ""
 "towards improving the product, you can %1$sdisable telemetry%2$s."
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:144
+#: bp-core/admin/settings/bb-admin-setting-performance.php:134
 msgid "Anonymous reporting"
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:151
+#: bp-core/admin/settings/bb-admin-setting-performance.php:141
 #. translators: %1$s and %2$s wrap the phrase "disable telemetry" in a
 #. clickable link.
 msgid ""
@@ -6157,11 +6161,11 @@ msgid ""
 "telemetry%2$s."
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:195
+#: bp-core/admin/settings/bb-admin-setting-performance.php:185
 msgid "Disable telemetry"
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:199
+#: bp-core/admin/settings/bb-admin-setting-performance.php:189
 msgid ""
 "Disabling telemetry will stop gathering and reporting usage statistics \n"
 "\t\t\t\tabout your configuration and the features and functionality you "
@@ -10166,13 +10170,9 @@ msgstr ""
 msgid ""
 "We gather statistics about how our users use the product. We aggregate this "
 "information to help us improve the product and provide you with a better "
-"service. If you’re happy with that, you can dismiss this message; "
-"otherwise, you can <a href=\"%1$s\">adjust your telemetry settings</a>. To "
-"read more about what statistics we collect and why, click below."
-msgstr ""
-
-#: bp-core/classes/class-bb-telemetry.php:537
-msgid "About Telemetry"
+"service. If you're happy with that you can dismiss this message, otherwise "
+"you can <a href=\"%1$s\">adjust your telemetry settings</a>. To read more "
+"about what statistics we collect and why, click below."
 msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:176
