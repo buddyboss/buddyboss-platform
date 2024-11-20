@@ -44,6 +44,8 @@ TABLE OF CONTENTS:
 19.0 Reactions Settings
 ------------------------------------------------------------------------------*/
 
+@import "tooltips";
+
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
  *----------------------------------------------------------------------------*/
@@ -2006,6 +2008,20 @@ tr.child-no-padding-first td {
 	padding: 15px 10px 5px;
 }
 
+@media screen and (max-width: 782px) {
+
+	.section-bp_registration {
+
+		tr.child-no-padding,
+		tr.child-no-padding-first {
+
+			td {
+				padding-left: 0;
+			}
+		}
+	}
+}
+
 td.inviter.column-inviter strong img {
 	float: left;
 	margin-right: 10px;
@@ -2287,7 +2303,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 
 /*Deactivation Popup*/
-#bp-hello-container.deactivation-popup {
+#bp-hello-container.deactivation-popup,
+#bb-hello-container.deactivation-popup {
 	top: 50%;
 	bottom: initial;
 	transform: translateY(-50%);
@@ -2296,7 +2313,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
 	max-width: 640px;
 	margin: 0 auto;
 
-	.bp-hello-footer {
+	.bp-hello-footer,
+	.bb-hello-footer {
 		position: static;
 		padding: 10px 23px;
 
@@ -2306,7 +2324,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 	}
 
-	.bp-hello-content {
+	.bp-hello-content,
+	.bb-hello-content {
 		height: auto;
 		padding: 20px 23px;
 
@@ -2472,8 +2491,7 @@ h2.has_tutorial_btn {
 }
 
 #bp_web_push_notification_settings,
-#bp_media_settings_symlinks,
-#bp_privacy {
+#bp_media_settings_symlinks {
 
 	.bp-feedback {
 		box-shadow: none;
