@@ -132,25 +132,7 @@ class Core {
 		$atts         = apply_filters( 'bp_learndash_user_courses_atts', array() );
 		$user_courses = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $this->bp_displayed_user_id, $atts ) );
 
-		$user_courses_count = is_array( $user_courses ) ? count( $user_courses ) : 0;
-
-		// Only grab count if we're on a user page.
-		if ( bp_is_user() ) {
-			$class = ( 0 === $user_courses_count ) ? 'no-count' : 'count';
-
-			$nav_name = sprintf(
-			/* translators: %s: Group count for the current user */
-				__( '%1$s %2$s', 'buddyboss' ),
-				$this->course_name,
-				sprintf(
-					'<span class="%s">%s</span>',
-					esc_attr( $class ),
-					$user_courses_count
-				)
-			);
-		} else {
-			$nav_name = $this->course_name;
-		}
+		$nav_name = $this->course_name;
 
 		bp_core_new_nav_item(
 			array(
