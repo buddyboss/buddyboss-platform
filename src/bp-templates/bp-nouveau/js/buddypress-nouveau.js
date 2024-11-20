@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -3543,14 +3543,21 @@ window.bp = window.bp || {};
 				$resetButton.hide();
 
 				// Trigger search event
-				if( $form.hasClass( 'bp-invites-search-form') ) {
+				if( $form.hasClass( 'bp-invites-search-form') && BP_SEARCH.enable_ajax_search == '1' ) {
 					$form.find( 'input[type="search"]').val('');
 					$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
 				}
 			}
 
+			// Forum autocomplete should not trigger search when it's off
 			if ( !$( this ).hasClass( 'ui-autocomplete-input' ) ) {
-				$form.find( '.search-form_submit' ).trigger( 'click' );
+				if( $( this ).closest( '.bs-forums-search' ).length > 0 ) {
+					if( BP_SEARCH.enable_ajax_search == '1' ) {
+						$form.find( '.search-form_submit' ).trigger( 'click' );
+					}
+				} else {
+					$form.find( '.search-form_submit' ).trigger( 'click' );
+				}
 			}
 
 		},
