@@ -20,11 +20,14 @@ switch ( bp_current_action() ) :
 		?>
 		<div class="bb-item-count">
 			<?php
-			/* translators: %d is the group count */
-			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-				$count
-			);
+			if ( ! $is_send_ajax_request ) {
+
+				/* translators: %d is the group count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					$count
+				);
+			}
 			?>
 		</div>
 		<?php
@@ -34,11 +37,14 @@ switch ( bp_current_action() ) :
 		?>
 		<div class="bb-item-count">
 			<?php
-			/* translators: %d is the Invite count */
-			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Invite', '<span class="bb-count">%d</span> Invites', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-				$count
-			);
+			if ( ! $is_send_ajax_request ) {
+
+				/* translators: %d is the Invite count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Invite', '<span class="bb-count">%d</span> Invites', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					$count
+				);
+			}
 			?>
 		</div>
 		<?php

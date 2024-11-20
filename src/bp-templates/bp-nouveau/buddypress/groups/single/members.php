@@ -7,7 +7,7 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
-
+$is_send_ajax_request = bb_is_send_ajax_request();
 bp_get_template_part( 'groups/single/parts/members-subnav' );
 $enable_count = bb_group_directory_count_enable();
 $count        = $enable_count ? groups_get_total_member_count( bp_get_current_group_id () ) : '';
@@ -15,11 +15,14 @@ if ( '' !== $count ) {
 	?>
 		<div class="bb-item-count">
 			<?php
-			/* translators: %d is the members count */
-			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span class="bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-				$count
-			);
+			if ( ! $is_send_ajax_request ) {
+
+				/* translators: %d is the members count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span class="bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					$count
+				);
+			}
 			?>
 		</div>
 	<?php
@@ -34,7 +37,6 @@ if ( '' !== $count ) {
 </div>
 
 <?php
-$is_send_ajax_request = bb_is_send_ajax_request();
 switch ( bp_action_variable( 0 ) ) :
 
 	// Groups/All Members

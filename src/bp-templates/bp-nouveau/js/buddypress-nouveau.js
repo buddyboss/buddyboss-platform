@@ -638,36 +638,26 @@ window.bp = window.bp || {};
 
 						// Update count for inner page heading.
 						var dir_label_type = '';
-						switch ( data.scope ) {
-							case 'all':
-								if ( $( 'body' ).hasClass( 'members' ) ) {
-									dir_label_type = 'members';
-								} else if ( $( 'body.directory' ).hasClass( 'groups' ) ) {
-									dir_label_type = 'groups';
-								}
-								break;
-							case 'personal':
-								if ( $( 'body' ).hasClass( 'members' ) ) {
-									dir_label_type = 'connection';
-								} else if ( $( 'body.directory' ).hasClass( 'groups' ) ) {
-									dir_label_type = 'groups';
-								}
-								break;
-							case 'following':
-								if ( $( 'body' ).hasClass( 'members' ) ) {
-									dir_label_type = 'followers';
-								}
-								break;
-							default:
-								dir_label_type = ''; // Fallback in case no match
-								break;
+						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) ) {
+							data.scope = 'personal';
 						}
 
-						if ( '' !== dir_label_type ) {
-							var dir_count = response.data.scopes[ data.scope ] || 0; // Ensure count is defined.
-							var dir_label = parseInt( dir_count ) === 1 ? BP_Nouveau.dir_labels[ dir_label_type ][ 'singular' ] : BP_Nouveau.dir_labels[ dir_label_type ][ 'plural' ];
-							$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+						if ( 'personal' === data.scope && 'members' === data.object ) {
+							dir_label_type = 'connection';
+						} else if ( 'following' === data.scope ) {
+							dir_label_type = 'followers';
+						} else {
+							dir_label_type = data.object;
 						}
+
+						var dir_count = 0;
+						if ( null === data.template || '' === dir_label_type ) {
+							dir_count = response.data.scopes[ data.scope ] || 0;
+						} else {
+							dir_count = response.data.count || 0;
+						}
+						var dir_label = parseInt( dir_count ) === 1 ? BP_Nouveau.dir_labels[ dir_label_type ][ 'singular' ] : BP_Nouveau.dir_labels[ dir_label_type ][ 'plural' ];
+						$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
