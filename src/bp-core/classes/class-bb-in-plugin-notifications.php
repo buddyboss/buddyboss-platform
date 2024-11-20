@@ -76,7 +76,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			add_action( 'bp_admin_init', array( $this, 'bb_admin_notification_schedule_fetch' ) );
 			add_action( 'bb_in_plugin_admin_header_notifications', array( $this, 'bb_admin_notification_output' ) );
 			add_action( 'bb_in_plugin_admin_notifications_update', array( $this, 'bb_admin_notification_update' ) );
-			add_action( 'wp_ajax_buddyboss_in_plugin_notification_dismiss', array( $this, 'bb_admin_notification_dismiss' ) );
+			add_action(
+				'wp_ajax_buddyboss_in_plugin_notification_dismiss',
+				array(
+					$this,
+					'bb_admin_notification_dismiss',
+				)
+			);
 		}
 
 		/**
@@ -259,7 +265,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					continue;
 				}
 
-				$modified_start_time = sprintf(
+				$modified_start_time            = sprintf(
 				/* Translators: %s is the human-readable time difference (e.g., "2 hours ago"). */
 					__( '%1$s ago', 'buddyboss' ),
 					human_time_diff( strtotime( $notification['start'] ), time() )
@@ -353,67 +359,136 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				return $data;
 			}
 
-			$license_exists = function_exists( 'bbp_pro_is_license_valid' ) ? bbp_pro_is_license_valid() : false;
+			$pro_license_exists   = function_exists( 'bbp_pro_is_license_valid' ) ? bbp_pro_is_license_valid() : false;
+			$theme_license_exists = false;
+			if ( $pro_license_exists && function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
+				$theme_license_exists = $pro_license_exists;
+			} elseif ( ! $pro_license_exists && function_exists( 'buddyboss_theme' ) ) {
+				$theme_license_exists = ! buddyboss_theme_get_theme_sudharo(); // will get true if license not exists.
+			}
 			$option         = $this->bb_admin_notification_get_option();
 			$current_time   = time();
 			$activated_time = bp_get_option( 'bb_activation_time', $current_time );
 
 			foreach ( $notifications as $id => $notification ) {
-				$plans      = ! empty( $notification['plans'] ) ? array_column( $notification['plans'], 'slug' ) : array();
-				$segment    = $notification['segment'] ?? '';
-				$end_time   = ! empty( $notification['end'] ) ? strtotime( $notification['end'] ) : '';
-				$start_time = ! empty( $notification['start'] ) ? strtotime( $notification['start'] ) : '';
+				$process_notification = true;
 
 				// The message should never be empty - if it is, ignore.
 				if ( empty( $notification['content'] ) ) {
-					continue;
+					$process_notification = false;
 				}
 
-				// Ignore if segment is for expired licenses, but the license is current.
-				// Ignore if segment is for inactive licenses, but license is active.
+				// Ignore if notification is for BuddyBoss App only.
+				$plugins = ! empty( $notification['plugins'] ) ? $notification['plugins'] : array();
 				if (
-					in_array( 'pro', $plans, true ) &&
-					(
-						(
-							'expired' === $segment ||
-							'inactive' === $segment
-						) &&
-						! $license_exists
-					)
+					$process_notification &&
+					! empty( $plugins ) &&
+					1 === count( $plugins ) &&
+					in_array( 'buddyboss-app', $plugins, true )
 				) {
-					continue;
+					$process_notification = false;
 				}
 
+				$plans   = ! empty( $notification['plans'] ) ? array_column( $notification['plans'], 'slug' ) : array();
+				$segment = $notification['segment'] ?? '';
+
+				if (
+					$process_notification &&
+					! empty( $plans ) &&
+					in_array( 'pro', $plans, true ) &&
+					! in_array( 'free', $plans, true )
+				) {
+					if ( $this->bb_is_pro_plugin_invalid( $plugins ) ) {
+						$process_notification = false;
+					}
+
+					// If the plan is pro,
+					// and the user has the PRO plugin or theme,
+					// and the license is valid, and the segment is not expired,
+					// then ignore notification expired related.
+					if (
+						'none' !== $segment &&
+						(
+							in_array( 'buddyboss-platform-pro', $plugins, true ) ||
+							in_array( 'buddyboss-theme', $plugins, true )
+						)
+					) {
+
+						if ( $pro_license_exists || $theme_license_exists ) {
+							if ( 'expired' !== $segment ) {
+								error_log( 'Ignoring notification for pro plugin/theme' );
+								error_log( print_r( $notification['title'], true ) );
+								$process_notification = false;
+							}
+						} else {
+							if ( 'inactive' !== $segment ) {
+								error_log( 'Ignoring notification for pro plugin/theme license no ex' );
+								error_log( print_r( $notification['title'], true ) );
+								$process_notification = false;
+							}
+						}
+					}
+				}
+
+				$end_time   = ! empty( $notification['end'] ) ? strtotime( $notification['end'] ) : '';
+				$start_time = ! empty( $notification['start'] ) ? strtotime( $notification['start'] ) : '';
 				// Ignore if expired.
-				if ( $end_time && $current_time > $end_time ) {
-					continue;
+				if ( $process_notification && $end_time && $current_time > $end_time ) {
+					$process_notification = false;
 				}
 
 				// Ignore if notification has already been dismissed.
 				if (
+					$process_notification &&
 					! empty( $option['dismissed'] ) &&
 					array_key_exists( $notification['id'], $option['dismissed'] )
 				) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
-					continue;
+					$process_notification = false;
 				}
 
 				if ( $start_time && $activated_time > $start_time ) {
-					continue;
+					$process_notification = false;
 				}
 
-				$data[ $id ] = $notification;
+				if ( $process_notification ) {
+					$data[ $id ] = $notification;
 
-				// Check if this notification has already been saved with a timestamp.
-				if ( ! empty( $option['feed'][ $id ] ) ) { // Already exists in feed, so use saved time.
-					$data[ $id ]['saved'] = $option['feed'][ $id ]['saved'];
-				} elseif ( ! empty( $option['events'][ $id ] ) ) { // Already exists in events, so use saved time.
-					$data[ $id ]['saved'] = $option['events'][ $id ]['saved'];
-				} else { // Doesn't exist in feed or events, so save current time.
-					$data[ $id ]['saved'] = time();
+					// Check if this notification has already been saved with a timestamp.
+					if ( ! empty( $option['feed'][ $id ] ) ) { // Already exists in feed, so use saved time.
+						$data[ $id ]['saved'] = $option['feed'][ $id ]['saved'];
+					} elseif ( ! empty( $option['events'][ $id ] ) ) { // Already exists in events, so use saved time.
+						$data[ $id ]['saved'] = $option['events'][ $id ]['saved'];
+					} else { // Doesn't exist in feed or events, so save current time.
+						$data[ $id ]['saved'] = time();
+					}
 				}
 			}
 
 			return $data;
+		}
+
+		private function bb_is_pro_plugin_invalid( $plugins ) {
+			return (
+				(
+					1 === count( $plugins ) &&
+					(
+						(
+							in_array( 'buddyboss-platform-pro', $plugins, true ) &&
+							! function_exists( 'bbp_pro_is_license_valid' )
+						) ||
+						(
+							in_array( 'buddyboss-theme', $plugins, true ) &&
+							! function_exists( 'buddyboss_theme' )
+						)
+					)
+				) ||
+				(
+					in_array( 'buddyboss-platform-pro', $plugins, true ) &&
+					in_array( 'buddyboss-theme', $plugins, true ) &&
+					! function_exists( 'bbp_pro_is_license_valid' ) &&
+					! function_exists( 'buddyboss_theme' )
+				)
+			);
 		}
 
 		/**
@@ -588,7 +663,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							);
 						}
 						$buttons_html .= sprintf( '<button class="bb-in-plugin-admin-notifications-notice-dismiss" data-message-id="%s">%s</button>', $notification['id'], __( 'Dismiss', 'buddyboss' ) );
-						$buttons_html  = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
+						$buttons_html = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
 					}
 
 					// Icon HTML
@@ -685,7 +760,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							);
 						}
 						$buttons_html .= sprintf( '<button class="bb-in-plugin-admin-notifications-notice-dismiss" data-message-id="%s">%s</button>', $notification['id'], __( 'Dismiss', 'buddyboss' ) );
-						$buttons_html  = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
+						$buttons_html = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
 					}
 
 					$time_diff = ceil( ( time() - $notification['saved'] ) );
