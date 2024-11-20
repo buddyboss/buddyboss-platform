@@ -99,11 +99,11 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	public function bb_admin_advanced_telemetry_setting_tutorial() {
 		?>
 		<p>
-			<a class="button bb-button_filled bb-telemetry-tutorial-link" href="
-		<?php
-			echo esc_url( 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry' );
-		?>
-		" target="_blank"><?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?></a>
+			<a class="button bb-button_filled bb-telemetry-tutorial-link" 
+				href="<?php echo esc_url( 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry' ); ?>" 
+				target="_blank">
+				<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
+			</a>
 		</p>
 		<?php
 	}
