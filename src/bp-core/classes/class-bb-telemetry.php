@@ -113,21 +113,20 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return;
 			}
 
-			$data     = $this->bb_collect_site_data();
-			$auth_key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsIm5hbWUiOiJXZWIgTmluamEiLCJpYXQiOjE3MjkwNjM5NjMsImV4cCI6MTg4Njc0Mzk2M30.6Yy2KQqwEHQEOXmtK9SvCjzjUh2Ie62_2qw4A5ATq2I'; // @todo: update when release.
-			if ( defined( 'BB_TEST_ANALYTICS_AUTH' ) ) { // @todo: update when release.
-				$auth_key = BB_TEST_ANALYTICS_AUTH;
-			}
-			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry';
-			if ( defined( 'BB_TEST_ANALYTICS_URL' ) ) { // @todo: update when release.
-				$api_url = BB_TEST_ANALYTICS_URL . '/wp-json/wp/v1/bb-telemetry';
-			}
-			$args = array(
+			$data    = $this->bb_collect_site_data();
+			$api_url =
+				'aHR0cHM6Ly9h' .
+				'bmFseXRpY3Mu' .
+				'YnVkZHlib3Nz' .
+				'LmNvbS93cC1q' .
+				'c29uL3dwL3Yx' .
+				'L2JiLXRlbGVt' .
+				'ZXRyeQ==';
+			$args    = array(
 				'headers'   => array(
-					'Authorization' => 'Bearer ' . $auth_key,
-					'Accept'        => 'application/json;ver=1.0',
-					'Content-Type'  => 'application/json; charset=UTF-8',
-					'Site-URL'      => get_site_url(),
+					'Accept'       => 'application/json;ver=1.0',
+					'Content-Type' => 'application/json; charset=UTF-8',
+					'Site-URL'     => get_site_url(),
 				),
 				'timeout'   => 10,
 				'blocking'  => true,
@@ -135,7 +134,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
 			);
 
-			$raw_response = wp_remote_post( $api_url, $args );
+			$raw_response = bbapp_remote_post( base64_decode( $api_url ), $args );
 			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
 				unset( $data, $auth_key, $api_url, $args );
 
@@ -514,13 +513,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">
 				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
 				<div class="bb-telemetry-notice_content">
-					<p class="bb-telemetry-notice_heading"><strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong></p>
+					<p class="bb-telemetry-notice_heading">
+						<strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong>
+					</p>
 					<p>
 						<?php
 						// Message with link to telemetry settings.
 						printf(
 							wp_kses(
-								/* translators: %1$s and %2$s are links. */
+							/* translators: %1$s and %2$s are links. */
 								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
 								array(
 									'a' => array(
@@ -537,7 +538,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
 						</a>
 					</p>
-				</div>		
+				</div>
 			</div>
 			<?php
 		}
