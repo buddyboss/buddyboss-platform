@@ -10,7 +10,6 @@
 }
 
 $balloon-bg: var(--bb-plt-tooltip-background) !default;
-$balloon-base-size: 10px !default;
 $balloon-arrow-height: 6px;
 
 // Mixins
@@ -97,7 +96,7 @@ button[data-balloon] {
 		@include base-effects;
 		@include normalized-text;
 
-		background: var(--bb-plt-tooltip-background);
+		background: $balloon-bg;
 		border-radius: 4px;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
 		color: var(--bb-plt-tooltip-color);
@@ -486,7 +485,7 @@ button[data-balloon] {
 [data-bp-tooltip] {
 
 	&:after {
-		background: var(--bb-plt-tooltip-background);
+		background: $balloon-bg;
 		color: var(--bb-plt-tooltip-color);
 	}
 
