@@ -3925,6 +3925,12 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
   font-family: bb-icons;
 }
 
+#loco-admin.wrap .bb-telemetry-notice.notice-info {
+  border: 1px solid #c3c4c7;
+  border-left: 4px solid #e0623d;
+  padding: 0;
+}
+
 .section-bb_advanced_telemetry label[for="complete_reporting"] {
   margin-right: 15px;
 }
