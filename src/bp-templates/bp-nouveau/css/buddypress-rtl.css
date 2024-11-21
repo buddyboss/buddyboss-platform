@@ -517,9 +517,23 @@ body.buddypress article.page > .entry-header .entry-title {
   float: left;
 }
 
+.item-body:has(.bb-item-count + .subnav-filters) .bb-item-count,
 .item-body-inner:has(.bb-item-count + .subnav-filters) .bb-item-count {
   float: right;
   margin: 10px 0 0;
+}
+
+.item-body:has(.group-search + .bb-item-count) .group-search,
+.item-body-inner:has(.group-search + .bb-item-count) .group-search {
+  margin-top: 10px;
+}
+
+.bp-search + .bb-item-count {
+  margin-top: 35px !important;
+}
+
+.bp-search + .bb-item-count + .subnav-filters {
+  margin-top: 25px;
 }
 
 .buddypress-wrap .dir-component-filters .filter label {

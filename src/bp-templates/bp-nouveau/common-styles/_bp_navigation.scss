@@ -473,7 +473,23 @@
 	}
 }
 
-.item-body-inner:has(.bb-item-count + .subnav-filters) .bb-item-count {
-	float: left;
-	margin: 10px 0 0;
+.item-body,
+.item-body-inner {
+
+	&:has(.bb-item-count + .subnav-filters) .bb-item-count {
+		float: left;
+		margin: 10px 0 0;
+	}
+
+	&:has(.group-search + .bb-item-count) .group-search {
+		margin-top: 10px;
+	}
+}
+
+.bp-search + .bb-item-count {
+	margin-top: 35px !important;
+
+	+ .subnav-filters {
+		margin-top: 25px;
+	}
 }
