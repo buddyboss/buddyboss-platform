@@ -1304,6 +1304,10 @@ input#send-to-input {
 			}
 		}
 	}
+
+	#bb-messages-thread-list-nav .bp-navs.bp-subnavs {
+		overflow: initial;
+	}
 }
 
 .messages-wrapper #subnav {
