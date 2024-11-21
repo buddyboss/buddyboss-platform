@@ -12,6 +12,26 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_get_template_part( 'members/single/parts/item-subnav' );
 
+if ( bp_is_current_action( 'unread' ) ) {
+
+	// Pending notification requests.
+	$count = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+	?>
+	<div class="bb-item-count">
+		<?php
+		if ( ! $is_send_ajax_request ) {
+
+			/* translators: %d is the notification count */
+			printf(
+				wp_kses( _n( '<span class="bb-count">%d</span> Notification', '<span class="bb-count">%d</span> Notifications', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				$count
+			);
+		}
+		?>
+	</div>
+	<?php
+}
+
 switch ( bp_current_action() ) :
 	case 'unread':
 	case 'read':

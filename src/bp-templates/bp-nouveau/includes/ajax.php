@@ -151,6 +151,8 @@ function bp_nouveau_ajax_object_template_loader() {
 		if ( $enable_count ) {
 			$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
 		}
+	} elseif ( 'members' === $object && bp_is_notifications_component() && bp_is_current_action( 'unread' ) ) {
+		$result['count'] = buddypress()->notifications->query_loop->total_notification_count;
 	}
 
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );

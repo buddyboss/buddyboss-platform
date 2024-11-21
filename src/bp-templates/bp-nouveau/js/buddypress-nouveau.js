@@ -638,14 +638,16 @@ window.bp = window.bp || {};
 
 						// Update count for inner page heading.
 						var dir_label_type = '';
-						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) ) {
+						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) && 'member_notifications' !== data.template ) {
 							data.scope = 'personal';
 						}
 
 						if ( 'personal' === data.scope && 'members' === data.object ) {
-							dir_label_type = 'connection';
+							dir_label_type = 'connections';
 						} else if ( 'following' === data.scope ) {
 							dir_label_type = 'followers';
+						} else if ( 'member_notifications' === data.template ) {
+							dir_label_type = 'notifications';
 						} else {
 							dir_label_type = data.object;
 						}

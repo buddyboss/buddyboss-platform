@@ -674,9 +674,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
-			$params['dir_labels']['connection'] = array(
+			$params['dir_labels']['connections'] = array(
 				'singular' => esc_html( 'Connection', 'buddyboss' ),
 				'plural'   => esc_html( 'Connections', 'buddyboss' ),
+			);
+		}
+
+		if ( bp_is_active( 'notifications' ) ) {
+			$params['dir_labels']['notifications'] = array(
+				'singular' => esc_html( 'Notification', 'buddyboss' ),
+				'plural'   => esc_html( 'Notifications', 'buddyboss' ),
 			);
 		}
 
