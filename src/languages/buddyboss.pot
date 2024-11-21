@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.7.31\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-11-21 07:43:01+00:00\n"
+"POT-Creation-Date: 2024-11-21 09:52:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -174,7 +174,7 @@ msgstr ""
 #: bp-activity/bb-activity-reactions.php:483
 #: bp-core/admin/settings/bb-admin-setting-reactions.php:27
 #: bp-core/admin/templates/upgrade-screen.php:81
-#: bp-core/bp-core-functions.php:9217 bp-core/classes/class-bb-reaction.php:233
+#: bp-core/bp-core-functions.php:9220 bp-core/classes/class-bb-reaction.php:233
 #: bp-core/classes/class-bb-reaction.php:263
 #: bp-core/classes/class-bb-reaction.php:264
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:991
@@ -223,7 +223,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:291 bp-activity/bp-activity-admin.php:1107
 #: bp-activity/classes/class-bp-activity-list-table.php:416
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
-#: bp-core/admin/settings/bb-admin-setting-performance.php:55
+#: bp-core/admin/settings/bb-admin-setting-performance.php:61
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
 #: bp-core/bp-core-cssjs.php:237
 #: bp-moderation/classes/class-bp-moderation-activity.php:120
@@ -1137,12 +1137,12 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:7406
-#: bp-blogs/bp-blogs-activity.php:279 bp-blogs/bp-blogs-activity.php:1707
+#: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:7408
-#: bp-blogs/bp-blogs-activity.php:281 bp-blogs/bp-blogs-activity.php:1709
+#: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
 msgstr ""
 
@@ -3030,35 +3030,35 @@ msgstr ""
 msgid "%s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:148
+#: bp-blogs/bp-blogs-activity.php:156
 msgid "New post comment posted"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:150
+#: bp-blogs/bp-blogs-activity.php:158
 msgid "Comments"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:173 cli/components/activity.php:822
+#: bp-blogs/bp-blogs-activity.php:181 cli/components/activity.php:822
 msgid "%1$s created the site %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:255 bp-blogs/bp-blogs-activity.php:1651
+#: bp-blogs/bp-blogs-activity.php:263 bp-blogs/bp-blogs-activity.php:1659
 msgid "(no title)"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:405
+#: bp-blogs/bp-blogs-activity.php:413
 msgid "%1$s commented on the post, %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:407 cli/components/activity.php:869
+#: bp-blogs/bp-blogs-activity.php:415 cli/components/activity.php:869
 msgid "%1$s commented on the post, %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1700
+#: bp-blogs/bp-blogs-activity.php:1708
 msgid "%1$s posted a new %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1702
+#: bp-blogs/bp-blogs-activity.php:1710
 msgid "%1$s posted a new %2$s."
 msgstr ""
 
@@ -3468,6 +3468,7 @@ msgid "Dismiss this notice."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:528
+#: bp-core/classes/class-bb-telemetry.php:556
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
 msgid "Sorry, something goes wrong please try again."
@@ -3676,7 +3677,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:678
-#: bp-core/admin/bp-core-admin-functions.php:3795
+#: bp-core/admin/bp-core-admin-functions.php:3803
 #: bp-core/admin/bp-core-admin-settings.php:1637
 #: bp-core/classes/class-bp-admin.php:345
 #: bp-core/classes/class-bp-admin.php:506
@@ -4394,7 +4395,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:607
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:663
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:745
-#: bp-core/bp-core-functions.php:9247
+#: bp-core/bp-core-functions.php:9250
 #: bp-core/classes/class-bp-admin-tab.php:550
 #: bp-integrations/learndash/bp-learndash-functions.php:408
 #: bp-integrations/learndash/bp-learndash-functions.php:431
@@ -4441,7 +4442,7 @@ msgid "Create Page"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:504
-#: bp-core/admin/settings/bb-admin-setting-performance.php:50
+#: bp-core/admin/settings/bb-admin-setting-performance.php:57
 #: bp-core/admin/settings/bp-admin-setting-general.php:21
 #: bp-forums/core/update.php:188
 msgid "General"
@@ -6105,16 +6106,73 @@ msgid "MySql Server"
 msgstr ""
 
 #: bp-core/admin/settings/bb-admin-setting-performance.php:28
-#: bp-core/admin/settings/bp-admin-setting-performance.php:27
-msgid "Performance"
+msgid "Advanced"
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:51
+#: bp-core/admin/settings/bb-admin-setting-performance.php:58
 msgid "Page requests"
 msgstr ""
 
-#: bp-core/admin/settings/bb-admin-setting-performance.php:56
+#: bp-core/admin/settings/bb-admin-setting-performance.php:62
 msgid "Activity loading"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:67
+#: bp-core/admin/settings/bb-admin-setting-performance.php:76
+msgid "Telemetry"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:105
+#: bp-core/classes/class-bb-telemetry.php:537
+msgid "About Telemetry"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:120
+msgid "Complete reporting"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:127
+#. translators: %1$s and %2$s wrap the phrase "disable telemetry" in a
+#. clickable link.
+msgid ""
+"Telemetry helps us gather usage statistics and information about your "
+"configuration and the features and functionality you use. We aggregate this "
+"information to help us improve our product and associate it with your "
+"customer record to help us serve you better. We do not gather or send any "
+"of your users' personally identifiable information. To stop contributing "
+"towards improving the product, you can %1$sdisable telemetry%2$s."
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:134
+msgid "Anonymous reporting"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:141
+#. translators: %1$s and %2$s wrap the phrase "disable telemetry" in a
+#. clickable link.
+msgid ""
+"Telemetry helps us gather usage statistics and information about your "
+"configuration and the features and functionality you use. We aggregate this "
+"information to help us improve our product. By choosing anonymous "
+"reporting, your data will not be associated with your customer record, and "
+"the way we serve you will be less relevant to you. We do not gather or send "
+"any of your users' personally identifiable information. If you stop "
+"contributing towards improving the product, you can %1$sdisable "
+"telemetry%2$s."
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:185
+msgid "Disable telemetry"
+msgstr ""
+
+#: bp-core/admin/settings/bb-admin-setting-performance.php:189
+msgid ""
+"Disabling telemetry will stop gathering and reporting usage statistics \n"
+"\t\t\t\tabout your configuration and the features and functionality you "
+"use. By disabling telemetry, \n"
+"\t\t\t\tyou will not be contributing towards the improvement of the product "
+"and the way we serve \n"
+"\t\t\t\tyou will be less relevant to you."
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:68
@@ -6611,6 +6669,10 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-notifications.php:194
 msgid "review this tutorial"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-performance.php:27
+msgid "Performance"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-registration.php:27
@@ -8914,15 +8976,15 @@ msgstr ""
 msgid "A manual notification from a site admin"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:9293
+#: bp-core/bp-core-functions.php:9296
 msgid "Enable Reactions"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:9299
+#: bp-core/bp-core-functions.php:9302
 msgid "Reactions Mode"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:9310
+#: bp-core/bp-core-functions.php:9313
 msgid "Reactions Button"
 msgstr ""
 
@@ -10092,6 +10154,24 @@ msgstr ""
 
 #: bp-core/classes/class-bb-subscriptions.php:294
 msgid "The item ID is required to create a subscription."
+msgstr ""
+
+#: bp-core/classes/class-bb-telemetry.php:149
+msgid "An error occurred while sending the telemetry report."
+msgstr ""
+
+#: bp-core/classes/class-bb-telemetry.php:516
+msgid "Help us improve BuddyBoss"
+msgstr ""
+
+#: bp-core/classes/class-bb-telemetry.php:524
+#. translators: %1$s and %2$s are links.
+msgid ""
+"We gather statistics about how our users use the product. We aggregate this "
+"information to help us improve the product and provide you with a better "
+"service. If you're happy with that you can dismiss this message, otherwise "
+"you can <a href=\"%1$s\">adjust your telemetry settings</a>. To read more "
+"about what statistics we collect and why, click below."
 msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:176
@@ -35187,7 +35267,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:924
+#: class-buddypress.php:925
 msgid "BuddyPress Nouveau"
 msgstr ""
 
