@@ -3379,6 +3379,20 @@ table.moderations tbody tr .column-suspend .dashicons {
   font-size: 24px;
 }
 
+table.moderations .bp-block-user.disabled {
+  cursor: default;
+}
+
+table.moderations .bp-block-user[data-bp-tooltip] {
+  display: inline-block;
+}
+
+table.moderations .bp-block-user[data-bp-tooltip]:after {
+  white-space: normal;
+  width: 210px;
+  text-align: center;
+}
+
 .buddyboss_page_bp-moderation .dashicons {
   font-weight: 700;
 }
@@ -3576,6 +3590,24 @@ table.moderations .column-member img {
 
 .bp-admin-card .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   content: "\ee6a";
+}
+
+table.users .suspend a.disabled,
+table.users .unsuspend a.disabled {
+  cursor: default;
+}
+
+table.users .suspend a.disabled[data-bp-tooltip],
+table.users .unsuspend a.disabled[data-bp-tooltip] {
+  display: inline-block;
+}
+
+table.users .suspend a.disabled[data-bp-tooltip]:after,
+table.users .unsuspend a.disabled[data-bp-tooltip]:after {
+  white-space: normal;
+  width: 210px;
+  text-align: center;
+  z-index: 9999;
 }
 
 /*------------------------------------------------------------------------------
@@ -4790,6 +4822,81 @@ h1.bb-advance-heading {
   margin-right: 8px;
   line-height: 1;
   color: #e0613c;
+}
+
+.bb-upgrade-notice {
+  background-color: #f6efe8;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #c5bfba;
+  margin-left: -20px;
+  position: relative;
+}
+
+.bb-upgrade-notice .bb-upgrade-point {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-upgrade-notice .bb-upgrade-point i {
+  font-size: 24px;
+  margin-right: 4px;
+}
+
+.bb-upgrade-notice .bb-upgrade-point .bb-upgrade-notice__link {
+  font-weight: 600;
+  color: inherit;
+  margin-left: 16px;
+}
+
+.bb-upgrade-notice .bb-upgrade-point .bb-upgrade-notice__link:focus {
+  box-shadow: none;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  color: rgba(0, 0, 0, 0.6);
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:before {
+  content: "\e828";
+  font-family: bb-icons;
+  font-style: normal;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:hover {
+  color: black;
+}
+
+.bb-upgrade-notice .bb-dismiss-upgrade-notice:focus, .bb-upgrade-notice .bb-dismiss-upgrade-notice:active {
+  outline: 0;
+  box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+  .bb-upgrade-notice {
+    margin: 0 0 0 -10px;
+    padding-right: 35px;
+  }
 }
 
 .wrap.wrap--performance > h2:first-child {

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.7.00
+Stable tag: 2.7.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,32 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.31 =
+* Bug: Moderation - Resolved missing wp_bp_suspend table causing frontend pages to fail loading
+
+= 2.7.30 =
+* Enhancement: Moderation - Optimized moderation for improved performance
+* Bug: Activity - Fixed an issue where the “View x replies” popup was not displaying correctly in iOS mobile view
+* Bug: Activity - Fixed an issue with translation strings in the Activity news feed related to profile photo updates
+* Bug: Members - Fixed an issue where the member search feature on the member directory page was not functioning correctly for non-admin users
+
+= 2.7.20 =
+* Bug: Discussion - Fixed an issue where replying to a GIF in a discussion disappeared after restoring it from the trash
+* Bug: Learndash - Removed the Course tab from the Group Creation process on the front end when Social Group to LearnDash Group sync is disabled
+* Bug: The Events Calendar - Fixed the insecure connection prompt when opening Events in iCalendar
+
+= 2.7.10 =
+* Enhanced: Activity - Enhanced the ability to generate link previews when the BuddyBoss Platform is set to Private mode
+* Bug: Activity - Fixed an issue where embedded videos were not displaying in blog custom posts on the activity feed
+* Bug: Activity - Resolved the emoji icon inconsistency when adding comments or replies
+* Bug: Activity - Resolved the issue with adding reactions to comments
+* Bug: Activity - Resolved the issue with the “Read more” link in Polls
+* Bug: Core - Resolved issues with the “Load More” button on the Photo page
+* Bug: Core - Resolved the search error with Divi Builder
+* Bug: Performance - Improvement on Members, Groups, and News Feed pages
+* Bug: Profiles - Fixed an issue where Profile Type visibility set to “Only me” was still visible to non-admin users
+* Bug: Profiles - Resolved an issue with profile search when using first and last names.
 
 = 2.7.00 =
 * Enhancement: Coding Standards - Fixed all warnings and errors for PHP versions 7.3 to 8.3

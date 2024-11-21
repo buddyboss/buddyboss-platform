@@ -1356,14 +1356,14 @@
 		.acomment-display .ac-emotions_list {
 
 			&.active {
-				bottom: 35px;
+				bottom: 31px;
 				left: -30px;
 			}
 
 			&:hover {
 
 				body:not(.bb-is-mobile) & {
-					bottom: 35px;
+					bottom: 31px;
 					left: -30px;
 				}
 			}
@@ -1558,7 +1558,7 @@
 .bb-modal-activity-header {
 	display: flex;
 	align-items: center;
-	position: sticky;
+	position: relative;
 	z-index: 99;
 	top: 0;
 	left: 0;
