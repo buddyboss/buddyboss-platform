@@ -638,7 +638,7 @@ window.bp = window.bp || {};
 
 						// Update count for inner page heading.
 						var dir_label_type = '';
-						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) && 'member_notifications' !== data.template ) {
+						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) ) {
 							data.scope = 'personal';
 						}
 
@@ -646,8 +646,6 @@ window.bp = window.bp || {};
 							dir_label_type = 'connections';
 						} else if ( 'following' === data.scope ) {
 							dir_label_type = 'followers';
-						} else if ( 'member_notifications' === data.template ) {
-							dir_label_type = 'notifications';
 						} else {
 							dir_label_type = data.object;
 						}
@@ -660,6 +658,10 @@ window.bp = window.bp || {};
 						}
 						var dir_label = parseInt( dir_count ) === 1 ? BP_Nouveau.dir_labels[ dir_label_type ][ 'singular' ] : BP_Nouveau.dir_labels[ dir_label_type ][ 'plural' ];
 						$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+
+						if ( 'member_notifications' === data.template ) {
+							$( '#notifications-personal-li.selected' ).find( 'span' ).text( response.data.count );
+						}
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {

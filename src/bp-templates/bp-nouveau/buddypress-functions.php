@@ -680,13 +680,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 			);
 		}
 
-		if ( bp_is_active( 'notifications' ) ) {
-			$params['dir_labels']['notifications'] = array(
-				'singular' => esc_html( 'Notification', 'buddyboss' ),
-				'plural'   => esc_html( 'Notifications', 'buddyboss' ),
-			);
-		}
-
 		// If the Object/Item nav are in the sidebar.
 		if ( bp_nouveau_is_object_nav_in_sidebar() ) {
 			$params['object_nav_parent'] = '.buddypress_object_nav';
