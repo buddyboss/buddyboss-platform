@@ -513,6 +513,15 @@ body.buddypress article.page > .entry-header .entry-title {
   margin-bottom: 20px;
 }
 
+.item-body-inner > .bb-item-count + .subnav-filters {
+  float: right;
+}
+
+.item-body-inner:has(.bb-item-count + .subnav-filters) .bb-item-count {
+  float: left;
+  margin: 10px 0 0;
+}
+
 .buddypress-wrap .dir-component-filters .filter label {
   display: inline;
 }

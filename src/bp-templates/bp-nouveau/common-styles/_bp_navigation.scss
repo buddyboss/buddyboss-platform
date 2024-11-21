@@ -466,5 +466,14 @@
 
 	.item-body-inner > & {
 		margin-bottom: 20px;
+
+		+ .subnav-filters {
+			float: right;
+		}
 	}
+}
+
+.item-body-inner:has(.bb-item-count + .subnav-filters) .bb-item-count {
+	float: left;
+	margin: 10px 0 0;
 }
