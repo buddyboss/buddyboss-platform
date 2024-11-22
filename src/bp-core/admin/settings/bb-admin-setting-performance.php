@@ -94,7 +94,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	/**
 	 * Displays a tutorial link for telemetry settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.40
 	 */
 	public function bb_admin_advanced_telemetry_setting_tutorial() {
 		?>
@@ -111,7 +111,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	/**
 	 * Outputs the telemetry setting fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.40
 	 */
 	public function bb_admin_advanced_setting_telemetry_callback() {
 		$bb_advanced_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
@@ -204,7 +204,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	 *
 	 * @param string $old_telemetry_reporting Old telemetry setting value.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.40
 	 */
 	public function bb_admin_send_immediate_telemetry_on_complete( $old_telemetry_reporting ) {
 		check_admin_referer( $this->tab_name . '-options' );
