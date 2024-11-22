@@ -1300,6 +1300,9 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		<?php
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
+				if ( false !== strpos( $profile_action['element_class'], 'bp-hide' ) ) {
+					continue;
+				}
 				?>
 				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php

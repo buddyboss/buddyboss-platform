@@ -19,11 +19,6 @@
   transform: translateX(0);
 }
 
-#loginform.shake .grecaptcha-badge {
-  /* animation: none !important;
-	transform: translateX(-100%); */
-}
-
 .register-page .error:has(.bb-recaptcha-register) {
   margin-top: 25px !important;
 }

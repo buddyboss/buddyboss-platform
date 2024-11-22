@@ -2363,6 +2363,11 @@ function bp_core_load_buddypress_textdomain() {
 	 */
 	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
 
+	$plugin_dir = BP_PLUGIN_DIR;
+	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+		$plugin_dir = $plugin_dir . 'src';
+	}
+
 	/**
 	 * Filters the locations to load language files from.
 	 *
@@ -2375,6 +2380,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
+			trailingslashit( $plugin_dir . '/languages' ),
 		)
 	);
 
@@ -7915,6 +7921,9 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bb_performance_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
+			break;
+		case 'bb_advanced_telemetry':
+			$meta_icon = $bb_icon_bf . ' bb-icon-box';
 			break;
 		default:
 			$meta_icon = '';
