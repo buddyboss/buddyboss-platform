@@ -10006,3 +10006,14 @@ function bb_get_all_headers() {
 
 	return $headers;
 }
+
+/**
+ * Function to return the minimum pro version to show notice for sso.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_pro_sso_version() {
+	return '2.6.20'; // @todo: update when release.
+}
