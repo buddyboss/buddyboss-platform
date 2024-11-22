@@ -10015,5 +10015,5 @@ function bb_get_all_headers() {
  * @return string
  */
 function bb_pro_sso_version() {
-	return '2.6.20'; // @todo: update when release.
+	return '2.6.30';
 }
