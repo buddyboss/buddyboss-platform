@@ -360,12 +360,12 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			}
 
 			$pro_license_status  = function_exists( 'bb_pro_license_status' ) ? bb_pro_license_status() : array();
-			$pro_license_exists  = (bool) $pro_license_status['is_license_exists'];
-			$pro_license_expired = (bool) $pro_license_status['is_license_expired'];
+			$pro_license_exists  = ! empty( $pro_license_status ) && (bool) $pro_license_status['is_license_exists'];
+			$pro_license_expired = ! empty( $pro_license_status ) && (bool) $pro_license_status['is_license_expired'];
 			if ( empty( $pro_license_status ) ) {
 				$theme_license_status = function_exists( 'bb_theme_license_status' ) ? bb_theme_license_status() : array();
-				$pro_license_exists   = (bool) $theme_license_status['is_license_exists'];
-				$pro_license_expired  = (bool) $theme_license_status['is_license_expired'];
+				$pro_license_exists   = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_exists'];
+				$pro_license_expired  = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_expired'];
 			}
 
 			$option         = $this->bb_admin_notification_get_option();
