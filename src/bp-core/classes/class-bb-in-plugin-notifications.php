@@ -359,13 +359,15 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				return $data;
 			}
 
-			$pro_license_exists   = function_exists( 'bbp_pro_is_license_valid' ) ? bbp_pro_is_license_valid() : false;
-			$theme_license_exists = false;
-			if ( $pro_license_exists && function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
-				$theme_license_exists = $pro_license_exists;
-			} elseif ( ! $pro_license_exists && function_exists( 'buddyboss_theme' ) ) {
-				$theme_license_exists = ! buddyboss_theme_get_theme_sudharo(); // will get true if license not exists.
+			$pro_license_status  = function_exists( 'bb_pro_license_status' ) ? bb_pro_license_status() : array();
+			$pro_license_exists  = (bool) $pro_license_status['is_license_exists'];
+			$pro_license_expired = (bool) $pro_license_status['is_license_expired'];
+			if ( empty( $pro_license_status ) ) {
+				$theme_license_status = function_exists( 'bb_theme_license_status' ) ? bb_theme_license_status() : array();
+				$pro_license_exists   = (bool) $theme_license_status['is_license_exists'];
+				$pro_license_expired  = (bool) $theme_license_status['is_license_expired'];
 			}
+
 			$option         = $this->bb_admin_notification_get_option();
 			$current_time   = time();
 			$activated_time = bp_get_option( 'bb_activation_time', $current_time );
@@ -402,10 +404,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 						$process_notification = false;
 					}
 
-					// If the plan is pro,
-					// and the user has the PRO plugin or theme,
-					// and the license is valid, and the segment is not expired,
-					// then ignore notification expired related.
 					if (
 						'none' !== $segment &&
 						(
@@ -413,17 +411,17 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							in_array( 'buddyboss-theme', $plugins, true )
 						)
 					) {
-
-						if ( $pro_license_exists || $theme_license_exists ) {
-							if ( 'expired' !== $segment ) {
-								error_log( 'Ignoring notification for pro plugin/theme' );
-								error_log( print_r( $notification['title'], true ) );
+						if ( $pro_license_exists ) {
+							if ( 'inactive' === $segment ) {
 								$process_notification = false;
 							}
+							if ( ! $pro_license_expired ) {
+								if ( 'expired' === $segment ) {
+									$process_notification = false;
+								}
+							}
 						} else {
-							if ( 'inactive' !== $segment ) {
-								error_log( 'Ignoring notification for pro plugin/theme license no ex' );
-								error_log( print_r( $notification['title'], true ) );
+							if ( 'expired' === $segment ) {
 								$process_notification = false;
 							}
 						}
