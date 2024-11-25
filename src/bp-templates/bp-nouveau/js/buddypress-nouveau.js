@@ -633,9 +633,7 @@ window.bp = window.bp || {};
 						} );
 					}
 
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
-
+					if ( ! _.isUndefined( response.data ) ) {
 						// Update count for inner page heading.
 						var dir_label_type = '';
 						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) ) {
@@ -652,21 +650,35 @@ window.bp = window.bp || {};
 
 						var dir_count = 0;
 						if ( null === data.template || '' === dir_label_type ) {
-							dir_count = response.data.scopes[ data.scope ] || 0;
+							dir_count = 'undefined' !== typeof response.data.scopes ? ( response.data.scopes[ data.scope ] || 0 ) : 0;
 						} else {
 							dir_count = response.data.count || 0;
 						}
-						var dir_label = parseInt( dir_count ) === 1 ? BP_Nouveau.dir_labels[ dir_label_type ][ 'singular' ] : BP_Nouveau.dir_labels[ dir_label_type ][ 'plural' ];
-						$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+						var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( dir_label_type ) ?
+							(
+								1 === parseInt( dir_count )
+								? BP_Nouveau.dir_labels[dir_label_type]['singular']
+								: BP_Nouveau.dir_labels[dir_label_type]['plural']
+							)
+							: '';
 
-						if ( 'member_notifications' === data.template ) {
-							$( '#notifications-personal-li.selected' ).find( 'span' ).text( response.data.count );
+						if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
+							$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
+							$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+
+							if ( 'member_notifications' === data.template ) {
+								$( '#notifications-personal-li.selected' ).find( 'span' ).text( response.data.count );
+							}
 						}
-					}
 
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
-						for ( var i in response.data.scopes ) {
-							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
+						if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
+							for ( var i in response.data.scopes ) {
+								$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
+							}
+
+							if ( ( $( 'body.groups' ).hasClass( 'single-item' ) || $( 'body.bp-user' ).hasClass( 'single' ) ) && ( 'media' === data.object || 'video' === data.object ) ) {
+								$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.scopes[ data.scope ] + '</span> ' + dir_label );
+							}
 						}
 					}
 

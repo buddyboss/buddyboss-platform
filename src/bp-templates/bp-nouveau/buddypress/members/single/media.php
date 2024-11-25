@@ -16,28 +16,33 @@ if ( bp_is_user() ) {
 			?>
 			<div class="bb-item-count">
 				<?php
-				/* translators: %d is the photo count */
-				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-					$count
-				);
+				if ( ! $is_send_ajax_request ) {
+
+					/* translators: %d is the photo count */
+					printf(
+						wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+						$count
+					);
+				}
 				?>
 			</div>
 			<?php
 			break;
 		case 'albums':
-			$count = bp_media_get_total_album_count();
-			?>
-			<div class="bb-item-count">
-				<?php
-				/* translators: %d is the album count */
-				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-					$count
-				);
+			if ( ! bp_is_single_album() ) {
+				$count = bp_media_get_total_album_count();
 				?>
-			</div>
-			<?php
+				<div class="bb-item-count">
+					<?php
+					/* translators: %d is the album count */
+					printf(
+						wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+						$count
+					);
+					?>
+				</div>
+				<?php
+			}
 			break;
 	endswitch;
 }

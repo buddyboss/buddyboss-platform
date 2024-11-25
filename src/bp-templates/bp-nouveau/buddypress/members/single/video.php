@@ -17,11 +17,14 @@ if ( bp_is_user() ) {
 			?>
 			<div class="bb-item-count">
 				<?php
-				/* translators: %d is the video count */
-				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-					$count
-				);
+				if ( ! $is_send_ajax_request ) {
+
+					/* translators: %d is the video count */
+					printf(
+						wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+						$count
+					);
+				}
 				?>
 			</div>
 			<?php
