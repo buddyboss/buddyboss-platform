@@ -152,7 +152,23 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 										$notification_class = ( 'dismissed' === $notification['status'] ) ? 'dismissed' : 'unread';
 										?>
 										<div id="bb-notifications-message-<?php echo esc_attr( $notification['id'] ); ?>" class="bb-notice-block bb-notice-block--<?php echo esc_attr( $notification['type'] ); ?> <?php echo esc_attr( $notification_class ); ?>" data-message-id="<?php echo esc_attr( $notification['id'] ); ?>">
-											<div class="bb-notice-icon"><span class="notice-icon"></span></div>
+											<div class="bb-notice-icon">
+												<?php
+												if ( ! empty( $notification['icon'] ) && filter_var( $notification['icon'], FILTER_VALIDATE_URL ) ) {
+													?>
+													<span class="notice-icon">
+														<img src='<?php echo esc_url( $notification['icon'] ); ?>' alt='<?php echo esc_attr( $notification_title ); ?>' />
+													</span>
+													<?php
+												} else {
+													?>
+													<span class="notice-icon">
+														<i class='<?php echo $notification['icon']; ?>' aria-hidden='true'></i>
+													</span>
+													<?php
+												}
+												?>
+											</div>
 											<div class="bb-notice-card">
 												<div class="bb-notice-header">
 													<div class="notice-header">
