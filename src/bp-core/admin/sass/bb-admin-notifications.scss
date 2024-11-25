@@ -383,6 +383,7 @@
 			font-weight: 600;
 			margin: 0 0 5px;
 			color: var(--bb-notice-sys-black);
+			word-break: break-all;
 
 			.bb-notice-block.dismissed & {
 				color: #646970;
@@ -429,6 +430,7 @@
 	.notice-content {
 		color: #101517;
 		margin: 0 0 16px;
+		word-break: break-all;
 
 		.bb-notice-block.dismissed & {
 			color: #646970;

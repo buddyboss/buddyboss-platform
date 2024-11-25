@@ -364,6 +364,7 @@
   font-weight: 600;
   margin: 0 0 5px;
   color: var(--bb-notice-sys-black);
+  word-break: break-all;
 }
 
 .bb-notice-block.dismissed .bb-notice-header .notice-header h5 {
@@ -403,6 +404,7 @@
 .bb-notice-body .notice-content {
   color: #101517;
   margin: 0 0 16px;
+  word-break: break-all;
 }
 
 .bb-notice-block.dismissed .bb-notice-body .notice-content {
