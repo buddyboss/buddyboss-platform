@@ -96,7 +96,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		/**
 		 * Fires to register SSO settings fields.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @param Object $this BP_Admin_Setting_General.
 		 */
@@ -188,7 +188,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	/**
 	 * Add SSO settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.40
 	 */
 	public function bb_admin_setting_callback_enable_sso_registration( $args ) {
 		$val    = function_exists( 'bb_enable_sso' ) && bb_enable_sso();
