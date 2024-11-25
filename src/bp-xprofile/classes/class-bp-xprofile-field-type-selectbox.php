@@ -160,7 +160,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		/**
 		 * Filters the HTML output for options in a select input.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.7.40
 		 *
 		 * @param string $html      HTML output for options in a select input.
 		 * @param object $field_obj Current field object.

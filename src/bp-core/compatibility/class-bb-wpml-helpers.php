@@ -286,7 +286,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * Sort the xprofile field options alphabetically according to the current language.
 		 * Reference: https://wpml.org/errata/buddyboss-alphabetical-sorting-issue-for-translated-taxonomy-fields-in-frontend/
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.7.40
 		 *
 		 * @param string $html      The HTML output of the field.
 		 * @param object $field_obj The field object.

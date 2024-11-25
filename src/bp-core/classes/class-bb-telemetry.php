@@ -2,7 +2,7 @@
 /**
  * Telemetry class.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.7.40
  * @package BuddyBoss\Core
  */
 
@@ -13,14 +13,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 	/**
 	 * BuddyBoss Telemetry object.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.40
 	 */
 	class BB_Telemetry {
 
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @var self
 		 */
@@ -29,7 +29,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Global $wpdb object.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @var wpdb
 		 */
@@ -38,7 +38,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Telemetry Option.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @var bb_telemetry_option
 		 */
@@ -47,7 +47,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return BB_Telemetry|null
 		 */
@@ -62,7 +62,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Constructor method.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 */
 		public function __construct() {
 			global $wpdb;
@@ -91,7 +91,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Setup actions for telemetry reporting.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 */
 		public function setup_actions() {
 			add_action( 'bb_telemetry_report_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
@@ -103,7 +103,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Send telemetry data to the analytics site when the CRON job is triggered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 */
 		public function bb_send_telemetry_report_to_analytics() {
 			if (
@@ -153,7 +153,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Generate or retrieve a unique UUID.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return string The unique UUID.
 		 */
@@ -174,7 +174,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Collect site data for telemetry reporting.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return array An array of collected site data.
 		 */
@@ -224,7 +224,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Retrieves the list of installed plugins along with their name, slug, version, and activation status.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return array List of plugins with 'name', 'slug', 'version', and 'active' keys.
 		 */
@@ -252,7 +252,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Retrieves data for the active theme, including the parent theme if a child theme is active.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return array List of themes with 'name', 'stylesheet', 'version', and 'template' keys.
 		 */
@@ -273,7 +273,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Retrieves specific data from the provided theme object.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @param WP_Theme $theme Theme object.
 		 *
@@ -295,7 +295,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Check if the domain is allowlisted for telemetry data.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return bool True if the domain is not allowlisted, false otherwise.
 		 */
@@ -331,7 +331,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Get the telemetry platform options.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @param array $bb_telemetry_data Telemetry options.
 		 *
@@ -465,7 +465,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Get the status of integrations.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 *
 		 * @return array list of integrations status.
 		 */
@@ -498,7 +498,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Telemetry notice.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 */
 		public function bb_telemetry_admin_notice() {
 
@@ -546,7 +546,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Store the dismissal of the notice.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.40
 		 */
 		public function bb_telemetry_notice_dismissed() {
 
