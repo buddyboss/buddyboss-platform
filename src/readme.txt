@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 8.0
-Stable tag: 2.7.31
+Stable tag: 2.7.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.40 =
+* Enhancement: MemberPress - We have added full integration of MemberPress into Buddyboss including their most recent Courses feature
+* Bug: Core - Fixed accessibility issues on the platform and theme
+* Bug: Members - Fixed issue where the Follow option appeared in the primary action dropdown when the Follow feature was disabled
+* Bug: Messages - Fixed overlapping issue with the ellipsis button on the messaging sidebar
+* Bug: Notifications - Fixed issue with notifications to mentioned moderators in Group Forum discussions/replies
+* Bug: Translation - Fixed translation issue that occurred after WordPress 6.7 update
+* Bug: Translations - Fixed ordering of translated dropdown options
 
 = 2.7.31 =
 * Bug: Moderation - Resolved missing wp_bp_suspend table causing frontend pages to fail loading
