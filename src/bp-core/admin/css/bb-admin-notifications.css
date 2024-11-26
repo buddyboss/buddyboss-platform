@@ -267,18 +267,12 @@
   justify-content: center;
 }
 
-.bb-notice-block .notice-icon::before {
-  content: "";
-  font-family: bb-icons;
-  font-style: normal;
+.bb-notice-block .notice-icon i {
   font-size: 16px;
-  display: inline-block;
-  text-decoration: inherit;
-  text-align: center;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
   color: var(--bb-notice-sys-white);
+}
+
+.bb-notice-block .notice-icon i::before {
   margin: 0;
 }
 
@@ -290,28 +284,12 @@
   background-color: var(--bb-notice-sys-white);
 }
 
-.bb-notice-block.bb-notice-block--alert .notice-icon {
-  background-color: #e0455e;
-}
-
-.bb-notice-block.bb-notice-block--alert .notice-icon::before {
-  content: "\eebd";
-}
-
 .bb-notice-block.bb-notice-block--info {
   background-color: rgba(224, 69, 94, 0.05);
 }
 
 .bb-notice-block.bb-notice-block--info.dismissed {
   background-color: var(--bb-notice-sys-white);
-}
-
-.bb-notice-block.bb-notice-block--info .notice-icon {
-  background-color: #4bb1cf;
-}
-
-.bb-notice-block.bb-notice-block--info .notice-icon::before {
-  content: "\ee03";
 }
 
 .bb-notice-block.bb-notice-block--warning {
@@ -322,28 +300,12 @@
   background-color: var(--bb-notice-sys-white);
 }
 
-.bb-notice-block.bb-notice-block--warning .notice-icon {
-  background-color: #f8b706;
-}
-
-.bb-notice-block.bb-notice-block--warning .notice-icon::before {
-  content: "\eebc";
-}
-
 .bb-notice-block.bb-notice-block--promo {
   background-color: rgba(199, 0, 255, 0.05);
 }
 
 .bb-notice-block.bb-notice-block--promo.dismissed {
   background-color: var(--bb-notice-sys-white);
-}
-
-.bb-notice-block.bb-notice-block--promo .notice-icon {
-  background-color: #c700ff;
-}
-
-.bb-notice-block.bb-notice-block--promo .notice-icon::before {
-  content: "\ef3b";
 }
 
 .bb-notice-block .bb-notice-card {

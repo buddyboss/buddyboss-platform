@@ -294,19 +294,13 @@
 		align-items: center;
 		justify-content: center;
 
-		&::before {
-			content: "";
-			font-family: bb-icons;
-			font-style: normal;
+		i {
 			font-size: 16px;
-			display: inline-block;
-			text-decoration: inherit;
-			text-align: center;
-			font-variant: normal;
-			text-transform: none;
-			line-height: 1;
 			color: var(--bb-notice-sys-white);
-			margin: 0;
+
+			&::before {
+				margin: 0;
+			}
 		}
 	}
 
@@ -314,56 +308,24 @@
 		background-color: rgba(224, 69, 94, 0.05);
 
 		@include dismissed-case;
-
-		.notice-icon {
-			background-color: #e0455e;
-
-			&::before {
-				content: "\eebd";
-			}
-		}
 	}
 
 	&.bb-notice-block--info {
 		background-color: rgba(224, 69, 94, 0.05);
 
 		@include dismissed-case;
-
-		.notice-icon {
-			background-color: #4bb1cf;
-
-			&::before {
-				content: "\ee03";
-			}
-		}
 	}
 
 	&.bb-notice-block--warning {
 		background-color: rgba(248, 183, 6, 0.05);
 
 		@include dismissed-case;
-
-		.notice-icon {
-			background-color: #f8b706;
-
-			&::before {
-				content: "\eebc";
-			}
-		}
 	}
 
 	&.bb-notice-block--promo {
 		background-color: rgba(199, 0, 255, 0.05);
 
 		@include dismissed-case;
-
-		.notice-icon {
-			background-color: #c700ff;
-
-			&::before {
-				content: "\ef3b";
-			}
-		}
 	}
 
 	.bb-notice-card {
