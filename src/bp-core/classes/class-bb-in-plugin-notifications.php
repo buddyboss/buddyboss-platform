@@ -149,7 +149,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @throws Exception
 		 * @return int
 		 */
 		public function get_count() {
@@ -161,7 +160,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @throws Exception
 		 * @return array
 		 */
 		public function bb_admin_notification_get() {
@@ -211,7 +209,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 *
 		 * @param array $notifications Array of notification items to verify.
 		 *
-		 * @throws Exception
 		 * @return array
 		 */
 		public function bb_admin_notification_verify_active( $notifications ) {
@@ -252,6 +249,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param array $notifications Array of notification items.
+		 *
 		 * @return void|array $notifications
 		 */
 		public function bb_get_notifications_with_human_readeable_start_time( $notifications ) {
@@ -265,7 +264,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					continue;
 				}
 
-				$modified_start_time            = sprintf(
+				$modified_start_time = sprintf(
 				/* Translators: %s is the human-readable time difference (e.g., "2 hours ago"). */
 					__( '%1$s ago', 'buddyboss' ),
 					human_time_diff( strtotime( $notification['start'] ), time() )
@@ -420,10 +419,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 									$process_notification = false;
 								}
 							}
-						} else {
-							if ( 'expired' === $segment ) {
+						} elseif ( 'expired' === $segment ) {
 								$process_notification = false;
-							}
 						}
 					}
 				}
@@ -465,6 +462,13 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			return $data;
 		}
 
+		/**
+		 * Check the plugin is valid or not.
+		 *
+		 * @param Array $plugins Plugins lists.
+		 *
+		 * @return bool
+		 */
 		private function bb_is_pro_plugin_invalid( $plugins ) {
 			return (
 				(
@@ -538,7 +542,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * Admin area enqueues.
 		 *
 		 * @since BuddyBoss [BBVERSION]
-		 * @throws Exception
 		 */
 		public function bb_admin_notification_enqueues() {
 
@@ -581,7 +584,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * Admin script for adding notification count to the MemberPress admin menu list item.
 		 *
 		 * @since BuddyBoss [BBVERSION]
-		 * @throws Exception
 		 */
 		public function bb_admin_notification_menu_append_count() {
 
@@ -661,10 +663,10 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							);
 						}
 						$buttons_html .= sprintf( '<button class="bb-in-plugin-admin-notifications-notice-dismiss" data-message-id="%s">%s</button>', $notification['id'], __( 'Dismiss', 'buddyboss' ) );
-						$buttons_html = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
+						$buttons_html  = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
 					}
 
-					// Icon HTML
+					// Icon HTML.
 					$icon_html = '';
 					if ( ! empty( $notification['icon'] ) ) {
 						$icon_html = '<img src="' . esc_url( sanitize_text_field( $notification['icon'] ) ) . '" width="32" height="32">';
@@ -758,7 +760,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							);
 						}
 						$buttons_html .= sprintf( '<button class="bb-in-plugin-admin-notifications-notice-dismiss" data-message-id="%s">%s</button>', $notification['id'], __( 'Dismiss', 'buddyboss' ) );
-						$buttons_html = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
+						$buttons_html  = ! empty( $buttons_html ) ? '<div class="buddyboss-notifications-buttons">' . $buttons_html . '</div>' : '';
 					}
 
 					$time_diff = ceil( ( time() - $notification['saved'] ) );
