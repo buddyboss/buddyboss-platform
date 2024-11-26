@@ -9239,7 +9239,7 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(

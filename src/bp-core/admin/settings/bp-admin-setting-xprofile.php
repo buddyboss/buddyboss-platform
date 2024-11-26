@@ -594,7 +594,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -650,7 +650,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -732,7 +732,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
