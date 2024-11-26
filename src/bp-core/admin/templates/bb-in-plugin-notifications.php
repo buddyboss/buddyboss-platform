@@ -192,7 +192,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 																	continue;
 																}
 																$primary = isset( $button['type']['value'] ) ? $button['type']['value'] : 'primary';
-																$label   = $button['type']['label'] ?? '';
+																$label   = $button['text'] ?? '';
 																?>
 																<a href="<?php echo esc_url( $button['url'] ); ?>"
 																class="button button-<?php echo esc_attr( $primary ); ?>">
