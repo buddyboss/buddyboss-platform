@@ -150,20 +150,15 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 
 										// Determine the class based on notification status.
 										$notification_class = ( 'dismissed' === $notification['status'] ) ? 'dismissed' : 'unread';
+										$icon_color         = ! empty( $notification['icon_color'] ) ? $notification['icon_color'] : '';
 										?>
 										<div id="bb-notifications-message-<?php echo esc_attr( $notification['id'] ); ?>" class="bb-notice-block bb-notice-block--<?php echo esc_attr( $notification['type'] ); ?> <?php echo esc_attr( $notification_class ); ?>" data-message-id="<?php echo esc_attr( $notification['id'] ); ?>">
 											<div class="bb-notice-icon">
 												<?php
-												if ( ! empty( $notification['icon'] ) && filter_var( $notification['icon'], FILTER_VALIDATE_URL ) ) {
+												if ( ! empty( $notification['icon'] ) ) {
 													?>
-													<span class="notice-icon">
-														<img src='<?php echo esc_url( $notification['icon'] ); ?>' alt='<?php echo esc_attr( $notification_title ); ?>' />
-													</span>
-													<?php
-												} else {
-													?>
-													<span class="notice-icon">
-														<i class='<?php echo $notification['icon']; ?>' aria-hidden='true'></i>
+													<span class="notice-icon" style='background-color: <?php echo esc_attr( $icon_color ); ?>;'>
+														<i class='<?php echo $notification['icon']; ?>' aria-hidden="true"></i>
 													</span>
 													<?php
 												}
