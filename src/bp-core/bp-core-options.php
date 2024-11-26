@@ -192,6 +192,7 @@ function bp_get_default_options() {
 
 		'bb-member-directory-count'                  => false,
 		'bb-group-directory-count'                   => false,
+		'bb-enable-sso'                              => false,
 	);
 
 	/**

@@ -1225,3 +1225,16 @@ function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
 }
 
 add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
+
+/**
+ * Function to load telemetry class.
+ *
+ * @since BuddyBoss 2.7.40
+ */
+function bb_telemetry_load() {
+	if ( class_exists( 'BB_Telemetry' ) ) {
+		BB_Telemetry::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_telemetry_load' );
