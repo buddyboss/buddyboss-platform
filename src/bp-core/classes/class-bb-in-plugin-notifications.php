@@ -358,104 +358,127 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				return $data;
 			}
 
-			$pro_license_status  = function_exists( 'bb_pro_license_status' ) ? bb_pro_license_status() : array();
-			$pro_license_exists  = ! empty( $pro_license_status ) && (bool) $pro_license_status['is_license_exists'];
-			$pro_license_expired = ! empty( $pro_license_status ) && (bool) $pro_license_status['is_license_expired'];
-			if ( empty( $pro_license_status ) ) {
-				$theme_license_status = function_exists( 'bb_theme_license_status' ) ? bb_theme_license_status() : array();
-				$pro_license_exists   = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_exists'];
-				$pro_license_expired  = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_expired'];
+			$enabled_plugins = array(
+				'buddyboss-platform' => 'free',
+			);
+
+			if ( function_exists( 'bb_platform_pro' ) ) {
+				$enabled_plugins['buddyboss-platform-pro'] = 'pro';
 			}
+
+			if ( function_exists( 'buddyboss_theme' ) ) {
+				$enabled_plugins['buddyboss-theme'] = 'pro';
+			}
+
+			$activated_plans = array_unique( array_values( $enabled_plugins ) );
 
 			$option         = $this->bb_admin_notification_get_option();
 			$current_time   = time();
 			$activated_time = bp_get_option( 'bb_activation_time', $current_time );
 
+			$pro_license_exists  = $this->bb_pro_has_licence();
+			$pro_license_expired = function_exists( 'bbp_pro_is_license_valid' ) ? ! bbp_pro_is_license_valid() : false;
+
+			$theme_license_status  = function_exists( 'bb_theme_license_status' ) ? bb_theme_license_status() : array();
+			$theme_license_exists  = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_exists'];
+			$theme_license_expired = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_expired'];
+
 			foreach ( $notifications as $id => $notification ) {
-				$process_notification = true;
 
 				// The message should never be empty - if it is, ignore.
 				if ( empty( $notification['content'] ) ) {
-					$process_notification = false;
+					error_log( print_r( '--- return empty content: --' .  $notification['id'], 1 ) );
+					continue;
 				}
 
 				// Ignore if notification is for BuddyBoss App only.
 				$plugins = ! empty( $notification['plugins'] ) ? $notification['plugins'] : array();
 				if (
-					$process_notification &&
-					! empty( $plugins ) &&
-					1 === count( $plugins ) &&
-					in_array( 'buddyboss-app', $plugins, true )
+					empty( $plugins ) ||
+					empty( array_intersect( $plugins, array_keys( $enabled_plugins ) ) )
 				) {
-					$process_notification = false;
+					error_log( print_r( '--- return not valid plugin: --' .  $notification['id'], 1 ) );
+					continue;
 				}
 
-				$plans   = ! empty( $notification['plans'] ) ? array_column( $notification['plans'], 'slug' ) : array();
-				$segment = $notification['segment'] ?? '';
-
+				// Return if activated plugin plans are not in the notification plans.
+				$plans = ! empty( $notification['plans'] ) ? array_column( $notification['plans'], 'slug' ) : array();
 				if (
-					$process_notification &&
 					! empty( $plans ) &&
-					in_array( 'pro', $plans, true ) &&
-					! in_array( 'free', $plans, true )
+					empty( array_intersect( $plans, array_keys( $activated_plans ) ) )
 				) {
-					if ( $this->bb_is_pro_plugin_invalid( $plugins ) ) {
-						$process_notification = false;
-					}
+					error_log( print_r( '--- return not valid Plan: --' .  $notification['id'], 1 ) );
+					continue;
+				}
 
-					if (
-						'none' !== $segment &&
+				// Return if the plugin is not valid segment based on the licence.
+				$segment = $notification['segment'] ?? '';
+				if (
+					'expired' === $segment &&
+					(
 						(
-							in_array( 'buddyboss-platform-pro', $plugins, true ) ||
-							in_array( 'buddyboss-theme', $plugins, true )
+							in_array( 'buddyboss-platform-pro', $plugins, true ) &&
+							$pro_license_exists &&
+							! $pro_license_expired
+						) ||
+						(
+							in_array( 'buddyboss-theme', $plugins, true ) &&
+							$theme_license_exists &&
+							$theme_license_expired
 						)
-					) {
-						if ( $pro_license_exists ) {
-							if ( 'inactive' === $segment ) {
-								$process_notification = false;
-							}
-							if ( ! $pro_license_expired ) {
-								if ( 'expired' === $segment ) {
-									$process_notification = false;
-								}
-							}
-						} elseif ( 'expired' === $segment ) {
-								$process_notification = false;
-						}
-					}
+					)
+				) {
+					error_log( print_r( '--- return licence expired: --' . $notification['title'], 1 ) );
+					continue;
+				} elseif (
+					'inactive' === $segment &&
+					(
+						(
+							! empty( $enabled_plugins['buddyboss-platform-pro'] ) &&
+							$pro_license_exists
+						) ||
+						(
+							! empty( $enabled_plugins['buddyboss-theme'] ) &&
+							$theme_license_exists
+						)
+					)
+				) {
+					error_log( print_r( '--- return inactive licence: --' . $notification['id'], 1 ) );
+					continue;
 				}
 
 				$end_time   = ! empty( $notification['end'] ) ? strtotime( $notification['end'] ) : '';
 				$start_time = ! empty( $notification['start'] ) ? strtotime( $notification['start'] ) : '';
-				// Ignore if expired.
-				if ( $process_notification && $end_time && $current_time > $end_time ) {
-					$process_notification = false;
+
+				// Ignore if notification expired.
+				if ( $end_time && $current_time > $end_time ) {
+					error_log( print_r( '--- return notification expiered: --' .  $notification['id'], 1 ) );
+					continue;
 				}
 
 				// Ignore if notification has already been dismissed.
 				if (
-					$process_notification &&
 					! empty( $option['dismissed'] ) &&
 					array_key_exists( $notification['id'], $option['dismissed'] )
-				) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
-					$process_notification = false;
+				) {
+					error_log( print_r( '--- return notification dismissed: --' .  $notification['id'], 1 ) );
+					continue;
 				}
 
 				if ( $start_time && $activated_time > $start_time ) {
-					$process_notification = false;
+					error_log( print_r( '--- return activation: --' .  $notification['id'], 1 ) );
+					continue;
 				}
 
-				if ( $process_notification ) {
-					$data[ $id ] = $notification;
+				$data[ $id ] = $notification;
 
-					// Check if this notification has already been saved with a timestamp.
-					if ( ! empty( $option['feed'][ $id ] ) ) { // Already exists in feed, so use saved time.
-						$data[ $id ]['saved'] = $option['feed'][ $id ]['saved'];
-					} elseif ( ! empty( $option['events'][ $id ] ) ) { // Already exists in events, so use saved time.
-						$data[ $id ]['saved'] = $option['events'][ $id ]['saved'];
-					} else { // Doesn't exist in feed or events, so save current time.
-						$data[ $id ]['saved'] = time();
-					}
+				// Check if this notification has already been saved with a timestamp.
+				if ( ! empty( $option['feed'][ $id ] ) ) { // Already exists in feed, so use saved time.
+					$data[ $id ]['saved'] = $option['feed'][ $id ]['saved'];
+				} elseif ( ! empty( $option['events'][ $id ] ) ) { // Already exists in events, so use saved time.
+					$data[ $id ]['saved'] = $option['events'][ $id ]['saved'];
+				} else { // Doesn't exist in feed or events, so save current time.
+					$data[ $id ]['saved'] = time();
 				}
 			}
 
@@ -943,6 +966,49 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			bp_update_option( 'bb_in_plugin_admin_notifications', $option );
 
 			wp_send_json_success();
+		}
+
+		/**
+		 * Check the pro has licence configured or not.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool
+		 */
+		private function bb_pro_has_licence() {
+			if ( ! function_exists( 'bb_platform_pro' ) ) {
+				return false;
+			}
+
+			$saved_licenses = get_option( 'bboss_updater_saved_licenses' );
+			if ( is_multisite() ) {
+				if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+					require_once ABSPATH . '/wp-admin/includes/plugin.php';
+				}
+
+				if ( is_plugin_active_for_network( bb_platform_pro()->basename ) ) {
+					$saved_licenses = get_site_option( 'bboss_updater_saved_licenses' );
+				}
+			}
+
+			$license_exists = false;
+			if ( ! empty( $saved_licenses ) ) {
+				foreach ( $saved_licenses as $package_id => $license_details ) {
+					if (
+						! empty( $license_details['license_key'] ) &&
+						! empty( $license_details['product_keys'] ) &&
+						(
+							in_array( 'BB_THEME', $license_details['product_keys'], true ) ||
+							in_array( 'BB_PLATFORM_PRO', $license_details['product_keys'], true )
+						)
+					) {
+						$license_exists = true;
+						break;
+					}
+				}
+			}
+
+			return $license_exists;
 		}
 	}
 }
