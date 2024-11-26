@@ -827,7 +827,7 @@ function bbp_admin_setting_callback_root_slug_section() {
 			__( 'Customize your Forums directory. Use %s for more flexibility.', 'buddyboss' ),
 			sprintf(
 			/* translators: 1: Link, 2: Text. */
-				'<a href="%1$s">%2$s</a>',
+				'<a href="%1$s" target="_blank">%2$s</a>',
 				esc_url( bp_get_admin_url(
 					add_query_arg(
 						array(
