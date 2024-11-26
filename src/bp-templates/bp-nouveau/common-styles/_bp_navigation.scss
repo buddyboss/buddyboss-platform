@@ -457,3 +457,43 @@
 		}
 	}
 }
+
+// Directory Count Styling
+.bb-item-count {
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.3;
+
+	.item-body-inner > & {
+		margin-bottom: 20px;
+
+		+ .subnav-filters {
+			float: right;
+		}
+	}
+
+	.item-body > & {
+		margin-bottom: 20px;
+	}
+}
+
+.item-body,
+.item-body-inner {
+
+	&:has(.bb-item-count + .subnav-filters) .bb-item-count {
+		float: left;
+		margin: 10px 0 0;
+	}
+
+	&:has(.group-search + .bb-item-count) .group-search {
+		margin-top: 10px;
+	}
+}
+
+.bp-search + .bb-item-count {
+	margin-top: 35px !important;
+
+	+ .subnav-filters {
+		margin-top: 25px;
+	}
+}

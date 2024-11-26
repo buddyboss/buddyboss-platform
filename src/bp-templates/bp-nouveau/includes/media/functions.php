@@ -195,6 +195,24 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
 	);
 
+	$params['dir_labels'] = array_merge(
+		$params['dir_labels'],
+		array(
+			'video' => array(
+				'singular' => esc_html( 'Video', 'buddyboss' ),
+				'plural'   => esc_html( 'Videos', 'buddyboss' ),
+			),
+			'album' => array(
+				'singular' => esc_html( 'Album', 'buddyboss' ),
+				'plural'   => esc_html( 'Albums', 'buddyboss' ),
+			),
+			'media' => array(
+				'singular' => esc_html( 'Photo', 'buddyboss' ),
+				'plural'   => esc_html( 'Photos', 'buddyboss' ),
+			),
+		)
+	);
+
 	return $params;
 }
 
