@@ -18,40 +18,52 @@
 			},
 
 			showNotifications: function () {
-				$( document ).on( 'click', '#bb-notifications-button', function ( e ) {
-					e.preventDefault();
+				$( document ).on(
+					'click',
+					'#bb-notifications-button',
+					function ( e ) {
+						e.preventDefault();
 
-					var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
+						var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
 
-					$wrapper.toggleClass( 'expanded' );
+						$wrapper.toggleClass( 'expanded' );
 
-					BuddyBossNoticeSystem.checkNoticesCount();
-				} );
+						BuddyBossNoticeSystem.checkNoticesCount();
+					}
+				);
 
-				$( document ).on( 'click', '.close-panel-header', function ( e ) {
-					e.preventDefault();
+				$( document ).on(
+					'click',
+					'.close-panel-header',
+					function ( e ) {
+						e.preventDefault();
 
-					var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
+						var $wrapper = $( this ).closest( '.bb-notifications-wrapepr' );
 
-					$wrapper.removeClass( 'expanded' );
-				} );
+						$wrapper.removeClass( 'expanded' );
+					}
+				);
 			},
 
 			switchNotices: function () {
-				$( document ).on( 'click', '.panel-nav-list .switch-notices', function ( e ) {
-					e.preventDefault();
+				$( document ).on(
+					'click',
+					'.panel-nav-list .switch-notices',
+					function ( e ) {
+						e.preventDefault();
 
-					var $this               = $( this );
-					var status              = $this.data( 'status' );
-					var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
+						var $this               = $( this );
+						var status              = $this.data( 'status' );
+						var $notificationsPanel = $this.closest( '.bb-notifications-panel' );
 
-					$this.closest( 'li' ).siblings().find( '.switch-notices' ).removeClass( 'active' );
-					$this.addClass( 'active' );
-					$notificationsPanel.removeClass( 'all dismissed unread' );
-					$notificationsPanel.addClass( status );
+						$this.closest( 'li' ).siblings().find( '.switch-notices' ).removeClass( 'active' );
+						$this.addClass( 'active' );
+						$notificationsPanel.removeClass( 'all dismissed unread' );
+						$notificationsPanel.addClass( status );
 
-					BuddyBossNoticeSystem.checkNoticesStatus( status );
-				} );
+						BuddyBossNoticeSystem.checkNoticesStatus( status );
+					}
+				);
 
 				$( document ).on(
 					'click',
@@ -84,9 +96,11 @@
 								if ( ! res.success ) {
 									console.log( res );
 								} else {
-									$this.closest( '.bb-notifications-panel' ).find( '.bb-notices-blocks-container .bb-notice-block' ).each( function () {
-										$( this ).removeClass( 'unread' ).addClass( 'dismissed' );
-									} );
+									$this.closest( '.bb-notifications-panel' ).find( '.bb-notices-blocks-container .bb-notice-block' ).each(
+										function () {
+											$( this ).removeClass( 'unread' ).addClass( 'dismissed' );
+										}
+									);
 									count = 0;
 									if ( 0 === count ) {
 										countEl.hide();
@@ -152,7 +166,7 @@
 								if ( ! res.success ) {
 									console.log( res );
 								} else {
-									count --;
+									count--;
 
 									if ( count < 0 ) {
 										count = 0;
@@ -195,13 +209,15 @@
 				var $noticeBlocks     = $noticesContainer.find( '.bb-notice-block' );
 
 				var diffStatus = [];
-				$noticeBlocks.each( function () {
-					if ( 'all' !== status && ! $( this ).hasClass( status ) ) {
-						diffStatus.push( false );
-					} else {
-						diffStatus.push( true );
+				$noticeBlocks.each(
+					function () {
+						if ( 'all' !== status && ! $( this ).hasClass( status ) ) {
+								diffStatus.push( false );
+						} else {
+							diffStatus.push( true );
+						}
 					}
-				} );
+				);
 				if ( diffStatus.length > 0 && diffStatus.includes( true ) ) {
 					$noticesContainer.removeClass( 'bp-hide' );
 					$noticesContainer.closest( '.bb-panel-body' ).find( '.bb-notices-blocks-blank' ).hide();
@@ -213,12 +229,14 @@
 				}
 
 				var allDismissed = true;
-				$noticeBlocks.each( function () {
-					if ( ! $( this ).hasClass( status ) ) {
-						allDismissed = false;
-						return false;
+				$noticeBlocks.each(
+					function () {
+						if ( ! $( this ).hasClass( status ) ) {
+								allDismissed = false;
+								return false;
+						}
 					}
-				} );
+				);
 
 				if ( allDismissed ) {
 					$noticesContainer.closest( '.bb-panel-body' ).addClass( 'all-dismissed' );
@@ -237,11 +255,13 @@
 				if ( $noticeBlocks.length === 0 ) {
 					activeCount = 0;
 				} else {
-					$noticeBlocks.each( function () {
-						if ( $( this ).hasClass( 'unread' ) ) {
-							activeCount ++;
+					$noticeBlocks.each(
+						function () {
+							if ( $( this ).hasClass( 'unread' ) ) {
+									activeCount++;
+							}
 						}
-					} );
+					);
 				}
 
 				$noticesCount.text( '(' + activeCount + ')' );
@@ -249,14 +269,7 @@
 			}
 		};
 
-		window.BuddyBossNoticeSystem = BuddyBossNoticeSystem;
-
-		$( document ).on(
-			'ready',
-			function () {
-				BuddyBossNoticeSystem.init();
-			}
-		);
+		BuddyBossNoticeSystem.init();
 
 	}
 )( jQuery );
