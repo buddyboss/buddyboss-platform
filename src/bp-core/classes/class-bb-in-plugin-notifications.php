@@ -432,7 +432,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 				// The message should never be empty - if it is, ignore.
 				if ( empty( $notification['content'] ) ) {
-					error_log( print_r( '--- return empty content: --' .  $notification['id'], 1 ) );
 					continue;
 				}
 
@@ -442,7 +441,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					empty( $plugins ) ||
 					empty( array_intersect( $plugins, array_keys( $enabled_plugins ) ) )
 				) {
-					error_log( print_r( '--- return not valid plugin: --' .  $notification['id'], 1 ) );
 					continue;
 				}
 
@@ -452,7 +450,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					! empty( $plans ) &&
 					empty( array_intersect( $plans, $activated_plans ) )
 				) {
-					error_log( print_r( '--- return not valid Plan: --' .  $notification['id'], 1 ) );
 					continue;
 				}
 
@@ -488,7 +485,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 						)
 					)
 				) {
-					error_log( print_r( '--- return licence expired: --' . $notification['title'], 1 ) );
 					continue;
 				} elseif (
 					'inactive' === $segment &&
@@ -503,7 +499,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 						)
 					)
 				) {
-					error_log( print_r( '--- return inactive licence: --' . $notification['id'], 1 ) );
 					continue;
 				}
 
@@ -512,7 +507,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 				// Ignore if notification expired.
 				if ( $end_time && $current_time > $end_time ) {
-					error_log( print_r( '--- return notification expiered: --' .  $notification['id'], 1 ) );
 					continue;
 				}
 
@@ -521,12 +515,10 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					! empty( $option['dismissed'] ) &&
 					array_key_exists( $notification['id'], $option['dismissed'] )
 				) {
-					error_log( print_r( '--- return notification dismissed: --' .  $notification['id'], 1 ) );
 					continue;
 				}
 
 				if ( $start_time && $activated_time > $start_time ) {
-					error_log( print_r( '--- return activation: --' .  $notification['id'], 1 ) );
 					continue;
 				}
 
