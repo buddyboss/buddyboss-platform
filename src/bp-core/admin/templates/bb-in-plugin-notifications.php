@@ -158,7 +158,7 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 												if ( ! empty( $notification['icon'] ) ) {
 													?>
 													<span class="notice-icon" style='background-color: <?php echo esc_attr( $icon_color ); ?>;'>
-														<i class='<?php echo $notification['icon']; ?>' aria-hidden="true"></i>
+														<i class='<?php echo esc_attr( $notification['icon'] ); ?>' aria-hidden="true"></i>
 													</span>
 													<?php
 												}
