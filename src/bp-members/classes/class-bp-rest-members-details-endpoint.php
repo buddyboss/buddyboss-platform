@@ -1193,6 +1193,49 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_courses;
 		}
 
+		// Memberpress courses.
+		if (
+			class_exists( 'memberpress\courses\helpers\Options' ) &&
+			function_exists( 'bb_meprlms_profile_courses_slug' ) &&
+			class_exists( 'BB_Platform_Pro' ) &&
+			function_exists( 'bb_meprlms_enable' ) &&
+			bb_meprlms_enable()
+		) {
+			$slug        = bb_meprlms_profile_courses_slug();
+			$course_link = trailingslashit( bp_loggedin_user_domain() . $slug );
+			$name        = esc_html__( 'Courses', 'buddyboss' );
+
+			$item_courses = array(
+				'ID'       => $slug,
+				'title'    => $name,
+				'url'      => esc_url( $course_link ),
+				'count'    => '',
+				'children' => array(
+					array(
+						'ID'    => $slug,
+						'title' => sprintf(
+							/* translators: My Courses */
+							__( 'My %s', 'buddyboss' ),
+							$name
+						),
+						'url'   => esc_url( $course_link ),
+						'count' => '',
+					),
+				),
+			);
+
+			if ( user_can( bp_loggedin_user_id(), 'administrator' ) ) {
+				$item_courses['children'][] = array(
+					'ID'    => bb_meprlms_profile_instructor_courses_slug(),
+					'title' => esc_html__( 'My Created Courses', 'buddyboss' ),
+					'url'   => esc_url( trailingslashit( $course_link . 'instructor-courses' ) ),
+					'count' => '',
+				);
+			}
+
+			$items[] = $item_courses;
+		}
+
 		if ( bp_is_active( 'forums' ) ) {
 			$user_domain = bp_loggedin_user_domain();
 			$forums_link = trailingslashit( $user_domain . bbp_get_root_slug() );
