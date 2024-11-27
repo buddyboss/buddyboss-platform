@@ -2884,6 +2884,61 @@ window.bp = window.bp || {};
 		} );
 	}
 
+	$( document ).on( 'change', '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]', function() {
+		var telemetry_notice = '',
+			telemetry_mode   = $( this ).val();
+
+		if ( $( this ).is( ':checked' ) ) {
+			telemetry_notice = $( this ).data( 'notice' );
+			if ( 'undefined' !== typeof telemetry_notice && '' !== telemetry_notice  ) {
+				$( '.bb-telemetry-mode-description' ).html( telemetry_notice );
+			}
+
+			if ( '' !== telemetry_mode && 'disable' !== telemetry_mode ) {
+				$( '.bb-setting-telemetry-no-reporting' ).addClass( 'bp-hide' );
+			}
+		}
+	});
+
+	$( document ).on( 'click', '.bb-disable-telemetry-link', function( e ) {
+		e.preventDefault();
+
+		// Show telemetry no-reporting setting and mark as checked.
+		var $no_reporting_setting = jQuery( '.bb-setting-telemetry-no-reporting' );
+		$no_reporting_setting.removeClass( 'bp-hide' );
+		$no_reporting_setting.find( 'input' ).prop( 'checked', true );
+	
+		// Update telemetry mode description with data from the first telemetry input field.
+		var notice_text = jQuery( '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]' ).first().data( 'notice' );
+		jQuery( '.bb-telemetry-mode-description' ).html( notice_text );
+	});
+
+	$(document).on( 'click', '.bb-telemetry-notice .notice-dismiss', function( e ) {
+		e.preventDefault();
+
+		// Retrieve the nonce from the notice element.
+		var nonce = jQuery( this ).closest( '.bb-telemetry-notice' ).data( 'nonce' );
+		if ( 'undefined' === typeof nonce ) {
+			return;
+		}
+
+		$.ajax(
+			{
+				type   : 'POST',
+				url    : BP_ADMIN.ajax_url,
+				data   : {
+					'action': 'dismiss_bb_telemetry_notice',
+					'nonce' : nonce
+				},
+				success: function ( response ) {
+					if ( response.success ) {
+						jQuery( '.bb-telemetry-notice' ).fadeOut();
+					}
+				},
+			}
+		);
+	});
+
 	/* jshint ignore:end */
 
 }());

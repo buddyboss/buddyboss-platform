@@ -1300,6 +1300,9 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		<?php
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
+				if ( false !== strpos( $profile_action['element_class'], 'bp-hide' ) ) {
+					continue;
+				}
 				?>
 				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
@@ -2776,7 +2779,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	<?php
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
 		?>
-		<div class="bp-feedback info">
+		<div class="bp-feedback info bp-feedback--clean bp-feedback--vmiddle">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
 				<?php
