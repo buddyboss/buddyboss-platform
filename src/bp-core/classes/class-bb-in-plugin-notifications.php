@@ -127,7 +127,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					false === strpos( $current_screen->base, 'buddyboss' ) &&
 					false === strpos( $current_screen->id, 'edit-bpm_category' ) &&
 					false === strpos( $current_screen->id, 'buddyboss_fonts' ) &&
-					! in_array( $current_screen->post_type, array( 'forum', 'topic', 'reply' ) )
+					! in_array( $current_screen->post_type, array( 'forum', 'topic', 'reply' ), true )
 				)
 			) {
 				unset( $current_screen );
@@ -421,7 +421,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			$activated_time = bp_get_option( 'bb_activation_time', $current_time );
 
 			$pro_license_exists  = function_exists( 'bb_pro_license_status' ) ? bb_pro_license_status() : false;
-			$pro_license_expired = function_exists( 'bbp_pro_is_license_valid' ) ? ! bbp_pro_is_license_valid() : false;
+			$pro_license_expired = function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid();
 			$pro_license_exists  = ! empty( $pro_license_exists ) && (bool) $pro_license_exists['is_license_exists'];
 
 			$theme_license_status  = function_exists( 'bb_theme_license_status' ) ? bb_theme_license_status() : array();
@@ -659,7 +659,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		}
 
 		/**
-		 * Admin script for adding notification count to the MemberPress admin menu list item.
+		 * Admin script for adding notification count to the BuddyBoss admin menu list item.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
@@ -709,7 +709,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		}
 
 		/**
-		 * Output notifications in MemberPress admin area.
+		 * Output notifications in BuddyBoss admin area.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
@@ -797,14 +797,14 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					// Notification HTML.
 					$notifications_html .= sprintf(
 						'<div id="buddyboss-notifications-message-%4$s" class="buddyboss-notifications-message" data-message-id="%4$s">
-              <div class="buddyboss-notification-icon-title">
-              %5$s
-              <h3 class="buddyboss-notifications-title">%1$s</h3>
-              <time datetime="%6$s">%7$s</time>
-              </div>
-              <div class="buddyboss-notifications-content">%2$s</div>
-              %3$s
-            </div>',
+						  <div class="buddyboss-notification-icon-title">
+						  %5$s
+						  <h3 class="buddyboss-notifications-title">%1$s</h3>
+						  <time datetime="%6$s">%7$s</time>
+						  </div>
+						  <div class="buddyboss-notifications-content">%2$s</div>
+						  %3$s
+						</div>',
 						! empty( $notification['title'] ) ? sanitize_text_field( $notification['title'] ) : '',
 						! empty( $notification['content'] ) ? apply_filters( 'the_content', $notification['content'] ) : '',
 						$buttons_html,
@@ -889,14 +889,14 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					// Notification HTML.
 					$notifications_html .= sprintf(
 						'<div id="buddyboss-notifications-message-%4$s" class="buddyboss-notifications-message" data-message-id="%4$s">
-              <div class="buddyboss-notification-icon-title">
-              <img src="%5$s" width="32" height="32" alt="">
-              <h3 class="buddyboss-notifications-title">%1$s</h3>
-              <time datetime="%6$s">%7$s</time>
-              </div>
-              <div class="buddyboss-notifications-content">%2$s</div>
-              %3$s
-            </div>',
+						  <div class="buddyboss-notification-icon-title">
+						  <img src="%5$s" width="32" height="32" alt="">
+						  <h3 class="buddyboss-notifications-title">%1$s</h3>
+						  <time datetime="%6$s">%7$s</time>
+						  </div>
+						  <div class="buddyboss-notifications-content">%2$s</div>
+						  %3$s
+						</div>',
 						! empty( $notification['title'] ) ? sanitize_text_field( $notification['title'] ) : '',
 						! empty( $notification['content'] ) ? apply_filters( 'the_content', $notification['content'] ) : '',
 						$buttons_html,
