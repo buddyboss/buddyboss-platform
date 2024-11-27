@@ -9597,6 +9597,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 .buddypress-wrap .friends-mutual-list:not(.grid) .list-wrap-inner .item-avatar img {
   border-radius: 50%;
   max-width: 70px;
+  height: auto;
 }
 
 .buddypress-wrap .members-list:not(.grid) .only-grid-view,
@@ -27355,7 +27356,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
