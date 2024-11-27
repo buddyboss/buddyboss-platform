@@ -169,9 +169,9 @@ function bp_version_bump() {
  * @return void
  */
 function bb_plugin_activation_time() {
-	$activation_time = get_option( 'bb_activation_time' );
+	$activation_time = bp_get_option( 'bb_activation_time' );
 	if ( empty( $activation_time ) ) {
-		update_option( 'bb_activation_time', time() );
+		bp_update_option( 'bb_activation_time', time() );
 	}
 }
 
