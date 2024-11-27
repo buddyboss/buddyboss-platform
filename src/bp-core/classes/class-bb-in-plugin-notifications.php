@@ -539,37 +539,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		}
 
 		/**
-		 * Check the plugin is valid or not.
-		 *
-		 * @param Array $plugins Plugins lists.
-		 *
-		 * @return bool
-		 */
-		private function bb_is_pro_plugin_invalid( $plugins ) {
-			return (
-				(
-					1 === count( $plugins ) &&
-					(
-						(
-							in_array( 'buddyboss-platform-pro', $plugins, true ) &&
-							! function_exists( 'bbp_pro_is_license_valid' )
-						) ||
-						(
-							in_array( 'buddyboss-theme', $plugins, true ) &&
-							! function_exists( 'buddyboss_theme' )
-						)
-					)
-				) ||
-				(
-					in_array( 'buddyboss-platform-pro', $plugins, true ) &&
-					in_array( 'buddyboss-theme', $plugins, true ) &&
-					! function_exists( 'bbp_pro_is_license_valid' ) &&
-					! function_exists( 'buddyboss_theme' )
-				)
-			);
-		}
-
-		/**
 		 * Update notification data from feed.
 		 * This pulls the latest notifications from our remote feed.
 		 *
