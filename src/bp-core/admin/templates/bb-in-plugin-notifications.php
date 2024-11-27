@@ -217,7 +217,14 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 						</div>
 					</div>
 				</div>
-				<a href="" class="bb-admin-nav__button bb-admin-nav__help"><i class="bb-icon-l bb-icon-question"></i></a>
+				<a href="<?php echo esc_url( bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+						),
+						'admin.php'
+					)
+				) ); ?>" class="bb-admin-nav__button bb-admin-nav__help"><i class="bb-icon-l bb-icon-question"></i></a>
 			</div>
 		</div>
 	</div>
