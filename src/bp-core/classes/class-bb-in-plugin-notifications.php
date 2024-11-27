@@ -261,17 +261,18 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			// Remove notifications that are not active.
 			foreach ( $notifications as $key => $notification ) {
 
-				// Set the timezone to Hong Kong (UTC+8).
-				$hong_kong_tz = new DateTimeZone( 'Asia/Hong_Kong' );
+				// Set the timezone to UTC.
+				$utc_timezone = new DateTimeZone( 'UTC' );
 
-				// Parse the notification start date in Hong Kong time.
-				$start_date = ! empty( $notification['start'] ) ? DateTime::createFromFormat( 'Y:m:d H:i:s', $notification['start'], $hong_kong_tz ) : null;
+				// Parse the notification start date in UTC time.
+				$start_date = ! empty( $notification['start'] ) ? DateTime::createFromFormat( 'Y:m:d H:i:s', $notification['start'], $utc_timezone ) : null;
 
-				// Parse the notification end date in Hong Kong time.
-				$end_date = ! empty( $notification['end'] ) ? DateTime::createFromFormat( 'Y:m:d H:i:s', $notification['end'], $hong_kong_tz ) : null;
+				// Parse the notification end date in UTC time.
+				$end_date = ! empty( $notification['end'] ) ? DateTime::createFromFormat( 'Y:m:d H:i:s', $notification['end'], $utc_timezone ) : null;
 
 				// Get current time in Hong Kong timezone.
-				$current_date = new DateTime( 'now', $hong_kong_tz );
+				$current_timestamp = current_time( 'timestamp', true ); // 'true' ensures UTC time.
+				$current_date      = ( new DateTime() )->setTimestamp( $current_timestamp )->setTimezone( $utc_timezone );
 
 				// Conditions to check if the notification should be removed.
 				if (
