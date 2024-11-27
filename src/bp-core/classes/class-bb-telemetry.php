@@ -534,7 +534,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 						?>
 					</p>
 					<p>
-						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary">
+						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary" target="_blank" >
 							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
 						</a>
 					</p>
