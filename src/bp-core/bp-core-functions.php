@@ -2396,7 +2396,7 @@ function bp_core_load_buddypress_textdomain() {
 		}
 	} else {
 		/**
-		 * In most cases, WordPress already loaded BuddyPress textdomain
+		 * In most cases, WordPress already loaded BuddyBoss textdomain
 		 * thanks to the `_load_textdomain_just_in_time()` function.
 		 */
 		if ( is_textdomain_loaded( $domain ) ) {
