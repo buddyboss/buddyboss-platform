@@ -25,6 +25,15 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 	class BB_In_Plugin_Notifications {
 
 		/**
+		 * Instance.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var bool
+		 */
+		private static $instance = null;
+
+		/**
 		 * Source URL.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -50,6 +59,21 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * @var bool|array
 		 */
 		public $option = false;
+
+		/**
+		 * Get the instance of this class.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return null|BB_In_Plugin_Notifications|Controller|object
+		 */
+		public static function instance() {
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
+		}
 
 		/**
 		 * BB_In_Plugin_Notifications constructor.
@@ -340,6 +364,9 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					'dismissed' => $option['dismissed'],
 				)
 			);
+
+			// Update the option cache.
+			$this->bb_admin_notification_get_option( false );
 		}
 
 		/**
@@ -417,14 +444,29 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					'expired' === $segment &&
 					(
 						(
+							// Both platform and theme exist in plugins.
 							in_array( 'buddyboss-platform-pro', $plugins, true ) &&
-							$pro_license_exists &&
-							! $pro_license_expired
+							in_array( 'buddyboss-theme', $plugins, true ) &&
+							(
+								$pro_license_exists && ! $pro_license_expired &&
+								$theme_license_exists && ! $theme_license_expired
+							)
 						) ||
 						(
+							// Only platform exists in plugins.
+							in_array( 'buddyboss-platform-pro', $plugins, true ) &&
+							! in_array( 'buddyboss-theme', $plugins, true ) &&
+							(
+								$pro_license_exists && ! $pro_license_expired
+							)
+						) ||
+						(
+							// Only theme exists in plugins.
 							in_array( 'buddyboss-theme', $plugins, true ) &&
-							$theme_license_exists &&
-							$theme_license_expired
+							! in_array( 'buddyboss-platform-pro', $plugins, true ) &&
+							(
+								$theme_license_exists && ! $theme_license_expired
+							)
 						)
 					)
 				) {
@@ -536,6 +578,9 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					'dismissed' => $option['dismissed'],
 				)
 			);
+
+			// Update the option cache.
+			$this->bb_admin_notification_get_option( false );
 		}
 
 		/**
@@ -964,6 +1009,9 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			}
 
 			bp_update_option( 'bb_in_plugin_admin_notifications', $option );
+
+			// Update the option cache.
+			$this->bb_admin_notification_get_option( false );
 
 			wp_send_json_success();
 		}

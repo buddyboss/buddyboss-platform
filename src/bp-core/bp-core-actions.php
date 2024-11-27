@@ -1246,7 +1246,7 @@ add_action( 'bp_init', 'bb_telemetry_load' );
  */
 function bb_in_plugin_notification() {
 	if ( class_exists( 'BB_In_Plugin_Notifications' ) ) {
-		return new BB_In_Plugin_Notifications();
+		return BB_In_Plugin_Notifications::instance();
 	}
 }
 
