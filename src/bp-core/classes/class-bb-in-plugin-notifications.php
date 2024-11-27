@@ -420,8 +420,9 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			$current_time   = time();
 			$activated_time = bp_get_option( 'bb_activation_time', $current_time );
 
-			$pro_license_exists  = $this->bb_pro_has_licence();
+			$pro_license_exists  = function_exists( 'bb_pro_license_status' ) ? bb_pro_license_status() : false;
 			$pro_license_expired = function_exists( 'bbp_pro_is_license_valid' ) ? ! bbp_pro_is_license_valid() : false;
+			$pro_license_exists  = ! empty( $pro_license_exists ) && (bool) $pro_license_exists['is_license_exists'];
 
 			$theme_license_status  = function_exists( 'bb_theme_license_status' ) ? bb_theme_license_status() : array();
 			$theme_license_exists  = ! empty( $theme_license_status ) && (bool) $theme_license_status['is_license_exists'];
@@ -1031,49 +1032,6 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			$this->bb_admin_notification_get_option( false );
 
 			wp_send_json_success();
-		}
-
-		/**
-		 * Check the pro has licence configured or not.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return bool
-		 */
-		private function bb_pro_has_licence() {
-			if ( ! function_exists( 'bb_platform_pro' ) ) {
-				return false;
-			}
-
-			$saved_licenses = get_option( 'bboss_updater_saved_licenses' );
-			if ( is_multisite() ) {
-				if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-					require_once ABSPATH . '/wp-admin/includes/plugin.php';
-				}
-
-				if ( is_plugin_active_for_network( bb_platform_pro()->basename ) ) {
-					$saved_licenses = get_site_option( 'bboss_updater_saved_licenses' );
-				}
-			}
-
-			$license_exists = false;
-			if ( ! empty( $saved_licenses ) ) {
-				foreach ( $saved_licenses as $package_id => $license_details ) {
-					if (
-						! empty( $license_details['license_key'] ) &&
-						! empty( $license_details['product_keys'] ) &&
-						(
-							in_array( 'BB_THEME', $license_details['product_keys'], true ) ||
-							in_array( 'BB_PLATFORM_PRO', $license_details['product_keys'], true )
-						)
-					) {
-						$license_exists = true;
-						break;
-					}
-				}
-			}
-
-			return $license_exists;
 		}
 	}
 }
