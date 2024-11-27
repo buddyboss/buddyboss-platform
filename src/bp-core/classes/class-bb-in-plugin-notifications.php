@@ -118,6 +118,23 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 */
 		public function bb_admin_notification_header() {
 			global $bp;
+			// If a user is not on a relevant screen, don't show the notice.
+			$current_screen = get_current_screen();
+
+			if (
+				! $current_screen ||
+				(
+					false === strpos( $current_screen->base, 'buddyboss' ) &&
+					false === strpos( $current_screen->id, 'edit-bpm_category' ) &&
+					false === strpos( $current_screen->id, 'buddyboss_fonts' ) &&
+					! in_array( $current_screen->post_type, array( 'forum', 'topic', 'reply' ) )
+				)
+			) {
+				unset( $current_screen );
+
+				return;
+			}
+
 			$notifications = $this->bb_admin_notification_get();
 			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-in-plugin-notifications.php';
 		}
