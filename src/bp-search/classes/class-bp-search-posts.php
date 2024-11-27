@@ -179,17 +179,23 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					remove_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 
-				if ( 
+				$plugin_instance = null;
+				if (
 					class_exists( 'Elementor\Plugin' ) &&
 					class_exists( 'Elementor\Frontend' ) &&
-					defined( 'Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY' ) &&
-					method_exists( Elementor\Plugin::instance()->frontend, 'apply_builder_in_content' )
+					defined( 'Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY' )
 				) {
-					// Retrieve the Elementor Frontend instance.
-					$frontend = Elementor\Plugin::instance()->frontend;
+					// Retrieve the plugin instance only once.
+					$plugin_instance = Elementor\Plugin::instance();
 
-					// Remove the filter for `apply_builder_in_content`.
-					remove_filter( 'the_content', [ $frontend, 'apply_builder_in_content' ], Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
+					if (
+						$plugin_instance &&
+						isset( $plugin_instance->frontend ) &&
+						method_exists( $plugin_instance->frontend, 'apply_builder_in_content' )
+					) {
+						// Remove the filter for `apply_builder_in_content`.
+						remove_filter( 'the_content', array( $plugin_instance->frontend, 'apply_builder_in_content' ), Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
+					}
 				}
 
 				while ( $qry->have_posts() ) {
@@ -209,17 +215,13 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					add_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 
-				if ( 
-					class_exists( 'Elementor\Plugin' ) &&
-					class_exists( 'Elementor\Frontend' ) &&
-					defined( 'Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY' ) &&
-					method_exists( Elementor\Plugin::instance()->frontend, 'apply_builder_in_content' )
+				if (
+					$plugin_instance &&
+					isset( $plugin_instance->frontend ) &&
+					method_exists( $plugin_instance->frontend, 'apply_builder_in_content' )
 				) {
-					// Retrieve the Elementor Frontend instance.
-					$frontend = Elementor\Plugin::instance()->frontend;
-
-					// Add the filter for `apply_builder_in_content`.
-					add_filter( 'the_content', [ $frontend, 'apply_builder_in_content' ], Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
+					// Remove the filter for `apply_builder_in_content`.
+					add_filter( 'the_content', array( $plugin_instance->frontend, 'apply_builder_in_content' ), Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
 				}
 			}
 			wp_reset_postdata();
