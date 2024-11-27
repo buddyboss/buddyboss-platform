@@ -405,7 +405,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				$plans = ! empty( $notification['plans'] ) ? array_column( $notification['plans'], 'slug' ) : array();
 				if (
 					! empty( $plans ) &&
-					empty( array_intersect( $plans, array_keys( $activated_plans ) ) )
+					empty( array_intersect( $plans, $activated_plans ) )
 				) {
 					error_log( print_r( '--- return not valid Plan: --' .  $notification['id'], 1 ) );
 					continue;
