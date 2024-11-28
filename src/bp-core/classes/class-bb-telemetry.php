@@ -134,7 +134,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
 			);
 
-			$raw_response = wp_remote_post( base64_decode( $api_url ), $args );
+			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args );
 			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
 				unset( $data, $auth_key, $api_url, $args );
 
