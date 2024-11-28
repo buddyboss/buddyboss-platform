@@ -7,7 +7,7 @@
  * Author URI:  https://buddyboss.com/
  * Version:     2.7.40
  * Text Domain: buddyboss
- * Domain Path: /bp-languages/
+ * Domain Path: /src/languages
  * License:     GPLv2 or later (license.txt)
  */
 
