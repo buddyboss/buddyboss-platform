@@ -2355,7 +2355,7 @@ function bp_core_load_buddypress_textdomain() {
 	global $wp_version;
 	$domain = 'buddyboss';
 
-	if ( 6.7 <= $wp_version ) {
+	if ( version_compare( $wp_version, '6.7', '<=' ) ) {
 		/**
 		 * Filters the locale to be loaded for the language files.
 		 *
