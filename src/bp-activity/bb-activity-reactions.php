@@ -45,6 +45,8 @@ function bb_activity_get_user_reacted_item_ids( $user_id = 0, $activity_type = '
 		$item_ids = $reaction_data['reactions'];
 	}
 
+	unset( $reaction_data );
+
 	return apply_filters( 'bb_activity_get_user_reacted_item_ids', $item_ids, $user_id, $activity_type );
 }
 
@@ -76,6 +78,8 @@ function bb_activity_remove_activity_post_reactions( $activities ) {
 			)
 		);
 	}
+
+	unset( $activity_ids );
 }
 
 /**
@@ -158,6 +162,8 @@ function bb_activity_prepare_web_emotions() {
 			$icon,
 		);
 	}
+
+	unset( $all_emotions );
 
 	$output .= '</div>';
 
@@ -336,6 +342,8 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 		$output .= '</div>';
 	}
 
+	unset( $most_reactions );
+
 	// Build popup to show reacted items.
 	if ( $is_popup ) {
 		$output .= '<div class="activity-state-popup">
@@ -495,6 +503,8 @@ function bb_get_activity_reaction_ajax_callback() {
 			$tabs[ $reaction['id'] ] = $tab;
 		}
 
+		unset( $most_reacted );
+
 		$popup_heading_count = 0;
 		$total_pages         = 0;
 		if ( 1 === count( $tabs ) ) {
@@ -618,6 +628,8 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 
 	$reacted_users  = ! empty( $reaction_data['reactions'] ) ? $reaction_data['reactions'] : array();
 	$reaction_count = ! empty( $reaction_data['total'] ) ? absint( $reaction_data['total'] ) : 0;
+
+	unset( $reaction_data );
 
 	if (
 		empty( $reaction_count ) ||
@@ -829,6 +841,8 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 	$reaction_id  = current( $user_reaction['reactions'] );
 	$all_emotions = bb_active_reactions();
 
+	unset( $user_reaction );
+
 	if ( ! empty( $all_emotions ) && isset( $all_emotions[ $reaction_id ] ) ) {
 		return $all_emotions[ $reaction_id ];
 	}
@@ -870,6 +884,8 @@ function bb_activity_get_reaction_button( $reaction_id, $has_reacted = false ) {
 
 	$reaction  = $all_emotions[ $reaction_id ];
 	$icon_html = bb_activity_prepare_emotion_icon( $reaction_id );
+
+	unset( $all_emotions );
 
 	if (
 		! empty( $reaction['type'] ) ||
@@ -931,6 +947,8 @@ function bb_activity_prepare_emotion_icon( $reaction_id ) {
 			) :
 			'<i class="bb-icon-thumbs-up"></i>';
 	}
+
+	unset( $all_emotions );
 
 	return $icon_html;
 }

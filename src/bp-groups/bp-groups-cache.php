@@ -326,6 +326,7 @@ function bp_groups_clear_user_group_cache_on_invitation_change( $args ) {
 	foreach ( $affected_invitation_ids as $invitation_id ) {
 		wp_cache_delete( $invitation_id, 'bp_groups_invitations_as_memberships' );
 	}
+	unset( $affected_invitation_ids );
 }
 add_action( 'bp_invitation_before_delete', 'bp_groups_clear_user_group_cache_on_invitation_change' );
 add_action( 'bp_invitation_before_update', 'bp_groups_clear_user_group_cache_on_invitation_change' );
@@ -343,6 +344,7 @@ function bp_groups_clear_user_group_cache_on_other_events( $user_id, $group_id )
 
 	$membership = new BP_Groups_Member( $user_id, $group_id );
 	wp_cache_delete( $membership->id, 'bp_groups_memberships' );
+	unset( $membership );
 }
 add_action( 'bp_groups_member_before_delete', 'bp_groups_clear_user_group_cache_on_other_events', 10, 2 );
 
@@ -385,8 +387,11 @@ add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
 function bp_groups_reset_cache_incrementor_on_group_term_change( $object_id, $terms, $tt_ids, $taxonomy ) {
 	$tax_object = get_taxonomy( $taxonomy );
 	if ( $tax_object && in_array( 'bp_group', $tax_object->object_type, true ) ) {
+		unset( $tax_object );
 		return bp_groups_reset_cache_incrementor();
 	}
+
+	unset( $tax_object );
 
 	return false;
 }
@@ -408,8 +413,11 @@ add_action( 'bp_set_object_terms', 'bp_groups_reset_cache_incrementor_on_group_t
 function bp_groups_reset_cache_incrementor_on_group_term_remove( $object_id, $terms, $taxonomy ) {
 	$tax_object = get_taxonomy( $taxonomy );
 	if ( $tax_object && in_array( 'bp_group', $tax_object->object_type, true ) ) {
+		unset( $tax_object );
 		return bp_groups_reset_cache_incrementor();
 	}
+
+	unset( $tax_object );
 
 	return false;
 }
@@ -450,15 +458,18 @@ function bb_groups_clear_group_type_cache_on_update( $post_id ) {
 	$post = get_post( $post_id );
 
 	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+		unset( $post );
 		return;
 	}
 
 	if ( ! isset( $_POST['_bp-group-type-nonce'] ) ) {
+		unset( $post );
 		return;
 	}
 
 	// verify nonce.
 	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+		unset( $post );
 		return;
 	}
 
@@ -468,6 +479,8 @@ function bb_groups_clear_group_type_cache_on_update( $post_id ) {
 	if ( ! empty( $bp_group_type_key ) ) {
 		wp_cache_delete( 'bb-group-type-label-color-' . $bp_group_type_key, 'bp_groups_group_type' );
 	}
+
+	unset( $post, $bp_group_type_key );
 }
 add_action( 'save_post', 'bb_groups_clear_group_type_cache_on_update' );
 
@@ -485,6 +498,7 @@ function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
 
 	// Return if post is not 'bp-group-type' type.
 	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
+		unset( $post );
 		return;
 	}
 
@@ -494,6 +508,8 @@ function bb_groups_clear_group_type_cache_before_delete( $post_id ) {
 	if ( ! empty( $bp_group_type_key ) ) {
 		wp_cache_delete( 'bb-group-type-label-color-' . $bp_group_type_key, 'bp_groups_group_type' );
 	}
+
+	unset( $post, $bp_group_type_key );
 }
 
 add_action( 'before_delete_post', 'bb_groups_clear_group_type_cache_before_delete' );

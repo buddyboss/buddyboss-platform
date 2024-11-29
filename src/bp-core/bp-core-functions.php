@@ -155,6 +155,8 @@ function bp_sort_by_key( $items, $key, $type = 'alpha', $preserve_keys = false )
 		usort( $items, $callback );
 	}
 
+	unset( $callback );
+
 	return $items;
 }
 
@@ -565,6 +567,8 @@ function bp_core_get_directory_page_id( $component = null ) {
 		$page_id = (int) $bp_pages[ $component ];
 	}
 
+	unset( $bp_pages );
+
 	return $page_id;
 }
 
@@ -647,6 +651,8 @@ function bp_core_get_directory_pages() {
 
 		wp_cache_set( $cache_key, $pages, 'bp_pages' );
 	}
+
+	unset( $page_ids, $page_names, $page_name );
 
 	/**
 	 * Filters the names and slugs for BuddyPress component directory pages.
@@ -777,6 +783,8 @@ function bp_core_add_page_mappings( $components, $existing = 'keep', $map_regist
 	if ( ! bp_is_root_blog() ) {
 		restore_current_blog();
 	}
+
+	unset( $pages, $pages_to_create, $page_titles );
 }
 
 /**
@@ -841,6 +849,8 @@ function bp_core_on_directory_page_delete( $post_id ) {
 	}
 
 	bp_core_update_directory_page_ids( $page_ids );
+
+	unset( $page_ids, $component_name );
 }
 add_action( 'delete_post', 'bp_core_on_directory_page_delete' );
 
@@ -870,6 +880,8 @@ add_action( 'delete_post', 'bp_core_on_directory_page_delete' );
 function bp_core_component_slug_from_root_slug( $root_slug ) {
 	$slug_chunks = explode( '/', $root_slug );
 	$slug        = array_pop( $slug_chunks );
+
+	unset( $slug_chunks );
 
 	/**
 	 * Filters the default component slug from a WP page root_slug.
@@ -955,6 +967,8 @@ function bp_core_create_root_component_page() {
 
 	$page_ids = array_merge( $new_page_ids, bp_core_get_directory_page_ids( 'all' ) );
 	bp_core_update_directory_page_ids( $page_ids );
+
+	unset( $page_ids, $new_page_ids );
 }
 
 /**
@@ -1631,6 +1645,8 @@ function bp_core_record_activity() {
 
 	// updated users last activity on each page refresh.
 	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
+
+	unset( $user_id, $activity, $current_time );
 
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
@@ -2312,6 +2328,8 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 	 */
 	do_action( 'bp_verify_nonce_request', $action, $result );
 
+	unset( $parsed_home, $parsed_host, $home_url, $scheme, $requested_url, $request_host, $matched_url );
+
 	return $result;
 }
 
@@ -2403,6 +2421,8 @@ function bp_core_load_buddypress_textdomain() {
 			return true;
 		}
 	}
+
+	unset( $locations, $mofile_custom );
 
 	$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
 	$buddyboss_lang_path = $plugin_folder . '/languages';
@@ -2797,6 +2817,8 @@ function bp_core_get_components( $type = 'all' ) {
 			break;
 	}
 
+	unset( $required_components, $optional_components, $default_components );
+
 	/**
 	 * Filters the list of component information.
 	 *
@@ -3087,6 +3109,8 @@ function bp_nav_menu_get_loggedin_pages() {
 
 	buddypress()->wp_nav_menu_items->loggedin = $page_args;
 
+	unset( $bp_menu_items );
+
 	return $page_args;
 }
 
@@ -3161,6 +3185,8 @@ function bp_nav_menu_get_loggedout_pages() {
 
 	buddypress()->wp_nav_menu_items->loggedout = $page_args;
 
+	unset( $bp_menu_items, $bp_directory_page_ids );
+
 	return $page_args;
 }
 
@@ -3184,6 +3210,8 @@ function bp_nav_menu_get_item_url( $slug ) {
 	if ( isset( $nav_menu_items[ $slug ] ) ) {
 		$nav_item_url = $nav_menu_items[ $slug ]->guid;
 	}
+
+	unset( $nav_menu_items );
 
 	return $nav_item_url;
 }
@@ -3571,6 +3599,8 @@ function bp_get_email( $email_type ) {
 		restore_current_blog();
 	}
 
+	unset( $post, $email, $args );
+
 	return $retval;
 }
 
@@ -3896,6 +3926,8 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
 	$text = strtr( $text, $unescaped );  // Do first.
 	$text = strtr( $text, $escaped );
 
+	unset( $unescaped, $escaped );
+
 	/**
 	 * Filters text that has had tokens replaced.
 	 *
@@ -4156,6 +4188,9 @@ function bp_email_unsubscribe_handler() {
 	);
 
 	bp_core_add_message( $message , $message_type );
+
+	unset( $message, $message_type, $result_msg, $unsub_msg, $redirect_to, $emails, $raw_email_type, $raw_hash, $new_hash, $meta_key );
+
 	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
 
 	exit;
@@ -4342,6 +4377,9 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 			}
 		}
 	}
+
+	unset( $current_user, $member_type, $member_type_post_id, $meta, $enable_invite, $get_all_registered_member_types );
+
 	return $allowed;
 }
 
@@ -4416,6 +4454,8 @@ function bp_core_get_active_custom_post_type_feed() {
 			$cpt_arr[] = $single_post;
 		}
 	}
+
+	unset( $custom_post_types, $single_post, $enabled );
 
 	return $cpt_arr;
 }
@@ -4526,6 +4566,8 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 			}
 		}
 
+		unset( $args, $docs, $doc );
+
 		return $post_id;
 	}
 }
@@ -4603,6 +4645,8 @@ function bp_ajax_get_suggestions() {
 	$results_total = apply_filters( 'bb_members_suggestions_results_total', $results['total'] ?? 0 );
 	$results       = apply_filters( 'bb_members_suggestions_results', $results['members'] ?? array() );
 
+	unset( $args );
+
 	wp_send_json_success(
 		array(
 			'results'     => $results,
@@ -4645,6 +4689,8 @@ function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
 			$mentioned_users[ $user_id ] = $username;
 		}
 	}
+
+	unset( $usernames, $username, $user_id );
 
 	if ( empty( $mentioned_users ) ) {
 		return $mentioned_users;
@@ -4691,6 +4737,8 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 	} else {
 		$user_id = bp_core_get_userid_from_nickname( $mentionname );
 	}
+
+	unset( $userdata, $regex );
 
 	return $user_id;
 }
@@ -5003,6 +5051,8 @@ function bp_core_parse_url( $url ) {
 		set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
 	}
 
+	unset( $parse_url_data, $original_url, $response, $body, $dom, $meta_tags, $images, $description, $title, $xpath, $query, $metas_query, $tag, $property, $content, $nodes, $metas, $i, $meta, $image_elements, $image, $src );
+
 	/**
 	 * Filters parsed URL data.
 	 *
@@ -5108,6 +5158,8 @@ function bp_core_hide_display_name_field( $field_id = 0 ) {
 		}
 	}
 
+	unset( $current_value );
+
 	/**
 	 * Filters Hide Display name field.
 	 *
@@ -5159,6 +5211,8 @@ function bp_core_upload_max_size() {
 			$max_size = $upload_max;
 		}
 	}
+
+	unset( $size, $unit, $post_max_size, $upload_max );
 
 	/**
 	 * Filters file upload max limit.
@@ -5220,6 +5274,8 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 	// Get logged in user Progress.
 	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
 	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
+
+	unset( $user_progress_arr, $profile_groups, $profile_photo_type, $steps_options );
 
 }
 
@@ -5298,6 +5354,8 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	if ( $total_completed_count > 0 ) {
 		$response['completed_fields'] = $total_completed_count;
 	}
+
+	unset( $total_count, $total_completed_count );
 
 	/**
 	 * Filters will return the user progress based on the settings you provided.
@@ -5428,6 +5486,8 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$sql['where']['search'] = $search_combined;
 	}
 
+	unset( $search_terms_clean, $search_terms_nospace, $search_terms_space, $current_value, $enabled_fields, $where_condition, $matched_user_ids, $matched_user_data, $field_visibility, $search_core, $search_combined );
+
 	return $sql;
 }
 
@@ -5481,6 +5541,8 @@ function bp_core_regenerate_attachment_thumbnails( $attachment_id ) {
 	$new_metadata = wp_generate_attachment_metadata( $attachment_id, $fullsizepath );
 	wp_update_attachment_metadata( $attachment_id, $new_metadata );
 
+	unset( $fullsizepath, $new_metadata );
+
 	/**
 	 * Action to perform after regenerating attachment thumbnails.
 	 *
@@ -5511,6 +5573,8 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 		reset( $objects );
 		rmdir( $directory );
 	}
+
+	unset( $objects, $object );
 }
 
 /**
@@ -5644,6 +5708,7 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 		}
 	}
 
+	unset( $key, $sym_path, $filename, $attachment_id );
 }
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
@@ -5670,6 +5735,8 @@ function bb_core_scaled_attachment_path( $attachment_id ) {
 		}
 	}
 
+	unset( $is_image, $meta, $img_url_basename );
+
 	return $img_url;
 }
 
@@ -5692,6 +5759,8 @@ function bb_check_ios_device() {
 	if ( $ipod || $iphone || $ipad || $safari ) {
 		$is_ios = true;
 	}
+
+	unset( $ipod, $iphone, $ipad, $safari );
 
 	/**
 	 * Filter for the check if it's ios devices or not.
@@ -5731,6 +5800,8 @@ function bb_core_upload_dummy_attachment() {
 			wp_update_attachment_metadata( $attachment_id, $attachment_data );
 		}
 	}
+
+	unset( $file, $filename, $upload_file, $wp_filetype, $attachment, $attachment_data );
 
 	return $attachment_id;
 }
@@ -5861,6 +5932,8 @@ function bb_moderation_get_media_record_by_id( $id, $type ) {
 		}
 	}
 
+	unset( $media_table, $document_table, $cache_key, $cache_group, $media_sql, $document_sql );
+
 	return $record;
 }
 
@@ -5894,6 +5967,8 @@ function bb_moderation_suspend_record_exist( $id ) {
 		$record = $wpdb->get_row( $suspend_record_sql );
 		wp_cache_set( $cache_key, $record, 'bp_moderation' );
 	}
+
+	unset( $suspend_table, $cache_key, $suspend_record_sql );
 
 	return $record;
 }
@@ -5970,6 +6045,8 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 		}
 	}
 
+	unset( $suspend_table, $media_results, $moderated_activity, $suspend_record, $document_results );
+
 	return $offset;
 }
 
@@ -5994,6 +6071,8 @@ function bb_moderation_bg_update_moderation_data() {
 	if ( ! empty( $moderated_activities ) ) {
 		bb_moderation_update_suspend_data( $moderated_activities, 0 );
 	}
+
+	unset( $suspend_table, $table_exists, $moderated_activities );
 }
 
 /**
@@ -6014,6 +6093,9 @@ function bb_get_all_admin_users() {
 	if ( ! empty( $users ) ) {
 		$users = array_map( 'intval', $users );
 	}
+
+	unset( $args );
+
 	return $users;
 }
 
@@ -6315,6 +6397,8 @@ function bb_has_default_custom_upload_profile_avatar() {
 		}
 	}
 
+	unset( $avatar, $avatar_option, $default_image_id, $image_attributes, $wp_user_avatar );
+
 	/**
 	 * Filters has custom upload avatar image?
 	 *
@@ -6604,6 +6688,8 @@ function bb_attachments_get_default_profile_group_avatar_image( $params ) {
 		}
 	}
 
+	unset( $object, $size, $show_avatar, $profile_avatar_type, $default_profile_avatar_type, $group_avatar_type );
+
 	/**
 	 * Filters default avatar image URL.
 	 *
@@ -6657,6 +6743,8 @@ function bb_attachments_get_default_profile_group_cover_image( $component ) {
 			}
 		}
 	}
+
+	unset( $profile_cover_type, $group_cover_type );
 
 	/**
 	 * Filters default cover image URL.
@@ -6847,6 +6935,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 		! empty( $read_only_notifications[ $notification_type ]['default'] ) &&
 		'no' === $read_only_notifications[ $notification_type ]['default']
 	) {
+		unset( $read_only_notifications, $all_notifications, $preferences );
 		return false;
 	}
 
@@ -6868,6 +6957,7 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 	}
 
 	if ( ! empty( $main ) && isset( $main[ $notification_type ] ) && 'no' === $main[ $notification_type ] ) {
+		unset( $main, $all_notifications, $preferences, $settings_by_admin, $read_only_notifications );
 		return false;
 	}
 
@@ -6889,9 +6979,11 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 			)
 		)
 	) {
+		unset( $main, $all_notifications, $preferences, $settings_by_admin, $read_only_notifications );
 		return true;
 	}
 
+	unset( $main, $all_notifications, $preferences, $settings_by_admin, $read_only_notifications );
 	return false;
 }
 
@@ -6977,10 +7069,13 @@ function bp_can_send_notification( $user_id, $component_name, $component_action 
 	);
 
 	if ( empty( $notification_type ) ) {
+		unset( $all_notifications, $notification_type );
 		return false;
 	}
 
 	$notification_type = current( $notification_type );
+
+	unset( $all_notifications );
 
 	return (bool) bb_is_notification_enabled( $user_id, $notification_type, $pref_type );
 }
@@ -7010,6 +7105,8 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
 			'value'             => bb_is_notification_enabled( $user_id, $notification['notification_type'], $pref_type ),
 		);
 	}
+
+	unset( $all_notifications, $user_id, $user_meta_key );
 
 	return $keys;
 }
@@ -7120,6 +7217,8 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 		);
 	}
 
+	unset( $enabled_all_notification, $email_checked, $web_checked, $app_checked );
+
 	return apply_filters( 'bb_notifications_types', $options );
 
 }
@@ -7146,12 +7245,16 @@ function bb_check_notification_registered( string $notification_type ) {
 	}
 
 	if ( empty( $all_notifications ) ) {
+		unset( $notifications, $all_notifications );
 		return false;
 	}
 
 	if ( $notification_type && isset( $all_notifications[ $notification_type ] ) ) {
+		unset( $notifications );
 		return ! empty( $all_notifications[ $notification_type ] );
 	}
+
+	unset( $notifications, $all_notifications );
 
 	return false;
 }
@@ -7178,12 +7281,16 @@ function bb_check_email_type_registered( string $notification_type ) {
 	}
 
 	if ( empty( $all_notifications ) ) {
+		unset( $notifications, $all_notifications );
 		return false;
 	}
 
 	if ( $notification_type && isset( $all_notifications[ $notification_type ] ) ) {
+		unset( $notifications );
 		return ! empty( $all_notifications[ $notification_type ] );
 	}
+
+	unset( $notifications, $all_notifications );
 
 	return false;
 }
@@ -7231,6 +7338,7 @@ function bb_render_notification( $notification_group ) {
 	$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 	if ( empty( $options['fields'] ) ) {
+		unset( $options, $enabled_all_notification );
 		return;
 	}
 
@@ -7362,6 +7470,8 @@ function bb_render_notification( $notification_group ) {
 			<?php
 		}
 	}
+
+	unset( $options, $enabled_all_notification, $default_enabled_notifications );
 }
 
 /**
@@ -7403,6 +7513,8 @@ function bb_core_notification_preferences_data() {
 			$data['screen_description'] = esc_html__( 'Choose which notifications to receive by email.', 'buddyboss' );
 		}
 	}
+
+	unset( $menu_title, $screen_title );
 
 	return $data;
 }
@@ -7487,6 +7599,8 @@ function bb_render_enable_notification_options() {
 		</thead>
 	</table>
 	<?php
+
+	unset( $enable_notifications, $user_id, $key, $label, $class, $name, $checked );
 }
 
 /**
@@ -7583,6 +7697,8 @@ function bb_render_manual_notification() {
 		</table>
 		<?php
 	}
+
+	unset( $manual_notifications, $user_id, $key, $label, $class, $disabled, $name, $checked );
 }
 
 /**
@@ -7626,6 +7742,7 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		$enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
 
 		if ( empty( $options['fields'] ) ) {
+			unset( $options, $enabled_all_notification );
 			return false;
 		}
 
@@ -7641,11 +7758,13 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		);
 
 		if ( empty( $fields ) ) {
+			unset( $options, $enabled_all_notification, $default_enabled_notifications, $enabled_notification );
 			return false;
 		}
 
 		$keys = array_column( $fields, 'key' );
 		if ( ! empty( $keys ) && in_array( $notification_key, $keys, true ) ) {
+			unset( $options, $enabled_all_notification, $default_enabled_notifications, $enabled_notification, $fields, $keys );
 			return true;
 		}
 	}
@@ -7710,6 +7829,8 @@ function bb_get_prefences_key( $type = 'legacy', $key = '', $action = '' ) {
 	} elseif ( 'modern' === $type && array_key_exists( $key, $keys ) ) {
 		return ( '' !== $action ? str_replace( '_' . $action, '', $keys[ $key ] ) : $keys[ $key ] );
 	}
+
+	unset( $keys );
 
 	return '';
 }
@@ -7962,6 +8083,8 @@ function bb_validate_gravatar( $email ) {
 		$has_valid_avatar = true;
 	}
 
+	unset( $url, $key, $response );
+
 	return $has_valid_avatar;
 }
 
@@ -8050,6 +8173,8 @@ function bb_core_get_os() {
 
 			break;
 	}
+
+	unset( $user_agent, $os_array, $regex, $value );
 
 	return $os_platform;
 }
@@ -8147,6 +8272,8 @@ function bb_get_user_id_by_activity_mentionname( $mention_names ) {
 
 		$mention_user_ids[] = (int) $user_id;
 	}
+
+	unset( $mention_user, $user_id );
 
 	return $mention_user_ids;
 }
@@ -8319,6 +8446,8 @@ function bb_autop( $pee, $br = true ) {
 	if ( false !== strpos( $pee, '<!-- wpnl -->' ) ) {
 		$pee = str_replace( array( ' <!-- wpnl --> ', '<!-- wpnl -->' ), "\n", $pee );
 	}
+
+	unset( $pre_tags, $allblocks, $pees, $tinkle );
 
 	return $pee;
 }
@@ -8499,6 +8628,8 @@ function bb_mention_deleted_users( $mentioned_users, $content ) {
 		}
 	}
 
+	unset( $usernames, $username, $user_id );
+
 	if ( empty( $mentioned_users ) ) {
 		return $mentioned_users;
 	}
@@ -8539,6 +8670,8 @@ function bb_mention_remove_deleted_users_link( $content ) {
 			}
 		}
 	}
+
+	unset( $usernames, $user_id, $username, $content_matches, $match );
 
 	return $content;
 }
@@ -8597,6 +8730,8 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
 		}
+
+		unset( $require_array );
 
 		return $string;
 
@@ -8781,6 +8916,8 @@ function bb_media_handle_sideload( $file_array, $post_data = array() ) {
 		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
 	}
 
+	unset( $overrides, $time, $file, $url, $type, $title, $content, $image_meta, $desc, $attachment );
+
 	return $id;
 }
 
@@ -8823,6 +8960,8 @@ function bb_is_notification_type_enabled( $notification_type, $type = 'main' ) {
 
 	if ( ! empty( $all_preferences ) ) {
 		$notifications = array_column( $all_preferences, 'default', 'key' );
+
+		unset( $all_preferences, $notification_preferences, $preference );
 
 		return ! empty( $notifications[ $notification_type ] ) && 'yes' === $notifications[ $notification_type ];
 	}
@@ -9512,6 +9651,7 @@ function bb_generate_default_avatar( $args ) {
 	$image_library = _wp_image_editor_choose();
 
 	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || empty( $image_library ) ) {
+		unset( $r, $image_library );
 		return $prepare_response;
 	}
 
@@ -9525,6 +9665,7 @@ function bb_generate_default_avatar( $args ) {
 	}
 
 	if ( empty( $r['item_name'] ) ) {
+		unset( $r, $image_library );
 		return $prepare_response;
 	}
 
@@ -9553,6 +9694,7 @@ function bb_generate_default_avatar( $args ) {
 
 	$item_name = strtoupper( $char1 . $char2 );
 	if ( empty( $item_name ) && '0' !== $item_name ) {
+		unset( $r, $image_library, $char1, $char2, $item_name );
 		return $prepare_response;
 	}
 
@@ -9577,6 +9719,7 @@ function bb_generate_default_avatar( $args ) {
 	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Medium.ttf' );
 
 	if ( empty( $font_family ) ) {
+		unset( $r, $image_library, $char1, $char2, $item_name, $all_palettes, $palette );
 		return $prepare_response;
 	}
 
@@ -9704,6 +9847,8 @@ function bb_generate_default_avatar( $args ) {
 		$prepare_response['path'] = str_replace( bp_core_get_upload_dir( 'url' ), bp_core_avatar_upload_path(), $default_avatar );
 	}
 
+	unset( $r, $image_library, $char1, $char2, $item_name, $all_palettes, $palette, $font_family, $png_text_color, $font_size, $bg_color, $filename, $file_path, $file_url, $image_editor, $text_dimensions, $text_width, $text_height, $image_size, $image_width, $image_height, $text_x, $text_y, $rf_image_editor, $property, $image, $filtered_bg_color, $text_color, $draw, $result, $default_avatar );
+
 	return $prepare_response;
 }
 
@@ -9740,6 +9885,8 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 			}
 		}
 	}
+
+	unset( $delete_query, $user_avatar_dir );
 }
 
 /**
@@ -9775,6 +9922,8 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 			}
 		}
 	}
+
+	unset( $delete_query, $group_avatar_dir );
 }
 
 /**

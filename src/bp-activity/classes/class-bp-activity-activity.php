@@ -879,6 +879,9 @@ class BP_Activity_Activity {
 			$retval['total'] = $total_activities;
 		}
 
+		// Unset variables to free up memory.
+		unset( $args, $function_args, $old_args_keys, $r, $select_sql, $from_sql, $join_sql, $where_conditions, $excluded_types, $order_by, $where_sql, $sort, $pinned_id, $exclude, $in, $privacy, $status, $meta_query_sql, $date_query_sql, $excluded_types, $not_in, $not_in_type );
+
 		return $retval;
 	}
 
@@ -918,6 +921,8 @@ class BP_Activity_Activity {
 			foreach ( (array) $queried_adata as $adata ) {
 				wp_cache_set( $adata->id, $adata, 'bp_activity' );
 			}
+
+			unset( $queried_adata );
 		}
 
 		// Now fetch data from the cache.
@@ -998,6 +1003,7 @@ class BP_Activity_Activity {
 					}
 				}
 			}
+			unset( $fullnames, $activity_user_ids );
 		}
 
 		return $activities;
@@ -1217,6 +1223,8 @@ class BP_Activity_Activity {
 		if ( ! empty( $override ) ) {
 			$retval['override'] = $override;
 		}
+
+		unset( $query_args, $override, $query, $sql );
 
 		return $retval;
 	}
@@ -1492,6 +1500,8 @@ class BP_Activity_Activity {
 			}
 		}
 
+		unset( $activities, $comment_ids );
+
 		return $activity_ids;
 	}
 
@@ -1525,6 +1535,8 @@ class BP_Activity_Activity {
 				self::delete_activity_meta_entries( $activity_comment_ids );
 			}
 		}
+
+		unset( $activity_comment_ids );
 
 		return $wpdb->query( "DELETE FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id IN ({$activity_ids})" );
 	}
@@ -1582,6 +1594,8 @@ class BP_Activity_Activity {
 				$activities[ $key ]->top_level_count = $comments_count['top_level_count'] ?? 0;
 			}
 		}
+
+		unset( $activity_comments );
 
 		return $activities;
 	}
@@ -1918,6 +1932,8 @@ class BP_Activity_Activity {
 			}
 		}
 
+		unset( $descendants, $ref, $sql, $spam_sql, $fullname_select, $fullname_from, $fullname_where, $cache_value );
+
 		return $comments;
 	}
 
@@ -1956,6 +1972,8 @@ class BP_Activity_Activity {
 		} else {
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET mptt_left = %d, mptt_right = %d WHERE type = 'activity_comment' AND id = %d", $left, $right, $parent_id ) );
 		}
+
+		unset( $comments, $descendants, $descendant_id );
 
 		// Return the right value of this node + 1.
 		return intval( $right + 1 );
@@ -2025,13 +2043,15 @@ class BP_Activity_Activity {
 		$activities    = bp_activity_get_sitewide( array( 'max' => $limit ) );
 		$activity_feed = array();
 
-		for ( $i = 0, $count = count( $activities ); $i < $count; ++$i ) {
+		for ( $i = 0, $count = count( $activities ); $i < $count; ++ $i ) {
 			$title                              = explode( '<span', $activities[ $i ]['content'] );
 			$activity_feed[ $i ]['title']       = trim( strip_tags( $title[0] ) );
 			$activity_feed[ $i ]['link']        = $activities[ $i ]['primary_link'];
 			$activity_feed[ $i ]['description'] = @sprintf( $activities[ $i ]['content'], '' );
 			$activity_feed[ $i ]['pubdate']     = $activities[ $i ]['date_recorded'];
 		}
+
+		unset( $activities );
 
 		return $activity_feed;
 	}
