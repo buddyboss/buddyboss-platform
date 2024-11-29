@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			self::$wpdb = $wpdb;
 
-			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
+			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' );
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
