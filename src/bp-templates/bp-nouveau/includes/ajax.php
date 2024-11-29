@@ -246,6 +246,12 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
 				unset( $querystring['include'] );
 			}
 		}
+
+		if ( ! empty( $counts['followers'] ) ) {
+			if ( isset( $querystring['scope'] ) && 'followers' === $querystring['scope'] ) {
+				unset( $querystring['include'] );
+			}
+		}
 	}
 
 	$querystring['scope']    = 'personal';
