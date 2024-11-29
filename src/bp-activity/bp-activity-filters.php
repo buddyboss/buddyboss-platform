@@ -3815,7 +3815,7 @@ function bb_add_member_followers_scope_filter( $qs, $object ) {
 	// members directory
 	if ( ! bp_is_user() && bp_is_members_directory() ) {
 		$qs_args = bp_parse_args( $qs );
-		// check if members scope is following before manipulating.
+		// check if members scope is followers before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
 			$qs .= '&include=' . bp_get_follower_ids(
 				array(
