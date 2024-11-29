@@ -1266,9 +1266,18 @@ function bp_nouveau_nav_has_count() {
 	$bp_nouveau = bp_nouveau();
 	$nav_item   = $bp_nouveau->current_nav_item;
 	$count      = false;
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		if ( ! empty( $nav_item->count ) ) {
+			$count = $nav_item->count;
+		} else {
+			// Support after count relocation from the navigation.
+			if ( 'followers' === $nav_item->slug ) {
 
-	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
-		$count = $nav_item->count;
+				// Followers count.
+				$counts = bp_total_follow_counts();
+				$count  = $counts['followers'];
+			}
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 		$count = 0 !== (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
@@ -1317,7 +1326,15 @@ function bp_nouveau_get_nav_count() {
 	$count      = 0;
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
-		$count = (int) str_replace( ',', '', $nav_item->count );
+		if ( ! empty( $nav_item->count ) ) {
+			$count = (int) str_replace( ',', '', $nav_item->count );
+		} else {
+			// Support after count relocation from the navigation.
+			if ( 'followers' === $nav_item->slug ) {
+				$counts = bp_total_follow_counts();
+				$count  = $counts['followers'];
+			}
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
 		$count = (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
