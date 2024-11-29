@@ -114,7 +114,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 2.7.40
 	 */
 	public function bb_admin_advanced_setting_telemetry_callback() {
-		$bb_advanced_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
+		$bb_advanced_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' );
 		$telemetry_modes                 = array(
 			'complete'  => array(
 				'label'    => esc_html__( 'Complete reporting', 'buddyboss' ),
