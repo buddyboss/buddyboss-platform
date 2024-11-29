@@ -67,7 +67,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'li_class'  => array(),
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-followers/',
 					'text'      => __( 'Followers', 'buddyboss' ),
-					'count'     => $counts['followers'],
+					'count'     => false,
 					'position'  => 16,
 				);
 			}

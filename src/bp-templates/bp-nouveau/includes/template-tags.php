@@ -1274,12 +1274,9 @@ function bp_nouveau_nav_has_count() {
 			if ( 'followers' === $nav_item->slug ) {
 
 				// Followers count.
-				$follower_ids = bp_get_follower_ids( array( 'user_id' => bp_loggedin_user_id() ) );
-				if ( ! empty( $follower_ids ) ) {
-					$count = count( explode( ',', $follower_ids ) );
-				}
+				$counts = bp_total_follow_counts();
+				$count  = $counts['followers'];
 			}
-			
 		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 		$count = 0 !== (int) groups_get_current_group()->total_member_count;
@@ -1329,7 +1326,15 @@ function bp_nouveau_get_nav_count() {
 	$count      = 0;
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
-		$count = (int) str_replace( ',', '', $nav_item->count );
+		if ( ! empty( $nav_item->count ) ) {
+			$count = (int) str_replace( ',', '', $nav_item->count );
+		} else {
+			// Support after count relocation from the navigation.
+			if ( 'followers' === $nav_item->slug ) {
+				$counts = bp_total_follow_counts();
+				$count  = $counts['followers'];
+			}
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
 		$count = (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
