@@ -99,8 +99,8 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	public function bb_admin_advanced_telemetry_setting_tutorial() {
 		?>
 		<p>
-			<a class="button bb-button_filled bb-telemetry-tutorial-link" 
-				href="<?php echo esc_url( 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry' ); ?>" 
+			<a class="button bb-button_filled bb-telemetry-tutorial-link"
+				href="<?php echo esc_url( 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry' ); ?>"
 				target="_blank">
 				<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
 			</a>
@@ -114,7 +114,7 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 2.7.40
 	 */
 	public function bb_admin_advanced_setting_telemetry_callback() {
-		$bb_advanced_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
+		$bb_advanced_telemetry_reporting = bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' );
 		$telemetry_modes                 = array(
 			'complete'  => array(
 				'label'    => esc_html__( 'Complete reporting', 'buddyboss' ),
@@ -180,16 +180,16 @@ class BB_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		?>
 		<div class='bb-setting-telemetry-no-reporting <?php echo ( 'disable' !== $bb_advanced_telemetry_reporting ) ? esc_attr( 'bp-hide' ) : ''; ?>'>
 			<br>
-			<label for="no_reporting">
+			<label for="disable_reporting">
 				<input name="bb_advanced_telemetry_reporting" id="disable_reporting" type="radio" value="disable" <?php checked( $bb_advanced_telemetry_reporting, 'disable' ); ?>/>
 				<?php esc_html_e( 'Disable telemetry', 'buddyboss' ); ?>
 			</label>
 			<p class="description">
 				<?php
 				esc_html_e(
-					'Disabling telemetry will stop gathering and reporting usage statistics 
-				about your configuration and the features and functionality you use. By disabling telemetry, 
-				you will not be contributing towards the improvement of the product and the way we serve 
+					'Disabling telemetry will stop gathering and reporting usage statistics
+				about your configuration and the features and functionality you use. By disabling telemetry,
+				you will not be contributing towards the improvement of the product and the way we serve
 				you will be less relevant to you.',
 					'buddyboss'
 				);
