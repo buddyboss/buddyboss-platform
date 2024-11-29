@@ -1266,9 +1266,21 @@ function bp_nouveau_nav_has_count() {
 	$bp_nouveau = bp_nouveau();
 	$nav_item   = $bp_nouveau->current_nav_item;
 	$count      = false;
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		if ( ! empty( $nav_item->count ) ) {
+			$count = $nav_item->count;
+		} else {
+			// Support after count relocation from the navigation.
+			if ( 'followers' === $nav_item->slug ) {
 
-	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
-		$count = $nav_item->count;
+				// Followers count.
+				$follower_ids = bp_get_follower_ids( array( 'user_id' => bp_loggedin_user_id() ) );
+				if ( ! empty( $follower_ids ) ) {
+					$count = count( explode( ',', $follower_ids ) );
+				}
+			}
+			
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 		$count = 0 !== (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {

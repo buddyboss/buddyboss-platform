@@ -706,9 +706,20 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 
 	$querystring = bp_parse_args( $querystring );
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
+	if (
+		bp_is_active( 'activity' ) &&
+		bp_is_activity_follow_active() &&
+		isset( $querystring['scope'] ) &&
+		(
+			'following' === $querystring['scope'] ||
+			'followers' === $querystring['scope']
+		)
+		
+	) {
 		$counts = bp_total_follow_counts();
-		if ( ! empty( $counts['following'] ) ) {
+		if ( 'following' === $querystring['scope'] && ! empty( $counts['following'] ) ) {
+			unset( $querystring['include'] );
+		} elseif ( 'followers' === $querystring['scope'] && ! empty( $counts['followers'] ) ) {
 			unset( $querystring['include'] );
 		}
 	}
