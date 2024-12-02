@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.7.40
+Stable tag: 2.7.50
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.50 =
+* Enhancement: Core - Updated all “View Tutorial” links across the platform to open in a new tab
+* Enhancement: Core- Updated Telemetry configuration to be anonymous by default
+* Bug: Translations - Addressed translation compatibility issues for BuddyBoss with WordPress 6.7, 6.7.1, and ensured support for future WordPress updates.
 
 = 2.7.40 =
 * Enhancement: MemberPress - We have added full integration of MemberPress into Buddyboss including their most recent Courses feature
