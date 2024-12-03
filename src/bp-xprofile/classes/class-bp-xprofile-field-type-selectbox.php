@@ -157,6 +157,16 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 			$html .= apply_filters( 'bp_get_the_profile_field_options_select', '<option' . $selected . ' value="' . esc_attr( stripslashes( $options[ $k ]->name ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
+		/**
+		 * Filters the HTML output for options in a select input.
+		 *
+		 * @since 2.7.40
+		 *
+		 * @param string $html      HTML output for options in a select input.
+		 * @param object $field_obj Current field object.
+		 */
+		$html = apply_filters( 'bb_get_the_profile_field_options_select_html', $html, $this->field_obj );
+
 		echo $html;
 	}
 
