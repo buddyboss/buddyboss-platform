@@ -77,8 +77,8 @@ if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
  * Show admin error message instead.
  */
 $bp_incompatible_plugins_list = array(
-	'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-	'buddypress-followers/loader.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+	'buddypress-global-search/buddypress-global-search.php' => 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.',
+	'buddypress-followers/loader.php' => 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.',
 );
 
 foreach ( $bp_incompatible_plugins_list as $incompatible_plugin => $error_message ) {
@@ -432,7 +432,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				<div id="message" class="error notice">
 					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
 					<?php
-					printf( '<p>%s</p>', $incompatible_plugin_message );
+					printf( '<p>%s</p>', esc_html__( $incompatible_plugin_message, 'buddyboss' ) );
 					?>
 				</div>
 				<?php
