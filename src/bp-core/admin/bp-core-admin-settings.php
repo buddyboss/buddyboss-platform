@@ -74,7 +74,7 @@ function bp_admin_setting_callback_admin_admin_bar() {
 function bp_admin_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -139,7 +139,7 @@ function bp_admin_setting_callback_private_network_public_content() {
 function bp_privacy_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -196,7 +196,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 function bp_posts_in_activity_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -332,7 +332,7 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 function bp_activity_settings_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -786,7 +786,7 @@ function bb_admin_setting_callback_default_profile_cover_size() {
 function bp_profile_photos_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -815,7 +815,7 @@ function bp_profile_photos_tutorial() {
 function bb_group_headers_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -844,7 +844,7 @@ function bb_group_headers_tutorial() {
 function bp_group_avatar_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1159,7 +1159,7 @@ function bb_admin_setting_callback_default_group_cover_size() {
 function bb_profile_headers_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 			<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1420,7 +1420,7 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 function bp_group_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1511,7 +1511,7 @@ function bp_admin_setting_callback_group_auto_join() {
 function bp_group_types_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1577,7 +1577,7 @@ function bp_admin_setting_callback_group_restrict_invites() {
 function bp_group_hierarchies_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1961,7 +1961,7 @@ function bp_admin_setting_callback_enable_profile_gravatar() {
 function bp_email_invites_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2081,7 +2081,7 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
 function bp_profile_names_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2398,7 +2398,7 @@ function bb_admin_setting_group_elements( $args ) {
 function bp_group_directories_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2476,7 +2476,7 @@ function bp_admin_setting_callback_register_page_url() {
 function bp_admin_registration_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2515,7 +2515,7 @@ function bp_admin_setting_callback_group_messages() {
 function bp_admin_moderation_block_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2542,7 +2542,7 @@ function bp_admin_moderation_block_setting_tutorial() {
 function bp_admin_moderation_report_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2682,7 +2682,7 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
 function bp_admin_on_screen_notification_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -3000,7 +3000,7 @@ function bb_admin_setting_callback_group_subscriptions() {
 function bb_profile_slug_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3027,7 +3027,7 @@ function bb_profile_slug_tutorial() {
 function bb_registration_restrictions_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3354,7 +3354,7 @@ function bb_admin_setting_callback_enable_activity_pinned_posts() {
 function bb_admin_redirection_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3657,7 +3657,7 @@ function bb_reactions_settings_callback_reactions_button() {
 function bb_admin_performance_general_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3684,7 +3684,7 @@ function bb_admin_performance_general_setting_tutorial() {
 function bb_admin_performance_activity_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
