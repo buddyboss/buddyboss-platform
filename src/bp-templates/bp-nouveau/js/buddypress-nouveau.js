@@ -922,6 +922,11 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
+
+			// Profile Popup Card
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar', this.profilePopupCard );
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar', this.hideProfilePopupCard);
+			$( window ).on( 'scroll', this.hideProfilePopupCard );
 		},
 
 		/**
@@ -4445,6 +4450,32 @@ window.bp = window.bp || {};
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
 				$( 'body' ).removeClass( 'more_option_open' );
 			}
+		},
+
+		profilePopupCard: function() {
+			var $avatar = $( this );
+			var offset = $avatar.offset();
+			var popupTop = offset.top + $avatar.outerHeight() + 10;
+  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
+
+			var $li = $avatar.closest( '.comment-item' );
+			var data = JSON.parse( $li.attr( 'data-bp-activity-comment' ) );
+
+			// Populate popup with data
+			$( '.bb-card-avatar img' ).attr( 'src', data.avatar_url );
+			$( '.bb-card-heading' ).text( data.nickname );
+
+			// Position popup near hovered avatar
+			$( '#profile-card' ).css( {
+				position: 'fixed',
+				top: popupTop - $( window ).scrollTop() + 'px',
+				left: popupLeft - $( window ).scrollLeft() + 'px',
+				display: 'block',
+			} );
+		},
+
+		hideProfilePopupCard: function() {
+			$( '#profile-card' ).hide();
 		},
 	};
 

@@ -603,3 +603,28 @@ div.profile_completion_wrap {
 	}
 
 }
+
+.bb-popup-card {
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	padding: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	min-width: 200px;
+	z-index: 999;
+}
+
+.bb-card-body {
+	display: flex;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+.bb-card-avatar {
+
+	img {
+		width: 88px;
+		height: auto;
+		border-radius: 50%;
+	}
+}

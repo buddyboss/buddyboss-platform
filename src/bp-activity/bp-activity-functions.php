@@ -6339,6 +6339,13 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
 		$activity_comment_user_id  = bp_get_activity_comment_user_id();
 		$activity_comment_nickname = bp_activity_get_user_mentionname( $activity_comment_user_id );
+		$avatar_url = bp_core_fetch_avatar(
+			array(
+				'item_id' => $activity_comment_user_id,
+				'type'    => 'thumb',
+				'html'    => false,
+			)
+		);
 
 		$can_edit_privacy                = true;
 		$album_id                        = 0;
@@ -6371,6 +6378,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'privacy'          => $activity_comment->privacy,
 			'user_id'          => $activity_comment_user_id,
 			'nickname'         => $activity_comment_nickname,
+			'avatar_url'       => $avatar_url,
 		);
 	}
 

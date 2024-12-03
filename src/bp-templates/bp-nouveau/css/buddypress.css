@@ -12586,6 +12586,28 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   display: none;
 }
 
+.bb-popup-card {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 999;
+}
+
+.bb-card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.bb-card-avatar img {
+  width: 88px;
+  height: auto;
+  border-radius: 50%;
+}
+
 /**
 *-------------------------------------------
 * @subsection 5.2.2.3 - Groups
