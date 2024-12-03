@@ -75,7 +75,7 @@ function bb_web_push_notifications_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -106,7 +106,7 @@ function bb_automatic_notifications_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -573,7 +573,7 @@ function bb_messaging_notifications_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(

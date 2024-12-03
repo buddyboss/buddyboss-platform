@@ -76,6 +76,32 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
+		// SSO.
+		$sso_pro_class      = bb_get_pro_fields_class( 'sso' );
+		$sso_notice         = bb_get_pro_label_notice( 'sso' );
+		$sso_args           = array();
+		$sso_args['class']  = esc_attr( $sso_pro_class );
+		$sso_args['notice'] = $sso_notice;
+		$this->add_field(
+			'bb-enable-sso',
+			__( 'Enable Social Login', 'buddyboss' ) . $sso_notice,
+			array(
+				$this,
+				'bb_admin_setting_callback_enable_sso_registration',
+			),
+			'intval',
+			$sso_args
+		);
+
+		/**
+		 * Fires to register SSO settings fields.
+		 *
+		 * @since BuddyBoss 2.7.40
+		 *
+		 * @param Object $this BP_Admin_Setting_General.
+		 */
+		do_action( 'bb_admin_setting_general_registration_fields', $this );
+
 		// Redirection Settings Section.
 		$this->add_section( 'bb_redirection', __( 'Redirection', 'buddyboss' ), '', 'bb_admin_redirection_setting_tutorial' );
 
@@ -158,6 +184,21 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_general_register_fields', $this );
 	}
+
+	/**
+	 * Add SSO settings.
+	 *
+	 * @since BuddyBoss 2.7.40
+	 */
+	public function bb_admin_setting_callback_enable_sso_registration( $args ) {
+		$val    = function_exists( 'bb_enable_sso' ) && bb_enable_sso();
+		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
+		?>
+		<input id="bb_enable_sso" name="<?php echo empty( $notice ) ? 'bb-enable-sso' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+		<label for="bb_enable_sso"><?php esc_html_e( 'Allow users to sign in with social login', 'buddyboss' ); ?></label>
+		<?php
+	}
+
 }
 
 return new BP_Admin_Setting_General();
