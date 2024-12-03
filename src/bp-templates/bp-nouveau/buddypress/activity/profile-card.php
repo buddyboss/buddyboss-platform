@@ -19,6 +19,14 @@
 				<div class="bb-card-profile-type"></div>
 				<h4 class="bb-card-heading"></h4>
 				<div class="bb-card-meta"></div>
+				<div class="bb-card-actions">
+					<div class="bb-card-action-primary">
+						<a href="" class="card-button"><?php esc_html_e( 'Message', 'buddyboss' ); ?></a>
+					</div>
+					<div class="bb-card-action-secondary">
+						<a href="" class="card-button card-button-profile"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="bb-card-footer"></div>

@@ -12587,13 +12587,17 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 }
 
 .bb-popup-card {
-  background-color: white;
+  background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-width: 200px;
   z-index: 999;
+}
+
+.acomments-modal-open .bb-popup-card {
+  z-index: 999985;
 }
 
 .bb-card-body {
@@ -12605,7 +12609,29 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 .bb-card-avatar img {
   width: 88px;
   height: auto;
-  border-radius: 50%;
+}
+
+.bb-card-heading {
+  margin: 0 0 1em;
+}
+
+.bb-card-profile-type .bp-member-type {
+  background-color: #fafafa;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.bb-card-entity .bb-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bb-card-entity .bb-card-actions .card-button {
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 15px;
 }
 
 /**

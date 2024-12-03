@@ -6,6 +6,9 @@ window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+	var hoverAvatar = false;
+	var hoverCardPopup = false;
+	var hideCardTimeout = null;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -924,8 +927,27 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile Popup Card
-			$( document ).on( 'mouseenter', '.item-avatar img.avatar', this.profilePopupCard );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar', this.hideProfilePopupCard);
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
+				hoverAvatar = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+				bp.Nouveau.profilePopupCard.call(this);
+			} );
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar', function(){
+				hoverAvatar = false;
+				bp.Nouveau.checkHideProfilePopupCard();
+			} );
+			$( document ).on( 'mouseenter', '#profile-card', function(){
+				hoverCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			} );
+			$( document ).on( 'mouseleave', '#profile-card', function() {
+				hoverCardPopup = false;
+				bp.Nouveau.checkHideProfilePopupCard();
+			} );
 			$( window ).on( 'scroll', this.hideProfilePopupCard );
 		},
 
@@ -4459,11 +4481,13 @@ window.bp = window.bp || {};
   			var popupLeft = offset.left + $avatar.outerWidth() - 100;
 
 			var $li = $avatar.closest( '.comment-item' );
-			var data = JSON.parse( $li.attr( 'data-bp-activity-comment' ) );
+			var data = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
 
 			// Populate popup with data
 			$( '.bb-card-avatar img' ).attr( 'src', data.avatar_url );
-			$( '.bb-card-heading' ).text( data.nickname );
+			$( '.bb-card-actions .card-button-profile' ).attr( 'href', data.user_link );
+			$( '.bb-card-heading' ).text( data.name );
+			$( '.bb-card-profile-type' ).html( data.type );
 
 			// Position popup near hovered avatar
 			$( '#profile-card' ).css( {
@@ -4474,8 +4498,17 @@ window.bp = window.bp || {};
 			} );
 		},
 
+		checkHideProfilePopupCard: function () {
+			if ( !hoverAvatar && !hoverCardPopup ) {
+				hideCardTimeout = setTimeout( function() {
+					bp.Nouveau.hideProfilePopupCard();
+				}, 300 );
+			}
+		},
+
 		hideProfilePopupCard: function() {
 			$( '#profile-card' ).hide();
+			hideCardTimeout = null;
 		},
 	};
 

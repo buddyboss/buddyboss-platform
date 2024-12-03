@@ -6339,13 +6339,6 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
 		$activity_comment_user_id  = bp_get_activity_comment_user_id();
 		$activity_comment_nickname = bp_activity_get_user_mentionname( $activity_comment_user_id );
-		$avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id' => $activity_comment_user_id,
-				'type'    => 'thumb',
-				'html'    => false,
-			)
-		);
 
 		$can_edit_privacy                = true;
 		$album_id                        = 0;
@@ -6378,7 +6371,6 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'privacy'          => $activity_comment->privacy,
 			'user_id'          => $activity_comment_user_id,
 			'nickname'         => $activity_comment_nickname,
-			'avatar_url'       => $avatar_url,
 		);
 	}
 
@@ -6391,6 +6383,75 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters(
 		'bb_activity_comment_get_edit_data',
+		$edit_data
+	);
+}
+
+/**
+ * Get the profile card edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @param int $activity_comment_id Activity comment ID.
+ *
+ * @return array|bool The profile card edit data or false otherwise.
+ */
+function bb_profile_card_get_edit_data( $activity_comment_id = 0 ) {
+	global $activities_template;
+
+	// check activity comment empty or not.
+	if ( empty( $activity_comment_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+
+	$activity_comment = new stdClass();
+	// get activity comment.
+	if ( ! empty( $activity_comment_id ) ) {
+		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
+	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
+		$activity_comment = $activities_template->activity->current_comment;
+	}
+
+	// check activity comment exists.
+	if ( empty( $activity_comment->id ) ) {
+		return false;
+	}
+
+	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
+	if ( false === $edit_data ) {
+		$activity_comment_user_id  = bp_get_activity_comment_user_id();
+		$activity_comment_user_nickname = bp_activity_get_user_mentionname( $activity_comment_user_id );
+		$activity_comment_user_name = bp_get_activity_comment_name();
+		$activity_comment_user_link = bp_get_activity_comment_user_link();
+		$avatar_url = bp_core_fetch_avatar(
+			array(
+				'item_id' => $activity_comment_user_id,
+				'type'    => 'thumb',
+				'html'    => false,
+			)
+		);
+		$user_type = bp_get_user_member_type( $activity_comment_user_id );
+
+		$edit_data = array(
+			'id'               => $activity_comment_id,
+			'user_id'          => $activity_comment_user_id,
+			'nickname'         => $activity_comment_user_nickname,
+			'name'         	   => $activity_comment_user_name,
+			'user_link'        => $activity_comment_user_link,
+			'avatar_url'       => $avatar_url,
+			'type'       	   => $user_type,
+		);
+	}
+
+	/**
+	 * Filter here to edit the activity comment edit data.
+	 *
+	 * @since BuddyBoss 2.4.40
+	 *
+	 * @param array $activity_comment_data The Activity comment edit data.
+	 */
+	return apply_filters(
+		'bb_profile_card_get_edit_data',
 		$edit_data
 	);
 }
