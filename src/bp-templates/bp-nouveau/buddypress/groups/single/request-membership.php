@@ -85,7 +85,9 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			esc_html( bp_get_group_name( $parent_group ) )
 		);
 
-		printf( __( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name );
+		if ( ! empty( $parent_group_id ) ) {
+			printf( __( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name );
+		}
 	}
 } else {
 	bp_nouveau_user_feedback( 'group-requested-membership' );
