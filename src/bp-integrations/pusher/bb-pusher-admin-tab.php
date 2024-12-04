@@ -202,7 +202,7 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_pusher_tutorial() {
 		?>
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 				echo esc_url(
 					bp_get_admin_url(
