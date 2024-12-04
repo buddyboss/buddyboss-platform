@@ -533,7 +533,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				?>
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" href="
+				<a class="button" target="_blank" href="
 				<?php
 				echo esc_url(
 					bp_get_admin_url(
