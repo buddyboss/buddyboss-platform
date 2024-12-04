@@ -11,7 +11,7 @@
 ?>
 <script type="text/html" id="tmpl-editor-toolbar">
 		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
-			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
 				<span class="bb-icon-l bb-icon-font"></span>
 			</a>
 		</div>

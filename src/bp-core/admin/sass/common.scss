@@ -44,6 +44,8 @@ TABLE OF CONTENTS:
 19.0 Reactions Settings
 ------------------------------------------------------------------------------*/
 
+@import "tooltips";
+
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
  *----------------------------------------------------------------------------*/
@@ -2006,6 +2008,20 @@ tr.child-no-padding-first td {
 	padding: 15px 10px 5px;
 }
 
+@media screen and (max-width: 782px) {
+
+	.section-bp_registration {
+
+		tr.child-no-padding,
+		tr.child-no-padding-first {
+
+			td {
+				padding-left: 0;
+			}
+		}
+	}
+}
+
 td.inviter.column-inviter strong img {
 	float: left;
 	margin-right: 10px;
@@ -2287,7 +2303,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 
 /*Deactivation Popup*/
-#bp-hello-container.deactivation-popup {
+#bp-hello-container.deactivation-popup,
+#bb-hello-container.deactivation-popup {
 	top: 50%;
 	bottom: initial;
 	transform: translateY(-50%);
@@ -2296,7 +2313,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
 	max-width: 640px;
 	margin: 0 auto;
 
-	.bp-hello-footer {
+	.bp-hello-footer,
+	.bb-hello-footer {
 		position: static;
 		padding: 10px 23px;
 
@@ -2306,7 +2324,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 	}
 
-	.bp-hello-content {
+	.bp-hello-content,
+	.bb-hello-content {
 		height: auto;
 		padding: 20px 23px;
 
@@ -2352,6 +2371,16 @@ h2.has_tutorial_btn {
 
 		p {
 			margin: 0;
+		}
+
+		.bb-button_filled {
+			color: #fff;
+			background: #2271b1;
+
+			&:hover {
+				background: #135e96;
+				border-color: transparent;
+			}
 		}
 
 	}
@@ -2462,8 +2491,7 @@ h2.has_tutorial_btn {
 }
 
 #bp_web_push_notification_settings,
-#bp_media_settings_symlinks,
-#bp_privacy {
+#bp_media_settings_symlinks {
 
 	.bp-feedback {
 		box-shadow: none;
@@ -3647,6 +3675,23 @@ table.moderations {
 		}
 
 	}
+
+	.bp-block-user {
+
+		&.disabled {
+			cursor: default;
+		}
+
+		&[data-bp-tooltip] {
+			display: inline-block;
+
+			&:after {
+				white-space: normal;
+				width: 210px;
+				text-align: center;
+			}
+		}
+	}
 }
 
 .buddyboss_page_bp-moderation {
@@ -3879,6 +3924,28 @@ table.moderations .column-member {
 
 		.bb-hide-pw.bb-show-pass .bb-icon::before {
 			content: "\ee6a";
+		}
+	}
+}
+
+table.users {
+
+	.suspend,
+	.unsuspend {
+
+		a.disabled {
+			cursor: default;
+		}
+
+		a.disabled[data-bp-tooltip] {
+			display: inline-block;
+
+			&:after {
+				white-space: normal;
+				width: 210px;
+				text-align: center;
+				z-index: 9999;
+			}
 		}
 	}
 }
@@ -4148,6 +4215,79 @@ table.moderations .column-member {
 		}
 	}
 }
+
+/*------------------------------------------------------------------------------
+ * Telemetry Settings
+ *----------------------------------------------------------------------------*/
+
+.bb-telemetry-notice.notice-info {
+	display: flex;
+	border-left-color: #e0623d;
+	border-radius: 4px;
+	padding: 0;
+
+	.bb-telemetry-notice_content {
+		padding-left: 20px;
+	}
+
+	.bb-telemetry-notice_logo {
+		background-color: rgba(224, 98, 61, 0.1);
+		padding: 15px 10px;
+		color: #e0623d;
+		font-size: 28px;
+	}
+
+	.bb-telemetry-notice_heading {
+		font-size: 16px;
+		margin: 1.2em 0 0.5em;
+	}
+
+	p {
+		margin-bottom: 15px;
+	}
+
+	a.button {
+		padding: 2px 16px;
+		display: inline-block;
+		margin-bottom: 5px;
+		border-radius: 5px;
+
+		&:after {
+			font-size: 16px;
+			content: "\ee68";
+			font-family: bb-icons;
+			font-weight: 400;
+			margin-left: 5px;
+		}
+	}
+
+	.notice-dismiss:before {
+		font-size: 20px;
+		content: "\e828";
+		font-family: bb-icons;
+	}
+
+	#loco-admin.wrap & {
+		border: 1px solid #c3c4c7;
+		border-left: 4px solid #e0623d;
+		padding: 0;
+	}
+}
+
+.section-bb_advanced_telemetry {
+
+	label[for="complete_reporting"] {
+		margin-right: 15px;
+	}
+
+	.bb-telemetry-tutorial-link:after {
+		content: "\ee68";
+		font-family: bb-icons;
+		font-size: 14px;
+		margin-left: 5px;
+	}
+}
+
 // Integrations Listing
 .bb-integrations-section h1.bb-advance-heading {
 	max-width: 900px;
