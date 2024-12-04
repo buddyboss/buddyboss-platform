@@ -28,7 +28,7 @@ function bp_core_admin_get_directory_pages() {
 			if ( isset( $bp->{$component_id} ) && ! empty( $bp->{$component_id}->has_directory ) ) {
 
 				// The component->name property was introduced in BP 1.5, so we must provide a fallback.
-				$directory_pages[ $component_id ] = ! empty( $bp->{$component_id}->name ) ? $bp->{$component_id}->name : ucwords( $component_id );
+				$directory_pages[ $component_id ] = ! empty( $bp->{$component_id}->name ) ? esc_html__( $bp->{$component_id}->name, 'buddyboss' ) : ucwords( $component_id );
 			}
 		}
 	}
