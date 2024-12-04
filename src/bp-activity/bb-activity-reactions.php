@@ -516,7 +516,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			);
 
 			$tab_content         = $current_reacted['reactions'];
-			$popup_heading       = $current_tabs['icon_text'];
+			$popup_heading       = 'likes' === strtolower( $current_tabs['name'] ) && ! bb_is_reaction_emotions_enabled() ? $popup_heading : $current_tabs['icon_text'];
 			$popup_heading_count = $current_tabs['total_count'];
 			$total_pages         = $current_tabs['total_pages'];
 
