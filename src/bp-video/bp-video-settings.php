@@ -203,7 +203,7 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
 function bp_video_uploading_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url( // phpcs:ignore
 			add_query_arg(
