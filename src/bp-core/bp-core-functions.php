@@ -2411,7 +2411,7 @@ function bp_core_load_buddypress_textdomain() {
 	}
 	return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 }
-add_action( 'init', 'bp_core_load_buddypress_textdomain' );
+add_action( 'init', 'bp_core_load_buddypress_textdomain', 0 );
 
 /**
  * A JavaScript-free implementation of the search functions in BuddyPress.
