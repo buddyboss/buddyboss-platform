@@ -2352,43 +2352,54 @@ function bp_is_get_request() {
  * @return bool True on success, false on failure.
  */
 function bp_core_load_buddypress_textdomain() {
+	global $wp_version;
 	$domain = 'buddyboss';
 
-	/**
-	 * Filters the locale to be loaded for the language files.
-	 *
-	 * @since BuddyPress 1.0.2
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
+	if ( version_compare( $wp_version, '6.7', '<=' ) ) {
+		/**
+		 * Filters the locale to be loaded for the language files.
+		 *
+		 * @since BuddyPress 1.0.2
+		 *
+		 * @param string $value Current locale for the install.
+		 */
+		$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
 
-	$plugin_dir = BP_PLUGIN_DIR;
-	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-		$plugin_dir = $plugin_dir . 'src';
-	}
+		$plugin_dir = BP_PLUGIN_DIR;
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$plugin_dir = $plugin_dir . 'src';
+		}
 
-	/**
-	 * Filters the locations to load language files from.
-	 *
-	 * @since BuddyPress 2.2.0
-	 *
-	 * @param array $value Array of directories to check for language files in.
-	 */
-	$locations = apply_filters(
-		'buddypress_locale_locations',
-		array(
-			trailingslashit( WP_LANG_DIR . '/' . $domain ),
-			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( $plugin_dir . '/languages' ),
-		)
-	);
+		/**
+		 * Filters the locations to load language files from.
+		 *
+		 * @since BuddyPress 2.2.0
+		 *
+		 * @param array $value Array of directories to check for language files in.
+		 */
+		$locations = apply_filters(
+			'buddypress_locale_locations',
+			array(
+				trailingslashit( WP_LANG_DIR . '/' . $domain ),
+				trailingslashit( WP_LANG_DIR ),
+				trailingslashit( $plugin_dir . '/languages' ),
+			)
+		);
 
-	unload_textdomain( $domain );
+		unload_textdomain( $domain );
 
-	// Try custom locations in WP_LANG_DIR.
-	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
+		// Try custom locations in WP_LANG_DIR.
+		foreach ( $locations as $location ) {
+			if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
+				return true;
+			}
+		}
+	} else {
+		/**
+		 * In most cases, WordPress already loaded BuddyBoss textdomain
+		 * thanks to the `_load_textdomain_just_in_time()` function.
+		 */
+		if ( is_textdomain_loaded( $domain ) ) {
 			return true;
 		}
 	}
@@ -9239,7 +9250,7 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
