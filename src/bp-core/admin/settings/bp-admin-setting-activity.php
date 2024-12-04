@@ -363,7 +363,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function bb_admin_activity_comments_settings_tutorial() {
 		?>
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo esc_url(
 				bp_get_admin_url(
