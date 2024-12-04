@@ -1555,6 +1555,11 @@ input#send-to-input {
 	}
 }
 
+#send_message_form .dropzone {
+
+	@include center-vert();
+}
+
 .bp-messages-search-form #user_messages_search_reset {
 	font-size: 13px;
 	color: $light-text;
