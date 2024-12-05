@@ -3715,6 +3715,10 @@ table.moderations {
 			}
 		}
 	}
+
+	&.wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+		display: none;
+	}
 }
 
 .buddyboss_page_bp-moderation {

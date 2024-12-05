@@ -3428,6 +3428,10 @@ table.moderations .bp-block-user[data-bp-tooltip]:after {
   text-align: center;
 }
 
+table.moderations.wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+  display: none;
+}
+
 .buddyboss_page_bp-moderation .dashicons {
   font-weight: 700;
 }
