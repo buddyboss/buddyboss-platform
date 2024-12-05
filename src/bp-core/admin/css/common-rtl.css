@@ -1141,6 +1141,13 @@ body.post-type-reply #edit-slug-box {
   .bp-new-notice {
     margin-bottom: 0.5em;
   }
+  #bp-activities-form .wp-list-table th.column-primary.column-author,
+  form#bp-groups-form .wp-list-table th.column-primary.column-comment {
+    width: auto;
+  }
+  .wp-list-table.activities tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before, .wp-list-table.groups tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+    font-weight: 600;
+  }
 }
 
 /*
