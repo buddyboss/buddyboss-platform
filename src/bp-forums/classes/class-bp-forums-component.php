@@ -36,7 +36,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		public function __construct() {
 			parent::start(
 				'forums',
-				__( 'Forums', 'buddyboss' ),
+				'Forums',
 				buddypress()->plugin_dir
 			);
 			// $this->includes();
