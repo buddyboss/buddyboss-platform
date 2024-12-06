@@ -27,7 +27,7 @@ class BP_Friends_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'friends',
-			'Connections',
+			__( 'Connections', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 60,

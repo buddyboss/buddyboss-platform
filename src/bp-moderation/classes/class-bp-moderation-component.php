@@ -27,7 +27,7 @@ class BP_Moderation_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'moderation',
-			'Moderation',
+			__( 'Moderation', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,

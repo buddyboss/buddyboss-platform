@@ -60,7 +60,7 @@ class BP_Video_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'video',
-			'Videos',
+			__( 'Videos', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,

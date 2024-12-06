@@ -67,7 +67,7 @@ class BP_Document_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'document',
-			'Documents',
+			__( 'Documents', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,

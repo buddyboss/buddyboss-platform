@@ -25,7 +25,7 @@ class BP_Performance_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'performance',
-			'API Caching',
+			__( 'API Caching', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
