@@ -24,16 +24,19 @@ if (
 	if ( ! empty( $receiver_arr ) && isset( $receiver_arr[1] ) && 0 < $receiver_arr[1] ) {
 		$receiver_id = $receiver_arr[1];
 
-		/**
-		 * Prevent infinite loop and fatal error caused by "bbp_set_current_user_default_role",
-		 * hooked to "bbp_setup_current_user", repeatedly triggering "bp_loggedin_user_id" through a chain of function call and hooks.
-		 */
-		remove_action( 'bbp_setup_current_user', 'bbp_set_current_user_default_role' );
-
 		add_filter(
 			'bp_loggedin_user_id',
 			function( $user_id ) use ( $receiver_id ) {
+				/**
+				 * Prevent infinite loop and fatal error caused by "bbp_set_current_user_default_role",
+				 * hooked to "bbp_setup_current_user", repeatedly triggering "bp_loggedin_user_id" through a chain of function call and hooks.
+				 */
+				remove_action( 'bbp_setup_current_user', 'bbp_set_current_user_default_role' );
+
 				wp_set_current_user( $receiver_id );
+
+				add_action( 'bbp_setup_current_user', 'bbp_set_current_user_default_role' );
+
 				return $receiver_id;
 			}
 		);
