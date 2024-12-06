@@ -603,3 +603,89 @@ div.profile_completion_wrap {
 	}
 
 }
+
+.bb-popup-card {
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	padding: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	min-width: 200px;
+	z-index: 999;
+
+	.acomments-modal-open & {
+		z-index: 999985;
+	}
+}
+
+.bb-card-body {
+	display: flex;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+.bb-card-avatar {
+	position: relative;
+
+	img {
+		width: 88px;
+		height: auto;
+		min-width: 88px;
+	}
+
+	.card-profile-status {
+		position: absolute;
+		display: inline-block;
+		width: 13px;
+		height: 13px;
+		background-color: #14b550;
+		border: 2px solid #fff;
+		border-radius: 50%;
+		right: 7px;
+		top: 5px;
+	}
+}
+
+.bb-card-heading {
+	margin: 0 0 10px;
+}
+
+.bb-card-profile-type {
+
+	.bp-member-type {
+		background-color: #fafafa;
+		padding: 4px 8px;
+		font-size: 11px;
+	}
+}
+
+.bb-card-meta {
+
+	span {
+		font-size: 14px;
+		line-height: 21px;
+	}
+
+	> span {
+		margin: 0 5px 0 0;
+		white-space: nowrap;
+	}
+}
+
+.bb-card-footer {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 30px 0 0;
+
+	.card-button {
+		display: inline-block;
+		text-align: center;
+		white-space: nowrap;
+		font-size: 14px;
+		font-weight: 500;
+		padding: 0 15px;
+		height: 30px;
+		line-height: 28px;
+	}
+}

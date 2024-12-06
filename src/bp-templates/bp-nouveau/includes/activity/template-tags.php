@@ -2464,6 +2464,26 @@ function bb_nouveau_get_edit_activity_comment_data() {
 	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
+/**
+ * Output the profile card edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_nouveau_edit_profile_card_data() {
+	echo bb_nouveau_get_edit_profile_card_data();
+}
+
+/**
+ * Get the profile card edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @return string The profile card edit data.
+ */
+function bb_nouveau_get_edit_profile_card_data() {
+	return htmlentities( wp_json_encode( bb_profile_card_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
 
 /**
  * Get edited activity comment log.
