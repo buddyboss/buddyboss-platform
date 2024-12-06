@@ -12606,13 +12606,30 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   gap: 24px;
 }
 
+.bb-card-avatar {
+  position: relative;
+}
+
 .bb-card-avatar img {
   width: 88px;
   height: auto;
+  min-width: 88px;
+}
+
+.bb-card-avatar .card-profile-status {
+  position: absolute;
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  background-color: #14b550;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  left: 7px;
+  top: 5px;
 }
 
 .bb-card-heading {
-  margin: 0 0 1em;
+  margin: 0 0 10px;
 }
 
 .bb-card-profile-type .bp-member-type {
@@ -12621,17 +12638,32 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   font-size: 11px;
 }
 
-.bb-card-entity .bb-card-actions {
+.bb-card-meta span {
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.bb-card-meta > span {
+  margin: 0 0 0 5px;
+  white-space: nowrap;
+}
+
+.bb-card-footer {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin: 30px 0 0;
 }
 
-.bb-card-entity .bb-card-actions .card-button {
+.bb-card-footer .card-button {
+  display: inline-block;
+  text-align: center;
   white-space: nowrap;
   font-size: 14px;
   font-weight: 500;
-  padding: 6px 15px;
+  padding: 0 15px;
+  height: 30px;
+  line-height: 28px;
 }
 
 /**

@@ -4485,7 +4485,7 @@ window.bp = window.bp || {};
 
 			// Populate popup with data
 			$( '.bb-card-avatar img' ).attr( 'src', data.avatar_url );
-			$( '.bb-card-actions .card-button-profile' ).attr( 'href', data.user_link );
+			$( '.bb-card-footer .card-button-profile' ).attr( 'href', data.user_link );
 			$( '.bb-card-heading' ).text( data.name );
 			$( '.bb-card-profile-type' ).html( data.type );
 
