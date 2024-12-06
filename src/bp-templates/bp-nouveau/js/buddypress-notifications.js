@@ -26,6 +26,8 @@ window.bp = window.bp || {};
 
 			// Listen to events ("Add hooks!")
 			this.addListeners();
+
+			this.prepareDocument();
 		},
 
 		/**
