@@ -26,7 +26,7 @@ class BP_Search_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'search',
-			'Search',
+			__( 'Search', 'buddyboss' ),
 			buddypress()->plugin_dir
 		);
 	}

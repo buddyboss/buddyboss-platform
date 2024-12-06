@@ -102,7 +102,7 @@ class BP_Groups_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'groups',
-			'Social Groups',
+			__( 'Social Groups', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 70,
