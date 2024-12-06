@@ -500,6 +500,14 @@ function bp_core_load_buddypress_textdomain() {
 				return true;
 			}
 		}
+
+		$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
+		$buddyboss_lang_path = $plugin_folder . '/languages';
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$buddyboss_lang_path = $plugin_folder . '/src/languages';
+		}
+
+		return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 	}
 
 	return false;
