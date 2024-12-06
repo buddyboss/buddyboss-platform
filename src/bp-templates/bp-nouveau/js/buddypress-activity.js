@@ -962,13 +962,6 @@ window.bp = window.bp || {};
 									target.removeClass( 'loading' );
 								}
 							);
-
-							// Add flag for ajax load for getting reactions.
-							if ( 'activity_comment' === item_type ) {
-								$( '#acomment' + '-' + item_id ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
-							} else {
-								$( '#' + item_type + '-' + item_id ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
-							}
 						}
 
 						// Add "Likes/Emotions" menu item on activity directory nav menu.
