@@ -127,7 +127,7 @@ if ( bp_is_group_create() ) {
 	<dt class="gen-members-section section-title">
 		<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ), 'buddyboss' ); ?>
 		<div class="group-search members-search bp-search search-wrapper" data-bp-search="manage_group_members">
-			<input id="bb_search_group_members" type="search" placeholder="Search Members" name="group_members_search" />
+			<input id="bb_search_group_members" type="search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>" name="group_members_search" />
 			<button type="reset" class="search-form_reset">
 				<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
