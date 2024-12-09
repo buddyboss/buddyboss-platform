@@ -1440,6 +1440,22 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
 
+	$privacy_check = bb_validate_activity_privacy(
+		array(
+			'activity_id'     => $activity_id,
+			'validate_action' => 'view_activity',
+		)
+	);
+
+	// Bail if activity privacy restrict.
+	if ( is_wp_error( $privacy_check ) ) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+			)
+		);
+	}
+
 	$activities_template = new stdClass();
 	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
 	if ( empty( $parent_commment ) ) {
