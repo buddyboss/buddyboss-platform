@@ -616,6 +616,13 @@ div.profile_completion_wrap {
 	.acomments-modal-open & {
 		z-index: 999985;
 	}
+
+	&.loading {
+
+		.bb-card-content {
+			display: none;
+		}
+	}
 }
 
 .bb-card-body {

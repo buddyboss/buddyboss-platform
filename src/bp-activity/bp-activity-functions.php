@@ -6420,26 +6420,10 @@ function bb_profile_card_get_edit_data( $activity_comment_id = 0 ) {
 	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
 	if ( false === $edit_data ) {
 		$activity_comment_user_id  = bp_get_activity_comment_user_id();
-		$activity_comment_user_nickname = bp_activity_get_user_mentionname( $activity_comment_user_id );
-		$activity_comment_user_name = bp_get_activity_comment_name();
-		$activity_comment_user_link = bp_get_activity_comment_user_link();
-		$avatar_url = bp_core_fetch_avatar(
-			array(
-				'item_id' => $activity_comment_user_id,
-				'type'    => 'thumb',
-				'html'    => false,
-			)
-		);
-		$user_type = bp_get_user_member_type( $activity_comment_user_id );
 
 		$edit_data = array(
 			'id'               => $activity_comment_id,
 			'user_id'          => $activity_comment_user_id,
-			'nickname'         => $activity_comment_user_nickname,
-			'name'         	   => $activity_comment_user_name,
-			'user_link'        => $activity_comment_user_link,
-			'avatar_url'       => $avatar_url,
-			'type'       	   => $user_type,
 		);
 	}
 

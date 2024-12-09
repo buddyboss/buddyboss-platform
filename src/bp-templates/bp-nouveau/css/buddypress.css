@@ -12600,6 +12600,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   z-index: 999985;
 }
 
+.bb-popup-card.loading .bb-card-content {
+  display: none;
+}
+
 .bb-card-body {
   display: flex;
   align-items: flex-start;

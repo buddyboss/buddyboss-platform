@@ -4480,22 +4480,47 @@ window.bp = window.bp || {};
 			var popupTop = offset.top + $avatar.outerHeight() + 10;
   			var popupLeft = offset.left + $avatar.outerWidth() - 100;
 
+			var restUrl = '';
 			var $li = $avatar.closest( '.comment-item' );
-			var data = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
+			var cardData = JSON.parse( $li.attr( 'data-bp-profile-id' ) );
+			var memberId = cardData.user_id;
+			var url = restUrl + 'buddyboss/v1/members/' + memberId + '/info';
 
-			// Populate popup with data
-			$( '.bb-card-avatar img' ).attr( 'src', data.avatar_url );
-			$( '.bb-card-footer .card-button-profile' ).attr( 'href', data.user_link );
-			$( '.bb-card-heading' ).text( data.name );
-			$( '.bb-card-profile-type' ).html( data.type );
+			var $profileCard = $( '#profile-card' );
+			$profileCard.prepend( '<div class="bb-card-skeleton">loading...</div>' );
+			$profileCard.css( 'display', 'block' );
 
-			// Position popup near hovered avatar
-			$( '#profile-card' ).css( {
-				position: 'fixed',
-				top: popupTop - $( window ).scrollTop() + 'px',
-				left: popupLeft - $( window ).scrollLeft() + 'px',
-				display: 'block',
-			} );
+			$.ajax({
+				url: url,
+				method: 'GET',
+				beforeSend: function ( xhr ) {
+					// Position popup near hovered avatar
+					$profileCard
+						.css( {
+							position: 'fixed',
+							top: popupTop - $( window ).scrollTop() + 'px',
+							left: popupLeft - $( window ).scrollLeft() + 'px',
+							display: 'block',
+						} )
+						.addClass( 'loading' );
+				},
+				success: function ( data ) {
+					var member_type = data.member_types || 'member';
+
+					$profileCard.find( '.bb-card-skeleton' ).remove();
+					$profileCard.removeClass( 'loading' );
+
+					// Populate popup with data
+					$( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+					$( '.bb-card-footer .card-button-profile' ).attr( 'href', data.link );
+					$( '.bb-card-heading' ).text( data.profile_name );
+					$( '.bb-card-profile-type' ).html( data.member_type );
+				},
+				error: function ( xhr, status, error ) {
+					console.error( 'Error fetching member info:', error );
+					$profileCard.html( '<span>Failed to load data.</span>' );
+				}
+			});
 		},
 
 		checkHideProfilePopupCard: function () {
