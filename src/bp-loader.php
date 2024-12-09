@@ -32,7 +32,7 @@ if ( ! defined( 'BP_PLATFORM_API' ) ) {
 }
 
 // Load translation files.
-add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 9 );
+add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
 
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
@@ -458,7 +458,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
  * Load the buddyboss translation file for current language.
  *
  * @since BuddyPress 1.0.2
- * @since BuddyBoss [BBVERSION] Moved function from bp-core-functions.php
+ * @since BuddyBoss [BBVERSION] Moved function from bp-core-functions.php and made logic updates.
  *
  * @see load_textdomain() for a description of return values.
  *
@@ -466,11 +466,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
  */
 function bp_core_load_buddypress_textdomain() {
 	$domain = 'buddyboss';
-	if ( ! is_textdomain_loaded( $domain ) && defined( 'BP_PLUGIN_DIR' ) ) { 
+	if ( ! is_textdomain_loaded( $domain ) ) { 
 
-		$mofile_custom = sprintf( '%s-%s.mo', $domain, get_locale() );
-
-		$plugin_dir = BP_PLUGIN_DIR;
+		$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
+		$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
+		$plugin_dir      = $plugin_dir_path;
 		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
 			$plugin_dir = $plugin_dir . 'src';
 		}
@@ -501,7 +501,7 @@ function bp_core_load_buddypress_textdomain() {
 			}
 		}
 
-		$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
+		$plugin_folder       = plugin_basename( $plugin_dir_path );
 		$buddyboss_lang_path = $plugin_folder . '/languages';
 		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
 			$buddyboss_lang_path = $plugin_folder . '/src/languages';
