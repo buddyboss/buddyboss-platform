@@ -5193,19 +5193,23 @@ body.buddyboss-theme {
 	position: relative;
 	z-index: 1;
 
-	.subnav-filters-opener {
-		border-radius: 6px;
-		border: 1px solid #f2f4f5;
-		background: #f2f4f5;
-		height: 30px;
-		width: 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
+	&.bb-subnav-filters-search {
+		margin-right: auto;
+
+		.subnav-filters-opener {
+			border-radius: 6px;
+			border: 1px solid #f2f4f5;
+			background: #f2f4f5;
+			height: 30px;
+			width: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
 	}
 
-	.subnav-filters {
+	.subnav-filters-modal {
 		opacity: 0;
 		visibility: hidden;
 		position: absolute;
@@ -5237,12 +5241,12 @@ body.buddyboss-theme {
 
 	&.active {
 
-		.subnav-filters-opener {
+		&.bb-subnav-filters-search .subnav-filters-opener {
 			border-color: #dee2e4;
 			background: #dee2e4;
 		}
 
-		.subnav-filters {
+		.subnav-filters-modal {
 			opacity: 1;
 			visibility: visible;
 		}
