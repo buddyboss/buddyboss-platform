@@ -5189,6 +5189,66 @@ body.buddyboss-theme {
 	}
 }
 
+.bb-subnav-filters-container {
+	position: relative;
+	z-index: 1;
+
+	.subnav-filters-opener {
+		border-radius: 6px;
+		border: 1px solid #f2f4f5;
+		background: #f2f4f5;
+		height: 30px;
+		width: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+	.subnav-filters {
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		top: 35px;
+		left: 0;
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+		padding: 7px;
+
+		form.bp-dir-search-form {
+			border: 0;
+
+			&:focus-within {
+
+				.buddypress-wrap & {
+					box-shadow: none;
+				}
+			}
+
+			input[type="search"] {
+
+				#buddypress & {
+					box-shadow: none;
+				}
+			}
+		}
+	}
+
+	&.active {
+
+		.subnav-filters-opener {
+			border-color: #dee2e4;
+			background: #dee2e4;
+		}
+
+		.subnav-filters {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
 .directory.media,
 .directory.document,
 .directory.video {

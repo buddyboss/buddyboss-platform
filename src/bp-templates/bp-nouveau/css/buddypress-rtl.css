@@ -26079,6 +26079,57 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   height: 34px;
 }
 
+.bb-subnav-filters-container {
+  position: relative;
+  z-index: 1;
+}
+
+.bb-subnav-filters-container .subnav-filters-opener {
+  border-radius: 6px;
+  border: 1px solid #f2f4f5;
+  background: #f2f4f5;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bb-subnav-filters-container .subnav-filters {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 35px;
+  right: 0;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+  padding: 7px;
+}
+
+.bb-subnav-filters-container .subnav-filters form.bp-dir-search-form {
+  border: 0;
+}
+
+.buddypress-wrap .bb-subnav-filters-container .subnav-filters form.bp-dir-search-form:focus-within {
+  box-shadow: none;
+}
+
+#buddypress .bb-subnav-filters-container .subnav-filters form.bp-dir-search-form input[type="search"] {
+  box-shadow: none;
+}
+
+.bb-subnav-filters-container.active .subnav-filters-opener {
+  border-color: #dee2e4;
+  background: #dee2e4;
+}
+
+.bb-subnav-filters-container.active .subnav-filters {
+  opacity: 1;
+  visibility: visible;
+}
+
 .directory.media .bp-subnavs li.selected a:hover span,
 .directory.document .bp-subnavs li.selected a:hover span,
 .directory.video .bp-subnavs li.selected a:hover span {

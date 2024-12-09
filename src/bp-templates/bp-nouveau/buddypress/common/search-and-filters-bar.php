@@ -9,7 +9,7 @@
  */
 
 ?>
-<div class="subnav-filters-container">
+<div class="bb-subnav-filters-container">
 	<div class="subnav-filters-opener">
 		<i class="bb-icon-f bb-icon-search"></i>	
 	</div>
