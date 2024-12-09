@@ -4107,7 +4107,12 @@ window.bp = window.bp || {};
 
 		openActivityFilter: function ( e ) {
 			e.preventDefault();
-			$( e.currentTarget ).parent( '.bb-subnav-filters-container' ).addClass( 'active' ).find( 'input[type="search"]' ).focus();
+			var $parent = $( e.currentTarget ).parent( '.bb-subnav-filters-container' );
+			$parent.addClass( 'active' );
+
+			if ( $parent.find( 'input[type="search"]' ).length ){
+				$parent.find( 'input[type="search"]' ).focus();
+			}
 		},
 
 		closeActivityFilter: function ( e ) {
