@@ -83,7 +83,7 @@
 
 	<div class="subnav-filters-modal">
 		<ul>
-			<li><a href="#" data-value="all_posts">All posts</a></li>
+			<li><a href="#" data-value="all_posts" class="selected">All posts</a></li>
 			<li><a href="#" data-value="created_by_me">Created by me</a></li>
 			<li><a href="#" data-value="from_my_groups">From my groups</a></li>
 			<li><a href="#" data-value="from_my_connections">From my connections</a></li>
@@ -105,7 +105,7 @@
 
 	<div class="subnav-filters-modal">
 		<ul>
-			<li><a href="#" data-value="most_recent">Most recent</a></li>
+			<li><a href="#" data-value="most_recent" class="selected">Most recent</a></li>
 			<li><a href="#" data-value="recent_activity">Recent activity</a></li>
 		</ul>
 	</div>

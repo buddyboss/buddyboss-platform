@@ -26135,6 +26135,65 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   visibility: visible;
 }
 
+.bb-subnav-filters-container.bb-subnav-filters-filtering:not(:last-child) {
+  margin-left: 5px;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
+  display: flex;
+  cursor: pointer;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener span {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal {
+  right: auto;
+  left: -20px;
+  padding: 10px;
+  width: 230px;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal ul {
+  list-style: none;
+  margin: 0;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a {
+  display: block;
+  color: #5a5a5a;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 10px 16px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a.selected:after {
+  content: "\e876";
+  color: #385dff;
+  font-family: bb-icons;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
+  background-color: #f2f4f5;
+}
+
+.actvity-head-bar .bb-subnav-filters-label {
+  font-size: 14px;
+  margin-left: 4px;
+}
+
 .directory.media .bp-subnavs li.selected a:hover span,
 .directory.document .bp-subnavs li.selected a:hover span,
 .directory.video .bp-subnavs li.selected a:hover span {
