@@ -42,6 +42,9 @@ $total_dismissed_notifications = $dismissed_notifications ? count( $notification
 		<div class="bb-admin-header__nav">
 			<div class="bb-admin-nav">
 				<div class="bb-notifications-wrapepr">
+					<?php
+					do_action( 'bb_admin_header_actions' );
+					?>
 					<a href="javascript:void(0);" class="bb-admin-nav__button bb-admin-nav__notice" id="bb-notifications-button">
 						<i class="bb-icon-l bb-icon-bell"></i>
 						<?php

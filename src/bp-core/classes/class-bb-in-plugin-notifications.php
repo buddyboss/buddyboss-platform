@@ -7,13 +7,13 @@
  * @package BuddyBoss/Core
  */
 
-use \BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
-use \BuddyBossPlatform\GroundLevel\Container\Container;
-use \BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
-use \BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
-use \BuddyBossPlatform\GroundLevel\Mothership\Service as MoshService;
-use \BuddyBossPlatform\GroundLevel\Support\Concerns\Hookable;
-use \BuddyBossPlatform\GroundLevel\Support\Models\Hook;
+use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
+use BuddyBossPlatform\GroundLevel\Container\Container;
+use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
+use BuddyBossPlatform\GroundLevel\Mothership\Service as MoshService;
+use BuddyBossPlatform\GroundLevel\Support\Concerns\Hookable;
+use BuddyBossPlatform\GroundLevel\Support\Models\Hook;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -144,7 +144,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				 * plugin bootstrap via GrdLvl package.
 				 */
 
-//				self::init_mothership();
+				// self::init_mothership();
 				self::init_ipn();
 			}
 		}
@@ -155,15 +155,15 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		private static function init_ipn(): void {
 			// Set IPN Service parameters.
 			self::$container->addParameter( IPNService::PRODUCT_SLUG, 'buddyboss-platform' );
-			self::$container->addParameter( IPNService::PREFIX, 'bp' );
+			self::$container->addParameter( IPNService::PREFIX, 'bbglvl' );
 			self::$container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
 			self::$container->addParameter(
 				IPNService::USER_CAPABILITY,
-				apply_filters('bb-admin-capability', 'remove_users')
+				apply_filters( 'bb_admin_capability', 'remove_users' )
 			);
 			self::$container->addParameter(
 				IPNService::RENDER_HOOK,
-				'mepr_admin_header_actions'
+				'bb_admin_header_actions'
 			);
 			self::$container->addParameter(
 				IPNService::THEME,
