@@ -23,7 +23,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'recaptcha',
-			__( 'reCAPTCHA', 'buddyboss' ),
+			'reCAPTCHA',
 			'recaptcha',
 			array(
 				'required_plugin' => array(),

@@ -31,10 +31,7 @@ class Requirements
 		$this->requirements = [
 			'bp_group_component' => [
 				'callback' => ['bp_is_active', ['groups']],
-				'error' => sprintf(
-		            __('BuddyBoss Platform component %s needs to be enabled.', 'buddyboss'),
-		            '<b>' . __('Social Groups', 'buddyboss') . '</b>'
-		        )
+				'error'    => 'BuddyBoss Platform component <b>Social Groups</b> needs to be enabled.'
 		    ]
 		];
 

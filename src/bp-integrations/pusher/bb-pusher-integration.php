@@ -23,7 +23,7 @@ class BB_Pusher_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'pusher',
-			__( 'Pusher', 'buddyboss' ),
+			'Pusher',
 			'pusher',
 			array(
 				'required_plugin' => array(),
