@@ -6,6 +6,9 @@ window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+	var hoverAvatar = false;
+	var hoverCardPopup = false;
+	var hideCardTimeout = null;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -922,6 +925,30 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
+
+			// Profile Popup Card
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
+				hoverAvatar = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+				bp.Nouveau.profilePopupCard.call(this);
+			} );
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar', function(){
+				hoverAvatar = false;
+				bp.Nouveau.checkHideProfilePopupCard();
+			} );
+			$( document ).on( 'mouseenter', '#profile-card', function(){
+				hoverCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			} );
+			$( document ).on( 'mouseleave', '#profile-card', function() {
+				hoverCardPopup = false;
+				bp.Nouveau.checkHideProfilePopupCard();
+			} );
+			$( window ).on( 'scroll', this.hideProfilePopupCard );
 		},
 
 		/**
@@ -4445,6 +4472,69 @@ window.bp = window.bp || {};
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
 				$( 'body' ).removeClass( 'more_option_open' );
 			}
+		},
+
+		profilePopupCard: function() {
+			var $avatar = $( this );
+			var offset = $avatar.offset();
+			var popupTop = offset.top + $avatar.outerHeight() + 10;
+  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
+
+			var restUrl = '';
+			var $li = $avatar.closest( '.comment-item' );
+			var cardData = JSON.parse( $li.attr( 'data-bp-profile-id' ) );
+			var memberId = cardData.user_id;
+			var restUrl = BB_Nouveau_Profile.site_rest_url;
+			var url = restUrl + '/members/' + memberId + '/info';
+
+			var $profileCard = $( '#profile-card' );
+			$profileCard.prepend( '<div class="bb-card-skeleton">loading...</div>' );
+			$profileCard.css( 'display', 'block' );
+
+			$.ajax({
+				url: url,
+				method: 'GET',
+				beforeSend: function ( xhr ) {
+					// Position popup near hovered avatar
+					$profileCard
+						.css( {
+							position: 'fixed',
+							top: popupTop - $( window ).scrollTop() + 'px',
+							left: popupLeft - $( window ).scrollLeft() + 'px',
+							display: 'block',
+						} )
+						.addClass( 'loading' );
+				},
+				success: function ( data ) {
+					var member_type = data.member_types || 'member';
+
+					$profileCard.find( '.bb-card-skeleton' ).remove();
+					$profileCard.removeClass( 'loading' );
+
+					// Populate popup with data
+					$( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+					$( '.bb-card-footer .card-button-profile' ).attr( 'href', data.link );
+					$( '.bb-card-heading' ).text( data.profile_name );
+					$( '.bb-card-profile-type' ).html( data.member_type );
+				},
+				error: function ( xhr, status, error ) {
+					console.error( 'Error fetching member info:', error );
+					$profileCard.html( '<span>Failed to load data.</span>' );
+				}
+			});
+		},
+
+		checkHideProfilePopupCard: function () {
+			if ( !hoverAvatar && !hoverCardPopup ) {
+				hideCardTimeout = setTimeout( function() {
+					bp.Nouveau.hideProfilePopupCard();
+				}, 300 );
+			}
+		},
+
+		hideProfilePopupCard: function() {
+			$( '#profile-card' ).hide();
+			hideCardTimeout = null;
 		},
 	};
 
