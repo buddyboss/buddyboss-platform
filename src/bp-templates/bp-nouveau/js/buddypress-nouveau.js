@@ -4484,7 +4484,8 @@ window.bp = window.bp || {};
 			var $li = $avatar.closest( '.comment-item' );
 			var cardData = JSON.parse( $li.attr( 'data-bp-profile-id' ) );
 			var memberId = cardData.user_id;
-			var url = restUrl + 'buddyboss/v1/members/' + memberId + '/info';
+			var restUrl = BB_Nouveau_Profile.site_rest_url;
+			var url = restUrl + '/members/' + memberId + '/info';
 
 			var $profileCard = $( '#profile-card' );
 			$profileCard.prepend( '<div class="bb-card-skeleton">loading...</div>' );
