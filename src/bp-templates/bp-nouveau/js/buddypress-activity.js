@@ -4108,9 +4108,9 @@ window.bp = window.bp || {};
 
 		openActivityFilter: function ( e ) {
 			e.preventDefault();
-			$( '.bb-subnav-filters-container' ).removeClass( 'active' );
+			$( '.bb-subnav-filters-container' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
 			var $parent = $( e.currentTarget ).parent( '.bb-subnav-filters-container' );
-			$parent.addClass( 'active' );
+			$parent.addClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'true' );
 
 			if ( $parent.find( 'input[type="search"]' ).length ){
 				$parent.find( 'input[type="search"]' ).focus();
@@ -4119,7 +4119,7 @@ window.bp = window.bp || {};
 
 		closeActivityFilter: function ( e ) {
 			if ( ! $( e.target ).closest( '.bb-subnav-filters-container' ).length ) {
-				$( '.bb-subnav-filters-container' ).removeClass( 'active' );
+				$( '.bb-subnav-filters-container' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
 			}
 		},
 
@@ -4128,7 +4128,7 @@ window.bp = window.bp || {};
 			var $this = $( e.currentTarget );
 			var $parent = $this.closest( '.bb-subnav-filters-container' );
 			$this.addClass( 'selected' ).parent().siblings().find( 'a' ).removeClass( 'selected' );
-			$parent.removeClass( 'active' );
+			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
 			$parent.find( 'input[type="hidden"]' ).val( $this.data( 'value' ) );
 			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
 

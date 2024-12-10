@@ -5198,10 +5198,11 @@ body.buddyboss-theme {
 
 		.subnav-filters-opener {
 			border-radius: 6px;
-			border: 1px solid #f2f4f5;
+			border: 1px solid transparent;
 			background: #f2f4f5;
 			height: 30px;
 			width: 30px;
+			padding: 0;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -5245,6 +5246,11 @@ body.buddyboss-theme {
 		&.bb-subnav-filters-search .subnav-filters-opener {
 			border-color: #dee2e4;
 			background: #dee2e4;
+
+			&:hover,
+			&:focus {
+				background: #dee2e4;
+			}
 		}
 
 		.subnav-filters-modal {
@@ -5261,7 +5267,19 @@ body.buddyboss-theme {
 
 		.subnav-filters-opener {
 			display: flex;
+			align-items: center;
+			padding: 0;
+			background-color: transparent;
+			border: 0;
+			color: var(--bb-body-text-color);
 			cursor: pointer;
+
+			&:focus,
+			&:hover {
+				background-color: transparent;
+				color: var(--bb-body-text-color);
+				box-shadow: none;
+			}
 
 			span {
 				font-size: 14px;

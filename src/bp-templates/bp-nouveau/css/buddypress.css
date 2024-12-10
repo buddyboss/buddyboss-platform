@@ -26090,10 +26090,11 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 
 .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener {
   border-radius: 6px;
-  border: 1px solid #f2f4f5;
+  border: 1px solid transparent;
   background: #f2f4f5;
   height: 30px;
   width: 30px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26130,6 +26131,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   background: #dee2e4;
 }
 
+.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener:hover, .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener:focus {
+  background: #dee2e4;
+}
+
 .bb-subnav-filters-container.active .subnav-filters-modal {
   opacity: 1;
   visibility: visible;
@@ -26141,7 +26146,18 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 
 .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
   display: flex;
+  align-items: center;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  color: var(--bb-body-text-color);
   cursor: pointer;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:focus, .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:hover {
+  background-color: transparent;
+  color: var(--bb-body-text-color);
+  box-shadow: none;
 }
 
 .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener span {

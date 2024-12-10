@@ -10,9 +10,9 @@
 
 ?>
 <div class="bb-subnav-filters-container bb-subnav-filters-search">
-	<div class="subnav-filters-opener">
+	<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 		<i class="bb-icon-f bb-icon-search"></i>	
-	</div>
+	</button>
 	<div class="subnav-filters filters no-ajax subnav-filters-modal" id="subnav-filters">
 		<?php
 		$bp_current_component = bp_current_component();
@@ -76,20 +76,20 @@
 <span class="bb-subnav-filters-label">Show</span>
 <div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
-	<div class="subnav-filters-opener">
+	<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
 		<span class="selected">all posts</span>
 		<i class="bb-icon-l bb-icon-angle-down"></i>
-	</div>
+	</button>
 
-	<div class="subnav-filters-modal">
-		<ul>
-			<li><a href="#" data-value="all_posts" class="selected">All posts</a></li>
-			<li><a href="#" data-value="created_by_me">Created by me</a></li>
-			<li><a href="#" data-value="from_my_groups">From my groups</a></li>
-			<li><a href="#" data-value="from_my_connections">From my connections</a></li>
-			<li><a href="#" data-value="im_mentioned_in">I'm mentioned in</a></li>
-			<li><a href="#" data-value="im_following">I'm following</a></li>
-			<li><a href="#" data-value="ihv_replied_to">I've replied to</a></li>
+	<div id="bb-subnav-filter-show" class="subnav-filters-modal">
+		<ul role="listbox">
+			<li role="option"><a href="#" data-value="all_posts" class="selected">All posts</a></li>
+			<li role="option"><a href="#" data-value="created_by_me">Created by me</a></li>
+			<li role="option"><a href="#" data-value="from_my_groups">From my groups</a></li>
+			<li role="option"><a href="#" data-value="from_my_connections">From my connections</a></li>
+			<li role="option"><a href="#" data-value="im_mentioned_in">I'm mentioned in</a></li>
+			<li role="option"><a href="#" data-value="im_following">I'm following</a></li>
+			<li role="option"><a href="#" data-value="ihv_replied_to">I've replied to</a></li>
 		</ul>
 	</div>
 	<input type="hidden" name="bb_activity_filter_show" value="all_posts" />
@@ -98,15 +98,15 @@
 <span class="bb-subnav-filters-label">by</span>
 <div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
-	<div class="subnav-filters-opener">
+	<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 		<span class="selected">most recent</span>
 		<i class="bb-icon-l bb-icon-angle-down"></i>
-	</div>
+	</button>
 
-	<div class="subnav-filters-modal">
-		<ul>
-			<li><a href="#" data-value="most_recent" class="selected">Most recent</a></li>
-			<li><a href="#" data-value="recent_activity">Recent activity</a></li>
+	<div class="subnav-filters-modal" id="bb-subnav-filter-by">
+		<ul role="listbox">
+			<li role="option"><a href="#" data-value="most_recent" class="selected">Most recent</a></li>
+			<li role="option"><a href="#" data-value="recent_activity">Recent activity</a></li>
 		</ul>
 	</div>
 	<input type="hidden" name="bb_activity_filter_by" value="most_recent" />
