@@ -5213,12 +5213,12 @@ body.buddyboss-theme {
 		opacity: 0;
 		visibility: hidden;
 		position: absolute;
-		top: 35px;
+		top: 40px;
 		left: 0;
 		border-radius: 8px;
 		background: #fff;
 		box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
-		padding: 7px;
+		padding: 9px 7px;
 
 		form.bp-dir-search-form {
 			border: 0;
@@ -5234,6 +5234,7 @@ body.buddyboss-theme {
 
 				#buddypress & {
 					box-shadow: none;
+					width: 260px;
 				}
 			}
 		}
