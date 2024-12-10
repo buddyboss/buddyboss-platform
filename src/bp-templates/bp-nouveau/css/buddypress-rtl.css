@@ -12685,7 +12685,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 
 .bb-card-avatar .card-profile-status {
   position: absolute;
-  display: inline-block;
+  display: none;
   width: 13px;
   height: 13px;
   background-color: #14b550;
@@ -12695,14 +12695,23 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   top: 5px;
 }
 
+.bb-card-avatar .card-profile-status.active {
+  display: inline-block;
+}
+
 .bb-card-heading {
   margin: 0 0 10px;
 }
 
-.bb-card-profile-type .bp-member-type {
+.bb-card-profile-type {
+  display: none;
   background-color: #fafafa;
   padding: 4px 8px;
   font-size: 11px;
+}
+
+.bb-card-profile-type.hasMemberType {
+  display: inline;
 }
 
 .bb-card-meta span {

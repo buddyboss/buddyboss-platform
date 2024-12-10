@@ -4505,25 +4505,32 @@ window.bp = window.bp || {};
 						.addClass( 'loading' );
 				},
 				success: function ( data ) {
-					var member_type = data.member_types || 'member';
 					var registeredDate = new Date( data.registered_date );
 					var joinedDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( registeredDate );
-					var activityDate = new Date( data.last_activity );
-					var lastActivityDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( activityDate );
-
-					console.log(data);
-					
+					var activeStatus = data.last_activity === 'Active now'
+						? 'active' 
+						: '';
+					var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 
+						? 'hasMemberType' 
+						: '';
+					var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0
+						? data.member_types[0].labels.singular_name 
+						: '';
 
 					$profileCard.removeClass( 'loading' );
 
 					// Populate popup with data
 					$( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+					$( '.card-profile-status' ).removeClass( 'active' ).addClass( activeStatus );
 					$( '.bb-card-footer .card-button-profile' ).attr( 'href', data.link );
 					$( '.bb-card-heading' ).text( data.profile_name );
-					$( '.bb-card-profile-type' ).html( data.member_type );
+					$( '.bb-card-profile-type' )
+						.removeClass( 'hasMemberType' )
+						.addClass( memberTypeClass )
+						.text( memberType );
 					$( '.card-meta-joined span' ).text( joinedDate );
-					$( '.card-meta-last-active' ).text( lastActivityDate );
-					$( '.card-meta-followers span' ).text( data.followers );
+					$( '.card-meta-last-active' ).text( data.last_activity );
+					$( '.card-meta-followers' ).text( data.followers );
 				},
 				error: function ( xhr, status, error ) {
 					console.error( 'Error fetching member info:', error );

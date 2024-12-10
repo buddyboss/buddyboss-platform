@@ -28,7 +28,7 @@
 	<div class="bb-card-content">
 		<div class="bb-card-body">
 			<div class="bb-card-avatar">
-				<span class="card-profile-status active"></span>
+				<span class="card-profile-status"></span>
 				<img src="" alt="">
 			</div>
 			<div class="bb-card-entity">
@@ -37,7 +37,7 @@
 				<div class="bb-card-meta">
 					<span class="card-meta-joined"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> <span></span></span>
 					<span class="card-meta-last-active"></span>
-					<span class="card-meta-followers"><span></span> <?php esc_html_e( 'followers', 'buddyboss' ); ?></span>
+					<span class="card-meta-followers"></span>
 				</div>
 			</div>
 		</div>
@@ -46,6 +46,12 @@
 				<a href="" class="card-button">
 					<i class="bb-icon-l bb-icon-comment"></i>
 					<?php esc_html_e( 'Message', 'buddyboss' ); ?>
+				</a>
+			</div>
+			<div class="bb-card-action-secondary">
+				<a href="" class="card-button card-button-follow">
+					<i class="bb-icon-l bb-icon-bullhorn"></i>
+					<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
 				</a>
 			</div>
 			<div class="bb-card-action-outline">

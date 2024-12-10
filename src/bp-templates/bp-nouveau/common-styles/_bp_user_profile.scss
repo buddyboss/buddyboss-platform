@@ -708,7 +708,7 @@ div.profile_completion_wrap {
 
 	.card-profile-status {
 		position: absolute;
-		display: inline-block;
+		display: none;
 		width: 13px;
 		height: 13px;
 		background-color: #14b550;
@@ -716,6 +716,10 @@ div.profile_completion_wrap {
 		border-radius: 50%;
 		right: 7px;
 		top: 5px;
+
+		&.active {
+			display: inline-block;
+		}
 	}
 }
 
@@ -724,11 +728,13 @@ div.profile_completion_wrap {
 }
 
 .bb-card-profile-type {
+	display: none;
+	background-color: #fafafa;
+	padding: 4px 8px;
+	font-size: 11px;
 
-	.bp-member-type {
-		background-color: #fafafa;
-		padding: 4px 8px;
-		font-size: 11px;
+	&.hasMemberType {
+		display: inline;
 	}
 }
 
