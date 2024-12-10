@@ -1060,35 +1060,35 @@ function bb_moderation_async_request_batch_process( $batch ) {
 add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
 
 /**
- * Filters the JOIN clause for friendship IDs to exclude suspended users.
+ * Function to exclude suspended users from the friendship query.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $join    The JOIN clause of the SQL query.
- * @param int    $user_id The user ID for whom friendship IDs are being fetched.
+ * @param array $where   Array of where conditions.
+ * @param int   $user_id User ID.
  *
- * @return string Modified JOIN clause of the SQL query.
+ * @return array
  */
-function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
-	$bp = buddypress();
+function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
+	global $wpdb;
+	$moderated_user_ids = bb_moderation_moderated_user_ids();
 
-	// Join with the wp_bp_suspend table to filter out users based on suspension criteria.
-	$join .= ' LEFT JOIN ' . $bp->moderation->table_name . ' s ON (';
-	$join .= ' (f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)';
-	$join .= ' AND s.item_type = "user"';
-	$join .= ' AND (s.hide_sitewide = 1 OR s.user_suspended = 1)';
-	$join .= ')';
+	// If user ID is also in fetched modarated user ids, remove it.
+	if ( in_array( $user_id, $moderated_user_ids, true ) ) {
+		$moderated_user_ids = array_diff( $moderated_user_ids, array( $user_id ) );
+	}
 
-	// Join with the wp_bp_moderation table to apply moderation checks.
-	$join .= ' LEFT JOIN ' . $bp->moderation->table_name_reports . ' m ON (';
-	$join .= ' s.id = m.moderation_id';
-	$join .= ' AND (';
-	$join .= ' (m.user_id = ' . $user_id . ' AND m.user_report = 0)';
-	$join .= ' OR m.user_report != 1';
-	$join .= ')';
-	$join .= ')';
+	// If there are any suspended users, add conditions to exclude them.
+	if ( ! empty( $moderated_user_ids ) ) {
+		$placeholders = implode( ', ', array_fill( 0, count( $moderated_user_ids ), '%d' ) );
+		$where[]      = $wpdb->prepare(
+			"(initiator_user_id NOT IN ( {$placeholders} ) AND friend_user_id NOT IN ( {$placeholders} ))",
+			...$moderated_user_ids,
+			...$moderated_user_ids
+		);
+	}
 
-	return $join;
+	return $where;
 }
 
-add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
