@@ -12740,6 +12740,16 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   padding: 0 15px;
   height: 30px;
   line-height: 28px;
+  width: 100%;
+}
+
+.bb-card-footer .bb-card-action {
+  flex: 1;
+}
+
+.bb-card-footer.bb-card-footer--plain .bb-card-action-primary,
+.bb-card-footer.bb-card-footer--plain .bb-card-action-secondary {
+  display: none;
 }
 
 /**

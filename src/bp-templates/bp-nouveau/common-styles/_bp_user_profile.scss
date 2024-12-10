@@ -766,5 +766,18 @@ div.profile_completion_wrap {
 		padding: 0 15px;
 		height: 30px;
 		line-height: 28px;
+		width: 100%;
+	}
+
+	.bb-card-action {
+		flex: 1;
+	}
+
+	&.bb-card-footer--plain {
+
+		.bb-card-action-primary,
+		.bb-card-action-secondary {
+			display: none;
+		}
 	}
 }

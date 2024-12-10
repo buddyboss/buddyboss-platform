@@ -42,19 +42,19 @@
 			</div>
 		</div>
 		<div class="bb-card-footer">
-			<div class="bb-card-action-primary">
-				<a href="" class="card-button">
+			<div class="bb-card-action bb-card-action-primary">
+				<a href="" class="card-button send-message">
 					<i class="bb-icon-l bb-icon-comment"></i>
 					<?php esc_html_e( 'Message', 'buddyboss' ); ?>
 				</a>
 			</div>
-			<div class="bb-card-action-secondary">
-				<a href="" class="card-button card-button-follow">
+			<div class="bb-card-action bb-card-action-secondary">
+				<button class="card-button card-button-follow secondary" data-bp-nonce="" id="" data-bp-btn-action="">
 					<i class="bb-icon-l bb-icon-bullhorn"></i>
 					<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
-				</a>
+				</button>
 			</div>
-			<div class="bb-card-action-outline">
+			<div class="bb-card-action bb-card-action-outline">
 				<a href="" class="card-button card-button-profile"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
 			</div>
 		</div>

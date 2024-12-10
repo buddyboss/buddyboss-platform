@@ -6422,8 +6422,8 @@ function bb_profile_card_get_edit_data( $activity_comment_id = 0 ) {
 		$activity_comment_user_id  = bp_get_activity_comment_user_id();
 
 		$edit_data = array(
-			'id'               => $activity_comment_id,
 			'user_id'          => $activity_comment_user_id,
+			'current_user_id'  => get_current_user_id(),
 		);
 	}
 
