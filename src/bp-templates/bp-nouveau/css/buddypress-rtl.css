@@ -12600,6 +12600,73 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   z-index: 999985;
 }
 
+.bb-popup-card .skeleton-card {
+  display: none;
+}
+
+.bb-popup-card.loading .bb-card-content {
+  display: none;
+}
+
+.bb-popup-card.loading .skeleton-card {
+  display: block;
+}
+
+.bb-popup-card.loading .skeleton-card-entity {
+  flex: 1;
+}
+
+.bb-popup-card.loading .skeleton-card-entity > div {
+  border-radius: 6px;
+}
+
+.bb-popup-card.loading .skeleton-card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.bb-popup-card.loading .skeleton-card-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+}
+
+.bb-popup-card.loading .skeleton-card-type {
+  max-width: 61px;
+  height: 21px;
+  margin-bottom: 6px;
+}
+
+.bb-popup-card.loading .skeleton-card-heading {
+  max-width: 100px;
+  height: 21px;
+  margin-bottom: 10px;
+}
+
+.bb-popup-card.loading .skeleton-card-meta {
+  max-width: 150px;
+  height: 15px;
+}
+
+.bb-popup-card.loading .skeleton-card-footer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 30px 0 0;
+}
+
+.bb-popup-card.loading .skeleton-card-footer .skeleton-card-button {
+  display: inline-block;
+  width: 33.33%;
+  height: 30px;
+  border-radius: 6px;
+}
+
+.bb-popup-card.loading .skeleton-card-footer .skeleton-card-button:first-of-type {
+  width: 66.66%;
+}
+
 .bb-card-body {
   display: flex;
   align-items: flex-start;

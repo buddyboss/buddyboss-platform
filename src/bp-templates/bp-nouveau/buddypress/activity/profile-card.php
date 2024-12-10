@@ -10,6 +10,21 @@
 ?>
 <div id="profile-card" class="bb-profile-card bb-popup-card" style="display: none;">
 
+	<div class="skeleton-card">
+		<div class="skeleton-card-body">
+			<div class="skeleton-card-avatar bb-loading-bg"></div>
+			<div class="skeleton-card-entity">
+				<div class="skeleton-card-type bb-loading-bg"></div>
+				<div class="skeleton-card-heading bb-loading-bg"></div>
+				<div class="skeleton-card-meta bb-loading-bg"></div>
+			</div>
+		</div>
+		<div class="skeleton-card-footer">
+			<div class="skeleton-card-button bb-loading-bg"></div>
+			<div class="skeleton-card-button bb-loading-bg"></div>
+		</div>
+	</div>
+
 	<div class="bb-card-content">
 		<div class="bb-card-body">
 			<div class="bb-card-avatar">
@@ -20,9 +35,9 @@
 				<div class="bb-card-profile-type"></div>
 				<h4 class="bb-card-heading"></h4>
 				<div class="bb-card-meta">
-					<span class="card-meta-joined">Joined Nov 2023</span>
-					<span class="card-meta-last-active">Active now</span>
-					<span class="card-meta-joined"><span>23</span> followers</span>
+					<span class="card-meta-joined"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> <span></span></span>
+					<span class="card-meta-last-active"></span>
+					<span class="card-meta-followers"><span></span> <?php esc_html_e( 'followers', 'buddyboss' ); ?></span>
 				</div>
 			</div>
 		</div>

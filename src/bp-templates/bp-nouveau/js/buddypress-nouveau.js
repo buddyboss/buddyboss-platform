@@ -4484,11 +4484,10 @@ window.bp = window.bp || {};
 			var $li = $avatar.closest( '.comment-item' );
 			var cardData = JSON.parse( $li.attr( 'data-bp-profile-id' ) );
 			var memberId = cardData.user_id;
-			var restUrl = BB_Nouveau_Profile.site_rest_url;
+			var restUrl = BP_Nouveau.rest_url;
 			var url = restUrl + '/members/' + memberId + '/info';
 
 			var $profileCard = $( '#profile-card' );
-			$profileCard.prepend( '<div class="bb-card-skeleton">loading...</div>' );
 			$profileCard.css( 'display', 'block' );
 
 			$.ajax({
@@ -4507,8 +4506,14 @@ window.bp = window.bp || {};
 				},
 				success: function ( data ) {
 					var member_type = data.member_types || 'member';
+					var registeredDate = new Date( data.registered_date );
+					var joinedDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( registeredDate );
+					var activityDate = new Date( data.last_activity );
+					var lastActivityDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( activityDate );
 
-					$profileCard.find( '.bb-card-skeleton' ).remove();
+					console.log(data);
+					
+
 					$profileCard.removeClass( 'loading' );
 
 					// Populate popup with data
@@ -4516,6 +4521,9 @@ window.bp = window.bp || {};
 					$( '.bb-card-footer .card-button-profile' ).attr( 'href', data.link );
 					$( '.bb-card-heading' ).text( data.profile_name );
 					$( '.bb-card-profile-type' ).html( data.member_type );
+					$( '.card-meta-joined span' ).text( joinedDate );
+					$( '.card-meta-last-active' ).text( lastActivityDate );
+					$( '.card-meta-followers span' ).text( data.followers );
 				},
 				error: function ( xhr, status, error ) {
 					console.error( 'Error fetching member info:', error );

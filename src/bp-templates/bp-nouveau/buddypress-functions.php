@@ -187,7 +187,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization.
 		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), PHP_INT_MAX );
 		add_filter( 'wp_enqueue_scripts', array( $this, 'presence_localize_scripts' ), PHP_INT_MAX ); // Enqueue theme script localization.
-		add_filter( 'wp_enqueue_scripts', array( $this, 'profile_localize_scripts' ), PHP_INT_MAX );
 
 		// Register login and forgot password popup link.
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
@@ -640,6 +639,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
+			'rest_url' 			 		 => home_url( 'wp-json/buddyboss/v1' ),
 		);
 
 		// If the Object/Item nav are in the sidebar.
@@ -732,19 +732,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param array $params Array of key/value pairs for AJAX usage.
 		 */
 		wp_localize_script( 'bp-nouveau', 'BB_Nouveau_Presence', apply_filters( 'presence_localize_scripts', $params ) );
-	}
-
-	/**
-	 * Load localizations for profile card script.
-	 *
-	 * @since BuddyBoss 2.7.50
-	 */
-	public function profile_localize_scripts() {
-		$params = array(
-			'site_rest_url' => home_url( 'wp-json/buddyboss/v1' ),
-		);
-	
-		wp_localize_script( 'bp-nouveau', 'BB_Nouveau_Profile', apply_filters( 'profile_localize_scripts', $params ) );
 	}
 
 	/**
