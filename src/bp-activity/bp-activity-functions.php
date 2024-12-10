@@ -5570,6 +5570,61 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 }
 
 /**
+ * Get the profile card data.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array|bool The profile card data or false otherwise.
+ */
+function bp_profile_card_get_edit_data( $activity_id = 0 ) {
+	global $activities_template;
+
+	// check activity empty or not.
+	if ( empty( $activity_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+
+	// get activity.
+	if ( ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	} else {
+		$activity = new BP_Activity_Activity( $activity_id );
+	}
+
+	// check activity exists.
+	if ( empty( $activity->id ) ) {
+		return false;
+	}
+
+	$edit_data = wp_cache_get( $activity->id, 'profile_card_data' );
+	if ( false === $edit_data ) {
+		$activity_user_id  = bp_get_activity_user_id();
+
+		$edit_data = array(
+			'user_id'          => $activity_user_id,
+			'current_user_id'  => get_current_user_id(),
+		);
+
+		// Set meta data to cache.
+		wp_cache_set( $activity->id, $edit_data, 'profile_card_data' );
+	}
+
+	/**
+	 * Filter here to edit the activity edit data.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $activity_data The Activity edit data.
+	 */
+	return apply_filters(
+		'bp_profile_card_get_edit_data',
+		$edit_data
+	);
+}
+
+/**
  * Return the link to report activity
  *
  * @since BuddyBoss 1.5.6

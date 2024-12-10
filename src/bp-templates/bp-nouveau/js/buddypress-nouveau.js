@@ -4572,8 +4572,8 @@ window.bp = window.bp || {};
 			var popupTop = offset.top + $avatar.outerHeight() + 10;
   			var popupLeft = offset.left + $avatar.outerWidth() - 100;
 
-			var $li = $avatar.closest( '.comment-item' );
-			var cardData = JSON.parse( $li.attr( 'data-bp-profile-id' ) );
+			var $li = $avatar.closest( '.comment-item, .activity-item' );
+			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
 			var memberId = cardData.user_id;
 			var currentUserId = cardData.current_user_id;
 			var restUrl = BP_Nouveau.rest_url;
