@@ -466,7 +466,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
  */
 function bp_core_load_buddypress_textdomain() {
 	$domain = 'buddyboss';
-	if ( ! is_textdomain_loaded( $domain ) ) { 
+	if ( ! is_textdomain_loaded( $domain ) ) {
 
 		$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
 		$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
@@ -496,7 +496,7 @@ function bp_core_load_buddypress_textdomain() {
 
 		// Try to load the translations from locations.
 		foreach ( $locations as $location ) {
-			if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
+			if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
 				return true;
 			}
 		}
