@@ -152,8 +152,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		private static function init_ipn(): void {
 			// Set IPN Service parameters.
 			self::$container->addParameter( IPNService::PRODUCT_SLUG, 'buddyboss-platform' );
-			self::$container->addParameter( IPNService::PREFIX, 'bb' );
-			self::$container->addParameter( IPNService::MENU_SLUG, 'memberpress' );
+			self::$container->addParameter( IPNService::PREFIX, 'bp' );
+			self::$container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
 			self::$container->addParameter(
 				IPNService::USER_CAPABILITY,
 				MeprUtils::get_mepr_admin_capability()
