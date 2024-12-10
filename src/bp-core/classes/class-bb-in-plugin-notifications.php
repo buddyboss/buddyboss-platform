@@ -156,7 +156,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			self::$container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
 			self::$container->addParameter(
 				IPNService::USER_CAPABILITY,
-				MeprUtils::get_mepr_admin_capability()
+				apply_filters('bb-admin-capability', 'remove_users')
 			);
 			self::$container->addParameter(
 				IPNService::RENDER_HOOK,
