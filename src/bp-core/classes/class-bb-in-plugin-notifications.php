@@ -96,6 +96,9 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			$this->source_url_args = array(
 				'sslverify' => false,
 			);
+
+			add_action( 'in_admin_header', array( $this, 'bb_admin_notification_header' ), 0 );
+			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_admin_notification_enqueues' ) );
 		}
 
 		/**
@@ -192,6 +195,67 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 					);
 				},
 				true
+			);
+		}
+
+		/**
+		 * Load the admin notification header template.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_admin_notification_header() {
+			global $bp;
+			// If a user is not on a relevant screen, don't show the notice.
+			$current_screen = get_current_screen();
+
+			if (
+				! $current_screen ||
+				(
+					false === strpos( $current_screen->base, 'buddyboss' ) &&
+					false === strpos( $current_screen->id, 'edit-bpm_category' ) &&
+					false === strpos( $current_screen->id, 'buddyboss_fonts' ) &&
+					! in_array( $current_screen->post_type, array( 'forum', 'topic', 'reply' ), true )
+				)
+			) {
+				unset( $current_screen );
+
+				return;
+			}
+
+			include trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/bb-in-plugin-notifications.php';
+		}
+
+		/**
+		 * Admin area enqueues.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_admin_notification_enqueues() {
+
+			wp_enqueue_style(
+				'bb-in-plugin-admin-notifications',
+				buddypress()->plugin_url . 'bp-core/admin/css/bb-admin-notifications.css',
+				array( 'bp-admin-common-css' ),
+				bp_get_version()
+			);
+
+			wp_enqueue_script(
+				'bb-in-plugin-admin-notifications',
+				buddypress()->plugin_url . 'bp-core/admin/js/bb-admin-notifications.js',
+				array( 'jquery' ),
+				bp_get_version(),
+				true
+			);
+
+			wp_localize_script(
+				'bb-in-plugin-admin-notifications',
+				'BBInPluginAdminNotifications',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'nonce'    => wp_create_nonce( 'bb-in-plugin-admin-notifications' ),
+				)
 			);
 		}
 	}
