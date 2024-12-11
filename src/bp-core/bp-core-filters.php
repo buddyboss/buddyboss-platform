@@ -2327,6 +2327,13 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 		}
 	}
 
+	$is_moderation_disabled = in_array( 'moderation', $db_component, true ) && ! in_array( 'moderation', $active_components, true );
+	$is_moderation_enabled  = ! in_array( 'moderation', $db_component, true ) && in_array( 'moderation', $active_components, true );
+
+	if ( $is_moderation_disabled || $is_moderation_enabled ) {
+		bb_create_background_member_friends_count();
+	}
+
 }
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
 
@@ -2650,27 +2657,3 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	return $hosts;
 }
-
-/**
- * Handles moderation component is activated or deactivated.
- * Runs a background update to recalculate member friends count if the moderation component status changes.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array $active_components Array of active components.
- *
- * @return void
- */
-function bb_update_moderation_component_status( $active_components = array() ) {
-    $active_components = array_keys( $active_components );
-    $db_components     = array_keys( bp_get_option( 'bp-active-components', array() ) );
-
-    $is_moderation_disabled = in_array( 'moderation', $db_components, true ) && ! in_array( 'moderation', $active_components, true );
-    $is_moderation_enabled  = ! in_array( 'moderation', $db_components, true ) && in_array( 'moderation', $active_components, true );
-
-    if ( $is_moderation_disabled || $is_moderation_enabled ) {
-        bb_create_background_member_friends_count();
-    }
-}
-
-add_action( 'bp_core_install', 'bb_update_moderation_component_status', 10, 1 );
