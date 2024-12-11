@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 ?>
-<div id="profile-card" class="bb-profile-card bb-popup-card" style="display: none;">
+<div id="profile-card" class="bb-profile-card bb-popup-card" data-bp-item-id="" data-bp-item-component="members" style="display: none;">
 
 	<div class="skeleton-card">
 		<div class="skeleton-card-body">
@@ -63,10 +63,12 @@
 					<?php endif; ?>
 				<?php endif; ?>
 				<div class="bb-card-action bb-card-action-secondary">
-					<button class="card-button card-button-follow secondary" data-bp-nonce="" id="" data-bp-btn-action="">
-						<i class="bb-icon-l bb-icon-bullhorn"></i>
-						<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
-					</button>
+					<div class="follow-button generic-button" id="">
+						<button class="card-button card-button-follow secondary follow-button" data-bp-nonce="http://localhost/bb-buddyboss-theme-demo/members/john/activity_follow/start-following/7/?_wpnonce=c94d1bdaed" id="" data-bp-btn-action="not_following">
+							<i class="bb-icon-l bb-icon-bullhorn"></i>
+							<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
+						</button>
+					</div>
 				</div>
 			<?php endif; ?>
 			<div class="bb-card-action bb-card-action-outline">

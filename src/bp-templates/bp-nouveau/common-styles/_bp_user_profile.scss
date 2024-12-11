@@ -766,7 +766,8 @@ div.profile_completion_wrap {
 	gap: 10px;
 	margin: 30px 0 0;
 
-	.card-button {
+	.card-button,
+	button.follow-button {
 		display: inline-block;
 		text-align: center;
 		white-space: nowrap;
@@ -776,6 +777,19 @@ div.profile_completion_wrap {
 		height: 30px;
 		line-height: 28px;
 		width: 100%;
+	}
+
+	.buddypress .buddypress-wrap & {
+
+		button {
+			width: 100%;
+
+			&.small {
+				min-height: 30px;
+				line-height: 30px;
+				height: 30px;
+			}
+		}
 	}
 
 	.bb-card-action {

@@ -12736,7 +12736,8 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   margin: 30px 0 0;
 }
 
-.bb-card-footer .card-button {
+.bb-card-footer .card-button,
+.bb-card-footer button.follow-button {
   display: inline-block;
   text-align: center;
   white-space: nowrap;
@@ -12746,6 +12747,16 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   height: 30px;
   line-height: 28px;
   width: 100%;
+}
+
+.buddypress .buddypress-wrap .bb-card-footer button {
+  width: 100%;
+}
+
+.buddypress .buddypress-wrap .bb-card-footer button.small {
+  min-height: 30px;
+  line-height: 30px;
+  height: 30px;
 }
 
 .bb-card-footer .bb-card-action {

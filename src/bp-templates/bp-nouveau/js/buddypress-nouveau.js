@@ -869,7 +869,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content, #profile-card' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
@@ -4502,8 +4502,14 @@ window.bp = window.bp || {};
 				.attr( 'data-bp-btn-action', '' )
 				.attr( 'id', '' );
 			$profileCard
+				.find( '.follow-button.generic-button' )
+				.removeClass('following not_following')
+				.attr( 'id', '' );
+			$profileCard
 				.find( '.send-message' )
 				.attr( 'href', '' );
+			$profileCard
+				.attr( 'data-bp-item-id', '' );
 		},
 
 		/**
@@ -4517,6 +4523,7 @@ window.bp = window.bp || {};
 			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
 			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
 			var isFollowing = data.is_following;
+			var followLabel = isFollowing ? 'following' : 'not_following';
 		
 			$profileCard
 				.find( '.bb-card-avatar img' )
@@ -4543,6 +4550,8 @@ window.bp = window.bp || {};
 			$profileCard
 				.find( '.card-meta-followers' )
 				.text( data.followers );
+			$profileCard
+				.attr( 'data-bp-item-id', data.id );
 		
 			if ( currentUser ) {
 				$profileCard
@@ -4552,8 +4561,14 @@ window.bp = window.bp || {};
 
 			var $followButton = $profileCard.find( '.card-button-follow' );
 			if ( $followButton.length ) {
-				$followButton.attr( 'id', 'follow-' + data.id );
-				$followButton.attr( 'data-bp-btn-action', isFollowing ? 'following' : 'not_following' );
+				$followButton
+					.attr( 'id', 'follow-' + data.id )
+					.attr( 'data-bp-btn-action', followLabel )
+					.addClass( followLabel );
+				$profileCard
+					.find( '.follow-button.generic-button' )
+					.addClass( followLabel )
+					.attr( 'id', 'follow-button-' + data.id );
 			}
 
 			var $messageButton = $profileCard.find( '.send-message' );
@@ -4579,6 +4594,9 @@ window.bp = window.bp || {};
 			$.ajax({
 				url: url,
 				method: 'GET',
+				headers: {
+					'BB-Logged-In-User-Id': currentUserId
+				},
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
 					// Position popup near hovered avatar
