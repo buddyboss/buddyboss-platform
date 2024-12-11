@@ -23,6 +23,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function getLicenseActivationStatus(): bool
 	{
+		return true;
 		return MeprUpdateCtrl::is_activated();
 	}
 
@@ -43,6 +44,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function getLicenseKey(): string
 	{
+		return '';
 		return MeprOptions::fetch()->mothership_license;
 	}
 

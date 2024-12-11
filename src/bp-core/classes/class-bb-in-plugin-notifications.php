@@ -117,10 +117,10 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_admin_notification_menu_append_count() {
-
-				if ( self::has_access() ) {
+			if ( self::has_access() ) {
 				BB_Grd_Lvl_Ctrl::init( true );
-				$fetch_store = BB_Grd_Lvl_Ctrl::getContainer()->get(IPNRetrieverService::class)->performEvent();
+				$fetch_store = BB_Grd_Lvl_Ctrl::getContainer()->get( IPNRetrieverService::class )->performEvent();
+				error_log( print_r( $fetch_store, 1 ) );
 				$notifications       = BB_Grd_Lvl_Ctrl::getContainer()->get( Store::class )->fetch()->notifications( false, Store::FILTER_UNREAD );
 				$notifications_count = count( $notifications );
 			} else {
@@ -133,7 +133,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 			<span class="awaiting-mod">
 				<span class="pending-count" id="bb_in_plugin_admin_menu_unread_count" aria-hidden="true">
-					<?php echo count( $notifications_count ); ?>
+					<?php echo $notifications_count ; ?>
 				</span>
 				<span class="comments-in-moderation-text screen-reader-text">
 					<?php
