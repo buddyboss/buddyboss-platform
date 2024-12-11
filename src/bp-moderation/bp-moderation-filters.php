@@ -1073,7 +1073,7 @@ function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id )
 	global $wpdb;
 	$moderated_user_ids = bb_moderation_moderated_user_ids();
 
-	// If user ID is also in fetched modarated user ids, remove it.
+	// If user ID is also in fetched moderated user ids, remove it.
 	if ( in_array( $user_id, $moderated_user_ids, true ) ) {
 		$moderated_user_ids = array_diff( $moderated_user_ids, array( $user_id ) );
 	}
