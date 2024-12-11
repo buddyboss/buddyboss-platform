@@ -646,6 +646,7 @@ class BuddyPress {
 			'BB_Base_Ctrl'                                 => 'core',
 			'BB_Hooks'                                     => 'core',
 			'BB_Utils'                                     => 'core',
+			'BB_Options'                                   => 'core',
 			'BB_Mothership_Plugin_Connector'               => 'core',
 			'BB_Grd_Lvl_Ctrl'                              => 'core',
 			'BB_Presence'                                  => 'core',

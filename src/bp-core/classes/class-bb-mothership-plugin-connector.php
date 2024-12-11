@@ -24,7 +24,6 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	public function getLicenseActivationStatus(): bool
 	{
 		return true;
-		return MeprUpdateCtrl::is_activated();
 	}
 
 	/**
@@ -34,7 +33,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function updateLicenseActivationStatus(bool $status): void
 	{
-		update_option('mepr_activated', $status);
+		update_option('bb_activated', $status);
 	}
 
 	/**
@@ -44,8 +43,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function getLicenseKey(): string
 	{
-		return '';
-		return MeprOptions::fetch()->mothership_license;
+		return BB_Options::fetch()->mothership_license;
 	}
 
 	/**
@@ -55,7 +53,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function updateLicenseKey(string $licenseKey): void
 	{
-		$opts                     = MeprOptions::fetch();
+		$opts                     = BB_Options::fetch();
 		$opts->mothership_license = $licenseKey;
 		$opts->store(false);
 	}
