@@ -6,6 +6,9 @@ window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+	var hoverAvatar = false;
+	var hoverCardPopup = false;
+	var hideCardTimeout = null;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -922,6 +925,30 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
+
+			// Profile Popup Card
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
+				hoverAvatar = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+				bp.Nouveau.profilePopupCard.call(this);
+			} );
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar', function(){
+				hoverAvatar = false;
+				bp.Nouveau.checkHideProfilePopupCard();
+			} );
+			$( document ).on( 'mouseenter', '#profile-card', function(){
+				hoverCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			} );
+			$( document ).on( 'mouseleave', '#profile-card', function() {
+				hoverCardPopup = false;
+				bp.Nouveau.checkHideProfilePopupCard();
+			} );
+			$( window ).on( 'scroll', this.hideProfilePopupCard );
 		},
 
 		/**
@@ -4445,6 +4472,153 @@ window.bp = window.bp || {};
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
 				$( 'body' ).removeClass( 'more_option_open' );
 			}
+		},
+
+		/**
+		 * Helper function to reset profile popup cards.
+		 */
+		resetProfileCard: function () {
+			var $profileCard = $( '#profile-card' );
+
+			$profileCard
+				.removeClass( 'loading' )
+				.find( '.bb-card-footer, .skeleton-card-footer' )
+				.removeClass( 'bb-card-footer--plain' );
+			$profileCard
+				.find( '.bb-card-profile-type' )
+				.removeClass( 'hasMemberType' )
+				.text( '' );
+			$profileCard
+				.find( '.card-profile-status' )
+				.removeClass( 'active' );
+			$profileCard
+				.find( '.card-meta-joined span, .card-meta-last-active, .card-meta-followers' )
+				.text( '' );
+			$profileCard
+				.find( '.bb-card-avatar img' )
+				.attr( 'src', '' );
+			$profileCard
+				.find( '.card-button-follow' )
+				.attr( 'data-bp-btn-action', '' )
+				.attr( 'id', '' );
+			$profileCard
+				.find( '.send-message' )
+				.attr( 'href', '' );
+		},
+
+		/**
+		 * Helper function to update and populate profile popup cards with data.
+		 */
+		updateProfileCard: function ( data, currentUser ) {
+			var $profileCard = $( '#profile-card' );
+			var registeredDate = new Date( data.registered_date );
+			var joinedDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( registeredDate );
+			var activeStatus = data.last_activity === 'Active now' ? 'active' : '';
+			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
+			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
+			var isFollowing = data.is_following;
+		
+			$profileCard
+				.find( '.bb-card-avatar img' )
+				.attr( 'src', data.avatar_urls.thumb );
+			$profileCard
+				.find( '.card-profile-status' )
+				.addClass( activeStatus );
+			$profileCard
+				.find( '.bb-card-footer .card-button-profile' )
+				.attr( 'href', data.link );
+			$profileCard
+				.find( '.bb-card-heading' )
+				.text( data.profile_name );
+			$profileCard
+				.find( '.bb-card-profile-type' )
+				.addClass( memberTypeClass )
+				.text( memberType );
+			$profileCard
+				.find( '.card-meta-joined span' )
+				.text( joinedDate );
+			$profileCard
+				.find( '.card-meta-last-active' )
+				.text( data.last_activity );
+			$profileCard
+				.find( '.card-meta-followers' )
+				.text( data.followers );
+		
+			if ( currentUser ) {
+				$profileCard
+					.find( '.bb-card-footer' )
+					.addClass( 'bb-card-footer--plain' );
+			}
+
+			var $followButton = $profileCard.find( '.card-button-follow' );
+			if ( $followButton.length ) {
+				$followButton.attr( 'id', 'follow-' + data.id );
+				$followButton.attr( 'data-bp-btn-action', isFollowing ? 'following' : 'not_following' );
+			}
+
+			var $messageButton = $profileCard.find( '.send-message' );
+			if ( $messageButton.length && data.can_send_message ) {
+				$messageButton.attr( 'href', data.message_url );
+			}
+		},
+
+		profilePopupCard: function() {
+			var $avatar = $( this );
+			var offset = $avatar.offset();
+			var popupTop = offset.top + $avatar.outerHeight() + 10;
+  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
+			var $li = $avatar.closest( '.comment-item, .activity-item' );
+			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
+			var memberId = cardData.user_id;
+			var currentUserId = cardData.current_user_id;
+			var currentUser = currentUserId === memberId;
+			var restUrl = BP_Nouveau.rest_url;
+			var url = restUrl + '/members/' + memberId + '/info';
+			var $profileCard = $( '#profile-card' );
+
+			$.ajax({
+				url: url,
+				method: 'GET',
+				beforeSend: function () {
+					bp.Nouveau.resetProfileCard();
+					// Position popup near hovered avatar
+					$profileCard
+						.css( {
+							position: 'fixed',
+							top: popupTop - $( window ).scrollTop() + 'px',
+							left: popupLeft - $( window ).scrollLeft() + 'px',
+							display: 'block',
+						} )
+						.addClass( 'loading' );
+
+					if ( currentUser ) {
+						$profileCard
+							.find( '.skeleton-card-footer' )
+							.addClass( 'bb-card-footer--plain' );
+					}
+				},
+				success: function ( data ) {
+					$profileCard.removeClass( 'loading' );
+					bp.Nouveau.updateProfileCard( data, currentUser );
+				},
+				error: function ( xhr, status, error ) {
+					console.error( 'Error fetching member info:', error );
+					$profileCard.html( '<span>Failed to load data.</span>' );
+				}
+			});
+		},
+
+		checkHideProfilePopupCard: function () {
+			if ( !hoverAvatar && !hoverCardPopup ) {
+				hideCardTimeout = setTimeout( function() {
+					bp.Nouveau.hideProfilePopupCard();
+				}, 300 );
+			}
+		},
+
+		hideProfilePopupCard: function() {
+			$( '#profile-card' ).hide();
+			hideCardTimeout = null;
 		},
 	};
 

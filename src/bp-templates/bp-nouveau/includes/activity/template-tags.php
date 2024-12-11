@@ -1642,6 +1642,26 @@ function bp_nouveau_get_edit_activity_data() {
 }
 
 /**
+ * Output the profile card related data into the bp-profile-card attribute.
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_nouveau_profile_card_data() {
+	echo bp_nouveau_get_profile_card_data();
+}
+
+/**
+ * Get the profile card data.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @return string The profile card related data.
+ */
+function bp_nouveau_get_profile_card_data() {
+	return htmlentities( wp_json_encode( bp_profile_card_get_edit_data( bp_get_activity_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
+/**
  * Output the top action buttons inside an Activity Loop.
  *
  * @since BuddyBoss 1.7.2
@@ -2462,6 +2482,26 @@ function bb_nouveau_edit_activity_comment_data() {
  */
 function bb_nouveau_get_edit_activity_comment_data() {
 	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+}
+
+/**
+ * Output the profile card edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ */
+function bb_nouveau_edit_profile_card_data() {
+	echo bb_nouveau_get_edit_profile_card_data();
+}
+
+/**
+ * Get the profile card edit data.
+ *
+ * @since BuddyBoss 2.4.40
+ *
+ * @return string The profile card edit data.
+ */
+function bb_nouveau_get_edit_profile_card_data() {
+	return htmlentities( wp_json_encode( bb_profile_card_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
 
