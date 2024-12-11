@@ -35,6 +35,9 @@ if ( ! defined( 'BP_PLUGIN_URL' ) ) {
 	// Be nice to symlinked directories.
 	define( 'BP_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BP_PLUGIN_DIR' ) ) ) ) );
 }
+if ( ! defined( 'BUDDYBOSS_MOTHERSHIP_API_BASE_URL' ) ) {
+	define( 'BUDDYBOSS_MOTHERSHIP_API_BASE_URL', 'https://caseproof.ddev.site/api/v1/' );
+}
 
 // Include BuddyBoss Platform.
 include( $bp_loader );

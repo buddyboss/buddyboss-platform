@@ -7,13 +7,7 @@
  * @package BuddyBoss/Core
  */
 
-use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
-use BuddyBossPlatform\GroundLevel\Container\Container;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
-use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
-use BuddyBossPlatform\GroundLevel\Mothership\Service as MoshService;
-use BuddyBossPlatform\GroundLevel\Support\Concerns\Hookable;
-use BuddyBossPlatform\GroundLevel\Support\Models\Hook;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -30,10 +24,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 	 *     Notifications from our remote feed
 	 *     Plugin-related notifications (i.e. - recent sales performances)
 	 */
-	class BB_In_Plugin_Notifications extends BB_Base_Ctrl implements StaticContainerAwareness {
-
-		use HasStaticContainer;
-		use Hookable;
+	class BB_In_Plugin_Notifications {
 
 		/**
 		 * Instance.
@@ -97,105 +88,77 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				'sslverify' => false,
 			);
 
+			add_action( 'admin_footer', array( $this, 'bb_admin_notification_menu_append_count' ) );
 			add_action( 'in_admin_header', array( $this, 'bb_admin_notification_header' ), 0 );
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_admin_notification_enqueues' ) );
 		}
 
 		/**
-		 * Returns an array of Hooks that should be added by the class.
+		 * Check if user has access and is enabled.
 		 *
-		 * @return array
+		 * @return boolean
 		 */
-		protected function configureHooks(): array {
-			return array(
-				new Hook( Hook::TYPE_ACTION, 'init', __CLASS__ . '::init', 5 ),
-			);
-		}
-
-		/**
-		 * Loads the hooks for the controller.
-		 */
-		public function load_hooks() {
-			$this->addHooks();
-		}
-
-		/**
-		 * Initializes a GroundLevel container and dependent services.
-		 *
-		 * @param boolean $force_init If true, forces notifications to load even if notifications are disabled.
-		 *                            Used during database migrations when we cannot determine if the current
-		 *                            user has access to notifications.
-		 */
-		public static function init( bool $force_init = false ): void {
+		public static function has_access() {
+			$has_access = BB_Utils::is_bb_admin() && ! get_option( 'bb_hide_announcements' );
 			/**
-			 * Currently we're loading a container, mothership, and ipn services in order
-			 * to power IPN functionality. We don't need the container or mothership
-			 * for anything other than IPN so we can skip the whole load if notifications
-			 * are disabled or unavailable for the user.
+			 * Filters whether or not the user has access to notifications.
 			 *
-			 * Later we'll want to move this condition to be only around the {@see self::init_ipn()}
-			 * load method.
+			 * @param boolean $has_access Whether or not the user has access to notifications.
 			 */
-			if ( bp_current_user_can( 'bp_moderate' ) || $force_init ) {
-				self::setContainer( new Container() );
+			return apply_filters( 'bb_admin_notifications_has_access', $has_access );
+		}
 
-				/**
-				 * @todo: Later we'll want to "properly" bootstrap a container via a
-				 * plugin bootstrap via GrdLvl package.
-				 */
+		/**
+		 * Admin script for adding notification count to the BuddyBoss admin menu list item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_admin_notification_menu_append_count() {
 
-				// self::init_mothership();
-				self::init_ipn();
+				if ( self::has_access() ) {
+				BB_Grd_Lvl_Ctrl::init( true );
+				$fetch_store = BB_Grd_Lvl_Ctrl::getContainer()->get(Store::class)->fetch();
+				$notifications       = BB_Grd_Lvl_Ctrl::getContainer()->get( Store::class )->fetch()->notifications( false, Store::FILTER_UNREAD );
+				$notifications_count = count( $notifications );
+			} else {
+				$notifications_count = 0;
 			}
-		}
 
-		/**
-		 * Initializes and configures the IPN Service.
-		 */
-		private static function init_ipn(): void {
-			// Set IPN Service parameters.
-			self::$container->addParameter( IPNService::PRODUCT_SLUG, 'buddyboss-platform' );
-			self::$container->addParameter( IPNService::PREFIX, 'bbglvl' );
-			self::$container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
-			self::$container->addParameter(
-				IPNService::USER_CAPABILITY,
-				apply_filters( 'bb_admin_capability', 'remove_users' )
-			);
-			self::$container->addParameter(
-				IPNService::RENDER_HOOK,
-				'bb_admin_header_actions'
-			);
-			self::$container->addParameter(
-				IPNService::THEME,
-				array(
-					'primaryColor'       => '#2271b1',
-					'primaryColorDarker' => '#0a4b78',
-				)
-			);
+			ob_start();
 
-			self::$container->addService(
-				IPNService::class,
-				static function ( Container $container ): IPNService {
-					return new IPNService( $container );
-				},
-				true
-			);
-		}
+			?>
 
-		/**
-		 * Initializes the Mothership Service.
-		 */
-		private static function init_mothership(): void {
-			self::$container->addService(
-				MoshService::class,
-				static function ( Container $container ): MoshService {
-					return new MoshService(
-						$container,
-						new MeprMothershipPluginConnector()
+			<span class="awaiting-mod">
+				<span class="pending-count" id="bb_in_plugin_admin_menu_unread_count" aria-hidden="true">
+					<?php echo count( $notifications_count ); ?>
+				</span>
+				<span class="comments-in-moderation-text screen-reader-text">
+					<?php
+					printf(
+						esc_html(
+						// Translators: %s is the number of unread messages in the user's notifications.
+							_n(
+								'%s unread message',
+								'%s unread messages',
+								count( $notifications_count ),
+								'buddyboss'
+							)
+						),
+						esc_html( count( $notifications_count ) )
 					);
-				},
-				true
-			);
+					?>
+				</span>
+			</span>
+
+			<?php $output = ob_get_clean(); ?>
+
+			<script>
+				jQuery( document ).ready( function ( $ ) {
+					$( 'li.toplevel_page_buddyboss-platform .wp-menu-name' ).append( `<?php echo wp_kses_post( $output ); ?>` );
+				} );
+			</script>
+
+			<?php
 		}
 
 		/**

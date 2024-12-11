@@ -643,6 +643,11 @@ class BuddyPress {
 
 		// These classes don't have a name that matches their component.
 		$irregular_map = array(
+			'BB_Base_Ctrl'                                 => 'core',
+			'BB_Hooks'                                     => 'core',
+			'BB_Utils'                                     => 'core',
+			'BB_Mothership_Plugin_Connector'               => 'core',
+			'BB_Grd_Lvl_Ctrl'                              => 'core',
 			'BB_Presence'                                  => 'core',
 			'BP_Akismet'                                   => 'activity',
 			'BP_Admin'                                     => 'core',
@@ -721,7 +726,6 @@ class BuddyPress {
 			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',
-			'BB_Base_Ctrl'                                 => 'core',
 			'BB_In_Plugin_Notifications'                   => 'core',
 
 			// BuddyBoss Platform Rest API classes.
