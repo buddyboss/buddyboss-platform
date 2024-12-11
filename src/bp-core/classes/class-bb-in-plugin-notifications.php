@@ -7,7 +7,10 @@
  * @package BuddyBoss/Core
  */
 
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Retriever as IPNRetrieverService;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View as IPNViewService;
+use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -117,7 +120,7 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 
 				if ( self::has_access() ) {
 				BB_Grd_Lvl_Ctrl::init( true );
-				$fetch_store = BB_Grd_Lvl_Ctrl::getContainer()->get(Store::class)->fetch();
+				$fetch_store = BB_Grd_Lvl_Ctrl::getContainer()->get(IPNRetrieverService::class)->performEvent();
 				$notifications       = BB_Grd_Lvl_Ctrl::getContainer()->get( Store::class )->fetch()->notifications( false, Store::FILTER_UNREAD );
 				$notifications_count = count( $notifications );
 			} else {
