@@ -10,6 +10,7 @@
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Retriever as IPNRetrieverService;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View as IPNViewService;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Ajax;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products;
 
 // Exit if accessed directly.
@@ -95,6 +96,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 				BB_Grd_Lvl_Ctrl::getContainer()->get( IPNRetrieverService::class )->performEvent();
 				$container = BB_Grd_Lvl_Ctrl::getContainer()->get( IPNViewService::class )->getContainer();
 				BB_Grd_Lvl_Ctrl::getContainer()->get( IPNViewService::class )->load( $container );
+				$ajax_container = BB_Grd_Lvl_Ctrl::getContainer()->get( Ajax::class )->getContainer();
+				BB_Grd_Lvl_Ctrl::getContainer()->get( Ajax::class )->load( $ajax_container );
 			}
 
 //			add_action( 'admin_footer', array( $this, 'bb_admin_notification_menu_append_count' ) );
