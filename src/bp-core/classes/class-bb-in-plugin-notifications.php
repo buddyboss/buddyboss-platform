@@ -90,8 +90,14 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 			$this->source_url_args = array(
 				'sslverify' => false,
 			);
+			if ( self::has_access() ) {
+				BB_Grd_Lvl_Ctrl::init( true );
+				BB_Grd_Lvl_Ctrl::getContainer()->get( IPNRetrieverService::class )->performEvent();
+				$container = BB_Grd_Lvl_Ctrl::getContainer()->get( IPNViewService::class )->getContainer();
+				BB_Grd_Lvl_Ctrl::getContainer()->get( IPNViewService::class )->load( $container );
+			}
 
-			add_action( 'admin_footer', array( $this, 'bb_admin_notification_menu_append_count' ) );
+//			add_action( 'admin_footer', array( $this, 'bb_admin_notification_menu_append_count' ) );
 			add_action( 'in_admin_header', array( $this, 'bb_admin_notification_header' ), 0 );
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_admin_notification_enqueues' ) );
 		}
@@ -118,22 +124,18 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 */
 		public function bb_admin_notification_menu_append_count() {
 			if ( self::has_access() ) {
-				BB_Grd_Lvl_Ctrl::init( true );
-				$fetch_store = BB_Grd_Lvl_Ctrl::getContainer()->get( IPNRetrieverService::class )->performEvent();
-				error_log( print_r( $fetch_store, 1 ) );
 				$notifications       = BB_Grd_Lvl_Ctrl::getContainer()->get( Store::class )->fetch()->notifications( false, Store::FILTER_UNREAD );
 				$notifications_count = count( $notifications );
 			} else {
 				$notifications_count = 0;
 			}
-
 			ob_start();
 
 			?>
 
 			<span class="awaiting-mod">
 				<span class="pending-count" id="bb_in_plugin_admin_menu_unread_count" aria-hidden="true">
-					<?php echo $notifications_count ; ?>
+					<?php echo esc_html( $notifications_count ); ?>
 				</span>
 				<span class="comments-in-moderation-text screen-reader-text">
 					<?php
@@ -143,11 +145,11 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 							_n(
 								'%s unread message',
 								'%s unread messages',
-								count( $notifications_count ),
+								$notifications_count,
 								'buddyboss'
 							)
 						),
-						esc_html( count( $notifications_count ) )
+						esc_html( $notifications_count )
 					);
 					?>
 				</span>
