@@ -683,9 +683,18 @@ div.profile_completion_wrap {
 			width: 33.33%;
 			height: 30px;
 			border-radius: 6px;
+		}
 
-			&:first-of-type {
-				width: 66.66%;
+		&.bb-card-footer--plain,
+		&.skeleton-footer-plain {
+
+			.skeleton-card-button {
+				display: none;
+				width: 100%;
+
+				&:first-of-type {
+					display: inline-block;
+				}
 			}
 		}
 	}

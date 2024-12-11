@@ -12663,8 +12663,13 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   border-radius: 6px;
 }
 
-.bb-popup-card.loading .skeleton-card-footer .skeleton-card-button:first-of-type {
-  width: 66.66%;
+.bb-popup-card.loading .skeleton-card-footer.bb-card-footer--plain .skeleton-card-button, .bb-popup-card.loading .skeleton-card-footer.skeleton-footer-plain .skeleton-card-button {
+  display: none;
+  width: 100%;
+}
+
+.bb-popup-card.loading .skeleton-card-footer.bb-card-footer--plain .skeleton-card-button:first-of-type, .bb-popup-card.loading .skeleton-card-footer.skeleton-footer-plain .skeleton-card-button:first-of-type {
+  display: inline-block;
 }
 
 .bb-card-body {

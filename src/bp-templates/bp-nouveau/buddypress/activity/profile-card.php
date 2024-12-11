@@ -19,7 +19,9 @@
 				<div class="skeleton-card-meta bb-loading-bg"></div>
 			</div>
 		</div>
-		<div class="skeleton-card-footer">
+		<?php $plain_class = !is_user_logged_in() ? 'skeleton-footer-plain' : ''; ?>
+		<div class="skeleton-card-footer <?php echo $plain_class; ?>">
+			<div class="skeleton-card-button bb-loading-bg"></div>
 			<div class="skeleton-card-button bb-loading-bg"></div>
 			<div class="skeleton-card-button bb-loading-bg"></div>
 		</div>
@@ -42,18 +44,31 @@
 			</div>
 		</div>
 		<div class="bb-card-footer">
-			<div class="bb-card-action bb-card-action-primary">
-				<a href="" class="card-button send-message">
-					<i class="bb-icon-l bb-icon-comment"></i>
-					<?php esc_html_e( 'Message', 'buddyboss' ); ?>
-				</a>
-			</div>
-			<div class="bb-card-action bb-card-action-secondary">
-				<button class="card-button card-button-follow secondary" data-bp-nonce="" id="" data-bp-btn-action="">
-					<i class="bb-icon-l bb-icon-bullhorn"></i>
-					<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
-				</button>
-			</div>
+			<?php if ( is_user_logged_in() ) : ?>
+				<?php if ( bp_is_active( 'messages' ) ) : ?>
+					<div class="bb-card-action bb-card-action-primary">
+						<a href="" class="card-button send-message">
+							<i class="bb-icon-l bb-icon-comment"></i>
+							<?php esc_html_e( 'Message', 'buddyboss' ); ?>
+						</a>
+					</div>
+				<?php else : ?>
+					<?php if ( bp_is_active( 'friends' ) ) : ?>
+						<div class="bb-card-action bb-card-action-primary">
+							<a href="" class="card-button connect">
+								<i class="bb-icon-l bb-icon-user-plus"></i>
+								<?php esc_html_e( 'Connect', 'buddyboss' ); ?>
+							</a>
+						</div>
+					<?php endif; ?>
+				<?php endif; ?>
+				<div class="bb-card-action bb-card-action-secondary">
+					<button class="card-button card-button-follow secondary" data-bp-nonce="" id="" data-bp-btn-action="">
+						<i class="bb-icon-l bb-icon-bullhorn"></i>
+						<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
+					</button>
+				</div>
+			<?php endif; ?>
 			<div class="bb-card-action bb-card-action-outline">
 				<a href="" class="card-button card-button-profile"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
 			</div>

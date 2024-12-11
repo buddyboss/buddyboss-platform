@@ -4479,9 +4479,10 @@ window.bp = window.bp || {};
 		 */
 		resetProfileCard: function () {
 			var $profileCard = $( '#profile-card' );
+
 			$profileCard
 				.removeClass( 'loading' )
-				.find( '.bb-card-footer' )
+				.find( '.bb-card-footer, .skeleton-card-footer' )
 				.removeClass( 'bb-card-footer--plain' );
 			$profileCard
 				.find( '.bb-card-profile-type' )
@@ -4542,12 +4543,6 @@ window.bp = window.bp || {};
 			$profileCard
 				.find( '.card-meta-followers' )
 				.text( data.followers );
-			$profileCard
-				.find( '.card-button-follow' )
-				.attr( 'id', 'follow-' + data.id );
-			$profileCard
-				.find( '.send-message' )
-				.attr( 'href', data.message_url );
 		
 			if ( currentUser ) {
 				$profileCard
@@ -4555,14 +4550,15 @@ window.bp = window.bp || {};
 					.addClass( 'bb-card-footer--plain' );
 			}
 
-			if ( !isFollowing ) {
-				$profileCard
-					.find( '.card-button-follow' )
-					.attr( 'data-bp-btn-action', 'not_following' );
-			} else {
-				$profileCard
-					.find( '.card-button-follow' )
-					.attr( 'data-bp-btn-action', 'following' );
+			var $followButton = $profileCard.find( '.card-button-follow' );
+			if ( $followButton.length ) {
+				$followButton.attr( 'id', 'follow-' + data.id );
+				$followButton.attr( 'data-bp-btn-action', isFollowing ? 'following' : 'not_following' );
+			}
+
+			var $messageButton = $profileCard.find( '.send-message' );
+			if ( $messageButton.length && data.can_send_message ) {
+				$messageButton.attr( 'href', data.message_url );
 			}
 		},
 
@@ -4571,14 +4567,13 @@ window.bp = window.bp || {};
 			var offset = $avatar.offset();
 			var popupTop = offset.top + $avatar.outerHeight() + 10;
   			var popupLeft = offset.left + $avatar.outerWidth() - 100;
-
 			var $li = $avatar.closest( '.comment-item, .activity-item' );
 			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
 			var memberId = cardData.user_id;
 			var currentUserId = cardData.current_user_id;
+			var currentUser = currentUserId === memberId;
 			var restUrl = BP_Nouveau.rest_url;
 			var url = restUrl + '/members/' + memberId + '/info';
-
 			var $profileCard = $( '#profile-card' );
 
 			$.ajax({
@@ -4595,9 +4590,14 @@ window.bp = window.bp || {};
 							display: 'block',
 						} )
 						.addClass( 'loading' );
+
+					if ( currentUser ) {
+						$profileCard
+							.find( '.skeleton-card-footer' )
+							.addClass( 'bb-card-footer--plain' );
+					}
 				},
 				success: function ( data ) {
-					var currentUser = currentUserId === memberId;
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
 				},
