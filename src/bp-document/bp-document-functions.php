@@ -5076,7 +5076,10 @@ function bb_document_delete_older_symlinks() {
 
 	return $list;
 }
-bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks', 'bb_schedule_15days' );
+
+add_action( 'bp_init', function() {
+	bp_core_schedule_cron( 'bb_document_deleter_older_symlink', 'bb_document_delete_older_symlinks', 'bb_schedule_15days' );
+});
 
 
 /**
