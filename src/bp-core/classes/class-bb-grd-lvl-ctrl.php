@@ -4,6 +4,7 @@ use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
 use BuddyBossPlatform\GroundLevel\Container\Container;
 use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store;
 use BuddyBossPlatform\GroundLevel\Mothership\Service as MoshService;
 use BuddyBossPlatform\GroundLevel\Support\Concerns\Hookable;
 use BuddyBossPlatform\GroundLevel\Support\Models\Hook;
@@ -128,5 +129,66 @@ class BB_Grd_Lvl_Ctrl implements StaticContainerAwareness
 			},
 			true
 		);
+	}
+
+	/**
+	 * Add an event notification. This is NOT for feed notifications.
+	 * Event notifications are for alerting the user to something internally (e.g. recent sales performances).
+	 *
+	 * @param array $notification Notification data.
+	 *
+	 * use below variable array to register the custom notification.
+	 * $notification = array(
+	 *     'id'      => 'bb-platform-free-notice',
+	 *     'type'    => 'notice',
+	 *     'title'   => 'BuddyBoss Platform Free',
+	 *     'content' => 'Get the BuddyBoss Platform Pro to unlock more features.',
+	 *     'buttons' => array(
+	 *         'main'    => array(
+	 *             'text'   => 'Upgrade Now',
+	 *             'url'    => 'BTN_URL,
+	 *             'target' => '_blank',
+	 *         ),
+	 *         'dismiss' => array(
+	 *             'text' => 'Dismiss',
+	 *             'url'  => '#notification-dismiss',
+	 *         ),
+	 *    ),
+	 *     'icon'    => 'IMAGE_ICON_URL',
+	 * );
+	 */
+	public function add( $notification ) {
+		if ( empty( $notification['id'] ) ) {
+			return;
+		}
+
+		MeprGrdLvlCtrl::init( true );
+
+		/** @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store */ // phpcs:ignore
+		$store = self::getContainer()->get( Store::class )->fetch();
+
+		$btns = array();
+		foreach ( $notification['buttons'] as $type => $data ) {
+			$btns[] = sprintf(
+				'<a class="btn btn--%1$s" href="%2$s" target="%3$s" rel="noopener">%4$s</a>',
+				'main' === $type ? 'primary' : 'link',
+				esc_url( $data['url'] ),
+				esc_attr( $data['target'] ?? '_blank' ),
+				esc_html( $data['text'] )
+			);
+		}
+		$store->add(
+			array(
+				'id'           => $notification['type'] . '_' . $notification['id'],
+				'subject'      => $notification['title'],
+				'content'      => $notification['content'] . '<p>' . implode( ' ', $btns ) . '</p>',
+				'publishes_at' => date( 'Y-m-d H:i:s', $notification['saved'] ?? time() ),
+				'icon'         => sprintf(
+					'<img alt="%1$s" src="%2$s" style="width: 100%%; height: auto;">',
+					esc_attr__( 'Notification Icon', 'memberpress' ),
+					$notification['icon'] ?? MEPR_IMAGES_URL . '/alert-icon.png'
+				),
+			)
+		)->persist();
 	}
 }
