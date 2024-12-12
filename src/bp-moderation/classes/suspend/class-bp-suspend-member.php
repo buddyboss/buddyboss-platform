@@ -721,7 +721,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		if (
 			bp_is_active( 'friends' ) &&
 			$page <= 1 &&
-			! empty( $args['action_suspend'] )
+			(
+				! empty( $args['action_suspend'] ) ||
+				! empty( $args['user_suspended'] )
+			)
 		) {
 
 			// Update friend count for the suspend users only not for the blocked users.
