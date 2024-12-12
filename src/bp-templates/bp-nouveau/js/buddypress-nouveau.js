@@ -9,6 +9,7 @@ window.bp = window.bp || {};
 	var hoverAvatar = false;
 	var hoverCardPopup = false;
 	var hideCardTimeout = null;
+	var profileCardLoaded = false;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -929,14 +930,18 @@ window.bp = window.bp || {};
 			// Profile Popup Card
 			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
 				hoverAvatar = true;
-				if ( hideCardTimeout ) {
-					clearTimeout( hideCardTimeout );
+				if ( !profileCardLoaded ) {
+					if ( hideCardTimeout ) {
+						clearTimeout( hideCardTimeout );
+					}
+					bp.Nouveau.profilePopupCard.call(this);
 				}
-				bp.Nouveau.profilePopupCard.call(this);
 			} );
 			$( document ).on( 'mouseleave', '.item-avatar img.avatar', function(){
 				hoverAvatar = false;
-				bp.Nouveau.checkHideProfilePopupCard();
+				if ( !hoverCardPopup ) {
+					bp.Nouveau.checkHideProfilePopupCard();
+				}
 			} );
 			$( document ).on( 'mouseenter', '#profile-card', function(){
 				hoverCardPopup = true;
@@ -945,8 +950,12 @@ window.bp = window.bp || {};
 				}
 			} );
 			$( document ).on( 'mouseleave', '#profile-card', function() {
-				hoverCardPopup = false;
-				bp.Nouveau.checkHideProfilePopupCard();
+				setTimeout( function() {
+					hoverCardPopup = false;
+					if ( !hoverAvatar ) {
+						bp.Nouveau.checkHideProfilePopupCard();
+					}
+				}, 200 );
 			} );
 			$( window ).on( 'scroll', this.hideProfilePopupCard );
 		},
@@ -4509,7 +4518,7 @@ window.bp = window.bp || {};
 				.find( '.send-message' )
 				.attr( 'href', '' );
 			$profileCard
-				.attr( 'data-bp-item-id', '' )
+				.attr( 'data-bp-item-id', '' );
 			$profileCard
 				.find( '.card-button-friendship' )
 				.removeClass('is_friend not_friends add remove bp-toggle-action-button')
@@ -4624,6 +4633,10 @@ window.bp = window.bp || {};
 			var url = restUrl + '/members/' + memberId + '/info';
 			var $profileCard = $( '#profile-card' );
 
+			if ( profileCardLoaded ) {
+				return;
+			}
+
 			$.ajax({
 				url: url,
 				method: 'GET',
@@ -4651,6 +4664,7 @@ window.bp = window.bp || {};
 				success: function ( data ) {
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
+					profileCardLoaded = true;
 				},
 				error: function ( xhr, status, error ) {
 					console.error( 'Error fetching member info:', error );
@@ -4663,13 +4677,14 @@ window.bp = window.bp || {};
 			if ( !hoverAvatar && !hoverCardPopup ) {
 				hideCardTimeout = setTimeout( function() {
 					bp.Nouveau.hideProfilePopupCard();
-				}, 300 );
+				}, 200 );
 			}
 		},
 
 		hideProfilePopupCard: function() {
 			$( '#profile-card' ).hide();
 			hideCardTimeout = null;
+			profileCardLoaded = false;
 		},
 	};
 
