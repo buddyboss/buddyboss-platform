@@ -783,12 +783,15 @@ div.profile_completion_wrap {
 
 		button {
 			width: 100%;
+			white-space: nowrap;
+		}
 
-			&.small {
-				min-height: 30px;
-				line-height: 30px;
-				height: 30px;
-			}
+		button.small,
+		a.card-button,
+		a.friendship-button,
+		button.friendship-button {
+			min-height: 30px;
+			line-height: 30px;
 		}
 	}
 

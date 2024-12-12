@@ -55,10 +55,12 @@
 				<?php else : ?>
 					<?php if ( bp_is_active( 'friends' ) ) : ?>
 						<div class="bb-card-action bb-card-action-primary">
-							<a href="" class="card-button connect">
-								<i class="bb-icon-l bb-icon-user-plus"></i>
-								<?php esc_html_e( 'Connect', 'buddyboss' ); ?>
-							</a>
+							<div class="friendship-button generic-button" id="">
+								<a href="" class="card-button connect card-button-friendship friendship-button not_friends add" id="" rel="" data-bp-btn-action="">
+									<i class="bb-icon-l bb-icon-user-plus"></i>
+									<?php esc_html_e( 'Connect', 'buddyboss' ); ?>
+								</a>
+							</div>
 						</div>
 					<?php endif; ?>
 				<?php endif; ?>

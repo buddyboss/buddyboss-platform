@@ -4509,7 +4509,17 @@ window.bp = window.bp || {};
 				.find( '.send-message' )
 				.attr( 'href', '' );
 			$profileCard
-				.attr( 'data-bp-item-id', '' );
+				.attr( 'data-bp-item-id', '' )
+			$profileCard
+				.find( '.card-button-friendship' )
+				.removeClass('is_friend not_friends add remove bp-toggle-action-button')
+				.attr( 'data-bp-btn-action', '' )
+				.attr( 'id', '' )
+				.attr( 'rel', '' );
+			$profileCard
+				.find( '.friendship-button.generic-button' )
+				.removeClass('is_friend not_friends')
+				.attr( 'id', '' );
 		},
 
 		/**
@@ -4524,6 +4534,12 @@ window.bp = window.bp || {};
 			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
 			var isFollowing = data.is_following;
 			var followLabel = isFollowing ? 'following' : 'not_following';
+			var friendshipRel = data.friendship_status === 'not_friends' ? 'add' : 'remove';
+			var friendshipLabel = 
+				data.friendship_status === 'not_friends' ? 'Connect' : 
+				data.friendship_status === 'is_friend' ? 'Connected' : 
+				'Request Sent';
+			var friendshipToggleBtn = ( data.friendship_status === 'pending' || data.friendship_status === 'is_friend' ) ? 'bp-toggle-action-button' : '';
 		
 			$profileCard
 				.find( '.bb-card-avatar img' )
@@ -4559,16 +4575,33 @@ window.bp = window.bp || {};
 					.addClass( 'bb-card-footer--plain' );
 			}
 
-			var $followButton = $profileCard.find( '.card-button-follow' );
+			var $followButton = $profileCard.find( 'button.follow-button' );
 			if ( $followButton.length ) {
 				$followButton
 					.attr( 'id', 'follow-' + data.id )
 					.attr( 'data-bp-btn-action', followLabel )
+					.attr( 'data-bp-nonce', data.follow_url )
 					.addClass( followLabel );
 				$profileCard
 					.find( '.follow-button.generic-button' )
 					.addClass( followLabel )
 					.attr( 'id', 'follow-button-' + data.id );
+			}
+
+			var $friendshipButton = $profileCard.find( 'a.friendship-button' );
+			if ( $friendshipButton.length ) {
+				$friendshipButton
+					.attr( 'id', 'friend-' + data.id )
+					.attr( 'data-bp-btn-action', data.friendship_status )
+					.attr( 'data-bp-nonce', data.follow_url )
+					.attr( 'rel', friendshipRel )
+					.addClass( friendshipRel )
+					.addClass( friendshipToggleBtn )
+					.addClass( data.friendship_status );
+				$profileCard
+					.find( '.friendship-button.generic-button' )
+					.addClass( data.friendship_status )
+					.attr( 'id', 'friendship-button-' + data.id );
 			}
 
 			var $messageButton = $profileCard.find( '.send-message' );
@@ -4616,6 +4649,8 @@ window.bp = window.bp || {};
 					}
 				},
 				success: function ( data ) {
+					console.log(data);
+					
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
 				},
@@ -4635,7 +4670,7 @@ window.bp = window.bp || {};
 		},
 
 		hideProfilePopupCard: function() {
-			$( '#profile-card' ).hide();
+			// $( '#profile-card' ).hide();
 			hideCardTimeout = null;
 		},
 	};
