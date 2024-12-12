@@ -64,7 +64,7 @@
 				<?php endif; ?>
 				<div class="bb-card-action bb-card-action-secondary">
 					<div class="follow-button generic-button" id="">
-						<button class="card-button card-button-follow secondary follow-button" data-bp-nonce="http://localhost/bb-buddyboss-theme-demo/members/john/activity_follow/start-following/7/?_wpnonce=c94d1bdaed" id="" data-bp-btn-action="not_following">
+						<button class="card-button card-button-follow secondary follow-button" data-bp-nonce="" id="" data-bp-btn-action="not_following">
 							<i class="bb-icon-l bb-icon-bullhorn"></i>
 							<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
 						</button>
