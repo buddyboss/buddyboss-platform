@@ -65,6 +65,6 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function getDomain(): string
 	{
-		return BB_Utils::site_domain();
+		return preg_replace('#^https?://(www\.)?([^\?\/]*)#', '$2', get_option('home'));
 	}
 }
