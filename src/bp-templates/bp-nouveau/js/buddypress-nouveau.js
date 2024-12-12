@@ -4635,7 +4635,7 @@ window.bp = window.bp || {};
 		},
 
 		hideProfilePopupCard: function() {
-			// $( '#profile-card' ).hide();
+			$( '#profile-card' ).hide();
 			hideCardTimeout = null;
 		},
 	};
