@@ -71,12 +71,12 @@ class BB_Grd_Lvl_Ctrl implements StaticContainerAwareness
 		 * Later we'll want to move this condition to be only around the {@see self::init_ipn()}
 		 * load method.
 		 */
-		//if (BB_In_Plugin_Notifications::has_access() || $force_init) {
+		if (bp_current_user_can( 'manage_options' ) || $force_init) {
 			self::setContainer(new Container());
 
 			self::init_mothership();
 			self::init_ipn();
-		//}
+		}
 	}
 
 	/**
