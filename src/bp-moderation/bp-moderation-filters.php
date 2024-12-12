@@ -283,23 +283,6 @@ function bp_moderation_block_member() {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
 
-			if (
-				function_exists( 'bp_is_following' ) &&
-				bp_is_following(
-					array(
-						'leader_id'   => $item_id,
-						'follower_id' => bp_loggedin_user_id(),
-					)
-				)
-			) {
-				bp_stop_following(
-					array(
-						'leader_id'   => $item_id,
-						'follower_id' => bp_loggedin_user_id(),
-					)
-				);
-			}
-
 			$response['button'] = bp_moderation_get_report_button(
 				array(
 					'button_attr' => array(
@@ -1076,3 +1059,36 @@ function bb_moderation_async_request_batch_process( $batch ) {
 }
 add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
 
+/**
+ * Function to exclude suspended users from the friendship query.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $where   Array of where conditions.
+ * @param int   $user_id User ID.
+ *
+ * @return array
+ */
+function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
+	global $wpdb;
+	$moderated_user_ids = bb_moderation_moderated_user_ids();
+
+	// If user ID is also in fetched moderated user ids, remove it.
+	if ( in_array( $user_id, $moderated_user_ids, true ) ) {
+		$moderated_user_ids = array_diff( $moderated_user_ids, array( $user_id ) );
+	}
+
+	// If there are any suspended users, add conditions to exclude them.
+	if ( ! empty( $moderated_user_ids ) ) {
+		$placeholders = implode( ', ', array_fill( 0, count( $moderated_user_ids ), '%d' ) );
+		$where[]      = $wpdb->prepare(
+			"(initiator_user_id NOT IN ( {$placeholders} ) AND friend_user_id NOT IN ( {$placeholders} ))",
+			...$moderated_user_ids,
+			...$moderated_user_ids
+		);
+	}
+
+	return $where;
+}
+
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
