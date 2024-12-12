@@ -4649,8 +4649,6 @@ window.bp = window.bp || {};
 					}
 				},
 				success: function ( data ) {
-					console.log(data);
-					
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
 				},
@@ -4670,7 +4668,7 @@ window.bp = window.bp || {};
 		},
 
 		hideProfilePopupCard: function() {
-			// $( '#profile-card' ).hide();
+			$( '#profile-card' ).hide();
 			hideCardTimeout = null;
 		},
 	};
