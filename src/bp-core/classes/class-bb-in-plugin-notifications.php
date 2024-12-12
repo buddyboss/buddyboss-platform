@@ -87,6 +87,8 @@ if ( ! class_exists( 'BB_In_Plugin_Notifications' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
+
+			return;
 			$this->source_url      = defined( 'BB_TEST_IN_PLUGIN_NOTIFICATION_URL' ) ? BB_TEST_IN_PLUGIN_NOTIFICATION_URL : 'https://buddyboss.com/inpns/notifications.json';
 			$this->source_url_args = array(
 				'sslverify' => false,

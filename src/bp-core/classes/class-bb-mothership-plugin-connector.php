@@ -43,7 +43,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function getLicenseKey(): string
 	{
-		return BB_Options::fetch()->mothership_license;
+		return '';
 	}
 
 	/**

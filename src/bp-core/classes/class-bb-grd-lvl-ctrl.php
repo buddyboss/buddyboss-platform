@@ -11,10 +11,27 @@ use BuddyBossPlatform\GroundLevel\Support\Models\Hook;
 /**
  * Initializes a GroundLevel container and dependent services.
  */
-class BB_Grd_Lvl_Ctrl extends BB_Base_Ctrl implements StaticContainerAwareness
+class BB_Grd_Lvl_Ctrl implements StaticContainerAwareness
 {
 	use HasStaticContainer;
 	use Hookable;
+
+	public function __construct() {
+		// This is to ensure that the load_hooks method is
+		// only ever loaded once across all instansiations.
+		static $loaded;
+
+		if ( ! isset( $loaded ) ) {
+			$loaded = array();
+		}
+
+		$class_name = get_class( $this );
+
+		if ( ! isset( $loaded[ $class_name ] ) ) {
+			$this->load_hooks();
+			$loaded[ $class_name ] = true;
+		}
+	}
 
 	/**
 	 * Returns an array of Hooks that should be added by the class.
@@ -54,17 +71,12 @@ class BB_Grd_Lvl_Ctrl extends BB_Base_Ctrl implements StaticContainerAwareness
 		 * Later we'll want to move this condition to be only around the {@see self::init_ipn()}
 		 * load method.
 		 */
-		if (BB_In_Plugin_Notifications::has_access() || $force_init) {
+		//if (BB_In_Plugin_Notifications::has_access() || $force_init) {
 			self::setContainer(new Container());
-
-			/**
-			 * @todo: Later we'll want to "properly" bootstrap a container via a
-			 * plugin bootstrap via GrdLvl package.
-			 */
 
 			self::init_mothership();
 			self::init_ipn();
-		}
+		//}
 	}
 
 	/**
@@ -78,7 +90,7 @@ class BB_Grd_Lvl_Ctrl extends BB_Base_Ctrl implements StaticContainerAwareness
 		self::$container->addParameter(IPNService::MENU_SLUG, 'buddyboss-platform');
 		self::$container->addParameter(
 			IPNService::USER_CAPABILITY,
-			BB_Utils::get_bb_admin_capability()
+			'remove_users'
 		);
 		self::$container->addParameter(
 			IPNService::RENDER_HOOK,
