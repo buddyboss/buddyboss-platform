@@ -212,6 +212,7 @@ class BB_Grd_Lvl_Ctrl implements StaticContainerAwareness
 
 		if (
 			! $current_screen ||
+			false !== strpos( $current_screen->base, 'buddyboss-app' ) ||
 			(
 				false === strpos( $current_screen->base, 'buddyboss' ) &&
 				false === strpos( $current_screen->id, 'edit-bpm_category' ) &&
