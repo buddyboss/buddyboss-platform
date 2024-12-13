@@ -640,6 +640,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 			'rest_url' 			 		 => home_url( 'wp-json/buddyboss/v1' ),
+			'rest_nonce'                 => wp_create_nonce('wp_rest'),
 		);
 
 		// If the Object/Item nav are in the sidebar.

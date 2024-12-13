@@ -4641,7 +4641,7 @@ window.bp = window.bp || {};
 				url: url,
 				method: 'GET',
 				headers: {
-					'BB-Logged-In-User-Id': currentUserId
+					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
