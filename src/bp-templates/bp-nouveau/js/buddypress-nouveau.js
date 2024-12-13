@@ -4490,7 +4490,9 @@ window.bp = window.bp || {};
 			var $profileCard = $( '#profile-card' );
 
 			$profileCard
-				.removeClass( 'loading' )
+				.attr( 'data-bp-item-id', '' )
+				.removeClass( 'loading' );
+			$profileCard
 				.find( '.bb-card-footer, .skeleton-card-footer' )
 				.removeClass( 'bb-card-footer--plain' );
 			$profileCard
@@ -4518,17 +4520,11 @@ window.bp = window.bp || {};
 				.find( '.send-message' )
 				.attr( 'href', '' );
 			$profileCard
-				.attr( 'data-bp-item-id', '' );
+				.find( '.bb-card-action-connect' )
+				.html('');
 			$profileCard
-				.find( '.card-button-friendship' )
-				.removeClass('is_friend not_friends add remove bp-toggle-action-button')
-				.attr( 'data-bp-btn-action', '' )
-				.attr( 'id', '' )
-				.attr( 'rel', '' );
-			$profileCard
-				.find( '.friendship-button.generic-button' )
-				.removeClass('is_friend not_friends')
-				.attr( 'id', '' );
+				.find( '.bb-card-action-follow' )
+				.html('');
 		},
 
 		/**
@@ -4541,24 +4537,15 @@ window.bp = window.bp || {};
 			var activeStatus = data.last_activity === 'Active now' ? 'active' : '';
 			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
 			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
-			var isFollowing = data.is_following;
-			var followLabel = isFollowing ? 'following' : 'not_following';
-			var friendshipRel = data.friendship_status === 'not_friends' ? 'add' : 'remove';
-			var friendshipLabel = 
-				data.friendship_status === 'not_friends' ? 'Connect' : 
-				data.friendship_status === 'is_friend' ? 'Connected' : 
-				'Request Sent';
-			var friendshipToggleBtn = ( data.friendship_status === 'pending' || data.friendship_status === 'is_friend' ) ? 'bp-toggle-action-button' : '';
 		
+			$profileCard
+				.attr( 'data-bp-item-id', data.id );
 			$profileCard
 				.find( '.bb-card-avatar img' )
 				.attr( 'src', data.avatar_urls.thumb );
 			$profileCard
 				.find( '.card-profile-status' )
 				.addClass( activeStatus );
-			$profileCard
-				.find( '.bb-card-footer .card-button-profile' )
-				.attr( 'href', data.link );
 			$profileCard
 				.find( '.bb-card-heading' )
 				.text( data.profile_name );
@@ -4576,7 +4563,8 @@ window.bp = window.bp || {};
 				.find( '.card-meta-followers' )
 				.text( data.followers );
 			$profileCard
-				.attr( 'data-bp-item-id', data.id );
+				.find( '.bb-card-footer .card-button-profile' )
+				.attr( 'href', data.link );
 		
 			if ( currentUser ) {
 				$profileCard
@@ -4584,33 +4572,14 @@ window.bp = window.bp || {};
 					.addClass( 'bb-card-footer--plain' );
 			}
 
-			var $followButton = $profileCard.find( 'button.follow-button' );
-			if ( $followButton.length ) {
-				$followButton
-					.attr( 'id', 'follow-' + data.id )
-					.attr( 'data-bp-btn-action', followLabel )
-					.attr( 'data-bp-nonce', data.follow_url )
-					.addClass( followLabel );
-				$profileCard
-					.find( '.follow-button.generic-button' )
-					.addClass( followLabel )
-					.attr( 'id', 'follow-button-' + data.id );
+			var $followButtonWrapper = $profileCard.find( '.bb-card-action-follow' );
+			if ( $followButtonWrapper.length ) {
+				$followButtonWrapper.html( data.follow_button_html );
 			}
 
-			var $friendshipButton = $profileCard.find( 'a.friendship-button' );
-			if ( $friendshipButton.length ) {
-				$friendshipButton
-					.attr( 'id', 'friend-' + data.id )
-					.attr( 'data-bp-btn-action', data.friendship_status )
-					.attr( 'data-bp-nonce', data.follow_url )
-					.attr( 'rel', friendshipRel )
-					.addClass( friendshipRel )
-					.addClass( friendshipToggleBtn )
-					.addClass( data.friendship_status );
-				$profileCard
-					.find( '.friendship-button.generic-button' )
-					.addClass( data.friendship_status )
-					.attr( 'id', 'friendship-button-' + data.id );
+			var $connectButtonWrapper = $profileCard.find( '.bb-card-action-connect' );
+			if ( $connectButtonWrapper.length ) {
+				$connectButtonWrapper.html( data.friend_button_html );
 			}
 
 			var $messageButton = $profileCard.find( '.send-message' );

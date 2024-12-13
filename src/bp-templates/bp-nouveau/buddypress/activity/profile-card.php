@@ -54,24 +54,10 @@
 					</div>
 				<?php else : ?>
 					<?php if ( bp_is_active( 'friends' ) ) : ?>
-						<div class="bb-card-action bb-card-action-primary">
-							<div class="friendship-button generic-button" id="">
-								<a href="" class="card-button connect card-button-friendship friendship-button not_friends add" id="" rel="" data-bp-btn-action="">
-									<i class="bb-icon-l bb-icon-user-plus"></i>
-									<?php esc_html_e( 'Connect', 'buddyboss' ); ?>
-								</a>
-							</div>
-						</div>
+						<div class="bb-card-action bb-card-action-connect bb-card-action-primary"></div>
 					<?php endif; ?>
 				<?php endif; ?>
-				<div class="bb-card-action bb-card-action-secondary">
-					<div class="follow-button generic-button" id="">
-						<button class="card-button card-button-follow secondary follow-button" data-bp-nonce="" id="" data-bp-btn-action="not_following">
-							<i class="bb-icon-l bb-icon-bullhorn"></i>
-							<?php esc_html_e( 'Follow', 'buddyboss' ); ?>
-						</button>
-					</div>
-				</div>
+				<div class="bb-card-action bb-card-action-follow bb-card-action-secondary"></div>
 			<?php endif; ?>
 			<div class="bb-card-action bb-card-action-outline">
 				<a href="" class="card-button card-button-profile"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
