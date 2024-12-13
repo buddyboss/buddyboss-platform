@@ -143,7 +143,8 @@ window.bp = window.bp || {};
 						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
 						! $( event.target ).closest( '#activity-modal' ).length &&
 						! $( event.target ).closest( '.gif-media-search-dropdown-standalone' ).length &&
-						! $( event.target ).closest( '.emojionearea-theatre' ).length
+						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
+						! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
 					) {
 						this.closeActivity( event );
 						this.activitySyncOnModalClose( event, activityId );
