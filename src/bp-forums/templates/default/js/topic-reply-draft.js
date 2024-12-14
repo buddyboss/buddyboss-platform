@@ -576,9 +576,6 @@ window.bp = window.bp || {};
 				// Unescape characters.
 				bbp_topic_title = bbp_topic_title.replace( /\\(.)/g, '$1' );
 
-				// Strip HTML tags.
-				bbp_topic_title = bbp_topic_title.replace( /<\/?[^>]+(>|$)/g, '' );
-
 				// Remove JavaScript patterns (basic filtering).
 				var forbiddenPatterns = [
 					/javascript:/gi, // Remove "javascript:" keyword.
@@ -587,7 +584,7 @@ window.bp = window.bp || {};
 					/\b(alert|confirm|prompt|eval|setTimeout|setInterval)\b\(.*?\)/gi, // Block common JS methods.
 				];
 
-				forbiddenPatterns.forEach( ( pattern ) => {
+				forbiddenPatterns.forEach( function ( pattern ) {
 					bbp_topic_title = bbp_topic_title.replace( pattern, '' );
 				} );
 
