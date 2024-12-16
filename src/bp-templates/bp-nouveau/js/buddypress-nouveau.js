@@ -6,6 +6,10 @@ window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+	var hoverAvatar = false;
+	var hoverCardPopup = false;
+	var hideCardTimeout = null;
+	var popupCardLoaded = false;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -866,12 +870,12 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content, #profile-card' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
@@ -922,6 +926,48 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
+
+			// Profile/Group Popup Card
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
+				hoverAvatar = true;
+				if ( !popupCardLoaded ) {
+					if ( hideCardTimeout ) {
+						clearTimeout( hideCardTimeout );
+					}
+					bp.Nouveau.profilePopupCard.call(this);
+				}
+			} );
+			$( document ).on( 'mouseenter', '.group-avatar img.avatar', function() {
+				hoverAvatar = true;
+				if ( !popupCardLoaded ) {
+					if ( hideCardTimeout ) {
+						clearTimeout( hideCardTimeout );
+					}
+					bp.Nouveau.groupPopupCard.call(this);
+				}
+			} );
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .group-avatar img.avatar', function() {
+				hoverAvatar = false;
+				if ( !hoverCardPopup ) {
+					bp.Nouveau.checkHidePopupCard();
+				}
+			} );
+			$( document ).on( 'mouseenter', '#profile-card, #group-card', function() {
+				hoverCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			});
+			$( document ).on( 'mouseleave', '#profile-card, #group-card', function() {
+				setTimeout( function() {
+					hoverCardPopup = false;
+					if ( !hoverAvatar ) {
+						bp.Nouveau.checkHidePopupCard();
+					}
+				}, 200 );
+			} );
+
+			$( window ).on( 'scroll', this.hidePopupCard );
 		},
 
 		/**
@@ -4445,6 +4491,298 @@ window.bp = window.bp || {};
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
 				$( 'body' ).removeClass( 'more_option_open' );
 			}
+		},
+
+		/**
+		 * Helper function to reset profile popup cards.
+		 */
+		resetProfileCard: function () {
+			var $profileCard = $( '#profile-card' );
+
+			$profileCard
+				.attr( 'data-bp-item-id', '' )
+				.removeClass( 'loading' );
+			$profileCard
+				.find( '.bb-card-footer, .skeleton-card-footer' )
+				.removeClass( 'bb-card-footer--plain' );
+			$profileCard
+				.find( '.bb-card-profile-type' )
+				.removeClass( 'hasMemberType' )
+				.text( '' );
+			$profileCard
+				.find( '.card-profile-status' )
+				.removeClass( 'active' );
+			$profileCard
+				.find( '.card-meta-joined span, .card-meta-last-active, .card-meta-followers' )
+				.text( '' );
+			$profileCard
+				.find( '.bb-card-avatar img' )
+				.attr( 'src', '' );
+			$profileCard
+				.find( '.card-button-follow' )
+				.attr( 'data-bp-btn-action', '' )
+				.attr( 'id', '' );
+			$profileCard
+				.find( '.follow-button.generic-button' )
+				.removeClass('following not_following')
+				.attr( 'id', '' );
+			$profileCard
+				.find( '.send-message' )
+				.attr( 'href', '' );
+			$profileCard
+				.find( '.bb-card-action-connect' )
+				.html('');
+			$profileCard
+				.find( '.bb-card-action-follow' )
+				.html('');
+		},
+
+		/**
+		 * Helper function to update and populate profile popup cards with data.
+		 */
+		updateProfileCard: function ( data, currentUser ) {
+			var $profileCard = $( '#profile-card' );
+			var registeredDate = new Date( data.registered_date );
+			var joinedDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( registeredDate );
+			var activeStatus = data.last_activity === 'Active now' ? 'active' : '';
+			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
+			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
+		
+			$profileCard
+				.attr( 'data-bp-item-id', data.id );
+			$profileCard
+				.find( '.bb-card-avatar img' )
+				.attr( 'src', data.avatar_urls.thumb );
+			$profileCard
+				.find( '.card-profile-status' )
+				.addClass( activeStatus );
+			$profileCard
+				.find( '.bb-card-heading' )
+				.text( data.profile_name );
+			$profileCard
+				.find( '.bb-card-profile-type' )
+				.addClass( memberTypeClass )
+				.text( memberType );
+			$profileCard
+				.find( '.card-meta-joined span' )
+				.text( joinedDate );
+			$profileCard
+				.find( '.card-meta-last-active' )
+				.text( data.last_activity );
+			$profileCard
+				.find( '.card-meta-followers' )
+				.text( data.followers );
+			$profileCard
+				.find( '.bb-card-footer .card-button-profile' )
+				.attr( 'href', data.link );
+		
+			if ( currentUser ) {
+				$profileCard
+					.find( '.bb-card-footer' )
+					.addClass( 'bb-card-footer--plain' );
+			}
+
+			var $followButtonWrapper = $profileCard.find( '.bb-card-action-follow' );
+			if ( $followButtonWrapper.length ) {
+				$followButtonWrapper.html( data.follow_button_html );
+			}
+
+			var $connectButtonWrapper = $profileCard.find( '.bb-card-action-connect' );
+			if ( $connectButtonWrapper.length ) {
+				$connectButtonWrapper.html( data.friend_button_html );
+			}
+
+			var $messageButton = $profileCard.find( '.send-message' );
+			if ( $messageButton.length && data.can_send_message ) {
+				$messageButton.attr( 'href', data.message_url );
+			}
+		},
+
+		profilePopupCard: function() {
+			var $avatar = $( this );
+			var offset = $avatar.offset();
+			var popupTop = offset.top + $avatar.outerHeight() + 10;
+  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
+			var $li = $avatar.closest( '.comment-item, .activity-item' );
+			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
+			var memberId = cardData.user_id;
+			var currentUserId = cardData.current_user_id;
+			var currentUser = currentUserId === memberId;
+			var restUrl = BP_Nouveau.rest_url;
+			var url = restUrl + '/members/' + memberId + '/info';
+			var $profileCard = $( '#profile-card' );
+
+			if ( popupCardLoaded ) {
+				return;
+			}
+
+			$.ajax({
+				url: url,
+				method: 'GET',
+				headers: {
+					'X-WP-Nonce': BP_Nouveau.rest_nonce
+				},
+				beforeSend: function () {
+					bp.Nouveau.resetProfileCard();
+					// Position popup near hovered avatar
+					$profileCard
+						.css( {
+							position: 'fixed',
+							top: popupTop - $( window ).scrollTop() + 'px',
+							left: popupLeft - $( window ).scrollLeft() + 'px',
+							display: 'block',
+						} )
+						.addClass( 'loading' );
+
+					if ( currentUser ) {
+						$profileCard
+							.find( '.skeleton-card-footer' )
+							.addClass( 'bb-card-footer--plain' );
+					}
+				},
+				success: function ( data ) {
+					$profileCard.removeClass( 'loading' );
+					bp.Nouveau.updateProfileCard( data, currentUser );
+					popupCardLoaded = true;
+				},
+				error: function ( xhr, status, error ) {
+					console.error( 'Error fetching member info:', error );
+					$profileCard.html( '<span>Failed to load data.</span>' );
+				}
+			});
+		},
+
+		/**
+		 * Helper function to reset group popup cards.
+		 */
+		resetGroupCard: function () {
+			var $groupCard = $( '#group-card' );
+
+			$groupCard
+				.attr( 'data-bp-item-id', '' )
+				.removeClass( 'loading' );
+			$groupCard
+				.find( '.bb-card-footer, .skeleton-card-footer' )
+				.removeClass( 'bb-card-footer--plain' );
+			$groupCard
+				.find( '.card-meta-type, .card-meta-status, .card-meta-last-active' )
+				.text( '' );
+			$groupCard
+				.find( '.bb-card-avatar img' )
+				.attr( 'src', '' );
+			$groupCard
+				.find( '.card-button-group' )
+				.attr( 'href', '' );
+		},
+
+		/**
+		 * Helper function to update and populate group popup cards with data.
+		 */
+		updateGroupCard: function ( data, currentUser ) {
+			var $groupCard = $( '#group-card' );
+			var activityDate = new Date( data.last_activity );
+			var lastActivity = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( activityDate );
+		
+			$groupCard
+				.attr( 'data-bp-item-id', data.id );
+			$groupCard
+				.find( '.bb-card-avatar img' )
+				.attr( 'src', data.avatar_urls.thumb );
+			$groupCard
+				.find( '.bb-card-heading' )
+				.text( data.name );
+			$groupCard
+				.find( '.card-meta-status' )
+				.text( data.status );
+			$groupCard
+				.find( '.card-meta-type' )
+				.text( data.group_type_label );
+			$groupCard
+				.find( '.card-meta-last-active' )
+				.text( lastActivity );
+			$groupCard
+				.find( '.bb-card-footer .card-button-profile' )
+				.attr( 'href', data.link );
+		
+			if ( currentUser ) {
+				$groupCard
+					.find( '.bb-card-footer' )
+					.addClass( 'bb-card-footer--plain' );
+			}
+
+			var $joinGroupButton = $groupCard.find( '.join-group' );
+			if ( $joinGroupButton.length && data.can_join ) {
+				$joinGroupButton.attr( 'href', '' );
+			}
+		},
+
+		groupPopupCard: function() {
+			var $avatar = $( this );
+			var offset = $avatar.offset();
+			var popupTop = offset.top + $avatar.outerHeight() + 10;
+  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
+			var $li = $avatar.closest( '.activity-item' );
+			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
+			var groupId = cardData.group_id;
+			var memberId = cardData.user_id;
+			var currentUserId = cardData.current_user_id;
+			var currentUser = currentUserId === memberId;
+			var restUrl = BP_Nouveau.rest_url;
+			var url = restUrl + '/groups/' + groupId + '/info';
+			var $groupCard = $( '#group-card' );
+
+			if ( popupCardLoaded ) {
+				return;
+			}
+
+			$.ajax({
+				url: url,
+				method: 'GET',
+				headers: {
+					'X-WP-Nonce': BP_Nouveau.rest_nonce
+				},
+				beforeSend: function () {
+					bp.Nouveau.resetGroupCard();
+					// Position popup near hovered avatar
+					$groupCard
+						.css( {
+							position: 'fixed',
+							top: popupTop - $( window ).scrollTop() + 'px',
+							left: popupLeft - $( window ).scrollLeft() + 'px',
+							display: 'block',
+						} )
+						.addClass( 'loading' );
+
+					if ( currentUser ) {
+						$groupCard
+							.find( '.skeleton-card-footer' )
+							.addClass( 'bb-card-footer--plain' );
+					}
+				},
+				success: function ( data ) {
+					$groupCard.removeClass( 'loading' );
+					bp.Nouveau.updateGroupCard( data, currentUser );
+					popupCardLoaded = true;
+				},
+				error: function ( xhr, status, error ) {
+					console.error( 'Error fetching group info:', error );
+					$groupCard.html( '<span>Failed to load data.</span>' );
+				}
+			});
+		},
+
+		checkHidePopupCard: function () {
+			if ( !hoverAvatar && !hoverCardPopup ) {
+				hideCardTimeout = setTimeout( function() {
+					bp.Nouveau.hidePopupCard();
+				}, 200 );
+			}
+		},
+
+		hidePopupCard: function() {
+			$( '.bb-popup-card' ).hide();
+			hideCardTimeout = null;
+			popupCardLoaded = false;
 		},
 	};
 
