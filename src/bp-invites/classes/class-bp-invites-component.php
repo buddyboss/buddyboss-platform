@@ -51,7 +51,7 @@ class BP_Invites_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'invites',
-			__( 'Sent Invites', 'buddyboss' ),
+			'Sent Invites',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,

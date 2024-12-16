@@ -72,7 +72,7 @@
 					sprintf(
 						'<a href="%s">%s</a>',
 						'https://learndash.idevaffiliate.com/111.html',
-						__( 'LearnDash LMS', 'buddyboss' )
+						'LearnDash LMS'
 					)
 				)
 				?>

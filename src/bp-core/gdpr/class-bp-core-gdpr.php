@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Core_Gdpr {
 
 	public function __construct() {
-		$this->load_on_bp_dependency();
+		add_action( 'bp_loaded', array( $this, 'load_on_bp_dependency' ), 0 );
 	}
 
 	/**

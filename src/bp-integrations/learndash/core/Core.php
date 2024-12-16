@@ -42,7 +42,7 @@ class Core {
 		$this->learndash    = new LearndashCore();
 		$this->settings     = new Settings();
 
-		$this->pluginName = __( 'BuddyBoss LearnDash', 'buddyboss' );
+		$this->pluginName = 'BuddyBoss LearnDash';
 
 		add_action( 'bp_ld_sync/requirements_checked', array( $this, 'init' ) );
 		$this->registerCourseComponent();
