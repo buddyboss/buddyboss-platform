@@ -5601,10 +5601,12 @@ function bp_profile_card_get_edit_data( $activity_id = 0 ) {
 	$edit_data = wp_cache_get( $activity->id, 'profile_card_data' );
 	if ( false === $edit_data ) {
 		$activity_user_id  = bp_get_activity_user_id();
+		$group_id      	   = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
 		$edit_data = array(
 			'user_id'          => $activity_user_id,
 			'current_user_id'  => get_current_user_id(),
+			'group_id'  	   => $group_id,
 		);
 
 		// Set meta data to cache.

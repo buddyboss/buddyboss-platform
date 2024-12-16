@@ -655,6 +655,13 @@ div.profile_completion_wrap {
 		border-radius: 50%;
 	}
 
+	&.bb-group-card {
+
+		.skeleton-card-avatar {
+			border-radius: 8px;
+		}
+	}
+
 	.skeleton-card-type {
 		max-width: 61px;
 		height: 21px;
@@ -670,6 +677,16 @@ div.profile_completion_wrap {
 	.skeleton-card-meta {
 		max-width: 150px;
 		height: 15px;
+	}
+
+	&.bb-group-card {
+
+		.skeleton-card-footer:not(.bb-card-footer--plain) {
+
+			.skeleton-card-button:first-of-type {
+				width: 66.66%;
+			}
+		}
 	}
 
 	.skeleton-card-footer {
@@ -766,6 +783,13 @@ div.profile_completion_wrap {
 	gap: 10px;
 	margin: 30px 0 0;
 
+	.bb-group-card & {
+
+		.bb-card-action:first-of-type {
+			flex: 0 0 66.66%;
+		}
+	}
+
 	.card-button,
 	button.follow-button {
 		display: inline-block;
@@ -791,7 +815,7 @@ div.profile_completion_wrap {
 		a.friendship-button,
 		button.friendship-button {
 			min-height: 30px;
-			line-height: 30px;
+			line-height: 28px;
 		}
 	}
 

@@ -187,6 +187,9 @@ add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template'
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_profile_card_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_profile_card_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_profile_card_template' );
+add_action( 'bp_after_directory_activity_list', 'bb_activity_add_group_card_template' );
+add_action( 'bp_after_group_activity_content', 'bb_activity_add_group_card_template' );
+add_action( 'bp_after_member_activity_content', 'bb_activity_add_group_card_template' );
 add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
@@ -3764,12 +3767,21 @@ function bb_activity_add_modal_template() {
 }
 
 /**
- * Add profile/group hover card template.
+ * Add profile hover card template.
  *
  * @since BuddyBoss 2.5.80
  */
 function bb_activity_add_profile_card_template() {
 	bp_get_template_part( 'activity/profile-card' );
+}
+
+/**
+ * Add group hover card template.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_activity_add_group_card_template() {
+	bp_get_template_part( 'activity/group-card' );
 }
 
 /**

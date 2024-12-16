@@ -12632,6 +12632,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   border-radius: 50%;
 }
 
+.bb-popup-card.loading.bb-group-card .skeleton-card-avatar {
+  border-radius: 8px;
+}
+
 .bb-popup-card.loading .skeleton-card-type {
   max-width: 61px;
   height: 21px;
@@ -12647,6 +12651,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 .bb-popup-card.loading .skeleton-card-meta {
   max-width: 150px;
   height: 15px;
+}
+
+.bb-popup-card.loading.bb-group-card .skeleton-card-footer:not(.bb-card-footer--plain) .skeleton-card-button:first-of-type {
+  width: 66.66%;
 }
 
 .bb-popup-card.loading .skeleton-card-footer {
@@ -12736,6 +12744,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   margin: 30px 0 0;
 }
 
+.bb-group-card .bb-card-footer .bb-card-action:first-of-type {
+  flex: 0 0 66.66%;
+}
+
 .bb-card-footer .card-button,
 .bb-card-footer button.follow-button {
   display: inline-block;
@@ -12759,7 +12771,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 .buddypress .buddypress-wrap .bb-card-footer a.friendship-button,
 .buddypress .buddypress-wrap .bb-card-footer button.friendship-button {
   min-height: 30px;
-  line-height: 30px;
+  line-height: 28px;
 }
 
 .bb-card-footer .bb-card-action {
