@@ -1280,7 +1280,7 @@ window.bp = window.bp || {};
 									}
 								} else {
 									if ( response.data.media_personal_count ) {
-										if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
 											var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 											(
 												1 === parseInt( response.data.media_personal_count )
@@ -1295,7 +1295,7 @@ window.bp = window.bp || {};
 									}
 
 									if ( response.data.media_group_count ) {
-										if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
 											var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 											(
 												1 === parseInt( response.data.media_group_count )
@@ -5234,7 +5234,7 @@ window.bp = window.bp || {};
 								bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
 
 								if ( response.data.media_personal_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
 										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
 											1 === parseInt( response.data.media_personal_count )
@@ -5255,7 +5255,7 @@ window.bp = window.bp || {};
 								}
 
 								if ( response.data.media_group_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
 										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
 											1 === parseInt( response.data.media_group_count )
@@ -5276,9 +5276,31 @@ window.bp = window.bp || {};
 								}
 
 								if ( 'yes' === BP_Nouveau.media.is_media_directory ) {
-									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
-									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
-									$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+
+									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+										var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
+										var dir_count = 0;
+										if ( 'all' === dir_scope ) {
+											dir_count = response.data.media_all_count;
+										} else if ( 'personal' === dir_scope ) {
+											dir_count = response.data.media_personal_count;
+										} else if( 'groups' === dir_scope ) {
+											dir_count = response.data.media_group_count;
+										}
+
+										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										(
+											1 === dir_count
+											? BP_Nouveau.dir_labels['media']['singular']
+											: BP_Nouveau.dir_labels['media']['plural']
+										)
+										: '';
+										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+									} else {
+										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
+										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
+										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+									}
 								}
 
 								for ( var i = 0; i < self.dropzone_media.length; i++ ) {
@@ -6498,7 +6520,7 @@ window.bp = window.bp || {};
 			if ( $( '.single-screen-navs.groups-nav' ).find( 'ul li#albums-groups-li' ).length < 1 ) {
 				return;
 			}
-			if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+			if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
 				var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'album' ) ?
 				(
 					1 === parseInt( count )

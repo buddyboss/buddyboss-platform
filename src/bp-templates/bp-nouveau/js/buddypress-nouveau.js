@@ -676,7 +676,14 @@ window.bp = window.bp || {};
 								$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
 							}
 
-							if ( ( $( 'body.groups' ).hasClass( 'single-item' ) || $( 'body.bp-user' ).hasClass( 'single' ) ) && ( 'media' === data.object || 'video' === data.object ) ) {
+							if (
+								(
+									$( 'body.groups' ).hasClass( 'single-item' ) ||
+									$( 'body.bp-user' ).hasClass( 'single' ) ||
+									$( 'body.directory' ).hasClass( 'media' ) ||
+									$( 'body.directory' ).hasClass( 'video' )
+								) && ( 'media' === data.object || 'video' === data.object )
+							) {
 								$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.scopes[ data.scope ] + '</span> ' + dir_label );
 							}
 						}

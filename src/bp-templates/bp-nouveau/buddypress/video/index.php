@@ -30,6 +30,24 @@ bp_nouveau_template_notices();
 	if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 		bp_get_template_part( 'common/nav/directory-nav' );
 	}
+
+	$bp_nouveau = bp_nouveau();
+	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $bp_nouveau->sorted_nav[0]->count ) ) {
+		$count = $bp_nouveau->sorted_nav[0]->count;
+		?>
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+				/* translators: %d is the video count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					$count
+				);
+			}
+			?>
+		</div>
+		<?php
+	}
 	?>
 
 	<div class="video-options">
