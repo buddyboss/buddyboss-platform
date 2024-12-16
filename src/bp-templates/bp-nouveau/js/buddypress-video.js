@@ -414,12 +414,18 @@ window.bp = window.bp || {};
 									}
 
 									// Prepend the activity.
-									bp.Nouveau.inject( '#video-stream ul.video-list', response.data.video, 'prepend' );
+									if (
+										'undefined' === typeof BP_Nouveau.video.is_video_directory ||
+										'yes' !== BP_Nouveau.video.is_video_directory ||
+										'groups' !== $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' )
+									) {
+										bp.Nouveau.inject( '#video-stream ul.video-list', response.data.video, 'prepend' );
+									}
 
 								}
 
 								if ( response.data.video_personal_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_video_directory ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
 										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
 											1 === parseInt( response.data.video_personal_count )
@@ -440,7 +446,7 @@ window.bp = window.bp || {};
 								}
 
 								if ( response.data.video_group_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_video_directory ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
 										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
 											1 === parseInt( response.data.video_group_count )
@@ -1653,7 +1659,7 @@ window.bp = window.bp || {};
 									'undefined' !== typeof response.data.video_personal_count
 								) {
 
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_video_directory ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
 										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
 											1 === parseInt( response.data.video_personal_count )
@@ -1671,7 +1677,7 @@ window.bp = window.bp || {};
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.video_group_count
 								) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_video_directory ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
 										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
 											1 === parseInt( response.data.video_group_count )

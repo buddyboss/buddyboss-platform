@@ -5231,7 +5231,13 @@ window.bp = window.bp || {};
 								}
 
 								// Prepend the activity.
-								bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
+								if (
+									'undefined' === typeof BP_Nouveau.media.is_media_directory ||
+									'yes' !== BP_Nouveau.media.is_media_directory ||
+									'groups' !== $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' )
+								) {
+									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
+								}
 
 								if ( response.data.media_personal_count ) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
