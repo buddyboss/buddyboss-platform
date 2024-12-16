@@ -4031,9 +4031,12 @@ function bb_media_delete_older_symlinks() {
 
 }
 
-add_action( 'bp_init', function() {
-	bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
-});
+add_action(
+	'bp_init',
+	function () {
+		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
+	}
+);
 
 
 /**
