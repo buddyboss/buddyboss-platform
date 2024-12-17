@@ -66,8 +66,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Bug: Core - Fixed an issue where member’s last activity time did not align with the timezone selected
 * Bug: Core - Fixed an issue where non-English pages/URLs could not be added as public content, they now work correctly when site privacy is enabled
 * Bug: Core - Fixed UI spacing issues in the General Settings admin card on smaller screens within BuddyBoss settings
-* Bug: Core - Fixed XSS and CSRF vulnerabilities to enhance security
-* Bug: Elementror - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
+* Bug: Core - Code refactoring to improve security and fix vulnerabilities
+* Bug: Elementor - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
 * Bug: Forum - Fixed an issue where disabling autocomplete in the forum search bar caused the page to reload with search results after typing a character
 * Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Platform plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
 * Bug: Groups - Fixed an issue where a Private Group incorrectly displayed a message indicating it was a subgroup, even when it was a parent group
