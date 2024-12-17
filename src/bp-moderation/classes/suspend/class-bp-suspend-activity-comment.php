@@ -29,7 +29,7 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -221,20 +221,22 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $acomment_id;
 
-		if ( $this->background_disabled ) {
-			$this->hide_related_content( $acomment_id, $hide_sitewide, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $acomment_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $acomment_id, $hide_sitewide, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->hide_related_content( $acomment_id, $hide_sitewide, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $acomment_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $acomment_id, $hide_sitewide, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -293,20 +295,22 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $acomment_id;
 
-		if ( $this->background_disabled ) {
-			$this->unhide_related_content( $acomment_id, $hide_sitewide, $force_all, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $acomment_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $acomment_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->unhide_related_content( $acomment_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $acomment_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $acomment_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -355,27 +359,103 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 		$blocked_user = ! empty( $args['blocked_user'] ) ? $args['blocked_user'] : '';
 		$page         = ! empty( $args['page'] ) ? $args['page'] : - 1;
 
-		if ( $page > 1 ) {
-			return array();
-		}
-
 		$related_contents = array();
 
-		// related activity comment only hide if parent activity hide or comment's/parent activity's author blocked or suspended.
-		if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
-			$related_contents[ self::$type ] = self::get_activity_comment_ids( $acomment_id );
+		if ( $page <= 1 ) {
+			// Related activity comment only hide if parent activity hides or comment's/parent activity's author blocked or suspended.
+			if ( ! empty( $args ) && ( isset( $args['blocked_user'] ) || isset( $args['user_suspended'] ) || isset( $args['hide_parent'] ) ) ) {
+				$related_contents[ self::$type ] = self::get_activity_comment_ids( $acomment_id );
+			}
+
+			if ( bp_is_active( 'document' ) ) {
+				$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
+			}
+
+			if ( bp_is_active( 'media' ) ) {
+				$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
+			}
+
+			if ( bp_is_active( 'video' ) ) {
+				$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
+			}
 		}
 
-		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
-		}
+		if (
+			! empty( $args['parent_id'] ) &&
+			(
+				self::$type . '_' . $acomment_id === $args['parent_id'] ||
+				strpos( $args['parent_id'], BP_Suspend_Document::$type . '_' ) !== 0 ||
+				strpos( $args['parent_id'], BP_Suspend_Media::$type . '_' ) !== 0 ||
+				strpos( $args['parent_id'], BP_Suspend_Video::$type . '_' ) !== 0
+			) &&
+			! empty( $args['action'] ) &&
+			in_array( $args['action'], array( 'hide', 'unhide' ), true )
+		) {
+			$page           = $args['page'] ?? 1;
+			$child_comments = BP_Suspend_Activity::fetch_all_child_activity( $acomment_id, $page );
+			$document_ids   = array();
+			$media_ids      = array();
+			$video_ids      = array();
 
-		if ( bp_is_active( 'media' ) ) {
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
-		}
+			if ( ! empty( $child_comments['comments'] ) ) {
+				foreach ( $child_comments['comments'] as $child_comment ) {
+					if ( 'activity_comment' === $child_comment->type ) {
+						$related_contents[ self::$type ][] = $child_comment->id;
+					} else {
+						$related_contents[ BP_Suspend_Activity::$type ][] = $child_comment->id;
+					}
 
-		if ( bp_is_active( 'video' ) ) {
-			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_video_ids_meta( $acomment_id, 'bp_activity_get_meta', $action );
+					if ( bp_is_active( 'document' ) ) {
+						$document_ids = array_merge( $document_ids, BP_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+					if ( bp_is_active( 'media' ) ) {
+						$media_ids = array_merge( $media_ids, BP_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+					if ( bp_is_active( 'video' ) ) {
+						$video_ids = array_merge( $video_ids, BP_Suspend_Video::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+					}
+				}
+
+				$args['next_page'] = $child_comments['has_more'] ?? false;
+
+				if ( ! empty( $related_contents[ BP_Suspend_Activity::$type ] ) ) {
+					$related_contents[ BP_Suspend_Activity::$type ] = array_unique( $related_contents[ BP_Suspend_Activity::$type ] );
+				}
+
+				if ( ! empty( $related_contents[ self::$type ] ) ) {
+					$related_contents[ self::$type ] = array_unique( $related_contents[ self::$type ] );
+				}
+
+				unset( $child_comments );
+			}
+
+			if ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
+				$related_contents[ BP_Suspend_Document::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Document::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $document_ids ) : $document_ids ) );
+				unset( $document_ids );
+			}
+
+			if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+				$related_contents[ BP_Suspend_Media::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Media::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $media_ids ) : $media_ids ) );
+				unset( $media_ids );
+			}
+
+			if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
+				$related_contents[ BP_Suspend_Video::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Video::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $video_ids ) : $video_ids ) );
+				unset( $video_ids );
+			}
+
+			$hide_sitewide = $args['hide_sitewide'] ?? 0;
+
+			$args['disable_background'] = true;
+
+			if ( 'hide' === $args['action'] ) {
+				$this->loop_hide_related_content( $related_contents, $acomment_id, $hide_sitewide, $args );
+			} elseif ( 'unhide' === $args['action'] ) {
+				$this->loop_unhide_related_content( $related_contents, $acomment_id, $hide_sitewide, 0, $args );
+			}
+
+			unset( $related_contents );
+			$related_contents = array();
 		}
 
 		return $related_contents;
@@ -470,7 +550,6 @@ class BP_Suspend_Activity_Comment extends BP_Suspend_Abstract {
 				BP_Core_Suspend::delete_suspend( $activity->id, $this->item_type );
 			}
 		}
-
 	}
 
 	/**

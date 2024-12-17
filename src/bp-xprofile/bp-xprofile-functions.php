@@ -2054,18 +2054,40 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 		return;
 	}
 
-	$user = get_user_by( 'id', $user_id );
+	$user              = get_user_by( 'id', $user_id );
+	$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 	if ( isset( $user->first_name ) ) {
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+		$firstname_field_id = bp_xprofile_firstname_field_id();
+		xprofile_set_field_data( $firstname_field_id, $user->ID, $user->first_name );
+
+		// Check if firstname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $firstname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $firstname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $firstname_field_id, $user_id, $visibility );
+		}
 	}
 
 	if ( isset( $user->last_name ) ) {
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
+		$lastname_field_id  = bp_xprofile_lastname_field_id();
+		xprofile_set_field_data( $lastname_field_id, $user->ID, $user->last_name );
+
+		// Check if lastname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $lastname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $lastname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $lastname_field_id, $user_id, $visibility );
+		}
 	}
 
 	if ( isset( $user->nickname ) ) {
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
+		$nickname_field_id  = bp_xprofile_nickname_field_id();
+		xprofile_set_field_data( $nickname_field_id, $user->ID, $user->nickname );
+
+		// Check if nickname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $nickname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $nickname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
+		}
 	}
 }
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
@@ -2735,15 +2757,9 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
 	$bp   = buddypress();
 	$args = array(
-		'number'     => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
-		'paged'      => $page,
-		'meta_query' => array(
-			array(
-				'key'     => 'bp_xprofile_visibility_levels',
-				'compare' => 'EXISTS',
-			),
-		),
-		'fields'     => 'ID',
+		'number' => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
+		'paged'  => $page,
+		'fields' => 'ID',
 	);
 
 	$users = get_users( $args );
@@ -2771,6 +2787,31 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	}
 
 	foreach ( $users as $user_id ) {
+
+		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		if ( ! empty( $visibility_levels ) ) {
+			$default_field_ids = array(
+				bp_xprofile_firstname_field_id(),
+				bp_xprofile_lastname_field_id(),
+				bp_xprofile_nickname_field_id(),
+			);
+
+			foreach ( $default_field_ids as $default_field_id ) {
+				if ( empty( $visibility_levels[ $default_field_id ] ) ) {
+					$visibility_level = xprofile_get_field_visibility_level( $default_field_id, $user_id );
+					xprofile_set_field_visibility_level( $default_field_id, $user_id, $visibility_level );
+				}
+			}
+		} else {
+			// Get all profile field data for the user and set the visibility levels.
+			$profile_data = BP_XProfile_ProfileData::get_all_for_user( $user_id );
+			foreach ( $profile_data as $field_name => $field_data ) {
+				if ( ! empty( $field_data ) && ! empty( $field_data['field_id'] ) ) {
+					$visibility_level = xprofile_get_field_visibility_level( $field_data['field_id'], $user_id );
+					xprofile_set_field_visibility_level( $field_data['field_id'], $user_id, $visibility_level );
+				}
+			}
+		}
 
 		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 		if ( ! empty( $visibility_levels ) ) {
