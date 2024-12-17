@@ -4673,6 +4673,9 @@ window.bp = window.bp || {};
 			$groupCard
 				.find( '.card-button-group' )
 				.attr( 'href', '' );
+			$groupCard
+				.find( '.bs-group-members' )
+				.html( '' );
 		},
 
 		/**
@@ -4682,6 +4685,8 @@ window.bp = window.bp || {};
 			var $groupCard = $( '#group-card' );
 			var activityDate = new Date( data.last_activity );
 			var lastActivity = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( activityDate );
+			var groupMembers = data.group_members || [];
+			var $groupMembersContainer = $( '.bs-group-members' );
 		
 			$groupCard
 				.attr( 'data-bp-item-id', data.id );
@@ -4703,8 +4708,28 @@ window.bp = window.bp || {};
 			$groupCard
 				.find( '.bb-card-footer .card-button-profile' )
 				.attr( 'href', data.link );
+
+			groupMembers.forEach( function ( member ) {
+				var memberHtml = 
+					'<span class="bs-group-member">' +
+						'<a href="' + member.link + '">' +
+							'<img src="' + member.avatar_urls.thumb + '" class="round">' +
+						'</a>' +
+					'</span>';
+				$groupMembersContainer.append( memberHtml );
+			} );
+
+			if ( data.members_count > 3 ) {
+				var moreIconHtml =
+					'<span class="bs-group-member">' +
+						'<a href="#">' +
+							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
+						'</a>' +
+					'</span>';
+				$groupMembersContainer.append( moreIconHtml );
+			}
 		
-			if ( currentUser ) {
+			if ( !data.can_join ) {
 				$groupCard
 					.find( '.bb-card-footer' )
 					.addClass( 'bb-card-footer--plain' );
@@ -4753,11 +4778,9 @@ window.bp = window.bp || {};
 						} )
 						.addClass( 'loading' );
 
-					if ( currentUser ) {
-						$groupCard
-							.find( '.skeleton-card-footer' )
-							.addClass( 'bb-card-footer--plain' );
-					}
+					$groupCard
+						.find( '.skeleton-card-footer' )
+						.addClass( 'bb-card-footer--plain' );
 				},
 				success: function ( data ) {
 					$groupCard.removeClass( 'loading' );
@@ -4775,12 +4798,14 @@ window.bp = window.bp || {};
 			if ( !hoverAvatar && !hoverCardPopup ) {
 				hideCardTimeout = setTimeout( function() {
 					bp.Nouveau.hidePopupCard();
-				}, 200 );
+				}, 100 );
 			}
 		},
 
 		hidePopupCard: function() {
 			$( '.bb-popup-card' ).hide();
+			bp.Nouveau.resetProfileCard();
+			bp.Nouveau.resetGroupCard();
 			hideCardTimeout = null;
 			popupCardLoaded = false;
 		},

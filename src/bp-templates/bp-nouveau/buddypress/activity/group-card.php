@@ -37,6 +37,9 @@
 					<span class="card-meta-type"></span>
 					<span class="card-meta-last-active"></span>
 				</div>
+				<div class="card-group-members">
+					<span class="bs-group-members"></span>
+				</div>
 			</div>
 		</div>
 		<div class="bb-card-footer">
