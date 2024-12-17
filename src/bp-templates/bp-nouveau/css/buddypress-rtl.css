@@ -9846,6 +9846,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 .buddypress-wrap .friends-mutual-list:not(.grid) .list-wrap-inner .item-avatar img {
   border-radius: 50%;
   max-width: 70px;
+  height: auto;
 }
 
 .buddypress-wrap .members-list:not(.grid) .only-grid-view,
@@ -10524,6 +10525,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 #item-header-cover-image #item-header-avatar img.avatar {
   max-width: 150px;
+  height: auto;
 }
 
 #item-header-cover-image #item-header-content {
