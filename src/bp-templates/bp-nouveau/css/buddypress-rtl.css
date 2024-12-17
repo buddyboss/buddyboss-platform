@@ -14030,6 +14030,17 @@ body.bb-is-mobile .bp-messages-content .bp-message-content_foot_note {
   display: flex;
 }
 
+#send_message_form .dropzone {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
 .bp-messages-search-form #user_messages_search_reset {
   font-size: 13px;
   color: #767676;
@@ -27584,7 +27595,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {
