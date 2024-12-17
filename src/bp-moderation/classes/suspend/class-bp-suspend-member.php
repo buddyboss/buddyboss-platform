@@ -1340,7 +1340,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	/**
 	 * Finds the next active component item after the current process.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param array  $components      An associative array of components and their items.
 	 * @param string $current_process The current process or item to match against.

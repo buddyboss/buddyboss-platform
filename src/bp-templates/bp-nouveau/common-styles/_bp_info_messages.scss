@@ -218,6 +218,81 @@ button[data-bp-close]:hover {
 	}
 }
 
+.bp-feedback {
+
+	&.bp-feedback--clean {
+		border-radius: 5px;
+		box-shadow: none;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		padding: 9px 12px;
+		font-size: 14px;
+		line-height: 18px;
+		font-weight: 600;
+
+		.bp-icon {
+			background-color: transparent;
+			color: #2271b1;
+			padding: 0;
+			margin: 0 8px 0 0;
+			display: inline-flex;
+			height: 16px;
+
+			&::before {
+				font-family: bb-icons;
+				font-style: normal;
+				display: inline-flex;
+				text-decoration: inherit;
+				text-align: center;
+				font-variant: normal;
+				text-transform: none;
+				font-size: 16px;
+				line-height: 16px;
+			}
+		}
+
+		> p {
+			padding: 0;
+			margin: 0;
+
+			.bp-admin-card .form-table td & {
+				margin-top: 0;
+			}
+		}
+
+		> p + p {
+			margin-top: 10px;
+		}
+
+		&.info {
+			border-color: #2271b1;
+			background-color: #f0f6fc;
+			color: #3c434a;
+
+			.bp-icon {
+				color: #2271b1;
+
+				&::before {
+					content: "\eebc";
+					font-weight: 200;
+				}
+			}
+
+			> p {
+				color: #3c434a;
+
+				.bp-admin-card .form-table td & {
+					margin-top: 0;
+					color: #3c434a;
+				}
+			}
+		}
+
+		&.bp-feedback--vmiddle {
+			align-items: center;
+		}
+	}
+}
+
 #pass-strength-result {
 	background-color: $pwd-background;
 	border-color: #ddd;

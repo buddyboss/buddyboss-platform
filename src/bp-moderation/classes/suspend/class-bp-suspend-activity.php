@@ -652,7 +652,7 @@ class BP_Suspend_Activity extends BP_Suspend_Abstract {
 	/**
 	 * Fetch all child activity
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param int $activity_id Activity ID.
 	 * @param int $page        Current page number.

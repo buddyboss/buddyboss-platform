@@ -66,7 +66,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Components and its moderation types.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @var array[] $components
 	 */
@@ -96,7 +96,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * BP_Suspend_Abstract constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 */
 	public function __construct() {
 		self::$item_per_page = (int) apply_filters( 'bb_suspend_item_per_page', 50 );
@@ -422,7 +422,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Checks if a moderation item is hidden based on the suspended or blocked user status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param int    $item_id   The ID of the item to check.
 	 * @param string $item_type The type of the item.
@@ -461,7 +461,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Checks if a moderation item is unhidden based on the blocked or suspended user status.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param int    $item_id   The ID of the item to check.
 	 * @param string $item_type The type of the item (e.g., post, activity).
@@ -507,7 +507,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Loops through and hides related content for a moderated item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param array $related_contents List of related content types and their respective content IDs.
 	 * @param int   $item_id          The ID of the main item being moderated.
@@ -606,7 +606,7 @@ abstract class BP_Suspend_Abstract {
 	/**
 	 * Loops through and unhides related content for a moderated item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.7.30
 	 *
 	 * @param array $related_contents List of related content types and their respective content IDs.
 	 * @param int   $item_id          The ID of the main item being moderated.
