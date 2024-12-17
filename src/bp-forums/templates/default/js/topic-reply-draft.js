@@ -570,6 +570,30 @@ window.bp = window.bp || {};
 				meta.bbp_topic_subscription = '';
 			}
 
+			if ( 'undefined' !== typeof meta.bbp_topic_title && '' !== meta.bbp_topic_title ) {
+				var bbp_topic_title = meta.bbp_topic_title;
+
+				// Unescape characters.
+				bbp_topic_title = bbp_topic_title.replace( /\\(.)/g, '$1' );
+
+				// Remove JavaScript patterns (basic filtering).
+				var forbiddenPatterns = [
+					/javascript:/gi, // Remove "javascript:" keyword.
+					/on\w+=".*?"/gi, // Remove inline event handlers like onload, onclick.
+					/<script.*?>.*?<\/script>/gi, // Remove <script> tags.
+					/\b(alert|confirm|prompt|eval|setTimeout|setInterval)\b\(.*?\)/gi, // Block common JS methods.
+				];
+
+				forbiddenPatterns.forEach( function ( pattern ) {
+					bbp_topic_title = bbp_topic_title.replace( pattern, '' );
+				} );
+
+				// Trim spaces.
+				bbp_topic_title = bbp_topic_title.trim();
+
+				meta.bbp_topic_title = bbp_topic_title;
+			}
+
 			var media_valid = false;
 			if ( 'undefined' !== typeof meta.bbp_media && ( '' !== meta.bbp_media && '[]' !== meta.bbp_media ) ) {
 				media_valid = true;
