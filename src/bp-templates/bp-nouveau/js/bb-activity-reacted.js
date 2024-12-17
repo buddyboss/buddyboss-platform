@@ -466,7 +466,7 @@ window.bp = window.bp || {};
 					this.args.collection = this.collection;
 					this.collection.fetch(
 						{
-							data: _.pick( arguments, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ),
+							data: _.pick( params, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ),
 							success: _.bind( this.onTabChangeSuccessRender, this, targetElement ),
 							error: _.bind( this.onTabChangeFailedRender, this, targetElement ),
 						}
