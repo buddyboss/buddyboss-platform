@@ -10,6 +10,7 @@ window.bp = window.bp || {};
 	var hoverCardPopup = false;
 	var hideCardTimeout = null;
 	var popupCardLoaded = false;
+	var currentRequest = null;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -4494,6 +4495,16 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Function to cancel ongoing AJAX request.
+		 */
+		abortOngoingRequest: function () {
+			if ( currentRequest ) {
+				currentRequest.abort();
+				currentRequest = null;
+			}
+		},
+
+		/**
 		 * Helper function to reset profile popup cards.
 		 */
 		resetProfileCard: function () {
@@ -4512,6 +4523,9 @@ window.bp = window.bp || {};
 			$profileCard
 				.find( '.card-profile-status' )
 				.removeClass( 'active' );
+			$profileCard
+				.find( '.bb-card-heading' )
+				.text( '' );
 			$profileCard
 				.find( '.card-meta-joined span, .card-meta-last-active, .card-meta-followers' )
 				.text( '' );
@@ -4612,6 +4626,13 @@ window.bp = window.bp || {};
 			var url = restUrl + '/members/' + memberId + '/info';
 			var $profileCard = $( '#profile-card' );
 
+			// Cancel any ongoing request
+			bp.Nouveau.abortOngoingRequest();
+
+			// Set up a new AbortController for current request
+			var controller = new AbortController();
+			currentRequest = controller;
+
 			if ( popupCardLoaded ) {
 				return;
 			}
@@ -4622,6 +4643,7 @@ window.bp = window.bp || {};
 				headers: {
 					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
+				signal: controller.signal, // Attach the signal to the request
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
 					// Position popup near hovered avatar
@@ -4641,6 +4663,9 @@ window.bp = window.bp || {};
 					}
 				},
 				success: function ( data ) {
+					// Check if this request was aborted
+					if ( controller.signal.aborted ) return;
+
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
 					popupCardLoaded = true;
@@ -4756,6 +4781,13 @@ window.bp = window.bp || {};
 			var url = restUrl + '/groups/' + groupId + '/info';
 			var $groupCard = $( '#group-card' );
 
+			// Cancel any ongoing request
+			bp.Nouveau.abortOngoingRequest();
+
+			// Set up a new AbortController for current request
+			var controller = new AbortController();
+			currentRequest = controller;
+
 			if ( popupCardLoaded ) {
 				return;
 			}
@@ -4766,6 +4798,7 @@ window.bp = window.bp || {};
 				headers: {
 					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
+				signal: controller.signal, // Attach the signal to the request
 				beforeSend: function () {
 					bp.Nouveau.resetGroupCard();
 					// Position popup near hovered avatar
@@ -4783,6 +4816,9 @@ window.bp = window.bp || {};
 						.addClass( 'bb-card-footer--plain' );
 				},
 				success: function ( data ) {
+					// Check if this request was aborted
+					if ( controller.signal.aborted ) return;
+
 					$groupCard.removeClass( 'loading' );
 					bp.Nouveau.updateGroupCard( data, currentUser );
 					popupCardLoaded = true;
