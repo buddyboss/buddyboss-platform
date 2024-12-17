@@ -5225,6 +5225,10 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
 }
 
 .bb-is-mobile.bb-reactions-mode.activity * {
+  -webkit-touch-callout: none;
+}
+
+.bb-is-mobile.bb-reactions-mode.activity .activity-meta .generic-button * {
   -webkit-user-select: none;
   user-select: none;
 }
