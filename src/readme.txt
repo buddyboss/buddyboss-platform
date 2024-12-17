@@ -57,6 +57,26 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.60 =
+* Bug: Activity - Fixed a security issue where private or connections-related activity post comments could be exposed using inspection tools
+* Bug: Activity - Fixed an issue where the reaction tab was still displayed after the activity tab was disabled on the news feed page
+* Bug: Activity - Fixed cursor placement issue in the draft activity form popup on Safari browsers
+* Bug: Core - Fixed a error that occurred when clicking the link in the confirmation email to change the admin email id
+* Bug: Core - Fixed an issue where copying text on mobile devices (Android and iOS) was not working as expected
+* Bug: Core - Fixed an issue where member’s last activity time did not align with the timezone selected
+* Bug: Core - Fixed an issue where non-English pages/URLs could not be added as public content, they now work correctly when site privacy is enabled
+* Bug: Core - Fixed UI spacing issues in the General Settings admin card on smaller screens within BuddyBoss settings
+* Bug: Core - Fixed XSS and CSRF vulnerabilities to enhance security
+* Bug: Elementror - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
+* Bug: Forum - Fixed an issue where disabling autocomplete in the forum search bar caused the page to reload with search results after typing a character
+* Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Platform plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
+* Bug: Groups - Fixed an issue where a Private Group incorrectly displayed a message indicating it was a subgroup, even when it was a parent group
+* Bug: Members - Fixed spacing issue with the display name separator when the first name contains multiple names and no last name, in the member list API for logged-out users
+* Bug: Messages - Fixed an issue where the “More Options” button remained active after closing the dropdown
+* Bug: Messages - Fixed the alignment issue with the upload media button on the message screen
+* Bug: Profiles - Fixed an issue where profile avatars were distorted on the Members index page when using default WordPress themes like Twenty Twenty One
+* Bug: Translations - Fixed an issue where the title of the “Like/Likes” modal was not translatable
+
 = 2.7.50 =
 * Enhancement: Core - Updated all “View Tutorial” links across the platform to open in a new tab
 * Enhancement: Core- Updated Telemetry configuration to be anonymous by default
