@@ -461,7 +461,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
 
-				$args = array(
+				$email_args = array(
 					'tokens' => array(
 						'usermessage'       => wp_strip_all_tags( $reply_content ),
 						'mentioned.url'     => $reply_url,
@@ -480,7 +480,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 					),
 				);
 
-				bp_send_email( $email_type, $user_id, $args );
+				bp_send_email( $email_type, $user_id, $email_args );
 			}
 		}
 	}
@@ -620,7 +620,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 
 				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
 
-				$args = array(
+				$email_args = array(
 					'tokens' => array(
 						'usermessage'       => wp_strip_all_tags( $topic_content ),
 						'mentioned.url'     => $topic_url,
@@ -638,7 +638,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 					),
 				);
 
-				bp_send_email( $email_type, $user_id, $args );
+				bp_send_email( $email_type, $user_id, $email_args );
 			}
 		}
 	}
