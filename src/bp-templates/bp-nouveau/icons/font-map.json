@@ -1,6 +1,6 @@
 {
     "name": "bb-icons",
-    "version": "1.0.5",
+    "version": "1.0.8",
     "copyright": "BuddyBoss",
     "groups": [
         {
@@ -599,6 +599,12 @@
             "css": "brand-quora",
             "code": 60903,
             "label": "Quora",
+            "group": "brands"
+        },
+        {
+            "css": "brand-react",
+            "code": 59924,
+            "label": "React",
             "group": "brands"
         },
         {
@@ -2507,6 +2513,12 @@
             "css": "search-plus",
             "code": 61202,
             "label": "Search Plus",
+            "group": "interfaces"
+        },
+        {
+            "css": "search-times",
+            "code": 59925,
+            "label": "Search Times",
             "group": "interfaces"
         },
         {
