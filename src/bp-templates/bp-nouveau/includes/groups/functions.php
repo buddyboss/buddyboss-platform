@@ -615,11 +615,8 @@ function bp_nouveau_get_groups_directory_nav_items() {
 		'link'      => bp_get_groups_directory_permalink(),
 		'text'      => __( 'All Groups', 'buddyboss' ),
 		'position'  => 5,
+		'count'     => false,
 	);
-
-	if ( $enable_count ) {
-		$nav_items['all']['count'] = bp_get_total_group_count();
-	}
 
 	if ( is_user_logged_in() ) {
 

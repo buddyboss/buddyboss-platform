@@ -18,8 +18,8 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 
 if ( 'subgroups' === bp_current_action() ) {
 	$enable_group_count = bb_group_directory_count_enable();
-	$count              = $enable_group_count ? (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) ) : '';
-	if ( '' !== $count ) {
+	$count              = $enable_group_count ? (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) ) : false;
+	if ( false !== $count ) {
 		?>
 		<div class="bb-item-count">
 			<?php

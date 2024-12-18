@@ -29,24 +29,19 @@ bp_nouveau_template_notices();
 		bp_get_template_part( 'common/nav/directory-nav' );
 	endif;
 
-	$bp_nouveau = bp_nouveau();
-	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $bp_nouveau->sorted_nav[0]->count ) ) {
-		$count = $bp_nouveau->sorted_nav[0]->count;
-		?>
-		<div class="bb-item-count">
-			<?php
-			if ( ! $is_send_ajax_request ) {
-				/* translators: %d is the photo count */
-				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-					$count
-				);
-			}
-			?>
-		</div>
-		<?php
-	}
 	?>
+	<div class="bb-item-count">
+		<?php
+		if ( ! $is_send_ajax_request ) {
+			$count = bp_get_total_media_count();
+			/* translators: %d is the photo count */
+			printf(
+				wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				$count
+			);
+		}
+		?>
+	</div>
 
 	<div class="media-options">
 		<?php

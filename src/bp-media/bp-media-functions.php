@@ -845,8 +845,9 @@ function bp_media_get_total_media_count() {
 /**
  * Get the album count of a user.
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return int album count of the user.
- * @since BuddyBoss 1.0.0
  */
 function bp_media_get_total_album_count() {
 

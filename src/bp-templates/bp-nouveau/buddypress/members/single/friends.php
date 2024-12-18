@@ -14,8 +14,8 @@ bp_get_template_part( 'members/single/parts/item-subnav' );
 $enable_count = bb_member_directory_count_enable();
 switch ( bp_current_action() ) :
 	case 'my-friends':
-		$count = $enable_count ? friends_get_total_friend_count() : '';
-		if ( '' !== $count ) {
+		$count = $enable_count ? friends_get_total_friend_count() : false;
+		if ( false !== $count ) {
 			?>
 			<div class="bb-item-count">
 				<?php
@@ -33,8 +33,8 @@ switch ( bp_current_action() ) :
 		}
 		break;
 	case 'requests':
-		$count = $enable_count ? count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) ) : '';
-		if ( '' !== $count ) {
+		$count = $enable_count ? count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) ) : false;
+		if ( false !== $count ) {
 			?>
 			<div class="bb-item-count">
 				<?php

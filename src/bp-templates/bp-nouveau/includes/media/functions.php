@@ -232,7 +232,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_media_directory_permalink(),
 		'text'      => __( 'All Photos', 'buddyboss' ),
-		'count'     => bp_get_total_media_count(),
+		'count'     => false,
 		'position'  => 5,
 	);
 
@@ -243,7 +243,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
 			'text'      => __( 'My Photos', 'buddyboss' ),
-			'count'     => bp_media_get_total_media_count(),
+			'count'     => false,
 			'position'  => 15,
 		);
 	}
@@ -255,7 +255,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
-			'count'     => bp_media_get_user_total_group_media_count(),
+			'count'     => false,
 			'position'  => 15,
 		);
 	}
