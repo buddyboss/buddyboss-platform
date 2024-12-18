@@ -10533,6 +10533,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 #item-header-cover-image #item-header-avatar img.avatar {
   max-width: 150px;
+  height: auto;
 }
 
 #item-header-cover-image #item-header-content {
