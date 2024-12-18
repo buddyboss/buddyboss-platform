@@ -187,6 +187,7 @@ window.bp = window.bp || {};
 								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).attr( 'poster', response.data.thumbnail );
 								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( 'video' ).attr( 'poster', response.data.thumbnail );
 								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
+								$( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' ).find( '.vjs-poster img' ).attr( 'src', response.data.thumbnail );
 							}
 							if ( $( '#theatre-video-' + videoId ).length ) {
 								$( '#theatre-video-' + videoId ).attr( 'poster', response.data.thumbnail );
