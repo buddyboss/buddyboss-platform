@@ -2253,8 +2253,6 @@ tr.child-no-padding-first td {
 }
 
 @media screen and (max-width: 782px) {
-  .section-bp_registration tr.child-no-padding td,
-  .section-bp_registration tr.child-no-padding-first td,
   .form-table tr.child-no-padding td,
   .form-table tr.child-no-padding-first td {
     padding-left: 0;
