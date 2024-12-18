@@ -80,34 +80,54 @@
 		<span class="selected">all posts</span>
 		<i class="bb-icon-l bb-icon-angle-down"></i>
 	</button>
-
 	<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 		<ul role="listbox">
-			<li role="option"><a href="#" data-value="all_posts" class="selected">All posts</a></li>
-			<li role="option"><a href="#" data-value="created_by_me">Created by me</a></li>
-			<li role="option"><a href="#" data-value="from_my_groups">From my groups</a></li>
-			<li role="option"><a href="#" data-value="from_my_connections">From my connections</a></li>
-			<li role="option"><a href="#" data-value="im_mentioned_in">I'm mentioned in</a></li>
-			<li role="option"><a href="#" data-value="im_following">I'm following</a></li>
-			<li role="option"><a href="#" data-value="ihv_replied_to">I've replied to</a></li>
+			<li role="option"><a href="#" data-value="all" class="selected"><?php esc_html_e( 'All updates', 'buddyboss' ); ?></a></li>
+			<?php
+				$activity_filters = bb_get_all_activity_filter_options();
+				$avail_filters    = bb_get_enabled_activity_filter_options();
+				if ( ! empty ( $avail_filters ) ) {
+					foreach( $avail_filters as $key ) {
+						$label = $activity_filters[ $key ];
+						?>
+						<li role="option"><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $label; ?></a></li>
+						<?php
+					}
+				}
+			?>
 		</ul>
 	</div>
 	<input type="hidden" name="bb_activity_filter_show" value="all_posts" />
 </div>
 
-<span class="bb-subnav-filters-label">by</span>
-<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
+<?php
+$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+if ( ! empty ( $avail_sorting_options ) && count( $avail_sorting_options ) > 1 ) {
+	?>
+	<span class="bb-subnav-filters-label">by</span>
+	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
+		<?php $sorting_options = bb_get_all_activity_sorting_options(); ?>
+		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
+			<span class="selected">most recent</span>
+			<i class="bb-icon-l bb-icon-angle-down"></i>
+		</button>
 
-	<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-		<span class="selected">most recent</span>
-		<i class="bb-icon-l bb-icon-angle-down"></i>
-	</button>
-
-	<div class="subnav-filters-modal" id="bb-subnav-filter-by">
-		<ul role="listbox">
-			<li role="option"><a href="#" data-value="most_recent" class="selected">Most recent</a></li>
-			<li role="option"><a href="#" data-value="recent_activity">Recent activity</a></li>
-		</ul>
+		<div class="subnav-filters-modal" id="bb-subnav-filter-by">
+			<ul role="listbox">
+				<?php
+				if ( ! empty ( $avail_sorting_options ) ) {
+					foreach( $avail_sorting_options as $key ) {
+						$label = $sorting_options[ $key ];
+						?>
+						<li role="option"><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $label; ?></a></li>
+						<?php
+					}
+				}
+				?>
+			</ul>
+		</div>
+		<input type="hidden" name="bb_activity_filter_by" value="most_recent" />
 	</div>
-	<input type="hidden" name="bb_activity_filter_by" value="most_recent" />
-</div>
+	<?php
+}
+?>

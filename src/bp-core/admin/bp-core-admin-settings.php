@@ -281,21 +281,6 @@ function bp_admin_setting_callback_enable_relevant_feed() {
 	<?php
 }
 
-
-/**
- * Enable activity scopes like groups, friends, mentions, following etc.
- *
- * @since BuddyBoss 1.1.6
- */
-function bp_admin_setting_callback_enable_activity_tabs() {
-	?>
-
-	<input id="_bp_enable_activity_tabs" name="_bp_enable_activity_tabs" type="checkbox" value="1" <?php checked( bp_is_activity_tabs_active( false ) ); ?> />
-	<label for="_bp_enable_activity_tabs"><?php esc_html_e( 'Display activity in separate tabs based on activity type', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
 /**
  * Allow following activity stream.
  *
@@ -3765,4 +3750,70 @@ function bb_admin_performance_setting_activity_callback() {
 	</select>
 	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
 	<?php
+}
+
+/**
+ * Enable activity filters with scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_activity_filters() {
+	?>
+	<label><?php esc_html_e( 'Allow members to filter activity posts by:', 'buddyboss' ); ?></label>
+	<br /><br />
+	<?php
+
+	$filters = bb_get_all_activity_filter_options();
+
+	// Retrieve the enabled options.
+	$selected_filters = bb_get_enabled_activity_filter_options();
+
+	foreach ( $filters as $key => $label ) :
+		?>
+		<input
+			id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
+			name="bb_activity_filter_options[]" 
+			type="checkbox" 
+			value="<?php echo esc_attr( $key ); ?>" 
+			<?php checked( in_array( $key, $selected_filters, true ) ); ?> 
+		/>
+		<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
+			<?php echo esc_html( $label ); ?>
+		</label>
+		<br /><br />
+		<?php
+	endforeach;
+}
+
+/**
+ * Enable activity sorting options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_activity_sorting() {
+	?>
+	<label><?php esc_html_e( 'Allow members to sort activity posts by:', 'buddyboss' ); ?></label>
+	<br /><br />
+	<?php
+
+	$sorting_options = bb_get_all_activity_sorting_options();
+
+	// Retrieve the enabled options.
+	$selected_sorting_options = bb_get_enabled_activity_sorting_options();
+
+	foreach ( $sorting_options as $key => $label ) :
+		?>
+		<input 
+			id="<?php echo esc_attr( $key ); ?>" 
+			name="bb_activity_sorting_options[]" 
+			type="checkbox" 
+			value="<?php echo esc_attr( $key ); ?>" 
+			<?php checked( in_array( $key, $selected_sorting_options, true ) ); ?> 
+		/>
+		<label for="<?php echo esc_attr( $key ); ?>">
+			<?php echo esc_html( $label ); ?>
+		</label>
+		<br /><br />
+		<?php
+	endforeach;
 }
