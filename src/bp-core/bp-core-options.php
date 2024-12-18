@@ -2757,3 +2757,65 @@ function bb_get_load_activity_per_request( $default = 10 ) {
 function bb_is_send_ajax_request() {
 	return (bool) ( 2 === bb_get_ajax_request_page_load() );
 }
+
+
+/**
+ * Get all activity filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity filters options.
+ */
+function bb_get_all_activity_filter_options() {
+	$filters = array(
+		'just_me'   => __( 'Created by me', 'buddyboss' ),
+		'groups'    => __( 'From my groups', 'buddyboss' ),
+		'friends'   => __( 'From my connections', 'buddyboss' ),
+		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
+		'following' => __( "I'm following", 'buddyboss' ),
+		'replied'   => __( "I've replied to", 'buddyboss' ),
+		'favorites' => __( "I've reacted to", 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_all_activity_filter_options', $filters );
+}
+
+/**
+ * Get enabled activity filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ * 
+ * @param array $default Array of default activity filter options. 
+ *
+ * @return array Array of enabled activity filters options.
+ */
+function bb_get_enabled_activity_filter_options( $default = array( 'just_me', 'my_groups', 'my_connections', 'mentions', 'following', 'replied' ) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
+}
+
+/**
+ * Get all activity sorting options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity sorting options.
+ */
+function bb_get_all_activity_sorting_options() {
+	$sorting_options = array(
+		'most_recent'     => __( 'Most recent', 'buddyboss' ),
+		'recent_activity' => __( 'Recent activity', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_all_activity_sorting_options', $sorting_options );
+}
+
+/**
+ * Get enabled activity sorting options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ * 
+ * @param array $default Array of default activity sorting options. 
+ *
+ * @return array Array of enabled activity sorting options.
+ */
+function bb_get_enabled_activity_sorting_options( $default = array( 'most_recent', 'recent_activity' ) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
+}

@@ -5189,6 +5189,154 @@ body.buddyboss-theme {
 	}
 }
 
+.bb-subnav-filters-container {
+	position: relative;
+	z-index: 1;
+
+	&.bb-subnav-filters-search {
+		margin-right: auto;
+
+		.subnav-filters-opener {
+			border-radius: 6px;
+			border: 1px solid transparent;
+			background: #f2f4f5;
+			height: 30px;
+			width: 30px;
+			padding: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
+	}
+
+	.subnav-filters-modal {
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		top: 40px;
+		left: 0;
+		border-radius: 8px;
+		background: #fff;
+		box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+		padding: 9px 7px;
+
+		form.bp-dir-search-form {
+			border: 0;
+
+			&:focus-within {
+
+				.buddypress-wrap & {
+					box-shadow: none;
+				}
+			}
+
+			input[type="search"] {
+
+				#buddypress & {
+					box-shadow: none;
+					width: 260px;
+				}
+			}
+		}
+	}
+
+	&.active {
+
+		&.bb-subnav-filters-search .subnav-filters-opener {
+			border-color: #dee2e4;
+			background: #dee2e4;
+
+			&:hover,
+			&:focus {
+				background: #dee2e4;
+			}
+		}
+
+		.subnav-filters-modal {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+
+	&.bb-subnav-filters-filtering {
+
+		&:not(:last-child) {
+			margin-right: 5px;
+		}
+
+		.subnav-filters-opener {
+			display: flex;
+			align-items: center;
+			padding: 0;
+			background-color: transparent;
+			border: 0;
+			color: var(--bb-body-text-color);
+			cursor: pointer;
+
+			&:focus,
+			&:hover {
+				background-color: transparent;
+				color: var(--bb-body-text-color);
+				box-shadow: none;
+			}
+
+			span {
+				font-size: 14px;
+				font-weight: 500;
+				text-transform: lowercase;
+			}
+		}
+
+		.subnav-filters-modal {
+			left: auto;
+			right: -20px;
+			padding: 10px;
+			width: 230px;
+
+			ul {
+				list-style: none;
+				margin: 0;
+			}
+
+			li a {
+				display: block;
+				color: #5a5a5a;
+				font-size: 13px;
+				font-weight: 500;
+				line-height: 1.2;
+				padding: 10px 16px;
+				border-radius: 6px;
+				position: relative;
+
+				&.selected:after {
+					content: "\e876";
+					color: #385dff;
+					font-family: bb-icons;
+					font-size: 16px;
+					font-weight: 400;
+					position: absolute;
+					right: 10px;
+					top: 50%;
+					transform: translateY(-50%);
+				}
+
+				&:hover {
+					background-color: #f2f4f5;
+				}
+			}
+		}
+	}
+}
+
+.actvity-head-bar {
+
+	.bb-subnav-filters-label {
+		font-size: 14px;
+		margin-right: 4px;
+	}
+}
+
 .directory.media,
 .directory.document,
 .directory.video {

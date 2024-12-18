@@ -176,6 +176,11 @@ window.bp = window.bp || {};
 				$( window ).scroll( this.loadMoreActivities );
 			}
 
+			// Activity search filter
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-opener', this.openActivityFilter.bind( this ) );
+			$( document ).on( 'click', this.closeActivityFilter.bind( this ) );
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-modal a', this.filterActivity.bind( this ) );
+
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$( document ).on( 'click', '#activity-stream .activity-comments .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
 				e.preventDefault();
@@ -4099,6 +4104,38 @@ window.bp = window.bp || {};
 					},
 				}
 			);
+		},
+
+		openActivityFilter: function ( e ) {
+			e.preventDefault();
+			$( '.bb-subnav-filters-container' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			var $parent = $( e.currentTarget ).parent( '.bb-subnav-filters-container' );
+			$parent.addClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'true' );
+
+			if ( $parent.find( 'input[type="search"]' ).length ){
+				$parent.find( 'input[type="search"]' ).focus();
+			}
+		},
+
+		closeActivityFilter: function ( e ) {
+			if ( ! $( e.target ).closest( '.bb-subnav-filters-container' ).length ) {
+				$( '.bb-subnav-filters-container' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			}
+		},
+
+		filterActivity: function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $parent = $this.closest( '.bb-subnav-filters-container' );
+			$this.addClass( 'selected' ).parent().siblings().find( 'a' ).removeClass( 'selected' );
+			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			$parent.find( 'input[type="hidden"]' ).val( $this.data( 'value' ) );
+			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+
+			// Filter activity with below selections
+			var bb_activity_filter_show = $( 'input[name="bb_activity_filter_show"]' ).val();
+			var bb_activity_filter_by = $( 'input[name="bb_activity_filter_by"]' ).val();
+
 		}
 
 	};

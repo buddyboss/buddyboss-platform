@@ -18,13 +18,15 @@ endif;
 
 bp_nouveau_template_notices();
 
-if ( ! bp_nouveau_is_object_nav_in_sidebar() ) :
+if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
+	echo '<div class="flex actvity-head-bar">';
+	bp_get_template_part( 'common/search-and-filters-bar' );
 	bp_get_template_part( 'common/nav/directory-nav' );
-endif;
+	echo '</div>';
+}
 ?>
 <div class="screen-content">
 	<?php
-	bp_get_template_part( 'common/search-and-filters-bar' );
 	bp_nouveau_activity_hook( 'before_directory', 'list' );
 	?>
 
