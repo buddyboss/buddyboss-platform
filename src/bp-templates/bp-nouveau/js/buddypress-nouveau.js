@@ -4687,6 +4687,9 @@ window.bp = window.bp || {};
 				.attr( 'data-bp-item-id', '' )
 				.removeClass( 'loading' );
 			$groupCard
+				.find( '.bb-card-heading' )
+				.text( '' );
+			$groupCard
 				.find( '.bb-card-footer, .skeleton-card-footer' )
 				.removeClass( 'bb-card-footer--plain' );
 			$groupCard
@@ -4701,6 +4704,9 @@ window.bp = window.bp || {};
 			$groupCard
 				.find( '.bs-group-members' )
 				.html( '' );
+			$groupCard
+				.find( '.bb-card-action-join' )
+				.html('');
 		},
 
 		/**
@@ -4708,8 +4714,6 @@ window.bp = window.bp || {};
 		 */
 		updateGroupCard: function ( data, currentUser ) {
 			var $groupCard = $( '#group-card' );
-			var activityDate = new Date( data.last_activity );
-			var lastActivity = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( activityDate );
 			var groupMembers = data.group_members || [];
 			var $groupMembersContainer = $( '.bs-group-members' );
 		
@@ -4729,7 +4733,7 @@ window.bp = window.bp || {};
 				.text( data.group_type_label );
 			$groupCard
 				.find( '.card-meta-last-active' )
-				.text( lastActivity );
+				.text( data.last_activity );
 			$groupCard
 				.find( '.bb-card-footer .card-button-profile' )
 				.attr( 'href', data.link );
@@ -4738,7 +4742,7 @@ window.bp = window.bp || {};
 				var memberHtml = 
 					'<span class="bs-group-member">' +
 						'<a href="' + member.link + '">' +
-							'<img src="' + member.avatar_urls.thumb + '" class="round">' +
+							'<img src="' + member.avatar_urls.thumb + '" alt="' + member.name + '" class="round">' +
 						'</a>' +
 					'</span>';
 				$groupMembersContainer.append( memberHtml );
@@ -4747,7 +4751,7 @@ window.bp = window.bp || {};
 			if ( data.members_count > 3 ) {
 				var moreIconHtml =
 					'<span class="bs-group-member">' +
-						'<a href="#">' +
+						'<a href="' + data.group_members_url + '">' +
 							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
 						'</a>' +
 					'</span>';
@@ -4760,9 +4764,9 @@ window.bp = window.bp || {};
 					.addClass( 'bb-card-footer--plain' );
 			}
 
-			var $joinGroupButton = $groupCard.find( '.join-group' );
+			var $joinGroupButton = $groupCard.find( '.bb-card-action-join' );
 			if ( $joinGroupButton.length && data.can_join ) {
-				$joinGroupButton.attr( 'href', '' );
+				$joinGroupButton.html( data.join_button );
 			}
 		},
 

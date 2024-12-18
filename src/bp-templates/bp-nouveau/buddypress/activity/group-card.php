@@ -45,12 +45,7 @@
 		<div class="bb-card-footer">
 			<?php if ( is_user_logged_in() ) : ?>
 				<?php if ( bp_is_active( 'groups' ) ) : ?>
-					<div class="bb-card-action bb-card-action-primary">
-						<a href="" class="card-button join-group">
-							<i class="bb-icon-l bb-icon-plus"></i>
-							<?php esc_html_e( 'Join Group', 'buddyboss' ); ?>
-						</a>
-					</div>
+					<div class="bb-card-action bb-card-action-join bb-card-action-primary"></div>
 				<?php endif; ?>
 			<?php endif; ?>
 			<div class="bb-card-action bb-card-action-outline">
