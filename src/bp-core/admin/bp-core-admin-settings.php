@@ -3786,7 +3786,7 @@ function bb_admin_setting_callback_activity_filters() {
 		<?php
 	endforeach;
 	?>
-	<input type="hidden" id="bb_activity_filter_order" />
+	<input type="hidden" class="bb_activity_options_order" />
 	</div>
 	<?php
 }
@@ -3800,6 +3800,7 @@ function bb_admin_setting_callback_activity_sorting() {
 	?>
 	<label><?php esc_html_e( 'Allow members to sort activity posts by:', 'buddyboss' ); ?></label>
 	<br /><br />
+	<div class="bb-activity-sorting-list">
 	<?php
 
 	$sorting_options = bb_get_all_activity_sorting_options();
@@ -3809,17 +3810,22 @@ function bb_admin_setting_callback_activity_sorting() {
 
 	foreach ( $sorting_options as $key => $label ) :
 		?>
-		<input 
-			id="<?php echo esc_attr( $key ); ?>" 
-			name="bb_activity_sorting_options[]" 
-			type="checkbox" 
-			value="<?php echo esc_attr( $key ); ?>" 
-			<?php checked( in_array( $key, $selected_sorting_options, true ) ); ?> 
-		/>
-		<label for="<?php echo esc_attr( $key ); ?>">
-			<?php echo esc_html( $label ); ?>
-		</label>
-		<br /><br />
+		<div class="bb-activity-sorting-item">
+			<input 
+				id="<?php echo esc_attr( $key ); ?>" 
+				name="bb_activity_sorting_options[]" 
+				type="checkbox" 
+				value="<?php echo esc_attr( $key ); ?>" 
+				<?php checked( in_array( $key, $selected_sorting_options, true ) ); ?> 
+			/>
+			<label for="<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $label ); ?>
+			</label>
+		</div>
 		<?php
 	endforeach;
+	?>
+	<input type="hidden" class="bb_activity_options_order" />
+	</div>
+	<?php
 }
