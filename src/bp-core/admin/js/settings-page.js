@@ -2950,11 +2950,12 @@ window.bp = window.bp || {};
 
 	// Handle Activity filter and sortring drag-drop
 	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
-	function handleUpdateActivityFilter() {
+	function handleUpdateActivityFilter( event ) {
+		console.log( event );
 		var activityFilter = [];
-		$( '.bb-activity-sorting-list .bb-activity-sorting-item' ).each( function () {
+		$( event.target ).find( '.bb-activity-sorting-item' ).each( function () {
 			activityFilter.push( $( this ).find( 'input' ).val() );
 		} );
-		$( '#bb_activity_filter_order' ).val( activityFilter.join( ',' ) );
+		$( event.target ).find( '.bb_activity_options_order' ).val( activityFilter.join( ',' ) );
 	}
 }());
