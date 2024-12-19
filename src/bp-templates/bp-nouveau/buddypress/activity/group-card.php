@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 ?>
-<div id="group-card" class="bb-group-card bb-popup-card" data-bp-item-id="" data-bp-item-component="members" style="display: none;">
+<div id="group-card" class="bb-group-card bb-popup-card" data-bp-item-id="" data-bp-item-component="groups" style="display: none;">
 
 	<div class="skeleton-card">
 		<div class="skeleton-card-body">
@@ -33,9 +33,9 @@
 			<div class="bb-card-entity">
 				<h4 class="bb-card-heading"></h4>
 				<div class="bb-card-meta">
-					<span class="card-meta-status"></span>
-					<span class="card-meta-type"></span>
-					<span class="card-meta-last-active"></span>
+					<span class="card-meta-item card-meta-status"></span>
+					<span class="card-meta-item card-meta-type"></span>
+					<span class="card-meta-item card-meta-last-active"></span>
 				</div>
 				<div class="card-group-members">
 					<span class="bs-group-members"></span>

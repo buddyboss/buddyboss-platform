@@ -4712,10 +4712,11 @@ window.bp = window.bp || {};
 		/**
 		 * Helper function to update and populate group popup cards with data.
 		 */
-		updateGroupCard: function ( data, currentUser ) {
+		updateGroupCard: function ( data ) {
 			var $groupCard = $( '#group-card' );
 			var groupMembers = data.group_members || [];
 			var $groupMembersContainer = $( '.bs-group-members' );
+			var membersLabel = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
 		
 			$groupCard
 				.attr( 'data-bp-item-id', data.id );
@@ -4735,12 +4736,12 @@ window.bp = window.bp || {};
 				.find( '.card-meta-last-active' )
 				.text( data.last_activity );
 			$groupCard
-				.find( '.bb-card-footer .card-button-profile' )
+				.find( '.bb-card-footer .card-button-group' )
 				.attr( 'href', data.link );
 
 			groupMembers.forEach( function ( member ) {
 				var memberHtml = 
-					'<span class="bs-group-member">' +
+					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="' + member.name + '">' +
 						'<a href="' + member.link + '">' +
 							'<img src="' + member.avatar_urls.thumb + '" alt="' + member.name + '" class="round">' +
 						'</a>' +
@@ -4750,7 +4751,7 @@ window.bp = window.bp || {};
 
 			if ( data.members_count > 3 ) {
 				var moreIconHtml =
-					'<span class="bs-group-member">' +
+					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+ ' + ( Number( data.members_count ) - 3 ) + ' ' + membersLabel + '">' +
 						'<a href="' + data.group_members_url + '">' +
 							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
 						'</a>' +

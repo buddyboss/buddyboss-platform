@@ -641,6 +641,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 			'rest_url'					 => home_url( 'wp-json/buddyboss/v1' ),
 			'rest_nonce'                 => wp_create_nonce('wp_rest'),
+			'member_label'               => __( 'member', 'buddyboss' ),
+			'members_label'              => __( 'members', 'buddyboss' ),
 		);
 
 		// If the Object/Item nav are in the sidebar.
