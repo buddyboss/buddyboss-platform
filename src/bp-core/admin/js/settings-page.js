@@ -2952,7 +2952,7 @@ window.bp = window.bp || {};
 	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
 	function handleUpdateActivityFilter() {
 		var activityFilter = [];
-		$( '.bb-activity-sorting-list .bb-sortable-item' ).each( function () {
+		$( '.bb-activity-sorting-list .bb-activity-sorting-item' ).each( function () {
 			activityFilter.push( $( this ).find( 'input' ).val() );
 		} );
 		$( '#bb_activity_filter_order' ).val( activityFilter.join( ',' ) );
