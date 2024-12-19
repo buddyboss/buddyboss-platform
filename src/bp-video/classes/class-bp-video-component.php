@@ -219,20 +219,7 @@ class BP_Video_Component extends BP_Component {
 
 			$slug       = bp_get_video_slug();
 			$video_link = trailingslashit( $user_domain . $slug );
-
-			// Only grab count if we're on a user page and current user has access.
-			if ( bp_is_user() ) {
-				$count     = bp_video_get_total_video_count( bp_displayed_user_id() );
-				$class     = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name  = __( 'Videos', 'buddyboss' );
-				$nav_name .= sprintf(
-					' <span class="%s">%s</span>',
-					esc_attr( $class ),
-					$count
-				);
-			} else {
-				$nav_name = __( 'Videos', 'buddyboss' );
-			}
+			$nav_name   = __( 'Videos', 'buddyboss' );
 
 			// Add 'Videos' to the main navigation.
 			$main_nav = array(

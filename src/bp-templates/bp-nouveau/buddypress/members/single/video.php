@@ -9,6 +9,31 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
+
+if ( bp_is_user() ) {
+	switch ( bp_current_action() ) :
+		case 'my-video':
+		 	$count = bp_video_get_total_video_count( bp_displayed_user_id() );
+			?>
+			<div class="bb-item-count">
+				<?php
+				if ( ! $is_send_ajax_request ) {
+
+					/* translators: %d is the video count */
+					printf(
+						wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+						$count
+					);
+				}
+				?>
+			</div>
+			<?php
+			break;
+		case 'albums':
+			break;
+	endswitch;
+
+}
 ?>
 <div class="bb-video-container bb-media-container member-video">
 	<?php

@@ -169,16 +169,9 @@ class BP_Friends_Component extends BP_Component {
 		$access       = bp_core_can_edit_settings();
 		$slug         = bp_get_friends_slug();
 		$friends_link = trailingslashit( $user_domain . $slug );
-
-		// Add 'Connections' to the main navigation.
-		$count = friends_get_total_friend_count();
-		$class = ( 0 === $count ) ? 'no-count' : 'count';
+		$enable_count = bb_member_directory_count_enable();
+	
 		$main_nav_name = __( 'Connections', 'buddyboss' );
-		$main_nav_name .= sprintf(
-			' <span class="%s">%s</span>',
-			esc_attr( $class ),
-			$count
-		);
 
 		$main_nav = array(
 			'name'                => $main_nav_name,
