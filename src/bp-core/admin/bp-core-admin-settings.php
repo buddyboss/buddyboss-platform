@@ -3761,6 +3761,7 @@ function bb_admin_setting_callback_activity_filters() {
 	?>
 	<label><?php esc_html_e( 'Allow members to filter activity posts by:', 'buddyboss' ); ?></label>
 	<br /><br />
+	<div class="bb-activity-sorting-list">
 	<?php
 
 	$filters = bb_get_all_activity_filter_options();
@@ -3770,19 +3771,24 @@ function bb_admin_setting_callback_activity_filters() {
 
 	foreach ( $filters as $key => $label ) :
 		?>
-		<input
-			id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
-			name="bb_activity_filter_options[]" 
-			type="checkbox" 
-			value="<?php echo esc_attr( $key ); ?>" 
-			<?php checked( in_array( $key, $selected_filters, true ) ); ?> 
-		/>
-		<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
-			<?php echo esc_html( $label ); ?>
-		</label>
-		<br /><br />
+		<div class="bb-activity-sorting-item">
+			<input
+				id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
+				name="bb_activity_filter_options[]" 
+				type="checkbox" 
+				value="<?php echo esc_attr( $key ); ?>" 
+				<?php checked( in_array( $key, $selected_filters, true ) ); ?> 
+			/>
+			<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $label ); ?>
+			</label>
+		</div>
 		<?php
 	endforeach;
+	?>
+	<input type="hidden" id="bb_activity_filter_order" />
+	</div>
+	<?php
 }
 
 /**

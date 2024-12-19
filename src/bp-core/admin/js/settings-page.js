@@ -2940,4 +2940,21 @@ window.bp = window.bp || {};
 
 	/* jshint ignore:end */
 
+	function handleDragDrop( sortableParent,onUpdateFun ){
+		$( sortableParent ).sortable( {
+			update: function ( event, ui ) {
+				onUpdateFun( event, ui );
+			},
+		} );
+	}
+
+	// Handle Activity filter and sortring drag-drop
+	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
+	function handleUpdateActivityFilter() {
+		var activityFilter = [];
+		$( '.bb-activity-sorting-list .bb-sortable-item' ).each( function () {
+			activityFilter.push( $( this ).find( 'input' ).val() );
+		} );
+		$( '#bb_activity_filter_order' ).val( activityFilter.join( ',' ) );
+	}
 }());
