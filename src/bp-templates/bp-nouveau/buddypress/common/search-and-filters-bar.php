@@ -82,15 +82,17 @@
 	</button>
 	<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 		<ul role="listbox">
-			<li role="option"><a href="#" data-value="<?php esc_attr_e( $key ); ?>" class="selected"><?php esc_html_e( 'All updates', 'buddyboss' ); ?></a></li>
+			<li role="option" data-bp-scope='all'><a href="#" data-value='all' class="selected"><?php esc_html_e( 'All updates', 'buddyboss' ); ?></a></li>
 			<?php
-				$activity_filters = bb_get_all_activity_filter_options();
-				$avail_filters    = bb_get_enabled_activity_filter_options();
-				if ( ! empty ( $avail_filters ) ) {
-					foreach( $avail_filters as $key ) {
-						$label = $activity_filters[ $key ];
+				$filters_labels   = bb_get_activity_filter_options_labels();
+				$activity_filters = bb_get_enabled_activity_filter_options();
+				if ( ! empty ( $activity_filters ) ) {
+					foreach( $activity_filters as $key => $is_enabled ) {
+						if ( empty( $is_enabled ) || empty( $filters_labels[ $key ] ) ) {
+							continue;
+						}
 						?>
-						<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $label; ?></a></li>
+						<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $filters_labels[ $key ]; ?></a></li>
 						<?php
 					}
 				}
@@ -102,13 +104,14 @@
 
 <?php
 $avail_sorting_options = bb_get_enabled_activity_sorting_options();
-if ( ! empty ( $avail_sorting_options ) && count( $avail_sorting_options ) > 1 ) {
+asort($activity_filters);
+if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false )  ) {
 	?>
 	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-		<?php $sorting_options = bb_get_all_activity_sorting_options(); ?>
+		<?php $sorting_labels = bb_get_all_activity_sorting_options_labels(); ?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-			<span class="selected"><?php echo strtolower( $sorting_options[ $avail_sorting_options[0] ] ); ?></span>
+			<span class="selected"><?php echo strtolower( $sorting_labels[ key( $avail_sorting_options ) ] ); ?></span>
 			<i class="bb-icon-l bb-icon-angle-down"></i>
 		</button>
 
@@ -116,10 +119,12 @@ if ( ! empty ( $avail_sorting_options ) && count( $avail_sorting_options ) > 1 )
 			<ul role="listbox">
 				<?php
 				if ( ! empty ( $avail_sorting_options ) ) {
-					foreach( $avail_sorting_options as $key ) {
-						$label = $sorting_options[ $key ];
+					foreach( $avail_sorting_options as $key => $is_enabled ) {
+						if ( empty( $is_enabled ) || empty( $sorting_labels[ $key ] ) ) {
+							continue;
+						}
 						?>
-						<li role="option" selected='selected'><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $label; ?></a></li>
+						<li role="option" selected='selected'><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $sorting_labels[ $key ]; ?></a></li>
 						<?php
 					}
 				}

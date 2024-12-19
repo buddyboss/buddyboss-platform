@@ -3761,32 +3761,57 @@ function bb_admin_setting_callback_activity_filters() {
 	?>
 	<label><?php esc_html_e( 'Allow members to filter activity posts by:', 'buddyboss' ); ?></label>
 	<br /><br />
-	<div class="bb-activity-sorting-list">
-	<?php
-
-	$filters = bb_get_all_activity_filter_options();
-
-	// Retrieve the enabled options.
-	$selected_filters = bb_get_enabled_activity_filter_options();
-
-	foreach ( $filters as $key => $label ) :
-		?>
-		<div class="bb-activity-sorting-item">
-			<input
-				id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
-				name="bb_activity_filter_options[]" 
-				type="checkbox" 
-				value="<?php echo esc_attr( $key ); ?>" 
-				<?php checked( in_array( $key, $selected_filters, true ) ); ?> 
-			/>
-			<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
-				<?php echo esc_html( $label ); ?>
-			</label>
-		</div>
+	<div class="bb_activity_filter_options_container bb-activity-sorting-list">
 		<?php
-	endforeach;
-	?>
-	<input type="hidden" class="bb_activity_options_order" />
+		$filter_labels = bb_get_activity_filter_options_labels();
+
+		// Retrieve the saved options.
+		$activity_filters = bb_get_enabled_activity_filter_options();
+		if ( ! empty( $activity_filters ) ) {
+
+			// Sort filter labels based on the order of $activity_filters.
+			$sorted_filter_labels = array();
+			foreach ( $activity_filters as $key => $value ) {
+				if ( isset( $filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $activity_filters.
+			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
+				foreach ( $filter_labels as $key => $label ) {
+					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
+						$sorted_filter_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_filter_labels = $filter_labels;
+		}
+
+		foreach ( $sorted_filter_labels as $key => $label ) :
+			?>
+			<div class="bb-activity-sorting-item">
+				<input
+					type="hidden"
+					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]"
+					value="0"
+					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ? 'disabled' : ''; ?>
+				/>
+				<input
+					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
+					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]" 
+					type="checkbox" 
+					value="1"
+					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
+				/>
+				<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
+					<?php esc_html_e( $label ); ?>
+				</label>
+			</div>
+			<?php
+		endforeach;
+		?>
 	</div>
 	<?php
 }
@@ -3800,32 +3825,57 @@ function bb_admin_setting_callback_activity_sorting() {
 	?>
 	<label><?php esc_html_e( 'Allow members to sort activity posts by:', 'buddyboss' ); ?></label>
 	<br /><br />
-	<div class="bb-activity-sorting-list">
-	<?php
-
-	$sorting_options = bb_get_all_activity_sorting_options();
-
-	// Retrieve the enabled options.
-	$selected_sorting_options = bb_get_enabled_activity_sorting_options();
-
-	foreach ( $sorting_options as $key => $label ) :
-		?>
-		<div class="bb-activity-sorting-item">
-			<input 
-				id="<?php echo esc_attr( $key ); ?>" 
-				name="bb_activity_sorting_options[]" 
-				type="checkbox" 
-				value="<?php echo esc_attr( $key ); ?>" 
-				<?php checked( in_array( $key, $selected_sorting_options, true ) ); ?> 
-			/>
-			<label for="<?php echo esc_attr( $key ); ?>">
-				<?php echo esc_html( $label ); ?>
-			</label>
-		</div>
+	<div class="bb_activity_sorting_options_container bb-activity-sorting-list">
 		<?php
-	endforeach;
-	?>
-	<input type="hidden" class="bb_activity_options_order" />
+
+		$sorting_options_labels = bb_get_all_activity_sorting_options_labels();
+
+		// Retrieve the saved options.
+		$sorting_options = bb_get_enabled_activity_sorting_options();
+		if ( ! empty( $sorting_options ) ) {
+			// Sort filter labels based on the order of $sorting_options.
+			$sorted_labels = array();
+			foreach ( $sorting_options as $key => $value ) {
+				if ( isset( $sorting_options_labels[ $key ] ) ) {
+					$sorting_options_labels[ $key ] = $sorting_options_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $sorting_options.
+			if ( count( $sorting_options_labels ) > count( $sorted_labels ) ) {
+				foreach ( $sorting_options_labels as $key => $label ) {
+					if ( ! isset( $sorted_labels[ $key ] ) ) {
+						$sorted_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_labels = $sorting_options_labels;
+		}
+
+		foreach ( $sorting_options_labels as $key => $label ) :
+			?>
+			<div class="bb-activity-sorting-item">
+				<input
+					type="hidden"
+					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]"
+					value="0"
+					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) ? 'disabled' : ''; ?>
+				/>
+				<input 
+					id="<?php echo esc_attr( $key ); ?>" 
+					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]" 
+					type="checkbox" 
+					value="1" 
+					<?php checked( isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) ); ?>
+				/>
+				<label for="<?php echo esc_attr( $key ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</label>
+			</div>
+			<?php
+		endforeach;
+		?>
 	</div>
 	<?php
 }

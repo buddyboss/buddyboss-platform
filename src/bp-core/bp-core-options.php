@@ -2760,13 +2760,13 @@ function bb_is_send_ajax_request() {
 
 
 /**
- * Get all activity filters options.
+ * Get all activity filters option labels.
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @return array Array of all activity filters options.
+ * @return array Array of all activity filters option labels.
  */
-function bb_get_all_activity_filter_options() {
+function bb_get_activity_filter_options_labels() {
 	$filters = array(
 		'just_me'   => __( 'Created by me', 'buddyboss' ),
 		'groups'    => __( 'From my groups', 'buddyboss' ),
@@ -2776,7 +2776,7 @@ function bb_get_all_activity_filter_options() {
 		'replied'   => __( "I've replied to", 'buddyboss' ),
 		'favorites' => __( "I've reacted to", 'buddyboss' ),
 	);
-	return (array) apply_filters( 'bb_get_all_activity_filter_options', $filters );
+	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
 }
 
 /**
@@ -2788,23 +2788,23 @@ function bb_get_all_activity_filter_options() {
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array( 'just_me', 'my_groups', 'my_connections', 'mentions', 'following', 'replied' ) ) {
+function bb_get_enabled_activity_filter_options( $default = array( 'just_me' => 0, 'my_groups' => 0, 'my_connections' => 0, 'mentions' => 0, 'following' => 0, 'replied' => 0 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
 }
 
 /**
- * Get all activity sorting options.
+ * Get all activity sorting options labels.
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @return array Array of all activity sorting options.
+ * @return array Array of all activity sorting options labels.
  */
-function bb_get_all_activity_sorting_options() {
+function bb_get_all_activity_sorting_options_labels() {
 	$sorting_options = array(
 		'most_recent'     => __( 'Most recent', 'buddyboss' ),
 		'recent_activity' => __( 'Recent activity', 'buddyboss' ),
 	);
-	return (array) apply_filters( 'bb_get_all_activity_sorting_options', $sorting_options );
+	return (array) apply_filters( 'bb_get_all_activity_sorting_options_labels', $sorting_options );
 }
 
 /**
@@ -2816,6 +2816,6 @@ function bb_get_all_activity_sorting_options() {
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $default = array( 'most_recent', 'recent_activity' ) ) {
+function bb_get_enabled_activity_sorting_options( $default = array( 'most_recent' => 0, 'recent_activity' => 0 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
 }

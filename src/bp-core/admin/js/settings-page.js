@@ -2948,14 +2948,29 @@ window.bp = window.bp || {};
 		} );
 	}
 
-	// Handle Activity filter and sortring drag-drop
+	// Handle Activity filter and sortring drag-drop.
 	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
 	function handleUpdateActivityFilter( event ) {
-		console.log( event );
 		var activityFilter = [];
 		$( event.target ).find( '.bb-activity-sorting-item' ).each( function () {
 			activityFilter.push( $( this ).find( 'input' ).val() );
 		} );
-		$( event.target ).find( '.bb_activity_options_order' ).val( activityFilter.join( ',' ) );
 	}
+
+	// Handle Activity filter option save.
+	if ( $( 'body.buddyboss_page_bp-settings' ).length > 0 ) {
+		$('.bb_activity_filter_options_container input[type="checkbox"], .bb_activity_sorting_options_container input[type="checkbox"]').on( 'change', function () {
+			var checkbox = $( this ),
+				hiddenInput = checkbox.siblings( 'input[type="hidden"]' );
+	
+			if ( checkbox.is( ':checked' ) ) {
+				// Disable the hidden input when checkbox is checked.
+				hiddenInput.prop( 'disabled', true );
+			} else {
+				// Enable the hidden input when checkbox is unchecked.
+				hiddenInput.prop( 'disabled', false );
+			}
+		});
+	}
+
 }());
