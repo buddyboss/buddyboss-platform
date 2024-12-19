@@ -9,8 +9,22 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
 
+if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
+	$count = bp_media_get_total_group_album_count();
+	?>
+	<div class="bb-item-count">
+		<?php
+		/* translators: %d is the album count */
+		printf(
+			wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+			$count
+		);
+		?>
+	</div>
+	<?php
+}
+?>
 <div class="bb-media-container group-albums">
 
 	<?php

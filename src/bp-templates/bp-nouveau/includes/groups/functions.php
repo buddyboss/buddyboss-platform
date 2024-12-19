@@ -117,6 +117,12 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
  * @return array The same array with specific strings for the Group's Invite UI if needed.
  */
 function bp_nouveau_groups_localize_scripts( $params = array() ) {
+
+	$params['dir_labels']['groups'] = array(
+		'singular' => esc_html( 'Group', 'buddyboss' ),
+		'plural'   => esc_html( 'Groups', 'buddyboss' ),
+	);
+
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
 		return $params;
 	}
@@ -609,11 +615,8 @@ function bp_nouveau_get_groups_directory_nav_items() {
 		'link'      => bp_get_groups_directory_permalink(),
 		'text'      => __( 'All Groups', 'buddyboss' ),
 		'position'  => 5,
+		'count'     => false,
 	);
-
-	if ( $enable_count ) {
-		$nav_items['all']['count'] = bp_get_total_group_count();
-	}
 
 	if ( is_user_logged_in() ) {
 

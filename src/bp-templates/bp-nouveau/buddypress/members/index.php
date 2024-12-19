@@ -43,6 +43,22 @@ do_action( 'bp_before_directory_members_page' );
 			bp_get_template_part( 'common/nav/directory-nav' );
 		}
 
+		if ( bb_member_directory_count_enable() ) {
+			?>
+			<div class="bb-item-count">
+				<?php
+				if ( ! $is_send_ajax_request ) {
+					$count = bp_core_get_all_member_count();
+					/* translators: %d is the member count */
+					printf(
+						wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span class="bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+						$count
+					);
+				}
+				?>
+			</div>
+			<?php
+		}
 		bp_get_template_part( 'common/search-and-filters-bar' );
 
 		/**

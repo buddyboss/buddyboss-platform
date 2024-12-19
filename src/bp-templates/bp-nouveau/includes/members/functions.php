@@ -27,11 +27,8 @@ function bp_nouveau_get_members_directory_nav_items() {
 		'link'      => bp_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
 		'position'  => 5,
+		'count'     => false,
 	);
-
-	if ( $enable_count ) {
-		$nav_items['all']['count'] = bp_core_get_all_member_count();
-	}
 
 	if ( is_user_logged_in() ) {
 		// If friends component is active and the user has friends
@@ -43,10 +40,8 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
 				'text'      => __( 'My Connections', 'buddyboss' ),
 				'position'  => 15,
+				'count'     => false,
 			);
-			if ( $enable_count ) {
-				$nav_items['personal']['count'] = bp_get_total_friend_count( bp_loggedin_user_id() );
-			}
 		}
 
 		// If follow component is active and the user is following
@@ -61,11 +56,8 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
 					'text'      => __( 'Following', 'buddyboss' ),
 					'position'  => 16,
+					'count'     => false,
 				);
-
-				if ( $enable_count ) {
-					$nav_items['following']['count'] = $counts['following'];
-				}
 			}
 		}
 	}

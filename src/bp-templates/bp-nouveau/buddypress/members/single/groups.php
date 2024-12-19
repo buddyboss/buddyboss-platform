@@ -14,6 +14,43 @@ if ( bp_is_my_profile() ) {
 	bp_get_template_part( 'members/single/parts/item-subnav' );
 }
 
+switch ( bp_current_action() ) :
+	case 'my-groups':
+		$count = bp_get_total_group_count_for_user( bp_displayed_user_id() );
+		?>
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+
+				/* translators: %d is the group count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					$count
+				);
+			}
+			?>
+		</div>
+		<?php
+		break;
+	case 'invites':
+		$count = groups_get_invite_count_for_user( bp_displayed_user_id() );
+		?>
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+
+				/* translators: %d is the Invite count */
+				printf(
+					wp_kses( _n( '<span class="bb-count">%d</span> Invite', '<span class="bb-count">%d</span> Invites', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					$count
+				);
+			}
+			?>
+		</div>
+		<?php
+		break;
+endswitch;
+
 if ( ! bp_is_current_action( 'invites' ) ) {
 	bp_get_template_part( 'common/search-and-filters-bar' );
 }

@@ -1268,8 +1268,42 @@ function bp_nouveau_nav_has_count() {
 	$count        = false;
 	$courses_slug = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
-	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
-		$count = $nav_item->count;
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		if ( isset( $nav_item->count ) && false !== $nav_item->count ) {
+			$count = $nav_item->count;
+		} else {
+			if ( bp_is_members_directory() && bb_member_directory_count_enable() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_core_get_all_member_count();
+				} elseif ( 'personal' === $nav_item->slug ) {
+					$count  = bp_get_total_friend_count( bp_loggedin_user_id() );
+				} elseif ( 'following' === $nav_item->slug ) {
+					$counts = bp_total_follow_counts();
+					$count  = $counts['following'];
+				}
+			} elseif ( bp_is_groups_directory() && bb_group_directory_count_enable() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_get_total_group_count();
+				}
+			} elseif ( bp_is_media_directory() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_get_total_media_count();
+				} elseif ( 'personal' === $nav_item->slug ) {
+					$count  = bp_media_get_total_media_count();
+				} elseif ( 'groups' === $nav_item->slug ) {
+					$count  = bp_media_get_user_total_group_media_count();
+				}
+			} elseif ( bp_is_video_directory() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_get_total_video_count();
+				} elseif ( 'personal' === $nav_item->slug ) {
+					$count  = bp_video_get_total_video_count();
+				} elseif ( 'groups' === $nav_item->slug ) {
+					$count  = bp_video_get_user_total_group_video_count();
+				}
+			}
+		}
+		
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 		$enable_member_count = bb_member_directory_count_enable();
 
@@ -1318,7 +1352,7 @@ function bp_nouveau_nav_count() {
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @return int The count attribute for the nav item.
+	 * @return bool|int The count attribute for the nav item, false if not available.
 	 */
 function bp_nouveau_get_nav_count() {
 	$bp_nouveau   = bp_nouveau();
@@ -1327,7 +1361,42 @@ function bp_nouveau_get_nav_count() {
 	$courses_slug = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
-		$count = (int) str_replace( ',', '', $nav_item->count );
+		if ( isset( $nav_item->count ) && false !== $nav_item->count ) {
+			$count = (int) str_replace( ',', '', $nav_item->count );
+		} else {
+
+			if ( bp_is_members_directory() && bb_member_directory_count_enable() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_core_get_all_member_count();
+				} elseif ( 'personal' === $nav_item->slug ) {
+					$count  = bp_get_total_friend_count( bp_loggedin_user_id() );
+				} elseif ( 'following' === $nav_item->slug ) {
+					// Following count.
+					$counts = bp_total_follow_counts();
+					$count  = $counts['following'];
+				}
+			} elseif ( bp_is_groups_directory() && bb_group_directory_count_enable() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_get_total_group_count();
+				}
+			} elseif ( bp_is_media_directory() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_get_total_media_count();
+				} elseif ( 'personal' === $nav_item->slug ) {
+					$count  = bp_media_get_total_media_count();
+				} elseif ( 'groups' === $nav_item->slug ) {
+					$count  = bp_media_get_user_total_group_media_count();
+				}
+			} elseif ( bp_is_video_directory() ) {
+				if ( 'all' === $nav_item->slug ) {
+					$count  = bp_get_total_video_count();
+				} elseif ( 'personal' === $nav_item->slug ) {
+					$count  = bp_video_get_total_video_count();
+				} elseif ( 'groups' === $nav_item->slug ) {
+					$count  = bp_video_get_user_total_group_video_count();
+				}
+			}
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
 		$enable_member_count = bb_member_directory_count_enable();
 
