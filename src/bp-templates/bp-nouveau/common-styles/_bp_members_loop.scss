@@ -192,6 +192,20 @@
 	border-radius: 100%;
 	z-index: 1;
 
+	&.online {
+		position: absolute;
+		width: 15px;
+		height: 15px;
+		box-sizing: border-box;
+		right: 12px;
+		top: -5px;
+	}
+
+	&.offline {
+		opacity: 0;
+		visibility: hidden;
+	}
+
 	.bp-user-blocked > &,
 	.bp-user-suspended > &,
 	.bp-user-blocked-by > & {
