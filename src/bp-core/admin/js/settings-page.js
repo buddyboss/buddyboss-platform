@@ -2906,7 +2906,6 @@ window.bp = window.bp || {};
 		// Show telemetry no-reporting setting and mark as checked.
 		var $no_reporting_setting = jQuery( '.bb-setting-telemetry-no-reporting' );
 		$no_reporting_setting.removeClass( 'bp-hide' );
-		$no_reporting_setting.find( 'input' ).prop( 'checked', true );
 	
 		// Update telemetry mode description with data from the first telemetry input field.
 		var notice_text = jQuery( '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]' ).first().data( 'notice' );

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.7.40
+Stable tag: 2.7.60
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,31 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.60 =
+* Bug: Activity - Fixed a security issue where private or connections-related activity post comments could be exposed using inspection tools
+* Bug: Activity - Fixed an issue where the reaction tab was still displayed after the activity tab was disabled on the news feed page
+* Bug: Activity - Fixed cursor placement issue in the draft activity form popup on Safari browsers
+* Bug: Core - Fixed a error that occurred when clicking the link in the confirmation email to change the admin email id
+* Bug: Core - Fixed an issue where copying text on mobile devices (Android and iOS) was not working as expected
+* Bug: Core - Fixed an issue where member’s last activity time did not align with the timezone selected
+* Bug: Core - Fixed an issue where non-English pages/URLs could not be added as public content, they now work correctly when site privacy is enabled
+* Bug: Core - Fixed UI spacing issues in the General Settings admin card on smaller screens within BuddyBoss settings
+* Bug: Core - Code refactoring to improve security and fix vulnerabilities
+* Bug: Elementor - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
+* Bug: Forum - Fixed an issue where disabling autocomplete in the forum search bar caused the page to reload with search results after typing a character
+* Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Platform plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
+* Bug: Groups - Fixed an issue where a Private Group incorrectly displayed a message indicating it was a subgroup, even when it was a parent group
+* Bug: Members - Fixed spacing issue with the display name separator when the first name contains multiple names and no last name, in the member list API for logged-out users
+* Bug: Messages - Fixed an issue where the “More Options” button remained active after closing the dropdown
+* Bug: Messages - Fixed the alignment issue with the upload media button on the message screen
+* Bug: Profiles - Fixed an issue where profile avatars were distorted on the Members index page when using default WordPress themes like Twenty Twenty One
+* Bug: Translations - Fixed an issue where the title of the “Like/Likes” modal was not translatable
+
+= 2.7.50 =
+* Enhancement: Core - Updated all “View Tutorial” links across the platform to open in a new tab
+* Enhancement: Core- Updated Telemetry configuration to be anonymous by default
+* Bug: Translations - Addressed translation compatibility issues for BuddyBoss with WordPress 6.7, 6.7.1, and ensured support for future WordPress updates.
 
 = 2.7.40 =
 * Enhancement: MemberPress - We have added full integration of MemberPress into Buddyboss including their most recent Courses feature
