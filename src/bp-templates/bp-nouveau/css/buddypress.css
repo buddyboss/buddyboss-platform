@@ -9635,6 +9635,20 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   z-index: 1;
 }
 
+.member-status.online {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  box-sizing: border-box;
+  right: 12px;
+  top: -5px;
+}
+
+.member-status.offline {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .bp-user-blocked > .member-status,
 .bp-user-suspended > .member-status,
 .bp-user-blocked-by > .member-status {
