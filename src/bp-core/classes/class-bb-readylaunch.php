@@ -82,7 +82,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					)
 				) {
 					add_settings_field( $name, $label, array( $this, 'bb_enable_setting_callback_page_directory' ), 'bb-readylaunch', 'bb_readylaunch', compact( 'enabled_pages', 'name', 'label', 'description' ) );
-					register_setting( 'bb-readylaunch', $name, array() );
+					register_setting( 'bb-readylaunch', $name, array(
+						'default' => array()
+					) );
 				}
 			}
 		}
@@ -169,6 +171,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( ! empty( $compponent ) && bp_is_active( $compponent ) ) {
 					$template = bp_locate_template( 'readylaunch/layout.php' );
 					if ( $template ) {
+						add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_enqueue' ) );
 						return $template;
 					}
 				}
@@ -176,5 +179,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $template;
 		}
+
+
+		public function bb_readylaunch_enqueue() {
+			wp_enqueue_script( 'bp-api-request');
+		}
 	}
+
 }
