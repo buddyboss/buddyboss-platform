@@ -5361,7 +5361,7 @@ h1.bb-advance-heading {
 }
 
 .bb-activity-sorting-list.ui-sortable .bb-activity-sorting-item:before {
-  content: '\edb2';
+  content: "\edb2";
   color: #000;
   font-family: bb-icons;
   font-size: 16px;

@@ -5335,6 +5335,20 @@ body.buddyboss-theme {
 		font-size: 14px;
 		margin-right: 4px;
 	}
+
+	.bb-icon-loader {
+		display: none;
+	}
+
+	&:has(li.loading) {
+
+		.bb-icon-loader {
+			display: inline-block;
+			margin: 0 auto;
+			font-size: 22px;
+			line-height: 1;
+		}
+	}
 }
 
 .directory.media,

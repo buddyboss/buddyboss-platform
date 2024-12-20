@@ -72,7 +72,7 @@
 		?>
 	</div><!-- search & filters -->
 </div>
-
+<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 <span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
 <div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 

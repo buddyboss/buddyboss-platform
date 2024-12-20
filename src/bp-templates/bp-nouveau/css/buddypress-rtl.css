@@ -26210,6 +26210,17 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   margin-left: 4px;
 }
 
+.actvity-head-bar .bb-icon-loader {
+  display: none;
+}
+
+.actvity-head-bar:has(li.loading) .bb-icon-loader {
+  display: inline-block;
+  margin: 0 auto;
+  font-size: 22px;
+  line-height: 1;
+}
+
 .directory.media .bp-subnavs li.selected a:hover span,
 .directory.document .bp-subnavs li.selected a:hover span,
 .directory.video .bp-subnavs li.selected a:hover span {
