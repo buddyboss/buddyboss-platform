@@ -182,7 +182,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 
 		public function bb_readylaunch_enqueue() {
+			global $bp;
 			wp_enqueue_script( 'bp-api-request');
+			// Enqueue CSS and JavaScript.
+			wp_enqueue_script( 'bb-readylaunch', $bp->plugin_url . "bp-core/js/readylaunch.js", array( 'jquery', 'wp-backbone', 'bp-api-request' ), bp_get_version() );
 		}
 	}
 
