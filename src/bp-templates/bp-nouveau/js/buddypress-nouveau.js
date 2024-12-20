@@ -97,6 +97,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.lazyLoad( '.lazy' );
 				}
 			);
+
+			// Initialize cache
+			this.cacheProfileCard = {};
+			this.cacheGroupCard = {};
 		},
 
 		/*
@@ -4629,6 +4633,20 @@ window.bp = window.bp || {};
 			// Cancel any ongoing request
 			bp.Nouveau.abortOngoingRequest();
 
+			// Check cache
+			if ( bp.Nouveau.cacheProfileCard[ memberId ] ) {
+				var cachedProfileData = bp.Nouveau.cacheProfileCard[ memberId ];
+				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
+				$profileCard.css( {
+					position: 'fixed',
+					top: popupTop - $( window ).scrollTop() + 'px',
+					left: popupLeft - $( window ).scrollLeft() + 'px',
+					display: 'block',
+				} ).removeClass( 'loading' );
+				popupCardLoaded = true;
+				return;
+			}
+
 			// Set up a new AbortController for current request
 			var controller = new AbortController();
 			currentRequest = controller;
@@ -4665,6 +4683,9 @@ window.bp = window.bp || {};
 				success: function ( data ) {
 					// Check if this request was aborted
 					if ( controller.signal.aborted ) return;
+
+					// Cache profile data
+					bp.Nouveau.cacheProfileCard[ memberId ] = data;
 
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
@@ -4789,6 +4810,20 @@ window.bp = window.bp || {};
 			// Cancel any ongoing request
 			bp.Nouveau.abortOngoingRequest();
 
+			// Check cache
+			if ( bp.Nouveau.cacheGroupCard[ groupId ] ) {
+				var cachedGroupData = bp.Nouveau.cacheGroupCard[ groupId ];
+				bp.Nouveau.updateGroupCard( cachedGroupData, currentUser );
+				$groupCard.css( {
+					position: 'fixed',
+					top: popupTop - $( window ).scrollTop() + 'px',
+					left: popupLeft - $( window ).scrollLeft() + 'px',
+					display: 'block',
+				} ).removeClass( 'loading' );
+				popupCardLoaded = true;
+				return;
+			}
+
 			// Set up a new AbortController for current request
 			var controller = new AbortController();
 			currentRequest = controller;
@@ -4823,6 +4858,9 @@ window.bp = window.bp || {};
 				success: function ( data ) {
 					// Check if this request was aborted
 					if ( controller.signal.aborted ) return;
+
+					// Cache group data
+					bp.Nouveau.cacheGroupCard[ groupId ] = data;
 
 					$groupCard.removeClass( 'loading' );
 					bp.Nouveau.updateGroupCard( data, currentUser );
