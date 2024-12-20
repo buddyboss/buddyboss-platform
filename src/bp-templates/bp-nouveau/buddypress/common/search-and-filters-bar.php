@@ -82,7 +82,6 @@
 	</button>
 	<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 		<ul role="listbox">
-			<li role="option" data-bp-scope='all'><a href="#" data-value='all' class="selected"><?php esc_html_e( 'All updates', 'buddyboss' ); ?></a></li>
 			<?php
 				$filters_labels   = bb_get_activity_filter_options_labels();
 				$activity_filters = bb_get_enabled_activity_filter_options();
@@ -109,7 +108,7 @@ if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, 
 	?>
 	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-		<?php $sorting_labels = bb_get_all_activity_sorting_options_labels(); ?>
+		<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 			<span class="selected"><?php echo strtolower( $sorting_labels[ key( $avail_sorting_options ) ] ); ?></span>
 			<i class="bb-icon-l bb-icon-angle-down"></i>
@@ -131,7 +130,7 @@ if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, 
 				?>
 			</ul>
 		</div>
-		<input type="hidden" name="bb_activity_filter_by" value="<?php esc_attr_e( $avail_sorting_options[0] ); ?>" />
+		<input type="hidden" name="bb_activity_filter_by" value="<?php echo esc_attr( key( $avail_sorting_options ) ); ?>" />
 	</div>
 	<?php
 }

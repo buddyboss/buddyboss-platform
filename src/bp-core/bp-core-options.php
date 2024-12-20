@@ -2768,6 +2768,7 @@ function bb_is_send_ajax_request() {
  */
 function bb_get_activity_filter_options_labels() {
 	$filters = array(
+		'all'       => __( 'All updates', 'buddyboss' ),
 		'just_me'   => __( 'Created by me', 'buddyboss' ),
 		'groups'    => __( 'From my groups', 'buddyboss' ),
 		'friends'   => __( 'From my connections', 'buddyboss' ),
@@ -2788,7 +2789,7 @@ function bb_get_activity_filter_options_labels() {
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array( 'just_me' => 0, 'my_groups' => 0, 'my_connections' => 0, 'mentions' => 0, 'following' => 0, 'replied' => 0 ) ) {
+function bb_get_enabled_activity_filter_options( $default = array( 'all' => 1, 'just_me' => 0, 'groups' => 0, 'friends' => 0, 'mentions' => 0, 'following' => 0, 'replied' => 0, 'favorites' => 0 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
 }
 
@@ -2799,12 +2800,12 @@ function bb_get_enabled_activity_filter_options( $default = array( 'just_me' => 
  *
  * @return array Array of all activity sorting options labels.
  */
-function bb_get_all_activity_sorting_options_labels() {
+function bb_get_activity_sorting_options_labels() {
 	$sorting_options = array(
 		'most_recent'     => __( 'Most recent', 'buddyboss' ),
 		'recent_activity' => __( 'Recent activity', 'buddyboss' ),
 	);
-	return (array) apply_filters( 'bb_get_all_activity_sorting_options_labels', $sorting_options );
+	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
 }
 
 /**
@@ -2818,4 +2819,33 @@ function bb_get_all_activity_sorting_options_labels() {
  */
 function bb_get_enabled_activity_sorting_options( $default = array( 'most_recent' => 0, 'recent_activity' => 0 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
+}
+
+/**
+ * Get all activity comment sorting options labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity comment sorting options labels.
+ */
+function bb_get_activity_comment_sorting_options_labels() {
+	$sorting_options = array(
+		'oldest_first'    => __( 'Oldest first', 'buddyboss' ),
+		'most_recent'     => __( 'Most recent', 'buddyboss' ),
+		'recent_activity' => __( 'Recent activity', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_comment_sorting_options_labels', $sorting_options );
+}
+
+/**
+ * Get enabled activity comments sorting options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ * 
+ * @param array $default Array of default activity comments sorting options. 
+ *
+ * @return array Array of enabled activity comments sorting options.
+ */
+function bb_get_enabled_activity_comment_sorting_options( $default = array( 'oldest_first' => 1, 'most_recent' => 0, 'recent_activity' => 0 ) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_comment_sorting_options', bp_get_option( 'bb_activity_comment_sorting_options', $default ) );
 }

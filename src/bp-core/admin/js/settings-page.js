@@ -2959,7 +2959,7 @@ window.bp = window.bp || {};
 
 	// Handle Activity filter option save.
 	if ( $( 'body.buddyboss_page_bp-settings' ).length > 0 ) {
-		$('.bb_activity_filter_options_container input[type="checkbox"], .bb_activity_sorting_options_container input[type="checkbox"]').on( 'change', function () {
+		$( '.bb-activity-sorting-item input[type="checkbox"]' ).on( 'change', function () {
 			var checkbox = $( this ),
 				hiddenInput = checkbox.siblings( 'input[type="hidden"]' );
 	

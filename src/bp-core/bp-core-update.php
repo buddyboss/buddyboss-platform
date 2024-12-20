@@ -503,6 +503,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
+		if ( $raw_db_version < 21221 ) {
+			bb_update_to_2_6_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3806,6 +3810,34 @@ function bb_update_to_2_6_70() {
 					$ids_to_delete
 				)
 			);
+		}
+	}
+}
+
+/**
+ * Add updated_time column in activity table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_80() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_activity' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_activity' ) );
+	if ( $table_exists ) {
+
+		// Add 'date_updated' column in 'bp_activity' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_activity' AND column_name = 'date_updated'" ); //phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( 
+				"ALTER TABLE {$bp_prefix}bp_activity 
+				ADD `date_updated` datetime AFTER `date_recorded`,
+				ADD KEY `date_updated` (`date_updated`)" 
+			); // phpcs:ignore
 		}
 	}
 }
