@@ -214,6 +214,16 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( true === $retval && ! $this->can_see( $request ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you cannot view the activity comment.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the activity comment permissions check.
 		 *
@@ -1151,6 +1161,22 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
+
+		// Check if the user can read the activity as per privacy settings.
+		if ( ! empty( $request['id'] ) && function_exists( 'bb_validate_activity_privacy' ) ) {
+			$privacy_check = bb_validate_activity_privacy(
+				array(
+					'activity_id'     => $request['id'],
+					'validate_action' => 'view_activity',
+					'user_id'         => bp_loggedin_user_id(),
+				)
+			);
+
+			if ( is_wp_error( $privacy_check ) ) {
+				return false;
+			}
+		}
+
 		$activity_comment = $this->get_activity_comment_object( $request );
 
 		return ( ! empty( $activity_comment ) && bp_activity_user_can_read( $activity_comment, bp_loggedin_user_id() ) );
