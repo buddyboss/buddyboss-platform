@@ -1072,11 +1072,7 @@ function bb_moderation_get_friendship_ids_for_user_where_sql( $where ) {
     global $wpdb;
 
     // Add conditions to exclude suspended and moderated users.
-    $where[] = $wpdb->prepare(
-        "f.is_confirmed = 1
-        AND s.user_suspended IS NULL
-        AND m.moderation_id IS NULL"
-    );
+    $where[] = $wpdb->prepare( 's.user_suspended IS NULL AND m.moderation_id IS NULL' );
 
     return $where;
 }
@@ -1101,15 +1097,13 @@ function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
 	$join .= ' (f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)';
 	$join .= ' AND s.item_type = "user"';
 	$join .= ' AND s.item_id != ' . $user_id ;
-	$join .= ' AND (s.hide_sitewide = 1 OR s.user_suspended = 1)';
+	$join .= ' AND (s.hide_sitewide = 1 OR s.user_suspended = 1 OR s.reported != 0)';
 	$join .= ')';
 
 	// Join with the wp_bp_moderation table to apply moderation checks.
 	$join .= ' LEFT JOIN ' . $bp->moderation->table_name_reports . ' m ON (';
 	$join .= ' s.id = m.moderation_id';
-	$join .= ' AND (';
-	$join .= ' (m.user_id = ' . $user_id . ')';
-	$join .= ')';
+	$join .= ' AND m.user_id is NULL';
 	$join .= ')';
 
 	return $join;
