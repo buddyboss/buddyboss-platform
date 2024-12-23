@@ -2849,3 +2849,24 @@ function bb_get_activity_comment_sorting_options_labels() {
 function bb_get_enabled_activity_comment_sorting_options( $default = array( 'oldest_first' => 1, 'most_recent' => 0, 'recent_activity' => 0 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_comment_sorting_options', bp_get_option( 'bb_activity_comment_sorting_options', $default ) );
 }
+
+/**
+ * Check whether activity search is enabled.
+ *
+ * @since Buddyboss [BBVERSION]
+ *
+ * @param bool $default Default: true.
+ *
+ * @return bool True if activity search enabled.
+ */
+function bb_is_activity_search_enabled( $default = true ) {
+
+	/**
+	 * Filters whether activity search is enabled.
+	 *
+	 * @since Buddyboss [BBVERSION]
+	 *
+	 * @param bool $value Is activity search enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
+}

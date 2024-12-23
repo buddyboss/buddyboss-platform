@@ -3885,6 +3885,11 @@ function bb_admin_setting_callback_activity_sorting() {
 	<?php
 }
 
+/**
+ * Enable activity comments sorting options.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
 function bb_admin_setting_callback_activity_comment_sorting() {
 	?>
 	<label><?php esc_html_e( 'Allow members to sort activity comments by:', 'buddyboss' ); ?></label>
@@ -3945,5 +3950,17 @@ function bb_admin_setting_callback_activity_comment_sorting() {
 		endforeach;
 		?>
 	</div>
+	<?php
+}
+
+/**
+ * Enable activity search.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_enable_activity_search() {
+	?>
+	<input id="bb_enable_activity_search" name="bb_enable_activity_search" type="checkbox" value="1" <?php checked( bb_is_activity_search_enabled( true ) ); ?> />
+	<label for="bb_enable_activity_search"><?php esc_html_e( 'Allow members to search activity posts', 'buddyboss' ); ?></label>
 	<?php
 }

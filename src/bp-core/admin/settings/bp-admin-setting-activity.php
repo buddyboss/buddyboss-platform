@@ -85,6 +85,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Activity sorting.
 		$this->add_field( 'bb_activity_sorting_options', __( 'Activity sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_sorting' );
 
+		// Activity search.
+		$this->add_field( 'bb_enable_activity_search', __( 'Activity search', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_search' );
+
 		// Pin posts.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 

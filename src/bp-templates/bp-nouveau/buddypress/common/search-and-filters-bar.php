@@ -10,9 +10,15 @@
 
 ?>
 <div class="bb-subnav-filters-container bb-subnav-filters-search">
-	<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
-		<i class="bb-icon-f bb-icon-search"></i>	
-	</button>
+	<?php
+	if ( bb_is_activity_search_enabled() ) {
+		?>
+		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
+			<i class="bb-icon-f bb-icon-search"></i>	
+		</button>
+		<?php
+	}	
+	?>
 	<div class="subnav-filters filters no-ajax subnav-filters-modal" id="subnav-filters">
 		<?php
 		$bp_current_component = bp_current_component();
