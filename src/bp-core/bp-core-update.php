@@ -3822,22 +3822,73 @@ function bb_update_to_2_6_70() {
  * @return void
  */
 function bb_update_to_2_6_80() {
-	global $wpdb;
 
-	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	// Run migration.
+	$is_already_run = get_transient( 'bb_update_to_2_6_80' );
+	if ( ! $is_already_run ) {
 
-	// Check if the 'bp_activity' table exists.
-	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_activity' ) );
-	if ( $table_exists ) {
+		global $wpdb;
 
-		// Add 'date_updated' column in 'bp_activity' table.
-		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_activity' AND column_name = 'date_updated'" ); //phpcs:ignore
-		if ( empty( $row ) ) {
-			$wpdb->query( 
-				"ALTER TABLE {$bp_prefix}bp_activity 
-				ADD `date_updated` datetime AFTER `date_recorded`,
-				ADD KEY `date_updated` (`date_updated`)" 
-			); // phpcs:ignore
+		$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+		// Check if the 'bp_activity' table exists.
+		$activity_table = $bp_prefix . 'bp_activity';
+		$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) );
+		if ( $table_exists ) {
+
+			// Add 'date_updated' column in 'bp_activity' table.
+			$column_exists = $wpdb->query( "SHOW COLUMNS FROM {$activity_table} LIKE 'date_updated'" );
+			if ( empty( $column_exists ) ) {
+				$wpdb->query(
+					"ALTER TABLE {$bp_prefix}bp_activity 
+					ADD `date_updated` datetime NOT NULL AFTER `date_recorded`"
+				); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+			} else {
+
+				// Handle case when wordpress creates the column automatically from the create query.
+
+				// Get the current column order.
+				$columns = $wpdb->get_results(
+					"SHOW COLUMNS FROM {$activity_table}",
+					ARRAY_A
+				);
+
+				$column_positions = [];
+				foreach ( $columns as $index => $column ) {
+					$column_positions[] = $column['Field'];
+				}
+
+				// Check if 'date_updated' is already after 'date_recorded'.
+				$date_recorded_index = array_search( 'date_recorded', $column_positions, true );
+				$date_updated_index  = array_search( 'date_updated', $column_positions, true );
+
+				// If 'date_updated' is not already after 'date_recorded', modify its position.
+				if ( false !== $date_recorded_index && false !== $date_updated_index && ( $date_recorded_index + 1 ) !== $date_updated_index ) {
+					$wpdb->query(
+						"ALTER TABLE {$activity_table} 
+						MODIFY `date_updated` datetime NOT NULL AFTER `date_recorded`"
+					); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Necessary to modify column position.
+				}
+			}
+
+			// Populate 'date_updated' with the value of 'date_recorded'.
+			$wpdb->query(
+				"UPDATE {$bp_prefix}bp_activity 
+				SET `date_updated` = `date_recorded` WHERE date_updated IS NULL OR date_updated = '0000-00-00 00:00:00' OR date_updated = '' "
+			); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+
+			// Get all existing indexes for the table.
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $activity_table ) );
+
+			// Add key for date_updated if it doesn't exist.
+			if ( ! in_array( 'date_updated', $indexes, true ) ) {
+				$wpdb->query(
+					"ALTER TABLE {$bp_prefix}bp_activity 
+					ADD KEY `date_updated` (`date_updated`)"
+				); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+			}
 		}
+
+		set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
 	}
 }
