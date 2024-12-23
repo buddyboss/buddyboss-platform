@@ -63,9 +63,10 @@
 			while ( have_posts() ) :
 				the_post();
 
-//				 the_content();
+				 the_content();
 			endwhile;
 		endif;
+        /*
 		?>
 		<div id="buddypress" class="buddypress-wrap bp-single-plain-nav bp-dir-hori-nav">
 			<div id="members-dir-list" class="members dir-list">
@@ -74,7 +75,11 @@
 				</ul>
 			</div>
 		</div>
+        <?php */ ?>
 	</main>
+    <footer id="site-footer" >
+        FOOTER
+    </footer>
 	<?php wp_footer(); ?>
 </body>
 

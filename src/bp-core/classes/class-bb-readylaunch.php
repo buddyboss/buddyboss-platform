@@ -54,6 +54,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
 			add_filter( 'template_include', array( $this, 'override_page_templates' ), 999999 ); // High priority so we have the last say here
+			// Filter BuddyPress template locations.
+			remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+			add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
 		}
 
 		public function bb_core_admin_readylaunch_page_fields() {
@@ -169,7 +172,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			) {
 				$compponent = array_search( $post->ID, $enabled_pages, true );
 				if ( ! empty( $compponent ) && bp_is_active( $compponent ) ) {
-					$template = bp_locate_template( 'readylaunch/layout.php' );
+					$template = bp_locate_template( 'layout.php' );
 					if ( $template ) {
 						add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_enqueue' ) );
 						return $template;
@@ -186,6 +189,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_script( 'bp-api-request');
 			// Enqueue CSS and JavaScript.
 			wp_enqueue_script( 'bb-readylaunch', $bp->plugin_url . "bp-core/js/readylaunch.js", array( 'jquery', 'wp-backbone', 'bp-api-request' ), bp_get_version() );
+		}
+
+		public function add_template_stack( $stack ) {
+
+			$stylesheet_dir = get_stylesheet_directory();
+			$template_dir   = get_template_directory();
+
+			$stack = array_flip($stack);
+
+			unset( $stack[$stylesheet_dir], $stack[$template_dir] );
+
+			$stack = array_flip($stack);
+
+			$custom_location = 'readylaunch';
+
+			foreach ( $stack as $key => $value ) {
+				$stack[$key] = untrailingslashit( trailingslashit( $value ) . $custom_location );
+			}
+
+			return $stack;
+
 		}
 	}
 
