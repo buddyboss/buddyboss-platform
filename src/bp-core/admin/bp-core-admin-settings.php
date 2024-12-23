@@ -3842,7 +3842,7 @@ function bb_admin_setting_callback_activity_sorting() {
 			$sorted_labels = array();
 			foreach ( $sorting_options as $key => $value ) {
 				if ( isset( $sorting_options_labels[ $key ] ) ) {
-					$sorting_options_labels[ $key ] = $sorting_options_labels[ $key ];
+					$sorted_labels[ $key ] = $sorting_options_labels[ $key ];
 				}
 			}
 
@@ -3858,7 +3858,7 @@ function bb_admin_setting_callback_activity_sorting() {
 			$sorted_labels = $sorting_options_labels;
 		}
 
-		foreach ( $sorting_options_labels as $key => $label ) :
+		foreach ( $sorted_labels as $key => $label ) :
 			?>
 			<div class="bb-activity-sorting-item">
 				<input
@@ -3900,7 +3900,7 @@ function bb_admin_setting_callback_activity_comment_sorting() {
 			$sorted_labels = array();
 			foreach ( $sorting_options as $key => $value ) {
 				if ( isset( $sorting_options_labels[ $key ] ) ) {
-					$sorting_options_labels[ $key ] = $sorting_options_labels[ $key ];
+					$sorted_labels[ $key ] = $sorting_options_labels[ $key ];
 				}
 			}
 
@@ -3916,7 +3916,7 @@ function bb_admin_setting_callback_activity_comment_sorting() {
 			$sorted_labels = $sorting_options_labels;
 		}
 
-		foreach ( $sorting_options_labels as $key => $label ) :
+		foreach ( $sorted_labels as $key => $label ) :
 			$readonly = '';
 			if ( 'oldest_first' === $key ) {
 				$readonly = 'disabled';
