@@ -929,6 +929,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$send_mail = false;
 			}
 
+			if ( true === (bool) apply_filters( 'bb_send_forums_subscribed_discussion_notifications_disabled', false, $type_key, $user_id ) ) {
+				$send_notification = false;
+				$send_mail         = false;
+			}
+
 			// Bail if member opted out of receiving this email.
 			// Check the sender is blocked by recipient or not.
 			if ( true === $send_mail ) {
@@ -1041,6 +1046,11 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if ( false === bb_is_notification_enabled( $user_id, $type_key ) ) {
 				$send_mail = false;
+			}
+
+			if ( true === (bool) apply_filters( 'bb_send_forums_subscribed_reply_notifications_disabled', false, $type_key, $user_id ) ) {
+				$send_notification = false;
+				$send_mail         = false;
 			}
 
 			// Bail if member opted out of receiving this email.
