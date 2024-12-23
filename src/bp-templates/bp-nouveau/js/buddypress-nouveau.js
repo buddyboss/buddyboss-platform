@@ -4582,7 +4582,13 @@ window.bp = window.bp || {};
 			var activeStatus = data.last_activity === 'Active now' ? 'active' : '';
 			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
 			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
-		
+			var memberTypeCSS = {};
+			if ( data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ) {
+				var labelColors = data.member_types[ 0 ].label_colors || {};
+				memberTypeCSS[ 'color' ] = labelColors.color || '';
+				memberTypeCSS[ 'background-color' ] = labelColors[ 'background-color' ] || '';
+			}
+
 			$profileCard
 				.attr( 'data-bp-item-id', data.id );
 			$profileCard
@@ -4597,7 +4603,8 @@ window.bp = window.bp || {};
 			$profileCard
 				.find( '.bb-card-profile-type' )
 				.addClass( memberTypeClass )
-				.text( memberType );
+				.text( memberType )
+				.css(memberTypeCSS);
 			$profileCard
 				.find( '.card-meta-joined span' )
 				.text( joinedDate );
