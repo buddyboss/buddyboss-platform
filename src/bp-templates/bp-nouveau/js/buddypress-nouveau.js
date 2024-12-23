@@ -2021,6 +2021,14 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
+		 	// Clear cache for a specific profile/group
+			if (target.closest( '#profile-card' ).length) {
+				bp.Nouveau.clearCacheProfileCard( item_id );
+			}
+			if (target.closest( '#group-card' ).length) {
+				bp.Nouveau.clearCacheGroupCard( item_id );
+			}
+
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 
 				// support for buddyboss theme for button actions and icons and texts.
@@ -2151,7 +2159,7 @@ window.bp = window.bp || {};
 			target.addClass( 'pending loading' );
 
 			var current_page = '';
-			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) ) {
+			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) || $( document.body ).hasClass( 'activity' ) ) {
 				current_page = 'directory';
 			} else if ( $( document.body ).hasClass( 'bp-user' ) ) {
 				current_page = 'single';
@@ -4509,6 +4517,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Helper function to clear cache for a specific member.
+		 */
+		clearCacheProfileCard: function ( memberId ) {
+			if ( this.cacheProfileCard[ memberId ] ) {
+				delete this.cacheProfileCard[ memberId ];
+			}
+		},
+
+		/**
 		 * Helper function to reset profile popup cards.
 		 */
 		resetProfileCard: function () {
@@ -4696,6 +4713,15 @@ window.bp = window.bp || {};
 					$profileCard.html( '<span>Failed to load data.</span>' );
 				}
 			});
+		},
+
+		/**
+		 * Helper function to clear cache for a specific group.
+		 */
+		clearCacheGroupCard: function ( groupId ) {
+			if ( this.cacheGroupCard[ groupId ] ) {
+				delete this.cacheGroupCard[ groupId ];
+			}
 		},
 
 		/**
