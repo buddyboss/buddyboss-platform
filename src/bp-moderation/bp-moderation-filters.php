@@ -1064,31 +1064,55 @@ add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $where   Array of where conditions.
- * @param int   $user_id User ID.
+ * @param array $where Array of where conditions.
  *
- * @return array
+ * @return array Modified where conditions.
  */
-function bb_moderation_get_friendship_ids_for_user_where_sql( $where, $user_id ) {
-	global $wpdb;
-	$moderated_user_ids = bb_moderation_moderated_user_ids();
+function bb_moderation_get_friendship_ids_for_user_where_sql( $where ) {
+    global $wpdb;
 
-	// If user ID is also in fetched moderated user ids, remove it.
-	if ( in_array( $user_id, $moderated_user_ids, true ) ) {
-		$moderated_user_ids = array_diff( $moderated_user_ids, array( $user_id ) );
-	}
+    // Add conditions to exclude suspended and moderated users.
+    $where[] = $wpdb->prepare(
+        "f.is_confirmed = 1
+        AND s.user_suspended IS NULL
+        AND m.moderation_id IS NULL"
+    );
 
-	// If there are any suspended users, add conditions to exclude them.
-	if ( ! empty( $moderated_user_ids ) ) {
-		$placeholders = implode( ', ', array_fill( 0, count( $moderated_user_ids ), '%d' ) );
-		$where[]      = $wpdb->prepare(
-			"(initiator_user_id NOT IN ( {$placeholders} ) AND friend_user_id NOT IN ( {$placeholders} ))",
-			...$moderated_user_ids,
-			...$moderated_user_ids
-		);
-	}
-
-	return $where;
+    return $where;
 }
 
-add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 2 );
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
+
+/**
+ * Function to modify JOIN clauses to filter friendships based on suspension and moderation criteria.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $join    The JOIN SQL part of the query.
+ * @param int    $user_id The ID of the user for whom friendships are being queried.
+ *
+ * @return string Updated JOIN SQL part with suspension and moderation checks.
+ */
+function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
+	$bp = buddypress();
+
+	// Join with the wp_bp_suspend table to filter out suspended users.
+	$join .= ' LEFT JOIN ' . $bp->moderation->table_name . ' s ON (';
+	$join .= ' (f.initiator_user_id = s.item_id OR f.friend_user_id = s.item_id)';
+	$join .= ' AND s.item_type = "user"';
+	$join .= ' AND s.item_id != ' . $user_id ;
+	$join .= ' AND (s.hide_sitewide = 1 OR s.user_suspended = 1)';
+	$join .= ')';
+
+	// Join with the wp_bp_moderation table to apply moderation checks.
+	$join .= ' LEFT JOIN ' . $bp->moderation->table_name_reports . ' m ON (';
+	$join .= ' s.id = m.moderation_id';
+	$join .= ' AND (';
+	$join .= ' (m.user_id = ' . $user_id . ')';
+	$join .= ')';
+	$join .= ')';
+
+	return $join;
+}
+
+add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
