@@ -4540,7 +4540,8 @@ window.bp = window.bp || {};
 			$profileCard
 				.find( '.bb-card-profile-type' )
 				.removeClass( 'hasMemberType' )
-				.text( '' );
+				.text( '' )
+				.removeAttr( 'style' );
 			$profileCard
 				.find( '.card-profile-status' )
 				.removeClass( 'active' );
