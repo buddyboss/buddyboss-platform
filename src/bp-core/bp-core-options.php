@@ -2802,8 +2802,8 @@ function bb_get_enabled_activity_filter_options( $default = array( 'all' => 1, '
  */
 function bb_get_activity_sorting_options_labels() {
 	$sorting_options = array(
-		'most_recent'     => __( 'Most recent', 'buddyboss' ),
-		'recent_activity' => __( 'Recent activity', 'buddyboss' ),
+		'date_recorded' => __( 'Most recent', 'buddyboss' ),
+		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
 	);
 	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
 }
@@ -2817,7 +2817,7 @@ function bb_get_activity_sorting_options_labels() {
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $default = array( 'most_recent' => 1, 'recent_activity' => 1 ) ) {
+function bb_get_enabled_activity_sorting_options( $default = array( 'date_recorded' => 1, 'date_updated' => 1 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
 }
 

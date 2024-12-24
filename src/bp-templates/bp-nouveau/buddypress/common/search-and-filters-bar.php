@@ -126,8 +126,8 @@
 
 <?php
 $avail_sorting_options = bb_get_enabled_activity_sorting_options();
-asort( $avail_sorting_options );
-if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false )  ) {
+arsort( $avail_sorting_options );
+if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
 	?>
 	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
