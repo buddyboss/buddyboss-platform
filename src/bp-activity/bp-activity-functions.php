@@ -7165,10 +7165,11 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 function bb_validate_activity_privacy( $args ) {
 	$activity = new BP_Activity_Activity( $args['activity_id'] );
 
-	if (
-		! empty( $activity->privacy ) &&
-		! empty( $args['user_id'] )
-	) {
+	if ( empty( $args['user_id'] ) ) {
+		$args['user_id'] = bp_loggedin_user_id();
+	}
+
+	if ( ! empty( $activity->privacy ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			if ( 'new_comment' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss' ) );
@@ -7178,6 +7179,9 @@ function bb_validate_activity_privacy( $args ) {
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss' ) );
+			}
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on `Only Me` activity.', 'buddyboss' ) );
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
@@ -7195,6 +7199,13 @@ function bb_validate_activity_privacy( $args ) {
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
 				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss' ) );
+			}
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss' ) );
+			}
+		} elseif ( 'loggedin' === $activity->privacy && ! is_user_logged_in() ) {
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss' ) );
 			}
 		}
 	}

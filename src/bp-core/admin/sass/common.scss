@@ -260,6 +260,14 @@ TABLE OF CONTENTS:
 	color: #32373c;
 }
 
+.nav-settings-subsubsub {
+	padding-bottom: 0;
+
+	.subsubsub {
+		float: none;
+	}
+}
+
 @media screen and (max-width: 782px) {
 
 	#bp-admin-component-form .wp-list-table.plugins .plugin-title {
@@ -472,6 +480,14 @@ tr.bp-search-parent-field label {
 
 	.child-no-padding.bp-display-none.child-custom-post-type td {
 		margin: 10px 0 10px 10px;
+	}
+
+	@media screen and (max-width: 782px) {
+
+		.child-no-padding.bp-display-none td,
+		.child-no-padding.bp-display-none.child-custom-post-type td {
+			margin-left: 0;
+		}
 	}
 }
 
@@ -1205,6 +1221,22 @@ body.post-type-reply #edit-slug-box {
 
 	.bp-new-notice {
 		margin-bottom: 0.5em;
+	}
+
+	#bp-activities-form .wp-list-table th.column-primary.column-author,
+	form#bp-groups-form .wp-list-table th.column-primary.column-comment {
+		width: auto;
+	}
+
+	.wp-list-table {
+
+		&.activities,
+		&.groups {
+
+			tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+				font-weight: 600;
+			}
+		}
 	}
 }
 
@@ -2012,7 +2044,7 @@ tr.child-no-padding-first td {
 
 @media screen and (max-width: 782px) {
 
-	.section-bp_registration {
+	.form-table {
 
 		tr.child-no-padding,
 		tr.child-no-padding-first {
@@ -2021,6 +2053,7 @@ tr.child-no-padding-first td {
 				padding-left: 0;
 			}
 		}
+
 	}
 }
 
@@ -2561,6 +2594,10 @@ h2.has_tutorial_btn {
 	line-height: 1.5;
 	border: 1px solid rgb(255, 197, 202);
 	border-radius: 4px;
+
+	@media screen and (max-width: 782px) {
+		margin-left: 0;
+	}
 }
 
 .bb-warning-section-wrap.hidden-header > th {
@@ -3693,6 +3730,10 @@ table.moderations {
 				text-align: center;
 			}
 		}
+	}
+
+	&.wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+		display: none;
 	}
 }
 
