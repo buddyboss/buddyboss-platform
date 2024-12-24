@@ -99,9 +99,12 @@
 							continue;
 						}
 
+						if ( 'all' !== $key && ! bp_is_user_logged_in() ) {
+							continue;
+						}
+
 						// Skip filters based on user login or component active.
 						$skip_conditions = [
-							'all'       => ! is_user_logged_in(),
 							'friends'   => ! bp_is_active( 'friends' ),
 							'following' => ! bp_is_activity_follow_active(),
 							'groups'    => ! bp_is_active( 'groups' ),
