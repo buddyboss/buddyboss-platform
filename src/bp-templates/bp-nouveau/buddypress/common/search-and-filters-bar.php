@@ -93,19 +93,22 @@
 				$activity_filters = bb_get_enabled_activity_filter_options();
 				if ( ! empty ( $activity_filters ) ) {
 					foreach( $activity_filters as $key => $is_enabled ) {
+
+						// Skip filters not enabled or without labels.
 						if ( empty( $is_enabled ) || empty( $filters_labels[ $key ] ) ) {
 							continue;
 						}
-						if ( 'friends' === $key  && ! bp_is_active( 'friends' ) ) {
-							continue;
-						}
-						if ( 'following' === $key && ! bp_is_activity_follow_active() ) {
-							continue;
-						}
-						if ( 'groups' === $key && ! bp_is_active( 'groups' ) ) {
-							continue;
-						}
-						if ( 'mentions' === $key && ! bp_activity_do_mentions() ) {
+
+						// Skip filters based on user login or component active.
+						$skip_conditions = [
+							'all'       => ! is_user_logged_in(),
+							'friends'   => ! bp_is_active( 'friends' ),
+							'following' => ! bp_is_activity_follow_active(),
+							'groups'    => ! bp_is_active( 'groups' ),
+							'mentions'  => ! bp_activity_do_mentions(),
+						];
+				
+						if ( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] ) {
 							continue;
 						}
 						?>
