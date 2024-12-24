@@ -4165,7 +4165,7 @@ window.bp = window.bp || {};
 				filter: filter,
 				search_terms: search_terms,
 				extras: extras,
-				order: order
+				order_by: order
 			};
 
 			bp.Nouveau.objectRequest( queryData );

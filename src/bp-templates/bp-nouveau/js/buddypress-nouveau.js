@@ -492,7 +492,7 @@ window.bp = window.bp || {};
 					template: null,
 					method: 'reset',
 					ajaxload: true,
-					order: '',
+					order_by: '',
 				},
 				data
 			);
@@ -518,7 +518,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( this.objectNavParent + ' [data-bp-order]' ).length ) {
-				data.order = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
+				data.order_by = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
 			}
 
 			// Set session's data.
@@ -1927,7 +1927,7 @@ window.bp = window.bp || {};
 					page: 1,
 					extras: extras,
 					template: template,
-					order: order
+					order_by: order
 				}
 			);
 		},
