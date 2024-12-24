@@ -92,6 +92,13 @@
 				$filters_labels   = bb_get_activity_filter_options_labels();
 				$activity_filters = bb_get_enabled_activity_filter_options();
 				if ( ! empty ( $activity_filters ) ) {
+					// Skip filters based on user login or component active.
+					$skip_conditions = [
+						'friends'   => ! bp_is_active( 'friends' ),
+						'following' => ! bp_is_activity_follow_active(),
+						'groups'    => ! bp_is_active( 'groups' ),
+						'mentions'  => ! bp_activity_do_mentions(),
+					];
 					foreach( $activity_filters as $key => $is_enabled ) {
 
 						// Skip filters not enabled or without labels.
@@ -99,17 +106,9 @@
 							continue;
 						}
 
-						if ( 'all' !== $key && ! bp_is_user_logged_in() ) {
+						if ( 'all' !== $key && ! is_user_logged_in() ) {
 							continue;
 						}
-
-						// Skip filters based on user login or component active.
-						$skip_conditions = [
-							'friends'   => ! bp_is_active( 'friends' ),
-							'following' => ! bp_is_activity_follow_active(),
-							'groups'    => ! bp_is_active( 'groups' ),
-							'mentions'  => ! bp_activity_do_mentions(),
-						];
 				
 						if ( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] ) {
 							continue;
@@ -127,7 +126,7 @@
 
 <?php
 $avail_sorting_options = bb_get_enabled_activity_sorting_options();
-asort($activity_filters);
+asort( $avail_sorting_options );
 if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false )  ) {
 	?>
 	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
