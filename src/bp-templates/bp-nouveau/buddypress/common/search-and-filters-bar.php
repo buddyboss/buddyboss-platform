@@ -114,14 +114,13 @@
 							continue;
 						}
 						?>
-						<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $filters_labels[ $key ]; ?></a></li>
+						<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
 						<?php
 					}
 				}
 			?>
 		</ul>
 	</div>
-	<input type="hidden" name="bb_activity_filter_show" value="all" />
 </div>
 
 <?php
@@ -146,14 +145,13 @@ if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, 
 							continue;
 						}
 						?>
-						<li role="option" selected='selected'><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $sorting_labels[ $key ]; ?></a></li>
+						<li role="option" data-bp-order="activity" data-bp-orderby="<?php esc_attr_e( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
 						<?php
 					}
 				}
 				?>
 			</ul>
 		</div>
-		<input type="hidden" name="bb_activity_filter_by" value="<?php echo esc_attr( key( $avail_sorting_options ) ); ?>" />
 	</div>
 	<?php
 }

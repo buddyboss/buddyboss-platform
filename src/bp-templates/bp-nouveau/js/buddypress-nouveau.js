@@ -492,6 +492,7 @@ window.bp = window.bp || {};
 					template: null,
 					method: 'reset',
 					ajaxload: true,
+					order: '',
 				},
 				data
 			);
@@ -514,6 +515,10 @@ window.bp = window.bp || {};
 			// Prepare the search terms for the request.
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
+			}
+
+			if ( $( this.objectNavParent + ' [data-bp-order]' ).length ) {
+				data.order = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
 			}
 
 			// Set session's data.
@@ -1884,7 +1889,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		searchQuery: function ( event ) {
-			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '',
+			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '', order='',
 				extras = false;
 
 			if ( $( event.delegateTarget ).hasClass( 'no-ajax' ) || undefined === $( event.delegateTarget ).data( 'bp-search' ) ) {
@@ -1902,6 +1907,10 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
+			if ( $( self.objectNavParent + ' [data-bp-order]' ).length ) {
+				order = $( self.objectNavParent + ' [data-bp-order="' + object + '"].selected' ).data( 'bp-orderby' );
+			}
+
 			var objectData = self.getStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones.
@@ -1917,7 +1926,8 @@ window.bp = window.bp || {};
 					search_terms: search_terms,
 					page: 1,
 					extras: extras,
-					template: template
+					template: template,
+					order: order
 				}
 			);
 		},

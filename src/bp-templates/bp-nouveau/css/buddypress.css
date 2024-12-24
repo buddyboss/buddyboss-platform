@@ -26207,7 +26207,11 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   position: relative;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a.selected:after {
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
+  background-color: #f2f4f5;
+}
+
+.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li.selected a:after {
   content: "\e876";
   color: #385dff;
   font-family: bb-icons;
@@ -26217,10 +26221,6 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-}
-
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
-  background-color: #f2f4f5;
 }
 
 .actvity-head-bar .bb-subnav-filters-label {

@@ -4127,14 +4127,48 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			var $this = $( e.currentTarget );
 			var $parent = $this.closest( '.bb-subnav-filters-container' );
-			$this.addClass( 'selected' ).parent().siblings().find( 'a' ).removeClass( 'selected' );
+			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
-			$parent.find( 'input[type="hidden"]' ).val( $this.data( 'value' ) );
 			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
 
 			// Filter activity with below selections
-			var bb_activity_filter_show = $( 'input[name="bb_activity_filter_show"]' ).val();
-			var bb_activity_filter_by = $( 'input[name="bb_activity_filter_by"]' ).val();
+			var objectNavParent = bp.Nouveau.objectNavParent;
+			var object          = 'activity';
+			var filter          = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
+			var scope           = '';
+			var search_terms    = '';
+			var order           = '';
+			var extras          = '';
+
+			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
+				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
+			}
+
+			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
+				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			}
+
+			if ( $( objectNavParent + ' [data-bp-order]' ).length ) {
+				order = $( objectNavParent + ' [data-bp-order="' + object + '"].selected' ).data( 'bp-orderby' );
+			}
+
+			var objectData = bp.Nouveau.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones.
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
+			var queryData = {
+				object: object,
+				scope: scope,
+				filter: filter,
+				search_terms: search_terms,
+				extras: extras,
+				order: order
+			};
+
+			bp.Nouveau.objectRequest( queryData );
 
 		}
 

@@ -5299,17 +5299,24 @@ body.buddyboss-theme {
 				margin: 0;
 			}
 
-			li a {
-				display: block;
-				color: #5a5a5a;
-				font-size: 13px;
-				font-weight: 500;
-				line-height: 1.2;
-				padding: 10px 16px;
-				border-radius: 6px;
-				position: relative;
+			li {
 
-				&.selected:after {
+				a {
+					display: block;
+					color: #5a5a5a;
+					font-size: 13px;
+					font-weight: 500;
+					line-height: 1.2;
+					padding: 10px 16px;
+					border-radius: 6px;
+					position: relative;
+
+					&:hover {
+						background-color: #f2f4f5;
+					}
+				}
+
+				&.selected a:after {
 					content: "\e876";
 					color: #385dff;
 					font-family: bb-icons;
@@ -5319,10 +5326,6 @@ body.buddyboss-theme {
 					right: 10px;
 					top: 50%;
 					transform: translateY(-50%);
-				}
-
-				&:hover {
-					background-color: #f2f4f5;
 				}
 			}
 		}
