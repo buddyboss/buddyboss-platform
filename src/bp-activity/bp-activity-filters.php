@@ -193,6 +193,10 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
+// Update activity date_update when any reaction.
+add_filter( 'bp_activity_add_user_favorite', 'bb_activity_update_date_updated_on_reactions', 10, 2 );
+add_filter( 'bp_activity_remove_user_favorite', 'bb_activity_update_date_updated_on_reactions', 10, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3794,4 +3798,61 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Update date_updated on reactions
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id ID of the activity item being favorited.
+ * @param int $user_id     ID of the user doing the favoriting.
+ *
+ * @return void
+ */
+function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
+	$time = bp_core_current_time();
+
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( 'activity_comment' === $activity->type ) {
+
+		// Check if the item_id and secondary_item_id are same.
+		if ( $activity->item_id === $activity->secondary_item_id ) {
+
+			// Update the date_updated of the parent activity item.
+			bb_activity_update_date_updated( $activity->item_id, $time );
+
+			// Clear the cache for the parent activity item.
+			bp_activity_clear_cache_for_activity( $activity );
+		} else {
+			// Get the parent activity id if the activity is a comment.
+			$main_activity_object = bb_activity_get_comment_parent_activity_id( $activity );
+
+			// Update the date_updated of the parent activity item.
+			bb_activity_update_date_updated( $main_activity_object->id, $this->date_updated );
+
+			// Clear the cache for the parent activity item.
+			bp_activity_clear_cache_for_activity( $main_activity_object );
+
+			// Get the parent comment activity object.
+			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_id( $activity, $main_activity_object->id );
+
+			// Update the date_updated of the parent comment activity item.
+			bb_activity_update_date_updated( $parent_comment_activity_object->id, $time );
+
+			// Clear the cache for the parent activity item.
+			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
+
+		}
+	} else {
+		// Update the date_updated of the activity item.
+		bb_activity_update_date_updated( $activity_id, $time );
+
+		// Clear the cache for the parent activity item.
+		bp_activity_clear_cache_for_activity( $activity );
+	}
+
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+	}
 }

@@ -2853,7 +2853,7 @@ function bb_get_enabled_activity_comment_sorting_options( $default = array( 'old
 /**
  * Check whether activity search is enabled.
  *
- * @since Buddyboss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Default: true.
  *
@@ -2864,7 +2864,7 @@ function bb_is_activity_search_enabled( $default = true ) {
 	/**
 	 * Filters whether activity search is enabled.
 	 *
-	 * @since Buddyboss [BBVERSION]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $value Is activity search enabled.
 	 */
