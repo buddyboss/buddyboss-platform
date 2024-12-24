@@ -96,6 +96,18 @@
 						if ( empty( $is_enabled ) || empty( $filters_labels[ $key ] ) ) {
 							continue;
 						}
+						if ( 'friends' === $key  && ! bp_is_active( 'friends' ) ) {
+							continue;
+						}
+						if ( 'following' === $key && ! bp_is_activity_follow_active() ) {
+							continue;
+						}
+						if ( 'groups' === $key && ! bp_is_active( 'groups' ) ) {
+							continue;
+						}
+						if ( 'mentions' === $key && ! bp_activity_do_mentions() ) {
+							continue;
+						}
 						?>
 						<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#" data-value="<?php esc_attr_e( $key ); ?>"><?php echo $filters_labels[ $key ]; ?></a></li>
 						<?php
