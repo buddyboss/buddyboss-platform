@@ -1198,6 +1198,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						'type'              => $type_key,
 						'component_type'    => buddypress()->groups->id,
 						'group_id'          => $r['item_id'],
+						'data_id'           => $data_id,
 						'recipient_user_id' => $user_id,
 						'author_id'         => $author_id,
 					)
@@ -1207,7 +1208,6 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				$send_mail         = false;
 			}
 
-			
 			if ( true === $send_mail ) {
 				$unsubscribe_args = array(
 					'user_id'           => $user_id,

@@ -940,6 +940,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'group_id'          => $group_id,
 						'recipient_user_id' => $user_id,
 						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+						'author_id'         => $author_id,
 					)
 				)
 			) {
@@ -1072,6 +1073,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 						'group_id'          => $group_id,
 						'recipient_user_id' => $user_id,
 						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+						'author_id'         => $author_id,
 					)
 				)
 			) {
