@@ -830,6 +830,14 @@ div.profile_completion_wrap {
 			display: none;
 		}
 	}
+
+	@media screen and (max-width: 560px) {
+		flex-direction: column;
+
+		.bb-card-action {
+			width: 100%;
+		}
+	}
 }
 
 .bb-group-card {

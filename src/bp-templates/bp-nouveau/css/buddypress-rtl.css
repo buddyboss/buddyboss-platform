@@ -12791,6 +12791,15 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   display: none;
 }
 
+@media screen and (max-width: 560px) {
+  .bb-card-footer {
+    flex-direction: column;
+  }
+  .bb-card-footer .bb-card-action {
+    width: 100%;
+  }
+}
+
 .bb-group-card .card-group-members .bs-group-members {
   margin: 5px -4px 0 0;
 }

@@ -4644,8 +4644,6 @@ window.bp = window.bp || {};
 		profilePopupCard: function() {
 			var $avatar = $( this );
 			var offset = $avatar.offset();
-			var popupTop = offset.top + $avatar.outerHeight() + 10;
-  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
 			var $li = $avatar.closest( '.comment-item, .activity-item' );
 			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
 			var memberId = cardData.user_id;
@@ -4655,6 +4653,24 @@ window.bp = window.bp || {};
 			var url = restUrl + '/members/' + memberId + '/info';
 			var $profileCard = $( '#profile-card' );
 
+			function setPopupPosition() {
+				var popupTop, popupLeft;
+				if ( window.innerWidth <= 560 ) {
+					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = 5;
+				} else if ( window.innerWidth <= 800 ) {
+					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 20;
+				} else {
+					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 100;
+				}
+				return {
+					top: popupTop - $( window ).scrollTop(),
+					left: popupLeft - $( window ).scrollLeft(),
+				};
+			}
+
 			// Cancel any ongoing request
 			bp.Nouveau.abortOngoingRequest();
 
@@ -4662,10 +4678,12 @@ window.bp = window.bp || {};
 			if ( bp.Nouveau.cacheProfileCard[ memberId ] ) {
 				var cachedProfileData = bp.Nouveau.cacheProfileCard[ memberId ];
 				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
+
+				var position = setPopupPosition();
 				$profileCard.css( {
 					position: 'fixed',
-					top: popupTop - $( window ).scrollTop() + 'px',
-					left: popupLeft - $( window ).scrollLeft() + 'px',
+					top: position.top + 'px',
+            		left: position.left + 'px',
 					display: 'block',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
@@ -4690,11 +4708,12 @@ window.bp = window.bp || {};
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
 					// Position popup near hovered avatar
+					var position = setPopupPosition();
 					$profileCard
 						.css( {
 							position: 'fixed',
-							top: popupTop - $( window ).scrollTop() + 'px',
-							left: popupLeft - $( window ).scrollLeft() + 'px',
+							top: position.top + 'px',
+            				left: position.left + 'px',
 							display: 'block',
 						} )
 						.addClass( 'loading' );
@@ -4829,8 +4848,6 @@ window.bp = window.bp || {};
 		groupPopupCard: function() {
 			var $avatar = $( this );
 			var offset = $avatar.offset();
-			var popupTop = offset.top + $avatar.outerHeight() + 10;
-  			var popupLeft = offset.left + $avatar.outerWidth() - 100;
 			var $li = $avatar.closest( '.activity-item' );
 			var cardData = JSON.parse( $li.attr( 'data-bp-profile-card' ) );
 			var groupId = cardData.group_id;
@@ -4841,6 +4858,24 @@ window.bp = window.bp || {};
 			var url = restUrl + '/groups/' + groupId + '/info';
 			var $groupCard = $( '#group-card' );
 
+			function setPopupPosition() {
+				var popupTop, popupLeft;
+				if ( window.innerWidth <= 560 ) {
+					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = 5;
+				} else if ( window.innerWidth <= 800 ) {
+					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 20;
+				} else {
+					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 100;
+				}
+				return {
+					top: popupTop - $( window ).scrollTop(),
+					left: popupLeft - $( window ).scrollLeft(),
+				};
+			}
+
 			// Cancel any ongoing request
 			bp.Nouveau.abortOngoingRequest();
 
@@ -4848,10 +4883,12 @@ window.bp = window.bp || {};
 			if ( bp.Nouveau.cacheGroupCard[ groupId ] ) {
 				var cachedGroupData = bp.Nouveau.cacheGroupCard[ groupId ];
 				bp.Nouveau.updateGroupCard( cachedGroupData, currentUser );
+
+				var position = setPopupPosition();
 				$groupCard.css( {
 					position: 'fixed',
-					top: popupTop - $( window ).scrollTop() + 'px',
-					left: popupLeft - $( window ).scrollLeft() + 'px',
+					top: position.top + 'px',
+            		left: position.left + 'px',
 					display: 'block',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
@@ -4876,11 +4913,12 @@ window.bp = window.bp || {};
 				beforeSend: function () {
 					bp.Nouveau.resetGroupCard();
 					// Position popup near hovered avatar
+					var position = setPopupPosition();
 					$groupCard
 						.css( {
 							position: 'fixed',
-							top: popupTop - $( window ).scrollTop() + 'px',
-							left: popupLeft - $( window ).scrollLeft() + 'px',
+							top: position.top + 'px',
+            				left: position.left + 'px',
 							display: 'block',
 						} )
 						.addClass( 'loading' );
