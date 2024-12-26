@@ -3617,6 +3617,11 @@ window.bp = window.bp || {};
 				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
 			}
 
+			// remove search input from screen
+			if( $form.closest( '.bb-subnav-filters-search.active' ) ) {
+				$form.closest( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
+			}
+
 		},
 
 		/**
