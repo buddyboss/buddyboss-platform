@@ -4119,7 +4119,15 @@ window.bp = window.bp || {};
 
 		closeActivityFilter: function ( e ) {
 			if ( ! $( e.target ).closest( '.bb-subnav-filters-container' ).length ) {
-				$( '.bb-subnav-filters-container' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+				$.each( $( '.bb-subnav-filters-container' ), function() {
+					if ( $( this ).hasClass( 'bb-subnav-filters-search' ) ) {
+						if( $( this ).find( '#dir-activity-search' ).val() === '' ) {
+							$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
+						}
+					} else {
+						$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
+					}
+				});
 			}
 		},
 
