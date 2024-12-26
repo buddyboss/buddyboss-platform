@@ -933,7 +933,7 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile/Group Popup Card
-			$( document ).on( 'mouseenter', '.item-avatar img.avatar, .author-avatar img.avatar', function() {
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
 				hoverAvatar = true;
 				if ( !popupCardLoaded ) {
 					if ( hideCardTimeout ) {
@@ -951,7 +951,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call(this);
 				}
 			} );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function() {
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .group-avatar img.avatar', function() {
 				hoverAvatar = false;
 				if ( !hoverCardPopup ) {
 					bp.Nouveau.checkHidePopupCard();
