@@ -5241,15 +5241,26 @@ body.buddyboss-theme {
 		}
 	}
 
+	&.bb-subnav-filters-search .subnav-filters-modal {
+		display: none;
+		position: static;
+		border: 1px solid #b7b7b7;
+		opacity: 1;
+		visibility: visible;
+		box-shadow: none;
+		padding: 2px 4px;
+	}
+
 	&.active {
 
-		&.bb-subnav-filters-search .subnav-filters-opener {
-			border-color: #dee2e4;
-			background: #dee2e4;
+		&.bb-subnav-filters-search {
 
-			&:hover,
-			&:focus {
-				background: #dee2e4;
+			.subnav-filters-modal {
+				display: block;
+			}
+
+			.subnav-filters-opener {
+				display: none;
 			}
 		}
 
@@ -5375,12 +5386,7 @@ body.buddyboss-theme {
 			}
 
 			.subnav-filters-modal {
-				position: static;
-				opacity: 1;
-				visibility: visible;
-				box-shadow: none;
-				border: 1px solid #b7b7b7;
-				padding: 3px 5px;
+				display: block;
 
 				form.bp-dir-search-form input[type="search"] {
 

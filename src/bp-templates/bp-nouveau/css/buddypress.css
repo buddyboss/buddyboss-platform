@@ -26144,13 +26144,22 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   width: 260px;
 }
 
-.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener {
-  border-color: #dee2e4;
-  background: #dee2e4;
+.bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
+  display: none;
+  position: static;
+  border: 1px solid #b7b7b7;
+  opacity: 1;
+  visibility: visible;
+  box-shadow: none;
+  padding: 2px 4px;
 }
 
-.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener:hover, .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener:focus {
-  background: #dee2e4;
+.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-modal {
+  display: block;
+}
+
+.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener {
+  display: none;
 }
 
 .bb-subnav-filters-container.active .subnav-filters-modal {
@@ -26254,12 +26263,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
     display: none;
   }
   .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
-    position: static;
-    opacity: 1;
-    visibility: visible;
-    box-shadow: none;
-    border: 1px solid #b7b7b7;
-    padding: 3px 5px;
+    display: block;
   }
   #buddypress .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
     width: 100%;
