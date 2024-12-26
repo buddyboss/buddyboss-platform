@@ -26162,6 +26162,21 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   display: none;
 }
 
+.bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset {
+  line-height: 1;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset [class^="bb-icon-"]:before {
+  content: "\ef30";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
 .bb-subnav-filters-container.active .subnav-filters-modal {
   opacity: 1;
   visibility: visible;

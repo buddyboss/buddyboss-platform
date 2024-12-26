@@ -648,6 +648,10 @@ window.bp = window.bp || {};
 						} );
 					}
 
+					if( $( '.bb-subnav-filters-search.loading' ).length ) {
+						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+					}
+
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
 						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
 					}
@@ -1926,6 +1930,11 @@ window.bp = window.bp || {};
 			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
+			}
+
+			var search_parent = $( event.currentTarget ).closest( '.bb-subnav-filters-search' );
+			if( search_parent.length ) {
+				search_parent.addClass( 'loading' );
 			}
 
 			self.objectRequest(
