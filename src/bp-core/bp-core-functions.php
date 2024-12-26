@@ -6146,6 +6146,22 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 		return $response;
 	}
 
+	// Allow endpoints for terms and privacy policy pages.
+	if ( '/wp/v2/pages' === $current_endpoint ) {
+		$query_params = $request->get_query_params();
+		if ( ! empty( $query_params ) ) {
+			$page_ids = bp_core_get_directory_page_ids();
+			// Get terms and privacy policy page IDs.
+			$terms       = isset( $page_ids['terms'] ) ? (int) $page_ids['terms'] : false;
+			$privacy     = isset( $page_ids['privacy'] ) ? (int) $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+			$valid_pages = array( $terms, $privacy );
+			$matches     = array_intersect( $query_params['include'], $valid_pages );
+			if ( count( $matches ) === count( $query_params['include'] ) ) {
+				return $response;
+			}
+		}
+	}
+
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
