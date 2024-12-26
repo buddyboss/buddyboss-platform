@@ -51,15 +51,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
+
+			$enabled = $this->is_readylaunch_enabled();
+
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
-			add_filter( 'template_include', array( $this, 'override_page_templates' ), 999999 ); // High priority so we have the last say here
-			// Filter BuddyPress template locations.
-			remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
-			add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+
+			if ( $enabled ) {
+				add_filter( 'template_include', array( $this, 'override_page_templates' ), 999999 ); // High priority so we have the last say here
+
+				// Filter BuddyPress template locations.
+				remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+
+				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			}
 		}
 
 		public function bb_core_admin_readylaunch_page_fields() {
+			global $wp_settings_sections;
+
 			add_settings_section(
 				'bb_readylaunch',
 				__( 'ReadyLaunch', 'buddyboss' ),
@@ -109,21 +119,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				switch_to_blog( bp_get_root_blog_id() );
 			}
 
-			$bp_pages = bp_core_get_directory_page_ids( 'all' );
 			$checked  = ! empty( $enabled_pages ) && isset( $enabled_pages[ $name ] );
-
-			if ( 'new_forums_page' === $name ) {
-				$val = bp_get_forum_page_id();
-			} else {
-				$val = ! empty( $bp_pages ) && isset( $bp_pages[ $name ] ) ? $bp_pages[ $name ] : '';
-			}
 
 			// For the button.
 			if ( 'button' === $name ) {
 				printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );
 				// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`.
 			} else {
-				echo '<input type="checkbox" value="' . esc_attr( $val ) . '" name="' . 'bb-readylaunch[' . esc_attr( $name ) . ']' . '" ' . checked( $checked, true, false ) . '/>';
+				echo '<input type="checkbox" value="1" name="' . 'bb-readylaunch[' . esc_attr( $name ) . ']' . '" ' . checked( $checked, true, false ) . '/>';
 			}
 
 			if ( ! bp_is_root_blog() ) {
@@ -162,37 +165,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		public function override_page_templates( $template ) {
-			global $post;
-			$enabled_pages = bb_get_enabled_readylaunch();
-			$enabled_pages = wp_parse_id_list( $enabled_pages );
-
-			if (
-				! empty( $post->ID ) &&
-				in_array( $post->ID, $enabled_pages, true )
-			) {
-				$compponent = array_search( $post->ID, $enabled_pages, true );
-				if ( ! empty( $compponent ) && bp_is_active( $compponent ) ) {
-					$template = bp_locate_template( 'layout.php' );
-					if ( $template ) {
-						add_action( 'wp_enqueue_scripts', array( $this, 'bb_readylaunch_enqueue' ) );
-						return $template;
-					}
-				}
+			$template = bp_locate_template( 'layout.php' );
+			if ( $template ) {
+				return $template;
 			}
 
 			return $template;
 		}
 
-
-		public function bb_readylaunch_enqueue() {
-			global $bp;
-			wp_enqueue_script( 'bp-api-request');
-			// Enqueue CSS and JavaScript.
-			wp_enqueue_script( 'bb-readylaunch', $bp->plugin_url . "bp-core/js/readylaunch.js", array( 'jquery', 'wp-backbone', 'bp-api-request' ), bp_get_version() );
-		}
-
 		public function add_template_stack( $stack ) {
-
 			$stylesheet_dir = get_stylesheet_directory();
 			$template_dir   = get_template_directory();
 
@@ -209,7 +190,42 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $stack;
+		}
 
+		private function is_readylaunch_enabled() {
+			$enabled_pages = bb_get_enabled_readylaunch();
+
+			if (
+				(
+					bp_is_members_directory() &&
+					! empty( $enabled_pages['members'] )
+				) ||
+				(
+					bp_is_video_directory() &&
+					! empty( $enabled_pages['video'] )
+				) ||
+				(
+					bp_is_media_directory() &&
+					! empty( $enabled_pages['media'] )
+				) ||
+				(
+					bp_is_document_directory() &&
+					! empty( $enabled_pages['document'] )
+				) ||
+				(
+					bp_is_groups_directory() &&
+					! empty( $enabled_pages['groups'] )
+				) ||
+				(
+					bp_is_activity_directory() &&
+					! empty( $enabled_pages['activity'] )
+				)
+			) {
+				return true;
+			}
+
+
+			return false;
 		}
 	}
 
