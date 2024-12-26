@@ -72,6 +72,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			
 			// Fix incorrect search results for Global Search for translated/non-translated posts.
 			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
+
+			add_action( 'bb_get_the_profile_field_options_select_html', array( $this, 'bb_wpml_profile_field_options_order' ), 10, 2 );
 		}
 
 		/**
@@ -278,6 +280,59 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $sql_query;
+		}
+
+		/**
+		 * Sort the xprofile field options alphabetically according to the current language.
+		 * Reference: https://wpml.org/errata/buddyboss-alphabetical-sorting-issue-for-translated-taxonomy-fields-in-frontend/
+		 *
+		 * @since 2.7.40
+		 *
+		 * @param string $html      The HTML output of the field.
+		 * @param object $field_obj The field object.
+		 *
+		 * @return string $html The sorted HTML output of the field.
+		 */
+		public function bb_wpml_profile_field_options_order( $html, $field_obj ) {
+			if ( class_exists( 'Sitepress' ) && 'en' !== apply_filters( 'wpml_current_language', null ) ) {
+				$order_by = ! empty( $field_obj->order_by ) ? $field_obj->order_by : 'asc';
+
+				if ( 'custom' === $order_by ) {
+					return $html;
+				}
+
+				preg_match_all( '/<option(.*?)>(.*?)<\/option>/s', $html, $matches, PREG_SET_ORDER );
+
+				$options = array();
+				foreach ( $matches as $match ) {
+					$options[] = array(
+						'full'       => $match[0],
+						'attributes' => $match[1],
+						'text'       => $match[2],
+					);
+				}
+
+				// Sort the array by the 'text' element.
+				usort( $options, function ( $a, $b ) {
+					return strcmp( $a['text'], $b['text'] );
+				} );
+
+				if ( 'desc' === $order_by ) {
+					$first   = array_shift( $options );
+					$options = array_reverse( $options );
+					array_unshift( $options, $first );
+				}
+
+				// Rebuild the HTML string.
+				$sorted_options = '';
+				foreach ( $options as $option ) {
+					$sorted_options .= sprintf( '<option%s>%s</option>', $option['attributes'], $option['text'] );
+				}
+
+				$html = $sorted_options;
+			}
+
+			return $html;
 		}
 
 	}

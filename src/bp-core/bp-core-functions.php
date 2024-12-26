@@ -2352,37 +2352,54 @@ function bp_is_get_request() {
  * @return bool True on success, false on failure.
  */
 function bp_core_load_buddypress_textdomain() {
+	global $wp_version;
 	$domain = 'buddyboss';
 
-	/**
-	 * Filters the locale to be loaded for the language files.
-	 *
-	 * @since BuddyPress 1.0.2
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
+	if ( version_compare( $wp_version, '6.7', '<=' ) ) {
+		/**
+		 * Filters the locale to be loaded for the language files.
+		 *
+		 * @since BuddyPress 1.0.2
+		 *
+		 * @param string $value Current locale for the install.
+		 */
+		$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
 
-	/**
-	 * Filters the locations to load language files from.
-	 *
-	 * @since BuddyPress 2.2.0
-	 *
-	 * @param array $value Array of directories to check for language files in.
-	 */
-	$locations = apply_filters(
-		'buddypress_locale_locations',
-		array(
-			trailingslashit( WP_LANG_DIR . '/' . $domain ),
-			trailingslashit( WP_LANG_DIR ),
-		)
-	);
+		$plugin_dir = BP_PLUGIN_DIR;
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$plugin_dir = $plugin_dir . 'src';
+		}
 
-	unload_textdomain( $domain );
+		/**
+		 * Filters the locations to load language files from.
+		 *
+		 * @since BuddyPress 2.2.0
+		 *
+		 * @param array $value Array of directories to check for language files in.
+		 */
+		$locations = apply_filters(
+			'buddypress_locale_locations',
+			array(
+				trailingslashit( WP_LANG_DIR . '/' . $domain ),
+				trailingslashit( WP_LANG_DIR ),
+				trailingslashit( $plugin_dir . '/languages' ),
+			)
+		);
 
-	// Try custom locations in WP_LANG_DIR.
-	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
+		unload_textdomain( $domain );
+
+		// Try custom locations in WP_LANG_DIR.
+		foreach ( $locations as $location ) {
+			if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
+				return true;
+			}
+		}
+	} else {
+		/**
+		 * In most cases, WordPress already loaded BuddyBoss textdomain
+		 * thanks to the `_load_textdomain_just_in_time()` function.
+		 */
+		if ( is_textdomain_loaded( $domain ) ) {
 			return true;
 		}
 	}
@@ -3621,6 +3638,9 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	if ( is_wp_error( $email ) ) {
 		return $email;
 	}
+
+	// Set all original token are used for email without a replacement.
+	$email->bb_set_original_tokens( $args['tokens'] );
 
 	// From, subject, content are set automatically.
 	$email->set_to( $to );
@@ -4867,6 +4887,18 @@ function bp_core_parse_url( $url ) {
 		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
 
 		if ( bb_is_same_site_url( $url ) ) {
+			if ( ! bp_enable_private_network() ) {
+				// Add the custom header with the JWT token.
+				$args['headers'] = array(
+					'bb-preview-token' => bb_create_jwt(
+						array(
+							'url' => $url,
+							'iat' => time(),
+							'exp' => time() + 120, // Token validity 2 minutes.
+						)
+					),
+				);
+			}
 			$args['sslverify'] = false;
 		}
 
@@ -7922,6 +7954,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_performance_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_advanced_telemetry':
+			$meta_icon = $bb_icon_bf . ' bb-icon-box';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -9236,7 +9271,7 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -9915,4 +9950,102 @@ function bb_remove_deleted_user_last_activities() {
  */
 function bb_pro_poll_version() {
 	return '2.6.00';
+}
+
+/**
+ * Generates a JWT (JSON Web Token) that includes a URL, issued-at time, and expiration time.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @param array $payload {
+ * Array containing the payload data for the JWT.
+ *
+ * @type string $url  The current URL for which the preview is being generated.
+ * @type int    $iat  The issued-at time for the token, typically the current time.
+ * @type int    $exp  The expiration time for the token, usually set to 2 minutes after creation.
+ * }
+ * @return string The generated JWT token as a string.
+ */
+function bb_create_jwt( $payload ) {
+	$secret_key        = wp_salt( 'nonce' );
+	$header            = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$encoded_header    = base64_encode( $header );
+	$encoded_payload   = base64_encode( json_encode( $payload ) );
+	$signature         = hash_hmac( 'sha256', $encoded_header . '.' . $encoded_payload, $secret_key, true );
+	$encoded_signature = base64_encode( $signature );
+
+	return $encoded_header . '.' . $encoded_payload . '.' . $encoded_signature;
+}
+
+/**
+ * Validates a JWT (JSON Web Token) to check the signature of the provided JWT token and validates its payload,
+ * including checking if the token is expired, and if the URL within the token matches the site's URL.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @param string $token The JWT token string to be validated.
+ *
+ * @return bool True if the token is valid, false if the token is invalid or expired.
+ */
+function bb_validate_jwt( $token ) {
+	$secret_key      = wp_salt( 'nonce' );
+	$token_parts     = explode( '.', $token );
+	$header          = ! empty( $token_parts[0] ) ? base64_decode( $token_parts[0] ) : array();
+	$payload         = ! empty( $token_parts[1] ) ? base64_decode( $token_parts[1] ) : array();
+	$signature       = ! empty( $token_parts[2] ) ? base64_decode( $token_parts[2] ) : '';
+	$valid_signature = ! empty( $token_parts[0] ) && ! empty( $token_parts[1] ) ? hash_hmac( 'sha256', $token_parts[0] . '.' . $token_parts[1], $secret_key, true ) : '';
+
+	if ( ! empty( $signature ) && ! empty( $valid_signature ) && hash_equals( $signature, $valid_signature ) ) {
+		$decoded_payload = json_decode( $payload, true );
+		$currentTime     = time();
+
+		if (
+			! empty( $decoded_payload['exp'] ) &&
+			$decoded_payload['exp'] >= $currentTime &&
+			! empty( $decoded_payload['url'] ) &&
+			bb_is_same_site_url( $decoded_payload['url'] )
+		) {
+			return true; // JWT is valid
+		}
+	}
+
+	return false; // JWT is invalid
+}
+
+/**
+ * Retrieves all HTTP headers from the current request.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @return array An associative array of all HTTP headers from the current request.
+ */
+function bb_get_all_headers() {
+
+	if ( function_exists( 'getallheaders' ) ) {
+		return getallheaders();
+	}
+
+	if ( ! is_array( $_SERVER ) ) {
+		return array();
+	}
+
+	$headers = array();
+	foreach ( $_SERVER as $name => $value ) {
+		if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
+			$headers[ str_replace( ' ', '-', strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ] = $value;
+		}
+	}
+
+	return $headers;
+}
+
+/**
+ * Function to return the minimum pro version to show notice for sso.
+ *
+ * @since BuddyBoss 2.7.40
+ *
+ * @return string
+ */
+function bb_pro_sso_version() {
+	return '2.6.30';
 }

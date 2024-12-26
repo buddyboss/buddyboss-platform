@@ -34,6 +34,8 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			return;
 		}
 
+		parent::__construct();
+
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -296,21 +298,22 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $reply_id;
-
-		if ( $this->background_disabled ) {
-			$this->hide_related_content( $reply_id, $hide_sitewide, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $reply_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $reply_id, $hide_sitewide, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->hide_related_content( $reply_id, $hide_sitewide, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $reply_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $reply_id, $hide_sitewide, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -369,20 +372,22 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $reply_id;
 
-		if ( $this->background_disabled ) {
-			$this->unhide_related_content( $reply_id, $hide_sitewide, $force_all, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $reply_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $reply_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->unhide_related_content( $reply_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $reply_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $reply_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 

@@ -1661,7 +1661,25 @@ function bp_activity_generate_action_string( $activity ) {
 
 	// Check for registered format callback.
 	$actions = bp_activity_get_actions();
-	if ( empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
+
+	/**
+	 * Handle the case where a format_callback is missing for the 'blogs' component.
+	 * This situation can occur when a custom post type (CPT) associated with the activity
+	 * is no longer registered, possibly due to deactivating a third-party plugin that provided the CPT.
+	 */
+	if ( 'blogs' === $activity->component && empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
+		if ( ! bp_is_active( 'blogs' ) ) {
+			$actions->{$activity->component} = new stdClass();
+		}
+		$actions->{$activity->component}->{$activity->type} = array(
+			'key'             => $activity->type,
+			'value'           => sprintf( __( 'New %s published', 'buddyboss' ), str_replace( 'new_blog_', '', $activity->type ) ),
+			'format_callback' => 'bb_blogs_format_activity_action_disabled_post_type_feed',
+			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
+			'context'         => array( 'activity', 'member' ),
+			'position'        => 5,
+		);
+	} elseif ( empty( $actions->{$activity->component}->{$activity->type}['format_callback'] ) ) {
 		return false;
 	}
 
@@ -2221,6 +2239,11 @@ function bp_activity_post_update( $args = '' ) {
 	}
 
 	$bp_activity_edit = false;
+	// Set the activity edit true when the $_POST['edit_activity'] is set to true.
+	$edit_activity = filter_input( INPUT_POST, 'edit_activity', FILTER_VALIDATE_BOOLEAN );
+	if ( $edit_activity ) {
+		$bp_activity_edit = true;
+	}
 	$activity_id      = false;
 
 	// Record this on the user's profile.
@@ -7133,10 +7156,11 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
 function bb_validate_activity_privacy( $args ) {
 	$activity = new BP_Activity_Activity( $args['activity_id'] );
 
-	if (
-		! empty( $activity->privacy ) &&
-		! empty( $args['user_id'] )
-	) {
+	if ( empty( $args['user_id'] ) ) {
+		$args['user_id'] = bp_loggedin_user_id();
+	}
+
+	if ( ! empty( $activity->privacy ) ) {
 		if ( 'onlyme' === $activity->privacy && $activity->user_id !== $args['user_id'] ) {
 			if ( 'new_comment' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot add comments on `Only Me` activity.', 'buddyboss' ) );
@@ -7146,6 +7170,9 @@ function bb_validate_activity_privacy( $args ) {
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot perform reactions on `Only Me` activity.', 'buddyboss' ) );
+			}
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on `Only Me` activity.', 'buddyboss' ) );
 			}
 		} elseif (
 			'friends' === $activity->privacy &&
@@ -7163,6 +7190,13 @@ function bb_validate_activity_privacy( $args ) {
 				in_array( $args['activity_type'], array( 'activity', 'activity_comment' ), true )
 			) {
 				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to perform a reaction.', 'buddyboss' ) );
+			}
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss' ) );
+			}
+		} elseif ( 'loggedin' === $activity->privacy && ! is_user_logged_in() ) {
+			if ( 'view_activity' === $args['validate_action'] ) {
+				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss' ) );
 			}
 		}
 	}
@@ -7362,4 +7396,36 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 			}
 		}
 	}
+}
+
+/**
+ * If a blog component is disabled, then display activity action for existing blog activity.
+ *
+ * @since BuddyBoss 2.7.00
+ *
+ * @param string $action   Constructed activity action.
+ * @param object $activity Activity data object.
+ *
+ * @return string
+ */
+function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $activity ) {
+	$blog_url  = get_home_url( $activity->item_id );
+	$blog_name = get_blog_option( $activity->item_id, 'blogname' );
+	$user_link = bp_core_get_userlink( $activity->user_id );
+
+	if ( is_multisite() ) {
+		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+	} else {
+		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
+	}
+
+	/**
+	 * Filters the blog post action for the existing blog activity.
+	 *
+	 * @since BuddyBoss 2.7.00
+	 *
+	 * @param string $action   Constructed activity action.
+	 * @param object $activity Activity data object.
+	 */
+	return apply_filters( 'bb_blogs_format_activity_action_disabled_post_type_feed', $action, $activity );
 }

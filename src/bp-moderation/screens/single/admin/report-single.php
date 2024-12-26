@@ -73,7 +73,7 @@ $admins            = array_map(
 												if ( ! empty( $view_content_url ) ) {
 													printf(
 													/* translators: 1: View content URL, 2: Attribute title, 3: Title */
-													'<span>#%s</span> <a target="_blank" href="%s" title="%s"><i class="bb-icon-external-link bb-icon-l"></i></a>',
+														'<span>#%s</span> <a target="_blank" href="%s" title="%s"><i class="bb-icon-external-link bb-icon-l"></i></a>',
 														esc_html( $moderation_request_data->item_id ),
 														esc_url( $view_content_url ),
 														esc_attr__( 'View', 'buddyboss' )
@@ -94,7 +94,7 @@ $admins            = array_map(
 														'<strong><a target="_blank" href="%s">%s %s</a></strong>',
 														esc_url( BP_Moderation_Members::get_permalink( $user_id ) ),
 														get_avatar( $user_id, '32' ),
-														esc_html( bp_core_get_userlink( $user_id, true ) ) 
+														esc_html( bp_core_get_userlink( $user_id, true ) )
 													);
 												}
 												?>
@@ -123,8 +123,18 @@ $admins            = array_map(
 											if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 												$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
 												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
+
+												$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+												$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
+												$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+
+												$classes   = array();
+												$classes[] = ! empty( $meta_value ) ? 'disabled' : '';
+												$classes[] = ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : '';
+
+												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '';
 												?>
-												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : ''; ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button bp-block-user single-report-btn content-author <?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>" <?php echo wp_kses_post( $tooltip ); ?>>
 													<?php
 													echo esc_html( $user_action_text );
 													?>
@@ -166,8 +176,19 @@ $admins            = array_map(
 											if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 												$user_action_type = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
 												$user_action_text = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
+
+												$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+												$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
+												$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+
+												$classes   = array();
+												$classes[] = ! empty( $meta_value ) ? 'disabled' : '';
+												$classes[] = ( 'unsuspend' === $user_action_type ) ? esc_attr( 'green' ) : '';
+
+												$tooltip = ! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '';
+
 												?>
-												<a href="javascript:void(0);" class="button report-header_button <?php echo ( 'unsuspend' === $user_action_type ) ? 'green' : ''; ?> bp-block-user single-report-btn123 content-author123" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>">
+												<a href="javascript:void(0);" class="button report-header_button <?php echo esc_attr( implode( ' ', $classes ) ); ?> bp-block-user single-report-btn123 content-author123" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_text ); ?>" <?php echo wp_kses_post( $tooltip ); ?>>
 													<?php
 													echo esc_html( $user_action_text );
 													?>
@@ -192,7 +213,7 @@ $admins            = array_map(
 												<td scope="row" style="width: 20%;">
 													<strong>
 														<label>
-															<?php esc_html_e('Blocked By', 'buddyboss'); ?>
+															<?php esc_html_e( 'Blocked By', 'buddyboss' ); ?>
 														</label>
 													</strong>
 												</td>
@@ -215,7 +236,7 @@ $admins            = array_map(
 												<td scope="row" style="width: 20%;">
 													<strong>
 														<label>
-															<?php esc_html_e('Reported By', 'buddyboss'); ?>
+															<?php esc_html_e( 'Reported By', 'buddyboss' ); ?>
 														</label>
 													</strong>
 												</td>

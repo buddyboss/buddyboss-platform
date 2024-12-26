@@ -1205,3 +1205,36 @@ function bb_load_web_performance_tester() {
 		bb_web_performance_tester();
 	}
 }
+
+/**
+ * Delete the upgrade notice transient when administrators logout.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @param int $user_id The ID of the user who is logging out.
+ *
+ * @return void
+ */
+function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
+	$user = get_userdata( $user_id );
+	if ( user_can( $user, 'manage_options' ) ) {
+		delete_transient( 'bb_pro_upgrade_notice_dismissed' );
+	}
+
+	unset( $user );
+}
+
+add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
+
+/**
+ * Function to load telemetry class.
+ *
+ * @since BuddyBoss 2.7.40
+ */
+function bb_telemetry_load() {
+	if ( class_exists( 'BB_Telemetry' ) ) {
+		BB_Telemetry::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_telemetry_load' );

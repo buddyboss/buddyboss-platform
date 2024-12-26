@@ -1159,6 +1159,7 @@ function bb_digest_message_email_notifications() {
 			}
 
 			if ( ! empty( $threads ) ) {
+				add_filter( 'bp_xprofile_get_hidden_field_types_for_user', 'bb_bypass_name_privacy_for_admin', 10, 3 );
 				foreach ( $threads as $thread ) {
 
 					if ( empty( $thread['recipients'] ) ) {
@@ -1196,6 +1197,7 @@ function bb_digest_message_email_notifications() {
 						bb_render_digest_messages_template( $thread['recipients'], $thread['thread_id'] );
 					}
 				}
+				remove_filter( 'bp_xprofile_get_hidden_field_types_for_user', 'bb_bypass_name_privacy_for_admin', 10, 3 );
 			}
 		}
 	}
@@ -1237,4 +1239,28 @@ function bb_clear_group_thread_cache( $thread_id ) {
 	bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 	wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 	bp_core_reset_incrementor( 'bp_messages' );
+}
+
+/**
+ * Function to bypass the name privacy for admin.
+ *
+ * @since BuddyBoss 2.7.00
+ *
+ * @param array $hidden_levels     Hidden levels.
+ * @param int   $displayed_user_id Displayed user id.
+ * @param int   $current_user_id   Current user id.
+ *
+ * @return array
+ */
+function bb_bypass_name_privacy_for_admin( $hidden_levels, $displayed_user_id, $current_user_id ) {
+	if ( empty( $current_user_id ) ) {
+		return array();
+	}
+
+	$current_user_data = get_userdata( $current_user_id );
+	if ( in_array( 'administrator', $current_user_data->roles, true ) ) {
+		$hidden_levels = array();
+	}
+
+	return $hidden_levels;
 }

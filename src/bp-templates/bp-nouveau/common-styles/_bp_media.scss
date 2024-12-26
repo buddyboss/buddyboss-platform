@@ -1338,9 +1338,11 @@ ul.bb-albums-list {
 	-ms-flex-preferred-size: 100%;
 	flex-basis: 100%;
 	max-width: 100%;
+	pointer-events: none;
 
 	> a {
 		max-width: 33%;
+		pointer-events: auto;
 	}
 
 }

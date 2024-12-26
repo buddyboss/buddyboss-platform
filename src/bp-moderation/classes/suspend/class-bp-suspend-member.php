@@ -29,7 +29,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -417,6 +417,25 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 
 		BP_Core_Suspend::add_suspend( $suspend_args );
 
+		$meta_key = (
+			! empty( $suspend_args['action_suspend'] ) ||
+			! empty( $suspend_args['user_suspended'] )
+		) ? 'suspend' : '';
+
+		$suspend_id = BP_Core_Suspend::get_suspend_id( $member_id, self::$type );
+		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+		if ( empty( $meta_value ) ) {
+			$meta_value = array();
+		}
+		$current_process = end( $meta_value );
+		if ( empty( $current_process ) ) {
+			$current_process = BP_Suspend_Comment::$type;
+		}
+		if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+			$meta_value[] = $current_process;
+		}
+		bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
@@ -486,6 +505,26 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$group_name      = $this->bb_moderation_get_action_type( $group_name_args );
 
 		BP_Core_Suspend::remove_suspend( $suspend_args );
+
+		$meta_key = (
+			! empty( $suspend_args['action_suspend'] ) &&
+			! empty( $args['action'] ) &&
+			'unsuspended' === $args['action']
+		) ? 'unsuspend' : '';
+
+		$suspend_id = BP_Core_Suspend::get_suspend_id( $member_id, self::$type );
+		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+		if ( empty( $meta_value ) ) {
+			$meta_value = array();
+		}
+		$current_process = end( $meta_value );
+		if ( empty( $current_process ) ) {
+			$current_process = BP_Suspend_Comment::$type;
+		}
+		if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+			$meta_value[] = $current_process;
+		}
+		bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
 
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
@@ -677,14 +716,12 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
 
-		$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
-
 		// Update friend count.
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bp_is_active( 'friends' ) && $page <= 1 ) {
 			$friend_ids = friends_get_friend_user_ids( $member_id );
 
 			if ( ! empty( $friend_ids ) ) {
-				if ( $this->background_disabled ) {
+				if ( $this->background_disabled || count( $friend_ids ) < 50 ) {
 					$this->bb_update_member_friend_count( $member_id, $friend_ids, $action );
 				} else {
 					$min_count     = (int) apply_filters( 'bb_update_member_friend_count', 50 );
@@ -709,10 +746,44 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		// Return the loop when the user is blocked/unblocked but not suspended/unsuspended.
+		if (
+			! empty( $args['blocked_user'] ) &&
+			empty( $args['action_suspend'] ) &&
+			empty( $args['user_suspended'] ) &&
+			! empty( $args['parent_id'] ) &&
+			self::$type . '_' . $member_id === $args['parent_id']
+		) {
+			return $related_contents;
+		}
+
+		$meta_key = (
+			! empty( $args['action_suspend'] ) ||
+			! empty( $args['user_suspended'] )
+		) && 'hide' === $action ? 'suspend' : 'unsuspend';
+
+		$suspend_id = BP_Core_Suspend::get_suspend_id( $member_id, self::$type );
+		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
+		if ( empty( $meta_value ) ) {
+			$meta_value = array();
+		}
+		$components      = self::$components;
+		$current_process = end( $meta_value );
+
+		if ( empty( $current_process ) ) {
+			$current_process = BP_Suspend_Comment::$type;
+		}
+
+		if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+			$meta_value[] = $current_process;
+		}
+
+		bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+
+		if ( bp_is_active( 'groups' ) && $page <= 1 ) {
 			$groups    = BP_Groups_Member::get_group_ids( $member_id, false, false, true );
 			$group_ids = ! empty( $groups['groups'] ) ? $groups['groups'] : array();
-			$min_count = (int) apply_filters( 'bb_update_group_member_count', 10 );
+			$min_count = (int) apply_filters( 'bb_update_group_member_count', 50 );
 
 			if ( count( $group_ids ) > $min_count ) {
 				foreach ( array_chunk( $group_ids, $min_count ) as $chunk ) {
@@ -733,29 +804,159 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 		}
 
-		if ( bp_is_active( 'forums' ) ) {
-			$related_contents[ BP_Suspend_Forum::$type ]       = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action, $page );
+		$page_meta_key   = $meta_key . '_page';
+		$page_meta_value = bb_suspend_get_meta( $suspend_id, $page_meta_key );
+		if ( empty( $page_meta_value ) ) {
+			$page_meta_value = 1;
+		} else {
+			++$page_meta_value;
+		}
+		bb_suspend_update_meta( $suspend_id, $page_meta_key, $page_meta_value );
+
+		$page = $page_meta_value;
+
+		if ( BP_Suspend_Comment::$type === $current_process ) {
+			$related_contents[ BP_Suspend_Comment::$type ] = BP_Suspend_Comment::get_member_comment_ids( $member_id, $action, $page );
+
+			if ( empty( $related_contents[ BP_Suspend_Comment::$type ] ) ) {
+				$current_process = 'forum';
+
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
+		}
+
+		if ( bp_is_active( 'forums' ) && BP_Suspend_Forum::$type === $current_process ) {
+			$related_contents[ BP_Suspend_Forum::$type ] = BP_Suspend_Forum::get_member_forum_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Forum::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
+		}
+
+		if ( bp_is_active( 'forums' ) && BP_Suspend_Forum_Topic::$type === $current_process ) {
 			$related_contents[ BP_Suspend_Forum_Topic::$type ] = BP_Suspend_Forum_Topic::get_member_topic_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Forum_Topic::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
+		}
+
+		if ( bp_is_active( 'forums' ) && BP_Suspend_Forum_Reply::$type === $current_process ) {
 			$related_contents[ BP_Suspend_Forum_Reply::$type ] = BP_Suspend_Forum_Reply::get_member_reply_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Forum_Reply::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
 		}
 
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ]         = BP_Suspend_Activity::get_member_activity_ids( $member_id, $action, $page );
+		if ( bp_is_active( 'activity' ) && BP_Suspend_Activity::$type === $current_process ) {
+			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_member_activity_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Activity::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
+		}
+
+		if ( bp_is_active( 'activity' ) && BP_Suspend_Activity_Comment::$type === $current_process ) {
 			$related_contents[ BP_Suspend_Activity_Comment::$type ] = BP_Suspend_Activity_Comment::get_member_activity_comment_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
 		}
 
-		if ( bp_is_active( 'document' ) ) {
-			$related_contents[ BP_Suspend_Folder::$type ]   = BP_Suspend_Folder::get_member_folder_ids( $member_id, $action, $page );
+		if ( bp_is_active( 'document' ) && BP_Suspend_Folder::$type === $current_process ) {
+			$related_contents[ BP_Suspend_Folder::$type ] = BP_Suspend_Folder::get_member_folder_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Folder::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
+		}
+
+		if ( bp_is_active( 'document' ) && BP_Suspend_Document::$type === $current_process ) {
 			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_member_document_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Document::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
 		}
 
-		if ( bp_is_active( 'media' ) ) {
+		if ( bp_is_active( 'media' ) && BP_Suspend_Album::$type === $current_process ) {
 			$related_contents[ BP_Suspend_Album::$type ] = BP_Suspend_Album::get_member_album_ids( $member_id, $action, $page );
-			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Album::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
 		}
 
-		if ( bp_is_active( 'video' ) ) {
+		if ( bp_is_active( 'media' ) && BP_Suspend_Media::$type === $current_process ) {
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_member_media_ids( $member_id, $action, $page );
+			if ( empty( $related_contents[ BP_Suspend_Media::$type ] ) ) {
+				$current_process = self::find_active_component( $components, $current_process );
+				if ( empty( $meta_value ) || ! in_array( $current_process, $meta_value, true ) ) {
+					$meta_value[] = $current_process;
+				}
+				bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+				$page = 1;
+				bb_suspend_update_meta( $suspend_id, $page_meta_key, 1 );
+			}
+		}
+
+		if ( bp_is_active( 'video' ) && BP_Suspend_Video::$type === $current_process ) {
 			$related_contents[ BP_Suspend_Video::$type ] = BP_Suspend_Video::get_member_video_ids( $member_id, $action, $page );
+		}
+
+		$related_contents = array_filter( $related_contents );
+
+		if ( empty( $related_contents ) ) {
+			bb_suspend_delete_meta( $suspend_id, $meta_key );
+			bb_suspend_delete_meta( $suspend_id, $page_meta_key );
 		}
 
 		return $related_contents;
@@ -983,13 +1184,15 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$total_friend_count = count( $friend_ids );
 
 					if ( 'hide' === $type && in_array( $user_id, $friend_ids, true ) ) {
-						$total_friend_count--;
+						--$total_friend_count;
 					} elseif ( 'unhide' === $type && ! in_array( $user_id, $friend_ids, true ) ) {
-						$total_friend_count++;
+						++$total_friend_count;
 					}
 
 					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
 				}
+
+				unset( $friend_ids, $total_friend_count );
 			}
 		}
 	}
@@ -1132,5 +1335,38 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		$domain       = trailingslashit( bp_get_root_domain() . '/' . $after_domain );
 
 		return $domain;
+	}
+
+	/**
+	 * Finds the next active component item after the current process.
+	 *
+	 * @since BuddyBoss 2.7.30
+	 *
+	 * @param array  $components      An associative array of components and their items.
+	 * @param string $current_process The current process or item to match against.
+	 *
+	 * @return string|null The next item in the component after the current process, or null if not found.
+	 */
+	public static function find_active_component( $components, $current_process ) {
+		$found_current = false;
+
+		foreach ( $components as $component => $items ) {
+			if ( ! bp_is_active( $component ) ) {
+				continue; // Skip the inactive components.
+			}
+
+			foreach ( $items as $item ) {
+				if ( $found_current ) {
+					return $item; // Return the next item type after the current one.
+				}
+
+				if ( $item === $current_process ) {
+					$found_current = true;
+				}
+			}
+		}
+
+		// If no next item type was found, return null or handle it as needed.
+		return null;
 	}
 }

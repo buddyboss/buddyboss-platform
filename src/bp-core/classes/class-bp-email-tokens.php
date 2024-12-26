@@ -1691,6 +1691,10 @@ class BP_Email_Tokens {
 		$sender_ids = array_column( $tokens['message'], 'sender_id' );
 		$sender_ids = array_unique( wp_parse_id_list( $sender_ids ) );
 
+		$recipients_ids = array_column( $tokens['message'], 'recipients_id' );
+		$recipients_ids = array_unique( wp_parse_id_list( $recipients_ids ) );
+		$recipients_id  = ! empty( $recipients_ids ) ? current( $recipients_ids ) : 0;
+
 		// Find the group.
 		$group = $tokens['group'] ?? false;
 		if ( empty( $group ) ) {
@@ -1775,7 +1779,7 @@ class BP_Email_Tokens {
 										$sender_avatars[] = '<div><a style="display: block;" href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow"><img alt="" src="' . esc_url( $avatar_url ) . '" width="52" height="52" border="0" style="margin:0; padding:0; border:none; display:block; width: 52px; height: 52px; border-radius: 50%;" /></a></div>';
 									}
 
-									$sender_names[] = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id ) ) . '</a>';
+									$sender_names[] = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['body_secondary_text_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( bp_core_get_user_displayname( $sender_id, $recipients_id ) ) . '</a>';
 									$avatars_iteration++;
 								}
 								?>
@@ -1838,7 +1842,7 @@ class BP_Email_Tokens {
 											</td>
 											<td width="88%" style="vertical-align: top;padding-bottom:20px;">
 												<p style="margin:0 0 5px 0;">
-													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'] ) ); ?></a>
+													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'], $message['recipients_id'] ) ); ?></a>
 												</p>
 												<div class="bb-email-message-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>

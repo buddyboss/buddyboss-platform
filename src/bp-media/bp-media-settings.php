@@ -643,7 +643,7 @@ function bp_photo_uploading_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -670,7 +670,7 @@ function bp_document_uploading_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -841,7 +841,7 @@ function bp_emoji_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(
@@ -1081,7 +1081,7 @@ function bp_animated_gifs_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url(
 			add_query_arg(

@@ -96,7 +96,17 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			$where   = array();
 			$where[] = '1=1';
-			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+
+			$search_term_array  = bb_search_get_search_keywords_by_term( $search_term, $this->type );
+			$every_word_clauses = array();
+			foreach ( $search_term_array as $term ) {
+				$every_word_clauses[] = "(post_title LIKE %s OR post_content LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
+				$query_placeholder[]  = '%' . $term . '%';
+				$query_placeholder[]  = '%' . $term . '%';
+				$query_placeholder[]  = '%' . $term . '%';
+			}
+			$where[] = implode( ' AND ', $every_word_clauses );
+
 			$where[] = "post_type = '{$this->type}'";
 
 			$where[] = '(' . $group_query . '
@@ -111,9 +121,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 */
 			$where = apply_filters( 'bp_forum_reply_search_where_sql', $where );
-
-			$query_placeholder[] = '%' . $search_term . '%';
-			$query_placeholder[] = '%' . $search_term . '%';
 
 			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
 			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
