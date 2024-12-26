@@ -346,7 +346,22 @@ function bp_has_activities( $args = '' ) {
 			'since'        => $r['since'],
 		);
 	} else {
-		$r['filter'] = false;
+
+		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
+			$scope                  = 'just-me';
+			$r['user_id']           = bp_loggedin_user_id();
+			$r['filter'] = array(
+				'user_id'      => $r['user_id'],
+				'object'       => $r['object'],
+				'action'       => $r['action'],
+				'primary_id'   => $r['primary_id'],
+				'secondary_id' => $r['secondary_id'],
+				'offset'       => $r['offset'],
+				'since'        => $r['since'],
+			);
+		} else {
+			$r['filter'] = false;
+		}
 	}
 
 	// If specific activity items have been requested, override the $hide_spam

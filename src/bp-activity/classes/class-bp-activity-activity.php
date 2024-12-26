@@ -593,8 +593,7 @@ class BP_Activity_Activity {
 				break;
 
 			default:
-				// $r['order_by'] = 'date_recorded';
-				$r['order_by'] = 'date_updated';
+				 $r['order_by'] = 'date_recorded';
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];

@@ -2774,7 +2774,7 @@ function bb_get_activity_filter_options_labels() {
 		'groups'    => __( 'From my groups', 'buddyboss' ),
 		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
 		'following' => __( "I'm following", 'buddyboss' ),
-		'just_me'   => __( 'Created by me', 'buddyboss' ),
+		'just-me'   => __( 'Created by me', 'buddyboss' ),
 		'replied'   => __( "I've replied to", 'buddyboss' ),
 	);
 	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
@@ -2789,7 +2789,7 @@ function bb_get_activity_filter_options_labels() {
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array( 'all' => 1, 'favorites' => 1, 'friends' => 1, 'groups' => 1, 'mentions' => 1, 'following' => 1, 'just_me' => 1, 'replied' => 1,  ) ) {
+function bb_get_enabled_activity_filter_options( $default = array( 'all' => 1, 'favorites' => 1, 'friends' => 1, 'groups' => 1, 'mentions' => 1, 'following' => 1, 'just-me' => 1, 'replied' => 1,  ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
 }
 
