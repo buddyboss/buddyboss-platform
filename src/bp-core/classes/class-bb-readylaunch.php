@@ -202,11 +202,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				) ||
 				(
 					bp_is_video_directory() &&
-					! empty( $enabled_pages['video'] )
+					! empty( $enabled_pages['video'] ) &&
+					bp_is_current_component( 'video' )
 				) ||
 				(
 					bp_is_media_directory() &&
-					! empty( $enabled_pages['media'] )
+					! empty( $enabled_pages['media'] ) &&
+					bp_is_current_component( 'media' )
 				) ||
 				(
 					bp_is_document_directory() &&
