@@ -6131,11 +6131,6 @@ function bb_restricate_rss_feed() {
 function bb_restricate_rest_api( $response, $handler, $request ) {
 	// Get current route.
 	$current_endpoint = $request->get_route();
-	// Get the query parameters.
-	$query_params = $request->get_query_params();
-	if ( ! empty( $query_params ) ) { // If query parameters exist, append them to the current endpoint.
-		$current_endpoint .= '?' . urldecode( http_build_query( $query_params ) );
-	}
 	// Add mandatory endpoint here for app which you want to exclude from restriction.
 	// ex: /buddyboss-app/auth/v1/jwt/token.
 	$default_exclude_endpoint   = array(
@@ -6170,32 +6165,16 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
  * @return bool true Return true if allow endpoint otherwise return false.
  */
 function bb_is_allowed_endpoint( $current_endpoint ) {
-	$current_endpoint_path  = parse_url( $current_endpoint, PHP_URL_PATH );
-	$current_endpoint_query = parse_url( $current_endpoint, PHP_URL_QUERY );
-	$current_endpoint       = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
-	$exploded_endpoint      = explode( 'wp-json', $current_endpoint );
-	$exclude_endpoints      = bb_enable_private_rest_apis_public_content();
+	$current_endpoint  = trailingslashit( bp_get_root_domain() ) . 'wp-json' . $current_endpoint;
+	$exploded_endpoint = explode( 'wp-json', $current_endpoint );
+	$exclude_endpoints = bb_enable_private_rest_apis_public_content();
 	if ( '' !== $exclude_endpoints ) {
 		$exclude_arr_endpoints = preg_split( "/\r\n|\n|\r/", $exclude_endpoints );
 		if ( ! empty( $exclude_arr_endpoints ) && is_array( $exclude_arr_endpoints ) ) {
 			foreach ( $exclude_arr_endpoints as $endpoints ) {
 				if ( ! empty( $endpoints ) ) {
-					$endpoints       = untrailingslashit( trim( $endpoints ) );
-					$endpoints_path  = parse_url( $endpoints, PHP_URL_PATH );
-					$endpoints_query = parse_url( $endpoints, PHP_URL_QUERY );
-					if (
-						empty( $endpoints_query ) &&
-						strpos( $current_endpoint, $endpoints ) !== false
-					) {
-						return true;
-					} elseif (
-						! empty( $current_endpoint_path ) &&
-						! empty( $endpoints_path ) &&
-						strpos( $current_endpoint_path, $endpoints_path ) !== false &&
-						! empty( $current_endpoint_query ) &&
-						! empty( $endpoints_query ) &&
-						$current_endpoint_query === $endpoints_query
-					) {
+					$endpoints = untrailingslashit( trim( $endpoints ) );
+					if ( strpos( $current_endpoint, $endpoints ) !== false ) {
 						return true;
 					} else {
 						if ( strpos( $endpoints, bp_get_root_domain() ) !== false ) {
