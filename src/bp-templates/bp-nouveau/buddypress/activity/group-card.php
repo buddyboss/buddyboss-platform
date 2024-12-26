@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 ?>
-<div id="group-card" class="bb-group-card bb-popup-card" data-bp-item-id="" data-bp-item-component="groups" style="display: none;">
+<div id="group-card" class="bb-group-card bb-popup-card" data-bp-item-id="" data-bp-item-component="groups">
 
 	<div class="skeleton-card">
 		<div class="skeleton-card-body">

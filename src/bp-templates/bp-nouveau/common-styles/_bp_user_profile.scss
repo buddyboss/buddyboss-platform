@@ -605,6 +605,7 @@ div.profile_completion_wrap {
 }
 
 .bb-popup-card {
+	position: fixed;
 	background-color: #fff;
 	border: 1px solid rgba(0, 0, 0, 0.1);
 	border-radius: 5px;
@@ -612,6 +613,15 @@ div.profile_completion_wrap {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	min-width: 200px;
 	z-index: 999992;
+	opacity: 0;
+	transition-behavior: allow-discrete;/* stylelint-disable-line */
+	transition: opacity 0.3s ease;
+	transform: translate(9999px);
+
+	&.show {
+		opacity: 1;
+		transform: translate(0);
+	}
 
 	.acomments-modal-open & {
 		z-index: 999985;

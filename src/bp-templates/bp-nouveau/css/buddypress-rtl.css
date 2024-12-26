@@ -12595,6 +12595,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 }
 
 .bb-popup-card {
+  position: fixed;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 5px;
@@ -12602,6 +12603,16 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-width: 200px;
   z-index: 999992;
+  opacity: 0;
+  transition-behavior: allow-discrete;
+  /* stylelint-disable-line */
+  transition: opacity 0.3s ease;
+  transform: translate(-9999px);
+}
+
+.bb-popup-card.show {
+  opacity: 1;
+  transform: translate(0);
 }
 
 .acomments-modal-open .bb-popup-card {

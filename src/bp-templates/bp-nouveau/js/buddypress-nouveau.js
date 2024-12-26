@@ -933,7 +933,7 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile/Group Popup Card
-			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar, .author-avatar img.avatar', function() {
 				hoverAvatar = true;
 				if ( !popupCardLoaded ) {
 					if ( hideCardTimeout ) {
@@ -951,7 +951,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call(this);
 				}
 			} );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .group-avatar img.avatar', function() {
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function() {
 				hoverAvatar = false;
 				if ( !hoverCardPopup ) {
 					bp.Nouveau.checkHidePopupCard();
@@ -969,7 +969,7 @@ window.bp = window.bp || {};
 					if ( !hoverAvatar ) {
 						bp.Nouveau.checkHidePopupCard();
 					}
-				}, 200 );
+				}, 100 );
 			} );
 
 			$( window ).on( 'scroll', this.hidePopupCard );
@@ -4533,7 +4533,7 @@ window.bp = window.bp || {};
 
 			$profileCard
 				.attr( 'data-bp-item-id', '' )
-				.removeClass( 'loading' );
+				.removeClass( 'show loading' );
 			$profileCard
 				.find( '.bb-card-footer, .skeleton-card-footer' )
 				.removeClass( 'bb-card-footer--plain' );
@@ -4591,6 +4591,7 @@ window.bp = window.bp || {};
 			}
 
 			$profileCard
+				.addClass( 'show' )
 				.attr( 'data-bp-item-id', data.id );
 			$profileCard
 				.find( '.bb-card-avatar img' )
@@ -4681,10 +4682,8 @@ window.bp = window.bp || {};
 
 				var position = setPopupPosition();
 				$profileCard.css( {
-					position: 'fixed',
 					top: position.top + 'px',
             		left: position.left + 'px',
-					display: 'block',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
 				return;
@@ -4711,12 +4710,10 @@ window.bp = window.bp || {};
 					var position = setPopupPosition();
 					$profileCard
 						.css( {
-							position: 'fixed',
 							top: position.top + 'px',
             				left: position.left + 'px',
-							display: 'block',
 						} )
-						.addClass( 'loading' );
+						.addClass( 'show loading' );
 
 					if ( currentUser ) {
 						$profileCard
@@ -4759,7 +4756,7 @@ window.bp = window.bp || {};
 
 			$groupCard
 				.attr( 'data-bp-item-id', '' )
-				.removeClass( 'loading' );
+				.removeClass( 'show loading' );
 			$groupCard
 				.find( '.bb-card-heading' )
 				.text( '' );
@@ -4793,6 +4790,7 @@ window.bp = window.bp || {};
 			var membersLabel = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
 		
 			$groupCard
+				.addClass( 'show' )
 				.attr( 'data-bp-item-id', data.id );
 			$groupCard
 				.find( '.bb-card-avatar img' )
@@ -4886,10 +4884,8 @@ window.bp = window.bp || {};
 
 				var position = setPopupPosition();
 				$groupCard.css( {
-					position: 'fixed',
 					top: position.top + 'px',
             		left: position.left + 'px',
-					display: 'block',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
 				return;
@@ -4916,12 +4912,10 @@ window.bp = window.bp || {};
 					var position = setPopupPosition();
 					$groupCard
 						.css( {
-							position: 'fixed',
 							top: position.top + 'px',
             				left: position.left + 'px',
-							display: 'block',
 						} )
-						.addClass( 'loading' );
+						.addClass( 'show loading' );
 
 					$groupCard
 						.find( '.skeleton-card-footer' )
@@ -4954,7 +4948,7 @@ window.bp = window.bp || {};
 		},
 
 		hidePopupCard: function() {
-			$( '.bb-popup-card' ).hide();
+			$( '.bb-popup-card' ).removeClass( 'show' );
 			bp.Nouveau.resetProfileCard();
 			bp.Nouveau.resetGroupCard();
 			hideCardTimeout = null;

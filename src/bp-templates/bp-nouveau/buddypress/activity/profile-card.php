@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 ?>
-<div id="profile-card" class="bb-profile-card bb-popup-card" data-bp-item-id="" data-bp-item-component="members" style="display: none;">
+<div id="profile-card" class="bb-profile-card bb-popup-card" data-bp-item-id="" data-bp-item-component="members">
 
 	<div class="skeleton-card">
 		<div class="skeleton-card-body">
