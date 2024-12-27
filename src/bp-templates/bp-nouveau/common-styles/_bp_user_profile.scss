@@ -823,14 +823,22 @@ div.profile_completion_wrap {
 		button.small,
 		a.card-button,
 		a.friendship-button,
+		a.follow-button,
 		button.friendship-button {
 			min-height: 30px;
 			line-height: 28px;
+
+			@media screen and (max-width: 560px) {
+				width: 100%;
+				display: inline-block;
+				padding: 0;
+			}
 		}
 	}
 
 	.bb-card-action {
 		flex: 1;
+		white-space: nowrap;
 	}
 
 	&.bb-card-footer--plain {

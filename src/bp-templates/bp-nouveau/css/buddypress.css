@@ -12788,13 +12788,27 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 .buddypress .buddypress-wrap .bb-card-footer button.small,
 .buddypress .buddypress-wrap .bb-card-footer a.card-button,
 .buddypress .buddypress-wrap .bb-card-footer a.friendship-button,
+.buddypress .buddypress-wrap .bb-card-footer a.follow-button,
 .buddypress .buddypress-wrap .bb-card-footer button.friendship-button {
   min-height: 30px;
   line-height: 28px;
 }
 
+@media screen and (max-width: 560px) {
+  .buddypress .buddypress-wrap .bb-card-footer button.small,
+  .buddypress .buddypress-wrap .bb-card-footer a.card-button,
+  .buddypress .buddypress-wrap .bb-card-footer a.friendship-button,
+  .buddypress .buddypress-wrap .bb-card-footer a.follow-button,
+  .buddypress .buddypress-wrap .bb-card-footer button.friendship-button {
+    width: 100%;
+    display: inline-block;
+    padding: 0;
+  }
+}
+
 .bb-card-footer .bb-card-action {
   flex: 1;
+  white-space: nowrap;
 }
 
 .bb-card-footer.bb-card-footer--plain .bb-card-action-primary,

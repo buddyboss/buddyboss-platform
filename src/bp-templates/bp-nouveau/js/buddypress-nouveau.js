@@ -951,7 +951,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call(this);
 				}
 			} );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function(event) {
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function( event ) {
 				var relatedTarget = event.relatedTarget;
 
 				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
