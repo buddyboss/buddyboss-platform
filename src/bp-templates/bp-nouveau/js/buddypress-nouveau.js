@@ -933,7 +933,7 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile/Group Popup Card
-			$( document ).on( 'mouseenter', '.item-avatar img.avatar', function() {
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar, .author-avatar img.avatar', function() {
 				hoverAvatar = true;
 				if ( !popupCardLoaded ) {
 					if ( hideCardTimeout ) {
@@ -951,10 +951,33 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call(this);
 				}
 			} );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .group-avatar img.avatar', function() {
-				hoverAvatar = false;
-				if ( !hoverCardPopup ) {
-					bp.Nouveau.checkHidePopupCard();
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function(event) {
+				var relatedTarget = event.relatedTarget;
+
+				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
+					var $newAvatar = $( relatedTarget );
+					
+        
+					// Hide the current popup
+					if ( $( '#profile-card' ).hasClass( 'show' ) ) {
+						bp.Nouveau.hidePopupCard();
+					} else if ( $( '#group-card' ).hasClass( 'show' ) ) {
+						bp.Nouveau.hidePopupCard();
+					}
+
+					// Check which avatar is hovered
+					if ( $newAvatar.closest( '.author-avatar' ).length > 0 || $newAvatar.is( '.author-avatar' ) ) {
+						// Show profile popup for the new avatar
+						bp.Nouveau.profilePopupCard.call( '.group-avatar img.avatar' );
+					} else if ( $newAvatar.closest( '.group-avatar' ).length > 0 ) {
+						// Show group popup for the new avatar
+						bp.Nouveau.groupPopupCard.call( '.author-avatar img.avatar' );
+					}
+				} else {
+					hoverAvatar = false;
+					if (!hoverCardPopup) {
+						bp.Nouveau.checkHidePopupCard();
+					}
 				}
 			} );
 			$( document ).on( 'mouseenter', '#profile-card, #group-card', function() {
