@@ -446,7 +446,14 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							true
 						)
 					) {
-						$value = isset( $_POST[ $setting_name ] ) ? wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						$value = '';
+						if ( isset( $_POST[ $setting_name ] ) ) {
+							if ( 'bp-enable-private-network-public-content' === $setting_name ) {
+								$value = wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							} else {
+								$value = sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							}
+						}
 					} elseif (
 						in_array(
 							$setting_name,
