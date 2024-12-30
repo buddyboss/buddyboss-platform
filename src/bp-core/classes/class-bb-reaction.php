@@ -1989,7 +1989,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$activities_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
 				if ( ! empty( $r['item_object'] ) ) {
-					$activities_ids = array( $r['item_object'] );
+					$activities_ids = array( $r['item_object']->id );
 				} else {
 					$activities = BP_Activity_Activity::get(
 						array(
@@ -2170,7 +2170,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			$activity_comment_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity_comment' === $r['item_type'] ) {
 				if ( ! empty( $r['item_object'] ) ) {
-					$activity_comment_ids = array( $r['item_object'] );
+					$activity_comment_ids = array( $r['item_object']->id );
 				} else {
 					$activities = BP_Activity_Activity::get(
 						array(
