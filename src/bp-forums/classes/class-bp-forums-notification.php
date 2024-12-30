@@ -931,6 +931,24 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
+					'bb_send_forums_subscribed_discussion_email_notifications_disabled',
+					false,
+					array(
+						'type'              => $type_key,
+						'component_type'    => bbp_get_component_name(),
+						'topic_id'          => $topic_id,
+						'group_id'          => $group_id,
+						'recipient_user_id' => $user_id,
+						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+						'author_id'         => $author_id,
+					)
+				)
+			) {
+				$send_mail = false;
+			}
+
+			if (
+				true === (bool) apply_filters(
 					'bb_send_forums_subscribed_discussion_notifications_disabled',
 					false,
 					array(
@@ -945,7 +963,6 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				)
 			) {
 				$send_notification = false;
-				$send_mail         = false;
 			}
 
 			// Bail if member opted out of receiving this email.
@@ -1064,6 +1081,24 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
+					'bb_send_forums_subscribed_reply_email_notifications_disabled',
+					false,
+					array(
+						'type'              => $type_key,
+						'component_type'    => bbp_get_component_name(),
+						'reply_id'          => $reply_id,
+						'group_id'          => $group_id,
+						'recipient_user_id' => $user_id,
+						'sender_id'         => bbp_get_topic_author_id( $r['item_id'] ),
+						'author_id'         => $author_id,
+					)
+				)
+			) {
+				$send_mail = false;
+			}
+
+			if (
+				true === (bool) apply_filters(
 					'bb_send_forums_subscribed_reply_notifications_disabled',
 					false,
 					array(
@@ -1078,7 +1113,6 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				)
 			) {
 				$send_notification = false;
-				$send_mail         = false;
 			}
 
 			// Bail if member opted out of receiving this email.
