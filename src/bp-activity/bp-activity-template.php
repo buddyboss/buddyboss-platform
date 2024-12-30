@@ -790,6 +790,15 @@ function bp_activity_date_recorded() {
 }
 
 /**
+ * Output the date the activity was updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_date_updated() {
+	echo bb_get_activity_date_updated();
+}
+
+/**
  * Return the date the activity was recorded.
  *
  * @since BuddyPress 1.2.0
@@ -809,6 +818,28 @@ function bp_get_activity_date_recorded() {
 	 * @param int $date_recorded The activity's date.
 	 */
 	return apply_filters( 'bp_get_activity_date_recorded', $activities_template->activity->date_recorded );
+}
+
+/**
+ * Return the date the activity was updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The date the activity was updated.
+ */
+function bb_get_activity_date_updated() {
+	global $activities_template;
+
+	/**
+	 * Filters the date the activity was updated.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $date_updated The activity's date.
+	 */
+	return apply_filters( 'bb_get_activity_date_updated', $activities_template->activity->date_updated );
 }
 
 /**

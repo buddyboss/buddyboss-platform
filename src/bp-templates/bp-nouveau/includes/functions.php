@@ -125,6 +125,19 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'search_terms=' . urlencode( $_POST['search_terms'] );
 	}
 
+	if (
+		'activity' === $object &&
+		bp_is_activity_directory() &&
+		isset( $post_query['order_by'] ) && ! empty( $post_query['order_by'] )
+	) {
+		if ( ! empty( $post_query['activity_order_by'] ) ) {
+			$order_by = $post_query['activity_order_by'];
+		} else {
+			$order_by = $post_query['order_by'];
+		}
+		$qs[] = 'order_by=' . $order_by;
+	}
+
 	// Specific to messages
 	if ( 'messages' === $object ) {
 		if ( ! empty( $post_query['box'] ) ) {

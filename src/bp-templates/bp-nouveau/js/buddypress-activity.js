@@ -222,7 +222,31 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		heartbeatSend: function( event, data ) {
-			this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first().data( 'bp-timestamp' ) || 0;
+			if ( $( bp.Nouveau.objectNavParent + ' [data-bp-orderby=date_updated].selected' ).length ) {
+				var first_unpinned_activity = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first();
+				if ( 'undefined' !== typeof first_unpinned_activity.data( 'bb-updated-timestamp' ) ) {
+					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bb-updated-timestamp' );
+				} else if (
+					first_unpinned_activity.length &&
+					'undefined' !== typeof first_unpinned_activity.data( 'bp-activity' ).date_updated &&
+					'' !== first_unpinned_activity.data( 'bp-activity' ).date_updated
+				) {
+					// convert to timestamp.
+					var dateString = first_unpinned_activity.data( 'bp-activity' ).date_updated ;
+
+					// Convert directly to a Date object in UTC by appending 'Z' (UTC designator).
+					var utcDate = new Date( dateString.replace( ' ', 'T') + 'Z' );
+
+					// Get the Unix timestamp in seconds.
+					var activity_timestamp = utcDate.getTime() / 1000;
+
+					this.heartbeat_data.first_recorded = activity_timestamp;
+				} else {
+					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bp-timestamp' ) || 0;
+				}
+			} else {
+				this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first().data( 'bp-timestamp' ) || 0;
+			}
 
 			// Handle the first item is already latest and pinned.
 			var first_activity_timestamp = $( '#buddypress [data-bp-list] [data-bp-activity-id]' ).first().data( 'bp-timestamp' ) || 0;
@@ -240,7 +264,17 @@ window.bp = window.bp || {};
 				data.bp_activity_last_recorded_search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 			}
 
-			$.extend( data, { bp_heartbeat: bp.Nouveau.getStorage( 'bp-activity' ) } );
+			$.extend(data, {
+				bp_heartbeat: (function() {
+					let heartbeatData = bp.Nouveau.getStorage('bp-activity') || {};
+					// Add `order_by` only if it's not already set.
+					if ( $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).length ) {
+						order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
+						heartbeatData.order_by = order_by; 
+					}
+					return heartbeatData;
+				})()
+			});
 		},
 
 		/**
@@ -4166,6 +4200,9 @@ window.bp = window.bp || {};
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
 			}
+
+			// On filter update reset last_recorded.
+			bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 
 			var queryData = {
 				object: object,

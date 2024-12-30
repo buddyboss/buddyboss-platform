@@ -649,6 +649,10 @@ window.bp = window.bp || {};
 					}
 
 					if( $( '.bb-subnav-filters-search.loading' ).length ) {
+						if ( 'activity' === data.object ) {
+							bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+						}
+
 						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
 					}
 

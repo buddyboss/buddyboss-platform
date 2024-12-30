@@ -525,6 +525,10 @@ class BP_Activity_Activity {
 			}
 		}
 
+		if ( ! empty( $r['order_by'] ) ) {
+			$r['filter']['since_date_column'] = $r['order_by'];
+		}
+
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
@@ -2201,7 +2205,12 @@ class BP_Activity_Activity {
 			// Trick: parse to UNIX date then translate back.
 			$translated_date = date( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
 			if ( $translated_date === $filter_array['since'] ) {
-				$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				if ( ! empty( $filter_array['since_date_column'] ) && 'date_updated' === $filter_array['since_date_column'] ) {
+					$filter_sql[] = "a.date_updated > '{$translated_date}'";
+				} else {
+					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				}
+				
 			}
 		}
 
