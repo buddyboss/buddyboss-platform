@@ -931,8 +931,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
-					'bb_send_forums_subscribed_discussion_email_notifications_disabled',
-					false,
+					'bb_send_forums_subscribed_discussion_email_notifications',
+					$send_mail,
 					array(
 						'type'              => $type_key,
 						'component_type'    => bbp_get_component_name(),
@@ -949,8 +949,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
-					'bb_send_forums_subscribed_discussion_notifications_disabled',
-					false,
+					'bb_send_forums_subscribed_discussion_notifications',
+					$send_notification,
 					array(
 						'type'              => $type_key,
 						'component_type'    => bbp_get_component_name(),
@@ -1081,8 +1081,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
-					'bb_send_forums_subscribed_reply_email_notifications_disabled',
-					false,
+					'bb_send_forums_subscribed_reply_email_notifications',
+					$send_mail,
 					array(
 						'type'              => $type_key,
 						'component_type'    => bbp_get_component_name(),
@@ -1099,8 +1099,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
-					'bb_send_forums_subscribed_reply_notifications_disabled',
-					false,
+					'bb_send_forums_subscribed_reply_notifications',
+					$send_notification,
 					array(
 						'type'              => $type_key,
 						'component_type'    => bbp_get_component_name(),

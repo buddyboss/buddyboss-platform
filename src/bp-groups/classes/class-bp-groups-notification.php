@@ -1192,8 +1192,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
-					'bb_send_subscribed_group_email_notifications_disabled',
-					false,
+					'bb_send_subscribed_group_email_notifications',
+					$send_mail,
 						array(
 						'type'              => $type_key,
 						'component_type'    => buddypress()->groups->id,
@@ -1209,8 +1209,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			if (
 				true === (bool) apply_filters(
-					'bb_send_subscribed_group_notifications_disabled',
-					false,
+					'bb_send_subscribed_group_notifications',
+					$send_notification,
 						array(
 						'type'              => $type_key,
 						'component_type'    => buddypress()->groups->id,
