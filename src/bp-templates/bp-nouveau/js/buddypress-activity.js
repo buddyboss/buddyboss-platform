@@ -266,12 +266,26 @@ window.bp = window.bp || {};
 
 			$.extend(data, {
 				bp_heartbeat: (function() {
-					let heartbeatData = bp.Nouveau.getStorage('bp-activity') || {};
+					var  heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || {};
+
+					if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
+						var scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+						if ( 'undefined' !== typeof heartbeatData.scope && heartbeatData.scope !== scope )  {
+							heartbeatData.scope = scope; 
+
+							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+								// Add to the storage if page request 2.
+								bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+							}	
+						}
+					}
+
 					// Add `order_by` only if it's not already set.
 					if ( $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).length ) {
-						order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
+						var order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
 						heartbeatData.order_by = order_by; 
 					}
+
 					return heartbeatData;
 				})()
 			});

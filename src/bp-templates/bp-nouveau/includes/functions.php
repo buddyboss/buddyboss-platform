@@ -33,10 +33,43 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		return '';
 	}
 
+	$default_scope = 'all';
+	if (
+		'activity' === $object &&
+		bp_is_activity_directory()
+	) {
+		$activity_filters = bb_get_enabled_activity_filter_options();
+		if ( ! empty ( $activity_filters ) ) {
+
+			// Skip filters based on user login or component active.
+			$skip_conditions = [
+				'friends'   => ! bp_is_active( 'friends' ),
+				'following' => ! bp_is_activity_follow_active(),
+				'groups'    => ! bp_is_active( 'groups' ),
+				'mentions'  => ! bp_activity_do_mentions(),
+			];
+			foreach( $activity_filters as $key => $is_enabled ) {
+
+				// Skip filters based on conditions.
+				if (
+					empty( $is_enabled ) ||
+					( 'all' !== $key && ! is_user_logged_in() ) ||
+					isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ]
+				) {
+					continue;
+				}
+
+				// First item as default.
+				$default_scope = $key;
+				break;
+			}
+		}
+	}
+
 	// Default query
 	$post_query = array(
 		'filter'       => '',
-		'scope'        => 'all',
+		'scope'        => $default_scope,
 		'page'         => 1,
 		'search_terms' => '',
 		'extras'       => '',
@@ -127,15 +160,24 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	if (
 		'activity' === $object &&
-		bp_is_activity_directory() &&
-		isset( $post_query['order_by'] ) && ! empty( $post_query['order_by'] )
+		bp_is_activity_directory()
 	) {
-		if ( ! empty( $post_query['activity_order_by'] ) ) {
-			$order_by = $post_query['activity_order_by'];
-		} else {
+		if ( ! empty( $post_query['order_by'] ) ) {
 			$order_by = $post_query['order_by'];
+		} else {
+			// Default order.
+			$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+			arsort( $avail_sorting_options );
+			if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) ) {
+				$order_by = key( $avail_sorting_options );
+			} else {
+				if ( empty ( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, false ) ) {
+					$order_by = 'date_recorded';
+				}
+			}
 		}
 		$qs[] = 'order_by=' . $order_by;
+		
 	}
 
 	// Specific to messages

@@ -78,21 +78,24 @@
 		?>
 	</div><!-- search & filters -->
 </div>
-<?php if ( bp_is_activity_directory() ) { ?>
+<?php if ( bp_is_activity_directory() ) {
+	$activity_filters = bb_get_enabled_activity_filter_options();
+	$filters_labels   = bb_get_activity_filter_options_labels();
+	arsort( $activity_filters );
+	$default_selected = key( $activity_filters );
+	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class="bb-subnav-filters-container-main">
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
-				<span class="selected"><?php echo strtolower( esc_html__( 'All updates', 'buddyboss' ) ); ?></span>
+				<span class="selected"><?php echo strtolower( $filters_labels[ $default_selected ] ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 			<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 				<ul role="listbox">
 					<?php
-						$filters_labels   = bb_get_activity_filter_options_labels();
-						$activity_filters = bb_get_enabled_activity_filter_options();
 						if ( ! empty ( $activity_filters ) ) {
 							// Skip filters based on user login or component active.
 							$skip_conditions = [
@@ -116,7 +119,7 @@
 									continue;
 								}
 								?>
-								<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
+								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
 								<?php
 							}
 						}
@@ -129,6 +132,7 @@
 	<?php
 	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 	arsort( $avail_sorting_options );
+	$default_selected = key( $avail_sorting_options );
 	if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
 		$hide_class = '';
 	} else {
@@ -143,7 +147,7 @@
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo strtolower( $sorting_labels[ key( $avail_sorting_options ) ] ); ?></span>
+				<span class="selected"><?php echo strtolower( $sorting_labels[ $default_selected ] ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 
@@ -156,7 +160,7 @@
 								continue;
 							}
 							?>
-							<li role="option" data-bp-order="activity" data-bp-orderby="<?php esc_attr_e( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
+							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php esc_attr_e( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
 							<?php
 						}
 					}
