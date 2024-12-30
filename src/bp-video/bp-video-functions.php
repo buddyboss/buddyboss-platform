@@ -2342,13 +2342,21 @@ function bp_video_download_url_file() {
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'album' !== $video_type ) {
+
+			// Remove action to remove meta query for forums while download check.
+			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 			$video_privacy    = bb_media_user_can_access( $video_file, 'video', $attachment_id ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
+
+			// Add pre_get_posts action hook back.
+			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
 		if ( $can_download_btn ) {
 			bp_video_download_file( $attachment_id, $video_type ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
+			exit();
 		}
 	}
 }
