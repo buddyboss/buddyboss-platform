@@ -128,7 +128,15 @@
 	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 	arsort( $avail_sorting_options );
 	if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
-		?>
+		$hide_class = '';
+	} else {
+		$hide_class = 'bp-hide';
+		if ( empty ( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, false ) ) {
+			$avail_sorting_options = array( 'date_recorded' => 1 );
+		}
+	}
+	?>
+	<div class='<?php echo esc_attr( $hide_class ); ?>'>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
@@ -154,7 +162,7 @@
 				</ul>
 			</div>
 		</div>
-		<?php
-	}
+	</div>
+	<?php
 }
 ?>
