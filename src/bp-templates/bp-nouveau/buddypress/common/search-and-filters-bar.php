@@ -79,8 +79,8 @@
 	</div><!-- search & filters -->
 </div>
 <?php if ( bp_is_activity_directory() ) { ?>
+	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class="bb-subnav-filters-container-main">
-		<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 

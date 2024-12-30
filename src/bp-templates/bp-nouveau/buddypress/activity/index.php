@@ -19,9 +19,9 @@ endif;
 bp_nouveau_template_notices();
 
 if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-	echo '<div class="flex actvity-head-bar">';
+	echo '<div class="flex activity-head-bar">';
 	bp_get_template_part( 'common/search-and-filters-bar' );
-	bp_get_template_part( 'common/nav/directory-nav' );
+	// bp_get_template_part( 'common/nav/directory-nav' );
 	echo '</div>';
 }
 ?>

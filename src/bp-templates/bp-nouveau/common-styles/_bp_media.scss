@@ -5227,6 +5227,7 @@ body.buddyboss-theme {
 		padding: 9px 7px;
 
 		form.bp-dir-search-form {
+			display: flex;
 			border: 0;
 
 			&:focus-within {
@@ -5331,6 +5332,7 @@ body.buddyboss-theme {
 			ul {
 				list-style: none;
 				margin: 0;
+				padding: 0;
 			}
 
 			li {
@@ -5344,6 +5346,7 @@ body.buddyboss-theme {
 					padding: 10px 16px;
 					border-radius: 6px;
 					position: relative;
+					text-decoration: none;
 
 					&:hover {
 						background-color: #f2f4f5;
@@ -5366,7 +5369,14 @@ body.buddyboss-theme {
 	}
 }
 
-.actvity-head-bar {
+.activity-head-bar {
+	display: flex;
+	align-items: center;
+	margin: 20px 0;
+
+	.subnav-filters {
+		margin: 0 0 0 auto;
+	}
 
 	.bb-subnav-filters-label {
 		font-size: 14px;
@@ -5390,7 +5400,7 @@ body.buddyboss-theme {
 
 @media screen and (max-width: 511px) {
 
-	.actvity-head-bar {
+	.activity-head-bar {
 		justify-content: center;
 
 		&:has(li.loading) .bb-icon-loader {
