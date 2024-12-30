@@ -79,48 +79,50 @@
 	</div><!-- search & filters -->
 </div>
 <?php if ( bp_is_activity_directory() ) { ?>
-	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
-	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
-	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
+	<div class="bb-subnav-filters-container-main">
+		<i class="bb-icon-f bb-icon-loader animate-spin"></i>
+		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
+		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
-		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
-			<span class="selected"><?php echo strtolower( esc_html__( 'All updates', 'buddyboss' ) ); ?></span>
-			<i class="bb-icon-l bb-icon-angle-down"></i>
-		</button>
-		<div id="bb-subnav-filter-show" class="subnav-filters-modal">
-			<ul role="listbox">
-				<?php
-					$filters_labels   = bb_get_activity_filter_options_labels();
-					$activity_filters = bb_get_enabled_activity_filter_options();
-					if ( ! empty ( $activity_filters ) ) {
-						// Skip filters based on user login or component active.
-						$skip_conditions = [
-							'friends'   => ! bp_is_active( 'friends' ),
-							'following' => ! bp_is_activity_follow_active(),
-							'groups'    => ! bp_is_active( 'groups' ),
-							'mentions'  => ! bp_activity_do_mentions(),
-						];
-						foreach( $activity_filters as $key => $is_enabled ) {
+			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
+				<span class="selected"><?php echo strtolower( esc_html__( 'All updates', 'buddyboss' ) ); ?></span>
+				<i class="bb-icon-l bb-icon-angle-down"></i>
+			</button>
+			<div id="bb-subnav-filter-show" class="subnav-filters-modal">
+				<ul role="listbox">
+					<?php
+						$filters_labels   = bb_get_activity_filter_options_labels();
+						$activity_filters = bb_get_enabled_activity_filter_options();
+						if ( ! empty ( $activity_filters ) ) {
+							// Skip filters based on user login or component active.
+							$skip_conditions = [
+								'friends'   => ! bp_is_active( 'friends' ),
+								'following' => ! bp_is_activity_follow_active(),
+								'groups'    => ! bp_is_active( 'groups' ),
+								'mentions'  => ! bp_activity_do_mentions(),
+							];
+							foreach( $activity_filters as $key => $is_enabled ) {
 
-							// Skip filters not enabled or without labels.
-							if ( empty( $is_enabled ) || empty( $filters_labels[ $key ] ) ) {
-								continue;
-							}
+								// Skip filters not enabled or without labels.
+								if ( empty( $is_enabled ) || empty( $filters_labels[ $key ] ) ) {
+									continue;
+								}
 
-							if ( 'all' !== $key && ! is_user_logged_in() ) {
-								continue;
+								if ( 'all' !== $key && ! is_user_logged_in() ) {
+									continue;
+								}
+						
+								if ( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] ) {
+									continue;
+								}
+								?>
+								<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
+								<?php
 							}
-					
-							if ( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] ) {
-								continue;
-							}
-							?>
-							<li role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
-							<?php
 						}
-					}
-				?>
-			</ul>
+					?>
+				</ul>
+			</div>
 		</div>
 	</div>
 
@@ -136,7 +138,7 @@
 		}
 	}
 	?>
-	<div class='<?php echo esc_attr( $hide_class ); ?>'>
+	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>

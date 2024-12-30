@@ -26097,6 +26097,11 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   height: 34px;
 }
 
+.bb-subnav-filters-container-main {
+  display: flex;
+  align-items: center;
+}
+
 .bb-subnav-filters-container {
   position: relative;
   z-index: 11;

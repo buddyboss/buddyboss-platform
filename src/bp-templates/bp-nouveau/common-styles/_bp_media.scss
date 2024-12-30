@@ -5189,6 +5189,11 @@ body.buddyboss-theme {
 	}
 }
 
+.bb-subnav-filters-container-main {
+	display: flex;
+	align-items: center;
+}
+
 .bb-subnav-filters-container {
 	position: relative;
 	z-index: 11;
