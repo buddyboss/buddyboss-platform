@@ -917,7 +917,7 @@ function bp_document_delete_attachment_document( $attachment_id ) {
  */
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		
+
 		// Remove action to remove meta query for forums while download check.
 		remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
@@ -931,7 +931,7 @@ function bp_document_download_url_file() {
 
 		// Add pre_get_posts action hook back.
 		add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
-	
+
 		if ( $can_download_btn ) {
 			bp_document_download_file( $_GET['attachment'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
