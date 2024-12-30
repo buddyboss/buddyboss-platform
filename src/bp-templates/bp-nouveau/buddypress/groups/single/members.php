@@ -9,7 +9,7 @@
  */
 $is_send_ajax_request = bb_is_send_ajax_request();
 bp_get_template_part( 'groups/single/parts/members-subnav' );
-$enable_count = bb_group_directory_count_enable();
+$enable_count = bb_member_directory_count_enable();
 $count        = $enable_count ? groups_get_total_member_count( bp_get_current_group_id () ) : false;
 if ( false !== $count ) {
 	bp_nouveau_search_form();
