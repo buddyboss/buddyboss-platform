@@ -2169,18 +2169,22 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$activity_comment_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity_comment' === $r['item_type'] ) {
-				$activities = BP_Activity_Activity::get(
-					array(
-						'per_page'         => 0,
-						'fields'           => 'ids',
-						'display_comments' => true,
-						'show_hidden'      => true, // Support hide_sitewide as true like document activity_comment.
-						'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
-					),
-				);
+				if ( ! empty( $r['item_object'] ) ) {
+					$activity_comment_ids = array( $r['item_object'] );
+				} else {
+					$activities = BP_Activity_Activity::get(
+						array(
+							'per_page'         => 0,
+							'fields'           => 'ids',
+							'display_comments' => true,
+							'show_hidden'      => true, // Support hide_sitewide as true like document activity_comment.
+							'in'               => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+						),
+					);
 
-				if ( ! empty( $activities['activities'] ) ) {
-					$activity_comment_ids = $activities['activities'];
+					if ( ! empty( $activities['activities'] ) ) {
+						$activity_comment_ids = $activities['activities'];
+					}
 				}
 			}
 
