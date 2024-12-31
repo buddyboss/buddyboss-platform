@@ -26106,16 +26106,16 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   margin-left: 10px;
 }
 
-.bb-subnav-filters-container {
+.activity-head-bar .bb-subnav-filters-container {
   position: relative;
   z-index: 11;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-search {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
   margin-left: auto;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener {
   border-radius: 6px;
   border: 1px solid transparent;
   background: #f2f4f5;
@@ -26128,7 +26128,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   cursor: pointer;
 }
 
-.bb-subnav-filters-container .subnav-filters-modal {
+.activity-head-bar .bb-subnav-filters-container .subnav-filters-modal {
   opacity: 0;
   visibility: hidden;
   position: absolute;
@@ -26140,21 +26140,21 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   padding: 9px 7px;
 }
 
-.bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form {
+.activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form {
   display: flex;
   border: 0;
 }
 
-.buddypress-wrap .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form:focus-within {
+.buddypress-wrap .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form:focus-within {
   box-shadow: none;
 }
 
-#buddypress .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
+#buddypress .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
   box-shadow: none;
   width: 260px;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
   display: none;
   position: static;
   border: 1px solid #b7b7b7;
@@ -26164,21 +26164,21 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   padding: 2px 4px;
 }
 
-.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-modal {
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-modal {
   display: block;
 }
 
-.bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener {
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener {
   display: none;
 }
 
-.bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset {
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset {
   line-height: 1;
   opacity: 1;
   pointer-events: none;
 }
 
-.bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset [class^="bb-icon-"]:before {
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset [class^="bb-icon-"]:before {
   content: "\ef30";
   font-weight: 300;
   font-size: 18px;
@@ -26187,12 +26187,12 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   display: inline-block;
 }
 
-.bb-subnav-filters-container.active .subnav-filters-modal {
+.activity-head-bar .bb-subnav-filters-container.active .subnav-filters-modal {
   opacity: 1;
   visibility: visible;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
   display: flex;
   align-items: center;
   padding: 0;
@@ -26202,32 +26202,32 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   cursor: pointer;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:focus, .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:hover {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:focus, .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:hover {
   background-color: transparent;
   color: var(--bb-body-text-color);
   box-shadow: none;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener span {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener span {
   font-size: 14px;
   font-weight: 500;
   text-transform: lowercase;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal {
   right: auto;
   left: -20px;
   padding: 10px;
   width: 230px;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal ul {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a {
   display: block;
   color: #5a5a5a;
   font-size: 13px;
@@ -26239,11 +26239,11 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   text-decoration: none;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
   background-color: #f2f4f5;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li.selected a:after {
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li.selected a:after {
   content: "\e876";
   color: #385dff;
   font-family: bb-icons;
@@ -26323,6 +26323,12 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 .directory.document .entry-header .entry-title,
 .directory.video .entry-header .entry-title {
   text-align: right;
+}
+
+.directory.media .media-options > .bb-subnav-filters-search,
+.directory.document .document-options > .bb-subnav-filters-search,
+.directory.video .video-options > .bb-subnav-filters-search {
+  display: inline-block;
 }
 
 .directory.media .media-options a.button > i,

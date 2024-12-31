@@ -5198,7 +5198,7 @@ body.buddyboss-theme {
 	}
 }
 
-.bb-subnav-filters-container {
+.activity-head-bar .bb-subnav-filters-container {
 	position: relative;
 	z-index: 11;
 
@@ -5463,6 +5463,10 @@ body.buddyboss-theme {
 .directory.media .media-options,
 .directory.document .document-options,
 .directory.video .video-options {
+
+	> .bb-subnav-filters-search {
+		display: inline-block;
+	}
 
 	a.button > i {
 		margin-right: 7px;
