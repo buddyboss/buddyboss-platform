@@ -4195,9 +4195,14 @@ window.bp = window.bp || {};
 			var search_terms    = '';
 			var order           = '';
 			var extras          = '';
+			var save_scope	    = false;
 
 			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
 				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
+
+				if( $this.closest( '#bb-subnav-filter-show' ).length ) {
+					save_scope = true;
+				}
 			}
 
 			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
@@ -4224,7 +4229,8 @@ window.bp = window.bp || {};
 				filter: filter,
 				search_terms: search_terms,
 				extras: extras,
-				order_by: order
+				order_by: order,
+				save_scope: save_scope,
 			};
 
 			bp.Nouveau.objectRequest( queryData );

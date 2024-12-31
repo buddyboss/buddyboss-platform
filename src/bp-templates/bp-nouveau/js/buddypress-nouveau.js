@@ -507,8 +507,8 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
-			if ( [ 'members', 'activity', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+			// if object is members, media, document and object nav does not exists fallback to scope = all.
+			if ( [ 'members', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 			}
 
@@ -523,7 +523,13 @@ window.bp = window.bp || {};
 
 			// Set session's data.
 			if ( null !== data.scope ) {
-				this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				if( data.object === 'activity' ) {
+					if( 'undefined' !== data.save_scope && true === data.save_scope ) {
+						this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+					}
+				} else {
+					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				}
 			}
 
 			if ( null !== data.filter ) {
@@ -747,7 +753,7 @@ window.bp = window.bp || {};
 		 */
 		initObjects: function () {
 			var self   = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null,
-				filter = null;
+				filter = null, save_scope = true;
 
 			$.each(
 				this.objects,
@@ -770,6 +776,9 @@ window.bp = window.bp || {};
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
+					} else if ( object === 'activity' ) {
+						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
+						save_scope = false;
 					}
 
 					// Notifications always need to start with Newest ones.
@@ -815,7 +824,8 @@ window.bp = window.bp || {};
 							scope: scope,
 							filter: filter,
 							search_terms: search_terms,
-							extras: extras
+							extras: extras,
+							save_scope: save_scope,
 						};
 
 						if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
