@@ -5230,9 +5230,14 @@ body.buddyboss-theme {
 		box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
 		padding: 9px 7px;
 
+		.subnav-search {
+			float: none;
+		}
+
 		form.bp-dir-search-form {
 			display: flex;
 			border: 0;
+			float: none;
 
 			&:focus-within {
 
@@ -5295,6 +5300,27 @@ body.buddyboss-theme {
 		.subnav-filters-modal {
 			opacity: 1;
 			visibility: visible;
+		}
+	}
+
+	&.bb-subnav-filters-search {
+
+		&.loading {
+
+			.search-form_reset {
+				line-height: 1;
+				opacity: 1;
+				pointer-events: none;
+
+				[class^="bb-icon-"]:before {
+					content: "\ef30";
+					font-weight: 300;
+					font-size: 18px;
+					line-height: 1;
+					animation: spin 2s infinite linear;
+					display: inline-block;
+				}
+			}
 		}
 	}
 
@@ -5398,17 +5424,18 @@ body.buddyboss-theme {
 	}
 }
 
-@media screen and (max-width: 511px) {
+@media screen and (max-width: 640px) {
 
 	.activity-head-bar {
 		justify-content: center;
+		flex-wrap: wrap;
 
-		&:has(li.loading) .bb-icon-loader {
+		&:has(li.loading):not(:has(.bb-subnav-filters-search.loading)) .bb-icon-loader {
 			margin: 0 10px 0 0;
 		}
 	}
 
-	.bb-subnav-filters-container {
+	.activity-head-bar .bb-subnav-filters-container {
 
 		&.bb-subnav-filters-search {
 			margin-bottom: 10px;
