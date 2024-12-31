@@ -160,35 +160,32 @@ class BB_XProfile_Visibility {
 	public static function user_data_exists( $user_id = 0 ) {
 		global $wpdb;
 		$bp = buddypress();
-
-		// Static cache for user data existence results and table existence check.
+		static $table_exists = null;
 		static $cache = array();
-		static $table_exists = '';
 
-		// Check if the result for this user is already cached.
-		if ( isset( $cache[ $user_id ] ) ) {
-			return $cache[ $user_id ];
-		}
-
-		if ( '' == $table_exists ) {
+		if ( null === $table_exists ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
 		}
 
+		if ( ! empty( $cache[ $user_id ] ) ) {
+			return $cache[ $user_id ];
+		}
+
 		if ( $table_exists ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$retval            = $wpdb->get_row(
+			$retval = $wpdb->get_row(
 				$wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d LIMIT 1",
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d limit 0, 1",
 					$user_id
 				)
 			);
-			$cache[ $user_id ] = ! empty( $retval );
 		} else {
-			$cache[ $user_id ] = false;
-			$retval            = false;
+			$retval = false;
 		}
+
+		$cache[ $user_id ] = ! empty( $retval );
 
 		/**
 		 * Filters whether any data already exists for the user.
@@ -198,7 +195,7 @@ class BB_XProfile_Visibility {
 		 * @param bool $retval  Whether data already exists.
 		 * @param int  $user_id User id.
 		 */
-		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval ), $user_id ) );
+		return apply_filters( 'xprofile_visibility_user_data_exists', $cache[ $user_id ], $user_id  );
 	}
 
 	/**
