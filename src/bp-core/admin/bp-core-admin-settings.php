@@ -3800,7 +3800,7 @@ function bb_admin_setting_callback_activity_filters() {
 					type="hidden"
 					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]"
 					value="<?php echo ( 'all' === $key ) ? 1 : 0 ?>"
-					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] && 'all' !== $key ) ? 'disabled' : ''; ?>
+					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'all' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
 					<?php echo $readonly; ?>
@@ -3859,15 +3859,20 @@ function bb_admin_setting_callback_activity_sorting() {
 		}
 
 		foreach ( $sorted_labels as $key => $label ) :
+			$readonly = '';
+			if ( 'date_recorded' === $key ) {
+				$readonly = 'disabled';
+			}
 			?>
 			<div class="bb-activity-sorting-item">
 				<input
 					type="hidden"
 					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]"
-					value="0"
-					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) ? 'disabled' : ''; ?>
+					value="<?php echo ( 'date_recorded' === $key ) ? 1 : 0 ?>"
+					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) && 'date_recorded' !== $key ? 'disabled' : ''; ?>
 				/>
-				<input 
+				<input
+					<?php echo $readonly; ?>
 					id="<?php echo esc_attr( $key ); ?>" 
 					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]" 
 					type="checkbox" 
