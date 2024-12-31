@@ -26274,7 +26274,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   display: none;
 }
 
-.activity-head-bar:has(li.loading) .bb-icon-loader {
+.activity-head-bar:has(li.loading):not(:has(.bb-subnav-filters-search.loading)) .bb-icon-loader {
   display: inline-block;
   margin: 0 auto 0 15px;
   font-size: 22px;

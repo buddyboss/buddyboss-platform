@@ -5387,7 +5387,7 @@ body.buddyboss-theme {
 		display: none;
 	}
 
-	&:has(li.loading) {
+	&:has(li.loading):not(:has(.bb-subnav-filters-search.loading)) {
 
 		.bb-icon-loader {
 			display: inline-block;
