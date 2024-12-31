@@ -4156,7 +4156,7 @@ window.bp = window.bp || {};
 
 		openActivityFilter: function ( e ) {
 			e.preventDefault();
-			$( '.bb-subnav-filters-container' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			$( '.bb-subnav-filters-container:not(.bb-subnav-filters-search)' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
 			var $parent = $( e.currentTarget ).parent( '.bb-subnav-filters-container' );
 			$parent.addClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'true' );
 
