@@ -1875,7 +1875,7 @@ class BP_Activity_Activity {
 				}
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']} {$sql['limit']}";
-// error_log($sql);
+
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
 				$descendants    = self::append_user_fullnames( $descendants );

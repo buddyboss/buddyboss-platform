@@ -2131,7 +2131,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
 	$activity->date_recorded     = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : $activity->date_recorded;
-	$activity->date_updated      = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : bp_core_current_time();
+	$activity->date_updated      = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : ( $r['updated_time'] ? $r['updated_time'] : bp_core_current_time() );
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
@@ -2299,7 +2299,7 @@ function bp_activity_post_update( $args = '' ) {
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
 					'recorded_time'     => ! empty( $r['recorded_time'] ) ? $r['recorded_time'] : $activity->date_recorded,
-					'updated_time'      => ! empty( $r['updated_time'] ) ? $r['updated_time'] : $activity->date_updated,
+					'updated_time'      => ! empty( $r['updated_time'] ) ? $r['updated_time'] : bp_core_current_time(),
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
@@ -7461,9 +7461,15 @@ function bb_activity_get_comment_parent_activity_id( $activity ) {
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_comment_id( $activity, $main_activity_id ) {
+
 	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
-	while ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) {
-		$activity = new BP_Activity_Activity( $activity->secondary_item_id );
+	while ( 'blogs' !== $activity->component && ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) ) {	
+		$temp_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+		if ( empty( $temp_activity->id ) ) {
+			unset( $temp_activity );
+			return $activity;
+		}
+		$activity = $temp_activity;
 	}
 
 	return $activity;
