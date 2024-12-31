@@ -5192,6 +5192,10 @@ body.buddyboss-theme {
 .bb-subnav-filters-container-main {
 	display: flex;
 	align-items: center;
+
+	&:not(:last-child) {
+		margin-right: 10px;
+	}
 }
 
 .bb-subnav-filters-container {
@@ -5296,10 +5300,6 @@ body.buddyboss-theme {
 
 	&.bb-subnav-filters-filtering {
 
-		&:not(:last-child) {
-			margin-right: 5px;
-		}
-
 		.subnav-filters-opener {
 			display: flex;
 			align-items: center;
@@ -5391,7 +5391,7 @@ body.buddyboss-theme {
 
 		.bb-icon-loader {
 			display: inline-block;
-			margin: 0 auto;
+			margin: 0 15px 0 auto;
 			font-size: 22px;
 			line-height: 1;
 		}

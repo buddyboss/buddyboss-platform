@@ -26102,6 +26102,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   align-items: center;
 }
 
+.bb-subnav-filters-container-main:not(:last-child) {
+  margin-left: 10px;
+}
+
 .bb-subnav-filters-container {
   position: relative;
   z-index: 11;
@@ -26188,10 +26192,6 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   visibility: visible;
 }
 
-.bb-subnav-filters-container.bb-subnav-filters-filtering:not(:last-child) {
-  margin-left: 5px;
-}
-
 .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
   display: flex;
   align-items: center;
@@ -26276,7 +26276,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 
 .activity-head-bar:has(li.loading) .bb-icon-loader {
   display: inline-block;
-  margin: 0 auto;
+  margin: 0 auto 0 15px;
   font-size: 22px;
   line-height: 1;
 }
