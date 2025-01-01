@@ -3844,13 +3844,13 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
 
 		}
-	} else {
-		// Update the date_updated of the activity item.
-		bb_activity_update_date_updated( $activity_id, $time );
-
-		// Clear the cache for the parent activity item.
-		bp_activity_clear_cache_for_activity( $activity );
 	}
+
+	// Update the date_updated of the activity item.
+	bb_activity_update_date_updated( $activity_id, $time );
+
+	// Clear the cache for the parent activity item.
+	bp_activity_clear_cache_for_activity( $activity );
 
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );

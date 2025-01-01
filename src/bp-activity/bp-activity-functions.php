@@ -7444,7 +7444,13 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
  */
 function bb_activity_get_comment_parent_activity_id( $activity ) {
 	// Loop through find the parent id until the item_id and secondary_item_id are same.
-	while ( $activity->item_id !== $activity->secondary_item_id ) {
+	while (
+		$activity->item_id !== $activity->secondary_item_id && 
+		( 
+			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) || 
+			$activity->component !== 'groups' 
+		)
+	) {
 		$activity = new BP_Activity_Activity( $activity->item_id );
 	}
 	return $activity;
