@@ -346,7 +346,7 @@ class BP_Activity_Activity {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
-		if ( 'activity_comment' === $this->type ) {
+		if ( 'activity_comment' === $this->type || in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
 
 			// Check if the item_id and secondary_item_id are same.
 			if ( $this->item_id === $this->secondary_item_id && ! in_array( $this->privacy, array( 'media', 'document', 'video' ), true ) ) {

@@ -3814,7 +3814,7 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 	$time = bp_core_current_time();
 
 	$activity = new BP_Activity_Activity( $activity_id );
-	if ( 'activity_comment' === $activity->type ) {
+	if ( 'activity_comment' === $activity->type || in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
 
 		// Check if the item_id and secondary_item_id are same.
 		if ( $activity->item_id === $activity->secondary_item_id && ! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
