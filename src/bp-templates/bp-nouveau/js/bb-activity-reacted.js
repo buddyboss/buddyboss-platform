@@ -79,7 +79,7 @@ window.bp = window.bp || {};
 
 			if ( '' === $.trim( target.find( '#reaction-content-' + item_id ).html() ) || target.parent().hasClass( 'bb-has-reaction_update' ) ) {
 				if ( '' !== $.trim( target.find( '#reaction-content-' + item_id ).html() ) ) {
-					target.find( '#reaction-content-' + item_id ).html('');
+					target.find( '#reaction-content-' + item_id ).html( '' );
 				}
 				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
 				self.loader[ item_id ]             = new bp.Views.ReactionPopup(
