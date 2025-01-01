@@ -427,6 +427,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
+					'bb-member-directory-count',
+					'bb-group-directory-count',
 				)
 			);
 
