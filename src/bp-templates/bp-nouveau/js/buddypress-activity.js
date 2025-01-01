@@ -963,6 +963,13 @@ window.bp = window.bp || {};
 									target.removeClass( 'loading' );
 								}
 							);
+
+							// Add flag for ajax load for getting reactions.
+							if ( 'activity_comment' === item_type ) {
+								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							} else if ( 'activity' === item_type ) {
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							}
 						}
 
 						// Add "Likes/Emotions" menu item on activity directory nav menu.
