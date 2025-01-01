@@ -349,7 +349,7 @@ class BP_Activity_Activity {
 		if ( 'activity_comment' === $this->type ) {
 
 			// Check if the item_id and secondary_item_id are same.
-			if ( $this->item_id === $this->secondary_item_id ) {
+			if ( $this->item_id === $this->secondary_item_id && ! in_array( $this->privacy, array( 'media', 'document', 'video' ), true ) ) {
 				// Update the date_updated of the parent activity item.
 				bb_activity_update_date_updated( $this->item_id, $this->date_updated );
 

@@ -3799,7 +3799,7 @@ function bb_admin_setting_callback_activity_filters() {
 				<input
 					type="hidden"
 					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]"
-					value="<?php echo ( 'all' === $key ) ? 1 : 0 ?>"
+					value="<?php echo ( 'all' === $key ) ? 1 : 0; ?>"
 					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'all' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
@@ -3868,7 +3868,7 @@ function bb_admin_setting_callback_activity_sorting() {
 				<input
 					type="hidden"
 					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]"
-					value="<?php echo ( 'date_recorded' === $key ) ? 1 : 0 ?>"
+					value="<?php echo ( 'date_recorded' === $key ) ? 1 : 0; ?>"
 					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) && 'date_recorded' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input

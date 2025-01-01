@@ -3817,7 +3817,7 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 	if ( 'activity_comment' === $activity->type ) {
 
 		// Check if the item_id and secondary_item_id are same.
-		if ( $activity->item_id === $activity->secondary_item_id ) {
+		if ( $activity->item_id === $activity->secondary_item_id && ! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
 
 			// Update the date_updated of the parent activity item.
 			bb_activity_update_date_updated( $activity->item_id, $time );
