@@ -965,9 +965,9 @@ window.bp = window.bp || {};
 
 							// Add flag for ajax load for getting reactions.
 							if ( 'activity_comment' === item_type ) {
-								$( '#acomment' + '-' + item_id ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
-							} else {
-								$( '#' + item_type + '-' + item_id ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							} else if ( 'activity' === item_type ) {
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
 							}
 						}
 
