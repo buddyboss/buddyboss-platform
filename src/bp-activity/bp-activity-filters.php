@@ -3825,7 +3825,7 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 			// Clear the cache for the parent activity item.
 			bp_activity_clear_cache_for_activity( $activity );
 		} else {
-			// Get the parent activity id if the activity is a comment.
+			// Get the parent activity id if the activity is a comment or the sub media, document, video activity.
 			$main_activity_object = bb_activity_get_comment_parent_activity_id( $activity );
 
 			// Update the date_updated of the parent activity item.
@@ -3849,7 +3849,7 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 	// Update the date_updated of the activity item.
 	bb_activity_update_date_updated( $activity_id, $time );
 
-	// Clear the cache for the parent activity item.
+	// Clear the cache for the activity item.
 	bp_activity_clear_cache_for_activity( $activity );
 
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
