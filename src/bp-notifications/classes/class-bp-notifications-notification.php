@@ -907,8 +907,16 @@ class BP_Notifications_Notification {
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
 
+		// Set the cache.
+		$cache_key = md5( $sql );
+		$count     = wp_cache_get( $cache_key, 'bp_notifications_unread_count' );
+		if ( false === $count ) {
+			$count = (int) $wpdb->get_var( $sql );
+			wp_cache_set( $cache_key, $count, 'bp_notifications_unread_count' );
+		}
+
 		// Return the queried results.
-		return (int) $wpdb->get_var( $sql );
+		return (int) $count;
 	}
 
 	/**
