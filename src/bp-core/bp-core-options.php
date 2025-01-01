@@ -175,14 +175,14 @@ function bp_get_default_options() {
 		// Enabled reactions and their mode.
 		'bb_all_reactions'                           => array(
 			'activity'         => true,
-			'activity_comment' => true
+			'activity_comment' => true,
 		),
 		'bb_reaction_mode'                           => 'likes',
 		'bb_reaction_button'                         => array(
 			array(
 				'text' => '',
 				'icon' => 'thumbs-up',
-			)
+			),
 		),
 
 		// Performance Settings.
@@ -2634,7 +2634,7 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
-	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
 /**
@@ -2717,7 +2717,6 @@ function bb_active_reactions() {
 		$all_emotions = bb_load_reaction()->bb_get_reactions();
 	}
 
-
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
 
@@ -2783,12 +2782,20 @@ function bb_get_activity_filter_options_labels() {
  * Get enabled activity filters options.
  *
  * @since BuddyBoss [BBVERSION}
- * 
- * @param array $default Array of default activity filter options. 
+ *
+ * @param array $default Array of default activity filter options.
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array( 'all' => 1, 'favorites' => 1, 'friends' => 1, 'groups' => 1, 'mentions' => 1, 'following' => 1, 'just-me' => 1 ) ) {
+function bb_get_enabled_activity_filter_options( $default = array(
+	'all'       => 1,
+	'favorites' => 1,
+	'friends'   => 1,
+	'groups'    => 1,
+	'mentions'  => 1,
+	'following' => 1,
+	'just-me'   => 1,
+) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
 }
 
@@ -2811,42 +2818,16 @@ function bb_get_activity_sorting_options_labels() {
  * Get enabled activity sorting options.
  *
  * @since BuddyBoss [BBVERSION}
- * 
- * @param array $default Array of default activity sorting options. 
+ *
+ * @param array $default Array of default activity sorting options.
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $default = array( 'date_recorded' => 1, 'date_updated' => 1 ) ) {
+function bb_get_enabled_activity_sorting_options( $default = array(
+	'date_recorded' => 1,
+	'date_updated'  => 1,
+) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
-}
-
-/**
- * Get all activity comment sorting options labels.
- *
- * @since BuddyBoss [BBVERSION}
- *
- * @return array Array of all activity comment sorting options labels.
- */
-function bb_get_activity_comment_sorting_options_labels() {
-	$sorting_options = array(
-		'oldest_first'    => __( 'Oldest first', 'buddyboss' ),
-		'most_recent'     => __( 'Most recent', 'buddyboss' ),
-		'recent_activity' => __( 'Recent activity', 'buddyboss' ),
-	);
-	return (array) apply_filters( 'bb_get_activity_comment_sorting_options_labels', $sorting_options );
-}
-
-/**
- * Get enabled activity comments sorting options.
- *
- * @since BuddyBoss [BBVERSION}
- * 
- * @param array $default Array of default activity comments sorting options. 
- *
- * @return array Array of enabled activity comments sorting options.
- */
-function bb_get_enabled_activity_comment_sorting_options( $default = array( 'oldest_first' => 1, 'most_recent' => 0, 'recent_activity' => 0 ) ) {
-	return (array) apply_filters( 'bb_get_enabled_activity_comment_sorting_options', bp_get_option( 'bb_activity_comment_sorting_options', $default ) );
 }
 
 /**

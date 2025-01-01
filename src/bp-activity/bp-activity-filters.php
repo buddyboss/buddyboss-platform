@@ -3801,7 +3801,7 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 }
 
 /**
- * Update date_updated on reactions
+ * Update date_updated on reactions.
  *
  * @since BuddyBoss [BBVERSION]
  *
