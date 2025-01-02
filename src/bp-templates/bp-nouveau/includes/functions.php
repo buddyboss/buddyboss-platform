@@ -160,7 +160,10 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	if (
 		'activity' === $object &&
-		bp_is_activity_directory()
+		(
+			bp_is_activity_directory() ||
+			bp_is_group_activity()
+		)
 	) {
 		if ( ! empty( $post_query['order_by'] ) ) {
 			$order_by = $post_query['order_by'];
