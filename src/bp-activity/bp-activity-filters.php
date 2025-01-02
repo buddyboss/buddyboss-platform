@@ -3826,7 +3826,7 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 			bp_activity_clear_cache_for_activity( $activity );
 		} else {
 			// Get the parent activity id if the activity is a comment or the sub media, document, video activity.
-			$main_activity_object = bb_activity_get_comment_parent_activity_id( $activity );
+			$main_activity_object = bb_activity_get_comment_parent_activity_object( $activity );
 
 			// Update the date_updated of the parent activity item.
 			bb_activity_update_date_updated( $main_activity_object->id, $time );
@@ -3857,7 +3857,7 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 			}
 
 			// Get the parent comment activity object.
-			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_id( $activity, $main_activity_object->id );
+			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_object->id );
 
 			// Update the date_updated of the parent comment activity item.
 			bb_activity_update_date_updated( $parent_comment_activity_object->id, $time );

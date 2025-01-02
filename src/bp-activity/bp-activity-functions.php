@@ -7442,7 +7442,7 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
  *
  * @return object Activity object.
  */
-function bb_activity_get_comment_parent_activity_id( $activity ) {
+function bb_activity_get_comment_parent_activity_object( $activity ) {
 
 	$is_media = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
 
@@ -7476,7 +7476,7 @@ function bb_activity_get_comment_parent_activity_id( $activity ) {
  *
  * @return object Activity object.
  */
-function bb_activity_get_comment_parent_comment_id( $activity, $main_activity_id ) {
+function bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_id ) {
 
 	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
 	while ( 'blogs' !== $activity->component && ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) ) {

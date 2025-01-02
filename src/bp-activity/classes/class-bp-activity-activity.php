@@ -358,7 +358,7 @@ class BP_Activity_Activity {
 				bp_activity_clear_cache_for_activity( $this );
 			} else {
 				// Get the parent activity id if the activity is a comment.
-				$main_activity_object = bb_activity_get_comment_parent_activity_id( $this );
+				$main_activity_object = bb_activity_get_comment_parent_activity_object( $this );
 
 				// Update the date_updated of the parent activity item.
 				bb_activity_update_date_updated( $main_activity_object->id, $this->date_updated );
@@ -389,7 +389,7 @@ class BP_Activity_Activity {
 				}
 
 				// Get the parent comment activity object.
-				$parent_comment_activity_object = bb_activity_get_comment_parent_comment_id( $this, $main_activity_object->id );
+				$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $this, $main_activity_object->id );
 
 				// Update the date_updated of the parent comment activity item.
 				bb_activity_update_date_updated( $parent_comment_activity_object->id, $this->date_updated );
