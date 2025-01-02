@@ -1379,7 +1379,6 @@ function bb_messages_is_group_thread( $thread_id ) {
  * @return bool
  */
 function bb_messages_thread_group_id( $thread_id ) {
-
 	if ( ! $thread_id || ! bp_is_active( 'messages' ) ) {
 		return 0;
 	}
@@ -1391,8 +1390,8 @@ function bb_messages_thread_group_id( $thread_id ) {
 	$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 	$group_id                = 0;
 
-	if ( 'group' === $message_from && $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-		$group_id = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
+	if ( 'group' === $message_from && (int) $thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		$group_id = ( isset( $first_message->id ) ) ? (int) bp_messages_get_meta( $first_message->id, 'group_id', true ) : 0;
 	}
 
 	return $group_id;
