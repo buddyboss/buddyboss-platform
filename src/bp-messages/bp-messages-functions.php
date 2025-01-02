@@ -3023,3 +3023,37 @@ function bb_messages_group_thread_name( $group_id ) {
 
 	return $group_name;
 }
+
+/**
+ * Check if the thread is a group message thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Thread ID.
+ *
+ * @return bool
+ */
+function bb_messages_thread_group_deleted( $group_id ) {
+
+	if ( empty( $group_id ) ) {
+		return false;
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$group = groups_get_group( $group_id );
+		if ( empty( $group ) ) {
+			return true;
+		}
+	} else {
+		global $wpdb;
+		$prefix       = bp_core_get_table_prefix();
+		$groups_table = $prefix . 'bp_groups';
+		$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+
+		if ( empty( $group_name ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}

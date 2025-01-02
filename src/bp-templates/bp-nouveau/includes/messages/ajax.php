@@ -703,18 +703,16 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 	$threads->threads = array();
 	$i                = 0;
-	$content          = '';
 
 	while ( bp_message_threads() ) :
 		bp_message_thread();
 
-		$bp_get_message_thread_id = bp_get_message_thread_id();
-
+		$bp_get_message_thread_id  = bp_get_message_thread_id();
 		$last_message_id           = (int) $messages_template->thread->last_message_id;
 		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		$group_name                = '';
 		$group_avatar              = '';
-		$group_link                = '';
+		$group_link                = 'javascript:void(0);';
 		$group_message_users       = '';
 		$group_message_type        = '';
 		$group_message_thread_type = '';
@@ -723,141 +721,36 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		$first_message             = '';
 
 		if ( ! empty( $group_id ) ) {
+
 			$group_message_users       = bp_messages_get_meta( $last_message_id, 'group_message_users', true );
 			$group_message_type        = bp_messages_get_meta( $last_message_id, 'group_message_type', true );
 			$group_message_thread_type = bp_messages_get_meta( $last_message_id, 'group_message_thread_type', true );
 			$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
+			$group_name                = bb_messages_group_thread_name( $group_id );
+			$group_avatar              = bb_messages_group_thread_avatar( $group_id );
 
 			if ( bp_is_active( 'groups' ) ) {
 				$group      = groups_get_group( $group_id );
-				$group_name = bp_get_group_name( $group );
-				if ( empty( $group_name ) ) {
-					$group_link = 'javascript:void(0);';
-				} else {
-					$group_link = bp_get_group_permalink( $group );
-				}
-
-				if ( ! bp_disable_group_avatar_uploads() ) {
-					$group_avatar = bp_core_fetch_avatar(
-						array(
-							'item_id'    => $group_id,
-							'object'     => 'group',
-							'type'       => 'full',
-							'avatar_dir' => 'group-avatars',
-							'alt'        => sprintf(
-								/* translators: group name. */
-								__( 'Group logo of %s', 'buddyboss' ),
-								$group_name
-							),
-							'title'      => $group_name,
-							'html'       => false,
-						)
-					);
-				} else {
-					$group_avatar = bb_get_buddyboss_group_avatar();
-				}
-			} else {
-
-				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
-				$group_link               = 'javascript:void(0);';
-				$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
-				$legacy_group_avatar_name = '-groupavatar-full';
-				$legacy_user_avatar_name  = '-avatar2';
-
-				if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
-					$directory         = 'group-avatars';
-					$avatar_size       = '-bpfull';
-					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
-					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
-
-					$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
-					if ( '' !== $avatar ) {
-						$group_avatar = $avatar;
-					}
-				}
+				$group_link = bp_get_group_permalink( $group );
 			}
-
-			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
-
 		}
 
 		$is_deleted_group = 0;
 		if ( ! $group_id ) {
 			$first_message = BP_Messages_Thread::get_first_message( $bp_get_message_thread_id );
 			$group_id      = ( isset( $first_message->id ) ) ? (int) bp_messages_get_meta( $first_message->id, 'group_id', true ) : 0;
-
 			if ( $group_id ) {
-
-				$group_avatar = '';
-
+				$group_name   = bb_messages_group_thread_name( $group_id );
+				$group_avatar = bb_messages_group_thread_avatar( $group_id );
 				if ( bp_is_active( 'groups' ) ) {
 					$group      = empty( $group ) ? groups_get_group( $group_id ) : $group;
-					$group_name = bp_get_group_name( $group );
 					$group_link = bp_get_group_permalink( $group );
-
-					if ( ! bp_disable_group_avatar_uploads() ) {
-						$group_avatar = bp_core_fetch_avatar(
-							array(
-								'item_id'    => $group_id,
-								'object'     => 'group',
-								'type'       => 'full',
-								'avatar_dir' => 'group-avatars',
-								'alt'        => sprintf(
-									/* translators: group name. */
-									__( 'Group logo of %s', 'buddyboss' ),
-									$group_name
-								),
-								'title'      => $group_name,
-								'html'       => false,
-							)
-						);
-					} else {
-						$group_avatar = bb_get_buddyboss_group_avatar();
-					}
-				} else {
-
-					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-					$groups_table             = $prefix . 'bp_groups';
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
-					$group_link               = 'javascript:void(0);';
-					$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
-					$legacy_group_avatar_name = '-groupavatar-full';
-					$legacy_user_avatar_name  = '-avatar2';
-
-					if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
-						$directory         = 'group-avatars';
-						$avatar_size       = '-bpfull';
-						$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
-						$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
-
-						$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
-						if ( '' !== $avatar ) {
-							$group_avatar = $avatar;
-						}
-					}
 				}
-
-				$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
-				$group_name       = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+				$is_deleted_group = bb_messages_thread_group_deleted( $group_id );
 			}
 		}
 
-		$is_group_thread = 0;
-		if ( (int) $group_id > 0 ) {
-
-			$first_message           = empty( $first_message ) ? BP_Messages_Thread::get_first_message( $bp_get_message_thread_id ) : $first_message;
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
-			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
-			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
-			if ( 'group' === $message_from && $bp_get_message_thread_id === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
-				$is_group_thread = 1;
-			}
-		}
+		$is_group_thread = bb_messages_is_group_thread( $bp_get_message_thread_id );
 
 		if ( ! $last_message_id ) {
 			continue;
@@ -1800,7 +1693,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	if ( $is_group_message_thread ) {
 		$group_id         = bb_messages_thread_group_id( bp_get_the_thread_id() );
 		$group_name       = bb_messages_group_thread_name( $group_id );
-		$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
+		$is_deleted_group = bb_messages_thread_group_deleted( $group_id );
 
 		if ( bp_is_active( 'groups' ) ) {
 			$get_group  = groups_get_group( $group_id );
