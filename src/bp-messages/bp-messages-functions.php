@@ -2941,9 +2941,9 @@ function bb_messages_group_thread_avatar( $group_id ) {
 		return '';
 	}
 
+	$group_name = bb_messages_group_thread_name( $group_id );
 	if ( bp_is_active( 'groups' ) ) {
-		$group            = groups_get_group( $group_id );
-		$group_name       = bp_get_group_name( $group );
+		$group = groups_get_group( $group_id );
 
 		if ( ! bp_disable_group_avatar_uploads() ) {
 			$group_avatar_url = bp_core_fetch_avatar(
@@ -2979,9 +2979,8 @@ function bb_messages_group_thread_avatar( $group_id ) {
 		 *
 		 * @param int $wpdb ->base_prefix table prefix
 		 */
-		$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-		$groups_table             = $prefix . 'bp_groups';
-		$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+
+
 		$default_group_avatar_url = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 		$legacy_group_avatar_name = '-groupavatar-full';
 		$legacy_user_avatar_name  = '-avatar2';
@@ -3005,4 +3004,44 @@ function bb_messages_group_thread_avatar( $group_id ) {
 	}
 
 	return $group_avatar;
+}
+
+/**
+ * Get the group name for the group thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id Group ID.
+ *
+ * @return array
+ */
+function bb_messages_group_thread_name( $group_id ) {
+	global $wpdb;
+
+	if ( empty( $group_id ) ) {
+		return '';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$group            = groups_get_group( $group_id );
+		$group_name       = bp_get_group_name( $group );
+	} else {
+		/**
+		 *
+		 * Filters table prefix.
+		 *
+		 * @since BuddyBoss 1.4.7
+		 *
+		 * @param int $wpdb ->base_prefix table prefix
+		 */
+		$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+		$groups_table             = $prefix . 'bp_groups';
+		$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+
+		if ( empty( $group_name ) ) {
+			$group_name = __( 'Deleted Group', 'buddyboss' );
+		}
+	}
+
+	return $group_name;
 }
