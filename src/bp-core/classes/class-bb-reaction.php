@@ -723,7 +723,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'validate_action' => 'reaction',
 				)
 			);
-		
+
 			// Bail if activity privacy restrict.
 			if ( is_wp_error( $privacy_check ) ) {
 				return ( 'wp_error' === $r['error_type'] ) ? $privacy_check : false;
@@ -1988,17 +1988,21 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$activities_ids = array();
 			if ( ! empty( $r['item_id'] ) && 'activity' === $r['item_type'] ) {
-				$activities = BP_Activity_Activity::get(
-					array(
-						'per_page'    => 0,
-						'fields'      => 'ids',
-						'show_hidden' => true, // Support hide_sitewide as true like document activity.
-						'in'          => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
-					),
-				);
+				if ( ! empty( $r['item_object'] ) ) {
+					$activities_ids = array( $r['item_object'] );
+				} else {
+					$activities = BP_Activity_Activity::get(
+						array(
+							'per_page'    => 0,
+							'fields'      => 'ids',
+							'show_hidden' => true, // Support hide_sitewide as true like document activity.
+							'in'          => ! is_array( $r['item_id'] ) ? array( $r['item_id'] ) : $r['item_id'],
+						),
+					);
 
-				if ( ! empty( $activities['activities'] ) ) {
-					$activities_ids = $activities['activities'];
+					if ( ! empty( $activities['activities'] ) ) {
+						$activities_ids = $activities['activities'];
+					}
 				}
 			}
 

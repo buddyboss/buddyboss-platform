@@ -258,6 +258,7 @@ function bp_nouveau_get_activity_timestamp() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_state() {
+	global $activities_template;
 
 	$activity_id    = bp_get_activity_id();
 	$comment_count  = bp_activity_get_comment_count();
@@ -266,7 +267,8 @@ function bp_nouveau_activity_state() {
 		array(
 			'item_id'     => $activity_id,
 			'item_type'   => 'activity',
-			'reaction_id' => array_keys( $reactions )
+			'reaction_id' => array_keys( $reactions ),
+			'item_object' => $activities_template->activity,
 		)
 	);
 	?>
@@ -361,6 +363,8 @@ function bb_nouveau_get_activity_inner_buttons( $args ) {
 		return $buttons;
 	}
 
+	$args['activity'] = $activities_template->activity;
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
@@ -436,6 +440,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
  */
 function bp_nouveau_get_activity_entry_buttons( $args ) {
 	$buttons = array();
+	global $activities_template;
 
 	if ( ! isset( $GLOBALS['activities_template'] ) ) {
 		return $buttons;
@@ -497,7 +502,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		);
 
 		$reacted_id = 0;
-		if ( ! bb_activity_is_item_favorite( $activity_id ) ) {
+		if ( ! bb_activity_is_item_favorite( $activity_id, 'activity', bp_loggedin_user_id(), $activities_template->activity ) ) {
 			$fav_args['link_class'] = $fav_args['link_class'] . ' reaction';
 
 			$fav_args['link_text'] = sprintf(
