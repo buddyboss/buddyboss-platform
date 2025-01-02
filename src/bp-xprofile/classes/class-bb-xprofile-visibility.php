@@ -159,33 +159,37 @@ class BB_XProfile_Visibility {
 	 */
 	public static function user_data_exists( $user_id = 0 ) {
 		global $wpdb;
-		$bp = buddypress();
-		static $table_exists = null;
-		static $cache = array();
+		$bp           = buddypress();
+		$table_exists = wp_cache_get( 'db_bb_xprofile_visibility', 'bp_xprofile' );
 
-		if ( null === $table_exists ) {
+		if ( false === $table_exists ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
+			wp_cache_set( 'db_bb_xprofile_visibility', $table_exists, 'bp_xprofile' );
 		}
 
-		if ( ! empty( $cache[ $user_id ] ) ) {
-			return $cache[ $user_id ];
-		}
+		$found = null;
+		$key   = 'visibility_user_data_' . $user_id;
+		$val   = wp_cache_get( $key, 'bp_xprofile', false, $found );
 
-		if ( $table_exists ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$retval = $wpdb->get_row(
-				$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d limit 0, 1",
-					$user_id
-				)
-			);
+		if ( $found ) {
+			$retval = $val;
 		} else {
-			$retval = false;
-		}
+			if ( $table_exists ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$retval = $wpdb->get_row(
+					$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+						"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d limit 0, 1",
+						$user_id
+					)
+				);
+			} else {
+				$retval = false;
+			}
 
-		$cache[ $user_id ] = ! empty( $retval );
+			wp_cache_set( $key, $retval, 'bp_xprofile' );
+		}
 
 		/**
 		 * Filters whether any data already exists for the user.
@@ -195,7 +199,7 @@ class BB_XProfile_Visibility {
 		 * @param bool $retval  Whether data already exists.
 		 * @param int  $user_id User id.
 		 */
-		return apply_filters( 'xprofile_visibility_user_data_exists', $cache[ $user_id ], $user_id  );
+		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval ), $user_id ) );
 	}
 
 	/**
