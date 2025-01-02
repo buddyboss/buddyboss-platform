@@ -1288,9 +1288,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 			$avatar_urls = array( $group_avatar );
 		}
 	} else {
-		// Get the last two not deleted messages and message is not from a current user.
-		$qyery            = "SELECT DISTINCT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id != %d AND is_deleted = 0 ORDER BY id DESC LIMIT 2";
-		$avatars_user_ids = $wpdb->get_col( $wpdb->prepare( $qyery, $thread_id, $user_id ) );
+		$avatars_user_ids = BP_Messages_Message::avatar_recipients( $thread_id, $user_id );
 
 		if ( empty( $avatars_user_ids ) ) {
 			$avatars_user_ids = array( $user_id );

@@ -912,4 +912,35 @@ class BP_Messages_Message {
 	protected static function strip_leading_and( $s ) {
 		return preg_replace( '/^\s*AND\s*/', '', $s );
 	}
+
+	/**
+	 * Get the avatar recipient IDs for a given thread.
+	 *
+	 * @param int $thread_id Thread id.
+	 * @param int $user_id   User id.
+	 *
+	 * @return array
+	 */
+	public static function avatar_recipients( $thread_id, $user_id = 0 ) {
+		global $wpdb, $bp;
+		static $cache = array();
+
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		$key = 'thread_avatar_' . $thread_id . '_' . $user_id;
+
+		if ( isset( $cache[ $key ] ) ) {
+			return $cache[ $key ];
+		}
+
+		// Get the last two not deleted messages and message is not from a current user.
+		$query  = "SELECT DISTINCT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id != %d AND is_deleted = 0 ORDER BY id DESC LIMIT 2";
+		$retval = $wpdb->get_col( $wpdb->prepare( $query, $thread_id, $user_id ) );
+
+		$cache[ $key ] = $retval;
+
+		return $retval;
+	}
 }
