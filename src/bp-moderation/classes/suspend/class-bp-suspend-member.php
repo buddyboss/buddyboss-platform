@@ -720,15 +720,17 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		// Update friend count.
 		if (
 			bp_is_active( 'friends' ) &&
-			$page <= 1 &&
-			(
-				! empty( $args['action_suspend'] ) ||
-				! empty( $args['user_suspended'] )
-			)
+			$page <= 1
 		) {
+
+			remove_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+			remove_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
 
 			// Update friend count for the suspend users only not for the blocked users.
 			$friend_ids = friends_get_friend_user_ids( $member_id );
+
+			add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );
+			add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
 
 			if ( ! empty( $friend_ids ) ) {
 				if ( $this->background_disabled || count( $friend_ids ) < 50 ) {
