@@ -5428,6 +5428,35 @@ body.buddyboss-theme {
 	}
 }
 
+.buddypress-wrap .activity-head-bar {
+
+	.subnav-filters .group-search.loading {
+
+		.search-form_reset {
+			display: flex;
+
+			[class^="bb-icon-"] {
+				line-height: 1;
+				opacity: 1;
+				pointer-events: none;
+
+				&:before {
+					content: "\ef30";
+					font-weight: 300;
+					font-size: 18px;
+					line-height: 1;
+					animation: spin 2s infinite linear;
+					display: inline-block;
+				}
+			}
+		}
+
+		&:not(#specificity):after {
+			display: none;
+		}
+	}
+}
+
 @media screen and (max-width: 640px) {
 
 	.activity-head-bar {
