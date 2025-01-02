@@ -7479,7 +7479,7 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
 function bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_id ) {
 
 	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
-	while ( 'blogs' !== $activity->component && ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) ) {
+	while ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) {
 		$temp_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 		if ( empty( $temp_activity->id ) ) {
 			unset( $temp_activity );
