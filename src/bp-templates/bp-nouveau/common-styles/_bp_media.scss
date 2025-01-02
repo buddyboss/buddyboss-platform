@@ -5400,8 +5400,12 @@ body.buddyboss-theme {
 	align-items: center;
 	margin: 20px 0;
 
-	.subnav-filters {
-		margin: 0 0 0 auto;
+	> .subnav-filters {
+		margin: 0 auto 0 0;
+
+		.buddypress-wrap .bb-profile-grid & {
+			margin-bottom: 0;
+		}
 	}
 
 	.bb-subnav-filters-label {

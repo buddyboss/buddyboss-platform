@@ -26281,8 +26281,12 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   margin: 20px 0;
 }
 
-.activity-head-bar .subnav-filters {
-  margin: 0 0 0 auto;
+.activity-head-bar > .subnav-filters {
+  margin: 0 auto 0 0;
+}
+
+.buddypress-wrap .bb-profile-grid .activity-head-bar > .subnav-filters {
+  margin-bottom: 0;
 }
 
 .activity-head-bar .bb-subnav-filters-label {
