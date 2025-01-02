@@ -939,6 +939,16 @@ class BP_Messages_Message {
 		$query  = "SELECT DISTINCT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id != %d AND is_deleted = 0 ORDER BY id DESC LIMIT 2";
 		$retval = $wpdb->get_col( $wpdb->prepare( $query, $thread_id, $user_id ) );
 
+		if ( count( $retval ) < 2 ) {
+			$limit         = 2 - count( $retval );
+			$excluded_id   = $retval;
+			$excluded_id[] = $user_id;
+			$exclude       = implode( ',', wp_parse_id_list( $excluded_id ) );
+			$query         = "SELECT DISTINCT user_id FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND user_id NOT IN ({$exclude}) AND is_deleted = 0 ORDER BY id DESC LIMIT {$limit}";
+			$recepient     = $wpdb->get_col( $wpdb->prepare( $query, $thread_id ) );
+			$retval        = array_merge( $retval, $recepient );
+		}
+
 		$cache[ $key ] = $retval;
 
 		return $retval;
