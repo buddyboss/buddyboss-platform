@@ -1861,31 +1861,20 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 
 	$email_type    = 'messages-unread-digest';
 	$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-	$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+	$group_id      = bb_messages_thread_group_id( $thread_id );
+	$group_name    = bb_messages_group_thread_name( $group_id );
+
 	$message_users = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual.
 	$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
-	$group_name    = '';
 
 	if ( ! empty( $group_id ) && 'open' === $message_type && 'all' === $message_users ) {
 		$email_type = 'group-message-digest';
-		if ( bp_is_active( 'groups' ) ) {
-			$group      = groups_get_group( $group_id );
-			$group_name = bp_get_group_name( $group );
-		} else {
-			$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-			$groups_table = $prefix . 'bp_groups';
-			$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
-		}
-
-		$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
 
 		// Get notification type key.
 		$type_key = 'notification_group_messages_new_message';
 		if ( ! bb_enabled_legacy_email_preference() ) {
 			$type_key = bb_get_prefences_key( 'legacy', $type_key );
 		}
-	} else {
-		$group_id = 0;
 	}
 
 	$message_slug = bp_get_messages_slug();
@@ -1942,7 +1931,7 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 		);
 
 		$tokens                = array();
-		$tokens['usersubject'] = isset( $first_message->subject ) ? $first_message->subject : '';
+		$tokens['usersubject'] = $first_message->subject ?? '';
 		$tokens['group.id']    = $group_id;
 		$tokens['group.name']  = $group_name;
 		$tokens['message.url'] = esc_url( bp_core_get_user_domain( $recipients_id ) . $message_slug . '/view/' . $thread_id . '/' );
