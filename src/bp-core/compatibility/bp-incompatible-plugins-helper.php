@@ -219,6 +219,14 @@ function bp_helper_plugins_loaded_callback() {
 				return $builder_load_requests;
 			}
 		);
+
+		add_filter( 'et_builder_load_actions',
+			function ( $actions ) {
+				$actions[] = 'bp_search_ajax';
+
+				return $actions;
+			}
+		);
 	}
 
 	/**

@@ -38,7 +38,8 @@ TABLE OF CONTENTS:
 	--bp-hello-container-size: 15%;
 }
 
-#bp-hello-container {
+#bp-hello-container,
+#bb-hello-container {
 
 	a {
 		color: var(--bp-hello-color-primary);
@@ -51,7 +52,8 @@ TABLE OF CONTENTS:
 		}
 	}
 
-	.bp-hello-header {
+	.bp-hello-header,
+	.bb-hello-header {
 
 		h1 {
 			line-height: 1.7;
@@ -61,14 +63,16 @@ TABLE OF CONTENTS:
 	}
 }
 
-.bp-hello-content {
+.bp-hello-content,
+.bb-hello-content {
 
 	p {
 		font-size: 16px;
 	}
 
 	.bb-release-changelog ul,
-	ul.bp-hello-list {
+	ul.bp-hello-list,
+	ul.bb-hello-list {
 		list-style: disc;
 		margin-left: 25px;
 		font-size: 16px;
@@ -106,7 +110,8 @@ TABLE OF CONTENTS:
 /*
  * 2.1 - Social Icons
  */
-.bp-hello-social {
+.bp-hello-social,
+.bb-hello-social {
 
 	li a i:before {
 		font-size: 23px;
@@ -126,7 +131,8 @@ TABLE OF CONTENTS:
 /*
  * 3.1 - Backdrop and container
  */
-#bp-hello-backdrop {
+#bp-hello-backdrop,
+#bb-hello-backdrop {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -137,14 +143,17 @@ TABLE OF CONTENTS:
 	display: none;
 }
 
-#bp-hello-container {
+#bp-hello-container,
+#bb-hello-container {
 	position: fixed;
 	top: 0;
 	bottom: 80px;
 	z-index: 99999;
 }
 
-.bp-hello-buddyboss#bp-hello-container {
+.bp-hello-buddyboss#bp-hello-container,
+.bp-hello-buddyboss#bb-hello-container,
+.bb-hello-buddyboss#bb-hello-container {
 	bottom: 0;
 }
 
@@ -154,7 +163,8 @@ TABLE OF CONTENTS:
 
 @media screen and (max-width: 1023px) {
 
-	.admin-bar #bp-hello-container {
+	.admin-bar #bp-hello-container,
+	.admin-bar #bb-hello-container {
 		top: 32px;
 	}
 
@@ -162,7 +172,8 @@ TABLE OF CONTENTS:
 
 @media screen and (max-width: 782px) {
 
-	.admin-bar #bp-hello-container {
+	.admin-bar #bp-hello-container,
+	.admin-bar #bb-hello-container {
 		top: 46px;
 	}
 
@@ -171,7 +182,8 @@ TABLE OF CONTENTS:
 /*
  * 3.2 - Modal footer
  */
-.bp-hello-footer {
+.bp-hello-footer,
+.bb-hello-footer {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -183,12 +195,15 @@ TABLE OF CONTENTS:
 }
 
 .bp-hello-social-cta,
-.bp-hello-social-links {
+.bp-hello-social-links,
+.bb-hello-social-cta,
+.bb-hello-social-links {
 	-ms-flex-preferred-size: 50%;
 	flex-basis: 50%;
 }
 
-.bp-hello-social-links {
+.bp-hello-social-links,
+.bb-hello-social-links {
 
 	ul {
 		display: inline-block;
@@ -196,7 +211,8 @@ TABLE OF CONTENTS:
 	}
 }
 
-.bp-hello-social {
+.bp-hello-social,
+.bb-hello-social {
 
 	li {
 		position: relative;
@@ -211,7 +227,8 @@ TABLE OF CONTENTS:
 /*
  * 3.3 - Modal header
  */
-.bp-hello-header {
+.bp-hello-header,
+.bb-hello-header {
 	height: 58px;
 	max-height: 58px;
 }
@@ -219,7 +236,8 @@ TABLE OF CONTENTS:
 /*
  * 3.4 - Modal content
  */
-.bp-hello-content {
+.bp-hello-content,
+.bb-hello-content {
 	padding: 0 25px;
 
 	// Force scrolling.
@@ -235,21 +253,24 @@ TABLE OF CONTENTS:
 /*
  * 4.1 - Backdrop and container
  */
-#bp-hello-backdrop {
+#bp-hello-backdrop,
+#bb-hello-backdrop {
 	background-color: rgba(0, 0, 0, 0.8);
 	-webkit-transition: opacity 0.15s ease-out;
 	-o-transition: opacity 0.15s ease-out;
 	transition: opacity 0.15s ease-out;
 }
 
-#bp-hello-container {
+#bp-hello-container,
+#bb-hello-container {
 	background-color: rgb(255, 255, 255);
 }
 
 /*
  * 4.2 - Footer content
  */
-.bp-hello-footer {
+.bp-hello-footer,
+.bb-hello-footer {
 	border-radius: 0 0 3px 3px;
 	background-color: rgb(255, 255, 255);
 	border-top: 1px solid var(--bp-hello-color-secondary);
@@ -260,19 +281,24 @@ TABLE OF CONTENTS:
 	}
 }
 
-.bp-hello-buddyboss-app .bp-hello-footer {
+.bp-hello-buddyboss-app .bp-hello-footer,
+.bp-hello-buddyboss-app .bb-hello-footer,
+.bb-hello-buddyboss-app .bb-hello-footer {
 	border-top: none;
 }
 
-.bp-hello-social-cta {
+.bp-hello-social-cta,
+.bb-hello-social-cta {
 	text-align: left;
 }
 
-.bp-hello-social-links {
+.bp-hello-social-links,
+.bb-hello-social-links {
 	text-align: right;
 }
 
-.bp-hello-social {
+.bp-hello-social,
+.bb-hello-social {
 
 	li {
 
@@ -285,7 +311,8 @@ TABLE OF CONTENTS:
 /*
  * 4.3 - Header content
  */
-.bp-hello-header {
+.bp-hello-header,
+.bb-hello-header {
 	padding: 6px 25px;
 
 	h1 {
@@ -293,18 +320,22 @@ TABLE OF CONTENTS:
 	}
 }
 
-#bp-hello-container {
+#bp-hello-container,
+#bb-hello-container {
 
-	.bp-hello-header {
+	.bp-hello-header,
+	.bb-hello-header {
 		border-bottom: 1px solid var(--bp-hello-color-secondary);
 	}
 }
 
-.bp-hello-title {
+.bp-hello-title,
+.bb-hello-title {
 	text-align: left;
 }
 
-.bp-hello-close {
+.bp-hello-close,
+.bb-hello-close {
 	position: absolute;
 	top: 15px;
 	right: 25px;
@@ -314,20 +345,26 @@ TABLE OF CONTENTS:
 /*
  * 4.4 - Content content
  */
-.bp-hello-content {
+.bp-hello-content,
+.bb-hello-content {
 	background-color: rgb(255, 255, 255);
 }
 
-.bp-hello-buddyboss .bp-hello-content {
+.bp-hello-buddyboss .bp-hello-content,
+.bp-hello-buddyboss .bb-hello-content,
+.bb-hello-buddyboss .bb-hello-content {
 	max-height: calc(100vh - 200px);
 	overflow: auto;
 }
 
-.bp-hello-buddyboss-app .bp-hello-content {
+.bp-hello-buddyboss-app .bp-hello-content,
+.bp-hello-buddyboss-app .bb-hello-content,
+.bb-hello-buddyboss-app .bb-hello-content {
 	padding: 0;
 }
 
-.bp-hello-content {
+.bp-hello-content,
+.bb-hello-content {
 
 	img {
 		border-radius: 2px;
@@ -344,7 +381,8 @@ TABLE OF CONTENTS:
  */
 @media screen and (max-width: 500px) {
 
-	.bp-hello-social-cta p span {
+	.bp-hello-social-cta p span,
+	.bb-hello-social-cta p span {
 		display: none;
 	}
 }
@@ -354,7 +392,8 @@ TABLE OF CONTENTS:
  */
 @media screen and (max-width: 1024px) {
 
-	#bp-hello-container {
+	#bp-hello-container,
+	#bb-hello-container {
 		width: 100%;
 	}
 }
@@ -364,11 +403,13 @@ TABLE OF CONTENTS:
  */
 @media only screen and (min-width: 1024px) {
 
-	#bp-hello-backdrop {
+	#bp-hello-backdrop,
+	#bb-hello-backdrop {
 		display: block;
 	}
 
-	#bp-hello-container {
+	#bp-hello-container,
+	#bb-hello-container {
 		position: fixed;
 		top: 60px;
 		left: var(--bp-hello-container-size);
@@ -377,21 +418,24 @@ TABLE OF CONTENTS:
 		z-index: 9999;
 		border-radius: 3px;
 
-		&.bp-hello-buddyboss {
+		&.bp-hello-buddyboss,
+		&.bb-hello-buddyboss {
 			top: 50%;
 			bottom: initial;
 			max-height: calc(100% - 90px);
 			transform: translateY(-50%);
 		}
 
-		.bp-hello-header {
+		.bp-hello-header,
+		.bb-hello-header {
 
 			h1 {
 				line-height: inherit;
 			}
 		}
 
-		&.bp-hello-buddyboss-app {
+		&.bp-hello-buddyboss-app,
+		&.bb-hello-buddyboss-app {
 			bottom: auto;
 			width: 105vmin;
 			max-width: 900px;
@@ -402,20 +446,23 @@ TABLE OF CONTENTS:
 			top: 50%;
 			transform: translateY(-50%);
 
-			.bp-hello-footer {
+			.bp-hello-footer,
+			.bb-hello-footer {
 				height: 60px;
 				position: static;
 			}
 		}
 	}
 
-	.bp-hello-header {
+	.bp-hello-header,
+	.bb-hello-header {
 		height: auto;
 		max-height: inherit;
 		padding: 6px 23px;
 	}
 
-	.bp-hello-close {
+	.bp-hello-close,
+	.bb-hello-close {
 		right: 23px;
 
 		.close-modal:before {
@@ -423,7 +470,8 @@ TABLE OF CONTENTS:
 		}
 	}
 
-	.bp-hello-footer {
+	.bp-hello-footer,
+	.bb-hello-footer {
 		position: fixed; // Fixed position above "content" div.
 		left: var(--bp-hello-container-size);
 		right: var(--bp-hello-container-size);
@@ -436,24 +484,30 @@ TABLE OF CONTENTS:
 		padding: 6px 23px;
 	}
 
-	.bp-hello-buddyboss .bp-hello-footer {
+	.bp-hello-buddyboss .bp-hello-footer,
+	.bp-hello-buddyboss .bb-hello-footer,
+	.bb-hello-buddyboss .bb-hello-footer {
 		bottom: initial;
 		left: 0;
 		right: 0;
 	}
 
-	.bp-hello-content {
+	.bp-hello-content,
+	.bb-hello-content {
 		// Very very approx. height of header and footer.
 		height: calc(100% - 90px);
 		padding: 0 23px;
 	}
 
-	.bp-hello-buddyboss-app .bp-hello-content {
+	.bp-hello-buddyboss-app .bp-hello-content,
+	.bp-hello-buddyboss-app .bb-hello-content,
+	.bb-hello-buddyboss-app .bb-hello-content {
 		height: calc(100% - 120px);
 		padding: 0;
 	}
 
-	#bp-hello-container {
+	#bp-hello-container,
+	#bb-hello-container {
 
 		p {
 			font-size: 14px;
@@ -467,13 +521,17 @@ TABLE OF CONTENTS:
 @media screen and (min-width: 1280px) {
 
 	#bp-hello-container,
-	.bp-hello-footer {
+	.bp-hello-footer,
+	#bb-hello-container,
+	.bb-hello-footer {
 		// Approx. max-width of modal at Desktop Medium size.
 		left: calc((100% - 896px) / 2);
 		right: calc((100% - 896px) / 2);
 	}
 
-	.bp-hello-buddyboss-app .bp-hello-content {
+	.bp-hello-buddyboss-app .bp-hello-content,
+	.bp-hello-buddyboss-app .bb-hello-content,
+	.bb-hello-buddyboss-app .bb-hello-content {
 		height: calc(100% - 120px);
 		padding: 0;
 	}
@@ -516,7 +574,8 @@ TABLE OF CONTENTS:
 
 .bb-update-modal {
 
-	&#bp-hello-container {
+	&#bp-hello-container,
+	&#bb-hello-container {
 		bottom: initial;
 		margin-top: 15px;
 		max-height: calc(100% - 70px);
@@ -525,13 +584,15 @@ TABLE OF CONTENTS:
 		top: 50%;
 		transform: translateY(-50%);
 
-		h1#bp-hello-title {
+		h1#bp-hello-title,
+		h1#bb-hello-title {
 			font-weight: 600;
 		}
 
 	}
 
-	.bp-hello-content {
+	.bp-hello-content,
+	.bb-hello-content {
 		border-radius: 0 0 3px 3px;
 		height: auto;
 		min-height: 200px;
@@ -539,7 +600,8 @@ TABLE OF CONTENTS:
 	}
 
 	.bb-release-changelog ul,
-	ul.bp-hello-list {
+	ul.bp-hello-list,
+	ul.bb-hello-list {
 		font-size: 14px;
 	}
 
@@ -553,7 +615,8 @@ TABLE OF CONTENTS:
 		height: auto;
 	}
 
-	.bp-hello-header {
+	.bp-hello-header,
+	.bb-hello-header {
 		height: auto;
 		max-height: initial;
 	}
@@ -574,7 +637,8 @@ TABLE OF CONTENTS:
  * 9.0 - Tabs
  */
 
-.bp-hello-title {
+.bp-hello-title,
+.bb-hello-title {
 
 	h1 {
 		display: inline-block;
@@ -614,7 +678,8 @@ TABLE OF CONTENTS:
 		text-decoration: none;
 		font-weight: 600;
 
-		#bp-hello-container & {
+		#bp-hello-container &,
+		#bb-hello-container & {
 			box-shadow: none;
 			color: #1d2327;
 			transition: none;

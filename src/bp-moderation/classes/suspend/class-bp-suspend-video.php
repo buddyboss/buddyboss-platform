@@ -29,7 +29,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.7.0
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -389,20 +389,22 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $video_id;
 
-		if ( $this->background_disabled ) {
-			$this->hide_related_content( $video_id, $hide_sitewide, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $video_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'hide_related_content' ),
-					'args'              => array( $video_id, $hide_sitewide, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->hide_related_content( $video_id, $hide_sitewide, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $video_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'hide_related_content' ),
+						'args'              => array( $video_id, $hide_sitewide, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -461,20 +463,22 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 
 		$args['parent_id'] = ! empty( $args['parent_id'] ) ? $args['parent_id'] : $this->item_type . '_' . $video_id;
 
-		if ( $this->background_disabled ) {
-			$this->unhide_related_content( $video_id, $hide_sitewide, $force_all, $args );
-		} else {
-			$bb_background_updater->data(
-				array(
-					'type'              => $this->item_type,
-					'group'             => $group_name,
-					'data_id'           => $video_id,
-					'secondary_data_id' => $args['parent_id'],
-					'callback'          => array( $this, 'unhide_related_content' ),
-					'args'              => array( $video_id, $hide_sitewide, $force_all, $args ),
-				),
-			);
-			$bb_background_updater->save()->schedule_event();
+		if ( empty( $args['disable_background'] ) ) {
+			if ( $this->background_disabled ) {
+				$this->unhide_related_content( $video_id, $hide_sitewide, $force_all, $args );
+			} else {
+				$bb_background_updater->data(
+					array(
+						'type'              => $this->item_type,
+						'group'             => $group_name,
+						'data_id'           => $video_id,
+						'secondary_data_id' => $args['parent_id'],
+						'callback'          => array( $this, 'unhide_related_content' ),
+						'args'              => array( $video_id, $hide_sitewide, $force_all, $args ),
+					),
+				);
+				$bb_background_updater->save()->schedule_event();
+			}
 		}
 	}
 
@@ -558,12 +562,114 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 				}
 			}
 
+			if (
+				! empty( $args['parent_id'] ) &&
+				(
+					self::$type . '_' . $video_id === $args['parent_id'] ||
+					strpos( $args['parent_id'], BP_Suspend_Activity::$type . '_' ) !== 0 ||
+					strpos( $args['parent_id'], BP_Suspend_Activity_Comment::$type . '_' ) !== 0
+				) &&
+				! empty( $args['action'] ) &&
+				in_array( $args['action'], array( 'hide', 'unhide' ), true ) &&
+				(
+					! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) ||
+					! empty( $related_contents[ BP_Suspend_Activity::$type ] )
+				)
+			) {
+				$page = $args['page'] ?? 1;
+
+				if (
+					! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) &&
+					! empty( $related_contents[ BP_Suspend_Activity::$type ] )
+				) {
+					$all_activity_ids = array_merge( $related_contents[ BP_Suspend_Activity_Comment::$type ], $related_contents[ BP_Suspend_Activity::$type ] );
+				} elseif (
+					! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] )
+				) {
+					$all_activity_ids = $related_contents[ BP_Suspend_Activity_Comment::$type ];
+				} else {
+					$all_activity_ids = $related_contents[ BP_Suspend_Activity::$type ];
+				}
+
+				$document_ids = array();
+				$media_ids    = array();
+				$video_ids    = array();
+
+				foreach ( $all_activity_ids as $activity_id ) {
+					$child_comments = BP_Suspend_Activity::fetch_all_child_activity( $activity_id, $page );
+
+					if ( ! empty( $child_comments['comments'] ) ) {
+						foreach ( $child_comments['comments'] as $child_comment ) {
+							if ( 'activity_comment' === $child_comment->type ) {
+								$related_contents[ BP_Suspend_Activity_Comment::$type ][] = $child_comment->id;
+							} else {
+								$related_contents[ BP_Suspend_Activity::$type ][] = $child_comment->id;
+							}
+
+							if ( bp_is_active( 'document' ) ) {
+								$document_ids = array_merge( $document_ids, BP_Suspend_Document::get_document_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+							}
+							if ( bp_is_active( 'media' ) ) {
+								$media_ids = array_merge( $media_ids, BP_Suspend_Media::get_media_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+							}
+							if ( bp_is_active( 'video' ) ) {
+								$video_ids = array_merge( $video_ids, self::get_video_ids_meta( $child_comment->id, 'bp_activity_get_meta', $action ) );
+							}
+						}
+
+						if ( empty( $args['next_page'] ) ) {
+							$args['next_page'] = $child_comments['has_more'] ?? false;
+						}
+
+						if ( ! empty( $related_contents[ BP_Suspend_Activity_Comment::$type ] ) ) {
+							$related_contents[ BP_Suspend_Activity_Comment::$type ] = array_unique( $related_contents[ BP_Suspend_Activity_Comment::$type ] );
+						}
+
+						if ( ! empty( $related_contents[ self::$type ] ) ) {
+							$related_contents[ self::$type ] = array_unique( $related_contents[ self::$type ] );
+						}
+
+						unset( $child_comments );
+					}
+				}
+
+				if ( bp_is_active( 'document' ) && ! empty( $document_ids ) ) {
+					$related_contents[ BP_Suspend_Document::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Document::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $document_ids ) : $document_ids ) );
+					unset( $document_ids );
+				}
+
+				if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
+					$related_contents[ self::$type ] = array_unique( ( ! empty( $related_contents[ self::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $media_ids ) : $media_ids ) );
+					unset( $media_ids );
+				}
+
+				if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
+					$related_contents[ self::$type ] = array_unique( ( ! empty( $related_contents[ self::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $video_ids ) : $video_ids ) );
+					unset( $video_ids );
+				}
+
+				unset( $all_activity_ids );
+			}
+
 			/**
 			 * Added pre-validate check.
 			 *
 			 * @since BuddyBoss 1.7.5
 			 */
 			do_action( 'bb_moderation_after_get_related_' . BP_Suspend_Activity::$type );
+
+			$hide_sitewide = $args['hide_sitewide'] ?? 0;
+
+			$args['disable_background'] = true;
+
+			if ( 'hide' === $args['action'] ) {
+				$this->loop_hide_related_content( $related_contents, $video_id, $hide_sitewide, $args );
+			} elseif ( 'unhide' === $args['action'] ) {
+				$this->loop_unhide_related_content( $related_contents, $video_id, $hide_sitewide, 0, $args );
+			}
+
+			unset( $related_contents );
+			$related_contents = array();
 		}
 
 		return $related_contents;

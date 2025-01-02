@@ -85,6 +85,7 @@ if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 			'staging.',
 			'localhost',
 			'.local',
+			'.rapydapps.cloud',
 		);
 
 		foreach ( $whitelist_domain as $domain ) {
