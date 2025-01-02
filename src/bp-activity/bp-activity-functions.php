@@ -7443,21 +7443,31 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_activity_id( $activity ) {
+
+	$is_media = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
+
 	// Loop through find the parent id until the item_id and secondary_item_id are same.
 	while (
-		$activity->item_id !== $activity->secondary_item_id && 
-		( 
-			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) || 
-			$activity->component !== 'groups' 
+		$activity->item_id !== $activity->secondary_item_id &&
+		(
+			// Get medias individual activity if muliple uploaded.
+			( $is_media && 'groups' !== $activity->component ) || 
+			( ! $is_media && 'activity_comment' === $activity->type ) 
 		)
 	) {
-		$activity = new BP_Activity_Activity( $activity->item_id );
+		$temp_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( empty( $temp_activity->id ) ) {
+			unset( $temp_activity );
+			return $activity;
+		}
+		$activity = $temp_activity;
 	}
+
 	return $activity;
 }
 
 /**
- * Get parent comment id of the activity item.
+ * Get top level parent comment id of the activity item.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -7469,7 +7479,7 @@ function bb_activity_get_comment_parent_activity_id( $activity ) {
 function bb_activity_get_comment_parent_comment_id( $activity, $main_activity_id ) {
 
 	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
-	while ( 'blogs' !== $activity->component && ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) ) {	
+	while ( 'blogs' !== $activity->component && ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) ) {
 		$temp_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 		if ( empty( $temp_activity->id ) ) {
 			unset( $temp_activity );

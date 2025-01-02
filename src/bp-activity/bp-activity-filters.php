@@ -3834,6 +3834,28 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 			// Clear the cache for the parent activity item.
 			bp_activity_clear_cache_for_activity( $main_activity_object );
 
+			// If individual medias activity then also get the most parent activity.
+			if ( 
+				(
+					( 
+						in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
+						'activity_update' === $main_activity_object->type
+					)
+				) && ! empty( $main_activity_object->secondary_item_id )
+			) {
+
+				// Update the date_updated of the parent activity item.
+				bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $this->date_updated );
+
+				$intermediate_activity = new BP_Activity_Activity( $main_activity_object->secondary_item_id );
+				if ( ! empty( $intermediate_activity->id ) ) {
+
+					// Clear the cache for the parent activity item.
+					bp_activity_clear_cache_for_activity( $intermediate_activity );
+					unset( $intermediate_activity );
+				}
+			}
+
 			// Get the parent comment activity object.
 			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_id( $activity, $main_activity_object->id );
 
