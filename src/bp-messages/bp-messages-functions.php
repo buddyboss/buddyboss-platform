@@ -1278,81 +1278,18 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	$avatar_urls      = array();
-	$avatars_user_ids = array();
+	$avatar_urls = array();
 
 	$group_id = bb_messages_thread_group_id( $thread_id );
 	if ( $group_id > 0 ) {
-		if ( bp_is_active( 'groups' ) ) {
-			$group            = groups_get_group( $group_id );
-			$group_name       = bp_get_group_name( $group );
-
-			if ( ! bp_disable_group_avatar_uploads() ) {
-				$group_avatar_url = bp_core_fetch_avatar(
-					array(
-						'item_id'    => $group_id,
-						'object'     => 'group',
-						'type'       => 'full',
-						'avatar_dir' => 'group-avatars',
-						'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
-						'title'      => $group_name,
-						'html'       => false,
-					)
-				);
-			} else {
-				$group_avatar_url = bb_get_buddyboss_group_avatar();
-			}
-
-			$group_avatar = array(
-				'url'  => $group_avatar_url,
-				'name' => $group_name,
-				'id'   => $group_id,
-				'type' => 'group',
-				'link' => bp_get_group_permalink( $group ),
-			);
-
-		} else {
-
-			/**
-			 *
-			 * Filters table prefix.
-			 *
-			 * @since BuddyBoss 1.4.7
-			 *
-			 * @param int $wpdb ->base_prefix table prefix
-			 */
-			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-			$groups_table             = $prefix . 'bp_groups';
-			$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
-			$default_group_avatar_url = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
-			$legacy_group_avatar_name = '-groupavatar-full';
-			$legacy_user_avatar_name  = '-avatar2';
-			$group_avatar_url         = '';
-
-			if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
-				$directory         = 'group-avatars';
-				$avatar_size       = '-bpfull';
-				$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
-				$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
-				$group_avatar_url  = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
-			}
-
-			$group_avatar = array(
-				'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
-				'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
-				'id'   => $group_id,
-				'type' => 'group',
-				'link' => '',
-			);
-		}
+		$group_avatar = bb_messages_group_thread_avatar( $group_id );
 
 		if ( ! empty( $group_avatar ) ) {
 			$avatar_urls = array( $group_avatar );
 		}
 	} else {
-
 		// Get the last two not deleted messages and message is not from a current user.
-		$qyery = "SELECT DISTINCT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id != %d AND is_deleted = 0 ORDER BY id DESC LIMIT 2";
+		$qyery            = "SELECT DISTINCT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id != %d AND is_deleted = 0 ORDER BY id DESC LIMIT 2";
 		$avatars_user_ids = $wpdb->get_col( $wpdb->prepare( $qyery, $thread_id, $user_id ) );
 
 		if ( empty( $avatars_user_ids ) ) {
@@ -2986,4 +2923,86 @@ function bb_messages_migration() {
 			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
 		}
 	}
+}
+
+/**
+ * Get the group avatar for the group thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $group_id Group ID.
+ *
+ * @return array
+ */
+function bb_messages_group_thread_avatar( $group_id ) {
+	global $wpdb;
+
+	if ( empty( $group_id ) ) {
+		return '';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$group            = groups_get_group( $group_id );
+		$group_name       = bp_get_group_name( $group );
+
+		if ( ! bp_disable_group_avatar_uploads() ) {
+			$group_avatar_url = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $group_id,
+					'object'     => 'group',
+					'type'       => 'full',
+					'avatar_dir' => 'group-avatars',
+					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+					'title'      => $group_name,
+					'html'       => false,
+				)
+			);
+		} else {
+			$group_avatar_url = bb_get_buddyboss_group_avatar();
+		}
+
+		$group_avatar = array(
+			'url'  => $group_avatar_url,
+			'name' => $group_name,
+			'id'   => $group_id,
+			'type' => 'group',
+			'link' => bp_get_group_permalink( $group ),
+		);
+
+	} else {
+
+		/**
+		 *
+		 * Filters table prefix.
+		 *
+		 * @since BuddyBoss 1.4.7
+		 *
+		 * @param int $wpdb ->base_prefix table prefix
+		 */
+		$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+		$groups_table             = $prefix . 'bp_groups';
+		$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+		$default_group_avatar_url = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
+		$legacy_group_avatar_name = '-groupavatar-full';
+		$legacy_user_avatar_name  = '-avatar2';
+		$group_avatar_url         = '';
+
+		if ( ! empty( $group_name ) && ! bp_disable_group_avatar_uploads() ) {
+			$directory         = 'group-avatars';
+			$avatar_size       = '-bpfull';
+			$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+			$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+			$group_avatar_url  = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
+		}
+
+		$group_avatar = array(
+			'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
+			'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+			'id'   => $group_id,
+			'type' => 'group',
+			'link' => '',
+		);
+	}
+
+	return $group_avatar;
 }
