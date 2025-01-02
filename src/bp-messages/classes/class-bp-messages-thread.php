@@ -1058,8 +1058,7 @@ class BP_Messages_Thread {
 
 			$current_user_thread_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'thread_id' ) );
 
-			$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-			$groups_table = $prefix . 'bp_groups';
+			// Search Group Thread via Group Name via search_terms.
 			if ( bp_is_active( 'groups' ) ) {
 				$groups_table = $bp->groups->table_name;
 				// Search Group Thread via Group Name via search_terms.
@@ -1114,13 +1113,7 @@ class BP_Messages_Thread {
 						$first_message    = self::get_first_message( $thread );
 						$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
 						if ( $message_group_id ) {
-							if ( bp_is_active( 'groups' ) ) {
-								$group_name = bp_get_group_name( groups_get_group( $message_group_id ) );
-							} else {
-								// phpcs:ignore ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-								$group_name = $wpdb->get_var( "SELECT name FROM {$groups_table} WHERE id = '{$message_group_id}';" ); // db call ok; no-cache ok.
-							}
-							if ( empty( $group_name ) ) {
+							if ( bb_messages_thread_group_deleted( $message_group_id ) ) {
 								$group_thread_in[] = $thread;
 							}
 						}
