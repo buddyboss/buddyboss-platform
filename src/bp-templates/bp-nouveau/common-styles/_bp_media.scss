@@ -5438,7 +5438,8 @@ body.buddyboss-theme {
 	.subnav-filters .group-search.loading {
 
 		.search-form_reset {
-			display: flex;
+			display: flex !important;
+			box-shadow: none;
 
 			[class^="bb-icon-"] {
 				line-height: 1;
@@ -5454,10 +5455,6 @@ body.buddyboss-theme {
 					display: inline-block;
 				}
 			}
-		}
-
-		&.active .search-form_reset {
-			display: flex !important;
 		}
 
 		&:not(#specificity):after {
