@@ -81,6 +81,7 @@ window.bp = window.bp || {};
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
+        var $form = $delete_button.closest( '#profile-edit-form' );
         e.preventDefault();
         if ( $delete_button.hasClass( 'disabled' ) ) {
             return;
@@ -141,6 +142,9 @@ window.bp = window.bp || {};
             if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
                 //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
             }
+
+            // Save the form
+            $form.submit();
         }
     });
 
