@@ -101,6 +101,14 @@ class BP_Activity_Activity {
 	var $date_recorded;
 
 	/**
+	 * The date the activity item was recorded, in 'Y-m-d h:i:s' format.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var string
+	 */
+	var $date_updated;
+
+	/**
 	 * Whether the item should be hidden in sitewide streams.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -231,6 +239,7 @@ class BP_Activity_Activity {
 		$this->action            = $row->action;
 		$this->content           = $row->content;
 		$this->date_recorded     = $row->date_recorded;
+		$this->date_updated      = $row->date_updated;
 		$this->hide_sitewide     = (int) $row->hide_sitewide;
 		$this->mptt_left         = (int) $row->mptt_left;
 		$this->mptt_right        = (int) $row->mptt_right;
@@ -270,6 +279,7 @@ class BP_Activity_Activity {
 		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
 		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
+		$this->date_updated      = apply_filters_ref_array( 'bp_activity_date_updated_before_save', array( $this->date_updated, &$this ) );
 		$this->hide_sitewide     = apply_filters_ref_array( 'bp_activity_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
 		$this->mptt_left         = apply_filters_ref_array( 'bp_activity_mptt_left_before_save', array( $this->mptt_left, &$this ) );
 		$this->mptt_right        = apply_filters_ref_array( 'bp_activity_mptt_right_before_save', array( $this->mptt_right, &$this ) );
@@ -313,9 +323,9 @@ class BP_Activity_Activity {
 
 			$prev_activity_status = self::bb_get_activity_status( $this->id );
 
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -334,6 +344,60 @@ class BP_Activity_Activity {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 		} else {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+		}
+
+		// Activity comment or if the media, document, video related activity.
+		if ( 'activity_comment' === $this->type || in_array( $this->privacy, array( 'media', 'document', 'video' ), true ) ) {
+
+			// Check if the item_id and secondary_item_id are same.
+			if ( $this->item_id === $this->secondary_item_id && ! in_array( $this->privacy, array( 'media', 'document', 'video' ), true ) ) {
+				// Update the date_updated of the parent activity item.
+				bb_activity_update_date_updated( $this->item_id, $this->date_updated );
+
+				// Clear the cache for the parent activity item.
+				bp_activity_clear_cache_for_activity( $this );
+			} else {
+				// Get the parent activity id if the activity is a comment.
+				$main_activity_object = bb_activity_get_comment_parent_activity_object( $this );
+
+				// Update the date_updated of the parent activity item.
+				bb_activity_update_date_updated( $main_activity_object->id, $this->date_updated );
+
+				// Clear the cache for the parent activity item.
+				bp_activity_clear_cache_for_activity( $main_activity_object );
+
+				// If individual medias activity then also get the most parent activity.
+				if ( 
+					(
+						( 
+							in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
+							'activity_update' === $main_activity_object->type
+						)
+					) && ! empty( $main_activity_object->secondary_item_id )
+				) {
+
+					// Update the date_updated of the parent activity item.
+					bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $this->date_updated );
+
+					$intermediate_activity = new BP_Activity_Activity( $main_activity_object->secondary_item_id );
+					if ( ! empty( $intermediate_activity->id ) ) {
+
+						// Clear the cache for the parent activity item.
+						bp_activity_clear_cache_for_activity( $intermediate_activity );
+						unset( $intermediate_activity );
+					}
+				}
+
+				// Get the parent comment activity object.
+				$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $this, $main_activity_object->id );
+
+				// Update the date_updated of the parent comment activity item.
+				bb_activity_update_date_updated( $parent_comment_activity_object->id, $this->date_updated );
+
+				// Clear the cache for the parent activity item.
+				bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
+
+			}
 		}
 
 		/**
@@ -484,6 +548,10 @@ class BP_Activity_Activity {
 			}
 		}
 
+		if ( ! empty( $r['order_by'] ) ) {
+			$r['filter']['since_date_column'] = $r['order_by'];
+		}
+
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
@@ -540,6 +608,7 @@ class BP_Activity_Activity {
 			case 'item_id':
 			case 'secondary_item_id':
 			case 'date_recorded':
+			case 'date_updated':
 			case 'hide_sitewide':
 			case 'mptt_left':
 			case 'mptt_right':
@@ -551,7 +620,7 @@ class BP_Activity_Activity {
 				break;
 
 			default:
-				$r['order_by'] = 'date_recorded';
+				 $r['order_by'] = 'date_recorded';
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
@@ -1259,9 +1328,10 @@ class BP_Activity_Activity {
 	 * @param string $action            Action to filter by.
 	 * @param string $content           Content to filter by.
 	 * @param string $date_recorded     Date to filter by.
+	 * @param string $date_updated      Date to filter by.
 	 * @return int|false Activity ID on success, false if none is found.
 	 */
-	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded ) {
+	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded, $date_updated ) {
 		global $wpdb;
 
 		$bp = buddypress();
@@ -1298,6 +1368,10 @@ class BP_Activity_Activity {
 
 		if ( ! empty( $date_recorded ) ) {
 			$where_args[] = $wpdb->prepare( 'date_recorded = %s', $date_recorded );
+		}
+
+		if ( ! empty( $date_updated ) ) {
+			$where_args[] = $wpdb->prepare( 'date_updated = %s', $date_updated );
 		}
 
 		if ( ! empty( $where_args ) ) {
@@ -1350,6 +1424,7 @@ class BP_Activity_Activity {
 				'item_id'           => false,
 				'secondary_item_id' => false,
 				'date_recorded'     => false,
+				'date_updated'      => false,
 				'hide_sitewide'     => false,
 				'status'            => false,
 			)
@@ -1406,6 +1481,11 @@ class BP_Activity_Activity {
 		// Date Recorded.
 		if ( ! empty( $r['date_recorded'] ) ) {
 			$where_args[] = $wpdb->prepare( 'date_recorded = %s', $r['date_recorded'] );
+		}
+
+		// Date Updated.
+		if ( ! empty( $r['date_updated'] ) ) {
+			$where_args[] = $wpdb->prepare( 'date_updated = %s', $r['date_updated'] );
 		}
 
 		// Hidden sitewide.
@@ -2148,7 +2228,12 @@ class BP_Activity_Activity {
 			// Trick: parse to UNIX date then translate back.
 			$translated_date = date( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
 			if ( $translated_date === $filter_array['since'] ) {
-				$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				if ( ! empty( $filter_array['since_date_column'] ) && 'date_updated' === $filter_array['since_date_column'] ) {
+					$filter_sql[] = "a.date_updated > '{$translated_date}'";
+				} else {
+					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				}
+				
 			}
 		}
 

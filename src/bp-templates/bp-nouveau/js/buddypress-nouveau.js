@@ -492,6 +492,7 @@ window.bp = window.bp || {};
 					template: null,
 					method: 'reset',
 					ajaxload: true,
+					order_by: '',
 				},
 				data
 			);
@@ -506,8 +507,8 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
-			if ( [ 'members', 'activity', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+			// if object is members, media, document and object nav does not exists fallback to scope = all.
+			if ( [ 'members', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 			}
 
@@ -516,9 +517,19 @@ window.bp = window.bp || {};
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
 			}
 
+			if ( $( this.objectNavParent + ' [data-bp-order]' ).length ) {
+				data.order_by = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
+			}
+
 			// Set session's data.
 			if ( null !== data.scope ) {
-				this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				if( data.object === 'activity' ) {
+					if( 'undefined' !== data.save_scope && true === data.save_scope ) {
+						this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+					}
+				} else {
+					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				}
 			}
 
 			if ( null !== data.filter ) {
@@ -546,6 +557,16 @@ window.bp = window.bp || {};
 				$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
 			} else {
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
+			}
+
+			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
+			if( selected_scope.length ) {
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' ).text( selected_scope.text() );
+			}
+
+			var selected_order = $( this.objectNavParent + ' #bb-subnav-filter-by [data-bp-order="' + data.order_by + '"].selected' );
+			if( selected_order.length ) {
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( selected_order.text() );
 			}
 
 			// Add loader at custom place for few search types
@@ -631,6 +652,18 @@ window.bp = window.bp || {};
 						component_targets.forEach( function ( target ) {
 							target.removeClass( 'loading' );
 						} );
+					}
+
+					if( $( '.bb-subnav-filters-search.loading' ).length ) {
+						if ( 'activity' === data.object ) {
+							bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+						}
+
+						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+					}
+
+					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
+						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
 					}
 
 					if ( ! _.isUndefined( response.data ) ) {
@@ -770,7 +803,7 @@ window.bp = window.bp || {};
 		 */
 		initObjects: function () {
 			var self   = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null,
-				filter = null;
+				filter = null, save_scope = true;
 
 			$.each(
 				this.objects,
@@ -793,6 +826,9 @@ window.bp = window.bp || {};
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
+					} else if ( object === 'activity' ) {
+						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
+						save_scope = false;
 					}
 
 					// Notifications always need to start with Newest ones.
@@ -838,7 +874,8 @@ window.bp = window.bp || {};
 							scope: scope,
 							filter: filter,
 							search_terms: search_terms,
-							extras: extras
+							extras: extras,
+							save_scope: save_scope,
 						};
 
 						if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
@@ -1931,7 +1968,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		searchQuery: function ( event ) {
-			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '',
+			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '', order='',
 				extras = false;
 
 			if ( $( event.delegateTarget ).hasClass( 'no-ajax' ) || undefined === $( event.delegateTarget ).data( 'bp-search' ) ) {
@@ -1949,11 +1986,20 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
+			if ( $( self.objectNavParent + ' [data-bp-order]' ).length ) {
+				order = $( self.objectNavParent + ' [data-bp-order="' + object + '"].selected' ).data( 'bp-orderby' );
+			}
+
 			var objectData = self.getStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
+			}
+
+			var search_parent = $( event.currentTarget ).closest( '.bb-subnav-filters-search' );
+			if( search_parent.length ) {
+				search_parent.addClass( 'loading' );
 			}
 
 			self.objectRequest(
@@ -1964,7 +2010,8 @@ window.bp = window.bp || {};
 					search_terms: search_terms,
 					page: 1,
 					extras: extras,
-					template: template
+					template: template,
+					order_by: order
 				}
 			);
 		},
@@ -3650,6 +3697,11 @@ window.bp = window.bp || {};
 			if ( $form.hasClass( 'bp-invites-search-form') ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
+			}
+
+			// remove search input from screen
+			if( $form.closest( '.bb-subnav-filters-search.active' ) ) {
+				$form.closest( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
 			}
 
 		},

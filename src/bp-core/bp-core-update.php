@@ -507,6 +507,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_80();
 		}
 
+		if ( $raw_db_version < 23321 ) {
+			bb_update_to_2_6_90();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3820,6 +3824,7 @@ function bb_update_to_2_6_70() {
 
 /**
  * Enable the member and group directory count option for existing installations.
+ * Add updated_time column in activity table.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -3829,16 +3834,97 @@ function bb_update_to_2_6_80() {
 	bp_update_option( 'bb-member-directory-count', 1 );
 	bp_update_option( 'bb-group-directory-count', 1 );
 
-	if ( ! bp_is_active( 'moderation' ) ) {
-		return;
-	}
 	$is_already_run = get_transient( 'bb_update_to_2_6_80' );
 	if ( $is_already_run ) {
 		return;
 	}
 
-	// Set a transient to avoid running the update multiple times within an hour.
-	set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
+	if ( bp_is_active( 'moderation' ) ) {
+		bb_create_background_member_friends_count();
+	}
 
-	bb_create_background_member_friends_count();
+	set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
+}
+
+/**
+ * Add updated_time column in activity table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_90() {
+	
+	$is_already_run = get_transient( 'bb_update_to_2_6_90' );
+	if ( ! $is_already_run ) {
+
+		global $wpdb;
+
+		$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+		// Check if the 'bp_activity' table exists.
+		$activity_table = $bp_prefix . 'bp_activity';
+		$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $activity_table ) );
+		if ( $table_exists ) {
+
+			// Add 'date_updated' column in 'bp_activity' table.
+			$column_exists = $wpdb->query( "SHOW COLUMNS FROM {$activity_table} LIKE 'date_updated'" );
+			if ( empty( $column_exists ) ) {
+				$wpdb->query(
+					"ALTER TABLE {$bp_prefix}bp_activity 
+					ADD `date_updated` datetime NOT NULL AFTER `date_recorded`"
+				); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+			} else {
+
+				// Handle case when wordpress creates the column automatically from the create query.
+
+				// Get the current column order.
+				$columns = $wpdb->get_results(
+					"SHOW COLUMNS FROM {$activity_table}",
+					ARRAY_A
+				);
+
+				$column_positions = [];
+				foreach ( $columns as $index => $column ) {
+					$column_positions[] = $column['Field'];
+				}
+
+				// Check if 'date_updated' is already after 'date_recorded'.
+				$date_recorded_index = array_search( 'date_recorded', $column_positions, true );
+				$date_updated_index  = array_search( 'date_updated', $column_positions, true );
+
+				// If 'date_updated' is not already after 'date_recorded', modify its position.
+				if ( false !== $date_recorded_index && false !== $date_updated_index && ( $date_recorded_index + 1 ) !== $date_updated_index ) {
+					$wpdb->query(
+						"ALTER TABLE {$activity_table} 
+						MODIFY `date_updated` datetime NOT NULL AFTER `date_recorded`"
+					); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Necessary to modify column position.
+				}
+			}
+
+			// Populate 'date_updated' with the value of 'date_recorded'.
+			$wpdb->query(
+				"UPDATE {$bp_prefix}bp_activity 
+				SET `date_updated` = `date_recorded` WHERE date_updated IS NULL OR date_updated = '0000-00-00 00:00:00' OR date_updated = '' "
+			); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+
+			// Get all existing indexes for the table.
+			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $activity_table ) );
+
+			// Add key for date_updated if it doesn't exist.
+			if ( ! in_array( 'date_updated', $indexes, true ) ) {
+				$wpdb->query(
+					"ALTER TABLE {$bp_prefix}bp_activity 
+					ADD KEY `date_updated` (`date_updated`)"
+				); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+			}
+		}
+
+		// Migrate activity tabs settings to filters.
+		if ( ! bp_is_activity_tabs_active() ) {
+			bp_update_option( 'bb_activity_filter_options', array( 'all' => 1 ) );
+		}
+
+		set_transient( 'bb_update_to_2_6_90', 'yes', HOUR_IN_SECONDS );
+	}
 }

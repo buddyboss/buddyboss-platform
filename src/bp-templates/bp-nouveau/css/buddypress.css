@@ -25919,6 +25919,270 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   height: 34px;
 }
 
+.bb-subnav-filters-container-main {
+  display: flex;
+  align-items: center;
+}
+
+.bb-subnav-filters-container-main:not(:last-child) {
+  margin-right: 10px;
+}
+
+.activity-head-bar .bb-subnav-filters-container {
+  position: relative;
+  z-index: 11;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
+  margin-right: auto;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: #f2f4f5;
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.activity-head-bar .bb-subnav-filters-container .subnav-filters-modal {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+  padding: 9px 7px;
+}
+
+.activity-head-bar .bb-subnav-filters-container .subnav-filters-modal .subnav-search {
+  float: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form {
+  display: flex;
+  border: 0;
+  float: none;
+}
+
+.buddypress-wrap .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form:focus-within {
+  box-shadow: none;
+}
+
+#buddypress .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
+  box-shadow: none;
+  width: 260px;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
+  display: none;
+  position: static;
+  border: 1px solid #b7b7b7;
+  opacity: 1;
+  visibility: visible;
+  box-shadow: none;
+  padding: 2px 4px;
+}
+
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-modal {
+  display: block;
+}
+
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-opener {
+  display: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset {
+  line-height: 1;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search.loading .search-form_reset [class^="bb-icon-"]:before {
+  content: "\ef30";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+.activity-head-bar .bb-subnav-filters-container.active .subnav-filters-modal {
+  opacity: 1;
+  visibility: visible;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search.loading .search-form_reset {
+  line-height: 1;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search.loading .search-form_reset [class^="bb-icon-"]:before {
+  content: "\ef30";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  color: var(--bb-body-text-color);
+  cursor: pointer;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:focus, .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener:hover {
+  background-color: transparent;
+  color: var(--bb-body-text-color);
+  box-shadow: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener span {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal {
+  left: auto;
+  right: -20px;
+  padding: 10px;
+  width: 230px;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a {
+  display: block;
+  color: #5a5a5a;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 10px 16px;
+  border-radius: 6px;
+  position: relative;
+  text-decoration: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
+  background-color: #f2f4f5;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li.selected a:after {
+  content: "\e876";
+  color: #385dff;
+  font-family: bb-icons;
+  font-size: 16px;
+  font-weight: 400;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.activity-head-bar {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.activity-head-bar > .subnav-filters {
+  margin: 0 auto 0 0;
+}
+
+.buddypress-wrap .bb-profile-grid .activity-head-bar > .subnav-filters {
+  margin-bottom: 0;
+}
+
+.activity-head-bar .bb-subnav-filters-label {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.activity-head-bar .bb-icon-loader {
+  display: none;
+}
+
+.activity-head-bar:has(li.loading):not(:has(.bb-subnav-filters-search.loading)) .bb-icon-loader {
+  display: inline-block;
+  margin: 0 15px 0 auto;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.buddypress-wrap .activity-head-bar .subnav-filters .group-search.loading .search-form_reset {
+  display: flex;
+}
+
+.buddypress-wrap .activity-head-bar .subnav-filters .group-search.loading .search-form_reset [class^="bb-icon-"] {
+  line-height: 1;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.buddypress-wrap .activity-head-bar .subnav-filters .group-search.loading .search-form_reset [class^="bb-icon-"]:before {
+  content: "\ef30";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+.buddypress-wrap .activity-head-bar .subnav-filters .group-search.loading:not(#specificity):after {
+  display: none;
+}
+
+@media screen and (max-width: 640px) {
+  .activity-head-bar {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .activity-head-bar:has(li.loading):not(:has(.bb-subnav-filters-search.loading)) .bb-icon-loader {
+    margin: 0 10px 0 0;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener {
+    display: none;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
+    display: block;
+  }
+  #buddypress .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
+    width: 100%;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal .subnav-search {
+    margin: 0;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal .subnav-search .activity-search.bp-search {
+    margin: 0;
+    float: none;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering #bb-subnav-filter-show {
+    right: -70px;
+  }
+}
+
 .directory.media .bp-subnavs li.selected a:hover span,
 .directory.document .bp-subnavs li.selected a:hover span,
 .directory.video .bp-subnavs li.selected a:hover span {
@@ -25929,6 +26193,12 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 .directory.document .entry-header .entry-title,
 .directory.video .entry-header .entry-title {
   text-align: left;
+}
+
+.directory.media .media-options > .bb-subnav-filters-search,
+.directory.document .document-options > .bb-subnav-filters-search,
+.directory.video .video-options > .bb-subnav-filters-search {
+  display: inline-block;
 }
 
 .directory.media .media-options a.button > i,

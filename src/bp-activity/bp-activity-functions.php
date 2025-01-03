@@ -2102,6 +2102,7 @@ function bp_activity_add( $args = '' ) {
 			'item_id'           => false,                              // Optional: The ID of the specific item being recorded, e.g. a blog_id.
 			'secondary_item_id' => false,                              // Optional: A second ID used to further filter e.g. a comment_id.
 			'recorded_time'     => bp_core_current_time(),             // The GMT time that this activity was recorded.
+			'updated_time'      => bp_core_current_time(),             // The GMT time that this activity was recorded.
 			'hide_sitewide'     => false,                              // Should this be hidden on the sitewide activity feed?
 			'is_spam'           => false,                              // Is this activity item to be marked as spam?
 			'privacy'           => 'public',                           // privacy of the activity.
@@ -2130,6 +2131,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
 	$activity->date_recorded     = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : $activity->date_recorded;
+	$activity->date_updated      = ( empty( $r['id'] ) || $r['status'] === bb_get_activity_scheduled_status() || ( bb_get_activity_scheduled_status() === $activity->status && $r['status'] === bb_get_activity_published_status() ) ) && $r['recorded_time'] ? $r['recorded_time'] : ( $r['updated_time'] ? $r['updated_time'] : bp_core_current_time() );
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
@@ -2223,6 +2225,7 @@ function bp_activity_post_update( $args = '' ) {
 			'privacy'       => 'public',
 			'status'        => bb_get_activity_published_status(),
 			'recorded_time' => bp_core_current_time(),
+			'updated_time'  => bp_core_current_time(),
 			'error_type'    => 'bool',
 		)
 	);
@@ -2296,6 +2299,7 @@ function bp_activity_post_update( $args = '' ) {
 					'item_id'           => $activity->item_id,
 					'secondary_item_id' => $activity->secondary_item_id,
 					'recorded_time'     => ! empty( $r['recorded_time'] ) ? $r['recorded_time'] : $activity->date_recorded,
+					'updated_time'      => ! empty( $r['updated_time'] ) ? $r['updated_time'] : bp_core_current_time(),
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
@@ -2326,6 +2330,7 @@ function bp_activity_post_update( $args = '' ) {
 				'hide_sitewide' => $r['hide_sitewide'],
 				'privacy'       => $r['privacy'],
 				'recorded_time' => $r['recorded_time'],
+				'updated_time'  => $r['updated_time'],
 				'status'        => $r['status'],
 				'error_type'    => $r['error_type'],
 			)
@@ -2560,6 +2565,8 @@ function bp_activity_post_type_update( $post = null ) {
 		} else {
 			$activity->content = $activity_summary;
 		}
+
+		$activity->date_updated = bp_core_current_time();
 	}
 
 	// Save the updated activity.
@@ -3205,6 +3212,7 @@ function bp_activity_get_activity_id( $args = '' ) {
 			'action'            => false,
 			'content'           => false,
 			'date_recorded'     => false,
+			'date_updated'      => false,
 		)
 	);
 
@@ -3228,7 +3236,8 @@ function bp_activity_get_activity_id( $args = '' ) {
 			$r['secondary_item_id'],
 			$r['action'],
 			$r['content'],
-			$r['date_recorded']
+			$r['date_recorded'],
+			$r['date_updated']
 		),
 		$r,
 		$args
@@ -3275,6 +3284,7 @@ function bp_activity_delete( $args = '' ) {
 			'item_id'           => false,
 			'secondary_item_id' => false,
 			'date_recorded'     => false,
+			'date_updated'      => false,
 			'hide_sitewide'     => false,
 		)
 	);
@@ -5549,6 +5559,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'group_avatar'          => $group_avatar,
 			'link_image_index_save' => $link_image_index_save,
 			'date_recorded'         => $activity->date_recorded,
+			'date_updated'          => $activity->date_updated,
 			'status'                => $activity->status,
 		);
 
@@ -7396,6 +7407,88 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 			}
 		}
 	}
+}
+
+/**
+ * Update the date_updated of an activity item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $activity_id Activity ID.
+ * @param string $time        Time to update.
+ *
+ * @return bool True on success.
+ */
+function bb_activity_update_date_updated( $activity_id, $time ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET date_updated = %s WHERE id = %d", $time, $activity_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Get parent activity id of the activity item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity Activity object.
+ *
+ * @return object Activity object.
+ */
+function bb_activity_get_comment_parent_activity_object( $activity ) {
+
+	$is_media = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
+
+	// Loop through find the parent id until the item_id and secondary_item_id are same.
+	while (
+		$activity->item_id !== $activity->secondary_item_id &&
+		(
+			// Get medias individual activity if muliple uploaded.
+			( $is_media && 'groups' !== $activity->component ) || 
+			( ! $is_media && 'activity_comment' === $activity->type ) 
+		)
+	) {
+		$temp_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( empty( $temp_activity->id ) ) {
+			unset( $temp_activity );
+			return $activity;
+		}
+		$activity = $temp_activity;
+	}
+
+	return $activity;
+}
+
+/**
+ * Get top level parent comment id of the activity item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity         Activity object.
+ * @param int    $main_activity_id Main activity ID.
+ *
+ * @return object Activity object.
+ */
+function bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_id ) {
+
+	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
+	while ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) {
+		$temp_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+		if ( empty( $temp_activity->id ) ) {
+			unset( $temp_activity );
+			return $activity;
+		}
+		$activity = $temp_activity;
+	}
+
+	return $activity;
 }
 
 /**

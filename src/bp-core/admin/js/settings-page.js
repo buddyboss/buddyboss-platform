@@ -2940,4 +2940,37 @@ window.bp = window.bp || {};
 
 	/* jshint ignore:end */
 
+	function handleDragDrop( sortableParent,onUpdateFun ){
+		$( sortableParent ).sortable( {
+			update: function ( event, ui ) {
+				onUpdateFun( event, ui );
+			},
+		} );
+	}
+
+	// Handle Activity filter and sortring drag-drop.
+	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
+	function handleUpdateActivityFilter( event ) {
+		var activityFilter = [];
+		$( event.target ).find( '.bb-activity-sorting-item' ).each( function () {
+			activityFilter.push( $( this ).find( 'input' ).val() );
+		} );
+	}
+
+	// Handle Activity filter option save.
+	if ( $( 'body.buddyboss_page_bp-settings' ).length > 0 ) {
+		$( '.bb-activity-sorting-item input[type="checkbox"]' ).on( 'change', function () {
+			var checkbox = $( this ),
+				hiddenInput = checkbox.siblings( 'input[type="hidden"]' );
+	
+			if ( checkbox.is( ':checked' ) ) {
+				// Disable the hidden input when checkbox is checked.
+				hiddenInput.prop( 'disabled', true );
+			} else {
+				// Enable the hidden input when checkbox is unchecked.
+				hiddenInput.prop( 'disabled', false );
+			}
+		});
+	}
+
 }());

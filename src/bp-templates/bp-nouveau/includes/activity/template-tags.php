@@ -235,6 +235,15 @@ function bp_nouveau_activity_timestamp() {
 }
 
 /**
+ * Output the Activity updated timestamp into the bp-updated-timestamp attribute.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_nouveau_activity_updated_timestamp() {
+	echo esc_attr( bb_nouveau_get_activity_updated_timestamp() );
+}
+
+/**
  * Get the Activity timestamp.
  *
  * @since BuddyPress 3.0.0
@@ -250,6 +259,24 @@ function bp_nouveau_get_activity_timestamp() {
 	 * @param integer $value The Activity timestamp.
 	 */
 	return apply_filters( 'bp_nouveau_get_activity_timestamp', strtotime( bp_get_activity_date_recorded() ) );
+}
+
+/**
+ * Get the Activity updated timestamp.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return integer The Activity updated timestamp.
+ */
+function bb_nouveau_get_activity_updated_timestamp() {
+	/**
+	 * Filter here to edit the activity updated timestamp.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param integer $value The Activity updated timestamp.
+	 */
+	return apply_filters( 'bb_nouveau_get_activity_updated_timestamp', strtotime( bb_get_activity_date_updated() ) );
 }
 
 /**

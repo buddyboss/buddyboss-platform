@@ -175,14 +175,14 @@ function bp_get_default_options() {
 		// Enabled reactions and their mode.
 		'bb_all_reactions'                           => array(
 			'activity'         => true,
-			'activity_comment' => true
+			'activity_comment' => true,
 		),
 		'bb_reaction_mode'                           => 'likes',
 		'bb_reaction_button'                         => array(
 			array(
 				'text' => '',
 				'icon' => 'thumbs-up',
-			)
+			),
 		),
 
 		// Performance Settings.
@@ -2636,7 +2636,7 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
-	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
 /**
@@ -2718,7 +2718,6 @@ function bb_active_reactions() {
 	} else {
 		$all_emotions = bb_load_reaction()->bb_get_reactions();
 	}
-
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
@@ -2802,4 +2801,97 @@ function bb_member_directory_count_enable( $default = false ) {
 	 * @param bool $default     The default value if the setting is not configured. Default false.
 	 */
 	return (bool) apply_filters( 'bb_member_directory_count_enable', (bool) bp_get_option( 'bb-member-directory-count', $default ) );
+}
+
+/**
+ * Get all activity filters option labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity filters option labels.
+ */
+function bb_get_activity_filter_options_labels() {
+	$filters = array(
+		'all'       => __( 'All updates', 'buddyboss' ),
+		'favorites' => __( "I've reacted to", 'buddyboss' ),
+		'friends'   => __( 'From my connections', 'buddyboss' ),
+		'groups'    => __( 'From my groups', 'buddyboss' ),
+		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
+		'following' => __( "I'm following", 'buddyboss' ),
+		'just-me'   => __( 'Created by me', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
+}
+
+/**
+ * Get enabled activity filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $default Array of default activity filter options.
+ *
+ * @return array Array of enabled activity filters options.
+ */
+function bb_get_enabled_activity_filter_options( $default = array(
+	'all'       => 1,
+	'favorites' => 1,
+	'friends'   => 1,
+	'groups'    => 1,
+	'mentions'  => 1,
+	'following' => 1,
+	'just-me'   => 1,
+) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
+}
+
+/**
+ * Get all activity sorting options labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity sorting options labels.
+ */
+function bb_get_activity_sorting_options_labels() {
+	$sorting_options = array(
+		'date_recorded' => __( 'Most recent', 'buddyboss' ),
+		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
+}
+
+/**
+ * Get enabled activity sorting options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $default Array of default activity sorting options.
+ *
+ * @return array Array of enabled activity sorting options.
+ */
+function bb_get_enabled_activity_sorting_options( $default = array(
+	'date_recorded' => 1,
+	'date_updated'  => 1,
+) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
+}
+
+/**
+ * Check whether activity search is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Default: true.
+ *
+ * @return bool True if activity search enabled.
+ */
+function bb_is_activity_search_enabled( $default = true ) {
+
+	/**
+	 * Filters whether activity search is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Is activity search enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
 }

@@ -79,10 +79,16 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Close comments.
 		$this->add_field( '_bb_enable_close_activity_comments', __( 'Close comments', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_close_activity_comments' ), 'intval' );
 
-		// Allow scopes/tabs.
-		$this->add_field( '_bp_enable_activity_tabs', __( 'Activity tabs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_tabs', 'intval' );
+		// Activity filters.
+		$this->add_field( 'bb_activity_filter_options', __( 'Activity filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_filters' );
 
-		// Allow scopes/tabs.
+		// Activity sorting.
+		$this->add_field( 'bb_activity_sorting_options', __( 'Activity sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_sorting' );
+
+		// Activity search.
+		$this->add_field( 'bb_enable_activity_search', __( 'Activity search', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_search' );
+
+		// Pin posts.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
 		// Allow Poll.
@@ -136,6 +142,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		$this->add_field( '_bb_activity_comment_visibility', __( 'Comment visibility', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_comment_visibility' ), 'intval' );
 		$this->add_field( '_bb_activity_comment_loading', __( 'Comments loading', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_comment_loading' ), 'intval' );
+
+		// Comment sorting.
+		$this->add_field( 'bb_activity_comment_sorting_options', __( 'Comment sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_comment_sorting' );
 
 		// Allow Activity comment edit setting.
 		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Activity comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
