@@ -143,9 +143,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$this->add_field( '_bb_activity_comment_visibility', __( 'Comment visibility', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_comment_visibility' ), 'intval' );
 		$this->add_field( '_bb_activity_comment_loading', __( 'Comments loading', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_comment_loading' ), 'intval' );
 
-		// Comment sorting.
-		$this->add_field( 'bb_activity_comment_sorting_options', __( 'Comment sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_comment_sorting' );
-
 		// Allow Activity comment edit setting.
 		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Activity comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
 		$this->add_field( '_bb_activity_comment_edit_time', __( 'Edit Comment Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
