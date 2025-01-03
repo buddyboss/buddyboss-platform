@@ -5168,11 +5168,19 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   pointer-events: none;
 }
 
+.bb-internal-model .activity-comments.active .acomment-content .activity-read-more a {
+  pointer-events: none;
+}
+
 .bb-internal-model .activity-item.active .activity-header .activity-privacy li {
   pointer-events: none;
 }
 
 .bb-internal-model .activity-item.active .bb-activity-more-options a.button {
+  pointer-events: none;
+}
+
+.bb-internal-model .activity-item.active .activity-content .activity-read-more a {
   pointer-events: none;
 }
 

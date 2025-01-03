@@ -1848,6 +1848,10 @@
 				pointer-events: none;
 			}
 		}
+
+		.acomment-content .activity-read-more a {
+			pointer-events: none;
+		}
 	}
 
 	.activity-item.active {
@@ -1864,6 +1868,10 @@
 			a.button {
 				pointer-events: none;
 			}
+		}
+
+		.activity-content .activity-read-more a {
+			pointer-events: none;
 		}
 	}
 }
