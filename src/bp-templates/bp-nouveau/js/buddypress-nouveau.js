@@ -660,6 +660,11 @@ window.bp = window.bp || {};
 						}
 
 						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+
+						if( data.search_terms === '' && window.clear_search_trigger) {
+							$( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
+							window.clear_search_trigger = false;
+						}
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
@@ -3617,6 +3622,7 @@ window.bp = window.bp || {};
 			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
+				window.clear_search_trigger = true;
 			} else if ( $form.find( '#bb_search_group_members' ).length > 0 ) {
 				$form.find( '#bb_search_group_members' ).val('').trigger('keyup');
 			} else {
@@ -3629,11 +3635,6 @@ window.bp = window.bp || {};
 			if ( $form.hasClass( 'bp-invites-search-form') ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
-			}
-
-			// remove search input from screen
-			if( $form.closest( '.bb-subnav-filters-search.active' ) ) {
-				$form.closest( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
 			}
 
 		},

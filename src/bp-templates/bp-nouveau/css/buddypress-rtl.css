@@ -26212,6 +26212,11 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   display: inline-block;
 }
 
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search.loading.active .search-form_reset {
+  display: flex !important;
+  box-shadow: none;
+}
+
 .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener {
   display: flex;
   align-items: center;
@@ -26322,6 +26327,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   line-height: 1;
   animation: spin 2s infinite linear;
   display: inline-block;
+}
+
+.buddypress-wrap .activity-head-bar .subnav-filters .group-search.loading.active .search-form_reset {
+  display: flex !important;
 }
 
 .buddypress-wrap .activity-head-bar .subnav-filters .group-search.loading:not(#specificity):after {

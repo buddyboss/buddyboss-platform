@@ -5321,6 +5321,11 @@ body.buddyboss-theme {
 					display: inline-block;
 				}
 			}
+
+			&.active .search-form_reset {
+				display: flex !important;
+				box-shadow: none;
+			}
 		}
 	}
 
@@ -5449,6 +5454,10 @@ body.buddyboss-theme {
 					display: inline-block;
 				}
 			}
+		}
+
+		&.active .search-form_reset {
+			display: flex !important;
 		}
 
 		&:not(#specificity):after {
