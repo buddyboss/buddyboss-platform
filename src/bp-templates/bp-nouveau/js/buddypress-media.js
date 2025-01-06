@@ -205,7 +205,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-media-uploader-close', this.closeUploader.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-media', this.deleteMedia.bind( this ) );
 			bpNouveau.on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
-			if( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) {
+			if ( BP_Nouveau.is_send_ajax_request !== undefined && '1' === BP_Nouveau.is_send_ajax_request ) {
 				$( '#buddypress [data-bp-list="media"]' ).on( 'bp_ajax_request', this.bp_ajax_media_request );
 			} else {
 				this.bp_media_after_load();
@@ -984,8 +984,8 @@ window.bp = window.bp || {};
 			}
 		},
 
-		bp_media_after_load: function() {
-			if( $( '.media-list.bb-photo-list' ).children().length ) {
+		bp_media_after_load: function () {
+			if ( $( '.media-list.bb-photo-list' ).children().length ) {
 				$( '.bb-photos-actions' ).show();
 			}
 		},
