@@ -230,7 +230,7 @@ window.bp = window.bp || {};
 		var shouldconfirm = true;
         $( '#profile-edit-form #btn_add_repeater_set' ).addClass('disabled');
 
-		$( '#profile-edit-form input:submit, #signup_form input:submit' ).on( 'click', function() {
+		$( '#profile-edit-form input:submit, #signup_form input:submit, #profile-edit-form .repeater_set_delete' ).on( 'click', function() {
 			shouldconfirm = false;
             $( '#profile-edit-form #btn_add_repeater_set' ).removeClass('disabled');
 		} );
