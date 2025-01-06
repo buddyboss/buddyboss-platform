@@ -404,7 +404,7 @@ class BP_Friends_Friendship {
 			 */
 			$sql['join'] = apply_filters( 'bb_get_friendship_ids_for_user_join_sql', $sql['join'], $user_id );
 
-			$sql['where'][] = $wpdb->prepare( "(f.initiator_user_id = %d OR f.friend_user_id = %d) AND f.is_confirmed = 1", $user_id, $user_id );
+			$sql['where'][] = $wpdb->prepare( "(f.initiator_user_id = %d OR f.friend_user_id = %d)", $user_id, $user_id );
 			/**
 			 * Filters the WHERE clause for retrieving friendship IDs.
 			 *
