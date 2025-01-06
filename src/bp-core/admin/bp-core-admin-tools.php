@@ -496,41 +496,31 @@ function bp_admin_repair_friend_count() {
 	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
-	$bp  = buddypress();
-	$sql = "SELECT COUNT(u.ID) as c FROM {$wpdb->users} u";
-
-	// Check if moderation is enabled then exclude suspended users.
-	if ( bp_is_active( 'moderation' ) ) {
-		$sql .= " LEFT JOIN {$bp->moderation->table_name} s
-			ON u.ID = s.item_id
-			AND s.item_type = 'user'
-			AND ( s.user_suspended = 1 OR s.hide_sitewide = 1 )
-			WHERE s.item_id IS NULL";
-	}
+	$bp = buddypress();
 
 	// Walk through all users on the site.
-	$total_users = $wpdb->get_row( $sql )->c;
+	$total_users = $wpdb->get_row( "SELECT count(ID) as c FROM {$wpdb->users}" )->c;
 
+	$updated = array();
 	if ( $total_users > 0 ) {
-		$per_query = 50;
+		$per_query = 500;
 		$offset    = 0;
 		while ( $offset < $total_users ) {
-			$select = "SELECT DISTINCT u.ID FROM {$wpdb->users} u";
-			$join   = '';
-			$where  = 'WHERE u.ID IS NOT NULL';
-			$limit  = $wpdb->prepare('LIMIT %d OFFSET %d', $per_query, $offset);
+			// Only bother updating counts for users who actually have friendships.
+			$friendships = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND ( ( initiator_user_id > %d AND initiator_user_id <= %d ) OR ( friend_user_id > %d AND friend_user_id <= %d ) )", $offset, $offset + $per_query, $offset, $offset + $per_query ) );
 
-			// Check if moderation is enabled then exclude suspended users.
-			if ( bp_is_active( 'moderation' ) ) {
-				$join .= " LEFT JOIN {$bp->moderation->table_name} s
-					ON ( u.ID = s.item_id AND s.item_type = 'user' )
-					AND (s.user_suspended = 1 OR s.hide_sitewide = 1)";
-				$where .= ' AND s.item_id IS NULL';
-			}
+			// The previous query will turn up duplicates, so we
+			// filter them here.
+			foreach ( $friendships as $friendship ) {
+				if ( ! isset( $updated[ $friendship->initiator_user_id ] ) ) {
+					BP_Friends_Friendship::total_friend_count( $friendship->initiator_user_id );
+					$updated[ $friendship->initiator_user_id ] = 1;
+				}
 
-			$members = $wpdb->get_results( "{$select} {$join} {$where} {$limit}" );
-			foreach ( $members as $member ) {
-				BP_Friends_Friendship::total_friend_count( $member->ID );
+				if ( ! isset( $updated[ $friendship->friend_user_id ] ) ) {
+					BP_Friends_Friendship::total_friend_count( $friendship->friend_user_id );
+					$updated[ $friendship->friend_user_id ] = 1;
+				}
 			}
 
 			$offset += $per_query;
