@@ -369,6 +369,7 @@ class BP_Friends_Friendship {
 	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int $user_id ID of the user.
+	 *
 	 * @return array
 	 */
 	public static function get_friendship_ids_for_user( $user_id ) {
@@ -399,12 +400,14 @@ class BP_Friends_Friendship {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param string $join  The JOIN clause of the SQL query.
+			 * @param string $join    The JOIN clause of the SQL query.
 			 * @param int    $user_id The user ID for whom friendship IDs are being fetched.
 			 */
 			$sql['join'] = apply_filters( 'bb_get_friendship_ids_for_user_join_sql', $sql['join'], $user_id );
 
+			// Prepare the WHERE clause.
 			$sql['where'][] = $wpdb->prepare( "(f.initiator_user_id = %d OR f.friend_user_id = %d)", $user_id, $user_id );
+
 			/**
 			 * Filters the WHERE clause for retrieving friendship IDs.
 			 *
@@ -416,8 +419,11 @@ class BP_Friends_Friendship {
 			$sql['where'] = apply_filters( 'bb_get_friendship_ids_for_user_where_sql', $sql['where'], $user_id );
 			$where_sql    = 'WHERE ' . join( ' AND ', $sql['where'] );
 
+			// Combine the SQL components.
 			$sql            = "{$sql['select']} {$sql['join']} {$where_sql} ORDER BY f.date_created DESC";
 			$friendship_ids = $wpdb->get_col( $sql );
+
+			// Cache the result.
 			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
 		}
 

@@ -235,6 +235,7 @@ class BP_Activity_Follow {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID to fetch counts for.
+	 *
 	 * @return array
 	 */
 	public static function get_counts( $user_id ) {
@@ -253,6 +254,7 @@ class BP_Activity_Follow {
 			 * @return int The count of followers for the specified user.
 			 */
 			$sql['select'] = "SELECT COUNT(u.id) FROM {$bp->activity->table_name_follow} u";
+
 			/**
 			 * Filters the SELECT clause for retrieving the follower count.
 			 *
@@ -264,6 +266,7 @@ class BP_Activity_Follow {
 			$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'follower_id' );
 
 			$sql['where'][] = $wpdb->prepare( "u.leader_id = %d", $user_id );
+
 			/**
 			 * Filters the WHERE clause for retrieving the follower count.
 			 *
@@ -285,6 +288,7 @@ class BP_Activity_Follow {
 
 		if ( false === $following ) {
 			$sql = array();
+
 			/**
 			 * Retrieves the count of users being followed by a specific user.
 			 *
@@ -295,6 +299,7 @@ class BP_Activity_Follow {
 			 * @return int The count of users the specified user is following.
 			 */
 			$sql['select'] = "SELECT COUNT(u.id) FROM {$bp->activity->table_name_follow} u";
+
 			/**
 			 * Filters the SELECT clause for retrieving the follow count.
 			 *
@@ -306,6 +311,7 @@ class BP_Activity_Follow {
 			$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'leader_id' );
 
 			$sql['where'][] = $wpdb->prepare( "u.follower_id = %d", $user_id );
+
 			/**
 			 * Filters the WHERE clause for retrieving the follow count.
 			 *
