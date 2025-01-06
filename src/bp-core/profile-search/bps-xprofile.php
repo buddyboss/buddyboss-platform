@@ -583,7 +583,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 		$query_args['role__not_in'] = array( 'administrator' );
 	}
 
-	if ( true === learndash_use_legacy_course_access_list() ) {
+	if ( function_exists( 'learndash_use_legacy_course_access_list' ) && true === learndash_use_legacy_course_access_list() ) {
 		$course_access_list = function_exists( 'learndash_get_course_meta_setting' ) ? learndash_get_course_meta_setting( $course_id, 'course_access_list' ) : get_course_meta_setting( $course_id, 'course_access_list' );
 		$course_user_ids    = array_merge( $course_user_ids, $course_access_list );
 	}
