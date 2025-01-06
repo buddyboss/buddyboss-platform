@@ -397,7 +397,7 @@ function bb_tutorial_social_group_sync() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" target="_blank" href="<?php echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -420,7 +420,7 @@ function bb_tutorial_learndash_group_sync() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" target="_blank" href="<?php echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -443,7 +443,7 @@ function bb_profiles_tutorial_my_courses() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" target="_blank" href="<?php echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',

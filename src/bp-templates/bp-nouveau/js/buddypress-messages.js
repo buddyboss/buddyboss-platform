@@ -4908,6 +4908,7 @@ window.bp = window.bp || {};
 						if ( $( event.target ).hasClass( 'message_action__anchor' ) || $( event.target ).parent().hasClass( 'message_action__anchor' ) ) {
 							return event;
 						} else {
+							$( '.message_actions.open' ).removeClass( 'open' );
 							$( '.message_action__list.open' ).removeClass( 'open' );
 							$( 'body' ).removeClass( 'message_more_option_open' );
 						}

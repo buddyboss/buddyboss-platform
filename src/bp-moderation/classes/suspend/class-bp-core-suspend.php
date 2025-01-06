@@ -35,40 +35,42 @@ class BP_Core_Suspend {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function load_on_bp_dependency() {
-		new BP_Suspend_Member();
-		new BP_Suspend_Comment();
+		global $moderation_suspend;
+
+		$moderation_suspend['user']    = new BP_Suspend_Member();
+		$moderation_suspend['comment'] = new BP_Suspend_Comment();
 
 		if ( bp_is_active( 'activity' ) ) {
-			new BP_Suspend_Activity();
-			new BP_Suspend_Activity_Comment();
+			$moderation_suspend['activity']         = new BP_Suspend_Activity();
+			$moderation_suspend['activity_comment'] = new BP_Suspend_Activity_Comment();
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
-			new BP_Suspend_Group();
+			$moderation_suspend['groups'] = new BP_Suspend_Group();
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			new BP_Suspend_Forum();
-			new BP_Suspend_Forum_Topic();
-			new BP_Suspend_Forum_Reply();
+			$moderation_suspend['forum']       = new BP_Suspend_Forum();
+			$moderation_suspend['forum_topic'] = new BP_Suspend_Forum_Topic();
+			$moderation_suspend['forum_reply'] = new BP_Suspend_Forum_Reply();
 		}
 
 		if ( bp_is_active( 'document' ) ) {
-			new BP_Suspend_Folder();
-			new BP_Suspend_Document();
+			$moderation_suspend['document_folder'] = new BP_Suspend_Folder();
+			$moderation_suspend['document']        = new BP_Suspend_Document();
 		}
 
 		if ( bp_is_active( 'media' ) ) {
-			new BP_Suspend_Album();
-			new BP_Suspend_Media();
+			$moderation_suspend['media_album'] = new BP_Suspend_Album();
+			$moderation_suspend['media']       = new BP_Suspend_Media();
 		}
 
 		if ( bp_is_active( 'video' ) ) {
-			new BP_Suspend_Video();
+			$moderation_suspend['video'] = new BP_Suspend_Video();
 		}
 
 		if ( bp_is_active( 'messages' ) ) {
-			new BP_Suspend_Message();
+			$moderation_suspend['message_thread'] = new BP_Suspend_Message();
 		}
 
 		/**
@@ -77,7 +79,7 @@ class BP_Core_Suspend {
 		 * @since BuddyBoss 2.0.3
 		 */
 		if ( bp_is_active( 'notifications' ) ) {
-			new BP_Suspend_Notification();
+			$moderation_suspend['notification'] = new BP_Suspend_Notification();
 		}
 	}
 
@@ -125,6 +127,10 @@ class BP_Core_Suspend {
 		do_action( 'bb_suspend_before_add_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
+
+		// Intersect the original array with the keys to keep.
+		$args = array_intersect_key( $args, array_flip( self::db_columns() ) );
+
 		if ( ! empty( $recode ) ) {
 			$where = array(
 				'item_id'   => $args['item_id'],
@@ -305,6 +311,10 @@ class BP_Core_Suspend {
 		do_action( 'bb_suspend_before_remove_suspend', $args );
 
 		$recode = self::get_recode( $args['item_id'], $args['item_type'] );
+
+		// Intersect the original array with the keys to keep.
+		$args = array_intersect_key( $args, array_flip( self::db_columns() ) );
+
 		if ( ! empty( $recode ) ) {
 
 			$where = array(
@@ -324,7 +334,7 @@ class BP_Core_Suspend {
 			$flag = $wpdb->update( $table_name, $args, $where ); // phpcs:ignore
 
 			// Remove suspend record if item is not hidden.
-			self::maybe_delete( $where['item_id'], $where['item_type'] );
+			// self::maybe_delete( $where['item_id'], $where['item_type'] );
 
 			/**
 			 * Hook fire when item unsuspended
@@ -590,5 +600,43 @@ class BP_Core_Suspend {
 			 */
 			do_action( 'suspend_after_delete', $recode );
 		}
+	}
+
+	/**
+	 * Return list of the DB columns.
+	 *
+	 * @since BuddyBoss 2.7.30
+	 *
+	 * @return string[]
+	 */
+	protected static function db_columns() {
+		return array(
+			'item_id',
+			'item_type',
+			'hide_sitewide',
+			'hide_parent',
+			'user_suspended',
+			'reported',
+			'blog_id',
+			'user_report',
+			'last_updated',
+		);
+	}
+
+	/**
+	 * Fetch suspend ID by item ID and item type.
+	 *
+	 * @since BuddyBoss 2.7.30
+	 *
+	 * @param int    $item_id   item id.
+	 * @param string $item_type item type.
+	 *
+	 * @return string|null
+	 */
+	public static function get_suspend_id( $item_id, $item_type ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		return $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->moderation->table_name} WHERE item_id = %d AND item_type = %s", $item_id, $item_type ) );
 	}
 }

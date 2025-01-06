@@ -97,6 +97,10 @@ jQuery( document ).ready(
 				var curObj     = $( this );
 				var sub_action = curObj.attr( 'data-action' );
 
+				if ( curObj.hasClass( 'disabled' ) ) {
+					return false;
+				}
+
 				if ('suspend' === sub_action) {
 					if ( ! confirm( BP_ADMIN.moderation.suspend_confirm_message )) {
 						return false;
