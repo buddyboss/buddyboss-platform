@@ -583,18 +583,16 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 		$query_args['role__not_in'] = array( 'administrator' );
 	}
 
-	$course_access_list = learndash_get_course_meta_setting( $course_id, 'course_access_list' );
-	$course_user_ids    = array_merge( $course_user_ids, $course_access_list );
+	if ( true === learndash_use_legacy_course_access_list() ) {
+		$course_access_list = learndash_get_course_meta_setting( $course_id, 'course_access_list' );
+		$course_user_ids    = array_merge( $course_user_ids, $course_access_list );
+	}
 
 	$course_access_users = learndash_get_course_users_access_from_meta( $course_id );
 	$course_user_ids     = array_merge( $course_user_ids, $course_access_users );
 
-	if ( function_exists( 'learndash_get_course_groups_users_access' ) ) {
-		$course_groups_users = learndash_get_course_groups_users_access( $course_id );
-	} else {
-		$course_groups_users = get_course_groups_users_access( $course_id );
-	}
-	$course_user_ids = array_merge( $course_user_ids, $course_groups_users );
+	$course_groups_users = learndash_get_course_groups_users_access( $course_id );
+	$course_user_ids     = array_merge( $course_user_ids, $course_groups_users );
 
 	if ( ! empty( $course_user_ids ) ) {
 		$course_user_ids = array_unique( $course_user_ids );
@@ -602,7 +600,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 
 	$course_expired_access_users = learndash_get_course_expired_access_from_meta( $course_id );
 	if ( ! empty( $course_expired_access_users ) ) {
-		$course_user_ids = array_diff( $course_access_list, $course_expired_access_users );
+		$course_user_ids = array_diff( $course_user_ids, $course_expired_access_users );
 	}
 
 	if ( ! empty( $course_user_ids ) ) {
