@@ -496,6 +496,11 @@ function bp_admin_repair_friend_count() {
 	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
+	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array( 1, sprintf( $statement, $result ) );
+	}
+
 	$bp = buddypress();
 
 	// Walk through all users on the site.
