@@ -3018,7 +3018,7 @@ function bb_messages_group_thread_name( $group_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $thread_id Thread ID.
+ * @param int $group_id Thread ID.
  *
  * @return bool
  */
