@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/activity/group-card.php.
  *
- * @since   BuddyBoss 2.5.80
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 ?>
@@ -18,8 +18,8 @@
 				<div class="skeleton-card-meta bb-loading-bg"></div>
 			</div>
 		</div>
-		<?php $plain_class = !is_user_logged_in() ? 'skeleton-footer-plain' : ''; ?>
-		<div class="skeleton-card-footer <?php echo $plain_class; ?>">
+		<?php $plain_class = ! is_user_logged_in() ? 'skeleton-footer-plain' : ''; ?>
+		<div class="skeleton-card-footer <?php echo esc_attr( $plain_class ); ?>">
 			<div class="skeleton-card-button bb-loading-bg"></div>
 			<div class="skeleton-card-button bb-loading-bg"></div>
 		</div>

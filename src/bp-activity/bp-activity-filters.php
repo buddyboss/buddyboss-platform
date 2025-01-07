@@ -3769,7 +3769,7 @@ function bb_activity_add_modal_template() {
 /**
  * Add profile hover card template.
  *
- * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_activity_add_profile_card_template() {
 	bp_get_template_part( 'activity/profile-card' );
@@ -3778,7 +3778,7 @@ function bb_activity_add_profile_card_template() {
 /**
  * Add group hover card template.
  *
- * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION]
  */
 function bb_activity_add_group_card_template() {
 	bp_get_template_part( 'activity/group-card' );

@@ -5572,13 +5572,13 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 /**
  * Get the profile card data.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int $activity_id Activity ID.
  *
  * @return array|bool The profile card data or false otherwise.
  */
-function bp_profile_card_get_edit_data( $activity_id = 0 ) {
+function bb_profile_card_get_edit_data( $activity_id = 0 ) {
 	global $activities_template;
 
 	// check activity empty or not.
@@ -5600,13 +5600,13 @@ function bp_profile_card_get_edit_data( $activity_id = 0 ) {
 
 	$edit_data = wp_cache_get( $activity->id, 'profile_card_data' );
 	if ( false === $edit_data ) {
-		$activity_user_id  = bp_get_activity_user_id();
-		$group_id      	   = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+		$activity_user_id = bp_get_activity_user_id();
+		$group_id      	  = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
 
 		$edit_data = array(
-			'user_id'          => $activity_user_id,
-			'current_user_id'  => get_current_user_id(),
-			'group_id'  	   => $group_id,
+			'user_id'         => $activity_user_id,
+			'current_user_id' => get_current_user_id(),
+			'group_id'  	  => $group_id,
 		);
 
 		// Set meta data to cache.
@@ -5616,12 +5616,12 @@ function bp_profile_card_get_edit_data( $activity_id = 0 ) {
 	/**
 	 * Filter here to edit the activity edit data.
 	 *
-	 * @since BuddyBoss 1.5.1
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $activity_data The Activity edit data.
 	 */
 	return apply_filters(
-		'bp_profile_card_get_edit_data',
+		'bb_profile_card_get_edit_data',
 		$edit_data
 	);
 }
@@ -6447,13 +6447,13 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 /**
  * Get the profile card edit data.
  *
- * @since BuddyBoss 2.4.40
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int $activity_comment_id Activity comment ID.
  *
  * @return array|bool The profile card edit data or false otherwise.
  */
-function bb_profile_card_get_edit_data( $activity_comment_id = 0 ) {
+function bb_profile_card_comment_get_edit_data( $activity_comment_id = 0 ) {
 	global $activities_template;
 
 	// check activity comment empty or not.
@@ -6476,23 +6476,23 @@ function bb_profile_card_get_edit_data( $activity_comment_id = 0 ) {
 
 	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
 	if ( false === $edit_data ) {
-		$activity_comment_user_id  = bp_get_activity_comment_user_id();
+		$activity_comment_user_id = bp_get_activity_comment_user_id();
 
 		$edit_data = array(
-			'user_id'          => $activity_comment_user_id,
-			'current_user_id'  => get_current_user_id(),
+			'user_id'         => $activity_comment_user_id,
+			'current_user_id' => get_current_user_id(),
 		);
 	}
 
 	/**
 	 * Filter here to edit the activity comment edit data.
 	 *
-	 * @since BuddyBoss 2.4.40
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $activity_comment_data The Activity comment edit data.
 	 */
 	return apply_filters(
-		'bb_profile_card_get_edit_data',
+		'bb_profile_card_comment_get_edit_data',
 		$edit_data
 	);
 }
