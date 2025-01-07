@@ -11,6 +11,7 @@ window.bp = window.bp || {};
 
     // Collapse repeater sets on page load, if there are more than one sets
     var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
+    window.deleteFieldEvent = false;
 
     if ( repeater_set_count > 0 ) {
         var repeater_set_sequence = [];
@@ -145,6 +146,7 @@ window.bp = window.bp || {};
 
             // Save the form
             $form.submit();
+            window.deleteFieldEvent = true;
         }
     });
 
@@ -230,13 +232,13 @@ window.bp = window.bp || {};
 		var shouldconfirm = true;
         $( '#profile-edit-form #btn_add_repeater_set' ).addClass('disabled');
 
-		$( '#profile-edit-form input:submit, #signup_form input:submit, #profile-edit-form .repeater_set_delete' ).on( 'click', function() {
+		$( '#profile-edit-form input:submit, #signup_form input:submit' ).on( 'click', function() {
 			shouldconfirm = false;
             $( '#profile-edit-form #btn_add_repeater_set' ).removeClass('disabled');
 		} );
 
 		window.onbeforeunload = function() {
-			if ( shouldconfirm ) {
+			if ( shouldconfirm && !window.deleteFieldEvent ) {
 				return BP_Nouveau.unsaved_changes;
 			}
 		};
