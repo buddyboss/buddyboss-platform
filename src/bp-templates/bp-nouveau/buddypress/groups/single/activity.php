@@ -39,8 +39,9 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			}
 		}
 	?>
+	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
-		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
+		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">

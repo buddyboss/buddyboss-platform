@@ -4231,6 +4231,7 @@ window.bp = window.bp || {};
 				extras: extras,
 				order_by: order,
 				save_scope: save_scope,
+				event_element: $this,
 			};
 
 			bp.Nouveau.objectRequest( queryData );
