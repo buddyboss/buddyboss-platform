@@ -1307,6 +1307,7 @@ function bp_nouveau_nav_has_count() {
 		$enable_member_count = bb_member_directory_count_enable();
 
 		$count = $enable_member_count && 0 !== (int) groups_get_current_group()->total_member_count;
+		unset( $enable_member_count );
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
@@ -1317,6 +1318,7 @@ function bp_nouveau_nav_has_count() {
 		$enable_group_count = bb_group_directory_count_enable();
 
 		$count = $enable_group_count && 0 !== (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
+		unset( $enable_group_count );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
@@ -1395,10 +1397,12 @@ function bp_nouveau_get_nav_count() {
 		$enable_member_count = bb_member_directory_count_enable();
 
 		$count = $enable_member_count ? (int) groups_get_current_group()->total_member_count : false;
+		unset( $enable_member_count );
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$enable_group_count = bb_group_directory_count_enable();
 
 		$count = $enable_group_count ? count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) ) : false;
+		unset( $enable_group_count );
 		// } elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
 		// $count = bp_document_get_total_group_document_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {

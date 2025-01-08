@@ -11,34 +11,30 @@
 $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
 bp_get_template_part( 'members/single/parts/item-subnav' );
-$enable_count = bb_member_directory_count_enable();
 
-if ( 'my-friends' === $bp_current_action ) {
-	$count = $enable_count ? friends_get_total_friend_count() : false;
-} elseif ( 'requests' === $bp_current_action ) {
-	$count = $enable_count ? count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) ) : false;
-}
-
-if ( false !== $count ) {
+if ( 'my-friends' === $bp_current_action && bb_member_directory_count_enable() ) {
 	?>
-	<div class="bb-item-count">
-		<?php
-		if ( ! $is_send_ajax_request ) {
-			/* translators: %d is the count */
-			printf(
-				wp_kses(
-					_n(
-						'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Request' : 'Connection' ),
-						'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Requests' : 'Connections' ),
-						$count,
-						'buddyboss'
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+				$count = friends_get_total_friend_count();
+				printf(
+					wp_kses(
+						/* translators: %d is the count */
+						_n(
+							'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Request' : 'Connection' ),
+							'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Requests' : 'Connections' ),
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
 					),
-					array( 'span' => array( 'class' => true ) )
-				),
-				$count
-			);
-		}
-		?>
+					(int) $count
+				);
+
+				unset( $count );
+			}
+			?>
 		</div>
 	<?php
 }

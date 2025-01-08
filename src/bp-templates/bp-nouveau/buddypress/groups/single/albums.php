@@ -15,9 +15,9 @@ if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 	?>
 	<div class="bb-item-count">
 		<?php
-		/* translators: %d is the album count */
 		printf(
-			wp_kses( 
+			wp_kses(
+				/* translators: %d is the album count */
 				_n(
 					'<span class="bb-count">%d</span> Album',
 					'<span class="bb-count">%d</span> Albums',
@@ -26,11 +26,12 @@ if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 				),
 				array( 'span' => array( 'class' => true ) )
 			),
-			$count
+			(int) $count
 		);
 		?>
 	</div>
 	<?php
+	unset( $count );
 }
 ?>
 <div class="bb-media-container group-albums">

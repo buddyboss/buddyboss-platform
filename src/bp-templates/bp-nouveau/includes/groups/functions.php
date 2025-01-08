@@ -672,6 +672,8 @@ function bp_nouveau_get_groups_directory_nav_items() {
 		$nav_items = array_merge( $nav_items, $extra_nav_items );
 	}
 
+	unset( $enable_count, $extra_nav_items );
+
 	/**
 	 * Use this filter to introduce your custom nav items for the groups directory.
 	 *

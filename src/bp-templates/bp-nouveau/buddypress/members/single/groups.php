@@ -15,38 +15,40 @@ if ( bp_is_my_profile() ) {
 }
 
 $bp_current_action = bp_current_action();
-$count             = false;
-
-if ( 'my-groups' === $bp_current_action ) {
-	$count = bp_get_total_group_count_for_user( bp_displayed_user_id() );
-} elseif ( 'invites' === $bp_current_action ) {
-	$count = groups_get_invite_count_for_user( bp_displayed_user_id() );
-}
-
-if ( false !== $count ) {
+if ( bb_group_directory_count_enable() ) {
 	?>
 	<div class="bb-item-count">
 		<?php
-		if ( ! $is_send_ajax_request ) {
-			/* translators: %d is the count */
-			printf(
-				wp_kses(
-					_n(
-						'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invite' : 'Group' ),
-						'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invites' : 'Groups' ),
-						$count,
-						'buddyboss'
-					),
-					array( 'span' => array( 'class' => true ) )
-				),
-				$count
-			);
-		}
+			if ( ! $is_send_ajax_request ) {
+				$count = false;
+				if ( 'my-groups' === $bp_current_action ) {
+					$count = bp_get_total_group_count_for_user( bp_displayed_user_id() );
+				} elseif ( 'invites' === $bp_current_action ) {
+					$count = groups_get_invite_count_for_user( bp_displayed_user_id() );
+				}
+
+				if ( false !== $count ) {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invite' : 'Group' ),
+								'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invites' : 'Groups' ),
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+				}
+
+				unset( $count );
+			}
 		?>
 	</div>
 	<?php
 }
-
 if ( ! bp_is_current_action( 'invites' ) ) {
 	bp_get_template_part( 'common/search-and-filters-bar' );
 }

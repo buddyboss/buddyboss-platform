@@ -10,23 +10,22 @@
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
+$count                = false;
 if ( bp_is_user() ) {
-	$count = false;
+	?>
+	<div class="bb-item-count">
+		<?php
+		if ( ! $is_send_ajax_request || ( 'albums' === $bp_current_action && ! bp_is_single_album() ) ) {
+			if ( 'my-media' === $bp_current_action ) {
+				$count = $count = bp_media_get_total_media_count();
+			} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
+				$count = bb_media_get_total_album_count();
+			}
 
-	if ( 'my-media' === $bp_current_action ) {
-		$count = $count = bp_media_get_total_media_count();
-	} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
-		$count = bb_media_get_total_album_count();
-	}
-
-	if ( false !== $count ) {
-		?>
-		<div class="bb-item-count">
-			<?php
-			if ( ! $is_send_ajax_request ) {
-				/* translators: %d is the count */
+			if ( false !== $count ) {
 				printf(
 					wp_kses(
+						/* translators: %d is the count */
 						_n(
 							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Album' : 'Photo' ),
 							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Albums' : 'Photos' ),
@@ -35,13 +34,15 @@ if ( bp_is_user() ) {
 						),
 						array( 'span' => array( 'class' => true ) )
 					),
-					$count
+					(int) $count
 				);
 			}
-			?>
-		</div>
-		<?php
-	}
+
+			unset( $count );
+		}
+		?>
+	</div>
+	<?php
 }
 ?>
 <div class="bb-media-container member-media">

@@ -16,33 +16,31 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 	bp_get_template_part( 'common/nav/directory-nav' );
 }
 
-if ( 'subgroups' === bp_current_action() ) {
-	$enable_group_count = bb_group_directory_count_enable();
-	$count              = $enable_group_count ? (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) ) : false;
-	if ( false !== $count ) {
-		?>
-		<div class="bb-item-count">
-			<?php
-			if ( ! $is_send_ajax_request ) {
-
-				/* translators: %d is the group count */
-				printf(
-					wp_kses(
-						_n(
-							'<span class="bb-count">%d</span> Group',
-							'<span class="bb-count">%d</span> Groups',
-							$count,
-							'buddyboss'
-						),
-						array( 'span' => array( 'class' => true ) )
-					),
-					$count
-				);
-			}
-			?>
-		</div>
+if ( 'subgroups' === bp_current_action() && bb_group_directory_count_enable() ) {
+	?>
+	<div class="bb-item-count">
 		<?php
-	}
+		if ( ! $is_send_ajax_request ) {
+			$count = (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
+			printf(
+				wp_kses(
+					/* translators: %d is the group count */
+					_n(
+						'<span class="bb-count">%d</span> Group',
+						'<span class="bb-count">%d</span> Groups',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				(int) $count
+			);
+
+			unset( $count );
+		}
+		?>
+	</div>
+	<?php
 }
 ?>
 <div class="screen-content">
