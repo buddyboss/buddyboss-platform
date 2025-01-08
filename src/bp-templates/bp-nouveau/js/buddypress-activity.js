@@ -4169,7 +4169,7 @@ window.bp = window.bp || {};
 			if ( ! $( e.target ).closest( '.bb-subnav-filters-container' ).length ) {
 				$.each( $( '.bb-subnav-filters-container' ), function() {
 					if ( $( this ).hasClass( 'bb-subnav-filters-search' ) ) {
-						if( $( this ).find( '#dir-activity-search' ).val() === '' ) {
+						if( $( this ).find( 'input[name="activity_search"]' ).val() === '' ) {
 							$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
 						}
 					} else {

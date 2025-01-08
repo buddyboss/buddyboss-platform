@@ -26112,6 +26112,9 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 }
 
 .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
   margin-right: auto;
 }
 
@@ -26167,6 +26170,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   visibility: visible;
   box-shadow: none;
   padding: 2px 4px;
+  margin-bottom: 0;
 }
 
 .activity-head-bar .bb-subnav-filters-container.active.bb-subnav-filters-search .subnav-filters-modal {
@@ -26345,12 +26349,19 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
     margin-bottom: 10px;
     width: 100%;
+    min-height: auto;
+    margin-right: 0;
+  }
+  .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .group-search.activity-search {
+    margin: 0;
+    float: none;
   }
   .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener {
     display: none;
   }
   .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal {
     display: block;
+    width: 100%;
   }
   #buddypress .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
     width: 100%;

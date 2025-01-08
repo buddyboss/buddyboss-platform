@@ -19,12 +19,18 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 <?php bp_nouveau_groups_activity_post_form(); ?>
 
 <div class="activity-head-bar">
-	<div class="subnav-filters filters clearfix">
-		<ul>
-			<li class="group-act-search"><?php bp_nouveau_search_form(); ?></li>
-		</ul>
-		<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
-	</div><!-- // .subnav-filters -->
+
+	<div class="bb-subnav-filters-container bb-subnav-filters-search">
+		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
+			<i class="bb-icon-f bb-icon-search"></i>
+		</button>
+		<div class="subnav-filters filters clearfix subnav-filters-modal">
+			<ul>
+				<li class="group-act-search"><?php bp_nouveau_search_form(); ?></li>
+			</ul>
+			<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
+		</div><!-- .subnav-filters -->
+	</div><!-- .bb-subnav-filters-container -->
 
 	<?php
 		$avail_sorting_options = bb_get_enabled_activity_sorting_options();
