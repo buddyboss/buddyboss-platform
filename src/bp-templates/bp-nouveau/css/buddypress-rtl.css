@@ -26301,6 +26301,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 .activity-head-bar .bb-subnav-filters-label {
   font-size: 14px;
   margin-left: 4px;
+  line-height: 1;
 }
 
 .activity-head-bar .bb-icon-loader {
