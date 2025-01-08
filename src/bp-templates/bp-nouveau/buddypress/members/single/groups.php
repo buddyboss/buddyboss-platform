@@ -14,48 +14,44 @@ if ( bp_is_my_profile() ) {
 	bp_get_template_part( 'members/single/parts/item-subnav' );
 }
 
-switch ( bp_current_action() ) :
-	case 'my-groups':
-		$count = bp_get_total_group_count_for_user( bp_displayed_user_id() );
-		?>
-		<div class="bb-item-count">
-			<?php
-			if ( ! $is_send_ajax_request ) {
+$bp_current_action = bp_current_action();
+$count             = false;
 
-				/* translators: %d is the group count */
-				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-					$count
-				);
-			}
-			?>
-		</div>
-		<?php
-		break;
-	case 'invites':
-		$count = groups_get_invite_count_for_user( bp_displayed_user_id() );
-		?>
-		<div class="bb-item-count">
-			<?php
-			if ( ! $is_send_ajax_request ) {
+if ( 'my-groups' === $bp_current_action ) {
+	$count = bp_get_total_group_count_for_user( bp_displayed_user_id() );
+} elseif ( 'invites' === $bp_current_action ) {
+	$count = groups_get_invite_count_for_user( bp_displayed_user_id() );
+}
 
-				/* translators: %d is the Invite count */
-				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Invite', '<span class="bb-count">%d</span> Invites', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-					$count
-				);
-			}
-			?>
-		</div>
+if ( false !== $count ) {
+	?>
+	<div class="bb-item-count">
 		<?php
-		break;
-endswitch;
+		if ( ! $is_send_ajax_request ) {
+			/* translators: %d is the count */
+			printf(
+				wp_kses(
+					_n(
+						'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invite' : 'Group' ),
+						'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invites' : 'Groups' ),
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				$count
+			);
+		}
+		?>
+	</div>
+	<?php
+}
 
 if ( ! bp_is_current_action( 'invites' ) ) {
 	bp_get_template_part( 'common/search-and-filters-bar' );
 }
 
-switch ( bp_current_action() ) :
+switch ( $bp_current_action ) :
 
 	// Home/My Groups
 	case 'my-groups':

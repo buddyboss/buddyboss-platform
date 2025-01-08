@@ -9,42 +9,39 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
+$bp_current_action    = bp_current_action();
 if ( bp_is_user() ) {
-	switch ( bp_current_action() ) :
-		case 'my-media':
-			$count = bp_media_get_total_media_count();
-			?>
-			<div class="bb-item-count">
-				<?php
-				if ( ! $is_send_ajax_request ) {
+	$count = false;
 
-					/* translators: %d is the photo count */
-					printf(
-						wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-						$count
-					);
-				}
-				?>
-			</div>
+	if ( 'my-media' === $bp_current_action ) {
+		$count = $count = bp_media_get_total_media_count();
+	} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
+		$count = bb_media_get_total_album_count();
+	}
+
+	if ( false !== $count ) {
+		?>
+		<div class="bb-item-count">
 			<?php
-			break;
-		case 'albums':
-			if ( ! bp_is_single_album() ) {
-				$count = bp_media_get_total_album_count();
-				?>
-				<div class="bb-item-count">
-					<?php
-					/* translators: %d is the album count */
-					printf(
-						wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-						$count
-					);
-					?>
-				</div>
-				<?php
+			if ( ! $is_send_ajax_request ) {
+				/* translators: %d is the count */
+				printf(
+					wp_kses(
+						_n(
+							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Album' : 'Photo' ),
+							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Albums' : 'Photos' ),
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
+					),
+					$count
+				);
 			}
-			break;
-	endswitch;
+			?>
+		</div>
+		<?php
+	}
 }
 ?>
 <div class="bb-media-container member-media">
@@ -57,7 +54,7 @@ if ( bp_is_user() ) {
 	}
 	bp_get_template_part( 'document/theatre' );
 
-	switch ( bp_current_action() ) :
+	switch ( $bp_current_action ) :
 
 		// Home/Media.
 		case 'my-media':

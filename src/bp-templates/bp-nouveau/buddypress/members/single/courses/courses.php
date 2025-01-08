@@ -62,7 +62,15 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 			/* translators: %d is the courses count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Course', '<span class="bb-count">%d</span> Courses', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				wp_kses(
+					_n(
+						'<span class="bb-count">%d</span> Course',
+						'<span class="bb-count">%d</span> Courses',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
 				$count
 			);
 			?>

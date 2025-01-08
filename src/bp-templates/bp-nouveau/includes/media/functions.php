@@ -199,16 +199,16 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		$params['dir_labels'],
 		array(
 			'video' => array(
-				'singular' => esc_html( 'Video', 'buddyboss' ),
-				'plural'   => esc_html( 'Videos', 'buddyboss' ),
+				'singular' => esc_html__( 'Video', 'buddyboss' ),
+				'plural'   => esc_html__( 'Videos', 'buddyboss' ),
 			),
 			'album' => array(
-				'singular' => esc_html( 'Album', 'buddyboss' ),
-				'plural'   => esc_html( 'Albums', 'buddyboss' ),
+				'singular' => esc_html__( 'Album', 'buddyboss' ),
+				'plural'   => esc_html__( 'Albums', 'buddyboss' ),
 			),
 			'media' => array(
-				'singular' => esc_html( 'Photo', 'buddyboss' ),
-				'plural'   => esc_html( 'Photos', 'buddyboss' ),
+				'singular' => esc_html__( 'Photo', 'buddyboss' ),
+				'plural'   => esc_html__( 'Photos', 'buddyboss' ),
 			),
 		)
 	);

@@ -166,11 +166,9 @@ class BP_Friends_Component extends BP_Component {
 			return;
 		}
 
-		$access       = bp_core_can_edit_settings();
-		$slug         = bp_get_friends_slug();
-		$friends_link = trailingslashit( $user_domain . $slug );
-		$enable_count = bb_member_directory_count_enable();
-	
+		$access        = bp_core_can_edit_settings();
+		$slug          = bp_get_friends_slug();
+		$friends_link  = trailingslashit( $user_domain . $slug );
 		$main_nav_name = __( 'Connections', 'buddyboss' );
 
 		$main_nav = array(

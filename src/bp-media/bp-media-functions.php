@@ -849,7 +849,7 @@ function bp_media_get_total_media_count() {
  *
  * @return int album count of the user.
  */
-function bp_media_get_total_album_count() {
+function bb_media_get_total_album_count() {
 
 	add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	bp_has_albums( bp_ajax_querystring( 'albums' ) );
@@ -858,13 +858,13 @@ function bp_media_get_total_album_count() {
 	remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 
 	/**
-	 * Filters the total media count for a given user.
+	 * Filters the total media album count for a given user.
 	 *
-	 * @param int $count Total media count for a given user.
+	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @param int $count Total media album count for a given user.
 	 */
-	return apply_filters( 'bp_media_get_total_album_count', (int) $count );
+	return apply_filters( 'bb_media_get_total_album_count', (int) $count );
 }
 
 /**

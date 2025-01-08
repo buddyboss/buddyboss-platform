@@ -9,30 +9,33 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
-
+$bp_current_action    = bp_current_action();
 if ( bp_is_user() ) {
-	switch ( bp_current_action() ) :
-		case 'my-video':
-		 	$count = bp_video_get_total_video_count( bp_displayed_user_id() );
-			?>
-			<div class="bb-item-count">
-				<?php
-				if ( ! $is_send_ajax_request ) {
-
-					/* translators: %d is the video count */
-					printf(
-						wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-						$count
-					);
-				}
-				?>
-			</div>
+	if ( 'my-video' === $bp_current_action ) {
+		$count = bp_video_get_total_video_count();
+		?>
+		<div class="bb-item-count">
 			<?php
-			break;
-		case 'albums':
-			break;
-	endswitch;
+			if ( ! $is_send_ajax_request ) {
 
+				/* translators: %d is the video count */
+				printf(
+					wp_kses(
+						_n(
+							'<span class="bb-count">%d</span> Video',
+							'<span class="bb-count">%d</span> Videos',
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
+					),
+					$count
+				);
+			}
+			?>
+		</div>
+		<?php
+	}
 }
 ?>
 <div class="bb-video-container bb-media-container member-video">
@@ -42,7 +45,7 @@ if ( bp_is_user() ) {
 	bp_get_template_part( 'media/theatre' );
 	bp_get_template_part( 'document/theatre' );
 
-	switch ( bp_current_action() ) :
+	switch ( $bp_current_action ) :
 
 		// Home/Video.
 		case 'my-video':

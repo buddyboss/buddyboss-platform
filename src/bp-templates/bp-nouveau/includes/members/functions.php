@@ -17,8 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @return array An associative array of nav items.
  */
 function bp_nouveau_get_members_directory_nav_items() {
-	$enable_count = bb_member_directory_count_enable();
-	$nav_items    = array();
+	$nav_items = array();
 
 	$nav_items['all'] = array(
 		'component' => 'members',

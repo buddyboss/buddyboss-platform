@@ -119,8 +119,8 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
 function bp_nouveau_groups_localize_scripts( $params = array() ) {
 
 	$params['dir_labels']['groups'] = array(
-		'singular' => esc_html( 'Group', 'buddyboss' ),
-		'plural'   => esc_html( 'Groups', 'buddyboss' ),
+		'singular' => esc_html__( 'Group', 'buddyboss' ),
+		'plural'   => esc_html__( 'Groups', 'buddyboss' ),
 	);
 
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {

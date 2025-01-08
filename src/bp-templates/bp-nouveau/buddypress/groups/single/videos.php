@@ -18,7 +18,15 @@ if ( 'videos' === bp_current_action() ) {
 
 			/* translators: %d is the video count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				wp_kses(
+					_n(
+						'<span class="bb-count">%d</span> Video',
+						'<span class="bb-count">%d</span> Videos',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
 				$count
 			);
 		}

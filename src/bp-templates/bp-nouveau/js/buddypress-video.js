@@ -474,7 +474,7 @@ window.bp = window.bp || {};
 											dir_count = response.data.video_all_count;
 										} else if ( 'personal' === dir_scope ) {
 											dir_count = response.data.video_personal_count;
-										} else if( 'groups' === dir_scope ) {
+										} else if ( 'groups' === dir_scope ) {
 											dir_count = response.data.video_group_count;
 										}
 
