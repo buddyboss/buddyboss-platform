@@ -11,7 +11,7 @@
 ?>
 <div class="bb-subnav-filters-container bb-subnav-filters-search">
 	<?php
-	if ( bp_is_activity_directory() && bb_is_activity_search_enabled() ) {
+	if ( ( bp_is_activity_directory() || ( bp_is_user() && bp_is_current_component( 'activity' ) ) ) && bb_is_activity_search_enabled() ) {
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>	
