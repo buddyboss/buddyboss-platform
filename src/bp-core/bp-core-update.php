@@ -3892,6 +3892,7 @@ function bb_update_to_2_6_80() {
 		// Migrate activity tabs settings to filters.
 		if ( ! bp_is_activity_tabs_active() ) {
 			bp_update_option( 'bb_activity_filter_options', array( 'all' => 1 ) );
+			bp_update_option( 'bb_activity_timeline_filter_options', array( 'just-me' => 1 ) );
 		}
 
 		set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );

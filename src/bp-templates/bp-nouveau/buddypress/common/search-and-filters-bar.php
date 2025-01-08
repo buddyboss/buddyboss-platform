@@ -78,9 +78,18 @@
 		?>
 	</div><!-- search & filters -->
 </div>
-<?php if ( bp_is_activity_directory() ) {
-	$activity_filters = bb_get_enabled_activity_filter_options();
-	$filters_labels   = bb_get_activity_filter_options_labels();
+<?php
+if ( bp_is_activity_directory() || ( bp_is_user() && bp_is_current_component( 'activity' ) ) ) {
+
+	// Timeline filters.
+	if ( bp_is_user() && bp_is_current_component( 'activity' ) ) {
+		$activity_filters = bb_get_enabled_activity_timeline_filter_options();
+		$filters_labels   = bb_get_activity_timeline_filter_options_labels();
+	} else {
+		$activity_filters = bb_get_enabled_activity_filter_options();
+		$filters_labels   = bb_get_activity_filter_options_labels();
+	}
+
 	arsort( $activity_filters );
 	$default_selected = key( $activity_filters );
 	?>
@@ -111,10 +120,10 @@
 									continue;
 								}
 
-								if ( 'all' !== $key && ! is_user_logged_in() ) {
+								if ( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() ) {
 									continue;
 								}
-						
+
 								if ( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] ) {
 									continue;
 								}
