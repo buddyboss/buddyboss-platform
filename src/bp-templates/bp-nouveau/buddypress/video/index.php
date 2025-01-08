@@ -37,9 +37,17 @@ bp_nouveau_template_notices();
 		<?php
 		if ( ! $is_send_ajax_request ) {
 			$count = bp_get_total_video_count();
+
 			/* translators: %d is the video count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				wp_kses(
+					_n(
+						'<span class="bb-count">%d</span> Video',
+						'<span class="bb-count">%d</span> Videos',
+						$count,
+						'buddyboss'
+					), array( 'span' => array( 'class' => true ) )
+				),
 				$count
 			);
 		}

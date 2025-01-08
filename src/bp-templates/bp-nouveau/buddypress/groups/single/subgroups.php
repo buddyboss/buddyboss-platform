@@ -27,7 +27,15 @@ if ( 'subgroups' === bp_current_action() ) {
 
 				/* translators: %d is the group count */
 				printf(
-					wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+					wp_kses(
+						_n(
+							'<span class="bb-count">%d</span> Group',
+							'<span class="bb-count">%d</span> Groups',
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
+					),
 					$count
 				);
 			}

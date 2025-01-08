@@ -19,7 +19,15 @@ if ( 'photos' === bp_current_action() ) {
 
 			/* translators: %d is the photo count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Photo', '<span class="bb-count">%d</span> Photos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				wp_kses(
+					_n(
+						'<span class="bb-count">%d</span> Photo',
+						'<span class="bb-count">%d</span> Photos',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
 				$count
 			);
 		}

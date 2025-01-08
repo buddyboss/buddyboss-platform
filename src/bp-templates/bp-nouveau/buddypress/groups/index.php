@@ -24,7 +24,15 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 			$count = bp_get_total_group_count();
 			/* translators: %d is the group count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
+				wp_kses(
+					_n(
+						'<span class="bb-count">%d</span> Group',
+						'<span class="bb-count">%d</span> Groups',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
 				$count
 			);
 		}
