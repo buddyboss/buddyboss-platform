@@ -7,6 +7,7 @@
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
 ?>
 <div id="profile-card" class="bb-profile-card bb-popup-card" data-bp-item-id="" data-bp-item-component="members">
 

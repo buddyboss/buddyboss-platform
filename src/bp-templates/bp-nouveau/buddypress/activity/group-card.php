@@ -7,6 +7,7 @@
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
 ?>
 <div id="group-card" class="bb-group-card bb-popup-card" data-bp-item-id="" data-bp-item-component="groups">
 

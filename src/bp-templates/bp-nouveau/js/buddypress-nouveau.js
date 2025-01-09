@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, AbortController */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -956,8 +956,6 @@ window.bp = window.bp || {};
 
 				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
 					var $newAvatar = $( relatedTarget );
-					
-        
 					// Hide the current popup
 					if ( $( '#profile-card' ).hasClass( 'show' ) ) {
 						bp.Nouveau.hidePopupCard();
@@ -4609,7 +4607,7 @@ window.bp = window.bp || {};
 			var memberTypeCSS = {};
 			if ( data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ) {
 				var labelColors = data.member_types[ 0 ].label_colors || {};
-				memberTypeCSS[ 'color' ] = labelColors.color || '';
+				memberTypeCSS.color = labelColors.color || '';
 				memberTypeCSS[ 'background-color' ] = labelColors[ 'background-color' ] || '';
 			}
 
@@ -4642,7 +4640,7 @@ window.bp = window.bp || {};
 			$profileCard
 				.find( '.bb-card-footer .card-button-profile' )
 				.attr( 'href', data.link );
-		
+
 			if ( currentUser ) {
 				$profileCard
 					.find( '.bb-card-footer' )
@@ -4665,14 +4663,22 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Profile popup card for avatars.
+		 */
 		profilePopupCard: function() {
 			var $avatar = $( this );
 			var offset = $avatar.offset();
 			var $li = $avatar.closest( '.comment-item, .activity-item' );
-			var cardData = JSON.parse( $li.attr( 'data-bb-profile-card' ) );
-			var memberId = cardData.user_id;
-			var currentUserId = cardData.current_user_id;
-			var currentUser = currentUserId === memberId;
+			if ( ! $li.attr( 'data-bb-profile-card' ) || ! $li.attr( 'data-bb-profile-card' ).length ) {
+				return;
+			}
+			var memberId = $li.attr( 'data-bb-profile-card' );
+			var currentUserId = 0;
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+				currentUserId = BP_Nouveau.activity.params.user_id;
+			}
+			var currentUser = parseInt( currentUserId ) === parseInt( memberId );
 			var restUrl = BP_Nouveau.rest_url;
 			var url = restUrl + '/members/' + memberId + '/info';
 			var $profileCard = $( '#profile-card' );
@@ -4695,10 +4701,10 @@ window.bp = window.bp || {};
 				};
 			}
 
-			// Cancel any ongoing request
+			// Cancel any ongoing request.
 			bp.Nouveau.abortOngoingRequest();
 
-			// Check cache
+			// Check cache.
 			if ( bp.Nouveau.cacheProfileCard[ memberId ] ) {
 				var cachedProfileData = bp.Nouveau.cacheProfileCard[ memberId ];
 				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
@@ -4712,7 +4718,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Set up a new AbortController for current request
+			// Set up a new AbortController for current request.
 			var controller = new AbortController();
 			currentRequest = controller;
 
@@ -4745,10 +4751,11 @@ window.bp = window.bp || {};
 					}
 				},
 				success: function ( data ) {
-					// Check if this request was aborted
-					if ( controller.signal.aborted ) return;
-
-					// Cache profile data
+					// Check if this request was aborted.
+					if ( controller.signal.aborted ) {
+						return;
+					}
+					// Cache profile data.
 					bp.Nouveau.cacheProfileCard[ memberId ] = data;
 
 					$profileCard.removeClass( 'loading' );
@@ -4811,7 +4818,7 @@ window.bp = window.bp || {};
 			var groupMembers = data.group_members || [];
 			var $groupMembersContainer = $( '.bs-group-members' );
 			var membersLabel = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
-		
+
 			$groupCard
 				.addClass( 'show' )
 				.attr( 'data-bp-item-id', data.id );
@@ -4835,7 +4842,7 @@ window.bp = window.bp || {};
 				.attr( 'href', data.link );
 
 			groupMembers.forEach( function ( member ) {
-				var memberHtml = 
+				var memberHtml =
 					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="' + member.name + '">' +
 						'<a href="' + member.link + '">' +
 							'<img src="' + member.avatar_urls.thumb + '" alt="' + member.name + '" class="round">' +
@@ -4853,7 +4860,7 @@ window.bp = window.bp || {};
 					'</span>';
 				$groupMembersContainer.append( moreIconHtml );
 			}
-		
+
 			if ( !data.can_join ) {
 				$groupCard
 					.find( '.bb-card-footer' )
@@ -4866,18 +4873,25 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Group popup card for avatars.
+		 */
 		groupPopupCard: function() {
-			var $avatar = $( this );
-			var offset = $avatar.offset();
-			var $li = $avatar.closest( '.activity-item' );
-			var cardData = JSON.parse( $li.attr( 'data-bb-profile-card' ) );
-			var groupId = cardData.group_id;
-			var memberId = cardData.user_id;
-			var currentUserId = cardData.current_user_id;
+			var $avatar       = $( this );
+			var offset        = $avatar.offset();
+			var $li           = $avatar.closest( '.activity-item' );
+			var cardData      = $li.attr( 'data-bb-profile-card' );
+			var liClass       = $li.attr( 'class' ).match( /group-\d+/ );
+			var groupId       = liClass[0].replace( 'group-', '' );
+			var memberId      = cardData.user_id;
+			var currentUserId = 0;
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+				currentUserId = BP_Nouveau.activity.params.user_id;
+			}
 			var currentUser = currentUserId === memberId;
-			var restUrl = BP_Nouveau.rest_url;
-			var url = restUrl + '/groups/' + groupId + '/info';
-			var $groupCard = $( '#group-card' );
+			var restUrl     = BP_Nouveau.rest_url;
+			var url         = restUrl + '/groups/' + groupId + '/info';
+			var $groupCard  = $( '#group-card' );
 
 			function setPopupPosition() {
 				var popupTop, popupLeft;
@@ -4946,7 +4960,9 @@ window.bp = window.bp || {};
 				},
 				success: function ( data ) {
 					// Check if this request was aborted
-					if ( controller.signal.aborted ) return;
+					if ( controller.signal.aborted ) {
+						return;
+					}
 
 					// Cache group data
 					bp.Nouveau.cacheGroupCard[ groupId ] = data;
@@ -4962,6 +4978,9 @@ window.bp = window.bp || {};
 			});
 		},
 
+		/**
+		 * Hide popup card on mouse leave.
+		 */
 		checkHidePopupCard: function () {
 			if ( !hoverAvatar && !hoverCardPopup ) {
 				hideCardTimeout = setTimeout( function() {
@@ -4970,6 +4989,9 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Hide popup card.
+		 */
 		hidePopupCard: function() {
 			$( '.bb-popup-card' ).removeClass( 'show' );
 			bp.Nouveau.resetProfileCard();

@@ -6388,59 +6388,6 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 }
 
 /**
- * Get the profile card edit data.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $activity_comment_id Activity comment ID.
- *
- * @return array|bool The profile card edit data or false otherwise.
- */
-function bb_profile_card_comment_get_edit_data( $activity_comment_id = 0 ) {
-	global $activities_template;
-
-	// check activity comment empty or not.
-	if ( empty( $activity_comment_id ) && empty( $activities_template ) ) {
-		return false;
-	}
-
-	$activity_comment = new stdClass();
-	// get activity comment.
-	if ( ! empty( $activity_comment_id ) ) {
-		$activity_comment = new BP_Activity_Activity( $activity_comment_id );
-	} elseif ( ! empty( $activities_template->activity->current_comment ) ) {
-		$activity_comment = $activities_template->activity->current_comment;
-	}
-
-	// check activity comment exists.
-	if ( empty( $activity_comment->id ) ) {
-		return false;
-	}
-
-	$edit_data = wp_cache_get( $activity_comment_id, 'activity_edit_data' );
-	if ( false === $edit_data ) {
-		$activity_comment_user_id = bp_get_activity_comment_user_id();
-
-		$edit_data = array(
-			'user_id'         => $activity_comment_user_id,
-			'current_user_id' => get_current_user_id(),
-		);
-	}
-
-	/**
-	 * Filter here to edit the activity comment edit data.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $activity_comment_data The Activity comment edit data.
-	 */
-	return apply_filters(
-		'bb_profile_card_comment_get_edit_data',
-		$edit_data
-	);
-}
-
-/**
  * Check CPT comment global settings.
  *
  * @since BuddyBoss 2.4.60

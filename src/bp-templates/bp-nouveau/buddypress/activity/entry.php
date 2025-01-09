@@ -31,34 +31,9 @@ if ( ! empty( $link_embed ) ) {
 }
 
 $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
-
-global $activities_template;
-
-if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) {
-	// If group activity.
-	$group_id        = (int) $activities_template->activity->item_id;
-	$group           = groups_get_group( $group_id );
-	$group_name      = bp_get_group_name( $group );
-	$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
-	$group_permalink = bp_get_group_permalink( $group );
-	$group_permalink = ! empty( $group_permalink ) ? esc_url( $group_permalink ) : '';
-	$activity_link   = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
-	$activity_link   = ! empty( $activity_link ) ? esc_url( $activity_link ) : '';
-}
-
-$profile_card_array = array(
-    "user_id" => bp_get_activity_user_id(),
-    "current_user_id" => get_current_user_id(),
-);
-
-if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) {
-    $profile_card_array[ "group_id" ] = $group_id;
-}
-
-$profile_card_data = htmlspecialchars( json_encode( $profile_card_array ), ENT_QUOTES, 'UTF-8' );
 ?>
 
-<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-bb-profile-card="<?php echo $profile_card_data; ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
+<li class="<?php bp_activity_css_class(); ?>" id="activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>' data-bb-profile-card="<?php echo bp_get_activity_user_id(); ?>">
 
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
@@ -87,6 +62,14 @@ $profile_card_data = htmlspecialchars( json_encode( $profile_card_array ), ENT_Q
 	if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 		// If group activity.
+		$group_id        = (int) $activities_template->activity->item_id;
+		$group           = groups_get_group( $group_id );
+		$group_name      = bp_get_group_name( $group );
+		$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
+		$group_permalink = bp_get_group_permalink( $group );
+		$group_permalink = ! empty( $group_permalink ) ? esc_url( $group_permalink ) : '';
+		$activity_link   = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
+		$activity_link   = ! empty( $activity_link ) ? esc_url( $activity_link ) : '';
 		?>
 		<div class="bp-activity-head-group">
 			<div class="activity-group-avatar">
