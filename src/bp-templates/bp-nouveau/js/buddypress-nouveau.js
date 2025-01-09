@@ -932,26 +932,26 @@ window.bp = window.bp || {};
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
-			// Profile/Group Popup Card
-			$( document ).on( 'mouseenter', '.item-avatar img.avatar, .author-avatar img.avatar', function() {
+			// Profile/Group Popup Card.
+			$( document ).on( 'mouseenter', '.item-avatar img.avatar, .author-avatar img.avatar', function () {
 				hoverAvatar = true;
-				if ( !popupCardLoaded ) {
+				if ( ! popupCardLoaded ) {
 					if ( hideCardTimeout ) {
 						clearTimeout( hideCardTimeout );
 					}
-					bp.Nouveau.profilePopupCard.call(this);
+					bp.Nouveau.profilePopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseenter', '.group-avatar img.avatar', function() {
+			$( document ).on( 'mouseenter', '.group-avatar img.avatar', function () {
 				hoverAvatar = true;
-				if ( !popupCardLoaded ) {
+				if ( ! popupCardLoaded ) {
 					if ( hideCardTimeout ) {
 						clearTimeout( hideCardTimeout );
 					}
-					bp.Nouveau.groupPopupCard.call(this);
+					bp.Nouveau.groupPopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function( event ) {
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function ( event ) {
 				var relatedTarget = event.relatedTarget;
 
 				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
@@ -973,21 +973,21 @@ window.bp = window.bp || {};
 					}
 				} else {
 					hoverAvatar = false;
-					if (!hoverCardPopup) {
+					if ( ! hoverCardPopup ) {
 						bp.Nouveau.checkHidePopupCard();
 					}
 				}
 			} );
-			$( document ).on( 'mouseenter', '#profile-card, #group-card', function() {
+			$( document ).on( 'mouseenter', '#profile-card, #group-card', function () {
 				hoverCardPopup = true;
 				if ( hideCardTimeout ) {
 					clearTimeout( hideCardTimeout );
 				}
-			});
-			$( document ).on( 'mouseleave', '#profile-card, #group-card', function() {
-				setTimeout( function() {
+			} );
+			$( document ).on( 'mouseleave', '#profile-card, #group-card', function () {
+				setTimeout( function () {
 					hoverCardPopup = false;
-					if ( !hoverAvatar ) {
+					if ( ! hoverAvatar ) {
 						bp.Nouveau.checkHidePopupCard();
 					}
 				}, 100 );
@@ -2042,11 +2042,11 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
-		 	// Clear cache for a specific profile/group
-			if (target.closest( '#profile-card' ).length) {
+			// Clear cache for a specific profile/group.
+			if ( target.closest( '#profile-card' ).length ) {
 				bp.Nouveau.clearCacheProfileCard( item_id );
 			}
-			if (target.closest( '#group-card' ).length) {
+			if ( target.closest( '#group-card' ).length ) {
 				bp.Nouveau.clearCacheGroupCard( item_id );
 			}
 
@@ -4541,8 +4541,8 @@ window.bp = window.bp || {};
 		 * Helper function to clear cache for a specific member.
 		 */
 		clearCacheProfileCard: function ( memberId ) {
-			if ( this.cacheProfileCard[ memberId ] ) {
-				delete this.cacheProfileCard[ memberId ];
+			if ( this.cacheProfileCard[memberId] ) {
+				delete this.cacheProfileCard[memberId];
 			}
 		},
 
@@ -4552,99 +4552,52 @@ window.bp = window.bp || {};
 		resetProfileCard: function () {
 			var $profileCard = $( '#profile-card' );
 
-			$profileCard
-				.attr( 'data-bp-item-id', '' )
-				.removeClass( 'show loading' );
-			$profileCard
-				.find( '.bb-card-footer, .skeleton-card-footer' )
-				.removeClass( 'bb-card-footer--plain' );
-			$profileCard
-				.find( '.bb-card-profile-type' )
-				.removeClass( 'hasMemberType' )
-				.text( '' )
-				.removeAttr( 'style' );
-			$profileCard
-				.find( '.card-profile-status' )
-				.removeClass( 'active' );
-			$profileCard
-				.find( '.bb-card-heading' )
-				.text( '' );
-			$profileCard
-				.find( '.card-meta-joined span, .card-meta-last-active, .card-meta-followers' )
-				.text( '' );
-			$profileCard
-				.find( '.bb-card-avatar img' )
-				.attr( 'src', '' );
-			$profileCard
-				.find( '.card-button-follow' )
-				.attr( 'data-bp-btn-action', '' )
-				.attr( 'id', '' );
-			$profileCard
-				.find( '.follow-button.generic-button' )
-				.removeClass('following not_following')
-				.attr( 'id', '' );
-			$profileCard
-				.find( '.send-message' )
-				.attr( 'href', '' );
-			$profileCard
-				.find( '.bb-card-action-connect' )
-				.html('');
-			$profileCard
-				.find( '.bb-card-action-follow' )
-				.html('');
+			$profileCard.attr( 'data-bp-item-id', '' ).removeClass( 'show loading' );
+			$profileCard.find( '.bb-card-footer, .skeleton-card-footer' ).removeClass( 'bb-card-footer--plain' );
+			$profileCard.find( '.bb-card-profile-type' ).removeClass( 'hasMemberType' ).text( '' ).removeAttr( 'style' );
+			$profileCard.find( '.card-profile-status' ).removeClass( 'active' );
+			$profileCard.find( '.bb-card-heading' ).text( '' );
+			$profileCard.find( '.card-meta-joined span, .card-meta-last-active, .card-meta-followers' ).text( '' );
+			$profileCard.find( '.bb-card-avatar img' ).attr( 'src', '' );
+			$profileCard.find( '.card-button-follow' ).attr( 'data-bp-btn-action', '' ).attr( 'id', '' );
+			$profileCard.find( '.follow-button.generic-button' ).removeClass( 'following not_following' ).attr( 'id', '' );
+			$profileCard.find( '.send-message' ).attr( 'href', '' );
+			$profileCard.find( '.bb-card-action-connect' ).html( '' );
+			$profileCard.find( '.bb-card-action-follow' ).html( '' );
 		},
 
 		/**
 		 * Helper function to update and populate profile popup cards with data.
 		 */
 		updateProfileCard: function ( data, currentUser ) {
-			var $profileCard = $( '#profile-card' );
-			var registeredDate = new Date( data.registered_date );
-			var joinedDate = new Intl.DateTimeFormat( 'en-US', { year: 'numeric', month: 'short' } ).format( registeredDate );
-			var activeStatus = data.last_activity === 'Active now' ? 'active' : '';
+			var $profileCard    = $( '#profile-card' );
+			var registeredDate  = new Date( data.registered_date );
+			var joinedDate      = new Intl.DateTimeFormat( 'en-US', {
+				year : 'numeric',
+				month: 'short'
+			} ).format( registeredDate );
+			var activeStatus    = data.last_activity === 'Active now' ? 'active' : '';
 			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
-			var memberType = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
-			var memberTypeCSS = {};
+			var memberType      = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
+			var memberTypeCSS   = {};
 			if ( data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ) {
-				var labelColors = data.member_types[ 0 ].label_colors || {};
-				memberTypeCSS.color = labelColors.color || '';
-				memberTypeCSS[ 'background-color' ] = labelColors[ 'background-color' ] || '';
+				var labelColors                   = data.member_types[0].label_colors || {};
+				memberTypeCSS.color               = labelColors.color || '';
+				memberTypeCSS['background-color'] = labelColors['background-color'] || '';
 			}
 
-			$profileCard
-				.addClass( 'show' )
-				.attr( 'data-bp-item-id', data.id );
-			$profileCard
-				.find( '.bb-card-avatar img' )
-				.attr( 'src', data.avatar_urls.thumb );
-			$profileCard
-				.find( '.card-profile-status' )
-				.addClass( activeStatus );
-			$profileCard
-				.find( '.bb-card-heading' )
-				.text( data.profile_name );
-			$profileCard
-				.find( '.bb-card-profile-type' )
-				.addClass( memberTypeClass )
-				.text( memberType )
-				.css(memberTypeCSS);
-			$profileCard
-				.find( '.card-meta-joined span' )
-				.text( joinedDate );
-			$profileCard
-				.find( '.card-meta-last-active' )
-				.text( data.last_activity );
-			$profileCard
-				.find( '.card-meta-followers' )
-				.text( data.followers );
-			$profileCard
-				.find( '.bb-card-footer .card-button-profile' )
-				.attr( 'href', data.link );
+			$profileCard.addClass( 'show' ).attr( 'data-bp-item-id', data.id );
+			$profileCard.find( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+			$profileCard.find( '.card-profile-status' ).addClass( activeStatus );
+			$profileCard.find( '.bb-card-heading' ).text( data.profile_name );
+			$profileCard.find( '.bb-card-profile-type' ).addClass( memberTypeClass ).text( memberType ).css( memberTypeCSS );
+			$profileCard.find( '.card-meta-joined span' ).text( joinedDate );
+			$profileCard.find( '.card-meta-last-active' ).text( data.last_activity );
+			$profileCard.find( '.card-meta-followers' ).text( data.followers );
+			$profileCard.find( '.bb-card-footer .card-button-profile' ).attr( 'href', data.link );
 
 			if ( currentUser ) {
-				$profileCard
-					.find( '.bb-card-footer' )
-					.addClass( 'bb-card-footer--plain' );
+				$profileCard.find( '.bb-card-footer' ).addClass( 'bb-card-footer--plain' );
 			}
 
 			var $followButtonWrapper = $profileCard.find( '.bb-card-action-follow' );
@@ -4666,37 +4619,37 @@ window.bp = window.bp || {};
 		/**
 		 * Profile popup card for avatars.
 		 */
-		profilePopupCard: function() {
+		profilePopupCard: function () {
 			var $avatar = $( this );
-			var offset = $avatar.offset();
-			var $li = $avatar.closest( '.comment-item, .activity-item' );
+			var offset  = $avatar.offset();
+			var $li     = $avatar.closest( '.comment-item, .activity-item' );
 			if ( ! $li.attr( 'data-bb-profile-card' ) || ! $li.attr( 'data-bb-profile-card' ).length ) {
 				return;
 			}
-			var memberId = $li.attr( 'data-bb-profile-card' );
+			var memberId      = $li.attr( 'data-bb-profile-card' );
 			var currentUserId = 0;
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
 				currentUserId = BP_Nouveau.activity.params.user_id;
 			}
-			var currentUser = parseInt( currentUserId ) === parseInt( memberId );
-			var restUrl = BP_Nouveau.rest_url;
-			var url = restUrl + '/members/' + memberId + '/info';
+			var currentUser  = parseInt( currentUserId ) === parseInt( memberId );
+			var restUrl      = BP_Nouveau.rest_url;
+			var url          = restUrl + '/members/' + memberId + '/info';
 			var $profileCard = $( '#profile-card' );
 
 			function setPopupPosition() {
 				var popupTop, popupLeft;
 				if ( window.innerWidth <= 560 ) {
-					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
 					popupLeft = 5;
 				} else if ( window.innerWidth <= 800 ) {
-					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
 					popupLeft = offset.left + $avatar.outerWidth() - 20;
 				} else {
-					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
 					popupLeft = offset.left + $avatar.outerWidth() - 100;
 				}
 				return {
-					top: popupTop - $( window ).scrollTop(),
+					top : popupTop - $( window ).scrollTop(),
 					left: popupLeft - $( window ).scrollLeft(),
 				};
 			}
@@ -4705,14 +4658,14 @@ window.bp = window.bp || {};
 			bp.Nouveau.abortOngoingRequest();
 
 			// Check cache.
-			if ( bp.Nouveau.cacheProfileCard[ memberId ] ) {
-				var cachedProfileData = bp.Nouveau.cacheProfileCard[ memberId ];
+			if ( bp.Nouveau.cacheProfileCard[memberId] ) {
+				var cachedProfileData = bp.Nouveau.cacheProfileCard[memberId];
 				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
 
 				var position = setPopupPosition();
 				$profileCard.css( {
-					top: position.top + 'px',
-            		left: position.left + 'px',
+					top : position.top + 'px',
+					left: position.left + 'px',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
 				return;
@@ -4726,55 +4679,51 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			$.ajax({
-				url: url,
-				method: 'GET',
-				headers: {
+			$.ajax( {
+				url       : url,
+				method    : 'GET',
+				headers   : {
 					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
-				signal: controller.signal, // Attach the signal to the request
+				signal    : controller.signal, // Attach the signal to the request.
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
-					// Position popup near hovered avatar
+					// Position popup near hovered avatar.
 					var position = setPopupPosition();
-					$profileCard
-						.css( {
-							top: position.top + 'px',
-            				left: position.left + 'px',
-						} )
-						.addClass( 'show loading' );
+					$profileCard.css( {
+						top : position.top + 'px',
+						left: position.left + 'px',
+					} ).addClass( 'show loading' );
 
 					if ( currentUser ) {
-						$profileCard
-							.find( '.skeleton-card-footer' )
-							.addClass( 'bb-card-footer--plain' );
+						$profileCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
 					}
 				},
-				success: function ( data ) {
+				success   : function ( data ) {
 					// Check if this request was aborted.
 					if ( controller.signal.aborted ) {
 						return;
 					}
 					// Cache profile data.
-					bp.Nouveau.cacheProfileCard[ memberId ] = data;
+					bp.Nouveau.cacheProfileCard[memberId] = data;
 
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
 					popupCardLoaded = true;
 				},
-				error: function ( xhr, status, error ) {
+				error     : function ( xhr, status, error ) {
 					console.error( 'Error fetching member info:', error );
 					$profileCard.html( '<span>Failed to load data.</span>' );
 				}
-			});
+			} );
 		},
 
 		/**
 		 * Helper function to clear cache for a specific group.
 		 */
 		clearCacheGroupCard: function ( groupId ) {
-			if ( this.cacheGroupCard[ groupId ] ) {
-				delete this.cacheGroupCard[ groupId ];
+			if ( this.cacheGroupCard[groupId] ) {
+				delete this.cacheGroupCard[groupId];
 			}
 		},
 
@@ -4784,62 +4733,32 @@ window.bp = window.bp || {};
 		resetGroupCard: function () {
 			var $groupCard = $( '#group-card' );
 
-			$groupCard
-				.attr( 'data-bp-item-id', '' )
-				.removeClass( 'show loading' );
-			$groupCard
-				.find( '.bb-card-heading' )
-				.text( '' );
-			$groupCard
-				.find( '.bb-card-footer, .skeleton-card-footer' )
-				.removeClass( 'bb-card-footer--plain' );
-			$groupCard
-				.find( '.card-meta-type, .card-meta-status, .card-meta-last-active' )
-				.text( '' );
-			$groupCard
-				.find( '.bb-card-avatar img' )
-				.attr( 'src', '' );
-			$groupCard
-				.find( '.card-button-group' )
-				.attr( 'href', '' );
-			$groupCard
-				.find( '.bs-group-members' )
-				.html( '' );
-			$groupCard
-				.find( '.bb-card-action-join' )
-				.html('');
+			$groupCard.attr( 'data-bp-item-id', '' ).removeClass( 'show loading' );
+			$groupCard.find( '.bb-card-heading' ).text( '' );
+			$groupCard.find( '.bb-card-footer, .skeleton-card-footer' ).removeClass( 'bb-card-footer--plain' );
+			$groupCard.find( '.card-meta-type, .card-meta-status, .card-meta-last-active' ).text( '' );
+			$groupCard.find( '.bb-card-avatar img' ).attr( 'src', '' );
+			$groupCard.find( '.card-button-group' ).attr( 'href', '' );
+			$groupCard.find( '.bs-group-members' ).html( '' );
+			$groupCard.find( '.bb-card-action-join' ).html( '' );
 		},
 
 		/**
 		 * Helper function to update and populate group popup cards with data.
 		 */
 		updateGroupCard: function ( data ) {
-			var $groupCard = $( '#group-card' );
-			var groupMembers = data.group_members || [];
+			var $groupCard             = $( '#group-card' );
+			var groupMembers           = data.group_members || [];
 			var $groupMembersContainer = $( '.bs-group-members' );
-			var membersLabel = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
+			var membersLabel           = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
 
-			$groupCard
-				.addClass( 'show' )
-				.attr( 'data-bp-item-id', data.id );
-			$groupCard
-				.find( '.bb-card-avatar img' )
-				.attr( 'src', data.avatar_urls.thumb );
-			$groupCard
-				.find( '.bb-card-heading' )
-				.text( data.name );
-			$groupCard
-				.find( '.card-meta-status' )
-				.text( data.status );
-			$groupCard
-				.find( '.card-meta-type' )
-				.text( data.group_type_label );
-			$groupCard
-				.find( '.card-meta-last-active' )
-				.text( data.last_activity );
-			$groupCard
-				.find( '.bb-card-footer .card-button-group' )
-				.attr( 'href', data.link );
+			$groupCard.addClass( 'show' ).attr( 'data-bp-item-id', data.id );
+			$groupCard.find( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+			$groupCard.find( '.bb-card-heading' ).text( data.name );
+			$groupCard.find( '.card-meta-status' ).text( data.status );
+			$groupCard.find( '.card-meta-type' ).text( data.group_type_label );
+			$groupCard.find( '.card-meta-last-active' ).text( data.last_activity );
+			$groupCard.find( '.bb-card-footer .card-button-group' ).attr( 'href', data.link );
 
 			groupMembers.forEach( function ( member ) {
 				var memberHtml =
@@ -4861,10 +4780,8 @@ window.bp = window.bp || {};
 				$groupMembersContainer.append( moreIconHtml );
 			}
 
-			if ( !data.can_join ) {
-				$groupCard
-					.find( '.bb-card-footer' )
-					.addClass( 'bb-card-footer--plain' );
+			if ( ! data.can_join ) {
+				$groupCard.find( '.bb-card-footer' ).addClass( 'bb-card-footer--plain' );
 			}
 
 			var $joinGroupButton = $groupCard.find( '.bb-card-action-join' );
@@ -4876,7 +4793,7 @@ window.bp = window.bp || {};
 		/**
 		 * Group popup card for avatars.
 		 */
-		groupPopupCard: function() {
+		groupPopupCard: function () {
 			var $avatar       = $( this );
 			var offset        = $avatar.offset();
 			var $li           = $avatar.closest( '.activity-item' );
@@ -4896,39 +4813,39 @@ window.bp = window.bp || {};
 			function setPopupPosition() {
 				var popupTop, popupLeft;
 				if ( window.innerWidth <= 560 ) {
-					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
 					popupLeft = 5;
 				} else if ( window.innerWidth <= 800 ) {
-					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
 					popupLeft = offset.left + $avatar.outerWidth() - 20;
 				} else {
-					popupTop = offset.top + $avatar.outerHeight() + 10;
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
 					popupLeft = offset.left + $avatar.outerWidth() - 100;
 				}
 				return {
-					top: popupTop - $( window ).scrollTop(),
+					top : popupTop - $( window ).scrollTop(),
 					left: popupLeft - $( window ).scrollLeft(),
 				};
 			}
 
-			// Cancel any ongoing request
+			// Cancel any ongoing request.
 			bp.Nouveau.abortOngoingRequest();
 
-			// Check cache
-			if ( bp.Nouveau.cacheGroupCard[ groupId ] ) {
-				var cachedGroupData = bp.Nouveau.cacheGroupCard[ groupId ];
+			// Check cache.
+			if ( bp.Nouveau.cacheGroupCard[groupId] ) {
+				var cachedGroupData = bp.Nouveau.cacheGroupCard[groupId];
 				bp.Nouveau.updateGroupCard( cachedGroupData, currentUser );
 
 				var position = setPopupPosition();
 				$groupCard.css( {
-					top: position.top + 'px',
-            		left: position.left + 'px',
+					top : position.top + 'px',
+					left: position.left + 'px',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
 				return;
 			}
 
-			// Set up a new AbortController for current request
+			// Set up a new AbortController for current request.
 			var controller = new AbortController();
 			currentRequest = controller;
 
@@ -4936,54 +4853,50 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			$.ajax({
-				url: url,
-				method: 'GET',
-				headers: {
+			$.ajax( {
+				url       : url,
+				method    : 'GET',
+				headers   : {
 					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
-				signal: controller.signal, // Attach the signal to the request
+				signal    : controller.signal, // Attach the signal to the request.
 				beforeSend: function () {
 					bp.Nouveau.resetGroupCard();
-					// Position popup near hovered avatar
+					// Position popup near hovered avatar.
 					var position = setPopupPosition();
-					$groupCard
-						.css( {
-							top: position.top + 'px',
-            				left: position.left + 'px',
-						} )
-						.addClass( 'show loading' );
+					$groupCard.css( {
+						top : position.top + 'px',
+						left: position.left + 'px',
+					} ).addClass( 'show loading' );
 
-					$groupCard
-						.find( '.skeleton-card-footer' )
-						.addClass( 'bb-card-footer--plain' );
+					$groupCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
 				},
-				success: function ( data ) {
-					// Check if this request was aborted
+				success   : function ( data ) {
+					// Check if this request was aborted.
 					if ( controller.signal.aborted ) {
 						return;
 					}
 
-					// Cache group data
-					bp.Nouveau.cacheGroupCard[ groupId ] = data;
+					// Cache group data.
+					bp.Nouveau.cacheGroupCard[groupId] = data;
 
 					$groupCard.removeClass( 'loading' );
 					bp.Nouveau.updateGroupCard( data, currentUser );
 					popupCardLoaded = true;
 				},
-				error: function ( xhr, status, error ) {
+				error     : function ( xhr, status, error ) {
 					console.error( 'Error fetching group info:', error );
 					$groupCard.html( '<span>Failed to load data.</span>' );
 				}
-			});
+			} );
 		},
 
 		/**
 		 * Hide popup card on mouse leave.
 		 */
 		checkHidePopupCard: function () {
-			if ( !hoverAvatar && !hoverCardPopup ) {
-				hideCardTimeout = setTimeout( function() {
+			if ( ! hoverAvatar && ! hoverCardPopup ) {
+				hideCardTimeout = setTimeout( function () {
 					bp.Nouveau.hidePopupCard();
 				}, 100 );
 			}
@@ -4992,7 +4905,7 @@ window.bp = window.bp || {};
 		/**
 		 * Hide popup card.
 		 */
-		hidePopupCard: function() {
+		hidePopupCard: function () {
 			$( '.bb-popup-card' ).removeClass( 'show' );
 			bp.Nouveau.resetProfileCard();
 			bp.Nouveau.resetGroupCard();
