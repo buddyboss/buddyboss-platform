@@ -4637,6 +4637,10 @@ window.bp = window.bp || {};
 			if ( ! currentUserId ) {
 				return;
 			}
+			// Skip showing profile card for current user
+			if ( parseInt( currentUserId ) === parseInt( memberId ) ) {
+				return;
+			}
 			var currentUser  = parseInt( currentUserId ) === parseInt( memberId );
 			var restUrl      = BP_Nouveau.rest_url;
 			var url          = restUrl + '/members/' + memberId + '/info';
