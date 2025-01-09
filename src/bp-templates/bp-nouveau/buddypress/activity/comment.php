@@ -16,8 +16,7 @@ bp_nouveau_activity_hook( 'before', 'comment_entry' );
 $activity_comment_id = bp_get_activity_comment_id();
 ?>
 
-<li id="acomment-<?php echo esc_attr( $activity_comment_id ); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>" data-bp-activity-comment="<?php bb_nouveau_edit_activity_comment_data(); ?>"
-    data-bb-profile-card="<?php echo bp_get_activity_comment_user_id(); ?>">
+<li id="acomment-<?php echo esc_attr( $activity_comment_id ); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php echo esc_attr( $activity_comment_id ); ?>" data-bp-timestamp="<?php bb_nouveau_activity_comment_timestamp(); ?>" data-bp-activity-comment="<?php bb_nouveau_edit_activity_comment_data(); ?>" data-bb-profile-card="<?php echo bp_get_activity_comment_user_id(); ?>">
 
 	<div id="acomment-display-<?php echo esc_attr( $activity_comment_id ); ?>" class="acomment-display">
 
