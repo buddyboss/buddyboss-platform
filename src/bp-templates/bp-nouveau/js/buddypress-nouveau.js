@@ -4626,10 +4626,16 @@ window.bp = window.bp || {};
 			if ( ! $li.attr( 'data-bb-profile-card' ) || ! $li.attr( 'data-bb-profile-card' ).length ) {
 				return;
 			}
-			var memberId      = $li.attr( 'data-bb-profile-card' );
+			var memberId = $li.attr( 'data-bb-profile-card' );
+			if ( ! memberId ) {
+				return;
+			}
 			var currentUserId = 0;
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
 				currentUserId = BP_Nouveau.activity.params.user_id;
+			}
+			if ( ! currentUserId ) {
+				return;
 			}
 			var currentUser  = parseInt( currentUserId ) === parseInt( memberId );
 			var restUrl      = BP_Nouveau.rest_url;
@@ -4794,12 +4800,18 @@ window.bp = window.bp || {};
 		 * Group popup card for avatars.
 		 */
 		groupPopupCard: function () {
-			var $avatar       = $( this );
-			var offset        = $avatar.offset();
-			var $li           = $avatar.closest( '.activity-item' );
+			var $avatar = $( this );
+			var offset  = $avatar.offset();
+			var $li     = $avatar.closest( '.activity-item' );
+			var groupId = 0;
+			if ( $li.hasClass( 'groups' ) ) {
+				var liClass = $li.attr( 'class' ).match( /group-\d+/ );
+				groupId     = liClass[0].replace( 'group-', '' );
+			}
+			if ( ! groupId ) {
+				return;
+			}
 			var cardData      = $li.attr( 'data-bb-profile-card' );
-			var liClass       = $li.attr( 'class' ).match( /group-\d+/ );
-			var groupId       = liClass[0].replace( 'group-', '' );
 			var memberId      = cardData.user_id;
 			var currentUserId = 0;
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
