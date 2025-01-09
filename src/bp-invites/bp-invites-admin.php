@@ -55,6 +55,7 @@ function bp_register_invite_type_sections_filters_actions() {
 	add_filter( 'posts_distinct_request', 'bb_invites_modify_posts_distinct_request', 10, 2 );
 	add_filter( 'posts_join_request', 'bb_invites_modify_posts_join_request', 10, 2 );
 	add_filter( 'posts_where_request', 'bb_invites_modify_posts_where_request', 10, 2 );
+	add_filter( 'posts_orderby_request', 'bp_invite_sort_items', 10, 2 );
 
 }
 
@@ -186,51 +187,52 @@ function bp_invite_add_request_filter() {
  * @param type $qv
  * @return string
  */
-function bp_invite_sort_items( $qv ) {
+function bp_invite_sort_items( $orderby, $qv ) {
 
-	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_invite_post_type() ) {
-		return $qv;
+	if ( ! isset( $qv->query['post_type'] ) || $qv->query['post_type'] != bp_get_invite_post_type() ) {
+		return $orderby;
 	}
 
-	if ( ! isset( $qv['orderby'] ) ) {
-		return $qv;
+	if ( ! isset( $qv->query['orderby'] ) ) {
+		return $orderby;
 	}
 
-	switch ( $qv['orderby'] ) {
+	global $wpdb;
+
+	switch ( $qv->query['orderby'] ) {
 
 		case 'inviter':
-			$qv['meta_key'] = '_bp_invites_inviter_name';
-			$qv['orderby']  = 'meta_value';
-
+			$qv->query['meta_key'] = '_bp_inviter_name';
+			$qv->query['orderby']  = 'meta_value';
+			$orderby = $wpdb->postmeta . '.meta_value ' . $qv->query['order'];
 			break;
 
 		case 'invitee_name':
-			$qv['meta_key'] = '_bp_invites_invitee_name';
-			$qv['orderby']  = 'meta_value';
-
+			$qv->query['meta_key'] = '_bp_invitee_name';
+			$qv->query['orderby']  = 'meta_value';
+			$orderby = $wpdb->postmeta . '.meta_value ' . $qv->query['order'];
 			break;
 
 		case 'invitee_email':
-			$qv['meta_key'] = '_bp_invites_invitee_email';
-			$qv['orderby']  = 'meta_value';
-
+			$qv->query['meta_key'] = '_bp_invitee_email';
+			$qv->query['orderby']  = 'meta_value';
+			$orderby = $wpdb->postmeta . '.meta_value ' . $qv->query['order'];
 			break;
 
 		case 'date_invited':
-			$qv['meta_key'] = '_bp_invites_date_invited';
-			$qv['orderby']  = 'meta_value_num';
+			$qv->query['orderby']  = 'post_date';
 
 			break;
 
 		case 'status':
-			$qv['meta_key'] = '_bp_invites_status';
-			$qv['orderby']  = 'meta_value_num';
+			$qv->query['meta_key'] = '_bp_invites_status';
+			$qv->query['orderby']  = 'meta_value_num';
 
 			break;
 
 	}
 
-	return $qv;
+	return $orderby;
 }
 
 /**
@@ -502,8 +504,8 @@ function bb_invites_modify_posts_join_request( $join, $query ) {
 		return $join;
 	}
 
-	$search_term = $query->query_vars['s'];
-	if ( ! empty( $search_term ) ) {
+	$search_term   = $query->query_vars['s'];
+	if ( ! empty( $search_term ) || ( in_array( $query->query['orderby'], ['invitee_name','invitee_email', 'inviter'] ) ) ) {
 		$join .= " INNER JOIN {$wpdb->postmeta} ON ( {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id )";
 	}
 
@@ -540,6 +542,14 @@ function bb_invites_modify_posts_where_request( $where, $query ) {
 		$invitee_email_meta_query = $wpdb->prepare( "( {$wpdb->postmeta}.meta_key = '_bp_invitee_email' AND {$wpdb->postmeta}.meta_value LIKE %s )", '%' . $wpdb->esc_like( $search_term ) . '%' );
 
 		$where .= " OR ( $invitee_name_meta_query OR $invitee_email_meta_query )";
+	} else if ( in_array( $query->query['orderby'], ['invitee_name','invitee_email','inviter'] ) ) {
+		if ( 'inviter' == $query->query['orderby'] ) {
+			$meta_query  = $wpdb->prepare( "( {$wpdb->postmeta}.meta_key = '%s' )", '_bp_' . $query->query['orderby'] . '_name' );
+		} else {
+			$meta_query  = $wpdb->prepare( "( {$wpdb->postmeta}.meta_key = '%s' )", '_bp_' . $query->query['orderby'] );
+		}
+		
+		$where .= " AND $meta_query ";
 	}
 
 	return $where;
