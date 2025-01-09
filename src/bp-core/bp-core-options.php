@@ -2814,7 +2814,6 @@ function bb_get_activity_timeline_filter_options_labels() {
 		'friends'   => __( 'From connections', 'buddyboss' ),
 		'mentions'  => __( 'Mentioned in', 'buddyboss' ),
 		'following' => __( 'Following', 'buddyboss' ),
-		
 	);
 	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $filters );
 }

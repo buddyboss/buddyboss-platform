@@ -3803,7 +3803,7 @@ function bb_admin_setting_callback_activity_filters() {
 					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'all' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
-					<?php echo $readonly; ?>
+					<?php echo esc_attr( $readonly ); ?>
 					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
 					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]" 
 					type="checkbox" 
@@ -3811,7 +3811,7 @@ function bb_admin_setting_callback_activity_filters() {
 					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
 				/>
 				<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
-					<?php esc_html_e( $label ); ?>
+					<?php echo esc_html( $label ); ?>
 				</label>
 			</div>
 			<?php
@@ -3872,7 +3872,7 @@ function bb_admin_setting_callback_activity_timeline_filters() {
 					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'just-me' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
-					<?php echo $readonly; ?>
+					<?php echo esc_attr( $readonly ); ?>
 					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
 					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]" 
 					type="checkbox" 
@@ -3880,7 +3880,7 @@ function bb_admin_setting_callback_activity_timeline_filters() {
 					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
 				/>
 				<label for="bb_activity_timeline_filter_<?php echo esc_attr( $key ); ?>">
-					<?php esc_html_e( $label ); ?>
+				<?php echo esc_html( $label ); ?>
 				</label>
 			</div>
 			<?php
@@ -3941,7 +3941,7 @@ function bb_admin_setting_callback_activity_sorting() {
 					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) && 'date_recorded' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
-					<?php echo $readonly; ?>
+					<?php echo esc_attr( $readonly ); ?>
 					id="<?php echo esc_attr( $key ); ?>" 
 					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]" 
 					type="checkbox" 
