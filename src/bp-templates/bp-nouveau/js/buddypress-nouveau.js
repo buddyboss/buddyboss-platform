@@ -798,9 +798,14 @@ window.bp = window.bp || {};
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
-					} else if ( object === 'activity' ) {
+					} else if ( 'activity' === object ) {
 						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
 						save_scope = false;
+					}
+
+					// Single activity page.
+					if ( 'activity' === object && $( 'body' ).hasClass( 'activity-singular' ) ) {
+						scope = 'all';
 					}
 
 					// Notifications always need to start with Newest ones.

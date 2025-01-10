@@ -260,8 +260,8 @@ window.bp = window.bp || {};
 
 			data.bp_activity_last_recorded = this.heartbeat_data.last_recorded;
 
-			if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
-				data.bp_activity_last_recorded_search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+			if ( $( '#buddypress .activity-head-bar .activity-search input[type=search]' ).length ) {
+				data.bp_activity_last_recorded_search_terms = $( '#buddypress .activity-head-bar .activity-search input[type=search]' ).val();
 			}
 
 			$.extend(data, {
