@@ -756,6 +756,15 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					}
 				}
 			}
+
+			wp_cache_delete( $member_id, 'bp_friends_friendships_for_user' );
+
+			// Update friend count for the suspend users only not for the blocked users.
+			$current_friend_ids = friends_get_friend_user_ids( $member_id );
+			if ( ! empty( $current_friend_ids ) ) {
+				$current_total_friend_count = count( $current_friend_ids );
+				bp_update_user_meta( $member_id, 'total_friend_count', (int) $current_total_friend_count );
+			}
 		}
 
 		// Return the loop when the user is blocked/unblocked but not suspended/unsuspended.
