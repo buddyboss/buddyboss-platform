@@ -52,7 +52,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function __construct() {
 
-			$enabled = $this->is_readylaunch_enabled();
+			$enabled = $this->bb_is_readylaunch_enabled();
+
+			// Register the ReadyLaunch menu.
+			$this->bb_register_readylaunch_menus();
 
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
@@ -71,6 +74,91 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Add Readylaunch template locations.
 				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+
+				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ) );
+
+				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
+				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
+			}
+		}
+
+		/**
+		 * Check if ReadyLaunch is enabled for the current directory.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if ReadyLaunch is enabled, false otherwise.
+		 */
+		private function bb_is_readylaunch_enabled() {
+			$enabled_pages = bb_get_enabled_readylaunch();
+
+			if (
+				(
+					bp_is_members_directory() &&
+					! empty( $enabled_pages['members'] )
+				) ||
+				(
+					bp_is_video_directory() &&
+					! empty( $enabled_pages['video'] ) &&
+					bp_is_current_component( 'video' )
+				) ||
+				(
+					bp_is_media_directory() &&
+					! empty( $enabled_pages['media'] ) &&
+					bp_is_current_component( 'media' )
+				) ||
+				(
+					bp_is_document_directory() &&
+					! empty( $enabled_pages['document'] )
+				) ||
+				(
+					bp_is_groups_directory() &&
+					! empty( $enabled_pages['groups'] )
+				) ||
+				(
+					bp_is_activity_directory() &&
+					! empty( $enabled_pages['activity'] )
+				)
+			) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Register the ReadyLaunch menu.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_register_readylaunch_menus() {
+
+			// Check if the menu exists already.
+			$menu_name   = __( 'ReadyLaunch', 'buddyboss' );
+			$menu_exists = wp_get_nav_menu_object( $menu_name );
+
+			// If the menu doesn't exist, create it.
+			$menu_id = ! $menu_exists ? wp_create_nav_menu( $menu_name ) : $menu_exists->term_id;
+
+			// Define the theme location.
+			$theme_location = 'bb-readylaunch';
+
+			// Only register the theme location if it has not been registered already.
+			if ( ! has_nav_menu( $theme_location ) ) {
+				// Register the theme location if not already registered.
+				register_nav_menu( $theme_location, $menu_name );
+			}
+
+			// If the menu exists and the theme location is ready, assign the menu to the location.
+			$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
+			if ( ! empty( $menu_id ) && ! isset( $nav_menu_locations [ $theme_location ] ) ) {
+				set_theme_mod(
+					'nav_menu_locations',
+					array_merge(
+						get_theme_mod( 'nav_menu_locations', array() ),
+						array( $theme_location => $menu_id )
+					)
+				);
 			}
 		}
 
@@ -112,14 +200,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						! empty( bp_get_forum_page_id() )
 					)
 				) {
-					add_settings_field( $name, $label, array( $this, 'bb_enable_setting_callback_page_directory' ), 'bb-readylaunch', 'bb_readylaunch', compact( 'enabled_pages', 'name', 'label', 'description' ) );
+					add_settings_field( $name, $label, array(
+						$this,
+						'bb_enable_setting_callback_page_directory',
+					), 'bb-readylaunch', 'bb_readylaunch', compact( 'enabled_pages', 'name', 'label', 'description' ) );
 					register_setting( 'bb-readylaunch', $name, array(
-						'default' => array()
+						'default' => array(),
 					) );
 				}
 			}
 		}
 
+		/**
+		 * ReadyLaunch pages description callback.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function bb_admin_readylaunch_pages_description() {
 		}
 
@@ -244,47 +340,52 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Check if ReadyLaunch is enabled for the current directory.
+		 * Enqueue ReadyLaunch scripts.
 		 *
 		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
-		private function is_readylaunch_enabled() {
-			$enabled_pages = bb_get_enabled_readylaunch();
+		public function bb_enqueue_scripts() {
+			$min = bp_core_get_minified_asset_suffix();
 
-			if (
-				(
-					bp_is_members_directory() &&
-					! empty( $enabled_pages['members'] )
-				) ||
-				(
-					bp_is_video_directory() &&
-					! empty( $enabled_pages['video'] ) &&
-					bp_is_current_component( 'video' )
-				) ||
-				(
-					bp_is_media_directory() &&
-					! empty( $enabled_pages['media'] ) &&
-					bp_is_current_component( 'media' )
-				) ||
-				(
-					bp_is_document_directory() &&
-					! empty( $enabled_pages['document'] )
-				) ||
-				(
-					bp_is_groups_directory() &&
-					! empty( $enabled_pages['groups'] )
-				) ||
-				(
-					bp_is_activity_directory() &&
-					! empty( $enabled_pages['activity'] )
+			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/js/bb-readylaunch-front{$min}.js", array( 'jquery' ), bp_get_version(), true );
+			wp_localize_script(
+				'bb-readylaunch-front',
+				'bbReadyLaunchFront',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'nonce'    => wp_create_nonce( 'bb-readylaunch' ),
 				)
-			) {
-				return true;
-			}
+			);
+		}
 
-			return false;
+		/**
+		 * Fetch header messages.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_fetch_header_messages() {
+
+			check_ajax_referer( 'bb-readylaunch', 'nonce' );
+
+			ob_start();
+			get_template_part( 'template-parts/unread-messages' );
+			$messages = ob_get_clean();
+			wp_send_json_success( $messages );
+		}
+
+		/**
+		 * Fetch header notifications.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_fetch_header_notifications() {
+
+			check_ajax_referer( 'bb-readylaunch', 'nonce' );
+
+			ob_start();
+			get_template_part( 'template-parts/unread-notifications' );
+			$notifications = ob_get_clean();
+			wp_send_json_success( $notifications );
 		}
 	}
 

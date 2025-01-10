@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-bp_get_template_part( 'readylaunch-header' );
+bp_get_template_part( 'header/readylaunch-header' );
 
 if ( have_posts() ) :
 	/* Start the Loop */
@@ -16,4 +16,4 @@ if ( have_posts() ) :
 	endwhile;
 endif;
 
-bp_get_template_part( 'readylaunch-footer' );
+bp_get_template_part( 'footer/readylaunch-footer' );
