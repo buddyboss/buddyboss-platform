@@ -1207,11 +1207,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
 				}
 
-				error_log( print_r( '---- loop ----', true ) );
-				error_log( print_r( $member_id, true ) );
-				error_log( print_r( $friend_ids, true ) );
-				error_log( print_r( $total_friend_count, true ) );
-
 				unset( $friend_ids, $total_friend_count );
 			}
 		}
