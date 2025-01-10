@@ -509,6 +509,7 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 23321 ) {
 			bb_update_to_2_6_90();
+			bb_on_update_moderation_friends_count_update();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3833,17 +3834,6 @@ function bb_update_to_2_6_70() {
 function bb_update_to_2_6_80() {
 	bp_update_option( 'bb-member-directory-count', 1 );
 	bp_update_option( 'bb-group-directory-count', 1 );
-
-	$is_already_run = get_transient( 'bb_update_to_2_6_80' );
-	if ( $is_already_run ) {
-		return;
-	}
-
-	if ( bp_is_active( 'moderation' ) ) {
-		bb_create_background_member_friends_count();
-	}
-
-	set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
 }
 
 /**
@@ -3854,7 +3844,7 @@ function bb_update_to_2_6_80() {
  * @return void
  */
 function bb_update_to_2_6_90() {
-	
+
 	$is_already_run = get_transient( 'bb_update_to_2_6_90' );
 	if ( ! $is_already_run ) {
 
@@ -3927,4 +3917,24 @@ function bb_update_to_2_6_90() {
 
 		set_transient( 'bb_update_to_2_6_90', 'yes', HOUR_IN_SECONDS );
 	}
+}
+
+/**
+ * Fixed count for my connection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_on_update_moderation_friends_count_update() {
+	if ( ! bp_is_active( 'moderation' ) ) {
+		return;
+	}
+	$is_already_run = get_transient( 'bb_on_update_moderation_friends_count_update' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	// Set a transient to avoid running the update multiple times within an hour.
+	set_transient( 'bb_on_update_moderation_friends_count_update', 'yes', HOUR_IN_SECONDS );
+
+	bb_create_background_member_friends_count();
 }
