@@ -7424,9 +7424,9 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
 
 	$bp = buddypress();
 
-	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET date_updated = %s WHERE id = %d", $time, $activity_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET date_updated = %s WHERE id = %d", $time, $activity_id ); // phpcs:ignore
 
-	if ( false === $wpdb->query( $q ) ) {
+	if ( false === $wpdb->query( $q ) ) { // phpcs:ignore
 		return false;
 	}
 
@@ -7451,8 +7451,8 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
 		$activity->item_id !== $activity->secondary_item_id &&
 		(
 			// Get medias individual activity if muliple uploaded.
-			( $is_media && 'groups' !== $activity->component ) || 
-			( ! $is_media && 'activity_comment' === $activity->type ) 
+			( $is_media && 'groups' !== $activity->component ) ||
+			( ! $is_media && 'activity_comment' === $activity->type )
 		)
 	) {
 		$temp_activity = new BP_Activity_Activity( $activity->item_id );

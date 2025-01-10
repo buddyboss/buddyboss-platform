@@ -82,6 +82,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Activity filters.
 		$this->add_field( 'bb_activity_filter_options', __( 'Activity filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_filters' );
 
+		// Timeline filters.
+		$this->add_field( 'bb_activity_timeline_filter_options', __( 'Profile Timeline filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_timeline_filters' );
+
 		// Activity sorting.
 		$this->add_field( 'bb_activity_sorting_options', __( 'Activity sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_sorting' );
 

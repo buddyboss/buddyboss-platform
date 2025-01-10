@@ -574,7 +574,6 @@ window.bp = window.bp || {};
 
 				var component_conditions = [
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
-					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
 					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage-members' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
@@ -582,7 +581,6 @@ window.bp = window.bp || {};
 
 				var component_targets = [
 					$( '.groups .group-search.members-search' ),
-					$( '.groups .group-search.activity-search' ),
 					$( '.documents .bp-document-listing .bb-title' ),
 					$( '.groups .group-search.search-wrapper' ),
 					$( '#bp-media-single-folder .bb-title' ),
@@ -594,6 +592,15 @@ window.bp = window.bp || {};
 					}
 				} );
 
+			}
+
+			if( data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ) ) {
+
+				if( data.event_element && data.event_element.hasClass('group-search' ) ) {
+					$( '.groups .group-search.activity-search' ).addClass( 'loading' );
+				} else {
+					$( 'body.groups .activity-head-bar .bb-subnav-filters-filtering li' ).first().addClass( 'loading' );
+				}
 			}
 
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).text('');
@@ -620,6 +627,11 @@ window.bp = window.bp || {};
 				},
 				data
 			);
+
+			// Remove the event element from the postdata.
+			if( ! _.isUndefined( postdata.event_element ) ) {
+				delete postdata.event_element;
+			}
 
 			return this.ajax( postdata, data.object ).done(
 				function ( response ) {
@@ -660,6 +672,16 @@ window.bp = window.bp || {};
 						}
 
 						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+
+						if( data.search_terms === '' && window.clear_search_trigger) {
+							$( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
+							window.clear_search_trigger = false;
+						}
+					}
+
+					if( data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ) ) {
+						$( '.groups .group-search.activity-search.loading' ).removeClass( 'loading' );
+						$( 'body.groups .activity-head-bar .bb-subnav-filters-filtering li.loading' ).removeClass( 'loading' );
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
@@ -826,9 +848,14 @@ window.bp = window.bp || {};
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
-					} else if ( object === 'activity' ) {
+					} else if ( 'activity' === object ) {
 						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
 						save_scope = false;
+					}
+
+					// Single activity page.
+					if ( 'activity' === object && $( 'body' ).hasClass( 'activity-singular' ) ) {
+						scope = 'all';
 					}
 
 					// Notifications always need to start with Newest ones.
@@ -1978,6 +2005,7 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
+			var $form    = $( event.delegateTarget );
 			object       = $( event.delegateTarget ).data( 'bp-search' );
 			filter       = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
 			search_terms = $( event.delegateTarget ).find( 'input[type=search]' ).first().val();
@@ -2011,7 +2039,8 @@ window.bp = window.bp || {};
 					page: 1,
 					extras: extras,
 					template: template,
-					order_by: order
+					order_by: order,
+					event_element: $form,
 				}
 			);
 		},
@@ -3685,6 +3714,7 @@ window.bp = window.bp || {};
 			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
+				window.clear_search_trigger = true;
 			} else if ( $form.find( '#bb_search_group_members' ).length > 0 ) {
 				$form.find( '#bb_search_group_members' ).val('').trigger('keyup');
 			} else {
@@ -3697,11 +3727,6 @@ window.bp = window.bp || {};
 			if ( $form.hasClass( 'bp-invites-search-form') ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( 'input[type="search"]').trigger( $.Event( 'search' ) );
-			}
-
-			// remove search input from screen
-			if( $form.closest( '.bb-subnav-filters-search.active' ) ) {
-				$form.closest( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
 			}
 
 		},

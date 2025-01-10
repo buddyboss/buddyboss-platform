@@ -11,7 +11,7 @@
 ?>
 <div class="bb-subnav-filters-container bb-subnav-filters-search">
 	<?php
-	if ( bp_is_activity_directory() && bb_is_activity_search_enabled() ) {
+	if ( ( bp_is_activity_directory() || bp_is_user_activity() ) && bb_is_activity_search_enabled() ) {
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>	
@@ -78,9 +78,18 @@
 		?>
 	</div><!-- search & filters -->
 </div>
-<?php if ( bp_is_activity_directory() ) {
-	$activity_filters = bb_get_enabled_activity_filter_options();
-	$filters_labels   = bb_get_activity_filter_options_labels();
+<?php
+if ( bp_is_activity_directory() || bp_is_user_activity() ) {
+
+	// Timeline filters.
+	if ( bp_is_user_activity() ) {
+		$activity_filters = bb_get_enabled_activity_timeline_filter_options();
+		$filters_labels   = bb_get_activity_timeline_filter_options_labels();
+	} else {
+		$activity_filters = bb_get_enabled_activity_filter_options();
+		$filters_labels   = bb_get_activity_filter_options_labels();
+	}
+
 	arsort( $activity_filters );
 	$default_selected = key( $activity_filters );
 	?>
@@ -98,30 +107,30 @@
 					<?php
 						if ( ! empty ( $activity_filters ) ) {
 							// Skip filters based on user login or component active.
-							$skip_conditions = [
+							$skip_conditions = array(
 								'friends'   => ! bp_is_active( 'friends' ),
 								'following' => ! bp_is_activity_follow_active(),
 								'groups'    => ! bp_is_active( 'groups' ),
 								'mentions'  => ! bp_activity_do_mentions(),
-							];
+							);
 							foreach( $activity_filters as $key => $is_enabled ) {
 
 								// Skip filters not enabled or without labels.
-								if ( empty( $is_enabled ) || empty( $filters_labels[ $key ] ) ) {
+								if (
+									empty( $is_enabled ) ||
+									empty( $filters_labels[ $key ] ) ||
+									( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() ) ||
+									( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] )
+								) {
 									continue;
 								}
 
-								if ( 'all' !== $key && ! is_user_logged_in() ) {
-									continue;
-								}
-						
-								if ( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] ) {
-									continue;
-								}
 								?>
 								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
 								<?php
 							}
+
+							unset( $skip_conditions, $activity_filters );
 						}
 					?>
 				</ul>

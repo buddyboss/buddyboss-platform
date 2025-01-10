@@ -367,13 +367,10 @@ class BP_Activity_Activity {
 				bp_activity_clear_cache_for_activity( $main_activity_object );
 
 				// If individual medias activity then also get the most parent activity.
-				if ( 
-					(
-						( 
-							in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
-							'activity_update' === $main_activity_object->type
-						)
-					) && ! empty( $main_activity_object->secondary_item_id )
+				if (
+					in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
+					'activity_update' === $main_activity_object->type &&
+					! empty( $main_activity_object->secondary_item_id )
 				) {
 
 					// Update the date_updated of the parent activity item.
@@ -620,7 +617,7 @@ class BP_Activity_Activity {
 				break;
 
 			default:
-				 $r['order_by'] = 'date_recorded';
+				$r['order_by'] = 'date_recorded';
 				break;
 		}
 		$order_by = 'a.' . $r['order_by'];
@@ -1882,7 +1879,7 @@ class BP_Activity_Activity {
 					}
 
 					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
-						$sql['limit'] = "";
+						$sql['limit'] = '';
 					} else {
 						$sql['limit'] = 'limit ' . $limit;
 					}
@@ -1938,7 +1935,6 @@ class BP_Activity_Activity {
 					}
 				}
 			}
-
 
 			// Calculate depth for each item.
 			foreach ( $ref as &$r ) {
@@ -2233,7 +2229,6 @@ class BP_Activity_Activity {
 				} else {
 					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
 				}
-				
 			}
 		}
 

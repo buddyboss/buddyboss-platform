@@ -3803,7 +3803,7 @@ function bb_admin_setting_callback_activity_filters() {
 					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'all' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
-					<?php echo $readonly; ?>
+					<?php echo esc_attr( $readonly ); ?>
 					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
 					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]" 
 					type="checkbox" 
@@ -3811,7 +3811,76 @@ function bb_admin_setting_callback_activity_filters() {
 					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
 				/>
 				<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
-					<?php esc_html_e( $label ); ?>
+					<?php echo esc_html( $label ); ?>
+				</label>
+			</div>
+			<?php
+		endforeach;
+		?>
+	</div>
+	<?php
+}
+
+/**
+ * Enable profile timeline filters with scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_activity_timeline_filters() {
+	?>
+	<label><?php esc_html_e( 'Allow members to filter activity posts by:', 'buddyboss' ); ?></label>
+	<br /><br />
+	<div class="bb_activity_filter_options_container bb-activity-sorting-list">
+		<?php
+		$filter_labels = bb_get_activity_timeline_filter_options_labels();
+
+		// Retrieve the saved options.
+		$activity_filters = bb_get_enabled_activity_timeline_filter_options();
+		if ( ! empty( $activity_filters ) ) {
+
+			// Sort filter labels based on the order of $activity_filters.
+			$sorted_filter_labels = array();
+			foreach ( $activity_filters as $key => $value ) {
+				if ( isset( $filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $activity_filters.
+			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
+				foreach ( $filter_labels as $key => $label ) {
+					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
+						$sorted_filter_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_filter_labels = $filter_labels;
+		}
+
+		foreach ( $sorted_filter_labels as $key => $label ) :
+			$readonly = '';
+			if ( 'just-me' === $key ) {
+				$readonly = 'disabled';
+			}
+			?>
+			<div class="bb-activity-sorting-item">
+				<input
+					type="hidden"
+					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]"
+					value="<?php echo ( 'just-me' === $key ) ? 1 : 0; ?>"
+					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'just-me' !== $key ? 'disabled' : ''; ?>
+				/>
+				<input
+					<?php echo esc_attr( $readonly ); ?>
+					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
+					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]" 
+					type="checkbox" 
+					value="1"
+					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
+				/>
+				<label for="bb_activity_timeline_filter_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $label ); ?>
 				</label>
 			</div>
 			<?php
@@ -3872,7 +3941,7 @@ function bb_admin_setting_callback_activity_sorting() {
 					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) && 'date_recorded' !== $key ? 'disabled' : ''; ?>
 				/>
 				<input
-					<?php echo $readonly; ?>
+					<?php echo esc_attr( $readonly ); ?>
 					id="<?php echo esc_attr( $key ); ?>" 
 					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]" 
 					type="checkbox" 

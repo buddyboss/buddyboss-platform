@@ -2813,12 +2813,12 @@ function bb_member_directory_count_enable( $default = false ) {
 function bb_get_activity_filter_options_labels() {
 	$filters = array(
 		'all'       => __( 'All updates', 'buddyboss' ),
+		'just-me'   => __( 'Created by me', 'buddyboss' ),
 		'favorites' => __( "I've reacted to", 'buddyboss' ),
-		'friends'   => __( 'From my connections', 'buddyboss' ),
 		'groups'    => __( 'From my groups', 'buddyboss' ),
+		'friends'   => __( 'From my connections', 'buddyboss' ),
 		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
 		'following' => __( "I'm following", 'buddyboss' ),
-		'just-me'   => __( 'Created by me', 'buddyboss' ),
 	);
 	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
 }
@@ -2834,14 +2834,53 @@ function bb_get_activity_filter_options_labels() {
  */
 function bb_get_enabled_activity_filter_options( $default = array(
 	'all'       => 1,
+	'just-me'   => 1,
 	'favorites' => 1,
-	'friends'   => 1,
 	'groups'    => 1,
+	'friends'   => 1,
 	'mentions'  => 1,
 	'following' => 1,
-	'just-me'   => 1,
 ) ) {
 	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
+}
+
+/**
+ * Get all activity timeline filters option labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity timeline filters option labels.
+ */
+function bb_get_activity_timeline_filter_options_labels() {
+	$filters = array(
+		'just-me'   => __( 'Personal posts', 'buddyboss' ),
+		'favorites' => __( 'Reacted to', 'buddyboss' ),
+		'groups'    => __( 'From groups', 'buddyboss' ),
+		'friends'   => __( 'From connections', 'buddyboss' ),
+		'mentions'  => __( 'Mentioned in', 'buddyboss' ),
+		'following' => __( 'Following', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $filters );
+}
+
+/**
+ * Get enabled activity timeline filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $default Array of default activity timeline filter options.
+ *
+ * @return array Array of enabled activity timeline filters options.
+ */
+function bb_get_enabled_activity_timeline_filter_options( $default = array(
+	'just-me'   => 1,
+	'favorites' => 1,
+	'groups'    => 1,
+	'friends'   => 1,
+	'mentions'  => 1,
+	'following' => 1,
+) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_timeline_filter_options', bp_get_option( 'bb_activity_timeline_filter_options', $default ) );
 }
 
 /**

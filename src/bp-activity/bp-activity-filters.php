@@ -3846,9 +3846,9 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 			bp_activity_clear_cache_for_activity( $main_activity_object );
 
 			// If individual medias activity then also get the most parent activity.
-			if ( 
+			if (
 				(
-					( 
+					(
 						in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
 						'activity_update' === $main_activity_object->type
 					)
