@@ -242,8 +242,6 @@ function bbp_has_replies( $args = '' ) {
 		// If pretty permalinks are enabled, make our pagination pretty
 		if ( bbp_use_pretty_urls() ) {
 
-			$use_pretty = true;
-
 			// User's replies
 			if ( bbp_is_single_user_replies() ) {
 				$base = bbp_get_user_replies_created_url( bbp_get_displayed_user_id() );
@@ -254,34 +252,14 @@ function bbp_has_replies( $args = '' ) {
 
 				// Any single post (for shortcodes)
 			} elseif ( is_singular() ) {
-				if (
-					bbp_is_single_topic() &&
-					! ( bp_is_active( 'groups') && bp_is_group() ) &&
-					'publish' !== get_post_status( bbp_get_topic_id() )
-				) {
-					$base       = add_query_arg( 'paged', '%#%' );
-					$use_pretty = false;
-				} else {
-					$base = get_permalink();
-				}
+				$base = get_permalink();
 
 				// Single topic
 			} else {
-
-				if (
-					! ( bp_is_active( 'groups') && bp_is_group() ) &&
-					'publish' !== get_post_status( bbp_get_topic_id() )
-				) {
-					$base       = add_query_arg( 'paged', '%#%' );
-					$use_pretty = false;
-				} else {
-					$base = get_permalink( bbp_get_topic_id() );
-				}
+				$base = get_permalink( bbp_get_topic_id() );
 			}
 
-			if ( $use_pretty ) {
-				$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
-			}
+			$base = trailingslashit( $base ) . user_trailingslashit( bbp_get_paged_slug() . '/%#%/' );
 
 			// Unpretty permalinks
 		} else {
