@@ -758,6 +758,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			}
 
 			wp_cache_delete( $member_id, 'bp_friends_friendships_for_user' );
+			wp_cache_delete( 'get_friendship_ids_for_user_' . $member_id, 'bp_friends_friendships_for_user' );
 
 			// Update friend count for the suspend users only not for the blocked users.
 			$current_friend_ids = friends_get_friend_user_ids( $member_id );
@@ -1205,6 +1206,11 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 					$total_friend_count = count( $friend_ids );
 					bp_update_user_meta( $member_id, 'total_friend_count', (int) $total_friend_count );
 				}
+
+				error_log( print_r( '---- loop ----', true ) );
+				error_log( print_r( $member_id, true ) );
+				error_log( print_r( $friend_ids, true ) );
+				error_log( print_r( $total_friend_count, true ) );
 
 				unset( $friend_ids, $total_friend_count );
 			}
