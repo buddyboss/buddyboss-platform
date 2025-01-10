@@ -10034,7 +10034,7 @@ function bb_pro_sso_version() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return string
+ * @return array
  */
 function bb_get_enabled_readylaunch() {
 	return bp_get_option( 'bb_readylaunch', array() );
