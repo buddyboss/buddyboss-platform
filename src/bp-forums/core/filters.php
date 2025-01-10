@@ -307,6 +307,8 @@ add_filter( 'bbp_get_forum_content', 'convert_chars' );
 add_filter( 'bbp_get_forum_content', 'wpautop' );
 add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
+add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 3 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -645,4 +647,14 @@ function bb_forums_hide_single_url( $content ) {
 	}
 
 	return $content;
+}
+
+function bb_pretty_link_trash_topics( $permalink, $post, $leavename ) {
+	if ( 'topic' === $post->post_type && ( bbp_is_topic_trash( $post->ID ) || bbp_is_topic_spam( $post->ID ) ) ) {
+		$url   = trailingslashit( trailingslashit( bbp_get_topic_slug() ) . get_post_field( 'post_name', $post->ID ) );
+		
+		// Force pretty permalink even for spam and trashed topics.
+		$permalink = home_url( $url );
+	}
+    return $permalink;
 }
