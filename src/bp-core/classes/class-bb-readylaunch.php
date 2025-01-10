@@ -2,8 +2,8 @@
 /**
  * Readylaunch class.
  *
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -21,7 +21,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since  BuddyBoss [BBVERSION]
 		 *
 		 * @access private
 		 * @var self
@@ -58,18 +58,31 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
 
 			if ( $enabled ) {
-				add_filter( 'template_include', array( $this, 'override_page_templates' ), 999999 ); // High priority so we have the last say here
+				add_filter( 'template_include',
+					array(
+						$this,
+						'override_page_templates',
+					),
+					999999
+				); // High priority so we have the last say here.
 
-				// Filter BuddyPress template locations.
+				// Remove BuddyPress template locations.
 				remove_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 
+				// Add Readylaunch template locations.
 				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
 			}
 		}
 
+		/**
+		 * Adds settings fields for the ReadyLaunch admin page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function bb_core_admin_readylaunch_page_fields() {
 			global $wp_settings_sections;
 
+			// Add the ReadyLaunch settings section.
 			add_settings_section(
 				'bb_readylaunch',
 				__( 'ReadyLaunch', 'buddyboss' ),
@@ -77,20 +90,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch'
 			);
 
+			// Get the directory pages.
 			$directory_pages = bp_core_admin_get_directory_pages();
+
+			// Add an icon to the settings section if the function exists.
 			if ( function_exists( 'bb_admin_icons' ) ) {
 				$wp_settings_sections['bb-readylaunch']['bb_readylaunch']['icon'] = bb_admin_icons( 'bb_readylaunch' );
 			}
 
+			// Get the enabled ReadyLaunch pages and BuddyPress directory page IDs.
 			$enabled_pages = bb_get_enabled_readylaunch();
 			$bp_pages      = bp_core_get_directory_page_ids( 'all' );
 			$description   = '';
 
+			// Loop through each directory page and add a settings field if applicable.
 			foreach ( $directory_pages as $name => $label ) {
 				if (
 					! empty( $bp_pages[ $name ] ) ||
 					(
-						$name === 'new_forums_page' &&
+						'new_forums_page' === $name &&
 						! empty( bp_get_forum_page_id() )
 					)
 				) {
@@ -106,51 +124,72 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Pages drop downs callback
+		 * Pages drop downs callback.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param $args
+		 * @param array $args
 		 */
 		public function bb_enable_setting_callback_page_directory( $args ) {
 			extract( $args );
 
+			// Switch to the root blog if not already on it.
 			if ( ! bp_is_root_blog() ) {
 				switch_to_blog( bp_get_root_blog_id() );
 			}
 
-			$checked  = ! empty( $enabled_pages ) && isset( $enabled_pages[ $name ] );
+			$checked = ! empty( $enabled_pages ) && isset( $enabled_pages[ $name ] );
 
 			// For the button.
 			if ( 'button' === $name ) {
-				printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );
-				// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`.
+				printf(
+					'<p><a href="%s" class="button">%s</a></p>',
+					esc_url( $label['link'] ),
+					esc_html( $label['label'] )
+				);
 			} else {
-				echo '<input type="checkbox" value="1" name="' . 'bb-readylaunch[' . esc_attr( $name ) . ']' . '" ' . checked( $checked, true, false ) . '/>';
+				printf(
+					'<input type="checkbox" value="1" name="bb-readylaunch[%s]" %s />',
+					esc_attr( $name ),
+					checked( $checked, true, false )
+				);
 			}
 
+			// Restore the current blog if switched.
 			if ( ! bp_is_root_blog() ) {
 				restore_current_blog();
 			}
 		}
 
+		/**
+		 * Save ReadyLaunch settings if applicable.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool False if settings are not saved, true otherwise.
+		 */
 		public function bb_core_admin_maybe_save_readylaunch_settings() {
+			// Check if the page and submit parameters are set.
 			if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) {
 				return false;
 			}
 
+			// Check if the current page is the ReadyLaunch settings page.
 			if ( 'bb-readylaunch' !== $_GET['page'] ) {
 				return false;
 			}
 
+			// Verify the nonce for security.
 			if ( ! check_admin_referer( 'bb-readylaunch-options' ) ) {
 				return false;
 			}
 
+			// Save the ReadyLaunch settings if provided.
 			if ( isset( $_POST['bb-readylaunch'] ) ) {
 				bp_update_option( 'bb_readylaunch', $_POST['bb-readylaunch'] );
 			}
 
+			// Redirect to the ReadyLaunch settings page with a success message.
 			bp_core_redirect(
 				bp_get_admin_url(
 					add_query_arg(
@@ -164,34 +203,53 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 		}
 
-		public function override_page_templates( $template ) {
-			$template = bp_locate_template( 'layout.php' );
-			if ( $template ) {
-				return $template;
-			}
+		/**
+		 * Override the page templates.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return string ReadyLaunch layout template.
+		 */
+		public function override_page_templates() {
 
-			return $template;
+			return bp_locate_template( 'layout.php' );
 		}
 
+		/**
+		 * Add custom template stack for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $stack The current template stack.
+		 *
+		 * @return array The modified template stack with ReadyLaunch custom location.
+		 */
 		public function add_template_stack( $stack ) {
 			$stylesheet_dir = get_stylesheet_directory();
 			$template_dir   = get_template_directory();
 
-			$stack = array_flip($stack);
+			$stack = array_flip( $stack );
 
-			unset( $stack[$stylesheet_dir], $stack[$template_dir] );
+			unset( $stack[ $stylesheet_dir ], $stack[ $template_dir ] );
 
-			$stack = array_flip($stack);
+			$stack = array_flip( $stack );
 
 			$custom_location = 'readylaunch';
 
 			foreach ( $stack as $key => $value ) {
-				$stack[$key] = untrailingslashit( trailingslashit( $value ) . $custom_location );
+				$stack[ $key ] = untrailingslashit( trailingslashit( $value ) . $custom_location );
 			}
 
 			return $stack;
 		}
 
+		/**
+		 * Check if ReadyLaunch is enabled for the current directory.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if ReadyLaunch is enabled, false otherwise.
+		 */
 		private function is_readylaunch_enabled() {
 			$enabled_pages = bb_get_enabled_readylaunch();
 
@@ -225,7 +283,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			) {
 				return true;
 			}
-
 
 			return false;
 		}

@@ -1239,7 +1239,6 @@ function bb_telemetry_load() {
 
 add_action( 'bp_init', 'bb_telemetry_load' );
 
-
 /**
  * Function to load readylaunch class.
  *
