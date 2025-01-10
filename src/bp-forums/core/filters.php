@@ -651,10 +651,11 @@ function bb_forums_hide_single_url( $content ) {
 
 function bb_pretty_link_trash_topics( $permalink, $post, $leavename ) {
 	if ( 'topic' === $post->post_type && ( bbp_is_topic_trash( $post->ID ) || bbp_is_topic_spam( $post->ID ) ) ) {
-		$url   = trailingslashit( trailingslashit( bbp_get_topic_slug() ) . get_post_field( 'post_name', $post->ID ) );
-		
+		$url = trailingslashit( trailingslashit( bbp_get_topic_slug() ) . get_post_field( 'post_name', $post->ID ) );
+
 		// Force pretty permalink even for spam and trashed topics.
 		$permalink = home_url( $url );
 	}
-    return $permalink;
+
+	return $permalink;
 }
