@@ -114,6 +114,9 @@ add_filter( 'bp_get_total_mention_count_for_user', 'bp_core_number_format' );
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
 // add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
+// Remove special characters from activity content.
+add_filter( 'bp_activity_content_before_save', 'bp_activity_filter_special_character' );
+
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
@@ -3794,4 +3797,17 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Remove special character for activity content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $content The activity content.
+ * @return string $content Filtered activity content.
+ */
+function bp_activity_filter_special_character( $content ) {
+	$special_characters = ['�'];
+	return str_replace($special_characters, '', $content);
 }
