@@ -4664,8 +4664,18 @@ window.bp = window.bp || {};
 				};
 			}
 
-			// Cancel any ongoing request.
-			bp.Nouveau.abortOngoingRequest();
+			// Cancel any ongoing request if it's for a different memberId.
+			if ( bp.Nouveau.currentRequestMemberId && bp.Nouveau.currentRequestMemberId !== memberId ) {
+				bp.Nouveau.abortOngoingRequest();
+			}
+
+			// Avoid duplicate AJAX requests for same memberId.
+			if ( bp.Nouveau.currentRequestMemberId === memberId ) {
+				return;
+			}
+
+			// Set current request memberId.
+			bp.Nouveau.currentRequestMemberId = memberId;
 
 			// Check cache.
 			if ( bp.Nouveau.cacheProfileCard[memberId] ) {
@@ -4678,6 +4688,7 @@ window.bp = window.bp || {};
 					left: position.left + 'px',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
+				bp.Nouveau.currentRequestMemberId = null;
 				return;
 			}
 
@@ -4720,10 +4731,12 @@ window.bp = window.bp || {};
 					$profileCard.removeClass( 'loading' );
 					bp.Nouveau.updateProfileCard( data, currentUser );
 					popupCardLoaded = true;
+					bp.Nouveau.currentRequestMemberId = null;
 				},
 				error     : function ( xhr, status, error ) {
 					console.error( 'Error fetching member info:', error );
 					$profileCard.html( '<span>Failed to load data.</span>' );
+					bp.Nouveau.currentRequestMemberId = null;
 				}
 			} );
 		},
@@ -4844,8 +4857,18 @@ window.bp = window.bp || {};
 				};
 			}
 
-			// Cancel any ongoing request.
-			bp.Nouveau.abortOngoingRequest();
+			// Cancel any ongoing request if it's for a different groupId.
+			if ( bp.Nouveau.currentRequestGroupId && bp.Nouveau.currentRequestGroupId !== groupId ) {
+				bp.Nouveau.abortOngoingRequest();
+			}
+
+			// Avoid duplicate AJAX requests for same groupId.
+			if ( bp.Nouveau.currentRequestGroupId === groupId ) {
+				return;
+			}
+
+			// Set current request groupId.
+			bp.Nouveau.currentRequestGroupId = groupId;
 
 			// Check cache.
 			if ( bp.Nouveau.cacheGroupCard[groupId] ) {
@@ -4858,6 +4881,7 @@ window.bp = window.bp || {};
 					left: position.left + 'px',
 				} ).removeClass( 'loading' );
 				popupCardLoaded = true;
+				bp.Nouveau.currentRequestGroupId = null;
 				return;
 			}
 
@@ -4899,10 +4923,12 @@ window.bp = window.bp || {};
 					$groupCard.removeClass( 'loading' );
 					bp.Nouveau.updateGroupCard( data, currentUser );
 					popupCardLoaded = true;
+					bp.Nouveau.currentRequestGroupId = null;
 				},
 				error     : function ( xhr, status, error ) {
 					console.error( 'Error fetching group info:', error );
 					$groupCard.html( '<span>Failed to load data.</span>' );
+					bp.Nouveau.currentRequestGroupId = null;
 				}
 			} );
 		},
