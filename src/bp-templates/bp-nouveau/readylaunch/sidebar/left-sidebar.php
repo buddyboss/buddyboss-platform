@@ -34,7 +34,7 @@ $current_user_id = bp_loggedin_user_id();
 
 		?>
 		<div class="">
-			<h2><?php echo esc_html__( 'My Groups', 'buddyoss' ); ?></h2>
+			<h2><?php echo esc_html__( 'My Groups', 'buddyboss' ); ?></h2>
 			<?php
 			if ( bp_has_groups( $group_args ) ) {
 				?>
