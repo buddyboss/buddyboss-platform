@@ -42,6 +42,8 @@ TABLE OF CONTENTS:
 17.0 Domain restriction
 18.0 Redirection Settings
 19.0 Reactions Settings
+20.0 Upgrade
+21.0 Activity Filter & Sorting
 ------------------------------------------------------------------------------*/
 
 @import "tooltips";
@@ -5411,6 +5413,27 @@ h1.bb-advance-heading {
 
 		table {
 			width: 100%;
+		}
+	}
+}
+
+/*------------------------------------------------------------------------------
+ * 21.0 Activity Filter & Sorting
+ *----------------------------------------------------------------------------*/
+
+.bb-activity-sorting-list.ui-sortable {
+
+	.bb-activity-sorting-item {
+		margin-bottom: 10px;
+
+		&:before {
+			content: "\edb2";
+			color: #000;
+			font-family: bb-icons;
+			font-size: 16px;
+			font-weight: 400;
+			cursor: move;
+			margin-right: 8px;
 		}
 	}
 }

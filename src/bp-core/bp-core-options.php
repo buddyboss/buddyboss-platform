@@ -175,14 +175,14 @@ function bp_get_default_options() {
 		// Enabled reactions and their mode.
 		'bb_all_reactions'                           => array(
 			'activity'         => true,
-			'activity_comment' => true
+			'activity_comment' => true,
 		),
 		'bb_reaction_mode'                           => 'likes',
 		'bb_reaction_button'                         => array(
 			array(
 				'text' => '',
 				'icon' => 'thumbs-up',
-			)
+			),
 		),
 
 		// Performance Settings.
@@ -2634,7 +2634,7 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
-	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
 /**
@@ -2717,7 +2717,6 @@ function bb_active_reactions() {
 		$all_emotions = bb_load_reaction()->bb_get_reactions();
 	}
 
-
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
 
@@ -2756,4 +2755,137 @@ function bb_get_load_activity_per_request( $default = 10 ) {
  */
 function bb_is_send_ajax_request() {
 	return (bool) ( 2 === bb_get_ajax_request_page_load() );
+}
+
+
+/**
+ * Get all activity filters option labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity filters option labels.
+ */
+function bb_get_activity_filter_options_labels() {
+	$filters = array(
+		'all'       => __( 'All updates', 'buddyboss' ),
+		'just-me'   => __( 'Created by me', 'buddyboss' ),
+		'favorites' => __( "I've reacted to", 'buddyboss' ),
+		'groups'    => __( 'From my groups', 'buddyboss' ),
+		'friends'   => __( 'From my connections', 'buddyboss' ),
+		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
+		'following' => __( "I'm following", 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
+}
+
+/**
+ * Get enabled activity filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $default Array of default activity filter options.
+ *
+ * @return array Array of enabled activity filters options.
+ */
+function bb_get_enabled_activity_filter_options( $default = array(
+	'all'       => 1,
+	'just-me'   => 1,
+	'favorites' => 1,
+	'groups'    => 1,
+	'friends'   => 1,
+	'mentions'  => 1,
+	'following' => 1,
+) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
+}
+
+/**
+ * Get all activity timeline filters option labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity timeline filters option labels.
+ */
+function bb_get_activity_timeline_filter_options_labels() {
+	$filters = array(
+		'just-me'   => __( 'Personal posts', 'buddyboss' ),
+		'favorites' => __( 'Reacted to', 'buddyboss' ),
+		'groups'    => __( 'From groups', 'buddyboss' ),
+		'friends'   => __( 'From connections', 'buddyboss' ),
+		'mentions'  => __( 'Mentioned in', 'buddyboss' ),
+		'following' => __( 'Following', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $filters );
+}
+
+/**
+ * Get enabled activity timeline filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $default Array of default activity timeline filter options.
+ *
+ * @return array Array of enabled activity timeline filters options.
+ */
+function bb_get_enabled_activity_timeline_filter_options( $default = array(
+	'just-me'   => 1,
+	'favorites' => 1,
+	'groups'    => 1,
+	'friends'   => 1,
+	'mentions'  => 1,
+	'following' => 1,
+) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_timeline_filter_options', bp_get_option( 'bb_activity_timeline_filter_options', $default ) );
+}
+
+/**
+ * Get all activity sorting options labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity sorting options labels.
+ */
+function bb_get_activity_sorting_options_labels() {
+	$sorting_options = array(
+		'date_recorded' => __( 'Most recent', 'buddyboss' ),
+		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
+}
+
+/**
+ * Get enabled activity sorting options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $default Array of default activity sorting options.
+ *
+ * @return array Array of enabled activity sorting options.
+ */
+function bb_get_enabled_activity_sorting_options( $default = array(
+	'date_recorded' => 1,
+	'date_updated'  => 1,
+) ) {
+	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
+}
+
+/**
+ * Check whether activity search is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Default: true.
+ *
+ * @return bool True if activity search enabled.
+ */
+function bb_is_activity_search_enabled( $default = true ) {
+
+	/**
+	 * Filters whether activity search is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value Is activity search enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
 }

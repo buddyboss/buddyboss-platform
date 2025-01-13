@@ -492,6 +492,7 @@ window.bp = window.bp || {};
 					template: null,
 					method: 'reset',
 					ajaxload: true,
+					order_by: '',
 				},
 				data
 			);
@@ -506,8 +507,8 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
-			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
-			if ( [ 'members', 'activity', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+			// if object is members, media, document and object nav does not exists fallback to scope = all.
+			if ( [ 'members', 'media', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
 			}
 
@@ -516,9 +517,23 @@ window.bp = window.bp || {};
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
 			}
 
+			if ( $( this.objectNavParent + ' [data-bp-order]' ).length ) {
+				data.order_by = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
+			}
+
 			// Set session's data.
 			if ( null !== data.scope ) {
-				this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				if( data.object === 'activity' ) {
+					if( 'undefined' !== data.save_scope && true === data.save_scope ) {
+						this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+					}
+
+					if( 'undefined' !== data.user_timeline && true === data.user_timeline ) {
+						this.setStorage( 'bp-user-activity', 'scope', data.scope );
+					}
+				} else {
+					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
+				}
 			}
 
 			if ( null !== data.filter ) {
@@ -548,12 +563,33 @@ window.bp = window.bp || {};
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
 			}
 
+			if( $('body').hasClass( 'my-activity' ) && data.object === 'activity' ) {
+				var user_timeline_scope = self.getStorage( 'bp-user-activity' );
+				if( undefined !== user_timeline_scope.scope ) {
+					data.scope = user_timeline_scope.scope;
+				} else {
+					data.scope = $( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).first().data( 'bp-scope' );
+				}
+
+				$( '.bb-subnav-filters-container .subnav-filters-modal li' ).removeClass( 'selected loading' );
+				$( '.bb-subnav-filters-container .subnav-filters-modal li[data-bp-scope="' + data.scope + '"]' ).addClass( 'selected loading' );
+			}
+
+			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
+			if( selected_scope.length ) {
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' ).text( selected_scope.text() );
+			}
+
+			var selected_order = $( this.objectNavParent + ' #bb-subnav-filter-by [data-bp-order="' + data.order_by + '"].selected' );
+			if( selected_order.length ) {
+				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] .selected' ).text( selected_order.text() );
+			}
+
 			// Add loader at custom place for few search types
 			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
 
 				var component_conditions = [
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
-					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
 					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage-members' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
@@ -561,7 +597,6 @@ window.bp = window.bp || {};
 
 				var component_targets = [
 					$( '.groups .group-search.members-search' ),
-					$( '.groups .group-search.activity-search' ),
 					$( '.documents .bp-document-listing .bb-title' ),
 					$( '.groups .group-search.search-wrapper' ),
 					$( '#bp-media-single-folder .bb-title' ),
@@ -573,6 +608,15 @@ window.bp = window.bp || {};
 					}
 				} );
 
+			}
+
+			if( data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ) ) {
+
+				if( data.event_element && data.event_element.hasClass('group-search' ) ) {
+					$( '.groups .group-search.activity-search' ).addClass( 'loading' );
+				} else {
+					$( 'body.groups .activity-head-bar .bb-subnav-filters-filtering li' ).first().addClass( 'loading' );
+				}
 			}
 
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).text('');
@@ -599,6 +643,14 @@ window.bp = window.bp || {};
 				},
 				data
 			);
+
+			// Remove the unnecessary data from the postdata.
+			if( ! _.isUndefined( postdata.event_element ) ) {
+				delete postdata.event_element;
+			}
+			if( ! _.isUndefined( postdata.user_timeline ) ) {
+				delete postdata.user_timeline;
+			}
 
 			return this.ajax( postdata, data.object ).done(
 				function ( response ) {
@@ -627,10 +679,30 @@ window.bp = window.bp || {};
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
 
+					$( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).removeClass( 'loading' );
+
 					if ( $( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
 						component_targets.forEach( function ( target ) {
 							target.removeClass( 'loading' );
 						} );
+					}
+
+					if( $( '.bb-subnav-filters-search.loading' ).length ) {
+						if ( 'activity' === data.object ) {
+							bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+						}
+
+						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+
+						if( data.search_terms === '' && window.clear_search_trigger) {
+							$( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
+							window.clear_search_trigger = false;
+						}
+					}
+
+					if( data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ) ) {
+						$( '.groups .group-search.activity-search.loading' ).removeClass( 'loading' );
+						$( 'body.groups .activity-head-bar .bb-subnav-filters-filtering li.loading' ).removeClass( 'loading' );
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
@@ -724,7 +796,7 @@ window.bp = window.bp || {};
 		 */
 		initObjects: function () {
 			var self   = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null,
-				filter = null;
+				filter = null, save_scope = true;
 
 			$.each(
 				this.objects,
@@ -747,6 +819,22 @@ window.bp = window.bp || {};
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
+					} else if ( 'activity' === object ) {
+						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
+						save_scope = false;
+					}
+
+					// Single activity page.
+					if ( 'activity' === object && $( 'body' ).hasClass( 'activity-singular' ) ) {
+						scope = 'all';
+					}
+
+					if( 'activity' === object && $( 'body' ).hasClass( 'my-activity' ) ) {
+						var userObjectData = self.getStorage( 'bp-user-activity' );
+						if( undefined !== userObjectData.scope ) {
+							scope = userObjectData.scope;
+						}
+						save_scope = false;
 					}
 
 					// Notifications always need to start with Newest ones.
@@ -792,7 +880,8 @@ window.bp = window.bp || {};
 							scope: scope,
 							filter: filter,
 							search_terms: search_terms,
-							extras: extras
+							extras: extras,
+							save_scope: save_scope,
 						};
 
 						if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
@@ -1884,7 +1973,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		searchQuery: function ( event ) {
-			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '',
+			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '', order='',
 				extras = false;
 
 			if ( $( event.delegateTarget ).hasClass( 'no-ajax' ) || undefined === $( event.delegateTarget ).data( 'bp-search' ) ) {
@@ -1894,6 +1983,7 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
+			var $form    = $( event.delegateTarget );
 			object       = $( event.delegateTarget ).data( 'bp-search' );
 			filter       = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
 			search_terms = $( event.delegateTarget ).find( 'input[type=search]' ).first().val();
@@ -1902,11 +1992,20 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
+			if ( $( self.objectNavParent + ' [data-bp-order]' ).length ) {
+				order = $( self.objectNavParent + ' [data-bp-order="' + object + '"].selected' ).data( 'bp-orderby' );
+			}
+
 			var objectData = self.getStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones.
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
 				extras = objectData.extras;
+			}
+
+			var search_parent = $( event.currentTarget ).closest( '.bb-subnav-filters-search' );
+			if( search_parent.length ) {
+				search_parent.addClass( 'loading' );
 			}
 
 			self.objectRequest(
@@ -1917,7 +2016,9 @@ window.bp = window.bp || {};
 					search_terms: search_terms,
 					page: 1,
 					extras: extras,
-					template: template
+					template: template,
+					order_by: order,
+					event_element: $form,
 				}
 			);
 		},
@@ -3574,6 +3675,7 @@ window.bp = window.bp || {};
 			if ( $form.filter( '.bp-messages-search-form, .bp-dir-search-form' ).length > 0 ) {
 				$form.find( 'input[type="search"]').val('');
 				$form.find( '.search-form_submit' ).trigger( 'click' );
+				window.clear_search_trigger = true;
 			} else if ( $form.find( '#bb_search_group_members' ).length > 0 ) {
 				$form.find( '#bb_search_group_members' ).val('').trigger('keyup');
 			} else {

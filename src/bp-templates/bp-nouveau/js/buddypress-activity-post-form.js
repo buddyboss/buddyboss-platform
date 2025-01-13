@@ -5886,6 +5886,15 @@ window.bp = window.bp || {};
 							}
 						}
 
+						var active_user_list = $( '.bb-subnav-filters-filtering .subnav-filters-modal ul li.selected' ).data( 'bp-scope' );
+						if( response.is_user_activity ) {
+							if( 'just-me' === active_user_list ) {
+								toPrepend = true;
+							} else {
+								toPrepend = false;
+							}
+						}
+
 						// Display a successful feedback if the activity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
 
