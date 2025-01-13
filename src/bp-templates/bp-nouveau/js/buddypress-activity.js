@@ -143,7 +143,8 @@ window.bp = window.bp || {};
 						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
 						! $( event.target ).closest( '#activity-modal' ).length &&
 						! $( event.target ).closest( '.gif-media-search-dropdown-standalone' ).length &&
-						! $( event.target ).closest( '.emojionearea-theatre' ).length
+						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
+						! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
 					) {
 						this.closeActivity( event );
 						this.activitySyncOnModalClose( event, activityId );
@@ -962,6 +963,13 @@ window.bp = window.bp || {};
 									target.removeClass( 'loading' );
 								}
 							);
+
+							// Add flag for ajax load for getting reactions.
+							if ( 'activity_comment' === item_type ) {
+								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							} else if ( 'activity' === item_type ) {
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							}
 						}
 
 						// Add "Likes/Emotions" menu item on activity directory nav menu.

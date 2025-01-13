@@ -2563,13 +2563,21 @@ function bp_media_download_link( $attachment_id, $media_id ) {
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['media_type'] ) {
+
+			// Remove action to remove meta query for forums while download check.
+			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+
+			// Add pre_get_posts action hook back.
+			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
 		if ( $can_download_btn ) {
 			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
+			exit();
 		}
 	}
 }
