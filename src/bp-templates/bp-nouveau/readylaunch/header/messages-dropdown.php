@@ -7,6 +7,9 @@
  * @package ReadyLaunch
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $menu_link            = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
 $unread_message_count = messages_get_unread_count();
 ?>

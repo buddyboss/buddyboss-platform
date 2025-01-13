@@ -5,6 +5,9 @@
  * @package ReadyLaunch
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 </main>
 <?php wp_footer(); ?>

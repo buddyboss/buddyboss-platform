@@ -5,6 +5,8 @@
  * @package ReadyLaunch
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -30,11 +32,11 @@
 			wp_nav_menu(
 				array(
 					'theme_location' => 'bb-readylaunch',
-//					'menu_id'        => 'primary-menu',
+					'menu_id'        => '',
 					'container'      => false,
 					'fallback_cb'    => '',
 					'walker'         => new BuddyBoss_SubMenuWrap(),
-					//'menu_class'     => 'primary-menu bb-primary-overflow',
+					'menu_class'     => 'bb-readylaunch-menu',
 				)
 			);
 			?>
