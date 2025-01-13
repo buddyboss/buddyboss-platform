@@ -4196,12 +4196,18 @@ window.bp = window.bp || {};
 			var order           = '';
 			var extras          = '';
 			var save_scope	    = false;
+			var user_timeline   = false;
 
 			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
 				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
 
-				if( $this.closest( '#bb-subnav-filter-show' ).length && ! $( 'body' ).hasClass( 'my-activity') ) {
+				if( $this.closest( '#bb-subnav-filter-show' ).length ) {
 					save_scope = true;
+
+					if( $( 'body' ).hasClass( 'my-activity') ) {
+						save_scope = false;
+						user_timeline = true;
+					}
 				}
 			}
 
@@ -4233,6 +4239,10 @@ window.bp = window.bp || {};
 				save_scope: save_scope,
 				event_element: $this,
 			};
+
+			if( user_timeline ) {
+				queryData.user_timeline = true;
+			}
 
 			bp.Nouveau.objectRequest( queryData );
 

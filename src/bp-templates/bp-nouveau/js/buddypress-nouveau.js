@@ -527,6 +527,10 @@ window.bp = window.bp || {};
 					if( 'undefined' !== data.save_scope && true === data.save_scope ) {
 						this.setStorage( 'bp-' + data.object, 'scope', data.scope );
 					}
+
+					if( 'undefined' !== data.user_timeline && true === data.user_timeline ) {
+						this.setStorage( 'bp-user-activity', 'scope', data.scope );
+					}
 				} else {
 					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
 				}
@@ -557,6 +561,18 @@ window.bp = window.bp || {};
 				$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
 			} else {
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
+			}
+
+			if( $('body').hasClass( 'my-activity' ) && data.object === 'activity' ) {
+				var user_timeline_scope = self.getStorage( 'bp-user-activity' );
+				if( undefined !== user_timeline_scope.scope ) {
+					data.scope = user_timeline_scope.scope;
+				} else {
+					data.scope = $( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).first().data( 'bp-scope' );
+				}
+
+				$( '.bb-subnav-filters-container .subnav-filters-modal li' ).removeClass( 'selected loading' );
+				$( '.bb-subnav-filters-container .subnav-filters-modal li[data-bp-scope="' + data.scope + '"]' ).addClass( 'selected loading' );
 			}
 
 			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
@@ -628,9 +644,12 @@ window.bp = window.bp || {};
 				data
 			);
 
-			// Remove the event element from the postdata.
+			// Remove the unnecessary data from the postdata.
 			if( ! _.isUndefined( postdata.event_element ) ) {
 				delete postdata.event_element;
+			}
+			if( ! _.isUndefined( postdata.user_timeline ) ) {
+				delete postdata.user_timeline;
 			}
 
 			return this.ajax( postdata, data.object ).done(
@@ -659,6 +678,8 @@ window.bp = window.bp || {};
 
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
+
+					$( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).removeClass( 'loading' );
 
 					if ( $( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
 						component_targets.forEach( function ( target ) {
@@ -809,7 +830,10 @@ window.bp = window.bp || {};
 					}
 
 					if( 'activity' === object && $( 'body' ).hasClass( 'my-activity' ) ) {
-						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
+						var userObjectData = self.getStorage( 'bp-user-activity' );
+						if( undefined !== userObjectData.scope ) {
+							scope = userObjectData.scope;
+						}
 						save_scope = false;
 					}
 
