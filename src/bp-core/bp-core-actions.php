@@ -1246,7 +1246,7 @@ add_action( 'bp_init', 'bb_telemetry_load' );
  */
 function bb_load_readylaunch() {
 	if ( class_exists( 'BB_Readylaunch' ) ) {
-		BB_Readylaunch::instance();
+		return BB_Readylaunch::instance();
 	}
 }
 
