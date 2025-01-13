@@ -1,14 +1,14 @@
-# Copyright (C) 2024 BuddyBoss
+# Copyright (C) 2025 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.7.60\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2024-12-17 14:58:47+00:00\n"
+"POT-Creation-Date: 2025-01-13 13:18:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -708,8 +708,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:646
 #: bp-core/classes/class-bb-post-notification.php:146
 #: bp-forums/classes/class-bp-forums-notification.php:426
-#: bp-groups/classes/class-bp-groups-notification.php:1256
-#: bp-groups/classes/class-bp-groups-notification.php:1457
+#: bp-groups/classes/class-bp-groups-notification.php:1267
+#: bp-groups/classes/class-bp-groups-notification.php:1468
 #: bp-messages/classes/class-bp-messages-notification.php:216
 #: bp-notifications/bp-notifications-functions.php:1363
 #: bp-notifications/bp-notifications-functions.php:1405
@@ -2040,56 +2040,56 @@ msgid "Posted a poll \"%1$s\""
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:712
-#: bp-groups/classes/class-bp-groups-notification.php:1349
+#: bp-groups/classes/class-bp-groups-notification.php:1360
 #. translators: %s: Total reply count.
 msgid "You have %1$d new posts"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:721
-#: bp-groups/classes/class-bp-groups-notification.php:1282
+#: bp-groups/classes/class-bp-groups-notification.php:1293
 #. translators: 1: User full name, 2: Activity content.
 msgid "%1$s posted an update: %2$s"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:730
-#: bp-groups/classes/class-bp-groups-notification.php:1291
+#: bp-groups/classes/class-bp-groups-notification.php:1302
 #. translators: User full name.
 msgid "%1$s posted some photos"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:736
-#: bp-groups/classes/class-bp-groups-notification.php:1297
+#: bp-groups/classes/class-bp-groups-notification.php:1308
 #. translators: User full name.
 msgid "%1$s posted a photo"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:745
-#: bp-groups/classes/class-bp-groups-notification.php:1306
+#: bp-groups/classes/class-bp-groups-notification.php:1317
 #. translators: User full name.
 msgid "%1$s posted some documents"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:751
-#: bp-groups/classes/class-bp-groups-notification.php:1312
+#: bp-groups/classes/class-bp-groups-notification.php:1323
 #. translators: User full name.
 msgid "%1$s posted a document"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:760
-#: bp-groups/classes/class-bp-groups-notification.php:1321
+#: bp-groups/classes/class-bp-groups-notification.php:1332
 #. translators: User full name.
 msgid "%1$s posted some videos"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:766
-#: bp-groups/classes/class-bp-groups-notification.php:1327
+#: bp-groups/classes/class-bp-groups-notification.php:1338
 #. translators: User full name.
 msgid "%1$s posted a video"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:773
 #: bp-activity/classes/class-bp-activity-notification.php:786
-#: bp-groups/classes/class-bp-groups-notification.php:1340
+#: bp-groups/classes/class-bp-groups-notification.php:1351
 #. translators: User full name.
 #. translators: %s: User full name.
 #. translators: %s: User full name.
@@ -4223,7 +4223,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:3412
 #: bp-core/admin/bp-core-admin-settings.php:3462
 #: bp-document/bp-document-functions.php:2059
-#: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2598
+#: bp-groups/bp-groups-admin.php:2659 bp-video/bp-video-functions.php:2606
 msgid "Default"
 msgstr ""
 
@@ -6707,7 +6707,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:565
 #: bp-moderation/classes/class-bp-moderation-activity.php:572
 #: bp-moderation/classes/class-bp-moderation-video.php:220
-#: bp-video/bp-video-functions.php:2643
+#: bp-video/bp-video-functions.php:2651
 msgid "Video"
 msgstr ""
 
@@ -12171,24 +12171,24 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1242 bp-media/bp-media-filters.php:1912
+#: bp-document/bp-document-filters.php:1250 bp-media/bp-media-filters.php:1912
 #: bp-video/bp-video-filters.php:1131
 msgid "File not found"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1259
+#: bp-document/bp-document-filters.php:1267
 msgid "Go to document"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1553
+#: bp-document/bp-document-filters.php:1561
 msgid "Repair documents"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1614
+#: bp-document/bp-document-filters.php:1622
 msgid "%s documents updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1624
+#: bp-document/bp-document-filters.php:1632
 msgid "Repairing documents &hellip; Complete!"
 msgstr ""
 
@@ -12209,44 +12209,44 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:164
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:250
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
-#: bp-video/bp-video-functions.php:2603
+#: bp-video/bp-video-functions.php:2611
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2069
-#: bp-video/bp-video-functions.php:2608
+#: bp-video/bp-video-functions.php:2616
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2074
-#: bp-video/bp-video-functions.php:2613
+#: bp-video/bp-video-functions.php:2621
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2079
-#: bp-video/bp-video-functions.php:2618
+#: bp-video/bp-video-functions.php:2626
 msgid "Design"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2084
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
-#: bp-video/bp-video-functions.php:2623
+#: bp-video/bp-video-functions.php:2631
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2089
-#: bp-video/bp-video-functions.php:2628
+#: bp-video/bp-video-functions.php:2636
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2094
-#: bp-video/bp-video-functions.php:2633
+#: bp-video/bp-video-functions.php:2641
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2099
-#: bp-video/bp-video-functions.php:2638
+#: bp-video/bp-video-functions.php:2646
 msgid "Text"
 msgstr ""
 
@@ -12855,28 +12855,28 @@ msgstr ""
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:429
+#: bp-forums/activity.php:430
 msgid "Reply to"
 msgstr ""
 
-#: bp-forums/activity.php:512 bp-forums/activity.php:513
-#: bp-forums/activity.php:555 bp-forums/activity.php:556
+#: bp-forums/activity.php:513 bp-forums/activity.php:514
+#: bp-forums/activity.php:556 bp-forums/activity.php:557
 msgid "Join Discussion"
 msgstr ""
 
-#: bp-forums/activity.php:916
+#: bp-forums/activity.php:917
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:948
+#: bp-forums/activity.php:949
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1218
+#: bp-forums/activity.php:1219
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1219
+#: bp-forums/activity.php:1220
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
@@ -21071,67 +21071,67 @@ msgid ""
 "subscribed to."
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1334
+#: bp-groups/classes/class-bp-groups-notification.php:1345
 #. translators: User full name.
 msgid "%1$s posted a gif"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1359
+#: bp-groups/classes/class-bp-groups-notification.php:1370
 #. translators: 1: User full name, 2: Group name, 3: Activity content.
 msgid "%1$s posted an update in %2$s: %3$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1369
+#: bp-groups/classes/class-bp-groups-notification.php:1380
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted some photos in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1376
+#: bp-groups/classes/class-bp-groups-notification.php:1387
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted a photo in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1386
+#: bp-groups/classes/class-bp-groups-notification.php:1397
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted some documents in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1393
+#: bp-groups/classes/class-bp-groups-notification.php:1404
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted a document in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1403
+#: bp-groups/classes/class-bp-groups-notification.php:1414
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted some videos in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1410
+#: bp-groups/classes/class-bp-groups-notification.php:1421
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted a video in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1418
+#: bp-groups/classes/class-bp-groups-notification.php:1429
 #. translators: User full name, 2: Group name.
 msgid "%1$s posted a gif in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1425
+#: bp-groups/classes/class-bp-groups-notification.php:1436
 #. translators: %s: User full name, 2: Group name.
 msgid "%1$s posted an update in %2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1482
+#: bp-groups/classes/class-bp-groups-notification.php:1493
 #. translators: 1: User full name, 2: Group name, 3: Discussion Title.
 msgid "%1$s started a discussion%2$s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1491
+#: bp-groups/classes/class-bp-groups-notification.php:1502
 #. translators: %s: Total reply count.
 msgid "You have %1$d new discussions"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-notification.php:1498
+#: bp-groups/classes/class-bp-groups-notification.php:1509
 #. translators: 1: User full name, 2: Group name, 3: Discussion Title.
 msgid "%1$s started a discussion%2$s%3$s"
 msgstr ""
@@ -26461,22 +26461,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2413
+#: bp-templates/bp-nouveau/includes/template-tags.php:2431
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2595
+#: bp-templates/bp-nouveau/includes/template-tags.php:2613
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2627
-#: bp-templates/bp-nouveau/includes/template-tags.php:2651
+#: bp-templates/bp-nouveau/includes/template-tags.php:2645
+#: bp-templates/bp-nouveau/includes/template-tags.php:2669
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -28939,10 +28939,10 @@ msgstr ""
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:329
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:345
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
-#: bp-templates/bp-nouveau/includes/template-tags.php:2617
-#: bp-templates/bp-nouveau/includes/template-tags.php:2641
-#: bp-templates/bp-nouveau/includes/template-tags.php:2666
+#: bp-templates/bp-nouveau/includes/template-tags.php:2627
+#: bp-templates/bp-nouveau/includes/template-tags.php:2635
+#: bp-templates/bp-nouveau/includes/template-tags.php:2659
+#: bp-templates/bp-nouveau/includes/template-tags.php:2684
 msgid "Close (Esc)"
 msgstr ""
 
@@ -33529,25 +33529,25 @@ msgstr ""
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2394
+#: bp-templates/bp-nouveau/includes/template-tags.php:2412
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2600
+#: bp-templates/bp-nouveau/includes/template-tags.php:2618
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2609
-#: bp-templates/bp-nouveau/includes/template-tags.php:2617
-#: bp-templates/bp-nouveau/includes/template-tags.php:2641
-#: bp-templates/bp-nouveau/includes/template-tags.php:2666
+#: bp-templates/bp-nouveau/includes/template-tags.php:2627
+#: bp-templates/bp-nouveau/includes/template-tags.php:2635
+#: bp-templates/bp-nouveau/includes/template-tags.php:2659
+#: bp-templates/bp-nouveau/includes/template-tags.php:2684
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2632
-#: bp-templates/bp-nouveau/includes/template-tags.php:2656
+#: bp-templates/bp-nouveau/includes/template-tags.php:2650
+#: bp-templates/bp-nouveau/includes/template-tags.php:2674
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
@@ -33720,11 +33720,11 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4177
+#: bp-video/bp-video-functions.php:4185
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4225
+#: bp-video/bp-video-functions.php:4233
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
