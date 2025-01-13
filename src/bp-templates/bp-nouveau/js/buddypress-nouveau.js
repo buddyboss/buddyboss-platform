@@ -4728,9 +4728,15 @@ window.bp = window.bp || {};
 					// Cache profile data.
 					bp.Nouveau.cacheProfileCard[memberId] = data;
 
-					$profileCard.removeClass( 'loading' );
-					bp.Nouveau.updateProfileCard( data, currentUser );
-					popupCardLoaded = true;
+					// Check if hovering over avatar or popup.
+					if ( hoverAvatar || hoverCardPopup ) {
+						$profileCard.removeClass( 'loading' );
+						bp.Nouveau.updateProfileCard( data, currentUser );
+						popupCardLoaded = true;
+					} else {
+						bp.Nouveau.hidePopupCard();
+					}
+
 					bp.Nouveau.currentRequestMemberId = null;
 				},
 				error     : function ( xhr, status, error ) {
@@ -4920,9 +4926,15 @@ window.bp = window.bp || {};
 					// Cache group data.
 					bp.Nouveau.cacheGroupCard[groupId] = data;
 
-					$groupCard.removeClass( 'loading' );
-					bp.Nouveau.updateGroupCard( data, currentUser );
-					popupCardLoaded = true;
+					// Check if hovering over avatar or popup.
+					if ( hoverAvatar || hoverCardPopup ) {
+						$groupCard.removeClass( 'loading' );
+						bp.Nouveau.updateGroupCard( data, currentUser );
+						popupCardLoaded = true;
+					} else {
+						bp.Nouveau.hidePopupCard();
+					}
+
 					bp.Nouveau.currentRequestGroupId = null;
 				},
 				error     : function ( xhr, status, error ) {
