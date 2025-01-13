@@ -4200,7 +4200,7 @@ window.bp = window.bp || {};
 			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
 				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
 
-				if( $this.closest( '#bb-subnav-filter-show' ).length ) {
+				if( $this.closest( '#bb-subnav-filter-show' ).length && ! $( 'body' ).hasClass( 'my-activity') ) {
 					save_scope = true;
 				}
 			}

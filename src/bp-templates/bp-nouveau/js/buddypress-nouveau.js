@@ -808,6 +808,11 @@ window.bp = window.bp || {};
 						scope = 'all';
 					}
 
+					if( 'activity' === object && $( 'body' ).hasClass( 'my-activity' ) ) {
+						scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
+						save_scope = false;
+					}
+
 					// Notifications always need to start with Newest ones.
 					if ( undefined !== objectData.extras && 'notifications' !== object ) {
 						extras = objectData.extras;
