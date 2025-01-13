@@ -2381,8 +2381,26 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 	foreach ( $fields as $name => $attributes ) {
 		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes );
+
+		$signup_class_arr = array( 'bb-signup-field', $name );
+		/**
+		 * Filters the class of the signup field.
+		 *
+		 * @since BuddyBoss [BVERSION]
+		 *
+		 * @param array $signup_class_arr The class of the signup field.
+		 * @param array $attributes       The attributes of the signup field.
+		 */
+		$signup_class = apply_filters( 'bb_nouveau_signup_field_class', $signup_class_arr, $attributes );
+
+		// Ensure $signup_class is an array after the filter.
+		if ( ! is_array( $signup_class ) ) {
+			$signup_class = (array) $signup_class;
+		}
+
+		$signup_class = ! empty( $signup_class ) ? join( ' ', array_map( 'sanitize_html_class', $signup_class ) ) : '';
 		?>
-		<div class="bb-signup-field <?php echo esc_attr( $name ); ?>">
+		<div class="<?php echo esc_attr( $signup_class ); ?>">
 		<?php
 		// Text fields are using strings, radios are using their inputs
 		$label_output = '<label for="%1$s">%2$s</label>';

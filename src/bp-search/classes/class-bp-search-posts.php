@@ -179,6 +179,25 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 					remove_filter( 'the_content', 'et_fb_app_boot', 1 );
 				}
 
+				$plugin_instance = null;
+				if (
+					class_exists( 'Elementor\Plugin' ) &&
+					class_exists( 'Elementor\Frontend' ) &&
+					defined( 'Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY' )
+				) {
+					// Retrieve the plugin instance only once.
+					$plugin_instance = Elementor\Plugin::instance();
+
+					if (
+						$plugin_instance &&
+						isset( $plugin_instance->frontend ) &&
+						method_exists( $plugin_instance->frontend, 'apply_builder_in_content' )
+					) {
+						// Remove the filter for `apply_builder_in_content`.
+						remove_filter( 'the_content', array( $plugin_instance->frontend, 'apply_builder_in_content' ), Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
+					}
+				}
+
 				while ( $qry->have_posts() ) {
 					$qry->the_post();
 					$result = array(
@@ -194,6 +213,15 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 				// Add Boots Frond End Builder App.
 				if ( class_exists( 'ET_Builder_Plugin' ) && function_exists( 'et_fb_app_boot' ) ) {
 					add_filter( 'the_content', 'et_fb_app_boot', 1 );
+				}
+
+				if (
+					$plugin_instance &&
+					isset( $plugin_instance->frontend ) &&
+					method_exists( $plugin_instance->frontend, 'apply_builder_in_content' )
+				) {
+					// Remove the filter for `apply_builder_in_content`.
+					add_filter( 'the_content', array( $plugin_instance->frontend, 'apply_builder_in_content' ), Elementor\Frontend::THE_CONTENT_FILTER_PRIORITY );
 				}
 			}
 			wp_reset_postdata();
