@@ -127,38 +127,41 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Register the ReadyLaunch menu.
+		 * Register the ReadyLaunch menus.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_register_readylaunch_menus() {
+			// Define the menus and their respective theme locations.
+			$menus = array(
+				'bb-readylaunch'             => __( 'ReadyLaunch', 'buddyboss' ),
+				'bb-top-readylaunchpanel'    => __( 'Top ReadyLaunchPanel', 'buddyboss' ),
+				'bb-bottom-readylaunchpanel' => __( 'Bottom ReadyLaunchPanel', 'buddyboss' ),
+			);
 
-			// Check if the menu exists already.
-			$menu_name   = __( 'ReadyLaunch', 'buddyboss' );
-			$menu_exists = wp_get_nav_menu_object( $menu_name );
+			foreach ( $menus as $theme_location => $menu_name ) {
+				// Check if the menu already exists.
+				$menu_exists = wp_get_nav_menu_object( $menu_name );
 
-			// If the menu doesn't exist, create it.
-			$menu_id = ! $menu_exists ? wp_create_nav_menu( $menu_name ) : $menu_exists->term_id;
+				// If the menu doesn't exist, create it.
+				$menu_id = ! $menu_exists ? wp_create_nav_menu( $menu_name ) : $menu_exists->term_id;
 
-			// Define the theme location.
-			$theme_location = 'bb-readylaunch';
+				// Register the theme location if it has not been registered already.
+				if ( ! has_nav_menu( $theme_location ) ) {
+					register_nav_menu( $theme_location, $menu_name );
+				}
 
-			// Only register the theme location if it has not been registered already.
-			if ( ! has_nav_menu( $theme_location ) ) {
-				// Register the theme location if not already registered.
-				register_nav_menu( $theme_location, $menu_name );
-			}
-
-			// If the menu exists and the theme location is ready, assign the menu to the location.
-			$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
-			if ( ! empty( $menu_id ) && ! isset( $nav_menu_locations [ $theme_location ] ) ) {
-				set_theme_mod(
-					'nav_menu_locations',
-					array_merge(
-						get_theme_mod( 'nav_menu_locations', array() ),
-						array( $theme_location => $menu_id )
-					)
-				);
+				// If the menu exists and the theme location is ready, assign the menu to the location.
+				$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
+				if ( ! empty( $menu_id ) && ! isset( $nav_menu_locations[ $theme_location ] ) ) {
+					set_theme_mod(
+						'nav_menu_locations',
+						array_merge(
+							$nav_menu_locations,
+							array( $theme_location => $menu_id )
+						)
+					);
+				}
 			}
 		}
 
