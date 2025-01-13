@@ -29,6 +29,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		private static $instance = null;
 
 		/**
+		 * ReadyLaunch Settings.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public $settings = array();
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -51,8 +58,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
-
-			$enabled = $this->bb_is_readylaunch_enabled();
+			$this->settings = bb_get_enabled_readylaunch();
+			$enabled        = $this->bb_is_readylaunch_enabled();
 
 			// Register the ReadyLaunch menu.
 			$this->bb_register_readylaunch_menus();
@@ -90,34 +97,33 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		private function bb_is_readylaunch_enabled() {
-			$enabled_pages = bb_get_enabled_readylaunch();
 
 			if (
 				(
 					bp_is_members_directory() &&
-					! empty( $enabled_pages['members'] )
+					! empty( $this->settings['members'] )
 				) ||
 				(
 					bp_is_video_directory() &&
-					! empty( $enabled_pages['video'] ) &&
+					! empty( $this->settings['video'] ) &&
 					bp_is_current_component( 'video' )
 				) ||
 				(
 					bp_is_media_directory() &&
-					! empty( $enabled_pages['media'] ) &&
+					! empty( $this->settings['media'] ) &&
 					bp_is_current_component( 'media' )
 				) ||
 				(
 					bp_is_document_directory() &&
-					! empty( $enabled_pages['document'] )
+					! empty( $this->settings['document'] )
 				) ||
 				(
 					bp_is_groups_directory() &&
-					! empty( $enabled_pages['groups'] )
+					! empty( $this->settings['groups'] )
 				) ||
 				(
 					bp_is_activity_directory() &&
-					! empty( $enabled_pages['activity'] )
+					! empty( $this->settings['activity'] )
 				)
 			) {
 				return true;
@@ -181,6 +187,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch'
 			);
 
+			add_settings_field(
+				'bb_readylaunch',
+				__( 'Global Design Settings', 'buddyboss' ),
+				array( $this, 'bb_readylaunch_global_design_settings' ),
+				'bb-readylaunch',
+				'bb_readylaunch'
+			);
+
 			// Get the directory pages.
 			$directory_pages = bp_core_admin_get_directory_pages();
 
@@ -190,7 +204,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Get the enabled ReadyLaunch pages and BuddyPress directory page IDs.
-			$enabled_pages = bb_get_enabled_readylaunch();
+			$enabled_pages = $this->settings;
 			$bp_pages      = bp_core_get_directory_page_ids( 'all' );
 			$description   = '';
 
@@ -223,6 +237,27 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * ReadyLaunch global design settings callback.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_readylaunch_global_design_settings() {
+			?>
+			<tr class="bb-rl-admin-settings">
+				<th scope="row">
+					<?php esc_html_e( 'Left Sidebar', 'buddyboss-pro' ); ?>
+				</th>
+				<td>
+					<input type="checkbox" name="bb-readylaunch[groups_sidebar]" id="bb-readylaunch-groups-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_groups() ); ?> />
+					<label for="enabled-meeting-webinars"><?php esc_html_e( 'Groups', 'buddyboss-pro' ); ?></label><br /><br />
+					<input type="checkbox" name="bb-readylaunch[courses_sidebar]" id="bb-readylaunch-courses-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_courses() ); ?> />
+					<label for="enabled-meeting-webinars"><?php esc_html_e( 'Courses', 'buddyboss-pro' ); ?></label><br /><br />
+				</td>
+			</tr>
+			<?php
+		}
+
+		/**
 		 * Pages drop downs callback.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -237,7 +272,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				switch_to_blog( bp_get_root_blog_id() );
 			}
 
-			$checked = ! empty( $enabled_pages ) && isset( $enabled_pages[ $name ] );
+			$checked = ! empty( $this->settings ) && isset( $this->settings[ $name ] );
 
 			// For the button.
 			if ( 'button' === $name ) {
@@ -389,6 +424,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			get_template_part( 'template-parts/unread-notifications' );
 			$notifications = ob_get_clean();
 			wp_send_json_success( $notifications );
+		}
+
+		/**
+		 * Check if the sidebar is enabled for groups.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the sidebar is enabled for groups, false otherwise.
+		 */
+		public function bb_is_sidebar_enabled_for_groups() {
+
+			return ! empty( $this->settings['groups_sidebar'] );
+		}
+
+		/**
+		 * Check if the sidebar is enabled for courses.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the sidebar is enabled for courses, false otherwise.
+		 */
+		public function bb_is_sidebar_enabled_for_courses() {
+
+			return ! empty( $this->settings['courses_sidebar'] );
 		}
 	}
 
