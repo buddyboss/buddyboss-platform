@@ -10,7 +10,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-$enable_groups   = bb_load_readylaunch()->bb_is_sidebar_enabled_for_groups();
+$enable_groups   = bp_is_active( 'groups' ) && bb_load_readylaunch()->bb_is_sidebar_enabled_for_groups();
 $current_user_id = bp_loggedin_user_id();
 ?>
 

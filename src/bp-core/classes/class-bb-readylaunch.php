@@ -248,8 +248,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					<?php esc_html_e( 'Left Sidebar', 'buddyboss-pro' ); ?>
 				</th>
 				<td>
-					<input type="checkbox" name="bb-readylaunch[groups_sidebar]" id="bb-readylaunch-groups-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_groups() ); ?> />
-					<label for="enabled-meeting-webinars"><?php esc_html_e( 'Groups', 'buddyboss-pro' ); ?></label><br /><br />
+					<?php
+					if ( bp_is_active( 'groups' ) ) {
+						?>
+						<input type="checkbox" name="bb-readylaunch[groups_sidebar]" id="bb-readylaunch-groups-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_groups() ); ?> />
+						<label for="enabled-meeting-webinars"><?php esc_html_e( 'Groups', 'buddyboss-pro' ); ?></label>
+						<br /><br />
+						<?php
+					}
+					?>
 					<input type="checkbox" name="bb-readylaunch[courses_sidebar]" id="bb-readylaunch-courses-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_courses() ); ?> />
 					<label for="enabled-meeting-webinars"><?php esc_html_e( 'Courses', 'buddyboss-pro' ); ?></label><br /><br />
 				</td>
