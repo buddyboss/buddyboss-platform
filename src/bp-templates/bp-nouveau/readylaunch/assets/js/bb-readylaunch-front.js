@@ -37,7 +37,7 @@ window.bp = window.bp || {};
 		openHeaderDropDown: function ( e ) {
 			e.preventDefault();
 
-			var $this       = $( e.target );
+			var $this       = $( e.target ).closest( '.notification-link' );
 			var isMessage   = $this.parent().hasClass( 'bb-message-dropdown-notification' );
 			var containerId = $this.parent().attr( 'id' );
 			var action      = isMessage ? 'bb_fetch_header_messages' : 'bb_fetch_header_notifications';
