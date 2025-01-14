@@ -126,7 +126,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 								}
 
 								?>
-								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php esc_attr_e( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
+								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
 								<?php
 							}
 
@@ -169,7 +169,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 								continue;
 							}
 							?>
-							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php esc_attr_e( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
+							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
 							<?php
 						}
 					}
