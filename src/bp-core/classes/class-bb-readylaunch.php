@@ -245,26 +245,34 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_readylaunch_global_design_settings() {
-			?>
-			<tr class="bb-rl-admin-settings">
-				<th scope="row">
-					<?php esc_html_e( 'Left Sidebar', 'buddyboss-pro' ); ?>
-				</th>
-				<td>
-					<?php
-					if ( bp_is_active( 'groups' ) ) {
-						?>
-						<input type="checkbox" name="bb-readylaunch[groups_sidebar]" id="bb-readylaunch-groups-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_groups() ); ?> />
-						<label for="enabled-meeting-webinars"><?php esc_html_e( 'Groups', 'buddyboss-pro' ); ?></label>
-						<br /><br />
+			$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section();
+			if ( $active_left_sidebar_section ) {
+				?>
+				<tr class="bb-rl-admin-settings">
+					<th scope="row">
+						<?php esc_html_e( 'Left Sidebar', 'buddyboss' ); ?>
+					</th>
+					<td>
 						<?php
-					}
-					?>
-					<input type="checkbox" name="bb-readylaunch[courses_sidebar]" id="bb-readylaunch-courses-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_courses() ); ?> />
-					<label for="enabled-meeting-webinars"><?php esc_html_e( 'Courses', 'buddyboss-pro' ); ?></label><br /><br />
-				</td>
-			</tr>
-			<?php
+						if ( ! empty( $active_left_sidebar_section['groups'] ) ) {
+							?>
+							<input type="checkbox" name="bb-readylaunch[groups_sidebar]" id="bb-readylaunch-groups-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_groups() ); ?> />
+							<label for="enabled-meeting-webinars"><?php esc_html_e( 'Groups', 'buddyboss' ); ?></label>
+							<br /><br />
+							<?php
+						}
+						if ( ! empty( $active_left_sidebar_section['courses'] ) ) {
+							?>
+							<input type="checkbox" name="bb-readylaunch[courses_sidebar]" id="bb-readylaunch-courses-sidebar" value="1" <?php checked( $this->bb_is_sidebar_enabled_for_courses() ); ?> />
+							<label for="enabled-meeting-webinars"><?php esc_html_e( 'Courses', 'buddyboss' ); ?></label>
+							<br /><br />
+							<?php
+						}
+						?>
+					</td>
+				</tr>
+				<?php
+			}
 		}
 
 		/**
@@ -466,6 +474,118 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_is_sidebar_enabled_for_courses() {
 
 			return ! empty( $this->settings['courses_sidebar'] );
+		}
+
+		/**
+		 * Check if any left sidebar section (groups or courses) is active.
+		 *
+		 * This function checks if the groups or courses sections are active in the left sidebar.
+		 * It applies the 'bb_readylaunch_left_sidebar_courses' filter to get the arguments and
+		 * parses them to ensure they have the required structure.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|bool The active courses array if any section is active, false otherwise.
+		 */
+		public function bb_is_active_any_left_sidebar_section() {
+			$args = apply_filters( 'bb_readylaunch_left_sidebar_middle_content', array() );
+			bp_parse_args(
+				$args,
+				array(
+					'integration' => '',
+				)
+			);
+
+			if (
+				! empty( $args['groups'] ) &&
+				(
+					! empty( $args['courses'] ) &&
+					(
+						empty( $args['courses']['integration'] ) ||
+						! in_array( $args['courses']['integration'],
+							array(
+								'sfwd-courses',
+								'tutorlms',
+								'lifterlms',
+								'meprlms',
+							),
+							true
+						)
+					)
+				)
+			) {
+				return false;
+			}
+
+			return $args;
+		}
+
+		/**
+		 * Render the middle content for left sidebar HTML.
+		 *
+		 * This function generates the HTML for the middle section of the left sidebar,
+		 * displaying a list of items or an error message if no items are available.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Array of arguments for the left sidebar middle content.
+		 */
+		public function bb_render_left_sidebar_middle_html( $args = array() ) {
+			bp_parse_args(
+				$args,
+				array(
+					'heading'    => '',
+					'items'      => array(),
+					'error_text' => '',
+				)
+			);
+
+			$title      = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss' );
+			$items      = ! empty( $args['items'] ) ? $args['items'] : array();
+			$error_text = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss' );
+			?>
+			<div class="bb-rl-list">
+				<h2><?php echo esc_html( $title ); ?></h2>
+				<?php
+				if ( ! empty( $items ) ) {
+					?>
+					<ul class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
+						<?php
+						foreach ( $items as $item ) {
+							?>
+							<li>
+								<?php
+								if ( ! empty( $item['thumbnail'] ) ) { ?>
+									<div class="item-avatar">
+										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+											<?php echo $item['thumbnail']; ?>
+										</a>
+									</div>
+									<?php
+								} ?>
+								<div class="item">
+									<div class="item-title">
+										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+											<?php echo esc_html( $item['title'] ); ?>
+										</a>
+									</div>
+								</div>
+							</li>
+							<?php
+						}
+						?>
+					</ul>
+					<?php
+				} else {
+					?>
+					<div class="widget-error">
+						<?php echo esc_html( $error_text ); ?>
+					</div>
+					<?php
+				}
+				?>
+			</div>
+			<?php
 		}
 	}
 

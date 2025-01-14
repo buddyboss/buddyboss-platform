@@ -303,6 +303,10 @@ function bp_helper_plugins_loaded_callback() {
 	if ( function_exists( 'tutor' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
+
+	if ( class_exists( 'LifterLMS' ) ) {
+		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -1175,3 +1179,48 @@ function mpcs_add_buddyboss_style( $allow_handle ) {
 }
 
 add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
+
+/**
+ * Function to get the user enrolled courses.
+ *
+ * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
+ * It fetches the courses for the logged-in user and returns an array containing course details.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Arguments.
+ *
+ * @return array $args User enrolled courses with course details.
+ */
+function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
+	$student = llms_get_student( bp_loggedin_user_id() );
+	if ( ! $student ) {
+		return $args;
+	}
+
+	$results = $student->get_courses(
+		array(
+			'status' => 'enrolled',
+			'limit'  => 5,
+		)
+	);
+
+	$course_data['integration'] = 'lifterlms';
+	if ( ! empty( $results['results'] ) ) {
+		foreach ( $results['results'] as $post_id ) {
+			$thumbnail_url = '';
+			if ( has_post_thumbnail( $post_id ) ) {
+				$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
+			}
+
+			$course_data['items'][ $post_id ] = array(
+				'title'     => get_the_title( $post_id ),
+				'permalink' => get_the_permalink( $post_id ),
+				'thumbnail' => $thumbnail_url,
+			);
+		}
+	}
+	$args['courses'] = $course_data;
+
+	return $args;
+}
