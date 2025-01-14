@@ -1701,35 +1701,38 @@ function bb_add_subgroups_args_single_home( $args ) {
  *
  * @return array Modified arguments array with the user's groups data.
  */
-function bb_readylaunch_middle_content_my_groups( $args ) {
-	$group_args = array(
-		'user_id'  => bp_loggedin_user_id(),
-		'per_page' => 6,
-	);
-
+function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 	$group_data = array(
 		'integration' => 'groups',
-		'heading'     => __( 'My Groups', 'buddyboss' ),
-		'error_text'  => __( 'There are no groups to display.', 'buddyboss' ),
 	);
 
-	if ( bp_has_groups( $group_args ) ) {
-		while ( bp_groups() ) {
-			bp_the_group();
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
+		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
+		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
 
-			$group_id      = bp_get_group_id();
-			$thumbnail_url = ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar(
-				array(
-					'type' => 'thumb',
-					'id'   => $group_id,
-				)
-			) : '';
+		$group_args = array(
+			'user_id'  => bp_loggedin_user_id(),
+			'per_page' => 6,
+		);
 
-			$group_data['items'][ $group_id ] = array(
-				'title'     => bp_get_group_name(),
-				'permalink' => bp_get_group_permalink(),
-				'thumbnail' => $thumbnail_url,
-			);
+		if ( bp_has_groups( $group_args ) ) {
+			while ( bp_groups() ) {
+				bp_the_group();
+
+				$group_id      = bp_get_group_id();
+				$thumbnail_url = ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar(
+					array(
+						'type' => 'thumb',
+						'id'   => $group_id,
+					)
+				) : '';
+
+				$group_data['items'][ $group_id ] = array(
+					'title'     => bp_get_group_name(),
+					'permalink' => bp_get_group_permalink(),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
 		}
 	}
 

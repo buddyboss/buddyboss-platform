@@ -1193,31 +1193,35 @@ add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
  * @return array $args User enrolled courses with course details.
  */
 function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
-	$student = llms_get_student( bp_loggedin_user_id() );
-	if ( ! $student ) {
-		return $args;
-	}
-
-	$results = $student->get_courses(
-		array(
-			'status' => 'enrolled',
-			'limit'  => 5,
-		)
-	);
 
 	$course_data['integration'] = 'lifterlms';
-	if ( ! empty( $results['results'] ) ) {
-		foreach ( $results['results'] as $post_id ) {
-			$thumbnail_url = '';
-			if ( has_post_thumbnail( $post_id ) ) {
-				$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
-			}
 
-			$course_data['items'][ $post_id ] = array(
-				'title'     => get_the_title( $post_id ),
-				'permalink' => get_the_permalink( $post_id ),
-				'thumbnail' => $thumbnail_url,
-			);
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$student = llms_get_student( bp_loggedin_user_id() );
+		if ( ! $student ) {
+			return $args;
+		}
+
+		$results = $student->get_courses(
+			array(
+				'status' => 'enrolled',
+				'limit'  => 5,
+			)
+		);
+
+		if ( ! empty( $results['results'] ) ) {
+			foreach ( $results['results'] as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
 		}
 	}
 	$args['courses'] = $course_data;

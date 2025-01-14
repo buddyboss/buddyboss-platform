@@ -495,27 +495,31 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
  * @return array $args The user enrolled courses.
  */
 function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
-	$courses_ids = learndash_user_get_enrolled_courses(
-		bp_loggedin_user_id(),
-		array(
-			'nopaging'       => false,
-			'posts_per_page' => 5,
-		)
-	);
 
 	$course_data['integration'] = 'sfwd-courses';
-	if ( ! empty( $courses_ids ) ) {
-		foreach ( $courses_ids as $post_id ) {
-			$thumbnail_url = '';
-			if ( has_post_thumbnail( $post_id ) ) {
-				$thumbnail_url = get_the_post_thumbnail( $post_id, 'medium' );
-			}
 
-			$course_data['items'][ $post_id ] = array(
-				'title'     => get_the_title( $post_id ),
-				'permalink' => get_the_permalink( $post_id ),
-				'thumbnail' => $thumbnail_url,
-			);
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$courses_ids = learndash_user_get_enrolled_courses(
+			bp_loggedin_user_id(),
+			array(
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			)
+		);
+
+		if ( ! empty( $courses_ids ) ) {
+			foreach ( $courses_ids as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'medium' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
 		}
 	}
 	$args['courses'] = $course_data;

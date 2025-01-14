@@ -25,12 +25,12 @@ $current_user_id = bp_loggedin_user_id();
 		)
 	);
 
-	$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section();
-	if ( ! empty( $active_left_sidebar_section['groups'] ) ) {
+	$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section( true );
+	if ( ! empty( $active_left_sidebar_section['groups']['items'] ) ) {
 		bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['groups'] );
 	}
 
-	if ( ! empty( $active_left_sidebar_section['courses'] ) ) {
+	if ( ! empty( $active_left_sidebar_section['courses']['items'] ) ) {
 		bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['courses'] );
 	}
 

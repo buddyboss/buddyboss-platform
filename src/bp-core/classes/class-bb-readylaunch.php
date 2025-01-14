@@ -245,7 +245,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_readylaunch_global_design_settings() {
-			$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section();
+			$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section( false );
 			if ( $active_left_sidebar_section ) {
 				?>
 				<tr class="bb-rl-admin-settings">
@@ -485,10 +485,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param bool $data if true, then check for return data otherwise it will check plugin active or not.
+		 *
 		 * @return array|bool The active courses array if any section is active, false otherwise.
 		 */
-		public function bb_is_active_any_left_sidebar_section() {
-			$args = apply_filters( 'bb_readylaunch_left_sidebar_middle_content', array() );
+		public function bb_is_active_any_left_sidebar_section( bool $data ) {
+			$args = apply_filters(
+				'bb_readylaunch_left_sidebar_middle_content',
+				array(
+					'has_sidebar_data'               => $data,
+					'is_sidebar_enabled_for_groups'  => $this->bb_is_sidebar_enabled_for_groups(),
+					'is_sidebar_enabled_for_courses' => $this->bb_is_sidebar_enabled_for_courses(),
+				)
+			);
+
 			bp_parse_args(
 				$args,
 				array(
@@ -497,12 +507,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			if (
-				! empty( $args['groups'] ) &&
+				! $data &&
 				(
-					! empty( $args['courses'] ) &&
+					empty( $args['groups']['integration'] ) &&
 					(
 						empty( $args['courses']['integration'] ) ||
-						! in_array( $args['courses']['integration'],
+						! in_array(
+							$args['courses']['integration'],
 							array(
 								'sfwd-courses',
 								'tutorlms',
