@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 <body <?php body_class( 'bb-reaylaunch-template' ); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="site app-layout">
-	<header id="masthead" class="">
+	<header id="masthead" class="bbrl-header">
 		<div class="container site-header-container flex">
 			<a href="#" class="bb-toggle-panel"><i class="bb-icon-l bb-icon-sidebar"></i></a>
 			<div id="site-logo" class="site-branding">
