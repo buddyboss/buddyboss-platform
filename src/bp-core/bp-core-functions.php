@@ -9850,7 +9850,7 @@ function bb_remove_deleted_user_last_activities() {
 	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
 
 	if ( $table_exists ) {
-		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE u.ID IS NULL AND a.component = 'members' AND a.type = 'last_activity'";
+		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE ( u.ID IS NULL OR u.user_status != 0 ) AND a.component = 'members' AND a.type = 'last_activity'";
 		$wpdb->query( $sql ); // phpcs:ignore
 
 		// Also remove duplicates last_activity per user if any.
