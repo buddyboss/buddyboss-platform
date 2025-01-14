@@ -1,0 +1,86 @@
+.tooltip {
+	position: relative;
+	display: inline-block;
+	padding: var(--bbrl-space-100) var(--bbrl-space-200);
+	background-color: var(--bbrl-background-black-color);
+	color: var(--bbrl-text-secondary-color);
+	border-radius: var(--bbrl-radius-md);
+	font-size: 0.875rem; // 14px
+	line-height: 1.2;
+	text-align: center;
+	max-width: 200px;
+
+	&:after {
+		content: "";
+		position: absolute;
+		width: 0;
+		height: 0;
+		border-style: solid;
+	}
+
+	&--top:after {
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border-width: 6px 6px 0 6px;
+		border-color: var(--bbrl-background-black-color) transparent transparent transparent;
+	}
+
+	&--bottom:after {
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		border-width: 0 6px 6px 6px;
+		border-color: transparent transparent var(--bbrl-background-black-color) transparent;
+	}
+
+	&--left:after {
+		top: 50%;
+		right: 100%;
+		transform: translateY(-50%);
+		border-width: 6px 6px 6px 0;
+		border-color: transparent var(--bbrl-background-black-color) transparent transparent;
+	}
+
+	&--right:after {
+		top: 50%;
+		left: 100%;
+		transform: translateY(-50%);
+		border-width: 6px 0 6px 6px;
+		border-color: transparent transparent transparent var(--bbrl-background-black-color);
+	}
+
+	&__title {
+		font-weight: 500;
+		margin-bottom: var(--bbrl-space-100);
+	}
+
+	&__content {
+		font-weight: 400;
+	}
+}
+
+
+/*
+
+<div class="tooltip tooltip--top">
+	<div class="tooltip__title">Body text</div>
+	<div class="tooltip__content">Body text</div>
+</div>
+
+<div class="tooltip tooltip--bottom">
+	<div class="tooltip__title">Body text</div>
+	<div class="tooltip__content">Body text</div>
+</div>
+
+<div class="tooltip tooltip--left">
+	<div class="tooltip__title">Body text</div>
+	<div class="tooltip__content">Body text</div>
+</div>
+
+<div class="tooltip tooltip--right">
+	<div class="tooltip__title">Body text</div>
+	<div class="tooltip__content">Body text</div>
+</div>
+
+*/

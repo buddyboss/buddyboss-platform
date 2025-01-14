@@ -40,8 +40,7 @@ defined( 'ABSPATH' ) || exit;
 				)
 			);
 			?>
-		</div>
-		<div id="header-aside" class="header-aside">
+			<div id="header-aside" class="header-aside">
 			<div class="header-aside-inner">
 				<?php
 				if ( is_user_logged_in() ) {
@@ -54,6 +53,7 @@ defined( 'ABSPATH' ) || exit;
 				}
 				?>
 			</div>
+		</div>
 		</div>
 	</header>
 	<main id="primary" class="site-main">

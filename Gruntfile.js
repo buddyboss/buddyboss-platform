@@ -120,6 +120,15 @@ module.exports = function (grunt) {
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
 				},
+				ready_launch: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/readylaunch/assets/css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/assets/css'
+				},
 				admin: {
 					cwd: SOURCE_DIR,
 					extDot: 'last',
@@ -388,7 +397,8 @@ module.exports = function (grunt) {
 						'!**/emojionearea-edited.css',
 						'!**/pusher/**/*.css',
 						'!**/recaptcha/**/*.css',
-						'!**/endpoints/**/*.css'
+						'!**/endpoints/**/*.css',
+						'!**/readylaunch/**/*.css'
 						]
 					)
 				},
