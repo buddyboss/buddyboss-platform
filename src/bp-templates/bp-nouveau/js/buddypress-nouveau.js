@@ -563,18 +563,6 @@ window.bp = window.bp || {};
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
 			}
 
-			if( $('body').hasClass( 'my-activity' ) && data.object === 'activity' ) {
-				var user_timeline_scope = self.getStorage( 'bp-user-activity' );
-				if( undefined !== user_timeline_scope.scope ) {
-					data.scope = user_timeline_scope.scope;
-				} else {
-					data.scope = $( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).first().data( 'bp-scope' );
-				}
-
-				$( '.bb-subnav-filters-container .subnav-filters-modal li' ).removeClass( 'selected loading' );
-				$( '.bb-subnav-filters-container .subnav-filters-modal li[data-bp-scope="' + data.scope + '"]' ).addClass( 'selected loading' );
-			}
-
 			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
 			if( selected_scope.length ) {
 				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' ).text( selected_scope.text() );
@@ -812,7 +800,11 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					objectData = self.getStorage( 'bp-' + object );
+					if( 'activity' === object && $( 'body' ).hasClass( 'my-activity' ) ) {
+						objectData = self.getStorage( 'bp-user-activity' );
+					} else {
+						objectData = self.getStorage( 'bp-' + object );
+					}
 
 					var typeType = window.location.hash.substr( 1 );
 					if ( undefined !== typeType && typeType == 'following' ) {
@@ -826,14 +818,7 @@ window.bp = window.bp || {};
 
 					// Single activity page.
 					if ( 'activity' === object && $( 'body' ).hasClass( 'activity-singular' ) ) {
-						scope = 'all';
-					}
-
-					if( 'activity' === object && $( 'body' ).hasClass( 'my-activity' ) ) {
-						var userObjectData = self.getStorage( 'bp-user-activity' );
-						if( undefined !== userObjectData.scope ) {
-							scope = userObjectData.scope;
-						}
+						scope      = 'all';
 						save_scope = false;
 					}
 
