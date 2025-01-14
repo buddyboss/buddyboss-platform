@@ -663,20 +663,20 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 			'dir_labels'                 => array(
 				'members'   => array(
-					'singular' => esc_html( 'Member', 'buddyboss' ),
-					'plural'   => esc_html( 'Members', 'buddyboss' ),
+					'singular' => esc_html__( 'Member', 'buddyboss' ),
+					'plural'   => esc_html__( 'Members', 'buddyboss' ),
 				),
 				'followers' => array(
-					'singular' => esc_html( 'Follower', 'buddyboss' ),
-					'plural'   => esc_html( 'Followers', 'buddyboss' ),
+					'singular' => esc_html__( 'Follower', 'buddyboss' ),
+					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
 				),
 			),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
 			$params['dir_labels']['connections'] = array(
-				'singular' => esc_html( 'Connection', 'buddyboss' ),
-				'plural'   => esc_html( 'Connections', 'buddyboss' ),
+				'singular' => esc_html__( 'Connection', 'buddyboss' ),
+				'plural'   => esc_html__( 'Connections', 'buddyboss' ),
 			);
 		}
 

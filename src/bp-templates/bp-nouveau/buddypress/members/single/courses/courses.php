@@ -59,12 +59,21 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 		<div class="bb-item-count">
 		<?php
 			$count = count( $user_courses );
-
-			/* translators: %d is the courses count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Course', '<span class="bb-count">%d</span> Courses', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-				$count
+				wp_kses(
+					/* translators: %d is the courses count */
+					_n(
+						'<span class="bb-count">%d</span> Course',
+						'<span class="bb-count">%d</span> Courses',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				(int) $count
 			);
+
+			unset( $count );
 			?>
 		</div>
 		<?php

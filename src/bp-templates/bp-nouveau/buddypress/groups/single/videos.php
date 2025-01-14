@@ -10,17 +10,26 @@
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 if ( 'videos' === bp_current_action() ) {
-	$count = bp_video_get_total_group_video_count();
 	?>
 	<div class="bb-item-count">
 		<?php
 		if ( ! $is_send_ajax_request ) {
-
-			/* translators: %d is the video count */
+			$count = bp_video_get_total_group_video_count();
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Video', '<span class="bb-count">%d</span> Videos', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-				$count
+				wp_kses(
+					/* translators: %d is the video count */
+					_n(
+						'<span class="bb-count">%d</span> Video',
+						'<span class="bb-count">%d</span> Videos',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				(int) $count
 			);
+
+			unset( $count );
 		}
 		?>
 	</div>

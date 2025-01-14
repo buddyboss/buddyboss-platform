@@ -119,8 +119,8 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
 function bp_nouveau_groups_localize_scripts( $params = array() ) {
 
 	$params['dir_labels']['groups'] = array(
-		'singular' => esc_html( 'Group', 'buddyboss' ),
-		'plural'   => esc_html( 'Groups', 'buddyboss' ),
+		'singular' => esc_html__( 'Group', 'buddyboss' ),
+		'plural'   => esc_html__( 'Groups', 'buddyboss' ),
 	);
 
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
@@ -671,6 +671,8 @@ function bp_nouveau_get_groups_directory_nav_items() {
 	if ( ! empty( $extra_nav_items ) ) {
 		$nav_items = array_merge( $nav_items, $extra_nav_items );
 	}
+
+	unset( $enable_count, $extra_nav_items );
 
 	/**
 	 * Use this filter to introduce your custom nav items for the groups directory.

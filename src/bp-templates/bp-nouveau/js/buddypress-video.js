@@ -425,13 +425,13 @@ window.bp = window.bp || {};
 
 								}
 
+								var dir_label;
 								if ( response.data.video_personal_count ) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
-											1 === parseInt( response.data.video_personal_count )
-											? BP_Nouveau.dir_labels['video']['singular']
-											: BP_Nouveau.dir_labels['video']['plural']
+											1 === parseInt( response.data.video_personal_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
@@ -448,11 +448,10 @@ window.bp = window.bp || {};
 
 								if ( response.data.video_group_count ) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
-											1 === parseInt( response.data.video_group_count )
-											? BP_Nouveau.dir_labels['video']['singular']
-											: BP_Nouveau.dir_labels['video']['plural']
+											1 === parseInt( response.data.video_group_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
@@ -475,15 +474,13 @@ window.bp = window.bp || {};
 											dir_count = response.data.video_all_count;
 										} else if ( 'personal' === dir_scope ) {
 											dir_count = response.data.video_personal_count;
-										} else if( 'groups' === dir_scope ) {
+										} else if ( 'groups' === dir_scope ) {
 											dir_count = response.data.video_group_count;
 										}
 
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
-											1 === dir_count
-											? BP_Nouveau.dir_labels['video']['singular']
-											: BP_Nouveau.dir_labels['video']['plural']
+											1 === dir_count ? BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
@@ -1655,17 +1652,17 @@ window.bp = window.bp || {};
 								500
 							);
 							if ( response.success ) {
+								var dir_label;
 								if (
 									'undefined' !== typeof response.data &&
 									'undefined' !== typeof response.data.video_personal_count
 								) {
 
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
-											1 === parseInt( response.data.video_personal_count )
-											? BP_Nouveau.dir_labels['video']['singular']
-											: BP_Nouveau.dir_labels['video']['plural']
+											1 === parseInt( response.data.video_personal_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
@@ -1679,11 +1676,10 @@ window.bp = window.bp || {};
 									'undefined' !== typeof response.data.video_group_count
 								) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 										(
-											1 === parseInt( response.data.video_group_count )
-											? BP_Nouveau.dir_labels['video']['singular']
-											: BP_Nouveau.dir_labels['video']['plural']
+											1 === parseInt( response.data.video_group_count ) ?
+											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );

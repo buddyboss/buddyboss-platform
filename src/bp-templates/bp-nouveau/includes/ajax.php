@@ -141,6 +141,9 @@ function bp_nouveau_ajax_object_template_loader() {
 	$result['contents'] = ob_get_contents();
 	ob_end_clean();
 
+	// Unset variables we no longer need.
+	unset( $template_path, $template_part );
+
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
 		$enable_count = bb_member_directory_count_enable();
 		if ( $enable_count ) {
@@ -156,6 +159,9 @@ function bp_nouveau_ajax_object_template_loader() {
 	}
 
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
+
+	// Unset variables we no longer need.
+	unset( $enable_count, $object );
 
 	// Locate the object template.
 	wp_send_json_success( $result );

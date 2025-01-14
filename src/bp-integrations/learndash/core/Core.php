@@ -129,9 +129,6 @@ class Core {
 		$this->bp_loggedin_user_id  = bp_loggedin_user_id();
 		$this->user_same            = ( $this->bp_displayed_user_id == $this->bp_loggedin_user_id ? true : false );
 
-		$atts         = apply_filters( 'bp_learndash_user_courses_atts', array() );
-		$user_courses = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $this->bp_displayed_user_id, $atts ) );
-
 		$nav_name = $this->course_name;
 
 		bp_core_new_nav_item(

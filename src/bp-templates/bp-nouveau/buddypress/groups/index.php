@@ -22,11 +22,21 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 		<?php
 		if ( ! $is_send_ajax_request ) {
 			$count = bp_get_total_group_count();
-			/* translators: %d is the group count */
 			printf(
-				wp_kses( _n( '<span class="bb-count">%d</span> Group', '<span class="bb-count">%d</span> Groups', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-				$count
+				wp_kses(
+					/* translators: %d is the group count */
+					_n(
+						'<span class="bb-count">%d</span> Group',
+						'<span class="bb-count">%d</span> Groups',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				(int) $count
 			);
+
+			unset( $count );
 		}
 		?>
 	</div>

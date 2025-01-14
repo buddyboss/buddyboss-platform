@@ -49,11 +49,21 @@ do_action( 'bp_before_directory_members_page' );
 				<?php
 				if ( ! $is_send_ajax_request ) {
 					$count = bp_core_get_all_member_count();
-					/* translators: %d is the member count */
 					printf(
-						wp_kses( _n( '<span class="bb-count">%d</span> Member', '<span class="bb-count">%d</span> Members', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-						$count
+						wp_kses(
+							/* translators: %d is the member count */
+							_n(
+								'<span class="bb-count">%d</span> Member',
+								'<span class="bb-count">%d</span> Members',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
 					);
+
+					unset( $count );
 				}
 				?>
 			</div>

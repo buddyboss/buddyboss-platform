@@ -1289,13 +1289,13 @@ window.bp = window.bp || {};
 										$( document ).find( 'li#media-all' ).trigger( 'click' );
 									}
 								} else {
+									var dir_label;
 									if ( response.data.media_personal_count ) {
 										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
-											var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 											(
-												1 === parseInt( response.data.media_personal_count )
-												? BP_Nouveau.dir_labels['media']['singular']
-												: BP_Nouveau.dir_labels['media']['plural']
+												1 === parseInt( response.data.media_personal_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
 											)
 											: '';
 											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
@@ -1306,11 +1306,10 @@ window.bp = window.bp || {};
 
 									if ( response.data.media_group_count ) {
 										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
-											var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 											(
-												1 === parseInt( response.data.media_group_count )
-												? BP_Nouveau.dir_labels['media']['singular']
-												: BP_Nouveau.dir_labels['media']['plural']
+												1 === parseInt( response.data.media_group_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
 											)
 											: '';
 											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
@@ -5248,14 +5247,13 @@ window.bp = window.bp || {};
 								) {
 									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
 								}
-
+								var dir_label;
 								if ( response.data.media_personal_count ) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
-											1 === parseInt( response.data.media_personal_count )
-											? BP_Nouveau.dir_labels['media']['singular']
-											: BP_Nouveau.dir_labels['media']['plural']
+											1 === parseInt( response.data.media_personal_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
@@ -5272,11 +5270,10 @@ window.bp = window.bp || {};
 
 								if ( response.data.media_group_count ) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
-											1 === parseInt( response.data.media_group_count )
-											? BP_Nouveau.dir_labels['media']['singular']
-											: BP_Nouveau.dir_labels['media']['plural']
+											1 === parseInt( response.data.media_group_count ) ?
+											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
@@ -5300,15 +5297,13 @@ window.bp = window.bp || {};
 											dir_count = response.data.media_all_count;
 										} else if ( 'personal' === dir_scope ) {
 											dir_count = response.data.media_personal_count;
-										} else if( 'groups' === dir_scope ) {
+										} else if ( 'groups' === dir_scope ) {
 											dir_count = response.data.media_group_count;
 										}
 
-										var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
-											1 === dir_count
-											? BP_Nouveau.dir_labels['media']['singular']
-											: BP_Nouveau.dir_labels['media']['plural']
+											1 === dir_count ? BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
 										)
 										: '';
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
@@ -6539,9 +6534,8 @@ window.bp = window.bp || {};
 			if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
 				var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'album' ) ?
 				(
-					1 === parseInt( count )
-					? BP_Nouveau.dir_labels['album']['singular']
-					: BP_Nouveau.dir_labels['album']['plural']
+					1 === parseInt( count ) ?
+					BP_Nouveau.dir_labels.album.singular : BP_Nouveau.dir_labels.album.plural
 				)
 				: '';
 				$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + count + '</span> ' + dir_label );

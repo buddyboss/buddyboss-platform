@@ -15,14 +15,23 @@ if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 	?>
 	<div class="bb-item-count">
 		<?php
-		/* translators: %d is the album count */
 		printf(
-			wp_kses( _n( '<span class="bb-count">%d</span> Album', '<span class="bb-count">%d</span> Albums', $count, 'buddyboss' ), array( 'span' => array( 'class' => true ) ) ),
-			$count
+			wp_kses(
+				/* translators: %d is the album count */
+				_n(
+					'<span class="bb-count">%d</span> Album',
+					'<span class="bb-count">%d</span> Albums',
+					$count,
+					'buddyboss'
+				),
+				array( 'span' => array( 'class' => true ) )
+			),
+			(int) $count
 		);
 		?>
 	</div>
 	<?php
+	unset( $count );
 }
 ?>
 <div class="bb-media-container group-albums">
@@ -33,7 +42,7 @@ if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 	if ( bp_is_group_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
-	
+
 	if ( bp_is_group_document_support_enabled() ) {
 		bp_get_template_part( 'document/theatre' );
 	}

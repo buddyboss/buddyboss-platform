@@ -711,9 +711,8 @@ window.bp = window.bp || {};
 						}
 						var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( dir_label_type ) ?
 							(
-								1 === parseInt( dir_count )
-								? BP_Nouveau.dir_labels[dir_label_type]['singular']
-								: BP_Nouveau.dir_labels[dir_label_type]['plural']
+								1 === parseInt( dir_count ) ?
+								BP_Nouveau.dir_labels[dir_label_type].singular : BP_Nouveau.dir_labels[dir_label_type].plural
 							)
 							: '';
 
