@@ -5404,6 +5404,26 @@ body.buddyboss-theme {
 	}
 }
 
+.has-sidebar #buddypress .bb-profile-grid:has(.widget-area) {
+
+	.activity-head-bar {
+
+		.bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
+			width: 200px;
+		}
+
+		@media screen and (min-width: 1131px) and (max-width: 1460px) {
+			flex-wrap: wrap;
+
+			.bb-subnav-filters-container {
+				width: 100%;
+				margin: 10px 0;
+			}
+		}
+	}
+
+}
+
 .activity-head-bar {
 	display: flex;
 	align-items: center;
