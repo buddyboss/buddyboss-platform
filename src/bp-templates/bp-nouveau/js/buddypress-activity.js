@@ -521,7 +521,9 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if ( $( '#buddypress .activity-search.bp-search input[type=search]' ).length ) {
+				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+				} else if ( $( '#buddypress .activity-search.bp-search input[type=search]' ).length ) {
 					search_terms = $( '#buddypress .activity-search.bp-search input[type=search]' ).val();
 				}
 
