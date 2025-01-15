@@ -81,6 +81,14 @@
 	--bbrl-space-600: 48px;
 	--bbrl-space-700: 56px;
 
+	--bbrl-z-index-dropdown:       1000;
+	--bbrl-z-index-sticky:         1020;
+	--bbrl-z-index-fixed:          1030;
+	--bbrl-z-index-modal-backdrop: 1040;
+	--bbrl-z-index-modal:          1050;
+	--bbrl-z-index-popover:        1060;
+	--bbrl-z-index-tooltip:        1070;
+
 	--font-family-base: "Roboto", sans-serif;
 	--font-size-base: 16px;
 }

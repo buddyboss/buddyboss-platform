@@ -65,6 +65,13 @@
   --bbrl-space-500: 40px;
   --bbrl-space-600: 48px;
   --bbrl-space-700: 56px;
+  --bbrl-z-index-dropdown:       1000;
+  --bbrl-z-index-sticky:         1020;
+  --bbrl-z-index-fixed:          1030;
+  --bbrl-z-index-modal-backdrop: 1040;
+  --bbrl-z-index-modal:          1050;
+  --bbrl-z-index-popover:        1060;
+  --bbrl-z-index-tooltip:        1070;
   --font-family-base: "Roboto", sans-serif;
   --font-size-base: 16px;
 }
@@ -697,4 +704,34 @@ h6 {
   max-width: 130px;
   max-height: 32px;
   object-fit: contain;
+}
+
+.header-aside .notification-wrap {
+  position: relative;
+}
+
+.header-aside .notification-wrap .notification-dropdown {
+  background: var(--bbrl-background-color);
+  border: 1px solid var(--bbrl-border-secondary-color);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
+  border-radius: var(--bbrl-radius-lg);
+  list-style: none;
+  position: absolute;
+  right: -15px;
+  top: -webkit-calc(100% - 15px);
+  top: calc(100% - 15px);
+  margin: 0;
+  min-width: 400px;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 0;
+  display: none;
+}
+
+.header-aside .notification-wrap.selected .notification-dropdown {
+  opacity: 1;
+  visibility: visible;
+  z-index: var(--bbrl-z-index-dropdown);
+  display: block;
 }
