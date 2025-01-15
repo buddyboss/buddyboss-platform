@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 <?php wp_body_open(); ?>
 <div id="page" class="site app-layout">
 	<header id="masthead" class="bbrl-header">
-		<div class="bbrl-container bbrl-header-container flex justify-space-between items-center">
+		<div class="bbrl-container bbrl-header-container flex justify-between items-center">
 			<div id="site-logo" class="bbrl-site-branding">
 				<?php get_template_part( 'template-parts/site-logo' ); ?>
 			</div>

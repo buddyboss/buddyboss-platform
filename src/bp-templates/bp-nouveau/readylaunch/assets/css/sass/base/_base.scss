@@ -55,20 +55,60 @@ h6 {
 }
 
 //  Utilities
+.hidden {
+	display: none;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.block {
+	display: block;
+}
+
 .flex {
 	display: flex;
+}
+
+.flex-row {
+	flex-direction: row;
+}
+
+.flex-row-reverse {
+	flex-direction: row-reverse;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
+.inline-flex {
+	display: inline-flex;
 }
 
 .justify-center {
 	justify-content: center;
 }
 
-.justify-space-between {
+.justify-between {
 	justify-content: space-between;
+}
+
+.justify-around {
+	justify-content: space-around;
+}
+
+.items-start {
+	align-items: flex-start;
 }
 
 .items-center  {
 	align-items: center;
+}
+
+.items-end {
+	align-items: flex-end;
 }
 
 // General Styles
