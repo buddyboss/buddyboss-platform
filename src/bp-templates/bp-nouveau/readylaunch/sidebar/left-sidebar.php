@@ -9,8 +9,6 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-$current_user_id = bp_loggedin_user_id();
 ?>
 
 <div id="secondary" class="widget-area sm-grid-1-1" role="complementary">
