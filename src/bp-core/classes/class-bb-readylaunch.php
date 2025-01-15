@@ -407,6 +407,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/css/main{$min}.css", array(), bp_get_version() );
 
+			wp_enqueue_style( 'bb-icons-rl', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+
 			wp_localize_script(
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
