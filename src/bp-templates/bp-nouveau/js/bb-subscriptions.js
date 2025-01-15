@@ -59,12 +59,12 @@ window.bp = window.bp || {};
 					function ( item ) {
 						var subscription_type = $( item ).data( 'type' );
 						if ( '' !== subscription_type ) {
-							this.subscriptions[ subscription_type ] = new bp.Collections.Subscriptions();
+							self.subscriptions[ subscription_type ] = new bp.Collections.Subscriptions();
 
 							// Create the loop view.
 							subscription_list[ subscription_type ] = new bp.Views.SubscriptionItems(
 								{
-									collection: this.subscriptions[ subscription_type ],
+									collection: self.subscriptions[ subscription_type ],
 									type: subscription_type
 								}
 							);
