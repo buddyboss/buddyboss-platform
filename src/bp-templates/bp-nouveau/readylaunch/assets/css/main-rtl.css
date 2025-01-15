@@ -388,6 +388,7 @@
   border-radius: var(--bbrl-radius-sm);
   padding: var(--bbrl-space-100) var(--bbrl-space-200);
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
 }
 
 .bbrl-button.bbrl-button--small {

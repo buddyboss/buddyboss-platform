@@ -23,9 +23,8 @@ defined( 'ABSPATH' ) || exit;
 <?php wp_body_open(); ?>
 <div id="page" class="site app-layout">
 	<header id="masthead" class="bbrl-header">
-		<div class="container site-header-container flex">
-			<a href="#" class="bb-toggle-panel"><i class="bb-icon-l bb-icon-sidebar"></i></a>
-			<div id="site-logo" class="site-branding">
+		<div class="bbrl-container bbrl-header-container flex justify-space-between items-center">
+			<div id="site-logo" class="bbrl-site-branding">
 				<?php get_template_part( 'template-parts/site-logo' ); ?>
 			</div>
 			<?php

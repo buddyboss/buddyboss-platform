@@ -2,14 +2,15 @@
 .bbrl-header {
 	background-color: var(--bbrl-background-color);
 	border-bottom: 1px solid var(--bbrl-border-tertiary-color);
-	padding: var(--bbrl-space-200) var(--bbrl-space-400);   
+	padding: var(--bbrl-space-200) var(--bbrl-space-400);
 }
 
 .bb-readylaunch-menu {
-	list-style: none;
-	margin: 0;
 	display: flex;
 	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 
 	li a {
 		display: inline-flex;
@@ -24,6 +25,7 @@
 		background-color: transparent;
 		color: var(--bbrl-text-color);
 		border: none;
+		text-decoration: none;
 
 		&:hover {
 			background-color: var(--bbrl-background-secondary-hover-color);
@@ -38,4 +40,10 @@
 			cursor: not-allowed;
 		}
 	}
+}
+
+.bbrl-site-branding img.bb-logo {
+	max-width: 130px;
+	max-height: 32px;
+	object-fit: contain;
 }

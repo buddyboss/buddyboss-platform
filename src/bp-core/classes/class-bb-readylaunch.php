@@ -418,8 +418,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		public function bb_dequeue_styles() {
-			wp_dequeue_style( 'buddyboss-theme-css-css' );
-			wp_dequeue_style( 'buddyboss-theme-template-css' );
+			wp_dequeue_style( 'buddyboss-theme-css' );
+			wp_dequeue_style( 'buddyboss-theme-template' );
+			wp_dequeue_style( 'buddyboss-theme-buddypress' );
+			wp_dequeue_style( 'buddyboss-theme-forums' );
 		}
 
 		/**
