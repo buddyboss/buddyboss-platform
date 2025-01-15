@@ -40,7 +40,11 @@ defined( 'ABSPATH' ) || exit;
 			);
 			?>
 			<div id="header-aside" class="header-aside">
-			<div class="header-aside-inner">
+			<div class="header-aside-inner flex items-center">
+				<div class="header-search-wrap">
+					<i class="bb-icon-r bb-icons-rl-magnifying-glass"></i>
+					<?php get_search_form(); ?>
+				</div>
 				<?php
 				if ( is_user_logged_in() ) {
 					if ( bp_is_active( 'messages' ) ) {
@@ -49,8 +53,19 @@ defined( 'ABSPATH' ) || exit;
 					if ( bp_is_active( 'notifications' ) ) {
 						bp_get_template_part( 'header/notification-dropdown' );
 					}
-				}
 				?>
+					<div class="user-wrap user-wrap-container">
+						<?php
+						$current_user = wp_get_current_user();
+						$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
+						$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+						?>
+
+						<a class="user-link" href="<?php echo esc_url( $user_link ); ?>" >
+							<?php echo get_avatar( get_current_user_id(), 100 ); ?>
+						</a>
+					</div>
+				<?php } ?>
 			</div>
 		</div>
 		</div>

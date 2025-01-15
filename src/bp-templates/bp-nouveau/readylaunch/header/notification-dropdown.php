@@ -17,7 +17,7 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 <div id="header-notifications-dropdown-elem" class="notification-wrap menu-item-has-children">
 	<a href="javascript:void(0);" ref="notification_bell" class="notification-link" aria-label="<?php esc_html_e( 'Notifications', 'buddyboss' ); ?>">
         <span data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Notifications', 'buddyboss' ); ?>">
-            <i class="bb-icon-l bb-icon-bell"></i>
+            <i class="bb-icons-rl bb-icons-rl-bell-simple"></i>
             <?php if ( $unread_notification_count > 0 ) : ?>
 	            <span class="count"><?php echo esc_html( $unread_notification_count ); ?></span>
             <?php endif; ?>
