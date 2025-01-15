@@ -1894,6 +1894,20 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
+								if (
+									(
+										'' === scope ||
+										false === scope || 
+										(
+											'undefined' !== BP_Nouveau.is_send_ajax_request &&
+											'' === BP_Nouveau.is_send_ajax_request
+										)
+									) &&
+									$( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length
+								) {
+									// Get the filter selected.
+									scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+								}
 								var update_pinned_icon = false;
 								var is_group_activity  = false;
 								var activity_group_id  = '';
@@ -1964,7 +1978,7 @@ window.bp = window.bp || {};
 									}
 								}
 
-								if ( 'all' === scope && update_pinned_icon ) {
+								if ( update_pinned_icon ) {
 									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 									bp.Nouveau.refreshActivities();
 								}
@@ -1980,6 +1994,15 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+
+							if ( isInsideModal ) {
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
+									bp.Nouveau.Activity.activityHasUpdates = true;
+								}
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates ) {
+									bp.Nouveau.Activity.activityPinHasUpdates = true;
+								}
+							}
 						}
 					}
 				).fail(
@@ -4079,6 +4102,7 @@ window.bp = window.bp || {};
 
 							// Refresh activities after updating pin/unpin post status.
 							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+								bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 								bp.Nouveau.refreshActivities();
 							}
 						}

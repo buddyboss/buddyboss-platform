@@ -4403,6 +4403,25 @@ window.bp = window.bp || {};
 				scope = objectData.scope;
 			}
 
+			if (
+				'' === scope ||
+				false === scope || 
+				(
+					'undefined' !== BP_Nouveau.is_send_ajax_request &&
+					'' === BP_Nouveau.is_send_ajax_request
+				)
+			) {
+				if ( $( 'body.activity.single-item' ).hasClass( 'groups' ) ) {
+
+					// Groups single activity page.
+					scope = 'all';
+				} else if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
+
+					// Get the filter selected.
+					scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+				}
+			}
+
 			if ( undefined !== objectData.extras ) {
 				extras = objectData.extras;
 			}
