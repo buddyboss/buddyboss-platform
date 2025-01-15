@@ -77,13 +77,13 @@
   --bbrl-space-500: 40px;
   --bbrl-space-600: 48px;
   --bbrl-space-700: 56px;
-  --bbrl-z-index-dropdown:       1000;
-  --bbrl-z-index-sticky:         1020;
-  --bbrl-z-index-fixed:          1030;
+  --bbrl-z-index-dropdown: 1000;
+  --bbrl-z-index-sticky: 1020;
+  --bbrl-z-index-fixed: 1030;
   --bbrl-z-index-modal-backdrop: 1040;
-  --bbrl-z-index-modal:          1050;
-  --bbrl-z-index-popover:        1060;
-  --bbrl-z-index-tooltip:        1070;
+  --bbrl-z-index-modal: 1050;
+  --bbrl-z-index-popover: 1060;
+  --bbrl-z-index-tooltip: 1070;
   --font-family-base: "Roboto", sans-serif;
   --font-size-base: 16px;
 }
@@ -524,7 +524,7 @@ h6 {
   font-size: 1rem;
   text-align: center;
   cursor: pointer;
-  border-radius: var(--bbrl-radius-sm);
+  border-radius: var(--bbrl-radius-md);
   padding: var(--bbrl-space-100) var(--bbrl-space-200);
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
@@ -692,7 +692,7 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.85rem;
   text-align: center;
   cursor: pointer;
   border-radius: var(--bbrl-radius-sm);
@@ -733,7 +733,7 @@ h6 {
 .header-aside .notification-wrap .notification-dropdown {
   background: var(--bbrl-background-color);
   border: 1px solid var(--bbrl-border-secondary-color);
-  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: var(--bbrl-radius-lg);
   list-style: none;
   position: absolute;
@@ -794,4 +794,15 @@ h6 {
   height: auto;
   object-fit: contain;
   border-radius: var(--bbrl-radius-full);
+}
+
+.header-aside .bbrl-button {
+  font-size: 0.85rem;
+  margin-right: var(--bbrl-space-300);
+}
+
+.header-aside .bbrl-button [class*="bb-icons-rl"] {
+  color: var(--bbrl-icon-color);
+  font-size: 16px;
+  margin-right: var(--bbrl-space-100);
 }

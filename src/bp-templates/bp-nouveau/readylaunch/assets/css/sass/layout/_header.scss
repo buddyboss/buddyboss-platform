@@ -32,11 +32,11 @@
 			color: var(--bbrl-text-color);
 			border: none;
 			text-decoration: none;
-	
+
 			&:hover {
 				background-color: var(--bbrl-background-secondary-hover-color);
 			}
-	
+
 			&:focus {
 				outline: 2px solid var(--bbrl-border-quinery-color);
 			}
@@ -66,7 +66,7 @@
 		.notification-dropdown {
 			background: var(--bbrl-background-color);
 			border: 1px solid var(--bbrl-border-secondary-color);
-			box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 			border-radius: var(--bbrl-radius-lg);
 			list-style: none;
 			position: absolute;
@@ -96,13 +96,13 @@
 		> span {
 			display: flex;
 		}
-	
+
 		[class*="bb-icons-rl"] {
 			color: var(--bbrl-icon-secondary-color);
 			font-size: 24px;
 		}
 
-	.count {
+		.count {
 			font-style: normal;
 			font-weight: 600;
 			color: var(--bbrl-text-white-color);
@@ -127,6 +127,17 @@
 			height: auto;
 			object-fit: contain;
 			border-radius: var(--bbrl-radius-full);
+		}
+	}
+
+	.bbrl-button {
+		font-size: 0.85rem;
+		margin-right: var(--bbrl-space-300);
+
+		[class*="bb-icons-rl"] {
+			color: var(--bbrl-icon-color);
+			font-size: 16px;
+			margin-right: var(--bbrl-space-100);
 		}
 	}
 }

@@ -16,7 +16,7 @@ $unread_message_count = messages_get_unread_count();
 <div id="header-messages-dropdown-elem" class="dropdown-passive dropdown-right notification-wrap messages-wrap bb-message-dropdown-notification menu-item-has-children">
 	<a href="javascript:void(0);" ref="notification_bell" class="notification-link" <?php echo bb_elementor_pro_disable_page_transition(); ?> aria-label="<?php esc_html_e( 'Messages', 'buddyboss' ); ?>">
         <span data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Messages', 'buddyboss' ); ?>" class="bb-member-unread-count-span-<?php echo esc_attr( bp_loggedin_user_id() ); ?>">
-            <i class="bb-icons-rl bb-icons-rl-chat-teardrop-text"></i>
+            <i class="bb-icons-rl-chat-teardrop-text"></i>
             <?php if ( $unread_message_count > 0 ) : ?>
 	            <span class="count"><?php echo esc_html( $unread_message_count ); ?></span>
             <?php endif; ?>

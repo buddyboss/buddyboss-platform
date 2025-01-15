@@ -41,10 +41,7 @@ defined( 'ABSPATH' ) || exit;
 			?>
 			<div id="header-aside" class="header-aside">
 			<div class="header-aside-inner flex items-center">
-				<div class="header-search-wrap">
-					<i class="bb-icon-r bb-icons-rl-magnifying-glass"></i>
-					<?php get_search_form(); ?>
-				</div>
+				<button class="bbrl-button bbrl-button--secondaryOutline"><i class="bb-icons-rl-magnifying-glass"></i> <?php echo esc_html( 'Search community', 'buddyboss' ); ?></button>
 				<?php
 				if ( is_user_logged_in() ) {
 					if ( bp_is_active( 'messages' ) ) {

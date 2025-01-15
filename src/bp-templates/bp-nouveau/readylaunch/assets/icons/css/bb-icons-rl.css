@@ -74,7 +74,7 @@
   font-display: block;
 }
 
-[class*=" bb-icons-rl"] {
+[class*="bb-icons-rl"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "bb-icons-rl" !important;
   speak: never;
