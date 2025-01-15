@@ -524,7 +524,7 @@ window.bp = window.bp || {};
 			// Set session's data.
 			if ( null !== data.scope ) {
 				if( data.object === 'activity' ) {
-					if( 'undefined' !== data.user_timeline && true === data.user_timeline || $( 'body.my-activity:not(.activity-singular)' ).length ) {
+					if( ( 'undefined' !== data.user_timeline && true === data.user_timeline ) || $( 'body.my-activity:not(.activity-singular)' ).length ) {
 						this.setStorage( 'bp-user-activity', 'scope', data.scope );
 					} else if( 'undefined' !== data.save_scope && true === data.save_scope ) {
 						this.setStorage( 'bp-' + data.object, 'scope', data.scope );
@@ -543,6 +543,14 @@ window.bp = window.bp || {};
 			}
 
 			if ( ! _.isUndefined( data.ajaxload ) && false === data.ajaxload ) {
+				var local_scope = $( '#bb-subnav-filter-show > ul > li.selected' ).data( 'bp-scope' );
+				if( undefined !== local_scope && data.scope !== local_scope ) {
+					if( ( 'undefined' !== data.user_timeline && true === data.user_timeline ) || $( 'body.my-activity:not(.activity-singular)' ).length ) {
+						this.setStorage( 'bp-user-activity', 'scope', local_scope );
+					} else {
+						this.setStorage( 'bp-' + data.object, 'scope', local_scope );
+					}
+				}
 				return false;
 			}
 
