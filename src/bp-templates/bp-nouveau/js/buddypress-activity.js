@@ -423,7 +423,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		injectActivities: function( event ) {
-			var store = bp.Nouveau.getStorage( 'bp-activity' ),
+			var store = $( 'body.my-activity:not(.activity-singular)' ).length ? bp.Nouveau.getStorage( 'bp-user-activity' ) : bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
 			// Load newest activities.
