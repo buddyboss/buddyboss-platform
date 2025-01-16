@@ -24,14 +24,15 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
         </span>
 	</a>
 	<section class="notification-dropdown">
-		<header class="notification-header">
+		<header class="notification-header flex items-center justify-between">
 			<h2 class="title"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></h2>
 			<a class="mark-read-all action-unread" data-notification-id="all" style="<?php echo esc_attr( $unread_notification_count > 0 ? 'display:block;' : 'display:none;' ); ?>">
-				<?php esc_html_e( 'Mark all as read', 'buddyboss' ); ?>
+				<i class="bb-icons-rl-bold bb-icons-rl-checks"></i>
+				<span class="screen-reader-text"><?php esc_html_e( 'Mark all as read', 'buddyboss' ); ?></span>
 			</a>
 		</header>
 
-		<div class="header-ajax-container" id="notification-list">
+		<div class="header-ajax-container notification-listing" id="notification-list">
 			<ul class="notification-list bb-nouveau-list"></ul>
 
 			<footer class="notification-footer">
