@@ -459,7 +459,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
 			ob_start();
-			get_template_part( 'template-parts/unread-messages' );
+			bp_get_template_part( 'header/unread-messages' );
 			$messages = ob_get_clean();
 			wp_send_json_success( $messages );
 		}
@@ -474,7 +474,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
 			ob_start();
-			get_template_part( 'template-parts/unread-notifications' );
+			bp_get_template_part( 'header/unread-notifications' );
 			$notifications = ob_get_clean();
 			wp_send_json_success( $notifications );
 		}
