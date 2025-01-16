@@ -124,6 +124,11 @@ window.bp = window.bp || {};
 			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
+			// Fix theme class type | should be removed in next release
+			if( $( '.actvity-head-bar' ).length ) {
+				$( '.actvity-head-bar' ).addClass( 'activity-head-bar' ).removeClass( 'actvity-head-bar' );
+			}
+
 			// Inject Activities.
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 

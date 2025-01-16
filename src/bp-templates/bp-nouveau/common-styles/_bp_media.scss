@@ -5219,6 +5219,10 @@ body.buddyboss-theme {
 			align-items: center;
 			justify-content: center;
 			cursor: pointer;
+
+			> i {
+				color: #5a5a5a;
+			}
 		}
 	}
 
@@ -5428,6 +5432,10 @@ body.buddyboss-theme {
 	display: flex;
 	align-items: center;
 	margin: 20px 0;
+
+	> .activity-type-navs {
+		flex: 0 0 auto;
+	}
 
 	> .subnav-filters {
 		margin: 0 auto 0 0;

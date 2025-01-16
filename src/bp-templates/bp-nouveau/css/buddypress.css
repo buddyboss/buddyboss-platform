@@ -26131,6 +26131,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   cursor: pointer;
 }
 
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener > i {
+  color: #5a5a5a;
+}
+
 .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal {
   opacity: 0;
   visibility: hidden;
@@ -26302,6 +26306,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   display: flex;
   align-items: center;
   margin: 20px 0;
+}
+
+.activity-head-bar > .activity-type-navs {
+  flex: 0 0 auto;
 }
 
 .activity-head-bar > .subnav-filters {
