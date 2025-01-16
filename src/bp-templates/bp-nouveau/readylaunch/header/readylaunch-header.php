@@ -33,38 +33,39 @@ defined( 'ABSPATH' ) || exit;
 					'theme_location' => 'bb-readylaunch',
 					'menu_id'        => '',
 					'container'      => false,
-					'fallback_cb'    => '',
-					'walker'         => new BuddyBoss_SubMenuWrap(),
+					'fallback_cb'    => false,
 					'menu_class'     => 'bb-readylaunch-menu',
 				)
 			);
 			?>
 			<div id="header-aside" class="header-aside">
-			<div class="header-aside-inner flex items-center">
-				<button class="bbrl-button bbrl-button--secondaryOutline"><i class="bb-icons-rl-magnifying-glass"></i> <?php echo esc_html( 'Search community', 'buddyboss' ); ?></button>
-				<?php
-				if ( is_user_logged_in() ) {
-					if ( bp_is_active( 'messages' ) ) {
-						bp_get_template_part( 'header/messages-dropdown' );
-					}
-					if ( bp_is_active( 'notifications' ) ) {
-						bp_get_template_part( 'header/notification-dropdown' );
-					}
-				?>
-					<div class="user-wrap user-wrap-container">
-						<?php
-						$current_user = wp_get_current_user();
-						$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
-						$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+				<div class="header-aside-inner flex items-center">
+					<button class="bbrl-button bbrl-button--secondaryOutline">
+						<i class="bb-icons-rl-magnifying-glass"></i> <?php echo esc_html( 'Search community', 'buddyboss' ); ?>
+					</button>
+					<?php
+					if ( is_user_logged_in() ) {
+						if ( bp_is_active( 'messages' ) ) {
+							bp_get_template_part( 'header/messages-dropdown' );
+						}
+						if ( bp_is_active( 'notifications' ) ) {
+							bp_get_template_part( 'header/notification-dropdown' );
+						}
 						?>
+						<div class="user-wrap user-wrap-container">
+							<?php
+							$current_user = wp_get_current_user();
+							$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
+							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+							?>
 
-						<a class="user-link" href="<?php echo esc_url( $user_link ); ?>" >
-							<?php echo get_avatar( get_current_user_id(), 100 ); ?>
-						</a>
-					</div>
-				<?php } ?>
+							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">
+								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
+							</a>
+						</div>
+					<?php } ?>
+				</div>
 			</div>
-		</div>
 		</div>
 	</header>
 	<main id="primary" class="site-main">
