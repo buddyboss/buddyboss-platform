@@ -10,7 +10,7 @@
  * @version 1.0.0
  */
 
-if ( 'albums' === bp_current_action() && ! bp_is_single_album() ) {
+if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 	$count = bp_media_get_total_group_album_count();
 	?>
 	<div class="bb-item-count">

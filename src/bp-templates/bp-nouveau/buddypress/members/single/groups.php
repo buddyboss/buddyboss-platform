@@ -15,7 +15,7 @@ if ( bp_is_my_profile() ) {
 }
 
 $bp_current_action = bp_current_action();
-if ( bb_group_directory_count_enable() ) {
+if ( bb_enable_content_counts() ) {
 	?>
 	<div class="bb-item-count">
 		<?php

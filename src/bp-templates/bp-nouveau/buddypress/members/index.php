@@ -43,7 +43,7 @@ do_action( 'bp_before_directory_members_page' );
 			bp_get_template_part( 'common/nav/directory-nav' );
 		}
 
-		if ( bb_member_directory_count_enable() ) {
+		if ( bb_enable_content_counts() ) {
 			?>
 			<div class="bb-item-count">
 				<?php

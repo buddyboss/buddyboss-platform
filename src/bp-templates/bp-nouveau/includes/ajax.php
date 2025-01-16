@@ -145,13 +145,11 @@ function bp_nouveau_ajax_object_template_loader() {
 	unset( $template_path, $template_part );
 
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
-		$enable_count = bb_member_directory_count_enable();
-		if ( $enable_count ) {
+		if ( bb_enable_content_counts() ) {
 			$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 		}
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
-		$enable_count = bb_group_directory_count_enable();
-		if ( $enable_count ) {
+		if ( bb_enable_content_counts() ) {
 			$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
 		}
 	} elseif ( 'members' === $object && bp_is_notifications_component() && bp_is_current_action( 'unread' ) ) {
@@ -161,7 +159,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
 
 	// Unset variables we no longer need.
-	unset( $enable_count, $object );
+	unset( $object );
 
 	// Locate the object template.
 	wp_send_json_success( $result );
@@ -178,10 +176,9 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		return $results;
 	}
 
-	$enable_count      = bb_member_directory_count_enable();
 	$results['scopes'] = array();
 
-	if ( $enable_count ) {
+	if ( bb_enable_content_counts() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 		bp_has_members( bp_ajax_querystring( 'members' ) );
 		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
@@ -219,10 +216,9 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 		return $results;
 	}
 
-	$enable_count      = bb_group_directory_count_enable();
 	$results['scopes'] = array();
 
-	if ( $enable_count ) {
+	if ( bb_enable_content_counts() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 		bp_has_groups( bp_ajax_querystring( 'groups' ) );
 		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
