@@ -199,6 +199,26 @@
 				max-width: 36px;
 				border-radius: var(--bbrl-radius-full);
 			}
+
+			.thread-multiple-avatar {
+				min-height: 40px;
+				min-width: 40px;
+				position: relative;
+
+				img {
+					max-width: 24px;
+					position: absolute;
+					left: 0;
+					top: 0;
+
+					+ img {
+						top: auto;
+						right: 0;
+						bottom: 0;
+						left: auto;
+					}
+				}
+			}
 		}
 
 		&:hover {
@@ -246,6 +266,10 @@
 			color: var(--bbrl-text-tertiary-color);
 			font-size: 0.85rem;
 			line-height: 1.5;
+
+			img {
+				vertical-align: middle;
+			}
 		}
 	}
 

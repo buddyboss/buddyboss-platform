@@ -891,6 +891,26 @@ img.emojioneemoji {
   border-radius: var(--bbrl-radius-full);
 }
 
+.notification-list li .notification-avatar .thread-multiple-avatar {
+  min-height: 40px;
+  min-width: 40px;
+  position: relative;
+}
+
+.notification-list li .notification-avatar .thread-multiple-avatar img {
+  max-width: 24px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.notification-list li .notification-avatar .thread-multiple-avatar img + img {
+  top: auto;
+  left: 0;
+  bottom: 0;
+  right: auto;
+}
+
 .notification-list li:hover {
   background-color: var(--bbrl-background-secondary-hover-color);
 }
@@ -936,6 +956,10 @@ img.emojioneemoji {
   color: var(--bbrl-text-tertiary-color);
   font-size: 0.85rem;
   line-height: 1.5;
+}
+
+.notification-list .notification-content .posted img {
+  vertical-align: middle;
 }
 
 .notification-list .unread:before {
