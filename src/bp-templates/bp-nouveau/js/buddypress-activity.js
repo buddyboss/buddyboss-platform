@@ -266,7 +266,21 @@ window.bp = window.bp || {};
 
 			$.extend(data, {
 				bp_heartbeat: (function() {
-					var  heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || {};
+					var heartbeatData = {};
+
+					// Check if the page is a user activity page.
+					if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || {};
+					} else {
+
+						// Otherwise, retrieve the general activity data.
+						heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || {};
+
+						// If the page is a single group activity page, set the scope to 'all'.
+						if ( $( 'body.activity.buddypress.groups.single-item' ).length ) {
+							heartbeatData.scope = 'all'; 
+						}
+					}
 
 					if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
 						var scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
@@ -275,7 +289,12 @@ window.bp = window.bp || {};
 
 							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
 								// Add to the storage if page request 2.
-								bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+
+								if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+									bp.Nouveau.setStorage( 'bp-user-activity', 'scope', scope );
+								} else {
+									bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+								}
 							}	
 						}
 					}
