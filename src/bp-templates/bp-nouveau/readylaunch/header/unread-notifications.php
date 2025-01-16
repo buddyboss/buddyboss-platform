@@ -1,6 +1,6 @@
 <?php
 
-if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' . get_current_user_id() . '&is_new=1' ) ) :
+if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' . get_current_user_id() . '&is_new=' . $args['type'] ) ) :
 
 	while ( bp_the_notifications() ) :
 		bp_the_notification();
