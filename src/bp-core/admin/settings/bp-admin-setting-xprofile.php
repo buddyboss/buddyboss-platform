@@ -322,8 +322,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', esc_html__( 'Default View', 'buddyboss' ), array( $this, 'bp_admin_setting_profile_layout_default_option' ), 'radio', $args );
 
-		$this->add_field( 'bb-member-directory-count', esc_html__( 'User Count', 'buddyboss' ), array( $this, 'bb_admin_setting_member_directory_count' ), 'checkbox' );
-
 		// Member directory elements.
 		$args             = array();
 		$args['class']    = 'member-directory-elements ' . esc_attr( $pro_class );

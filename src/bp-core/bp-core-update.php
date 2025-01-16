@@ -3822,6 +3822,5 @@ function bb_update_to_2_6_70() {
  * @return void
  */
 function bb_update_to_2_6_80() {
-	bp_update_option( 'bb-member-directory-count', 1 );
-	bp_update_option( 'bb-group-directory-count', 1 );
+	bp_update_option( 'bb-enable-content-counts', 1 );
 }

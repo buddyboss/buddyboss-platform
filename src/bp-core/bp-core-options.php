@@ -190,8 +190,7 @@ function bp_get_default_options() {
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
 
-		'bb-member-directory-count'                  => false,
-		'bb-group-directory-count'                   => false,
+		'bb-enable-content-counts'                   => false,
 		'bb-enable-sso'                              => false,
 	);
 
