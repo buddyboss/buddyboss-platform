@@ -392,6 +392,7 @@
 			font-size: 0.9rem;
 			line-height: 1.3;
 			font-weight: 500;
+			max-width: calc(100% - 75px);
 
 			a {
 				color: var(--bbrl-text-color);
