@@ -32,6 +32,7 @@
   --bbrl-border-tertiary-color: #dbdbdb;
   --bbrl-border-disabled-color: #f3f3f3;
   --bbrl-border-quinery-color: #6d6d6e;
+  --bbrl-border-quaternary-color: #9e9e9e;
   --bbrl-border-brand-primary-color: #0300c3;
   --bbrl-border-brand-secondary-color: #4946fe;
   --bbrl-border-positive-primary-color: #02542d;
@@ -210,6 +211,23 @@ h6 {
 
 .bbrl-header-container {
   max-width: 1600px;
+}
+
+img.emoji,
+img.emojioneemoji {
+  display: inline-block;
+  margin: 3px;
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 }
 
 .divider {
@@ -670,6 +688,16 @@ h6 {
   cursor: not-allowed;
 }
 
+.bbrl-loader {
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  border: 2px solid var(--bbrl-border-quaternary-color);
+  border-top-color: var(--bbrl-border-tertiary-color);
+  border-radius: var(--bbrl-radius-full);
+  animation: spin 3s infinite linear;
+}
+
 .bbrl-header {
   background-color: var(--bbrl-background-color);
   border-bottom: 1px solid var(--bbrl-border-tertiary-color);
@@ -738,15 +766,19 @@ h6 {
   list-style: none;
   position: absolute;
   left: -15px;
-  top: -webkit-calc(100% - 15px);
-  top: calc(100% - 15px);
+  top: calc(100% + 8px);
   margin: 0;
-  min-width: 400px;
+  min-width: 480px;
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
   z-index: 0;
   display: none;
+}
+
+.header-aside .notification-wrap .notification-dropdown .bbrl-loader {
+  margin: 20px auto;
+  display: table;
 }
 
 .header-aside .notification-wrap.selected .notification-dropdown {
@@ -756,7 +788,32 @@ h6 {
   display: block;
 }
 
+.header-aside .notification-wrap.selected .notification-link {
+  background-color: var(--bbrl-background-secondary-hover-color);
+}
+
+.header-aside .notification-wrap .notification-header {
+  padding: var(--bbrl-space-100) 0;
+  margin: var(--bbrl-space-100) var(--bbrl-space-200);
+  border-bottom: 1px solid var(--bbrl-border-secondary-color);
+}
+
+.header-aside .notification-wrap .notification-header h2 {
+  color: var(--bbrl-text-color);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.header-aside .notification-wrap .notification-header .notification-header-action {
+  color: var(--bbrl-icon-secondary-color);
+  font-size: 1rem;
+  text-decoration: none;
+}
+
 .header-aside .notification-link {
+  display: inline-block;
+  padding: 4px;
+  border-radius: var(--bbrl-radius-md);
   text-decoration: none;
 }
 
@@ -805,4 +862,94 @@ h6 {
   color: var(--bbrl-icon-color);
   font-size: 16px;
   margin-left: var(--bbrl-space-100);
+}
+
+.notification-list {
+  max-height: 52vh;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: var(--bbrl-space-100);
+}
+
+.notification-list li {
+  display: flex;
+  align-items: center;
+  padding: var(--bbrl-space-100) var(--bbrl-space-200);
+  border-radius: var(--bbrl-radius-lg);
+  position: relative;
+  margin-bottom: var(--bbrl-space-100);
+}
+
+.notification-list li .notification-avatar {
+  margin-left: var(--bbrl-space-100);
+  flex: 0 0 40px;
+}
+
+.notification-list li .notification-avatar img {
+  display: block;
+  max-width: 36px;
+  border-radius: var(--bbrl-radius-full);
+}
+
+.notification-list li:hover {
+  background-color: var(--bbrl-background-secondary-hover-color);
+}
+
+.notification-list .bb-full-link {
+  font-size: 0;
+}
+
+.notification-list .bb-full-link > a {
+  cursor: pointer;
+  font-size: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.notification-list .notification-content {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.notification-list .notification-content .notification-users {
+  color: var(--bbrl-text-color);
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 500;
+  display: block;
+  white-space: nowrap;
+  width: calc(100% - 50px);
+}
+
+.notification-list .notification-content .notification-users a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.notification-list .notification-content .posted {
+  color: var(--bbrl-text-tertiary-color);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.notification-list .unread:before {
+  content: "";
+  background-color: var(--bb-primary-color);
+  border-radius: 50%;
+  height: 6px;
+  width: 6px;
+  position: absolute;
+  left: var(--bbrl-space-100);
+  bottom: 16px;
+}
+
+.notification-list .unread .notification-content .posted {
+  color: var(--bbrl-text-color);
+  font-weight: 500;
 }

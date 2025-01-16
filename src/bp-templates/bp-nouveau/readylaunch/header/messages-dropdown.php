@@ -23,8 +23,13 @@ $unread_message_count = messages_get_unread_count();
         </span>
 	</a>
 	<section class="notification-dropdown">
-		<header class="notification-header">
+		<header class="notification-header flex items-center justify-between">
 			<h2 class="title"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></h2>
+			<div class="notification-header-actions">
+				<a href="#" class="notification-header-action">
+					<i class="bb-icons-rl-bold bb-icons-rl-plus"></i>
+				</a>
+			</div>
 		</header>
 
 		<div class="header-ajax-container">

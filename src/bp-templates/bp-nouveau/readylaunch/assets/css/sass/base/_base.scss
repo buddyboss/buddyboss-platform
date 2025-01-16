@@ -121,3 +121,23 @@ h6 {
 .bbrl-header-container {
 	max-width: 1600px;
 }
+
+img.emoji,
+img.emojioneemoji {
+	display: inline-block;
+	margin: 3px;
+	width: 24px;
+	height: 24px;
+}
+
+// Animation
+@keyframes spin {
+
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}

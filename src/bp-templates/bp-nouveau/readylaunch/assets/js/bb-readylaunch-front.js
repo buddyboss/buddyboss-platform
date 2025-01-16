@@ -43,7 +43,7 @@ window.bp = window.bp || {};
 			var action      = isMessage ? 'bb_fetch_header_messages' : 'bb_fetch_header_notifications';
 
 			// Show a loading indicator.
-			$( '#' + containerId ).find( '.notification-list' ).html( '<p>Loading...</p>' );
+			$( '#' + containerId ).find( '.notification-list' ).html( '<i class="bbrl-loader"></i>' );
 
 			// Perform the AJAX request.
 			$.ajax( {

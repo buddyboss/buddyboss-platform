@@ -1,0 +1,9 @@
+.bbrl-loader {
+	display: inline-block;
+	height: 22px;
+	width: 22px;
+	border: 2px solid var(--bbrl-border-quaternary-color);
+	border-top-color: var(--bbrl-border-tertiary-color);
+	border-radius: var(--bbrl-radius-full);
+	animation: spin 3s infinite linear;
+}
