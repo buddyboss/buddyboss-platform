@@ -842,6 +842,10 @@ class BP_Invitation {
 		 */
 		$paged_invites_sql = apply_filters( 'bp_invitations_get_paged_invitations_sql', $paged_invites_sql, $sql, $r );
 
+		if ( ! empty( $r['retval'] ) && 'sql' == $r['retval'] ) {
+			return $paged_invites_sql;
+		}
+
 		$cached = bp_core_get_incremented_cache( $paged_invites_sql, 'bp_invitations' );
 		if ( false === $cached ) {
 			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql );

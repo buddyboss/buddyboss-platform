@@ -49,6 +49,15 @@ class BP_Group_Member_Query extends BP_User_Query {
 	protected $group_member_ids;
 
 	/**
+	 * Array of group member ids, cached to prevent redundant lookups SQL
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var null|array Null if not yet defined, otherwise an array of ints.
+	 */
+	protected $group_member_ids_sql;
+
+	/**
 	 * Set up action hooks.
 	 *
 	 * @since BuddyPress 1.8.0
@@ -100,6 +109,8 @@ class BP_Group_Member_Query extends BP_User_Query {
 		);
 
 		$group_member_ids = $this->get_group_member_ids();
+
+		$group_member_ids_sql = $this->get_group_member_ids_sql( $include );
 
 		// If the group member query returned no users, bail with an
 		// array that will guarantee no matches for BP_User_Query.
@@ -498,5 +509,247 @@ class BP_Group_Member_Query extends BP_User_Query {
 		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" );
 
 		return wp_list_pluck( $group_user_ids, 'user_id' );
+	}
+
+	protected function get_group_member_ids_sql( $include = array() ) {
+		global $wpdb;
+
+		if ( ! empty( $this->group_member_ids_sql ) ) {
+			return $this->group_member_ids_sql;
+		}
+
+		$bp  = buddypress();
+		$sql = array(
+			'select'  => "SELECT user_id FROM {$bp->groups->table_name_members}",
+			'where'   => array(),
+			'orderby' => '',
+			'order'   => '',
+		);
+
+		/* WHERE clauses *****************************************************/
+
+		// Group id.
+		$group_ids      = wp_parse_id_list( $this->query_vars['group_id'] );
+		$group_ids      = implode( ',', $group_ids );
+		$sql['where'][] = "group_id IN ({$group_ids})";
+
+		// If is_confirmed.
+		$is_confirmed   = ! empty( $this->query_vars['is_confirmed'] ) ? 1 : 0;
+		$sql['where'][] = $wpdb->prepare( 'is_confirmed = %d', $is_confirmed );
+
+		// If invite_sent.
+		if ( ! is_null( $this->query_vars['invite_sent'] ) ) {
+			$invite_sent    = ! empty( $this->query_vars['invite_sent'] ) ? 1 : 0;
+			$sql['where'][] = $wpdb->prepare( 'invite_sent = %d', $invite_sent );
+		}
+
+		if ( ! empty( $include ) ) {
+			$include_ids    = wp_parse_id_list( $include );
+			$include_ids    = implode( ',', $include_ids );
+			$sql['where'][] = "user_id IN ({$include_ids})";
+		}
+
+		// If inviter_id.
+		if ( ! is_null( $this->query_vars['inviter_id'] ) ) {
+			$inviter_id = $this->query_vars['inviter_id'];
+
+			// Empty: inviter_id = 0. (pass false, 0, or empty array).
+			if ( empty( $inviter_id ) ) {
+				$sql['where'][] = 'inviter_id = 0';
+
+				// The string 'any' matches any non-zero value (inviter_id != 0).
+			} elseif ( 'any' === $inviter_id ) {
+				$sql['where'][] = 'inviter_id != 0';
+
+				// Assume that a list of inviter IDs has been passed.
+			} else {
+				// Parse and sanitize.
+				$inviter_ids = wp_parse_id_list( $inviter_id );
+				if ( ! empty( $inviter_ids ) ) {
+					$inviter_ids_sql = implode( ',', $inviter_ids );
+					$sql['where'][]  = "inviter_id IN ({$inviter_ids_sql})";
+				}
+			}
+		}
+
+		// Role information is stored as follows: admins have
+		// is_admin = 1, mods have is_mod = 1, banned have is_banned =
+		// 1, and members have all three set to 0.
+		$roles = ! empty( $this->query_vars['group_role'] ) ? $this->query_vars['group_role'] : array();
+		if ( is_string( $roles ) ) {
+			$roles = explode( ',', $roles );
+		}
+
+		// Sanitize: Only 'admin', 'mod', 'member', and 'banned' are valid.
+		$allowed_roles = array( 'admin', 'mod', 'member', 'banned' );
+		foreach ( $roles as $role_key => $role_value ) {
+			if ( ! in_array( $role_value, $allowed_roles ) ) {
+				unset( $roles[ $role_key ] );
+			}
+		}
+
+		$roles = array_unique( $roles );
+
+		// When querying for a set of roles containing 'member' (for
+		// which there is no dedicated is_ column), figure out a list
+		// of columns *not* to match.
+		$roles_sql = '';
+		if ( in_array( 'member', $roles ) ) {
+			$role_columns = array();
+			foreach ( array_diff( $allowed_roles, $roles ) as $excluded_role ) {
+				$role_columns[] = 'is_' . $excluded_role . ' = 0';
+			}
+
+			if ( ! empty( $role_columns ) ) {
+				$roles_sql = '(' . implode( ' AND ', $role_columns ) . ')';
+			}
+
+			// When querying for a set of roles *not* containing 'member',
+			// simply construct a list of is_* = 1 clauses.
+		} else {
+			$role_columns = array();
+			foreach ( $roles as $role ) {
+				$role_columns[] = 'is_' . $role . ' = 1';
+			}
+
+			if ( ! empty( $role_columns ) ) {
+				$roles_sql = '(' . implode( ' OR ', $role_columns ) . ')';
+			}
+		}
+
+		if ( ! empty( $roles_sql ) ) {
+			$sql['where'][] = $roles_sql;
+		}
+
+		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
+
+		// We fetch group members in order of last_joined, regardless
+		// of 'type'. If the 'type' value is not 'last_joined' or
+		// 'first_joined', the order will be overridden in
+		// BP_Group_Member_Query::set_orderby().
+		if ( $this->query_vars['type'] === 'group_role' ) {
+			$sql['orderby'] = 'ORDER BY -is_admin, -is_mod, date_modified';
+		} else {
+			$sql['orderby'] = 'ORDER BY date_modified';
+		}
+
+		$sql['order'] = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
+
+		$group_member_ids_sql = "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}";
+
+		$invited_member_ids_sql = '';
+
+		// If appropriate, fetch invitations and add them to the results.
+		if ( ! $is_confirmed || ! is_null( $this->query_vars['invite_sent'] ) || ! is_null( $this->query_vars['inviter_id'] ) ) {
+			$invite_args = array(
+				'item_id' => $this->query_vars['group_id'],
+				'fields'  => 'user_ids',
+				'type'    => 'all',
+			);
+
+			if ( ! is_null( $this->query_vars['invite_sent'] ) ) {
+				$invite_args['invite_sent'] = ! empty( $this->query_vars['invite_sent'] ) ? 'sent' : 'draft';
+			}
+
+			if ( ! empty( $include ) ) {
+				$invite_args['user_id'] = $include;
+			}
+
+			// If inviter_id.
+			if ( ! is_null( $this->query_vars['inviter_id'] ) ) {
+				$inviter_id = $this->query_vars['inviter_id'];
+
+				// Empty: inviter_id = 0. (pass false, 0, or empty array).
+				if ( empty( $inviter_id ) ) {
+					$invite_args['type'] = 'request';
+
+					/*
+					* The string 'any' matches any non-zero value (inviter_id != 0).
+					* These are invitations, not requests.
+					*/
+				} elseif ( 'any' === $inviter_id ) {
+					$invite_args['type'] = 'invite';
+
+					// Assume that a list of inviter IDs has been passed.
+				} else {
+					$invite_args['type'] = 'invite';
+					// Parse and sanitize.
+					$inviter_ids = wp_parse_id_list( $inviter_id );
+					if ( ! empty( $inviter_ids ) ) {
+						$invite_args['inviter_id'] = $inviter_ids;
+					}
+				}
+			}
+
+			/*
+			 * If first_joined is the "type" of query, sort the oldest
+			 * requests and invitations to the top.
+			 */
+			if ( 'first_joined' === $this->query_vars['type'] ) {
+				$invite_args['order_by']   = 'date_modified';
+				$invite_args['sort_order'] = 'ASC';
+			}
+
+			$invite_args['retval'] = 'sql';
+
+			$invited_member_ids_sql = groups_get_invites( $invite_args );
+
+		}
+
+		if ( ! empty( $invited_member_ids_sql ) ) {
+			$this->group_member_ids_sql = $group_member_ids_sql . ' UNION ' . $invited_member_ids_sql;
+		} else {
+			$this->group_member_ids_sql = $group_member_ids_sql;
+		}
+
+		/**
+		 * Filters the member IDs for the current group member query.
+		 *
+		 * Use this filter to build a custom query (such as when you've
+		 * defined a custom 'type').
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array                 $group_member_ids_sql Array of associated member IDs SQL.
+		 * @param BP_Group_Member_Query $this                 Current BP_Group_Member_Query instance.
+		 */
+		$this->group_member_ids_sql = apply_filters( 'bp_group_member_query_group_member_ids_sql', $this->group_member_ids_sql, $this );
+
+		return $this->group_member_ids_sql;
+	}
+
+	/**
+	 * Get a list of user_ids to include in the IN clause of the main query.
+	 *
+	 * Overrides BP_User_Query::get_include_ids(), adding our additional
+	 * group-member logic.
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param array $include Existing group IDs in the $include parameter,
+	 *                       as calculated in BP_User_Query.
+	 * @return array
+	 */
+	public function get_include_ids_sql( $include = array() ) {
+		// The following args are specific to group member queries, and
+		// are not present in the query_vars of a normal BP_User_Query.
+		// We loop through to make sure that defaults are set (though
+		// values passed to the constructor will, as usual, override
+		// these defaults).
+		$this->query_vars = bp_parse_args(
+			$this->query_vars,
+			array(
+				'group_id'     => 0,
+				'group_role'   => array( 'member' ),
+				'is_confirmed' => true,
+				'invite_sent'  => null,
+				'inviter_id'   => null,
+				'type'         => 'last_joined',
+			),
+			'bp_group_member_query_get_include_ids'
+		);
+
+
+		return $this->get_group_member_ids_sql( $include );
 	}
 }
