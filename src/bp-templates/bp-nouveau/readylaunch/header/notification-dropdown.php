@@ -32,6 +32,15 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 			</a>
 		</header>
 
+		<div class="notification-header-tabs">
+			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action active ">
+				<?php esc_html_e( 'All', 'buddyboss' ); ?>
+			</button>
+			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action">
+				<?php esc_html_e( 'Unread', 'buddyboss' ); ?>
+			</button>
+		</div>
+
 		<div class="header-ajax-container notification-listing" id="notification-list">
 			<ul class="notification-list bb-nouveau-list"></ul>
 

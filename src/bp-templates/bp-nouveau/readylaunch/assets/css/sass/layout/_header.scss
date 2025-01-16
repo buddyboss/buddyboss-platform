@@ -171,7 +171,7 @@
 		}
 	}
 
-	.bbrl-button {
+	.bbrl-header-search {
 		font-size: 0.85rem;
 		margin-right: var(--bbrl-space-300);
 
@@ -184,6 +184,27 @@
 }
 
 // Notification Dropdown
+
+.notification-dropdown {
+
+	.notification-header-tabs {
+		margin: 0 var(--bbrl-space-200);
+	}
+
+	.notification-header-tab-action {
+		color: var(--bbrl-text-secondary-color);
+		font-size: 0.85rem;
+		font-weight: 500;
+		border-radius: var(--bbrl-radius-full);
+
+		&:hover,
+		&.active {
+			color: var(--bbrl-text-color);
+			font-weight: 600;
+			background-color: var(--bbrl-background-secondary-hover-color);
+		}
+	}
+}
 
 .notification-list {
 	max-height: 52vh;

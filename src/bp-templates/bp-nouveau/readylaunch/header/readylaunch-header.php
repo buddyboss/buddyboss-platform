@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 			?>
 			<div id="header-aside" class="header-aside">
 				<div class="header-aside-inner flex items-center">
-					<button class="bbrl-button bbrl-button--secondaryOutline">
+					<button class="bbrl-button bbrl-button--secondaryOutline bbrl-header-search">
 						<i class="bb-icons-rl-magnifying-glass"></i> <?php echo esc_html( 'Search community', 'buddyboss' ); ?>
 					</button>
 					<?php

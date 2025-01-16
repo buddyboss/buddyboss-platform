@@ -28,9 +28,22 @@ $unread_message_count = messages_get_unread_count();
 			<div class="notification-header-actions">
 				<a href="#" class="notification-header-action">
 					<i class="bb-icons-rl-bold bb-icons-rl-plus"></i>
+					<span class="screen-reader-text"><?php esc_html_e( 'New Thread', 'buddyboss' ); ?></span>
 				</a>
 			</div>
 		</header>
+
+		<!-- create all and unread button -->
+		<div class="notification-header-tabs">
+			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action active ">
+				<?php esc_html_e( 'All', 'buddyboss' ); ?>
+			</button>
+			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action">
+				<?php esc_html_e( 'Unread', 'buddyboss' ); ?>
+			</button>
+		</div>
+		
+
 
 		<div class="header-ajax-container">
 			<ul class="notification-list"></ul>

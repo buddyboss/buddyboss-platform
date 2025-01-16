@@ -862,15 +862,32 @@ img.emojioneemoji {
   border-radius: var(--bbrl-radius-full);
 }
 
-.header-aside .bbrl-button {
+.header-aside .bbrl-header-search {
   font-size: 0.85rem;
   margin-left: var(--bbrl-space-300);
 }
 
-.header-aside .bbrl-button [class*="bb-icons-rl"] {
+.header-aside .bbrl-header-search [class*="bb-icons-rl"] {
   color: var(--bbrl-icon-color);
   font-size: 16px;
   margin-left: var(--bbrl-space-100);
+}
+
+.notification-dropdown .notification-header-tabs {
+  margin: 0 var(--bbrl-space-200);
+}
+
+.notification-dropdown .notification-header-tab-action {
+  color: var(--bbrl-text-secondary-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: var(--bbrl-radius-full);
+}
+
+.notification-dropdown .notification-header-tab-action:hover, .notification-dropdown .notification-header-tab-action.active {
+  color: var(--bbrl-text-color);
+  font-weight: 600;
+  background-color: var(--bbrl-background-secondary-hover-color);
 }
 
 .notification-list {
