@@ -266,30 +266,32 @@ window.bp = window.bp || {};
 
 			$.extend(data, {
 				bp_heartbeat: (function() {
-					var heartbeatData = {};
+					var heartbeatData = { scope: 'all' };
 
 					// Check if the page is a user activity page.
 					if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
-						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || {};
+						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || { scope: 'just-me' };
 					} else {
 
-						// Otherwise, retrieve the general activity data.
-						heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || {};
+						// Otherwise, retrieve the activity data.
+						heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || { scope: 'all' };
 
 						// If the page is a single group activity page, set the scope to 'all'.
 						if ( $( 'body.activity.buddypress.groups.single-item' ).length ) {
-							heartbeatData.scope = 'all'; 
+							heartbeatData.scope = 'all';
 						}
 					}
 
 					if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
 						var scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
-						if ( 'undefined' !== typeof heartbeatData.scope && heartbeatData.scope !== scope )  {
+
+						// Heartbeat check the value from the available.
+						if ( 'undefined' === typeof heartbeatData.scope || heartbeatData.scope !== scope ) {
 							heartbeatData.scope = scope; 
 
 							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
-								// Add to the storage if page request 2.
 
+								// Add to the storage if page request 2.
 								if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
 									bp.Nouveau.setStorage( 'bp-user-activity', 'scope', scope );
 								} else {
