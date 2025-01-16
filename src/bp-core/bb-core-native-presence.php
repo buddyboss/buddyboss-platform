@@ -85,16 +85,6 @@ if ( isset( $_GET['direct_allow'] ) ) { // phpcs:ignore WordPress.Security.Nonce
 // Include BB_Presence class.
 require_once __DIR__ . '/classes/class-bb-presence.php';
 
-// File from the build version.
-$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
-if ( ! is_dir( $buddyboss_lang ) ) {
-	// File from the development version.
-	$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
-}
-if ( ! empty( $buddyboss_lang ) && function_exists( 'load_plugin_textdomain' ) ) {
-	load_plugin_textdomain( 'buddyboss', false, $buddyboss_lang );
-}
-
 BB_Presence::instance()->bb_presence_mu_loader();
 
 $loggedin_user_id = ! empty( get_current_user_id() ) ? get_current_user_id() : BB_Presence::instance()->bb_get_loggedin_user_id();

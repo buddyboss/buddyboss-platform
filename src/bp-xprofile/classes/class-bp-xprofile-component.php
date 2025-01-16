@@ -46,7 +46,7 @@ class BP_XProfile_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'xprofile',
-			__( 'Profile Fields', 'buddyboss' ),
+			'Profile Fields',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 20,

@@ -68,7 +68,7 @@ class BP_Media_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'media',
-			__( 'Photos', 'buddyboss' ),
+			'Photos',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
