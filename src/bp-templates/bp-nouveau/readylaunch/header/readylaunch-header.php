@@ -68,4 +68,5 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	</header>
+	<?php bp_get_template_part( 'sidebar/left-sidebar' ); ?>
 	<main id="primary" class="site-main">

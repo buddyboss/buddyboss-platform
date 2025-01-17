@@ -1126,3 +1126,91 @@ img.emojioneemoji {
   opacity: 1;
   visibility: visible;
 }
+
+.bbrl-left-panel {
+  position: fixed;
+  left: 0;
+  z-index: var(--bbrl-z-index-fixed);
+  background: var(--bbrl-background-color);
+  border-right: 1px solid var(--bbrl-border-color);
+  height: 100%;
+  width: 300px;
+  padding: var(--bbrl-space-100) var(--bbrl-space-200);
+  overflow: auto;
+}
+
+.bbrl-left-panel-widget {
+  padding: var(--bbrl-space-200) 0;
+  border-bottom: 1px solid var(--bbrl-border-secondary-color);
+}
+
+.bbrl-left-panel .bb-readylaunchpanel-menu {
+  padding: 0;
+  list-style: none;
+}
+
+.bbrl-left-panel .bb-readylaunchpanel-menu li > a {
+  display: flex;
+  align-items: center;
+  color: var(--bbrl-text-color);
+  font-size: 0.85rem;
+  padding: var(--bbrl-space-100) var(--bbrl-space-200);
+  text-decoration: none;
+  border-radius: var(--bbrl-radius-md);
+}
+
+.bbrl-left-panel .bb-readylaunchpanel-menu li > a:before {
+  content: "\e000";
+  font-family: bb-icons-rl;
+  font-size: 1.2rem;
+  color: var(--bbrl-icon-color);
+  margin-right: var(--bbrl-space-100);
+}
+
+.bbrl-left-panel .bb-readylaunchpanel-menu li > a:hover {
+  background-color: var(--bbrl-background-secondary-hover-color);
+}
+
+.bbrl-left-panel .bb-readylaunchpanel-menu li:nth-child(2) > a:before {
+  content: "\e4d6";
+}
+
+.bbrl-left-panel .bb-rl-list h2 {
+  color: var(--bbrl-text-tertiary-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 var(--bbrl-space-200) var(--bbrl-space-200);
+}
+
+.bbrl-left-panel .bb-rl-list .item-list {
+  list-style: none;
+  padding: 0;
+}
+
+.bbrl-left-panel .bb-rl-list .item-list li {
+  display: flex;
+  align-items: center;
+  padding: var(--bbrl-space-100) var(--bbrl-space-200);
+  border-radius: var(--bbrl-radius-md);
+}
+
+.bbrl-left-panel .bb-rl-list .item-list li:hover {
+  background-color: var(--bbrl-background-secondary-hover-color);
+}
+
+.bbrl-left-panel .bb-rl-list .item-list .item-avatar {
+  margin-right: var(--bbrl-space-100);
+}
+
+.bbrl-left-panel .bb-rl-list .item-list .item-avatar img {
+  height: 24px;
+  width: 24px;
+  border-radius: var(--bbrl-radius-full);
+}
+
+.bbrl-left-panel .bb-rl-list .item-list .item-title a {
+  color: var(--bbrl-text-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}

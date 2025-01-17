@@ -33,7 +33,6 @@ $unread_message_count = messages_get_unread_count();
 			</div>
 		</header>
 
-		<!-- create all and unread button -->
 		<div class="notification-header-tabs">
 			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action active ">
 				<?php esc_html_e( 'All', 'buddyboss' ); ?>
