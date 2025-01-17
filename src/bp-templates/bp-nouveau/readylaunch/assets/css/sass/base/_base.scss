@@ -54,6 +54,11 @@ h6 {
 	text-wrap: balance;
 }
 
+html,
+body {
+    min-height: 100%;
+}
+
 //  Utilities
 .hidden {
 	display: none;

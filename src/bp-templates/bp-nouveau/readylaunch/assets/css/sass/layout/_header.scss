@@ -3,6 +3,14 @@
 	background-color: var(--bbrl-background-color);
 	border-bottom: 1px solid var(--bbrl-border-tertiary-color);
 	padding: var(--bbrl-space-200) var(--bbrl-space-400);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+
+	body.admin-bar & {
+		top: 32px;
+	}
 }
 
 .bb-readylaunch-menu {

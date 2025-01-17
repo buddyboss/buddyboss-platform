@@ -147,6 +147,11 @@ h6 {
   text-wrap: balance;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 .hidden {
   display: none;
 }
@@ -702,6 +707,14 @@ img.emojioneemoji {
   background-color: var(--bbrl-background-color);
   border-bottom: 1px solid var(--bbrl-border-tertiary-color);
   padding: var(--bbrl-space-200) var(--bbrl-space-400);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+body.admin-bar .bbrl-header {
+  top: 32px;
 }
 
 .bb-readylaunch-menu {
@@ -1133,10 +1146,16 @@ img.emojioneemoji {
   z-index: var(--bbrl-z-index-fixed);
   background: var(--bbrl-background-color);
   border-left: 1px solid var(--bbrl-border-color);
-  height: 100%;
+  height: calc(100% - 71px);
   width: 300px;
   padding: var(--bbrl-space-100) var(--bbrl-space-200);
   overflow: auto;
+  top: 71px;
+}
+
+body.admin-bar .bbrl-left-panel {
+  top: 103px;
+  height: calc(100% - 71px - 32px);
 }
 
 .bbrl-left-panel-widget {

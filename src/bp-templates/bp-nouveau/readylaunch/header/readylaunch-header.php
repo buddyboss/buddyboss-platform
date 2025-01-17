@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 <body <?php body_class( 'bb-reaylaunch-template' ); ?>>
 <?php wp_body_open(); ?>
-<div id="page" class="site app-layout">
+<div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bbrl-header">
 		<div class="bbrl-container bbrl-header-container flex justify-between items-center">
 			<div id="site-logo" class="bbrl-site-branding">

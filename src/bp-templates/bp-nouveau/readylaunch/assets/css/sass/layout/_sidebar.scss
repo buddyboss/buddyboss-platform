@@ -4,10 +4,16 @@
 	z-index: var(--bbrl-z-index-fixed);
 	background: var(--bbrl-background-color);
 	border-right: 1px solid var(--bbrl-border-color);
-	height: 100%;
+	height: calc(100% - 71px);
 	width: 300px;
 	padding: var(--bbrl-space-100) var(--bbrl-space-200);
 	overflow: auto;
+	top: 71px;
+
+	body.admin-bar & {
+		top: 103px;
+		height: calc(100% - 71px - 32px);
+	}
 
 	&-widget {
 		padding: var(--bbrl-space-200) 0;
