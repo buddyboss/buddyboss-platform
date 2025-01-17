@@ -681,21 +681,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
-			if ( ! function_exists( 'buddypress' ) && ! bp_is_active( 'notifications' ) ) {
-				return;
-			}
-
 			$id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
 			if ( 'all' !== $id ) {
-				$id = intval( $id );
+				if ( is_array( $_POST['id'] ) ) {
+					$id = array_map( 'intval', $_POST['id'] );
+				} else {
+					$id = intval( $_POST['id'] );
+				}
 			}
 
 			$user_id = bp_loggedin_user_id();
 			if ( ! empty( $id ) && 'all' !== $id ) {
-				BP_Notifications_Notification::update(
-					array( 'is_new' => 0 ),
-					array( 'id' => $id )
-				);
+				foreach ( $id as $notification_id ) {
+					BP_Notifications_Notification::update(
+						array( 'is_new' => 0 ),
+						array( 'id' => $notification_id )
+					);
+				}
 			} elseif ( 'all' === $id ) {
 				$notification_ids = BP_Notifications_Notification::get(
 					array(

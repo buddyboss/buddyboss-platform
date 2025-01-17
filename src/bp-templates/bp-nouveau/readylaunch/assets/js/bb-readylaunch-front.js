@@ -17,7 +17,8 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function () {
-
+			this.deletedNotifications    = [];
+			this.markAsReadNotifications = [];
 			// Listen to events ("Add hooks!")
 			this.addListeners();
 		},
@@ -34,6 +35,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
 			$( document ).on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
+			$( window ).on( 'beforeunload', this.beforeUnload.bind( this ) );
 		},
 
 		/**
@@ -241,12 +243,50 @@ window.bp = window.bp || {};
 		markNotificationRead: function ( e ) {
 			e.preventDefault();
 
-			var $this           = $( e.currentTarget );
-			var notificationId  = $this.data( 'notification-id' );
-			var mainContainerID = $this.closest( '.notification-wrap' );
-			mainContainerID.find( '.header-ajax-container .notification-list' ).addClass( 'loading' );
-			var notificationsIcon      = $( '.bb-icons-rl-bell-simple' );
-			var notificationsIconCount = $( notificationsIcon ).parent().children( '.count' );
+			var $this          = $( e.currentTarget );
+			var notificationId = $this.data( 'notification-id' );
+			if ( 'all' !== notificationId ) {
+				$this.closest( '.read-item' ).fadeOut();
+				bp.Readylaunch.markAsReadNotifications.push( notificationId );
+			}
+
+			if ( 'all' === notificationId ) {
+				var mainContainerID = $this.closest( '.notification-wrap' );
+				mainContainerID.find( '.header-ajax-container .notification-list' ).addClass( 'loading' );
+				var notificationsIcon      = $( '.bb-icons-rl-bell-simple' );
+				var notificationsIconCount = $( notificationsIcon ).parent().children( '.count' );
+
+				$.ajax( {
+					type   : 'POST',
+					url    : bbReadyLaunchFront.ajax_url,
+					data   : {
+						action: 'bb_mark_notification_read',
+						nonce : bbReadyLaunchFront.nonce,
+						id    : notificationId,
+					},
+					success: function ( response ) {
+						if ( response.success && response.data ) {
+							mainContainerID.find( '.header-ajax-container .notification-list' ).removeClass( 'loading' );
+							if ( response.success && response.data && response.data.contents ) {
+								mainContainerID.find( '.header-ajax-container .notification-list' ).html( response.data.contents );
+							}
+							if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
+								$( notificationsIconCount ).text( response.data.total_notifications );
+							}
+						}
+					},
+				} );
+			}
+		},
+
+		/**
+		 * [beforeUnload description]
+		 * @return {boolean} [description]
+		 */
+		beforeUnload: function () {
+			if ( 0 === bp.Readylaunch.markAsReadNotifications.length ) {
+				return false;
+			}
 
 			$.ajax( {
 				type   : 'POST',
@@ -254,22 +294,21 @@ window.bp = window.bp || {};
 				data   : {
 					action: 'bb_mark_notification_read',
 					nonce : bbReadyLaunchFront.nonce,
-					id    : notificationId,
+					id    : bp.Readylaunch.markAsReadNotifications,
 				},
 				success: function ( response ) {
-					if ( response.success && response.data ) {
-						mainContainerID.find( '.header-ajax-container .notification-list' ).removeClass( 'loading' );
-						if ( response.success && response.data && response.data.contents ) {
-							mainContainerID.find( '.header-ajax-container .notification-list' ).html( response.data.contents );
-						}
-						if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
-							$( notificationsIconCount ).text( response.data.total_notifications );
-						}
+					if ( response.success ) {
+
 					}
 				},
-			} );
-		}
+				error  : function () {
 
+				},
+			} );
+
+			// Clear the array after processing.
+			bp.Readylaunch.markAsReadNotifications = [];
+		}
 	};
 
 	// Launch BP Zoom.
