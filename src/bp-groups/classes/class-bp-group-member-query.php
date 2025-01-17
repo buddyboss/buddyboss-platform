@@ -632,8 +632,9 @@ class BP_Group_Member_Query extends BP_User_Query {
 		}
 
 		$sql['order'] = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
-
-		$group_member_ids_sql = "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}";
+		if ( $this->query_vars['type'] === 'group_role' ) {
+			$sql['order'] = $sql['order'] . ', user_id';
+		}
 
 		$invited_member_ids_sql = '';
 
@@ -691,12 +692,13 @@ class BP_Group_Member_Query extends BP_User_Query {
 			$invite_args['retval'] = 'sql';
 
 			$invited_member_ids_sql = groups_get_invites( $invite_args );
-
 		}
 
 		if ( ! empty( $invited_member_ids_sql ) ) {
+			$group_member_ids_sql = "{$sql['select']} {$sql['where']}";
 			$this->group_member_ids_sql = $group_member_ids_sql . ' UNION ' . $invited_member_ids_sql;
 		} else {
+			$group_member_ids_sql = "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}";
 			$this->group_member_ids_sql = $group_member_ids_sql;
 		}
 
