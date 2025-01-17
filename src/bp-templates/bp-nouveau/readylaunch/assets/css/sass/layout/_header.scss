@@ -82,7 +82,6 @@
 			top: calc(100% + 8px);
 			margin: 0;
 			min-width: 480px;
-			overflow: hidden;
 			opacity: 0;
 			visibility: hidden;
 			z-index: 0;
@@ -451,6 +450,10 @@
 			&__action {
 				padding: 0;
 				background-color: var(--bbrl-background-secondary-hover-color);
+
+				[class*="bb-icons-rl"] {
+					color: var(--bbrl-icon-tertiary-color);
+				}
 			}
 		}
 

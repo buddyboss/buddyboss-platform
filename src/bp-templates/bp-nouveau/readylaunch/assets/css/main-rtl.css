@@ -1188,6 +1188,10 @@ body.admin-bar .bbrl-header {
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
+.notification-listing .notification-list li .bbrl-option-wrap__action [class*="bb-icons-rl"] {
+  color: var(--bbrl-icon-tertiary-color);
+}
+
 .notification-listing .notification-list li .bbrl-option-wrap.active,
 .notification-listing .notification-list li:hover .bbrl-option-wrap {
   opacity: 1;

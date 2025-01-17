@@ -267,91 +267,316 @@ img.emojioneemoji {
 <div class="indicator indicator--dot"></div>
 <div class="indicator indicator--line"></div>
 */
-.tooltip {
+button[data-balloon] {
+  overflow: visible;
+}
+
+[data-balloon] {
   position: relative;
-  display: inline-block;
+  cursor: pointer;
+}
+
+[data-balloon]:after {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.24px;
+  content: attr(data-balloon);
+  color: var(--bbrl-text-white-color);
   padding: var(--bbrl-space-100) var(--bbrl-space-200);
   background-color: var(--bbrl-background-black-color);
-  color: var(--bbrl-text-secondary-color);
   border-radius: var(--bbrl-radius-md);
   font-size: 0.875rem;
   line-height: 1.2;
   text-align: center;
-  max-width: 200px;
+  line-height: 1.3;
+  position: absolute;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px 0 black;
+  z-index: var(--bbrl-z-index-dropdown);
 }
 
-.tooltip:after {
+[data-balloon]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
   content: "";
   position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
+  z-index: 10;
 }
 
-.tooltip--top:after {
+[data-balloon]:hover:before, [data-balloon]:hover:after, [data-balloon][data-balloon-visible]:before, [data-balloon][data-balloon-visible]:after {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+[data-balloon].font-awesome:after {
+  font-family: FontAwesome;
+}
+
+[data-balloon][data-balloon-break]:after {
+  white-space: pre;
+}
+
+[data-balloon][data-balloon-blunt]:before, [data-balloon][data-balloon-blunt]:after {
+  transition: none;
+}
+
+[data-balloon][data-balloon-pos="up"]:after {
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px 6px 0 6px;
-  border-color: var(--bbrl-background-black-color) transparent transparent transparent;
+  margin-bottom: 11px;
+  transform: translate(-50%, 10px);
+  transform-origin: top;
 }
 
-.tooltip--bottom:after {
-  top: 100%;
+[data-balloon][data-balloon-pos="up"]:before {
+  bottom: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  border-width: 0 6px 6px 6px;
-  border-color: transparent transparent var(--bbrl-background-black-color) transparent;
+  margin-bottom: 5px;
+  transform: translate(-50%, 10px);
+  transform-origin: top;
 }
 
-.tooltip--left:after {
-  top: 50%;
+[data-balloon][data-balloon-pos="up"]:hover:after, [data-balloon][data-balloon-pos="up"][data-balloon-visible]:after {
+  transform: translate(-50%, 0);
+}
+
+[data-balloon][data-balloon-pos="up"]:hover:before, [data-balloon][data-balloon-pos="up"][data-balloon-visible]:before {
+  transform: translate(-50%, 0);
+}
+
+[data-balloon][data-balloon-pos="up-left"]:after {
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 11px;
+  transform: translate(0, 10px);
+  transform-origin: top;
+}
+
+[data-balloon][data-balloon-pos="up-left"]:before {
+  bottom: 100%;
+  left: 5px;
+  margin-bottom: 5px;
+  transform: translate(0, 10px);
+  transform-origin: top;
+}
+
+[data-balloon][data-balloon-pos="up-left"]:hover:after, [data-balloon][data-balloon-pos="up-left"][data-balloon-visible]:after {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="up-left"]:hover:before, [data-balloon][data-balloon-pos="up-left"][data-balloon-visible]:before {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="up-right"]:after {
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 11px;
+  transform: translate(0, 10px);
+  transform-origin: top;
+}
+
+[data-balloon][data-balloon-pos="up-right"]:before {
+  bottom: 100%;
+  right: 5px;
+  margin-bottom: 5px;
+  transform: translate(0, 10px);
+  transform-origin: top;
+}
+
+[data-balloon][data-balloon-pos="up-right"]:hover:after, [data-balloon][data-balloon-pos="up-right"][data-balloon-visible]:after {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="up-right"]:hover:before, [data-balloon][data-balloon-pos="up-right"][data-balloon-visible]:before {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="down"]:after {
+  left: 50%;
+  margin-top: 11px;
+  top: 100%;
+  transform: translate(-50%, -10px);
+}
+
+[data-balloon][data-balloon-pos="down"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(180 18 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  left: 50%;
+  margin-top: 5px;
+  top: 100%;
+  transform: translate(-50%, -10px);
+}
+
+[data-balloon][data-balloon-pos="down"]:hover:after, [data-balloon][data-balloon-pos="down"][data-balloon-visible]:after {
+  transform: translate(-50%, 0);
+}
+
+[data-balloon][data-balloon-pos="down"]:hover:before, [data-balloon][data-balloon-pos="down"][data-balloon-visible]:before {
+  transform: translate(-50%, 0);
+}
+
+[data-balloon][data-balloon-pos="down-left"]:after {
+  left: 0;
+  margin-top: 11px;
+  top: 100%;
+  transform: translate(0, -10px);
+}
+
+[data-balloon][data-balloon-pos="down-left"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(180 18 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  left: 5px;
+  margin-top: 5px;
+  top: 100%;
+  transform: translate(0, -10px);
+}
+
+[data-balloon][data-balloon-pos="down-left"]:hover:after, [data-balloon][data-balloon-pos="down-left"][data-balloon-visible]:after {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="down-left"]:hover:before, [data-balloon][data-balloon-pos="down-left"][data-balloon-visible]:before {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="down-right"]:after {
+  right: 0;
+  margin-top: 11px;
+  top: 100%;
+  transform: translate(0, -10px);
+}
+
+[data-balloon][data-balloon-pos="down-right"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(180 18 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  right: 5px;
+  margin-top: 5px;
+  top: 100%;
+  transform: translate(0, -10px);
+}
+
+[data-balloon][data-balloon-pos="down-right"]:hover:after, [data-balloon][data-balloon-pos="down-right"][data-balloon-visible]:after {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="down-right"]:hover:before, [data-balloon][data-balloon-pos="down-right"][data-balloon-visible]:before {
+  transform: translate(0, 0);
+}
+
+[data-balloon][data-balloon-pos="left"]:after {
+  margin-right: 11px;
   right: 100%;
-  transform: translateY(-50%);
-  border-width: 6px 6px 6px 0;
-  border-color: transparent var(--bbrl-background-black-color) transparent transparent;
-}
-
-.tooltip--right:after {
   top: 50%;
+  transform: translate(10px, -50%);
+}
+
+[data-balloon][data-balloon-pos="left"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(-90 18 18)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 6px;
+  height: 18px;
+  margin-right: 5px;
+  right: 100%;
+  top: 50%;
+  transform: translate(10px, -50%);
+}
+
+[data-balloon][data-balloon-pos="left"]:hover:after, [data-balloon][data-balloon-pos="left"][data-balloon-visible]:after {
+  transform: translate(0, -50%);
+}
+
+[data-balloon][data-balloon-pos="left"]:hover:before, [data-balloon][data-balloon-pos="left"][data-balloon-visible]:before {
+  transform: translate(0, -50%);
+}
+
+[data-balloon][data-balloon-pos="right"]:after {
   left: 100%;
-  transform: translateY(-50%);
-  border-width: 6px 0 6px 6px;
-  border-color: transparent transparent transparent var(--bbrl-background-black-color);
+  margin-left: 11px;
+  top: 50%;
+  transform: translate(-10px, -50%);
 }
 
-.tooltip__title {
-  font-weight: 500;
-  margin-bottom: var(--bbrl-space-100);
+[data-balloon][data-balloon-pos="right"]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(90 6 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 6px;
+  height: 18px;
+  left: 100%;
+  margin-left: 5px;
+  top: 50%;
+  transform: translate(-10px, -50%);
 }
 
-.tooltip__content {
-  font-weight: 400;
+[data-balloon][data-balloon-pos="right"]:hover:after, [data-balloon][data-balloon-pos="right"][data-balloon-visible]:after {
+  transform: translate(0, -50%);
 }
 
-/*
+[data-balloon][data-balloon-pos="right"]:hover:before, [data-balloon][data-balloon-pos="right"][data-balloon-visible]:before {
+  transform: translate(0, -50%);
+}
 
-<div class="tooltip tooltip--top">
-	<div class="tooltip__title">Body text</div>
-	<div class="tooltip__content">Body text</div>
-</div>
+[data-balloon][data-balloon-length="small"]:after {
+  white-space: normal;
+  width: 80px;
+}
 
-<div class="tooltip tooltip--bottom">
-	<div class="tooltip__title">Body text</div>
-	<div class="tooltip__content">Body text</div>
-</div>
+[data-balloon][data-balloon-length="medium"]:after {
+  white-space: normal;
+  width: 150px;
+}
 
-<div class="tooltip tooltip--left">
-	<div class="tooltip__title">Body text</div>
-	<div class="tooltip__content">Body text</div>
-</div>
+[data-balloon][data-balloon-length="large"]:after {
+  white-space: normal;
+  width: 260px;
+}
 
-<div class="tooltip tooltip--right">
-	<div class="tooltip__title">Body text</div>
-	<div class="tooltip__content">Body text</div>
-</div>
+[data-balloon][data-balloon-length="xlarge"]:after {
+  white-space: normal;
+  width: 380px;
+}
 
-*/
+@media screen and (max-width: 768px) {
+  [data-balloon][data-balloon-length="xlarge"]:after {
+    white-space: normal;
+    width: 90vw;
+  }
+}
+
+[data-balloon][data-balloon-length="fit"]:after {
+  white-space: normal;
+  width: 100%;
+}
+
+[data-bp-tooltip]:after {
+  background: var(--bb-tooltip-background);
+  color: var(--bbrl-text-secondary-color);
+}
+
+[data-bp-tooltip]:before {
+  background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+  background-size: 100% auto;
+  width: 18px;
+  height: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
+}
+
 .notice {
   display: flex;
   align-items: center;
@@ -838,7 +1063,6 @@ body.admin-bar .bbrl-header {
   top: calc(100% + 8px);
   margin: 0;
   min-width: 480px;
-  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   z-index: 0;
@@ -1186,6 +1410,10 @@ body.admin-bar .bbrl-header {
 .notification-listing .notification-list li .bbrl-option-wrap__action {
   padding: 0;
   background-color: var(--bbrl-background-secondary-hover-color);
+}
+
+.notification-listing .notification-list li .bbrl-option-wrap__action [class*="bb-icons-rl"] {
+  color: var(--bbrl-icon-tertiary-color);
 }
 
 .notification-listing .notification-list li .bbrl-option-wrap.active,
