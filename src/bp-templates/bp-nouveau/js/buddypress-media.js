@@ -5259,7 +5259,7 @@ window.bp = window.bp || {};
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
 									} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).length ) {
 										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
-									} else {
+									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
 										var mediaPersonalSpanTag = document.createElement( 'span' );
 										mediaPersonalSpanTag.setAttribute( 'class', 'count' );
 										var mediaPersonalSpanTagTextNode = document.createTextNode( response.data.media_personal_count );
@@ -5279,7 +5279,7 @@ window.bp = window.bp || {};
 										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
 									} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
 										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
-									} else {
+									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
 										var photoGroupSpanTag = document.createElement( 'span' );
 										photoGroupSpanTag.setAttribute( 'class', 'count' );
 										var photoGroupSpanTagTextNode = document.createTextNode( response.data.media_group_count );

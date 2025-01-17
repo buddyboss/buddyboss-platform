@@ -731,6 +731,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Add localize variable for performance tab.
 		$params['is_send_ajax_request'] = function_exists( 'bb_is_send_ajax_request' ) ? bb_is_send_ajax_request() : '';
 
+		// Add localize variable for enable content counts.
+		$params['bb_enable_content_counts'] = bb_enable_content_counts();
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
