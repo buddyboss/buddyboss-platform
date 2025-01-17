@@ -17,8 +17,9 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function () {
-			this.deletedNotifications    = [];
-			this.markAsReadNotifications = [];
+			this.deletedNotifications     = [];
+			this.markAsReadNotifications  = [];
+			this.notificationIconSelector = $( '.bb-icons-rl-bell-simple' );
 			// Listen to events ("Add hooks!")
 			this.addListeners();
 		},
@@ -185,8 +186,7 @@ window.bp = window.bp || {};
 				$( '#header-notifications-dropdown-elem .notification-dropdown .notification-list' ).empty().html( data.unread_notifications );
 			}
 
-			var notifs      = $( '.bb-icons-rl-bell-simple' );
-			var notif_icons = $( notifs ).parent().children( '.count' );
+			var notif_icons = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 
 			if ( typeof data.total_notifications !== 'undefined' && data.total_notifications > 0 ) {
 				$( '.notification-header .mark-read-all' ).show();
@@ -253,14 +253,15 @@ window.bp = window.bp || {};
 			var notificationId = $this.data( 'notification-id' );
 			if ( 'all' !== notificationId ) {
 				$this.closest( '.read-item' ).fadeOut();
+				var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
 				bp.Readylaunch.markAsReadNotifications.push( notificationId );
 			}
 
 			if ( 'all' === notificationId ) {
 				var mainContainerID = $this.closest( '.notification-wrap' );
 				mainContainerID.find( '.header-ajax-container .notification-list' ).addClass( 'loading' );
-				var notificationsIcon      = $( '.bb-icons-rl-bell-simple' );
-				var notificationsIconCount = $( notificationsIcon ).parent().children( '.count' );
+				var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 
 				$.ajax( {
 					type   : 'POST',
@@ -304,7 +305,10 @@ window.bp = window.bp || {};
 				},
 				success: function ( response ) {
 					if ( response.success ) {
-
+						var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+						if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
+							$( notificationsIconCount ).text( response.data.total_notifications );
+						}
 					}
 				},
 				error  : function () {
