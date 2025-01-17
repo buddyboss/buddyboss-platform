@@ -26,7 +26,7 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 	<section class="notification-dropdown">
 		<header class="notification-header flex items-center justify-between">
 			<h2 class="title"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></h2>
-			<a href="" class="bbrl-button bbrl-button--secondaryOutline message-view-all-link"><?php esc_html_e( 'View all', 'buddyboss' )?></a>
+			<a href="<?php echo esc_url( $menu_link ); ?>" class="bbrl-button bbrl-button--secondaryOutline message-view-all-link"><?php esc_html_e( 'View all', 'buddyboss' )?></a>
 			<button class="mark-read-all action-unread" data-notification-id="all" style="<?php echo esc_attr( $unread_notification_count > 0 ? 'display:flex;' : 'display:none;' ); ?>">
 				<i class="bb-icons-rl-bold bb-icons-rl-checks"></i>
 				<span class="screen-reader-text"><?php esc_html_e( 'Mark all as read', 'buddyboss' ); ?></span>
@@ -44,13 +44,6 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 
 		<div class="header-ajax-container notification-listing" id="notification-list">
 			<ul class="notification-list bb-nouveau-list"></ul>
-
-			<footer class="notification-footer">
-				<a href="<?php echo esc_url( $menu_link ); ?>" class="delete-all">
-					<?php esc_html_e( 'View Notifications', 'buddyboss' ); ?>
-					<i class="bb-icon-l bb-icon-angle-right"></i>
-				</a>
-			</footer>
 		</div>
 	</section>
 </div>
