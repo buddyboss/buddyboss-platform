@@ -41,7 +41,7 @@ if ( $enable_count ) {
 ?>
 <div class="subnav-filters filters clearfix no-subnav">
 	<?php
-	if ( $enable_count ) {
+	if ( ! $enable_count ) {
 		bp_nouveau_search_form();
 	}
 	unset( $enable_count );
