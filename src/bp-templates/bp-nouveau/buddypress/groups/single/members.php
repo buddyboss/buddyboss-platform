@@ -11,9 +11,8 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 bp_get_template_part( 'groups/single/parts/members-subnav' );
 $enable_count = bb_enable_content_counts();
 if ( $enable_count ) {
-	bp_nouveau_search_form();
 	?>
-		<div class="bb-item-count">
+		<div class="bb-item-count bb-group-members-count">
 			<?php
 			if ( ! $is_send_ajax_request ) {
 				$count = groups_get_total_member_count( bp_get_current_group_id() );
@@ -37,6 +36,7 @@ if ( $enable_count ) {
 			?>
 		</div>
 	<?php
+	bp_nouveau_search_form();
 }
 ?>
 <div class="subnav-filters filters clearfix no-subnav">

@@ -521,6 +521,14 @@ body.buddypress article.page > .entry-header .entry-title {
   margin-bottom: 20px;
 }
 
+.item-body > .bb-item-count.bb-group-members-count {
+  margin-top: 20px;
+}
+
+.item-body > .bb-item-count.bb-group-members-count + .members-search {
+  float: left;
+}
+
 .item-body:has(.bb-item-count + .subnav-filters) .bb-item-count,
 .item-body-inner:has(.bb-item-count + .subnav-filters) .bb-item-count {
   float: left;
