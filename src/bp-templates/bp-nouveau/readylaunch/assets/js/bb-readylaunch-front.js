@@ -234,6 +234,12 @@ window.bp = window.bp || {};
 			var current = $( e.currentTarget ).closest( 'div.menu-item-has-children' );
 			current.siblings( '.selected' ).removeClass( 'selected' );
 			current.toggleClass( 'selected' );
+			if (
+				'header-notifications-dropdown-elem' === current.attr( 'id' ) &&
+				! current.hasClass( 'selected' )
+			) {
+				bp.Readylaunch.beforeUnload();
+			}
 		},
 
 		/**
