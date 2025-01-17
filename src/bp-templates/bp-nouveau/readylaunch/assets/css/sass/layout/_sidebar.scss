@@ -41,7 +41,9 @@
 				margin-right: var(--bbrl-space-100);
 			}
 
+			&:focus,
 			&:hover {
+				outline: none;
 				background-color: var(--bbrl-background-secondary-hover-color);
 			}
 		}
@@ -71,13 +73,18 @@
 				padding: var(--bbrl-space-100) var(--bbrl-space-200);
 				border-radius: var(--bbrl-radius-md);
 
-				&:hover {
+				&:hover,
+				&:focus-within {
 					background-color: var(--bbrl-background-secondary-hover-color);
 				}
 			}
 
 			.item-avatar {
 				margin-right: var(--bbrl-space-100);
+
+				a {
+					outline: none;
+				}
 
 				img {
 					height: 24px;
@@ -91,6 +98,7 @@
 				font-size: 0.85rem;
 				font-weight: 500;
 				text-decoration: none;
+				outline: none;
 			}
 		}
 	}

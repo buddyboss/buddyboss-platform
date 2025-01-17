@@ -1186,7 +1186,8 @@ body.admin-bar .bbrl-left-panel {
   margin-left: var(--bbrl-space-100);
 }
 
-.bbrl-left-panel .bb-readylaunchpanel-menu li > a:hover {
+.bbrl-left-panel .bb-readylaunchpanel-menu li > a:focus, .bbrl-left-panel .bb-readylaunchpanel-menu li > a:hover {
+  outline: none;
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
@@ -1213,12 +1214,16 @@ body.admin-bar .bbrl-left-panel {
   border-radius: var(--bbrl-radius-md);
 }
 
-.bbrl-left-panel .bb-rl-list .item-list li:hover {
+.bbrl-left-panel .bb-rl-list .item-list li:hover, .bbrl-left-panel .bb-rl-list .item-list li:focus-within {
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
 .bbrl-left-panel .bb-rl-list .item-list .item-avatar {
   margin-left: var(--bbrl-space-100);
+}
+
+.bbrl-left-panel .bb-rl-list .item-list .item-avatar a {
+  outline: none;
 }
 
 .bbrl-left-panel .bb-rl-list .item-list .item-avatar img {
@@ -1232,4 +1237,5 @@ body.admin-bar .bbrl-left-panel {
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
+  outline: none;
 }

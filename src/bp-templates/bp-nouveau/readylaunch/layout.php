@@ -10,8 +10,6 @@ defined( 'ABSPATH' ) || exit;
 
 bp_get_template_part( 'header/readylaunch-header' );
 
-bp_get_template_part( 'sidebar/left-sidebar' );
-
 if ( have_posts() ) :
 	/* Start the Loop */
 	while ( have_posts() ) :
