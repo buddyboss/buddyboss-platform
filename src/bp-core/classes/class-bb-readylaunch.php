@@ -475,17 +475,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
-			$type = ! empty( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : 'all';
-			if ( 'all' === $type ) {
-				$type = 'both';
-			} elseif ( 'unread' === $type ) {
-				$type = '1';
-			} else {
-				$type = '0';
-			}
+			$page = ! empty( $_GET['page'] ) ? intval( $_GET['page'] ) : 1;
 
 			ob_start();
-			bp_get_template_part( 'header/unread-notifications', null, array( 'type' => $type ) );
+			bp_get_template_part( 'header/unread-notifications', null, array( 'page' => $page ) );
 			$notifications = ob_get_clean();
 			wp_send_json_success( $notifications );
 		}
