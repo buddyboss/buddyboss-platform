@@ -92,6 +92,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
+
+				add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12 );
+				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12 );
 			}
 		}
 
@@ -447,6 +450,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_dequeue_style( 'buddyboss-theme-template' );
 			wp_dequeue_style( 'buddyboss-theme-buddypress' );
 			wp_dequeue_style( 'buddyboss-theme-forums' );
+			wp_dequeue_script( 'buddyboss-theme-main-js' );
 		}
 
 		/**
@@ -628,6 +632,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				?>
 			</div>
 			<?php
+		}
+
+		/**
+		 * Adds unread notifications to the heartbeat response.
+		 *
+		 * This function checks if the user is logged in and if the notification component is active.
+		 * If both conditions are met, it retrieves the unread notifications template part and the total
+		 * count of unread notifications, then adds them to the response array.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $response The existing heartbeat response array.
+		 *
+		 * @return array The modified heartbeat response array with unread notifications' data.
+		 */
+		public function bb_heartbeat_unread_notifications( $response = array() ) {
+			if ( bp_loggedin_user_id() && bp_is_active( 'notifications' ) ) {
+				ob_start();
+				bp_get_template_part( 'header/unread-notifications' );
+				$response['unread_notifications'] = ob_get_clean();
+				$response['total_notifications']  = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+			}
+
+			return $response;
 		}
 	}
 

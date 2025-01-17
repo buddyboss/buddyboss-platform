@@ -26,8 +26,10 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
-			$( '.bb-nouveau-list' ).scroll( 'scroll', this.scrollHeaderDropDown.bind( this ) );
-			$( document ).on( 'click', '.notification-link, .load-more a', this.handleLoadMore.bind( this ) );
+			$( '.bb-nouveau-list' ).scroll( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
+			$( document ).on( 'click', '.notification-link, .load-more a', this.bbHandleLoadMore.bind( this ) );
+			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
+			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 		},
 
 		/**
@@ -35,7 +37,7 @@ window.bp = window.bp || {};
 		 *
 		 * @param e
 		 */
-		scrollHeaderDropDown: function ( e ) {
+		bbScrollHeaderDropDown: function ( e ) {
 			var el = e.target;
 			if ( 'notification-list' === el.id ) {
 				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! el.classList.contains( 'loading' ) ) {
@@ -53,7 +55,7 @@ window.bp = window.bp || {};
 		 *
 		 * @param {Object} e Event object
 		 */
-		handleLoadMore: function ( e ) {
+		bbHandleLoadMore: function ( e ) {
 			e.preventDefault();
 
 			// Identify the clicked element.
@@ -68,23 +70,26 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Check if there's already a request in progress.
+			if ( $container.data( 'loading' ) ) {
+				return; // Exit if an AJAX request is already in progress.
+			}
+
+			// Set the 'loading' flag to true.
+			$container.data( 'loading', true );
+
 			// Get the container ID.
 			var containerId = $container.attr( 'id' );
 
 			var isMessage = $container.hasClass( 'bb-message-dropdown-notification' );
 			var page      = $target.data( 'page' ) ? $target.data( 'page' ) + 1 : 1;
 
-			this.performAjaxRequest( e, {
+			this.bbPerformAjaxRequest( e, {
 				action     : isMessage ? 'bb_fetch_header_messages' : 'bb_fetch_header_notifications',
 				page       : page,
 				isMessage  : isMessage,
 				containerId: containerId,
 			} );
-
-			// Update page data if applicable
-			//if ( $this.data( 'page' ) ) {
-			//	$this.data( 'page', page );
-			//}
 		},
 
 		/**
@@ -93,7 +98,7 @@ window.bp = window.bp || {};
 		 * @param {Object} e Event object
 		 * @param {Object} options Options for AJAX request
 		 */
-		performAjaxRequest: function ( e, options ) {
+		bbPerformAjaxRequest: function ( e, options ) {
 			e.preventDefault();
 
 			var defaults = {
@@ -123,6 +128,9 @@ window.bp = window.bp || {};
 				url    : bbReadyLaunchFront.ajax_url,
 				data   : data,
 				success: function ( response ) {
+					// Reset the 'loading' flag once the request completes.
+					mainContainerID.data( 'loading', false );
+
 					if ( response.success && response.data ) {
 						var container = mainContainerID.find( '.notification-list' );
 						if ( container.find( '.bbrl-loader' ).has( '.bbrl-loader' ) ) {
@@ -136,9 +144,56 @@ window.bp = window.bp || {};
 					}
 				},
 				error  : function () {
+					// Reset the 'loading' flag in case of error.
+					mainContainerID.data( 'loading', false );
 					mainContainerID.find( '.notification-list' ).html( '<p>Failed to load data. Please try again.</p>' );
 				},
 			} );
+		},
+
+		/**
+		 * [bbHeartbeatSend description]
+		 * @param e
+		 * @param data
+		 */
+		bbHeartbeatSend: function ( e, data ) {
+			data.bb_fetch_header_notifications = true;
+		},
+
+		/**
+		 * [bbHeartbeatTick description]
+		 * @param e
+		 * @param data
+		 */
+		bbHeartbeatTick: function ( e, data ) {
+			this.bpInjectNotifications( e, data );
+		},
+
+		/**
+		 * [bpInjectNotifications description]
+		 * @param event
+		 * @param data
+		 */
+		bpInjectNotifications: function ( event, data ) {
+			if ( typeof data.unread_notifications !== 'undefined' && data.unread_notifications !== '' ) {
+				$( '#header-notifications-dropdown-elem .notification-dropdown .notification-list' ).empty().html( data.unread_notifications );
+			}
+
+			var notifs      = $( '.bb-icon-bell' );
+			var notif_icons = $( notifs ).parent().children( '.count' );
+
+			if ( typeof data.total_notifications !== 'undefined' && data.total_notifications > 0 ) {
+				$( '.notification-header .mark-read-all' ).show();
+
+				if ( notif_icons.length > 0 ) {
+					$( notif_icons ).text( data.total_notifications );
+				} else {
+					$( notifs ).parent( ':not(.group-subscription)' ).append( '<span class="count"> ' + data.total_notifications + ' </span>' );
+				}
+			} else {
+				$( notif_icons ).remove();
+				$( '.notification-header .mark-read-all' ).fadeOut();
+			}
 		},
 	};
 
