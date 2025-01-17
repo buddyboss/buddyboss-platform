@@ -95,6 +95,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12 );
 				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12 );
+
+				add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
 			}
 		}
 
@@ -462,7 +464,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
-			$type = ! empty( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : 'all';
+			$type = ! empty( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'all';
 
 			ob_start();
 			bp_get_template_part( 'header/unread-messages', null, array( 'type' => $type ) );
@@ -479,7 +481,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
-			$page = ! empty( $_GET['page'] ) ? intval( $_GET['page'] ) : 1;
+			$page = ! empty( $_POST['page'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['page'] ) ) ) : 1;
 
 			ob_start();
 			bp_get_template_part( 'header/unread-notifications', null, array( 'page' => $page ) );
@@ -656,6 +658,70 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $response;
+		}
+
+		/**
+		 * Marks BuddyBoss notifications as read.
+		 *
+		 * This function handles AJAX requests to mark notifications as read for the logged-in user.
+		 * It checks if the notification component is active and verifies the AJAX nonce.
+		 *
+		 * Depending on the provided notification ID, it either marks a specific notification or all notifications as read.
+		 * Finally, it returns the updated unread notifications count and content via a JSON response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_mark_notification_read() {
+
+			if ( ! bp_is_active( 'notifications' ) ) {
+				return;
+			}
+
+			check_ajax_referer( 'bb-readylaunch', 'nonce' );
+
+			if ( ! function_exists( 'buddypress' ) && ! bp_is_active( 'notifications' ) ) {
+				return;
+			}
+
+			$id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
+			if ( 'all' !== $id ) {
+				$id = intval( $id );
+			}
+
+			$user_id = bp_loggedin_user_id();
+			if ( ! empty( $id ) && 'all' !== $id ) {
+				BP_Notifications_Notification::update(
+					array( 'is_new' => 0 ),
+					array( 'id' => $id )
+				);
+			} elseif ( 'all' === $id ) {
+				$notification_ids = BP_Notifications_Notification::get(
+					array(
+						'user_id'           => $user_id,
+						'order_by'          => 'date_notified',
+						'sort_order'        => 'DESC',
+						'page'              => 1,
+						'per_page'          => 25,
+						'update_meta_cache' => false,
+					)
+				);
+				if ( $notification_ids ) {
+					foreach ( $notification_ids as $notification_id ) {
+						BP_Notifications_Notification::update(
+							array( 'is_new' => 0 ),
+							array( 'id' => $notification_id->id )
+						);
+					}
+				}
+			}
+			$response = array();
+			ob_start();
+			bp_get_template_part( 'header/unread-notifications' );
+			$response['contents']            = ob_get_clean();
+			$response['total_notifications'] = bp_notifications_get_unread_notification_count( $user_id );
+			wp_send_json_success( $response );
 		}
 	}
 
