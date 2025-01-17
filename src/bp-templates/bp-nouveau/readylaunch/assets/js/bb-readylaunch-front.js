@@ -32,6 +32,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 			$( document ).on( 'click', '.bbrl-option-wrap__action', this.openMoreOption.bind( this ) );
 			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
+			$( document ).on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 		},
 
 		/**
@@ -198,17 +199,44 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * [openMoreOption Open more options dropdown]
+		 * @param event
+		 */
 		openMoreOption: function ( e ) {
 			e.preventDefault();
 
 			$(  e.currentTarget ).closest( '.bbrl-option-wrap' ).toggleClass( 'active' );
 		},
 
+		/**
+		 * [closeMoreOption close more options dropdown]
+		 * @param event
+		 */
 		closeMoreOption: function ( e ) {
 			if ( ! $( e.target ).closest( '.bbrl-option-wrap' ).length ) {
 				$( '.bbrl-option-wrap' ).removeClass( 'active' );
 			}
+
+			var container = $( '.header-aside div.menu-item-has-children *' );
+			if ( !container.is( e.target ) ) {
+				$( '.header-aside div.menu-item-has-children' ).removeClass( 'selected' );
+			}
+		},
+		
+		
+		/**
+		 * Show header notification dropdowns
+		 * @param event
+		 */
+		showHeaderNotifications: function ( e ) {
+			e.preventDefault();
+			var current = $( e.currentTarget ).closest( 'div.menu-item-has-children' );
+			current.siblings( '.selected' ).removeClass( 'selected' );
+			current.toggleClass( 'selected' );
 		}
+
+
 	};
 
 	// Launch BP Zoom.

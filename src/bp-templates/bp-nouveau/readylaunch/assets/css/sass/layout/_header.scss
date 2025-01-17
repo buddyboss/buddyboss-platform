@@ -268,6 +268,7 @@
 			}
 		}
 
+		&:has(.bbrl-option-wrap.active),
 		&:hover {
 			background-color: var(--bbrl-background-secondary-hover-color);
 		}
@@ -449,9 +450,11 @@
 
 			&__action {
 				padding: 0;
+				background-color: var(--bbrl-background-secondary-hover-color);
 			}
 		}
 
+		.bbrl-option-wrap.active,
 		&:hover .bbrl-option-wrap {
 			opacity: 1;
 			visibility: visible;

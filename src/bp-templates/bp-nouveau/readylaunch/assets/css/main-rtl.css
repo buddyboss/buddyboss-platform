@@ -721,7 +721,7 @@ img.emojioneemoji {
   background-color: var(--bbrl-background-color);
   padding: var(--bbrl-space-100);
   border-radius: var(--bbrl-radius-md);
-  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
   width: 195px;
   position: absolute;
   left: 0;
@@ -1015,7 +1015,7 @@ body.admin-bar .bbrl-header {
   right: auto;
 }
 
-.notification-list > li:hover {
+.notification-list > li:has(.bbrl-option-wrap.active), .notification-list > li:hover {
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
@@ -1185,8 +1185,10 @@ body.admin-bar .bbrl-header {
 
 .notification-listing .notification-list li .bbrl-option-wrap__action {
   padding: 0;
+  background-color: var(--bbrl-background-secondary-hover-color);
 }
 
+.notification-listing .notification-list li .bbrl-option-wrap.active,
 .notification-listing .notification-list li:hover .bbrl-option-wrap {
   opacity: 1;
   visibility: visible;
