@@ -117,9 +117,18 @@
 				text-decoration: none;
 			}
 
+			.message-view-all-link {
+				margin-left: auto;
+				margin-right: var(--bbrl-space-200);
+				border-radius: var(--bbrl-radius-full);
+				font-size: 0.85rem;
+			}
+
 			.mark-read-all {
 				color: var(--bbrl-text-color);
 				cursor: pointer;
+				background: transparent;
+				border: 0;
 
 				[class*="bb-icons-rl"] {
 					opacity: 0.6;

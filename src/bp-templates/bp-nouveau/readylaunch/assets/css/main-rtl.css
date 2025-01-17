@@ -810,9 +810,18 @@ img.emojioneemoji {
   text-decoration: none;
 }
 
+.header-aside .notification-wrap .notification-header .message-view-all-link {
+  margin-right: auto;
+  margin-left: var(--bbrl-space-200);
+  border-radius: var(--bbrl-radius-full);
+  font-size: 0.85rem;
+}
+
 .header-aside .notification-wrap .notification-header .mark-read-all {
   color: var(--bbrl-text-color);
   cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 
 .header-aside .notification-wrap .notification-header .mark-read-all [class*="bb-icons-rl"] {
