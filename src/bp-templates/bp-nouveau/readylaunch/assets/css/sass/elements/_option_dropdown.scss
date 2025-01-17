@@ -1,0 +1,56 @@
+.bbrl-option-wrap {
+	position: relative;
+
+	&__action {
+		color: var(--bbrl-icon-tertiary-color);
+		font-size: 24px;
+	}
+
+	&.active .bbrl-option-dropdown {
+		visibility: visible;
+		opacity: 1;
+	}
+
+}
+
+.bbrl-option-dropdown {
+	background-color: var(--bbrl-background-color);
+	padding: var(--bbrl-space-100);
+	border-radius: var(--bbrl-radius-md);
+	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+	width: 195px;
+	position: absolute;
+	right: 0;
+	top: 100%;
+	list-style: none;
+	z-index: var(--bbrl-z-index-dropdown);
+	visibility: hidden;
+
+	&__button {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		background-color: transparent;
+		border: 0;
+		width: 100%;
+		padding: var(--bbrl-space-100);
+		cursor: pointer;
+		text-align: left;
+
+		[class*="bb-icons-rl"] {
+			color: var(--bbrl-icon-secondary-color);
+			font-size: 20px;
+		}
+
+		&:hover {
+			background-color: var(--bbrl-background-secondary-hover-color);
+			border-radius: var(--bbrl-radius-md);
+		}
+	}
+
+	&__label {
+		color: var(--bbrl-icon-secondary-color);
+		font-size: 0.85rem;
+		font-weight: 500;
+	}
+}

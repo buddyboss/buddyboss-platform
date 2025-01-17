@@ -30,6 +30,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.notification-link, .load-more a', this.bbHandleLoadMore.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
+			$( document ).on( 'click', '.bbrl-option-wrap__action', this.openMoreOption.bind( this ) );
+			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
 		},
 
 		/**
@@ -195,6 +197,18 @@ window.bp = window.bp || {};
 				$( '.notification-header .mark-read-all' ).fadeOut();
 			}
 		},
+
+		openMoreOption: function ( e ) {
+			e.preventDefault();
+
+			$(  e.currentTarget ).closest( '.bbrl-option-wrap' ).toggleClass( 'active' );
+		},
+
+		closeMoreOption: function ( e ) {
+			if ( ! $( e.target ).closest( '.bbrl-option-wrap' ).length ) {
+				$( '.bbrl-option-wrap' ).removeClass( 'active' );
+			}
+		}
 	};
 
 	// Launch BP Zoom.

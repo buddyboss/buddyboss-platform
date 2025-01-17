@@ -22,10 +22,29 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 				<span><?php echo $description; ?></span>
 				<span class="posted"><?php bp_the_notification_time_since(); ?></span>
 			</div>
-			<div class="actions">
-				<a class="mark-read action-unread primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_html_e( 'Mark as Read', 'buddyboss' ); ?>" data-notification-id="<?php bp_the_notification_id(); ?>">
-					<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
-				</a>
+			<div class="bbrl-option-wrap">
+				<button class="bbrl-option-wrap__action bbrl-button bbrl-button--tertiaryText" data-bp-tooltip-pos="top" data-bp-tooltip="<?php esc_html_e( 'More options', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-bold bb-icons-rl-dots-three"></i>
+					<span class="screen-reader-text"><?php esc_html_e( 'More Options', 'buddyboss' ); ?></span>
+				</button>
+				<ul class="bbrl-option-dropdown">
+					<li>
+						<button class="bbrl-option-dropdown__button action-unread" data-notification-id="<?php bp_the_notification_id(); ?>">
+							<i class="bb-icons-rl-check"></i>
+							<div class="bbrl-option-dropdown__label">
+								<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>
+							</div>
+						</button>
+					</li>
+					<li>
+						<button class="bbrl-option-dropdown__button action-delete" data-notification-id="<?php bp_the_notification_id(); ?>">
+							<i class="bb-icons-rl-trash"></i>
+							<div class="bbrl-option-dropdown__label">
+								<?php esc_html_e( 'Delete notifications', 'buddyboss' ); ?>
+							</div>
+						</button>
+					</li>
+				</ul>
 			</div>
 		</li>
 	<?php

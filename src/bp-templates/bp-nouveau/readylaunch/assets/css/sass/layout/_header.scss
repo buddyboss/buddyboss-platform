@@ -229,7 +229,7 @@
 	overflow-x: hidden;
 	padding: var(--bbrl-space-100);
 
-	li {
+	>  li {
 		display: flex;
 		align-items: center;
 		padding: var(--bbrl-space-200);
@@ -426,23 +426,10 @@
 			}
 		}
 
-		.dashicons-visibility {
-			color: var(--bbrl-icon-tertiary-color);
-			font-size: 1rem;
-			font-family: bb-icons-rl !important;
-			opacity: 0;
-			visibility: hidden;
-			height: auto;
-
-			&:before {
-				content: "\e220";
-			}
-		}
-
 		&.unread:before {
-			right: 17px;
+			right: 27px;
 			bottom: 50%;
-			margin-bottom: -3px;
+			margin-bottom: -1px;
 		}
 
 		.actions {
@@ -456,7 +443,16 @@
 			}
 		}
 
-		&:hover .dashicons-visibility {
+		.bbrl-option-wrap {
+			opacity: 0;
+			visibility: hidden;
+
+			&__action {
+				padding: 0;
+			}
+		}
+
+		&:hover .bbrl-option-wrap {
 			opacity: 1;
 			visibility: visible;
 		}
