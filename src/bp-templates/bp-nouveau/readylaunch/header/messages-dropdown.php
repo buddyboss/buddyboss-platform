@@ -41,7 +41,6 @@ $unread_message_count = messages_get_unread_count();
 				<?php esc_html_e( 'Unread', 'buddyboss' ); ?>
 			</button>
 		</div>
-		
 
 
 		<div class="header-ajax-container">
