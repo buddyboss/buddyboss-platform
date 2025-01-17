@@ -249,11 +249,11 @@ window.bp = window.bp || {};
 		markNotificationRead: function ( e ) {
 			e.preventDefault();
 
-			var $this          = $( e.currentTarget );
-			var notificationId = $this.data( 'notification-id' );
+			var $this                  = $( e.currentTarget );
+			var notificationId         = $this.data( 'notification-id' );
+			var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 			if ( 'all' !== notificationId ) {
 				$this.closest( '.read-item' ).fadeOut();
-				var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
 				bp.Readylaunch.markAsReadNotifications.push( notificationId );
 			}
@@ -261,7 +261,6 @@ window.bp = window.bp || {};
 			if ( 'all' === notificationId ) {
 				var mainContainerID = $this.closest( '.notification-wrap' );
 				mainContainerID.find( '.header-ajax-container .notification-list' ).addClass( 'loading' );
-				var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 
 				$.ajax( {
 					type   : 'POST',
