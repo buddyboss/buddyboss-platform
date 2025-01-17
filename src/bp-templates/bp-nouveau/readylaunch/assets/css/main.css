@@ -285,10 +285,10 @@ button[data-balloon] {
   letter-spacing: -0.24px;
   content: attr(data-balloon);
   color: var(--bbrl-text-white-color);
-  padding: var(--bbrl-space-100) var(--bbrl-space-200);
+  padding: 6px 12px;
   background-color: var(--bbrl-background-black-color);
   border-radius: var(--bbrl-radius-md);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   line-height: 1.2;
   text-align: center;
   line-height: 1.3;

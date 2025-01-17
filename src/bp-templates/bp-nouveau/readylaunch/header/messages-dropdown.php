@@ -26,7 +26,7 @@ $unread_message_count = messages_get_unread_count();
 		<header class="notification-header flex items-center justify-between">
 			<h2 class="title"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></h2>
 			<div class="notification-header-actions">
-				<a href="#" class="notification-header-action">
+				<a href="#" class="notification-header-action" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'New Thread', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-bold bb-icons-rl-plus"></i>
 					<span class="screen-reader-text"><?php esc_html_e( 'New Thread', 'buddyboss' ); ?></span>
 				</a>

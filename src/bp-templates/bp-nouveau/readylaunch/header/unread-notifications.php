@@ -23,7 +23,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 				<span class="posted"><?php bp_the_notification_time_since(); ?></span>
 			</div>
 			<div class="bbrl-option-wrap">
-				<button class="bbrl-option-wrap__action bbrl-button bbrl-button--tertiaryText" data-bp-tooltip-pos="top" data-bp-tooltip="<?php esc_html_e( 'More options', 'buddyboss' ); ?>">
+				<button class="bbrl-option-wrap__action bbrl-button bbrl-button--tertiaryText" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'More options', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-bold bb-icons-rl-dots-three"></i>
 					<span class="screen-reader-text"><?php esc_html_e( 'More Options', 'buddyboss' ); ?></span>
 				</button>
