@@ -145,6 +145,7 @@
 			nav {
 				border-bottom: 1px solid $bp-border-color;
 				border-top: 1px solid $bp-border-color;
+				margin-bottom: 20px;
 
 				@include box-shadow( 0 2px 12px 0 $off-white);
 			}
