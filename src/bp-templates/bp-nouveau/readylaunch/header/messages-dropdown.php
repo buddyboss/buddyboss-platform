@@ -34,14 +34,13 @@ $unread_message_count = messages_get_unread_count();
 		</header>
 
 		<div class="notification-header-tabs">
-			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action active ">
+			<button class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action active" data-tab="all">
 				<?php esc_html_e( 'All', 'buddyboss' ); ?>
 			</button>
-			<button href="#" class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action">
+			<button class="bbrl-button bbrl-button--tertiaryText notification-header-tab-action" data-tab="unread">
 				<?php esc_html_e( 'Unread', 'buddyboss' ); ?>
 			</button>
 		</div>
-
 
 		<div class="header-ajax-container">
 			<ul class="notification-list"></ul>

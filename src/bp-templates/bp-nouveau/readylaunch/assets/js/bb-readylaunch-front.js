@@ -29,7 +29,7 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function () {
 			$( '.bb-nouveau-list' ).scroll( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
-			$( document ).on( 'click', '.notification-link, .load-more a', this.bbHandleLoadMore.bind( this ) );
+			$( document ).on( 'click', '.notification-link, .notification-header-tab-action, .load-more a', this.bbHandleLoadMore.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 			$( document ).on( 'click', '.bbrl-option-wrap__action', this.openMoreOption.bind( this ) );
@@ -66,7 +66,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 
 			// Identify the clicked element.
-			var $target = $( e.target ).closest( '.notification-link, .load-more a' );
+			var $target = $( e.target ).closest( '.notification-link, .notification-header-tab-action, .load-more a' );
 			if ( ! $target.length ) {
 				return;
 			}
@@ -77,8 +77,10 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// If the Dropdown going to be closed, then return.
-			if ( $container.hasClass( 'selected' ) ) {
+			var tabType = $target.data( 'tab' );
+			// Bypass the below condition if the message tab is clicked.
+			// If the Dropdown is going to be closed, then return.
+			if ( ! tabType && $container.hasClass( 'selected' ) ) {
 				return;
 			}
 
@@ -101,6 +103,7 @@ window.bp = window.bp || {};
 				page       : page,
 				isMessage  : isMessage,
 				containerId: containerId,
+				tabType    : isMessage ? tabType : '',
 			} );
 		},
 
@@ -118,6 +121,7 @@ window.bp = window.bp || {};
 				page       : 1,
 				isMessage  : false,
 				containerId: '',
+				tabType    : '',
 			};
 			var settings = $.extend( defaults, options );
 
@@ -134,6 +138,10 @@ window.bp = window.bp || {};
 				nonce : bbReadyLaunchFront.nonce,
 				page  : settings.page,
 			};
+
+			if ( settings.isMessage ) {
+				data.tab = settings.tabType;
+			}
 
 			$.ajax( {
 				type   : 'POST',
