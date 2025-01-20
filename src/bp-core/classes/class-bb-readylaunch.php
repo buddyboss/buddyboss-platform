@@ -671,7 +671,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					}
 
 					// Indicate that the notifications were processed.
-					$response['markAsReadProcessed'] = true;
+					$response['mark_as_read_processed'] = true;
 				}
 				ob_start();
 				bp_get_template_part( 'header/unread-notifications' );

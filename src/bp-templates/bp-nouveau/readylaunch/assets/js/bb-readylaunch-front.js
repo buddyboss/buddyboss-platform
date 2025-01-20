@@ -186,7 +186,7 @@ window.bp = window.bp || {};
 			this.bpInjectNotifications( e, data );
 
 			// Check if markAsReadNotifications were processed.
-			if ( data.markAsReadProcessed ) {
+			if ( data.mark_as_read_processed ) {
 				bp.Readylaunch.markAsReadNotifications = []; // Clear the array.
 			}
 		},
