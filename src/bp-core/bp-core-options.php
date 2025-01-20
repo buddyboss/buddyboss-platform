@@ -190,8 +190,7 @@ function bp_get_default_options() {
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
 
-		'bb-member-directory-count'                  => false,
-		'bb-group-directory-count'                   => false,
+		'bb-enable-content-counts'                   => false,
 		'bb-enable-sso'                              => false,
 	);
 
@@ -2760,15 +2759,15 @@ function bb_is_send_ajax_request() {
 }
 
 /**
- * Determines whether to show group counts at the top of the page for All Groups & My Groups.
+ * Determines whether to show counts at the pages like Memebers, Groups etc.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param bool $default Optional. Default value to use if the option is not set. Default false.
  *
- * @return bool True if group counts should be displayed, false otherwise.
+ * @return bool True if counts should be displayed, false otherwise.
  */
-function bb_group_directory_count_enable( $default = false ) {
+function bb_enable_content_counts( $default = false ) {
 
 	/**
 	 * Filter to modify the behavior of the group counts feature.
@@ -2778,29 +2777,7 @@ function bb_group_directory_count_enable( $default = false ) {
 	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
 	 * @param bool $default     The default value if the setting is not configured. Default false.
 	 */
-	return (bool) apply_filters( 'bb_group_directory_count_enable', (bool) bp_get_option( 'bb-group-directory-count', $default ) );
-}
-
-/**
- * Determines whether to show member counts at the top of the page for All Members, My Connections & Followers.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $default Optional. Default value to use if the option is not set. Default false.
- *
- * @return bool True if group counts should be displayed, false otherwise.
- */
-function bb_member_directory_count_enable( $default = false ) {
-
-	/**
-	 * Filter to modify the behavior of the member counts feature.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $show_counts Whether to show member counts. Default is the value retrieved from the settings.
-	 * @param bool $default     The default value if the setting is not configured. Default false.
-	 */
-	return (bool) apply_filters( 'bb_member_directory_count_enable', (bool) bp_get_option( 'bb-member-directory-count', $default ) );
+	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bp_get_option( 'bb-enable-content-counts', $default ) );
 }
 
 /**

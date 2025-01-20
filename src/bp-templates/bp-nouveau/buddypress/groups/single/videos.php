@@ -9,7 +9,7 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
-if ( 'videos' === bp_current_action() ) {
+if ( bb_enable_content_counts() && 'videos' === bp_current_action() ) {
 	?>
 	<div class="bb-item-count">
 		<?php

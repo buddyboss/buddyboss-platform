@@ -474,6 +474,14 @@
 
 	.item-body > & {
 		margin-bottom: 20px;
+
+		&.bb-group-members-count {
+			margin-top: 20px;
+
+			+ .members-search {
+				float: left;
+			}
+		}
 	}
 }
 

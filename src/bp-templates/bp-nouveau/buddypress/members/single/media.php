@@ -11,7 +11,7 @@
 $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
 $count                = false;
-if ( bp_is_user() ) {
+if ( bp_is_user() && bb_enable_content_counts() ) {
 	?>
 	<div class="bb-item-count">
 		<?php

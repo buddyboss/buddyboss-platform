@@ -229,8 +229,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$args['class'] = 'group-gride-style group-layout-options ' . esc_attr( $pro_class );
 		$this->add_field( 'bb-group-directory-layout-grid-style', esc_html__( 'Grid Style', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_group_grid_style', 'radio', $args );
 
-		$this->add_field( 'bb-group-directory-count', esc_html__( 'Group Count', 'buddyboss' ), array( $this, 'bb_admin_setting_group_directory_count' ), 'checkbox' );
-
 		// Admin Settings for Settings > Groups > Group Directories > Elements.
 		$args = array(
 			'class'    => 'group-elements ' . esc_attr( $pro_class ),
@@ -363,21 +361,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		);
 	}
 
-	/**
-	 * Displays the setting field for enabling or disabling group counts in the admin area.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function bb_admin_setting_group_directory_count() {
-		?>
-		<input id="bb-group-directory-count" name="bb-group-directory-count" type="checkbox" value="1" <?php checked( bb_group_directory_count_enable() ); ?> />
-		<label for="bb-group-directory-count">
-			<?php esc_html_e( 'Show group counts at the top of the page for All Groups & My Groups.', 'buddyboss' ); ?>
-		</label>
-		<?php
-	}
 }
 
 return new BP_Admin_Setting_Groups();

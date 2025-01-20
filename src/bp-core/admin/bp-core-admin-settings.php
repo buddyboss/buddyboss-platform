@@ -3970,3 +3970,24 @@ function bb_admin_setting_callback_enable_activity_search() {
 	<label for="bb_enable_activity_search"><?php esc_html_e( 'Allow members to search activity posts', 'buddyboss' ); ?></label>
 	<?php
 }
+
+/*
+ * Setting for enable content count.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_admin_setting_callback_content_counts() {
+   ?>
+
+   <input id="bb-enable-content-counts" name="bb-enable-content-counts" type="checkbox" value="1" <?php checked( bb_enable_content_counts() ); ?> />
+   <label for="bb-enable-content-counts"><?php esc_html_e( 'Enable content counts across your site', 'buddyboss' ); ?></label>
+   <p class="description">
+	   <?php
+	   esc_html_e(
+		   'Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance.',
+		   'buddyboss'
+	   );
+	   ?>
+   </p>
+   <?php
+}

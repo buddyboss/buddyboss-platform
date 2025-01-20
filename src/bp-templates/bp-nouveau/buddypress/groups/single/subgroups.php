@@ -16,7 +16,7 @@ if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 	bp_get_template_part( 'common/nav/directory-nav' );
 }
 
-if ( 'subgroups' === bp_current_action() && bb_group_directory_count_enable() ) {
+if ( 'subgroups' === bp_current_action() && bb_enable_content_counts() ) {
 	?>
 	<div class="bb-item-count">
 		<?php

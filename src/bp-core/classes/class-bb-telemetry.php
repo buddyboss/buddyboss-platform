@@ -430,8 +430,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bb_activity_filter_options',
 					'bb_activity_sorting_options',
 					'bb_enable_activity_search',
-					'bb-member-directory-count',
-					'bb-group-directory-count',
+					'bb-enable-content-counts',
 				)
 			);
 

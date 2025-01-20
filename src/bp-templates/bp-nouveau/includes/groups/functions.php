@@ -605,7 +605,7 @@ function bp_nouveau_groups_screen_invites_restriction() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_groups_directory_nav_items() {
-	$enable_count = bb_group_directory_count_enable();
+	$enable_count = bb_enable_content_counts();
 	$nav_items    = array();
 
 	$nav_items['all'] = array(

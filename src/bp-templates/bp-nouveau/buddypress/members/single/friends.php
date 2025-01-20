@@ -12,7 +12,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
 bp_get_template_part( 'members/single/parts/item-subnav' );
 
-if ( 'my-friends' === $bp_current_action && bb_member_directory_count_enable() ) {
+if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
 	?>
 		<div class="bb-item-count">
 			<?php
