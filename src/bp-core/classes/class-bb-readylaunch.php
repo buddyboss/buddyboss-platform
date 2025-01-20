@@ -677,12 +677,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 									<?php
 								}
 								?>
-								<div class="item">
-									<div class="item-title">
-										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
-											<?php echo esc_html( $item['title'] ); ?>
-										</a>
-									</div>
+								<div class="item-title">
+									<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+										<?php echo esc_html( $item['title'] ); ?>
+									</a>
 								</div>
 							</li>
 							<?php
