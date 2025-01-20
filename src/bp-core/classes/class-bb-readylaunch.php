@@ -93,8 +93,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
 
-				add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12 );
-				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12 );
+				add_filter( 'heartbeat_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
+				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
 
 				add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
 			}
@@ -649,8 +649,30 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return array The modified heartbeat response array with unread notifications' data.
 		 */
-		public function bb_heartbeat_unread_notifications( $response = array() ) {
-			if ( bp_loggedin_user_id() && bp_is_active( 'notifications' ) ) {
+		public function bb_heartbeat_unread_notifications( $response = array(), $data = array() ) {
+			if (
+				bp_loggedin_user_id() &&
+				bp_is_active( 'notifications' ) &&
+				! empty( $data['bb_fetch_header_notifications'] )
+			) {
+
+				// Handle the mark_as_read_notifications.
+				if (
+					isset( $data['mark_as_read_notifications'] ) &&
+					is_array( $data['mark_as_read_notifications'] )
+				) {
+					$ids = array_map( 'intval', $data['mark_as_read_notifications'] );
+
+					foreach ( $ids as $id ) {
+						BP_Notifications_Notification::update(
+							array( 'is_new' => 0 ),
+							array( 'id' => $id )
+						);
+					}
+
+					// Indicate that the notifications were processed.
+					$response['markAsReadProcessed'] = true;
+				}
 				ob_start();
 				bp_get_template_part( 'header/unread-notifications' );
 				$response['unread_notifications'] = ob_get_clean();

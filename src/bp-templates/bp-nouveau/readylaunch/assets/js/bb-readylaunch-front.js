@@ -164,21 +164,31 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [bbHeartbeatSend description]
+		 * [bbHeartbeatSend description] - Handles the request to the server.
 		 * @param e
 		 * @param data
 		 */
 		bbHeartbeatSend: function ( e, data ) {
 			data.bb_fetch_header_notifications = true;
+
+			// Include the markAsReadNotifications if there are any pending.
+			if ( bp.Readylaunch.markAsReadNotifications.length > 0 ) {
+				data.mark_as_read_notifications = bp.Readylaunch.markAsReadNotifications;
+			}
 		},
 
 		/**
-		 * [bbHeartbeatTick description]
+		 * [bbHeartbeatTick description] - Handles the response from the server.
 		 * @param e
 		 * @param data
 		 */
 		bbHeartbeatTick: function ( e, data ) {
 			this.bpInjectNotifications( e, data );
+
+			// Check if markAsReadNotifications were processed.
+			if ( data.markAsReadProcessed ) {
+				bp.Readylaunch.markAsReadNotifications = []; // Clear the array.
+			}
 		},
 
 		/**
