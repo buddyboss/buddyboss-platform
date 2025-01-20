@@ -249,6 +249,12 @@ img.emojioneemoji {
   min-height: calc(100vh - 71px);
 }
 
+.bb-reaylaunch-template {
+  font-family: Inter, serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 @media screen and (max-width: 992px) {
   .site.bb-readylaunch {
     margin-right: 0;
@@ -1056,6 +1062,7 @@ body.admin-bar .bbrl-header {
 }
 
 .bb-readylaunch-menu li.current-menu-item a {
+  font-weight: 600;
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
