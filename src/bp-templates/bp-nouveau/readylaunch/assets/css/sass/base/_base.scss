@@ -153,11 +153,36 @@ img.emojioneemoji {
 
 // Layout
 .site.bb-readylaunch {
+	background-color: var(--bbrl-background-secondary-color);
 	margin-left: 300px;
 	margin-top: 71px;
 	padding: 0 30px;
+	min-height: calc(100vh - 71px);
+}
 
-	body.admin-bar & {
-		margin-top: 103px;
+@media screen and (max-width: $lg) {
+
+	.site.bb-readylaunch {
+		margin-left: 0;
+		margin-top: 66px;
+	}
+}
+
+// WP Admin Bar breakpoints
+@media screen and (max-width: 782px) {
+
+	body.admin-bar {
+
+		.site.bb-readylaunch {
+			margin-top: 66px;
+			min-height: calc(100vh - 66px);
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	#wpadminbar {
+		position: fixed;
 	}
 }

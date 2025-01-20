@@ -242,13 +242,31 @@ img.emojioneemoji {
 }
 
 .site.bb-readylaunch {
+  background-color: var(--bbrl-background-secondary-color);
   margin-right: 300px;
   margin-top: 71px;
   padding: 0 30px;
+  min-height: calc(100vh - 71px);
 }
 
-body.admin-bar .site.bb-readylaunch {
-  margin-top: 103px;
+@media screen and (max-width: 992px) {
+  .site.bb-readylaunch {
+    margin-right: 0;
+    margin-top: 66px;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar .site.bb-readylaunch {
+    margin-top: 66px;
+    min-height: calc(100vh - 66px);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #wpadminbar {
+    position: fixed;
+  }
 }
 
 .divider {
@@ -1524,9 +1542,6 @@ body.admin-bar .bbrl-header {
 @media screen and (max-width: 782px) {
   body.admin-bar .bbrl-header {
     top: 46px;
-  }
-  body.admin-bar .site.bb-readylaunch {
-    margin-top: 71px;
   }
   body.admin-bar .bb-readylaunch-mobile-menu__wrap {
     top: 46px;
