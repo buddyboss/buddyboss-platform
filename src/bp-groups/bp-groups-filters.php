@@ -1710,6 +1710,7 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
 		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
 
+		$user_id    = bp_loggedin_user_id();
 		$group_args = array(
 			'user_id'  => bp_loggedin_user_id(),
 			'per_page' => 6,
@@ -1732,6 +1733,11 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 					'permalink' => bp_get_group_permalink(),
 					'thumbnail' => $thumbnail_url,
 				);
+			}
+
+			if ( BP_Groups_Member::total_group_count( $user_id ) > 6 ) {
+				$group_data['has_more_items'] = true;
+				$group_data['show_more_link'] = bp_get_groups_directory_permalink();
 			}
 		}
 	}

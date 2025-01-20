@@ -653,9 +653,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
-			$title      = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss' );
-			$items      = ! empty( $args['items'] ) ? $args['items'] : array();
-			$error_text = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss' );
+			$title          = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss' );
+			$items          = ! empty( $args['items'] ) ? $args['items'] : array();
+			$error_text     = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss' );
+			$has_more_items = ! empty( $args['has_more_items'] ) ? $args['has_more_items'] : false;
 			?>
 			<div class="bb-rl-list">
 				<h2><?php echo esc_html( $title ); ?></h2>
@@ -668,14 +669,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							?>
 							<li>
 								<?php
-								if ( ! empty( $item['thumbnail'] ) ) { ?>
+								if ( ! empty( $item['thumbnail'] ) ) {
+									?>
 									<div class="item-avatar">
 										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
 											<?php echo $item['thumbnail']; ?>
 										</a>
 									</div>
 									<?php
-								} ?>
+								}
+								?>
 								<div class="item">
 									<div class="item-title">
 										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
@@ -684,6 +687,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 									</div>
 								</div>
 							</li>
+							<?php
+						}
+						if ( ! empty( $has_more_items ) ) {
+							?>
+							<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
+								<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
+							</a>
 							<?php
 						}
 						?>
