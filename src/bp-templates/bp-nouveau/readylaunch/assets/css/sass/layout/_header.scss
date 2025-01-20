@@ -111,6 +111,11 @@
 
 			.notification-link {
 				background-color: var(--bbrl-background-secondary-hover-color);
+
+				> span:before,
+				> span:after {
+					display: none;
+				}
 			}
 		}
 
@@ -499,8 +504,10 @@
 		position: fixed;
 		left: -100%;
 		top: 0;
+		bottom: 0;
 		width: 100%;
 		overflow: auto;
+		transition: all 0.35s ease-in-out;
 
 		body.admin-bar & {
 			top: 32px;
@@ -545,15 +552,22 @@
 		}
 	}
 
-	.header-aside .bbrl-header-search {
-		background-color: transparent !important;
-		margin-right: 0;
-		padding: 0;
-		border: 0;
-		outline: none !important;
+	.header-aside {
 
-		[class*="bb-icons-rl"] {
-			font-size: 19px;
+		.user-wrap {
+			display: none;
+		}
+
+		.bbrl-header-search {
+			background-color: transparent !important;
+			margin-right: 0;
+			padding: 0;
+			border: 0;
+			outline: none !important;
+
+			[class*="bb-icons-rl"] {
+				font-size: 19px;
+			}
 		}
 	}
 
@@ -566,11 +580,17 @@
 			font-size: 0.95rem;
 			display: block;
 			padding: var(--bbrl-space-100) var(--bbrl-space-200);
+			border-radius: var(--bbrl-radius-sm);
+
+			&:hover {
+				background-color: var(--bbrl-background-secondary-hover-color);
+			}
 		}
 	}
 
 }
 
+// WP Admin Bar breakpoint
 @media screen and (max-width: 782px) {
 
 	body.admin-bar {
@@ -585,6 +605,25 @@
 
 		.bb-readylaunch-mobile-menu__wrap {
 			top: 46px;
+		}
+	}
+}
+
+@media screen and (max-width: $sm) {
+
+	.header-aside {
+
+		.notification-wrap {
+
+			&.messages-wrap .notification-dropdown {
+				right: -30px;
+			}
+
+			.notification-dropdown {
+				right: -10px;
+				min-width: 280px;
+				max-width: 280px;
+			}
 		}
 	}
 }

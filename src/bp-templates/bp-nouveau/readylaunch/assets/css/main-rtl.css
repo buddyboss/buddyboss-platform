@@ -1,4 +1,5 @@
 @charset "UTF-8";
+/* CSS variables */
 :root {
   --bbrl-primary-color: #4946fe;
   --bbrl-secondary-color: #dde4ff;
@@ -93,6 +94,7 @@
 /*.dark-mode {
 
 }*/
+/* SCSS Variables */
 *,
 *::before,
 *::after {
@@ -150,6 +152,10 @@ h6 {
 html,
 body {
   min-height: 100%;
+}
+
+a {
+  text-decoration: none;
 }
 
 .hidden {
@@ -299,7 +305,6 @@ button[data-balloon] {
   background-color: var(--bbrl-background-black-color);
   border-radius: var(--bbrl-radius-md);
   font-size: 0.85rem;
-  line-height: 1.2;
   text-align: center;
   line-height: 1.3;
   position: absolute;
@@ -760,21 +765,6 @@ button[data-balloon] {
   border-color: var(--color-disabled-border);
 }
 
-/*
-
-<!-- Large Buttons -->
-<button class="ellipsis-button ellipsis-button--large ellipsis-button--default">...</button>
-<button class="ellipsis-button ellipsis-button--large ellipsis-button--disabled" disabled>...</button>
-
-<!-- Medium Buttons -->
-<button class="ellipsis-button ellipsis-button--medium ellipsis-button--default">...</button>
-<button class="ellipsis-button ellipsis-button--medium ellipsis-button--disabled" disabled>...</button>
-
-<!-- Small Buttons -->
-<button class="ellipsis-button ellipsis-button--small ellipsis-button--default">...</button>
-<button class="ellipsis-button ellipsis-button--small ellipsis-button--disabled" disabled>...</button>
-
-*/
 .bbrl-button {
   display: inline-flex;
   align-items: center;
@@ -1008,6 +998,10 @@ body.admin-bar .bbrl-header {
   top: 32px;
 }
 
+.bbrl-header .bbrl-left-panel-mobile {
+  display: none;
+}
+
 .bb-readylaunch-menu {
   display: flex;
   align-items: center;
@@ -1033,7 +1027,6 @@ body.admin-bar .bbrl-header {
   background-color: transparent;
   color: var(--bbrl-text-color);
   border: none;
-  text-decoration: none;
 }
 
 .bb-readylaunch-menu li a:hover {
@@ -1046,6 +1039,10 @@ body.admin-bar .bbrl-header {
 
 .bb-readylaunch-menu li.current-menu-item a {
   background-color: var(--bbrl-background-secondary-hover-color);
+}
+
+.bb-readylaunch-mobile-menu__wrap {
+  display: none;
 }
 
 .bbrl-site-branding img.bb-logo {
@@ -1095,6 +1092,11 @@ body.admin-bar .bbrl-header {
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
+.header-aside .notification-wrap.selected .notification-link > span:before,
+.header-aside .notification-wrap.selected .notification-link > span:after {
+  display: none;
+}
+
 .header-aside .notification-wrap .notification-header {
   padding: var(--bbrl-space-100) 0;
   margin: var(--bbrl-space-100) var(--bbrl-space-200);
@@ -1110,7 +1112,6 @@ body.admin-bar .bbrl-header {
 .header-aside .notification-wrap .notification-header .notification-header-action {
   color: var(--bbrl-icon-secondary-color);
   font-size: 1rem;
-  text-decoration: none;
 }
 
 .header-aside .notification-wrap .notification-header .message-view-all-link {
@@ -1135,7 +1136,6 @@ body.admin-bar .bbrl-header {
   display: inline-block;
   padding: 4px;
   border-radius: var(--bbrl-radius-md);
-  text-decoration: none;
 }
 
 .header-aside .notification-link > span {
@@ -1285,11 +1285,6 @@ body.admin-bar .bbrl-header {
   width: calc(100% - 50px);
 }
 
-.notification-list .notification-content .notification-users a {
-  color: inherit;
-  text-decoration: none;
-}
-
 .notification-list .notification-content .posted {
   color: var(--bbrl-text-tertiary-color);
   font-size: 0.85rem;
@@ -1383,7 +1378,6 @@ body.admin-bar .bbrl-header {
 
 .notification-listing .notification-list li .notification-content a {
   color: var(--bbrl-text-color);
-  text-decoration: none;
 }
 
 .notification-listing .notification-list li .notification-content .posted {
@@ -1430,6 +1424,124 @@ body.admin-bar .bbrl-header {
 .notification-listing .notification-list li:hover .bbrl-option-wrap {
   opacity: 1;
   visibility: visible;
+}
+
+@media screen and (max-width: 992px) {
+  .bbrl-header-container {
+    justify-content: flex-start;
+  }
+  .bbrl-header {
+    padding: var(--bbrl-space-200);
+  }
+  .bbrl-header .bbrl-left-panel-mobile {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    margin-left: var(--bbrl-space-200);
+  }
+  .bbrl-left-panel,
+  .bb-readylaunch-menu,
+  .bbrl-header-search__label {
+    display: none;
+  }
+  .bbrl-site-branding {
+    margin-left: auto;
+  }
+  .bb-readylaunch-mobile-menu__wrap {
+    background-color: var(--bbrl-background-color);
+    display: block;
+    position: fixed;
+    right: -100%;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    overflow: auto;
+    transition: all 0.35s ease-in-out;
+  }
+  body.admin-bar .bb-readylaunch-mobile-menu__wrap {
+    top: 32px;
+  }
+  body.bb-mobile-menu-open .bb-readylaunch-mobile-menu__wrap {
+    right: 0;
+  }
+  .bbrl-mobile-panel-header {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    padding: var(--bbrl-space-200) var(--bbrl-space-300);
+    margin-bottom: var(--bbrl-space-200);
+  }
+  .bbrl-mobile-user-name {
+    color: var(--bbrl-text-color);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .bbrl-my-account-link a {
+    color: var(--bbrl-text-tertiary-color);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .bbrl-close-panel-mobile {
+    color: var(--bbrl-text-tertiary-color);
+    font-size: 20px;
+  }
+  .bbrl-mobile-user-link {
+    margin-left: var(--bbrl-space-200);
+  }
+  .bbrl-mobile-user-link img {
+    max-width: 50px;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--bbrl-radius-full);
+  }
+  .header-aside .user-wrap {
+    display: none;
+  }
+  .header-aside .bbrl-header-search {
+    background-color: transparent !important;
+    margin-left: 0;
+    padding: 0;
+    border: 0;
+    outline: none !important;
+  }
+  .header-aside .bbrl-header-search [class*="bb-icons-rl"] {
+    font-size: 19px;
+  }
+  .bb-readylaunch-mobile-menu {
+    list-style: none;
+    padding: 0 var(--bbrl-space-200);
+  }
+  .bb-readylaunch-mobile-menu li a {
+    color: var(--bbrl-text-color);
+    font-size: 0.95rem;
+    display: block;
+    padding: var(--bbrl-space-100) var(--bbrl-space-200);
+    border-radius: var(--bbrl-radius-sm);
+  }
+  .bb-readylaunch-mobile-menu li a:hover {
+    background-color: var(--bbrl-background-secondary-hover-color);
+  }
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar .bbrl-header {
+    top: 46px;
+  }
+  body.admin-bar .site.bb-readylaunch {
+    margin-top: 71px;
+  }
+  body.admin-bar .bb-readylaunch-mobile-menu__wrap {
+    top: 46px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .header-aside .notification-wrap.messages-wrap .notification-dropdown {
+    left: -30px;
+  }
+  .header-aside .notification-wrap .notification-dropdown {
+    left: -10px;
+    min-width: 280px;
+    max-width: 280px;
+  }
 }
 
 .bbrl-left-panel {
