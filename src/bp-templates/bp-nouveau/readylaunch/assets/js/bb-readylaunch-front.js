@@ -35,11 +35,11 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bbrl-option-wrap__action', this.openMoreOption.bind( this ) );
 			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
 			$( document ).on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
+			$( document ).on( 'click', '.bbrl-left-panel-mobile, .bbrl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 			$( window ).on( 'beforeunload', this.beforeUnload.bind( this ) );
 		},
-
 		/**
 		 * [scrollHeaderDropDown description]
 		 *
@@ -274,6 +274,12 @@ window.bp = window.bp || {};
 			) {
 				bp.Readylaunch.beforeUnload();
 			}
+		},
+
+		toggleMobileMenu: function( e ) {
+			e.preventDefault();
+
+			$( 'body' ).toggleClass( 'bb-mobile-menu-open' );
 		},
 
 		/**
