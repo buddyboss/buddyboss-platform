@@ -499,13 +499,31 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 	$course_data['integration'] = 'sfwd-courses';
 
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
-		$courses_ids = learndash_user_get_enrolled_courses(
-			bp_loggedin_user_id(),
-			array(
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			$courses_ids = learndash_user_get_enrolled_courses(
+				bp_loggedin_user_id(),
+				array(
+					'nopaging'       => false,
+					'posts_per_page' => 5,
+				)
+			);
+		} else {
+			$query_args = array(
+				'post_type'      => 'sfwd-courses',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
 				'nopaging'       => false,
 				'posts_per_page' => 5,
-			)
-		);
+			);
+
+			$query = new WP_Query( $query_args );
+			if ( $query instanceof WP_Query ) {
+				$courses_ids = $query->posts;
+			}
+		}
 
 		if ( ! empty( $courses_ids ) ) {
 			foreach ( $courses_ids as $post_id ) {
