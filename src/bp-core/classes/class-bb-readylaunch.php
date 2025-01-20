@@ -435,7 +435,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/css/main{$min}.css", array(), bp_get_version() );
 
-			wp_enqueue_style( 'bb-icons-rl', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 
 			wp_localize_script(
 				'bb-readylaunch-front',
@@ -447,12 +447,64 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 		}
 
+		/**
+		 * Dequeue all styles and scripts except the ones with the allowed suffix.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function bb_dequeue_styles() {
-			wp_dequeue_style( 'buddyboss-theme-css' );
-			wp_dequeue_style( 'buddyboss-theme-template' );
-			wp_dequeue_style( 'buddyboss-theme-buddypress' );
-			wp_dequeue_style( 'buddyboss-theme-forums' );
-			wp_dequeue_script( 'buddyboss-theme-main-js' );
+			global $wp_styles, $wp_scripts;
+
+			$allow_suffix = array(
+				'bb-readylaunch',
+				'query-monitor',
+			);
+
+			// Dequeue and deregister scripts.
+			foreach ( $wp_scripts->queue as $handle ) {
+				$src = $wp_scripts->registered[ $handle ]->src ?? '';
+
+				if (
+					false === strpos( $src, '/wp-includes/' ) &&
+					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
+				) {
+					wp_dequeue_script( $handle );
+					wp_deregister_script( $handle );
+				}
+			}
+
+			// Dequeue and deregister styles.
+			foreach ( $wp_styles->queue as $handle ) {
+				$src = $wp_styles->registered[ $handle ]->src ?? '';
+
+				if (
+					false === strpos( $src, '/wp-includes/' ) &&
+					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
+				) {
+					wp_dequeue_style( $handle );
+					wp_deregister_style( $handle );
+				}
+			}
+		}
+
+		/**
+		 * Function to check if the handle has allowed suffix.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $handle       The script handle.
+		 * @param array  $allow_suffix The allowed suffix.
+		 *
+		 * @return bool True if the handle has an allowed suffix, false otherwise.
+		 */
+		private function bb_has_allowed_suffix( $handle, $allow_suffix ) {
+			foreach ( $allow_suffix as $suffix ) {
+				if ( false !== strpos( $handle, $suffix ) ) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		/**
