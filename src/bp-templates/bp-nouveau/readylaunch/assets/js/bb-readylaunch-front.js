@@ -77,6 +77,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// If the Dropdown going to be closed, then return.
+			if ( $container.hasClass( 'selected' ) ) {
+				return;
+			}
+
 			// Check if there's already a request in progress.
 			if ( $container.data( 'loading' ) ) {
 				return; // Exit if an AJAX request is already in progress.
