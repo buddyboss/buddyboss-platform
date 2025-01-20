@@ -5,17 +5,17 @@
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	border: 1px dashed var(--bbrl-border-secondary-color);
-	border-radius: var(--bbrl-radius-md);
+	border: 1px dashed var(--bb-rl-border-secondary-color);
+	border-radius: var(--bb-rl-radius-md);
 
 	&--dot {
 
 		&::after {
 			content: "";
 			display: block;
-			width: var(--bbrl-space-100); // 8px
-			height: var(--bbrl-space-100); // 8px
-			background-color: var(--bbrl-border-secondary-color);
+			width: var(--bb-rl-space-100); // 8px
+			height: var(--bb-rl-space-100); // 8px
+			background-color: var(--bb-rl-border-secondary-color);
 			border-radius: 50%;
 		}
 	}
@@ -26,8 +26,8 @@
 			content: "";
 			display: block;
 			width: 1px;
-			height: var(--bbrl-space-400); // 32px
-			background-color: var(--bbrl-border-secondary-color);
+			height: var(--bb-rl-space-400); // 32px
+			background-color: var(--bb-rl-border-secondary-color);
 		}
 	}
 }

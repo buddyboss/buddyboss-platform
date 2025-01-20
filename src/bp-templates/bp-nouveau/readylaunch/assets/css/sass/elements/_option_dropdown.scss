@@ -1,29 +1,29 @@
-.bbrl-option-wrap {
+.bb-rl-option-wrap {
 	position: relative;
 
 	&__action {
-		color: var(--bbrl-icon-tertiary-color);
+		color: var(--bb-rl-icon-tertiary-color);
 		font-size: 24px;
 	}
 
-	&.active .bbrl-option-dropdown {
+	&.active .bb-rl-option-dropdown {
 		visibility: visible;
 		opacity: 1;
 	}
 
 }
 
-.bbrl-option-dropdown {
-	background-color: var(--bbrl-background-color);
-	padding: var(--bbrl-space-100);
-	border-radius: var(--bbrl-radius-md);
+.bb-rl-option-dropdown {
+	background-color: var(--bb-rl-background-color);
+	padding: var(--bb-rl-space-100);
+	border-radius: var(--bb-rl-radius-md);
 	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 	width: 195px;
 	position: absolute;
 	right: 0;
 	top: 100%;
 	list-style: none;
-	z-index: var(--bbrl-z-index-dropdown);
+	z-index: var(--bb-rl-z-index-dropdown);
 	visibility: hidden;
 
 	&__button {
@@ -33,23 +33,23 @@
 		background-color: transparent;
 		border: 0;
 		width: 100%;
-		padding: var(--bbrl-space-100);
+		padding: var(--bb-rl-space-100);
 		cursor: pointer;
 		text-align: left;
 
 		[class*="bb-icons-rl"] {
-			color: var(--bbrl-icon-secondary-color);
+			color: var(--bb-rl-icon-secondary-color);
 			font-size: 20px;
 		}
 
 		&:hover {
-			background-color: var(--bbrl-background-secondary-hover-color);
-			border-radius: var(--bbrl-radius-md);
+			background-color: var(--bb-rl-background-secondary-hover-color);
+			border-radius: var(--bb-rl-radius-md);
 		}
 	}
 
 	&__label {
-		color: var(--bbrl-icon-secondary-color);
+		color: var(--bb-rl-icon-secondary-color);
 		font-size: 0.85rem;
 		font-weight: 500;
 	}

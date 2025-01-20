@@ -32,10 +32,10 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.notification-link, .notification-header-tab-action, .load-more a', this.bbHandleLoadMore.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
-			$( document ).on( 'click', '.bbrl-option-wrap__action', this.openMoreOption.bind( this ) );
+			$( document ).on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
 			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
 			$( document ).on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
-			$( document ).on( 'click', '.bbrl-left-panel-mobile, .bbrl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
+			$( document ).on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 			$( window ).on( 'beforeunload', this.beforeUnload.bind( this ) );
@@ -125,9 +125,9 @@ window.bp = window.bp || {};
 			// Show a loading indicator.
 			var mainContainerID = $( '#' + settings.containerId );
 			if ( settings.page > 1 ) {
-				mainContainerID.find( '.load-more' ).before( '<i class="bbrl-loader"></i>' );
+				mainContainerID.find( '.load-more' ).before( '<i class="bb-rl-loader"></i>' );
 			} else {
-				mainContainerID.find( '.notification-list' ).html( '<i class="bbrl-loader"></i>' );
+				mainContainerID.find( '.notification-list' ).html( '<i class="bb-rl-loader"></i>' );
 			}
 
 			var data = {
@@ -146,8 +146,8 @@ window.bp = window.bp || {};
 
 					if ( response.success && response.data ) {
 						var container = mainContainerID.find( '.notification-list' );
-						if ( container.find( '.bbrl-loader' ).has( '.bbrl-loader' ) ) {
-							container.find( '.bbrl-loader' ).remove( '.bbrl-loader' );
+						if ( container.find( '.bb-rl-loader' ).has( '.bb-rl-loader' ) ) {
+							container.find( '.bb-rl-loader' ).remove( '.bb-rl-loader' );
 						}
 						if ( settings.page > 1 ) {
 							container.find( '.load-more' ).replaceWith( response.data );
@@ -233,7 +233,7 @@ window.bp = window.bp || {};
 		openMoreOption: function ( e ) {
 			e.preventDefault();
 
-			$(  e.currentTarget ).closest( '.bbrl-option-wrap' ).toggleClass( 'active' );
+			$(  e.currentTarget ).closest( '.bb-rl-option-wrap' ).toggleClass( 'active' );
 		},
 
 		/**
@@ -241,8 +241,8 @@ window.bp = window.bp || {};
 		 * @param event
 		 */
 		closeMoreOption: function ( e ) {
-			if ( ! $( e.target ).closest( '.bbrl-option-wrap' ).length ) {
-				$( '.bbrl-option-wrap' ).removeClass( 'active' );
+			if ( ! $( e.target ).closest( '.bb-rl-option-wrap' ).length ) {
+				$( '.bb-rl-option-wrap' ).removeClass( 'active' );
 			}
 
 			var container = $( '.header-aside div.menu-item-has-children *' );

@@ -1,7 +1,7 @@
 // Variables
 // -----------------------------------------
 
-$balloon-bg: var(--bb-tooltip-background) !default;
+$balloon-bg: var(--bb-rl-background-black-color) !default;
 $balloon-base-size: 0.85rem !default;
 $balloon-arrow-height: 6px;
 
@@ -88,17 +88,17 @@ button[data-balloon] {
 		@include normalized-text;
 
 		content: attr(data-balloon);
-		color: var(--bbrl-text-white-color);
+		color: var(--bb-rl-text-white-color);
 		padding: 6px 12px;
-		background-color: var(--bbrl-background-black-color);
-		border-radius: var(--bbrl-radius-md);
+		background-color: var(--bb-rl-background-black-color);
+		border-radius: var(--bb-rl-radius-md);
 		font-size: 0.85rem; // 13px
 		text-align: center;
 		line-height: 1.3;
 		position: absolute;
 		white-space: nowrap;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 22%);
-		z-index: var(--bbrl-z-index-dropdown);
+		z-index: var(--bb-rl-z-index-dropdown);
 	}
 
 	&:before {
@@ -477,8 +477,8 @@ button[data-balloon] {
 [data-bp-tooltip] {
 
 	&:after {
-		background: var(--bb-tooltip-background);
-		color: var(--bbrl-text-secondary-color);
+		background: var(--bb-rl-background-black-color);
+		color: var(--bb-rl-text-secondary-color);
 	}
 
 	&:before {
