@@ -87,8 +87,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ) );
 
-				// dequeue theme styles
+				// Dequeue theme/plugins styles.
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), 99999 );
+				// Dequeue bbpress activity js.
+				add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), 99999 );
 
 				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -504,6 +506,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
+			return false;
+		}
+
+		/**
+		 * Dequeue bbPress activity js.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool False to prevent bbPress activity js from being enqueued.
+		 */
+		public function bb_dequeue_bbpress_activity_js() {
 			return false;
 		}
 
