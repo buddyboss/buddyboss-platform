@@ -1715,6 +1715,11 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 			'user_id'  => bp_loggedin_user_id(),
 			'per_page' => 6,
 		);
+		if ( ! empty( $user_id ) ) {
+			$count = BP_Groups_Member::total_group_count( $user_id );
+		} else {
+			$count = bp_get_total_group_count();
+		}
 
 		if ( bp_has_groups( $group_args ) ) {
 			while ( bp_groups() ) {
@@ -1735,7 +1740,7 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 				);
 			}
 
-			if ( BP_Groups_Member::total_group_count( $user_id ) > 6 ) {
+			if ( $count > 6 ) {
 				$group_data['has_more_items'] = true;
 				$group_data['show_more_link'] = bp_get_groups_directory_permalink();
 			}
