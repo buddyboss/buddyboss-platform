@@ -656,21 +656,36 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			) {
 
 				// Handle the mark_as_read_notifications.
-				if (
-					isset( $data['mark_as_read_notifications'] ) &&
-					is_array( $data['mark_as_read_notifications'] )
-				) {
-					$ids = array_map( 'intval', $data['mark_as_read_notifications'] );
-
+				if ( ! empty( $data['mark_as_read_notifications'] ) ) {
+					$ids = array_map( 'intval', explode( ',', $data['mark_as_read_notifications'] ) );
 					foreach ( $ids as $id ) {
 						BP_Notifications_Notification::update(
 							array( 'is_new' => 0 ),
-							array( 'id' => $id )
+							array(
+								'id'      => $id,
+								'user_id' => bp_loggedin_user_id(),
+							)
 						);
 					}
 
 					// Indicate that the notifications were processed.
 					$response['mark_as_read_processed'] = true;
+				}
+
+				// Handle the delete_notifications.
+				if ( ! empty( $data['mark_as_delete_notifications'] ) ) {
+					$ids = array_map( 'intval', explode( ',', $data['mark_as_delete_notifications'] ) );
+					foreach ( $ids as $id ) {
+						BP_Notifications_Notification::delete(
+							array(
+								'id'      => $id,
+								'user_id' => bp_loggedin_user_id(),
+							)
+						);
+					}
+
+					// Indicate that the notifications were processed.
+					$response['mark_as_delete_processed'] = true;
 				}
 				ob_start();
 				bp_get_template_part( 'header/unread-notifications' );
@@ -702,21 +717,39 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
-			$id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
+			$user_id = bp_loggedin_user_id();
+
+			$id = isset( $_POST['read_notification_ids'] ) ? sanitize_text_field( $_POST['read_notification_ids'] ) : '';
 			if ( 'all' !== $id ) {
-				if ( is_array( $_POST['id'] ) ) {
-					$id = array_map( 'intval', $_POST['id'] );
+				if ( false !== strpos( $id, ',' ) ) {
+					$id = array_map( 'intval', explode( ',', $id ) );
 				} else {
-					$id = intval( $_POST['id'] );
+					$id = intval( $id );
 				}
 			}
 
-			$user_id = bp_loggedin_user_id();
+			$deleted_notification_ids = isset( $_POST['deleted_notification_ids'] ) ? sanitize_text_field( $_POST['deleted_notification_ids'] ) : '';
+			$deleted_notification_ids = array_map( 'intval', explode( ',', $deleted_notification_ids ) );
+
+			if ( ! empty( $deleted_notification_ids ) ) {
+				foreach ( $deleted_notification_ids as $deleted_notification_id ) {
+					BP_Notifications_Notification::delete(
+						array(
+							'id'      => $deleted_notification_id,
+							'user_id' => $user_id,
+						)
+					);
+				}
+			}
+
 			if ( ! empty( $id ) && 'all' !== $id ) {
 				foreach ( $id as $notification_id ) {
 					BP_Notifications_Notification::update(
 						array( 'is_new' => 0 ),
-						array( 'id' => $notification_id )
+						array(
+							'id'      => $notification_id,
+							'user_id' => $user_id,
+						)
 					);
 				}
 			} elseif ( 'all' === $id ) {
@@ -734,7 +767,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					foreach ( $notification_ids as $notification_id ) {
 						BP_Notifications_Notification::update(
 							array( 'is_new' => 0 ),
-							array( 'id' => $notification_id->id )
+							array(
+								'id'      => $notification_id->id,
+								'user_id' => $user_id,
+							)
 						);
 					}
 				}

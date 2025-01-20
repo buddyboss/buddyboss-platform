@@ -36,6 +36,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
 			$( document ).on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
+			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 			$( window ).on( 'beforeunload', this.beforeUnload.bind( this ) );
 		},
 
@@ -181,7 +182,12 @@ window.bp = window.bp || {};
 
 			// Include the markAsReadNotifications if there are any pending.
 			if ( bp.Readylaunch.markAsReadNotifications.length > 0 ) {
-				data.mark_as_read_notifications = bp.Readylaunch.markAsReadNotifications;
+				data.mark_as_read_notifications = bp.Readylaunch.markAsReadNotifications.join( ',' );
+			}
+
+			// Include the markAsDeleteNotifications if there are any pending.
+			if ( bp.Readylaunch.deletedNotifications.length > 0 ) {
+				data.mark_as_delete_notifications = bp.Readylaunch.deletedNotifications.join( ',' );
 			}
 		},
 
@@ -196,6 +202,11 @@ window.bp = window.bp || {};
 			// Check if markAsReadNotifications were processed.
 			if ( data.mark_as_read_processed ) {
 				bp.Readylaunch.markAsReadNotifications = []; // Clear the array.
+			}
+
+			// Check if markAsDeleteNotifications were processed.
+			if ( data.mark_as_delete_processed ) {
+				bp.Readylaunch.deletedNotifications = []; // Clear the array.
 			}
 		},
 
@@ -309,11 +320,31 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Delete notification.
+		 * @param e
+		 */
+		markNotificationDelete: function ( e ) {
+			e.preventDefault();
+
+			var $this                  = $( e.currentTarget );
+			var notificationId         = $this.data( 'notification-id' );
+			var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+			if ( 'all' !== notificationId ) {
+				$this.closest( '.read-item' ).fadeOut();
+				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
+				bp.Readylaunch.deletedNotifications.push( notificationId );
+			}
+		},
+
+		/**
 		 * [beforeUnload description]
 		 * @return {boolean} [description]
 		 */
 		beforeUnload: function () {
-			if ( 0 === bp.Readylaunch.markAsReadNotifications.length ) {
+			if (
+				0 === bp.Readylaunch.markAsReadNotifications.length &&
+				0 === bp.Readylaunch.deletedNotifications.length
+			) {
 				return false;
 			}
 
@@ -321,9 +352,10 @@ window.bp = window.bp || {};
 				type   : 'POST',
 				url    : bbReadyLaunchFront.ajax_url,
 				data   : {
-					action: 'bb_mark_notification_read',
-					nonce : bbReadyLaunchFront.nonce,
-					id    : bp.Readylaunch.markAsReadNotifications,
+					action                  : 'bb_mark_notification_read',
+					nonce                   : bbReadyLaunchFront.nonce,
+					read_notification_ids   : bp.Readylaunch.markAsReadNotifications.join( ',' ),
+					deleted_notification_ids: bp.Readylaunch.deletedNotifications.join( ',' ),
 				},
 				success: function ( response ) {
 					if ( response.success ) {
@@ -340,7 +372,8 @@ window.bp = window.bp || {};
 
 			// Clear the array after processing.
 			bp.Readylaunch.markAsReadNotifications = [];
-		}
+			bp.Readylaunch.deletedNotifications    = [];
+		},
 	};
 
 	// Launch BP Zoom.
