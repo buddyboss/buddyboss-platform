@@ -483,7 +483,7 @@ function bb_support_learndash_permalinks_nested_urls( $ld_rewrite_rules, $ld_rew
 }
 
 /**
- * Function to get the user enrolled course.
+ * Function to get the user enrolled course or all courses.
  *
  * This function retrieves the courses a user is enrolled in using the LearnDash plugin.
  * It fetches courses and includes the course title, permalink, and thumbnail.
@@ -502,7 +502,7 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 		$user_id = bp_loggedin_user_id();
 		if ( $user_id ) {
 			$courses_ids = learndash_user_get_enrolled_courses(
-				bp_loggedin_user_id(),
+				$user_id,
 				array(
 					'nopaging'       => false,
 					'posts_per_page' => 5,
@@ -519,10 +519,8 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 				'posts_per_page' => 5,
 			);
 
-			$query = new WP_Query( $query_args );
-			if ( $query instanceof WP_Query ) {
-				$courses_ids = $query->posts;
-			}
+			$query       = new WP_Query( $query_args );
+			$courses_ids = ! empty( $query->posts ) ? $query->posts : array();
 		}
 
 		if ( ! empty( $courses_ids ) ) {
