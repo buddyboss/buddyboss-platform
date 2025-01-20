@@ -1669,3 +1669,17 @@ body.admin-bar .bb-rl-left-panel {
   text-decoration: none;
   outline: none;
 }
+
+.bb-rl-left-panel .bb-rl-show-more {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.bb-rl-left-panel .bb-rl-show-more i {
+  font-size: 16px;
+}

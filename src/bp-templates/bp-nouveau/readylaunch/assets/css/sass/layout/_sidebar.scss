@@ -102,4 +102,18 @@
 			}
 		}
 	}
+
+	.bb-rl-show-more {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		color: var(--bb-rl-text-tertiary-color);
+		font-size: 0.85rem;
+		font-weight: 500;
+
+		i {
+			font-size: 16px;
+		}
+	}
 }

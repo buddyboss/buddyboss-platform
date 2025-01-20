@@ -692,6 +692,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						if ( ! empty( $has_more_items ) ) {
 							?>
 							<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
+								<i class="bb-icons-rl-caret-down"></i>
 								<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
 							</a>
 							<?php
