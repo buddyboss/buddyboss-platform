@@ -8,8 +8,7 @@ $excerpt          = '';
 $last_message_id  = 0;
 $first_message_id = 0;
 
-$type = ! empty( $args['type'] ) ? $args['type'] : 'unread';
-if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . get_current_user_id() . '&type=' . $type ) ) :
+if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . get_current_user_id() ) ) :
 
 	while ( bp_message_threads() ) :
 		bp_message_thread();

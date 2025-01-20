@@ -78,10 +78,8 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			var tabType = $target.data( 'tab' );
-			// Bypass the below condition if the message tab is clicked.
 			// If the Dropdown is going to be closed, then return.
-			if ( ! tabType && $container.hasClass( 'selected' ) ) {
+			if ( $container.hasClass( 'selected' ) ) {
 				return;
 			}
 
@@ -104,7 +102,6 @@ window.bp = window.bp || {};
 				page       : page,
 				isMessage  : isMessage,
 				containerId: containerId,
-				tabType    : isMessage ? tabType : '',
 			} );
 		},
 
@@ -122,7 +119,6 @@ window.bp = window.bp || {};
 				page       : 1,
 				isMessage  : false,
 				containerId: '',
-				tabType    : '',
 			};
 			var settings = $.extend( defaults, options );
 
@@ -139,10 +135,6 @@ window.bp = window.bp || {};
 				nonce : bbReadyLaunchFront.nonce,
 				page  : settings.page,
 			};
-
-			if ( settings.isMessage ) {
-				data.tab = settings.tabType;
-			}
 
 			$.ajax( {
 				type   : 'POST',

@@ -465,6 +465,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
 			$type = ! empty( $_POST['tab'] ) ? sanitize_text_field( wp_unslash( $_POST['tab'] ) ) : 'all';
+
 			ob_start();
 			bp_get_template_part( 'header/unread-messages', null, array( 'type' => $type ) );
 			$messages = ob_get_clean();
