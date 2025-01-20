@@ -191,6 +191,7 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		bp_has_members( bp_ajax_querystring( 'members' ) );
 		$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 		remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
+	}
 
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 		$counts = bp_total_follow_counts();
