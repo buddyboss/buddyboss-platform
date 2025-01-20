@@ -1092,6 +1092,11 @@ body.admin-bar .bbrl-header {
   background-color: var(--bbrl-background-secondary-hover-color);
 }
 
+.header-aside .notification-wrap.selected .notification-link > span:before,
+.header-aside .notification-wrap.selected .notification-link > span:after {
+  display: none;
+}
+
 .header-aside .notification-wrap .notification-header {
   padding: var(--bbrl-space-100) 0;
   margin: var(--bbrl-space-100) var(--bbrl-space-200);
@@ -1448,8 +1453,10 @@ body.admin-bar .bbrl-header {
     position: fixed;
     left: -100%;
     top: 0;
+    bottom: 0;
     width: 100%;
     overflow: auto;
+    transition: all 0.35s ease-in-out;
   }
   body.admin-bar .bb-readylaunch-mobile-menu__wrap {
     top: 32px;
@@ -1485,6 +1492,9 @@ body.admin-bar .bbrl-header {
     object-fit: contain;
     border-radius: var(--bbrl-radius-full);
   }
+  .header-aside .user-wrap {
+    display: none;
+  }
   .header-aside .bbrl-header-search {
     background-color: transparent !important;
     margin-right: 0;
@@ -1504,6 +1514,10 @@ body.admin-bar .bbrl-header {
     font-size: 0.95rem;
     display: block;
     padding: var(--bbrl-space-100) var(--bbrl-space-200);
+    border-radius: var(--bbrl-radius-sm);
+  }
+  .bb-readylaunch-mobile-menu li a:hover {
+    background-color: var(--bbrl-background-secondary-hover-color);
   }
 }
 
@@ -1516,6 +1530,17 @@ body.admin-bar .bbrl-header {
   }
   body.admin-bar .bb-readylaunch-mobile-menu__wrap {
     top: 46px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .header-aside .notification-wrap.messages-wrap .notification-dropdown {
+    right: -30px;
+  }
+  .header-aside .notification-wrap .notification-dropdown {
+    right: -10px;
+    min-width: 280px;
+    max-width: 280px;
   }
 }
 
