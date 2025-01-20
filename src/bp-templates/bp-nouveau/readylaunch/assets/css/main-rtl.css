@@ -235,6 +235,16 @@ img.emojioneemoji {
   }
 }
 
+.site.bb-readylaunch {
+  margin-right: 300px;
+  margin-top: 71px;
+  padding: 0 30px;
+}
+
+body.admin-bar .site.bb-readylaunch {
+  margin-top: 103px;
+}
+
 .divider {
   position: relative;
   display: flex;

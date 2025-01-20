@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 <body <?php body_class( 'bb-reaylaunch-template' ); ?>>
 <?php wp_body_open(); ?>
+<?php bp_get_template_part( 'sidebar/left-sidebar' ); ?>
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bbrl-header">
 		<div class="bbrl-container bbrl-header-container flex justify-between items-center">
@@ -68,5 +69,4 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	</header>
-	<?php bp_get_template_part( 'sidebar/left-sidebar' ); ?>
 	<main id="primary" class="site-main">
