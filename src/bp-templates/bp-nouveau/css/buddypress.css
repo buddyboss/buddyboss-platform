@@ -529,6 +529,14 @@ body.buddypress article.page > .entry-header .entry-title {
   float: left;
 }
 
+body.directory .main-navs + .bb-item-count {
+  margin-bottom: 10px;
+}
+
+body.directory .main-navs + .bb-item-count ~ #media-stream .bp-feedback {
+  margin-top: 15px;
+}
+
 .item-body:has(.bb-item-count + .subnav-filters) .bb-item-count,
 .item-body-inner:has(.bb-item-count + .subnav-filters) .bb-item-count {
   float: left;
