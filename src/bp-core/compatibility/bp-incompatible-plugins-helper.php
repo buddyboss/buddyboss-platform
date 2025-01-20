@@ -1181,7 +1181,7 @@ function mpcs_add_buddyboss_style( $allow_handle ) {
 add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
 
 /**
- * Function to get the user enrolled courses.
+ * Function to get the user enrolled course or all courses.
  *
  * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
  * It fetches the courses for the logged-in user and returns an array containing course details.
@@ -1197,18 +1197,37 @@ function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
 	$course_data['integration'] = 'lifterlms';
 
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
-		$student = llms_get_student( bp_loggedin_user_id() );
-		if ( ! $student ) {
-			return $args;
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$student = llms_get_student( bp_loggedin_user_id() );
+			if ( ! $student ) {
+				return $args;
+			}
+
+			$results = $student->get_courses(
+				array(
+					'status' => 'enrolled',
+					'limit'  => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'course',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
+
+			$query              = new WP_Query( $query_args );
+			$results['results'] = ! empty( $query->posts ) ? $query->posts : array();
 		}
 
-		$results = $student->get_courses(
-			array(
-				'status' => 'enrolled',
-				'limit'  => 5,
-			)
-		);
-
+		// Prepare course data.
 		if ( ! empty( $results['results'] ) ) {
 			foreach ( $results['results'] as $post_id ) {
 				$thumbnail_url = '';
