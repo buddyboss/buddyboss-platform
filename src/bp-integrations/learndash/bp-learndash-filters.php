@@ -498,9 +498,11 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 
 	$course_data['integration'] = 'sfwd-courses';
 
+	// Check if sidebar data is enabled and courses sidebar is enabled.
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
 		$user_id = bp_loggedin_user_id();
 		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
 			$courses_ids = learndash_user_get_enrolled_courses(
 				$user_id,
 				array(
@@ -509,6 +511,7 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 				)
 			);
 		} else {
+			// Get all published courses if no user is logged in.
 			$query_args = array(
 				'post_type'      => 'sfwd-courses',
 				'post_status'    => 'publish',
@@ -523,6 +526,7 @@ function bb_readylaunch_middle_content_ld_courses( $args = array() ) {
 			$courses_ids = ! empty( $query->posts ) ? $query->posts : array();
 		}
 
+		// Prepare course data.
 		if ( ! empty( $courses_ids ) ) {
 			foreach ( $courses_ids as $post_id ) {
 				$thumbnail_url = '';
