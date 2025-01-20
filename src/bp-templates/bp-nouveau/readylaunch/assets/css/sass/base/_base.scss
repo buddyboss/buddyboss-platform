@@ -146,3 +146,14 @@ img.emojioneemoji {
 		transform: rotate(360deg);
 	}
 }
+
+// Layout
+.site.bb-readylaunch {
+	margin-left: 300px;
+	margin-top: 71px;
+	padding: 0 30px;
+
+	body.admin-bar & {
+		margin-top: 103px;
+	}
+}
