@@ -56,29 +56,31 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 ?>
 <div id="learndash_profile" class="<?php echo empty( $user_courses ) ? 'user-has-no-lessons' : ''; ?>">
 	<div id="course_list">
-		<div class="bb-item-count">
-		<?php
-			if ( bb_enable_content_counts() ) {
-				$count = count( $user_courses );
-				printf(
-					wp_kses(
-						/* translators: %d is the courses count */
-						_n(
-							'<span class="bb-count">%d</span> Course',
-							'<span class="bb-count">%d</span> Courses',
-							$count,
-							'buddyboss'
+		<?php if ( bb_enable_content_counts() ) {
+			?>
+			<div class="bb-item-count">
+				<?php
+					$count = count( $user_courses );
+					printf(
+						wp_kses(
+							/* translators: %d is the courses count */
+							_n(
+								'<span class="bb-count">%d</span> Course',
+								'<span class="bb-count">%d</span> Courses',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
 						),
-						array( 'span' => array( 'class' => true ) )
-					),
-					(int) $count
-				);
+						(int) $count
+					);
 
-				unset( $count );
-			}
-		?>
-		</div>
+					unset( $count );
+				?>
+			</div>
 		<?php
+		}
+
 		if ( ! empty( $user_courses ) ) {
 			foreach ( $user_courses as $course_id ) {
 				$course      = get_post( $course_id );
