@@ -471,7 +471,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
-					wp_deregister_script( $handle );
 				}
 			}
 
@@ -484,7 +483,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_style( $handle );
-					wp_deregister_style( $handle );
 				}
 			}
 		}
