@@ -189,7 +189,7 @@ window.bp = window.bp || {};
 		 * @param data
 		 */
 		bbHeartbeatTick: function ( e, data ) {
-			this.bpInjectNotifications( e, data );
+			this.bbpInjectNotifications( e, data );
 
 			// Check if markAsReadNotifications were processed.
 			if ( data.mark_as_read_processed ) {
@@ -203,11 +203,11 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [bpInjectNotifications description]
+		 * [bbpInjectNotifications description]
 		 * @param event
 		 * @param data
 		 */
-		bpInjectNotifications: function ( event, data ) {
+		bbpInjectNotifications: function ( event, data ) {
 			if ( typeof data.unread_notifications !== 'undefined' && data.unread_notifications !== '' ) {
 				$( '#header-notifications-dropdown-elem .notification-dropdown .notification-list' ).empty().html( data.unread_notifications );
 			}
