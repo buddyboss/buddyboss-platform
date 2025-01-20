@@ -1,0 +1,16 @@
+.bbrl-flex-grid {
+	display: flex;
+	flex-flow: row wrap;
+	gap: var(--bbrl-space-200);
+	list-style: none;
+
+	.item-entry {
+		flex: 0 0 calc(33.33% - (var(--bbrl-space-200) * 2 / 3));
+		max-width: calc(33.33% - (var(--bbrl-space-200) * 2 / 3));
+	}
+
+	.item-entry {
+		flex: 0 0 calc(25% - (var(--bbrl-space-200) * 3 / 4));
+		max-width: calc(25% - (var(--bbrl-space-200) * 3 / 4));
+	}
+}

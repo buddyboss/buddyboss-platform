@@ -64,10 +64,21 @@
 	display: none;
 }
 
-.bbrl-site-branding img.bb-logo {
-	max-width: 130px;
-	max-height: 32px;
-	object-fit: contain;
+.bbrl-site-branding {
+
+	img.bb-logo {
+		max-width: 130px;
+		max-height: 32px;
+		object-fit: contain;
+	}
+
+	#site-logo .bb-logo {
+		max-height: 32px;
+	}
+
+	.bb-logo-dark {
+		display: none;
+	}
 }
 
 .header-aside {
