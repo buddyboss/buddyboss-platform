@@ -88,9 +88,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ) );
 
 				// Dequeue theme/plugins styles.
-				add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), 99999 );
+				add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
 				// Dequeue bbpress activity js.
-				add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), 99999 );
+				add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), PHP_INT_MAX );
 
 				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -433,11 +433,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/js/bb-readylaunch-front{$min}.js", array( 'jquery' ), bp_get_version(), true );
+			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery' ), bp_get_version(), true );
 
-			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/css/main{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
-			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 
 			wp_localize_script(
 				'bb-readylaunch-front',
@@ -468,6 +468,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				if (
 					false === strpos( $src, '/wp-includes/' ) &&
+					false === strpos( $src, '/buddyboss-platform/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
@@ -480,6 +481,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				if (
 					false === strpos( $src, '/wp-includes/' ) &&
+					false === strpos( $src, '/buddyboss-platform/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_style( $handle );

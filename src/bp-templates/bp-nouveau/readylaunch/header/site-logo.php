@@ -13,8 +13,8 @@ $logo = get_bloginfo( 'name' );
 
 <div id="site-logo" class="bb-rl-site-branding">
 	<<?php echo $elem; ?> class="site-title">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-            <img src="<?php echo buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/images/logo.png" ?>" alt="Logo"/>
-		</a>
+	<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+		<img src="<?php echo esc_url( buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/images/logo.png" ); ?>" alt="Logo" />
+	</a>
 	</<?php echo $elem; ?>>
 </div>
