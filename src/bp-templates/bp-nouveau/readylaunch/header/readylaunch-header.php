@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php wp_head(); ?>
 </head>
 
-<body <?php body_class( 'bb-reaylaunch-template' ); ?>>
+<body <?php body_class( 'bb-readylaunch-template' ); ?>>
 <?php wp_body_open(); ?>
 <?php bp_get_template_part( 'sidebar/left-sidebar' ); ?>
 <div id="page" class="site bb-readylaunch">
