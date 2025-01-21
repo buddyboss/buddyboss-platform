@@ -2768,7 +2768,7 @@ function bb_is_send_ajax_request() {
  *
  * @return bool True if counts should be displayed, false otherwise.
  */
-function bb_enable_content_counts( $default = false ) {
+function bb_enable_content_counts( $default = true ) {
 
 	/**
 	 * Filter to modify the behavior of the group counts feature.
