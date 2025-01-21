@@ -2766,7 +2766,7 @@ function bb_is_send_ajax_request() {
  *
  * @param bool $default Optional. Default value to use if the option is not set. Default 1.
  *
- * @return int 1 if counts should be displayed, 0 otherwise.
+ * @return bool true if counts should be displayed, false otherwise.
  */
 function bb_enable_content_counts( $default = 1 ) {
 
