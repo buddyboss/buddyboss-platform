@@ -34,7 +34,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 <?php if ( bp_has_members( bp_ajax_querystring( 'members' ) ) ) : ?>
 
-	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> bbrl-flex-grid">
+	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> bb-rl-flex-grid">
 
 		<?php
 		while ( bp_members() ) :
