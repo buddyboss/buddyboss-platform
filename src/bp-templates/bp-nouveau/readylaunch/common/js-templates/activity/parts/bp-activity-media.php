@@ -8,7 +8,7 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-media">
-	<div class="dropzone closed media-dropzone" id="activity-post-media-uploader"></div>
+	<div class="dropzone closed media-dropzone" id="bb-rl-activity-post-media-uploader"></div>
 	<div class="activity-post-default-template" style="display:none;">
 		<div class="dz-preview">
 			<div class="dz-image">

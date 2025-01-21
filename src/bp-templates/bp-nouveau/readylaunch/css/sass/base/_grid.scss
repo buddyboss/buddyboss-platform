@@ -1,0 +1,15 @@
+.bb-rl-flex-grid {
+	display: flex;
+	flex-flow: row wrap;
+	gap: var(--bb-rl-space-200);
+
+	.item-entry {
+		flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
+		max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
+	}
+
+	.item-entry {
+		flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));
+		max-width: calc(25% - (var(--bb-rl-space-200) * 3 / 4));
+	}
+}

@@ -31,12 +31,12 @@
 							</a>-->
 							<div class="activity-link-preview-icons">
 								<# if ( data.link_images.length > 1 ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ) ?>" href="#" class="icon-exchange toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ) ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
 								<# } #>
 								<# if ( data.link_images.length ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ) ?>" href="#" class="icon-image-slash toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ) ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
 								<# } #>
-								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss' ) ?>" class="toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
+								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss' ) ?>" class="bb-rl-toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
 									<i class="bb-icon-check bb-icon-l"></i>
 								</a>
 							</div>

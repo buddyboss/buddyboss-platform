@@ -8,7 +8,7 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-document">
-	<div class="dropzone closed document-dropzone" id="activity-post-document-uploader"></div>
+	<div class="dropzone closed document-dropzone" id="bb-rl-activity-post-document-uploader"></div>
 	<div class="activity-post-document-template" style="display:none;">
 		<div class="dz-preview dz-file-preview">
 			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>

@@ -437,6 +437,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
+			// Register only if it's Activity component.
+			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
+				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+			}
+
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 
 			wp_localize_script(

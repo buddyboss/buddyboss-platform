@@ -70,6 +70,7 @@
 	--bb-rl-text-danger-secondary-color: #ec221f;
 
 	--bb-rl-icon-color: #0c0c0d;
+	--bb-rl-icon-primary-color: #3d3d3d;
 	--bb-rl-icon-secondary-color: #555556;
 	--bb-rl-icon-tertiary-color: #9e9e9e;
 	--bb-rl-icon-disabled-color: #b6b6b6;
@@ -88,6 +89,7 @@
 	--bb-rl-radius-full: 99px;
 
 	--bb-rl-space-0: 0;
+	--bb-rl-space-50: 4px;
 	--bb-rl-space-100: 8px;
 	--bb-rl-space-200: 16px;
 	--bb-rl-space-300: 24px;
@@ -106,6 +108,11 @@
 
 	--font-family-base: "Roboto", sans-serif;
 	--font-size-base: 16px;
+	--font-size-xs: 11px;
+	--font-size-sm: 13px;
+
+	--bb-rl-base-line-small: 20px;
+	--bb-rl-base-line: 24px;
 }
 
 /* Dark Mode Variables */

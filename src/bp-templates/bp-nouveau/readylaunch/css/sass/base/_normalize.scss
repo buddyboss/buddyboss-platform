@@ -1,0 +1,213 @@
+// Reset CSS
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	overflow-wrap: break-word;
+}
+
+p {
+	text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	text-wrap: balance;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+//  Utilities
+.hidden {
+	display: none;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.block {
+	display: block;
+}
+
+.flex {
+	display: flex;
+}
+
+.flex-row {
+	flex-direction: row;
+}
+
+.flex-row-reverse {
+	flex-direction: row-reverse;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
+.inline-flex {
+	display: inline-flex;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.justify-between {
+	justify-content: space-between;
+}
+
+.justify-around {
+	justify-content: space-around;
+}
+
+.items-start {
+	align-items: flex-start;
+}
+
+.items-center {
+	align-items: center;
+}
+
+.items-end {
+	align-items: flex-end;
+}
+
+// General Styles
+.bb-rl-container {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.bb-rl-container-inner {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.bb-rl-header-container {
+	max-width: initial;
+}
+
+.bb-rl-screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	overflow: hidden;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+img.emoji,
+img.emojioneemoji {
+	display: inline-block;
+	margin: 3px;
+	width: 24px;
+	height: 24px;
+}
+
+// Animation
+@keyframes spin {
+
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+// Layout
+.site.bb-readylaunch {
+	background-color: var(--bb-rl-background-secondary-color);
+	margin-left: 300px;
+	margin-top: 71px;
+	padding: 0;
+	min-height: calc(100vh - 71px);
+}
+
+.bb-readylaunch-template {
+	font-family: Inter, serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+@media screen and (max-width: $lg) {
+
+	.site.bb-readylaunch {
+		margin-left: 0;
+		margin-top: 66px;
+	}
+}
+
+// WP Admin Bar breakpoints
+@media screen and (max-width: 782px) {
+
+	body.admin-bar {
+
+		.site.bb-readylaunch {
+			margin-top: 66px;
+			min-height: calc(100vh - 66px);
+		}
+	}
+
+	.site.bb-readylaunch {
+		padding: 0 15px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	#wpadminbar {
+		position: fixed;
+	}
+}

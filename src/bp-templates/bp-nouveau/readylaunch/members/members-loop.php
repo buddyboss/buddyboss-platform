@@ -264,9 +264,9 @@ bp_nouveau_after_loop();
 		<div class="modal-mask bb-white bbm-model-wrap">
 			<div class="modal-wrapper">
 				<div class="modal-container">
-					<header class="bb-model-header">
+					<header class="bb-rl-bb-model-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
-						<a class="bb-close-remove-connection bb-model-close-button" href="#">
+						<a class="bb-close-remove-connection bb-rl-model-close-button" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
