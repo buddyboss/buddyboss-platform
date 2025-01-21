@@ -30,10 +30,8 @@ defined( 'ABSPATH' ) || exit;
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
-			<div id="site-logo" class="bb-rl-site-branding">
-				<?php get_template_part( 'template-parts/site-logo' ); ?>
-			</div>
 			<?php
+			bp_get_template_part( 'header/site-logo' );
 			wp_nav_menu(
 				array(
 					'theme_location' => 'bb-readylaunch',
@@ -79,7 +77,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-readylaunch-mobile-menu__wrap">
 				<?php
 				if ( is_user_logged_in() ) {
-				?>
+					?>
 					<div class="bb-rl-mobile-panel-header flex items-center justify-between">
 						<div class="bb-rl-mobile-user-wrap flex items-center">
 							<?php
@@ -92,24 +90,24 @@ defined( 'ABSPATH' ) || exit;
 								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 							</a>
 							<div>
-									<a href="<?php echo esc_url( $user_link ); ?>" class="bb-rl-mobile-user-name">
-										<?php echo esc_html( $display_name ); ?>
-									</a>
-									<?php
-									if ( function_exists( 'bp_is_active' ) && bp_is_active( 'settings' ) ) {
-										$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
-										?>
-										<div class="bb-rl-my-account-link">
-											<a href="<?php echo esc_url( $settings_link ); ?>"><?php esc_html_e( 'My Account', 'buddyboss' ); ?></a>
-										</div>
-									<?php
-									}
+								<a href="<?php echo esc_url( $user_link ); ?>" class="bb-rl-mobile-user-name">
+									<?php echo esc_html( $display_name ); ?>
+								</a>
+								<?php
+								if ( function_exists( 'bp_is_active' ) && bp_is_active( 'settings' ) ) {
+									$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
 									?>
+									<div class="bb-rl-my-account-link">
+										<a href="<?php echo esc_url( $settings_link ); ?>"><?php esc_html_e( 'My Account', 'buddyboss' ); ?></a>
+									</div>
+									<?php
+								}
+								?>
 							</div>
 						</div><!-- .bb-rl-mobile-user-wrap -->
 						<a href="#" class="bb-rl-close-panel-mobile"><i class="bb-icons-rl-bold bb-icons-rl-x"></i></a>
 					</div> <!-- .brl-mobile-panel-header -->
-				<?php
+					<?php
 				}
 				wp_nav_menu(
 					array(
