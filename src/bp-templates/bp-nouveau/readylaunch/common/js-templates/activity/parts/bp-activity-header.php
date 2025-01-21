@@ -27,7 +27,7 @@
 			<# } #>
 		<span>
 	</h3>
-	<a class="bb-model-close-button" href="#">
+	<a class="bb-rl-model-close-button" href="#">
 		<span class="bb-icon-l bb-icon-times"></span>
 	</a>
 </script>

@@ -8,7 +8,7 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-target-item">
-	<label for="bp-item-opt-{{data.id}}">
+	<label for="bb-rl-item-opt-{{data.id}}">
 		<# if ( data.selected ) { #>
 		<input type="hidden" value="{{data.id}}">
 		<# } #>
@@ -19,8 +19,8 @@
 
 		<span class="bp-item-name">{{data.name}}</span>
 
-		<span class="bb-radio-style privacy-radio <# if ( data.selected ) { #>selected<# } #>">
-			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" <# if ( data.allow_schedule ) { #> data-allow-schedule-post="{{data.allow_schedule}}" <# } #> <# if ( data.allow_polls ) { #> data-allow-polls="{{data.allow_polls}}" <# } #> value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
+		<span class="bb-radio-style bb-rl-privacy-radio <# if ( data.selected ) { #>selected<# } #>">
+			<input type="radio" id="bb-rl-item-opt-{{data.id}}" class="bb-rl-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" <# if ( data.allow_schedule ) { #> data-allow-schedule-post="{{data.allow_schedule}}" <# } #> <# if ( data.allow_polls ) { #> data-allow-polls="{{data.allow_polls}}" <# } #> value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
 		</span>
 	</label>
 </script>

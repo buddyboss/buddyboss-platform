@@ -8,7 +8,7 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-video">
-	<div class="dropzone closed video-dropzone" id="activity-post-video-uploader"></div>
+	<div class="dropzone closed video-dropzone" id="bb-rl-activity-post-video-uploader"></div>
 	<div class="activity-post-video-template" style="display:none;">
 		<div class="dz-preview dz-file-preview well" id="dz-preview-template">
 			<div class="dz-details">

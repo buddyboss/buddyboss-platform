@@ -38,7 +38,7 @@ if ( ! bp_is_active( 'media' ) ) {
 ?>
 	<h2 class="bb-rl-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss' ); ?></h2>
 	<div id="bb-rl-nouveau-activity-form-placeholder" class="bb-rl-nouveau-activity-form-placeholder-<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
-	<div id="bb-rl-nouveau-activity-form" class="bb-rlactivity-update-form<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
+	<div id="bb-rl-nouveau-activity-form" class="bb-rl-activity-update-form<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
 <?php
 /*
  * Template tag to load the JavaScript templates of the Post form UI.
