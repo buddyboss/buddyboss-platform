@@ -18,83 +18,104 @@ do_action( 'bp_before_directory_members_page' );
 ?>
 
 <div class="members-directory-wrapper">
+	<div class="bb-rl-secondary-header flex items-center">
+		<div class="bb-rl-entry-heading">
+			<h2>Members<span class="bb-rl-heading-count">(9)</span></h2>
+		</div>
+		<div class="bb-rl-sub-ctrls flex items-center">
+			<div class="bb-rl-grid-filters flex items-center">
+				<a href="" class="layout-view layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="Grid View">
+					<i class="bb-icons-rl-squares-four"></i>
+				</a>
+				<a href="" class="layout-view layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="List View">
+					<i class="bb-icons-rl-rows"></i>
+				</a>
+			</div>
+			<div class="bb-rl-action-button">
+				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i>Add member</a>
+			</div>
+		</div>
+	</div>
 
-	<?php
-	/**
-	 * Fires before the display of the members.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	do_action( 'bp_before_directory_members' );
-	?>
-
-	<div class="members-directory-container">
+	<div class="bb-rl-container-inner">
 
 		<?php
 		/**
-		 * Fires before the display of the members list tabs.
+		 * Fires before the display of the members.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		do_action( 'bp_before_directory_members_tabs' );
-
-		if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-			bp_get_template_part( 'common/nav/directory-nav' );
-		}
-
-		bp_get_template_part( 'common/search-and-filters-bar' );
-
-		/**
-		 * Fires before the display of the members content.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		do_action( 'bp_before_directory_members_content' );
+		do_action( 'bp_before_directory_members' );
 		?>
 
-		<div class="screen-content members-directory-content">
-
-			<div id="members-dir-list" class="members dir-list bbrl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
-				<?php
-				if ( $is_send_ajax_request ) {
-					echo '<div id="bp-ajax-loader">';
-					bp_nouveau_user_feedback( 'directory-members-loading' );
-					echo '</div>';
-				} else {
-					bp_get_template_part( 'members/members-loop' );
-				}
-				?>
-			</div><!-- #members-dir-list -->
+		<div class="members-directory-container">
 
 			<?php
 			/**
-			 * Fires and displays the members content.
+			 * Fires before the display of the members list tabs.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 */
-			do_action( 'bp_directory_members_content' );
+			do_action( 'bp_before_directory_members_tabs' );
+
+			if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
+				bp_get_template_part( 'common/nav/directory-nav' );
+			}
+
+			bp_get_template_part( 'common/search-and-filters-bar' );
+
+			/**
+			 * Fires before the display of the members content.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bp_before_directory_members_content' );
 			?>
-		</div><!-- // .screen-content -->
+
+			<div class="screen-content members-directory-content">
+
+				<div id="members-dir-list" class="members dir-list bbrl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'directory-members-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'members/members-loop' );
+					}
+					?>
+				</div><!-- #members-dir-list -->
+
+				<?php
+				/**
+				 * Fires and displays the members content.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bp_directory_members_content' );
+				?>
+			</div><!-- // .screen-content -->
+
+			<?php
+			/**
+			 * Fires after the display of the members content.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bp_after_directory_members_content' );
+			?>
+
+		</div>
 
 		<?php
 		/**
-		 * Fires after the display of the members content.
+		 * Fires after the display of the members.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		do_action( 'bp_after_directory_members_content' );
+		do_action( 'bp_after_directory_members' );
 		?>
-
 	</div>
-
-	<?php
-	/**
-	 * Fires after the display of the members.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	do_action( 'bp_after_directory_members' );
-	?>
 
 </div>
 

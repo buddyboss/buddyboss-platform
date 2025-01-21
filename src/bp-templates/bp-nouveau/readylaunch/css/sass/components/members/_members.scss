@@ -39,6 +39,32 @@
 			font-weight: 500;
 			margin-bottom: var(--bb-rl-space-100);
 		}
+
+		.bb-rl-item-meta-asset {
+			font-size: var(--font-size-sm);
+			line-height: var(--bb-rl-base-line-small);
+			color: var(--bb-rl-text-tertiary-color);
+
+			.separator {
+				margin: 0 6px;
+				color: var(--bb-rl-background-tertiary-color);
+			}
+		}
+
+		.member-buttons-wrap {
+			margin: var(--bb-rl-space-200) 0 0;
+
+			.primary-action button {
+
+				@include bb-rl-button;
+				@include bb-rl-button-secondary-fill;
+				font-size: var(--font-size-sm);
+			}
+		}
+
+		.bb_more_options {
+			display: none; /* Temporary hide untill design mockup is ready */
+		}
 	}
 
 	.item-list.grid {

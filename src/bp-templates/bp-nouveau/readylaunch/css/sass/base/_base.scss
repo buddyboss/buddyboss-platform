@@ -122,6 +122,11 @@ a {
 
 // General Styles
 .bb-rl-container {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.bb-rl-container-inner {
 	max-width: 1200px;
 	margin-left: auto;
 	margin-right: auto;
@@ -158,7 +163,7 @@ img.emojioneemoji {
 	background-color: var(--bb-rl-background-secondary-color);
 	margin-left: 300px;
 	margin-top: 71px;
-	padding: 0 30px;
+	padding: 0;
 	min-height: calc(100vh - 71px);
 }
 

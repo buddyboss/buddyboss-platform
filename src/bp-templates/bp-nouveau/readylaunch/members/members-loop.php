@@ -169,7 +169,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 								if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :
 
-									echo '<p class="item-meta last-activity">';
+									echo '<p class="item-meta last-activity bb-rl-item-meta-asset">';
 									if ( $enabled_joined_date ) {
 										echo wp_kses_post( $member_joined_date );
 									}
@@ -186,7 +186,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 								?>
 							</div>
 
-							<div class="flex align-items-center follow-container justify-center">
+							<div class="flex align-items-center follow-container justify-center bb-rl-item-meta-asset">
 								<?php echo wp_kses_post( $followers_count ); ?>
 							</div>
 
