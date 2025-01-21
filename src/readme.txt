@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.80 =
+* Bug: Core - Fixed color functionality and spacing issues in the WordPress Customizer when using a default theme
+* Bug: Profiles - Fixed an issue where adding or removing repeater fields in a repeater fieldset was not functioning correctly
+* Bug: Performance - Removed an unused variable from class-bp-search.php and ensured network search functionality works as expected
+
 = 2.7.70 =
 * Enhancement: Forums - Added a new hook to control forum-related notifications
 * Enhancement: Social Login - Enhanced the web social login registration process to auto-populate fields with data from the social account, allowing users to manually complete any remaining mandatory fields
