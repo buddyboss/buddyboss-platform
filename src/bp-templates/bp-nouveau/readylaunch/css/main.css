@@ -226,6 +226,15 @@ a {
   max-width: initial;
 }
 
+.bb-rl-screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
 img.emoji,
 img.emojioneemoji {
   display: inline-block;
@@ -1021,6 +1030,7 @@ button[data-balloon] {
   top: 0;
   left: 0;
   right: 0;
+  z-index: var(--bb-rl-z-index-fixed);
 }
 
 body.admin-bar .bb-rl-header {
@@ -1625,6 +1635,7 @@ body.admin-bar .bb-rl-header {
     display: none;
     list-style: none;
     padding-left: var(--bb-rl-space-300);
+    margin-top: var(--bb-rl-space-100);
   }
   .bb-readylaunch-mobile-menu .open-parent > .sub-menu {
     display: block;

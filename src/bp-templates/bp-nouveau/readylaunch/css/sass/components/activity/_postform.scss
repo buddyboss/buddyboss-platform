@@ -1,0 +1,54 @@
+.bb-rl-activity-form {
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-tertiary-color);
+	border-radius: var(--bb-rl-radius-lg);
+
+	.bb-rl-bb-model-header {
+		display: none;
+	}
+
+	.bb-rl-whats-new-form-header {
+		display: flex;
+		cursor: pointer;
+	}
+
+	.bb-rl-activity-post-avatar {
+		display: flex;
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+		img {
+			height: 48px;
+			width: 48px;
+			object-fit: contain;
+			border-radius: var(--bb-rl-radius-full);
+		}
+	}
+
+	#bb-rl-whats-new-content {
+		flex: 1;
+	}
+
+	.bb-rl-activity-post-user-name,
+	#bb-rl-activity-privacy-point {
+		display: none;
+	}
+
+	#bb-rl-whats-new {
+		display: flex;
+		align-items: center;
+		min-height: 80px;
+	}
+
+	#bb-rl-whats-new-textarea [contenteditable="true"]:empty:before {
+		content: attr(placeholder);
+		font-size: 1rem;
+		color: var(--bb-rl-text-tertiary-color);
+	}
+
+	#bb-rl-whats-new-privacy-stage,
+	#bb-rl-editor-toolbar,
+	#bb-rl-whats-new-toolbar,
+	#bp-activity-privacy-point {
+		display: none;
+	}
+}
