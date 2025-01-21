@@ -482,11 +482,8 @@ window.bp = window.bp || {};
 
 			component = 'undefined' === typeof component ? object : component;
 
-			$.ajax( {
-				type   : 'POST',
-				url    : bbReadyLaunchFront.ajax_url,
-				data   : {
-					nonce         : bbReadyLaunchFront.nonce,
+			self.ajax(
+				{
 					action        : object + '_' + action,
 					item_id       : item_id,
 					current_page  : current_page,
@@ -494,7 +491,10 @@ window.bp = window.bp || {};
 					component     : component,
 					_wpnonce      : nonce
 				},
-				success: function ( response ) {
+				object,
+				true
+			).done(
+				function ( response ) {
 					if ( false === response.success ) {
 						item_inner.prepend( response.data.feedback );
 						target.removeClass( 'pending loading' );
@@ -506,11 +506,34 @@ window.bp = window.bp || {};
 
 						target.parent().replaceWith( response.data.contents );
 					}
-				},
-				fail: function( jqXHR, textStatus, errorThrown ) {
+				}
+			).fail(
+				function () {
 					target.removeClass( 'pending loading' );
-				},
-			} );
+				}
+			);
+		},
+
+		/**
+		 * Common ajax function.
+		 *
+		 * @param  {[type]} post_data [description]
+		 * @param  {[type]} object    [description]
+		 * @param  {[type]} button    [description]
+		 * @return {[type]}           [description]
+		 */
+		ajax: function ( post_data, object, button ) {
+
+			if ( this.ajax_request && typeof button === 'undefined' && post_data.status !== 'scheduled') {
+				this.ajax_request.abort();
+			}
+
+			// Extend posted data with stored data and object nonce.
+			var postData = $.extend( {}, bp.Readylaunch.getStorage( 'bp-' + object ), { nonce: bbReadyLaunchFront.nonce }, post_data );
+
+			this.ajax_request = $.post( bbReadyLaunchFront.ajax_url, postData, 'json' );
+
+			return this.ajax_request;
 		},
 
 		/**
@@ -544,6 +567,53 @@ window.bp = window.bp || {};
 			}
 
 			return params;
+		},
+
+		/**
+		 * [getStorage description]
+		 *
+		 * @param  {[type]} type     [description]
+		 * @param  {[type]} property [description]
+		 * @return {[type]}          [description]
+		 */
+		getStorage: function ( type, property ) {
+
+			var store = sessionStorage.getItem( type );
+
+			if ( store ) {
+				store = JSON.parse( store );
+			} else {
+				store = {};
+			}
+
+			if ( undefined !== property ) {
+				return store[ property ] || false;
+			}
+
+			return store;
+		},
+
+		/**
+		 * [setStorage description]
+		 *
+		 * @param {[type]} type     [description]
+		 * @param {[type]} property [description]
+		 * @param {[type]} value    [description]
+		 */
+		setStorage: function ( type, property, value ) {
+
+			var store = this.getStorage( type );
+
+			if ( undefined === value && undefined !== store[ property ] ) {
+				delete store[ property ];
+			} else {
+				// Set property.
+				store[ property ] = value;
+			}
+
+			sessionStorage.setItem( type, JSON.stringify( store ) );
+
+			return sessionStorage.getItem( type ) !== null;
 		},
 	};
 
