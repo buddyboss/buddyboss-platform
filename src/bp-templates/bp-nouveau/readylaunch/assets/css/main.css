@@ -1070,7 +1070,7 @@ body.admin-bar .bb-rl-header {
   display: none;
 }
 
-.bb-rl-site-branding img.bb-logo {
+.bb-rl-site-branding img {
   max-width: 130px;
   max-height: 32px;
   object-fit: contain;
