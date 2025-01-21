@@ -123,3 +123,4 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 	</header>
 	<main id="primary" class="site-main">
+		<div class="bb-rl-container">

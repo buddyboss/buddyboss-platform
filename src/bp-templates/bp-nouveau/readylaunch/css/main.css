@@ -218,10 +218,12 @@ a {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .bb-rl-header-container {
-  max-width: 1600px;
+  max-width: initial;
 }
 
 img.emoji,
@@ -266,6 +268,9 @@ img.emojioneemoji {
   body.admin-bar .site.bb-readylaunch {
     margin-top: 66px;
     min-height: calc(100vh - 66px);
+  }
+  .site.bb-readylaunch {
+    padding: 0 15px;
   }
 }
 

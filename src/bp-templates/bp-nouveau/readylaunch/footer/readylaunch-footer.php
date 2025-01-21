@@ -9,6 +9,7 @@
 defined( 'ABSPATH' ) || exit;
 
 ?>
+    </div> <!-- .bb-rl-container -->
 </main>
 <?php wp_footer(); ?>
 </body>
