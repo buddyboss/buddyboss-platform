@@ -22,6 +22,7 @@ window.bp = window.bp || {};
 			this.notificationIconSelector = $( '.bb-icons-rl-bell-simple' );
 			// Listen to events ("Add hooks!")
 			this.addListeners();
+			this.mobileSubMenu();
 		},
 
 		/**
@@ -56,6 +57,24 @@ window.bp = window.bp || {};
 					}
 				}
 			}
+		},
+
+		// Add Mobile menu toggle button
+		mobileSubMenu: function () {
+			$( '.bb-readylaunch-mobile-menu .sub-menu' ).each(
+				function () {
+					$( this ).closest( 'li.menu-item-has-children' ).find( 'a:first' ).append( '<i class="bb-icons-rl-caret-down submenu-toggle"></i>' );
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.submenu-toggle',
+				function ( e ) {
+					e.preventDefault();
+					$( this ).closest( '.menu-item-has-children' ).toggleClass( 'open-parent' );
+				}
+			);
 		},
 
 		/**
