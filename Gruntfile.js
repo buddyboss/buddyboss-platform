@@ -126,8 +126,8 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.css',
 					flatten: true,
-					src: ['bp-templates/bp-nouveau/readylaunch/assets/css/sass/*.scss'],
-					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/assets/css'
+					src: ['bp-templates/bp-nouveau/readylaunch//css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/css'
 				},
 				admin: {
 					cwd: SOURCE_DIR,

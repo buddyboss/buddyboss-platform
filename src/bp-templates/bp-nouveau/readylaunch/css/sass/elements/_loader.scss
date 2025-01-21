@@ -1,0 +1,9 @@
+.bb-rl-loader {
+	display: inline-block;
+	height: 22px;
+	width: 22px;
+	border: 2px solid var(--bb-rl-border-quaternary-color);
+	border-top-color: var(--bb-rl-border-tertiary-color);
+	border-radius: var(--bb-rl-radius-full);
+	animation: spin 3s infinite linear;
+}
