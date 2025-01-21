@@ -2764,11 +2764,11 @@ function bb_is_send_ajax_request() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $default Optional. Default value to use if the option is not set. Default 1.
+ * @param bool $default Optional. Default value to use if the option is not set. Default true.
  *
  * @return bool true if counts should be displayed, false otherwise.
  */
-function bb_enable_content_counts( $default = 1 ) {
+function bb_enable_content_counts( $default = true ) {
 
 	/**
 	 * Filter to modify the behavior of the group counts feature.
