@@ -23,14 +23,7 @@ do_action( 'bp_before_directory_members_page' );
 			<h2>Members<span class="bb-rl-heading-count">(9)</span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
-			<div class="bb-rl-grid-filters flex items-center">
-				<a href="" class="layout-view layout-grid-view bp-tooltip active" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="Grid View">
-					<i class="bb-icons-rl-squares-four"></i>
-				</a>
-				<a href="" class="layout-view layout-list-view bp-tooltip" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="List View">
-					<i class="bb-icons-rl-rows"></i>
-				</a>
-			</div>
+			<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
 			<div class="bb-rl-action-button">
 				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i>Add member</a>
 			</div>

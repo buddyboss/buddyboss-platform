@@ -1334,10 +1334,10 @@ window.bp = window.bp || {};
 
 			$( document ).on(
 				'click',
-				'.grid-filters .layout-view:not(.active)',
+				'.bb-rl-grid-filters .layout-view:not(.active)',
 				function ( e ) {
 					e.preventDefault();
-					var gridfilters = $( this ).parents( '.grid-filters' ),
+					var gridfilters = $( this ).parents( '.bb-rl-grid-filters' ),
 						object = gridfilters.data( 'object' );
 
 					if ( 'friends' === object ) {
