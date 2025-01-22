@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.7.70\n"
+"Project-Id-Version: BuddyBoss Platform 2.7.80\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-01-14 06:00:09+00:00\n"
+"POT-Creation-Date: 2025-01-22 04:29:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10647,7 +10647,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-core-notification-abstract.php:184
 #: bp-core/profile-search/bps-xprofile.php:363
-#: bp-core/profile-search/bps-xprofile.php:756
+#: bp-core/profile-search/bps-xprofile.php:759
 #: bp-media/bp-media-settings.php:1995 bp-media/bp-media-settings.php:2131
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:274
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:104
@@ -12036,20 +12036,20 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:758
+#: bp-core/profile-search/bps-xprofile.php:761
 msgid "Heading"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:759
+#: bp-core/profile-search/bps-xprofile.php:762
 msgid "Used to segregate form into sections"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:790
+#: bp-core/profile-search/bps-xprofile.php:793
 msgid "General Information"
 msgstr ""
 
-#: bp-core/profile-search/bps-xprofile.php:793
-#: bp-core/profile-search/bps-xprofile.php:794
+#: bp-core/profile-search/bps-xprofile.php:796
+#: bp-core/profile-search/bps-xprofile.php:797
 #: bp-members/bp-members-filters.php:152 bp-members/bp-members-filters.php:166
 msgid "Email Address"
 msgstr ""
@@ -29516,7 +29516,7 @@ msgstr[1] ""
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:894
+#: bp-search/classes/class-bp-search.php:893
 msgid "All Results"
 msgstr ""
 
