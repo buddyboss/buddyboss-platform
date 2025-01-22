@@ -10,6 +10,12 @@
 			background-color: var(--bb-rl-background-color);
 			border: 1px solid var(--bb-rl-border-secondary-color);
 			padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
+
+			.list-wrap-inner {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			}
 		}
 
 		.item {
@@ -52,7 +58,7 @@
 		}
 
 		.member-buttons-wrap {
-			margin: var(--bb-rl-space-200) 0 0;
+			margin: auto 0 0;
 
 			.primary-action button {
 
@@ -78,6 +84,71 @@
 
 		.only-grid-view {
 			display: none;
+		}
+	}
+}
+
+.bb-rl-item-actions {
+
+	.bb-rl-secondary-actions {
+		margin-right: auto;
+	}
+
+	.bb-rl-secondary-actions {
+
+		.button-wrap {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.send-message,
+		.friendship-button {
+			font-size: 0;
+			line-height: 1;
+			display: inline-block;
+
+			i {
+
+				&::before {
+					content: "";
+					font-weight: 400;
+					font-family: bb-icons-rl;
+					font-size: 24px;
+					color: var(--bb-rl-icon-secondary-color);
+					font-style: normal;
+				}
+			}
+		}
+
+		.send-message {
+
+			i {
+
+				&::before {
+					content: "\e16e";
+				}
+			}
+		}
+
+		.friendship-button.not_friends {
+
+			i {
+
+				&::before {
+					content: "\e3d6";
+				}
+			}
+		}
+
+		.friendship-button.is_friend {
+
+			i {
+
+				&::before {
+					content: "\e32c";
+				}
+			}
 		}
 	}
 }

@@ -193,8 +193,8 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 						<div class="member-buttons-wrap">
 
-							<div class="bb-rl-item-actions flex align-center">
-								<div class="bb-rl-secondary-actions flex align-center">
+							<div class="bb-rl-item-actions flex items-center">
+								<div class="bb-rl-secondary-actions flex items-center">
 									<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
 										<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
 											<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>

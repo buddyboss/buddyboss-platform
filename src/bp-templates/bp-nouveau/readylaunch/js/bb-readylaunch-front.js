@@ -83,8 +83,7 @@ window.bp = window.bp || {};
 			$( '.bb-rl-filter select' ).select2( {
 				theme: 'rl',
 				containerCssClass: 'bb-rl-select2-container',
-				dropdownCssClass: 'bb-rl-select2-dropdown',
-				dropdownParent: $( '.bb-rl-filter select' ).parent()
+				dropdownCssClass: 'bb-rl-select2-dropdown'
 			} );
 		},
 

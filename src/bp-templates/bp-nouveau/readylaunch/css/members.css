@@ -7,6 +7,12 @@
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
 
+.bb-rl-members .item-entry .list-wrap .list-wrap-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .bb-rl-members .item-entry .item {
   text-align: center;
 }
@@ -47,7 +53,7 @@
 }
 
 .bb-rl-members .item-entry .member-buttons-wrap {
-  margin: var(--bb-rl-space-200) 0 0;
+  margin: auto 0 0;
 }
 
 .bb-rl-members .item-entry .member-buttons-wrap .primary-action button {
@@ -92,4 +98,43 @@
 
 .bb-rl-members .item-list.list .only-grid-view {
   display: none;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions {
+  margin-right: auto;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .button-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message,
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button {
+  font-size: 0;
+  line-height: 1;
+  display: inline-block;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before,
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button i::before {
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before {
+  content: "\e16e";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.not_friends i::before {
+  content: "\e3d6";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.is_friend i::before {
+  content: "\e32c";
 }
