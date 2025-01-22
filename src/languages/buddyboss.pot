@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.7.70\n"
+"Project-Id-Version: BuddyBoss Platform 2.7.80\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-01-20 05:58:03+00:00\n"
+"POT-Creation-Date: 2025-01-22 04:27:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22873,7 +22873,7 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/generators/AssignmentsReportsGenerator.php:79
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:86
 #: bp-integrations/learndash/buddypress/generators/QuizzesReportsGenerator.php:57
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:145
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:147
 msgid "Score"
 msgstr ""
 
@@ -29987,7 +29987,7 @@ msgid "Schedule post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bb-activity-schedule-post.php:58
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:147
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:149
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:28
 msgid "Date"
 msgstr ""
@@ -31208,30 +31208,30 @@ msgstr ""
 msgid "Sorry, no certificates were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:66
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:67
 #. translators: %d is the courses count
 msgid "<span class=\"bb-count\">%d</span> Course"
 msgid_plural "<span class=\"bb-count\">%d</span> Courses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:130
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:132
 msgid "%s out of %s steps completed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:135
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:137
 msgid "%s%% Complete"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:144
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:146
 msgid "Certificate"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:146
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:148
 msgid "Statistics"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:235
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:237
 msgid "Sorry, no %s were found."
 msgstr ""
 
@@ -35738,12 +35738,12 @@ msgid ""
 "to,was,what,when,where,who,will,with,www"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:126
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:128
 msgctxt "Course Progress Overview Label"
 msgid "%s Progress Overview"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:185
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:187
 msgctxt "Pending Certificate Status Label"
 msgid "Pending"
 msgstr ""
