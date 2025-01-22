@@ -86,7 +86,14 @@ window.bp = window.bp || {};
 			this.postForm.inject( '#' + $activityForm[0].id );
 
 			// Wrap Avatar and Content section into header.
-			$( '.bb-rl-activity-update-form #bb-rl-user-status-huddle, .bb-rl-activity-update-form #bb-rl-whats-new-content, .bb-rl-activity-update-form  #bb-rl-whats-new-attachments' ).wrapAll( '<div class="bb-rl-whats-new-form-header"></div>' );
+			var $formHeaderElements = $activityForm.find(
+				'#bb-rl-user-status-huddle, #bb-rl-whats-new-content, #bb-rl-whats-new-attachments'
+			);
+
+			// Wrap elements into the header section.
+			if ( $formHeaderElements.length ) {
+				$formHeaderElements.wrapAll( '<div class="bb-rl-whats-new-form-header"></div>' );
+			}
 
 			var $this = this;
 
@@ -136,7 +143,12 @@ window.bp = window.bp || {};
 			// Display it within selector.
 			this.postFormPlaceholder.inject( '#' + $activityFormPlaceholder[0].id );
 
-			$( '.bb-rl-activity-form-placeholder #bb-rl-user-status-huddle, .bb-rl-activity-form-placeholder #bb-rl-whats-new-content-placeholder' ).wrapAll( '<div class="bb-rl-whats-new-form-header"></div>' );
+			var $headerElements = $( '.bb-rl-activity-form-placeholder #bb-rl-user-status-huddle, .bb-rl-activity-form-placeholder #bb-rl-whats-new-content-placeholder' );
+
+			// Wrap the elements in a header container if they exist.
+			if ( $headerElements.length ) {
+				$headerElements.wrapAll( '<div class="bb-rl-whats-new-form-header"></div>' );
+			}
 		},
 
 		dropzoneView: function () {
@@ -395,10 +407,12 @@ window.bp = window.bp || {};
 				if ( 'scheduled' === activity_data.activity_action_type || 'scheduled' === activity_data.status ) {
 
 					// Set Schedule post data.
-					self.postForm.model.set( 'activity_schedule_date_raw', activity_data.activity_schedule_date_raw );
-					self.postForm.model.set( 'activity_schedule_date', activity_data.activity_schedule_date );
-					self.postForm.model.set( 'activity_schedule_time', activity_data.activity_schedule_time );
-					self.postForm.model.set( 'activity_schedule_meridiem', activity_data.activity_schedule_meridiem );
+					self.postForm.model.set( {
+						activity_schedule_date_raw: activity_data.activity_schedule_date_raw,
+						activity_schedule_date    : activity_data.activity_schedule_date,
+						activity_schedule_time    : activity_data.activity_schedule_time,
+						activity_schedule_meridiem: activity_data.activity_schedule_meridiem
+					} );
 
 					if ( 'scheduled' === activity_data.status ) {
 						self.postForm.model.set( 'activity_action_type', activity_data.status );
@@ -464,13 +478,15 @@ window.bp = window.bp || {};
 					$whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 				} else {
 
-					// If schedule post is not allowed then reset schedule post data.
-					self.postForm.model.set( 'activity_action_type', null );
-					self.postForm.model.set( 'activity_schedule_date_raw', null );
-					self.postForm.model.set( 'activity_schedule_date', null );
-					self.postForm.model.set( 'activity_schedule_time', null );
-					self.postForm.model.set( 'activity_schedule_meridiem', null );
-					self.postForm.model.set( 'schedule_allowed', 'disabled' );
+					// If schedule post is not allowed, then reset schedule post data.
+					self.postForm.model.set( {
+						activity_action_type      : null,
+						activity_schedule_date_raw: null,
+						activity_schedule_date    : null,
+						activity_schedule_time    : null,
+						activity_schedule_meridiem: null,
+						schedule_allowed          : 'disabled'
+					} );
 					$whatsNewForm.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 				}
 
@@ -1616,12 +1632,6 @@ window.bp = window.bp || {};
 				this.$el.parent().find( '#bb-rl-aw-whats-new-reset' ).trigger( 'click' ); //Trigger reset
 				this.model.set( 'privacy_modal', 'general' );
 
-				// Reset group
-				// var selected_item = this.$el.closest( '#bb-rl-whats-new-form' ).find( '.bp-activity-object.selected' );
-				// selected_item.find( '.bb-rl-privacy-radio' ).removeClass( 'selected' );
-				// selected_item.find( '.bb-rl-activity-object__radio' ).prop('checked', false);
-				// selected_item.removeClass( 'selected' );
-
 				// Loose post form textarea focus for Safari.
 				if ( navigator.userAgent.includes( 'Safari' ) && ! navigator.userAgent.includes( 'Chrome' ) ) {
 					$( 'input' ).focus().blur();
@@ -1651,7 +1661,6 @@ window.bp = window.bp || {};
 				}
 
 				$( '#bb-rl-whats-new-form' ).removeClass( 'focus-in--attm' );
-
 			}
 		}
 	);
@@ -1690,9 +1699,7 @@ window.bp = window.bp || {};
 			media: [],
 
 			initialize: function () {
-
 				this.model.set( 'media', this.media );
-
 				this.listenTo( Backbone, 'activity_media_toggle', this.toggle_media_uploader );
 				this.listenTo( Backbone, 'activity_media_close', this.destroy );
 			},
@@ -1933,7 +1940,7 @@ window.bp = window.bp || {};
 				);
 
 				self.$el.find( '#bb-rl-activity-post-media-uploader' ).addClass( 'open' ).removeClass( 'closed' );
-				self.$whatsNewAttachments.removeClass( 'empty' ).closest( '#bb-rl-whats-new-form' ).addClass( 'focus-in--attm' );
+				$( '#bb-rl-whats-new-attachments' ).removeClass( 'empty' ).closest( '#bb-rl-whats-new-form' ).addClass( 'focus-in--attm' );
 			}
 
 		}
@@ -2203,7 +2210,7 @@ window.bp = window.bp || {};
 				);
 
 				self.$el.find( '#bb-rl-activity-post-document-uploader' ).addClass( 'open' ).removeClass( 'closed' );
-				self.$whatsNewAttachments.removeClass( 'empty' ).closest( '#bb-rl-whats-new-form' ).addClass( 'focus-in--attm' );
+				$( '#bb-rl-whats-new-attachments' ).removeClass( 'empty' ).closest( '#bb-rl-whats-new-form' ).addClass( 'focus-in--attm' );
 			}
 
 		}
@@ -2478,8 +2485,8 @@ window.bp = window.bp || {};
 				);
 
 				self.$el.find( '#bb-rl-activity-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
-				self.$whatsNewAttachments.removeClass( 'empty' ).closest( '#bb-rl-whats-new-form' ).addClass( 'focus-in--attm' );
-				self.$whatsNewForm.closest( 'body' ).addClass( 'video-post-form-open' );
+				$( '#bb-rl-whats-new-attachments' ).removeClass( 'empty' ).closest( '#bb-rl-whats-new-form' ).addClass( 'focus-in--attm' );
+				$( '#bb-rl-whats-new-form' ).closest( 'body' ).addClass( 'video-post-form-open' );
 			},
 
 			createVideoThumbnailFromUrl: function ( mock_file ) {
