@@ -23,6 +23,6 @@
 				<?php esc_html_e( 'Group', 'buddyboss' ); ?>
 			<# } #>
 		</span>
-		<i class="bb-icon-f bb-icon-caret-down"></i>
+		<i class="bb-icons-rl-fill bb-icons-rl-caret-down"></i>
 	</div>
 </script>

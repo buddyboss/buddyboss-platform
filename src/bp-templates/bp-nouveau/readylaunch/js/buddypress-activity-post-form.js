@@ -4986,7 +4986,7 @@ window.bp = window.bp || {};
 					{
 						type: 'reset',
 						id: 'bb-rl-aw-whats-new-reset',
-						className: 'text-button small',
+						className: 'bb-rl-button bb-rl-button--secondaryFill',
 						value: BP_Nouveau.activity.strings.cancelButton
 					}
 				);
@@ -5005,7 +5005,7 @@ window.bp = window.bp || {};
 						model: this.model,
 						type: 'submit',
 						id: 'aw-whats-new-submit',
-						className: 'button',
+						className: 'bb-rl-button bb-rl-button--brandFill',
 						name: 'aw-whats-new-submit',
 						value: buttomText
 					}

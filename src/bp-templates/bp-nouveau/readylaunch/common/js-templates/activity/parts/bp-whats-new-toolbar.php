@@ -21,7 +21,7 @@
 	if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ) : ?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
 			<a href="#" id="bb-rl-activity-media-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
-				<i class="bb-icon-l bb-icon-camera"></i>
+				<i class="bb-icons-rl-camera"></i>
 			</a>
 		</div>
 	<?php endif; ?>
@@ -31,7 +31,7 @@
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
 			<a href="#" id="bb-rl-activity-video-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
-				<i class="bb-icon-l bb-icon-video"></i>
+				<i class="bb-icons-rl-video-camera"></i>
 			</a>
 		</div>
 	<?php endif; ?>
@@ -41,7 +41,7 @@
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
 			<a href="#" id="bb-rl-activity-document-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-				<i class="bb-icon-l bb-icon-attach"></i>
+				<i class="bb-icons-rl-paperclip-horizontal"></i>
 			</a>
 		</div>
 	<?php endif; ?>
@@ -49,7 +49,7 @@
 	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profiles_gif_support_enabled() ) || ( bp_is_group_activity() && bp_is_groups_gif_support_enabled() ) ) ) : ?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 			<div class="bb-rl-gif-media-search">
-				<a href="#" id="bb-rl-activity-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-gif"></i></a>
+				<a href="#" id="bb-rl-activity-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>"><i class="bb-icons-rl-gif"></i></a>
 				<div class="bb-rl-gif-media-search-dropdown"></div>
 			</div>
 		</div>
