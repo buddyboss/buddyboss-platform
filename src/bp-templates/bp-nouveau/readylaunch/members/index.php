@@ -20,10 +20,10 @@ do_action( 'bp_before_directory_members_page' );
 <div class="members-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2>Members<span class="bb-rl-heading-count">(9)</span></h2>
+			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?><span class="bb-rl-heading-count">(9)</span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
-			<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
+			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
 			<div class="bb-rl-action-button">
 				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i>Add member</a>
 			</div>
@@ -50,8 +50,6 @@ do_action( 'bp_before_directory_members_page' );
 			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bp_before_directory_members_tabs' );
-
-			bp_get_template_part( 'common/search-and-filters-bar' );
 
 			/**
 			 * Fires before the display of the members content.
