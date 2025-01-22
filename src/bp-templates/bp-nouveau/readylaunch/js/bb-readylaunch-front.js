@@ -23,6 +23,8 @@ window.bp = window.bp || {};
 			// Listen to events ("Add hooks!")
 			this.addListeners();
 			this.mobileSubMenu();
+
+			this.bbReloadWindow();
 		},
 
 		/**
@@ -39,7 +41,6 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-			$( window ).on( 'beforeunload', this.beforeUnload.bind( this ) );
 		},
 		/**
 		 * [scrollHeaderDropDown description]
@@ -391,6 +392,19 @@ window.bp = window.bp || {};
 			bp.Readylaunch.markAsReadNotifications = [];
 			bp.Readylaunch.deletedNotifications    = [];
 		},
+
+		bbReloadWindow: function () {
+			var fetchDataHandler = function( event ) {
+				if ( 'undefined' !== typeof event ) {
+					bp.Readylaunch.beforeUnload();
+				}
+			};
+
+			// This will work only for Chrome.
+			window.onbeforeunload = fetchDataHandler;
+			// This will work only for other browsers.
+			window.unload         = fetchDataHandler;
+		}
 	};
 
 	// Launch BP Zoom.
