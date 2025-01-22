@@ -809,8 +809,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$deleted_notification_ids = isset( $_POST['deleted_notification_ids'] ) ? sanitize_text_field( $_POST['deleted_notification_ids'] ) : '';
-			$deleted_notification_ids = array_map( 'intval', explode( ',', $deleted_notification_ids ) );
-
+			$deleted_notification_ids = ! empty( $deleted_notification_ids ) ? array_map( 'intval', explode( ',', $deleted_notification_ids ) ) : array();
 			if ( ! empty( $deleted_notification_ids ) ) {
 				foreach ( $deleted_notification_ids as $deleted_notification_id ) {
 					BP_Notifications_Notification::delete(

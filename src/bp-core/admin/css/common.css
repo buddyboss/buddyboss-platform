@@ -5382,3 +5382,7 @@ h1.bb-advance-heading {
 .wrap--performance #resultTable table {
   width: 100%;
 }
+
+#customize-theme-controls .accordion-section-title button.accordion-trigger {
+  height: auto;
+}

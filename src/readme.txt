@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.6.2
 Requires PHP: 5.6.20
-Stable tag: 2.7.70
+Stable tag: 2.7.80
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.80 =
+* Bug: Core - Fixed color functionality and spacing issues in the WordPress Customizer when using a default theme
+* Bug: Profiles - Fixed an issue where adding or removing repeater fields in a repeater fieldset was not functioning correctly
+* Bug: Performance - Removed an unused variable from class-bp-search.php and ensured network search functionality works as expected
 
 = 2.7.70 =
 * Enhancement: Forums - Added a new hook to control forum-related notifications

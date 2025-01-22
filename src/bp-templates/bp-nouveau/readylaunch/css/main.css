@@ -277,6 +277,10 @@ img.emojioneemoji {
   font-style: normal;
 }
 
+#wpadminbar {
+  z-index: var(--bb-rl-z-index-fixed);
+}
+
 @media screen and (max-width: 992px) {
   .site.bb-readylaunch {
     margin-left: 0;
@@ -1191,7 +1195,7 @@ button[data-balloon] {
 
 .select2-container--rl .select2-selection__arrow b::before {
   content: "\e136";
-  font-weight: 400;
+  font-weight: 500;
   font-family: bb-icons-rl;
   font-size: 12px;
   color: var(--bb-rl-icon-primary-color);
@@ -1251,7 +1255,7 @@ body.admin-bar .bb-rl-header {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
-.bb-readylaunch-menu > li.current-menu-item a {
+.bb-readylaunch-menu > li.current-menu-item > a {
   font-weight: 600;
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
@@ -1900,6 +1904,51 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e4d6";
 }
 
+.bb-rl-left-panel .bb-readylaunchpanel-menu .current-menu-item > a {
+  font-weight: 600;
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .menu-item.menu-item-has-children {
+  position: relative;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .menu-item.menu-item-has-children > a {
+  padding-right: 35px;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .submenu-toggle {
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--bb-rl-text-tertiary-color);
+  line-height: 30px;
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .sub-menu {
+  display: none;
+  list-style: none;
+  padding-left: var(--bb-rl-space-300);
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > .sub-menu {
+  display: block;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > a {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > a .submenu-toggle {
+  transform: rotate(-180deg);
+}
+
 .bb-rl-left-panel .bb-rl-list h2 {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 0.85rem;
@@ -1986,100 +2035,4 @@ body.admin-bar .bb-rl-left-panel {
   content: "|";
   color: var(--bb-rl-background-tertiary-hover-color);
   padding: 0 var(--bb-rl-space-200);
-}
-
-/* Common styles */
-.bb-rl-members .item-entry .list-wrap {
-  height: 100%;
-  border-radius: var(--bb-rl-radius-lg);
-  background-color: var(--bb-rl-background-color);
-  border: 1px solid var(--bb-rl-border-secondary-color);
-  padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
-}
-
-.bb-rl-members .item-entry .item {
-  text-align: center;
-}
-
-.bb-rl-members .item-entry .item-avatar {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--bb-rl-space-200);
-}
-
-.bb-rl-members .item-entry .avatar {
-  max-width: 104px;
-  height: auto;
-  border-radius: 50%;
-}
-
-.bb-rl-members .item-entry .bp-member-type {
-  display: inline-flex;
-  color: var(--bb-rl-text-brand-secondary-color);
-  background-color: var(--bb-rl-background-brand-secondary-color);
-  border: 1px solid var(--bb-rl-border-brand-secondary-color);
-  border-radius: var(--bb-rl-radius-full);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-  font-size: var(--font-size-xs);
-  font-weight: 500;
-  margin-bottom: var(--bb-rl-space-100);
-}
-
-.bb-rl-members .item-entry .bb-rl-item-meta-asset {
-  font-size: var(--font-size-sm);
-  line-height: var(--bb-rl-base-line-small);
-  color: var(--bb-rl-text-tertiary-color);
-}
-
-.bb-rl-members .item-entry .bb-rl-item-meta-asset .separator {
-  margin: 0 6px;
-  color: var(--bb-rl-background-tertiary-color);
-}
-
-.bb-rl-members .item-entry .member-buttons-wrap {
-  margin: var(--bb-rl-space-200) 0 0;
-}
-
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  text-align: center;
-  cursor: pointer;
-  border-radius: var(--bb-rl-radius-md);
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
-  text-decoration: none;
-  background-color: var(--bb-rl-background-tertiary-color);
-  color: var(--bb-rl-text-color);
-  border: 1px solid transparent;
-  font-size: var(--font-size-sm);
-}
-
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button:hover {
-  background-color: var(--bb-rl-background-tertiary-hover-color);
-}
-
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button:focus {
-  outline: 2px solid var(--bb-rl-border-quinery-color);
-}
-
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button:disabled {
-  background-color: var(--bb-rl-background-tertiary-color);
-  color: var(--bb-rl-text-disabled-color);
-  cursor: not-allowed;
-}
-
-.bb-rl-members .item-entry .bb_more_options {
-  display: none;
-  /* Temporary hide untill design mockup is ready */
-}
-
-.bb-rl-members .item-list.grid .only-list-view {
-  display: none;
-}
-
-.bb-rl-members .item-list.list .only-grid-view {
-  display: none;
 }
