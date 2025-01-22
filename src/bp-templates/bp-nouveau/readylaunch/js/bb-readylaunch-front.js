@@ -61,7 +61,7 @@ window.bp = window.bp || {};
 
 		// Add Mobile menu toggle button
 		mobileSubMenu: function () {
-			$( '.bb-readylaunch-mobile-menu .sub-menu' ).each(
+			$( '.bb-readylaunch-mobile-menu .sub-menu, .bb-readylaunchpanel-menu .sub-menu' ).each(
 				function () {
 					$( this ).closest( 'li.menu-item-has-children' ).find( 'a:first' ).append( '<i class="bb-icons-rl-caret-down submenu-toggle"></i>' );
 				}

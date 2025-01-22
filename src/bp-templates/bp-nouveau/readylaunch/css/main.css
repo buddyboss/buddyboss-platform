@@ -1167,7 +1167,7 @@ body.admin-bar .bb-rl-header {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
-.bb-readylaunch-menu > li.current-menu-item a {
+.bb-readylaunch-menu > li.current-menu-item > a {
   font-weight: 600;
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
@@ -1814,6 +1814,51 @@ body.admin-bar .bb-rl-left-panel {
 
 .bb-rl-left-panel .bb-readylaunchpanel-menu li:nth-child(2) > a:before {
   content: "\e4d6";
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .current-menu-item > a {
+  font-weight: 600;
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .menu-item.menu-item-has-children {
+  position: relative;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .menu-item.menu-item-has-children > a {
+  padding-right: 35px;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .submenu-toggle {
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--bb-rl-text-tertiary-color);
+  line-height: 30px;
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .sub-menu {
+  display: none;
+  list-style: none;
+  padding-left: var(--bb-rl-space-300);
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > .sub-menu {
+  display: block;
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > a {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > a .submenu-toggle {
+  transform: rotate(-180deg);
 }
 
 .bb-rl-left-panel .bb-rl-list h2 {
