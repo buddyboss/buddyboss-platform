@@ -1,0 +1,29 @@
+.bb-rl-sub-ctrls {
+
+	.subnav-filters {
+		display: flex;
+		align-items: center;
+	}
+
+	.bb-rl-grid-filters + .bb-rl-component-filters {
+		display: inline-flex;
+		align-items: center;
+
+		&::before {
+			content: "|";
+			color: var(--bb-rl-background-tertiary-hover-color);
+			padding: 0 var(--bb-rl-space-200);
+		}
+	}
+
+	.subnav-filters + .bb-rl-action-button {
+		display: inline-flex;
+		align-items: center;
+
+		&::before {
+			content: "|";
+			color: var(--bb-rl-background-tertiary-hover-color);
+			padding: 0 var(--bb-rl-space-200);
+		}
+	}
+}

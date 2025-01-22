@@ -34,7 +34,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 <?php if ( bp_has_members( bp_ajax_querystring( 'members' ) ) ) : ?>
 
-	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> bb-rl-flex-grid">
+	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
 
 		<?php
 		while ( bp_members() ) :
@@ -189,29 +189,34 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							<div class="flex align-items-center follow-container justify-center bb-rl-item-meta-asset">
 								<?php echo wp_kses_post( $followers_count ); ?>
 							</div>
-
-							<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
-								<div class="flex only-grid-view align-items-center primary-action justify-center">
-									<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
-								</div>
-							<?php } ?>
 						</div><!-- // .item -->
 
 						<div class="member-buttons-wrap">
 
-							<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
-								<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
-									<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
-								</div>
-								<?php
-							}
+							<div class="bb-rl-item-actions flex align-center">
+								<div class="bb-rl-secondary-actions flex align-center">
+									<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
+										<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
+											<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
+										</div>
+										<?php
+									}
 
-							if ( ! empty( $profile_actions['primary'] ) ) {
-								?>
-								<div class="flex only-list-view align-items-center primary-action justify-center">
-									<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+									if ( ! empty( $profile_actions['primary'] ) ) {
+										?>
+										<div class="flex only-list-view align-items-center primary-action justify-center">
+											<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+										</div>
+									<?php } ?>
 								</div>
-							<?php } ?>
+								<div class="bb-rl-primary-actions">
+									<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
+										<div class="flex only-grid-view align-items-center primary-action justify-center">
+											<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
 
 						</div><!-- .member-buttons-wrap -->
 

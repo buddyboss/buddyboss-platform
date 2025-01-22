@@ -23,6 +23,7 @@ window.bp = window.bp || {};
 			// Listen to events ("Add hooks!")
 			this.addListeners();
 			this.mobileSubMenu();
+			this.gridListFilter();
 		},
 
 		/**
@@ -75,6 +76,15 @@ window.bp = window.bp || {};
 					$( this ).closest( '.menu-item-has-children' ).toggleClass( 'open-parent' );
 				}
 			);
+		},
+
+		gridListFilter: function () {
+			$( '.bb-rl-filter select' ).select2( {
+				theme: 'rl',
+				containerCssClass: 'bb-rl-select2-container',
+				dropdownCssClass: 'bb-rl-select2-dropdown',
+				dropdownParent: $( '.bb-rl-filter select' ).parent()
+			} );
 		},
 
 		/**

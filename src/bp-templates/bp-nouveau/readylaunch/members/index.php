@@ -61,7 +61,7 @@ do_action( 'bp_before_directory_members_page' );
 
 			<div class="screen-content members-directory-content">
 
-				<div id="members-dir-list" class="members dir-list bbrl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div id="members-dir-list" class="members dir-list bb-rl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
