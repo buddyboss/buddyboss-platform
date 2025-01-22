@@ -51,10 +51,6 @@ do_action( 'bp_before_directory_members_page' );
 			 */
 			do_action( 'bp_before_directory_members_tabs' );
 
-			if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-				bp_get_template_part( 'common/nav/directory-nav' );
-			}
-
 			bp_get_template_part( 'common/search-and-filters-bar' );
 
 			/**
