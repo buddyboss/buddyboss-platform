@@ -202,6 +202,7 @@ window.bp = window.bp || {};
 		 * Renamed it displayEditActivityPopup to displayEditActivityForm();
 		 *
 		 * @param activity_data
+		 * @param activity_URL_preview
 		 */
 		displayEditActivityForm : function( activity_data, activity_URL_preview ) {
 			var self = this;
@@ -816,8 +817,9 @@ window.bp = window.bp || {};
 			self.postForm.$el.find( '.bb-rl-activity-privacy__input#' + activity_data.privacy ).prop( 'checked', true );
 
 			// Update privacy status.
-			var privacy            = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.bb-rl-activity-privacy li.selected' ).data( 'value' ),
-			    privacy_edit_label = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.bb-rl-activity-privacy li.selected' ).text();
+			var bpListActivity = $( '[data-bp-list="activity"] #activity-' + activity_data.id );
+			var privacy            = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).data( 'value' ),
+			    privacy_edit_label = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).text();
 
 			if ( ! _.isUndefined( privacy ) ) {
 				self.postForm.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( privacy );
@@ -1268,12 +1270,11 @@ window.bp = window.bp || {};
 
 						if ( 'object' === pair ) {
 
+							bp.draft_content_changed = true;
 							if ( -1 !== _.indexOf( [ 'groups', 'group' ], new_data[ pair ] ) && -1 !== _.indexOf( [ 'groups', 'group' ], old_data[ pair ] ) ) {
 								bp.draft_content_changed = false;
 							} else if ( -1 !== _.indexOf( [ 'user' ], new_data[ pair ] ) && -1 !== _.indexOf( [ 'user' ], old_data[ pair ] ) ) {
 								bp.draft_content_changed = false;
-							} else {
-								bp.draft_content_changed = true;
 							}
 
 						} else if ( 'user_id' === pair || 'item_id' === pair ) {
@@ -1769,8 +1770,7 @@ window.bp = window.bp || {};
 
 						circle.style.strokeDasharray  = circumference + ' ' + circumference;
 						circle.style.strokeDashoffset = circumference;
-						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						circle.style.strokeDashoffset = offset;
+						circle.style.strokeDashoffset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 					}
 				);
 
@@ -1853,7 +1853,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
+							} else if( 'error' === file.status && ( file.xhr && 0 === file.xhr.status ) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2028,8 +2028,7 @@ window.bp = window.bp || {};
 
 						circle.style.strokeDasharray  = circumference + ' ' + circumference;
 						circle.style.strokeDashoffset = circumference;
-						var offset                    = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
-						circle.style.strokeDashoffset = offset;
+						circle.style.strokeDashoffset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
 					}
 				);
 
@@ -2104,7 +2103,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'accept',
 					function ( file, done ) {
-						if ( file.size == 0 ) {
+						if ( 0 === file.size ) {
 							done( BP_Nouveau.media.empty_document_type );
 						} else {
 							done();
@@ -2118,7 +2117,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
+							} else if( 'error' === file.status && ( file.xhr && 0 === file.xhr.status ) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2284,7 +2283,7 @@ window.bp = window.bp || {};
 
 						if ( file.dataURL && file.video_edit_data.thumb.length ) {
 							// Get Thumbnail image from response.
-							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' " />' );
+							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' "  alt=""/>' );
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 						} else {
 
@@ -2394,7 +2393,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'accept',
 					function ( file, done ) {
-						if ( file.size == 0 ) {
+						if ( 0 === file.size ) {
 							done( BP_Nouveau.video.empty_video_type );
 						} else {
 							done();
@@ -2408,7 +2407,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( ! _.isUndefined( response ) && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.feedback ) ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
+							} else if( 'error' === file.status && ( file.xhr && 0 === file.xhr.status ) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 							}
 						} else {
@@ -2959,7 +2958,7 @@ window.bp = window.bp || {};
 							    };
 
 							self.el.classList.add( 'loading' );
-							var request = null;
+							var request;
 							if ( _.isNull( self.q ) ) {
 								request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
 							} else {
@@ -3264,7 +3263,7 @@ window.bp = window.bp || {};
 				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
-					if ( ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_success' ) == true ) && self.options.activity.get( 'link_url' ) === url ) {
+					if ( ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && true === self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_url' ) === url ) {
 						return false;
 					}
 
