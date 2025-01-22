@@ -62,3 +62,30 @@ if ( ! empty( $member_types ) ) {
 	</div>
 	<?php
 }
+
+// Mmember scope as dropdown.
+if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
+	<div id="members-scope-filters" class="component-filters clearfix">
+		<div id="members-scope-select" class="last filter">
+			<label class="bp-screen-reader-text" for="members-scope-options">
+				<span>Filter</span>
+			</label>
+			<div class="select-wrap">
+				<select id="members-scope-options" data-bp-member-scope-filter="members">
+					<?php
+					while ( bp_nouveau_nav_items() ) :
+						bp_nouveau_nav_item();
+						?>
+						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
+							<?php bp_nouveau_nav_link_text(); ?>
+						</option>
+						<?php
+					endwhile;
+					?>
+				</select>
+				<span class="select-arrow" aria-hidden="true"></span>
+			</div>
+		</div>
+	</div>
+<?php
+}

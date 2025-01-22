@@ -850,8 +850,8 @@ window.bp = window.bp || {};
 			// Disabled inputs.
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
 
-			// Refreshing.
-			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
+			// Scope filters.
+			$( document ).on( 'change', this.objectNavParent + ' [data-bp-member-scope-filter]', this, this.scopeQuery );
 
 			// Filtering.
 			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
@@ -1641,15 +1641,15 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		scopeQuery: function ( event ) {
-			var self         = event.data, target = $( event.currentTarget ).parent(), scope = 'all', object, filter = null,
+			var self         = event.data, target = $( event.currentTarget ), scope = 'all', object, filter = null,
 				search_terms = '', extras = null, queryData = {};
 
-			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! target.attr( 'data-bp-scope' ) ) {
+			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! $( target ).find( ':selected' ).attr( 'data-bp-scope' ) ) {
 				return event;
 			}
 
-			scope  = target.data( 'bp-scope' );
-			object = target.data( 'bp-object' );
+			scope  = $( target ).find(':selected' ).data( 'bp-scope' );
+			object = $( target ).find(':selected' ).data( 'bp-object' );
 
 			if ( ! scope || ! object ) {
 				return event;
