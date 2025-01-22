@@ -2015,15 +2015,19 @@ body.admin-bar .bb-rl-left-panel {
   align-items: center;
 }
 
-.bb-rl-sub-ctrls .bb-rl-grid-filters + .bb-rl-component-filters {
+.bb-rl-sub-ctrls .bb-rl-grid-filters + .component-filters {
   display: inline-flex;
   align-items: center;
 }
 
-.bb-rl-sub-ctrls .bb-rl-grid-filters + .bb-rl-component-filters::before {
+.bb-rl-sub-ctrls .bb-rl-grid-filters + .component-filters::before {
   content: "|";
   color: var(--bb-rl-background-tertiary-hover-color);
   padding: 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-sub-ctrls .component-filters + .component-filters {
+  margin-left: var(--bb-rl-space-200);
 }
 
 .bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button {

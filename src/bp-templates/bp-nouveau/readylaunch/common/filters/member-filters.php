@@ -66,7 +66,7 @@ if ( ! empty( $member_types ) ) {
 // Mmember scope as dropdown.
 if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
 	<div id="members-scope-filters" class="component-filters clearfix">
-		<div id="members-scope-select" class="last filter">
+		<div id="members-scope-select" class="last filter bb-rl-filter">
 			<label class="bp-screen-reader-text" for="members-scope-options">
 				<span>Filter</span>
 			</label>
