@@ -620,10 +620,6 @@ window.bp = window.bp || {};
 						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
 					}
 
-					if ( $( 'body.group-members.members.buddypress' ).length && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( 'body.group-members.members.buddypress ul li#members-groups-li' ).find( 'span' ).text( response.data.count );
-					}
-
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
 
@@ -636,13 +632,6 @@ window.bp = window.bp || {};
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
 						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
 					}
-
-					// @todo to check later for other pages.
-					// if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
-					// 	for ( var i in response.data.scopes ) {
-					// 		$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
-					// 	}
-					// }
 
 					if ( 'reset' !== data.method ) {
 						self.inject( data.target, response.data.contents, data.method );
