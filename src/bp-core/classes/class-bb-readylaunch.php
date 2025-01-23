@@ -102,9 +102,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Directory filters.
 				add_filter( 'bp_nouveau_get_filter_label', array( $this, 'bb_nouveau_get_filter_label_hook' ), 10, 2 );
-				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_nouveau_filter_keys' ) );
-				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_nouveau_filter_keys' ) );
-				
+				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_rl_prefix_key' ) );
+				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
+
 			}
 		}
 
@@ -884,7 +884,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $label;
 		}
 
-		public function bb_nouveau_filter_keys( $key ) {
+		/**
+		 * Filters to add readylaunch prefix. 
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $key Key to readylaunch prefix. 
+		 */
+		public function bb_rl_prefix_key( $key ) {
 			return 'bb-rl-' . $key;
 		}
 	}

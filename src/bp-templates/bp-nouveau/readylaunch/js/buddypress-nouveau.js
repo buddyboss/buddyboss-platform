@@ -634,7 +634,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
+						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {

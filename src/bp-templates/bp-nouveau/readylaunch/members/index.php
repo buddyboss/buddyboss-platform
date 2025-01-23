@@ -17,10 +17,10 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 do_action( 'bp_before_directory_members_page' );
 ?>
 
-<div class="members-directory-wrapper">
+<div class="bb-rl-members-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?><span class="bb-rl-heading-count">(9)</span></h2>
+			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?> (<span class="bb-rl-heading-count"></span>)</h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
