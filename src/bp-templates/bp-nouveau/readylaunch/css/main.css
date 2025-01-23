@@ -2191,8 +2191,50 @@ body.admin-bar .bb-rl-left-panel {
   display: none;
 }
 
+.bb-rl-context-wrap {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}
+
+.bb-rl-context-wrap .bb-rl-context-btn i {
+  font-size: 24px;
+  color: var(--bb-rl-icon-tertiary-color);
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: var(--bb-rl-background-color);
+  padding: var(--bb-rl-space-100) 0;
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  width: 195px;
+  list-style: none;
+  z-index: var(--bb-rl-z-index-dropdown);
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown.active {
+  display: block;
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: 10px var(--bb-rl-space-200);
+  color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
+  display: inline-flex;
+  width: 100%;
+}
+
 /* Common styles */
 .bb-rl-members .item-entry .list-wrap {
+  position: relative;
   height: 100%;
   border-radius: var(--bb-rl-radius-lg);
   background-color: var(--bb-rl-background-color);
@@ -2246,9 +2288,8 @@ body.admin-bar .bb-rl-left-panel {
   color: var(--bb-rl-background-tertiary-color);
 }
 
-.bb-rl-members .item-entry .bb_more_options {
-  display: none;
-  /* Temporary hide untill design mockup is ready */
+.bb-rl-members .item-entry .bb-rl-member-buttons-wrap {
+  margin-top: auto;
 }
 
 .bb-rl-members .item-list.grid .only-list-view {

@@ -1,5 +1,6 @@
 /* Common styles */
 .bb-rl-members .item-entry .list-wrap {
+  position: relative;
   height: 100%;
   border-radius: var(--bb-rl-radius-lg);
   background-color: var(--bb-rl-background-color);
@@ -53,9 +54,8 @@
   color: var(--bb-rl-background-tertiary-color);
 }
 
-.bb-rl-members .item-entry .bb_more_options {
-  display: none;
-  /* Temporary hide untill design mockup is ready */
+.bb-rl-members .item-entry .bb-rl-member-buttons-wrap {
+  margin-top: auto;
 }
 
 .bb-rl-members .item-list.grid .only-list-view {

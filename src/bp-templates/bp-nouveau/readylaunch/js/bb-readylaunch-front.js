@@ -42,6 +42,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
+			$( document ).on( 'click', '.bb-rl-context-btn', this.openContextMenu.bind( this ) );
 		},
 		/**
 		 * [scrollHeaderDropDown description]
@@ -361,6 +362,22 @@ window.bp = window.bp || {};
 				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
 				bp.Readylaunch.deletedNotifications.push( notificationId );
 			}
+		},
+
+		/**
+		 * Open context menu.
+		 * @param e
+		 */
+		openContextMenu: function ( e ) {
+			e.preventDefault();
+
+			var target = $( e.currentTarget );
+			var contextWrapper = target.closest( '.bb-rl-context-wrap' );
+			var dropdown = contextWrapper.find( '.bb-rl-context-dropdown' );
+
+			dropdown.toggleClass( 'active' );
+
+			$( '.bb-rl-context-dropdown' ).not( dropdown ).removeClass( 'active' );
 		},
 
 		/**

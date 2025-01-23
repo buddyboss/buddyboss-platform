@@ -5,6 +5,7 @@
 	.item-entry {
 
 		.list-wrap {
+			position: relative;
 			height: 100%;
 			border-radius: var(--bb-rl-radius-lg);
 			background-color: var(--bb-rl-background-color);
@@ -58,8 +59,8 @@
 			}
 		}
 
-		.bb_more_options {
-			display: none; /* Temporary hide untill design mockup is ready */
+		.bb-rl-member-buttons-wrap {
+			margin-top: auto;
 		}
 	}
 
