@@ -87,12 +87,18 @@ window.bp = window.bp || {};
 
 			// Wrap Avatar and Content section into header.
 			var $formHeaderElements = $activityForm.find(
-				'#bb-rl-user-status-huddle, #bb-rl-whats-new-content, #bb-rl-whats-new-attachments'
+				'#bb-rl-user-status-huddle, #bb-rl-whats-new-privacy-stage, #bb-rl-whats-new-content, #bb-rl-whats-new-attachments'
 			);
 
 			// Wrap elements into the header section.
 			if ( $formHeaderElements.length ) {
 				$formHeaderElements.wrapAll( '<div class="bb-rl-whats-new-form-header"></div>' );
+			}
+
+			// Move Privacy stage into status huddle
+			var $privacyStage = $activityForm.find( '#bb-rl-whats-new-privacy-stage' );
+			if ( $privacyStage.length ) {
+				$privacyStage.appendTo( $activityForm.find( '.bb-rl-activity-post-name-status' ) );
 			}
 
 			var $this = this;
@@ -1591,19 +1597,13 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function() {
-				this.listenTo(Backbone, 'privacy:headerupdate', this.updateHeader);
 				this.listenTo(Backbone, 'editactivity', this.updateEditActivityHeader);
-				this.model.on( 'change:privacy_modal', this.render, this );
 				this.model.on( 'change:edit_activity', this.render, this );
 			},
 
 			render: function () {
 				this.$el.html( this.template( this.model.toJSON() ) );
 				return this;
-			},
-
-			updateHeader: function() {
-				this.model.set( 'privacy_modal', 'profile' );
 			},
 
 			updateEditActivityHeader: function() {
@@ -3984,7 +3984,6 @@ window.bp = window.bp || {};
 				$( '#bb-rl-activity-post-form-privacy' ).show();
 				var whats_new_form = $( '#bb-rl-whats-new-form' );
 				whats_new_form.addClass( 'bb-rl-focus-in--privacy' );
-				Backbone.trigger('privacy:headerupdate');
 				if ( whats_new_form.hasClass( 'bb-rl-activity-edit' ) ) {
 					this.model.set( 'privacy', this.$el.closest( '#bb-rl-whats-new-form' ).find( '.bb-rl-activity-privacy__input:checked' ).val() );
 				}
