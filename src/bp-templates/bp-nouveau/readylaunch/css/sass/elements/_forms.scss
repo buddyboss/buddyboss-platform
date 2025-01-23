@@ -86,3 +86,25 @@
 		}
 	}
 }
+
+.bb-rl-form-field-wrapper {
+
+	label {
+		display: block;
+
+		@include bb-rl-label-heading-bolder;
+		margin: 0 0 10px;
+	}
+
+	.bb-rl-input-field {
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		border-radius: 6px;
+		padding: 5px var(--bb-rl-space-100);
+	}
+
+	.bb-rl-textarea-field {
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		border-radius: 6px;
+		padding: 5px var(--bb-rl-space-100);
+	}
+}

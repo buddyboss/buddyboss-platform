@@ -20,6 +20,7 @@
 
 		.item {
 			text-align: center;
+			margin-bottom: 18px;
 		}
 
 		.item-avatar {
@@ -150,5 +151,13 @@
 				}
 			}
 		}
+	}
+}
+
+.bb-rl-invite-form {
+
+	.bb-rl-input-field,
+	textarea {
+		width: 100%;
 	}
 }

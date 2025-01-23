@@ -15,6 +15,7 @@
 
 .bb-rl-members .item-entry .item {
   text-align: center;
+  margin-bottom: 18px;
 }
 
 .bb-rl-members .item-entry .item-avatar {
@@ -137,4 +138,9 @@
 
 .bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.is_friend i::before {
   content: "\e32c";
+}
+
+.bb-rl-invite-form .bb-rl-input-field,
+.bb-rl-invite-form textarea {
+  width: 100%;
 }

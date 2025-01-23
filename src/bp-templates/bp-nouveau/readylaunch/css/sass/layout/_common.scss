@@ -31,3 +31,26 @@
 		}
 	}
 }
+
+.bb-rl-heading-count {
+	display: inline-flex;
+	align-items: center;
+
+	&::before {
+		content: "(";
+		font-size: inherit;
+	}
+
+	&::after {
+		content: ")";
+		font-size: inherit;
+	}
+
+	&:empty {
+
+		&::before,
+		&::after {
+			display: none;
+		}
+	}
+}

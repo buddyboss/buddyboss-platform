@@ -25,7 +25,7 @@ do_action( 'bp_before_directory_members_page' );
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
 			<div class="bb-rl-action-button">
-				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
+				<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
 			</div>
 		</div>
 	</div>

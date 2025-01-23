@@ -866,6 +866,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
+			$( document ).on( 'click', '#buddypress #bb-rl-invite-button', this.inviteMember );
+			$( document ).on( 'click', '#buddypress .bb-rl-close-invite', this.inviteMemberClose );
 			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$( document ).on( 'click', '.show-action-popup', this.showActionPopup );
 			$( document ).on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
@@ -2507,6 +2509,31 @@ window.bp = window.bp || {};
 			$( 'body' ).find( '[data-popup-shown="opened"]' ).attr( 'data-popup-shown' , 'closed' );
 			leave_group_popup.find( '.bb-remove-connection-content .bb-user-name' ).html( '' );
 			leave_group_popup.hide();
+		},
+
+		/**
+		 * [Invite Member]
+		 *
+		 * @param event
+		 */
+		inviteMember: function ( event ) {
+			event.preventDefault();
+			var target            = $( event.currentTarget );
+
+			$( '.bb-rl-invite-modal' ).show();
+		},
+
+		/**
+		 * [Invite Member Close]
+		 *
+		 * @param event
+		 */
+		inviteMemberClose: function ( event ) {
+			event.preventDefault();
+			var target            = $( event.currentTarget );
+			var invite_popup = $( target ).closest( '.bb-rl-invite-modal' );
+
+			invite_popup.hide();
 		},
 
 		/**
