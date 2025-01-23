@@ -293,6 +293,14 @@
   font-size: 0.85rem;
 }
 
+.bb-rl-activity-form.bb-rl-focus-in .bb-rl-whats-new-scroll-view {
+  max-height: calc(100vh - 280px);
+  overflow: auto;
+  width: 100%;
+  overscroll-behavior: contain;
+  padding-bottom: var(--bb-rl-space-100);
+}
+
 .bb-rl-activity-form.bb-rl-focus-in--empty #aw-whats-new-submit {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: default;
@@ -477,8 +485,8 @@
 }
 
 /* General Styling */
-.bb-rl-inner-container {
+.bb-rl-activity-page {
   max-width: 680px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) 0;
 }

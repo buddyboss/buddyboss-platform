@@ -10,7 +10,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_nouveau_before_activity_directory_content();
 ?>
-<div class="bb-rl-inner-container">
+<div class="bb-rl-inner-container bb-rl-activity-page">
 	<?php
 	if ( is_user_logged_in() ) :
 		bp_get_template_part( 'activity/post-form' );

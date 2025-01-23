@@ -1956,38 +1956,38 @@ body.admin-bar .bb-rl-left-panel {
   margin: 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list {
   list-style: none;
   padding: 0;
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list li {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list li {
   display: flex;
   align-items: center;
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list li:hover, .bb-rl-left-panel .bb-rl-list .item-list li:focus-within {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list li:hover, .bb-rl-left-panel .bb-rl-list .bb-rl-item-list li:focus-within {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list .item-avatar a {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list .item-avatar a {
   display: block;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-200);
   outline: none;
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list .item-avatar img {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list .item-avatar img {
   height: 24px;
   width: 24px;
   border-radius: var(--bb-rl-radius-full);
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list .item-title {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list .item-title {
   flex: 1;
 }
 
-.bb-rl-left-panel .bb-rl-list .item-list .item-title a {
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list .item-title a {
   display: block;
   color: var(--bb-rl-text-color);
   font-size: 0.85rem;
