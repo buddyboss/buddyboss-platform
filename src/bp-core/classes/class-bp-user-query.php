@@ -268,12 +268,7 @@ class BP_User_Query {
 
 		// 'include' - User ids to include in the results.
 		$include     = false !== $include ? wp_parse_id_list( $include ) : array();
-
-		$include_ids_sql = $this->get_include_ids_sql( $include );
-		$include_ids = array();
-		if ( empty( $include_ids_sql ) ) {
-			$include_ids = $this->get_include_ids( $include );
-		}
+		$include_ids = $this->get_include_ids( $include );
 
 		/* TYPE **************************************************************/
 
@@ -387,10 +382,7 @@ class BP_User_Query {
 				$this->uid_name  = 'ID';
 				$this->uid_table = $wpdb->users;
 				$sql['select']   = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				if ( ! empty( $include_ids_sql ) ) {
-					$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids_sql})";
-					$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids_sql})";
-				} else if ( ! empty( $include_ids ) ) {
+				if ( ! empty( $include_ids ) ) {
 					$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
 					$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids})";
 					$sql['orderby'] = "ORDER BY FIELD(u.{$this->uid_name}, {$include_ids})";
@@ -422,9 +414,7 @@ class BP_User_Query {
 		/* WHERE *************************************************************/
 
 		// An array containing nothing but 0 should always fail.
-		if ( ! empty( $include_ids_sql ) ) {
-			$sql['where'][] = "u.{$this->uid_name} IN ({$include_ids_sql})";
-		} else if ( is_array( $include_ids ) && 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
+		if ( is_array( $include_ids ) && 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
 			$sql['where'][] = $this->no_results['where'];
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
@@ -725,10 +715,6 @@ class BP_User_Query {
 	 */
 	public function get_include_ids( $include = array() ) {
 		return $include;
-	}
-
-	public function get_include_ids_sql( $include = array() ) {
-		return '';
 	}
 
 	/**

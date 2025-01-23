@@ -921,7 +921,7 @@ function groups_get_group_members( $args = array() ) {
 		$cache_key = 'bp_groups_get_group_members_' . md5( maybe_serialize( $group_member_args ) );
 		if ( ! isset( $cache[ $cache_key ] ) ) {
 			// Perform the group member query (extends BP_User_Query).
-			$members = new BP_Group_Member_Query( $group_member_args );
+			$members = new BB_Group_Member_Query( $group_member_args );
 
 			$cache[ $cache_key ] = $members;
 		} else {
