@@ -53,11 +53,25 @@
   color: var(--bb-rl-background-tertiary-color);
 }
 
-.bb-rl-members .item-entry .member-buttons-wrap {
-  margin: auto 0 0;
+.bb-rl-members .item-entry .bb_more_options {
+  display: none;
+  /* Temporary hide untill design mockup is ready */
 }
 
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button {
+.bb-rl-members .item-list.grid .only-list-view {
+  display: none;
+}
+
+.bb-rl-members .item-list.list .only-grid-view {
+  display: none;
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions {
+  margin-left: auto;
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -72,54 +86,106 @@
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   font-size: var(--font-size-sm);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  white-space: nowrap;
 }
 
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button:hover {
+.bb-rl-item-actions .bb-rl-primary-actions button:hover,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button:focus {
+.bb-rl-item-actions .bb-rl-primary-actions button:focus,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-rl-members .item-entry .member-buttons-wrap .primary-action button:disabled {
+.bb-rl-item-actions .bb-rl-primary-actions button:disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
-.bb-rl-members .item-entry .bb_more_options {
-  display: none;
-  /* Temporary hide untill design mockup is ready */
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i {
+  margin-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-members .item-list.grid .only-list-view {
-  display: none;
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i::before, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i::before {
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
 }
 
-.bb-rl-members .item-list.list .only-grid-view {
-  display: none;
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before {
+  content: "\e168";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.follow-button.not_following i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button.not_following i::before {
+  content: "\e3d4";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.follow-button.following i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button.following i::before {
+  content: "\e182";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.not_friends i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.not_friends i::before {
+  content: "\e3d4";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.pending_friend i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.pending_friend i::before {
+  content: "\eafa";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.awaiting_response_friend i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.awaiting_response_friend i::before {
+  content: "\edec";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.is_friend i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.is_friend i::before {
+  content: "\e182";
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions {
-  margin-right: auto;
+  flex: 1;
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .button-wrap {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .send-message,
-.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button {
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button,
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button {
   font-size: 0;
   line-height: 1;
   display: inline-block;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before,
-.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button i::before {
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button i::before,
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button i::before {
   content: "";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -133,11 +199,32 @@
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.not_friends i::before {
-  content: "\e3d6";
+  content: "\e4d0";
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.is_friend i::before {
-  content: "\e32c";
+  content: "\e4ce";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.pending_friend i::before {
+  content: "\edec";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button.not_following i::before {
+  content: "\e324";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button.not_following i::before {
+  content: "\e324";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button.following i::before {
+  content: "\e324";
+  font-weight: 500;
+}
+
+.bb-rl-item-actions.bb-rl-idle-primary .bb-rl-secondary-actions .button-wrap {
+  justify-content: center;
 }
 
 .bb-rl-invite-form .bb-rl-input-field,

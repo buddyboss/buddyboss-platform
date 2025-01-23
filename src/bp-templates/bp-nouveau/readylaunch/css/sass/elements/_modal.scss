@@ -37,8 +37,8 @@
 
 	h4 {
 		margin: 0;
-		font-size: 17px;
-		font-weight: 500;
+
+		@include bb-rl-base-heading-bolder;
 	}
 
 	.bb-rl-modal-close-button {
@@ -48,8 +48,7 @@
 }
 
 .bb-rl-modal-content {
-	font-size: 14px;
-	font-weight: 400;
+	font-size: var(--font-size-sm);
 	max-height: calc(100vh - 220px);
 	overflow: auto;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
@@ -59,4 +58,8 @@
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-300);
 	justify-content: flex-end;
 	gap: var(--bb-rl-space-100);
+
+	.bb-rl-button {
+		padding: 4px var(--bb-rl-space-200);
+	}
 }

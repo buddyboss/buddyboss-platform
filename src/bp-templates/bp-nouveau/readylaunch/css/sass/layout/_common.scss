@@ -24,6 +24,10 @@
 		display: inline-flex;
 		align-items: center;
 
+		.bb-rl-button {
+			padding: 4px var(--bb-rl-space-200);
+		}
+
 		&::before {
 			content: "|";
 			color: var(--bb-rl-background-tertiary-hover-color);

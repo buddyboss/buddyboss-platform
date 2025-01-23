@@ -193,7 +193,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 						<div class="member-buttons-wrap">
 
-							<div class="bb-rl-item-actions flex items-center">
+							<div class="bb-rl-item-actions flex items-center <?php echo empty($profile_actions['primary']) ? 'bb-rl-idle-primary' : ''; ?>">
 								<div class="bb-rl-secondary-actions flex items-center">
 									<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
 										<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
@@ -320,7 +320,7 @@ bp_nouveau_after_loop();
 							</div>
 							<div class="bb-rl-form-field-wrapper">
 								<label for="bb-rl-invite-type">Profile type</label>
-								<select id="bb-rl-invite-type" name="invitee-type" class="bb-rl-input-field">
+								<select id="bb-rl-invite-type" name="invitee-type" class="bb-rl-input-field bb-rl-input-field--select">
 									<option value="">--Select--</option>
 									<option selected="selected" value="admin">Admin</option>
 									<option value="subscriber">Subscriber</option>

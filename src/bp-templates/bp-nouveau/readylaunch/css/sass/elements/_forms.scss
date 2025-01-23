@@ -4,18 +4,42 @@
 	background-color: var(--bb-rl-background-secondary-color);
 	border: 1px solid var(--bb-rl-border-secondary-color);
 	border-radius: 6px;
-	padding: 6px 8px;
+	padding: 0 8px;
+	height: 32px;
+	line-height: 32px;
 
 	label {
 
 		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-secondary-color);
+
+		span::after {
+			content: "|";
+			color: var(--bb-rl-background-tertiary-hover-color);
+			padding: 0 0 0 var(--bb-rl-space-100);
+		}
 	}
 
 	.select-wrap {
 		display: inline-flex;
 		align-items: center;
+
+		select {
+			background-color: transparent;
+			border: 0;
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-color);
+		}
 	}
+}
+
+.no-js .bb-rl-filter select {
+	display: none;
+}
+
+.js .bb-rl-filter select {
+	display: block;
 }
 
 /* Selec2 custom theme/styling */
@@ -88,6 +112,7 @@
 }
 
 .bb-rl-form-field-wrapper {
+	margin: 0 0 var(--bb-rl-space-200);
 
 	label {
 		display: block;
@@ -100,6 +125,17 @@
 		border: 1px solid var(--bb-rl-border-tertiary-color);
 		border-radius: 6px;
 		padding: 5px var(--bb-rl-space-100);
+
+		&.bb-rl-input-field--select {
+			background-color: var(--bb-rl-background-secondary-color);
+			appearance: none;
+			/* stylelint-disable function-url-quotes */
+			background-image: url('data:image/svg+xml,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.21967 9.21967C5.92678 9.51256 5.92678 9.98744 6.21967 10.2803L11.2197 15.2803C11.5126 15.5732 11.9874 15.5732 12.2803 15.2803L17.2803 10.2803C17.5732 9.98744 17.5732 9.51256 17.2803 9.21967C16.9874 8.92678 16.5126 8.92678 16.2197 9.21967L11.75 13.6893L7.28033 9.21967C6.98744 8.92678 6.51256 8.92678 6.21967 9.21967Z" fill="%23a5a7a9"/></svg>');
+			/* stylelint-enable */
+			background-position: 99% center;
+			background-repeat: no-repeat;
+			padding-right: var(--bb-rl-space-500);
+		}
 	}
 
 	.bb-rl-textarea-field {

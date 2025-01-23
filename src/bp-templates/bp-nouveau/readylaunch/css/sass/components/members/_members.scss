@@ -58,17 +58,6 @@
 			}
 		}
 
-		.member-buttons-wrap {
-			margin: auto 0 0;
-
-			.primary-action button {
-
-				@include bb-rl-button;
-				@include bb-rl-button-secondary-fill;
-				font-size: var(--font-size-sm);
-			}
-		}
-
 		.bb_more_options {
 			display: none; /* Temporary hide untill design mockup is ready */
 		}
@@ -91,23 +80,85 @@
 
 .bb-rl-item-actions {
 
-	.bb-rl-secondary-actions {
-		margin-right: auto;
+	.bb-rl-primary-actions {
+		margin-left: auto;
+
+		button,
+		.generic-button a {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			font-size: var(--font-size-sm);
+			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+			white-space: nowrap;
+
+			&.send-message,
+			&.follow-button,
+			&.friendship-button {
+
+				i {
+					margin-right: var(--bb-rl-space-50);
+
+					&::before {
+						content: "";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						color: var(--bb-rl-icon-secondary-color);
+						font-style: normal;
+					}
+				}
+			}
+
+			&.send-message i::before {
+				content: "\e168";
+			}
+
+			&.follow-button.not_following i::before {
+				content: "\e3d4";
+			}
+
+			&.follow-button.following i::before {
+				content: "\e182";
+			}
+
+			&.friendship-button.not_friends i::before {
+				content: "\e3d4";
+			}
+
+			&.friendship-button.pending_friend i::before {
+				content: "\eafa";
+			}
+
+			&.friendship-button.awaiting_response_friend i::before {
+				content: "\edec";
+			}
+
+			&.friendship-button.is_friend i::before {
+				content: "\e182";
+			}
+		}
 	}
 
 	.bb-rl-secondary-actions {
+		flex: 1;
 
 		.button-wrap {
 			display: flex;
 			align-items: center;
 			gap: 12px;
+			width: 100%;
 		}
 
 		.send-message,
-		.friendship-button {
+		.friendship-button,
+		.follow-button {
 			font-size: 0;
 			line-height: 1;
 			display: inline-block;
+			background-color: transparent;
+			border: 0;
+			padding: 0;
 
 			i {
 
@@ -122,33 +173,42 @@
 			}
 		}
 
-		.send-message {
-
-			i {
-
-				&::before {
-					content: "\e16e";
-				}
-			}
+		.send-message i::before {
+			content: "\e16e";
 		}
 
-		.friendship-button.not_friends {
-
-			i {
-
-				&::before {
-					content: "\e3d6";
-				}
-			}
+		.friendship-button.not_friends i::before {
+			content: "\e4d0";
 		}
 
-		.friendship-button.is_friend {
+		.friendship-button.is_friend i::before {
+			content: "\e4ce";
+		}
 
-			i {
+		.friendship-button.pending_friend i::before {
+			content: "\edec";
+		}
 
-				&::before {
-					content: "\e32c";
-				}
+		.follow-button.not_following i::before {
+			content: "\e324";
+		}
+
+		.follow-button.not_following i::before {
+			content: "\e324";
+		}
+
+		.follow-button.following i::before {
+			content: "\e324";
+			font-weight: 500;
+		}
+	}
+
+	&.bb-rl-idle-primary {
+
+		.bb-rl-secondary-actions {
+
+			.button-wrap {
+				justify-content: center;
 			}
 		}
 	}
