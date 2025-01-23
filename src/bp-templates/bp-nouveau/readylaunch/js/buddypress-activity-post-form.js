@@ -6211,7 +6211,7 @@ window.bp = window.bp || {};
 
 				whats_new_form.find( '#public.bb-rl-activity-privacy__input' ).prop( 'checked', true );
 				whats_new_form.find( '#bb-rl-activity-group-ac-items .bb-rl-activity-object__radio' ).prop( 'checked', false ).removeAttr( 'checked' );
-				whats_new_form.find( '#bb-rl-activity-group-ac-items .bb-radio-style.selected' ).removeClass( 'selected' );
+				whats_new_form.find( '#bb-rl-activity-group-ac-items .bb-rl-radio-style.selected' ).removeClass( 'selected' );
 
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
 				$showToolbarButton.removeClass( 'active' );
