@@ -401,13 +401,13 @@ window.bp = window.bp || {};
 			 */
 			method = method || 'reset';
 			if ( 'append' === method ) {
-				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).append( content ).find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
 			} else if ( 'prepend' === method ) {
-				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).prepend( content ).find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
 			} else if ( 'after' === method ) {
-				$( selector ).after( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).after( content ).find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
 			} else {
-				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
+				$( selector ).html( content ).find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
 			}
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
@@ -436,7 +436,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		hideSingleUrl: function () {
-			var _findtext  = $( this ).find( '.activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
+			var _findtext  = $( this ).find( '.bb-rl-activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url       = '',
 				newString  = '',
 				startIndex = '',
@@ -465,7 +465,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( $.trim( newString ).length === 0 && $( this ).find( 'iframe' ).length !== 0 && _url !== '' ) {
-					$( this ).find( '.activity-inner > p:first' ).hide();
+					$( this ).find( '.bb-rl-activity-inner > p:first' ).hide();
 				}
 			}
 		},
@@ -502,8 +502,8 @@ window.bp = window.bp || {};
 			}
 
 			// prevent activity response to append to media model activity list element.
-			if ( data.object == 'activity' && data.target == '#buddypress [data-bp-list] ul.bp-list' ) {
-				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
+			if ( data.object == 'activity' && data.target == '#buddypress [data-bp-list] ul.bb-rl-list' ) {
+				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-media-model-container ul.bb-rl-list)';
 			}
 
 			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
@@ -553,7 +553,7 @@ window.bp = window.bp || {};
 
 				var component_conditions = [
 					data.object === 'group_members' && $( 'body' ).hasClass( 'group-members' ),
-					data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
+					data.object === 'activity' && $( 'body.groups' ).hasClass( 'bb-rl-activity' ),
 					data.object === 'document' && $( 'body' ).hasClass( 'documents' ),
 					data.object === 'manage_group_members' && $( 'body' ).hasClass( 'manage-members' ),
 					data.object === 'document' && ( $( 'body' ).hasClass( 'document' ) || $( 'body' ).hasClass( 'documents' ) ),
@@ -709,7 +709,7 @@ window.bp = window.bp || {};
 						function () { // Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
-							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+							$( '.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);
@@ -1367,12 +1367,12 @@ window.bp = window.bp || {};
 					if ( $( this ).hasClass( 'layout-list-view' ) ) {
 						gridfilters.find( '.layout-grid-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
-						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
+						$( this ).parents( '.buddypress-wrap' ).find( '.bb-rl-list' ).removeClass( 'grid' );
 						layout = 'list';
 					} else {
 						gridfilters.find( '.layout-list-view' ).removeClass( 'active' );
 						$( this ).addClass( 'active' );
-						$( this ).parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
+						$( this ).parents( '.buddypress-wrap' ).find( '.bb-rl-list' ).addClass( 'grid' );
 						layout = 'grid';
 					}
 

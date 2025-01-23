@@ -833,7 +833,7 @@ window.bp = window.bp || {};
 			self.postForm.$el.find( '.bb-rl-activity-privacy__input#' + activity_data.privacy ).prop( 'checked', true );
 
 			// Update privacy status.
-			var bpListActivity = $( '[data-bp-list="activity"] #activity-' + activity_data.id );
+			var bpListActivity = $( '[data-bp-list="activity"] #bb-rl-activity-' + activity_data.id );
 			var privacy            = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).data( 'value' ),
 			    privacy_edit_label = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).text();
 
@@ -969,7 +969,7 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
-			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
+			if ( $( 'body' ).hasClass( 'bb-rl-activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
 				bp.draft_activity.object = BP_Nouveau.activity.params.object;
 
 				// Draft activity data.
@@ -5877,7 +5877,7 @@ window.bp = window.bp || {};
 							}
 						}
 
-						var activityElemSel = $( '#activity-' + response.id );
+						var activityElemSel = $( '#bb-rl-activity-' + response.id );
 
 						// Display a successful feedback if the activity is not consistent with the displayed stream.
 						if ( ! toPrepend ) {
@@ -5910,12 +5910,12 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content
 							parsed_data_bp_activity.content = $( '<div>' ).html( parsed_data_bp_activity.content ).html();
 
-							var activity_modal_item = $( '#activity-modal .activity-list .activity-item' );
-							var activity_target = activity_modal_item.find( '.activity-content' ).find( '.activity-inner' );
+							var activity_modal_item = $( '#activity-modal .bb-rl-activity-list .bb-rl-activity-item' );
+							var activity_target = activity_modal_item.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' );
 							var activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-privacy-wrap' ).find( '.privacy');
 							var activity_privacy_list = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-activity-privacy li');
 							if ( activity_modal_item.length > 0 ) {
-								var content = activityElemSel.find( '.activity-content' ).find( '.activity-inner' ).html();
+								var content = activityElemSel.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ).html();
 								activity_target.empty();
 								activity_target.append( content );
 								activity_modal_item.data( 'bp-activity', parsed_data_bp_activity );
@@ -5930,21 +5930,21 @@ window.bp = window.bp || {};
 						} else if ( ! activityElemSel.length ) {
 
 							// It's the very first activity, let's make sure the container can welcome it!
-							if ( ! $( '#activity-stream ul.activity-list' ).length ) {
-								$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
+							if ( ! $( '#bb-rl-activity-stream ul.bb-rl-activity-list' ).length ) {
+								$( '#bb-rl-activity-stream' ).html( $( '<ul></ul>' ).addClass( 'bb-rl-activity-list bb-rl-item-list bb-rl-list' ) );
 							}
 
 							// Check if there is a pinned activity with .bb-pinned class
-							var pinned_activity = $( '#activity-stream ul.activity-list li:first.bb-pinned' );
+							var pinned_activity = $( '#bb-rl-activity-stream ul.bb-rl-activity-list li:first.bb-pinned' );
 
 							if ( pinned_activity.length > 0 ) {
 
 								// If a pinned activity with .bb-pinned class is found, insert after it.
-								bp.Nouveau.inject( '#activity-stream ul.activity-list li:first.bb-pinned', response.activity, 'after' );
+								bp.Nouveau.inject( '#bb-rl-activity-stream ul.bb-rl-activity-list li:first.bb-pinned', response.activity, 'after' );
 							} else {
 
 								// Prepend the activity.
-								bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+								bp.Nouveau.inject( '#bb-rl-activity-stream ul.bb-rl-activity-list', response.activity, 'prepend' );
 							}
 
 							// replace dummy image with original image by faking scroll event.
@@ -5955,7 +5955,7 @@ window.bp = window.bp || {};
 									window.instgrm.Embeds.process();
 								}
 								if ( ! _.isUndefined( window.FB ) && ! _.isUndefined( window.FB.XFBML ) ) {
-									window.FB.XFBML.parse( $( document ).find( '#activity-' + response.id ).get( 0 ) );
+									window.FB.XFBML.parse( $( document ).find( '#bb-rl-activity-' + response.id ).get( 0 ) );
 								}
 							}
 						}

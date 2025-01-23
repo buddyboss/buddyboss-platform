@@ -32,7 +32,7 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function () {
 			$( '.bb-nouveau-list' ).scroll( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
-			$( document ).on( 'click', '.notification-link, .notification-header-tab-action, .load-more a', this.bbHandleLoadMore.bind( this ) );
+			$( document ).on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 			$( document ).on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
@@ -51,7 +51,7 @@ window.bp = window.bp || {};
 			var el = e.target;
 			if ( 'notification-list' === el.id ) {
 				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! el.classList.contains( 'loading' ) ) {
-					var load_more = $( el ).find( '.load-more' );
+					var load_more = $( el ).find( '.bb-rl-load-more' );
 					if ( load_more.length ) {
 						el.classList.add( 'loading' );
 						load_more.find( 'a' ).trigger( 'click' );
@@ -87,7 +87,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 
 			// Identify the clicked element.
-			var $target = $( e.target ).closest( '.notification-link, .notification-header-tab-action, .load-more a' );
+			var $target = $( e.target ).closest( '.notification-link, .notification-header-tab-action, .bb-rl-load-more a' );
 			if ( ! $target.length ) {
 				return;
 			}
@@ -145,7 +145,7 @@ window.bp = window.bp || {};
 			// Show a loading indicator.
 			var mainContainerID = $( '#' + settings.containerId );
 			if ( settings.page > 1 ) {
-				mainContainerID.find( '.load-more' ).before( '<i class="bb-rl-loader"></i>' );
+				mainContainerID.find( '.bb-rl-load-more' ).before( '<i class="bb-rl-loader"></i>' );
 			} else {
 				mainContainerID.find( '.notification-list' ).html( '<i class="bb-rl-loader"></i>' );
 			}
@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 							container.find( '.bb-rl-loader' ).remove( '.bb-rl-loader' );
 						}
 						if ( settings.page > 1 ) {
-							container.find( '.load-more' ).replaceWith( response.data );
+							container.find( '.bb-rl-load-more' ).replaceWith( response.data );
 						} else {
 							container.html( response.data );
 						}

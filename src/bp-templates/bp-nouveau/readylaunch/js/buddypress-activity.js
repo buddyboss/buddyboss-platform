@@ -1,6 +1,6 @@
 /* jshint browser: true */
 /* global bp, BP_Nouveau, Dropzone, videojs, bp_media_dropzone */
-/* @version 3.1.0 */
+/* @version [BBVERSION] */
 window.bp = window.bp || {};
 
 ( function( exports, $ ) {
@@ -125,13 +125,13 @@ window.bp = window.bp || {};
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities.
-			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.bb-rl-load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
 			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
 
 			// Activity comments effect.
-			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
+			$( '#bb-rl-activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeActivity );
 
 			$( document ).on( 'activityModalOpened', function( event, data ) {
@@ -153,20 +153,20 @@ window.bp = window.bp || {};
 			}.bind( this ) );
 
 			// Activity actions.
-			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.bb-rl-activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.bb-rl-activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.bb-rl-activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
-			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #activity-modal' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
+			$( '#bb-media-model-container .bb-rl-activity-list' ).on( 'click', '.bb-rl-activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '.bb-activity-model-wrapper' ).on( 'click', '.ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
 			// forums.
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Reaction actions.
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
@@ -178,9 +178,9 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
-			$( document ).on( 'click', '#activity-stream .activity-comments .view-more-comments, #activity-stream .activity-state-comments > .comments-count', function ( e ) {
+			$( document ).on( 'click', '#bb-rl-activity-stream .activity-comments .view-more-comments, #bb-rl-activity-stream .activity-state-comments > .comments-count', function ( e ) {
 				e.preventDefault();
-				$( this ).parents( 'li.activity-item' ).find( '.activity-comments > ul > li.acomments-view-more, .activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
+				$( this ).parents( 'li.bb-rl-activity-item' ).find( '.activity-comments > ul > li.acomments-view-more, .activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
 			} );
 
 			$( '#activity-modal > .bb-modal-activity-body' ).on( 'scroll', this.autoloadMoreComments.bind( this ) );
@@ -259,7 +259,7 @@ window.bp = window.bp || {};
 			this.heartbeat_data.last_recorded = Number( data.bp_activity_newest_activities.last_recorded );
 
 			// Parse activities.
-			newest_activities = $( this.heartbeat_data.newest ).filter( '.activity-item' );
+			newest_activities = $( this.heartbeat_data.newest ).filter( '.bb-rl-activity-item' );
 
 			// Count them.
 			newest_activities_count = Number( newest_activities.length );
@@ -349,7 +349,7 @@ window.bp = window.bp || {};
 
 				// Otherwise add it.
 			} else {
-				$( '#buddypress [data-bp-list="activity"] ul.activity-list' ).prepend( '<li class="load-newest"><a href="#newest">' + BP_Nouveau.newest + ' (' + newest_activities_count + ')</a></li>' );
+				$( '#buddypress [data-bp-list="activity"] ul.bb-rl-activity-list' ).prepend( '<li class="load-newest"><a href="#newest">' + BP_Nouveau.newest + ' (' + newest_activities_count + ')</a></li>' );
 			}
 
 			$( '#buddypress [data-bp-list="activity"] li.load-newest' ).trigger( 'click' );
@@ -400,16 +400,16 @@ window.bp = window.bp || {};
 					}
 				);
 
-				var first_activity = $( event.delegateTarget ).find( '.activity-list .activity-item' ).first();
+				var first_activity = $( event.delegateTarget ).find( '.bb-rl-activity-list .bb-rl-activity-item' ).first();
 				if ( first_activity.length > 0 && first_activity.hasClass( 'bb-pinned' ) ) {
 
 					// Add after pinned post.
-					$( first_activity ).after( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
+					$( first_activity ).after( this.heartbeat_data.newest ).find( 'li.bb-rl-activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 
 				} else {
 
 					// Now the stream is cleaned, prepend newest.
-					$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
+					$( event.delegateTarget ).find( '.bb-rl-activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.bb-rl-activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 				}
 
 				// Reset the newest activities now they're displayed.
@@ -450,7 +450,7 @@ window.bp = window.bp || {};
 				jQuery( window ).scroll();
 
 				// Load more activities.
-			} else if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
+			} else if ( $( event.currentTarget ).hasClass( 'bb-rl-load-more' ) ) {
 				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
 
 				// Stop event propagation.
@@ -482,7 +482,7 @@ window.bp = window.bp || {};
 						page                : next_page,
 						method              : 'append',
 						exclude_just_posted : this.just_posted.join( ',' ),
-						target              : '#buddypress [data-bp-list]:not( #bb-schedule-posts_modal [data-bp-list="activity"] ) ul.bp-list'
+						target              : '#buddypress [data-bp-list]:not( #bb-schedule-posts_modal [data-bp-list="activity"] ) ul.bb-rl-list'
 					}
 				).done(
 					function( response ) {
@@ -499,7 +499,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+			$( '.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 		},
 
 		/**
@@ -531,7 +531,7 @@ window.bp = window.bp || {};
 					}
 
 					// Get the activity id.
-					activity_item = $( comment ).closest( '.activity-item' );
+					activity_item = $( comment ).closest( '.bb-rl-activity-item' );
 
 					// Get the comment count.
 					comment_count = $( '#acomment-comment-' + activity_item.data( 'bp-activity-id' ) + ' span.comment-count' ).html() || ' ';
@@ -601,7 +601,7 @@ window.bp = window.bp || {};
 		closeActivity: function ( event ) {
 			event.preventDefault();
 			var target = $( event.target ), modal = target.closest( '.bb-activity-model-wrapper' ), footer = modal.find( '.bb-modal-activity-footer' );
-			var activityId = modal.find( '.activity-item' ).data( 'bp-activity-id' );
+			var activityId = modal.find( '.bb-rl-activity-item' ).data( 'bp-activity-id' );
 			var form = modal.find( '#ac-form-' + activityId );
 
 			bp.Nouveau.Activity.reinitializeActivityCommentForm( form );
@@ -614,7 +614,7 @@ window.bp = window.bp || {};
 
 			modal.closest( 'body' ).removeClass( 'acomments-modal-open' );
 			modal.hide();
-			modal.find( 'ul.activity-list' ).empty();
+			modal.find( 'ul.bb-rl-activity-list' ).empty();
 			footer.removeClass( 'active' );
 			footer.find( 'form.ac-form' ).remove();
 		},
@@ -635,7 +635,7 @@ window.bp = window.bp || {};
 				$.each(
 					data.response.new_mentions,
 					function( i, id ) {
-						$( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_mentions_activity' );
+						$( '#buddypress #bb-rl-activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_mentions_activity' );
 					}
 				);
 
@@ -645,8 +645,8 @@ window.bp = window.bp || {};
 				$.each(
 					this.heartbeat_data.highlights[data.scope],
 					function( i, id ) {
-						if ( $( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).length ) {
-							$( '#buddypress #activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_' + data.scope + '_activity' );
+						if ( $( '#buddypress #bb-rl-activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).length ) {
+							$( '#buddypress #bb-rl-activity-stream' ).find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_' + data.scope + '_activity' );
 						}
 					}
 				);
@@ -673,7 +673,7 @@ window.bp = window.bp || {};
 
 			setTimeout(
 				function () {
-					$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
+					$( '#buddypress #bb-rl-activity-stream .bb-rl-activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
 				},
 				3000
 			);
@@ -705,7 +705,7 @@ window.bp = window.bp || {};
 
 		openEditActivityPopup: function() {
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
-				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
+				var activity_item = $( '#bb-rl-activity-' + BP_Nouveau.activity.params.is_activity_edit );
 				if ( activity_item.length ) {
 					var activity_data        = activity_item.data( 'bp-activity' );
 					var activity_URL_preview = ( activity_item.data( 'link-url' ) ) !== '' ? activity_item.data( 'link-url' ) : null;
@@ -718,7 +718,7 @@ window.bp = window.bp || {};
 		},
 
 		activityPrivacyChange: function( event ) {
-			var parent      = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest( '.activity-item' ),
+			var parent      = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest( '.bb-rl-activity-item' ),
 				activity_id = activity_item.data( 'bp-activity-id' );
 
 			// Stop event propagation.
@@ -786,7 +786,7 @@ window.bp = window.bp || {};
 		/* jshint ignore:start */
 		togglePrivacyDropdown: function( event ) {
 
-			var parent      = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest( '.activity-item' ),
+			var parent      = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest( '.bb-rl-activity-item' ),
 				activity_id = activity_item.data( 'bp-activity-id' );
 
 			// Stop event propagation.
@@ -890,7 +890,7 @@ window.bp = window.bp || {};
 					main_el = target.parents( '.activity-comment' ).first();
 					item_id = main_el.data( 'bp-activity-comment-id' );
 				} else {
-					main_el = target.parents( '.activity-item' );
+					main_el = target.parents( '.bb-rl-activity-item' );
 					item_id = main_el.data( 'bp-activity-id' );
 				}
 
@@ -922,10 +922,10 @@ window.bp = window.bp || {};
 									// Update reacted user name and counts.
 									if ( 'undefined' !== typeof response.data.reaction_count ) {
 										if ( is_activity ) {
-											if ( 0 < main_el.find( '.activity-content .activity-state-reactions' ).length ) {
-												main_el.find( '.activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_count );
+											if ( 0 < main_el.find( '.bb-rl-activity-content .activity-state-reactions' ).length ) {
+												main_el.find( '.bb-rl-activity-content  .activity-state-reactions' ).replaceWith( response.data.reaction_count );
 											} else {
-												main_el.find( '.activity-content .activity-state' ).prepend( response.data.reaction_count );
+												main_el.find( '.bb-rl-activity-content .activity-state' ).prepend( response.data.reaction_count );
 											}
 
 											// Added has-likes class if activity has any reactions.
@@ -968,7 +968,7 @@ window.bp = window.bp || {};
 							if ( 'activity_comment' === item_type ) {
 								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
 							} else if ( 'activity' === item_type ) {
-								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .bb-rl-activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
 							}
 						}
 
@@ -1074,7 +1074,7 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.parent_activity_id && response.data.activity ) {
-								$( 'body:not(.activity-singular) #buddypress #activity-stream ul.activity-list li#activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
+								$( 'body:not(.activity-singular) #buddypress #bb-rl-activity-stream ul.bb-rl-activity-list li#bb-rl-activity-' + response.data.parent_activity_id ).replaceWith( response.data.activity );
 							}
 
 							if ( activity_comment_id ) {
@@ -1165,7 +1165,7 @@ window.bp = window.bp || {};
 
 				item_id = null;
 
-				if ( $( content ).hasClass( 'activity-inner' ) ) {
+				if ( $( content ).hasClass( 'bb-rl-activity-inner' ) ) {
 					item_id = activity_id;
 				} else if ( $( content ).hasClass( 'acomment-content' ) ) {
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
@@ -1231,7 +1231,7 @@ window.bp = window.bp || {};
 
 			// Initiate Comment Form.
 			if ( target.hasClass( 'ac-form' ) && target.hasClass( 'not-initialized' ) ) {
-				target.closest( '.activity-item' ).find( '.acomment-reply' ).eq( 0 ).trigger( 'click' );
+				target.closest( '.bb-rl-activity-item' ).find( '.acomment-reply' ).eq( 0 ).trigger( 'click' );
 			}
 
 			// Displaying the comment form.
@@ -1241,7 +1241,7 @@ window.bp = window.bp || {};
 				target.parent().hasClass( 'acomment-reply' ) ||
 				target.hasClass( 'acomment-edit' )
 			) {
-				if ( target.parents( '.activity-item' ).hasClass( 'bb-closed-comments' ) ) {
+				if ( target.parents( '.bb-rl-activity-item' ).hasClass( 'bb-closed-comments' ) ) {
 					event.preventDefault();
 					return;
 				}
@@ -1271,8 +1271,8 @@ window.bp = window.bp || {};
 				}
 
 				// Show comment form on activity item when it is hidden initially.
-				if ( ! target.closest( '.activity-item' ).hasClass( 'has-comments' ) ) {
-					target.closest( '.activity-item' ).addClass( 'has-comments' );
+				if ( ! target.closest( '.bb-rl-activity-item' ).hasClass( 'has-comments' ) ) {
+					target.closest( '.bb-rl-activity-item' ).addClass( 'has-comments' );
 				}
 
 				// Stop event propagation.
@@ -1604,7 +1604,7 @@ window.bp = window.bp || {};
 						if ( false === response.success ) {
 							form.append( $( response.data.feedback ).hide().fadeIn( 200 ) );
 						} else {
-							var isElementorWidget = target.closest( '.elementor-activity-item' ).length > 0;
+							var isElementorWidget = target.closest( '.elementor-bb-rl-activity-item' ).length > 0;
 							var isCommentElementorWidgetForm = form.prev().hasClass( 'activity-actions' );
 							var activity_comments;
 
@@ -1812,7 +1812,7 @@ window.bp = window.bp || {};
 					return event;
 				}
 
-				target.closest( '.activity-item' ).addClass( 'loading-pin' );
+				target.closest( '.bb-rl-activity-item' ).addClass( 'loading-pin' );
 
 				var pin_action = 'pin';
 				if ( target.hasClass( 'unpin-activity' ) ) {
@@ -1828,19 +1828,19 @@ window.bp = window.bp || {};
 					'activity'
 				).done(
 					function( response ) {
-						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						target.closest( '.bb-rl-activity-item' ).removeClass( 'loading-pin' );
 
 						// Check for JSON output.
 						if ( 'object' !== typeof response ) {
 							response = JSON.parse( response );
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list   = target.closest( 'ul.activity-list' );
+							var activity_list   = target.closest( 'ul.bb-rl-activity-list' );
 							var activity_stream;
 							if ( isInsideModal ) {
-								activity_stream = target.closest( '.buddypress-wrap' ).find( '#activity-stream' );
+								activity_stream = target.closest( '.buddypress-wrap' ).find( '#bb-rl-activity-stream' );
 							} else {
-								activity_stream = target.closest( '#activity-stream' );
+								activity_stream = target.closest( '#bb-rl-activity-stream' );
 							}
 
 
@@ -1851,16 +1851,16 @@ window.bp = window.bp || {};
 								var is_group_activity  = false;
 								var activity_group_id  = '';
 
-								if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
+								if ( target.closest( 'li.bb-rl-activity-item' ).hasClass('groups') ) {
 									is_group_activity = true;
-									activity_group_id = target.closest( 'li.activity-item' ).attr('class').match(/group-\d+/);
+									activity_group_id = target.closest( 'li.bb-rl-activity-item' ).attr('class').match(/group-\d+/);
 									activity_group_id = activity_group_id[0].replace( 'group-', '' );
 								}
 
 								if ( activity_stream.hasClass( 'single-user' ) ) {
 									update_pinned_icon = false;
 								} else if (
-									activity_stream.hasClass( 'activity' ) &&
+									activity_stream.hasClass( 'bb-rl-activity' ) &&
 									'all' === scope &&
 									! is_group_activity
 								) {
@@ -1874,14 +1874,14 @@ window.bp = window.bp || {};
 
 									// Remove class from all old pinned and update action labels and icons.
 									if ( update_pinned_icon ) {
-										activity_list.find( 'li.activity-item' ).removeClass( 'bb-pinned' );
+										activity_list.find( 'li.bb-rl-activity-item' ).removeClass( 'bb-pinned' );
 									}
 
-									var update_pin_actions = 'li.activity-item:not(.groups)';
+									var update_pin_actions = 'li.bb-rl-activity-item:not(.groups)';
 									if( is_group_activity && ! activity_stream.hasClass( 'single-group' ) ) {
-										update_pin_actions = 'li.activity-item.group-' + activity_group_id;
+										update_pin_actions = 'li.bb-rl-activity-item.group-' + activity_group_id;
 									} else if( is_group_activity && activity_stream.hasClass( 'single-group' ) ) {
-										update_pin_actions = 'li.activity-item';
+										update_pin_actions = 'li.bb-rl-activity-item';
 									}
 									activity_list.find( update_pin_actions ).each( function() {
 										var action = $( this ).find( '.unpin-activity' );
@@ -1895,22 +1895,22 @@ window.bp = window.bp || {};
 									});
 
 									if ( update_pinned_icon ) {
-										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
+										target.closest( 'li.bb-rl-activity-item' ).addClass( 'bb-pinned' );
 									}
 
 									target.addClass( 'unpin-activity' );
 									target.removeClass( 'pin-activity' );
 
-									if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
+									if ( target.closest( 'li.bb-rl-activity-item' ).hasClass('groups') ) {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
 									}
 								} else if ( 'unpin' === pin_action ) {
-									target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
+									target.closest( 'li.bb-rl-activity-item' ).removeClass( 'bb-pinned' );
 									target.addClass( 'pin-activity' );
 									target.removeClass( 'unpin-activity' );
-									if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
+									if ( target.closest( 'li.bb-rl-activity-item' ).hasClass('groups') ) {
 										target.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
@@ -1937,7 +1937,7 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function() {
-						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						target.closest( '.bb-rl-activity-item' ).removeClass( 'loading-pin' );
 						$( document ).trigger(
 							'bb_trigger_toast_message',
 							[
@@ -1959,7 +1959,7 @@ window.bp = window.bp || {};
 				if ( ! activity_id ) {
 					return event;
 				}
-				target.closest( '.activity-item' ).addClass( 'loading-mute' );
+				target.closest( '.bb-rl-activity-item' ).addClass( 'loading-mute' );
 
 				var notification_toggle_action = 'mute';
 				if ( target.hasClass( 'bb-icon-bell' ) ) {
@@ -1975,7 +1975,7 @@ window.bp = window.bp || {};
 					'activity'
 				).done(
 					function( response ) {
-						target.closest( '.activity-item' ).removeClass( 'loading-mute' );
+						target.closest( '.bb-rl-activity-item' ).removeClass( 'loading-mute' );
 
 						// Check for JSON output.
 						if ( 'object' !== typeof response ) {
@@ -1987,13 +1987,13 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 								// Change the muted class and label.
 								if ( 'mute' === notification_toggle_action ) {
-									target.closest( 'li.activity-item' ).addClass( 'bb-muted' );
+									target.closest( 'li.bb-rl-activity-item' ).addClass( 'bb-muted' );
 									target.removeClass( 'bb-icon-bell-slash' );
 									target.addClass( 'bb-icon-bell' );
 									target.attr( 'title', BP_Nouveau.activity.strings.unmuteNotification );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.unmuteNotification );
 								} else if ( 'unmute' === notification_toggle_action ) {
-									target.closest( 'li.activity-item' ).removeClass( 'bb-muted' );
+									target.closest( 'li.bb-rl-activity-item' ).removeClass( 'bb-muted' );
 									target.removeClass( 'bb-icon-bell' );
 									target.addClass( 'bb-icon-bell-slash' );
 									target.attr( 'title', BP_Nouveau.activity.strings.muteNotification );
@@ -2026,7 +2026,7 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function() {
-						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						target.closest( '.bb-rl-activity-item' ).removeClass( 'loading-pin' );
 						$( document ).trigger(
 							'bb_trigger_toast_message',
 							[
@@ -2050,7 +2050,7 @@ window.bp = window.bp || {};
 					return event;
 				}
 
-				target.closest( '.activity-item' ).addClass( 'loading-pin' );
+				target.closest( '.bb-rl-activity-item' ).addClass( 'loading-pin' );
 
 				var close_comments_action = 'close_comments';
 				if ( target.hasClass( 'unclose-activity-comment' ) ) {
@@ -2066,7 +2066,7 @@ window.bp = window.bp || {};
 					'activity'
 				).done(
 					function( response ) {
-						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						target.closest( '.bb-rl-activity-item' ).removeClass( 'loading-pin' );
 
 						// Check for JSON output.
 						if ( 'object' !== typeof response ) {
@@ -2074,19 +2074,19 @@ window.bp = window.bp || {};
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 							if ( response.success ) {
-								var $media_parent = $( '#activity-stream > .activity-list' ).find( '[data-bp-activity-id=' + activity_id + ']' );
-								target.closest( '.activity-item' ).find( '.bb-activity-closed-comments-notice' ).remove();
+								var $media_parent = $( '#bb-rl-activity-stream > .bb-rl-activity-list' ).find( '[data-bp-activity-id=' + activity_id + ']' );
+								target.closest( '.bb-rl-activity-item' ).find( '.bb-rl-activity-closed-comments-notice' ).remove();
 								// Change the close comments related class and label.
 								if ( 'close_comments' === close_comments_action ) {
-									target.closest( 'li.activity-item' ).addClass( 'bb-closed-comments' );
+									target.closest( 'li.bb-rl-activity-item' ).addClass( 'bb-closed-comments' );
 									if ( target.closest( '#activity-modal' ).length > 0 ) {
 										target.closest( '#activity-modal' ).addClass( 'bb-closed-comments' );
 									}
 									target.addClass( 'unclose-activity-comment' );
 									target.removeClass( 'close-activity-comment' );
 									target.find( 'span' ).html( BP_Nouveau.activity.strings.uncloseComments );
-									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
-									target.closest( '.activity-item' ).find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
+									target.closest( 'li.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+									target.closest( '.bb-rl-activity-item' ).find( '.activity-comments' ).before( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 
 									// Handle event from media theatre.
 									if ( target.parents( '.bb-media-model-wrapper' ).length > 0 ) {
@@ -2095,12 +2095,12 @@ window.bp = window.bp || {};
 											$media_parent.find( '.bb-activity-more-options .close-activity-comment span' ).html( BP_Nouveau.activity.strings.uncloseComments );
 											$media_parent.find( '.bb-activity-more-options .close-activity-comment' ).addClass( 'unclose-activity-comment' ).removeClass( 'close-activity-comment' );
 											$media_parent.find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
-											$media_parent.find( '.activity-comments' ).before( '<div class="bb-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
+											$media_parent.find( '.activity-comments' ).before( '<div class="bb-rl-activity-closed-comments-notice">' + response.data.feedback + '</div>' );
 										}
 									}
 								} else if ( 'unclose_comments' === close_comments_action ) {
-									target.closest( 'li.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
-									target.closest( 'li.activity-item' ).removeClass( 'bb-closed-comments' );
+									target.closest( 'li.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).show();
+									target.closest( 'li.bb-rl-activity-item' ).removeClass( 'bb-closed-comments' );
 									if ( target.closest( '#activity-modal' ).length > 0 ) {
 										target.closest( '#activity-modal' ).removeClass( 'bb-closed-comments' );
 									}
@@ -2115,7 +2115,7 @@ window.bp = window.bp || {};
 											$media_parent.removeClass( 'bb-closed-comments' );
 											$media_parent.find( '.bb-activity-more-options .unclose-activity-comment span' ).html( BP_Nouveau.activity.strings.closeComments );
 											$media_parent.find( '.bb-activity-more-options .unclose-activity-comment' ).addClass( 'close-activity-comment' ).removeClass( 'unclose-activity-comment' );
-											$media_parent.find( '.bb-activity-closed-comments-notice' ).html( '' );
+											$media_parent.find( '.bb-rl-activity-closed-comments-notice' ).html( '' );
 										}
 									}
 								}
@@ -2139,7 +2139,7 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function() {
-						target.closest( '.activity-item' ).removeClass( 'loading-pin' );
+						target.closest( '.bb-rl-activity-item' ).removeClass( 'loading-pin' );
 						$( document ).trigger(
 							'bb_trigger_toast_message',
 							[
@@ -2232,10 +2232,10 @@ window.bp = window.bp || {};
 		// activity autoload.
 		loadMoreActivities: function () {
 
-			var $load_more_btn = $( '.load-more:visible' ).last(),
+			var $load_more_btn = $( '.bb-rl-load-more:visible' ).last(),
 				$window        = $( window );
 
-			if ( ! $load_more_btn.closest( '.activity-list' ).length ) {
+			if ( ! $load_more_btn.closest( '.bb-rl-activity-list' ).length ) {
 				return;
 			}
 
@@ -3120,12 +3120,12 @@ window.bp = window.bp || {};
 
 				if ( placeholder ) {
 					target = target ? $( target ) : $( placeholder );
-					parent_activity = target.closest( '.activity-modal' ).find( '.activity-item' );
-					activity_data = target.closest( '.activity-modal' ).find( '.activity-item' ).data( 'bp-activity' );
+					parent_activity = target.closest( '.activity-modal' ).find( '.bb-rl-activity-item' );
+					activity_data = target.closest( '.activity-modal' ).find( '.bb-rl-activity-item' ).data( 'bp-activity' );
 					form = $( placeholder );
 				} else {
-					parent_activity = target.closest( '.activity-item' );
-					activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+					parent_activity = target.closest( '.bb-rl-activity-item' );
+					activity_data = target.closest( '.bb-rl-activity-item' ).data( 'bp-activity' );
 				}
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
@@ -3245,7 +3245,7 @@ window.bp = window.bp || {};
 		},
 
 		fixAtWhoActivity: function() {
-			$( '.acomment-content, .activity-content' ).each(
+			$( '.acomment-content, .bb-rl-activity-content' ).each(
 				function(){
 					// replacing atwho query from the comment content to disable querying it in the requests.
 					var atwho_query = $( this ).find( 'span.atwho-query' );
@@ -3728,7 +3728,7 @@ window.bp = window.bp || {};
 		activityRootComment: function ( e ) {
 			var currentTarget = $( e.currentTarget ),
 				modal = currentTarget.closest( '#activity-modal' ),
-				activityId = modal.find( '.activity-item' ).data( 'bp-activity-id' ),
+				activityId = modal.find( '.bb-rl-activity-item' ).data( 'bp-activity-id' ),
 				form = modal.find( '#ac-form-' + activityId );
 
 			bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
@@ -3758,7 +3758,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		launchActivityPopup: function ( activityID, parentID ) {
-			var activity_item = $( '#activity-' + activityID );
+			var activity_item = $( '#bb-rl-activity-' + activityID );
 			var modal = $( '.bb-activity-model-wrapper' );
 			var activity_content = activity_item[ 0 ].outerHTML;
 			var selector = '[data-parent_comment_id="' + parentID + '"]';
@@ -3771,7 +3771,7 @@ window.bp = window.bp || {};
 
 			modal.closest( 'body' ).addClass( 'acomments-modal-open' );
 			modal.show();
-			modal.find( 'ul.activity-list' ).html( activity_content );
+			modal.find( 'ul.bb-rl-activity-list' ).html( activity_content );
 			modal.find( '.bb-modal-activity-header h2' ).text( activityTitle );
 
 			// Reload video
@@ -3818,7 +3818,7 @@ window.bp = window.bp || {};
 			var ce = modal.find( '.bb-modal-activity-footer' ).find( '.ac-input[contenteditable]' );
 			bp.Nouveau.Activity.listenCommentInput( ce );
 
-			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-pin-action_button, .bb-mute-action_button');
+			var action_tooltips = modal.find('.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-rl-pin-action_button, .bb-rl-mute-action_button');
 			action_tooltips.attr('data-balloon-pos', 'left');
 			var privacy_wrap = modal.find( '.bb-rl-privacy-wrap' );
 			privacy_wrap.attr( 'data-bp-tooltip-pos', 'right' );
@@ -3844,19 +3844,19 @@ window.bp = window.bp || {};
 				target = $( e.currentTarget ),
 				activityId = $( currentTargetList ).data( 'activity_id' ),
 				commentsList = $( e.currentTarget ).closest( '.activity-comments' ),
-				commentsActivityItem = $( e.currentTarget ).closest( '.activity-item' ),
+				commentsActivityItem = $( e.currentTarget ).closest( '.bb-rl-activity-item' ),
 				parentCommentId = $( currentTargetList ).data( 'parent_comment_id' ),
 				lastCommentTimeStamp = '',
 				addAfterListItemId = '';
 
 			var skeleton =
-				'<div id="bp-ajax-loader">' +
-				'<div class="bb-activity-placeholder bb-activity-tiny-placeholder">' +
-				'<div class="bb-activity-placeholder_head">' +
-				'<div class="bb-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>' +
-				'<div class="bb-activity-placeholder_details">' +
-				'<div class="bb-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>' +
-				'<div class="bb-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>' +
+				'<div id="bb-rl-ajax-loader">' +
+				'<div class="bb-rl-activity-placeholder bb-activity-tiny-placeholder">' +
+				'<div class="bb-rl-activity-placeholder_head">' +
+				'<div class="bb-rl-activity-placeholder_avatar bb-rl-bg-animation bb-rl-loading-bg"></div>' +
+				'<div class="bb-rl-activity-placeholder_details">' +
+				'<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>' +
+				'<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>' +
 				'</div>' +
 				'</div>' +
 				'</div>' +
@@ -4006,10 +4006,10 @@ window.bp = window.bp || {};
 				currentTargetModal = $( e.currentTarget ).parents( '.bb-activity-model-wrapper' );
 			}
 
-			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
+			var $activityListItem = currentTargetModal.find( 'ul.bb-rl-activity-list > li' ),
 				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
 				activityId = activityID !== undefined ? activityID : activityListItemId,
-				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
+				$pageActivitylistItem = $( '#bb-rl-activity-stream li.bb-rl-activity-item[data-bp-activity-id=' + activityId + ']' );
 
 			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
@@ -4048,7 +4048,7 @@ window.bp = window.bp || {};
 		},
 
 		discardGifEmojiPicker: function () {
-			var activityId = $( '#activity-modal > .bb-modal-activity-body .activity-item' ).data( 'bp-activity-id' );
+			var activityId = $( '#activity-modal > .bb-modal-activity-body .bb-rl-activity-item' ).data( 'bp-activity-id' );
 			if ( $( '#activity-modal' ).length > 0 && $( '.emojionearea-theatre.show' ).length > 0 ) {
 				$( '.bb-activity-model-wrapper #ac-input-' + activityId ).data( 'emojioneArea' ).hidePicker();
 			}
