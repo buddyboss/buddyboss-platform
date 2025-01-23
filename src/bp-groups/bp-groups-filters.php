@@ -1712,11 +1712,11 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 
 		$user_id    = bp_loggedin_user_id();
 		$group_args = array(
-			'user_id'  => bp_loggedin_user_id(),
+			'user_id'  => $user_id,
 			'per_page' => 6,
 		);
 		if ( ! empty( $user_id ) ) {
-			$count = BP_Groups_Member::total_group_count( $user_id );
+			$count = groups_total_groups_for_user( $user_id );
 		} else {
 			$count = bp_get_total_group_count();
 		}
