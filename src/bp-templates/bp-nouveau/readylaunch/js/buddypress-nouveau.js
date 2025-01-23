@@ -637,11 +637,12 @@ window.bp = window.bp || {};
 						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
 					}
 
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
-						for ( var i in response.data.scopes ) {
-							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
-						}
-					}
+					// @todo to check later for other pages.
+					// if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
+					// 	for ( var i in response.data.scopes ) {
+					// 		$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
+					// 	}
+					// }
 
 					if ( 'reset' !== data.method ) {
 						self.inject( data.target, response.data.contents, data.method );
@@ -755,7 +756,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
-						if ( undefined !== objectData.filter ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== objectData.filter ) {
 							filter = objectData.filter;
 							$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
 						} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {

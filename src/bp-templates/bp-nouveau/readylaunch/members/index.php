@@ -20,7 +20,7 @@ do_action( 'bp_before_directory_members_page' );
 <div class="bb-rl-members-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?> (<span class="bb-rl-heading-count"></span>)</h2>
+			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_core_get_all_member_count() : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
