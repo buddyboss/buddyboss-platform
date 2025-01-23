@@ -4784,7 +4784,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 		return '';
 	}
 
-	$members = new \BP_Group_Member_Query(
+	$members = new \BB_Group_Member_Query(
 		array(
 			'group_id'     => $group_id,
 			'per_page'     => 3,

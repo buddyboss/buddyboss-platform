@@ -165,7 +165,7 @@ class Group_Invite extends BuddypressCommand {
 		$user_id  = $user->ID;
 
 		if ( $group_id ) {
-			$invite_query = new \BP_Group_Member_Query(
+			$invite_query = new \BB_Group_Member_Query(
 				array(
 					'is_confirmed' => false,
 					'group_id'     => $group_id,
