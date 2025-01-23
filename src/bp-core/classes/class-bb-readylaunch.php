@@ -99,6 +99,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
 
 				add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
+
+				// Directory filters.
+				add_filter( 'bp_nouveau_get_filter_label', array( $this, 'bb_nouveau_get_filter_label_hook' ), 10, 2 );
+				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_nouveau_filter_keys' ) );
+				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_nouveau_filter_keys' ) );
+				
 			}
 		}
 
@@ -860,6 +866,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$response['contents']            = ob_get_clean();
 			$response['total_notifications'] = bp_notifications_get_unread_notification_count( $user_id );
 			wp_send_json_success( $response );
+		}
+
+		/**
+		 * Filters the label for BuddyPress Nouveau filters.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $label     Label for BuddyPress Nouveau filter.
+		 * @param array  $component The data filter's data-bp-filter attribute value.
+		 */
+		public function bb_nouveau_get_filter_label_hook( $label, $component ) {
+			if ( 'members' === $component['object'] ) {
+				$label = __( 'Order', 'buddyboss' );
+			}
+
+			return $label;
+		}
+
+		public function bb_nouveau_filter_keys( $key ) {
+			return 'bb-rl-' . $key;
 		}
 	}
 

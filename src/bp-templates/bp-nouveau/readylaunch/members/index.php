@@ -25,7 +25,7 @@ do_action( 'bp_before_directory_members_page' );
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
 			<div class="bb-rl-action-button">
-				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i>Add member</a>
+				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
 			</div>
 		</div>
 	</div>
@@ -41,7 +41,7 @@ do_action( 'bp_before_directory_members_page' );
 		do_action( 'bp_before_directory_members' );
 		?>
 
-		<div class="members-directory-container">
+		<div class="bb-rl-members-directory-container">
 
 			<?php
 			/**
@@ -59,9 +59,9 @@ do_action( 'bp_before_directory_members_page' );
 			do_action( 'bp_before_directory_members_content' );
 			?>
 
-			<div class="screen-content members-directory-content">
+			<div class="screen-content bb-rl-members-directory-content">
 
-				<div id="members-dir-list" class="members dir-list bb-rl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div id="bb-rl-members-dir-list" class="members dir-list bb-rl-members" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
@@ -84,6 +84,9 @@ do_action( 'bp_before_directory_members_page' );
 			</div><!-- // .screen-content -->
 
 			<?php
+
+			bp_get_template_part( 'sidebar/right-sidebar' );
+
 			/**
 			 * Fires after the display of the members content.
 			 *

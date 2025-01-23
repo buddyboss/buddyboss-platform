@@ -37,14 +37,14 @@ $member_types = bp_get_active_member_types( $args );
 
 if ( ! empty( $member_types ) ) {
 	?>
-	<div id="member-type-filters" class="component-filters clearfix">
-		<div id="member-type-select" class="last filter">
-			<label class="bp-screen-reader-text" for="member-type-order-by">
-				<span><?php bp_nouveau_filter_label(); ?></span>
+	<div id="bb-rl-member-type-filters" class="component-filters clearfix">
+		<div id="bb-rl-member-type-select" class="last filter bb-rl-filter">
+			<label class="bp-screen-reader-text" for="bb-rl-member-type-order-by">
+				<span><?php esc_html_e( 'Type', 'buddyboss' ); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="member-type-order-by" data-bp-member-type-filter="members">
-					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
+				<select id="bb-rl-member-type-order-by" data-bp-member-type-filter="members">
+					<option value=""><?php _e( 'All', 'buddyboss' ); ?></option><?php
 					foreach ( $member_types as $member_type_id ) {
 						$type_name        = bp_get_member_type_key( $member_type_id );
 						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
@@ -63,21 +63,27 @@ if ( ! empty( $member_types ) ) {
 	<?php
 }
 
-// Mmember scope as dropdown.
+// Member scope as dropdown.
 if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
-	<div id="members-scope-filters" class="component-filters clearfix">
-		<div id="members-scope-select" class="last filter bb-rl-filter">
-			<label class="bp-screen-reader-text" for="members-scope-options">
-				<span>Filter</span>
+	<div id="bb-rl-members-scope-filters" class="component-filters clearfix">
+		<div id="bb-rl-members-scope-select" class="last filter bb-rl-filter">
+			<label class="bp-screen-reader-text" for="bb-rl-members-scope-options">
+				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="members-scope-options" data-bp-member-scope-filter="members">
+				<select id="bb-rl-members-scope-options" data-bp-member-scope-filter="members">
 					<?php
 					while ( bp_nouveau_nav_items() ) :
 						bp_nouveau_nav_item();
 						?>
 						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
-							<?php bp_nouveau_nav_link_text(); ?>
+							<?php 
+								if ( 'bb-rl-members-all' === bp_nouveau_get_nav_id() ) {
+									esc_html_e( 'All', 'buddyboss' );
+								} else {
+									bp_nouveau_nav_link_text();
+								}
+							?>
 						</option>
 						<?php
 					endwhile;
