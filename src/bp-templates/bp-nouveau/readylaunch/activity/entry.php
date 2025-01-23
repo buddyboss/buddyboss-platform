@@ -11,27 +11,18 @@
 
 bp_nouveau_activity_hook( 'before', 'entry' );
 
-$activity_id    = bp_get_activity_id();
-$activity_metas = bb_activity_get_metadata( $activity_id );
-
-$link_preview_string = '';
-$link_url            = '';
-
-$link_preview_data = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
-if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
-	$link_preview_string = wp_json_encode( $link_preview_data );
-	$link_url            = ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
-}
-
-$link_embed = $activity_metas['_link_embed'][0] ?? '';
+$activity_id         = bp_get_activity_id();
+$activity_metas      = bb_activity_get_metadata( $activity_id );
+$link_preview_data   = ! empty( $activity_metas['_link_preview_data'][0] ) ? maybe_unserialize( $activity_metas['_link_preview_data'][0] ) : array();
+$link_preview_string = ! empty( $link_preview_data ) && count( $link_preview_data ) ? wp_json_encode( $link_preview_data ) : '';
+$link_url            = ! empty( $link_preview_data ) && count( $link_preview_data ) ? ( ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '' ) : '';
+$link_embed          = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
-
 $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 
 ?>
-
 	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
 
 		<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
@@ -54,14 +45,12 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 
 		<?php
 		global $activities_template;
-
-		$user_link           = bp_get_activity_user_link();
-		$user_link           = ! empty( $user_link ) ? esc_url( $user_link ) : '';
-
+		$user_link = bp_get_activity_user_link();
+		$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
 		if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 			// If group activity.
-			$group_id = (int) $activities_template->activity->item_id;
+			$group_id        = (int) $activities_template->activity->item_id;
 			$group           = groups_get_group( $group_id );
 			$group_name      = bp_get_group_name( $group );
 			$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
@@ -95,7 +84,8 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 
 				<div class="bb-rl-activity-header bb-rl-activity-header--group">
 					<div class="bb-rl-activity-group-heading">
-						<a href="<?php echo $group_permalink; ?>"><?php echo $group_name; ?></a></div>
+						<a href="<?php echo $group_permalink; ?>"><?php echo $group_name; ?></a>
+					</div>
 					<div class="bb-rl-activity-group-post-meta">
 						<span class="bb-rl-activity-post-author">
 							<?php bp_activity_action(); ?>
@@ -125,9 +115,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		<?php else : ?>
 
 			<div class="bb-rl-activity-avatar bb-rl-item-avatar">
-				<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
+				<a href="<?php echo $user_link; ?>">
+					<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
+				</a>
 			</div>
-
 			<div class="bb-rl-activity-header">
 				<?php
 				bp_activity_action();
@@ -136,14 +127,11 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				?>
 			</div>
 
-		<?php endif;
-		?>
+		<?php endif; ?>
 
 		<div class="bb-rl-activity-content <?php bp_activity_entry_css_class(); ?>">
-
 			<?php
 			bp_nouveau_activity_hook( 'before', 'activity_content' );
-
 			if ( bp_nouveau_activity_has_content() ) :
 				?>
 				<div class="bb-rl-activity-inner"><?php bp_nouveau_activity_content(); ?></div>
@@ -169,14 +157,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		}
 
 		if ( bp_activity_can_comment() ) {
-			$class = 'activity-comments';
+			$class = 'bb-rl-activity-comments';
 			if ( 'blogs' === bp_get_activity_object_name() ) {
 				$class .= get_option( 'thread_comments' ) ? ' bb-rl-threaded-comments bb-rl-threaded-level-' . get_option( 'thread_comments_depth' ) : '';
 			} else {
 				$class .= bb_is_activity_comment_threading_enabled() ? ' bb-rl-threaded-comments bb-rl-threaded-level-' . bb_get_activity_comment_threading_depth() : '';
 			}
 			?>
-			<div class="<?php echo $class ?>">
+			<div class="<?php echo esc_attr( $class ); ?>">
 				<?php
 				if ( bp_activity_get_comment_count() ) {
 					bp_activity_comments();
