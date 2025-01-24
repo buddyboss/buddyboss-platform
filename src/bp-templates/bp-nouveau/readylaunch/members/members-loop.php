@@ -147,47 +147,63 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 							<div class="item-block">
 
-								<?php
-								$user_member_type = '';
-								if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
-									$user_member_type = bp_get_user_member_type( $bp_get_member_user_id );
-								}
-
-								if ( ! empty( $user_member_type ) ) {
-									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( $user_member_type ) . '</p>';
-								}
-								?>
-
-								<h2 class="list-title member-name">
-									<a href="<?php echo esc_url( $bp_get_member_permalink ); ?>"><?php bp_member_name(); ?></a>
-								</h2>
-
-								<?php
-								if ( ! empty( $user_member_type ) ) {
-									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( $user_member_type ) . '</p>';
-								}
-
-								if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :
-
-									echo '<p class="item-meta last-activity bb-rl-item-meta-asset">';
-									if ( $enabled_joined_date ) {
-										echo wp_kses_post( $member_joined_date );
+								<div class="bb-rl-item-block-heading">
+									<?php
+									$user_member_type = '';
+									if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
+										$user_member_type = bp_get_user_member_type( $bp_get_member_user_id );
 									}
 
-									if ( ( $enabled_last_active && $member_last_activity ) && ( $enabled_joined_date && $member_joined_date ) ) {
-										echo '<span class="separator">&bull;</span>';
+									if ( ! empty( $user_member_type ) ) {
+										echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( $user_member_type ) . '</p>';
 									}
+									?>
 
-									if ( $enabled_last_active ) {
-										echo wp_kses_post( $member_last_activity );
+									<h2 class="list-title member-name">
+										<a href="<?php echo esc_url( $bp_get_member_permalink ); ?>"><?php bp_member_name(); ?></a>
+									</h2>
+
+									<?php
+									if ( ! empty( $user_member_type ) ) {
+										echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( $user_member_type ) . '</p>';
 									}
-									echo '</p>';
-								endif;
-								?>
-							</div>
+									?>
+								</div>
+								
+								<div class="bb-rl-item-block-assets">
+									<?php
+									if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :
 
-							<div class="flex align-items-center follow-container justify-center bb-rl-item-meta-asset">
-								<?php echo wp_kses_post( $followers_count ); ?>
+										echo '<p class="item-meta bb-rl-item-meta-asset">';
+										if ( $enabled_joined_date ) {
+											echo wp_kses_post( $member_joined_date );
+										}
+
+										if ( ( $enabled_last_active && $member_last_activity ) && ( $enabled_joined_date && $member_joined_date ) ) {
+											echo '<span class="separator">&bull;</span>';
+										}
+
+										echo '<span class="only-grid-view">';
+											if ( $enabled_last_active ) {
+												echo wp_kses_post( $member_last_activity );
+											}
+										echo '</span>';
+										echo '</p>';
+									endif;
+									?>
+
+									<div class="flex align-items-center follow-container justify-center bb-rl-item-meta-asset">
+										<?php echo wp_kses_post( $followers_count ); ?>
+									</div>
+
+									<div class="only-list-view bb-rl-last-activity bb-rl-item-meta-asset">
+										<?php 
+										if ( $enabled_last_active ) {
+											echo wp_kses_post( $member_last_activity );
+										}
+										?>
+									</div>
+								</div>
 							</div>
 						</div><!-- // .item -->
 
@@ -196,22 +212,14 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 							<div class="bb-rl-item-actions flex items-center <?php echo empty($profile_actions['primary']) ? 'bb-rl-idle-primary' : ''; ?>">
 								<div class="bb-rl-secondary-actions flex items-center">
 									<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
-										<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
+										<div class="flex button-wrap member-button-wrap footer-button-wrap">
 											<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
-										</div>
-										<?php
-									}
-
-									if ( ! empty( $profile_actions['primary'] ) ) {
-										?>
-										<div class="flex only-list-view align-items-center primary-action justify-center">
-											<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 										</div>
 									<?php } ?>
 								</div>
 								<div class="bb-rl-primary-actions">
 									<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
-										<div class="flex only-grid-view align-items-center primary-action justify-center">
+										<div class="flex align-items-center primary-action justify-center">
 											<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 										</div>
 									<?php } ?>
