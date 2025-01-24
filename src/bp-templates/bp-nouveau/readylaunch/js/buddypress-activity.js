@@ -1515,8 +1515,9 @@ window.bp = window.bp || {};
 				// Change the aria state back to false on comment cancel.
 				$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
 
-				self.destroyCommentMediaUploader( activity_id );
-				self.destroyCommentDocumentUploader( activity_id );
+				['media', 'document'].forEach( function ( type ) {
+					self.destroyUploader( type, activity_id );
+				} );
 
 				// If form is edit activity comment, then reset it.
 				self.resetActivityCommentForm( $form );
@@ -2271,72 +2272,6 @@ window.bp = window.bp || {};
 			}
 		},
 
-		destroyCommentMediaUploader: function ( comment_id ) {
-			var self = this;
-
-			if ( null === self.dropzone_obj ) {
-				return;
-			}
-
-			self.dropzone_obj.destroy();
-
-			var $mediaUploader = $( '#ac-reply-post-media-uploader-' + comment_id );
-			$mediaUploader.html( '' );
-			$( '#ac-reply-post-media-uploader-1-' + comment_id ).html( '' );
-
-			self.dropzone_media = [];
-			$mediaUploader.removeClass( 'open' ).addClass( 'closed' );
-			$( '#ac-reply-media-button-' + comment_id ).removeClass( 'active' );
-		},
-
-		destroyCommentDocumentUploader: function ( comment_id ) {
-			var self = this;
-
-			if ( null === self.dropzone_document_obj ) {
-				return;
-			}
-
-			self.dropzone_document_obj.destroy();
-
-			var $documentUploader = $( '#ac-reply-post-document-uploader-' + comment_id );
-			$documentUploader.html( '' );
-
-			self.dropzone_document = [];
-			$documentUploader.removeClass( 'open' ).addClass( 'closed' );
-			$( '#ac-reply-document-button-' + comment_id ).removeClass( 'active' );
-		},
-
-		destroyCommentVideoUploader: function ( comment_id ) {
-			var self = this;
-
-			if ( null === self.dropzone_video_obj ) {
-				return;
-			}
-
-			self.dropzone_video_obj.destroy();
-
-			var $videoUploader = $( '#ac-reply-post-video-uploader-' + comment_id );
-			$videoUploader.html( '' );
-
-			self.dropzone_video = [];
-			$videoUploader.removeClass( 'open' ).addClass( 'closed' );
-			$( '#ac-reply-video-button-' + comment_id ).removeClass( 'active' );
-		},
-
-		resetGifPicker: function ( comment_id ) {
-			var $gifButton = $( '#ac-reply-gif-button-' + comment_id );
-			$gifButton.closest( '.bb-rl-post-gif' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' ).empty();
-			$gifButton.removeClass( 'active' );
-			$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' ).empty();
-
-			// add gif data if enabled or uploaded.
-			if ( ! _.isUndefined( this.models[comment_id] ) ) {
-				var model = this.models[comment_id];
-				model.set( 'gif_data', {} );
-				$( '#ac-reply-post-gif-' + comment_id ).find( '.bb-rl-activity-attached-gif-container' ).removeAttr( 'style' );
-			}
-		},
-
 		openCommentsMediaUploader: function(event) {
 			var self               = this,
 				target             = $( event.currentTarget ),
@@ -2570,8 +2505,9 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			this.destroyCommentDocumentUploader( activityID );
-			this.destroyCommentVideoUploader( activityID );
+			['document', 'video'].forEach( function ( type ) {
+				self.destroyUploader( type, activityID );
+			} );
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
@@ -2816,8 +2752,9 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			this.destroyCommentMediaUploader( activityID );
-			this.destroyCommentVideoUploader( activityID );
+			['media', 'video'].forEach( function ( type ) {
+				self.destroyUploader( type, activityID );
+			} );
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
@@ -3079,8 +3016,9 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			this.destroyCommentMediaUploader( activityID );
-			this.destroyCommentDocumentUploader( activityID );
+			['media', 'video'].forEach( function ( type ) {
+				self.destroyUploader( type, activityID );
+			} );
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
@@ -3140,9 +3078,10 @@ window.bp = window.bp || {};
 			if ( isInsideModal ) {
 				$gifPickerEl.css( 'transform', transformValue );
 			}
-			this.destroyCommentMediaUploader( activityID );
-			this.destroyCommentDocumentUploader( activityID );
-			this.destroyCommentVideoUploader( activityID );
+			var self = this;
+			['media', 'document', 'video'].forEach( function ( type ) {
+				self.destroyUploader( type, activityID );
+			} );
 		},
 
 		toggleMultiMediaOptions: function( form, target, placeholder ) {
@@ -3437,10 +3376,10 @@ window.bp = window.bp || {};
 
 			form.find( '#ac-input-' + formActivityId ).html( '' );
 			form.removeClass( 'has-content has-gif has-media' );
-			this.destroyCommentMediaUploader( formActivityId );
-			this.destroyCommentDocumentUploader( formActivityId );
-			this.destroyCommentVideoUploader( formActivityId );
-			this.resetGifPicker( formActivityId );
+			var self = this;
+			['media', 'document', 'video', 'gif'].forEach( function ( type ) {
+				self.destroyUploader( 'gif', formActivityId );
+			} );
 		},
 
 		// Reinitialize reply/edit comment form and append in activity modal footer
@@ -3463,10 +3402,10 @@ window.bp = window.bp || {};
 			form.find( '#ac-input-' + formActivityId ).html( '' );
 			form.removeClass( 'has-content has-gif has-media' );
 			$( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
-			this.destroyCommentMediaUploader( formActivityId );
-			this.destroyCommentDocumentUploader( formActivityId );
-			this.destroyCommentVideoUploader( formActivityId );
-			this.resetGifPicker( formActivityId );
+			var self = this;
+			['media', 'document', 'video', 'gif'].forEach( function ( type ) {
+				self.destroyUploader( type, formActivityId );
+			} );
 		},
 
 		disabledCommentUploader: function ( toolbar, buttonClass ) {
@@ -4051,6 +3990,74 @@ window.bp = window.bp || {};
 			} );
 		},
 
+		destroyUploader: function ( type, comment_id ) {
+			var self = this;
+
+			// Map uploader types to their respective properties and IDs.
+			var uploaderConfig = {
+				media   : {
+					obj          : self.dropzone_obj,
+					dropzone     : self.dropzone_media,
+					uploaderId   : '#ac-reply-post-media-uploader-',
+					buttonId     : '#ac-reply-media-button-',
+					additionalIds: ['#ac-reply-post-media-uploader-1-']
+				},
+				document: {
+					obj       : self.dropzone_document_obj,
+					dropzone  : self.dropzone_document,
+					uploaderId: '#ac-reply-post-document-uploader-',
+					buttonId  : '#ac-reply-document-button-'
+				},
+				video   : {
+					obj       : self.dropzone_video_obj,
+					dropzone  : self.dropzone_video,
+					uploaderId: '#ac-reply-post-video-uploader-',
+					buttonId  : '#ac-reply-video-button-'
+				},
+				gif     : {
+					buttonId       : '#ac-reply-gif-button-',
+					dropdownClass  : '.gif-media-search-dropdown',
+					standaloneClass: '.gif-media-search-dropdown-standalone',
+					modelProperty  : 'gif_data',
+					containerId    : '#ac-reply-post-gif-'
+				}
+			};
+
+			// Get the configuration for the current type.
+			var config = uploaderConfig[type];
+			if ( ! config ) {
+				return;
+			}
+
+			// Handle Dropzone destroy and cleanup.
+			if ( 'gif' !== type ) {
+				var dropzoneObj = config.obj;
+				if ( ! _.isNull( dropzoneObj ) ) {
+					dropzoneObj.destroy();
+					$( config.uploaderId + comment_id ).html( '' );
+					if ( config.additionalIds ) {
+						config.additionalIds.forEach( function ( id ) {
+							$( id + comment_id ).html( '' );
+						} );
+					}
+				}
+				config.dropzone = [];
+				$( config.uploaderId + comment_id ).removeClass( 'open' ).addClass( 'closed' );
+			}
+			$( config.buttonId + comment_id ).removeClass( 'active' );
+
+			// Handle GIF-specific logic.
+			if ( 'gif' === type ) {
+				$( config.buttonId + comment_id ).closest( '.post-gif' ).find( config.dropdownClass ).removeClass( 'open' ).empty();
+				$( config.standaloneClass ).removeClass( 'open' ).empty();
+
+				if ( ! _.isUndefined( this.models[comment_id] ) ) {
+					var model = this.models[comment_id];
+					model.set( config.modelProperty, {} );
+					$( config.containerId + comment_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
+				}
+			}
+		},
 	};
 
 	// Launch BP Nouveau Activity.
