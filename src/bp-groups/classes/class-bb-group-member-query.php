@@ -223,7 +223,13 @@ class BB_Group_Member_Query extends BP_User_Query {
 	public function group_user_invite_query_where_sql( $where, $uid_name ) {
 		if ( ! empty( $this->inviter_sql ) ) {
 			$group_where  = implode( ' AND ', $this->group_user_query_where_sql( array(), $uid_name ) );
-			$inviter_join = str_replace( 'WHERE i.class', 'i.class', $this->inviter_sql['where'] );
+			$prefix       = 'WHERE';
+			$invite_where = $this->inviter_sql['where'];
+			if ( substr( $invite_where, 0, strlen( $prefix ) ) == $prefix ) {
+				$invite_where = substr( $invite_where, strlen( $prefix ) );
+			}
+
+			$inviter_join = $invite_where;
 			$where[]      = "(gm.user_id IS NOT NULL OR i.user_id IS NOT NULL) AND ( ({$group_where}) OR ({$inviter_join}) )";
 		}
 
