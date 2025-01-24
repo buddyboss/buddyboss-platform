@@ -1201,6 +1201,56 @@ button[data-balloon] {
   color: var(--bb-rl-icon-primary-color);
 }
 
+/* Radio */
+.bb-rl-radio-style {
+  position: relative;
+  line-height: 1;
+}
+
+.bb-rl-radio-style input[type="radio"] {
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.bb-rl-radio-style input[type="radio"] + span {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+.bb-rl-radio-style input[type="radio"] + span:before {
+  content: "";
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 16px;
+  height: 16px;
+  line-height: 1;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-radius: 100%;
+}
+
+.bb-rl-radio-style input[type="radio"]:checked + span:before {
+  border: 8px solid var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-radio-style input[type="radio"]:checked + span:after {
+  content: "";
+  background-color: var(--bb-rl-background-color);
+  margin: auto;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  border-radius: 100%;
+}
+
 .bb-rl-header {
   background-color: var(--bb-rl-background-color);
   border-bottom: 1px solid var(--bb-rl-border-tertiary-color);
