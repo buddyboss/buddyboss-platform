@@ -76,6 +76,8 @@ add_action( 'bp_admin_init', 'bb_updated_component_emails' );
 add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
 
+add_action( 'bp_register_widgets', 'bb_register_readylaunch_widgets' );
+
 // Avatars.
 /**
  * Disable gravatars fallback for member avatars.
@@ -2649,4 +2651,25 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 	}
 
 	return $hosts;
+}
+
+function bb_register_readylaunch_widgets () {
+	if ( bb_get_enabled_readylaunch() && function_exists( 'bp_get_following_ids' ) ) {
+		$plugin_dir = BP_PLUGIN_DIR;
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$plugin_dir = $plugin_dir . 'src';
+		}
+		$widget_file = $plugin_dir . '/bp-core/classes/class-bb-core-follow-my-network-widget.php';
+		if ( file_exists( $widget_file ) ) {
+			require_once $widget_file;
+			if ( class_exists( 'BB_Core_Follow_My_Network_Widget' ) ) {
+				add_action(
+					'widgets_init',
+					function() {
+						register_widget( 'BB_Core_Follow_My_Network_Widget' );
+					}
+				);
+			}
+		}
+	}
 }
