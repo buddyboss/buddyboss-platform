@@ -4,6 +4,12 @@
 	line-height: var(--bb-rl-base-line);
 }
 
+@mixin bb-rl-base-heading-bolder {
+	font-size: var(--font-size-base);
+	font-weight: 600;
+	line-height: var(--bb-rl-base-line);
+}
+
 @mixin bb-rl-label-heading {
 	font-size: var(--font-size-sm);
 	font-weight: 400;
