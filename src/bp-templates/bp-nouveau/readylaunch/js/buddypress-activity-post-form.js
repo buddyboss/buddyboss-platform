@@ -461,7 +461,7 @@ window.bp = window.bp || {};
 			// Show Hide Schedule post button according to group privacy.
 			if ( 'group' === activity_data.privacy ) {
 				// When change group from news feed.
-				var schedule_allowed = self.$whatsNewForm.find( '#bb-rl-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
+				var schedule_allowed = $whatsNewForm.find( '#bb-rl-item-opt-' + activity_data.item_id ).data( 'allow-schedule-post' );
 				if ( _.isUndefined( schedule_allowed ) ) {
 					// When change group from news feed.
 					if ( ! _.isUndefined( activity_data.schedule_allowed ) && 'enabled' === activity_data.schedule_allowed ) {
@@ -3639,7 +3639,7 @@ window.bp = window.bp || {};
 				).render();
 
 				this.$el.html( autocomplete.$el );
-				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icon-rl bb-icon-times"></i></span>' );
+				autocomplete.$el.wrapAll( '<span class="activity-autocomplete-wrapper" />' ).after( '<span class="activity-autocomplete-clear"><i class="bb-icons-rl-x"></i></span>' );
 				this.$el.append( '<div id="bb-rl-activity-group-ac-items"></div>' );
 
 				this.$activityGroupAcItems = this.$el.find( '#bb-rl-activity-group-ac-items' );
@@ -3745,7 +3745,7 @@ window.bp = window.bp || {};
 
 				var $elem = this.$activityGroupAcItems;
 				if ( 'group' === this.options.type ) {
-					$elem.html( '<div class="groups-selection groups-selection--finding"><i class="dashicons dashicons-update animate-spin"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</span></div>' );
+					$elem.html( '<div class="groups-selection groups-selection--finding"><i class="bb-rl-loader"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.finding_group_placeholder + '</span></div>' );
 					$elem.addClass( 'group_scrolling--revive' );
 				} else {
 					$elem.html( '<i class="dashicons dashicons-update animate-spin"></i>' );
@@ -3798,7 +3798,7 @@ window.bp = window.bp || {};
 
 			loadMoreData: function ( $this, currentPage ) {
 				if ( ! this.$el.find( '#bb-rl-activity-group-ac-items .groups-selection--loading' ).length ) {
-					this.$el.find( '#bb-rl-activity-group-ac-items .bb-rl-activity-object:last' ).after( '<div class="groups-selection groups-selection--loading"><i class="dashicons dashicons-update animate-spin"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</span></div>' );
+					this.$el.find( '#bb-rl-activity-group-ac-items .bb-rl-activity-object:last' ).after( '<div class="groups-selection groups-selection--loading"><i class="bb-rl-loader"></i><span class="groups-selection__label">' + BP_Nouveau.activity.params.objects.group.loading_group_placeholder + '</span></div>' );
 				}
 				var checkSucessData = false;
 				var fetchGroup      = new bp.Collections.fetchCollection();
@@ -3981,11 +3981,16 @@ window.bp = window.bp || {};
 					return false;
 				}
 				e.preventDefault();
-				$( '#bb-rl-activity-post-form-privacy' ).show();
 				var whats_new_form = $( '#bb-rl-whats-new-form' );
-				whats_new_form.addClass( 'bb-rl-focus-in--privacy' );
-				if ( whats_new_form.hasClass( 'bb-rl-activity-edit' ) ) {
-					this.model.set( 'privacy', this.$el.closest( '#bb-rl-whats-new-form' ).find( '.bb-rl-activity-privacy__input:checked' ).val() );
+				if( whats_new_form.hasClass( 'bb-rl-focus-in--privacy' ) ) {
+					whats_new_form.removeClass( 'bb-rl-focus-in--privacy' );
+					$( '#bb-rl-activity-post-form-privacy' ).hide();
+				} else {
+					$( '#bb-rl-activity-post-form-privacy' ).show();
+					whats_new_form.addClass( 'bb-rl-focus-in--privacy' );
+					if ( whats_new_form.hasClass( 'bb-rl-activity-edit' ) ) {
+						this.model.set( 'privacy', this.$el.closest( '#bb-rl-whats-new-form' ).find( '.bb-rl-activity-privacy__input:checked' ).val() );
+					}
 				}
 			}
 		}
@@ -4179,7 +4184,6 @@ window.bp = window.bp || {};
 					// First time when we open group selector and select any one group and close it
 					// and then back again on the same screen then object should be group to display the same view screen
 					this.model.set( 'object', $( e.currentTarget ).val() );
-					$( '#bb-rl-activity-post-form-privacy' ).hide();
 
 					// Disable save button if no group selected
 					if ( 0 === this.model.attributes.item_id ) {
@@ -4283,6 +4287,15 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.FormTargetHeader = bp.View.extend(
+		{
+			tagname: 'div',
+			id: 'bb-rl-whats-new-post-in-box-header',
+			className: 'bb-rl-whats-new-post-in-box-header',
+			template: bp.template( 'activity-edit-postin-header' )
+		}
+	);
+
 	bp.Views.FormTarget = bp.View.extend(
 		{
 			tagName: 'div',
@@ -4315,15 +4328,17 @@ window.bp = window.bp || {};
 				);
 
 				if ( 'profile' !== model.get( 'selected' ) ) {
-					this.views.add(
+					this.views.add([
+						new bp.Views.FormTargetHeader(),
 						new bp.Views.AutoComplete(
 							{
 								collection: bp.Nouveau.Activity.postForm.ActivityObjects,
 								type: model.get( 'selected' ),
 								placeholder: model.get( 'placeholder' )
 							}
-						)
-					);
+						),
+						new bp.Views.PrivacyStageFooter()
+					]);
 
 					// Set the object type.
 					this.model.set( 'object', model.get( 'selected' ) );
@@ -4349,15 +4364,17 @@ window.bp = window.bp || {};
 				this.model.set( 'item_id', model.get( 'id' ) );
 				if ( 'group' === this.model.get( 'object' ) ) {
 					this.views.remove('#bb-rl-whats-new-post-in-box-items');
-					this.views.add(
+					this.views.add([
+						new bp.Views.FormTargetHeader(),
 						new bp.Views.AutoComplete(
 							{
 								collection: bp.Nouveau.Activity.postForm.ActivityObjects,
 								type: this.model.get( 'object' ),
 								placeholder: BP_Nouveau.activity.params.objects.group.autocomplete_placeholder,
 							}
-						)
-					);
+						),
+						new bp.Views.PrivacyStageFooter()
+					]);
 					// Set the object type.
 					this.model.set( 'object', this.model.get( 'object' ) );
 					this.model.set( 'group_name', model.get( 'name' ) );
@@ -4373,7 +4390,6 @@ window.bp = window.bp || {};
 				if ( 'user' !== this.model.get( 'object' ) ) {
 					this.$el.removeClass();
 
-					$( '#bb-rl-activity-post-form-privacy' ).hide();
 				} else if ( ! this.$el.hasClass( 'in-profile' ) ) {
 					this.$el.addClass( 'in-profile' );
 
