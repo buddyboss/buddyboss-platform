@@ -41,7 +41,7 @@ do_action( 'bp_before_directory_members_page' );
 		do_action( 'bp_before_directory_members' );
 		?>
 
-		<div class="bb-rl-members-directory-container">
+		<div class="bb-rl-members-directory-container flex">
 
 			<?php
 			/**

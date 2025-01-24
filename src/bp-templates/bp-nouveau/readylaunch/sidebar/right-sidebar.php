@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 if ( is_active_sidebar( 'bb-readylaunch-sidebar' ) ) {
 	?>
-	<div id="bb-rl-right-sidebar" class="widget-right-area sm-grid-1-1" role="complementary">
+	<div id="bb-rl-right-sidebar" class="bb-rl-widget-sidebar sm-grid-1-1" role="complementary">
 		<?php
 		dynamic_sidebar( 'bb-readylaunch-sidebar' );
 		?>

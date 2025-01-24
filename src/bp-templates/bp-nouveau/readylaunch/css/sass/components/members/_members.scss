@@ -145,6 +145,14 @@
 	}
 }
 
+.bb-rl-members-directory-container {
+	gap: var(--bb-rl-space-200);
+
+	.bb-rl-members-directory-content {
+		flex: 1;
+	}
+}
+
 .bb-rl-item-actions {
 
 	.bb-rl-primary-actions {
