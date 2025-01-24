@@ -207,9 +207,11 @@ class BP_Moderation {
 
 		$bp        = buddypress();
 		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id . '_' . $user_report;
-		$result    = wp_cache_get( $cache_key, 'bp_moderation' );
 
-		if ( false === $result || true === $force_check ) {
+		$found  = null;
+		$result = wp_cache_get( $cache_key, 'bp_moderation', false, $found );
+
+		if ( ( false === $result && null == $found ) || true === $force_check ) {
 			if ( true === $user_report ) {
 				$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} ms WHERE ms.item_id = %d AND ms.item_type = %s AND ms.user_report = 1", $item_id, BP_Moderation_Members::$moderation_type ) ); // phpcs:ignore
 			} else {

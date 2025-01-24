@@ -1405,7 +1405,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 	foreach ( $members as $type => &$member_type_users ) {
 		$page_qs_key       = $type . '_page';
 		$current_type_page = isset( $_GET[ $page_qs_key ] ) ? absint( $_GET[ $page_qs_key ] ) : 1;
-		$member_type_query = new BP_Group_Member_Query(
+		$member_type_query = new BB_Group_Member_Query(
 			array(
 				'group_id'   => $item->id,
 				'group_role' => array( $type ),

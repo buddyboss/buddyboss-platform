@@ -173,7 +173,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			add_filter( 'bp_get_activity_content_body', array( $this, 'before_activity_content' ), 10, 2 );
 
 			// Meta button for activity discussion.
-			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 2 );
+			add_filter( 'bb_nouveau_get_activity_inner_buttons', array( $this, 'nouveau_get_activity_entry_buttons' ), 10, 3 );
 
 			// Allow slash in topic reply.
 			add_filter( 'bbp_activity_topic_create_excerpt', 'addslashes', 5 );
@@ -477,16 +477,24 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 *
 		 * @return array
 		 */
-		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id ) {
+		public function nouveau_get_activity_entry_buttons( $buttons, $activity_id, $args ) {
+			if ( ! empty( $args['activity'] ) ) {
+				$activity = $args['activity'];
+			} else {
+				// Get activity post data.
+				$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
 
-			// Get activity post data.
-			$activities = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+				if ( empty( $activities['activities'] ) ) {
+					return $buttons;
+				}
 
-			if ( empty( $activities['activities'] ) ) {
-				return $buttons;
+				$activity = array_shift( $activities['activities'] );
 			}
 
-			$activity = array_shift( $activities['activities'] );
+			// bail if activity is not found.
+			if ( empty( $activity->id ) ) {
+				return $buttons;
+			}
 
 			// Set default meta buttons when the activity type is not topic.
 			if ( $this->topic_create === $activity->type ) {

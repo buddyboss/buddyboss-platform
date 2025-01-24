@@ -373,7 +373,10 @@ function bp_core_install_private_messaging() {
 				date_sent datetime NOT NULL,
 				PRIMARY KEY  (id),
 				KEY sender_id (sender_id),
-				KEY thread_id (thread_id)
+				KEY thread_id (thread_id),
+				KEY date_sent (date_sent),
+				KEY is_deleted (is_deleted),
+				KEY idx_thread_sender_date (thread_id, sender_id, date_sent)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_messages_recipients (

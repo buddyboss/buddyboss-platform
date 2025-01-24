@@ -843,46 +843,61 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		$search_terms_space   = '%' . $search_terms_clean . '%';
 	}
 
-	// Combine the core search (against wp_users) into a single OR clause.
-	// with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-			$search_terms_nospace,
-			$search_terms_space
-		)
+	// Prepare SQL for searching profile fields.
+	$sql_profile = array(
+		'select' => "SELECT DISTINCT xpd.user_id FROM {$bp->profile->table_name_data} xpd",
+		'where'  => array(),
 	);
 
-	// Checked profile fields based on privacy settings of particular user while searching.
-	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-				$search_terms_nospace,
-				$search_terms_space
-			)
-		);
+	// Add search conditions for profile fields.
+	$sql_profile['where'][] = $wpdb->prepare( 'xpd.value LIKE %s OR xpd.value LIKE %s', $search_terms_nospace, $search_terms_space );
 
-		foreach ( $matched_user_data as $key => $user ) {
-			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-			if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
-				}
-			}
-			if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
-				}
+	// Add visibility checks for profile fields.
+	if ( ! current_user_can( 'administrator' ) ) {
+		$field_visibility = array( 'public' );
+		$loggin_user_id   = 0;
+		$friend_ids_sql   = '';
+
+		if ( is_user_logged_in() ) {
+			$loggin_user_id     = bp_loggedin_user_id();
+			$field_visibility[] = 'loggedin';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$friend_ids_sql = $wpdb->prepare(
+					'SELECT CASE
+                        WHEN initiator_user_id = %d THEN friend_user_id
+                        ELSE initiator_user_id
+                        END AS friend_id
+                        FROM ' . $bp->friends->table_name . '
+                        WHERE is_confirmed = 1
+                        AND ( initiator_user_id = %d OR friend_user_id = %d )',
+					$loggin_user_id, $loggin_user_id, $loggin_user_id
+				);
 			}
 		}
+
+		$visibility_values = implode( "','", array_map( 'esc_sql', $field_visibility ) );
+
+		$sql_where_condition = 'xpd.field_id IN (
+            SELECT xpv.field_id
+            FROM ' . $bp->profile->table_name_visibility . ' as xpv
+            WHERE xpv.user_id = xpd.user_id
+            AND (
+                xpv.value IN (\'' . $visibility_values . '\')
+                ' . ( ! empty( $friend_ids_sql ) ? 'OR ( xpv.value = \'friends\' AND xpv.user_id IN ( ' . $friend_ids_sql . ' ) )' : '' ) . '
+                ' . ( ! empty( $loggin_user_id ) ? 'OR ( xpv.user_id = ' . $loggin_user_id . ' )' : '' ) . '
+            )
+        )';
+
+		$sql_profile['where'][] = $sql_where_condition;
 	}
 
-	if ( ! empty( $matched_user_ids ) ) {
-		$search_core            = $sql['where']['search'];
-		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
-		$sql['where']['search'] = $search_combined;
-	}
+	// Combine the SQL for profile search.
+	$profile_query = $sql_profile['select'] . ' WHERE ' . implode( ' AND ', $sql_profile['where'] );
+
+	$search_core            = $sql['where']['search'];
+	$search_combined        = " ( u.{$query->uid_name} IN ({$profile_query}) OR {$search_core} )";
+	$sql['where']['search'] = $search_combined;
 
 	$cache[ $cache_key ] = $sql;
 

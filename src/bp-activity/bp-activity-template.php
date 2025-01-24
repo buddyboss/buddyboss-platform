@@ -4468,6 +4468,9 @@ function bb_activity_comment_can_favorite() {
  * @global object $activities_template {@link BP_Activity_Template}
  */
 function bb_get_activity_comment_is_favorite() {
+	global $activities_template;
+	$activity_comment = ! empty( $activities_template->activity->current_comment ) ? $activities_template->activity->current_comment : null;
+
 	/**
 	 * Filters whether the current activity comment item is in the current user's favorites.
 	 *
@@ -4475,7 +4478,7 @@ function bb_get_activity_comment_is_favorite() {
 	 *
 	 * @param bool $value Whether the current activity item is in the current user's favorites.
 	 */
-	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' ) );
+	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment', bp_loggedin_user_id(), $activity_comment ) );
 }
 
 /**

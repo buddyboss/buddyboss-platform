@@ -250,9 +250,16 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
  * @return string
  */
 function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'activity', $reaction_id = 0, $has_reacted = false ) {
+	global $activities_template;
+	$item_object = null;
+	if ( 'activity' === $item_type && ! empty( $activities_template->activity ) ) {
+		$item_object = $activities_template->activity;
+	} elseif ( 'activity_comment' === $item_type && ! empty( $activities_template->activity->current_comment ) ) {
+		$item_object = $activities_template->activity->current_comment;
+	}
 
 	$reaction_button_class = 'fav reaction';
-	if ( bb_activity_is_item_favorite( $item_id, $item_type ) ) {
+	if ( bb_activity_is_item_favorite( $item_id, $item_type, bp_loggedin_user_id(), $item_object ) ) {
 		$reaction_button_class = 'unfav reaction has-reaction';
 		$has_reacted           = true;
 	}
@@ -772,7 +779,7 @@ function bb_format_reaction_count( $count ) {
  *
  * @return bool
  */
-function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_id = 0 ) {
+function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_id = 0, $item_object = null ) {
 
 	if ( empty( $item_id ) ) {
 		return false;
@@ -783,9 +790,10 @@ function bb_activity_is_item_favorite( $item_id, $item_type = 'activity', $user_
 	}
 
 	$args = array(
-		'item_type' => $item_type,
-		'item_id'   => $item_id,
-		'user_id'   => $user_id,
+		'item_type'   => $item_type,
+		'item_id'     => $item_id,
+		'user_id'     => $user_id,
+		'item_object' => $item_object
 	);
 
 	return (bool) bb_load_reaction()->bb_get_user_reactions_count( $args );
@@ -812,6 +820,15 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 		$user_id = bp_loggedin_user_id();
 	}
 
+	global $activities_template;
+	$item_object = null;
+	if ( 'activity' === $item_type && ! empty( $activities_template->activity ) ) {
+		$item_object = $activities_template->activity;
+	} elseif ( 'activity_comment' === $item_type && ! empty( $activities_template->activity->current_comment ) ) {
+		$item_object = $activities_template->activity->current_comment;
+	}
+
+
 	$user_reaction = bb_load_reaction()->bb_get_user_reactions(
 		array(
 			'item_type'   => $item_type,
@@ -819,6 +836,7 @@ function bb_activity_get_user_reaction_by_item( $item_id, $item_type = 'activity
 			'user_id'     => $user_id,
 			'fields'      => 'reaction_id',
 			'reaction_id' => bb_is_reaction_emotions_enabled() ? 0 : bb_load_reaction()->bb_reactions_get_like_reaction_id(),
+			'item_object' => $item_object
 		)
 	);
 

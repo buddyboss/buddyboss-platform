@@ -152,6 +152,12 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * @return void
 		 */
 		public static function create_table() {
+			static $table_exists = null;
+
+			if ( null !== $table_exists ) {
+				return;
+			}
+
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
