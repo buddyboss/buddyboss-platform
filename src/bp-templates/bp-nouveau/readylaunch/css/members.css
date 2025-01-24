@@ -62,7 +62,7 @@
   display: none;
 }
 
-.bb-rl-members .item-list.list .only-grid-view {
+.bb-rl-members .item-list:not(.grid) .only-grid-view {
   display: none;
 }
 
@@ -230,4 +230,18 @@
 .bb-rl-invite-form .bb-rl-input-field,
 .bb-rl-invite-form textarea {
   width: 100%;
+}
+
+.bb-rl-block-member-content > p {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-block-member-content > div,
+.bb-rl-block-member-content > ul {
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-block-member-content > ul {
+  padding-left: var(--bb-rl-space-300);
+  margin-bottom: var(--bb-rl-space-200);
 }

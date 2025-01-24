@@ -297,7 +297,7 @@ bp_nouveau_after_loop();
 </div> <!-- .bb-remove-connection -->
 
 <!-- Invite popup -->
-<div class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
+<div id="bb-rl-invite-modal" class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
 	<transition name="modal">
 		<div class="modal-mask bb-rl-modal-mask">
 			<div class="bb-rl-modal-wrapper">
@@ -309,7 +309,7 @@ bp_nouveau_after_loop();
 						</a>
 					</header>
 					<div class="bb-rl-invite-content bb-rl-modal-content">
-						<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-send-invite-form">
+						<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form">
 							<div class="bb-rl-form-field-wrapper">
 								<label for="bb-rl-invite-name">Name</label>
 								<input type="text" name="invitee" id="bb-rl-invite-name" value="" class="bb-rl-input-field">
@@ -339,10 +339,89 @@ bp_nouveau_after_loop();
 					</div>
 					<footer class="bb-rl-model-footer flex items-center">
 						<a class="bb-rl-close-invite bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<input type="submit" name="member-invite-submit" id="bb-rl-submit-invite" form="bb-rl-send-invite-form" value="Send Invite" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+						<input type="submit" name="member-invite-submit" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="Send Invite" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 					</footer>
 				</div>
 			</div>
 		</div>
 	</transition>
 </div> <!-- .bb-invite-connection -->
+
+<!-- Block member popup -->
+<div id="bb-rl-block-member" class="bb-rl-block-modal bb-rl-modal" style="display: none;">
+	<transition name="modal">
+		<div class="modal-mask bb-rl-modal-mask">
+			<div class="bb-rl-modal-wrapper">
+				<div class="bb-rl-modal-container">
+					<header class="bb-rl-modal-header">
+						<h4><span class="target_name"><?php echo esc_html__( 'Block Member?', 'buddyboss' ); ?></span></h4>
+						<a class="bb-rl-close-block-member bb-rl-modal-close-button" href="#">
+							<span class="bb-icons-rl-x"></span>
+						</a>
+					</header>
+					<div class="bb-rl-block-member-content bb-rl-modal-content">
+						<p>
+							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss' ); ?>
+						</p>
+						<div>
+							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
+						</div>
+						<ul>
+							<?php if ( bp_is_active( 'activity' ) ) : ?>
+							<li>
+								<?php
+								esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
+								?>
+							</li>
+							<?php endif; ?>
+							<li>
+								<?php
+								esc_html_e( 'Mention this member in posts', 'buddyboss' );
+								?>
+							</li>
+							<?php if ( bp_is_active( 'groups' ) ) : ?>
+							<li>
+								<?php
+								esc_html_e( 'Invite this member to groups', 'buddyboss' );
+								?>
+							</li>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'messages' ) ) : ?>
+							<li>
+								<?php
+								esc_html_e( 'Message this member', 'buddyboss' );
+								?>
+							</li>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'friends' ) ) : ?>
+							<li>
+								<?php
+								esc_html_e( 'Add this member as a connection', 'buddyboss' );
+								?>
+							</li>
+							<?php endif; ?>
+						</ul>
+
+						<div class="notice notice--plain notice--warning">
+							<?php if ( bp_is_active( 'friends' ) ) : ?>
+								<?php
+								printf(
+									wp_kses( __( '<span>%s</span> %s', 'buddyboss' ), array( 'span' => array() ) ),
+									esc_html__( 'Please note:', 'buddyboss' ),
+									esc_html__( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' )
+								);
+								?>
+							<?php endif; ?>
+
+							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss' ); ?>
+						</div>
+					</div>
+					<footer class="bb-rl-model-footer flex items-center">
+						<a class="bb-rl-close-block-member bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<input type="submit" name="block-member-submit" id="bb-rl-submit-block-member" form="bb-rl-block-member-form" value="Confirm" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+					</footer>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div>

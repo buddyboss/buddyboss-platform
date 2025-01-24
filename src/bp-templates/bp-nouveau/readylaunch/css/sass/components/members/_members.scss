@@ -71,7 +71,7 @@
 		}
 	}
 
-	.item-list.list {
+	.item-list:not(.grid) {
 
 		.only-grid-view {
 			display: none;
@@ -220,5 +220,22 @@
 	.bb-rl-input-field,
 	textarea {
 		width: 100%;
+	}
+}
+
+.bb-rl-block-member-content {
+
+	> p {
+		margin-bottom: var(--bb-rl-space-100);
+	}
+
+	> div,
+	> ul {
+		color: var(--bb-rl-text-secondary-color);
+	}
+
+	> ul {
+		padding-left: var(--bb-rl-space-300);
+		margin-bottom: var(--bb-rl-space-200);
 	}
 }

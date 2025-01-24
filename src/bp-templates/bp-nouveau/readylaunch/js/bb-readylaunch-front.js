@@ -24,6 +24,9 @@ window.bp = window.bp || {};
 			this.addListeners();
 			this.mobileSubMenu();
 			this.gridListFilter();
+			this.blockMember();
+			this.inviteMember();
+			this.collapsibleContextNav();
 
 			this.bbReloadWindow();
 		},
@@ -42,8 +45,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-			$( document ).on( 'click', '.bb-rl-context-btn', this.openContextMenu.bind( this ) );
 		},
+
 		/**
 		 * [scrollHeaderDropDown description]
 		 *
@@ -282,6 +285,45 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Open context nav.
+		 * @param e
+		 */
+		collapsibleContextNav: function () {
+			var self = this;
+
+			$( document ).on( 'click', '.bb-rl-context-btn', function ( e ) {
+				e.preventDefault();
+
+				var $button = $( this );
+				var $dropdown = $button.siblings( '.bb-rl-context-dropdown' );
+
+				// Close other dropdowns
+				$( '.bb-rl-context-dropdown' ).not( $dropdown ).hide();
+				$( '.bb-rl-context-btn' ).not( $button ).removeClass( 'active' );
+
+				if ( $dropdown.is( ':visible' ) ) {
+					$dropdown.hide();
+					$button.removeClass( 'active' );
+				} else {
+					$dropdown.show();
+					$button.addClass( 'active' );
+				}
+			} );
+
+			// Close dropdown clicked outside
+			$( document ).on( 'click', function ( e ) {
+				if ( !$( e.target ).closest( '.bb-rl-context-wrap' ).length ) {
+					$( '.bb-rl-context-dropdown' ).hide();
+					$( '.bb-rl-context-btn' ).removeClass( 'active' );
+				}
+			} );
+
+			$( document ).on( 'click', '.bb-rl-context-dropdown', function ( e ) {
+				e.stopPropagation();
+			} );
+		},
+
+		/**
 		 * Show header notification dropdowns
 		 * @param event
 		 */
@@ -364,20 +406,50 @@ window.bp = window.bp || {};
 			}
 		},
 
-		/**
-		 * Open context menu.
-		 * @param e
-		 */
-		openContextMenu: function ( e ) {
-			e.preventDefault();
+		inviteMember: function () {
+            $( document ).on( 'click', '#bb-rl-invite-button', function ( e ) {
+                e.preventDefault();
 
-			var target = $( e.currentTarget );
-			var contextWrapper = target.closest( '.bb-rl-context-wrap' );
-			var dropdown = contextWrapper.find( '.bb-rl-context-dropdown' );
+                var $wrapper = $( this ).closest( '.bb-rl-members-directory-wrapper' );
+                var $modal = $wrapper.find( '#bb-rl-invite-modal' );
+                
+                if ( $modal.length ) {
+                    $modal.show();
+                }
+            } );
 
-			dropdown.toggleClass( 'active' );
+            $( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
+                e.preventDefault();
+                
+                var $modal = $( this ).closest( '#bb-rl-invite-modal' );
+                
+                if ( $modal.length ) {
+                    $modal.hide();
+                }
+            } );
+		},
 
-			$( '.bb-rl-context-dropdown' ).not( dropdown ).removeClass( 'active' );
+		blockMember: function () {
+            $( document ).on( 'click', '.block-member', function ( e ) {
+                e.preventDefault();
+
+                var $wrapper = $( this ).closest( '.bb-rl-members' );
+                var $modal = $wrapper.find( '#bb-rl-block-member' );
+                
+                if ( $modal.length ) {
+                    $modal.show();
+                }
+            } );
+
+            $( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
+                e.preventDefault();
+                
+                var $modal = $( this ).closest( '#bb-rl-block-member' );
+                
+                if ( $modal.length ) {
+                    $modal.hide();
+                }
+            } );
 		},
 
 		/**
