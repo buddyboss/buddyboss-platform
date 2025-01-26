@@ -410,6 +410,7 @@ function bp_has_groups( $args = '' ) {
 	$args = bp_parse_args( $args, array() );
 	// Exclude Group Types
 	if (
+		! is_admin() && // Ensure this runs only on the frontend
 		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
 		! bp_is_user_groups() && ! bp_is_group_subgroups() &&
 		empty( $group_type )
