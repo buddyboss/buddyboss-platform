@@ -393,6 +393,163 @@ window.bp = window.bp || {};
 			bp.Readylaunch.deletedNotifications    = [];
 		},
 
+		Utilities: {
+			createDropzoneOptions: function( options ) {
+				return _.extend({
+					url: BP_Nouveau.ajaxurl,
+					timeout: 3 * 60 * 60 * 1000,
+					autoProcessQueue: true,
+					addRemoveLinks: true,
+					uploadMultiple: false
+				}, options );
+			},
+
+			setupDropzoneEventHandlers: function( view, dropzone, config ) {
+				var defaultConfig = {
+					mediaType: 'media',
+					otherButtonSelectors: [],
+				 };
+
+				 var configExtended = _.extend( defaultConfig, config );
+				 var modelKey = configExtended.modelKey;
+				 var uploaderSelector = configExtended.uploaderSelector;
+				 var actionName = configExtended.actionName;
+				 var nonceName = configExtended.nonceName;
+				 var mediaType = configExtended.mediaType;
+				 var otherButtonSelectors = configExtended.otherButtonSelectors;
+				 var parentSelector = configExtended.parentSelector;
+				 var parentAttachmentSelector = configExtended.parentAttachmentSelector;
+				 var ActiveComponent = configExtended.ActiveComponent;
+
+				// Common event handlers
+				dropzone.on( 'addedfile', function( file ) { 
+					if ( file[mediaType + '_edit_data'] ) { 
+						view[modelKey].push( file[mediaType + '_edit_data'] ); 
+						view.model.set( modelKey, view[modelKey] );
+					} 
+				 });
+
+				 dropzone.on( 'uploadprogress', function( element ) {
+					view.$el.closest( parentSelector ).addClass( 'media-uploading' );
+
+					var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+					var radius = circle.r.baseVal.value;
+					var circumference = radius * 2 * Math.PI;
+
+					circle.style.strokeDasharray = circumference + ' ' + circumference;
+					circle.style.strokeDashoffset = circumference - (element.upload.progress.toFixed(0) / 100 * circumference);
+				 });
+
+				 dropzone.on('sending', function( file, xhr, formData ) {
+					formData.append('action', actionName);
+					formData.append( '_wpnonce', BP_Nouveau.nonces[nonceName] );
+
+					var toolBox = view.$el.parents( parentSelector );
+					otherButtonSelectors.forEach( function( selector ) {
+						var $button = toolBox.find( selector );
+						if ($button.length) {
+							$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
+						}
+					});
+				 });
+
+				dropzone.on('success', function( file, response ) {
+					if ( response.data.id ) {
+						if( 'activity' === ActiveComponent ) {
+							// Privacy and metadata handling
+							if ( !bp.privacyEditable ) {
+								response.data.group_id = bp.group_id;
+								response.data.privacy = bp.privacy;
+							}
+						}
+
+						file.id = response.data.id;
+						response.data.uuid = file.upload.uuid;
+						response.data.saved = false;
+						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+
+						view[modelKey].push( response.data );
+						view.model.set( modelKey, view[modelKey] );
+					}
+					if( 'activity' === ActiveComponent ) {
+						bp.draft_content_changed = true;
+					}
+				 });
+
+				 dropzone.on('error', function( file, response ) {
+					if ( file.accepted ) {
+						var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
+						$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
+					} else {
+						Backbone.trigger( 'onError', '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (response || '' ) + '<div>' );
+						dropzone.removeFile( file );
+						view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+					}
+				 });
+
+				 dropzone.on( 'removedfile', function( file ) {
+					if ( ActiveComponent === 'activity' ) {
+						if ( bp.draft_activity.allow_delete_media ) {
+							// Remove logic for media items
+							view[modelKey] = view[modelKey].filter( function( mediaItem ) {
+								return file.id !== mediaItem.id &&
+									   ( !file[mediaType + '_edit_data'] || file[mediaType + '_edit_data'].id !== mediaItem.id );
+							});
+							view.model.set(modelKey, view[modelKey]);
+
+							// Set draft content changed flag
+							bp.draft_content_changed = true;
+
+							if ( dropzone.files.length === 0 ) {
+								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+
+								// Re-enable buttons
+								var toolBox = view.$el.parents( parentSelector );
+								otherButtonSelectors.forEach( function( selector ) {
+									var $button = toolBox.find( selector );
+									if ( $button.length ) {
+										$button.parents( '.bb-rl-post-elements-buttons-item' )
+											   .removeClass( 'disable active no-click' );
+									}
+								});
+
+								view.model.unset( modelKey );
+							}
+						}
+					} else {
+						if ( dropzone.files.length === 0 ) {
+							view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+
+							// Re-enable buttons
+							var toolBox = view.$el.parents( parentSelector );
+							otherButtonSelectors.forEach( function( selector ) {
+								var $button = toolBox.find( selector );
+								if ( $button.length ) {
+									$button.parents( '.bb-rl-post-elements-buttons-item' )
+										   .removeClass( 'disable active no-click' );
+								}
+							});
+
+							view.model.unset( modelKey );
+						}
+					}
+				});
+
+				dropzone.on( 'complete', function() {
+					if ( dropzone.getUploadingFiles().length === 0 &&
+						dropzone.getQueuedFiles().length === 0 &&
+						dropzone.files.length > 0 ) {
+						view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+					}
+				 });
+
+				// Open uploader
+				view.$el.find( uploaderSelector ).addClass( 'open' ).removeClass( 'closed' );
+				$( parentAttachmentSelector ).removeClass( 'empty' )
+					.closest( parentSelector ).addClass( 'focus-in--attm' );
+			}
+		},
+
 		bbReloadWindow: function () {
 			var fetchDataHandler = function( event ) {
 				if ( 'undefined' !== typeof event ) {
