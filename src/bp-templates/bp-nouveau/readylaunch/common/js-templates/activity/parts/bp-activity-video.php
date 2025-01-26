@@ -11,17 +11,20 @@
 	<div class="dropzone closed video-dropzone" id="bb-rl-activity-post-video-uploader"></div>
 	<div class="activity-post-video-template" style="display:none;">
 		<div class="dz-preview dz-file-preview well" id="dz-preview-template">
+			<div class="dz-image">
+				<img data-dz-thumbnail />
+			</div>
 			<div class="dz-details">
-				<div class="dz-filename"><span data-dz-name></span></div>
+				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss' ); ?></div>
+				<div class="dz-filename" data-dz-name></div>
 			</div>
 			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
 			<div class="dz-progress-ring-wrap">
-				<i class="bb-icon-f bb-icon-video"></i>
-				<svg class="dz-progress-ring" width="54" height="54">
-					<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+				<i class="bb-icons-rl-fill bb-icons-rl-video-camera"></i>
+				<svg class="dz-progress-ring" width="48" height="48">
+				<circle class="progress-ring__circle" stroke="#4946FE" stroke-width="3" fill="transparent" r="21.5" cx="24" cy="24" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 				</svg>
 			</div>
-			<!-- <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> -->
 			<div class="dz-error-message"><span data-dz-errormessage></span></div>
 			<div class="dz-success-mark">
 				<svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -41,8 +44,6 @@
 					</g>
 				</svg>
 			</div>
-			<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></span></div>
-			<div class="dz-video-thumbnail"></span></div>
 		</div>
 	</div>
 </script>
