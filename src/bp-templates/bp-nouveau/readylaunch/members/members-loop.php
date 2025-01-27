@@ -294,7 +294,7 @@ bp_nouveau_after_loop();
 							?>
 						</p>
 					</div>
-					<footer class="bb-rl-model-footer flex items-center">
+					<footer class="bb-rl-modal-footer flex items-center">
 						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 					</footer>
@@ -373,7 +373,7 @@ bp_nouveau_after_loop();
 							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss' ); ?>
 						</div>
 					</div>
-					<footer class="bb-rl-model-footer flex items-center">
+					<footer class="bb-rl-modal-footer flex items-center">
 						<a class="bb-rl-close-block-member bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
 						<input type="submit" name="block-member-submit" id="bb-rl-submit-block-member" form="bb-rl-block-member-form" value="Confirm" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 					</footer>

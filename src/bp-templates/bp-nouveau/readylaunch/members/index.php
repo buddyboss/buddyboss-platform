@@ -206,7 +206,7 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 							?>
 						</form>
 					</div>
-					<footer class="bb-rl-model-footer flex items-center">
+					<footer class="bb-rl-modal-footer flex items-center">
 						<a class="bb-rl-close-invite bb-rl-modal-close-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="javascript:void(0);"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
 						<input type="submit" name="bb-rl-submit-invite" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="<?php esc_html_e( 'Send Invite', 'buddyboss' ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 					</footer>
