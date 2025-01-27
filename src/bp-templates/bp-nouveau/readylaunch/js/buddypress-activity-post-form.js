@@ -3430,6 +3430,7 @@ window.bp = window.bp || {};
 				'click #bb-rl-privacy-status-submit': 'privacyStatusSubmit',
 				'click #bb-rl-privacy-status-back': 'backPrivacySelector',
 				'click #bb-rl-privacy-status-group-back': 'backGroupSelector',
+				'click #bb-rl-whats-new-post-in-box-header .bb-rl-model-close-button': 'backGroupSelector',
 				'click input.bb-rl-activity-privacy__input': 'privacySelector'
 			},
 
@@ -3437,6 +3438,10 @@ window.bp = window.bp || {};
 				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
 					var privacy_body = new bp.Views.PrivacyStageBody( { model: this.model } );
 					this.views.add( privacy_body );
+
+					if( this.$el.find( '.bb-rl-whats-new-post-in-box--overlay' ).length === 0 ) {
+						this.$el.find( '.bb-rl-privacy-status-form-body' ).append( '<div class="bb-rl-whats-new-post-in-box--overlay"></div>' );
+					}
 				}
 
 				this.views.add( new bp.Views.PrivacyStageFooter( { model: this.model } ) );

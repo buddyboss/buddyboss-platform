@@ -491,6 +491,19 @@
 			}
 		}
 
+		&.bb-rl-focus-in--blank-group #bb-rl-privacy-status-submit {
+			opacity: 0.6;
+			cursor: default;
+			pointer-events: none;
+		}
+
+		.bb-rl-whats-new-post-in-box--overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(2px);
+		}
+
 		#bb-rl-activity-post-form-privacy {
 			display: none;
 		}
