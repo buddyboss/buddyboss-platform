@@ -831,8 +831,8 @@ window.bp = window.bp || {};
 		/**
 		 * [activityActions description]
 		 *
-		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
+		 * @param event
 		 */
 		activityActions: function ( event ) {
 			var parent        = event.data,
@@ -1060,8 +1060,8 @@ window.bp = window.bp || {};
 		/**
 		 * [closeCommentForm description]
 		 *
-		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
+		 * @param event
 		 */
 		commentFormAction: function( event ) {
 			var element, keyCode;
@@ -1095,8 +1095,8 @@ window.bp = window.bp || {};
 		/**
 		 * [togglePopupDropdown description]
 		 *
-		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
+		 * @param event
 		 */
 		togglePopupDropdown: function( event ) {
 			var element;
@@ -1283,7 +1283,7 @@ window.bp = window.bp || {};
 					self.dropzone_obj.on(
 						'accept',
 						function( file, done ) {
-							if (file.size == 0) {
+							if ( 0 === file.size ) {
 								done( BP_Nouveau.media.empty_document_type );
 							} else {
 								done();
@@ -1297,7 +1297,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
+								} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -1315,7 +1315,7 @@ window.bp = window.bp || {};
 						function(file) {
 							if ( self.dropzone_media.length ) {
 								for ( var i in self.dropzone_media ) {
-									if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
+									if ( file.upload.uuid === self.dropzone_media[i].uuid ) {
 
 										if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 											bp.Nouveau.Media.removeAttachment( self.dropzone_media[i].id );
@@ -1500,7 +1500,7 @@ window.bp = window.bp || {};
 					self.dropzone_document_obj.on(
 						'accept',
 						function( file, done ) {
-							if (file.size == 0) {
+							if ( file.size === 0) {
 								done( BP_Nouveau.media.empty_document_type );
 							} else {
 								done();
@@ -1544,7 +1544,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
+								} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -1562,7 +1562,7 @@ window.bp = window.bp || {};
 						function(file) {
 							if ( self.dropzone_document.length ) {
 								for ( var i in self.dropzone_document ) {
-									if ( file.upload.uuid == self.dropzone_document[i].uuid ) {
+									if ( file.upload.uuid === self.dropzone_document[i].uuid ) {
 
 										if ( typeof self.dropzone_document[i].saved !== 'undefined' && ! self.dropzone_document[i].saved ) {
 											bp.Nouveau.Media.removeAttachment( self.dropzone_document[i].id );
@@ -1715,7 +1715,7 @@ window.bp = window.bp || {};
 					self.dropzone_video_obj.on(
 						'accept',
 						function( file, done ) {
-							if (file.size == 0) {
+							if ( file.size === 0 ) {
 								done( BP_Nouveau.video.empty_video_type );
 							} else {
 								done();
@@ -1738,7 +1738,7 @@ window.bp = window.bp || {};
 
 							if ( file.dataURL && file.video_edit_data.thumb.length ) {
 								// Get Thumbnail image from response.
-								$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' " />' );
+								$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' "  alt=""/>' );
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 							} else {
 
@@ -1807,7 +1807,7 @@ window.bp = window.bp || {};
 							if ( file.accepted ) {
 								if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
+								} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
 								}
 							} else {
@@ -1825,7 +1825,7 @@ window.bp = window.bp || {};
 						function(file) {
 							if ( self.dropzone_video.length ) {
 								for ( var i in self.dropzone_video ) {
-									if ( file.upload.uuid == self.dropzone_video[i].uuid ) {
+									if ( file.upload.uuid === self.dropzone_video[i].uuid ) {
 
 										if ( typeof self.dropzone_video[i].saved !== 'undefined' && ! self.dropzone_video[i].saved ) {
 											bp.Nouveau.Media.removeAttachment( self.dropzone_video[i].id );
@@ -1907,7 +1907,7 @@ window.bp = window.bp || {};
 				isInsideModal = $( currentTarget ).closest( '#activity-modal' ).length > 0,
 				hasParentModal = isInsideModal ? '#activity-modal ' : '',
 				pickerContainer = isInsideModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : $( currentTarget ).next(),
-				isStandalone = isInsideModal ? true : false,
+				isStandalone = isInsideModal,
 				$gifPickerEl = pickerContainer,
 				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
@@ -1929,7 +1929,7 @@ window.bp = window.bp || {};
 			}
 
 			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .bb-rl-activity-attached-gif-container' );
-			if ( $( currentTarget ).hasClass( 'active' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+			if ( $( currentTarget ).hasClass( 'active' ) && gif_box.length && $.trim( gif_box.html() ) === '' ) {
 				$( currentTarget ).removeClass( 'active' );
 			} else {
 				$( currentTarget ).addClass( 'active' );
@@ -1959,8 +1959,7 @@ window.bp = window.bp || {};
 		toggleMultiMediaOptions: function( form, target, placeholder ) {
 			if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 
-				var parent_activity = '',
-					activity_data = '';
+				var parent_activity, activity_data;
 
 				if ( placeholder ) {
 					target = target ? $( target ) : $( placeholder );
@@ -2242,7 +2241,7 @@ window.bp = window.bp || {};
 			form.removeClass( 'has-content has-gif has-media' );
 			var self = this;
 			['media', 'document', 'video', 'gif'].forEach( function ( type ) {
-				self.destroyUploader( 'gif', formActivityId );
+				self.destroyUploader( type, formActivityId );
 			} );
 		},
 
@@ -2708,7 +2707,7 @@ window.bp = window.bp || {};
 					standalone: true,
 					hideSource: false,
 					container: parentSelector + '#ac-reply-emoji-button-' + activityId,
-					detachPicker: isModal ? true : false,
+					detachPicker: !! isModal,
 					containerPicker: isModal ? '.emojionearea-theatre' : null,
 					autocomplete: false,
 					pickerPosition: 'top',
@@ -2758,7 +2757,7 @@ window.bp = window.bp || {};
 
 			// Iterate through the files and inject them.
 			commonData.forEach( function ( file, index ) {
-				var editData = {};
+				var editData;
 				if ( 0 < parseInt( id, 10 ) ) {
 					editData = {
 						id        : file.attachment_id || file.doc_id || file.vid_id,
