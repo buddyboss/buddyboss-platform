@@ -26,43 +26,6 @@ if ( function_exists( 'buddyboss_theme' ) ) {
 
 	<h1 class="bb-advance-heading"><?php esc_html_e( 'Unlock more social networking features for your websites', 'buddyboss' ); ?></h1>
 	<div class="bb-upgrade-wrap">
-		<div class="bb-advance-card bb-advance-card--hero">
-			<div class="card-inner-wrap">
-				<div class="card-figure-wrapper">
-					<div class="card-figure">
-						<img alt="" class="upgrade-figure" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/upgrade/bb-upgrade-card-rapyd.png' ); ?>" />
-					</div>
-				</div>
-				<div class="card-data">
-					<h2><?php esc_html_e( 'Rapyd Cloud', 'buddyboss' ); ?></h2>
-					<div class="card-subtitle"><?php esc_html_e( 'The highest performance managed WordPress hosting on the planet', 'buddyboss' ); ?></div>
-					<div class="advance-card-note">
-						<p class="wp-upgrade-description">
-							<?php esc_html_e( 'Many hosting providers claim to have the best performance. But when you add dynamic features and high concurrency, website performance suffers. Rapyd keeps your feature-rich websites fast and responsive, even during periods of very high traffic.', 'buddyboss' ); ?>
-						</p>
-					</div>
-					<div class="advance-card-action">
-						<a href="
-						<?php
-						echo esc_url(
-							bp_get_admin_url(
-								add_query_arg(
-									array(
-										'page' => 'bb-upgrade',
-										'tab'  => 'bb-performance-tester',
-									),
-									'admin.php'
-								)
-							)
-						);
-						?>
-						" class="advance-action-button"><?php esc_html_e( 'Test Performance', 'buddyboss' ); ?></a>
-						<a href="https://rapyd.cloud/?fpr=buddyboss93" class="advance-action-link" target="_blank"><?php esc_html_e( 'View Pricing', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-arrow-up"></i></a>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<div class="bb-advance-card bb-advance-card--pro">
 			<div class="card-inner-wrap">
 				<div class="card-figure">
