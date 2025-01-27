@@ -25,7 +25,6 @@ window.bp = window.bp || {};
 			this.mobileSubMenu();
 			this.gridListFilter();
 			this.blockMember();
-			this.inviteMember();
 			this.collapsibleContextNav();
 
 			this.bbReloadWindow();
@@ -406,50 +405,27 @@ window.bp = window.bp || {};
 			}
 		},
 
-		inviteMember: function () {
-            $( document ).on( 'click', '#bb-rl-invite-button', function ( e ) {
-                e.preventDefault();
-
-                var $wrapper = $( this ).closest( '.bb-rl-members-directory-wrapper' );
-                var $modal = $wrapper.find( '#bb-rl-invite-modal' );
-                
-                if ( $modal.length ) {
-                    $modal.show();
-                }
-            } );
-
-            $( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
-                e.preventDefault();
-                
-                var $modal = $( this ).closest( '#bb-rl-invite-modal' );
-                
-                if ( $modal.length ) {
-                    $modal.hide();
-                }
-            } );
-		},
-
 		blockMember: function () {
-            $( document ).on( 'click', '.block-member', function ( e ) {
-                e.preventDefault();
+			$( document ).on( 'click', '.block-member', function ( e ) {
+				e.preventDefault();
 
-                var $wrapper = $( this ).closest( '.bb-rl-members' );
-                var $modal = $wrapper.find( '#bb-rl-block-member' );
-                
-                if ( $modal.length ) {
-                    $modal.show();
-                }
-            } );
+				var $wrapper = $( this ).closest( '.bb-rl-members' );
+				var $modal = $wrapper.find( '#bb-rl-block-member' );
+				
+				if ( $modal.length ) {
+					$modal.show();
+				}
+			} );
 
-            $( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
-                e.preventDefault();
-                
-                var $modal = $( this ).closest( '#bb-rl-block-member' );
-                
-                if ( $modal.length ) {
-                    $modal.hide();
-                }
-            } );
+			$( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
+				e.preventDefault();
+				
+				var $modal = $( this ).closest( '#bb-rl-block-member' );
+				
+				if ( $modal.length ) {
+					$modal.hide();
+				}
+			} );
 		},
 
 		/**

@@ -304,57 +304,6 @@ bp_nouveau_after_loop();
 	</transition>
 </div> <!-- .bb-remove-connection -->
 
-<!-- Invite popup -->
-<div id="bb-rl-invite-modal" class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
-	<transition name="modal">
-		<div class="modal-mask bb-rl-modal-mask">
-			<div class="bb-rl-modal-wrapper">
-				<div class="bb-rl-modal-container">
-					<header class="bb-rl-modal-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Send invite to add member', 'buddyboss' ); ?></span></h4>
-						<a class="bb-rl-close-invite bb-rl-modal-close-button" href="#">
-							<span class="bb-icons-rl-x"></span>
-						</a>
-					</header>
-					<div class="bb-rl-invite-content bb-rl-modal-content">
-						<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form">
-							<div class="bb-rl-form-field-wrapper">
-								<label for="bb-rl-invite-name">Name</label>
-								<input type="text" name="invitee" id="bb-rl-invite-name" value="" class="bb-rl-input-field">
-							</div>
-							<div class="bb-rl-form-field-wrapper">
-								<label for="bb-rl-invite-email">Email address</label>
-								<input type="email" name="invitee-email" id="bb-rl-invite-email" value="" class="bb-rl-input-field">
-							</div>
-							<div class="bb-rl-form-field-wrapper">
-								<label for="bb-rl-invite-type">Profile type</label>
-								<select id="bb-rl-invite-type" name="invitee-type" class="bb-rl-input-field bb-rl-input-field--select">
-									<option value="">--Select--</option>
-									<option selected="selected" value="admin">Admin</option>
-									<option value="subscriber">Subscriber</option>
-									<option value="student">Student</option>
-								</select>
-							</div>
-							<div class="bb-rl-form-field-wrapper">
-								<label for="bb-rl-invite-subject">Subject</label>
-								<textarea name="invitee-subject" id="bb-rl-invite-subject" class="bb-rl-textarea-field" rows="5" cols="10">An invitation from John Travolta to join Online Communities</textarea>
-							</div>
-							<div class="bb-rl-form-field-wrapper">
-								<label for="bb-rl-invite-message">Invitation message</label>
-								<textarea name="invitee-message" id="bb-rl-invite-message" class="bb-rl-textarea-field" rows="5" cols="10">An invitation from John Travolta to join Online Communities</textarea>
-							</div>
-						</form>
-					</div>
-					<footer class="bb-rl-model-footer flex items-center">
-						<a class="bb-rl-close-invite bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<input type="submit" name="member-invite-submit" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="Send Invite" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
-					</footer>
-				</div>
-			</div>
-		</div>
-	</transition>
-</div> <!-- .bb-invite-connection -->
-
 <!-- Block member popup -->
 <div id="bb-rl-block-member" class="bb-rl-block-modal bb-rl-modal" style="display: none;">
 	<transition name="modal">

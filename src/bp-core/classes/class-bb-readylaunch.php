@@ -105,6 +105,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_rl_prefix_key' ) );
 				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
 
+				add_filter( 'bp_nouveau_register_scripts',  array( $this, 'bb_rl_nouveau_member_register_scripts' ), 99, 1 );
+
 			}
 		}
 
@@ -449,6 +451,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+
+			if ( bp_is_members_directory() ) {
+				wp_enqueue_script( 'bb-rl-members' );
+			}
 
 			wp_localize_script(
 				'bb-readylaunch-front',
@@ -893,6 +899,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_prefix_key( $key ) {
 			return 'bb-rl-' . $key;
+		}
+
+		/**
+		 * Register Scripts for the Member component
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $scripts The array of scripts to register.
+		 *
+		 * @return array The same array with the specific messages scripts.
+		 */
+		function bb_rl_nouveau_member_register_scripts( $scripts = array() ) {
+			if ( ! isset( $scripts['bp-nouveau'] ) ) {
+				return $scripts;
+			}
+
+			return array_merge(
+				$scripts,
+				array(
+					'bb-rl-members' => array(
+						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members%s.js',
+						'dependencies' => array( 'bp-nouveau' ),
+						'footer'       => true,
+					),
+				)
+			);
 		}
 	}
 

@@ -109,6 +109,112 @@ do_action( 'bp_before_directory_members_page' );
 
 </div>
 
+<!-- Invite popup -->
+<?php
+$send_invite_member_type_allow     = bp_check_member_send_invites_tab_member_type_allowed();
+$is_disabled_invite_member_subject = bp_disable_invite_member_email_subject();
+$is_disabled_invite_member_content = bp_disable_invite_member_email_content();
+?>
+<div id="bb-rl-invite-modal" class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
+	<transition name="modal">
+		<div class="modal-mask bb-rl-modal-mask">
+			<div class="bb-rl-modal-wrapper">
+				<div class="bb-rl-modal-container">
+					<header class="bb-rl-modal-header">
+						<h4><span class="target_name"><?php echo esc_html__( 'Send invite to add member', 'buddyboss' ); ?></span></h4>
+						<a class="bb-rl-close-invite bb-rl-modal-close-button" href="javascript:void(0);">
+							<span class="bb-icons-rl-x"></span>
+						</a>
+					</header>
+					<div class="bb-rl-invite-content bb-rl-modal-content">
+						<form action="" method="post" class="bb-rl-invite-form" id="bb-rl-invite-form">
+							<div class="bb-rl-form-field-wrapper">
+								<label for="bb-rl-invite-name"><?php esc_html_e( 'Name', 'buddyboss' ); ?></label>
+								<input type="text" name="bb-rl-invite-name" id="bb-rl-invite-name" value="" class="bb-rl-input-field">
+							</div>
+							<div class="bb-rl-form-field-wrapper">
+								<label for="bb-rl-invite-email"><?php esc_html_e( 'Email Address', 'buddyboss' ); ?></label>
+								<input type="email" name="bb-rl-invite-email" id="bb-rl-invite-email" value="" class="bb-rl-input-field">
+							</div>
+							<?php
+							if ( true === $send_invite_member_type_allow ) {
+								$current_user              = bp_loggedin_user_id();
+								$member_type               = bp_get_member_type( $current_user );
+								$member_type_post_id       = bp_member_type_post_by_type( $member_type );
+								$get_selected_member_types = get_post_meta( $member_type_post_id, '_bp_member_type_allowed_member_type_invite', true );
+								if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
+									$member_types = $get_selected_member_types;
+								} else {
+									$member_types = bp_get_active_member_types();
+								}
+								?>
+									<div class="bb-rl-form-field-wrapper">
+										<label for="bb-rl-invite-type"><?php esc_html_e( 'Profile Type', 'buddyboss' ); ?></label>
+										<select id="bb-rl-invite-type" name="bb-rl-invite-type" class="bb-rl-input-field bb-rl-input-field--select">
+										<?php
+										foreach ( $member_types as $type ) {
+											$name = bp_get_member_type_key( $type );
+											if ( $type_obj = bp_get_member_type_object( $name ) ) {
+												$member_type = $type_obj->labels['singular_name'];
+											}
+											?>
+												<option value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $member_type ); ?></option>
+												<?php
+										}
+										?>
+										</select>
+									</div>
+									<?php
+							}
+							if ( true === $is_disabled_invite_member_subject ) {
+								?>
+								<div class="bb-rl-form-field-wrapper">
+									<label for="bb-rl-invite-subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
+									<textarea name="bb-rl-invite-subject" id="bb-rl-invite-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
+								</div>
+								<?php
+							}
+
+							if ( true === $is_disabled_invite_member_content ) {
+								?>
+								<div class="bb-rl-form-field-wrapper">
+									<label for="bb-rl-invite-message"><?php esc_html_e( 'Invitation message', 'buddyboss' ); ?></label>
+									<?php
+										add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
+										add_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
+										wp_editor(
+											bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
+											'bb-rl-member-invites-custom-content',
+											array(
+												'textarea_name' => 'bp_member_invites_custom_content',
+												'teeny'         => false,
+												'media_buttons' => false,
+												'dfw'           => false,
+												'tinymce'       => true,
+												'quicktags'     => false,
+												'tabindex'      => '3',
+												'textarea_rows' => 5,
+											)
+										);
+										// Remove the temporary filter on editor buttons.
+										remove_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
+										remove_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
+									?>
+								</div>
+								<?php
+							}
+							?>
+						</form>
+					</div>
+					<footer class="bb-rl-model-footer flex items-center">
+						<a class="bb-rl-close-invite bb-rl-modal-close-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="javascript:void(0);"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<input type="submit" name="bb-rl-submit-invite" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="<?php esc_html_e( 'Send Invite', 'buddyboss' ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+					</footer>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div> <!-- .bb-invite-connection -->
 <?php
 /**
  * Fires at the bottom of the member directory template file.
