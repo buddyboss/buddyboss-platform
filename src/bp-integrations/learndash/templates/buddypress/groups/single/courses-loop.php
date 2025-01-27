@@ -171,7 +171,7 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
             </h2>
 
 			<?php
-			if ( buddyboss_theme_get_option( 'learndash_course_author' ) ) {
+			if ( function_exists( 'buddyboss_theme_get_option' ) && buddyboss_theme_get_option( 'learndash_course_author' ) ) {
 				SFWD_LMS::get_template( 'course_list_course_author', compact( 'post' ), true );
 			}
 

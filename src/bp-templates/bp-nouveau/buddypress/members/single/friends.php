@@ -9,11 +9,39 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
-
+$bp_current_action    = bp_current_action();
 bp_get_template_part( 'members/single/parts/item-subnav' );
+
+if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
+	?>
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+				$count = friends_get_total_friend_count();
+				printf(
+					wp_kses(
+						/* translators: %d is the count */
+						_n(
+							'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Request' : 'Connection' ),
+							'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Requests' : 'Connections' ),
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
+					),
+					(int) $count
+				);
+
+				unset( $count );
+			}
+			?>
+		</div>
+	<?php
+}
+
 bp_get_template_part( 'common/search-and-filters-bar' );
 
-switch ( bp_current_action() ) :
+switch ( $bp_current_action ) :
 
 	// Home/My Connections
 	case 'my-friends':

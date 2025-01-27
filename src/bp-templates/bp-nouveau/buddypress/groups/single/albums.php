@@ -9,8 +9,31 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
-?>
 
+if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_single_album() ) {
+	$count = bp_media_get_total_group_album_count();
+	?>
+	<div class="bb-item-count">
+		<?php
+		printf(
+			wp_kses(
+				/* translators: %d is the album count */
+				_n(
+					'<span class="bb-count">%d</span> Album',
+					'<span class="bb-count">%d</span> Albums',
+					$count,
+					'buddyboss'
+				),
+				array( 'span' => array( 'class' => true ) )
+			),
+			(int) $count
+		);
+		?>
+	</div>
+	<?php
+	unset( $count );
+}
+?>
 <div class="bb-media-container group-albums">
 
 	<?php
@@ -19,7 +42,7 @@
 	if ( bp_is_group_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
-	
+
 	if ( bp_is_group_document_support_enabled() ) {
 		bp_get_template_part( 'document/theatre' );
 	}

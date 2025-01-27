@@ -43,6 +43,8 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'hide-loggedout-adminbar', '', 'bp_admin_setting_callback_admin_bar', 'intval', $args );
 		$args = array();
 
+		// Content Count Settings.
+		$this->add_field( 'bb-enable-content-counts', __( 'Content Counts', 'buddyboss' ), 'bb_admin_setting_callback_content_counts', 'intval' );
 
 		// Main Registration Settings Section.
 		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ), '', 'bp_admin_registration_setting_tutorial' );

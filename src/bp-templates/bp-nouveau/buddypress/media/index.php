@@ -28,6 +28,32 @@ bp_nouveau_template_notices();
 	if ( ! bp_nouveau_is_object_nav_in_sidebar() ) :
 		bp_get_template_part( 'common/nav/directory-nav' );
 	endif;
+
+	if ( bb_enable_content_counts() ) {
+		?>
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+				$count = bp_get_total_media_count();
+				printf(
+					wp_kses(
+						/* translators: %d is the photo count */
+						_n(
+							'<span class="bb-count">%d</span> Photo',
+							'<span class="bb-count">%d</span> Photos',
+							$count,
+							'buddyboss'
+						), array( 'span' => array( 'class' => true ) )
+					),
+					(int) $count
+				);
+
+				unset( $count );
+			}
+			?>
+		</div>
+		<?php
+	}
 	?>
 
 	<div class="media-options">

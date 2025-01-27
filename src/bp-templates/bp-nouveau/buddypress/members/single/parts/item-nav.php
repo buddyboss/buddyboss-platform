@@ -30,9 +30,13 @@
 					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>" class="<?php bp_nouveau_nav_link_class(); ?>">
 						<div class="bb-single-nav-item-point"><?php bp_nouveau_nav_link_text(); ?></div>
 
-						<?php if ( bp_nouveau_nav_has_count() ) : ?>
-							<span class="count"><?php bp_nouveau_nav_count(); ?></span>
-						<?php endif; ?>
+						<?php
+						if ( in_array( $nav_item->css_id, array( 'notifications', 'messages' ), true ) ) {
+							if ( bp_nouveau_nav_has_count() ) : ?>
+								<span class="count"><?php bp_nouveau_nav_count(); ?></span>
+							<?php endif;
+						}
+						?>
 					</a>
 				</li>
 
