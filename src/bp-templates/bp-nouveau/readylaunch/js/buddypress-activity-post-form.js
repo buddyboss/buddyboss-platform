@@ -8,7 +8,7 @@ window.bp = window.bp || {};
 	bp.Nouveau = bp.Nouveau || {};
 
 	// Bail if not set.
-	if ( typeof bp.Nouveau.Activity === 'undefined' || typeof BP_Nouveau === 'undefined' ) {
+	if ( 'undefined' === typeof bp.Nouveau.Activity || 'undefined' === typeof BP_Nouveau ) {
 		return;
 	}
 
@@ -2970,7 +2970,7 @@ window.bp = window.bp || {};
 			toggleSupport: function ( groupType, uploaderId, $supportElement, supportType ) {
 				var modelAttributes = this.model.attributes;
 
-				if ( typeof modelAttributes[groupType] !== 'undefined' && modelAttributes[groupType] === false ) {
+				if ( 'undefined' !== typeof modelAttributes[groupType] && modelAttributes[groupType] === false ) {
 					var dropzone = bp.Nouveau.Activity.postForm.dropzone;
 
 					if ( ! dropzone || dropzone.element.id === uploaderId ) {
