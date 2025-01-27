@@ -3182,8 +3182,10 @@ window.bp = window.bp || {};
 				var whats_new_form = $( '#bb-rl-whats-new-form' );
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object && 'group' === BP_Nouveau.activity.params.object ) {
-					this.model.set( 'item_name', BP_Nouveau.activity.params.item_name );
-					this.model.set( 'privacy', 'group' );
+					this.model.set( {
+						item_name : BP_Nouveau.activity.params.item_name,
+						privacy   : 'group'
+					} );
 
 					var group_name = BP_Nouveau.activity.params.item_name;
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( group_name );
@@ -3208,8 +3210,10 @@ window.bp = window.bp || {};
 				}
 
 				if ( ! _.isUndefined( bp.draft_activity ) && '' !== bp.draft_activity.object && 'group' === bp.draft_activity.object && bp.draft_activity.data && '' !== bp.draft_activity.data ) {
-					this.model.set( 'item_name', bp.draft_activity.data.item_name );
-					this.model.set( 'privacy', 'group' );
+					this.model.set( {
+						item_name : bp.draft_activity.data.item_name,
+						privacy   : 'group'
+					} );
 
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( bp.draft_activity.data.item_name );
 
@@ -3280,8 +3284,10 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				var selected_privacy = this.$el.find( '.bb-rl-activity-privacy__input:checked' ).val();
-				this.model.set( 'privacy', selected_privacy );
-				this.model.set( 'privacy_modal', 'general' );
+				this.model.set( {
+					privacy       : selected_privacy,
+					privacy_modal : 'general'
+				} );
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
 					bp.Nouveau.Activity.postForm.postGifProfile = new bp.Views.PostGifProfile( { model: this.model } );
@@ -3297,8 +3303,10 @@ window.bp = window.bp || {};
 					var group_name = whats_new_form.find( '#bb-rl-item-opt-' + group_item_id ).data( 'title' );
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( group_name );
 					whats_new_form.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( selected_privacy );
-					this.model.set( 'item_name', group_name );
-					this.model.set( 'group_name', group_name );
+					this.model.set( {
+						item_name  : group_name,
+						group_name : group_name
+					} );
 					// display image of the group.
 					if ( this.model.attributes.group_image && false === this.model.attributes.group_image.includes( 'mystery-group' ) ) {
 						whats_new_form.find( '#bb-rl-activity-privacy-point span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' );
@@ -3319,12 +3327,14 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'cleanFeedBack' );
 					} else if ( 'scheduled' === this.model.attributes.activity_action_type ) {
 						// Reset the schedule data.
-						this.model.set( 'activity_action_type', null );
-						this.model.set( 'activity_schedule_date_raw', null );
-						this.model.set( 'activity_schedule_date', null );
-						this.model.set( 'activity_schedule_time', null );
-						this.model.set( 'activity_schedule_meridiem', null );
-						this.model.set( 'schedule_allowed', 'disabled' );
+						this.model.set( {
+							activity_action_type       : null,
+							activity_schedule_date_raw : null,
+							activity_schedule_date     : null,
+							activity_schedule_time     : null,
+							activity_schedule_meridiem : null,
+							schedule_allowed           : 'disabled'
+						} );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 
 						// Show Warning message.
@@ -3341,9 +3351,11 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 						Backbone.trigger( 'cleanFeedBack' );
 					} else {
-						this.model.set( 'polls_allowed', 'disabled' );
-						this.model.set( 'poll', {} );
-						this.model.set( 'poll_id', '' );
+						this.model.set( {
+							polls_allowed : 'disabled',
+							poll          : {},
+							poll_id       : '',
+						} );
 						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 					}
 
@@ -3358,12 +3370,14 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).removeClass( 'bp-hide' );
 					} else {
 						// Reset the schedule data.
-						this.model.set( 'activity_action_type', null );
-						this.model.set( 'activity_schedule_date_raw', null );
-						this.model.set( 'activity_schedule_date', null );
-						this.model.set( 'activity_schedule_time', null );
-						this.model.set( 'activity_schedule_meridiem', null );
-						this.model.set( 'schedule_allowed', 'disabled' );
+						this.model.set( {
+							activity_action_type       : null,
+							activity_schedule_date_raw : null,
+							activity_schedule_date     : null,
+							activity_schedule_time     : null,
+							activity_schedule_meridiem : null,
+							schedule_allowed           : 'disabled'
+						} );
 						whats_new_form.find( '.bb-schedule-post_dropdown_section' ).addClass( 'bp-hide' );
 					}
 
@@ -3375,9 +3389,11 @@ window.bp = window.bp || {};
 					) {
 						whats_new_form.find( '.bb-post-poll-button' ).removeClass( 'bp-hide' );
 					} else {
-						this.model.set( 'polls_allowed', 'disabled' );
-						this.model.set( 'poll', {} );
-						this.model.set( 'poll_id', '' );
+						this.model.set( {
+							polls_allowed : 'disabled',
+							poll          : {},
+							poll_id       : '',
+						} );
 						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 					}
 
@@ -3392,11 +3408,13 @@ window.bp = window.bp || {};
 					whats_new_form.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon img' ).remove();
 					whats_new_form.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
 
-					this.model.set( 'item_id', 0 );
-					this.model.set( 'item_name', '' );
-					this.model.set( 'group_name', '' );
-					this.model.set( 'group_image', '' );
-					this.model.set( 'group-privacy', '' );
+					this.model.set( {
+						item_id       : 0,
+						item_name     : '',
+						group_name    : '',
+						group_image   : '',
+						group_privacy : ''
+					} );
 
 					bp.draft_activity.data.item_id            = 0;
 					bp.draft_activity.data.group_name         = '';
@@ -3635,11 +3653,13 @@ window.bp = window.bp || {};
 						new bp.Views.PrivacyStageFooter()
 					]);
 					// Set the object type.
-					this.model.set( 'object', this.model.get( 'object' ) );
-					this.model.set( 'group_name', model.get( 'name' ) );
-					this.model.set( 'item_name', model.get( 'name' ) );
-					this.model.set( 'group_image', model.get( 'avatar_url' ) );
-					this.model.set( 'group_url', model.get( 'group_url' ) );
+					this.model.set( {
+						object      : this.model.get( 'object' ),
+						group_name  : model.get( 'name' ),
+						item_name   : model.get( 'name' ),
+						group_image : model.get( 'avatar_url' ),
+						group_url   : model.get( 'group_url' )
+					} );
 				} else {
 					this.views.set( '#bb-rl-whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 				}
