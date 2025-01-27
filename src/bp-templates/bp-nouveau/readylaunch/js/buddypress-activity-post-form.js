@@ -340,7 +340,7 @@ window.bp = window.bp || {};
 
 			// unwrap hw wrapped content section.
 			var $whatsNewContent = $( '#bb-rl-whats-new-content' );
-			if ( $whatsNewContent.parent().is( '.edit-activity-content-wrap' ) ) {
+			if ( $whatsNewContent.parent().is( '.bb-rl-edit-activity-content-wrap' ) ) {
 				$whatsNewContent.unwrap();
 			}
 
