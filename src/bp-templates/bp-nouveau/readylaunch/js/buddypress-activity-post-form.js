@@ -1021,39 +1021,10 @@ window.bp = window.bp || {};
 			}
 
 			var is_profile_activity = this.isProfileDraftActivity( activity_data );
-
 			// Sync profile/group media/document/video.
-			var types = ['media', 'document', 'video'];
+			var types               = ['media', 'document', 'video'];
 			for ( var i = 0; i < types.length; i ++ ) {
-				var type        = types[i],
-				    profile_key = 'profile_' + type,
-				    group_key   = 'group_' + type;
-
-				activity_data[profile_key] = BP_Nouveau[type][profile_key];
-				activity_data[group_key]   = BP_Nouveau[type][group_key];
-
-				if (
-					(
-						false === is_profile_activity && activity_data[profile_key]
-					) ||
-					(
-						true === is_profile_activity && activity_data[group_key]
-					)
-				) {
-					delete activity_data[type];
-				}
-			}
-
-			// Update toolbar UI based on media settings.
-			for ( var j = 0; j < types.length; j ++ ) {
-				var toolbar_class = '#whats-new-toolbar .bb-rl-post-' + types[j] + '.bb-rl-' + types[j] + '-support',
-				    is_enabled    = BP_Nouveau[types[j]]['profile_' + types[j]];
-
-				$( toolbar_class ).toggleClass( 'bb-rl-' + types[j] + '-support-hide', ! is_enabled ).toggleClass( 'active', is_enabled );
-
-				if ( ! is_enabled ) {
-					Backbone.trigger( 'activity_' + types[j] + '_close' );
-				}
+				$this.syncMediaDocVideo( activity_data, types[ i ], is_profile_activity );
 			}
 
 			setTimeout(
@@ -1436,6 +1407,39 @@ window.bp = window.bp || {};
 
 			// This will work only for other browsers.
 			window.unload = postDraftActivityHandler;
+		},
+
+		syncMediaDocVideo : function ( activity_data, type, is_profile_activity ) {
+			var $whatsNewToolbarElem    = $( '#whats-new-toolbar' ),
+			    profileKey              = 'profile_' + type,
+			    groupKey                = 'group_' + type,
+			    subToolbarSelector      = '.post-' + type + '.' + type + '-support';
+
+			activity_data[ profileKey ] = BP_Nouveau[ type ][ profileKey ];
+			activity_data[ groupKey ]   = BP_Nouveau[ type ][ groupKey ];
+			if ( 'document' === type ) {
+				// Change type for class name and localize var for a document.
+				var changeType              = 'media';
+				subToolbarSelector          = '.post-' + changeType + ' .' + type + '-support';
+				activity_data[ profileKey ] = BP_Nouveau[ changeType ][ profileKey ];
+				activity_data[ groupKey ]   = BP_Nouveau[ changeType ][ groupKey ];
+			}
+			var toolbarSelector = $whatsNewToolbarElem.find( subToolbarSelector );
+
+			// Delete it from activity data if not supported.
+			if ( activity_data[ profileKey ] === false && is_profile_activity ) {
+				delete activity_data[ type ];
+			} else if ( activity_data[ groupKey ] === false && ! is_profile_activity ) {
+				delete activity_data[ type ];
+			}
+
+			// Update toolbar UI based on settings.
+			if ( BP_Nouveau[ type ][ profileKey ] === false ) {
+				$( toolbarSelector ).removeClass( 'active' ).addClass( type + '-support-hide' );
+				Backbone.trigger( 'activity_' + type + '_close' );
+			} else {
+				$( toolbarSelector ).removeClass( type + '-support-hide' );
+			}
 		},
 
 		clearDraftInterval: function() {
