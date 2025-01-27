@@ -668,7 +668,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				<?php
 				if ( ! empty( $items ) ) {
 					?>
-					<ul class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
+					<ul class="bb-rl-item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 						<?php
 						foreach ( $items as $item ) {
 							?>
