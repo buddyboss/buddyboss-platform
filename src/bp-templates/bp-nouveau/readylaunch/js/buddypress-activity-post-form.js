@@ -2834,7 +2834,7 @@ window.bp = window.bp || {};
 					}
 
 				} else if ( ! _.isUndefined( tinymce ) ) {
-					tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'bb-rl-whats-new' ); // jshint ignore:line.
+					tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'bb-rl-whats-new' );
 				}
 			}
 		}
