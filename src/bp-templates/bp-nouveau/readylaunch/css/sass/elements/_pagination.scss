@@ -38,13 +38,12 @@
 					font-size: var(--font-size-sm);
 					content: attr(data-bb-rl-label);
 				}
-			
+
 				&::after {
-					font-size: var(--font-size-sm);
+					font-size: var(--font-size-base);
 					content: "";
 					font-weight: 400;
 					font-family: bb-icons-rl;
-					font-size: 16px;
 					font-style: normal;
 					line-height: 1;
 					position: relative;
@@ -55,7 +54,7 @@
 			.prev {
 				flex-direction: row-reverse;
 				margin-right: var(--bb-rl-space-500);
-			
+
 				&::after {
 					content: "\e138";
 				}
@@ -63,7 +62,7 @@
 
 			.next {
 				margin-left: var(--bb-rl-space-500);
-			
+
 				&::after {
 					content: "\e13a";
 				}

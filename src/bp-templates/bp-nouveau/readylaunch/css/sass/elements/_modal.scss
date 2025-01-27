@@ -44,6 +44,7 @@
 	.bb-rl-modal-close-button {
 		margin-left: auto;
 		line-height: 1;
+		color: var(--bb-rl-icon-primary-color);
 	}
 }
 
@@ -70,7 +71,7 @@
 }
 
 .bb-readylaunch-template {
-	
+
 	.modal-mask {
 		position: fixed;
 		z-index: 999991;
@@ -107,13 +108,13 @@
 		align-items: center;
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
-	
+
 		h4 {
 			margin: 0;
-	
+
 			@include bb-rl-base-heading-bolder;
 		}
-	
+
 		.mfp-close {
 			margin-left: auto;
 			line-height: 1;
@@ -132,12 +133,12 @@
 		> p {
 			margin-bottom: var(--bb-rl-space-100);
 		}
-	
+
 		> div,
 		> ul {
 			color: var(--bb-rl-text-secondary-color);
 		}
-	
+
 		> ul {
 			padding-left: var(--bb-rl-space-300);
 			margin-bottom: var(--bb-rl-space-200);

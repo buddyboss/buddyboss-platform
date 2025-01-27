@@ -136,6 +136,10 @@
 			background-repeat: no-repeat;
 			padding-right: var(--bb-rl-space-500);
 		}
+
+		&.bb-rl-input-field--error {
+			border: 1px solid var(--bb-rl-border-danger-secondary-color);
+		}
 	}
 
 	.bb-rl-textarea-field {

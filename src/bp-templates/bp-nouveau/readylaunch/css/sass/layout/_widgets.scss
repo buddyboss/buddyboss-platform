@@ -21,6 +21,7 @@
 	}
 
 	.bb-rl-see-all a {
+
 		@include bb-rl-label-heading-bolder;
 		color: var(--bb-rl-text-color);
 	}
@@ -60,14 +61,14 @@
 				content: "(";
 				font-size: inherit;
 			}
-		
+
 			&::after {
 				content: ")";
 				font-size: inherit;
 			}
-		
+
 			&:empty {
-		
+
 				&::before,
 				&::after {
 					display: none;

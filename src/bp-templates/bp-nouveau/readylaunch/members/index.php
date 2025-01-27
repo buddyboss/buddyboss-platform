@@ -65,7 +65,24 @@ do_action( 'bp_before_directory_members_page' );
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
-						bp_nouveau_user_feedback( 'directory-members-loading' );
+						?>
+						<div class="bb-rl-skeleton-grid">
+							<div class="bb-rl-skeleton-grid-block">
+								<div class="bb-rl-skeleton-avatar"></div>
+								<div class="bb-rl-skeleton-data">
+									<span class="bb-rl-skeleton-data-bit"></span>
+									<span class="bb-rl-skeleton-data-bit"></span>
+									<span class="bb-rl-skeleton-data-bit"></span>
+								</div>
+								<div class="bb-rl-skeleton-footer">
+									<span class="bb-rl-skeleton-data-bit"></span>
+									<span class="bb-rl-skeleton-data-bit"></span>
+									<span class="bb-rl-skeleton-data-bit"></span>
+								</div>
+							</div>
+						</div>
+						<?php
+						//bp_nouveau_user_feedback( 'directory-members-loading' );
 						echo '</div>';
 					} else {
 						bp_get_template_part( 'members/members-loop' );
