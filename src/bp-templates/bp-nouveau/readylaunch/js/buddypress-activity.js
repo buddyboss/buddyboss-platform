@@ -3,7 +3,7 @@
 /* @version [BBVERSION] */
 window.bp = window.bp || {};
 
-( function( exports, $ ) {
+( function ( exports, $ ) {
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -22,17 +22,17 @@ window.bp = window.bp || {};
 	);
 
 	var bpNouveau             = BP_Nouveau,
-	    bbRlAjaxUrl           = bpNouveau.ajaxurl,
-	    bbRlMedia             = bpNouveau.media,
-	    bbRlIsSendAjaxRequest = bpNouveau.is_send_ajax_request,
-	    bbRlActivity          = bpNouveau.activity,
-	    bbRlNewest            = bpNouveau.newest,
-	    bbbRlShowXComments    = bpNouveau.show_x_comments,
-	    bbRlConfirm           = bpNouveau.confirm,
-	    bbRlNonce             = bpNouveau.nonces,
-	    bbRlDocument          = bpNouveau.document,
-	    bbRlVideo             = bpNouveau.video,
-	    bbRlIsAs3cfActive     = bpNouveau.is_as3cf_active;
+		bbRlAjaxUrl           = bpNouveau.ajaxurl,
+		bbRlMedia             = bpNouveau.media,
+		bbRlIsSendAjaxRequest = bpNouveau.is_send_ajax_request,
+		bbRlActivity          = bpNouveau.activity,
+		bbRlNewest            = bpNouveau.newest,
+		bbbRlShowXComments    = bpNouveau.show_x_comments,
+		bbRlConfirm           = bpNouveau.confirm,
+		bbRlNonce             = bpNouveau.nonces,
+		bbRlDocument          = bpNouveau.document,
+		bbRlVideo             = bpNouveau.video,
+		bbRlIsAs3cfActive     = bpNouveau.is_as3cf_active;
 
 	/**
 	 * [Activity description]
@@ -46,7 +46,7 @@ window.bp = window.bp || {};
 		 *
 		 * @return {[type]} [description]
 		 */
-		start: function() {
+		start: function () {
 			this.setupGlobals();
 
 			// Listen to events ("Add hooks!").
@@ -58,7 +58,7 @@ window.bp = window.bp || {};
 		 *
 		 * @return {[type]} [description]
 		 */
-		setupGlobals: function() {
+		setupGlobals: function () {
 			this.just_posted    = []; // Init just posted activities.
 			this.current_page   = 1; // Init current page.
 			this.mentions_count = Number( $( bp.Nouveau.objectNavParent + ' [data-bp-scope="mentions"]' ).find( 'a span' ).html() ) || 0; // Init mentions count.
@@ -108,14 +108,14 @@ window.bp = window.bp || {};
 
 			this.models                = [];
 			this.InitiatedCommentForms = [];
-			this.activityHasUpdates    = false; // Flag to track any activity updates
-			this.activityPinHasUpdates = false; // Flag to track activity pin updates
+			this.activityHasUpdates    = false; // Flag to track any activity updates.
+			this.activityPinHasUpdates = false; // Flag to track activity pin updates.
 		},
 
 		/**
 		 * [addListeners description]
 		 */
-		addListeners: function() {
+		addListeners: function () {
 			var $body           = $( 'body' );
 			var $bpElem         = $( '#buddypress' );
 			var $document       = $( document );
@@ -137,23 +137,29 @@ window.bp = window.bp || {};
 			$( '#bb-rl-activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$body.on( 'click', '.bb-close-action-popup', this.closeActivity );
 
-			$document.on( 'activityModalOpened', function( event, data ) {
-				var activityId = data.activityId;
+			$document.on(
+				'activityModalOpened',
+				function ( event, data ) {
+					var activityId = data.activityId;
 
-				$document.on( 'click', function( event ) {
-					if (
-						$( '#activity-modal:visible' ).length > 0 &&
-						0 === $( '#bb-rl-activity-form-placeholder:visible' ).length &&
-						! $( event.target ).closest( '#activity-modal' ).length &&
-						! $( event.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ).length &&
-						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
-						! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
-					) {
-						this.closeActivity( event );
-						this.activitySyncOnModalClose( event, activityId );
-					}
-				}.bind( this ) );
-			}.bind( this ) );
+					$document.on(
+						'click',
+						function ( event ) {
+							if (
+							$( '#activity-modal:visible' ).length > 0 &&
+							0 === $( '#bb-rl-activity-form-placeholder:visible' ).length &&
+							! $( event.target ).closest( '#activity-modal' ).length &&
+							! $( event.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ).length &&
+							! $( event.target ).closest( '.emojionearea-theatre' ).length &&
+							! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
+							) {
+								this.closeActivity( event );
+								this.activitySyncOnModalClose( event, activityId );
+							}
+						}.bind( this )
+					);
+				}.bind( this )
+			);
 
 			// Activity actions.
 			var activityParentSelectors = '[data-bp-list="activity"], #activity-modal, #bb-media-model-container .bb-rl-activity-list';
@@ -170,17 +176,21 @@ window.bp = window.bp || {};
 			// forums.
 			var forumSelectors       = '.ac-reply-media-button, .ac-reply-document-button, .ac-reply-video-button, .ac-reply-gif-button';
 			var forumParentSelectors = '[data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-modal-activity-footer';
-			$bpElem.find( forumParentSelectors ).on( 'click', forumSelectors, function ( event ) {
-				if ( $( event.target ).hasClass( 'ac-reply-media-button' ) ) {
-					this.openCommentsMediaUploader( event );
-				} else if ( $( event.target ).hasClass( 'ac-reply-document-button' ) ) {
-					this.openCommentsDocumentUploader( event );
-				} else if ( $( event.target ).hasClass( 'ac-reply-video-button' ) ) {
-					this.openCommentsVideoUploader( event );
-				} else if ( $( event.target ).hasClass( 'ac-reply-gif-button' ) ) {
-					this.openGifPicker( event );
-				}
-			}.bind( this ) );
+			$bpElem.find( forumParentSelectors ).on(
+				'click',
+				forumSelectors,
+				function ( event ) {
+					if ( $( event.target ).hasClass( 'ac-reply-media-button' ) ) {
+						this.openCommentsMediaUploader( event );
+					} else if ( $( event.target ).hasClass( 'ac-reply-document-button' ) ) {
+						this.openCommentsDocumentUploader( event );
+					} else if ( $( event.target ).hasClass( 'ac-reply-video-button' ) ) {
+						this.openCommentsVideoUploader( event );
+					} else if ( $( event.target ).hasClass( 'ac-reply-gif-button' ) ) {
+						this.openGifPicker( event );
+					}
+				}.bind( this )
+			);
 
 			// Reaction actions.
 			$document.on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
@@ -192,10 +202,14 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-model-wrapper, .bb-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
-			$document.on( 'click', '#bb-rl-activity-stream .bb-rl-activity-comments .view-more-comments, #bb-rl-activity-stream .activity-state-comments > .comments-count', function ( e ) {
-				e.preventDefault();
-				$( this ).parents( 'li.bb-rl-activity-item' ).find( '.bb-rl-activity-comments > ul > li.acomments-view-more, .bb-rl-activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
-			} );
+			$document.on(
+				'click',
+				'#bb-rl-activity-stream .bb-rl-activity-comments .view-more-comments, #bb-rl-activity-stream .activity-state-comments > .comments-count',
+				function ( e ) {
+					e.preventDefault();
+					$( this ).parents( 'li.bb-rl-activity-item' ).find( '.bb-rl-activity-comments > ul > li.acomments-view-more, .bb-rl-activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
+				}
+			);
 
 			$activityStream.on( 'scroll', this.autoloadMoreComments.bind( this ) );
 			$activityStream.on( 'scroll', this.discardGifEmojiPicker.bind( this ) );
@@ -204,17 +218,23 @@ window.bp = window.bp || {};
 
 			// Validate media access for comment forms.
 			var initializeForms = function () {
-				$( '.ac-form.not-initialized' ).each( function () {
-					var form   = $( this );
-					var target = form.find( '.ac-textarea' );
-					bp.Nouveau.Activity.toggleMultiMediaOptions( form, target );
-				} );
+				$( '.ac-form.not-initialized' ).each(
+					function () {
+						var form   = $( this );
+						var target = form.find( '.ac-textarea' );
+						bp.Nouveau.Activity.toggleMultiMediaOptions( form, target );
+					}
+				);
 			};
 
 			if ( bbRlIsSendAjaxRequest === '1' ) {
-				$bpElem.on( 'bp_ajax_request', '[data-bp-list="activity"]', function () {
-					setTimeout( initializeForms, 1000 );
-				} );
+				$bpElem.on(
+					'bp_ajax_request',
+					'[data-bp-list="activity"]',
+					function () {
+						setTimeout( initializeForms, 1000 );
+					}
+				);
 			} else {
 				setTimeout( initializeForms, 1000 );
 			}
@@ -227,7 +247,7 @@ window.bp = window.bp || {};
 		 * @param event
 		 * @param data
 		 */
-		heartbeatSend: function( event, data ) {
+		heartbeatSend: function ( event, data ) {
 			var $allActivities      = $( '#buddypress [data-bp-list] [data-bp-activity-id]' );
 			var $unPinnedActivities = $allActivities.not( '.bb-pinned' );
 
@@ -262,7 +282,7 @@ window.bp = window.bp || {};
 		 * @param event
 		 * @param data
 		 */
-		heartbeatTick: function( event, data ) {
+		heartbeatTick: function ( event, data ) {
 			var newestActivitiesCount, newestActivities, objects = bp.Nouveau.objects,
 				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
 
@@ -296,12 +316,12 @@ window.bp = window.bp || {};
 
 				$.each(
 					newestActivities,
-					function( a, activity ) {
+					function ( a, activity ) {
 						activity = $( activity );
 
 						$.each(
 							objects,
-							function( o, object ) {
+							function ( o, object ) {
 								if ( -1 !== $.inArray( 'bp-my-' + object, activity.get( 0 ).classList ) ) {
 									if ( undefined === self.heartbeat_data.highlights[ object ] ) {
 										self.heartbeat_data.highlights[ object ] = [ activity.data( 'bp-activity-id' ) ];
@@ -331,7 +351,7 @@ window.bp = window.bp || {};
 
 				$.each(
 					newestActivities,
-					function( a, activity ) {
+					function ( a, activity ) {
 						self.heartbeat_data.highlights[ scope ].push( $( activity ).data( 'bp-activity-id' ) );
 					}
 				);
@@ -339,7 +359,7 @@ window.bp = window.bp || {};
 
 			$.each(
 				objects,
-				function( o, object ) {
+				function ( o, object ) {
 					if ( undefined !== self.heartbeat_data.highlights[ object ] && self.heartbeat_data.highlights[ object ].length ) {
 						var count = 0;
 
@@ -362,7 +382,7 @@ window.bp = window.bp || {};
 
 			// Update the Load Newest li if it already exists.
 			var $bpElemList = $( '#buddypress [data-bp-list="activity"]' );
-			var $aElem       = $bpElemList.find( '.load-newest a' );
+			var $aElem      = $bpElemList.find( '.load-newest a' );
 			if ( $bpElemList.first().hasClass( 'load-newest' ) ) {
 				var newest_link = $aElem.html();
 				$aElem.html( newest_link.replace( /([0-9]+)/, newestActivitiesCount ) );
@@ -390,7 +410,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 * @param event
 		 */
-		injectActivities: function( event ) {
+		injectActivities: function ( event ) {
 			var store = bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
@@ -410,7 +430,7 @@ window.bp = window.bp || {};
 
 				$.each(
 					activities,
-					function( a, activity ){
+					function ( a, activity ) {
 						if ( 'LI' === activity.nodeName && $( activity ).hasClass( 'just-posted' ) ) {
 							var $elem = $( '#' + $( activity ).prop( 'id' ) );
 							if ( $elem.length ) {
@@ -486,7 +506,7 @@ window.bp = window.bp || {};
 
 				// Now set it.
 				$( event.delegateTarget ).children( '.just-posted' ).each(
-					function() {
+					function () {
 						self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
 					}
 				);
@@ -508,7 +528,7 @@ window.bp = window.bp || {};
 						target              : '#buddypress [data-bp-list]:not( #bb-schedule-posts_modal [data-bp-list="activity"] ) ul.bb-rl-list'
 					}
 				).done(
-					function( response ) {
+					function ( response ) {
 						if ( true === response.success ) {
 							targetEl.remove();
 
@@ -531,7 +551,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 * @param event
 		 */
-		hideComments: function( event ) {
+		hideComments: function ( event ) {
 			var comments = $( event.target ).find( '.bb-rl-activity-comments' ),
 				activityItem, commentItems, commentCount, commentParents;
 
@@ -540,7 +560,7 @@ window.bp = window.bp || {};
 			}
 
 			comments.each(
-				function( c, comment ) {
+				function ( c, comment ) {
 					commentParents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
 					commentItems   = $( commentParents ).find( 'li' ).not( $( '.document-action-class, .media-action-class, .video-action-class' ) );
 
@@ -561,7 +581,7 @@ window.bp = window.bp || {};
 
 					// Keep latest 5 comments.
 					commentItems.each(
-						function( i, item ) {
+						function ( i, item ) {
 							if ( i < commentItems.length - 4 ) {
 
 								// Prepend a link to display all.
@@ -597,26 +617,28 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 * @param event
 		 */
-		showActivity: function( event ) {
+		showActivity: function ( event ) {
 			event.preventDefault();
 			var currentTargetList = $( event.currentTarget ).parent(),
-				parentId = currentTargetList.data( 'parent_comment_id' ),
-				activityId = $( currentTargetList ).data( 'activity_id' );
+				parentId          = currentTargetList.data( 'parent_comment_id' ),
+				activityId        = $( currentTargetList ).data( 'activity_id' );
 
 			$( document ).trigger( 'activityModalOpened', { activityId: activityId } );
 
-			$( event.currentTarget ).parents( '.bb-rl-activity-comments' ).find( '.ac-form' ).each( function () {
-				var form = $( this );
-				var commentsList = $( this ).closest( '.bb-rl-activity-comments' );
-				var commentItem = $( this ).closest( '.comment-item' );
-				// Reset emojionearea
-				form.find( '.bb-rl-post-elements-buttons-item.bb-rl-post-emoji' ).removeClass( 'active' ).empty( '' );
+			$( event.currentTarget ).parents( '.bb-rl-activity-comments' ).find( '.ac-form' ).each(
+				function () {
+					var form         = $( this );
+					var commentsList = $( this ).closest( '.bb-rl-activity-comments' );
+					var commentItem  = $( this ).closest( '.comment-item' );
+					// Reset emojionearea.
+					form.find( '.bb-rl-post-elements-buttons-item.bb-rl-post-emoji' ).removeClass( 'active' ).empty( '' );
 
-				bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
-				commentsList.append( form );
-				commentItem.find( '.bb-rl-acomment-display' ).removeClass( 'bb-rl-display-focus' );
-				commentItem.removeClass( 'bb-rl-comment-item-focus' );
-			} );
+					bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
+					commentsList.append( form );
+					commentItem.find( '.bb-rl-acomment-display' ).removeClass( 'bb-rl-display-focus' );
+					commentItem.removeClass( 'bb-rl-comment-item-focus' );
+				}
+			);
 
 			bp.Nouveau.Activity.launchActivityPopup( activityId, parentId );
 		},
@@ -624,16 +646,16 @@ window.bp = window.bp || {};
 		closeActivity: function ( event ) {
 			event.preventDefault();
 			var target     = $( event.target ),
-			    modal      = target.closest( '.bb-activity-model-wrapper' ),
-			    footer     = modal.find( '.bb-modal-activity-footer' ),
-			    activityId = modal.find( '.bb-rl-activity-item' ).data( 'bp-activity-id' ),
-			    form       = modal.find( '#ac-form-' + activityId );
+				modal      = target.closest( '.bb-activity-model-wrapper' ),
+				footer     = modal.find( '.bb-modal-activity-footer' ),
+				activityId = modal.find( '.bb-rl-activity-item' ).data( 'bp-activity-id' ),
+				form       = modal.find( '#ac-form-' + activityId );
 
 			if ( form.length ) {
 				bp.Nouveau.Activity.reinitializeActivityCommentForm( form );
 			}
 
-			if ( !_.isUndefined( bbRlMedia ) && !_.isUndefined( bbRlMedia.emoji ) ) {
+			if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
 				bp.Nouveau.Activity.initializeEmojioneArea( false, '', activityId );
 			}
 
@@ -662,7 +684,7 @@ window.bp = window.bp || {};
 			if ( 'mentions' === data.scope && undefined !== data.response.new_mentions ) {
 				$.each(
 					data.response.new_mentions,
-					function( i, id ) {
+					function ( i, id ) {
 						$activityStream.find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_mentions_activity' );
 					}
 				);
@@ -672,7 +694,7 @@ window.bp = window.bp || {};
 			} else if ( undefined !== this.heartbeat_data.highlights[data.scope] && this.heartbeat_data.highlights[data.scope].length ) {
 				$.each(
 					this.heartbeat_data.highlights[data.scope],
-					function( i, id ) {
+					function ( i, id ) {
 						if ( $activityStream.find( '[data-bp-activity-id="' + id + '"]' ).length ) {
 							$activityStream.find( '[data-bp-activity-id="' + id + '"]' ).addClass( 'newest_' + data.scope + '_activity' );
 						}
@@ -684,7 +706,7 @@ window.bp = window.bp || {};
 			this.heartbeat_data.newest = '';
 			$.each(
 				$( bp.Nouveau.objectNavParent + ' [data-bp-scope]' ).find( 'a span' ),
-				function( s, count ) {
+				function ( s, count ) {
 					var countText = $( count ).html();
 					if ( '0' === countText ) {
 						$( count ).html( '' );
@@ -725,14 +747,14 @@ window.bp = window.bp || {};
 
 			// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout(
-				function() {
+				function () {
 					jQuery( window ).scroll();
 				},
 				200
 			);
 		},
 
-		openEditActivityPopup: function() {
+		openEditActivityPopup: function () {
 			if ( ! _.isUndefined( bbRlActivity.params.is_activity_edit ) && 0 < bbRlActivity.params.is_activity_edit ) {
 				var activity_item = $( '#bb-rl-activity-' + bbRlActivity.params.is_activity_edit );
 				if ( activity_item.length ) {
@@ -746,11 +768,11 @@ window.bp = window.bp || {};
 			}
 		},
 
-		activityPrivacyChange: function( event ) {
-			var parent        = event.data,
-			    target        = $( event.target ),
-			    activityItem = $( event.currentTarget ).closest( '.bb-rl-activity-item' ),
-			    activity_id   = activityItem.data( 'bp-activity-id' );
+		activityPrivacyChange: function ( event ) {
+			var parent       = event.data,
+				target       = $( event.target ),
+				activityItem = $( event.currentTarget ).closest( '.bb-rl-activity-item' ),
+				activity_id  = activityItem.data( 'bp-activity-id' );
 
 			// Stop event propagation.
 			event.preventDefault();
@@ -763,7 +785,7 @@ window.bp = window.bp || {};
 			activityItem.find( '.privacy' ).addClass( 'loading' );
 
 			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': privacyValue }, 'activity' ).done(
-				function( response ) {
+				function ( response ) {
 					activityItem.find( '.privacy' ).removeClass( 'loading' );
 
 					if ( true === response.success ) {
@@ -775,38 +797,44 @@ window.bp = window.bp || {};
 
 						if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.video_symlink ) {
 
-							// Cache selectors
+							// Cache selectors.
 							var $documentDescriptionWrap = $( '.document-description-wrap' );
 							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-open-document-theatre' );
 							var $documentDetailWrap      = $( '.document-detail-wrap.document-detail-wrap-description-popup' );
 
 							// Update attributes for document theater.
 							if ( $documentDescriptionWrap.length && $documentTheatre.length ) {
-								$documentTheatre.attr( {
-									'data-video-preview': response.data.video_symlink,
-									'data-extension'    : response.data.extension
-								} );
+								$documentTheatre.attr(
+									{
+										'data-video-preview': response.data.video_symlink,
+										'data-extension'    : response.data.extension
+									}
+								);
 							}
 
-							// Update attributes for document detail wrap
+							// Update attributes for document detail wrap.
 							if ( $documentDescriptionWrap.length && $documentDetailWrap.length ) {
-								$documentDetailWrap.attr( {
-									'data-video-preview': response.data.video_symlink,
-									'data-extension'    : response.data.extension
-								} );
+								$documentDetailWrap.attr(
+									{
+										'data-video-preview': response.data.video_symlink,
+										'data-extension'    : response.data.extension
+									}
+								);
 							}
 
 							if ( 'undefined' !== typeof videojs && response.data.video_js_id ) {
 								var myPlayer = videojs( response.data.video_js_id );
-								myPlayer.src( {
-									type: response.data.video_extension,
-									src : response.data.video_symlink
-								} );
+								myPlayer.src(
+									{
+										type: response.data.video_extension,
+										src : response.data.video_symlink
+									}
+								);
 							}
 						}
 
 						bp.Nouveau.Activity.activityHasUpdates = true;
-						bp.Nouveau.Activity.currentActivityId = activity_id;
+						bp.Nouveau.Activity.currentActivityId  = activity_id;
 					}
 				}
 			);
@@ -849,14 +877,14 @@ window.bp = window.bp || {};
 		 */
 		activityActions: function ( event ) {
 			var parent        = event.data,
-			    target        = $( event.target ),
-			    activityItem  = $( event.currentTarget ),
-			    activityId    = activityItem.data( 'bp-activity-id' ),
-			    stream        = $( event.delegateTarget ),
-			    activityState = activityItem.find( '.activity-state' ),
-			    commentsText  = activityItem.find( '.comments-count' ),
-			    self          = this,
-			    $body         = $( 'body' );
+				target        = $( event.target ),
+				activityItem  = $( event.currentTarget ),
+				activityId    = activityItem.data( 'bp-activity-id' ),
+				stream        = $( event.delegateTarget ),
+				activityState = activityItem.find( '.activity-state' ),
+				commentsText  = activityItem.find( '.comments-count' ),
+				self          = this,
+				$body         = $( 'body' );
 
 			// Check if target is inside #activity-modal or media theater.
 			var isInsideModal        = target.closest( '#activity-modal' ).length > 0;
@@ -905,24 +933,28 @@ window.bp = window.bp || {};
 
 			// Deleting or spamming.
 			if ( target.hasClass( 'delete-activity' ) || target.hasClass( 'acomment-delete' ) || target.hasClass( 'spam-activity' ) || target.hasClass( 'spam-activity-comment' ) ) {
-				self.deleteActivity( {
-					event        : event,
-					parent       : parent,
-					target       : target,
-					activityState: activityState,
-					activityItem : activityItem,
-					commentsText : commentsText,
-					activityId   : activityId,
-				} );
+				self.deleteActivity(
+					{
+						event        : event,
+						parent       : parent,
+						target       : target,
+						activityState: activityState,
+						activityItem : activityItem,
+						commentsText : commentsText,
+						activityId   : activityId,
+					}
+				);
 			}
 
 			// Reading more.
 			if ( target.closest( 'span' ).hasClass( 'activity-read-more' ) ) {
-				self.readMoreActivity( {
-					event     : event,
-					target    : target,
-					activityId: activityId,
-				} );
+				self.readMoreActivity(
+					{
+						event     : event,
+						target    : target,
+						activityId: activityId,
+					}
+				);
 			}
 
 			// Initiate Comment Form.
@@ -937,14 +969,16 @@ window.bp = window.bp || {};
 				target.parent().hasClass( 'acomment-reply' ) ||
 				target.hasClass( 'acomment-edit' )
 			) {
-				self.displayingTheCommentForm( {
-					event               : event,
-					target              : target,
-					activityId          : activityId,
-					isInsideModal       : isInsideModal,
-					isInsideMediaTheatre: isInsideMediaTheatre,
-					self                : self,
-				} );
+				self.displayingTheCommentForm(
+					{
+						event               : event,
+						target              : target,
+						activityId          : activityId,
+						isInsideModal       : isInsideModal,
+						isInsideMediaTheatre: isInsideMediaTheatre,
+						self                : self,
+					}
+				);
 			}
 
 			if ( target.hasClass( 'activity-state-no-comments' ) ) {
@@ -960,9 +994,11 @@ window.bp = window.bp || {};
 				// Change the aria state back to false on comment cancel.
 				$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
 
-				['media', 'document'].forEach( function ( type ) {
-					self.destroyUploader( type, activityId );
-				} );
+				['media', 'document'].forEach(
+					function ( type ) {
+						self.destroyUploader( type, activityId );
+					}
+				);
 
 				// If form is edit activity comment, then reset it.
 				self.resetActivityCommentForm( $form );
@@ -973,17 +1009,19 @@ window.bp = window.bp || {};
 
 			// Submitting comments and replies.
 			if ( 'ac_form_submit' === target.prop( 'name' ) ) {
-				self.submitActivityComment( {
-					event        : event,
-					parent       : parent,
-					target       : target,
-					activityId   : activityId,
-					isInsideModal: isInsideModal,
-					activityState: activityState,
-					commentsText : commentsText,
-					activityItem : activityItem,
-					self         : self,
-				} );
+				self.submitActivityComment(
+					{
+						event        : event,
+						parent       : parent,
+						target       : target,
+						activityId   : activityId,
+						isInsideModal: isInsideModal,
+						activityState: activityState,
+						commentsText : commentsText,
+						activityItem : activityItem,
+						self         : self,
+					}
+				);
 			}
 
 			// Edit the activity.
@@ -1027,20 +1065,22 @@ window.bp = window.bp || {};
 				event.preventDefault();
 
 				var modal       = target.closest( '#activity-modal' ),
-				    closeButton = modal.find( '.bb-modal-activity-header .bb-close-action-popup' );
+					closeButton = modal.find( '.bb-modal-activity-header .bb-close-action-popup' );
 
 				closeButton.trigger( 'click' );
 			}
 
 			// Pin OR UnPin the activity.
 			if ( target.hasClass( 'pin-activity' ) || target.hasClass( 'unpin-activity' ) ) {
-				self.pinUnpinActivity( {
-					event        : event,
-					activityId   : activityId,
-					parent       : parent,
-					target       : target,
-					isInsideModal: isInsideModal,
-				} );
+				self.pinUnpinActivity(
+					{
+						event        : event,
+						activityId   : activityId,
+						parent       : parent,
+						target       : target,
+						isInsideModal: isInsideModal,
+					}
+				);
 			}
 
 			// Mute OR Unmute notifications for the activity.
@@ -1076,7 +1116,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 * @param event
 		 */
-		commentFormAction: function( event ) {
+		commentFormAction: function ( event ) {
 			var element, keyCode;
 
 			event = event || window.event;
@@ -1111,7 +1151,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 * @param event
 		 */
-		togglePopupDropdown: function( event ) {
+		togglePopupDropdown: function ( event ) {
 			var element;
 
 			event = event || window.event;
@@ -1137,7 +1177,7 @@ window.bp = window.bp || {};
 		// activity autoload.
 		loadMoreActivities: function () {
 			var $load_more_btn = $( '.bb-rl-load-more:visible' ).last(),
-			    $window        = $( window );
+				$window        = $( window );
 
 			if ( 0 === $load_more_btn.length || ! $load_more_btn.closest( '.bb-rl-activity-list' ).length ) {
 				return;
@@ -1157,14 +1197,14 @@ window.bp = window.bp || {};
 			}
 		},
 
-		openCommentsMediaUploader: function(event) {
+		openCommentsMediaUploader: function (event) {
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
 				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-media-uploader-' + key );
 
-			// Check if target is inside #activity-modal
-			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
+			// Check if target is inside #activity-modal.
+			var isInsideModal  = target.closest( '#activity-modal' ).length > 0;
 			var hasParentModal = isInsideModal ? '#activity-modal ' : '';
 
 			event.preventDefault();
@@ -1201,13 +1241,13 @@ window.bp = window.bp || {};
 						maxThumbnailFilesize        : 'undefined' !== typeof bbRlMedia.max_upload_size ? bbRlMedia.max_upload_size : 2,
 					};
 
-					// If a Dropzone instance already exists, destroy it before creating a new one
+					// If a Dropzone instance already exists, destroy it before creating a new one.
 					if ( self.dropzone_obj instanceof Dropzone ) {
 						self.dropzone_obj.destroy();
 					}
 
 					// init dropzone.
-					self.dropzone_obj = new Dropzone( hasParentModal +'#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
+					self.dropzone_obj = new Dropzone( hasParentModal + '#ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
 					self.dropzone_obj.on(
 						'addedfile',
@@ -1215,7 +1255,7 @@ window.bp = window.bp || {};
 							// Set data from edit comment.
 							if ( file.media_edit_data ) {
 								self.dropzone_media.push( file.media_edit_data );
-								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								var tool_box = target.parents( '.ac-reply-toolbar' );
 								if ( tool_box.find( '.ac-reply-media-button' ) ) {
 									tool_box.find( '.ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
 								}
@@ -1225,7 +1265,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'sending',
-						function(file, xhr, formData) {
+						function (file, xhr, formData) {
 							formData.append( 'action', 'media_upload' );
 							formData.append( '_wpnonce', bbRlNonce.media );
 
@@ -1253,7 +1293,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'uploadprogress',
-						function() {
+						function () {
 
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
@@ -1265,7 +1305,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'success',
-						function(file, response) {
+						function (file, response) {
 							if ( response.data.id ) {
 								file.id                  = response.id;
 								response.data.uuid       = file.upload.uuid;
@@ -1295,7 +1335,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'accept',
-						function( file, done ) {
+						function ( file, done ) {
 							if ( 0 === file.size ) {
 								done( bbRlMedia.empty_document_type );
 							} else {
@@ -1306,7 +1346,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'error',
-						function(file,response) {
+						function (file,response) {
 							if ( file.accepted ) {
 								if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
@@ -1325,7 +1365,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on(
 						'removedfile',
-						function(file) {
+						function (file) {
 							if ( self.dropzone_media.length ) {
 								for ( var i in self.dropzone_media ) {
 									if ( file.upload.uuid === self.dropzone_media[i].uuid ) {
@@ -1367,7 +1407,7 @@ window.bp = window.bp || {};
 					// Enable submit button when all medias are uploaded.
 					self.dropzone_obj.on(
 						'complete',
-						function() {
+						function () {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
@@ -1390,9 +1430,11 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['document', 'video'].forEach( function ( type ) {
-				self.destroyUploader( type, activityID );
-			} );
+			['document', 'video'].forEach(
+				function ( type ) {
+					self.destroyUploader( type, activityID );
+				}
+			);
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
@@ -1402,14 +1444,14 @@ window.bp = window.bp || {};
 			}
 		},
 
-		openCommentsDocumentUploader: function(event) {
+		openCommentsDocumentUploader: function (event) {
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
 				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-document-uploader-' + key );
 
-			// Check if target is inside #activity-modal
-			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
+			// Check if target is inside #activity-modal.
+			var isInsideModal  = target.closest( '#activity-modal' ).length > 0;
 			var hasParentModal = isInsideModal ? '#activity-modal ' : '';
 
 			event.preventDefault();
@@ -1462,7 +1504,7 @@ window.bp = window.bp || {};
 							var filename 	  = file.upload.filename;
 							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
 							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-							var tool_box    = target.parents( '.ac-reply-toolbar' );
+							var tool_box = target.parents( '.ac-reply-toolbar' );
 							if ( tool_box.find( '.ac-reply-document-button' ) ) {
 								tool_box.find( '.ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
 							}
@@ -1471,7 +1513,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'sending',
-						function(file, xhr, formData) {
+						function (file, xhr, formData) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', bbRlNonce.media );
 
@@ -1499,7 +1541,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'uploadprogress',
-						function() {
+						function () {
 
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
@@ -1512,7 +1554,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'accept',
-						function( file, done ) {
+						function ( file, done ) {
 							if ( file.size === 0) {
 								done( bbRlMedia.empty_document_type );
 							} else {
@@ -1523,7 +1565,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'success',
-						function(file, response) {
+						function (file, response) {
 							if ( response.data.id ) {
 								file.id                  = response.id;
 								response.data.uuid       = file.upload.uuid;
@@ -1553,7 +1595,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'error',
-						function(file,response) {
+						function (file,response) {
 							if ( file.accepted ) {
 								if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
@@ -1572,7 +1614,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_document_obj.on(
 						'removedfile',
-						function(file) {
+						function (file) {
 							if ( self.dropzone_document.length ) {
 								for ( var i in self.dropzone_document ) {
 									if ( file.upload.uuid === self.dropzone_document[i].uuid ) {
@@ -1614,7 +1656,7 @@ window.bp = window.bp || {};
 					// Enable submit button when all medias are uploaded.
 					self.dropzone_document_obj.on(
 						'complete',
-						function() {
+						function () {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
@@ -1637,9 +1679,11 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['media', 'video'].forEach( function ( type ) {
-				self.destroyUploader( type, activityID );
-			} );
+			['media', 'video'].forEach(
+				function ( type ) {
+					self.destroyUploader( type, activityID );
+				}
+			);
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
@@ -1649,14 +1693,14 @@ window.bp = window.bp || {};
 			}
 		},
 
-		openCommentsVideoUploader: function(event) {
+		openCommentsVideoUploader: function (event) {
 			var self               = this,
 				target             = $( event.currentTarget ),
 				key                = target.data( 'ac-id' ),
 				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-video-uploader-' + key );
 
-			// Check if target is inside #activity-modal
-			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
+			// Check if the target is inside #activity-modal.
+			var isInsideModal  = target.closest( '#activity-modal' ).length > 0;
 			var hasParentModal = isInsideModal ? '#activity-modal ' : '';
 
 			event.preventDefault();
@@ -1699,7 +1743,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'sending',
-						function(file, xhr, formData) {
+						function (file, xhr, formData) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', bbRlNonce.video );
 
@@ -1727,7 +1771,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'accept',
-						function( file, done ) {
+						function ( file, done ) {
 							if ( file.size === 0 ) {
 								done( bbRlVideo.empty_video_type );
 							} else {
@@ -1743,7 +1787,7 @@ window.bp = window.bp || {};
 							// Set data from edit comment.
 							if ( file.video_edit_data ) {
 								self.dropzone_video.push( file.video_edit_data );
-								var tool_box    = target.parents( '.ac-reply-toolbar' );
+								var tool_box = target.parents( '.ac-reply-toolbar' );
 								if ( tool_box.find( '.ac-reply-video-button' ) ) {
 									tool_box.find( '.ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
 								}
@@ -1765,7 +1809,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'uploadprogress',
-						function() {
+						function () {
 
 							var commentForm = target.closest( '.ac-form' );
 							commentForm.addClass( 'media-uploading' );
@@ -1778,7 +1822,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'success',
-						function(file, response) {
+						function (file, response) {
 
 							if ( file.upload.progress === 100 ) {
 								$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
@@ -1816,7 +1860,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'error',
-						function(file,response) {
+						function (file,response) {
 							if ( file.accepted ) {
 								if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
@@ -1835,7 +1879,7 @@ window.bp = window.bp || {};
 
 					self.dropzone_video_obj.on(
 						'removedfile',
-						function(file) {
+						function (file) {
 							if ( self.dropzone_video.length ) {
 								for ( var i in self.dropzone_video ) {
 									if ( file.upload.uuid === self.dropzone_video[i].uuid ) {
@@ -1878,7 +1922,7 @@ window.bp = window.bp || {};
 					// Enable submit button when all medias are uploaded.
 					self.dropzone_video_obj.on(
 						'complete',
-						function() {
+						function () {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var commentForm = target.closest( '.ac-form' );
 								commentForm.removeClass( 'media-uploading' );
@@ -1901,9 +1945,11 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['media', 'video'].forEach( function ( type ) {
-				self.destroyUploader( type, activityID );
-			} );
+			['media', 'video'].forEach(
+				function ( type ) {
+					self.destroyUploader( type, activityID );
+				}
+			);
 
 			var c_id = $( event.currentTarget ).data( 'ac-id' );
 			this.resetGifPicker( c_id );
@@ -1916,13 +1962,13 @@ window.bp = window.bp || {};
 		openGifPicker: function ( event ) {
 			event.preventDefault();
 
-			var currentTarget = event.currentTarget,
-				isInsideModal = $( currentTarget ).closest( '#activity-modal' ).length > 0,
-				hasParentModal = isInsideModal ? '#activity-modal ' : '',
-				pickerContainer = isInsideModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : $( currentTarget ).next(),
-				isStandalone = isInsideModal,
-				$gifPickerEl = pickerContainer,
-				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
+			var currentTarget    = event.currentTarget,
+				isInsideModal    = $( currentTarget ).closest( '#activity-modal' ).length > 0,
+				hasParentModal   = isInsideModal ? '#activity-modal ' : '',
+				pickerContainer  = isInsideModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : $( currentTarget ).next(),
+				isStandalone     = isInsideModal,
+				$gifPickerEl     = pickerContainer,
+				activityID       = currentTarget.id.match( /\d+$/ )[ 0 ],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
 
 			var scrollTop    = $( window ).scrollTop(),
@@ -1931,7 +1977,7 @@ window.bp = window.bp || {};
 				leftPosition = Math.round( offset.left );
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
-				var model = new bp.Models.ACReply(),
+				var model                      = new bp.Models.ACReply(),
 					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: model, standalone: isStandalone } ),
 					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: model, standalone: isStandalone } );
 
@@ -1964,24 +2010,26 @@ window.bp = window.bp || {};
 				$gifPickerEl.css( 'transform', transformValue );
 			}
 			var self = this;
-			['media', 'document', 'video'].forEach( function ( type ) {
-				self.destroyUploader( type, activityID );
-			} );
+			['media', 'document', 'video'].forEach(
+				function ( type ) {
+					self.destroyUploader( type, activityID );
+				}
+			);
 		},
 
-		toggleMultiMediaOptions: function( form, target, placeholder ) {
+		toggleMultiMediaOptions: function ( form, target, placeholder ) {
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 
 				var parent_activity, activity_data;
 
 				if ( placeholder ) {
-					target = target ? $( target ) : $( placeholder );
+					target          = target ? $( target ) : $( placeholder );
 					parent_activity = target.closest( '.activity-modal' ).find( '.bb-rl-activity-item' );
-					activity_data = target.closest( '.activity-modal' ).find( '.bb-rl-activity-item' ).data( 'bp-activity' );
-					form = $( placeholder );
+					activity_data   = target.closest( '.activity-modal' ).find( '.bb-rl-activity-item' ).data( 'bp-activity' );
+					form            = $( placeholder );
 				} else {
 					parent_activity = target.closest( '.bb-rl-activity-item' );
-					activity_data = target.closest( '.bb-rl-activity-item' ).data( 'bp-activity' );
+					activity_data   = target.closest( '.bb-rl-activity-item' ).data( 'bp-activity' );
 				}
 
 				var targetLi = target.closest( 'li' ).data( 'bp-activity-comment' );
@@ -2011,7 +2059,7 @@ window.bp = window.bp || {};
 					};
 
 					this.applyMediaSettings( form, groupMediaSettings );
-				} else { // Check for profile media
+				} else { // Check for profile media.
 					var profileMediaSettings = {
 						profile_media   : mediaSettings( 'profile_media', false ),
 						profile_document: mediaSettings( 'profile_document', false ),
@@ -2027,30 +2075,40 @@ window.bp = window.bp || {};
 
 		applyMediaSettings: function ( form, settings ) {
 			// Handle media visibility based on the settings.
-			form.find( '.ac-reply-toolbar .bb-rl-post-media.bb-rl-media-support' ).toggle( settings.group_media || settings.profile_media ).parent( '.ac-reply-toolbar' ).toggleClass( 'bb-rl-post-media-disabled', ! (
+			form.find( '.ac-reply-toolbar .bb-rl-post-media.bb-rl-media-support' ).toggle( settings.group_media || settings.profile_media ).parent( '.ac-reply-toolbar' ).toggleClass(
+				'bb-rl-post-media-disabled',
+				! (
 				settings.group_media || settings.profile_media
-			) );
+				)
+			);
 
-			form.find( '.ac-reply-toolbar .bb-rl-post-media.bb-rl-document-support' ).toggle( settings.group_document || settings.profile_document ).parent( '.ac-reply-toolbar' ).toggleClass( 'bb-rl-post-media-disabled', ! (
+			form.find( '.ac-reply-toolbar .bb-rl-post-media.bb-rl-document-support' ).toggle( settings.group_document || settings.profile_document ).parent( '.ac-reply-toolbar' ).toggleClass(
+				'bb-rl-post-media-disabled',
+				! (
 				settings.group_document || settings.profile_document
-			) );
+				)
+			);
 
-			form.find( '.ac-reply-toolbar .bb-rl-post-video.bb-rl-video-support' ).toggle( settings.group_video || settings.profile_video ).parent( '.ac-reply-toolbar' ).toggleClass( 'post-video-disabled', ! (
+			form.find( '.ac-reply-toolbar .bb-rl-post-video.bb-rl-video-support' ).toggle( settings.group_video || settings.profile_video ).parent( '.ac-reply-toolbar' ).toggleClass(
+				'post-video-disabled',
+				! (
 				settings.group_video || settings.profile_video
-			) );
+				)
+			);
 
 			form.find( '.ac-reply-toolbar .bb-rl-post-gif' ).toggle( settings.gif !== false ).parent( '.ac-reply-toolbar' ).toggleClass( 'post-gif-disabled', settings.gif === false );
 
 			form.find( '.ac-reply-toolbar .bb-rl-post-emoji' ).toggle( settings.emoji !== false ).parent( '.ac-reply-toolbar' ).toggleClass( 'post-emoji-disabled', settings.emoji === false );
 		},
 
-		fixAtWhoActivity: function() {
+		fixAtWhoActivity: function () {
 			$( '.bb-rl-acomment-content, .bb-rl-activity-content' ).each(
-				function(){
+				function () {
 					// replacing atwho query from the comment content to disable querying it in the requests.
-					var atwho_query = $( this ).find( 'span.atwho-query' );
-					for ( var i = 0; i < atwho_query.length; i++ ) {
-						$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+					var atwho_query      = $( this ).find( 'span.atwho-query' );
+					var atwhoQueryLength = atwho_query.length;
+					for ( var i = 0; i < atwhoQueryLength; i++ ) {
+						$( atwho_query[ i ] ).replaceWith( atwho_query[ i ].innerText );
 					}
 				}
 			);
@@ -2063,8 +2121,8 @@ window.bp = window.bp || {};
 					var hash = window.location.hash;
 					if ( hash ) {
 						var $adminBar = $( '#wpadminbar' );
-						var id       = hash;
-						var adminBar = $adminBar.length !== 0 ? $adminBar.innerHeight() : 0;
+						var id        = hash;
+						var adminBar  = $adminBar.length !== 0 ? $adminBar.innerHeight() : 0;
 						if ( $( id ).length > 0 ) {
 							$( 'html, body' ).animate( { scrollTop: parseInt( $( id ).offset().top ) - (80 + adminBar) }, 0 );
 						}
@@ -2091,9 +2149,9 @@ window.bp = window.bp || {};
 
 		editActivityCommentForm: function ( form, activity_comment_data ) {
 			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
-			    toolbarDiv      = form.find( '#ac-reply-toolbar-' + formActivityId ),
-			    formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' ),
-			    self             = this;
+				toolbarDiv     = form.find( '#ac-reply-toolbar-' + formActivityId ),
+				formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' ),
+				self           = this;
 
 			form.find( '#ac-input-' + formActivityId ).html( activity_comment_data.content );
 
@@ -2114,19 +2172,23 @@ window.bp = window.bp || {};
 					'.ac-reply-video-button',
 					'.ac-reply-gif-button'
 				];
-				uploaderButtons.forEach( function ( buttonClass ) {
-					self.disabledCommentUploader( toolbarDiv, buttonClass );
-				} );
+				uploaderButtons.forEach(
+					function ( buttonClass ) {
+						self.disabledCommentUploader( toolbarDiv, buttonClass );
+					}
+				);
 
-				self.injectFiles( {
-					toolbarDiv : toolbarDiv,
-					commonData : activity_comment_data.media,
-					id         : activity_comment_data.id,
-					self       : this,
-					fileType   : 'media',
-					buttonClass: '.ac-reply-media-button',
-					dropzoneObj: self.dropzone_obj,
-				} );
+				self.injectFiles(
+					{
+						toolbarDiv : toolbarDiv,
+						commonData : activity_comment_data.media,
+						id         : activity_comment_data.id,
+						self       : this,
+						fileType   : 'media',
+						buttonClass: '.ac-reply-media-button',
+						dropzoneObj: self.dropzone_obj,
+					}
+				);
 			}
 
 			// Inject Documents.
@@ -2142,19 +2204,23 @@ window.bp = window.bp || {};
 					'.ac-reply-video-button',
 					'.ac-reply-gif-button'
 				];
-				uploaderButtons.forEach( function ( buttonClass ) {
-					self.disabledCommentUploader( toolbarDiv, buttonClass );
-				} );
+				uploaderButtons.forEach(
+					function ( buttonClass ) {
+						self.disabledCommentUploader( toolbarDiv, buttonClass );
+					}
+				);
 
-				self.injectFiles( {
-					toolbarDiv : toolbarDiv,
-					commonData : activity_comment_data.document,
-					id         : activity_comment_data.id,
-					self       : this,
-					fileType   : 'document',
-					buttonClass: '.ac-reply-document-button',
-					dropzoneObj: self.dropzone_document_obj,
-				} );
+				self.injectFiles(
+					{
+						toolbarDiv : toolbarDiv,
+						commonData : activity_comment_data.document,
+						id         : activity_comment_data.id,
+						self       : this,
+						fileType   : 'document',
+						buttonClass: '.ac-reply-document-button',
+						dropzoneObj: self.dropzone_document_obj,
+					}
+				);
 			}
 
 			// Inject Videos.
@@ -2170,19 +2236,23 @@ window.bp = window.bp || {};
 					'.ac-reply-document-button',
 					'.ac-reply-gif-button'
 				];
-				uploaderButtons.forEach( function ( buttonClass ) {
-					self.disabledCommentUploader( toolbarDiv, buttonClass );
-				} );
+				uploaderButtons.forEach(
+					function ( buttonClass ) {
+						self.disabledCommentUploader( toolbarDiv, buttonClass );
+					}
+				);
 
-				self.injectFiles( {
-					toolbarDiv : toolbarDiv,
-					commonData : activity_comment_data.video,
-					id         : activity_comment_data.id,
-					self       : this,
-					fileType   : 'video',
-					buttonClass: '.ac-reply-video-button',
-					dropzoneObj: self.dropzone_video_obj,
-				} );
+				self.injectFiles(
+					{
+						toolbarDiv : toolbarDiv,
+						commonData : activity_comment_data.video,
+						id         : activity_comment_data.id,
+						self       : this,
+						fileType   : 'video',
+						buttonClass: '.ac-reply-video-button',
+						dropzoneObj: self.dropzone_video_obj,
+					}
+				);
 			}
 
 			// Inject GIF.
@@ -2191,9 +2261,9 @@ window.bp = window.bp || {};
 				0 < Object.keys( activity_comment_data.gif ).length
 			) {
 				var $gifPickerEl     = toolbarDiv.find( '.ac-reply-gif-button' ).next(),
-				    isInsideModal    = form.closest( '#activity-modal' ).length > 0,
-				    hasParentModal   = isInsideModal ? '#activity-modal ' : '',
-				    $gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + formActivityId );
+					isInsideModal    = form.closest( '#activity-modal' ).length > 0,
+					hasParentModal   = isInsideModal ? '#activity-modal ' : '',
+					$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + formActivityId );
 
 				toolbarDiv.find( '.ac-reply-gif-button' ).trigger( 'click' );
 
@@ -2202,13 +2272,15 @@ window.bp = window.bp || {};
 					'.ac-reply-document-button',
 					'.ac-reply-video-button'
 				];
-				uploaderButtons.forEach( function ( buttonClass ) {
-					self.disabledCommentUploader( toolbarDiv, buttonClass );
-				} );
+				uploaderButtons.forEach(
+					function ( buttonClass ) {
+						self.disabledCommentUploader( toolbarDiv, buttonClass );
+					}
+				);
 
 				var model                      = new bp.Models.ACReply(),
-				    gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: model } ),
-				    activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: model } );
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: model } ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: model } );
 
 				gifMediaSearchDropdownView.model.set( 'gif_data', activity_comment_data.gif );
 				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
@@ -2237,9 +2309,9 @@ window.bp = window.bp || {};
 			}
 
 			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
-			    formItemId     = form.attr( 'data-item-id' ),
-			    formAcomment   = $( '[data-bp-activity-comment-id="' + formItemId + '"]' ),
-			    formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' );
+				formItemId     = form.attr( 'data-item-id' ),
+				formAcomment   = $( '[data-bp-activity-comment-id="' + formItemId + '"]' ),
+				formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' );
 
 			formAcomment.find( '#bb-rl-acomment-display-' + formItemId ).removeClass( 'bp-hide' );
 			form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
@@ -2253,16 +2325,18 @@ window.bp = window.bp || {};
 			form.find( '#ac-input-' + formActivityId ).html( '' );
 			form.removeClass( 'has-content has-gif has-media' );
 			var self = this;
-			['media', 'document', 'video', 'gif'].forEach( function ( type ) {
-				self.destroyUploader( type, formActivityId );
-			} );
+			['media', 'document', 'video', 'gif'].forEach(
+				function ( type ) {
+					self.destroyUploader( type, formActivityId );
+				}
+			);
 		},
 
-		// Reinitialize reply/edit comment form and append in activity modal footer
+		// Reinitialize reply/edit comment form and append in activity modal footer.
 		reinitializeActivityCommentForm: function ( form ) {
 
 			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
-			    formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' );
+				formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' );
 
 			if ( form.hasClass( 'acomment-edit' ) ) {
 				var formItemId   = form.attr( 'data-item-id' );
@@ -2279,9 +2353,11 @@ window.bp = window.bp || {};
 			form.removeClass( 'has-content has-gif has-media' );
 			$( '.bb-modal-activity-footer' ).addClass( 'active' ).append( form );
 			var self = this;
-			['media', 'document', 'video', 'gif'].forEach( function ( type ) {
-				self.destroyUploader( type, formActivityId );
-			} );
+			['media', 'document', 'video', 'gif'].forEach(
+				function ( type ) {
+					self.destroyUploader( type, formActivityId );
+				}
+			);
 		},
 
 		disabledCommentUploader: function ( toolbar, buttonClass ) {
@@ -2325,14 +2401,14 @@ window.bp = window.bp || {};
 		 *
 		 * @return {[type]}       [description]
 		 */
-		closeActivityState: function() {
+		closeActivityState: function () {
 			$( '.activity-state-popup' ).hide().removeClass( 'active' );
 		},
 
 		listenCommentInput: function ( input ) {
 			if ( input.length > 0 ) {
 				var divEditor = input.get( 0 );
-				var commentID  = $( divEditor ).attr( 'id' ) + (
+				var commentID = $( divEditor ).attr( 'id' ) + (
 					$( divEditor ).closest( '.bb-media-model-inner' ).length ? '-theater' : ''
 				);
 
@@ -2384,9 +2460,9 @@ window.bp = window.bp || {};
 		 */
 		activityRootComment: function ( e ) {
 			var currentTarget = $( e.currentTarget ),
-			    modal         = currentTarget.closest( '#activity-modal' ),
-			    activityId    = modal.find( '.bb-rl-activity-item' ).data( 'bp-activity-id' ),
-			    form          = modal.find( '#ac-form-' + activityId );
+				modal         = currentTarget.closest( '#activity-modal' ),
+				activityId    = modal.find( '.bb-rl-activity-item' ).data( 'bp-activity-id' ),
+				form          = modal.find( '#ac-form-' + activityId );
 
 			bp.Nouveau.Activity.resetActivityCommentForm( form, 'hardReset' );
 
@@ -2422,7 +2498,7 @@ window.bp = window.bp || {};
 			var selector        = '[data-parent_comment_id="' + parentID + '"]';
 			var activityTitle   = activityItem.data( 'activity-popup-title' );
 
-			// Reset to default activity updates and id global variables
+			// Reset to default activity updates and id global variables.
 			bp.Nouveau.Activity.activityHasUpdates    = false;
 			bp.Nouveau.Activity.currentActivityId     = null;
 			bp.Nouveau.Activity.activityPinHasUpdates = false;
@@ -2432,30 +2508,37 @@ window.bp = window.bp || {};
 			modal.find( 'ul.bb-rl-activity-list' ).html( activityContent );
 			modal.find( '.bb-modal-activity-header h2' ).text( activityTitle );
 
-			// Reload video
+			// Reload video.
 			var videoItems = modal.find( '.bb-activity-video-elem' );
-			videoItems.each( function ( index, elem ) {
-				var videoContainer = $( elem );
-				var videos         = videoContainer.find( 'video' );
-				videos.each( function ( index, video ) {
-					var videoElement   = $( video );
-					var videoElementId = videoElement.attr( 'id' ) + Math.floor( Math.random() * 10000 );
-					videoElement.attr( 'id', videoElementId );
+			videoItems.each(
+				function ( index, elem ) {
+					var videoContainer = $( elem );
+					var videos         = videoContainer.find( 'video' );
+					videos.each(
+						function ( index, video ) {
+							var videoElement   = $( video );
+							var videoElementId = videoElement.attr( 'id' ) + Math.floor( Math.random() * 10000 );
+							videoElement.attr( 'id', videoElementId );
 
-					var videoActionWrap = videoContainer.find( '.video-action-wrap' );
-					videoElement.insertAfter( videoActionWrap );
-					videoContainer.find( '.video-js' ).remove();
-					videoElement.addClass( 'video-js' );
+							var videoActionWrap = videoContainer.find( '.video-action-wrap' );
+							videoElement.insertAfter( videoActionWrap );
+							videoContainer.find( '.video-js' ).remove();
+							videoElement.addClass( 'video-js' );
 
-					videojs( videoElementId, {
-						'controls'        : true,
-						'aspectRatio'     : '16:9',
-						'fluid'           : true,
-						'playbackRates'   : [0.5, 1, 1.5, 2],
-						'fullscreenToggle': false,
-					} );
-				} );
-			} );
+							videojs(
+								videoElementId,
+								{
+									'controls'        : true,
+									'aspectRatio'     : '16:9',
+									'fluid'           : true,
+									'playbackRates'   : [0.5, 1, 1.5, 2],
+									'fullscreenToggle': false,
+								}
+							);
+						}
+					);
+				}
+			);
 
 			if ( activityItem.hasClass( 'bb-closed-comments' ) ) {
 				modal.find( '#activity-modal' ).addClass( 'bb-closed-comments' );
@@ -2491,13 +2574,13 @@ window.bp = window.bp || {};
 			e.preventDefault();
 
 			var $target              = $( e.currentTarget ),
-			    currentTargetList    = $target.parent(),
-			    activityId           = $( currentTargetList ).data( 'activity_id' ),
-			    commentsList         = $target.closest( '.bb-rl-activity-comments' ),
-			    commentsActivityItem = $target.closest( '.bb-rl-activity-item' ),
-			    parentCommentId      = $( currentTargetList ).data( 'parent_comment_id' ),
-			    lastCommentTimeStamp = '',
-			    addAfterListItemId   = '';
+				currentTargetList    = $target.parent(),
+				activityId           = $( currentTargetList ).data( 'activity_id' ),
+				commentsList         = $target.closest( '.bb-rl-activity-comments' ),
+				commentsActivityItem = $target.closest( '.bb-rl-activity-item' ),
+				parentCommentId      = $( currentTargetList ).data( 'parent_comment_id' ),
+				lastCommentTimeStamp = '',
+				addAfterListItemId   = '';
 
 			var skeleton =
 				'<div id="bb-rl-ajax-loader">' +
@@ -2542,22 +2625,24 @@ window.bp = window.bp || {};
 						return;
 					}
 					if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
-						// success
+						// success.
 						var $targetList  = $( '.bb-internal-model .bb-rl-activity-comments' ).find( '[data-activity_id=\'' + activityId + '\'][data-parent_comment_id=\'' + parentCommentId + '\']' );
 						var $newComments = $( $.parseHTML( response.data.comments ) );
 						if ( $targetList.length > 0 && $newComments.length > 0 ) {
 
-							// Iterate through new comments to handle duplicates
-							$newComments.each( function () {
-								if ( 'LI' === this.nodeName && 'undefined' !== this.id && '' !== this.id ) {
-									var newCommentId     = this.id;
-									// Check if this comment ID already exists within the target list
-									var $existingComment = $targetList.children( '#' + newCommentId );
-									if ( $existingComment.length > 0 ) {
-										$existingComment.remove(); // If it exists, remove the existing comment.
+							// Iterate through new comments to handle duplicates.
+							$newComments.each(
+								function () {
+									if ( 'LI' === this.nodeName && 'undefined' !== this.id && '' !== this.id ) {
+											var newCommentId = this.id;
+											// Check if this comment ID already exists within the target list.
+											var $existingComment = $targetList.children( '#' + newCommentId );
+										if ( $existingComment.length > 0 ) {
+											$existingComment.remove(); // If it exists, remove the existing comment.
+										}
 									}
 								}
-							} );
+							);
 
 							if ( 'undefined' !== typeof addAfterListItemId && '' !== addAfterListItemId ) {
 								var $addAfterElement = $targetList.find( 'li.bb-rl-activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
@@ -2618,14 +2703,14 @@ window.bp = window.bp || {};
 
 			if ( activityWrapper.length > 0 && 'none' !== activityWrapper.css( 'display' ) ) {
 				var element      = $( '.bb-modal-activity-body .bb-rl-activity-comments > ul > li.acomments-view-more:not(.loading), .bb-modal-activity-body .bb-rl-activity-comments .activity-actions > ul > li.acomments-view-more:not(.loading)' ),
-				    container    = activityWrapper.find( '.bb-modal-activity-body' ),
-				    commentsList = container.find( '.bb-rl-activity-comments:not(.active)' );
+					container    = activityWrapper.find( '.bb-modal-activity-body' ),
+					commentsList = container.find( '.bb-rl-activity-comments:not(.active)' );
 				if ( element.length > 0 && container.length > 0 && commentsList.length > 0 ) {
-					var elementTop = $( element ).offset().top, containerTop = $( container ).scrollTop(),
-					    containerBottom                                      = containerTop + $( container ).height();
+					var elementTop      = $( element ).offset().top, containerTop = $( container ).scrollTop(),
+						containerBottom = containerTop + $( container ).height();
 
-					// Adjust elementTop based on the container's current scroll position
-					// This translates the element's position to be relative to the container, not the whole document
+					// Adjust elementTop based on the container's current scroll position.
+					// This translates the element's position to be relative to the container, not the whole document.
 					var elementRelativeTop = elementTop - $( container ).offset().top + containerTop;
 					if ( elementRelativeTop < containerBottom && (
 						elementRelativeTop + $( element ).outerHeight()
@@ -2657,9 +2742,9 @@ window.bp = window.bp || {};
 			}
 
 			var $activityListItem     = currentTargetModal.find( 'ul.bb-rl-activity-list > li' ),
-			    activityListItemId    = $activityListItem.data( 'bp-activity-id' ),
-			    activityId            = undefined !== activityID ? activityID : activityListItemId,
-			    $pageActivitylistItem = $( '#bb-rl-activity-stream li.bb-rl-activity-item[data-bp-activity-id=' + activityId + ']' );
+				activityListItemId    = $activityListItem.data( 'bp-activity-id' ),
+				activityId            = undefined !== activityID ? activityID : activityListItemId,
+				$pageActivitylistItem = $( '#bb-rl-activity-stream li.bb-rl-activity-item[data-bp-activity-id=' + activityId + ']' );
 
 			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 				$pageActivitylistItem.addClass( 'activity-sync' );
@@ -2675,7 +2760,7 @@ window.bp = window.bp || {};
 							return;
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
-							// success
+							// Success.
 							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
 							// Replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
@@ -2712,7 +2797,7 @@ window.bp = window.bp || {};
 		},
 
 		initializeEmojioneArea: function ( isModal, parentSelector, activityId ) {
-			if( ! $.fn.emojioneArea ) {
+			if ( ! $.fn.emojioneArea ) {
 				return;
 			}
 			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
@@ -2720,7 +2805,7 @@ window.bp = window.bp || {};
 					standalone: true,
 					hideSource: false,
 					container: parentSelector + '#ac-reply-emoji-button-' + activityId,
-					detachPicker: !! isModal,
+					detachPicker: ! ! isModal,
 					containerPicker: isModal ? '.emojionearea-theatre' : null,
 					autocomplete: false,
 					pickerPosition: 'top',
@@ -2731,7 +2816,7 @@ window.bp = window.bp || {};
 							$( parentSelector + '#ac-input-' + activityId )[ 0 ].emojioneArea.hidePicker();
 
 							// Check if emoji is added then enable submit button.
-							var $activity_comment_input = $( parentSelector + '#ac-form-' + activityId + ' #ac-input-' + activityId );
+							var $activity_comment_input   = $( parentSelector + '#ac-form-' + activityId + ' #ac-input-' + activityId );
 							var $activity_comment_content = $activity_comment_input.html();
 							var content;
 
@@ -2763,107 +2848,109 @@ window.bp = window.bp || {};
 
 		injectFiles: function ( data ) {
 			var commonData  = data.commonData,
-			    id          = data.id,
-			    self        = data.self,
-			    fileType    = data.fileType, // 'media', 'document', or 'video'
-			    dropzoneObj = data.dropzoneObj;
+				id          = data.id,
+				self        = data.self,
+				fileType    = data.fileType, // 'media', 'document', or 'video'
+				dropzoneObj = data.dropzoneObj;
 
 			// Iterate through the files and inject them.
-			commonData.forEach( function ( file, index ) {
-				var editData;
-				if ( 0 < parseInt( id, 10 ) ) {
-					editData = {
-						id        : file.attachment_id || file.doc_id || file.vid_id,
-						name      : file.name || file.full_name,
-						saved     : true,
-						group_id  : file.group_id || 0,
-						menu_order: file.menu_order || 0,
-						uuid      : file.attachment_id || file.doc_id || file.vid_id,
-						url       : file.url,
-						type      : fileType,
-					};
-					if ( 'media' === fileType ) {
-						editData.media_id = file.id;
-						editData.thumb    = file.thumb || '';
-						editData.album_id = file.album_id || 0;
-					} else if ( 'document' === fileType ) {
-						editData.document_id = file.id;
-						editData.size        = file.size || 0;
-						editData.full_name   = file.full_name || file.name;
-						editData.folder_id   = file.folder_id || 0;
-						editData.svg_icon    = file.svg_icon || '';
-					} else if ( 'video' === fileType ) {
-						editData.video_id = file.id;
-						editData.thumb    = file.thumb || '';
-						editData.size     = file.size || 0;
-						editData.album_id = file.album_id || 0;
-					}
-				} else {
-					editData = {
-						id        : file.id || file.doc_id || file.vid_id,
-						name      : file.name || file.full_name,
-						saved     : false,
-						group_id  : file.group_id || 0,
-						menu_order: file.menu_order || 0,
-						uuid      : file.id || file.doc_id || file.vid_id,
-						url       : file.url,
-						type      : fileType,
-					};
+			commonData.forEach(
+				function ( file, index ) {
+					var editData;
+					if ( 0 < parseInt( id, 10 ) ) {
+							editData = {
+								id        : file.attachment_id || file.doc_id || file.vid_id,
+								name      : file.name || file.full_name,
+								saved     : true,
+								group_id  : file.group_id || 0,
+								menu_order: file.menu_order || 0,
+								uuid      : file.attachment_id || file.doc_id || file.vid_id,
+								url       : file.url,
+								type      : fileType,
+						};
+						if ( 'media' === fileType ) {
+							editData.media_id = file.id;
+							editData.thumb    = file.thumb || '';
+							editData.album_id = file.album_id || 0;
+						} else if ( 'document' === fileType ) {
+							editData.document_id = file.id;
+							editData.size        = file.size || 0;
+							editData.full_name   = file.full_name || file.name;
+							editData.folder_id   = file.folder_id || 0;
+							editData.svg_icon    = file.svg_icon || '';
+						} else if ( 'video' === fileType ) {
+							editData.video_id = file.id;
+							editData.thumb    = file.thumb || '';
+							editData.size     = file.size || 0;
+							editData.album_id = file.album_id || 0;
+						}
+					} else {
+						editData = {
+							id        : file.id || file.doc_id || file.vid_id,
+							name      : file.name || file.full_name,
+							saved     : false,
+							group_id  : file.group_id || 0,
+							menu_order: file.menu_order || 0,
+							uuid      : file.id || file.doc_id || file.vid_id,
+							url       : file.url,
+							type      : fileType,
+						};
 
-					if ( 'media' === fileType ) {
-						editData.thumb    = file.thumb || '';
-						editData.album_id = file.album_id || 0;
-					} else if ( 'document' === fileType ) {
-						editData.size      = file.size || 0;
-						editData.full_name = file.full_name || file.name;
-						editData.folder_id = file.folder_id || 0;
-						editData.svg_icon  = file.svg_icon || '';
-					} else if ( 'video' === fileType ) {
-						editData.thumb    = file.thumb || '';
-						editData.album_id = file.album_id || 0;
-						editData.size     = file.size || 0;
-					}
-				}
-
-				var mockFile = {
-					name    : file.name || file.full_name,
-					size    : file.size || 0,
-					accepted: true,
-					kind    : 'media' === fileType ? 'image' : 'file',
-					upload  : {
-						filename: file.name || file.full_name,
-						uuid    : file.attachment_id || file.doc_id || file.vid_id,
-					},
-					dataURL : file.url,
-					id      : file.attachment_id || file.doc_id || file.vid_id,
-				};
-
-				if ( 'media' === fileType ) {
-					mockFile.media_edit_data = editData;
-				} else if ( 'document' === fileType ) {
-					mockFile.document_edit_data = editData;
-					mockFile.svg_icon           = ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '';
-				} else if ( 'video' === fileType ) {
-					mockFile.video_edit_data = editData;
-				}
-
-				if ( dropzoneObj ) {
-					dropzoneObj.files.push( mockFile );
-					dropzoneObj.emit( 'addedfile', mockFile );
-
-					// Handle thumbnails for media files.
-					if ( 'media' === fileType ) {
-						if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
-							$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
-							dropzoneObj.emit( 'thumbnail', file.thumb );
-						} else {
-							self.createThumbnailFromUrl( mockFile );
+						if ( 'media' === fileType ) {
+							editData.thumb    = file.thumb || '';
+							editData.album_id = file.album_id || 0;
+						} else if ( 'document' === fileType ) {
+							editData.size      = file.size || 0;
+							editData.full_name = file.full_name || file.name;
+							editData.folder_id = file.folder_id || 0;
+							editData.svg_icon  = file.svg_icon || '';
+						} else if ( 'video' === fileType ) {
+							editData.thumb    = file.thumb || '';
+							editData.album_id = file.album_id || 0;
+							editData.size     = file.size || 0;
 						}
 					}
 
-					dropzoneObj.emit( 'complete', mockFile );
+					var mockFile = {
+						name    : file.name || file.full_name,
+						size    : file.size || 0,
+						accepted: true,
+						kind    : 'media' === fileType ? 'image' : 'file',
+						upload  : {
+							filename: file.name || file.full_name,
+							uuid    : file.attachment_id || file.doc_id || file.vid_id,
+						},
+						dataURL : file.url,
+						id      : file.attachment_id || file.doc_id || file.vid_id,
+					};
+
+					if ( 'media' === fileType ) {
+							mockFile.media_edit_data = editData;
+					} else if ( 'document' === fileType ) {
+						mockFile.document_edit_data = editData;
+						mockFile.svg_icon           = ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '';
+					} else if ( 'video' === fileType ) {
+						mockFile.video_edit_data = editData;
+					}
+
+					if ( dropzoneObj ) {
+						dropzoneObj.files.push( mockFile );
+						dropzoneObj.emit( 'addedfile', mockFile );
+
+						// Handle thumbnails for media files.
+						if ( 'media' === fileType ) {
+							if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+								$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
+								dropzoneObj.emit( 'thumbnail', file.thumb );
+							} else {
+								self.createThumbnailFromUrl( mockFile );
+							}
+						}
+
+						dropzoneObj.emit( 'complete', mockFile );
+					}
 				}
-			} );
+			);
 		},
 
 		destroyUploader: function ( type, comment_id ) {
@@ -2912,9 +2999,11 @@ window.bp = window.bp || {};
 					dropzoneObj.destroy();
 					$( config.uploaderId + comment_id ).html( '' );
 					if ( config.additionalIds ) {
-						config.additionalIds.forEach( function ( id ) {
-							$( id + comment_id ).html( '' );
-						} );
+						config.additionalIds.forEach(
+							function ( id ) {
+								$( id + comment_id ).html( '' );
+							}
+						);
 					}
 				}
 				config.dropzone = [];
@@ -2940,13 +3029,13 @@ window.bp = window.bp || {};
 			event.preventDefault(); // Stop event propagation.
 
 			var parent        = args.parent,
-			    target        = args.target,
-			    reactionId    = args.reactionId,
-			    activityState = args.activityState,
-			    $bodyElem     = args.bodyElem,
-			    stream        = args.stream,
-			    activityItem  = args.activityItem,
-			    itemId;
+				target        = args.target,
+				reactionId    = args.reactionId,
+				activityState = args.activityState,
+				$bodyElem     = args.bodyElem,
+				stream        = args.stream,
+				activityItem  = args.activityItem,
+				itemId;
 
 			// Do not trigger click event directly on the button when it's mobile and reaction is active.
 			if ( $bodyElem.hasClass( 'bb-is-mobile' ) && $bodyElem.hasClass( 'bb-reactions-mode' ) && target.closest( '.ac-emotion_btn' ).length === 0 && event.customTriggered !== true ) {
@@ -2964,11 +3053,11 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var type       = target.hasClass( 'fav' ) ? 'fav' : 'unfav',
-			    isActivity = true,
-			    itemType   = 'activity',
-			    parent_el  = target.parents( '.bb-rl-acomment-display' ).first(),
-			    reacted_id = target.attr( 'data-reacted-id' ),
-			    mainEl;
+				isActivity = true,
+				itemType   = 'activity',
+				parent_el  = target.parents( '.bb-rl-acomment-display' ).first(),
+				reacted_id = target.attr( 'data-reacted-id' ),
+				mainEl;
 
 			if ( reactionId > 0 ) {
 				type = 'fav';
@@ -3102,18 +3191,18 @@ window.bp = window.bp || {};
 			event.preventDefault(); // Stop event propagation.
 
 			var parent                 = args.parent,
-			    target                 = args.target,
-			    activityState          = args.activityState,
-			    activityItem           = args.activityItem,
-			    commentsText           = args.commentsText,
-			    activityId             = args.activityId,
-			    activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
-			    activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
-			    li_parent,
-			    comment_count_span,
-			    comment_count,
-			    show_all_a,
-			    deleted_comments_count = 0;
+				target                 = args.target,
+				activityState          = args.activityState,
+				activityItem           = args.activityItem,
+				commentsText           = args.commentsText,
+				activityId             = args.activityId,
+				activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
+				activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
+				li_parent,
+				comment_count_span,
+				comment_count,
+				show_all_a,
+				deleted_comments_count = 0;
 
 			var commentsList = target.closest( '.bb-rl-activity-comments' );
 			commentsList.addClass( 'active' );
@@ -3183,9 +3272,11 @@ window.bp = window.bp || {};
 							activityItem.append( activity_comment_li.find( 'form' ) );
 
 							// Count child comments if there are some.
-							activity_comment_li.find( 'li.comment-item' ).each( function () {
-								deleted_comments_count += 1;
-							} );
+							activity_comment_li.find( 'li.comment-item' ).each(
+								function () {
+									deleted_comments_count += 1;
+								}
+							);
 
 							deleted_comments_count += hidden_comments_count !== undefined ? parseFloat( hidden_comments_count ) : 0;
 
@@ -3259,9 +3350,9 @@ window.bp = window.bp || {};
 			event.preventDefault(); // Stop event propagation.
 
 			var target     = args.target,
-			    itemId     = null,
-			    activityId = args.activityId,
-			    content    = target.closest( 'div' );
+				itemId     = null,
+				activityId = args.activityId,
+				content    = target.closest( 'div' );
 
 			if ( $( content ).hasClass( 'bb-rl-activity-inner' ) ) {
 				itemId = activityId;
@@ -3274,8 +3365,8 @@ window.bp = window.bp || {};
 			}
 
 			var parent       = args.parent,
-			    activityItem = args.activityItem,
-			    readMore     = target.closest( 'span' );
+				activityItem = args.activityItem,
+				readMore     = target.closest( 'span' );
 
 			$( readMore ).addClass( 'loading' );
 
@@ -3330,7 +3421,7 @@ window.bp = window.bp || {};
 
 		displayingTheCommentForm: function ( args ) {
 			var event  = args.event,
-			    target = args.target;
+				target = args.target;
 
 			if ( target.parents( '.bb-rl-activity-item' ).hasClass( 'bb-closed-comments' ) ) {
 				event.preventDefault();
@@ -3338,13 +3429,13 @@ window.bp = window.bp || {};
 			}
 
 			var activityId           = args.activityId,
-			    form,
-			    isInsideModal        = args.isInsideModal,
-			    isInsideMediaTheatre = args.isInsideMediaTheatre,
-			    itemId               = activityId,
-			    hasParentModal,
-			    $activity_comments,
-			    self                 = args.self;
+				form,
+				isInsideModal        = args.isInsideModal,
+				isInsideMediaTheatre = args.isInsideMediaTheatre,
+				itemId               = activityId,
+				hasParentModal,
+				$activity_comments,
+				self                 = args.self;
 
 			var $activityModal = $( '#activity-modal' );
 			var $internalModel = $( '.bb-internal-model' );
@@ -3397,11 +3488,13 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.clearFeedbackNotice( form );
 
 			/* Remove any error messages */
-			form.children( 'div' ).each( function ( e, err ) {
-				if ( $( err ).hasClass( 'error' ) ) {
-					$( err ).remove();
+			form.children( 'div' ).each(
+				function ( e, err ) {
+					if ( $( err ).hasClass( 'error' ) ) {
+							$( err ).remove();
+					}
 				}
-			} );
+			);
 
 			if ( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) ) {
 				var acomment = $( hasParentModal + '[data-bp-activity-comment-id="' + itemId + '"]' );
@@ -3444,11 +3537,11 @@ window.bp = window.bp || {};
 			form.removeClass( 'not-initialized' );
 
 			var postEmojiELem = form.find( '.bb-rl-post-elements-buttons-item.post-emoji' ),
-			    emojiPosition = postEmojiELem.prevAll().not( ':hidden' ).length + 1;
+				emojiPosition = postEmojiELem.prevAll().not( ':hidden' ).length + 1;
 			postEmojiELem.attr( 'data-nth-child', emojiPosition );
 
 			var postGifELem = form.find( '.bb-rl-post-elements-buttons-item.bb-rl-post-gif' ),
-			    gifPosition = postGifELem.prevAll().not( ':hidden' ).length + 1;
+				gifPosition = postGifELem.prevAll().not( ':hidden' ).length + 1;
 			postGifELem.attr( 'data-nth-child', gifPosition );
 
 			/* Stop past image from clipboard */
@@ -3462,17 +3555,17 @@ window.bp = window.bp || {};
 			target.closest( '.comment-item' ).addClass( 'bb-rl-comment-item-focus' );
 
 			var activity_data_nickname = ! _.isNull( activity_comment_data ) ? activity_comment_data.nickname : '',
-			    activity_user_id       = ! _.isNull( activity_comment_data ) ? activity_comment_data.user_id : '',
-			    atWho                  = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;',
-			    current_user_id        = ! _.isUndefined( bbRlActivity.params.user_id ) ? bbRlActivity.params.user_id : '',
-			    peak_offset            = (
-				    $( window ).height() / 2 - 75
-			    ),
-			    scrollOptions          = {
-				    offset: - peak_offset,
-				    easing: 'swing'
-			    },
-			    div_editor             = ce.get( 0 );
+				activity_user_id       = ! _.isNull( activity_comment_data ) ? activity_comment_data.user_id : '',
+				atWho                  = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;',
+				current_user_id        = ! _.isUndefined( bbRlActivity.params.user_id ) ? bbRlActivity.params.user_id : '',
+				peak_offset            = (
+					$( window ).height() / 2 - 75
+				),
+				scrollOptions          = {
+					offset: - peak_offset,
+					easing: 'swing'
+			},
+				div_editor             = ce.get( 0 );
 
 			if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 				if ( isInsideModal ) {
@@ -3549,15 +3642,15 @@ window.bp = window.bp || {};
 
 		submitActivityComment: function ( args ) {
 			var event         = args.event,
-			    parent        = args.parent,
-			    target        = args.target,
-			    activityId    = args.activityId,
-			    isInsideModal = args.isInsideModal,
-			    activityState = args.activityState,
-			    commentsText  = args.commentsText,
-			    activityItem  = args.activityItem,
-			    self          = args.self,
-			    model;
+				parent        = args.parent,
+				target        = args.target,
+				activityId    = args.activityId,
+				isInsideModal = args.isInsideModal,
+				activityState = args.activityState,
+				commentsText  = args.commentsText,
+				activityItem  = args.activityItem,
+				self          = args.self,
+				model;
 
 			target.prop( 'disabled', true );
 
@@ -3580,19 +3673,25 @@ window.bp = window.bp || {};
 			commentContent = $( form ).find( '.ac-input' ).first();
 
 			// Replacing atwho query from the comment content to disable querying it in the requests.
-			commentContent.find( 'span.atwho-query' ).each( function () {
-				$( this ).replaceWith( this.innerText );
-			} );
+			commentContent.find( 'span.atwho-query' ).each(
+				function () {
+					$( this ).replaceWith( this.innerText );
+				}
+			);
 
 			// transform other emoji into emojionearea emoji.
-			commentContent.find( 'img.emoji' ).each( function () {
-				$( this ).addClass( 'emojioneemoji' ).attr( 'data-emoji-char', $( this ).attr( 'alt' ) ).removeClass( 'emoji' );
-			} );
+			commentContent.find( 'img.emoji' ).each(
+				function () {
+					$( this ).addClass( 'emojioneemoji' ).attr( 'data-emoji-char', $( this ).attr( 'alt' ) ).removeClass( 'emoji' );
+				}
+			);
 
 			// Transform emoji image into emoji unicode.
-			commentContent.find( 'img.emojioneemoji' ).replaceWith( function () {
-				return this.dataset.emojiChar;
-			} );
+			commentContent.find( 'img.emojioneemoji' ).replaceWith(
+				function () {
+					return this.dataset.emojiChar;
+				}
+			);
 
 			if ( 'undefined' === typeof activityId && target.parents( '.bb-modal-activity-footer' ).length > 0 ) {
 				activityId = target.parents( 'form.ac-form' ).find( 'input[name=comment_form_id]' ).val();
@@ -3697,15 +3796,17 @@ window.bp = window.bp || {};
 							'.ac-reply-video-button',
 							'.ac-reply-gif-button'
 						];
-						buttons.forEach( function ( button ) {
-							var $button = tool_box_comment.find( '.ac-reply-toolbar ' + button );
-							if ( $button.length > 0 ) {
-								if ( 'ac-reply-gif-button' === button ) {
-									$button.removeClass( 'active' );
+						buttons.forEach(
+							function ( button ) {
+								var $button = tool_box_comment.find( '.ac-reply-toolbar ' + button );
+								if ( $button.length > 0 ) {
+									if ( 'ac-reply-gif-button' === button ) {
+										$button.removeClass( 'active' );
+									}
+									$button.parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable no-click' );
 								}
-								$button.parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable no-click' );
 							}
-						} );
+						);
 						jQuery( window ).scroll();
 
 						if ( ! form.hasClass( 'acomment-edit' ) ) {
@@ -3733,13 +3834,17 @@ window.bp = window.bp || {};
 							self.dropzone_media,
 							self.dropzone_document,
 							self.dropzone_video
-						].forEach( function ( dropzone ) {
-							if ( dropzone && dropzone.length > 0 ) {
-								dropzone.forEach( function ( item ) {
-									item.saved = true;
-								} );
+						].forEach(
+							function ( dropzone ) {
+								if ( dropzone && dropzone.length > 0 ) {
+										dropzone.forEach(
+											function ( item ) {
+												item.saved = true;
+											}
+										);
+								}
 							}
-						} );
+						);
 
 						bp.Nouveau.Activity.activityHasUpdates = true;
 						bp.Nouveau.Activity.currentActivityId  = activityId;
@@ -3751,9 +3856,11 @@ window.bp = window.bp || {};
 						$( '#ac-reply-post-gif-' + activityId ).find( '.bb-rl-activity-attached-gif-container' ).removeAttr( 'style' );
 					}
 
-					['media', 'document', 'video'].forEach( function ( type ) {
-						self.destroyUploader( type, activityId );
-					} );
+					['media', 'document', 'video'].forEach(
+						function ( type ) {
+							self.destroyUploader( type, activityId );
+						}
+					);
 
 					target.prop( 'disabled', false );
 					commentContent.prop( 'disabled', false );
@@ -3779,7 +3886,7 @@ window.bp = window.bp || {};
 
 		pinUnpinActivity: function ( args ) {
 			var event      = args.event,
-			    activityId = args.activityId;
+				activityId = args.activityId;
 
 			// Stop event propagation.
 			event.preventDefault();
@@ -3789,8 +3896,8 @@ window.bp = window.bp || {};
 			}
 
 			var parent        = args.parent,
-			    target        = args.target,
-			    isInsideModal = args.isInsideModal;
+				target        = args.target,
+				isInsideModal = args.isInsideModal;
 
 			var activityItem = target.closest( '.bb-rl-activity-item' );
 			activityItem.addClass( 'loading-pin' );
@@ -3850,13 +3957,15 @@ window.bp = window.bp || {};
 								var update_pin_actions = is_group_activity && ! activityStream.hasClass( 'single-group' ) ?
 									'li.bb-rl-activity-item.group-' + activity_group_id :
 									'li.bb-rl-activity-item';
-								activityList.find( update_pin_actions ).each( function () {
-									var action = $( this ).find( '.unpin-activity' );
-									action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+								activityList.find( update_pin_actions ).each(
+									function () {
+										var action = $( this ).find( '.unpin-activity' );
+										action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
 
-									var pinText = is_group_activity ? bbRlActivity.strings.pinGroupPost : bbRlActivity.strings.pinPost;
-									action.find( 'span' ).html( pinText );
-								} );
+										var pinText = is_group_activity ? bbRlActivity.strings.pinGroupPost : bbRlActivity.strings.pinPost;
+										action.find( 'span' ).html( pinText );
+									}
+								);
 
 								if ( update_pinned_icon ) {
 									activityItem.addClass( 'bb-pinned' );
@@ -3910,10 +4019,10 @@ window.bp = window.bp || {};
 
 		muteUnmuteNotifications: function ( args ) {
 			var event         = args.event,
-			    parent        = args.parent,
-			    target        = args.target,
-			    activityId    = args.activityId,
-			    isInsideModal = args.isInsideModal;
+				parent        = args.parent,
+				target        = args.target,
+				activityId    = args.activityId,
+				isInsideModal = args.isInsideModal;
 
 			if ( target.hasClass( 'bb-icon-bell-slash' ) || target.hasClass( 'bb-icon-bell' ) ) {
 				// Stop event propagation.
@@ -4007,9 +4116,9 @@ window.bp = window.bp || {};
 
 		onOffComment: function ( args ) {
 			var event      = args.event,
-			    target     = args.target,
-			    parent     = args.parent,
-			    activityId = args.activityId;
+				target     = args.target,
+				parent     = args.parent,
+				activityId = args.activityId;
 			// Stop event propagation.
 			event.preventDefault();
 
