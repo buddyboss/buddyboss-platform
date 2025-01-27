@@ -546,14 +546,8 @@ window.bp = window.bp || {};
 			var tool_box = $( '.bb-rl-activity-form.bb-rl-focus-in #bb-rl-whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
-				// close and destroy existing gif instance.
-				self.activityToolbar.closeGifSelector( bpActivityEvent );
-				// close and destroy existing media instance.
-				self.activityToolbar.closeMediaSelector( bpActivityEvent );
-				// close and destroy existing document instance.
-				self.activityToolbar.closeDocumentSelector( bpActivityEvent );
-				// close and destroy existing video instance.
-				self.activityToolbar.closeVideoSelector( bpActivityEvent );
+				// Close and destroy existing gif,media,document,video instance.
+				self.activityToolbar.closeSelectors( ['gif', 'media', 'document', 'video'] );
 			}
 
 			// Inject GIF.
@@ -3897,10 +3891,7 @@ window.bp = window.bp || {};
 			toggleURLInput: function ( e ) {
 				var event;
 				e.preventDefault();
-				this.closeMediaSelector();
-				this.closeGifSelector();
-				this.closeDocumentSelector();
-				this.closeVideoSelector();
+				this.closeSelectors( ['media', 'gif', 'document', 'video'] );
 
 				if ( this.model.get( 'link_scrapping' ) ) {
 					event = new Event( 'activity_link_preview_close' );
@@ -3923,9 +3914,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				this.closeMediaSelector();
-				this.closeDocumentSelector();
-				this.closeVideoSelector();
+				this.closeSelectors( ['media', 'document', 'video'] );
 
 				if ( this.$gifPickerEl.is( ':empty' ) ) {
 					this.gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: this.model } );
@@ -3943,10 +3932,6 @@ window.bp = window.bp || {};
 				}
 			},
 
-			closeGifSelector: function () {
-				Backbone.trigger( 'activity_gif_close' );
-			},
-
 			toggleMediaSelector: function ( e ) {
 				e.preventDefault();
 				var parentElement = $( e.currentTarget ).closest( '.bb-rl-post-elements-buttons-item' );
@@ -3954,9 +3939,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				this.closeGifSelector();
-				this.closeDocumentSelector();
-				this.closeVideoSelector();
+				this.closeSelectors( ['gif', 'document', 'video'] );
 
 				Backbone.trigger( 'activity_media_toggle' );
 			},
@@ -3969,9 +3952,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				this.closeGifSelector();
-				this.closeMediaSelector();
-				this.closeVideoSelector();
+				this.closeSelectors( ['gif', 'media', 'video'] );
 
 				Backbone.trigger( 'activity_document_toggle' );
 			},
@@ -3982,23 +3963,18 @@ window.bp = window.bp || {};
 				if( !$( '.bb-rl-activity-form' ).hasClass( 'bb-rl-focus-in' ) || parentElement.hasClass( 'no-click' ) || parentElement.hasClass( 'disable' )) {
 					return;
 				}
-				this.closeMediaSelector();
-				this.closeDocumentSelector();
-				this.closeGifSelector();
+				this.closeSelectors( ['media', 'document', 'gif'] );
 
 				Backbone.trigger( 'activity_video_toggle' );
 			},
 
-			closeMediaSelector: function () {
-				Backbone.trigger( 'activity_media_close' );
-			},
-
-			closeDocumentSelector: function () {
-				Backbone.trigger( 'activity_document_close' );
-			},
-
-			closeVideoSelector: function () {
-				Backbone.trigger( 'activity_video_close' );
+			closeSelectors : function ( args ) {
+				if ( ! args ) {
+					return false;
+				}
+				args.forEach( function ( arg ) {
+					Backbone.trigger( 'activity_' + arg + '_close' );
+				} );
 			},
 
 			closePickersOnEsc: function ( event ) {
