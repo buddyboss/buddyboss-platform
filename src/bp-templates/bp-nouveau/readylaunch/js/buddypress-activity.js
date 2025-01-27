@@ -2360,11 +2360,16 @@ window.bp = window.bp || {};
 			);
 		},
 
-		disabledCommentUploader: function ( toolbar, buttonClass ) {
+		disabledCommentUploader: function ( toolbar, buttonClass, activeClass = '' ) {
 			var button = toolbar.find( buttonClass );
 
 			if ( button.length > 0 ) {
-				button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
+				var $btnElem = button.parents( '.bb-rl-post-elements-buttons-item' );
+				if ( activeClass ) {
+					$btnElem.addClass( activeClass );
+				} else {
+					$btnElem.addClass( 'disable' );
+				}
 			}
 		},
 
@@ -2848,10 +2853,11 @@ window.bp = window.bp || {};
 
 		injectFiles: function ( data ) {
 			var commonData  = data.commonData,
-				id          = data.id,
-				self        = data.self,
-				fileType    = data.fileType, // 'media', 'document', or 'video'
-				dropzoneObj = data.dropzoneObj;
+			    id          = data.id,
+			    self        = data.self,
+			    fileType    = data.fileType, // 'media', 'document', or 'video'
+			    dropzoneObj = data.dropzoneObj,
+			    draftData   = data.draftData || false;
 
 			// Iterate through the files and inject them.
 			commonData.forEach(
@@ -2912,12 +2918,12 @@ window.bp = window.bp || {};
 					}
 
 					var mockFile = {
-						name    : file.name || file.full_name,
+						name    : file.name || file.full_name || file.title,
 						size    : file.size || 0,
 						accepted: true,
 						kind    : 'media' === fileType ? 'image' : 'file',
 						upload  : {
-							filename: file.name || file.full_name,
+							filename: file.name || file.full_name || file.title,
 							uuid    : file.attachment_id || file.doc_id || file.vid_id,
 						},
 						dataURL : file.url,
@@ -2948,6 +2954,11 @@ window.bp = window.bp || {};
 						}
 
 						dropzoneObj.emit( 'complete', mockFile );
+
+						if ( 'media' === fileType && true === draftData ) {
+							dropzoneObj.emit( 'dz-success' );
+							dropzoneObj.emit( 'dz-complete' );
+						}
 					}
 				}
 			);

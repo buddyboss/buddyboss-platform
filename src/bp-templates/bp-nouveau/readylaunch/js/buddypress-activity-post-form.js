@@ -563,18 +563,11 @@ window.bp = window.bp || {};
 				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
 
 				// Make tool box button disable.
-				if ( tool_box.find( '#bb-rl-activity-media-button' ) ) {
-					tool_box.find( '#bb-rl-activity-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-document-button' ) ) {
-					tool_box.find( '#bb-rl-activity-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-video-button' ) ) {
-					tool_box.find( '#bb-rl-activity-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-gif-button' ) ) {
-					tool_box.find( '#bb-rl-activity-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'active' );
-				}
+				self.bbMakeToolBoxButtonDisabled( {
+					toolBox  : tool_box,
+					btnId    : '#bb-rl-activity-gif-button',
+					btnClass : 'active'
+				} );
 				// END Toolbox Button.
 			}
 
@@ -586,81 +579,21 @@ window.bp = window.bp || {};
 				}
 
 				// Make tool box button disable.
-				if ( tool_box.find( '#bb-rl-activity-media-button' ) ) {
-					tool_box.find( '#bb-rl-activity-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'active no-click' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-document-button' ) ) {
-					tool_box.find( '#bb-rl-activity-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-video-button' ) ) {
-					tool_box.find( '#bb-rl-activity-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-gif-button' ) ) {
-					tool_box.find( '#bb-rl-activity-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
+				self.bbMakeToolBoxButtonDisabled( {
+					toolBox  : tool_box,
+					btnId    : '#bb-rl-activity-media-button',
+					btnClass : 'active no-click'
+				} );
 				// END Toolbox Button.
 
-				var mock_file = false;
-				for ( var i = 0; i < activity_data.media.length; i++ ) {
-					mock_file = false;
-
-					var media_edit_data = {};
-					if ( 0 < parseInt( activity_data.id ) ) {
-						media_edit_data = {
-							'id': activity_data.media[ i ].attachment_id,
-							'media_id': activity_data.media[ i ].id,
-							'name': activity_data.media[ i ].name,
-							'thumb': activity_data.media[ i ].thumb,
-							'url': activity_data.media[ i ].url,
-							'uuid': activity_data.media[ i ].attachment_id,
-							'menu_order': activity_data.media[ i ].menu_order,
-							'album_id': activity_data.media[ i ].album_id,
-							'group_id': activity_data.media[ i ].group_id,
-							'saved': true
-						};
-					} else {
-						media_edit_data = {
-							'id': activity_data.media[ i ].id,
-							'name': activity_data.media[ i ].name,
-							'thumb': activity_data.media[ i ].thumb,
-							'url': activity_data.media[ i ].url,
-							'uuid': activity_data.media[ i ].id,
-							'menu_order': activity_data.media[ i ].menu_order,
-							'album_id': activity_data.media[ i ].album_id,
-							'group_id': activity_data.media[ i ].group_id,
-							'saved': false
-						};
-					}
-
-					mock_file = {
-						name: activity_data.media[ i ].title,
-						accepted: true,
-						kind: 'image',
-						upload: {
-							filename: activity_data.media[ i ].title,
-							uuid: activity_data.media[ i ].attachment_id
-						},
-						dataURL: activity_data.media[ i ].url,
-						id: activity_data.media[ i ].attachment_id,
-						media_edit_data: media_edit_data
-					};
-
-					if ( self.dropzone ) {
-						self.dropzone.files.push( mock_file );
-						self.dropzone.emit( 'addedfile', mock_file );
-
-						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
-							$( self.dropzone.files[i].previewElement ).find( 'img' ).attr( 'src', activity_data.media[i].thumb );
-							self.dropzone.emit( 'thumbnail', activity_data.media[i].thumb );
-							self.dropzone.emit( 'complete', mock_file );
-						} else {
-							self.createThumbnailFromUrl( mock_file );
-						}
-
-						self.dropzone.emit( 'dz-success' );
-						self.dropzone.emit( 'dz-complete' );
-					}
-				}
+				bp.Nouveau.Activity.injectFiles( {
+					commonData  : activity_data.media,
+					id          : activity_data.id,
+					self        : self,
+					fileType    : 'media',
+					dropzoneObj : self.dropzone,
+					draftData   : true,
+				} );
 			}
 
 			// Inject Documents.
@@ -672,79 +605,21 @@ window.bp = window.bp || {};
 				}
 
 				// Make tool box button disable.
-				if ( tool_box.find( '#bb-rl-activity-media-button' ) ) {
-					tool_box.find( '#bb-rl-activity-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-video-button' ) ) {
-					tool_box.find( '#bb-rl-activity-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-document-button' ) ) {
-					tool_box.find( '#bb-rl-activity-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'active no-click' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-gif-button' ) ) {
-					tool_box.find( '#bb-rl-activity-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
+				self.bbMakeToolBoxButtonDisabled( {
+					toolBox  : tool_box,
+					btnId    : '#bb-rl-activity-document-button',
+					btnClass : 'active no-click'
+				} );
+
 				// END Toolbox Button.
-
-				var doc_file = false;
-				for ( var doci = 0; doci < activity_data.document.length; doci++ ) {
-					doc_file = false;
-
-					var document_edit_data = {};
-					if ( 0 < parseInt( activity_data.id ) ) {
-						document_edit_data = {
-							'id': activity_data.document[ doci ].doc_id,
-							'name': activity_data.document[ doci ].full_name,
-							'full_name': activity_data.document[ doci ].full_name,
-							'type': 'document',
-							'url': activity_data.document[ doci ].url,
-							'size': activity_data.document[ doci ].size,
-							'uuid': activity_data.document[ doci ].doc_id,
-							'document_id': activity_data.document[ doci ].id,
-							'menu_order': activity_data.document[ doci ].menu_order,
-							'folder_id': activity_data.document[ doci ].folder_id,
-							'group_id': activity_data.document[ doci ].group_id,
-							'saved': true,
-							'svg_icon': !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
-						};
-					} else {
-						document_edit_data = {
-							'id': activity_data.document[ doci ].id,
-							'name': activity_data.document[ doci ].full_name,
-							'full_name': activity_data.document[ doci ].full_name,
-							'type': 'document',
-							'url': activity_data.document[ doci ].url,
-							'size': activity_data.document[ doci ].size,
-							'uuid': activity_data.document[ doci ].id,
-							'menu_order': activity_data.document[ doci ].menu_order,
-							'folder_id': activity_data.document[ doci ].folder_id,
-							'group_id': activity_data.document[ doci ].group_id,
-							'saved': false,
-							'svg_icon': !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
-						};
-					}
-
-					doc_file = {
-						name: activity_data.document[ doci ].full_name,
-						size: activity_data.document[ doci ].size,
-						accepted: true,
-						kind: 'file',
-						upload: {
-							filename: activity_data.document[ doci ].full_name,
-							uuid: activity_data.document[ doci ].doc_id
-						},
-						dataURL: activity_data.document[ doci ].url,
-						id: activity_data.document[ doci ].doc_id,
-						document_edit_data: document_edit_data,
-						svg_icon: !_.isUndefined( activity_data.document[ doci ].svg_icon ) ? activity_data.document[ doci ].svg_icon : ''
-					};
-
-					if ( self.dropzone ) {
-						self.dropzone.files.push( doc_file );
-						self.dropzone.emit( 'addedfile', doc_file );
-						self.dropzone.emit( 'complete', doc_file );
-					}
-				}
+				bp.Nouveau.Activity.injectFiles( {
+					commonData  : activity_data.document,
+					id          : activity_data.id,
+					self        : self,
+					fileType    : 'document',
+					dropzoneObj : self.dropzone,
+					draftData   : true,
+				} );
 			}
 
 			// Inject Videos.
@@ -755,78 +630,20 @@ window.bp = window.bp || {};
 				}
 
 				// Make tool box button disable.
-				if ( tool_box.find( '#bb-rl-activity-media-button' ) ) {
-					tool_box.find( '#bb-rl-activity-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-document-button' ) ) {
-					tool_box.find( '#bb-rl-activity-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-video-button' ) ) {
-					tool_box.find( '#bb-rl-activity-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'active no-click' );
-				}
-				if ( tool_box.find( '#bb-rl-activity-gif-button' ) ) {
-					tool_box.find( '#bb-rl-activity-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-				}
+				self.bbMakeToolBoxButtonDisabled( {
+					toolBox  : tool_box,
+					btnId    : '#bb-rl-activity-video-button',
+					btnClass : 'active no-click'
+				} );
 				// END Toolbox Button.
-
-				var video_file = false;
-				for ( var vidi = 0; vidi < activity_data.video.length; vidi++ ) {
-					video_file = false;
-
-					var video_edit_data = {};
-					if ( 0 < parseInt( activity_data.id ) ) {
-						video_edit_data = {
-							'id': activity_data.video[ vidi ].vid_id,
-							'name': activity_data.video[ vidi ].name,
-							'type': 'video',
-							'thumb': activity_data.video[ vidi ].thumb,
-							'url': activity_data.video[ vidi ].url,
-							'size': activity_data.video[ vidi ].size,
-							'uuid': activity_data.video[ vidi ].vid_id,
-							'video_id': activity_data.video[ vidi ].id,
-							'menu_order': activity_data.video[ vidi ].menu_order,
-							'album_id': activity_data.video[ vidi ].album_id,
-							'group_id': activity_data.video[ vidi ].group_id,
-							'saved': true
-						};
-					} else {
-						video_edit_data = {
-							'id': activity_data.video[ vidi ].id,
-							'name': activity_data.video[ vidi ].name,
-							'type': 'video',
-							'thumb': activity_data.video[ vidi ].thumb,
-							'url': activity_data.video[ vidi ].url,
-							'size': activity_data.video[ vidi ].size,
-							'uuid': activity_data.video[ vidi ].id,
-							'menu_order': activity_data.video[ vidi ].menu_order,
-							'album_id': activity_data.video[ vidi ].album_id,
-							'group_id': activity_data.video[ vidi ].group_id,
-							'saved': false,
-						};
-					}
-
-					video_file = {
-						name: activity_data.video[ vidi ].name,
-						size: activity_data.video[ vidi ].size,
-						accepted: true,
-						kind: 'file',
-						upload: {
-							filename: activity_data.video[ vidi ].name,
-							uuid: activity_data.video[ vidi ].vid_id
-						},
-						dataURL: activity_data.video[ vidi ].url,
-						id: activity_data.video[ vidi ].vid_id,
-						video_edit_data: video_edit_data
-					};
-
-					if ( self.dropzone ) {
-						self.dropzone.files.push( video_file );
-						self.dropzone.emit( 'addedfile', video_file );
-						self.dropzone.emit( 'complete', video_file );
-					}
-
-				}
-
+				bp.Nouveau.Activity.injectFiles( {
+					commonData  : activity_data.video,
+					id          : activity_data.id,
+					self        : self,
+					fileType    : 'video',
+					dropzoneObj : self.dropzone,
+					draftData   : true,
+				} );
 			}
 
 			self.postForm.$el.find( '#bb-rl-whats-new' ).trigger( 'keyup' );
@@ -1440,6 +1257,20 @@ window.bp = window.bp || {};
 			} else {
 				$( toolbarSelector ).removeClass( type + '-support-hide' );
 			}
+		},
+
+		bbMakeToolBoxButtonDisabled : function ( args ) {
+			var uploaderButtons = [
+				'#bb-rl-activity-media-button',
+				'#bb-rl-activity-video-button',
+				'#bb-rl-activity-document-button',
+				'#bb-rl-activity-gif-button'
+			];
+			uploaderButtons.forEach(
+				function ( buttonClass ) {
+					bp.Nouveau.Activity.disabledCommentUploader( args.toolBox, buttonClass, buttonClass === args.btnId ? args.btnClass : '' );
+				}
+			);
 		},
 
 		clearDraftInterval: function() {
