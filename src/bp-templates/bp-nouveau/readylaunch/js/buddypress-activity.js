@@ -74,7 +74,7 @@ window.bp = window.bp || {};
 
 			if ( 'undefined' !== typeof window.Dropzone && 'undefined' !== typeof bbRlMedia ) {
 
-				// set up dropzones auto discover to false so it does not automatically set dropzones.
+				// Set up dropzones auto discover to false so it does not automatically set dropzones.
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
@@ -130,7 +130,7 @@ window.bp = window.bp || {};
 			// Inject Activities.
 			$bpElem.find( '[data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.bb-rl-load-more', this.injectActivities.bind( this ) );
 
-			// Highlight new activities & clean up the stream.
+			// Highlight new activities and clean up the stream.
 			$bpElem.on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
 
 			// Activity comments effect.
@@ -266,7 +266,7 @@ window.bp = window.bp || {};
 			var newestActivitiesCount, newestActivities, objects = bp.Nouveau.objects,
 				scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' ), self = this;
 
-			// Only proceed if we have newest activities.
+			// Only proceed if we have the newest activities.
 			if ( undefined === data || ! data.bp_activity_newest_activities ) {
 				return;
 			}
@@ -283,8 +283,8 @@ window.bp = window.bp || {};
 			newestActivitiesCount = Number( newestActivities.length );
 
 			/**
-			 * It's not a regular object but we need it!
-			 * so let's add it temporarly..
+			 * It's not a regular object, but we need it!
+			 * so let's add it temporary.
 			 */
 			objects.push( 'mentions' );
 
@@ -357,7 +357,7 @@ window.bp = window.bp || {};
 			 */
 			objects.pop();
 
-			// Add an information about the number of newest activities inside the document's title.
+			// Add information about the number of newest activities inside the document's title.
 			$( document ).prop( 'title', '(' + newestActivitiesCount + ') ' + this.heartbeat_data.document_title );
 
 			// Update the Load Newest li if it already exists.
@@ -367,7 +367,7 @@ window.bp = window.bp || {};
 				var newest_link = $aElem.html();
 				$aElem.html( newest_link.replace( /([0-9]+)/, newestActivitiesCount ) );
 
-				// Otherwise add it.
+				// Otherwise, add it.
 			} else {
 				$bpElemList.find( 'ul.bb-rl-activity-list' ).prepend( '<li class="load-newest"><a href="#newest">' + bbRlNewest + ' (' + newestActivitiesCount + ')</a></li>' );
 			}
@@ -375,7 +375,7 @@ window.bp = window.bp || {};
 			$bpElemList.find( 'li.load-newest' ).trigger( 'click' );
 
 			/**
-			 * Finally trigger a pending event containing the activity heartbeat data
+			 * Finally, trigger a pending event containing the activity heartbeat data
 			 */
 			$bpElemList.trigger( 'bp_heartbeat_pending', this.heartbeat_data );
 
@@ -394,7 +394,7 @@ window.bp = window.bp || {};
 			var store = bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
-			// Load newest activities.
+			// Load the newest activities.
 			if ( $( event.currentTarget ).hasClass( 'load-newest' ) ) {
 				// Stop event propagation.
 				event.preventDefault();
@@ -402,7 +402,7 @@ window.bp = window.bp || {};
 				$( event.currentTarget ).remove();
 
 				/**
-				 * If a plugin is updating the recorded_date of an activity
+				 * If a plugin is updating the recorded_date of an activity,
 				 * it will be loaded as a new one. We need to look in the
 				 * stream and eventually remove similar ids to avoid "double".
 				 */
@@ -437,7 +437,7 @@ window.bp = window.bp || {};
 				// Reset the newest activities now they're displayed.
 				this.heartbeat_data.newest = '';
 
-				// Reset the All members tab dynamic span id it's the current one.
+				// Reset the member tab dynamic span id it's the current one.
 				if ( 'all' === scope ) {
 					$( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( '' );
 				}
@@ -468,7 +468,7 @@ window.bp = window.bp || {};
 				// Reset the document title.
 				$( document ).prop( 'title', this.heartbeat_data.document_title );
 
-				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+				// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
 
 				// Load more activities.
@@ -481,7 +481,7 @@ window.bp = window.bp || {};
 				var targetEl = $( event.currentTarget );
 				targetEl.find( 'a' ).first().addClass( 'loading' );
 
-				// reset the just posted.
+				// Reset the just posted.
 				this.just_posted = [];
 
 				// Now set it.
@@ -515,7 +515,7 @@ window.bp = window.bp || {};
 							// Update the current page.
 							self.current_page = nextPage;
 
-							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
 						}
 					}
@@ -548,7 +548,7 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					// Check if URL has specific comment to show.
+					// Check if the URL has specific comment to show.
 					if ( $( 'body' ).hasClass( 'activity-singular' ) && '' !== window.location.hash && $( window.location.hash ).length && 0 !== $( window.location.hash ).closest( '.bb-rl-activity-comments' ).length ) {
 						return;
 					}
@@ -720,10 +720,10 @@ window.bp = window.bp || {};
 			// Edit Activity Loader.
 			this.openEditActivityPopup();
 
-			// Navigate to specific comment when there's e.g. #acomment123 in url.
+			// Navigate to specific comment when there's e.g., #acomment123 in url.
 			this.navigateToSpecificComment();
 
-			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+			// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout(
 				function() {
 					jQuery( window ).scroll();
@@ -780,7 +780,7 @@ window.bp = window.bp || {};
 							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-open-document-theatre' );
 							var $documentDetailWrap      = $( '.document-detail-wrap.document-detail-wrap-description-popup' );
 
-							// Update attributes for document theatre
+							// Update attributes for document theater.
 							if ( $documentDescriptionWrap.length && $documentTheatre.length ) {
 								$documentTheatre.attr( {
 									'data-video-preview': response.data.video_symlink,
@@ -858,7 +858,7 @@ window.bp = window.bp || {};
 			    self          = this,
 			    $body         = $( 'body' );
 
-			// Check if target is inside #activity-modal or media theatre
+			// Check if target is inside #activity-modal or media theater.
 			var isInsideModal        = target.closest( '#activity-modal' ).length > 0;
 			var isInsideMediaTheatre = target.closest( '.bb-internal-model' ).length > 0;
 
@@ -867,7 +867,7 @@ window.bp = window.bp || {};
 				commentsText  = activityItem.closest( '#activity-modal' ).find( '.comments-count' );
 			}
 
-			// In case the target is set to a span or i tag inside the link.
+			// In case the target is set to a `span` or `i` tag inside the link.
 			if (
 				$( target ).is( 'span' ) ||
 				$( target ).is( 'i' ) ||
@@ -1001,7 +1001,7 @@ window.bp = window.bp || {};
 					var $activityForm = $( '#bp-nouveau-activity-form' );
 					$activityForm.toggleClass( 'group-activity', target.closest( 'li' ).hasClass( 'groups' ) );
 
-					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
+					// Close the Media/Document popup if someone clicks on Edit while on Media/Document popup.
 					if (
 						'undefined' !== typeof bp.Nouveau.Media &&
 						'undefined' !== typeof bp.Nouveau.Media.Theatre &&
@@ -1175,7 +1175,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentDefaultTemplate = document.getElementsByClassName( 'ac-reply-post-default-template' ).length ? document.getElementsByClassName( 'ac-reply-post-default-template' )[0].innerHTML : ''; // Check to avoid error if the Node is missing.
 
 			if ( 'undefined' !== typeof window.Dropzone && dropzone_container.length ) {
 
@@ -1423,7 +1423,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentDocumentTemplate = document.getElementsByClassName( 'ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if the Node is missing.
 
 			if ( 'undefined' !== typeof window.Dropzone && dropzone_container.length ) {
 
@@ -1670,7 +1670,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
+			var acCommentVideoTemplate = document.getElementsByClassName( 'ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if the Node is missing.
 
 			if ( 'undefined' !== typeof window.Dropzone && dropzone_container.length ) {
 
@@ -2336,14 +2336,14 @@ window.bp = window.bp || {};
 					$( divEditor ).closest( '.bb-media-model-inner' ).length ? '-theater' : ''
 				);
 
-				// Comment block is moved from theater and needs to be initiated.
+				// The Comment block is moved from theater and needs to be initiated.
 				if ( $.inArray( commentID, this.InitiatedCommentForms ) !== - 1 && ! $( divEditor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
 					var index = this.InitiatedCommentForms.indexOf( commentID );
 					this.InitiatedCommentForms.splice( index, 1 );
 				}
 
 				if ( $.inArray( commentID, this.InitiatedCommentForms ) === - 1 && ! $( divEditor ).closest( 'form' ).hasClass( 'events-initiated' ) ) {
-					// Check if a comment form has already paste event initiated.
+					// Check if a comment form has already pasted event initiated.
 					divEditor.addEventListener(
 						'paste',
 						function ( e ) {
@@ -2372,7 +2372,7 @@ window.bp = window.bp || {};
 						}
 					);
 					$( divEditor ).closest( 'form' ).addClass( 'events-initiated' );
-					this.InitiatedCommentForms.push( commentID ); // Add this Comment form in initiated comment form list.
+					this.InitiatedCommentForms.push( commentID ); // Add this Comment form in an initiated comment form list.
 				}
 			}
 		},
@@ -2573,7 +2573,7 @@ window.bp = window.bp || {};
 								$targetList.html( $newComments );
 							}
 
-							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							// Replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							setTimeout(
 								function () {
 									jQuery( window ).scroll();
@@ -2634,7 +2634,7 @@ window.bp = window.bp || {};
 					}
 				}
 
-				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+				// Replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				setTimeout(
 					function () {
 						jQuery( window ).scroll();
@@ -2677,10 +2677,10 @@ window.bp = window.bp || {};
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 							// success
 							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
-							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							// Replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
 
-							// Refresh activities after updating pin/unpin post status.
+							// Refresh activities after updating pin/unpin `post` status.
 							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
 								bp.Nouveau.refreshActivities();
 							}
@@ -3014,7 +3014,7 @@ window.bp = window.bp || {};
 								var ariaPressed = 'false' === $this.attr( 'aria-pressed' ) ? 'true' : 'false';
 								$this.attr( 'aria-pressed', ariaPressed );
 
-								// Update reacted user name and counts.
+								// Update reacted username and counts.
 								if ( 'undefined' !== typeof response.data.reaction_count ) {
 									var reactionCountElem = isActivity ?
 										mainEl.find( '.bb-rl-activity-content .activity-state-reactions' ) :
@@ -3060,7 +3060,7 @@ window.bp = window.bp || {};
 						reactionElem.parent().addClass( reactionUpdateClass );
 					}
 
-					// Add "Likes/Emotions" menu item on activity directory nav menu.
+					// Add "Likes/Emotions" menu item on the activity directory nav menu.
 					if ( 'fav' === type ) {
 						if (
 							'undefined' !== typeof response.data.directory_tab &&
@@ -3073,13 +3073,13 @@ window.bp = window.bp || {};
 					} else if ( 'unfav' === type ) {
 						var favoriteScope = $( '[data-bp-user-scope="favorites"]' ).hasClass( 'selected' ) || $( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).hasClass( 'selected' );
 
-						// If on user's profile or on the favorites directory tab, remove the entry.
+						// If on user's profile or on the favorite directory tab, remove the entry.
 						if ( favoriteScope ) {
 							activityItem.remove();
 						}
 
 						if ( undefined !== response.data.no_favorite ) {
-							// Remove the tab when on activity directory but not on the favorites tabs.
+							// Remove the tab when on activity directory but not on the favorite tabs.
 							if ( $( parent.objectNavParent + ' [data-bp-scope="all"]' ).length && $( parent.objectNavParent + ' [data-bp-scope="all"]' ).hasClass( 'selected' ) ) {
 								$( parent.objectNavParent + ' [data-bp-scope="favorites"]' ).remove();
 
@@ -3235,7 +3235,7 @@ window.bp = window.bp || {};
 							}
 						);
 
-						// reset vars to get newest activities when an activity is deleted.
+						// reset vars to get the newest activities when an activity is deleted.
 						if ( ! activity_comment_id && activityItem.data( 'bp-timestamp' ) === parent.Activity.heartbeat_data.last_recorded ) {
 							parent.Activity.heartbeat_data.newest        = '';
 							parent.Activity.heartbeat_data.last_recorded = 0;
@@ -3312,7 +3312,7 @@ window.bp = window.bp || {};
 							$( content ).html( response.data.contents ).slideDown( 300 );
 						}
 
-						// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+						// replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 						jQuery( window ).scroll();
 
 						if ( activityItem.hasClass( 'wp-link-embed' ) ) {
@@ -3369,7 +3369,7 @@ window.bp = window.bp || {};
 				$activity_comments = $mediaModelContainer.find( '[data-bp-activity-id="' + itemId + '"] .bb-rl-activity-comments' );
 			}
 
-			// Show comment form on activity item when it is hidden initially.
+			// Show a comment form on activity item when it is hidden initially.
 			var $activityItem = target.closest( '.bb-rl-activity-item' );
 			if ( ! $activityItem.hasClass( 'has-comments' ) ) {
 				$activityItem.addClass( 'has-comments' );
@@ -3728,7 +3728,7 @@ window.bp = window.bp || {};
 							}
 						}
 
-						// keep the dropzone media saved so it wont remove its attachment when destroyed.
+						// Keep the dropzone media saved, so it won't remove its attachment when destroyed.
 						[
 							self.dropzone_media,
 							self.dropzone_document,
