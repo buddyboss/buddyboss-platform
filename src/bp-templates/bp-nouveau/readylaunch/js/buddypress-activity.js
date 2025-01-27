@@ -47,6 +47,8 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function () {
+			bp.Nouveau.Activity.LocalizeActivityVars = bpNouveau;
+
 			this.setupGlobals();
 
 			// Listen to events ("Add hooks!").
@@ -2360,8 +2362,9 @@ window.bp = window.bp || {};
 			);
 		},
 
-		disabledCommentUploader: function ( toolbar, buttonClass, activeClass = '' ) {
-			var button = toolbar.find( buttonClass );
+		disabledCommentUploader : function ( toolbar, buttonClass, activeClass ) {
+			activeClass = activeClass || '';
+			var button  = toolbar.find( buttonClass );
 
 			if ( button.length > 0 ) {
 				var $btnElem = button.parents( '.bb-rl-post-elements-buttons-item' );
