@@ -744,23 +744,21 @@ window.bp = window.bp || {};
 						extras = objectData.extras;
 					}
 
-					if ( $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
+					// Pre select saved sort filter.
+					if ( $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).length ) {
 						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== objectData.filter ) {
 							filter = objectData.filter;
-							$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
-						} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
-							filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
+							$( self.objectNavParent + ' [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+						} else if ( '-1' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() && '0' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() ) {
+							filter = $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val();
 						}
 					}
 
-					if ( $( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).length ) {
-						$( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).each(
-							function () {
-								$( this ).removeClass( 'selected' );
-							}
-						);
-
-						$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
+					// Pre select saved scope filter.
+					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== scope ) {
+							$( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
+						}
 					}
 
 					// Check the querystring to eventually include the search terms.
