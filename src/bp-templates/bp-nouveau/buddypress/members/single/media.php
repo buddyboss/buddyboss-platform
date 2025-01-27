@@ -9,6 +9,41 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
+$bp_current_action    = bp_current_action();
+$count                = false;
+if ( bp_is_user() && bb_enable_content_counts() ) {
+	?>
+	<div class="bb-item-count">
+		<?php
+		if ( ! $is_send_ajax_request || ( 'albums' === $bp_current_action && ! bp_is_single_album() ) ) {
+			if ( 'my-media' === $bp_current_action ) {
+				$count = $count = bp_media_get_total_media_count();
+			} elseif ( 'albums' === $bp_current_action && ! bp_is_single_album() ) {
+				$count = bb_media_get_total_album_count();
+			}
+
+			if ( false !== $count ) {
+				printf(
+					wp_kses(
+						/* translators: %d is the count */
+						_n(
+							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Album' : 'Photo' ),
+							'<span class="bb-count">%d</span> ' . ( 'albums' === $bp_current_action ? 'Albums' : 'Photos' ),
+							$count,
+							'buddyboss'
+						),
+						array( 'span' => array( 'class' => true ) )
+					),
+					(int) $count
+				);
+			}
+
+			unset( $count );
+		}
+		?>
+	</div>
+	<?php
+}
 ?>
 <div class="bb-media-container member-media">
 	<?php
@@ -20,7 +55,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	}
 	bp_get_template_part( 'document/theatre' );
 
-	switch ( bp_current_action() ) :
+	switch ( $bp_current_action ) :
 
 		// Home/Media.
 		case 'my-media':

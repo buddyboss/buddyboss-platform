@@ -507,6 +507,10 @@ function bp_version_updater() {
 			bb_on_update_moderation_friends_count_update();
 		}
 
+		if ( $raw_db_version < 21331 ) {
+			bb_update_to_2_6_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3837,4 +3841,15 @@ function bb_on_update_moderation_friends_count_update() {
 	set_transient( 'bb_on_update_moderation_friends_count_update', 'yes', HOUR_IN_SECONDS );
 
 	bb_create_background_member_friends_count();
+}
+
+/**
+ * Enable the member and group directory count option for existing installations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_2_6_80() {
+	bp_update_option( 'bb-enable-content-counts', 1 );
 }
