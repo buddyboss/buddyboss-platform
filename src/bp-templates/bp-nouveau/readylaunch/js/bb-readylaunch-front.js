@@ -24,7 +24,6 @@ window.bp = window.bp || {};
 			this.addListeners();
 			this.mobileSubMenu();
 			this.gridListFilter();
-			this.blockMember();
 			this.collapsibleContextNav();
 
 			this.bbReloadWindow();
@@ -403,29 +402,6 @@ window.bp = window.bp || {};
 				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
 				bp.Readylaunch.deletedNotifications.push( notificationId );
 			}
-		},
-
-		blockMember: function () {
-			$( document ).on( 'click', '.block-member', function ( e ) {
-				e.preventDefault();
-
-				var $wrapper = $( this ).closest( '.bb-rl-members' );
-				var $modal = $wrapper.find( '#bb-rl-block-member' );
-				
-				if ( $modal.length ) {
-					$modal.show();
-				}
-			} );
-
-			$( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
-				e.preventDefault();
-				
-				var $modal = $( this ).closest( '#bb-rl-block-member' );
-				
-				if ( $modal.length ) {
-					$modal.hide();
-				}
-			} );
 		},
 
 		/**

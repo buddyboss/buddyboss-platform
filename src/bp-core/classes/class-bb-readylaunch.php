@@ -935,6 +935,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
 					),
+					'bp-nouveau-magnific-popup' => array(
+						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+						'dependencies' => array( 'jquery' ),
+						'footer'       => false,
+					),
 				)
 			);
 		}
