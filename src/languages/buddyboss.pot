@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.7.70\n"
+"Project-Id-Version: BuddyBoss Platform 2.7.80\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2025-01-17 08:41:57+00:00\n"
 "MIME-Version: 1.0\n"
@@ -29567,7 +29567,7 @@ msgstr[1] ""
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:894
+#: bp-search/classes/class-bp-search.php:893
 msgid "All Results"
 msgstr ""
 
