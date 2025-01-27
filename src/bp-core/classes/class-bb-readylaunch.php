@@ -962,7 +962,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
 
 				$prev_label = esc_html__( 'Prev', 'buddyboss' );
-				$next_label = esc_html__( 'Next &rarr;', 'buddyboss' );
+				$next_label = esc_html__( 'Next', 'buddyboss' );
 
 				// Use prev_text and next_text passed in the paginate_links arguments.
 				$prev_text = isset( $args['prev_text'] ) ? $args['prev_text'] : __( '&larr; Prev', 'buddyboss' );
