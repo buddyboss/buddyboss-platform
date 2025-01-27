@@ -190,7 +190,7 @@ function bp_get_default_options() {
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
 
-		'bb-enable-content-counts'                   => false,
+		'bb-enable-content-counts'                   => 1,
 		'bb-enable-sso'                              => false,
 	);
 
@@ -2763,11 +2763,11 @@ function bb_is_send_ajax_request() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $default Optional. Default value to use if the option is not set. Default false.
+ * @param bool $default Optional. Default value to use if the option is not set. Default true.
  *
- * @return bool True if counts should be displayed, false otherwise.
+ * @return bool true if counts should be displayed, false otherwise.
  */
-function bb_enable_content_counts( $default = false ) {
+function bb_enable_content_counts( $default = true ) {
 
 	/**
 	 * Filter to modify the behavior of the group counts feature.
@@ -2775,7 +2775,7 @@ function bb_enable_content_counts( $default = false ) {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
-	 * @param bool $default     The default value if the setting is not configured. Default false.
+	 * @param int  $default     The default value if the setting is not configured. Default false.
 	 */
 	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bp_get_option( 'bb-enable-content-counts', $default ) );
 }

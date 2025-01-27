@@ -336,6 +336,7 @@ body.buddypress article.page > .entry-header .entry-title {
   .buddypress-wrap.bp-dir-hori-nav:not(.bp-vertical-navs) nav {
     border-bottom: 1px solid #eee;
     border-top: 1px solid #eee;
+    margin-bottom: 20px;
     -webkit-box-shadow: 0 2px 12px 0 #fafafa;
     -moz-box-shadow: 0 2px 12px 0 #fafafa;
     box-shadow: 0 2px 12px 0 #fafafa;
@@ -527,6 +528,14 @@ body.buddypress article.page > .entry-header .entry-title {
 
 .item-body > .bb-item-count.bb-group-members-count + .members-search {
   float: left;
+}
+
+body.directory .main-navs + .bb-item-count {
+  margin-bottom: 10px;
+}
+
+body.directory .main-navs + .bb-item-count ~ #media-stream .bp-feedback {
+  margin-top: 15px;
 }
 
 .item-body:has(.bb-item-count + .subnav-filters) .bb-item-count,
