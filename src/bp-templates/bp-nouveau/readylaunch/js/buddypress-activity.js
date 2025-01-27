@@ -96,7 +96,6 @@ window.bp = window.bp || {};
 			this.models                = [];
 			this.InitiatedCommentForms = [];
 			this.activityHasUpdates    = false; // Flag to track any activity updates
-			this.currentActivityId     = null; // Store the ID of the updated activity
 			this.activityPinHasUpdates = false; // Flag to track activity pin updates
 		},
 
@@ -1973,18 +1972,10 @@ window.bp = window.bp || {};
 					activity_data = target.closest( '.bb-rl-activity-item' ).data( 'bp-activity' );
 				}
 
-				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
-					activity_data = target.closest( 'li' ).data( 'bp-activity-comment' );
+				var targetLi = target.closest( 'li' ).data( 'bp-activity-comment' );
+				if ( targetLi ) {
+					activity_data = targetLi;
 				}
-
-				// Use ternary operators to reduce repetitive code and ensure clear checks.
-				var toggleMedia = function ( selector, condition ) {
-					if ( false === condition ) {
-						form.find( selector ).hide().parent( '.ac-reply-toolbar' ).addClass( 'bb-rl-post-media-disabled' );
-					} else {
-						form.find( selector ).show().parent( '.ac-reply-toolbar' ).removeClass( 'bb-rl-post-media-disabled' );
-					}
-				};
 
 				var mediaSettings = function ( mediaType, fallbackValue ) {
 					if ( activity_data && ! _.isUndefined( activity_data[mediaType] ) ) {
