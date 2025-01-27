@@ -362,7 +362,7 @@
 
 .bb-rl-activity-form.bb-rl-focus-in--group #bb-rl-whats-new-post-in-box #bb-rl-activity-group-ac-items {
   min-height: 130px;
-  max-height: calc(100vh - 300px);
+  max-height: 280px;
   overflow: auto;
   padding: var(--bb-rl-space-100) 0;
 }

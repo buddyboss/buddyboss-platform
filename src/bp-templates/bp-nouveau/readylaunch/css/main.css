@@ -1240,6 +1240,9 @@ button[data-balloon] {
 .dropzone {
   display: flex;
   flex-flow: row wrap;
+}
+
+.dropzone.open {
   margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
@@ -1289,6 +1292,7 @@ button[data-balloon] {
   background-color: transparent;
   border: 0;
   cursor: pointer;
+  outline: none;
 }
 
 .dropzone .dz-button:before {
@@ -1317,20 +1321,24 @@ button[data-balloon] {
   content: "\e10e";
 }
 
-.dropzone.media-dropzone .dz-image img {
-  width: 175px;
-  height: 100%;
-  margin: 0 auto;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-  opacity: 0;
-}
-
 .dropzone.video-dropzone .dz-button:before {
   content: "\e4da";
+}
+
+.dropzone.video-dropzone .dz-preview.dz-complete .dz-progress-ring-wrap {
+  display: block;
+  color: var(--bb-rl-text-white-color);
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dropzone.video-dropzone .dz-preview.dz-complete .dz-progress-ring-wrap [class*="bb-icons-"] {
+  color: var(--bb-rl-text-white-color);
+}
+
+.dropzone.video-dropzone .dz-preview.dz-complete .dz-progress-ring-wrap:after,
+.dropzone.video-dropzone .dz-preview.dz-complete .dz-progress-ring-wrap .dz-progress-ring {
+  display: none;
 }
 
 .dropzone.document-dropzone .dz-button:before {
@@ -1375,7 +1383,7 @@ button[data-balloon] {
 }
 
 .dropzone .dz-preview .dz-progress-ring-wrap [class*=" bb-icons-"] {
-  color: var(--bb-icon-primary-color);
+  color: var(--bb-rl-icon-color);
   font-size: var(--bb-rl-base-line);
   position: absolute;
   top: 50%;
@@ -1408,12 +1416,15 @@ button[data-balloon] {
 }
 
 .dropzone .dz-image img {
-  width: auto;
+  width: 175px;
+  height: 100%;
   margin: 0 auto;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 0;
 }
 
 .dropzone .dz-error-title {
@@ -1463,6 +1474,7 @@ button[data-balloon] {
   top: 5px;
   right: 5px;
   cursor: pointer;
+  outline: none;
 }
 
 .dropzone .dz-remove:before {
