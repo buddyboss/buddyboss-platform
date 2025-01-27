@@ -2272,7 +2272,7 @@ body.admin-bar .bb-rl-left-panel {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-lg);
-  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-300);
 }
 
 .bb-rl-widget-sidebar .widget .widget-title {
@@ -2282,10 +2282,82 @@ body.admin-bar .bb-rl-left-panel {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-50) 0 var(--bb-rl-space-100);
   margin-bottom: var(--bb-rl-space-200);
+  display: flex;
+}
+
+.bb-rl-widget-sidebar .widget .widget-title .bb-rl-see-all {
+  margin-left: auto;
+}
+
+.bb-rl-widget-sidebar .bb-rl-see-all a {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-color);
 }
 
 .bb-rl-widget-sidebar .widget + .widget {
   margin-top: var(--bb-rl-space-200);
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options {
+  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-300);
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options > a {
+  display: inline-flex;
+  align-items: center;
+  line-height: var(--bb-rl-space-400);
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: var(--bb-rl-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: 0 var(--bb-rl-space-200);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options > a.selected {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options .bb-rl-widget-tab-count {
+  margin-left: var(--bb-rl-space-50);
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options .bb-rl-widget-tab-count::before {
+  content: "(";
+  font-size: inherit;
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options .bb-rl-widget-tab-count::after {
+  content: ")";
+  font-size: inherit;
+}
+
+.widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options .bb-rl-widget-tab-count:empty::before, .widget-bb-rl-follow-my-network-widget .bb-rl-members-item-options .bb-rl-widget-tab-count:empty::after {
+  display: none;
+}
+
+.bb-rl-my-network-members-list {
+  display: flex;
+  flex-flow: wrap;
+  gap: var(--bb-rl-space-100);
+  margin-left: -1px;
+  margin-right: -1px;
+}
+
+.bb-rl-my-network-members-list .item-avatar {
+  display: inline-block;
+  width: 48px;
+}
+
+.bb-rl-my-network-members-list .item-avatar img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
 }
 
 /* Common styles */
