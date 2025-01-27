@@ -135,7 +135,7 @@ window.bp = window.bp || {};
 
 		postFormPlaceholderView: function () {
 			// Do not carry on if the main element is not available.
-			var $activityFormPlaceholder = $( '#bb-rl-nouveau-activity-form-placeholder' );
+			var $activityFormPlaceholder = $( '#bb-rl-activity-form-placeholder' );
 			if ( ! $activityFormPlaceholder.length ) {
 				return;
 			}
@@ -225,8 +225,8 @@ window.bp = window.bp || {};
 		displayEditActivityForm : function( activity_data, activity_URL_preview ) {
 			var self = this;
 
-			var $activityForm            = $( '#bb-rl-nouveau-activity-form' );
-			var $activityFormPlaceholder = $( '#bb-rl-nouveau-activity-form-placeholder' );
+			var $activityForm            = $( '#bb-rl-activity-form' );
+			var $activityFormPlaceholder = $( '#bb-rl-activity-form-placeholder' );
 			var $singleActivityFormWrap  = $( '#bb-rl-single-activity-edit-form-wrap' );
 			if ( $singleActivityFormWrap.length ) {
 				$singleActivityFormWrap.show();
@@ -334,9 +334,9 @@ window.bp = window.bp || {};
 
 			$( '.bb-rl-activity-update-form.modal-popup' ).removeClass( 'modal-popup bb-rl-group-activity' ).closest( 'body' ).removeClass( 'bb-rl-activity-modal-open' );
 
-			var $activityFormPlaceholder = $( '#bb-rl-nouveau-activity-form-placeholder' );
+			var $activityFormPlaceholder = $( '#bb-rl-activity-form-placeholder' );
 			var $singleActivityFormWrap  = $( '#bb-rl-single-activity-edit-form-wrap' );
-			var $tabActivityFormWrap     = $( '#bb-rl-nouveau-activity-form' );
+			var $tabActivityFormWrap     = $( '#bb-rl-activity-form' );
 
 			// unwrap hw wrapped content section.
 			var $whatsNewContent = $( '#bb-rl-whats-new-content' );
@@ -375,7 +375,7 @@ window.bp = window.bp || {};
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
 			var self = this;
 
-			self.postForm.$el.parent( '#bb-rl-nouveau-activity-form' ).removeClass( 'bp-hide' );
+			self.postForm.$el.parent( '#bb-rl-activity-form' ).removeClass( 'bp-hide' );
 			self.postForm.$el.find( '#bb-rl-whats-new' ).html( activity_data.content );
 			if( activity_URL_preview != null ) {
 				self.postForm.$el.find( '#bb-rl-whats-new' ).data( 'activity-url-preview', activity_URL_preview );
@@ -1645,7 +1645,7 @@ window.bp = window.bp || {};
 				var $singleActivityFormWrap = $( '#bb-rl-single-activity-edit-form-wrap' );
 				$singleActivityFormWrap.hide();
 
-				var $tabActivityFormWrap = $( '#bb-rl-nouveau-activity-form' );
+				var $tabActivityFormWrap = $( '#bb-rl-activity-form' );
 				if ( $tabActivityFormWrap.hasClass( 'is-bp-hide' ) ) {
 					$tabActivityFormWrap.addClass( 'bp-hide' );
 				}
@@ -4506,7 +4506,7 @@ window.bp = window.bp || {};
 				$( '#bb-rl-whats-new-form' ).addClass( 'bb-rl-focus-in' ).parent().addClass( 'modal-popup' ).closest( 'body' ).addClass( 'bb-rl-activity-modal-open' ); // add some class to form so that DOM knows about focus.
 
 				//Show placeholder form
-				$( '#bb-rl-nouveau-activity-form-placeholder' ).show();
+				$( '#bb-rl-activity-form-placeholder' ).show();
 
 				// Add BB Poll View.
 				if ( ! _.isUndefined( bp.Views.activityPollForm ) ) {
@@ -4918,7 +4918,7 @@ window.bp = window.bp || {};
 				whats_new_form.removeClass( 'bb-rl-focus-in bb-rl-focus-in--privacy bb-rl-focus-in--group bb-rl-focus-in--scroll has-draft' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'bb-rl-activity-modal-open' ); // remove class when reset.
 
 				//Hide placeholder form
-				$( '#bb-rl-nouveau-activity-form-placeholder' ).hide();
+				$( '#bb-rl-activity-form-placeholder' ).hide();
 
 				$( '#bb-rl-whats-new-content' ).find( '#bb-rl-activity-id' ).val( '' ); // reset activity id if in edit mode.
 				bp.Nouveau.Activity.postForm.postForm.$el.removeClass( 'bb-rl-activity-edit hide-schedule-button' );
@@ -5609,7 +5609,7 @@ window.bp = window.bp || {};
 				);
 
 				var $whatsNew                = $( '#bb-rl-whats-new' );
-				var $activityFormPlaceholder = $( '#bb-rl-nouveau-activity-form-placeholder' );
+				var $activityFormPlaceholder = $( '#bb-rl-activity-form-placeholder' );
 				$whatsNew.css(
 					{
 						resize: 'none',

@@ -130,7 +130,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', function( event ) {
 					if (
 						$( '#activity-modal:visible' ).length > 0 &&
-						0 === $( '#bb-rl-nouveau-activity-form-placeholder:visible' ).length &&
+						0 === $( '#bb-rl-activity-form-placeholder:visible' ).length &&
 						! $( event.target ).closest( '#activity-modal' ).length &&
 						! $( event.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ).length &&
 						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
