@@ -16,7 +16,7 @@
 
 	&.dz-started .dz-default.dz-message {
 		flex-basis: 100%;
-		max-width: 175px;
+		max-width: 165px;
 		min-height: 160px;
 		margin: 0 var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
 		border-radius: var(--bb-rl-radius-md);
@@ -115,12 +115,64 @@
 		.dz-button:before {
 			content: "\e2e2";
 		}
+
+		.dz-icon {
+			display: none;
+		}
+
+		.dz-preview.dz-complete {
+
+			.dz-icon {
+				display: flex;
+				justify-content: center;
+				color: var(--bb-rl-icon-secondary-color);
+				font-size: 48px;
+				margin-bottom: var(--bb-rl-space-100);
+				min-height: 48px;
+
+				&:before {
+					content: "\e230";
+					font-family: bb-icons-rl;
+					font-size: 48px;
+					line-height: 1;
+					position: absolute;
+					top: 0;
+					left: 50%;
+					transform: translateX(-50%);
+					z-index: 1;
+				}
+
+				[class*="bb-icons"] {
+					z-index: 11;
+					position: relative;
+					background-color: var(--bb-rl-background-secondary-color);
+				}
+			}
+
+			.dz-progress {
+				display: none;
+			}
+
+			.dz-details {
+				display: block;
+				top: 45px;
+				left: 0;
+				width: 100%;
+				text-align: center;
+			}
+
+			.dz-remove:before {
+				content: "\e4f6";
+				color: var(--bb-rl-icon-tertiary-color);
+				font-weight: 400;
+			}
+		}
 	}
 
 	.dz-preview {
 		background-color: var(--bb-rl-background-secondary-color);
 		border: 1px solid var(--bb-rl-border-secondary-color);
-		width: 175px;
+		width: 165px;
 		height: 160px;
 		margin: 0 var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
 		border-radius: var(--bb-rl-radius-md);
@@ -190,7 +242,7 @@
 		height: 160px;
 
 		img {
-			width: 175px;
+			width: 165px;
 			height: 100%;
 			margin: 0 auto;
 			position: absolute;
@@ -209,6 +261,7 @@
 	.dz-details {
 		position: absolute;
 		top: 85px;
+		left: 0;
 		width: 100%;
 
 		.dz-progress {

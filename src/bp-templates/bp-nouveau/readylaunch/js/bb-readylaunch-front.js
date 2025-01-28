@@ -485,6 +485,17 @@ window.bp = window.bp || {};
 						view[modelKey].push( response.data );
 						view.model.set( modelKey, view[modelKey] );
 					}
+
+					if( 'document' === mediaType ) {
+						var filename      = file.upload.filename;
+						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+						var file_icon     = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+						var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+						if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icons-rl-file' ).addClass( icon_class );
+						}
+					}
+
 					if( 'activity' === ActiveComponent ) {
 						bp.draft_content_changed = true;
 					}
