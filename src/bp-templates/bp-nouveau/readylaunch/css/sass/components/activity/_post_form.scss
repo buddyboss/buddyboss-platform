@@ -629,6 +629,15 @@
 	#bb-rl-whats-new-privacy-stage-footer {
 		display: none;
 	}
+
+	// Notice
+	#message-feedback {
+		position: absolute;
+		top: 58px;
+		margin: 15px 25px 0;
+		width: calc(100% - 50px);
+		min-width: initial;
+	}
 }
 
 // Activity Link Preview

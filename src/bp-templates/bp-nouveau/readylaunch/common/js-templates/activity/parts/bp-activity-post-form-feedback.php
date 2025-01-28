@@ -8,5 +8,11 @@
 
 ?>
 <script type="text/html" id="tmpl-activity-post-form-feedback">
-	<span class="bp-icon" aria-hidden="true"></span><p>{{{data.message}}}</p>
+	<span class="bb-icons-rl-fill" aria-hidden="true"></span>
+	<div class="bb-rl-notice--content">
+		{{{data.message}}}
+		<button class="bb-rl-notice__close">
+			<i class="bb-icons-rl-x"></i>
+		</button>
+	</div>
 </script>

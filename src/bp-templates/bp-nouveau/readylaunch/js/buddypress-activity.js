@@ -1358,7 +1358,7 @@ window.bp = window.bp || {};
 							} else {
 								var commentForm = target.closest( '.ac-form' );
 								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
-								commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
+								commentForm.find( '.ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + response + '</div>' );
 								this.removeFile( file );
 								commentForm.removeClass( 'media-uploading' );
 							}
@@ -1607,7 +1607,7 @@ window.bp = window.bp || {};
 							} else {
 								var commentForm = target.closest( '.ac-form' );
 								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
-								commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
+								commentForm.find( '.ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + response + '</div>' );
 								this.removeFile( file );
 								commentForm.removeClass( 'media-uploading' );
 							}
@@ -1872,7 +1872,7 @@ window.bp = window.bp || {};
 							} else {
 								var commentForm = target.closest( '.ac-form' );
 								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
-								commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
+								commentForm.find( '.ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + response + '</div>' );
 								this.removeFile( file );
 								commentForm.removeClass( 'media-uploading' );
 							}
@@ -3877,7 +3877,7 @@ window.bp = window.bp || {};
 					var errorMessage = $xhr.readyState === 0 ? bbRlActivity.strings.commentPostError : (
 						$xhr.responseJSON && $xhr.responseJSON.message ? $xhr.responseJSON.message : $xhr.statusText
 					);
-					form.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + errorMessage + '</div>' );
+					form.find( '.ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + errorMessage + '</div>' );
 				}
 			);
 		},

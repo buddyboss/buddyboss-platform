@@ -1513,8 +1513,15 @@ window.bp = window.bp || {};
 	bp.Views.activityFeedback = bp.View.extend(
 		{
 			tagName: 'div',
-			id: 'message-feedabck',
+			id: 'message-feedback',
 			template: bp.template( 'activity-post-form-feedback' ),
+			events: {
+				'click .bb-rl-notice__close': 'removeNotice'
+			},
+
+			removeNotice: function () {
+				Backbone.trigger( 'cleanFeedBack' );
+			},
 
 			initialize: function () {
 				this.model = new Backbone.Model();
@@ -1529,7 +1536,7 @@ window.bp = window.bp || {};
 					this.type = this.options.type;
 				}
 
-				this.el.className = 'bp-messages bp-feedback ' + this.type;
+				this.el.className = 'bb-rl-notice bb-rl-notice--' + this.type;
 			}
 		}
 	);
@@ -2000,7 +2007,7 @@ window.bp = window.bp || {};
 				var old_gif_data = this.model.get( 'gif_data' );
 
 				this.model.set( 'gif_data', {} );
-				if ( $( '#message-feedabck' ).hasClass( 'noMediaError' ) ) {
+				if ( $( '#message-feedback' ).hasClass( 'noMediaError' ) ) {
 					this.model.unset( 'errors' );
 				}
 				this.el.style.backgroundImage = '';
@@ -4594,7 +4601,7 @@ window.bp = window.bp || {};
 				_.each(
 					this.views._views[ '' ],
 					function ( view ) {
-						if ( 'message-feedabck' === view.$el.prop( 'id' ) && ! view.$el.hasClass( 'noMediaError' ) ) { // Do not remove Media error message.
+						if ( 'message-feedback' === view.$el.prop( 'id' ) && ! view.$el.hasClass( 'noMediaError' ) ) { // Do not remove Media error message.
 							self.cleanFeedback();
 							self.$el.removeClass( 'has-feedback' );
 						}
@@ -4851,7 +4858,7 @@ window.bp = window.bp || {};
 				_.each(
 					this.views._views[ '' ],
 					function ( view ) {
-						if ( 'message-feedabck' === view.$el.prop( 'id' ) ) {
+						if ( 'message-feedback' === view.$el.prop( 'id' ) ) {
 							view.remove();
 							$( '#bb-rl-whats-new-form #bb-rl-activity-header' ).css( { 'margin-bottom': 0 } );
 						}
@@ -4871,7 +4878,7 @@ window.bp = window.bp || {};
 					this.cleanFeedback(); // Clean if there's any error already displayed.
 					this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
 					this.$el.addClass( 'has-feedback' );
-					var errorHeight = this.$el.find( '#message-feedabck' ).outerHeight( true );
+					var errorHeight = this.$el.find( '#message-feedback' ).outerHeight( true );
 					this.$el.find( '#bb-rl-activity-header' ).css( { 'margin-bottom': errorHeight + 'px' } );
 				}
 			},
