@@ -118,6 +118,22 @@
 		.mfp-close {
 			margin-left: auto;
 			line-height: 1;
+			background-color: transparent;
+			border: 0;
+			padding: 0;
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			cursor: pointer;
+
+			&::before {
+				content: "\e4f6";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: var(--font-size-base);
+				color: var(--bb-rl-icon-primary-color);
+				font-style: normal;
+			}
 		}
 	}
 
@@ -126,12 +142,22 @@
 		max-height: calc(100vh - 220px);
 		overflow: auto;
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		color: var(--bb-rl-text-secondary-color);
 	}
 
 	.bb-report-type-wrp {
 
 		> p {
 			margin-bottom: var(--bb-rl-space-100);
+
+			&:nth-of-type(1) {
+				font-weight: 500;
+				color: var(--bb-rl-text-color);
+			}
+
+			&:nth-of-type(2) {
+				margin-bottom: 0;
+			}
 		}
 
 		> div,
@@ -142,6 +168,30 @@
 		> ul {
 			padding-left: var(--bb-rl-space-300);
 			margin-bottom: var(--bb-rl-space-200);
+		}
+	}
+
+	.bb-model-footer {
+		display: flex;
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+		margin: var(--bb-rl-space-200) -24px 0;
+		justify-content: flex-end;
+		gap: var(--bb-rl-space-100);
+		border-top: 1px solid var(--bb-rl-border-secondary-color);
+
+		.button {
+			padding: 4px var(--bb-rl-space-200);
+			@include bb-rl-button;
+			padding: 4px var(--bb-rl-space-100);
+			font-size: 0.875rem;
+
+			&.report-submit {
+				@include bb-rl-button--brand-fill;
+			}
+
+			&.bb-cancel-report-content {
+				@include bb-rl-button-secondary-fill;
+			}
 		}
 	}
 }

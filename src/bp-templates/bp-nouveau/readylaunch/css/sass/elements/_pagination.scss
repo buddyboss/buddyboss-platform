@@ -55,6 +55,10 @@
 				flex-direction: row-reverse;
 				margin-right: var(--bb-rl-space-500);
 
+				@media screen and (max-width: $sm) {
+					margin-right: var(--bb-rl-space-200);
+				}
+
 				&::after {
 					content: "\e138";
 				}
@@ -62,6 +66,10 @@
 
 			.next {
 				margin-left: var(--bb-rl-space-500);
+
+				@media screen and (max-width: $sm) {
+					margin-left: var(--bb-rl-space-200);
+				}
 
 				&::after {
 					content: "\e13a";

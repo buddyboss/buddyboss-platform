@@ -5,6 +5,13 @@
 	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	padding: 12px var(--bb-rl-space-300);
 	margin-bottom: var(--bb-rl-space-400);
+
+	@media screen and (max-width: 782px) {
+		margin-left: -15px;
+		margin-right: -15px;
+		flex-direction: column;
+		gap: var(--bb-rl-space-100);
+	}
 }
 
 .bb-rl-entry-heading {
@@ -13,11 +20,19 @@
 
 		@include bb-rl-base-heading;
 		color: var(--bb-rl-text-color);
+		white-space: nowrap;
 	}
 }
 
 .bb-rl-sub-ctrls {
 	margin-left: auto;
+
+	@media screen and (max-width: 782px) {
+		flex-flow: wrap;
+		gap: var(--bb-rl-space-100);
+		margin-right: auto;
+		justify-content: center;
+	}
 }
 
 .bb-rl-grid-filters {
