@@ -2542,6 +2542,38 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			$( '.post-type-reply #post' ).on( 'submit', function ( event ) {
+				var content = $( '#content' ).val();
+
+				var decodedContent = $( '<textarea>' ).html( content ).text();
+
+				var escapedHtmlRegex = /&lt;.*?&gt;/;
+
+				// Check for escaped HTML tags
+				if ( escapedHtmlRegex.test( content ) ) {
+					alert( 'Your content contains escaped HTML tags. Please fix them before submitting.' );
+					event.preventDefault();
+					return;
+				}
+
+				// Parse decoded content for further validation
+				var contentWrapper = $('<div>').html(decodedContent);
+
+				// Structural validation for <ul> and <li>
+				var isValid = true;
+				contentWrapper.find( 'ul' ).each( function () {
+					if ( $( this ).find( 'li' ).length === 0 ) {
+						isValid = false;
+					}
+				} );
+
+				if ( !isValid ) {
+					alert( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.' );
+					event.preventDefault();
+					return;
+				}
+			} );
 		}
 	);
 
