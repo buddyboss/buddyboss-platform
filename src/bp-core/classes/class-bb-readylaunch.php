@@ -85,6 +85,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Add Readylaunch template locations.
 				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
 
+				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ) );
+
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ) );
 
 				// Dequeue theme/plugins styles.
@@ -860,6 +862,34 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$response['contents']            = ob_get_clean();
 			$response['total_notifications'] = bp_notifications_get_unread_notification_count( $user_id );
 			wp_send_json_success( $response );
+		}
+
+		/**
+		 * Get the SVG icon for the document.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $icons     The icons.
+		 * @param string $extension The extension.
+		 *
+		 * @return string The SVG icon.
+		 */
+		public function bb_rl_document_svg_icon( $icons, $extension ) {
+			$svg = array(
+				'font' => '',
+				'svg'  => '',
+			);
+
+			switch ( $extension ) {
+				case 'download':
+					$svg = array(
+						'font' => 'bb-icon-download',
+						'svg'  => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><title>download</title><path d="M2.656 22.656v4c0 2.209 1.791 4 4 4v0h18.688c2.209 0 4-1.791 4-4v0-4c0-0.742-0.602-1.344-1.344-1.344s-1.344 0.602-1.344 1.344v0 4c0 0 0 0 0 0 0 0.731-0.584 1.326-1.31 1.344l-0.002 0h-18.688c-0.728-0.018-1.312-0.613-1.312-1.344 0-0 0-0 0-0v0-4c0-0.742-0.602-1.344-1.344-1.344s-1.344 0.602-1.344 1.344v0zM16 19.456l-4.384-4.416c-0.248-0.312-0.628-0.51-1.054-0.51-0.742 0-1.344 0.602-1.344 1.344 0 0.426 0.198 0.805 0.507 1.052l0.003 0.002 5.344 5.344c0.243 0.239 0.576 0.387 0.944 0.387s0.701-0.148 0.944-0.387l-0 0 5.312-5.344c0.181-0.227 0.29-0.518 0.29-0.834 0-0.742-0.602-1.344-1.344-1.344-0.316 0-0.607 0.109-0.837 0.292l0.003-0.002-4.384 4.416zM14.656 2.656v18.688c0 0.742 0.602 1.344 1.344 1.344s1.344-0.602 1.344-1.344v0-18.688c0-0.742-0.602-1.344-1.344-1.344s-1.344 0.602-1.344 1.344v0z"></path></svg>',
+					);
+					break;
+			}
+
+			return $svg['font'];
 		}
 	}
 
