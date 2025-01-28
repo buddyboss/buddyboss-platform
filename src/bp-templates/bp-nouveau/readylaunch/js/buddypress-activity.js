@@ -2918,7 +2918,7 @@ window.bp = window.bp || {};
 					};
 
 					if ( 'media' === fileType ) {
-							mockFile.media_edit_data = editData;
+						mockFile.media_edit_data = editData;
 					} else if ( 'document' === fileType ) {
 						mockFile.document_edit_data = editData;
 						mockFile.svg_icon           = ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '';
