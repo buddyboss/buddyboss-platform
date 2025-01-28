@@ -572,7 +572,36 @@ window.bp = window.bp || {};
 				view.$el.find( uploaderSelector ).addClass( 'open' ).removeClass( 'closed' );
 				$( parentAttachmentSelector ).removeClass( 'empty' )
 					.closest( parentSelector ).addClass( 'focus-in--attm' );
-			}
+			},
+
+			createThumbnailFromUrl : function ( mock_file, dropzoneObj, dropzone_container ) {
+				var self             = this,
+				    dropzone_obj_key = dropzone_container && dropzone_container.data ? dropzone_container.data( 'key' ) : '',
+				    dropzoneObjData  = dropzoneObj || self.dropzone_obj;
+
+				if ( dropzone_obj_key && dropzoneObjData[ dropzone_obj_key ] ) {
+					dropzoneObjData = dropzoneObjData[ dropzone_obj_key ];
+				}
+
+				if ( ! dropzoneObjData || 'function' !== typeof dropzoneObjData.createThumbnailFromUrl ) {
+					return;
+				}
+				try {
+					dropzoneObjData.createThumbnailFromUrl(
+						mock_file,
+						dropzoneObjData.options.thumbnailWidth,
+						dropzoneObjData.options.thumbnailHeight,
+						dropzoneObjData.options.thumbnailMethod,
+						true,
+						function ( thumbnail ) {
+							dropzoneObjData.emit( 'thumbnail', mock_file, thumbnail );
+							dropzoneObjData.emit( 'complete', mock_file );
+						}
+					);
+				} catch ( error ) {
+					console.error( 'Error creating thumbnail:', error );
+				}
+			},
 		},
 
 		bbReloadWindow: function () {

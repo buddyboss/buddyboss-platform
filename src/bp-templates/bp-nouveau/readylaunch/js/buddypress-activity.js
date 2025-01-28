@@ -2134,21 +2134,6 @@ window.bp = window.bp || {};
 			);
 		},
 
-		createThumbnailFromUrl: function ( mock_file ) {
-			var self = this;
-			self.dropzone_obj.createThumbnailFromUrl(
-				mock_file,
-				self.dropzone_obj.options.thumbnailWidth,
-				self.dropzone_obj.options.thumbnailHeight,
-				self.dropzone_obj.options.thumbnailMethod,
-				true,
-				function ( thumbnail ) {
-					self.dropzone_obj.emit( 'thumbnail', mock_file, thumbnail );
-					self.dropzone_obj.emit( 'complete', mock_file );
-				}
-			);
-		},
-
 		editActivityCommentForm: function ( form, activity_comment_data ) {
 			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
 				toolbarDiv     = form.find( '#ac-reply-toolbar-' + formActivityId ),
@@ -2952,7 +2937,7 @@ window.bp = window.bp || {};
 								$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
 								dropzoneObj.emit( 'thumbnail', file.thumb );
 							} else {
-								self.createThumbnailFromUrl( mockFile );
+								bp.Readylaunch.Utilities.createThumbnailFromUrl( mockFile, dropzoneObj );
 							}
 						}
 

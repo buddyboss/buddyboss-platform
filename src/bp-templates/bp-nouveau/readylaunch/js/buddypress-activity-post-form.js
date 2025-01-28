@@ -375,21 +375,6 @@ window.bp = window.bp || {};
 			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
 		},
 
-		createThumbnailFromUrl: function ( mock_file ) {
-			var self = this;
-			self.dropzone.createThumbnailFromUrl(
-				mock_file,
-				self.dropzone.options.thumbnailWidth,
-				self.dropzone.options.thumbnailHeight,
-				self.dropzone.options.thumbnailMethod,
-				true,
-				function ( thumbnail ) {
-					self.dropzone.emit( 'thumbnail', mock_file, thumbnail );
-					self.dropzone.emit( 'complete', mock_file );
-				}
-			);
-		},
-
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
 			var self = this;
 
