@@ -5887,8 +5887,8 @@ window.bp = window.bp || {};
 						}
 
 						var active_user_list = $( '.bb-subnav-filters-filtering .subnav-filters-modal ul li.selected' ).data( 'bp-scope' );
-						if( response.is_user_activity && '' !== response.activity ) {
-							if( 'just-me' === active_user_list ) {
+						if ( response.is_user_activity && '' !== response.activity ) {
+							if ( 'just-me' === active_user_list ) {
 								toPrepend = true;
 							} else {
 								toPrepend = false;
