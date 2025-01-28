@@ -85,7 +85,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Add Readylaunch template locations.
 				add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
 
-				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ) );
+				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
 
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ) );
 
