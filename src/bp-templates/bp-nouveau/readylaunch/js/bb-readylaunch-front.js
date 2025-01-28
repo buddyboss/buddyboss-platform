@@ -20,7 +20,7 @@ window.bp = window.bp || {};
 			this.deletedNotifications     = [];
 			this.markAsReadNotifications  = [];
 			this.notificationIconSelector = $( '.bb-icons-rl-bell-simple' );
-			// Listen to events ("Add hooks!")
+			// Listen to events ("Add hooks!").
 			this.addListeners();
 			this.mobileSubMenu();
 
@@ -60,7 +60,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		// Add Mobile menu toggle button
+		// Add Mobile menu toggle button.
 		mobileSubMenu: function () {
 			$( '.bb-readylaunch-mobile-menu .sub-menu, .bb-readylaunchpanel-menu .sub-menu' ).each(
 				function () {
@@ -117,12 +117,15 @@ window.bp = window.bp || {};
 			var isMessage = $container.hasClass( 'bb-message-dropdown-notification' );
 			var page      = $target.data( 'page' ) ? $target.data( 'page' ) + 1 : 1;
 
-			this.bbPerformAjaxRequest( e, {
-				action     : isMessage ? 'bb_fetch_header_messages' : 'bb_fetch_header_notifications',
-				page       : page,
-				isMessage  : isMessage,
-				containerId: containerId,
-			} );
+			this.bbPerformAjaxRequest(
+				e,
+				{
+					action     : isMessage ? 'bb_fetch_header_messages' : 'bb_fetch_header_notifications',
+					page       : page,
+					isMessage  : isMessage,
+					containerId: containerId,
+				}
+			);
 		},
 
 		/**
@@ -156,36 +159,39 @@ window.bp = window.bp || {};
 				page  : settings.page,
 			};
 
-			$.ajax( {
-				type   : 'POST',
-				url    : bbReadyLaunchFront.ajax_url,
-				data   : data,
-				success: function ( response ) {
-					// Reset the 'loading' flag once the request completes.
-					mainContainerID.data( 'loading', false );
+			$.ajax(
+				{
+					type   : 'POST',
+					url    : bbReadyLaunchFront.ajax_url,
+					data   : data,
+					success: function ( response ) {
+						// Reset the 'loading' flag once the request completes.
+						mainContainerID.data( 'loading', false );
 
-					if ( response.success && response.data ) {
-						var container = mainContainerID.find( '.notification-list' );
-						if ( container.find( '.bb-rl-loader' ).has( '.bb-rl-loader' ) ) {
-							container.find( '.bb-rl-loader' ).remove( '.bb-rl-loader' );
+						if ( response.success && response.data ) {
+							var container = mainContainerID.find( '.notification-list' );
+							if ( container.find( '.bb-rl-loader' ).has( '.bb-rl-loader' ) ) {
+								container.find( '.bb-rl-loader' ).remove( '.bb-rl-loader' );
+							}
+							if ( settings.page > 1 ) {
+								container.find( '.bb-rl-load-more' ).replaceWith( response.data );
+							} else {
+								container.html( response.data );
+							}
 						}
-						if ( settings.page > 1 ) {
-							container.find( '.bb-rl-load-more' ).replaceWith( response.data );
-						} else {
-							container.html( response.data );
-						}
-					}
-				},
-				error  : function () {
-					// Reset the 'loading' flag in case of error.
-					mainContainerID.data( 'loading', false );
-					mainContainerID.find( '.notification-list' ).html( '<p>Failed to load data. Please try again.</p>' );
-				},
-			} );
+					},
+					error  : function () {
+						// Reset the 'loading' flag in case of error.
+						mainContainerID.data( 'loading', false );
+						mainContainerID.find( '.notification-list' ).html( '<p>Failed to load data. Please try again.</p>' );
+					},
+				}
+			);
 		},
 
 		/**
 		 * [bbHeartbeatSend description] - Handles the request to the server.
+		 *
 		 * @param e
 		 * @param data
 		 */
@@ -205,6 +211,7 @@ window.bp = window.bp || {};
 
 		/**
 		 * [bbHeartbeatTick description] - Handles the response from the server.
+		 *
 		 * @param e
 		 * @param data
 		 */
@@ -224,6 +231,7 @@ window.bp = window.bp || {};
 
 		/**
 		 * [bbpInjectNotifications description]
+		 *
 		 * @param event
 		 * @param data
 		 */
@@ -248,16 +256,18 @@ window.bp = window.bp || {};
 
 		/**
 		 * [openMoreOption Open more options dropdown]
+		 *
 		 * @param event
 		 */
 		openMoreOption: function ( e ) {
 			e.preventDefault();
 
-			$(  e.currentTarget ).closest( '.bb-rl-option-wrap' ).toggleClass( 'active' );
+			$( e.currentTarget ).closest( '.bb-rl-option-wrap' ).toggleClass( 'active' );
 		},
 
 		/**
 		 * [closeMoreOption close more options dropdown]
+		 *
 		 * @param event
 		 */
 		closeMoreOption: function ( e ) {
@@ -273,6 +283,7 @@ window.bp = window.bp || {};
 
 		/**
 		 * Show header notification dropdowns
+		 *
 		 * @param event
 		 */
 		showHeaderNotifications: function ( e ) {
@@ -288,7 +299,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		toggleMobileMenu: function( e ) {
+		toggleMobileMenu: function ( e ) {
 			e.preventDefault();
 
 			$( 'body' ).toggleClass( 'bb-mobile-menu-open' );
@@ -296,6 +307,7 @@ window.bp = window.bp || {};
 
 		/**
 		 * Mark notification as read.
+		 *
 		 * @param e
 		 */
 		markNotificationRead: function ( e ) {
@@ -314,31 +326,34 @@ window.bp = window.bp || {};
 				var mainContainerID = $this.closest( '.notification-wrap' );
 				mainContainerID.find( '.header-ajax-container .notification-list' ).addClass( 'loading' );
 
-				$.ajax( {
-					type   : 'POST',
-					url    : bbReadyLaunchFront.ajax_url,
-					data   : {
-						action: 'bb_mark_notification_read',
-						nonce : bbReadyLaunchFront.nonce,
-						id    : notificationId,
-					},
-					success: function ( response ) {
-						if ( response.success && response.data ) {
-							mainContainerID.find( '.header-ajax-container .notification-list' ).removeClass( 'loading' );
-							if ( response.success && response.data && response.data.contents ) {
-								mainContainerID.find( '.header-ajax-container .notification-list' ).html( response.data.contents );
+				$.ajax(
+					{
+						type   : 'POST',
+						url    : bbReadyLaunchFront.ajax_url,
+						data   : {
+							action: 'bb_mark_notification_read',
+							nonce : bbReadyLaunchFront.nonce,
+							id    : notificationId,
+						},
+						success: function ( response ) {
+							if ( response.success && response.data ) {
+								mainContainerID.find( '.header-ajax-container .notification-list' ).removeClass( 'loading' );
+								if ( response.success && response.data && response.data.contents ) {
+									mainContainerID.find( '.header-ajax-container .notification-list' ).html( response.data.contents );
+								}
+								if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
+									$( notificationsIconCount ).text( response.data.total_notifications );
+								}
 							}
-							if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
-								$( notificationsIconCount ).text( response.data.total_notifications );
-							}
-						}
-					},
-				} );
+						},
+					}
+				);
 			}
 		},
 
 		/**
 		 * Delete notification.
+		 *
 		 * @param e
 		 */
 		markNotificationDelete: function ( e ) {
@@ -356,6 +371,7 @@ window.bp = window.bp || {};
 
 		/**
 		 * [beforeUnload description]
+		 *
 		 * @return {boolean} [description]
 		 */
 		beforeUnload: function () {
@@ -366,27 +382,29 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			$.ajax( {
-				type   : 'POST',
-				url    : bbReadyLaunchFront.ajax_url,
-				data   : {
-					action                  : 'bb_mark_notification_read',
-					nonce                   : bbReadyLaunchFront.nonce,
-					read_notification_ids   : bp.Readylaunch.markAsReadNotifications.join( ',' ),
-					deleted_notification_ids: bp.Readylaunch.deletedNotifications.join( ',' ),
-				},
-				success: function ( response ) {
-					if ( response.success ) {
-						var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
-						if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
-							$( notificationsIconCount ).text( response.data.total_notifications );
+			$.ajax(
+				{
+					type   : 'POST',
+					url    : bbReadyLaunchFront.ajax_url,
+					data   : {
+						action                  : 'bb_mark_notification_read',
+						nonce                   : bbReadyLaunchFront.nonce,
+						read_notification_ids   : bp.Readylaunch.markAsReadNotifications.join( ',' ),
+						deleted_notification_ids: bp.Readylaunch.deletedNotifications.join( ',' ),
+					},
+					success: function ( response ) {
+						if ( response.success ) {
+							var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+							if ( typeof response.data.total_notifications !== 'undefined' && response.data.total_notifications > 0 && notificationsIconCount.length > 0 ) {
+								$( notificationsIconCount ).text( response.data.total_notifications );
+							}
 						}
-					}
-				},
-				error  : function () {
+					},
+					error  : function () {
 
-				},
-			} );
+					},
+				}
+			);
 
 			// Clear the array after processing.
 			bp.Readylaunch.markAsReadNotifications = [];
@@ -394,181 +412,214 @@ window.bp = window.bp || {};
 		},
 
 		Utilities: {
-			createDropzoneOptions: function( options ) {
-				return _.extend({
-					url: BP_Nouveau.ajaxurl,
-					timeout: 3 * 60 * 60 * 1000,
-					autoProcessQueue: true,
-					addRemoveLinks: true,
-					uploadMultiple: false
-				}, options );
+			createDropzoneOptions: function ( options ) {
+				return _.extend(
+					{
+						url: BP_Nouveau.ajaxurl,
+						timeout: 3 * 60 * 60 * 1000,
+						autoProcessQueue: true,
+						addRemoveLinks: true,
+						uploadMultiple: false
+					},
+					options
+				);
 			},
 
-			setupDropzoneEventHandlers: function( view, dropzone, config ) {
+			setupDropzoneEventHandlers: function ( view, dropzone, config ) {
 				var defaultConfig = {
 					mediaType: 'media',
 					otherButtonSelectors: [],
-				 };
+				};
 
-				 var configExtended = _.extend( defaultConfig, config );
-				 var modelKey = configExtended.modelKey;
-				 var uploaderSelector = configExtended.uploaderSelector;
-				 var actionName = configExtended.actionName;
-				 var nonceName = configExtended.nonceName;
-				 var mediaType = configExtended.mediaType;
-				 var otherButtonSelectors = configExtended.otherButtonSelectors;
-				 var parentSelector = configExtended.parentSelector;
-				 var parentAttachmentSelector = configExtended.parentAttachmentSelector;
-				 var ActiveComponent = configExtended.ActiveComponent;
+				var configExtended           = _.extend( defaultConfig, config );
+				var modelKey                 = configExtended.modelKey;
+				var uploaderSelector         = configExtended.uploaderSelector;
+				var actionName               = configExtended.actionName;
+				var nonceName                = configExtended.nonceName;
+				var mediaType                = configExtended.mediaType;
+				var otherButtonSelectors     = configExtended.otherButtonSelectors;
+				var parentSelector           = configExtended.parentSelector;
+				var parentAttachmentSelector = configExtended.parentAttachmentSelector;
+				var ActiveComponent          = configExtended.ActiveComponent;
 
-				// Common event handlers
-				dropzone.on( 'addedfile', function( file ) { 
-					if ( file[mediaType + '_edit_data'] ) { 
-						view[modelKey].push( file[mediaType + '_edit_data'] ); 
-						view.model.set( modelKey, view[modelKey] );
-					}
-
-					if( 'video' === mediaType ) {
-						if ( file.dataURL && file.video_edit_data.thumb.length ) {
-							// Get Thumbnail image from response.
-							$( file.previewElement ).find( '.dz-image' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' "  alt=""/>' );
-							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
-						} else {
-							if ( bp.Nouveau.getVideoThumb ) {
-								bp.Nouveau.getVideoThumb( file, '.dz-image' );
-							}
-
+				// Common event handlers.
+				dropzone.on(
+					'addedfile',
+					function ( file ) {
+						if ( file[mediaType + '_edit_data'] ) {
+							view[modelKey].push( file[mediaType + '_edit_data'] );
+							view.model.set( modelKey, view[modelKey] );
 						}
-					}
-				 });
 
-				 dropzone.on( 'uploadprogress', function( element ) {
-					view.$el.closest( parentSelector ).addClass( 'media-uploading' );
+						if ( 'video' === mediaType ) {
+							if ( file.dataURL && file.video_edit_data.thumb.length ) {
+								// Get Thumbnail image from response.
+								$( file.previewElement ).find( '.dz-image' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' "  alt=""/>' );
+								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
+							} else {
+								if ( bp.Nouveau.getVideoThumb ) {
+									bp.Nouveau.getVideoThumb( file, '.dz-image' );
+								}
 
-					var circle = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-					var radius = circle.r.baseVal.value;
-					var circumference = radius * 2 * Math.PI;
-
-					circle.style.strokeDasharray = circumference + ' ' + circumference;
-					circle.style.strokeDashoffset = circumference - (element.upload.progress.toFixed(0) / 100 * circumference);
-					$( element.previewElement ).find( '.dz-progress [data-dz-progress]' ).text( element.upload.progress.toFixed(0) + '%' );
-				 });
-
-				 dropzone.on('sending', function( file, xhr, formData ) {
-					formData.append('action', actionName);
-					formData.append( '_wpnonce', BP_Nouveau.nonces[nonceName] );
-
-					var toolBox = view.$el.parents( parentSelector );
-					otherButtonSelectors.forEach( function( selector ) {
-						var $button = toolBox.find( selector );
-						if ($button.length) {
-							$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-						}
-					});
-				 });
-
-				dropzone.on('success', function( file, response ) {
-					if ( response.data.id ) {
-						if( 'activity' === ActiveComponent ) {
-							// Privacy and metadata handling
-							if ( !bp.privacyEditable ) {
-								response.data.group_id = bp.group_id;
-								response.data.privacy = bp.privacy;
 							}
 						}
-
-						file.id = response.data.id;
-						response.data.uuid = file.upload.uuid;
-						response.data.saved = false;
-						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-
-						view[modelKey].push( response.data );
-						view.model.set( modelKey, view[modelKey] );
 					}
+				);
 
-					if( 'document' === mediaType ) {
-						var filename      = file.upload.filename;
-						var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-						var file_icon     = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
-						var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
-						if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icons-rl-file' ).addClass( icon_class );
+				dropzone.on(
+					'uploadprogress',
+					function ( element ) {
+						view.$el.closest( parentSelector ).addClass( 'media-uploading' );
+
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
+						var radius        = circle.r.baseVal.value;
+						var circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference - (element.upload.progress.toFixed( 0 ) / 100 * circumference);
+						$( element.previewElement ).find( '.dz-progress [data-dz-progress]' ).text( element.upload.progress.toFixed( 0 ) + '%' );
+					}
+				);
+
+				dropzone.on(
+					'sending',
+					function ( file, xhr, formData ) {
+						formData.append( 'action', actionName );
+						formData.append( '_wpnonce', BP_Nouveau.nonces[nonceName] );
+
+						var toolBox = view.$el.parents( parentSelector );
+						otherButtonSelectors.forEach(
+							function ( selector ) {
+								var $button = toolBox.find( selector );
+								if ($button.length) {
+										$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
+								}
+							}
+						);
+					}
+				);
+
+				dropzone.on(
+					'success',
+					function ( file, response ) {
+						if ( response.data.id ) {
+							if ( 'activity' === ActiveComponent ) {
+								// Privacy and metadata handling.
+								if ( ! bp.privacyEditable ) {
+									response.data.group_id = bp.group_id;
+									response.data.privacy  = bp.privacy;
+								}
+							}
+
+							file.id                  = response.data.id;
+							response.data.uuid       = file.upload.uuid;
+							response.data.saved      = false;
+							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+
+							view[modelKey].push( response.data );
+							view.model.set( modelKey, view[modelKey] );
 						}
-					}
 
-					if( 'activity' === ActiveComponent ) {
-						bp.draft_content_changed = true;
-					}
-				 });
+						if ( 'document' === mediaType ) {
+							var filename      = file.upload.filename;
+							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
+							var file_icon     = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
+							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
+								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icons-rl-file' ).addClass( icon_class );
+							}
+						}
 
-				 dropzone.on('error', function( file, response ) {
-					if ( file.accepted ) {
-						var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
-						$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
-					} else {
-						Backbone.trigger( 'onError', '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (response || '' ) + '<div>' );
-						dropzone.removeFile( file );
-						view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
-					}
-				 });
-
-				 dropzone.on( 'removedfile', function( file ) {
-					if ( ActiveComponent === 'activity' ) {
-						if ( bp.draft_activity.allow_delete_media ) {
-							// Remove logic for media items
-							view[modelKey] = view[modelKey].filter( function( mediaItem ) {
-								return file.id !== mediaItem.id &&
-									   ( !file[mediaType + '_edit_data'] || file[mediaType + '_edit_data'].id !== mediaItem.id );
-							});
-							view.model.set(modelKey, view[modelKey]);
-
-							// Set draft content changed flag
+						if ( 'activity' === ActiveComponent ) {
 							bp.draft_content_changed = true;
+						}
+					}
+				);
 
+				dropzone.on(
+					'error',
+					function ( file, response ) {
+						if ( file.accepted ) {
+								var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
+								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
+						} else {
+							Backbone.trigger( 'onError', '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (response || '' ) + '<div>' );
+							dropzone.removeFile( file );
+							view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+						}
+					}
+				);
+
+				dropzone.on(
+					'removedfile',
+					function ( file ) {
+						var toolBox;
+						if ( ActiveComponent === 'activity' ) {
+							if ( bp.draft_activity.allow_delete_media ) {
+								// Remove logic for media items.
+								view[modelKey] = view[modelKey].filter(
+									function ( mediaItem ) {
+										return file.id !== mediaItem.id &&
+										( ! file[mediaType + '_edit_data'] || file[mediaType + '_edit_data'].id !== mediaItem.id );
+									}
+								);
+								view.model.set( modelKey, view[modelKey] );
+
+								// Set draft content changed flag.
+								bp.draft_content_changed = true;
+
+								if ( dropzone.files.length === 0 ) {
+									view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+
+									// Re-enable buttons.
+									toolBox = view.$el.parents( parentSelector );
+									otherButtonSelectors.forEach(
+										function ( selector ) {
+											var $button = toolBox.find( selector );
+											if ( $button.length ) {
+														$button.parents( '.bb-rl-post-elements-buttons-item' )
+													.removeClass( 'disable active no-click' );
+											}
+										}
+									);
+
+										view.model.unset( modelKey );
+								}
+							}
+						} else {
 							if ( dropzone.files.length === 0 ) {
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
 
-								// Re-enable buttons
-								var toolBox = view.$el.parents( parentSelector );
-								otherButtonSelectors.forEach( function( selector ) {
-									var $button = toolBox.find( selector );
-									if ( $button.length ) {
-										$button.parents( '.bb-rl-post-elements-buttons-item' )
-											   .removeClass( 'disable active no-click' );
+								// Re-enable buttons.
+								toolBox = view.$el.parents( parentSelector );
+								otherButtonSelectors.forEach(
+									function ( selector ) {
+										var $button = toolBox.find( selector );
+										if ( $button.length ) {
+											$button.parents( '.bb-rl-post-elements-buttons-item' )
+											.removeClass( 'disable active no-click' );
+										}
 									}
-								});
+								);
 
 								view.model.unset( modelKey );
 							}
 						}
-					} else {
-						if ( dropzone.files.length === 0 ) {
-							view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
-
-							// Re-enable buttons
-							var toolBox = view.$el.parents( parentSelector );
-							otherButtonSelectors.forEach( function( selector ) {
-								var $button = toolBox.find( selector );
-								if ( $button.length ) {
-									$button.parents( '.bb-rl-post-elements-buttons-item' )
-										   .removeClass( 'disable active no-click' );
-								}
-							});
-
-							view.model.unset( modelKey );
-						}
 					}
-				});
+				);
 
-				dropzone.on( 'complete', function() {
-					if ( dropzone.getUploadingFiles().length === 0 &&
+				dropzone.on(
+					'complete',
+					function () {
+						if ( dropzone.getUploadingFiles().length === 0 &&
 						dropzone.getQueuedFiles().length === 0 &&
 						dropzone.files.length > 0 ) {
-						view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+							view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
+						}
 					}
-				 });
+				);
 
-				// Open uploader
+				// Open uploader.
 				view.$el.find( uploaderSelector ).addClass( 'open' ).removeClass( 'closed' );
 				$( parentAttachmentSelector ).removeClass( 'empty' )
 					.closest( parentSelector ).addClass( 'focus-in--attm' );
@@ -576,8 +627,8 @@ window.bp = window.bp || {};
 
 			createThumbnailFromUrl : function ( mock_file, dropzoneObj, dropzone_container ) {
 				var self             = this,
-				    dropzone_obj_key = dropzone_container && dropzone_container.data ? dropzone_container.data( 'key' ) : '',
-				    dropzoneObjData  = dropzoneObj || self.dropzone_obj;
+					dropzone_obj_key = dropzone_container && dropzone_container.data ? dropzone_container.data( 'key' ) : '',
+					dropzoneObjData  = dropzoneObj || self.dropzone_obj;
 
 				if ( dropzone_obj_key && dropzoneObjData[ dropzone_obj_key ] ) {
 					dropzoneObjData = dropzoneObjData[ dropzone_obj_key ];
@@ -605,7 +656,7 @@ window.bp = window.bp || {};
 		},
 
 		bbReloadWindow: function () {
-			var fetchDataHandler = function( event ) {
+			var fetchDataHandler = function ( event ) {
 				if ( 'undefined' !== typeof event ) {
 					bp.Readylaunch.beforeUnload();
 				}
@@ -614,7 +665,7 @@ window.bp = window.bp || {};
 			// This will work only for Chrome.
 			window.onbeforeunload = fetchDataHandler;
 			// This will work only for other browsers.
-			window.unload         = fetchDataHandler;
+			window.unload = fetchDataHandler;
 		}
 	};
 
