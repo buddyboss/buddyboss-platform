@@ -2841,11 +2841,10 @@ window.bp = window.bp || {};
 
 		injectFiles: function ( data ) {
 			var commonData  = data.commonData,
-			    id          = data.id,
-			    self        = data.self,
-			    fileType    = data.fileType, // 'media', 'document', or 'video'
-			    dropzoneObj = data.dropzoneObj,
-			    draftData   = data.draftData || false;
+				id          = data.id,
+				fileType    = data.fileType, // 'media', 'document', or 'video'
+				dropzoneObj = data.dropzoneObj,
+				draftData   = data.draftData || false;
 
 			// Iterate through the files and inject them.
 			commonData.forEach(
