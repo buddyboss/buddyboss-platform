@@ -942,7 +942,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.profilePopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseenter', '.group-avatar img.avatar', function () {
+			$( document ).on( 'mouseenter', '.group-avatar img.avatar, .activity-group-post-meta img.avatar', function () {
 				hoverAvatar = true;
 				if ( ! popupCardLoaded ) {
 					if ( hideCardTimeout ) {
@@ -951,7 +951,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar', function ( event ) {
+			$( document ).on( 'mouseleave', '.item-avatar img.avatar, .author-avatar img.avatar, .group-avatar img.avatar, .activity-group-post-meta img.avatar', function ( event ) {
 				var relatedTarget = event.relatedTarget;
 
 				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
