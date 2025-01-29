@@ -53,6 +53,34 @@ ul.bp-list {
 	padding: 0;
 }
 
+// Mention
+.atwho-view {
+	background-color: var(--bb-rl-background-color);
+	border-color: var(--bb-rl-border-secondary-color);
+	border-radius: var(--bb-rl-radius-md);
+	z-index: var(--bb-rl-z-index-popover);
+
+	ul {
+		margin: var(--bb-rl-space-100) 0;
+
+		li {
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		}
+
+		&.cur {
+			background-color: var(--bb-rl-background-secondary-color);
+		}
+	}
+
+	small {
+		color: var(--bb-rl-text-color);
+	}
+}
+
+span.atwho-inserted {
+	color: var(--bb-rl-primary-color);
+}
+
 /* List items headings */
 .item .list-title {
 

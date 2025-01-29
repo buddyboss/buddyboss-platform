@@ -369,6 +369,33 @@ ul.bp-list {
   padding: 0;
 }
 
+.atwho-view {
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  z-index: var(--bb-rl-z-index-popover);
+}
+
+.atwho-view ul {
+  margin: var(--bb-rl-space-100) 0;
+}
+
+.atwho-view ul li {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+}
+
+.atwho-view ul.cur {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.atwho-view small {
+  color: var(--bb-rl-text-color);
+}
+
+span.atwho-inserted {
+  color: var(--bb-rl-primary-color);
+}
+
 /* List items headings */
 .item .list-title {
   font-size: var(--bb-rl-font-size-base);

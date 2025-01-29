@@ -255,10 +255,17 @@
   color: var(--bb-rl-icon-secondary-color);
   font-size: var(--bb-rl-base-line);
   padding: var(--bb-rl-space-50);
+  cursor: pointer;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"] [class*="toolbar-button"]:hover {
   color: var(--bb-rl-icon-color);
+}
+
+.bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"] [class*="toolbar-button"] i {
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 24px;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in [class*="post-elements-buttons-item"].active [class*="toolbar-button"] {
@@ -645,6 +652,17 @@
 }
 
 #bb-rl-editor-toolbar .medium-editor-toolbar.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+#bb-rl-editor-toolbar .bb-rl-post-mention {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity ease 0.3s;
+}
+
+#bb-rl-editor-toolbar.active .bb-rl-post-mention {
   visibility: visible;
   opacity: 1;
 }

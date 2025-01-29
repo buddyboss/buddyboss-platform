@@ -2721,7 +2721,7 @@ window.bp = window.bp || {};
 					$whatsNew.each(
 						function () {
 							var $this           = $( this ),
-								whatsnewcontent = $this.closest( '#bb-rl-whats-new-form' ).find( '#bb-rl-editor-toolbar' )[ 0 ];
+								whatsnewcontent = $this.closest( '#bb-rl-whats-new-form' ).find( '.bb-rl-editor-toolbar__medium' )[ 0 ];
 
 							if ( ! $( this ).closest( '.edit-activity-modal-body' ).length ) {
 
@@ -3807,58 +3807,15 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			id: 'bb-rl-editor-toolbar',
 			template: bp.template( 'editor-toolbar' ),
-		}
-	);
-
-	bp.Views.ActivityToolbar = bp.View.extend(
-		{
-			tagName: 'div',
-			id: 'bb-rl-whats-new-toolbar',
-			template: bp.template( 'whats-new-toolbar' ),
 			events: {
-				'click .bb-rl-post-elements-buttons-item.disable .bb-rl-toolbar-button': 'disabledButton',
-				'click #activity-link-preview-button': 'toggleURLInput',
-				'click #bb-rl-activity-gif-button': 'toggleGifSelector',
-				'click #bb-rl-activity-media-button': 'toggleMediaSelector',
-				'click #bb-rl-activity-document-button': 'toggleDocumentSelector',
-				'click #bb-rl-activity-video-button': 'toggleVideoSelector',
-				'click .bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )': 'activeButton',
-				'click .bb-rl-post-elements-buttons-item.bb-rl-post-gif:not(.disable)': 'activeMediaButton',
-				'click .bb-rl-post-elements-buttons-item.bb-rl-post-media:not(.disable)': 'activeMediaButton',
-				'click .bb-rl-post-elements-buttons-item.bb-rl-post-video:not(.disable)': 'activeVideoButton',
-				'click .bb-rl-post-elements-buttons-item:not(.bb-rl-post-gif):not(.active)': 'scrollToMedia',
-				'click .bb-rl-show-toolbar': 'toggleToolbarSelector',
 				'click .bb-rl-post-mention': 'triggerMention',
-			},
-
-			toggleToolbarSelector: function ( e ) {
-				e.preventDefault();
-				var medium_editor = $( e.currentTarget ).closest( '#bb-rl-whats-new-form' ).find( '.medium-editor-toolbar' );
-				if ( ! medium_editor.hasClass( 'active' ) ) { // Check only when opening toolbar.
-					bp.Nouveau.mediumEditorButtonsWarp( medium_editor );
-				}
-				$( e.currentTarget ).find( '.bb-rl-toolbar-button' ).toggleClass( 'active' );
-				if ( $( e.currentTarget ).find( '.bb-rl-toolbar-button' ).hasClass( 'active' ) ) {
-					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
-					if ( window.activity_editor.exportSelection() != null ) {
-						medium_editor.addClass( 'medium-editor-toolbar-active' );
-					}
-				} else {
-					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
-					if ( window.activity_editor.exportSelection() === null ) {
-						medium_editor.removeClass( 'medium-editor-toolbar-active' );
-					}
-					medium_editor.find( 'li.medium-editor-action-more' ).removeClass( 'active' );
-				}
-				$( window.activity_editor.elements[0] ).focus();
-				medium_editor.toggleClass( 'medium-editor-toolbar-active active' );
 			},
 
 			triggerMention: function ( e ) {
 				e.preventDefault();
 				var $this         = this.$el,
 					editor        = $this.closest( '.bb-rl-activity-update-form' ).find( '#bb-rl-whats-new' ),
-					scrollPostion = $this.closest( '.bb-rl-whats-new-scroll-view' ).scrollTop();
+					scrollPosition = $this.closest( '.bb-rl-whats-new-scroll-view' ).scrollTop();
 
 				setTimeout(
 					function () {
@@ -3903,7 +3860,7 @@ window.bp = window.bp || {};
 						setTimeout(
 							function () {
 								editor.trigger( 'keyup' );
-								$this.closest( '.bb-rl-whats-new-scroll-view' ).scrollTop( scrollPostion );
+								$this.closest( '.bb-rl-whats-new-scroll-view' ).scrollTop( scrollPosition );
 							},
 							0
 						);
@@ -3911,6 +3868,53 @@ window.bp = window.bp || {};
 					0
 				);
 
+			},
+		}
+	);
+
+	bp.Views.ActivityToolbar = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'bb-rl-whats-new-toolbar',
+			template: bp.template( 'whats-new-toolbar' ),
+			events: {
+				'click .bb-rl-post-elements-buttons-item.disable .bb-rl-toolbar-button': 'disabledButton',
+				'click #activity-link-preview-button': 'toggleURLInput',
+				'click #bb-rl-activity-gif-button': 'toggleGifSelector',
+				'click #bb-rl-activity-media-button': 'toggleMediaSelector',
+				'click #bb-rl-activity-document-button': 'toggleDocumentSelector',
+				'click #bb-rl-activity-video-button': 'toggleVideoSelector',
+				'click .bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )': 'activeButton',
+				'click .bb-rl-post-elements-buttons-item.bb-rl-post-gif:not(.disable)': 'activeMediaButton',
+				'click .bb-rl-post-elements-buttons-item.bb-rl-post-media:not(.disable)': 'activeMediaButton',
+				'click .bb-rl-post-elements-buttons-item.bb-rl-post-video:not(.disable)': 'activeVideoButton',
+				'click .bb-rl-post-elements-buttons-item:not(.bb-rl-post-gif):not(.active)': 'scrollToMedia',
+				'click .bb-rl-show-toolbar': 'toggleToolbarSelector',
+			},
+
+			toggleToolbarSelector: function ( e ) {
+				e.preventDefault();
+				var medium_editor = $( e.currentTarget ).closest( '#bb-rl-whats-new-form' ).find( '.medium-editor-toolbar' );
+				var medium_editor_wrap = $( e.currentTarget ).closest( '#bb-rl-whats-new-form' ).find( '#bb-rl-editor-toolbar' );
+				if ( ! medium_editor.hasClass( 'active' ) ) { // Check only when opening toolbar.
+					bp.Nouveau.mediumEditorButtonsWarp( medium_editor );
+				}
+				$( e.currentTarget ).find( '.bb-rl-toolbar-button' ).toggleClass( 'active' );
+				if ( $( e.currentTarget ).find( '.bb-rl-toolbar-button' ).hasClass( 'active' ) ) {
+					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+					if ( window.activity_editor.exportSelection() != null ) {
+						medium_editor.addClass( 'medium-editor-toolbar-active' );
+					}
+				} else {
+					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+					if ( window.activity_editor.exportSelection() === null ) {
+						medium_editor.removeClass( 'medium-editor-toolbar-active' );
+					}
+					medium_editor.find( 'li.medium-editor-action-more' ).removeClass( 'active' );
+				}
+				$( window.activity_editor.elements[0] ).focus();
+				medium_editor.toggleClass( 'medium-editor-toolbar-active active' );
+				medium_editor_wrap.toggleClass( 'active' );
 			},
 
 			gifMediaSearchDropdownView: false,
@@ -4061,7 +4065,7 @@ window.bp = window.bp || {};
 			},
 
 			activeButton: function ( event ) {
-				var $buttonItems = this.$el.find( '.bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )' );
+				var $buttonItems = this.$el.find( '.bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video ):not( .bb-rl-show-toolbar )' );
 
 				if ( $( event.currentTarget ).hasClass( 'active' ) ) {
 					$buttonItems.removeClass( 'active' );

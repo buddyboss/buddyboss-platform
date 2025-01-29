@@ -260,9 +260,16 @@
 				color: var(--bb-rl-icon-secondary-color);
 				font-size: var(--bb-rl-base-line);
 				padding: var(--bb-rl-space-50);
+				cursor: pointer;
 
 				&:hover {
 					color: var(--bb-rl-icon-color);
+				}
+
+				i {
+					color: var(--bb-rl-icon-secondary-color);
+					font-family: bb-icons-rl;
+					font-size: 24px;
 				}
 			}
 
@@ -674,6 +681,17 @@
 			visibility: visible;
 			opacity: 1;
 		}
+	}
+
+	.bb-rl-post-mention {
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity ease 0.3s;
+	}
+
+	&.active .bb-rl-post-mention {
+		visibility: visible;
+		opacity: 1;
 	}
 
 	.medium-editor-action {
