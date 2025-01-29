@@ -145,7 +145,7 @@ window.bp = window.bp || {};
 				$( currentEl ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
 			}
 
-			// Add Toast Message
+			// Add Toast Message.
 			var uniqueId         = 'unique-' + Math.floor( Math.random() * 1000000 ),
 				currentEl        = '.' + uniqueId,
 				urlClass         = '',
@@ -423,7 +423,7 @@ window.bp = window.bp || {};
 			/**
 			 * How the content should be injected in the selector
 			 *
-			 * possible methods are.
+			 * Possible methods are.
 			 * - reset: the selector will be reset with the content
 			 * - append:  the content will be added after selector's content
 			 * - prepend: the content will be added before selector's content
@@ -491,7 +491,8 @@ window.bp = window.bp || {};
 				_is_exist  = 1;
 			}
 			if ( 1 === _is_exist ) {
-				for ( var i = startIndex; i < _findtext.length; i++ ) {
+				var findTextLength = _findtext.length;
+				for ( var i = startIndex; i < findTextLength; i++ ) {
 					if ( _findtext[ i ] === ' ' || _findtext[ i ] === '\n' ) {
 						break;
 					} else {
@@ -587,7 +588,7 @@ window.bp = window.bp || {};
 				$( this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current' ).addClass( 'selected loading' );
 			}
 
-			// Add loader at custom place for few search types
+			// Add loader at custom place for few search types.
 			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length === 0 ) {
 				var $body                = $( 'body' ),
 					component_conditions = [
@@ -716,10 +717,10 @@ window.bp = window.bp || {};
 									self.inject( this, response.data.contents, data.method );
 									$( this ).fadeIn( 100 );
 
-									// Inform other scripts the list of objects has been refreshed
+									// Inform other scripts the list of objects has been refreshed.
 									$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response : response.data } ) );
 
-									// Lazy Load Images
+									// Lazy Load Images.
 									if ( bp.Nouveau.lazyLoad ) {
 										setTimeout(
 											function () {
@@ -954,7 +955,7 @@ window.bp = window.bp || {};
 			// Following widget more button click.
 			$document.on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
 
-			// Accordion open/close event
+			// Accordion open/close event.
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
 
 			// Prevent duplicated emoji from windows system emoji picker.
@@ -1277,7 +1278,6 @@ window.bp = window.bp || {};
 						list.removeClass( 'bb-more-than-3' );
 					}
 
-					// items.first().addClass( 'recent-item' );
 					items.slice( 0, 3 ).removeClass( 'bb-more-item' );
 
 				},
@@ -1498,8 +1498,10 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		scopeQuery: function ( event ) {
-			var self         = event.data, target = $( event.currentTarget ).parent(), scope = 'all', object, filter = null,
-				search_terms = '', extras = null, queryData = {};
+			var self   = event.data,
+				target = $( event.currentTarget ).parent(),
+				scope  = 'all',
+				object;
 
 			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! target.attr( 'data-bp-scope' ) ) {
 				return event;
@@ -1515,42 +1517,14 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
-			var objectData = self.getStorage( 'bp-' + object );
-
-			// Notifications always need to start with Newest ones.
-			if ( undefined !== objectData.extras && 'notifications' !== object ) {
-				extras = objectData.extras;
-			}
-
-			filter = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
-
-			var searchFilter = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' );
-			if ( searchFilter.length ) {
-				search_terms = searchFilter.val();
-			}
-
-			// Remove the New count on dynamic tabs.
-			if ( target.hasClass( 'dynamic' ) ) {
-				target.find( 'a span' ).html( '' );
-			}
-
-			queryData            = {
-				object: object,
-				scope: scope,
-				filter: filter,
-				search_terms: search_terms,
-				page: 1,
-				extras: extras
-			};
-			var memberTypeFilter = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' );
-			var groupTypeFilter  = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' );
-			if ( memberTypeFilter.length ) {
-				queryData.member_type_id = memberTypeFilter.val();
-			} else if ( groupTypeFilter.length ) {
-				queryData.group_type = groupTypeFilter.val();
-			}
-
-			self.objectRequest( queryData );
+			bp.Nouveau.commonQueryFilter(
+				{
+					scope  : scope,
+					object : object,
+					self   : self,
+					target : target,
+				}
+			);
 		},
 
 		/**
@@ -1560,7 +1534,21 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		filterQuery: function ( event ) {
-			bp.Nouveau.typeFilterQuery( event, '' );
+			var self   = event.data,
+				object = $( event.target ).data( 'bp-filter' );
+
+			if ( ! object ) {
+				return event;
+			}
+
+			bp.Nouveau.commonQueryFilter(
+				{
+					object     : $( event.target ).data( 'bp-filter' ),
+					self       : self,
+					filter     : $( event.target ).val(),
+					fetchScope : true,
+				}
+			);
 		},
 
 		/**
@@ -1570,7 +1558,22 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		typeGroupFilterQuery: function ( event ) {
-			bp.Nouveau.typeFilterQuery( event, 'group' );
+			var self   = event.data,
+				object = $( event.target ).data( 'bp-group-type-filter' );
+
+			if ( ! object ) {
+				return event;
+			}
+
+			bp.Nouveau.commonQueryFilter(
+				{
+					scope      : 'all',
+					object     : $( event.target ).data( 'bp-group-type-filter' ),
+					self       : self,
+					type       : 'group',
+					fetchScope : true,
+				}
+			);
 		},
 
 		/**
@@ -1580,7 +1583,22 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		typeMemberFilterQuery: function ( event ) {
-			bp.Nouveau.typeFilterQuery( event, 'member' );
+			var self   = event.data,
+				object = $( event.target ).data( 'bp-member-type-filter' );
+
+			if ( ! object ) {
+				return event;
+			}
+
+			bp.Nouveau.commonQueryFilter(
+				{
+					scope      : 'all',
+					object     : $( event.target ).data( 'bp-member-type-filter' ),
+					self       : self,
+					type       : 'member',
+					fetchScope : true,
+				}
+			);
 		},
 
 		/**
@@ -1590,8 +1608,10 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		searchQuery: function ( event ) {
-			var self   = event.data, object, scope = 'all', filter = null, template = null, search_terms = '',
-				extras = false;
+			var self         = event.data,
+				object,
+				filter       = null,
+				search_terms = '';
 
 			if ( $( event.delegateTarget ).hasClass( 'no-ajax' ) || undefined === $( event.delegateTarget ).data( 'bp-search' ) ) {
 				return event;
@@ -1604,27 +1624,14 @@ window.bp = window.bp || {};
 			filter       = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
 			search_terms = $( event.delegateTarget ).find( 'input[type=search]' ).first().val();
 
-			var $selectedObject = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' );
-			if ( $selectedObject.length ) {
-				scope = $selectedObject.data( 'bp-scope' );
-			}
-
-			var objectData = self.getStorage( 'bp-' + object );
-
-			// Notifications always need to start with Newest ones.
-			if ( undefined !== objectData.extras && 'notifications' !== object ) {
-				extras = objectData.extras;
-			}
-
-			self.objectRequest(
+			bp.Nouveau.commonQueryFilter(
 				{
-					object: object,
-					scope: scope,
-					filter: filter,
-					search_terms: search_terms,
-					page: 1,
-					extras: extras,
-					template: template
+					scope        : 'all',
+					object       : object,
+					filter       : filter,
+					search_terms : search_terms,
+					self         : self,
+					fetchScope   : true,
 				}
 			);
 		},
@@ -2603,11 +2610,11 @@ window.bp = window.bp || {};
 							$( document ).trigger(
 								'bb_trigger_toast_message',
 								[
-								'',
-								response.data.toast_message,
-								'info',
-								null,
-								true
+									'',
+									response.data.toast_message,
+									'info',
+									null,
+									true
 								]
 							);
 						} else {
@@ -2731,7 +2738,8 @@ window.bp = window.bp || {};
 		lazyLoad: function ( lazyTarget ) {
 			var lazy = $( lazyTarget );
 			if ( lazy.length ) {
-				for ( var i = 0; i < lazy.length; i++ ) {
+				var lazyLength = lazy.length;
+				for ( var i = 0; i < lazyLength; i++ ) {
 					var isInViewPort = false;
 					try {
 						if ( $( lazy[ i ] ).is( ':in-viewport' ) ) {
@@ -3136,9 +3144,9 @@ window.bp = window.bp || {};
 		 */
 		directorySearchInput: function () {
 			// Check if the current value of the input field is equal to the last recorded value,
-			// OR if the current value is empty and there is no previously recorded value
+			// OR if the current value is empty and there is no previously recorded value.
 			if ( $( this ).val() === $( this ).data( 'last-value' ) || ( $( this ).val() === '' && $( this ).data( 'last-value' ) === undefined ) ) {
-				// Return early to skip unnecessary actions
+				// Return early to skip unnecessary actions.
 				return;
 			}
 			$( this ).data( 'last-value', $( this ).val() );
@@ -3151,7 +3159,7 @@ window.bp = window.bp || {};
 			} else {
 				$resetButton.hide();
 
-				// Trigger search event
+				// Trigger search event.
 				if ( $form.hasClass( 'bp-invites-search-form' ) && BP_SEARCH.enable_ajax_search === '1' ) {
 					var searchInputElem = $form.find( 'input[type="search"]' );
 					searchInputElem.val( '' );
@@ -3159,7 +3167,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			// Forum autocomplete should not trigger search when it's off
+			// Forum autocomplete should not trigger search when it's off.
 			if ( ! $( this ).hasClass( 'ui-autocomplete-input' ) ) {
 				var searchSubmitElem = $form.find( '.search-form_submit' );
 				if ( $( this ).closest( '.bs-forums-search' ).length > 0 ) {
@@ -3193,7 +3201,7 @@ window.bp = window.bp || {};
 
 			$( this ).hide();
 
-			// Trigger search event
+			// Trigger search event.
 			if ( $form.hasClass( 'bp-invites-search-form' ) ) {
 				searchInputElem.val( '' );
 				searchInputElem.trigger( $.Event( 'search' ) );
@@ -3212,13 +3220,13 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 *  handle profile notification setting events
+		 * Handle profile notification setting events.
 		 */
 		profileNotificationSetting: function () {
 			var self = this;
 			self.profileNotificationSettingInputs( ['.email', '.web', '.app'] );
 
-			// Learn More section hide/show for mobile
+			// Learn More section hide/show for mobile.
 			$( '.notification_info .notification_learn_more' ).click(
 				function ( e ) {
 					e.preventDefault();
@@ -3232,7 +3240,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			// Notification settings Mobile UI
+			// Notification settings Mobile UI.
 			$( '.main-notification-settings' ).each(
 				function () {
 					self.NotificationMobileDropdown( $( this ).find( 'tr:not( .notification_heading )' ) );
@@ -3290,9 +3298,10 @@ window.bp = window.bp || {};
 		 *  Enable Disable profile notification setting inputs
 		 */
 		profileNotificationSettingInputs: function ( node ) {
-			var $notificationSettings = $( '.main-notification-settings' );
-			for ( var i = 0; i < node.length; i++ ) {
-				/* jshint ignore:start */
+			var $notificationSettings = $( '.main-notification-settings' ),
+				nodeLength            = node.length;
+			for ( var i = 0; i < nodeLength; i++ ) {
+				/* jshint ignore:start. */
 				( function ( _i ) {
 					$( document ).on(
 						'click',
@@ -3303,7 +3312,7 @@ window.bp = window.bp || {};
 								$targetTd  = $notificationSettings.find( 'td' ).eq( targetNode ),
 								$targetLi  = $notificationSettings.find( '.bb-mobile-setting li' ).eq( targetNode );
 
-							// Toggle the 'disabled' class and input 'disabled' state based on checkbox state
+							// Toggle the 'disabled' class and input 'disabled' state based on checkbox state.
 							if ( $checkbox.is( ':checked' ) ) {
 								$targetTd.removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 								$targetLi.removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
@@ -3312,7 +3321,7 @@ window.bp = window.bp || {};
 								$targetLi.addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 							}
 
-							// Update the mobile dropdown state
+							// Update the mobile dropdown state.
 							bp.Nouveau.NotificationMobileDropdown( $checkbox.closest( '#settings-form' ).find( 'tr:not(.notification_heading)' ) );
 						}
 					);
@@ -3568,10 +3577,10 @@ window.bp = window.bp || {};
 			options: {},
 			render: function ( renderOptions ) {
 				var self = this;
-				// Link Preview Template
+				// Link Preview Template.
 				var tmpl = $( '#tmpl-bb-link-preview' ).html();
 
-				// Compile the template
+				// Compile the template.
 				var compiled = _.template( tmpl );
 
 				var html = compiled( renderOptions );
@@ -3768,11 +3777,11 @@ window.bp = window.bp || {};
 					self.dataInput = targetDataInput;
 				}
 
-				// Create a DOM parser
+				// Create a DOM parser.
 				var parser = new DOMParser();
 				var doc    = parser.parseFromString( urlText, 'text/html' );
 
-				// Exclude the mention links from the urlText
+				// Exclude the mention links from the urlText.
 				var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
 				anchorElements.forEach(
 					function ( anchor ) {
@@ -3824,7 +3833,8 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( jQuery( $.parseHTML( urlText ) ).attr( 'href' ) ) ) {
 					urlString = jQuery( urlText ).attr( 'href' );
 				} else {
-					for ( var i = startIndex; i < urlText.length; i++ ) {
+					var urlTextLength = urlText.length;
+					for ( var i = startIndex; i < urlTextLength; i++ ) {
 						if (
 							urlText[ i ] === ' ' ||
 							urlText[ i ] === '\n' ||
@@ -3933,12 +3943,12 @@ window.bp = window.bp || {};
 								url: url
 							},
 							function ( response ) {
-								// success callback
+								// success callback.
 								self.setURLResponse( response, url );
 							}
 						).always(
 							function () {
-								// always callback
+								// always callback.
 							}
 						);
 					} else {
@@ -4094,7 +4104,7 @@ window.bp = window.bp || {};
 			var localTime         = new Date(),
 				currentServerTime = new Date( localTime.getTime() + bp.Nouveau.bbServerTimeDiff );
 
-			// Extract date, year, and time components
+			// Extract date, year, and time components.
 			var date = currentServerTime.toLocaleDateString( 'en-US', { month: 'short', day: '2-digit' } ),
 				year = currentServerTime.getFullYear(),
 				time = currentServerTime.toLocaleTimeString( 'en-US', { hour: '2-digit', minute: '2-digit', hour12: true } );
@@ -4259,6 +4269,84 @@ window.bp = window.bp || {};
 				$emojioneAreaTheatre.removeClass( 'show' ).addClass( 'hide' );
 				$emojioneAreaTheatre.find( '.emojionearea-picker' ).addClass( 'hidden' );
 			}
+		},
+
+		commonQueryFilter: function ( data ) {
+			var self         = data.self,
+				object       = data.object,
+				target       = data.target,
+				scope        = data.scope,
+				filter       = null,
+				search_terms = ! _.isUndefined( data.search_terms ) ? data.search_terms : '',
+				extras       = null,
+				queryData    = {},
+				type         = data.type;
+
+			// Filter type.
+			if ( 'friends' === object ) {
+				object = 'members';
+			}
+
+			var objectData = self.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones.
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
+			filter = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
+
+			if ( type ) { // Group/Member type filter.
+				var bbFilterElem = $( '#buddypress [data-bp-filter="' + object + '"]' );
+				if ( bbFilterElem.length ) {
+					if ( undefined !== objectData.filter ) {
+						filter = objectData.filter;
+						$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+					} else if ( '-1' !== bbFilterElem.val() && '0' !== bbFilterElem.val() ) {
+						filter = bbFilterElem.val();
+					}
+				}
+			}
+
+			if ( ! _.isUndefined( data.fetchScope ) && data.fetchScope ) { // Filter type.
+				var $selectedObject = $( self.objectNavParent + ' [data-bp-object].selected' );
+				if ( $selectedObject.length ) {
+					scope = $selectedObject.data( 'bp-scope' );
+				}
+			}
+
+			if ( '' !== search_terms ) { // Filter, Group/Member, Scope filter.
+				var searchFilter = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' );
+				if ( searchFilter.length ) {
+					search_terms = searchFilter.val();
+				}
+			}
+
+			// For scope - Remove the New count on dynamic tabs.
+			if ( ! _.isUndefined( target ) && target.hasClass( 'dynamic' ) ) {
+				target.find( 'a span' ).html( '' );
+			}
+
+			queryData = {
+				object       : object,
+				scope        : scope,
+				filter       : filter,
+				search_terms : search_terms,
+				page         : 1,
+				extras       : extras
+			};
+
+			if ( '' === search_terms ) { // Exclude a type from a search query.
+				var memberTypeFilter = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' );
+				var groupTypeFilter  = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' );
+				if ( memberTypeFilter.length ) {
+					queryData.member_type_id = memberTypeFilter.val();
+				} else if ( groupTypeFilter.length ) {
+					queryData.group_type = groupTypeFilter.val();
+				}
+			}
+
+			self.objectRequest( queryData );
 		},
 	};
 
