@@ -48,8 +48,6 @@ window.bp = window.bp || {};
 			// Email Invites popup revoke access.
 			this.sendInvitesRevokeAccess();
 
-			this.sentInvitesFormValidate();
-
 			// Privacy Policy & Terms Popup on Register page.
 			this.registerPopUp();
 
@@ -620,10 +618,6 @@ window.bp = window.bp || {};
 						$( '.layout-' + response.data.layout + '-view' ).addClass( 'active' );
 					}
 
-					if ( $( 'body.group-members.members.buddypress' ).length && ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( 'body.group-members.members.buddypress ul li#members-groups-li' ).find( 'span' ).text( response.data.count );
-					}
-
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( '' );
 
@@ -634,13 +628,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
-					}
-
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
-						for ( var i in response.data.scopes ) {
-							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
-						}
+						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
 					}
 
 					if ( 'reset' !== data.method ) {
@@ -754,23 +742,21 @@ window.bp = window.bp || {};
 						extras = objectData.extras;
 					}
 
-					if ( $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
-						if ( undefined !== objectData.filter ) {
+					// Pre select saved sort filter.
+					if ( $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).length ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== objectData.filter ) {
 							filter = objectData.filter;
-							$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
-						} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
-							filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
+							$( self.objectNavParent + ' [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+						} else if ( '-1' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() && '0' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() ) {
+							filter = $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val();
 						}
 					}
 
-					if ( $( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).length ) {
-						$( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).each(
-							function () {
-								$( this ).removeClass( 'selected' );
-							}
-						);
-
-						$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
+					// Pre select saved scope filter.
+					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== scope ) {
+							$( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
+						}
 					}
 
 					// Check the querystring to eventually include the search terms.
@@ -850,8 +836,8 @@ window.bp = window.bp || {};
 			// Disabled inputs.
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
 
-			// Refreshing.
-			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
+			// Scope filters.
+			$( document ).on( 'change', this.objectNavParent + ' [data-bp-member-scope-filter]', this, this.scopeQuery );
 
 			// Filtering.
 			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
@@ -1395,173 +1381,6 @@ window.bp = window.bp || {};
 			);
 		},
 
-		sentInvitesFormValidate: function () {
-
-			if ( $( 'body.send-invites #send-invite-form #member-invites-table' ).length ) {
-
-				$( 'body.send-invites #send-invite-form' ).submit(
-					function () {
-
-						var prevent             = false;
-						var title               = '';
-						var id                  = '';
-						var email               = '';
-						var id_lists            = [];
-						var all_lists           = [];
-						var alert_message       = '';
-						var inviteMessage       = 0;
-						var inviteSubject       = 0;
-						var subject             = '';
-						var subjectErrorMessage = '';
-						var message             = '';
-						var messageErrorMessage = '';
-						var emailRegex          = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-						var emptyName           = $( 'body.send-invites #send-invite-form #error-message-empty-name-field' ).val();
-						var invalidEmail        = $( 'body.send-invites #send-invite-form #error-message-invalid-email-address-field' ).val();
-
-						alert_message = $( 'body.send-invites #send-invite-form #error-message-required-field' ).val();
-						inviteSubject = $( 'body.send-invites #send-invite-form #error-message-empty-subject-field' ).length;
-						inviteMessage = $( 'body.send-invites #send-invite-form #error-message-empty-body-field' ).length;
-
-						if ( 1 === inviteSubject ) {
-							subject             = $( 'body.send-invites #send-invite-form #bp-member-invites-custom-subject' ).val();
-							subjectErrorMessage = $( 'body.send-invites #send-invite-form #error-message-empty-subject-field' ).val();
-						}
-
-						if ( 1 === inviteMessage ) {
-							// message = $('body.send-invites #send-invite-form #bp-member-invites-custom-content').val();
-							/* jshint ignore:start */
-							message = tinyMCE.get( 'bp-member-invites-custom-content' ).getContent();
-							/* jshint ignore:end */
-							messageErrorMessage = $( 'body.send-invites #send-invite-form #error-message-empty-body-field' ).val();
-						}
-
-						if ( 1 === inviteSubject && 1 === inviteMessage ) {
-
-							var bothFieldsErrorMessage = $( 'body.send-invites #send-invite-form #error-message-empty-subject-body-field' ).val();
-
-							if ( '' === subject && '' === message ) {
-								if ( ! confirm( bothFieldsErrorMessage ) ) {
-									return false;
-								}
-							} else if ( '' !== subject && '' === message ) {
-								if ( ! confirm( messageErrorMessage ) ) {
-									return false;
-								}
-							} else if ( '' === subject && '' !== message ) {
-								if ( ! confirm( subjectErrorMessage ) ) {
-									return false;
-								}
-							}
-
-						} else if ( 0 === inviteSubject && 1 === inviteMessage ) {
-							if ( '' === message ) {
-								if ( ! confirm( messageErrorMessage ) ) {
-									return false;
-								}
-							}
-						} else if ( 1 === inviteSubject && 0 === inviteMessage ) {
-							if ( '' === subject ) {
-								if ( ! confirm( subjectErrorMessage ) ) {
-									return false;
-								}
-							}
-						}
-
-						$( 'body.send-invites #send-invite-form #member-invites-table > tbody  > tr' ).each(
-							function () {
-								$( this ).find( 'input[type="text"]' ).removeAttr( 'style' );
-								$( this ).find( 'input[type="email"]' ).removeAttr( 'style' );
-							}
-						);
-
-						$( 'body.send-invites #send-invite-form #member-invites-table > tbody  > tr' ).each(
-							function () {
-
-								title = $.trim( $( this ).find( 'input[type="text"]' ).val() );
-								id    = $( this ).find( 'input' ).attr( 'id' );
-								email = $.trim( $( this ).find( 'input[type="email"]' ).val() );
-
-								if ( '' === title && '' === email ) {
-									prevent = false;
-								} else if ( '' !== title && '' === email ) {
-									id      = $( this ).find( 'input[type="email"]' ).attr( 'id' );
-									prevent = true;
-									id_lists.push( id );
-								} else if ( '' === title && '' !== email ) {
-									id      = $( this ).find( 'input[type="text"]' ).attr( 'id' );
-									prevent = true;
-									id_lists.push( id );
-								} else {
-									if ( ! emailRegex.test( email ) ) {
-										id      = $( this ).find( 'input[type="email"]' ).attr( 'id' );
-										prevent = true;
-										id_lists.push( id );
-									} else {
-										prevent = false;
-										all_lists.push( 1 );
-									}
-								}
-							}
-						);
-
-						$( '.span_error' ).remove();
-
-						if ( id_lists.length === 0 ) {
-
-						} else {
-							id_lists.forEach(
-								function ( item ) {
-									$( '#' + item ).attr( 'style', 'border:1px solid #ef3e46' );
-									if ( item.indexOf( 'email_' ) !== -1 ) {
-										$( '#' + item ).after( '<span class="span_error" style="color:#ef3e46">' + invalidEmail + '</span>' );
-									} else {
-										$( '#' + item ).after( '<span class="span_error" style="color:#ef3e46">' + emptyName + '</span>' );
-									}
-								}
-							);
-							$( 'html, body' ).animate(
-								{
-									scrollTop: $( '#item-body' ).offset().top
-								},
-								2000
-							);
-							alert( alert_message );
-							return false;
-						}
-
-						if ( $( '#email_0_email_error' ).length ) {
-							$( '#email_0_email_error' ).remove();
-						}
-
-						if ( all_lists.length === 0 ) {
-							var name       = $( '#invitee_0_title' ).val();
-							var emailField = $( '#email_0_email' ).val();
-							if ( '' === name && '' === emailField ) {
-								$( '#invitee_0_title' ).attr( 'style', 'border:1px solid #ef3e46' );
-								$( '#invitee_0_title' ).focus();
-								$( '#email_0_email' ).attr( 'style', 'border:1px solid #ef3e46' );
-								return false;
-							} else if ( '' !== name && '' === emailField ) {
-								$( '#email_0_email' ).attr( 'style', 'border:1px solid #ef3e46' );
-								$( '#email_0_email' ).focus();
-								return false;
-							}
-							if ( ! emailRegex.test( emailField ) ) {
-								$( '#email_0_email' ).attr( 'style', 'border:1px solid #ef3e46' );
-								$( '#email_0_email' ).focus();
-								$( '#email_0_email_error' ).remove();
-								$( '#email_0_email' ).after( '<span id="email_0_email_error" style="color:#ef3e46">' + invalidEmail + '</span>' );
-							}
-							alert( alert_message );
-							return false;
-						}
-
-					}
-				);
-			}
-		},
-
 		sendInvitesRevokeAccess: function () {
 
 			if ( $( 'body.sent-invites #member-invites-table' ).length ) {
@@ -1641,15 +1460,15 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		scopeQuery: function ( event ) {
-			var self         = event.data, target = $( event.currentTarget ).parent(), scope = 'all', object, filter = null,
+			var self         = event.data, target = $( event.currentTarget ), scope = 'all', object, filter = null,
 				search_terms = '', extras = null, queryData = {};
 
-			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! target.attr( 'data-bp-scope' ) ) {
+			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! $( target ).find( ':selected' ).attr( 'data-bp-scope' ) ) {
 				return event;
 			}
 
-			scope  = target.data( 'bp-scope' );
-			object = target.data( 'bp-object' );
+			scope  = $( target ).find(':selected' ).data( 'bp-scope' );
+			object = $( target ).find(':selected' ).data( 'bp-object' );
 
 			if ( ! scope || ! object ) {
 				return event;

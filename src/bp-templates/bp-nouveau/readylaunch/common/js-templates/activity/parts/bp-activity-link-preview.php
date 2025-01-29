@@ -11,7 +11,7 @@
 	<# if ( data.link_scrapping ) { #>
 
 		<# if ( data.link_loading ) { #>
-			<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i>
+			<span class="activity-url-scrapper-loading activity-ajax-loader"><i class="bb-rl-loader"></i>
 				<?php esc_html_e( 'Loading preview...', 'buddyboss' ); ?>
 			</span>
 		<# } #>
@@ -31,20 +31,20 @@
 							</a>-->
 							<div class="activity-link-preview-icons">
 								<# if ( data.link_images.length > 1 ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ) ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icon-l bb-icon-exchange"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ) ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icons-rl-arrows-left-right"></i></a>
 								<# } #>
 								<# if ( data.link_images.length ) { #>
-									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ) ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icon-l bb-icon-image-slash"></i></a>
+									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Remove image', 'buddyboss' ) ?>" href="#" class="icon-image-slash bb-rl-toolbar-button bp-tooltip" id="activity-link-preview-remove-image"><i class="bb-icons-rl-camera-slash"></i></a>
 								<# } #>
 								<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Confirm', 'buddyboss' ) ?>" class="bb-rl-toolbar-button bp-tooltip" href="#" id="activity-link-preview-select-image">
-									<i class="bb-icon-check bb-icon-l"></i>
+									<i class="bb-icons-rl-check"></i>
 								</a>
 							</div>
 						</div>
 						<# if ( data.link_images.length > 1 ) { #>
 							<div class="activity-url-thumb-nav">
-								<button type="button" id="activity-url-prevPicButton"><span class="bb-icon-l bb-icon-angle-left"></span></button>
-								<button type="button" id="activity-url-nextPicButton"><span class="bb-icon-l bb-icon-angle-right"></span></button>
+								<button type="button" id="activity-url-prevPicButton"><span class="bb-icons-rl-caret-left"></span></button>
+								<button type="button" id="activity-url-nextPicButton"><span class="bb-icons-rl-caret-right"></span></button>
 								<div id="activity-url-scrapper-img-count">
 									<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 								</div>

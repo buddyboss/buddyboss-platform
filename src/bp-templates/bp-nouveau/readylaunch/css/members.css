@@ -1,29 +1,96 @@
 /* Common styles */
-.bbrl-members .item-entry .list-wrap {
+.bb-rl-members .bp-list.grid .item-entry .list-wrap {
+  padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
+}
+
+.bb-rl-members .bp-list.grid .item-entry .item {
+  margin-bottom: 18px;
+}
+
+.bb-rl-members .bp-list.grid .item-entry .bb-rl-member-buttons-wrap {
+  margin-top: auto;
+}
+
+.bb-rl-members .bp-list.grid .item-entry .list-wrap-inner {
+  flex-direction: column;
+}
+
+.bb-rl-members .bp-list.grid .item-entry .item {
+  text-align: center;
+}
+
+.bb-rl-members .bp-list.grid .item-entry .bp-member-type {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-members .bp-list.grid .item-entry .item-avatar {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-members .bp-list:not(.grid) .item-entry .list-wrap {
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+}
+
+.bb-rl-members .bp-list:not(.grid) .item-entry .bb-rl-member-buttons-wrap {
+  margin-left: auto;
+}
+
+.bb-rl-members .bp-list:not(.grid) .item-entry .bb-rl-item-actions {
+  flex-direction: row-reverse;
+  gap: var(--bb-rl-space-200);
+}
+
+.bb-rl-members .bp-list:not(.grid) .item-entry .item-avatar {
+  margin-right: var(--bb-rl-space-200);
+}
+
+.bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
+  align-items: center;
+}
+
+.bb-rl-members .bp-list:not(.grid) .bb-rl-item-block-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-50);
+}
+
+.bb-rl-members .bp-list:not(.grid) .bb-rl-item-block-assets {
+  display: flex;
+  flex-flow: wrap;
+  align-items: center;
+}
+
+.bb-rl-members .bp-list:not(.grid) .bb-rl-last-activity {
+  width: 100%;
+  margin-top: 2px;
+}
+
+.bb-rl-members .item-entry .list-wrap {
+  position: relative;
   height: 100%;
   border-radius: var(--bb-rl-radius-lg);
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
-  padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
 
-.bbrl-members .item-entry .item {
-  text-align: center;
+.bb-rl-members .item-entry .list-wrap .list-wrap-inner {
+  display: flex;
+  height: 100%;
 }
 
-.bbrl-members .item-entry .item-avatar {
+.bb-rl-members .item-entry .item-avatar {
   display: flex;
   justify-content: center;
-  margin-bottom: var(--bb-rl-space-200);
 }
 
-.bbrl-members .item-entry .avatar {
+.bb-rl-members .item-entry .avatar {
   max-width: 104px;
   height: auto;
   border-radius: 50%;
 }
 
-.bbrl-members .item-entry .bp-member-type {
+.bb-rl-members .item-entry .bp-member-type {
   display: inline-flex;
   color: var(--bb-rl-text-brand-secondary-color);
   background-color: var(--bb-rl-background-brand-secondary-color);
@@ -32,25 +99,52 @@
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
   font-size: var(--font-size-xs);
   font-weight: 500;
-  margin-bottom: var(--bb-rl-space-100);
 }
 
-.bbrl-members .item-entry .bb-rl-item-meta-asset {
+.bb-rl-members .item-entry .bb-rl-item-meta-asset {
   font-size: var(--font-size-sm);
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.bbrl-members .item-entry .bb-rl-item-meta-asset .separator {
+.bb-rl-members .item-entry .bb-rl-item-meta-asset .separator {
   margin: 0 6px;
   color: var(--bb-rl-background-tertiary-color);
 }
 
-.bbrl-members .item-entry .member-buttons-wrap {
-  margin: var(--bb-rl-space-200) 0 0;
+.bb-rl-members .item-list.grid .only-list-view {
+  display: none;
 }
 
-.bbrl-members .item-entry .member-buttons-wrap .primary-action button {
+.bb-rl-members .item-list:not(.grid) .only-grid-view {
+  display: none;
+}
+
+.bb-rl-members-directory-container {
+  gap: var(--bb-rl-space-200);
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-members-directory-container {
+    flex-direction: column;
+    padding-bottom: var(--bb-rl-space-500);
+  }
+  .bb-rl-members-directory-container .bb-rl-widget-sidebar {
+    width: 100%;
+  }
+}
+
+.bb-rl-members-directory-container .bb-rl-members-directory-content {
+  flex: 1;
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions {
+  margin-left: auto;
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -65,31 +159,162 @@
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
   font-size: var(--font-size-sm);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  white-space: nowrap;
 }
 
-.bbrl-members .item-entry .member-buttons-wrap .primary-action button:hover {
+.bb-rl-item-actions .bb-rl-primary-actions button:hover,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
-.bbrl-members .item-entry .member-buttons-wrap .primary-action button:focus {
+.bb-rl-item-actions .bb-rl-primary-actions button:focus,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bbrl-members .item-entry .member-buttons-wrap .primary-action button:disabled {
+.bb-rl-item-actions .bb-rl-primary-actions button:disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
-.bbrl-members .item-entry .bb_more_options {
-  display: none;
-  /* Temporary hide untill design mockup is ready */
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i {
+  margin-right: var(--bb-rl-space-50);
 }
 
-.bbrl-members .item-list.grid .only-list-view {
-  display: none;
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i::before, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i::before {
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
 }
 
-.bbrl-members .item-list.list .only-grid-view {
-  display: none;
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before {
+  content: "\e168";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.follow-button.not_following i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button.not_following i::before {
+  content: "\e3d4";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.follow-button.following i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button.following i::before {
+  content: "\e182";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.not_friends i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.not_friends i::before {
+  content: "\e3d4";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.pending_friend i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.pending_friend i::before {
+  content: "\eafa";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.awaiting_response_friend i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.awaiting_response_friend i::before {
+  content: "\edec";
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.friendship-button.is_friend i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button.is_friend i::before {
+  content: "\e182";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions {
+  flex: 1;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .button-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message,
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button,
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button {
+  font-size: 0;
+  line-height: 1;
+  display: inline-block;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before,
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button i::before,
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button i::before {
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before {
+  content: "\e16e";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.not_friends i::before {
+  content: "\e4d0";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.is_friend i::before {
+  content: "\e4ce";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.pending_friend i::before {
+  content: "\edec";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button.not_following i::before {
+  content: "\e324";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button.not_following i::before {
+  content: "\e324";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .follow-button.following i::before {
+  content: "\e324";
+  font-weight: 500;
+}
+
+.bb-rl-item-actions.bb-rl-idle-primary .bb-rl-secondary-actions .button-wrap {
+  justify-content: center;
+}
+
+.bb-rl-invite-form .bb-rl-input-field,
+.bb-rl-invite-form textarea {
+  width: 100%;
+}
+
+.bb-rl-block-member-content > p {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-block-member-content > div,
+.bb-rl-block-member-content > ul {
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-block-member-content > ul {
+  padding-left: var(--bb-rl-space-300);
+  margin-bottom: var(--bb-rl-space-200);
 }

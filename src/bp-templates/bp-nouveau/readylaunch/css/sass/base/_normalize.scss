@@ -181,6 +181,10 @@ img.emojioneemoji {
 	font-style: normal;
 }
 
+#wpadminbar {
+	z-index: var(--bb-rl-z-index-fixed);
+}
+
 @media screen and (max-width: $lg) {
 
 	.site.bb-readylaunch {

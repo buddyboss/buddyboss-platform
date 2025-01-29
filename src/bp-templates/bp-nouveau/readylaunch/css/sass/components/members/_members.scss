@@ -1,25 +1,104 @@
 @import "./common-tmp";
 
-.bbrl-members {
+.bb-rl-members {
+
+	.bp-list.grid {
+
+		.item-entry {
+
+			.list-wrap {
+				padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
+			}
+
+			.item {
+				margin-bottom: 18px;
+			}
+
+			.bb-rl-member-buttons-wrap {
+				margin-top: auto;
+			}
+
+			.list-wrap-inner {
+				flex-direction: column;
+			}
+
+			.item {
+				text-align: center;
+			}
+
+			.bp-member-type {
+				margin-bottom: var(--bb-rl-space-100);
+			}
+
+			.item-avatar {
+				margin-bottom: var(--bb-rl-space-200);
+			}
+		}
+	}
+
+	.bp-list:not(.grid) {
+
+		.item-entry {
+
+			.list-wrap {
+				padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+			}
+
+			.bb-rl-member-buttons-wrap {
+				margin-left: auto;
+			}
+
+			.bb-rl-item-actions {
+				flex-direction: row-reverse;
+				gap: var(--bb-rl-space-200);
+			}
+
+			.item-avatar {
+				margin-right: var(--bb-rl-space-200);
+			}
+		}
+
+		.list-wrap-inner {
+			align-items: center;
+		}
+
+		.bb-rl-item-block-heading {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+			margin-bottom: var(--bb-rl-space-50);
+		}
+
+		.bb-rl-item-block-assets {
+			display: flex;
+			flex-flow: wrap;
+			align-items: center;
+		}
+
+		.bb-rl-last-activity {
+			width: 100%;
+			margin-top: 2px;
+		}
+	}
 
 	.item-entry {
 
 		.list-wrap {
+			position: relative;
 			height: 100%;
 			border-radius: var(--bb-rl-radius-lg);
 			background-color: var(--bb-rl-background-color);
 			border: 1px solid var(--bb-rl-border-secondary-color);
-			padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
-		}
 
-		.item {
-			text-align: center;
+			.list-wrap-inner {
+				display: flex;
+				height: 100%;
+			}
 		}
 
 		.item-avatar {
 			display: flex;
 			justify-content: center;
-			margin-bottom: var(--bb-rl-space-200);
 		}
 
 		.avatar {
@@ -37,7 +116,6 @@
 			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 			font-size: var(--font-size-xs);
 			font-weight: 500;
-			margin-bottom: var(--bb-rl-space-100);
 		}
 
 		.bb-rl-item-meta-asset {
@@ -50,21 +128,6 @@
 				color: var(--bb-rl-background-tertiary-color);
 			}
 		}
-
-		.member-buttons-wrap {
-			margin: var(--bb-rl-space-200) 0 0;
-
-			.primary-action button {
-
-				@include bb-rl-button;
-				@include bb-rl-button-secondary-fill;
-				font-size: var(--font-size-sm);
-			}
-		}
-
-		.bb_more_options {
-			display: none; /* Temporary hide untill design mockup is ready */
-		}
 	}
 
 	.item-list.grid {
@@ -74,10 +137,189 @@
 		}
 	}
 
-	.item-list.list {
+	.item-list:not(.grid) {
 
 		.only-grid-view {
 			display: none;
 		}
+	}
+}
+
+.bb-rl-members-directory-container {
+	gap: var(--bb-rl-space-200);
+	padding-bottom: var(--bb-rl-space-400);
+
+	@media screen and (max-width: 800px) {
+		flex-direction: column;
+		padding-bottom: var(--bb-rl-space-500);
+
+		.bb-rl-widget-sidebar {
+			width: 100%;
+		}
+	}
+
+	.bb-rl-members-directory-content {
+		flex: 1;
+	}
+}
+
+.bb-rl-item-actions {
+
+	.bb-rl-primary-actions {
+		margin-left: auto;
+
+		button,
+		.generic-button a {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			font-size: var(--font-size-sm);
+			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+			white-space: nowrap;
+
+			&.send-message,
+			&.follow-button,
+			&.friendship-button {
+
+				i {
+					margin-right: var(--bb-rl-space-50);
+
+					&::before {
+						content: "";
+						font-weight: 400;
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						color: var(--bb-rl-icon-secondary-color);
+						font-style: normal;
+					}
+				}
+			}
+
+			&.send-message i::before {
+				content: "\e168";
+			}
+
+			&.follow-button.not_following i::before {
+				content: "\e3d4";
+			}
+
+			&.follow-button.following i::before {
+				content: "\e182";
+			}
+
+			&.friendship-button.not_friends i::before {
+				content: "\e3d4";
+			}
+
+			&.friendship-button.pending_friend i::before {
+				content: "\eafa";
+			}
+
+			&.friendship-button.awaiting_response_friend i::before {
+				content: "\edec";
+			}
+
+			&.friendship-button.is_friend i::before {
+				content: "\e182";
+			}
+		}
+	}
+
+	.bb-rl-secondary-actions {
+		flex: 1;
+
+		.button-wrap {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			width: 100%;
+		}
+
+		.send-message,
+		.friendship-button,
+		.follow-button {
+			font-size: 0;
+			line-height: 1;
+			display: inline-block;
+			background-color: transparent;
+			border: 0;
+			padding: 0;
+
+			i {
+
+				&::before {
+					content: "";
+					font-weight: 400;
+					font-family: bb-icons-rl;
+					font-size: 24px;
+					color: var(--bb-rl-icon-secondary-color);
+					font-style: normal;
+				}
+			}
+		}
+
+		.send-message i::before {
+			content: "\e16e";
+		}
+
+		.friendship-button.not_friends i::before {
+			content: "\e4d0";
+		}
+
+		.friendship-button.is_friend i::before {
+			content: "\e4ce";
+		}
+
+		.friendship-button.pending_friend i::before {
+			content: "\edec";
+		}
+
+		.follow-button.not_following i::before {
+			content: "\e324";
+		}
+
+		.follow-button.not_following i::before {
+			content: "\e324";
+		}
+
+		.follow-button.following i::before {
+			content: "\e324";
+			font-weight: 500;
+		}
+	}
+
+	&.bb-rl-idle-primary {
+
+		.bb-rl-secondary-actions {
+
+			.button-wrap {
+				justify-content: center;
+			}
+		}
+	}
+}
+
+.bb-rl-invite-form {
+
+	.bb-rl-input-field,
+	textarea {
+		width: 100%;
+	}
+}
+
+.bb-rl-block-member-content {
+
+	> p {
+		margin-bottom: var(--bb-rl-space-100);
+	}
+
+	> div,
+	> ul {
+		color: var(--bb-rl-text-secondary-color);
+	}
+
+	> ul {
+		padding-left: var(--bb-rl-space-300);
+		margin-bottom: var(--bb-rl-space-200);
 	}
 }

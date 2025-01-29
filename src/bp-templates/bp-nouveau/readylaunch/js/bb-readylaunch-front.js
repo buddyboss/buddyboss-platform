@@ -23,6 +23,10 @@ window.bp = window.bp || {};
 			// Listen to events ("Add hooks!")
 			this.addListeners();
 			this.mobileSubMenu();
+			this.gridListFilter();
+			this.collapsibleContextNav();
+
+			this.bbReloadWindow();
 		},
 
 		/**
@@ -39,8 +43,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-			$( window ).on( 'beforeunload', this.beforeUnload.bind( this ) );
 		},
+
 		/**
 		 * [scrollHeaderDropDown description]
 		 *
@@ -61,7 +65,7 @@ window.bp = window.bp || {};
 
 		// Add Mobile menu toggle button
 		mobileSubMenu: function () {
-			$( '.bb-readylaunch-mobile-menu .sub-menu' ).each(
+			$( '.bb-readylaunch-mobile-menu .sub-menu, .bb-readylaunchpanel-menu .sub-menu' ).each(
 				function () {
 					$( this ).closest( 'li.menu-item-has-children' ).find( 'a:first' ).append( '<i class="bb-icons-rl-caret-down submenu-toggle"></i>' );
 				}
@@ -75,6 +79,14 @@ window.bp = window.bp || {};
 					$( this ).closest( '.menu-item-has-children' ).toggleClass( 'open-parent' );
 				}
 			);
+		},
+
+		gridListFilter: function () {
+			$( '.bb-rl-filter select' ).select2( {
+				theme: 'rl',
+				containerCssClass: 'bb-rl-select2-container',
+				dropdownCssClass: 'bb-rl-select2-dropdown'
+			} );
 		},
 
 		/**
@@ -271,6 +283,45 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Open context nav.
+		 * @param e
+		 */
+		collapsibleContextNav: function () {
+			var self = this;
+
+			$( document ).on( 'click', '.bb-rl-context-btn', function ( e ) {
+				e.preventDefault();
+
+				var $button = $( this );
+				var $dropdown = $button.siblings( '.bb-rl-context-dropdown' );
+
+				// Close other dropdowns
+				$( '.bb-rl-context-dropdown' ).not( $dropdown ).hide();
+				$( '.bb-rl-context-btn' ).not( $button ).removeClass( 'active' );
+
+				if ( $dropdown.is( ':visible' ) ) {
+					$dropdown.hide();
+					$button.removeClass( 'active' );
+				} else {
+					$dropdown.show();
+					$button.addClass( 'active' );
+				}
+			} );
+
+			// Close dropdown clicked outside
+			$( document ).on( 'click', function ( e ) {
+				if ( !$( e.target ).closest( '.bb-rl-context-wrap' ).length ) {
+					$( '.bb-rl-context-dropdown' ).hide();
+					$( '.bb-rl-context-btn' ).removeClass( 'active' );
+				}
+			} );
+
+			$( document ).on( 'click', '.bb-rl-context-dropdown', function ( e ) {
+				e.stopPropagation();
+			} );
+		},
+
+		/**
 		 * Show header notification dropdowns
 		 * @param event
 		 */
@@ -391,6 +442,19 @@ window.bp = window.bp || {};
 			bp.Readylaunch.markAsReadNotifications = [];
 			bp.Readylaunch.deletedNotifications    = [];
 		},
+
+		bbReloadWindow: function () {
+			var fetchDataHandler = function( event ) {
+				if ( 'undefined' !== typeof event ) {
+					bp.Readylaunch.beforeUnload();
+				}
+			};
+
+			// This will work only for Chrome.
+			window.onbeforeunload = fetchDataHandler;
+			// This will work only for other browsers.
+			window.unload         = fetchDataHandler;
+		}
 	};
 
 	// Launch BP Zoom.

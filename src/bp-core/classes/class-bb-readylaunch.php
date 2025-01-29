@@ -71,7 +71,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$enabled = $this->bb_is_readylaunch_enabled();
 			if ( $enabled ) {
-				add_filter( 'template_include',
+				add_filter(
+					'template_include',
 					array(
 						$this,
 						'override_page_templates',
@@ -99,6 +100,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
 
 				add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
+
+				// Directory filters.
+				add_filter( 'bp_nouveau_get_filter_label', array( $this, 'bb_nouveau_get_filter_label_hook' ), 10, 2 );
+				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_rl_prefix_key' ) );
+				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
+
+				add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_member_register_scripts' ), 99, 1 );
+				add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+
+				add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
+
+				add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
 			}
 		}
 
@@ -250,13 +263,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						! empty( bp_get_forum_page_id() )
 					)
 				) {
-					add_settings_field( $name, $label, array(
-						$this,
-						'bb_enable_setting_callback_page_directory',
-					), 'bb-readylaunch', 'bb_readylaunch', compact( 'enabled_pages', 'name', 'label', 'description' ) );
-					register_setting( 'bb-readylaunch', $name, array(
-						'default' => array(),
-					) );
+					add_settings_field(
+						$name,
+						$label,
+						array(
+							$this,
+							'bb_enable_setting_callback_page_directory',
+						),
+						'bb-readylaunch',
+						'bb_readylaunch',
+						compact( 'enabled_pages', 'name', 'label', 'description' )
+					);
+					register_setting(
+						'bb-readylaunch',
+						$name,
+						array(
+							'default' => array(),
+						)
+					);
 				}
 			}
 		}
@@ -443,6 +467,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+
+			if ( bp_is_members_directory() ) {
+				wp_enqueue_script( 'bb-rl-members' );
+			}
 
 			wp_localize_script(
 				'bb-readylaunch-front',
@@ -809,8 +837,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$deleted_notification_ids = isset( $_POST['deleted_notification_ids'] ) ? sanitize_text_field( $_POST['deleted_notification_ids'] ) : '';
-			$deleted_notification_ids = array_map( 'intval', explode( ',', $deleted_notification_ids ) );
-
+			$deleted_notification_ids = ! empty( $deleted_notification_ids ) ? array_map( 'intval', explode( ',', $deleted_notification_ids ) ) : array();
 			if ( ! empty( $deleted_notification_ids ) ) {
 				foreach ( $deleted_notification_ids as $deleted_notification_id ) {
 					BP_Notifications_Notification::delete(
@@ -862,6 +889,282 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$response['total_notifications'] = bp_notifications_get_unread_notification_count( $user_id );
 			wp_send_json_success( $response );
 		}
-	}
 
+		/**
+		 * Filters the label for BuddyPress Nouveau filters.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $label     Label for BuddyPress Nouveau filter.
+		 * @param array  $component The data filter's data-bp-filter attribute value.
+		 */
+		public function bb_nouveau_get_filter_label_hook( $label, $component ) {
+			if ( 'members' === $component['object'] ) {
+				$label = __( 'Order', 'buddyboss' );
+			}
+
+			return $label;
+		}
+
+		/**
+		 * Filters to add readylaunch prefix.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $key Key to readylaunch prefix.
+		 */
+		public function bb_rl_prefix_key( $key ) {
+			return 'bb-rl-' . $key;
+		}
+
+		/**
+		 * Register Scripts for the Member component
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $scripts The array of scripts to register.
+		 *
+		 * @return array The same array with the specific messages scripts.
+		 */
+		function bb_rl_nouveau_member_register_scripts( $scripts = array() ) {
+			if ( ! isset( $scripts['bp-nouveau'] ) ) {
+				return $scripts;
+			}
+
+			return array_merge(
+				$scripts,
+				array(
+					'bb-rl-members' => array(
+						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members%s.js',
+						'dependencies' => array( 'bp-nouveau' ),
+						'footer'       => true,
+					),
+					'bp-nouveau-magnific-popup' => array(
+						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+						'dependencies' => array( 'jquery' ),
+						'footer'       => false,
+					),
+				)
+			);
+		}
+
+		/**
+		 * Filters the output of pagination links to add custom classes and ensure "Previous" and "Next" links are always visible.
+		 *
+		 * This function modifies the HTML output generated by paginate_links() by:
+		 * - Adding custom classes to all pagination links.
+		 * - Ensuring "Previous" and "Next" links are always visible, even if first or last page.
+		 * - Add previous and next data labels.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $output The HTML output of the pagination links.
+		 * @param array  $args   The arguments passed to paginate_links().
+		 *
+		 * @return string Modified pagination links output.
+		 */
+		function bb_rl_filter_paginate_links_output( $output, $args ) {
+
+			if ( bp_is_members_directory() ) {
+
+				// Add custom class to span tags (disabled or active links).
+				$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
+
+				$prev_label = esc_html__( 'Prev', 'buddyboss' );
+				$next_label = esc_html__( 'Next', 'buddyboss' );
+
+				// Use prev_text and next_text passed in the paginate_links arguments.
+				$prev_text = isset( $args['prev_text'] ) ? $args['prev_text'] : __( '&larr; Prev', 'buddyboss' );
+				$next_text = isset( $args['next_text'] ) ? $args['next_text'] : __( 'Next &rarr;', 'buddyboss' );
+
+				// Ensure Previous and Next links are always visible (even if disabled).
+				if ( strpos( $output, 'prev bb-rl-page-numbers' ) === false ) {
+					$prev_disabled = sprintf(
+						'<span data-bb-rl-label="%s" class="prev bb-rl-page-numbers disabled">%s</span>',
+						$prev_label,
+						$prev_text
+					);
+					$output        = $prev_disabled . $output;
+				} else {
+					// Replace "Previous" link text with custom text and add data-bb-rl-label attribute.
+					$output = preg_replace(
+						'/<a(.*?)class="prev bb-rl-page-numbers(.*?)"(.*?)>(.*?)<\/a>/i',
+						'<a$1class="prev bb-rl-page-numbers$2"$3 data-bb-rl-label="' . $prev_label . '">' . $prev_text . '</a>',
+						$output
+					);
+				}
+
+				if ( strpos( $output, 'next bb-rl-page-numbers' ) === false ) {
+					$next_disabled = sprintf(
+						'<span data-bb-rl-label="%s" class="next bb-rl-page-numbers disabled">%s</span>',
+						$next_label,
+						$next_text
+					);
+					$output       .= $next_disabled;
+				} else {
+					// Replace "Next" link text with custom text and add data-bb-rl-label attribute.
+					$output = preg_replace(
+						'/<a(.*?)class="next bb-rl-page-numbers(.*?)"(.*?)>(.*?)<\/a>/i',
+						'<a$1class="next bb-rl-page-numbers$2"$3 data-bb-rl-label="' . $next_label . '">' . $next_text . '</a>',
+						$output
+					);
+				}
+			}
+
+			return $output;
+		}
+
+		/**
+		 * Callback function for invite form.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		function bb_rl_invite_form_callback() {
+			$response = array(
+				'message' => esc_html__( 'Unable to send invite.', 'buddyboss' ),
+				'type'    => 'error',
+			);
+		
+			// Verify nonce.
+			if (
+				! isset( $_POST['bb_rl_invite_form_nonce'] ) ||
+				! wp_verify_nonce( $_POST['bb_rl_invite_form_nonce'], 'bb_rl_invite_form_action' )
+			) {
+				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+		
+			$loggedin_user_id = bp_loggedin_user_id();
+
+			// Check if the user is logged in.
+			if ( ! $loggedin_user_id ) {
+				$response['message'] = esc_html__( 'You should be logged in to send an invite.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+		
+			if ( ! bp_is_active( 'invites' ) || ! bp_is_post_request() || empty( $_POST['bb-rl-invite-email'] ) ) {
+				wp_send_json_error( $response );
+			}
+		
+			$email = strtolower( sanitize_email( wp_unslash( $_POST['bb-rl-invite-email'] ) ) );
+			if ( email_exists( $email ) ) {
+				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss' );
+				wp_send_json_error( $response );
+			} elseif ( bb_is_email_address_already_invited( $email, $loggedin_user_id ) ) {
+				$response['message'] = esc_html__( 'Email address already invited.', 'buddyboss' );
+				wp_send_json_error( $response );
+			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
+				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+		
+			$name        = sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) );
+			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
+		
+			$subject = bp_disable_invite_member_email_subject() && ! empty( $_POST['bp_member_invites_custom_subject'] )
+				? stripslashes( strip_tags( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
+				: stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
+		
+			$message = bp_disable_invite_member_email_content() && ! empty( $_POST['bp_member_invites_custom_content'] )
+				? stripslashes( strip_tags( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
+				: stripslashes( strip_tags( bp_get_member_invitation_message() ) );
+		
+			$message .= ' ' . bp_get_member_invites_wildcard_replace(
+				stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ),
+				$email
+			);
+		
+			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
+			$email_encode = urlencode( $email );
+			$inviter_url  = bp_loggedin_user_domain();
+		
+			$_POST['custom_user_email']  = $email;
+			$_POST['custom_user_name']   = $name;
+			$_POST['custom_user_avatar'] = apply_filters(
+				'bp_sent_invite_email_avatar',
+				bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) )
+			);
+		
+			$accept_link = add_query_arg(
+				array(
+					'bp-invites' => 'accept-member-invitation',
+					'email'      => $email_encode,
+					'inviter'    => base64_encode( (string) $loggedin_user_id ),
+				),
+				trailingslashit( bp_get_root_domain() ) . bp_get_signup_slug() . '/'
+			);
+			$accept_link = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
+			
+			$args = array(
+				'tokens' => array(
+					'inviter.name' => $inviter_name,
+					'inviter.url'  => $inviter_url,
+					'invitee.url'  => $accept_link,
+				),
+			);
+		
+			add_filter( 'bp_email_get_salutation', '__return_false' );
+			if ( ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
+				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
+			}
+			$mail = bp_send_email( 'invites-member-invite', $email, $args );
+
+			$post_id = wp_insert_post(
+				array(
+					'post_author'  => $loggedin_user_id,
+					'post_content' => $message,
+					'post_title'   => $subject,
+					'post_status'  => 'publish',
+					'post_type'    => bp_get_invite_post_type(),
+				)
+			);
+		
+			if ( ! $post_id ) {
+				return false;
+			}
+		
+			update_post_meta( $post_id, 'bp_member_invites_accepted', '' );
+			update_post_meta( $post_id, '_bp_invitee_email', $email );
+			update_post_meta( $post_id, '_bp_invitee_name', $name );
+			update_post_meta( $post_id, '_bp_inviter_name', $inviter_name );
+			update_post_meta( $post_id, '_bp_invitee_status', 0 );
+			update_post_meta( $post_id, '_bp_invitee_member_type', $member_type );
+		
+			/**
+			 * Fires after a member invitation is sent.
+			 *
+			 * @param int $user_id Inviter user ID.
+			 * @param int $post_id Invitation post ID.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bp_member_invite_submit', $loggedin_user_id, $post_id );
+		
+			wp_send_json_success(
+				array(
+					'message' => esc_html__( 'Email invite sent successfully.', 'buddyboss' ),
+					'type'    => 'success',
+				)
+			);
+		}
+
+		/**
+		 * Adds custom classes to the array of body classes.
+		 * 
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $classes Classes for the body element.
+		 *
+		 * @return array
+		 */
+		function bb_rl_theme_body_classes( $classes ) {
+			global $post, $wp_query;
+
+			if ( is_active_sidebar( 'bb-readylaunch-sidebar' ) ) {
+				$classes[] = 'bb-rl-has-sidebar';
+			}
+
+			return $classes;
+		}
+	}
 }
