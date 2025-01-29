@@ -689,7 +689,7 @@
 		transition: opacity ease 0.3s;
 	}
 
-	&.active .bb-rl-post-mention {
+	&:has(.medium-editor-toolbar.active) .bb-rl-post-mention {
 		visibility: visible;
 		opacity: 1;
 	}

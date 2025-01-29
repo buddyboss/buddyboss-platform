@@ -3895,7 +3895,7 @@ window.bp = window.bp || {};
 			toggleToolbarSelector: function ( e ) {
 				e.preventDefault();
 				var medium_editor = $( e.currentTarget ).closest( '#bb-rl-whats-new-form' ).find( '.medium-editor-toolbar' );
-				var medium_editor_wrap = $( e.currentTarget ).closest( '#bb-rl-whats-new-form' ).find( '#bb-rl-editor-toolbar' );
+
 				if ( ! medium_editor.hasClass( 'active' ) ) { // Check only when opening toolbar.
 					bp.Nouveau.mediumEditorButtonsWarp( medium_editor );
 				}
@@ -3914,7 +3914,6 @@ window.bp = window.bp || {};
 				}
 				$( window.activity_editor.elements[0] ).focus();
 				medium_editor.toggleClass( 'medium-editor-toolbar-active active' );
-				medium_editor_wrap.toggleClass( 'active' );
 			},
 
 			gifMediaSearchDropdownView: false,

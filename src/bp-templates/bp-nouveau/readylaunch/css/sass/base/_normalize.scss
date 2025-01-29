@@ -176,7 +176,10 @@ img.emojioneemoji {
 }
 
 .bb-readylaunch-template {
+	color: var(--bb-rl-text-color);
+	font-size: 1rem;
 	font-family: var(--bb-rl-font-family-base);
+	line-height: 1.5;
 	font-optical-sizing: auto;
 	font-style: normal;
 }
