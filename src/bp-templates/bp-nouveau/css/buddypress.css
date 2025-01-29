@@ -22317,6 +22317,7 @@ ul.bb-albums-list .load-more {
   text-align: center;
 }
 
+#buddypress .activity-list li.load-more,
 #buddypress .bb-photo-list li.load-more,
 #buddypress .bb-video-list li.load-more {
   margin: 20px auto 10px;
@@ -22326,7 +22327,7 @@ ul.bb-albums-list .load-more {
   max-width: 100%;
   pointer-events: none;
 }
-
+#buddypress .activity-list li.load-more > a
 #buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a {
   max-width: 33%;
