@@ -122,6 +122,17 @@
 
 .bb-rl-members-directory-container {
   gap: var(--bb-rl-space-200);
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-members-directory-container {
+    flex-direction: column;
+    padding-bottom: var(--bb-rl-space-500);
+  }
+  .bb-rl-members-directory-container .bb-rl-widget-sidebar {
+    width: 100%;
+  }
 }
 
 .bb-rl-members-directory-container .bb-rl-members-directory-content {

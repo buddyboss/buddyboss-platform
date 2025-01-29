@@ -5,13 +5,45 @@
 
 	&.grid {
 
-		/* .has-sidebar & {
+		.bb-rl-has-sidebar & {
 
 			.item-entry {
 				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
 				max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
 			}
-		} */
+
+			@media screen and (max-width: 1400px) {
+
+				.item-entry {
+					flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+					max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+				}	
+			}
+
+			@media screen and (max-width: $xl) {
+
+				.item-entry {
+					flex: 0 0 calc(100%);
+					max-width: calc(100%);
+				}
+			}
+
+			@media screen and (max-width: $lg) {
+
+				.item-entry {
+					flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+					max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+				}
+			}
+
+			@media screen and (max-width: $md) {
+
+				.item-entry {
+					flex: 0 0 calc(100%);
+					max-width: calc(100%);
+				}
+			}
+		}
 
 		.item-entry {
 			flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));
@@ -19,14 +51,6 @@
 		}
 
 		@media screen and (max-width: $xl) {
-
-			.item-entry {
-				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-				max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-			}	
-		}
-
-		@media screen and (max-width: $lg) {
 
 			.item-entry {
 				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));

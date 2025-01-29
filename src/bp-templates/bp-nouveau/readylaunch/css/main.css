@@ -310,14 +310,37 @@ img.emojioneemoji {
   gap: var(--bb-rl-space-200);
 }
 
-.bb-rl-members ul.bp-list.grid {
-  /* .has-sidebar & {
+.bb-rl-has-sidebar .bb-rl-members ul.bp-list.grid .item-entry {
+  flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
+  max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
+}
 
-			.item-entry {
-				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-				max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-			}
-		} */
+@media screen and (max-width: 1400px) {
+  .bb-rl-has-sidebar .bb-rl-members ul.bp-list.grid .item-entry {
+    flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+    max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .bb-rl-has-sidebar .bb-rl-members ul.bp-list.grid .item-entry {
+    flex: 0 0 calc(100%);
+    max-width: calc(100%);
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-has-sidebar .bb-rl-members ul.bp-list.grid .item-entry {
+    flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+    max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-has-sidebar .bb-rl-members ul.bp-list.grid .item-entry {
+    flex: 0 0 calc(100%);
+    max-width: calc(100%);
+  }
 }
 
 .bb-rl-members ul.bp-list.grid .item-entry {
@@ -326,13 +349,6 @@ img.emojioneemoji {
 }
 
 @media screen and (max-width: 1200px) {
-  .bb-rl-members ul.bp-list.grid .item-entry {
-    flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-    max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-  }
-}
-
-@media screen and (max-width: 992px) {
   .bb-rl-members ul.bp-list.grid .item-entry {
     flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
     max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
@@ -1590,7 +1606,7 @@ button[data-balloon] {
   display: flex;
   align-items: center;
   margin-top: var(--bb-rl-space-400);
-  margin-bottom: var(--bb-rl-space-700);
+  margin-bottom: var(--bb-rl-space-400);
 }
 
 .bb-rl-container-inner .bp-pagination > .pag-count {
@@ -2655,34 +2671,34 @@ body.admin-bar .bb-rl-left-panel {
   gap: var(--bb-rl-space-200);
 }
 
-.has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
+.bb-rl-has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
   flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
   max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
 }
 
-@media screen and (max-width: 1200px) {
-  .has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
-    flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-    max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
-    flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-    max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-  }
-}
-
-@media screen and (max-width: 800px) {
-  .has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
+@media screen and (max-width: 1400px) {
+  .bb-rl-has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
     flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
     max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
   }
 }
 
-@media screen and (max-width: 544px) {
-  .has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
+@media screen and (max-width: 1200px) {
+  .bb-rl-has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
+    flex: 0 0 calc(100%);
+    max-width: calc(100%);
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .bb-rl-has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
+    flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+    max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-has-sidebar .bb-rl-skeleton-grid.grid .bb-rl-skeleton-grid-block {
     flex: 0 0 calc(100%);
     max-width: calc(100%);
   }
@@ -3068,6 +3084,17 @@ body.admin-bar .bb-rl-left-panel {
 
 .bb-rl-members-directory-container {
   gap: var(--bb-rl-space-200);
+  padding-bottom: var(--bb-rl-space-400);
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-members-directory-container {
+    flex-direction: column;
+    padding-bottom: var(--bb-rl-space-500);
+  }
+  .bb-rl-members-directory-container .bb-rl-widget-sidebar {
+    width: 100%;
+  }
 }
 
 .bb-rl-members-directory-container .bb-rl-members-directory-content {
