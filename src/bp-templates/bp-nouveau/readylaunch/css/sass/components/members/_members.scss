@@ -149,7 +149,7 @@
 	gap: var(--bb-rl-space-200);
 	padding-bottom: var(--bb-rl-space-400);
 
-	@media screen and (max-width: 800px) {
+	@media screen and (max-width: $md) {
 		flex-direction: column;
 		padding-bottom: var(--bb-rl-space-500);
 
