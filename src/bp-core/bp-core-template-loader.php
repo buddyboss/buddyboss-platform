@@ -180,6 +180,8 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
 		load_template( $located, $require_once, $args );
 	}
 
+	unset( $template_location, $template_locations );
+
 	return $located;
 }
 
@@ -217,6 +219,8 @@ function bp_locate_template_asset( $filename ) {
 
 	// Make sure URI path is relative to site URL.
 	$data['uri'] = str_replace( $find, $replace, $data['uri'] );
+
+	unset( $find, $replace, $located );
 
 	return $data;
 }

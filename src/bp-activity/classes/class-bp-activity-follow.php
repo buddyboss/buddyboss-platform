@@ -77,6 +77,7 @@ class BP_Activity_Follow {
 		} else {
 			$this->id = 0;
 		}
+		unset( $row );
 	}
 
 	/**
@@ -181,6 +182,8 @@ class BP_Activity_Follow {
 			$follower_ids = $cached;
 		}
 
+		unset( $sql, $followers_sql, $cached );
+
 		return (array) $follower_ids;
 	}
 
@@ -225,6 +228,8 @@ class BP_Activity_Follow {
 		} else {
 			$following_ids = $cached;
 		}
+
+		unset( $sql, $following_sql, $cached );
 
 		return (array) $following_ids;
 	}

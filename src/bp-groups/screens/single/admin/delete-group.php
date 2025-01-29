@@ -45,6 +45,8 @@ function groups_screen_group_admin_delete_group() {
 			foreach ( $forum_ids as $forum_id ) {
 				wp_delete_post( $forum_id, true );
 			}
+
+			unset( $forum_ids );
 		}
 
 		// Group admin has deleted the group, now do it.

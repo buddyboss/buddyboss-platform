@@ -157,6 +157,8 @@ function bp_groups_filter_kses( $content = '' ) {
 	// Convert HTML entities to their corresponding characters.
 	$content = html_entity_decode( $content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
+	unset( $allowed_tags );
+
 	// Return KSES'ed content, allowing the above tags.
 	return wp_kses( $content, $tags );
 }
@@ -239,6 +241,8 @@ function bp_groups_disable_at_mention_forums_notification_for_non_public_groups(
 	if ( ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
+
+	unset( $group_ids, $group_id );
 
 	return $send;
 }
@@ -412,6 +416,8 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			break;
 	}
 
+	unset( $group_id, $group, $invite_status );
+
 	return $retval;
 
 }
@@ -446,6 +452,8 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		}
 	}
 
+	unset( $group );
+
 	return $can_delete;
 }
 add_filter( 'bp_activity_user_can_delete', 'bp_groups_allow_mods_to_delete_activity', 10, 2 );
@@ -479,6 +487,9 @@ function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
 			$args_forum['post__not_in'] = $exclude_forum_ids;
 		}
 	}
+
+	unset( $exclude_forum_ids );
+
 	return $args_forum;
 }
 
@@ -502,7 +513,7 @@ function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
 			foreach ( $exclude_group_ids as $exclude_group_id ) {
 				// Get forums id by group id.
 				$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );
-				// Loop forum ids to get topics
+				// Loop forum ids to get topics.
 				foreach ( $exclude_forum_ids as $exclude_forum_id ) {
 					$args = array(
 						'post_parent' => $exclude_forum_id,
@@ -523,6 +534,9 @@ function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
 			$args_topic['post__not_in'] = $exclude_topic_ids;
 		}
 	}
+
+	unset( $exclude_topic_ids, $exclude_forum_ids, $exclude_group_ids, $topics, $args, $exclude_forum_id );
+
 	return $args_topic;
 }
 
@@ -626,6 +640,8 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		'relation' => 'OR',
 		$args,
 	);
+
+	unset( $public_groups, $groups, $group_ids, $args );
 
 	return $retval;
 }
@@ -732,6 +748,8 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 		'relation' => 'OR',
 		$args,
 	);
+
+	unset( $public_groups, $groups, $group_ids, $args );
 
 	return $retval;
 }
@@ -858,6 +876,8 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		$folders,
 	);
 
+	unset( $public_groups, $groups, $group_ids, $folders, $folder_ids, $fetch_folder_ids, $single_folder, $single_folder_ids );
+
 	return $args;
 }
 
@@ -975,6 +995,8 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 		$folders,
 	);
 
+	unset( $public_groups, $groups, $group_ids, $folders, $folder_ids, $fetch_folder_ids, $single_folder, $single_folder_ids );
+
 	return $args;
 }
 
@@ -1008,6 +1030,8 @@ function bb_group_member_query_group_message_member_ids( $group_member_ids, $gro
 			$group_member_ids = array_merge( $can_send_arr, $cant_send_arr );
 		}
 	}
+
+	unset( $can_send_arr, $cant_send_arr );
 
 	/**
 	 * Filters the member IDs for the current group member query.
@@ -1096,6 +1120,8 @@ function bb_load_group_type_label_custom_css() {
 		}
 		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
 	}
+
+	unset( $registered_group_types, $cache_key, $group_type_custom_css, $type, $label_color_data, $background_color, $text_color, $class_name );
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
@@ -1126,6 +1152,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	$activity = new BP_Activity_Activity( $activity_id );
 
 	if ( ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
+		unset( $activity );
 		return;
 	}
 
@@ -1135,6 +1162,7 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
 		bb_get_activity_published_status() !== $activity->status
 	) {
+		unset( $activity );
 		return;
 	}
 
@@ -1200,6 +1228,8 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 			),
 		)
 	);
+
+	unset( $activity, $activity_user_id, $poster_name, $activity_link, $group, $activity_metas, $media_ids, $document_ids, $video_ids, $gif_data, $activity_type, $args );
 }
 add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
 
@@ -1258,6 +1288,7 @@ function bb_group_subscriptions_handler() {
 
 	// Bail if actions aren't meant for this function.
 	if ( ! in_array( $action, $possible_actions, true ) ) {
+		unset( $group_id, $action, $nonce, $group );
 		return;
 	}
 
@@ -1328,6 +1359,9 @@ function bb_group_subscriptions_handler() {
 	if ( ! empty( $message ) ) {
 		bp_core_add_message( $message, $type );
 	}
+
+	unset( $group_id, $action, $nonce, $group, $message, $type, $group_name, $is_subscription, $subscription_id );
+
 	wp_safe_redirect( esc_url( trailingslashit( home_url( $wp->request ) ) ) );
 	exit();
 }
@@ -1405,10 +1439,13 @@ function bb_subscription_send_subscribe_group_media_notifications( $content, $us
 		'groups' !== $activity->component ||
 		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
 	) {
+		unset( $activity );
 		return;
 	}
 
 	bb_subscription_send_subscribe_group_notifications( $content, $user_id, $activity->item_id, $activity_id );
+
+	unset( $activity );
 }
 add_action( 'bb_media_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_subscription_send_subscribe_group_media_notifications', 10, 3 );
@@ -1483,6 +1520,8 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 			bbp_remove_user_topic_subscription( $user_id, $topic_id );
 		}
 	}
+
+	unset( $forum_ids, $notifications, $topic_forum_id, $topic_id );
 }
 
 /**
@@ -1563,6 +1602,8 @@ function bb_group_remove_suspended_user( $user_id ) {
 				groups_update_groupmeta( $group_id, 'bb_suspended_users', $suspended_users );
 			}
 		}
+
+		unset( $group_ids, $admin, $group_id, $member, $suspended_users );
 	}
 }
 
@@ -1629,6 +1670,8 @@ function bb_group_add_unsuspended_user( $user_id ) {
 			}
 		}
 	}
+
+	unset( $group_metas, $group, $group_meta, $result_index, $member );
 }
 
 /**

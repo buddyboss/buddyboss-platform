@@ -178,6 +178,8 @@ add_action(
 			unset( $component['video'] );
 			bp_update_option( 'bp-active-components', $component );
 		}
+
+		unset( $component );
 	},
 	10,
 	2
@@ -548,6 +550,8 @@ function bb_render_notification_settings() {
 			bb_render_notification( $group );
 		}
 	}
+
+	unset( $registered_notification, $group, $data );
 }
 
 /**
@@ -669,6 +673,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		! is_a( $post, 'WP_Post' ) ||
 		( isset( $post->post_type ) && 'post' !== $post->post_type ) // Allow only for the WP default post only.
 	) {
+		unset( $post );
 		return false;
 	}
 
@@ -677,10 +682,12 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 	$parent_comment = get_comment( $commentdata['comment_parent'] );
 
 	if ( empty( $parent_comment->user_id ) ) {
+		unset( $comment_author, $parent_comment, $post );
 		return false;
 	}
 
 	if ( ! empty( $comment_author ) && $comment_author->ID === (int) $parent_comment->user_id ) {
+		unset( $comment_author, $parent_comment, $post );
 		return false;
 	}
 
@@ -690,6 +697,7 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		! empty( $comment_author ) &&
 		true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $comment_author->ID, $parent_comment->user_id )
 	) {
+		unset( $comment_author, $parent_comment, $post );
 		return false;
 	}
 
@@ -746,6 +754,8 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 		 */
 		do_action( 'bb_post_new_comment_reply_notification', $comment_id, $comment_author_id, $commentdata );
 	}
+
+	unset( $comment_author, $parent_comment, $post, $comment_author_id, $comment_content, $comment_link, $parent_comment_author_id, $comment_author_name );
 }
 
 /**
@@ -784,6 +794,8 @@ function bb_post_new_comment_reply_notification_helper( $comment_ID, $comment ) 
 	if ( empty( $notification_already_sent ) && 1 === (int) $commentdata['comment_approved'] ) {
 		bb_post_new_comment_reply_notification( $commentdata['comment_ID'], $commentdata['comment_approved'], $commentdata );
 	}
+
+	unset( $commentdata, $notification_already_sent );
 }
 
 /**
@@ -869,16 +881,19 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	// Don't record activity if the comment hasn't been approved.
 	if ( empty( $is_approved ) ) {
+		unset( $post_type_comment );
 		return false;
 	}
 
 	// Don't record activity if no email address has been included.
 	if ( empty( $post_type_comment->comment_author_email ) ) {
+		unset( $post_type_comment );
 		return false;
 	}
 
 	// Don't record activity if the comment has already been marked as spam.
 	if ( 'spam' === $is_approved ) {
+		unset( $post_type_comment );
 		return false;
 	}
 
@@ -887,6 +902,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	// If user isn't registered, don't record activity.
 	if ( empty( $user ) ) {
+		unset( $post_type_comment, $user );
 		return false;
 	}
 
@@ -897,6 +913,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 	$post = get_post( $post_type_comment->comment_post_ID );
 
 	if ( ! is_a( $post, 'WP_Post' ) ) {
+		unset( $post_type_comment, $user, $post );
 		return false;
 	}
 
@@ -911,6 +928,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 			)
 		)
 	) {
+		unset( $post_type_comment, $user, $post );
 		return;
 	}
 
@@ -918,6 +936,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 	$usernames = bp_find_mentions_by_at_sign( array(), $post_type_comment->comment_content );
 
 	if ( empty( $usernames ) ) {
+		unset( $post_type_comment, $user, $post );
 		return;
 	}
 
@@ -1009,6 +1028,8 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		}
 	}
 
+	unset( $post_type_comment, $user, $post, $usernames, $user_id, $username, $reply_author_name, $author_id, $reply_content, $reply_url, $title_text, $email_type, $unsubscribe_args, $notification_type_html, $args );
+
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
@@ -1032,6 +1053,7 @@ function bb_mention_post_type_comment_status_change( $new_status, $old_status, $
 	) {
 		$commentdata = get_object_vars( $comment );
 		bb_mention_post_type_comment( $commentdata['comment_ID'], $commentdata['comment_approved'] );
+		unset( $commentdata );
 	}
 }
 

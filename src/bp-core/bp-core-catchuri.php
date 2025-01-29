@@ -1025,6 +1025,8 @@ function bp_get_canonical_url( $args = array() ) {
 		$canonical_url = array_pop( $canonical_url );
 	}
 
+	unset( $url_stack, $requested_url );
+
 	/**
 	 * Filters the canonical url of the current page.
 	 *
@@ -1480,6 +1482,8 @@ function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_ra
 				$dashboard_link = get_permalink( $profile_dashboard );
 				$redirect_to    = $dashboard_link;
 			}
+
+			unset( $page_ids, $profile_dashboard );
 		}
 	}
 	return apply_filters( 'bp_core_login_profile_dashboard_redirect', $redirect_to );
@@ -1502,10 +1506,12 @@ function bp_core_profile_dashboard_non_logged_redirect() {
 				$profile_dashboard = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
 				if ( $profile_dashboard > 0 ) {
 					if ( is_page( $profile_dashboard ) ) {
+						unset( $page_ids, $profile_dashboard );
 						wp_safe_redirect( site_url() );
 						exit();
 					}
 				}
+				unset( $page_ids, $profile_dashboard );
 			}
 		}
 	}
@@ -1536,6 +1542,8 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 
 			$default_url = add_query_arg( $args, network_site_url( 'wp-login.php', 'login' ) );
 		}
+
+		unset( $enable_private_network, $args );
 	}
 
 	return $default_url;
@@ -1630,6 +1638,8 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 
 		$privacy_policy_url = '';
 	}
+
+	unset( $page_ids, $terms, $privacy, $page_title, $get_terms, $get_term_content, $get_privacy, $get_content );
 
 	return apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
 }

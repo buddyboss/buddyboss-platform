@@ -47,5 +47,7 @@ function bp_activity_admin_menu() {
 			'href'  => esc_url( $activity_edit_link ),
 		)
 	);
+
+	unset( $activity_edit_link );
 }
 add_action( 'admin_bar_menu', 'bp_activity_admin_menu', 99 );

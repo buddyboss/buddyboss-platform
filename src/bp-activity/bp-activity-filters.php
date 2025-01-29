@@ -266,6 +266,8 @@ function bp_activity_check_blacklist_keys( $activity ) {
 		// Backpat.
 		$activity->component = false;
 	}
+
+	unset( $blacklist );
 }
 
 /**
@@ -307,6 +309,8 @@ function bp_activity_save_link_data( $activity ) {
 		} else {
 			$link_url = $_POST['link_url'];
 		}
+
+		unset( $parsed_url );
 	}
 
 	$link_url   = ! empty( $link_url ) ? filter_var( $link_url, FILTER_VALIDATE_URL ) : '';
@@ -353,6 +357,7 @@ function bp_activity_save_link_data( $activity ) {
 			// store non downloadable urls as it is in preview data.
 			$preview_data['image_url'] = $link_image;
 		}
+		unset( $attachment_id );
 	}
 
 	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
@@ -368,6 +373,7 @@ function bp_activity_save_link_data( $activity ) {
 	}
 
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
+	unset( $preview_data, $link_image, $link_title, $link_description );
 }
 
 /**
@@ -392,7 +398,9 @@ function bp_activity_update_comment_privacy( $activity ) {
 				bp_activity_comment_privacy_update( $comment, $activity->privacy );
 			}
 		}
+		unset( $children );
 	}
+	unset( $activity_comments );
 }
 
 /**
@@ -498,6 +506,8 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		}
 	}
 
+	unset( $replacements, $replace_count, $content_matches );
+
 	// Return the content.
 	return $content;
 }
@@ -536,6 +546,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
 				$activity->content = preg_replace( $pattern, $replacement, $activity->content );
 			}
+			unset( $replacement );
 		}
 
 		if ( ! bb_is_rest() ) {
@@ -548,6 +559,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 		// Temporary variable to avoid having to run bp_activity_find_mentions() again.
 		buddypress()->activity->mentioned_users = $usernames;
 	}
+	unset( $usernames );
 }
 
 /**
@@ -600,6 +612,8 @@ function bp_activity_at_name_send_emails( $activity ) {
 			bp_activity_update_mention_count_for_user( $user_id, $activity->id );
 		}
 	}
+
+	unset( $usernames );
 }
 
 /**
@@ -776,6 +790,8 @@ function bp_activity_link_preview( $content, $activity ) {
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';
 	$content .= '</div>';
+
+	unset( $activity_metas, $description, $domain_name, $parse_url, $read_more, $preview_data );
 
 	return $content;
 }
@@ -1024,6 +1040,8 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 		)
 	);
 
+	unset( $global_pulse, $heartbeat_settings, $bp_activity_pulse, $pulse );
+
 	return $strings;
 }
 add_filter( 'bp_core_get_js_strings', 'bp_activity_heartbeat_strings', 10, 1 );
@@ -1165,6 +1183,8 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		),
 	);
 
+	unset( $privacy, $show_hidden, $friends, $public_groups, $user_groups, $logged_in_user_groups );
+
 	return $retval;
 }
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_activity_filter_just_me_scope', 10, 2 );
@@ -1197,6 +1217,8 @@ function bp_activity_filter_public_scope( $retval = array(), $filter = array() )
 			'value'  => 0,
 		),
 	);
+
+	unset( $privacy );
 
 	return $retval;
 }
@@ -1337,6 +1359,8 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			),
 		);
 	}
+
+	unset( $favs, $friends, $friends_filter, $onlyme_filter, $privacy, $show_hidden );
 
 	return $retval;
 }
@@ -1492,6 +1516,8 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 		$privacy_scope,
 	);
 
+	unset( $privacy, $friends, $public_groups, $user_groups, $privacy_scope );
+
 	return $retval;
 }
 add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_scope', 10, 2 );
@@ -1527,6 +1553,7 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 				)
 			);
 		}
+		unset( $qs_args );
 	}
 
 	return $qs;
@@ -1639,6 +1666,8 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 			'show_hidden' => true,
 		),
 	);
+
+	unset( $privacy, $friends, $friends_follow, $following_ids );
 
 	return $retval;
 }
@@ -2150,6 +2179,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 						// save parent activity id in attachment meta.
 						update_post_meta( $old_media->attachment_id, 'bp_media_parent_activity_id', $bp_activity_post_update_id );
 					}
+					unset( $old_media, $activity_id, $media_activity );
 				}
 
 				// old media count is greater than 1 and new media uploaded count is only 1 now.
@@ -2172,6 +2202,8 @@ function bp_activity_edit_update_media( $media_ids ) {
 
 					// save parent activity id in attachment meta.
 					update_post_meta( $new_media->attachment_id, 'bp_media_parent_activity_id', $bp_activity_post_update_id );
+
+					unset( $new_media, $media_activity_id );
 				}
 
 				// old media and new media count is same and old media and new media are different.
@@ -2191,6 +2223,7 @@ function bp_activity_edit_update_media( $media_ids ) {
 						// delete attachment activity id meta.
 						delete_post_meta( $old_media->attachment_id, 'bp_media_parent_activity_id' );
 					}
+					unset( $old_media, $old_media_id );
 				}
 			}
 		}
@@ -2239,7 +2272,10 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 			$id   = current( $notification )->id;
 			$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_obj->id ) );
 		}
+		unset( $notification );
 	}
+
+	unset( $activity_obj );
 
 	return $link;
 }
@@ -2466,6 +2502,8 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 
 				// save parent activity id in attachment meta.
 				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $activity_id );
+
+				unset( $document );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $added_document_ids ) );
@@ -2499,6 +2537,8 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			if ( ! empty( $main_activity->id ) ) {
 				do_action( 'bb_document_after_create_parent_activity', $main_activity->content, $main_activity->user_id, $main_activity->id );
 			}
+
+			unset( $main_activity );
 		}
 	}
 
@@ -2568,6 +2608,8 @@ function bp_activity_edit_update_document( $document_ids ) {
 						// save parent activity id in attachment meta.
 						update_post_meta( $old_document->attachment_id, 'bp_document_parent_activity_id', $bp_activity_post_update_id );
 					}
+
+					unset( $old_document, $activity_id, $document_activity );
 				}
 
 				// old document count is greater than 1 and new document uploaded count is only 1 now.
@@ -2592,6 +2634,8 @@ function bp_activity_edit_update_document( $document_ids ) {
 					update_post_meta( $new_document->attachment_id, 'bp_document_parent_activity_id', $bp_activity_post_update_id );
 				}
 
+				unset( $new_document, $document_activity_id );
+
 				// old document and new document count is same and old document and new document are different.
 			} elseif ( 1 === count( $old_document_ids ) && 1 === count( $document_ids ) ) {
 				$new_document_id = (int) $document_ids[0];
@@ -2610,6 +2654,8 @@ function bp_activity_edit_update_document( $document_ids ) {
 						delete_post_meta( $old_document->attachment_id, 'bp_document_parent_activity_id' );
 					}
 				}
+
+				unset( $old_document, $old_document_id );
 			}
 		}
 
@@ -2638,6 +2684,8 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 		if ( in_array( $activity->privacy, array( 'document', 'media', 'video' ), true ) ) {
 			unset( $buttons['activity_edit'] );
 		}
+
+		unset( $activity );
 	}
 
 	return $buttons;
@@ -2665,6 +2713,8 @@ function bp_blogs_activity_content_set_temp_content() {
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$activities_template->activity->content = '&#8203;';
 	}
+
+	unset( $activity, $content );
 
 }
 
@@ -2715,6 +2765,8 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				$content = sprintf( '%1$s <div class="bb-content-wrp">%2$s %3$s</div>', $content_img, $post_title, wpautop( $content ) );
 			}
 		}
+
+		unset( $blog_post );
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
@@ -2723,6 +2775,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 			$content     = wpautop( sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text ) );
 		}
+		unset( $comment );
 	}
 
 	return $content;
@@ -2766,6 +2819,8 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 				}
 			}
 		}
+
+		unset( $comment_activity, $get_post_type, $comment_id, $comment, $activity_metas );
 	}
 
 	return $content;
@@ -2859,6 +2914,8 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 		}
 	}
 
+	unset( $main_activity );
+
 	return $can_comment;
 }
 
@@ -2897,6 +2954,8 @@ function bb_remove_discussion_comment_reply_button( $buttons, $activity_comment_
 	if ( ! empty( $buttons['activity_comment_reply'] ) && in_array( $action_name, $disabled_actions, true ) ) {
 		$buttons['activity_comment_reply'] = '';
 	}
+
+	unset( $activity );
 
 	return $buttons;
 }
@@ -2981,6 +3040,7 @@ function bp_activity_video_add( $video ) {
 		// save attachment meta for activity.
 		update_post_meta( $video->attachment_id, 'bp_video_activity_id', $bb_activity_comment_edit_id );
 
+		unset( $comment, $comment_activity );
 		// This is for create new activity or comment or edit activity.
 	} elseif ( ! empty( $video ) && empty( $video->activity_id ) ) {
 		$parent_activity_id = false;
@@ -3055,6 +3115,8 @@ function bp_activity_video_add( $video ) {
 					update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
 				}
 			}
+
+			unset( $comment, $comment_activity, $parent_activity_id, $video_activity, $activity_id );
 		} else {
 
 			if ( $parent_activity_id ) {
@@ -3075,6 +3137,8 @@ function bp_activity_video_add( $video ) {
 				// save parent activity id in attachment meta.
 				update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
 			}
+
+			unset( $parent_activity_id );
 		}
 	}
 }
@@ -3198,6 +3262,8 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 	}
 
+	unset( $video_object, $video, $main_activity, $video_activity, $group_id, $album_id, $activity_id, $privacy, $added_video_ids, $content );
+
 	return $video_ids;
 }
 
@@ -3311,6 +3377,8 @@ function bp_activity_edit_update_video( $video_ids ) {
 		}
 
 		bb_activity_edit_update_video_status( $video_ids );
+
+		unset( $old_video_ids, $old_video_id, $old_video, $new_video_id, $new_video, $video_activity_id, $activity_metas );
 	}
 
 	return $video_ids;
@@ -3357,6 +3425,8 @@ function bb_activity_delete_link_review_attachment( $activities ) {
 			}
 		}
 	}
+
+	unset( $activity_ids, $activity_metas, $link_preview_meta );
 }
 
 /**
@@ -3515,6 +3585,7 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
 		bb_get_activity_published_status() !== $activity->status
 	) {
+		unset( $activity );
 		return;
 	}
 
@@ -3527,6 +3598,8 @@ function bb_activity_send_email_to_following_post( $content, $user_id, $activity
 
 	// Send notification to followers.
 	bb_activity_create_following_post_notification( $parse_args );
+
+	unset( $activity, $usernames );
 }
 
 add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
@@ -3566,6 +3639,8 @@ function bb_send_email_to_follower( $follower ) {
 		$args['tokens']['unsubscribe'] = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 		// Send notification email.
 		bp_send_email( 'new-follower', $following_user_id, $args );
+
+		unset( $args, $unsubscribe_args );
 	}
 
 	if ( bp_is_active( 'notifications' ) ) {
@@ -3581,6 +3656,8 @@ function bb_send_email_to_follower( $follower ) {
 			)
 		);
 	}
+
+	unset( $user_id, $following_user_id );
 }
 add_action( 'bp_start_following', 'bb_send_email_to_follower' );
 
@@ -3597,6 +3674,7 @@ function bb_activity_at_name_send_emails( $content, $user_id, $activity_id ) {
 	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
+	unset( $activity );
 }
 
 /**
@@ -3613,6 +3691,7 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
 	add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 	$activity = new BP_Activity_Activity( $activity_id );
 	bp_activity_at_name_send_emails( $activity );
+	unset( $activity );
 }
 
 /**
@@ -3627,6 +3706,7 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
 	$activity = new BP_Activity_Activity( $comment_id );
 	bp_activity_at_name_send_emails( $activity );
+	unset( $activity );
 }
 
 /**
@@ -3729,6 +3809,8 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 			}
 		}
 	}
+
+	unset( $parent_activity, $activity_metas, $comment_id, $comment );
 
 	return $activity_comment_data;
 }

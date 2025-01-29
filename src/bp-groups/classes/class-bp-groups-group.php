@@ -636,6 +636,8 @@ class BP_Groups_Group {
 
 		$this->admins = $admin_objects;
 		$this->mods   = $mod_objects;
+
+		unset( $admin_ids, $admin_ids_plucked, $mod_ids, $mod_ids_plucked, $admin_mod_ids, $admin_mod_users, $admin_objects, $mod_objects );
 	}
 
 	/**

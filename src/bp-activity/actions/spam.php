@@ -39,6 +39,7 @@ function bp_activity_action_spam_activity( $activity_id = 0 ) {
 	// Load up the activity item.
 	$activity = new BP_Activity_Activity( $activity_id );
 	if ( empty( $activity->id ) ) {
+		unset( $activity );
 		return false;
 	}
 
@@ -71,6 +72,8 @@ function bp_activity_action_spam_activity( $activity_id = 0 ) {
 	 * @param int $user_id     User ID associated with activity.
 	 */
 	do_action( 'bp_activity_action_spam_activity', $activity_id, $activity->user_id );
+
+	unset( $activity, $activity_id );
 
 	// Check for the redirect query arg, otherwise let WP handle things.
 	if ( ! empty( $_GET['redirect_to'] ) ) {

@@ -72,6 +72,8 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 	 */
 	do_action( 'bp_activity_action_delete_activity', $activity_id, $activity->user_id );
 
+	unset( $activity, $activity_id );
+
 	// Check for the redirect query arg, otherwise let WP handle things.
 	if ( ! empty( $_GET['redirect_to'] ) ) {
 		bp_core_redirect( esc_url( $_GET['redirect_to'] ) );

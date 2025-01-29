@@ -103,6 +103,7 @@ function bp_activity_embed_has_activity( $activity_id = 0 ) {
 
 		// No need to requery if we already got the embed activity
 		if ( (int) $activity_id === $activity->id ) {
+			unset( $activity );
 			return $activities_template->has_activities();
 		}
 	}
@@ -351,6 +352,8 @@ EOD;
 				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss' )
 			);
 		}
+
+		unset( $media, $content );
 	}
 
 	/** This hook is documented in /bp-activity/bp-activity-embeds.php */

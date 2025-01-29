@@ -57,6 +57,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 			} else {
 				bb_migrate_users_forum_topic_subscriptions( $results, $offset, $is_background );
 			}
+			unset( $results );
 		}
 
 		// Migrate bbpress forums/topics subscription to BuddyBoss new system.
@@ -223,6 +224,8 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 
 				wp_cache_flush();
 
+				unset( $place_holder_queries );
+
 				// Purge all the cache for API.
 				if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 					BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bb-subscriptions' );
@@ -278,6 +281,7 @@ function bb_subscriptions_migrate_bbpress_users_forum_topic( $is_background = fa
 				bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background, $site->blog_id );
 				restore_current_blog();
 			}
+			unset( $sites );
 		} else {
 			$switch = false;
 
@@ -349,6 +353,8 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 						);
 
 						$bp_background_updater->save();
+
+						unset( $chunk_result );
 					}
 				}
 
@@ -356,6 +362,8 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 			} else {
 				bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
 			}
+
+			unset( $results, $chunk_results );
 		}
 	} else {
 
@@ -525,6 +533,8 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 		}
 	}
 
+	unset( $place_holder_queries, $subscription_posts, $post, $bbpress_subscriptions, $group_ids );
+
 	if ( true === $is_background ) {
 		// Update the migration offset.
 		update_site_option( 'bb_subscriptions_migrate_bbpress_offset', $offset );
@@ -600,6 +610,8 @@ function bb_get_subscriptions_types( $singular = false ) {
 			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) );
 		}
 	}
+
+	unset( $all_subscriptions_types );
 
 	return $types;
 }
@@ -704,6 +716,8 @@ function bb_create_subscription( $args = array() ) {
 	$new_subscription->error_type        = $r['error_type'];
 	$new_subscription->status            = $r['status'];
 	$new_subscription_created            = $new_subscription->save();
+
+	unset( $new_subscription, $subscriptions );
 
 	// Return if not create a subscription.
 	if ( is_wp_error( $new_subscription_created ) || ! $new_subscription_created ) {
@@ -995,6 +1009,8 @@ function bb_delete_subscriptions_by_item( $type, $item_id, $blog_id = 0 ) {
 	 */
 	do_action( 'bb_subscriptions_after_delete_item_subscriptions', $subscriptions, $type, $item_id, $blog_id );
 
+	unset( $all_subscriptions, $subscriptions );
+
 	return true;
 }
 
@@ -1106,6 +1122,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	);
 
 	if ( empty( $subscriptions['subscriptions'] ) ) {
+		unset( $type_data, $subscriptions );
 		return;
 	}
 
@@ -1172,6 +1189,8 @@ function bb_send_notifications_to_subscribers( $args ) {
 		);
 	}
 
+	unset( $type_data, $subscriptions, $parse_args, $usernames );
+
 }
 
 /**
@@ -1209,6 +1228,8 @@ function bb_delete_group_forum_topic_subscriptions( $group_id ) {
 			$forum_ids = implode( ',', array_filter( wp_parse_id_list( $forum_ids ) ) );
 			$wpdb->query( "DELETE FROM {$subscription_tbl} WHERE item_id IN ({$forum_ids}) AND type = 'forum' AND blog_id = {$blog_id}" ); // phpcs:ignore
 		}
+
+		unset( $forum_ids, $child_forums, $get_child_forums );
 
 		// Clear subscription cache.
 		if (
@@ -1369,7 +1390,10 @@ function bb_migrating_group_member_subscriptions( $groups = array(), $is_backgro
 			}
 
 			bb_delete_group_forum_topic_subscriptions( $group_id );
+
+			unset( $member_ids, $chunk_results, $chunk_result );
 		}
+		unset( $groups );
 	}
 
 	if ( $is_background ) {
@@ -1436,4 +1460,6 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
+
+	unset( $subscription_tbl, $insert_query, $record_args, $subscription_exists );
 }

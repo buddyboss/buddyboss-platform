@@ -34,6 +34,7 @@ function bp_activity_update_meta_cache( $activity_ids = false ) {
 	);
 
 	bp_update_meta_cache( $cache_args );
+	unset( $cache_args );
 }
 
 /**
@@ -253,7 +254,9 @@ function bb_activity_comment_reset_count( $activities ) {
 						}
 					}
 				}
+				unset( $descendants );
 			}
+			unset( $comments );
 		}
 	}
 }

@@ -116,6 +116,8 @@ function groups_screen_group_admin_settings() {
 		 */
 		do_action( 'groups_group_settings_edited', $bp->groups->current_group->id );
 
+		unset( $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status );
+
 		bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'admin/group-settings/' );
 	}
 

@@ -589,6 +589,8 @@ function bp_search_form_type_select() {
 
 	$selection_box .= '</select>';
 
+	unset( $options );
+
 	/**
 	 * Filters the complete <select> input used for search scope.
 	 *
@@ -820,6 +822,8 @@ function bp_get_form_field_attributes( $name = '', $attributes = array() ) {
 			$retval .= sprintf( ' %s="%s"', sanitize_key( $attr ), esc_attr( $value ) );
 		}
 	}
+
+	unset( $name, $attributes, $attr, $value );
 
 	return $retval;
 }

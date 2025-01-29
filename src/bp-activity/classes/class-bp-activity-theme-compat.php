@@ -91,6 +91,8 @@ class BP_Activity_Theme_Compat {
 		// @see bp_get_theme_compat_templates().
 		$templates = array_merge( (array) $new_templates, $templates );
 
+		unset( $new_templates );
+
 		return $templates;
 	}
 
@@ -156,6 +158,8 @@ class BP_Activity_Theme_Compat {
 		// Merge new templates with existing stack
 		// @see bp_get_theme_compat_templates().
 		$templates = array_merge( (array) $new_templates, $templates );
+
+		unset( $new_templates );
 
 		return $templates;
 	}
