@@ -26288,6 +26288,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   transform: translateY(-50%);
 }
 
+.activity-head-bar .activity-type-navs + .bb-subnav-filters-search {
+  margin-left: 20px;
+}
+
 .has-sidebar #buddypress .bb-profile-grid:has(.widget-area) .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
   width: 200px;
 }
