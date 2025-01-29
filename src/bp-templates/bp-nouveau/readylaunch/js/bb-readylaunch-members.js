@@ -17,8 +17,7 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function () {
-			this.inviteMember();
-			this.sentInvitesFormValidate();
+			this.inviteMemberPopup();
 		},
 
 		/**
@@ -27,7 +26,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 		},
 
-		inviteMember: function () {
+		inviteMemberPopup: function () {
 			$( document ).on( 'click', '#bb-rl-invite-button',function ( e ) {
 				e.preventDefault();
 
@@ -47,47 +46,58 @@ window.bp = window.bp || {};
 					$modal.hide();
 				}
 			} );
+
+			$( document ).on( 'submit', '#bb-rl-invite-form', this.submitInviteMemberPopupForm );
 		},
 
-		sentInvitesFormValidate: function () {
+		submitInviteMemberPopupForm: function ( e ) {
 
-			if ( $( '#bb-rl-invite-form' ).length ) {
+			e.preventDefault();
 
-				$( '#bb-rl-invite-form' ).submit(
-					function ( e ) {
+			var isValid = true;
+			var $form = $( this );
 
-						e.preventDefault();
+			// Reset error classes
+			$form.removeClass( 'bb-rl-form-error' );
+			$form.find( '.bb-rl-input-field' ).removeClass( 'bb-rl-input-field--error' );
 
-						var isValid = true;
-						var $form = $( this );
+			// Validate Name
+			var $nameField = $( '#bb-rl-invite-name' );
+			if ( $nameField.val().trim() === '' ) {
+				$nameField.addClass( 'bb-rl-input-field--error' );
+				isValid = false;
+			}
 
-						// Reset error classes
-						$form.removeClass( 'bb-rl-form-error' );
-						$form.find( '.bb-rl-input-field' ).removeClass( 'bb-rl-input-field--error' );
+			// Validate Email
+			const $emailField = $( '#bb-rl-invite-email' );
+			const emailValue = $emailField.val().trim();
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-						// Validate Name
-						var $nameField = $( '#bb-rl-invite-name' );
-						if ( $nameField.val().trim() === '' ) {
-							$nameField.addClass( 'bb-rl-input-field--error' );
-							isValid = false;
+			if ( !emailRegex.test( emailValue ) ) {
+				$emailField.addClass( 'bb-rl-input-field--error' );
+				isValid = false;
+			}
+
+			if ( ! isValid) {
+				$form.addClass( 'bb-rl-form-error' );
+			} else {
+				// Ajax submit the form.
+				var formData = $form.serialize();
+				$.ajax(
+					{
+						method: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: formData,
+						success: function (response) {
+							if ( response.success ) {
+								alert(response.data.message); // Success message
+							} else {
+								alert( response.data.message ); // Error message
+							}
+						},
+						error: function (xhr, status, error) {
+							console.log('There was an error submitting the form. Please try again.');
 						}
-
-						// Validate Email
-						const $emailField = $( '#bb-rl-invite-email' );
-						const emailValue = $emailField.val().trim();
-						const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-						if ( !emailRegex.test( emailValue ) ) {
-							$emailField.addClass( 'bb-rl-input-field--error' );
-							isValid = false;
-						}
-
-						if ( ! isValid) {
-							$form.addClass( 'bb-rl-form-error' );
-						} else {
-							$form.off( 'submit' ).submit();
-						}
-
 					}
 				);
 			}

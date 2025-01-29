@@ -188,8 +188,8 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 							if ( true === $is_disabled_invite_member_subject ) {
 								?>
 								<div class="bb-rl-form-field-wrapper">
-									<label for="bb-rl-invite-subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
-									<textarea name="bb-rl-invite-subject" id="bb-rl-invite-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
+									<label for="bb-rl-invite-custom-subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
+									<textarea name="bp_member_invites_custom_subject" id="bb-rl-invite-custom-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
 								</div>
 								<?php
 							}
@@ -197,13 +197,13 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 							if ( true === $is_disabled_invite_member_content ) {
 								?>
 								<div class="bb-rl-form-field-wrapper">
-									<label for="bb-rl-invite-message"><?php esc_html_e( 'Invitation message', 'buddyboss' ); ?></label>
+									<label for="bb-rl-invite-custom-content"><?php esc_html_e( 'Invitation message', 'buddyboss' ); ?></label>
 									<?php
 										add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
 										add_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
 										wp_editor(
 											bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
-											'bb-rl-member-invites-custom-content',
+											'bb-rl-invite-custom-content',
 											array(
 												'textarea_name' => 'bp_member_invites_custom_content',
 												'teeny'         => false,
@@ -222,7 +222,9 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 								</div>
 								<?php
 							}
+							wp_nonce_field( 'bb_rl_invite_form_action', 'bb_rl_invite_form_nonce' );
 							?>
+							<input type="hidden" name="action" value="bb_rl_invite_form" />
 						</form>
 					</div>
 					<footer class="bb-rl-modal-footer flex items-center">
