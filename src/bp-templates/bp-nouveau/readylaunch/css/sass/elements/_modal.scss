@@ -181,15 +181,18 @@
 
 		.button {
 			padding: 4px var(--bb-rl-space-200);
+
 			@include bb-rl-button;
 			padding: 4px var(--bb-rl-space-100);
 			font-size: 0.875rem;
 
 			&.report-submit {
+
 				@include bb-rl-button--brand-fill;
 			}
 
 			&.bb-cancel-report-content {
+
 				@include bb-rl-button-secondary-fill;
 			}
 		}
