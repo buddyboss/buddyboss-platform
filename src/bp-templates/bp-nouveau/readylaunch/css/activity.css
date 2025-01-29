@@ -667,6 +667,11 @@
   opacity: 1;
 }
 
+#bb-rl-editor-toolbar:has(.medium-editor-toolbar-form.medium-editor-toolbar-form-active) .bb-rl-post-mention {
+  visibility: hidden;
+  opacity: 0;
+}
+
 #bb-rl-editor-toolbar .medium-editor-action {
   padding: var(--bb-rl-space-50);
   background-color: transparent;
@@ -727,6 +732,51 @@
 
 #bb-rl-editor-toolbar .medium-editor-action-pre b:before {
   content: "\e1bc";
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  color: var(--bb-rl-text-color);
+  background-color: transparent;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  height: 35px;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input:focus {
+  color: var(--bb-rl-text-color);
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
+  color: var(--bb-rl-text-color);
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form > a {
+  font-size: 0;
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form > a:before {
+  content: "\e182";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 22px;
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form > a.medium-editor-toolbar-save:before {
+  content: "\e182";
+}
+
+#bb-rl-editor-toolbar .medium-editor-toolbar-form > a.medium-editor-toolbar-close:before {
+  content: "\e4f6";
 }
 
 .bb-rl-whats-new-toolbar--addon .bb-rl-post-elements-buttons-item {
