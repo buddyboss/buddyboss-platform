@@ -238,10 +238,22 @@
 			position: relative;
 		}
 
+		.bb-rl-whats-new-toolbar--inner:after {
+			content: "";
+			width: 1px;
+			background-color: var(--bb-rl-border-tertiary-color);
+			height: 16px;
+			margin: 0 var(--bb-rl-space-100);
+		}
+
 		[class*="post-elements-buttons-item"] {
 			position: relative;
 			margin-right: var(--bb-rl-space-100);
 			line-height: 1;
+
+			&:last-child {
+				margin-right: 0;
+			}
 
 			[class*="toolbar-button"] {
 				display: flex;
@@ -308,6 +320,10 @@
 			width: 100%;
 			overscroll-behavior: contain;
 			padding-bottom: var(--bb-rl-space-100);
+		}
+
+		#bb-rl-editor-toolbar {
+			display: flex;
 		}
 	}
 
@@ -637,6 +653,119 @@
 		margin: 15px 25px 0;
 		width: calc(100% - 50px);
 		min-width: initial;
+	}
+}
+
+// Medium Editor
+#bb-rl-editor-toolbar {
+	display: flex;
+	align-items: center;
+	padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+
+	.medium-editor-toolbar {
+		position: static;
+		visibility: hidden;
+		opacity: 0;
+		background-color: transparent;
+		border-radius: 0;
+		transition: opacity ease 0.3s;
+
+		&.active {
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+
+	.medium-editor-action {
+		padding: var(--bb-rl-space-50);
+		background-color: transparent;
+		border-radius: var(--bb-rl-radius-md);
+		height: auto;
+		min-width: auto;
+		margin-right: var(--bb-rl-space-100);
+		transition: none;
+		border: 0.5px solid transparent;
+
+		b {
+			display: flex;
+			font-size: 0;
+			line-height: 24px;
+			height: auto;
+			width: auto;
+
+			&:before {
+				color: var(--bb-rl-icon-secondary-color);
+				font-family: bb-icons-rl;
+				font-size: 24px;
+			}
+		}
+
+		&.medium-editor-button-active {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+			border-color: var(--bb-rl-border-secondary-color);
+
+			b:before {
+				color: var(--bb-rl-icon-color);
+			}
+		}
+	}
+
+	.medium-editor-action-bold b:before {
+		content: "\e5be";
+	}
+
+	.medium-editor-action-italic b:before {
+		content: "\e5c0";
+	}
+
+	.medium-editor-action-unorderedlist b:before {
+		content: "\e2f2";
+	}
+
+	.medium-editor-action-orderedlist b:before {
+		content: "\e2f6";
+	}
+
+	.medium-editor-action-quote b:before {
+		content: "\e660";
+	}
+
+	.medium-editor-action-anchor b:before {
+		content: "\e2e2";
+	}
+
+	.medium-editor-action-pre b:before {
+		content: "\e1bc";
+	}
+}
+
+.bb-rl-whats-new-toolbar--addon {
+
+	.bb-rl-post-elements-buttons-item {
+		display: flex;
+		position: relative;
+		color: var(--bb-rl-icon-secondary-color);
+		font-size: var(--bb-rl-base-line);
+		line-height: 1;
+		border: 0.5px solid transparent;
+		padding: var(--bb-rl-space-50);
+		margin-right: var(--bb-rl-space-100);
+		cursor: pointer;
+
+		&.active {
+			color: var(--bb-rl-icon-color);
+			background-color: var(--bb-rl-background-secondary-hover-color);
+			border-color: var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-md);
+
+			[class*="toolbar-button"].bb-rl-toolbar-button {
+				border: 0;
+			}
+		}
+
+		[class*="toolbar-button"].bb-rl-toolbar-button {
+			padding: 0;
+		}
 	}
 }
 

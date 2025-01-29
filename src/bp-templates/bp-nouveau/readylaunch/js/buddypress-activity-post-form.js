@@ -3807,9 +3807,28 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			id: 'bb-rl-editor-toolbar',
 			template: bp.template( 'editor-toolbar' ),
+		}
+	);
+
+	bp.Views.ActivityToolbar = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'bb-rl-whats-new-toolbar',
+			template: bp.template( 'whats-new-toolbar' ),
 			events: {
+				'click .bb-rl-post-elements-buttons-item.disable .bb-rl-toolbar-button': 'disabledButton',
+				'click #activity-link-preview-button': 'toggleURLInput',
+				'click #bb-rl-activity-gif-button': 'toggleGifSelector',
+				'click #bb-rl-activity-media-button': 'toggleMediaSelector',
+				'click #bb-rl-activity-document-button': 'toggleDocumentSelector',
+				'click #bb-rl-activity-video-button': 'toggleVideoSelector',
+				'click .bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )': 'activeButton',
+				'click .bb-rl-post-elements-buttons-item.bb-rl-post-gif:not(.disable)': 'activeMediaButton',
+				'click .bb-rl-post-elements-buttons-item.bb-rl-post-media:not(.disable)': 'activeMediaButton',
+				'click .bb-rl-post-elements-buttons-item.bb-rl-post-video:not(.disable)': 'activeVideoButton',
+				'click .bb-rl-post-elements-buttons-item:not(.bb-rl-post-gif):not(.active)': 'scrollToMedia',
 				'click .bb-rl-show-toolbar': 'toggleToolbarSelector',
-				'click .bb-rl-post-mention': 'triggerMention'
+				'click .bb-rl-post-mention': 'triggerMention',
 			},
 
 			toggleToolbarSelector: function ( e ) {
@@ -3892,29 +3911,8 @@ window.bp = window.bp || {};
 					0
 				);
 
-			}
-
-		}
-	);
-
-	bp.Views.ActivityToolbar = bp.View.extend(
-		{
-			tagName: 'div',
-			id: 'bb-rl-whats-new-toolbar',
-			template: bp.template( 'whats-new-toolbar' ),
-			events: {
-				'click .bb-rl-post-elements-buttons-item.disable .bb-rl-toolbar-button': 'disabledButton',
-				'click #activity-link-preview-button': 'toggleURLInput',
-				'click #bb-rl-activity-gif-button': 'toggleGifSelector',
-				'click #bb-rl-activity-media-button': 'toggleMediaSelector',
-				'click #bb-rl-activity-document-button': 'toggleDocumentSelector',
-				'click #bb-rl-activity-video-button': 'toggleVideoSelector',
-				'click .bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )': 'activeButton',
-				'click .bb-rl-post-elements-buttons-item.bb-rl-post-gif:not(.disable)': 'activeMediaButton',
-				'click .bb-rl-post-elements-buttons-item.bb-rl-post-media:not(.disable)': 'activeMediaButton',
-				'click .bb-rl-post-elements-buttons-item.bb-rl-post-video:not(.disable)': 'activeVideoButton',
-				'click .bb-rl-post-elements-buttons-item:not(.bb-rl-post-gif):not(.active)': 'scrollToMedia',
 			},
+
 			gifMediaSearchDropdownView: false,
 
 			initialize: function () {
