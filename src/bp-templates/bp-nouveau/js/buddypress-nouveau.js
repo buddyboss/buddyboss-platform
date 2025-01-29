@@ -4678,6 +4678,7 @@ window.bp = window.bp || {};
 
 			// Avoid duplicate AJAX requests for same memberId.
 			if ( bp.Nouveau.currentRequestMemberId === memberId ) {
+				$profileCard.addClass( 'show loading' );
 				return;
 			}
 
@@ -4877,6 +4878,7 @@ window.bp = window.bp || {};
 
 			// Avoid duplicate AJAX requests for same groupId.
 			if ( bp.Nouveau.currentRequestGroupId === groupId ) {
+				$groupCard.addClass( 'show loading' );
 				return;
 			}
 
