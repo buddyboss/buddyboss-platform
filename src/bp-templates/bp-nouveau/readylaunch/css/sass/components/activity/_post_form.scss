@@ -729,9 +729,17 @@
 		transition: opacity ease 0.3s;
 	}
 
-	&:has(.medium-editor-toolbar.active) .bb-rl-post-mention {
-		visibility: visible;
-		opacity: 1;
+	&:has(.medium-editor-toolbar.active) {
+		opacity: 0.4;
+
+		&:has(.medium-editor-toolbar-active) {
+			opacity: 1;
+		}
+
+		.bb-rl-post-mention {
+			visibility: visible;
+			opacity: 1;
+		}
 	}
 
 	&:has(.medium-editor-toolbar-form.medium-editor-toolbar-form-active) .bb-rl-post-mention {
