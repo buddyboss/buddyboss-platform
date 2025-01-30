@@ -146,12 +146,13 @@ window.bp = window.bp || {};
 			}
 
 			// Add Toast Message.
-			var uniqueId         = 'unique-' + Math.floor( Math.random() * 1000000 ),
-				currentEl        = '.' + uniqueId,
-				urlClass         = '',
-				bpMsgType        = '',
-				bpIconType       = '',
-				autohideInterval = autohideInterval && typeof autohideInterval == 'number' ? ( autohideInterval * 1000 ) : 5000;
+			var uniqueId   = 'unique-' + Math.floor( Math.random() * 1000000 ),
+				currentEl  = '.' + uniqueId,
+				urlClass   = '',
+				bpMsgType  = '',
+				bpIconType = '';
+
+			var newAutohideInterval = autohideInterval && typeof autohideInterval == 'number' ? ( autohideInterval * 1000 ) : 5000;
 
 			if ( type ) {
 				bpMsgType = type;
@@ -196,7 +197,7 @@ window.bp = window.bp || {};
 					function () {
 						hideMessage();
 					},
-					autohideInterval
+					newAutohideInterval
 				);
 			}
 
@@ -1368,7 +1369,7 @@ window.bp = window.bp || {};
 
 					var $this       = $( this ),
 						gridfilters = $this.parents( '.grid-filters' ),
-						object      = $gridfilters.data( 'object' );
+						object      = gridfilters.data( 'object' );
 
 					if ( 'friends' === object ) {
 						object = 'members';
@@ -3297,37 +3298,37 @@ window.bp = window.bp || {};
 		/**
 		 *  Enable Disable profile notification setting inputs
 		 */
-		profileNotificationSettingInputs: function ( node ) {
-			var $notificationSettings = $( '.main-notification-settings' ),
-				nodeLength            = node.length;
-			for ( var i = 0; i < nodeLength; i++ ) {
-				/* jshint ignore:start. */
-				( function ( _i ) {
+		profileNotificationSettingInputs : function ( node ) {
+			var $notificationSettings = $( '.main-notification-settings' );
+
+			node.forEach(
+				function ( item ) {
+					var selector = '.main-notification-settings th' + item + ' input[type="checkbox"]';
+
 					$( document ).on(
 						'click',
-						'.main-notification-settings th' + node[_i] + ' input[type="checkbox"]',
+						selector,
 						function () {
-							var $checkbox  = $( this ),
-								targetNode = $checkbox.closest( 'th' ).index(),
-								$targetTd  = $notificationSettings.find( 'td' ).eq( targetNode ),
-								$targetLi  = $notificationSettings.find( '.bb-mobile-setting li' ).eq( targetNode );
+							var $checkbox = $( this ),
+							targetNode    = $checkbox.closest( 'th' ).index(),
+							$targetTd     = $notificationSettings.find( 'td' ).eq( targetNode ),
+							$targetLi     = $notificationSettings.find( '.bb-mobile-setting li' ).eq( targetNode );
 
-							// Toggle the 'disabled' class and input 'disabled' state based on checkbox state.
 							if ( $checkbox.is( ':checked' ) ) {
 								$targetTd.removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 								$targetLi.removeClass( 'disabled' ).find( 'input' ).prop( 'disabled', false );
 							} else {
-								$targetTd.addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
-								$targetLi.addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+									$targetTd.addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
+									$targetLi.addClass( 'disabled' ).find( 'input' ).prop( 'disabled', true );
 							}
 
-							// Update the mobile dropdown state.
-							bp.Nouveau.NotificationMobileDropdown( $checkbox.closest( '#settings-form' ).find( 'tr:not(.notification_heading)' ) );
+							bp.Nouveau.NotificationMobileDropdown(
+								$checkbox.closest( '#settings-form' ).find( 'tr:not(.notification_heading)' )
+							);
 						}
 					);
-				})( i );
-				/* jshint ignore:end */
-			}
+				}
+			);
 		},
 
 		/**
