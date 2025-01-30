@@ -2027,19 +2027,19 @@ window.bp = window.bp || {};
 				);
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#activity-modal .ac-form' ).removeClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container' ).find( '#bb-rl-activity-modal .ac-form' ).removeClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).removeClass( 'has-gif' );
 				}
 
-				var tool_box_comment = this.$el.parents( '.bp-ac-form-container' );
+				var tool_box_comment = this.$el.parents( '.bb-rl-ac-form-container' );
 				this.enableButtonsInToolBox(
 					tool_box_comment,
 					[
-					'.ac-reply-toolbar .ac-reply-media-button',
-					'.ac-reply-toolbar .ac-reply-document-button',
-					'.ac-reply-toolbar .ac-reply-video-button',
-					'.ac-reply-toolbar .ac-reply-gif-button'
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-media-button',
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-document-button',
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-video-button',
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-gif-button'
 					]
 				);
 
@@ -2202,20 +2202,20 @@ window.bp = window.bp || {};
 					]
 				);
 
-				var toolBoxComment = this.$el.parents( '.ac-reply-content' );
+				var toolBoxComment = this.$el.parents( '.bb-rl-ac-reply-content' );
 				this.disableButtonsInToolBox(
 					toolBoxComment,
 					[
-					'.ac-reply-toolbar .ac-reply-media-button',
-					'.ac-reply-toolbar .ac-reply-document-button',
-					'.ac-reply-toolbar .ac-reply-video-button'
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-media-button',
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-document-button',
+					'.bb-rl-ac-reply-toolbar .bb-rl-ac-reply-video-button'
 					]
 				);
 
 				var whatNewForm = this.$el.closest( '#bb-rl-whats-new-form' );
 
 				if ( this.standalone ) {
-					this.$el.closest( '.screen-content, .elementor-widget-container, .buddypress-wrap' ).find( '#activity-modal .ac-form' ).addClass( 'has-gif' );
+					this.$el.closest( '.screen-content, .elementor-widget-container, .bb-rl-wrap' ).find( '#bb-rl-activity-modal .ac-form' ).addClass( 'has-gif' );
 				} else {
 					this.$el.closest( '.ac-form' ).addClass( 'has-gif' );
 				}
@@ -5242,7 +5242,7 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content.
 							parsed_data_bp_activity.content = $( '<div>' ).html( parsed_data_bp_activity.content ).html();
 
-							var activity_modal_item     = $( '#activity-modal .bb-rl-activity-list .bb-rl-activity-item' ),
+							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .bb-rl-activity-item' ),
 								activity_target         = activity_modal_item.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ),
 								activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-privacy-wrap' ).find( '.privacy' ),
 								activity_privacy_list   = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-activity-privacy li' );

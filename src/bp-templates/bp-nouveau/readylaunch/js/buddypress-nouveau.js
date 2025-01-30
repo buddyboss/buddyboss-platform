@@ -923,7 +923,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
 			$document.on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$document.on( 'click', '#message-threads .report-content', this.threadListReportPopup );
-			$document.on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
+			$document.on( 'click', '.bb-rl-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$document.on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$document.on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
 
@@ -1390,7 +1390,7 @@ window.bp = window.bp || {};
 					if ( 'undefined' !== typeof bp.Nouveau.ajax_request && null !== bp.Nouveau.ajax_request && false !== bp.Nouveau.ajax_request ) {
 						bp.Nouveau.ajax_request.abort();
 
-						$( '.component-navigation [data-bp-object]' ).each(
+						$( '.bb-rl-component-navigation [data-bp-object]' ).each(
 							function () {
 								$( this ).removeClass( 'loading' );
 							}
@@ -1400,7 +1400,7 @@ window.bp = window.bp || {};
 					var layout = $this.hasClass( 'layout-list-view' ) ? 'list' : 'grid';
 					gridfilters.find( '.layout-view' ).removeClass( 'active' );
 					$this.addClass( 'active' );
-					$this.parents( '.buddypress-wrap' ).find( '.bb-rl-list' ).toggleClass( 'grid', 'grid' === layout ).removeClass( 'grid', 'list' === layout );
+					$this.parents( '.bb-rl-wrap' ).find( '.bb-rl-list' ).toggleClass( 'grid', 'grid' === layout ).removeClass( 'grid', 'list' === layout );
 
 					bp.Nouveau.ajax_request = $.ajax(
 						{
@@ -2717,7 +2717,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( bbRLMedia.emoji ) &&
 				! $targetEl.closest( '.bb-rl-post-emoji' ).length &&
 				! $targetEl.is( '.bb-rl-emojioneemoji,.emojibtn' ) &&
-				! $targetEl.closest( '.emojionearea-theatre' ).length ) {
+				! $targetEl.closest( '.bb-rl-emojionearea-theatre' ).length ) {
 				bp.Nouveau.closeEmojiPicker();
 			}
 		},
@@ -4269,8 +4269,8 @@ window.bp = window.bp || {};
 
 		closeEmojiPicker: function () {
 			$( '.bb-rl-post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
-			if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
-				var $emojioneAreaTheatre = $( '.emojionearea-theatre' );
+			if ( $( '.bb-rl-emojionearea-theatre.show' ).length > 0 ) {
+				var $emojioneAreaTheatre = $( '.bb-rl-emojionearea-theatre' );
 				$emojioneAreaTheatre.removeClass( 'show' ).addClass( 'hide' );
 				$emojioneAreaTheatre.find( '.emojionearea-picker' ).addClass( 'hidden' );
 			}
