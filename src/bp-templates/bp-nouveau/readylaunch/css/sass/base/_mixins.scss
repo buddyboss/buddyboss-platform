@@ -5,7 +5,7 @@
 }
 
 @mixin bb-rl-base-heading-bolder {
-	font-size: var(--font-size-base);
+	font-size: var(--bb-rl-font-size-base);
 	font-weight: 600;
 	line-height: var(--bb-rl-base-line);
 }

@@ -114,12 +114,12 @@
 			border: 1px solid var(--bb-rl-border-brand-secondary-color);
 			border-radius: var(--bb-rl-radius-full);
 			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-			font-size: var(--font-size-xs);
+			font-size: var(--bb-rl-font-size-xs);
 			font-weight: 500;
 		}
 
 		.bb-rl-item-meta-asset {
-			font-size: var(--font-size-sm);
+			font-size: var(--bb-rl-font-size-sm);
 			line-height: var(--bb-rl-base-line-small);
 			color: var(--bb-rl-text-tertiary-color);
 
@@ -173,7 +173,7 @@
 
 			@include bb-rl-button;
 			@include bb-rl-button-secondary-fill;
-			font-size: var(--font-size-sm);
+			font-size: var(--bb-rl-font-size-sm);
 			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 			white-space: nowrap;
 
