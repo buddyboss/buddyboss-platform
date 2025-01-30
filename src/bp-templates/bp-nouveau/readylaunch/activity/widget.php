@@ -8,7 +8,7 @@
  */
 
 if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
-	<div class="activity-list item-list">
+	<div class="bb-rl-activity-list bb-rl-item-list">
 		<?php
 		while ( bp_activities() ) :
 			bp_the_activity();

@@ -55,7 +55,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) . '&user_id=' 
 	$next_page   = $current_page + 1;
 	if ( $current_page != (int) $total_pages ) :
 		?>
-		<div class="load-more">
+		<div class="bb-rl-load-more">
 			<a class="button full outline" data-page="<?php echo esc_attr( $current_page ); ?>" data-next-page="<?php echo esc_attr( $next_page ); ?>" data-total-pages="<?php echo esc_attr( $total_pages ); ?>">
 				<?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 			</a>

@@ -134,7 +134,7 @@
 }
 
 .bb-rl-members .bp-list:not(.grid) .item-entry .bb-rl-member-buttons-wrap {
-  margin-left: auto;
+  margin-right: auto;
 }
 
 .bb-rl-members .bp-list:not(.grid) .item-entry .bb-rl-item-actions {
@@ -143,7 +143,7 @@
 }
 
 .bb-rl-members .bp-list:not(.grid) .item-entry .item-avatar {
-  margin-right: var(--bb-rl-space-200);
+  margin-left: var(--bb-rl-space-200);
 }
 
 .bb-rl-members .bp-list:not(.grid) .list-wrap-inner {
@@ -242,7 +242,7 @@
 }
 
 .bb-rl-item-actions .bb-rl-primary-actions {
-  margin-left: auto;
+  margin-right: auto;
 }
 
 .bb-rl-item-actions .bb-rl-primary-actions button,
@@ -286,7 +286,7 @@
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i {
-  margin-right: var(--bb-rl-space-50);
+  margin-left: var(--bb-rl-space-50);
 }
 
 .bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i::before, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i::before,
@@ -417,6 +417,6 @@
 }
 
 .bb-rl-block-member-content > ul {
-  padding-left: var(--bb-rl-space-300);
+  padding-right: var(--bb-rl-space-300);
   margin-bottom: var(--bb-rl-space-200);
 }

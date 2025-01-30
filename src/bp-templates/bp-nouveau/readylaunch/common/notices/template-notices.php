@@ -1,11 +1,8 @@
 <?php
 /**
- * The template for BP Nouveau template notices template
+ * ReadyLaunch - The template for BP Nouveau template notices template.
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/common/notices/template-notices.php.
- *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
@@ -16,7 +13,9 @@
 
 	<?php if ( bp_nouveau_has_dismiss_button() ) : ?>
 
-		<button type="button" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss' ); ?>" data-bp-close="<?php bp_nouveau_dismiss_button_type(); ?>"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span></button>
+		<button type="button" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss' ); ?>" data-bp-close="<?php bp_nouveau_dismiss_button_type(); ?>">
+			<span class="dashicons dashicons-dismiss" aria-hidden="true"></span>
+		</button>
 
 	<?php endif; ?>
 </aside>
