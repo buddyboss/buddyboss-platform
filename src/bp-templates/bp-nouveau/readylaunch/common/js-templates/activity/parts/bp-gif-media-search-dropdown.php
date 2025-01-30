@@ -17,12 +17,12 @@
 			<ul class="gif-search-results-list">
 			</ul>
 			<div class="gif-alert gif-no-results">
-				<i class="bb-icon-l bb-icon-image-slash"></i>
+				<i class="bb-icons-rl-empty"></i>
 				<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
 			</div>
 
 			<div class="gif-alert gif-no-connection">
-				<i class="bb-icon-l bb-icon-cloud-slash"></i>
+				<i class="bb-icons-rl-cloud-slash"></i>
 				<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
 			</div>
 

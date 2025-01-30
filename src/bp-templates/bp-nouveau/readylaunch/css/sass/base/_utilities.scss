@@ -153,26 +153,34 @@ span.atwho-inserted {
 	}
 
 	.gif-alert {
+		display: none;
+		align-items: center;
 		justify-content: center;
 		flex-flow: column;
 		min-height: 100px;
-		display: none;
 
-		&.show {
-			justify-content: center;
+		[class*="bb-icon"] {
+			color: var(--bb-rl-icon-secondary-color);
+			font-size: 30px;
+			opacity: 0.6;
+			margin-bottom: var(--bb-rl-space-100);
 		}
 
 		p {
 			font-size: 13px;
 			font-weight: 500;
 			line-height: 1.5;
-			opacity: 0.4;
+			opacity: 0.6;
+		}
+
+		&.show {
+			display: flex;
 		}
 	}
 
 	.gif-search-results {
 		min-height: 190px;
-        max-height: 250px;
+		max-height: 250px;
 		padding: var(--bb-rl-space-100) var(--bb-rl-space-100) 0;
 		overflow: auto;
 
@@ -186,23 +194,23 @@ span.atwho-inserted {
 			.bg1 {
 				background: #e0245e;
 			}
-			
+
 			.bg2 {
 				background: #f45d22;
 			}
-			
+
 			.bg3 {
 				background: #ffad1f;
 			}
-			
+
 			.bg4 {
 				background: #17bf63;
 			}
-			
+
 			.bg5 {
 				background: #1c94e0;
 			}
-			
+
 			.bg6 {
 				background: #794bc4;
 			}
