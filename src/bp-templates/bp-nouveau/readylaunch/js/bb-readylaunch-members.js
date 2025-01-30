@@ -50,8 +50,32 @@ window.bp = window.bp || {};
 			$( document ).on( 'submit', '#bb-rl-invite-form', this.submitInviteMemberPopupForm );
 		},
 
-		submitInviteMemberPopupForm: function ( e ) {
+		showToastMessage: function ( message, type = 'info' ) {
+			var $modalWrapper = $( '.bb-rl-modal-wrapper' );
+		
+			// Remove any existing toast messages
+			$( '.bb-rl-toast-message' ).remove();
+		
+			var toastClass = 'bb-rl-toast-message';
+			if ( type === 'error' ) {
+				toastClass += ' bb-rl-toast-message--error';
+			} else if ( type === 'success' ) {
+				toastClass += ' bb-rl-toast-message--success';
+			}
+		
+			var toastHTML = '<div class="' + toastClass + '"><span class="bb-rl-spinner"></span>' + message + '</div>';
+			$modalWrapper.append( toastHTML );
+			
+			if ( type !== 'error' ) {
+				setTimeout( function () {
+					$( '.bb-rl-toast-message' ).fadeOut( 500, function () {
+						$( this ).remove();
+					} );
+				}, 6000 );
+			}
+		},
 
+		submitInviteMemberPopupForm: function ( e ) {
 			e.preventDefault();
 
 			var isValid = true;
@@ -86,29 +110,32 @@ window.bp = window.bp || {};
 				isValid = false;
 			}
 
-			if ( ! isValid) {
+			if ( !isValid ) {
 				$form.addClass( 'bb-rl-form-error' );
-			} else {
-				// Ajax submit the form.
-				var formData = $form.serialize();
-				$.ajax(
-					{
-						method: 'POST',
-						url: BP_Nouveau.ajaxurl,
-						data: formData,
-						success: function (response) {
-							if ( response.success ) {
-								alert(response.data.message); // Success message
-							} else {
-								alert( response.data.message ); // Error message
-							}
-						},
-						error: function () {
-							console.log('There was an error submitting the form. Please try again.');
-						}
-					}
-				);
+				return;
 			}
+
+			bp.Readylaunch.Members.showToastMessage( 'Sending invitation...', 'info' );
+
+			var formData = $form.serialize();
+			$.ajax(
+				{
+					method: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: formData,
+					success: function (response) {
+						if ( response.success ) {
+							bp.Readylaunch.Members.showToastMessage( response.data.message + 'Invitation sent successfully!', 'success' );
+							$form[ 0 ].reset();
+						} else {
+							bp.Readylaunch.Members.showToastMessage( response.data.message, 'error' );
+						}
+					},
+					error: function () {
+						bp.Readylaunch.Members.showToastMessage( 'There was an error submitting the form. Please try again.', 'error' );
+					}
+				}
+			);
 		},
 	};
 
