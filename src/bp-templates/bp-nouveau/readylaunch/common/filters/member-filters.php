@@ -12,55 +12,53 @@
 // Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
 
-if ( false === $is_member_type_enabled ) {
-	return '';
-}
-
-$args = array(
-	'meta_query' => array(
-		array(
-			'key'   => '_bp_member_type_enable_filter',
-			'value' => 1,
-		),
-	)
-);
-
-if ( bp_is_members_directory() ) {
-	$args['meta_query'][] = array(
-		'key'   => '_bp_member_type_enable_remove',
-		'value' => 0,
+if ( $is_member_type_enabled ) {
+	$args = array(
+		'meta_query' => array(
+			array(
+				'key'   => '_bp_member_type_enable_filter',
+				'value' => 1,
+			),
+		)
 	);
-}
-
-// Get active member types
-$member_types = bp_get_active_member_types( $args );
-
-if ( ! empty( $member_types ) ) {
-	?>
-	<div id="bb-rl-member-type-filters" class="component-filters clearfix">
-		<div id="bb-rl-member-type-select" class="last filter bb-rl-filter">
-			<label class="bp-screen-reader-text" for="bb-rl-member-type-order-by">
-				<span><?php esc_html_e( 'Type', 'buddyboss' ); ?></span>
-			</label>
-			<div class="select-wrap">
-				<select id="bb-rl-member-type-order-by" data-bp-member-type-filter="members">
-					<option value=""><?php _e( 'All', 'buddyboss' ); ?></option><?php
-					foreach ( $member_types as $member_type_id ) {
-						$type_name        = bp_get_member_type_key( $member_type_id );
-						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+	
+	if ( bp_is_members_directory() ) {
+		$args['meta_query'][] = array(
+			'key'   => '_bp_member_type_enable_remove',
+			'value' => 0,
+		);
+	}
+	
+	// Get active member types.
+	$member_types = bp_get_active_member_types( $args );
+	
+	if ( ! empty( $member_types ) ) {
+		?>
+		<div id="bb-rl-member-type-filters" class="component-filters clearfix">
+			<div id="bb-rl-member-type-select" class="last filter bb-rl-filter">
+				<label class="bp-screen-reader-text" for="bb-rl-member-type-order-by">
+					<span><?php esc_html_e( 'Type', 'buddyboss' ); ?></span>
+				</label>
+				<div class="select-wrap">
+					<select id="bb-rl-member-type-order-by" data-bp-member-type-filter="members">
+						<option value=""><?php _e( 'All', 'buddyboss' ); ?></option><?php
+						foreach ( $member_types as $member_type_id ) {
+							$type_name        = bp_get_member_type_key( $member_type_id );
+							$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+							?>
+							<option value="<?php echo esc_attr( $member_type_id ); ?>">
+								<?php echo esc_attr( $member_type_name ); ?>
+							</option>
+							<?php
+						}
 						?>
-						<option value="<?php echo esc_attr( $member_type_id ); ?>">
-							<?php echo esc_attr( $member_type_name ); ?>
-						</option>
-						<?php
-					}
-					?>
-				</select>
-				<span class="select-arrow" aria-hidden="true"></span>
+					</select>
+					<span class="select-arrow" aria-hidden="true"></span>
+				</div>
 			</div>
 		</div>
-	</div>
-	<?php
+		<?php
+	}
 }
 
 // Member scope as dropdown.
