@@ -25,7 +25,7 @@ do_action( 'bp_before_directory_members_page' );
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
 				bp_get_template_part( 'common/search-and-filters-bar' );
-				if ( bp_is_active( 'invites' ) && is_user_logged_in() ) {
+				if ( bp_allow_user_to_send_invites() ) {
 					?>
 					<div class="bb-rl-action-button">
 						<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
@@ -136,7 +136,7 @@ do_action( 'bp_before_directory_members_page' );
 
 <!-- Invite popup -->
 <?php
-if ( bp_is_active( 'invites' ) && is_user_logged_in() ) {
+if ( bp_allow_user_to_send_invites() ) {
 	$send_invite_member_type_allow     = bp_check_member_send_invites_tab_member_type_allowed();
 	$is_disabled_invite_member_subject = bp_disable_invite_member_email_subject();
 	$is_disabled_invite_member_content = bp_disable_invite_member_email_content();

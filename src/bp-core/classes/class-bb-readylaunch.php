@@ -1235,6 +1235,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
 				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
 				wp_send_json_error( $response );
+			} elseif ( ! bp_allow_user_to_send_invites() ) {
+				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' );
+				wp_send_json_error( $response );
 			}
 		
 			$name        = sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) );
