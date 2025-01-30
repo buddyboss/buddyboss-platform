@@ -31,16 +31,17 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
+			var $document = $( document );
 			$( '.bb-nouveau-list' ).scroll( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
-			$( document ).on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
-			$( document ).on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
-			$( document ).on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
-			$( document ).on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
-			$( document ).on( 'click', this.closeMoreOption.bind( this ) );
-			$( document ).on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
-			$( document ).on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
-			$( document ).on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
-			$( document ).on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
+			$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
+			$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
+			$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
+			$document.on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
+			$document.on( 'click', this.closeMoreOption.bind( this ) );
+			$document.on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
+			$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
+			$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
+			$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 		},
 		/**
 		 * [scrollHeaderDropDown description]
@@ -137,16 +138,14 @@ window.bp = window.bp || {};
 		bbPerformAjaxRequest: function ( e, options ) {
 			e.preventDefault();
 
-			var defaults = {
+			var defaults        = {
 				action     : '',
 				page       : 1,
 				isMessage  : false,
 				containerId: '',
 			};
-			var settings = $.extend( defaults, options );
-
-			// Show a loading indicator.
-			var mainContainerID = $( '#' + settings.containerId );
+			var settings        = $.extend( defaults, options ),
+				mainContainerID = $( '#' + settings.containerId ); // Show a loading indicator.
 			if ( settings.page > 1 ) {
 				mainContainerID.find( '.bb-rl-load-more' ).before( '<i class="bb-rl-loader"></i>' );
 			} else {
@@ -241,7 +240,6 @@ window.bp = window.bp || {};
 			}
 
 			var notif_icons = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
-
 			if ( typeof data.total_notifications !== 'undefined' && data.total_notifications > 0 ) {
 				$( '.notification-header .mark-read-all' ).show();
 
@@ -313,9 +311,9 @@ window.bp = window.bp || {};
 		markNotificationRead: function ( e ) {
 			e.preventDefault();
 
-			var $this                  = $( e.currentTarget );
-			var notificationId         = $this.data( 'notification-id' );
-			var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+			var $this                  = $( e.currentTarget ),
+				notificationId         = $this.data( 'notification-id' ),
+				notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 			if ( 'all' !== notificationId ) {
 				$this.closest( '.read-item' ).fadeOut();
 				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
@@ -359,9 +357,9 @@ window.bp = window.bp || {};
 		markNotificationDelete: function ( e ) {
 			e.preventDefault();
 
-			var $this                  = $( e.currentTarget );
-			var notificationId         = $this.data( 'notification-id' );
-			var notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+			var $this                  = $( e.currentTarget ),
+				notificationId         = $this.data( 'notification-id' ),
+				notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 			if ( 'all' !== notificationId ) {
 				$this.closest( '.read-item' ).fadeOut();
 				notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
@@ -431,24 +429,24 @@ window.bp = window.bp || {};
 					otherButtonSelectors: [],
 				};
 
-				var configExtended           = _.extend( defaultConfig, config );
-				var modelKey                 = configExtended.modelKey;
-				var uploaderSelector         = configExtended.uploaderSelector;
-				var actionName               = configExtended.actionName;
-				var nonceName                = configExtended.nonceName;
-				var mediaType                = configExtended.mediaType;
-				var otherButtonSelectors     = configExtended.otherButtonSelectors;
-				var parentSelector           = configExtended.parentSelector;
-				var parentAttachmentSelector = configExtended.parentAttachmentSelector;
-				var ActiveComponent          = configExtended.ActiveComponent;
+				var configExtended           = _.extend( defaultConfig, config ),
+					modelKey                 = configExtended.modelKey,
+					uploaderSelector         = configExtended.uploaderSelector,
+					actionName               = configExtended.actionName,
+					nonceName                = configExtended.nonceName,
+					mediaType                = configExtended.mediaType,
+					otherButtonSelectors     = configExtended.otherButtonSelectors,
+					parentSelector           = configExtended.parentSelector,
+					parentAttachmentSelector = configExtended.parentAttachmentSelector,
+					ActiveComponent          = configExtended.ActiveComponent;
 
 				// Common event handlers.
 				dropzone.on(
 					'addedfile',
 					function ( file ) {
-						if ( file[mediaType + '_edit_data'] ) {
-							view[modelKey].push( file[mediaType + '_edit_data'] );
-							view.model.set( modelKey, view[modelKey] );
+						if ( file[ mediaType + '_edit_data' ] ) {
+							view[ modelKey ].push( file[ mediaType + '_edit_data' ] );
+							view.model.set( modelKey, view[ modelKey ] );
 						}
 
 						if ( 'video' === mediaType ) {
@@ -471,12 +469,14 @@ window.bp = window.bp || {};
 					function ( element ) {
 						view.$el.closest( parentSelector ).addClass( 'media-uploading' );
 
-						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[0];
-						var radius        = circle.r.baseVal.value;
-						var circumference = radius * 2 * Math.PI;
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ],
+							radius        = circle.r.baseVal.value,
+							circumference = radius * 2 * Math.PI;
 
 						circle.style.strokeDasharray  = circumference + ' ' + circumference;
-						circle.style.strokeDashoffset = circumference - (element.upload.progress.toFixed( 0 ) / 100 * circumference);
+						circle.style.strokeDashoffset = circumference - (
+							element.upload.progress.toFixed( 0 ) / 100 * circumference
+						);
 						$( element.previewElement ).find( '.dz-progress [data-dz-progress]' ).text( element.upload.progress.toFixed( 0 ) + '%' );
 					}
 				);
@@ -485,14 +485,14 @@ window.bp = window.bp || {};
 					'sending',
 					function ( file, xhr, formData ) {
 						formData.append( 'action', actionName );
-						formData.append( '_wpnonce', BP_Nouveau.nonces[nonceName] );
+						formData.append( '_wpnonce', BP_Nouveau.nonces[ nonceName ] );
 
 						var toolBox = view.$el.parents( parentSelector );
 						otherButtonSelectors.forEach(
 							function ( selector ) {
 								var $button = toolBox.find( selector );
-								if ($button.length) {
-										$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
+								if ( $button.length ) {
+									$button.parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
 								}
 							}
 						);
@@ -516,15 +516,21 @@ window.bp = window.bp || {};
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 
-							view[modelKey].push( response.data );
-							view.model.set( modelKey, view[modelKey] );
+							view[ modelKey ].push( response.data );
+							view.model.set( modelKey, view[ modelKey ] );
 						}
 
 						if ( 'document' === mediaType ) {
-							var filename      = file.upload.filename;
-							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							var file_icon     = ( ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : '' );
-							var icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+							var filename      = file.upload.filename,
+								fileExtension = filename.substr(
+									(
+									filename.lastIndexOf( '.' ) + 1
+									)
+								),
+								file_icon     = (
+									! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : ''
+								),
+								icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
 							if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
 								$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icons-rl-file' ).addClass( icon_class );
 							}
@@ -540,10 +546,15 @@ window.bp = window.bp || {};
 					'error',
 					function ( file, response ) {
 						if ( file.accepted ) {
-								var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
-								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
+							var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
+							$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
 						} else {
-							Backbone.trigger( 'onError', '<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (response || '' ) + '<div>' );
+							Backbone.trigger(
+								'onError',
+								'<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (
+								response || ''
+								) + '<div>'
+							);
 							dropzone.removeFile( file );
 							view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
 						}
@@ -554,39 +565,8 @@ window.bp = window.bp || {};
 					'removedfile',
 					function ( file ) {
 						var toolBox;
-						if ( ActiveComponent === 'activity' ) {
-							if ( bp.draft_activity.allow_delete_media ) {
-								// Remove logic for media items.
-								view[modelKey] = view[modelKey].filter(
-									function ( mediaItem ) {
-										return file.id !== mediaItem.id &&
-										( ! file[mediaType + '_edit_data'] || file[mediaType + '_edit_data'].id !== mediaItem.id );
-									}
-								);
-								view.model.set( modelKey, view[modelKey] );
 
-								// Set draft content changed flag.
-								bp.draft_content_changed = true;
-
-								if ( dropzone.files.length === 0 ) {
-									view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
-
-									// Re-enable buttons.
-									toolBox = view.$el.parents( parentSelector );
-									otherButtonSelectors.forEach(
-										function ( selector ) {
-											var $button = toolBox.find( selector );
-											if ( $button.length ) {
-														$button.parents( '.bb-rl-post-elements-buttons-item' )
-													.removeClass( 'disable active no-click' );
-											}
-										}
-									);
-
-										view.model.unset( modelKey );
-								}
-							}
-						} else {
+						var handleEmptyDropzone = function () {
 							if ( dropzone.files.length === 0 ) {
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
 
@@ -596,14 +576,35 @@ window.bp = window.bp || {};
 									function ( selector ) {
 										var $button = toolBox.find( selector );
 										if ( $button.length ) {
-											$button.parents( '.bb-rl-post-elements-buttons-item' )
-											.removeClass( 'disable active no-click' );
+												$button.parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 										}
 									}
 								);
 
 								view.model.unset( modelKey );
 							}
+						};
+
+						if ( 'activity' === ActiveComponent ) {
+							if ( bp.draft_activity.allow_delete_media ) {
+								// Remove logic for media items.
+								view[ modelKey ] = view[ modelKey ].filter(
+									function ( mediaItem ) {
+										return file.id !== mediaItem.id &&
+												(
+													! file[ mediaType + '_edit_data' ] || file[ mediaType + '_edit_data' ].id !== mediaItem.id
+												);
+									}
+								);
+								view.model.set( modelKey, view[ modelKey ] );
+
+								// Set draft content changed flag.
+								bp.draft_content_changed = true;
+
+								handleEmptyDropzone();
+							}
+						} else {
+							handleEmptyDropzone();
 						}
 					}
 				);
@@ -611,9 +612,9 @@ window.bp = window.bp || {};
 				dropzone.on(
 					'complete',
 					function () {
-						if ( dropzone.getUploadingFiles().length === 0 &&
-						dropzone.getQueuedFiles().length === 0 &&
-						dropzone.files.length > 0 ) {
+						if ( 0 === dropzone.getUploadingFiles().length &&
+							0 === dropzone.getQueuedFiles().length &&
+							dropzone.files.length > 0 ) {
 							view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
 						}
 					}
@@ -621,8 +622,7 @@ window.bp = window.bp || {};
 
 				// Open uploader.
 				view.$el.find( uploaderSelector ).addClass( 'open' ).removeClass( 'closed' );
-				$( parentAttachmentSelector ).removeClass( 'empty' )
-					.closest( parentSelector ).addClass( 'focus-in--attm' );
+				$( parentAttachmentSelector ).removeClass( 'empty' ).closest( parentSelector ).addClass( 'focus-in--attm' );
 			},
 
 			createThumbnailFromUrl : function ( mock_file, dropzoneObj, dropzone_container ) {
