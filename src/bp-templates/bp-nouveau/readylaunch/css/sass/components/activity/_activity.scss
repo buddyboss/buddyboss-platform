@@ -1,8 +1,8 @@
-@import "./_postform.scss";
+@import "./_post_form.scss";
 
 /* General Styling */
-.bb-rl-inner-container {
+.bb-rl-activity-page {
 	max-width: 680px;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 auto;
+	padding: var(--bb-rl-space-400) 0;
 }

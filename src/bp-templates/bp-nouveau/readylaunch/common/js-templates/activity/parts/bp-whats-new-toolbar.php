@@ -8,7 +8,7 @@
 
 ?>
 <script type="text/html" id="tmpl-whats-new-toolbar">
-
+	<div class="bb-rl-whats-new-toolbar--inner flex items-center">
 	<?php
 
 	/**
@@ -62,4 +62,39 @@
 	 */
 	do_action( 'bb_whats_new_toolbar_after' );
 	?>
+	</div><!-- .bb-rl-whats-new-toolbar--inner -->
+
+	<div class="bb-rl-whats-new-toolbar--addon flex items-center">
+		<?php
+		if (
+			bp_is_active( 'media' ) &&
+			(
+				(
+					bp_is_activity_directory() &&
+					(
+						bp_is_profiles_emoji_support_enabled() ||
+						bp_is_groups_emoji_support_enabled()
+					)
+				) ||
+				(
+					bp_is_user_activity() &&
+					bp_is_profiles_emoji_support_enabled()
+				) ||
+				(
+					bp_is_group_activity() &&
+					bp_is_groups_emoji_support_enabled()
+				)
+			)
+		) :
+			?>
+			<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up-right" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>">
+				<i class="bb-icons-rl-smiley"></i>
+			</div>
+		<?php endif; ?>
+		<div class="bb-rl-post-elements-buttons-item bb-rl-show-toolbar" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+			<a href="#" id="bb-rl-show-toolbar-button" class="bb-rl-toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+				<span class="bb-icons-rl-text-aa"></span>
+			</a>
+		</div>
+	</div><!-- .bb-rl-whats-new-toolbar--addon -->
 </script>
