@@ -476,6 +476,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if (
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
+					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_script( $handle );
@@ -489,6 +490,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if (
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
+					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
 					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
 				) {
 					wp_dequeue_style( $handle );
