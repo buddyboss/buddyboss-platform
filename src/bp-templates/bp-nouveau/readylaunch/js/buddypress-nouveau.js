@@ -678,13 +678,7 @@ window.bp = window.bp || {};
 					}
 
 					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						scopeElem.find( 'span' ).text( response.data.count );
-					}
-
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
-						for ( var i in response.data.scopes ) {
-							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
-						}
+						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
 					}
 
 					if ( 'reset' !== data.method ) {
@@ -785,12 +779,19 @@ window.bp = window.bp || {};
 					extras = ( undefined !== objectData.extras && 'notifications' !== object ) ? objectData.extras : null;
 
 					var bbFilterElem = $( '#buddypress [data-bp-filter="' + object + '"]' );
-					if ( bbFilterElem.length ) {
+					if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && bbFilterElem.length ) {
 						if ( undefined !== objectData.filter ) {
 							filter = objectData.filter;
 							bbFilterElem.find( 'option[value="' + filter + '"]' ).prop( 'selected', true );
 						} else if ( '-1' !== bbFilterElem.val() && '0' !== bbFilterElem.val() ) {
 							filter = bbFilterElem.val();
+						}
+					}
+
+					// Pre select saved scope filter.
+					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
+						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== scope ) {
+							$( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
 						}
 					}
 
@@ -886,6 +887,9 @@ window.bp = window.bp || {};
 
 			// Disabled inputs.
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
+
+			// Scope filters.
+			$document.on( 'change', this.objectNavParent + ' [data-bp-member-scope-filter]', this, this.scopeQuery );
 
 			// Refreshing.
 			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
@@ -1508,8 +1512,8 @@ window.bp = window.bp || {};
 				return event;
 			}
 
-			scope  = target.data( 'bp-scope' );
-			object = target.data( 'bp-object' );
+			scope  = target.find( ':selected' ).data( 'bp-scope' );
+			object = target.find( ':selected' ).data( 'bp-object' );
 
 			if ( ! scope || ! object ) {
 				return event;
