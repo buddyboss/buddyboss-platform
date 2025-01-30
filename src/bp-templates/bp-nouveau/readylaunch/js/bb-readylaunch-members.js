@@ -60,21 +60,29 @@ window.bp = window.bp || {};
 			// Reset error classes
 			$form.removeClass( 'bb-rl-form-error' );
 			$form.find( '.bb-rl-input-field' ).removeClass( 'bb-rl-input-field--error' );
+			$form.find( '.bb-rl-notice' ).remove();
 
 			// Validate Name
 			var $nameField = $( '#bb-rl-invite-name' );
+			var $nameWrapper = $nameField.closest( '.bb-rl-form-field-wrapper' );
 			if ( $nameField.val().trim() === '' ) {
 				$nameField.addClass( 'bb-rl-input-field--error' );
+				isValid = false;
+
+				$nameField.addClass( 'bb-rl-input-field--error' );
+				$nameWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>Name is required.</div>' );
 				isValid = false;
 			}
 
 			// Validate Email
 			var $emailField = $( '#bb-rl-invite-email' );
+			var $emailWrapper = $emailField.closest( '.bb-rl-form-field-wrapper' );
 			var emailValue = $emailField.val().trim();
 			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 			if ( ! emailRegex.test( emailValue ) ) {
 				$emailField.addClass( 'bb-rl-input-field--error' );
+				$emailWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>Please enter a valid email address.</div>' );
 				isValid = false;
 			}
 

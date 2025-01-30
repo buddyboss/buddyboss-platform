@@ -169,6 +169,19 @@
 			padding-left: var(--bb-rl-space-300);
 			margin-bottom: var(--bb-rl-space-200);
 		}
+
+		> ul + p {
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+			display: block;
+			border-width: 0;
+			border-style: solid;
+			border-left-width: 2px;
+			border-radius: 0;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			background-color: var(--bb-rl-background-warning-secondary-color);
+			border-color: var(--bb-rl-border-warning-secondary-color);
+		}
 	}
 
 	.bb-model-footer {

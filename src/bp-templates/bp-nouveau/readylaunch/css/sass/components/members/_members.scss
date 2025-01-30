@@ -177,6 +177,14 @@
 			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 			white-space: nowrap;
 
+			&.following,
+			&.is_friend,
+			&.pending_friend,
+			&.awaiting_response_friend {
+
+				@include bb-rl-button--secondary-outline;
+			}
+
 			&.send-message,
 			&.follow-button,
 			&.friendship-button {
@@ -271,6 +279,10 @@
 		}
 
 		.friendship-button.pending_friend i::before {
+			content: "\edec";
+		}
+
+		.friendship-button.awaiting_response_friend i::before {
 			content: "\edec";
 		}
 
