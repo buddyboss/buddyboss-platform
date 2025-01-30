@@ -1447,6 +1447,12 @@ window.bp = window.bp || {};
 
 			render: function () {
 				this.$el.html( this.template( this.model.toJSON() ) );
+
+				if ( bp.Views.activitySchedulePost !== undefined ) {
+					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+					$( '.bb-rl-activity-form' ).addClass( 'bb-rl-activity-form--schedule' );
+				}
+
 				return this;
 			},
 
@@ -4409,9 +4415,6 @@ window.bp = window.bp || {};
 					)
 				);
 
-				if ( bp.Views.activitySchedulePost !== undefined ) {
-					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
-				}
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
 		}
