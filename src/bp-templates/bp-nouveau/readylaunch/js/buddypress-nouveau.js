@@ -1413,7 +1413,11 @@ window.bp = window.bp || {};
 					var layout = $this.hasClass( 'layout-list-view' ) ? 'list' : 'grid';
 					gridfilters.find( '.layout-view' ).removeClass( 'active' );
 					$this.addClass( 'active' );
-					$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).toggleClass( 'grid', 'grid' === layout ).removeClass( 'grid', 'list' === layout );
+					if ( 'list' === layout ) {
+						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
+					} else {
+						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
+					}
 
 					bp.Nouveau.ajax_request = $.ajax(
 						{
