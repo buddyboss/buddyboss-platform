@@ -35,12 +35,12 @@
 				border-radius: var(--bb-rl-radius-md);
 
 				&::before {
-					font-size: var(--font-size-sm);
+					font-size: var(--bb-rl-font-size-sm);
 					content: attr(data-bb-rl-label);
 				}
 
 				&::after {
-					font-size: var(--font-size-base);
+					font-size: var(--bb-rl-font-size-base);
 					content: "";
 					font-weight: 400;
 					font-family: bb-icons-rl;
