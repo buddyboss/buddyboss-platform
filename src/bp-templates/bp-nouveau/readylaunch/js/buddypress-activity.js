@@ -1038,7 +1038,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data, activity_URL_preview );
 
 					// Check if it's a Group activity.
-					var $activityForm = $( '#bp-nouveau-activity-form' );
+					var $activityForm = $( '#bb-rl-activity-form' );
 					$activityForm.toggleClass( 'group-activity', target.closest( 'li' ).hasClass( 'groups' ) );
 
 					// Close the Media/Document popup if someone clicks on Edit while on Media/Document popup.
