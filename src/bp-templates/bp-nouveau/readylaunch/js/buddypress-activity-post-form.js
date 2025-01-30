@@ -3334,6 +3334,10 @@ window.bp = window.bp || {};
 					if ( whats_new_form.hasClass( 'bb-rl-activity-edit' ) ) {
 						this.model.set( 'privacy', this.$el.closest( '#bb-rl-whats-new-form' ).find( '.bb-rl-activity-privacy__input:checked' ).val() );
 					}
+
+					if( whats_new_form.hasClass( 'bb-rl-focus-in--privacy' ) ) {
+						$( '.bb-rl-activity-privacy-stage' ).css( 'margin-top', '-' + $( '.bb-rl-whats-new-scroll-view' ).scrollTop() + 'px' );
+					}
 				}
 			}
 		}
@@ -4684,9 +4688,13 @@ window.bp = window.bp || {};
 					$( '.bb-rl-activity-update-form .bb-rl-whats-new-form-header, .bb-rl-activity-update-form  #bb-rl-whats-new-attachments' ).wrapAll( '<div class="bb-rl-whats-new-scroll-view"></div>' );
 					$( '.bb-rl-whats-new-scroll-view' ).on(
 						'scroll',
-						function () {
+						function ( e ) {
 							if ( ! ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent ) ) ) {
 								$( '.atwho-container #atwho-ground-whats-new .atwho-view' ).hide();
+							}
+
+							if( $( '.bb-rl-activity-form' ).hasClass( 'bb-rl-focus-in--privacy' ) ) {
+								$( '.bb-rl-activity-privacy-stage' ).css( 'margin-top', '-' + $( e.currentTarget ).scrollTop() + 'px' );
 							}
 						}
 					);
