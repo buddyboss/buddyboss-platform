@@ -13,7 +13,7 @@
 		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
 	<div class="gif-image-remove gif-image-overlay">
-		<i class="bb-icon-l bb-icon-times"></i>
+		<i class="bb-icons-rl-x"></i>
 	</div>
 	<# } #>
 </script>

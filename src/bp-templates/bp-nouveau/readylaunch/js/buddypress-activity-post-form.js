@@ -4056,6 +4056,7 @@ window.bp = window.bp || {};
 						this.$self.addClass( 'open' );
 					} else {
 						this.$self.removeClass( 'open' );
+						$targetEl.find( '.bb-rl-post-gif' ).removeClass( 'active' );
 					}
 
 					this.$gifPickerEl.removeClass( 'open' );
