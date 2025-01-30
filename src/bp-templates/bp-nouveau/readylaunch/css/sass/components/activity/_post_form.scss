@@ -260,6 +260,7 @@
 				color: var(--bb-rl-icon-secondary-color);
 				font-size: var(--bb-rl-base-line);
 				padding: var(--bb-rl-space-50);
+				border: 0.5px solid transparent;
 				cursor: pointer;
 
 				&:hover {
@@ -882,6 +883,7 @@
 
 		[class*="toolbar-button"].bb-rl-toolbar-button {
 			padding: 0;
+			border: 0;
 		}
 	}
 }
