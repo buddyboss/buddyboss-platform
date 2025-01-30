@@ -17,7 +17,7 @@ bp_nouveau_template_notices();
 <div class="groups-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count">(9)</span></h2>
+			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_get_total_group_count() : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>

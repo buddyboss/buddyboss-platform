@@ -106,10 +106,6 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 
 								</div>
 							</div>
-
-							<?php if ( bb_platform_group_element_enable( 'group-descriptions' ) ) { ?>
-								<div class="item-desc group-item-desc only-list-view"><?php bp_group_description_excerpt( false, 150 ); ?></div>
-							<?php } ?>
 						</div>
 
 						<?php bp_nouveau_groups_loop_item(); ?>
