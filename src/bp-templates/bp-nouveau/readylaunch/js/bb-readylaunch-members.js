@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, bbReadyLaunchFront */
+/* global bp */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -69,11 +69,11 @@ window.bp = window.bp || {};
 			}
 
 			// Validate Email
-			const $emailField = $( '#bb-rl-invite-email' );
-			const emailValue = $emailField.val().trim();
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			var $emailField = $( '#bb-rl-invite-email' );
+			var emailValue = $emailField.val().trim();
+			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-			if ( !emailRegex.test( emailValue ) ) {
+			if ( ! emailRegex.test( emailValue ) ) {
 				$emailField.addClass( 'bb-rl-input-field--error' );
 				isValid = false;
 			}
@@ -95,7 +95,7 @@ window.bp = window.bp || {};
 								alert( response.data.message ); // Error message
 							}
 						},
-						error: function (xhr, status, error) {
+						error: function () {
 							console.log('There was an error submitting the form. Please try again.');
 						}
 					}

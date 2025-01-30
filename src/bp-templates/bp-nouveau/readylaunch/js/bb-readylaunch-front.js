@@ -297,7 +297,6 @@ window.bp = window.bp || {};
 		 * @param e
 		 */
 		collapsibleContextNav: function () {
-			var self = this;
 
 			$( document ).on( 'click', '.bb-rl-context-btn', function ( e ) {
 				e.preventDefault();
