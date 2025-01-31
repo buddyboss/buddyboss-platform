@@ -84,12 +84,17 @@ window.bp = window.bp || {};
 			}
 		},
 
+		appendMessage: function ( $wrapper, message ) {
+			var errorHTML = '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error">';
+			errorHTML += '<i class="bb-icons-rl-warning-circle"></i>' + message + '</div>';
+			$wrapper.append( errorHTML );
+		},
+
 		submitInviteMemberPopupForm: function ( e ) {
 			e.preventDefault();
 
 			var isValid = true;
 			var $form = $( this );
-			var $modal = $form.closest( '#bb-rl-invite-modal' );
 
 			// Reset error classes
 			$form.removeClass( 'bb-rl-form-error' );
@@ -104,7 +109,7 @@ window.bp = window.bp || {};
 				isValid = false;
 
 				$nameField.addClass( 'bb-rl-input-field--error' );
-				$nameWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>' + bbReadyLaunchMembersVars.invite_invalid_name_message + '</div>' );
+				bp.Readylaunch.Members.appendMessage( $nameWrapper, bbReadyLaunchMembersVars.invite_invalid_name_message );
 				isValid = false;
 			}
 
@@ -116,7 +121,7 @@ window.bp = window.bp || {};
 
 			if ( ! emailRegex.test( emailValue ) ) {
 				$emailField.addClass( 'bb-rl-input-field--error' );
-				$emailWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>' + bbReadyLaunchMembersVars.invite_valid_email + '</div>' );
+				bp.Readylaunch.Members.appendMessage( $emailWrapper, bbReadyLaunchMembersVars.invite_valid_email );
 				isValid = false;
 			}
 
