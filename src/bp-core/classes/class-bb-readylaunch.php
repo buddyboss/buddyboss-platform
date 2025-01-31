@@ -63,9 +63,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register the ReadyLaunch menu.
 			$this->bb_register_readylaunch_menus();
 
-			// Register the ReadyLaunch widgets.
-			$this->bb_register_readylaunch_widgets();
-
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
 
@@ -197,26 +194,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					);
 				}
 			}
-		}
-
-		/**
-		 * Register the ReadyLaunch widgets.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_register_readylaunch_widgets() {
-			$sidebar_id = 'bb-readylaunch-sidebar';
-			register_sidebar(
-				array(
-					'name'          => __( 'BB ReadyLaunch™ Sidebar', 'buddyboss' ),
-					'id'            => $sidebar_id,
-					'description'   => __( 'Add widgets here to appear in the right sidebar on ReadyLaunch pages. This sidebar is used to display additional content or tools specific to ReadyLaunch.', 'buddyboss' ),
-					'before_widget' => '<div id="%1$s" class="widget %2$s">',
-					'after_widget'  => '</div>',
-					'before_title'  => '<h2 class="widget-title">',
-					'after_title'   => '</h2>',
-				)
-			);
 		}
 
 		/**
@@ -1342,7 +1319,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		function bb_rl_theme_body_classes( $classes ) {
 			global $post, $wp_query;
 
-			if ( is_active_sidebar( 'bb-readylaunch-sidebar' ) ) {
+			if ( is_active_sidebar( 'bb-readylaunch-members-sidebar' ) ) {
 				$classes[] = 'bb-rl-has-sidebar';
 			}
 
