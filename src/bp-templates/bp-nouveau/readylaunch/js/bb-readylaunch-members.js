@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp */
+/* global bp, bbReadyLaunchMembersVars */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -104,7 +104,7 @@ window.bp = window.bp || {};
 				isValid = false;
 
 				$nameField.addClass( 'bb-rl-input-field--error' );
-				$nameWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>Name is required.</div>' );
+				$nameWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>' + bbReadyLaunchMembersVars.invite_invalid_name_message + '</div>' );
 				isValid = false;
 			}
 
@@ -116,7 +116,7 @@ window.bp = window.bp || {};
 
 			if ( ! emailRegex.test( emailValue ) ) {
 				$emailField.addClass( 'bb-rl-input-field--error' );
-				$emailWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>Please enter a valid email address.</div>' );
+				$emailWrapper.append( '<div class="bb-rl-notice bb-rl-notice--alt bb-rl-notice--error"><i class="bb-icons-rl-warning-circle"></i>' + bbReadyLaunchMembersVars.invite_valid_email + '</div>' );
 				isValid = false;
 			}
 
@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			bp.Readylaunch.Members.showToastMessage( 'Sending invitation...', 'info' );
+			bp.Readylaunch.Members.showToastMessage( bbReadyLaunchMembersVars.invite_sending_invite, 'info' );
 
 			var formData = $form.serialize();
 			$.ajax(
@@ -142,7 +142,7 @@ window.bp = window.bp || {};
 						}
 					},
 					error: function () {
-						bp.Readylaunch.Members.showToastMessage( 'There was an error submitting the form. Please try again.', 'error', false );
+						bp.Readylaunch.Members.showToastMessage( bbReadyLaunchMembersVars.invite_error_notice, 'error', false );
 					}
 				}
 			);
