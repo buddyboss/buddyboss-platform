@@ -3177,10 +3177,6 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.CaseHeading( { model: this.model } ) );
 				this.views.add( new bp.Views.CasePrivacy( { model: this.model } ) );
 
-				if ( undefined !== bp.Views.PostScheduleTime ) {
-					this.views.add( new bp.Views.PostScheduleTime( { model: this.model } ) );
-				}
-
 				$( '#bb-rl-whats-new-heading, #bb-rl-whats-new-status' ).wrapAll( '<div class="bb-rl-activity-post-name-status" />' );
 				setTimeout(
 					function () {
