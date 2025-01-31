@@ -95,6 +95,10 @@ window.bp = window.bp || {};
 
 			var isValid = true;
 			var $form = $( this );
+			var $submitButton = $form.closest( '#bb-rl-invite-modal' ).find( '#bb-rl-submit-invite' );
+
+			// Disable submit button to prevent multiple submissions
+			$submitButton.prop( 'disabled', true );
 
 			// Reset error classes
 			$form.removeClass( 'bb-rl-form-error' );
@@ -127,6 +131,7 @@ window.bp = window.bp || {};
 
 			if ( !isValid ) {
 				$form.addClass( 'bb-rl-form-error' );
+				$submitButton.prop( 'disabled', false );
 				return;
 			}
 
@@ -148,6 +153,9 @@ window.bp = window.bp || {};
 					},
 					error: function () {
 						bp.Readylaunch.Members.showToastMessage( bbReadyLaunchMembersVars.invite_error_notice, 'error', false );
+					},
+					complete: function () {
+						$submitButton.prop( 'disabled', false );
 					}
 				}
 			);
