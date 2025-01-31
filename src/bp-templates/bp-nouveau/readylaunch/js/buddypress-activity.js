@@ -1223,25 +1223,22 @@ window.bp = window.bp || {};
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
-					var dropzone_options = {
-						url                         : bbRlAjaxUrl,
-						timeout                     : 3 * 60 * 60 * 1000,
-						dictFileTooBig              : bbRlMedia.dictFileTooBig,
-						dictInvalidFileType         : bp_media_dropzone.dictInvalidFileType,
-						dictDefaultMessage          : bbRlMedia.dropzone_media_message,
-						acceptedFiles               : 'image/*',
-						autoProcessQueue            : true,
-						addRemoveLinks              : true,
-						uploadMultiple              : false,
-						maxFiles                    : 'undefined' !== typeof bbRlMedia.maxFiles ? bbRlMedia.maxFiles : 10,
-						maxFilesize                 : 'undefined' !== typeof bbRlMedia.max_upload_size ? bbRlMedia.max_upload_size : 2,
-						thumbnailWidth              : 140,
-						thumbnailHeight             : 140,
-						dictMaxFilesExceeded        : bbRlMedia.media_dict_file_exceeded,
-						previewTemplate             : acCommentDefaultTemplate,
-						dictCancelUploadConfirmation: bbRlMedia.dictCancelUploadConfirmation,
-						maxThumbnailFilesize        : 'undefined' !== typeof bbRlMedia.max_upload_size ? bbRlMedia.max_upload_size : 2,
-					};
+					var dropzone_options = bp.Readylaunch.Utilities.createDropzoneOptions(
+						{
+							dictFileTooBig               : BP_Nouveau.media.dictFileTooBig,
+							dictInvalidFileType          : bp_media_dropzone.dictInvalidFileType,
+							dictDefaultMessage           : BP_Nouveau.media.dropzone_media_message,
+							acceptedFiles                : 'image/*',
+							maxFiles                     : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+							maxFilesize                  : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+							thumbnailWidth               : 140,
+							thumbnailHeight              : 140,
+							dictMaxFilesExceeded         : BP_Nouveau.media.media_dict_file_exceeded,
+							previewTemplate              : acCommentDefaultTemplate,
+							maxThumbnailFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+							dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+						}
+					);
 
 					// If a Dropzone instance already exists, destroy it before creating a new one.
 					if ( self.dropzone_obj instanceof Dropzone ) {
@@ -1251,172 +1248,13 @@ window.bp = window.bp || {};
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( hasParentModal + '#bb-rl-ac-reply-post-media-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
-					self.dropzone_obj.on(
-						'addedfile',
-						function ( file ) {
-							// Set data from edit comment.
-							if ( file.media_edit_data ) {
-								self.dropzone_media.push( file.media_edit_data );
-								var tool_box = target.parents( '.bb-rl-ac-reply-toolbar' );
-								if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
-								}
-							}
-						}
-					);
-
-					self.dropzone_obj.on(
-						'sending',
-						function (file, xhr, formData) {
-							formData.append( 'action', 'media_upload' );
-							formData.append( '_wpnonce', bbRlNonce.media );
-
-							var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
-							var commentForm = target.closest( '.ac-form' );
-							if ( bp.Nouveau.dropZoneGlobalProgress ) {
-								bp.Nouveau.dropZoneGlobalProgress( this );
-							}
-							commentForm.addClass( 'has-media' );
-							if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-gif-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
-							}
-							this.element.classList.remove( 'files-uploaded' );
-						}
-					);
-
-					self.dropzone_obj.on(
-						'uploadprogress',
-						function () {
-
-							var commentForm = target.closest( '.ac-form' );
-							commentForm.addClass( 'media-uploading' );
-							if ( bp.Nouveau.dropZoneGlobalProgress ) {
-								bp.Nouveau.dropZoneGlobalProgress( this );
-							}
-						}
-					);
-
-					self.dropzone_obj.on(
-						'success',
-						function (file, response) {
-							if ( response.data.id ) {
-								file.id                  = response.id;
-								response.data.uuid       = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id   = 'undefined' !== typeof bbRlMedia && 'undefined' !== typeof bbRlMedia.album_id ? bbRlMedia.album_id : false;
-								response.data.group_id   = 'undefined' !== typeof bbRlMedia && 'undefined' !== typeof bbRlMedia.group_id ? bbRlMedia.group_id : false;
-								response.data.saved      = false;
-								self.dropzone_media.push( response.data );
-								return file.previewElement.classList.add( 'dz-success' );
-							} else {
-								var node, _i, _len, _ref, _results;
-								var message = response.data.feedback;
-								file.previewElement.classList.add( 'dz-error' );
-								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
-								_results = [];
-								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node = _ref[_i];
-									_results.push( node.textContent = message );
-								}
-								if ( ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
-									$( self.dropzone_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
-								}
-								return _results;
-							}
-						}
-					);
-
-					self.dropzone_obj.on(
-						'accept',
-						function ( file, done ) {
-							if ( 0 === file.size ) {
-								done( bbRlMedia.empty_document_type );
-							} else {
-								done();
-							}
-						}
-					);
-
-					self.dropzone_obj.on(
-						'error',
-						function (file,response) {
-							if ( file.accepted ) {
-								if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
-									$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
-								}
-							} else {
-								var commentForm = target.closest( '.ac-form' );
-								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
-								commentForm.find( '.bb-rl-ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + response + '</div>' );
-								this.removeFile( file );
-								commentForm.removeClass( 'media-uploading' );
-							}
-						}
-					);
-
-					self.dropzone_obj.on(
-						'removedfile',
-						function (file) {
-							if ( self.dropzone_media.length ) {
-								for ( var i in self.dropzone_media ) {
-									if ( file.upload.uuid === self.dropzone_media[i].uuid ) {
-
-										if ( 'undefined' !== typeof self.dropzone_media[i].saved && ! self.dropzone_media[i].saved ) {
-											bp.Nouveau.Media.removeAttachment( self.dropzone_media[i].id );
-										}
-
-										self.dropzone_media.splice( i, 1 );
-										break;
-									}
-								}
-							}
-
-							if ( ! _.isNull( self.dropzone_obj ) && ! _.isNull( self.dropzone_obj.files ) && self.dropzone_obj.files.length === 0 ) {
-								var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
-								var commentForm = target.closest( '.ac-form' );
-								commentForm.removeClass( 'has-media' );
-								if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-gif-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).removeClass( 'active' );
-								}
-								$( self.dropzone_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
-								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
-							} else {
-								target.closest( '.ac-form' ).addClass( 'has-content' );
-							}
-						}
-					);
-
-					// Enable submit button when all medias are uploaded.
-					self.dropzone_obj.on(
-						'complete',
-						function () {
-							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-								var commentForm = target.closest( '.ac-form' );
-								commentForm.removeClass( 'media-uploading' );
-								this.element.classList.add( 'files-uploaded' );
-							}
-						}
-					);
+					self.setupDropzoneEventHandlers( {
+						self            : self,
+						dropzoneObj     : self.dropzone_obj,
+						dropzoneDataObj : self.dropzone_media,
+						target          : target,
+						type            : 'media'
+					} );
 
 					// container class to open close.
 					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
@@ -1473,199 +1311,31 @@ window.bp = window.bp || {};
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
-					var dropzone_options = {
-						url                  		: bbRlAjaxUrl,
-						timeout              		: 3 * 60 * 60 * 1000,
-						dictFileTooBig       		: bbRlMedia.dictFileTooBig,
-						acceptedFiles        		: bbRlMedia.document_type,
-						createImageThumbnails		: false,
-						dictDefaultMessage   		: bbRlMedia.dropzone_document_message,
-						autoProcessQueue     		: true,
-						addRemoveLinks       		: true,
-						uploadMultiple       		: false,
-						maxFiles             		: 'undefined' !== typeof bbRlDocument.maxFiles ? bbRlDocument.maxFiles : 10,
-						maxFilesize          		: 'undefined' !== typeof bbRlDocument.max_upload_size ? bbRlDocument.max_upload_size : 2,
-						dictInvalidFileType  		: bbRlDocument.dictInvalidFileType,
-						dictMaxFilesExceeded 		: bbRlMedia.document_dict_file_exceeded,
-						previewTemplate		 		: acCommentDocumentTemplate,
-						dictCancelUploadConfirmation: bbRlMedia.dictCancelUploadConfirmation,
-					};
+					var dropzone_options = bp.Readylaunch.Utilities.createDropzoneOptions(
+						{
+							dictFileTooBig               : BP_Nouveau.media.dictFileTooBig,
+							acceptedFiles                : BP_Nouveau.media.video_type,
+							createImageThumbnails        : false,
+							dictDefaultMessage           : BP_Nouveau.media.dropzone_document_message,
+							maxFiles                     : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+							maxFilesize                  : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+							dictInvalidFileType          : BP_Nouveau.document.dictInvalidFileType,
+							dictMaxFilesExceeded         : BP_Nouveau.media.document_dict_file_exceeded,
+							previewTemplate              : acCommentDocumentTemplate,
+							dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+						}
+					);
 
 					// init dropzone.
 					self.dropzone_document_obj = new Dropzone( hasParentModal + '#bb-rl-ac-reply-post-document-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
-					self.dropzone_document_obj.on(
-						'addedfile',
-						function ( file ) {
-
-							// Set data from edit comment.
-							if ( file.document_edit_data ) {
-								self.dropzone_document.push( file.document_edit_data );
-							}
-
-							var filename 	  = file.upload.filename;
-							var fileExtension = filename.substr( ( filename.lastIndexOf( '.' ) + 1 ) );
-							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
-							var tool_box = target.parents( '.bb-rl-ac-reply-toolbar' );
-							if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
-							}
-						}
-					);
-
-					self.dropzone_document_obj.on(
-						'sending',
-						function (file, xhr, formData) {
-							formData.append( 'action', 'document_document_upload' );
-							formData.append( '_wpnonce', bbRlNonce.media );
-
-							var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
-							var commentForm = target.closest( '.ac-form' );
-							commentForm.addClass( 'has-media' );
-							if ( bp.Nouveau.dropZoneGlobalProgress ) {
-								bp.Nouveau.dropZoneGlobalProgress( this );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-gif-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
-							}
-							this.element.classList.remove( 'files-uploaded' );
-						}
-					);
-
-					self.dropzone_document_obj.on(
-						'uploadprogress',
-						function () {
-
-							var commentForm = target.closest( '.ac-form' );
-							commentForm.addClass( 'media-uploading' );
-
-							if ( bp.Nouveau.dropZoneGlobalProgress ) {
-								bp.Nouveau.dropZoneGlobalProgress( this );
-							}
-						}
-					);
-
-					self.dropzone_document_obj.on(
-						'accept',
-						function ( file, done ) {
-							if ( file.size === 0) {
-								done( bbRlMedia.empty_document_type );
-							} else {
-								done();
-							}
-						}
-					);
-
-					self.dropzone_document_obj.on(
-						'success',
-						function (file, response) {
-							if ( response.data.id ) {
-								file.id                  = response.id;
-								response.data.uuid       = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id   = 'undefined' !== typeof bbRlMedia && 'undefined' !== typeof bbRlMedia.album_id ? bbRlMedia.album_id : false;
-								response.data.group_id   = 'undefined' !== typeof bbRlMedia && 'undefined' !== typeof bbRlMedia.group_id ? bbRlMedia.group_id : false;
-								response.data.saved      = false;
-								self.dropzone_document.push( response.data );
-								return file.previewElement.classList.add( 'dz-success' );
-							} else {
-								var node, _i, _len, _ref, _results;
-								var message = response.data.feedback;
-								file.previewElement.classList.add( 'dz-error' );
-								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
-								_results = [];
-								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node = _ref[_i];
-									_results.push( node.textContent = message );
-								}
-								if ( ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
-									$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
-								}
-								return _results;
-							}
-						}
-					);
-
-					self.dropzone_document_obj.on(
-						'error',
-						function (file,response) {
-							if ( file.accepted ) {
-								if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
-									$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
-								}
-							} else {
-								var commentForm = target.closest( '.ac-form' );
-								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
-								commentForm.find( '.bb-rl-ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + response + '</div>' );
-								this.removeFile( file );
-								commentForm.removeClass( 'media-uploading' );
-							}
-						}
-					);
-
-					self.dropzone_document_obj.on(
-						'removedfile',
-						function (file) {
-							if ( self.dropzone_document.length ) {
-								for ( var i in self.dropzone_document ) {
-									if ( file.upload.uuid === self.dropzone_document[i].uuid ) {
-
-										if ( 'undefined' !== typeof self.dropzone_document[i].saved && ! self.dropzone_document[i].saved ) {
-											bp.Nouveau.Media.removeAttachment( self.dropzone_document[i].id );
-										}
-
-										self.dropzone_document.splice( i, 1 );
-										break;
-									}
-								}
-							}
-
-							if ( ! _.isNull( self.dropzone_document_obj ) && ! _.isNull( self.dropzone_document_obj.files ) && self.dropzone_document_obj.files.length === 0 ) {
-								var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
-								var commentForm = target.closest( '.ac-form' );
-								commentForm.removeClass( 'has-media' );
-								if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-gif-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).removeClass( 'active' );
-								}
-								$( self.dropzone_document_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
-								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
-							} else {
-								target.closest( '.ac-form' ).addClass( 'has-content' );
-							}
-						}
-					);
-
-					// Enable submit button when all medias are uploaded.
-					self.dropzone_document_obj.on(
-						'complete',
-						function () {
-							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-								var commentForm = target.closest( '.ac-form' );
-								commentForm.removeClass( 'media-uploading' );
-								this.element.classList.add( 'files-uploaded' );
-							}
-						}
-					);
+					self.setupDropzoneEventHandlers( {
+						self            : self,
+						dropzoneObj     : self.dropzone_document_obj,
+						dropzoneDataObj : self.dropzone_document,
+						target          : target,
+						type            : 'document'
+					} );
 
 					// container class to open close.
 					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
@@ -1722,216 +1392,31 @@ window.bp = window.bp || {};
 
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
-					var dropzone_options = {
-						url                  		: bbRlAjaxUrl,
-						timeout              		: 3 * 60 * 60 * 1000,
-						dictFileTooBig       		: bbRlVideo.dictFileTooBig,
-						acceptedFiles        		: bbRlVideo.video_type,
-						createImageThumbnails		: false,
-						dictDefaultMessage   		: bbRlVideo.dropzone_video_message,
-						autoProcessQueue     		: true,
-						addRemoveLinks       		: true,
-						uploadMultiple       		: false,
-						maxFiles             		: 'undefined' !== typeof bbRlVideo.maxFiles ? bbRlVideo.maxFiles : 10,
-						maxFilesize          		: 'undefined' !== typeof bbRlVideo.max_upload_size ? bbRlVideo.max_upload_size : 2,
-						dictInvalidFileType  		: bbRlVideo.dictInvalidFileType,
-						dictMaxFilesExceeded 		: bbRlVideo.video_dict_file_exceeded,
-						previewTemplate		 		: acCommentVideoTemplate,
-						dictCancelUploadConfirmation: bbRlVideo.dictCancelUploadConfirmation,
-					};
+					var dropzone_options = bp.Readylaunch.Utilities.createDropzoneOptions(
+						{
+							dictFileTooBig               : BP_Nouveau.video.dictFileTooBig,
+							acceptedFiles                : BP_Nouveau.video.video_type,
+							createImageThumbnails        : false,
+							dictDefaultMessage           : BP_Nouveau.video.dropzone_video_message,
+							maxFiles                     : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+							maxFilesize                  : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+							dictInvalidFileType          : BP_Nouveau.video.dictInvalidFileType,
+							dictMaxFilesExceeded         : BP_Nouveau.video.video_dict_file_exceeded,
+							previewTemplate              : acCommentVideoTemplate,
+							dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+						}
+					);
 
 					// init dropzone.
 					self.dropzone_video_obj = new Dropzone( hasParentModal + '#bb-rl-ac-reply-post-video-uploader-' + target.data( 'ac-id' ), dropzone_options );
 
-					self.dropzone_video_obj.on(
-						'sending',
-						function (file, xhr, formData) {
-							formData.append( 'action', 'video_upload' );
-							formData.append( '_wpnonce', bbRlNonce.video );
-
-							var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
-							var commentForm = target.closest( '.ac-form' );
-							commentForm.addClass( 'has-media' );
-							if ( bp.Nouveau.dropZoneGlobalProgress ) {
-								bp.Nouveau.dropZoneGlobalProgress( this );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-gif-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-								tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
-							}
-							this.element.classList.remove( 'files-uploaded' );
-						}
-					);
-
-					self.dropzone_video_obj.on(
-						'accept',
-						function ( file, done ) {
-							if ( file.size === 0 ) {
-								done( bbRlVideo.empty_video_type );
-							} else {
-								done();
-							}
-						}
-					);
-
-					self.dropzone_video_obj.on(
-						'addedfile',
-						function ( file ) {
-
-							// Set data from edit comment.
-							if ( file.video_edit_data ) {
-								self.dropzone_video.push( file.video_edit_data );
-								var tool_box = target.parents( '.bb-rl-ac-reply-toolbar' );
-								if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).addClass( 'active' );
-								}
-							}
-
-							if ( file.dataURL && file.video_edit_data.thumb.length ) {
-								// Get Thumbnail image from response.
-								$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' "  alt=""/>' );
-								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
-							} else {
-
-								if ( bp.Nouveau.getVideoThumb ) {
-									bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
-								}
-
-							}
-						}
-					);
-
-					self.dropzone_video_obj.on(
-						'uploadprogress',
-						function () {
-
-							var commentForm = target.closest( '.ac-form' );
-							commentForm.addClass( 'media-uploading' );
-
-							if ( bp.Nouveau.dropZoneGlobalProgress ) {
-								bp.Nouveau.dropZoneGlobalProgress( this );
-							}
-						}
-					);
-
-					self.dropzone_video_obj.on(
-						'success',
-						function (file, response) {
-
-							if ( file.upload.progress === 100 ) {
-								$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
-								$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + bbRlVideo.i18n_strings.video_uploaded_text );
-								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
-							}
-
-							if ( response.data.id ) {
-								file.id                  = response.id;
-								response.data.uuid       = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id   = 'undefined' !== typeof bbRlVideo && 'undefined' !== typeof bbRlVideo.album_id ? bbRlVideo.album_id : false;
-								response.data.group_id   = 'undefined' !== typeof bbRlVideo && 'undefined' !== typeof bbRlVideo.group_id ? bbRlVideo.group_id : false;
-								response.data.saved      = false;
-								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
-								self.dropzone_video.push( response.data );
-								return file.previewElement.classList.add( 'dz-success' );
-							} else {
-								var node, _i, _len, _ref, _results;
-								var message = response.data.feedback;
-								file.previewElement.classList.add( 'dz-error' );
-								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
-								_results = [];
-								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node = _ref[_i];
-									_results.push( node.textContent = message );
-								}
-								if ( ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
-									$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
-								}
-								return _results;
-							}
-						}
-					);
-
-					self.dropzone_video_obj.on(
-						'error',
-						function (file,response) {
-							if ( file.accepted ) {
-								if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-								} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
-									$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
-								}
-							} else {
-								var commentForm = target.closest( '.ac-form' );
-								bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
-								commentForm.find( '.bb-rl-ac-reply-content' ).after( '<div class="bb-rl-notice bb-rl-notice--error">' + response + '</div>' );
-								this.removeFile( file );
-								commentForm.removeClass( 'media-uploading' );
-							}
-						}
-					);
-
-					self.dropzone_video_obj.on(
-						'removedfile',
-						function (file) {
-							if ( self.dropzone_video.length ) {
-								for ( var i in self.dropzone_video ) {
-									if ( file.upload.uuid === self.dropzone_video[i].uuid ) {
-
-										if ( 'undefined' !== typeof self.dropzone_video[i].saved && ! self.dropzone_video[i].saved ) {
-											bp.Nouveau.Media.removeAttachment( self.dropzone_video[i].id );
-										}
-
-										self.dropzone_video.splice( i, 1 );
-										break;
-									}
-								}
-							}
-
-							if ( ! _.isNull( self.dropzone_video_obj ) && ! _.isNull( self.dropzone_video_obj.files ) && self.dropzone_video_obj.files.length === 0 ) {
-								var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
-								var commentForm = target.closest( '.ac-form' );
-								commentForm.removeClass( 'has-media' );
-
-								if ( tool_box.find( '.bb-rl-ac-reply-media-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-media-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-document-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-document-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-gif-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-gif-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
-								}
-								if ( tool_box.find( '.bb-rl-ac-reply-video-button' ) ) {
-									tool_box.find( '.bb-rl-ac-reply-video-button' ).parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'no-click' ).find( '.bb-rl-toolbar-button' ).removeClass( 'active' );
-								}
-								$( self.dropzone_video_obj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
-								self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
-							} else {
-								target.closest( '.ac-form' ).addClass( 'has-content' );
-							}
-						}
-					);
-
-					// Enable submit button when all medias are uploaded.
-					self.dropzone_video_obj.on(
-						'complete',
-						function () {
-							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-								var commentForm = target.closest( '.ac-form' );
-								commentForm.removeClass( 'media-uploading' );
-								this.element.classList.add( 'files-uploaded' );
-							}
-						}
-					);
+					self.setupDropzoneEventHandlers( {
+						self            : self,
+						dropzoneObj     : self.dropzone_video_obj,
+						dropzoneDataObj : self.dropzone_video,
+						target          : target,
+						type            : 'video'
+					} );
 
 					// container class to open close.
 					dropzone_container.removeClass( 'closed' ).addClass( 'open' );
@@ -4215,6 +3700,203 @@ window.bp = window.bp || {};
 							true
 						]
 					);
+				}
+			);
+		},
+
+		setupDropzoneEventHandlers: function( args ) {
+			var self            = args.self,
+			    dropzoneObj     = args.dropzoneObj,
+			    target          = args.target,
+			    type            = args.type,
+			    dropzoneDataObj = args.dropzoneDataObj;
+
+			dropzoneObj.on(
+				'addedfile',
+				function ( file ) {
+					// Set data from edit comment.
+					if ( file[ type + '_edit_data' ] ) {
+						dropzoneDataObj.push( file[ type + '_edit_data' ] );
+						if ( 'document' === type ) {
+							var filename      = file.upload.filename;
+							var fileExtension = filename.substr( (
+								filename.lastIndexOf( '.' ) + 1
+							) );
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
+						}
+						var tool_box = target.parents( '.ac-reply-toolbar' );
+						if ( tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ) ) {
+							tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
+						}
+					}
+					if ( 'video' === type ) {
+						if ( file.dataURL && file.video_edit_data.thumb.length ) {
+							// Get Thumbnail image from response.
+							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' " />' );
+							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
+						} else {
+							if ( bp.Nouveau.getVideoThumb ) {
+								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+							}
+						}
+					}
+				}
+			);
+
+			dropzoneObj.on(
+				'sending',
+				function ( file, xhr, formData ) {
+					var action = 'document' === type ? type + '_' + type + '_upload' : type + '_upload';
+					formData.append( 'action', action );
+					var nonce = 'document' === type ? 'media' : type;
+					formData.append( '_wpnonce', BP_Nouveau.nonces[ nonce ] );
+
+					var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
+					var commentForm = target.closest( '.ac-form' );
+					if ( bp.Nouveau.dropZoneGlobalProgress ) {
+						bp.Nouveau.dropZoneGlobalProgress( this );
+					}
+					commentForm.addClass( 'has-media' );
+					['media', 'document', 'video', 'gif'].forEach( function ( subType ) {
+						if ( tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ) ) {
+							var $buttonElement = tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' );
+							if ( type === subType ) {
+								$buttonElement.addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
+							} else {
+								$buttonElement.addClass( 'disable' );
+							}
+						}
+					} );
+					this.element.classList.remove( 'files-uploaded' );
+				}
+			);
+
+			dropzoneObj.on(
+				'uploadprogress',
+				function () {
+					var commentForm = target.closest( '.ac-form' );
+					commentForm.addClass( 'media-uploading' );
+					if ( bp.Nouveau.dropZoneGlobalProgress ) {
+						bp.Nouveau.dropZoneGlobalProgress( this );
+					}
+				}
+			);
+
+			dropzoneObj.on(
+				'success',
+				function ( file, response ) {
+					if ( 'video' === type && file.upload.progress === 100 ) {
+						$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
+						$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
+						$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+					}
+					if ( response.data.id ) {
+						file.id                  = response.id;
+						response.data.uuid       = file.upload.uuid;
+						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+						var subType = 'document' === type ? 'media' : type;
+						response.data.album_id   = typeof BP_Nouveau[subType] !== 'undefined' && typeof BP_Nouveau[subType].album_id !== 'undefined' ? BP_Nouveau[subType].album_id : false;
+						response.data.group_id   = typeof BP_Nouveau[subType] !== 'undefined' && typeof BP_Nouveau[subType].group_id !== 'undefined' ? BP_Nouveau[subType].group_id : false;
+						response.data.saved      = false;
+						dropzoneDataObj.push( response.data );
+						return file.previewElement.classList.add( 'dz-success' );
+					} else {
+						var node, _i, _len, _ref, _results;
+						var message = response.data.feedback;
+						file.previewElement.classList.add( 'dz-error' );
+						_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+						_results = [];
+						for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+							node = _ref[ _i ];
+							_results.push( node.textContent = message );
+						}
+						if ( ! _.isNull( dropzoneObj.files ) && dropzoneObj.files.length === 0 ) {
+							$( dropzoneObj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
+						}
+						return _results;
+					}
+				}
+			);
+
+			dropzoneObj.on(
+				'accept',
+				function ( file, done ) {
+					if ( file.size === 0 ) {
+						var subType   = 'document' === type ? 'media' : type;
+						var emptyType = 'video' === type ? 'empty_' + type + '_type' : 'empty_document_type';
+						done( BP_Nouveau[ subType ][ emptyType ] );
+					} else {
+						done();
+					}
+				}
+			);
+
+			dropzoneObj.on(
+				'error',
+				function ( file, response ) {
+					if ( file.accepted ) {
+						if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+							$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
+						} else if ( file.status === 'error' && (
+						            file.xhr && file.xhr.status === 0
+						) ) { // update server error text to user friendly.
+							$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+						}
+					} else {
+						var commentForm = target.closest( '.ac-form' );
+						bp.Nouveau.Activity.clearFeedbackNotice( commentForm );
+						commentForm.find( '.ac-reply-content' ).after( '<div class="bp-feedback bp-messages error">' + response + '</div>' );
+						this.removeFile( file );
+						commentForm.removeClass( 'media-uploading' );
+					}
+				}
+			);
+
+			dropzoneObj.on(
+				'removedfile',
+				function ( file ) {
+					if ( dropzoneDataObj.length ) {
+						for ( var i in dropzoneDataObj ) {
+							if ( file.upload.uuid === dropzoneDataObj[ i ].uuid ) {
+								if ( typeof dropzoneDataObj[ i ].saved !== 'undefined' && ! dropzoneDataObj[ i ].saved ) {
+									bp.Nouveau.Media.removeAttachment( dropzoneDataObj[ i ].id );
+								}
+								dropzoneDataObj.splice( i, 1 );
+								break;
+							}
+						}
+					}
+					if ( ! _.isNull( dropzoneObj ) && ! _.isNull( dropzoneObj.files ) && dropzoneObj.files.length === 0 ) {
+						var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
+						var commentForm = target.closest( '.ac-form' );
+						commentForm.removeClass( 'has-media' );
+						['media', 'document', 'video', 'gif'].forEach( function ( subType ) {
+							if ( tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ) ) {
+								var $buttonElement = tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' );
+								if ( type === subType ) {
+									$buttonElement.removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
+								} else {
+									$buttonElement.removeClass( 'disable' );
+								}
+							}
+						} );
+						$( dropzoneObj.element ).removeClass( 'files-uploaded dz-progress-view' ).find( '.dz-global-progress' ).remove();
+						self.validateCommentContent( commentForm.find( '.ac-textarea' ).children( '.ac-input' ) );
+					} else {
+						target.closest( '.ac-form' ).addClass( 'has-content' );
+					}
+				}
+			);
+
+			// Enable submit button when all medias are uploaded.
+			dropzoneObj.on(
+				'complete',
+				function () {
+					if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
+						var commentForm = target.closest( '.ac-form' );
+						commentForm.removeClass( 'media-uploading' );
+						this.element.classList.add( 'files-uploaded' );
+					}
 				}
 			);
 		},
