@@ -3890,7 +3890,7 @@ window.bp = window.bp || {};
 				'click #bb-rl-activity-media-button': 'toggleMediaSelector',
 				'click #bb-rl-activity-document-button': 'toggleDocumentSelector',
 				'click #bb-rl-activity-video-button': 'toggleVideoSelector',
-				'click .bb-rl-post-elements-buttons-item:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )': 'activeButton',
+				'click [class*="post-elements-buttons-item"]:not( .bb-rl-post-gif ):not( .bb-rl-post-media ):not( .bb-rl-post-video )': 'activeButton',
 				'click .bb-rl-post-elements-buttons-item.bb-rl-post-gif:not(.disable)': 'activeMediaButton',
 				'click .bb-rl-post-elements-buttons-item.bb-rl-post-media:not(.disable)': 'activeMediaButton',
 				'click .bb-rl-post-elements-buttons-item.bb-rl-post-video:not(.disable)': 'activeVideoButton',
