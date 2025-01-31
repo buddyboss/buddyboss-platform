@@ -71,7 +71,7 @@ window.bp = window.bp || {};
 
 			var ForumDocumentTemplates = document.getElementsByClassName( 'forum-post-document-template' ).length ? document.getElementsByClassName( 'forum-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
 
-			this.documentOptions = bp.Nouveau.createDropzoneOptions(
+			this.documentOptions = bp.Readylaunch.Utilities.createDropzoneOptions(
 				{
 					dictFileTooBig               : bbRlMedia.dictFileTooBig,
 					acceptedFiles                : bbRlMedia.document_type,
@@ -87,7 +87,7 @@ window.bp = window.bp || {};
 			);
 
 			var ForumVideoTemplate = document.getElementsByClassName( 'forum-post-video-template' ).length ? document.getElementsByClassName( 'forum-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
-			this.videoOptions      = bp.Nouveau.createDropzoneOptions(
+			this.videoOptions      = bp.Readylaunch.Utilities.createDropzoneOptions(
 				{
 					dictFileTooBig               : bbRlVideo.dictFileTooBig,
 					acceptedFiles                : bbRlVideo.video_type,
@@ -104,7 +104,7 @@ window.bp = window.bp || {};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
 				var ForumDocumentTemplate = document.getElementsByClassName( 'forum-post-document-template' ).length ? document.getElementsByClassName( 'forum-post-document-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
-				this.options              = bp.Nouveau.createDropzoneOptions(
+				this.options              = bp.Readylaunch.Utilities.createDropzoneOptions(
 					{
 						dictFileTooBig               : bbRlMedia.dictFileTooBig,
 						acceptedFiles                : bbRlMedia.document_type,
@@ -120,7 +120,7 @@ window.bp = window.bp || {};
 				);
 			} else {
 				var ForumMediaTemplate = document.getElementsByClassName( 'forum-post-media-template' ).length ? document.getElementsByClassName( 'forum-post-media-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
-				this.options           = bp.Nouveau.createDropzoneOptions(
+				this.options           = bp.Readylaunch.Utilities.createDropzoneOptions(
 					{
 						dictFileTooBig               : bbRlMedia.dictFileTooBig,
 						dictDefaultMessage           : bbRlMedia.dropzone_media_message,
