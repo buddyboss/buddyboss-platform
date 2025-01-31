@@ -602,6 +602,10 @@ class BuddyPress {
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
 		}
+
+		if ( bb_get_enabled_readylaunch() ) {
+			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
+		}
 	}
 
 	/**
@@ -721,6 +725,7 @@ class BuddyPress {
 			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',
+			'BB_Readylaunch'                               => 'core',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
