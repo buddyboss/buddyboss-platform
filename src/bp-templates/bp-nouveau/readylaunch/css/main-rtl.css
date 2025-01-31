@@ -2027,7 +2027,7 @@ button[data-balloon] {
 
 .bb-rl-styled-checkbox + label:before {
   content: "";
-  margin-left: var(--bb-rl-space-50);
+  margin-left: var(--bb-rl-space-100);
   display: inline-block;
   vertical-align: text-top;
   width: 20px;
