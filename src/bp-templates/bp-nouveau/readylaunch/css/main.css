@@ -184,6 +184,10 @@ a {
   flex-direction: row;
 }
 
+.flex-column {
+  flex-direction: column;
+}
+
 .flex-row-reverse {
   flex-direction: row-reverse;
 }
@@ -658,6 +662,45 @@ span.atwho-inserted {
 
 .item .list-title a:hover {
   color: var(--bb-rl-primary-color);
+}
+
+/* Group and Member single navigations */
+.bb-rl-secondary-header #object-nav {
+  padding: 12px var(--bb-rl-space-300);
+}
+
+.bb-rl-secondary-header #object-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-secondary-header #object-nav ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-secondary-header #object-nav ul li a {
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  padding: 12px var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-secondary-header #object-nav ul li a .count {
+  display: none;
+}
+
+.bb-rl-secondary-header #object-nav ul li.selected a,
+.bb-rl-secondary-header #object-nav ul li a:hover {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-color);
 }
 
 .divider {
