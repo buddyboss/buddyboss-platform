@@ -16,11 +16,34 @@
 	opacity: 1;
 	z-index: 9999;
 	transition: opacity 0.3s ease-in-out;
+
+	i {
+		font-size: 26px;
+		margin-right: var(--bb-rl-space-100);
+	}
 }
 
-.bb-rl-toast-message--error {}
+.bb-rl-toast-message--error {
 
-.bb-rl-toast-message--success {}
+	.bb-rl-spinner {
+		display: none;
+	}
+
+	i {
+		color: var(--bb-rl-text-danger-secondary-color);
+	}
+}
+
+.bb-rl-toast-message--success {
+
+	.bb-rl-spinner {
+		display: none;
+	}
+
+	i {
+		color: var(--bb-rl-text-positive-secondary-color);
+	}
+}
 
 .bb-rl-spinner {
 	display: inline-block;

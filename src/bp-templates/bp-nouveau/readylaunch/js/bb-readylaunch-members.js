@@ -39,6 +39,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
 				e.preventDefault();
+				bp.Readylaunch.Members.resetInviteMemberPopupForm.call( this, e );
 				
 				var $modal = $( this ).closest( '#bb-rl-invite-modal' );
 				
@@ -50,20 +51,24 @@ window.bp = window.bp || {};
 			$( document ).on( 'submit', '#bb-rl-invite-form', this.submitInviteMemberPopupForm );
 		},
 
-		showToastMessage: function ( message, type = 'info' ) {
-			var $modalWrapper = $( '.bb-rl-modal-wrapper' );
+		showToastMessage: function ( message, type = 'info', hideModal = false ) {
+			var $modal = $( '#bb-rl-invite-modal' );
+			var $modalWrapper = $modal.find( '.bb-rl-modal-wrapper' );
 		
 			// Remove any existing toast messages
 			$( '.bb-rl-toast-message' ).remove();
 		
 			var toastClass = 'bb-rl-toast-message';
+			var toastIcon = '<span class="bb-rl-spinner"></span>';
 			if ( type === 'error' ) {
 				toastClass += ' bb-rl-toast-message--error';
+				toastIcon += '<i class="bb-icons-rl-warning-circle"></i>';
 			} else if ( type === 'success' ) {
 				toastClass += ' bb-rl-toast-message--success';
+				toastIcon += '<i class="bb-icons-rl-check-circle"></i>';
 			}
 		
-			var toastHTML = '<div class="' + toastClass + '"><span class="bb-rl-spinner"></span>' + message + '</div>';
+			var toastHTML = '<div class="' + toastClass + '">' + toastIcon + message + '</div>';
 			$modalWrapper.append( toastHTML );
 			
 			if ( type !== 'error' ) {
@@ -71,7 +76,11 @@ window.bp = window.bp || {};
 					$( '.bb-rl-toast-message' ).fadeOut( 500, function () {
 						$( this ).remove();
 					} );
-				}, 6000 );
+
+					if ( hideModal ) {
+						$modal.fadeOut(200);
+					}
+				}, 5000 );
 			}
 		},
 
@@ -80,6 +89,7 @@ window.bp = window.bp || {};
 
 			var isValid = true;
 			var $form = $( this );
+			var $modal = $form.closest( '#bb-rl-invite-modal' );
 
 			// Reset error classes
 			$form.removeClass( 'bb-rl-form-error' );
@@ -125,17 +135,28 @@ window.bp = window.bp || {};
 					data: formData,
 					success: function (response) {
 						if ( response.success ) {
-							bp.Readylaunch.Members.showToastMessage( response.data.message + 'Invitation sent successfully!', 'success' );
+							bp.Readylaunch.Members.showToastMessage( response.data.message, 'success', true );
 							$form[ 0 ].reset();
 						} else {
-							bp.Readylaunch.Members.showToastMessage( response.data.message, 'error' );
+							bp.Readylaunch.Members.showToastMessage( response.data.message, 'error', false );
 						}
 					},
 					error: function () {
-						bp.Readylaunch.Members.showToastMessage( 'There was an error submitting the form. Please try again.', 'error' );
+						bp.Readylaunch.Members.showToastMessage( 'There was an error submitting the form. Please try again.', 'error', false );
 					}
 				}
 			);
+		},
+
+		resetInviteMemberPopupForm: function () {
+			var $modal = $( this ).closest( '#bb-rl-invite-modal' );
+			var $form = $modal.find( '#bb-rl-invite-form' )
+
+			// Reset form
+			$form.removeClass( 'bb-rl-form-error' );
+			$form.find( '.bb-rl-input-field' ).removeClass( 'bb-rl-input-field--error' );
+			$form.find( '.bb-rl-notice' ).remove();
+			$form[ 0 ].reset();
 		},
 	};
 
