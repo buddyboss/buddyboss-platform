@@ -4508,54 +4508,6 @@ window.bp = window.bp || {};
 								$this.displayFull( event );
 								$this.$el.closest( '.bb-rl-activity-update-form' ).find( '#bb-rl-aw-whats-new-reset' ).trigger( 'click' ); // Trigger reset.
 						}
-						if ( ! _.isUndefined( bbRlMedia ) &&
-							! _.isUndefined( bbRlMedia.emoji ) &&
-							(
-								(
-									! _.isUndefined( bbRlMedia.emoji.profile ) && bbRlMedia.emoji.profile
-								) ||
-								(
-									! _.isUndefined( bbRlMedia.emoji.groups ) && bbRlMedia.emoji.groups
-								)
-							)
-						) {
-							var $whatsNew = $( '#bb-rl-whats-new' );
-							$whatsNew.emojioneArea(
-								{
-									standalone: true,
-									hideSource: false,
-									container: '#bb-rl-editor-toolbar > .bb-rl-post-emoji',
-									autocomplete: false,
-									pickerPosition: 'bottom',
-									hidePickerOnBlur: true,
-									useInternalCDN: false,
-									events: {
-										emojibtn_click: function () {
-											$whatsNew[0].emojioneArea.hidePicker();
-											if ( window.getSelection && document.createRange ) { // Get caret position when user adds emoji.
-												var sel = window.getSelection && window.getSelection();
-												if ( sel && sel.rangeCount > 0 ) {
-													window.activityCaretPosition = sel.getRangeAt( 0 );
-												}
-											} else {
-												window.activityCaretPosition = document.selection.createRange();
-											}
-
-											// Enable post submit button.
-											$whatsNewForm.removeClass( 'bb-rl-focus-in--empty' );
-										},
-
-										picker_show: function () {
-											$( this.button[0] ).closest( '.bb-rl-post-emoji' ).addClass( 'active' );
-										},
-
-										picker_hide: function () {
-											$( this.button[0] ).closest( '.bb-rl-post-emoji' ).removeClass( 'active' );
-										},
-									}
-								}
-							);
-						}
 					}
 				);
 			},
@@ -4742,6 +4694,55 @@ window.bp = window.bp || {};
 					// Display draft activity.
 					bp.Nouveau.Activity.postForm.displayDraftActivity();
 				}
+
+				if ( ! _.isUndefined( bbRlMedia ) &&
+							! _.isUndefined( bbRlMedia.emoji ) &&
+							(
+								(
+									! _.isUndefined( bbRlMedia.emoji.profile ) && bbRlMedia.emoji.profile
+								) ||
+								(
+									! _.isUndefined( bbRlMedia.emoji.groups ) && bbRlMedia.emoji.groups
+								)
+							)
+						) {
+							var $whatsNew = $( '#bb-rl-whats-new' );
+							$whatsNew.emojioneArea(
+								{
+									standalone: true,
+									hideSource: false,
+									container: '#bb-rl-whats-new-toolbar .bb-rl-post-emoji',
+									autocomplete: false,
+									pickerPosition: 'bottom',
+									hidePickerOnBlur: true,
+									useInternalCDN: false,
+									events: {
+										emojibtn_click: function () {
+											$whatsNew[0].emojioneArea.hidePicker();
+											if ( window.getSelection && document.createRange ) { // Get caret position when user adds emoji.
+												var sel = window.getSelection && window.getSelection();
+												if ( sel && sel.rangeCount > 0 ) {
+													window.activityCaretPosition = sel.getRangeAt( 0 );
+												}
+											} else {
+												window.activityCaretPosition = document.selection.createRange();
+											}
+
+											// Enable post submit button.
+											$whatsNewForm.removeClass( 'bb-rl-focus-in--empty' );
+										},
+
+										picker_show: function () {
+											$( this.button[0] ).closest( '.bb-rl-post-emoji' ).addClass( 'active' );
+										},
+
+										picker_hide: function () {
+											$( this.button[0] ).closest( '.bb-rl-post-emoji' ).removeClass( 'active' );
+										},
+									}
+								}
+							);
+						}
 
 				$( 'a.bp-suggestions-mention:empty' ).remove();
 			},
