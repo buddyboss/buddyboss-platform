@@ -45,6 +45,7 @@ class BB_Group_Readylaunch {
 	 */
 	public function __construct() {
 		add_filter( 'bb_group_subscription_button_args', array( $this, 'bb_rl_update_group_subscription_button' ), 10, 2 );
+		add_filter( 'bb_nouveau_get_groups_bubble_buttons', array( $this, 'bb_rl_get_groups_bubble_buttons' ), 10, 3 );
 	}
 
 	public function bb_rl_update_group_subscription_button( $button, $r ) {
@@ -54,5 +55,11 @@ class BB_Group_Readylaunch {
 		$button['data-balloon-pos']                    = 'left';
 
 		return $button;
+	}
+
+	public function bb_rl_get_groups_bubble_buttons( $buttons, $group, $type ) {
+
+
+		return $buttons;
 	}
 }

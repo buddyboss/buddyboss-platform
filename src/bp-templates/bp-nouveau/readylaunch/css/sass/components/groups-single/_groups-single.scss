@@ -65,6 +65,10 @@
 						margin-right: -4px;
 						position: relative;
 
+						&:last-child {
+							margin-right: 0;
+						}
+
 						a {
 							text-decoration: none;
 							display: block;
@@ -102,13 +106,46 @@
 				display: flex;
 				align-items: center;
 
-				&:before {
+				&:not(:empty):before {
 					content: '';
 					height: 16px;
 					width: 1px;
 					background: var(--bb-rl-border-secondary-color);
 					display: block;
 					margin: 0 20px;
+				}
+
+				button.group-button {
+					@include bb-rl-button;
+					@include bb-rl-button--brand-fill;
+					font-size: var(--bb-rl-font-size-sm);
+					padding: 6px var(--bb-rl-space-200);
+					margin-right: 10px;
+					line-height: var(--bb-rl-base-line-small);
+
+					&.subscribed {
+						font-size: var(--bb-rl-font-size-base);
+						padding: var(--bb-rl-space-100);
+					}
+
+					&.join-group:before,
+					&.leave-group:before,
+					&.request-membership:before {
+						font-family: bb-icons-rl;
+						margin-right: 5px;
+					}
+
+					&.join-group:before {
+						content: "\e3d4";
+					}
+
+					&.leave-group:before {
+						content: "\e182";
+					}
+
+					&.request-membership:before {
+						content: "\e308";
+					}
 				}
 			}
 
