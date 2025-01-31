@@ -186,6 +186,7 @@
 			}
 
 			&.send-message,
+			&.bb-rl-send-message-disabled,
 			&.follow-button,
 			&.friendship-button {
 
@@ -203,7 +204,21 @@
 				}
 			}
 
-			&.send-message i::before {
+			&.bb-rl-send-message-disabled {
+				pointer-events: none;
+				color: var(--bb-rl-text-disabled-color);
+				border-color: var(--bb-rl-border-tertiary-color);
+
+				i {
+
+					&::before {
+						color: var(--bb-rl-text-disabled-color);
+					}
+				}
+			}
+
+			&.send-message i::before,
+			&.bb-rl-send-message-disabled i::before {
 				content: "\e168";
 			}
 
@@ -244,6 +259,7 @@
 		}
 
 		.send-message,
+		.bb-rl-send-message-disabled,
 		.friendship-button,
 		.follow-button {
 			font-size: 0;
@@ -266,7 +282,16 @@
 			}
 		}
 
-		.send-message i::before {
+		.bb-rl-send-message-disabled {
+			pointer-events: none;
+
+			i::before {
+				color: var(--bb-rl-icon-disabled-color);
+			}
+		}
+
+		.send-message i::before,
+		.bb-rl-send-message-disabled i::before {
 			content: "\e16e";
 		}
 
