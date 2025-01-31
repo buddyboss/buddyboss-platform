@@ -71,6 +71,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$enabled = $this->bb_is_readylaunch_enabled();
 			if ( $enabled ) {
+				if (
+					bp_is_active( 'groups' ) &&
+					(
+						bp_is_groups_directory() ||
+						bp_is_group_single()
+					)
+				) {
+					BB_Group_Readylaunch::instance();
+				}
+
 				add_filter(
 					'template_include',
 					array(
@@ -469,6 +479,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register only if it's Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+			}
+
+			// Register only if it's Groups component.
+			if ( bp_is_active( 'groups' ) ) {
+				if ( bp_is_group_single() ) {
+					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
+				}
 			}
 
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
