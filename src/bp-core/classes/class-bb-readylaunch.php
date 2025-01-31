@@ -435,7 +435,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery' ), bp_get_version(), true );
+			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery' ), bp_get_version(), false );
 
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
