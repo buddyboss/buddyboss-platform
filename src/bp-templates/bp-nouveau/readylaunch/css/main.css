@@ -2278,6 +2278,39 @@ button[data-balloon] {
   border-color: var(--bb-rl-border-warning-secondary-color);
 }
 
+.bb-readylaunch-template .bb-report-type-wrp #bb-report-content .form-item {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .bb-report-type-wrp #bb-report-content .form-item label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--bb-rl-space-50);
+  color: var(--bb-rl-text-color);
+  font-weight: 500;
+  width: 100%;
+}
+
+.bb-readylaunch-template .bb-report-type-wrp #bb-report-content .form-item label input[type="radio"] {
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-report-type-wrp #bb-report-content .form-item > span {
+  display: block;
+  padding-left: 21px;
+}
+
+.bb-readylaunch-template .bb-report-type-wrp #bb-report-content .form-item label[for="report-note"] {
+  margin: var(--bb-rl-space-100) 0 0;
+}
+
+.bb-readylaunch-template .bb-report-type-wrp #bb-report-content .form-item textarea {
+  width: 100%;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: 6px;
+  padding: 5px var(--bb-rl-space-100);
+}
+
 .bb-readylaunch-template .bb-model-footer {
   display: flex;
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;

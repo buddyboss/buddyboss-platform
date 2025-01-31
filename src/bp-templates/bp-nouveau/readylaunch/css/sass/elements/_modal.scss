@@ -184,6 +184,45 @@
 		}
 	}
 
+	.bb-report-type-wrp {
+
+		#bb-report-content {
+
+			.form-item {
+				margin: 0 0 var(--bb-rl-space-200);
+
+				label {
+					display: inline-flex;
+					align-items: center;
+					margin-right: var(--bb-rl-space-50);
+					color: var(--bb-rl-text-color);
+					font-weight: 500;
+					width: 100%;
+
+					input[type="radio"] {
+						margin-right: var(--bb-rl-space-100);
+					}
+				}
+
+				> span {
+					display: block;
+					padding-left: 21px;
+				}
+
+				label[for="report-note"] {
+					margin: var(--bb-rl-space-100) 0 0;
+				}
+
+				textarea {
+					width: 100%;
+					border: 1px solid var(--bb-rl-border-tertiary-color);
+					border-radius: 6px;
+					padding: 5px var(--bb-rl-space-100);
+				}
+			}
+		}
+	}
+
 	.bb-model-footer {
 		display: flex;
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
