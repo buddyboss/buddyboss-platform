@@ -102,6 +102,10 @@
 		list-style: none;
 		z-index: var(--bb-rl-z-index-dropdown);
 
+		.bb_rl_more_dropdown__title {
+			display: none;
+		}
+
 		.generic-button {
 
 			a {

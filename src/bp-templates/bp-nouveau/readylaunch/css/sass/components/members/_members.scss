@@ -177,7 +177,16 @@
 			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 			white-space: nowrap;
 
+			&.following,
+			&.is_friend,
+			&.pending_friend,
+			&.awaiting_response_friend {
+
+				@include bb-rl-button--secondary-outline;
+			}
+
 			&.send-message,
+			&.bb-rl-send-message-disabled,
 			&.follow-button,
 			&.friendship-button {
 
@@ -195,7 +204,21 @@
 				}
 			}
 
-			&.send-message i::before {
+			&.bb-rl-send-message-disabled {
+				pointer-events: none;
+				color: var(--bb-rl-text-disabled-color);
+				border-color: var(--bb-rl-border-tertiary-color);
+
+				i {
+
+					&::before {
+						color: var(--bb-rl-text-disabled-color);
+					}
+				}
+			}
+
+			&.send-message i::before,
+			&.bb-rl-send-message-disabled i::before {
 				content: "\e168";
 			}
 
@@ -236,6 +259,7 @@
 		}
 
 		.send-message,
+		.bb-rl-send-message-disabled,
 		.friendship-button,
 		.follow-button {
 			font-size: 0;
@@ -258,7 +282,16 @@
 			}
 		}
 
-		.send-message i::before {
+		.bb-rl-send-message-disabled {
+			pointer-events: none;
+
+			i::before {
+				color: var(--bb-rl-icon-disabled-color);
+			}
+		}
+
+		.send-message i::before,
+		.bb-rl-send-message-disabled i::before {
 			content: "\e16e";
 		}
 
@@ -271,6 +304,10 @@
 		}
 
 		.friendship-button.pending_friend i::before {
+			content: "\edec";
+		}
+
+		.friendship-button.awaiting_response_friend i::before {
 			content: "\edec";
 		}
 

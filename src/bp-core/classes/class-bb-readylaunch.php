@@ -63,9 +63,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register the ReadyLaunch menu.
 			$this->bb_register_readylaunch_menus();
 
-			// Register the ReadyLaunch widgets.
-			$this->bb_register_readylaunch_widgets();
-
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
 
@@ -114,6 +111,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
 
 				add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
+
+				add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+
+				add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
+
 			}
 		}
 
@@ -197,26 +199,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					);
 				}
 			}
-		}
-
-		/**
-		 * Register the ReadyLaunch widgets.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_register_readylaunch_widgets() {
-			$sidebar_id = 'bb-readylaunch-sidebar';
-			register_sidebar(
-				array(
-					'name'          => __( 'BB ReadyLaunch™ Sidebar', 'buddyboss' ),
-					'id'            => $sidebar_id,
-					'description'   => __( 'Add widgets here to appear in the right sidebar on ReadyLaunch pages. This sidebar is used to display additional content or tools specific to ReadyLaunch.', 'buddyboss' ),
-					'before_widget' => '<div id="%1$s" class="widget %2$s">',
-					'after_widget'  => '</div>',
-					'before_title'  => '<h2 class="widget-title">',
-					'after_title'   => '</h2>',
-				)
-			);
 		}
 
 		/**
@@ -472,6 +454,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_members_directory() ) {
 				wp_enqueue_script( 'bb-rl-members' );
+				wp_localize_script(
+					'bb-rl-members',
+					'bbReadyLaunchMembersVars',
+					array(
+						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss' ),
+						'invite_valid_email' => esc_html__( 'Please enter a valid email address.', 'buddyboss' ),
+						'invite_sending_invite' => esc_html__( 'Sending invitation...', 'buddyboss' ),
+						'invite_error_notice' => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss' ),
+					)
+				);
 			}
 
 			wp_localize_script(
@@ -1113,7 +1105,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return array_merge(
 				$scripts,
 				array(
-					'bb-rl-members' => array(
+					'bb-rl-members'             => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members%s.js',
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
@@ -1203,7 +1195,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'message' => esc_html__( 'Unable to send invite.', 'buddyboss' ),
 				'type'    => 'error',
 			);
-		
+
 			// Verify nonce.
 			if (
 				! isset( $_POST['bb_rl_invite_form_nonce'] ) ||
@@ -1212,7 +1204,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
 				wp_send_json_error( $response );
 			}
-		
+
 			$loggedin_user_id = bp_loggedin_user_id();
 
 			// Check if the user is logged in.
@@ -1220,11 +1212,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$response['message'] = esc_html__( 'You should be logged in to send an invite.', 'buddyboss' );
 				wp_send_json_error( $response );
 			}
-		
+
 			if ( ! bp_is_active( 'invites' ) || ! bp_is_post_request() || empty( $_POST['bb-rl-invite-email'] ) ) {
 				wp_send_json_error( $response );
 			}
-		
+
 			$email = strtolower( sanitize_email( wp_unslash( $_POST['bb-rl-invite-email'] ) ) );
 			if ( email_exists( $email ) ) {
 				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss' );
@@ -1235,35 +1227,38 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
 				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
 				wp_send_json_error( $response );
+			} elseif ( ! bp_allow_user_to_send_invites() ) {
+				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' );
+				wp_send_json_error( $response );
 			}
-		
+
 			$name        = sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) );
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
-		
+
 			$subject = bp_disable_invite_member_email_subject() && ! empty( $_POST['bp_member_invites_custom_subject'] )
 				? stripslashes( strip_tags( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
 				: stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
-		
+
 			$message = bp_disable_invite_member_email_content() && ! empty( $_POST['bp_member_invites_custom_content'] )
 				? stripslashes( strip_tags( wp_unslash( $_POST['bp_member_invites_custom_content'] ) ) )
 				: stripslashes( strip_tags( bp_get_member_invitation_message() ) );
-		
+
 			$message .= ' ' . bp_get_member_invites_wildcard_replace(
 				stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ),
 				$email
 			);
-		
+
 			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
 			$email_encode = urlencode( $email );
 			$inviter_url  = bp_loggedin_user_domain();
-		
+
 			$_POST['custom_user_email']  = $email;
 			$_POST['custom_user_name']   = $name;
 			$_POST['custom_user_avatar'] = apply_filters(
 				'bp_sent_invite_email_avatar',
 				bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) )
 			);
-		
+
 			$accept_link = add_query_arg(
 				array(
 					'bp-invites' => 'accept-member-invitation',
@@ -1273,7 +1268,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				trailingslashit( bp_get_root_domain() ) . bp_get_signup_slug() . '/'
 			);
 			$accept_link = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
-			
+
 			$args = array(
 				'tokens' => array(
 					'inviter.name' => $inviter_name,
@@ -1281,7 +1276,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'invitee.url'  => $accept_link,
 				),
 			);
-		
+
 			add_filter( 'bp_email_get_salutation', '__return_false' );
 			if ( ! function_exists( 'bp_invites_kses_allowed_tags' ) ) {
 				require trailingslashit( buddypress()->plugin_dir . 'bp-invites/actions' ) . '/invites.php';
@@ -1297,18 +1292,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'post_type'    => bp_get_invite_post_type(),
 				)
 			);
-		
+
 			if ( ! $post_id ) {
 				return false;
 			}
-		
+
 			update_post_meta( $post_id, 'bp_member_invites_accepted', '' );
 			update_post_meta( $post_id, '_bp_invitee_email', $email );
 			update_post_meta( $post_id, '_bp_invitee_name', $name );
 			update_post_meta( $post_id, '_bp_inviter_name', $inviter_name );
 			update_post_meta( $post_id, '_bp_invitee_status', 0 );
 			update_post_meta( $post_id, '_bp_invitee_member_type', $member_type );
-		
+
 			/**
 			 * Fires after a member invitation is sent.
 			 *
@@ -1318,7 +1313,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			 * @since BuddyBoss [BBVERSION]
 			 */
 			do_action( 'bp_member_invite_submit', $loggedin_user_id, $post_id );
-		
+
 			wp_send_json_success(
 				array(
 					'message' => esc_html__( 'Email invite sent successfully.', 'buddyboss' ),
@@ -1329,7 +1324,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 		/**
 		 * Adds custom classes to the array of body classes.
-		 * 
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $classes Classes for the body element.
@@ -1339,11 +1334,91 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		function bb_rl_theme_body_classes( $classes ) {
 			global $post, $wp_query;
 
-			if ( is_active_sidebar( 'bb-readylaunch-sidebar' ) ) {
+			if ( is_active_sidebar( 'bb-readylaunch-members-sidebar' ) ) {
 				$classes[] = 'bb-rl-has-sidebar';
 			}
 
 			return $classes;
+		}
+
+		/**
+		 * Override Send Message button text.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Button arguments.
+		 *
+		 * @return array $args Filtered arguments.
+		 */
+		function bb_rl_override_send_message_button_text( $args ) {
+			$args['link_text'] = esc_html__( 'Message', 'buddyboss' );
+			return $args;
+		}
+
+		/**
+		 * Filters the member actions for member directories.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $buttons     Member profile actions.
+		 * @param int    $user_id     Member ID.
+		 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+		 */
+		function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
+
+			$enabled_message_action = function_exists( 'bb_enabled_member_directory_profile_action' )
+				? bb_enabled_member_directory_profile_action( 'message' )
+				: true;
+
+			// Member directories primary actions.
+			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' )
+				? bb_get_member_directory_primary_action()
+				: '';
+
+			if ( $enabled_message_action ) {
+				// Skip if "send-private-message" action already exists.
+				if (
+					( isset( $buttons['primary'] ) && strpos( $buttons['primary'], 'send-private-message' ) !== false ) ||
+					( isset( $buttons['secondary'] ) && strpos( $buttons['secondary'], 'send-private-message' ) !== false )
+				) {
+					return $buttons;
+				}
+
+				// Show "Message" button or not?
+				add_filter( 'bp_force_friendship_to_message', '__return_false' );
+				$is_message_active = apply_filters(
+					'bb_member_loop_show_message_button',
+					(bool) $enabled_message_action && bp_is_active( 'messages' ),
+					$user_id,
+					bp_loggedin_user_id()
+				);
+				remove_filter( 'bp_force_friendship_to_message', '__return_false' );
+
+				if ( $is_message_active ) {
+
+					add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+					add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+
+					if ( 'message' === $primary_action_btn ) {
+						$primary_button_args = function_exists( 'bb_member_get_profile_action_arguments' )
+						? bb_member_get_profile_action_arguments()
+						: array();
+						$primary_button_args['link_class'] = 'bb-rl-send-message-disabled';
+						$buttons['primary']                = bp_get_send_message_button( $primary_button_args );
+					} else {
+						$secondary_button_args = function_exists( 'bb_member_get_profile_action_arguments' )
+						? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
+						: array();
+						$secondary_button_args['link_class'] = 'bb-rl-send-message-disabled';
+						$buttons['secondary']               .= bp_get_send_message_button( $secondary_button_args );
+					}
+
+					remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+					remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+				}
+			}
+
+			return $buttons;
 		}
 	}
 }
