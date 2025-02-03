@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-16 16:05-0400\n"
-"PO-Revision-Date: 2025-02-03 18:14+0530\n"
+"PO-Revision-Date: 2025-02-03 19:31+0530\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: Jean-Pierre Michaud <unpapapro@icloud.com>\n"
 "Language: fr_FR\n"
@@ -17943,7 +17943,7 @@ msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:723
 msgid "%s others"
-msgstr ""
+msgstr "%s autres"
 
 #: bp-activity/bp-activity-functions.php:976
 #: bp-activity/bp-activity-functions.php:987
@@ -18141,12 +18141,12 @@ msgstr ""
 #: bp-activity/bp-activity-functions.php:7417
 #: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
-msgstr ""
+msgstr "%1$s a publié un nouveau message sur le site %2$s"
 
 #: bp-activity/bp-activity-functions.php:7419
 #: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
-msgstr ""
+msgstr "%1$s a publié un nouveau message."
 
 #: bp-activity/bp-activity-template.php:1992
 #: bp-activity/bp-activity-template.php:2018
@@ -18201,7 +18201,7 @@ msgstr ""
 #. translators: 1: Activity type, 2: Activity content.
 #: bp-activity/classes/class-bp-activity-notification.php:269
 msgid "Replied to your %1$s: %2$s"
-msgstr ""
+msgstr "J’ai répondu à votre %1$s: %2$s"
 
 #. translators: Activity type.
 #: bp-activity/classes/class-bp-activity-notification.php:278
@@ -18250,7 +18250,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:341
 msgid "Replied: some photos"
-msgstr ""
+msgstr "Réponse: quelques photos"
 
 #: bp-activity/classes/class-bp-activity-notification.php:343
 msgid "Replied: a photo"
@@ -18386,13 +18386,13 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:580
 msgid "A new post by someone a member is following"
-msgstr ""
+msgstr "Un nouveau message d’une personne suivie par un membre"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:591
 #: bp-core/bp-core-update.php:2279
 msgid "[{{{site.name}}}] {{poster.name}} posted {{activity.type}}."
-msgstr ""
+msgstr "[{{{site.name}}}] {{poster.name}} a publié {{activity.type}}."
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:593
@@ -18402,6 +18402,9 @@ msgid ""
 "\n"
 "{{{activity.content}}}"
 msgstr ""
+"<a href=\"{{{poster.url}}}\">{{poster.name}}</a> a publié {{activity.type}}:\n"
+"\n"
+"{{{activity.content}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:595
@@ -18416,7 +18419,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:596
 #: bp-core/bp-core-update.php:2314
 msgid "New activity post by someone a member is following"
-msgstr ""
+msgstr "New activity post by someone a member is following"
 
 #: bp-activity/classes/class-bp-activity-notification.php:597
 msgid "You will no longer receive emails when someone you are following posts an update."
@@ -18538,7 +18541,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:862
 #: bp-core/bp-core-update.php:2357
 msgid "[{{{site.name}}}] {{follower.name}} started following you"
-msgstr ""
+msgstr "[{{{site.name}}}] {{follower.name}} a répondu à une de vos publications"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:864
@@ -18548,6 +18551,9 @@ msgid ""
 "\n"
 "{{{member.card}}}"
 msgstr ""
+"<a href=“{{{follower.url}}}”>{{follower.name}}</a> a commencé à vous suivre.\n"
+"\n"
+"{{{member.card}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-activity/classes/class-bp-activity-notification.php:866
@@ -18557,6 +18563,9 @@ msgid ""
 "\n"
 "To learn more about them, visit their profile: {{{follower.url}}}"
 msgstr ""
+"{{follower.name}} a accepté votre demande de contact. \n"
+"\n"
+"Pour en savoir plus, visitez son profil: {{{follower.url}}}"
 
 #: bp-activity/classes/class-bp-activity-notification.php:867
 #: bp-core/bp-core-update.php:2392
@@ -18573,7 +18582,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:80
 msgid "A unique numeric ID for the activity comment."
-msgstr ""
+msgstr "Un identifiant numérique unique pour le commentaire d’activité."
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:139
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:270
@@ -20329,7 +20338,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:373
 msgid "Update display name to selected format in profile settings"
-msgstr ""
+msgstr "Mettre à jour le nom d’affichage au format sélectionné dans les paramètres du profil"
 
 #: bp-core/admin/bp-core-admin-tools.php:382
 msgid "Repair total connections count for each member"
@@ -25294,7 +25303,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:1412
 msgid "%1$s on "
-msgstr ""
+msgstr "%1$s sur "
 
 #: bp-forums/core/actions.php:591
 msgid "Forum Description"
@@ -29567,7 +29576,7 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2682
 #: bp-messages/bp-messages-functions.php:2688
 msgid "%1$s joined the group."
-msgstr ""
+msgstr "%1$s a rejoint le groupe."
 
 #: bp-messages/bp-messages-functions.php:2650
 msgid "Left group"
@@ -31882,7 +31891,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single.php:55
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single.php:59
 msgid " to Send"
-msgstr ""
+msgstr " Envoyer"
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:58
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single.php:55
@@ -32023,7 +32032,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:46
 msgid " view"
-msgstr ""
+msgstr " Afficher"
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:103
 msgid "Click to"
@@ -32480,7 +32489,7 @@ msgstr[1] ""
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:776
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:799
 msgid " inside group"
-msgstr ""
+msgstr " à l’intérieur du groupe"
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:798
 msgid "document"
@@ -32802,7 +32811,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1516
 msgid " Documents"
-msgstr ""
+msgstr " Documentation"
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1547
 msgid "Please login to edit a privacy."
@@ -33274,7 +33283,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1408
 msgid " Medias"
-msgstr ""
+msgstr " Média"
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1471
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1479
@@ -34333,7 +34342,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1279
 msgid "The type for the profile field."
-msgstr ""
+msgstr "Rechercher tous les champs de profil."
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php:1288
 msgid "The name of the profile field."
@@ -34523,7 +34532,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:136
 msgid "Member marked as suspended"
-msgstr ""
+msgstr "Messages non lus"
 
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:530
 msgid "Member \"%s\" marked suspended. All BuddyBoss data associated with the member has been disabled."
@@ -34634,7 +34643,7 @@ msgstr ""
 #: bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php:932
 msgctxt "Start ribbon"
 msgid "Start %s "
-msgstr ""
+msgstr "Début %s "
 
 #. translators: 1: Imagick status
 #: bp-media/bp-media-settings.php:1269
