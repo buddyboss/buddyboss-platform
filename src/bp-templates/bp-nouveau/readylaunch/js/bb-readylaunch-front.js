@@ -24,8 +24,8 @@ window.bp = window.bp || {};
 				// Listen to events ("Add hooks!").
 				this.addListeners();
 				this.mobileSubMenu();
-			this.gridListFilter();
-			this.collapsibleContextNav();
+				this.gridListFilter();
+				// this.collapsibleContextNav();
 
 				this.bbReloadWindow();
 			},
@@ -297,15 +297,15 @@ window.bp = window.bp || {};
 		 */
 		collapsibleContextNav: function () {
 
-			$( document ).on( 'click', '.bb-rl-context-btn', function ( e ) {
+			$( document ).on( 'click', '.bb-rl-container .bb_more_options_action', function ( e ) {
 				e.preventDefault();
 
 				var $button = $( this );
-				var $dropdown = $button.siblings( '.bb-rl-context-dropdown' );
+				var $dropdown = $button.siblings( '.bb_more_dropdown' );
 
 				// Close other dropdowns
-				$( '.bb-rl-context-dropdown' ).not( $dropdown ).hide();
-				$( '.bb-rl-context-btn' ).not( $button ).removeClass( 'active' );
+				$( '.bb_more_dropdown' ).not( $dropdown ).hide();
+				$( '.bb_more_options_action' ).not( $button ).removeClass( 'active' );
 
 				if ( $dropdown.is( ':visible' ) ) {
 					$dropdown.hide();
@@ -319,12 +319,12 @@ window.bp = window.bp || {};
 			// Close dropdown clicked outside
 			$( document ).on( 'click', function ( e ) {
 				if ( !$( e.target ).closest( '.bb-rl-context-wrap' ).length ) {
-					$( '.bb-rl-context-dropdown' ).hide();
-					$( '.bb-rl-context-btn' ).removeClass( 'active' );
+					$( '.bb_more_dropdown' ).hide();
+					$( '.bb_more_options_action' ).removeClass( 'active' );
 				}
 			} );
 
-			$( document ).on( 'click', '.bb-rl-context-dropdown', function ( e ) {
+			$( document ).on( 'click', '.bb-rl-container .bb_more_dropdown', function ( e ) {
 				e.stopPropagation();
 			} );
 		},

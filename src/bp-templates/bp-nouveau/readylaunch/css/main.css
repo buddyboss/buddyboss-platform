@@ -3576,18 +3576,29 @@ body.admin-bar .bb-rl-left-panel {
   display: none;
 }
 
-.bb-rl-context-wrap {
+.bb-rl-members .item-entry .bb-rl-context-wrap {
   position: absolute;
   top: 12px;
   right: 16px;
 }
 
-.bb-rl-context-wrap .bb-rl-context-btn i {
+.bb-rl-context-wrap,
+.bb-rl-container .bb_more_options {
+  position: relative;
+}
+
+.bb-rl-context-wrap .bb-rl-context-btn i,
+.bb-rl-context-wrap .bb_more_options_action i,
+.bb-rl-container .bb_more_options .bb-rl-context-btn i,
+.bb-rl-container .bb_more_options .bb_more_options_action i {
   font-size: 24px;
   color: var(--bb-rl-icon-tertiary-color);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown {
+.bb-rl-context-wrap .bb-rl-context-dropdown,
+.bb-rl-context-wrap .bb_more_dropdown,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown,
+.bb-rl-container .bb_more_options .bb_more_dropdown {
   display: none;
   position: absolute;
   right: 0;
@@ -3602,7 +3613,24 @@ body.admin-bar .bb-rl-left-panel {
   z-index: var(--bb-rl-z-index-dropdown);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a {
+.bb-rl-context-wrap .bb-rl-context-dropdown.open,
+.bb-rl-context-wrap .bb_more_dropdown.open,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown.open,
+.bb-rl-container .bb_more_options .bb_more_dropdown.open {
+  display: block;
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown .bb_rl_more_dropdown__title,
+.bb-rl-context-wrap .bb_more_dropdown .bb_rl_more_dropdown__title,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown .bb_rl_more_dropdown__title,
+.bb-rl-container .bb_more_options .bb_more_dropdown .bb_rl_more_dropdown__title {
+  display: none;
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a,
+.bb-rl-context-wrap .bb_more_dropdown .generic-button a,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown .generic-button a,
+.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -3614,7 +3642,10 @@ body.admin-bar .bb-rl-left-panel {
   width: 100%;
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a::before {
+.bb-rl-context-wrap .bb-rl-context-dropdown a::before,
+.bb-rl-context-wrap .bb_more_dropdown a::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a::before {
   content: "";
   font-weight: 400;
   font-family: bb-icons-rl;
@@ -3624,19 +3655,34 @@ body.admin-bar .bb-rl-left-panel {
   margin-right: var(--bb-rl-space-100);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.block-member::before {
+.bb-rl-context-wrap .bb-rl-context-dropdown a.block-member::before,
+.bb-rl-context-wrap .bb_more_dropdown a.block-member::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.block-member::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.block-member::before {
   content: "\e3de";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.reported-content::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.report-content::before {
+.bb-rl-context-wrap .bb-rl-context-dropdown a.reported-content::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.report-content::before,
+.bb-rl-context-wrap .bb_more_dropdown a.reported-content::before,
+.bb-rl-context-wrap .bb_more_dropdown a.report-content::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.reported-content::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.report-content::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.reported-content::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.report-content::before {
   content: "\e244";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.view-as::before {
+.bb-rl-context-wrap .bb-rl-context-dropdown a.view-as::before,
+.bb-rl-context-wrap .bb_more_dropdown a.view-as::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.view-as::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.view-as::before {
   content: "\e220";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown .bp-screen-reader-text {
+.bb-rl-context-wrap .bb-rl-context-dropdown .bp-screen-reader-text,
+.bb-rl-context-wrap .bb_more_dropdown .bp-screen-reader-text,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown .bp-screen-reader-text,
+.bb-rl-container .bb_more_options .bb_more_dropdown .bp-screen-reader-text {
   clip: rect(1px, 1px, 1px, 1px);
   height: 1px;
   overflow: hidden;
