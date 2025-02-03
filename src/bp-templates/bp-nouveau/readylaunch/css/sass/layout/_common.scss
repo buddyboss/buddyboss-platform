@@ -164,6 +164,27 @@
 					content: "\e220";
 				}
 			}
+
+			&.about-group {
+
+				&::before {
+					content: "\e2ce";
+				}
+			}
+
+			&.group-manage {
+
+				&::before {
+					content: "\e272";
+				}
+			}
+
+			&.delete-group {
+
+				&::before {
+					content: "\e4a6";
+				}
+			}
 		}
 
 		.bp-screen-reader-text {

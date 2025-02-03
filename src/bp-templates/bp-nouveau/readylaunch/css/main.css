@@ -3867,6 +3867,27 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e220";
 }
 
+.bb-rl-context-wrap .bb-rl-context-dropdown a.about-group::before,
+.bb-rl-context-wrap .bb_more_dropdown a.about-group::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.about-group::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.about-group::before {
+  content: "\e2ce";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.group-manage::before,
+.bb-rl-context-wrap .bb_more_dropdown a.group-manage::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.group-manage::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.group-manage::before {
+  content: "\e272";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before,
+.bb-rl-context-wrap .bb_more_dropdown a.delete-group::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group::before {
+  content: "\e4a6";
+}
+
 .bb-rl-context-wrap .bb-rl-context-dropdown .bp-screen-reader-text,
 .bb-rl-context-wrap .bb_more_dropdown .bp-screen-reader-text,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown .bp-screen-reader-text,
