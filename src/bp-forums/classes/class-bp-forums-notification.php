@@ -47,7 +47,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function __construct() {
 		// Initialize.
-		$this->start();
+		add_action( 'bp_init', array( $this, 'start' ), 5 );
 	}
 
 	/**
