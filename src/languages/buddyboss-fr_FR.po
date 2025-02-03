@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-16 16:05-0400\n"
-"PO-Revision-Date: 2025-02-03 19:31+0530\n"
+"PO-Revision-Date: 2025-02-03 19:42+0530\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: Jean-Pierre Michaud <unpapapro@icloud.com>\n"
 "Language: fr_FR\n"
@@ -17987,7 +17987,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:217
 #: bp-members/classes/class-bp-members-mentions-notification.php:272
 msgid "post"
-msgstr ""
+msgstr "poste"
 
 #: bp-activity/bp-activity-functions.php:4185 bp-blogs/bp-blogs-filters.php:266
 #: bp-core/bp-core-actions.php:983
@@ -18551,7 +18551,7 @@ msgid ""
 "\n"
 "{{{member.card}}}"
 msgstr ""
-"<a href=“{{{follower.url}}}”>{{follower.name}}</a> a commencé à vous suivre.\n"
+"<a href=\"{{{follower.url}}}\">{{follower.name}}</a> a commencé à vous suivre.\n"
 "\n"
 "{{{member.card}}}"
 
