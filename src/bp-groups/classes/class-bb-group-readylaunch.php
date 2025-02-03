@@ -58,7 +58,49 @@ class BB_Group_Readylaunch {
 	}
 
 	public function bb_rl_get_groups_bubble_buttons( $buttons, $group, $type ) {
+		$buttons['about-group'] = array(
+			'id' => 'about-group',
+			'link_text' => __( 'About group', 'buddyboss' ),
+			'position' => 10,
+			'component' => 'groups',
+			'button_element' => 'a',
+			'button_attr' => array(
+				'id' => 'about-group-' . $group->id,
+				'href' => bp_get_group_permalink( $group ) . '#about-group-' . $group->id,
+				'class' => 'button item-button bp-secondary-action about-group',
+				'data-bp-content-type' => 'group-info',
+			)
+		);
 
+		if ( bp_is_item_admin() ) {
+			$buttons['group-manage'] = array(
+				'id' => 'group-manage',
+				'link_text' => __( 'Manage', 'buddyboss' ),
+				'position' => 20,
+				'component' => 'groups',
+				'button_element' => 'a',
+				'button_attr' => array(
+					'id' => 'group-manage-' . $group->id,
+					'href' => bp_get_group_permalink( $group ) . '#group-manage-' . $group->id,
+					'class' => 'button item-button bp-secondary-action group-manage',
+					'data-bp-content-type' => 'group-manage',
+				)
+			);
+
+			$buttons['delete-group'] = array(
+				'id' => 'delete-group',
+				'link_text' => __( 'Delete', 'buddyboss' ),
+				'position' => 1000,
+				'component' => 'groups',
+				'button_element' => 'a',
+				'button_attr' => array(
+					'id' => 'delete-group-' . $group->id,
+					'href' => bp_get_group_permalink( $group ) . '#delete-group-' . $group->id,
+					'class' => 'button item-button bp-secondary-action delete-group',
+					'data-bp-content-type' => 'delete-group',
+				)
+			);
+		}
 
 		return $buttons;
 	}
