@@ -63,9 +63,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register the ReadyLaunch menu.
 			$this->bb_register_readylaunch_menus();
 
-			// Register the ReadyLaunch widgets.
-			$this->bb_register_readylaunch_widgets();
-
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_readylaunch_page_fields' ) );
 			add_action( 'bp_admin_init', array( $this, 'bb_core_admin_maybe_save_readylaunch_settings' ), 100 );
 
@@ -124,6 +121,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
 
 				add_filter( 'body_class', array( $this, 'bb_rl_theme_body_classes' ) );
+
+				add_filter( 'bp_get_send_message_button_args', array( $this, 'bb_rl_override_send_message_button_text' ) );
+
+				add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
+
 			}
 		}
 
@@ -210,26 +212,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					);
 				}
 			}
-		}
-
-		/**
-		 * Register the ReadyLaunch widgets.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		public function bb_register_readylaunch_widgets() {
-			$sidebar_id = 'bb-readylaunch-sidebar';
-			register_sidebar(
-				array(
-					'name'          => __( 'BB ReadyLaunch™ Sidebar', 'buddyboss' ),
-					'id'            => $sidebar_id,
-					'description'   => __( 'Add widgets here to appear in the right sidebar on ReadyLaunch pages. This sidebar is used to display additional content or tools specific to ReadyLaunch.', 'buddyboss' ),
-					'before_widget' => '<div id="%1$s" class="widget %2$s">',
-					'after_widget'  => '</div>',
-					'before_title'  => '<h2 class="widget-title">',
-					'after_title'   => '</h2>',
-				)
-			);
 		}
 
 		/**
@@ -492,6 +474,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if ( bp_is_members_directory() ) {
 				wp_enqueue_script( 'bb-rl-members' );
+				wp_localize_script(
+					'bb-rl-members',
+					'bbReadyLaunchMembersVars',
+					array(
+						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss' ),
+						'invite_valid_email' => esc_html__( 'Please enter a valid email address.', 'buddyboss' ),
+						'invite_sending_invite' => esc_html__( 'Sending invitation...', 'buddyboss' ),
+						'invite_error_notice' => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss' ),
+					)
+				);
 			}
 
 			wp_localize_script(
@@ -1135,7 +1127,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return array_merge(
 				$scripts,
 				array(
-					'bb-rl-members' => array(
+					'bb-rl-members'             => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members%s.js',
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
@@ -1257,6 +1249,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
 				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
 				wp_send_json_error( $response );
+			} elseif ( ! bp_allow_user_to_send_invites() ) {
+				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' );
+				wp_send_json_error( $response );
 			}
 
 			$name        = sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) );
@@ -1361,11 +1356,91 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		function bb_rl_theme_body_classes( $classes ) {
 			global $post, $wp_query;
 
-			if ( is_active_sidebar( 'bb-readylaunch-sidebar' ) ) {
+			if ( is_active_sidebar( 'bb-readylaunch-members-sidebar' ) ) {
 				$classes[] = 'bb-rl-has-sidebar';
 			}
 
 			return $classes;
+		}
+
+		/**
+		 * Override Send Message button text.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $args Button arguments.
+		 *
+		 * @return array $args Filtered arguments.
+		 */
+		function bb_rl_override_send_message_button_text( $args ) {
+			$args['link_text'] = esc_html__( 'Message', 'buddyboss' );
+			return $args;
+		}
+
+		/**
+		 * Filters the member actions for member directories.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $buttons     Member profile actions.
+		 * @param int    $user_id     Member ID.
+		 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+		 */
+		function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
+
+			$enabled_message_action = function_exists( 'bb_enabled_member_directory_profile_action' )
+				? bb_enabled_member_directory_profile_action( 'message' )
+				: true;
+
+			// Member directories primary actions.
+			$primary_action_btn = function_exists( 'bb_get_member_directory_primary_action' )
+				? bb_get_member_directory_primary_action()
+				: '';
+
+			if ( $enabled_message_action ) {
+				// Skip if "send-private-message" action already exists.
+				if (
+					( isset( $buttons['primary'] ) && strpos( $buttons['primary'], 'send-private-message' ) !== false ) ||
+					( isset( $buttons['secondary'] ) && strpos( $buttons['secondary'], 'send-private-message' ) !== false )
+				) {
+					return $buttons;
+				}
+
+				// Show "Message" button or not?
+				add_filter( 'bp_force_friendship_to_message', '__return_false' );
+				$is_message_active = apply_filters(
+					'bb_member_loop_show_message_button',
+					(bool) $enabled_message_action && bp_is_active( 'messages' ),
+					$user_id,
+					bp_loggedin_user_id()
+				);
+				remove_filter( 'bp_force_friendship_to_message', '__return_false' );
+
+				if ( $is_message_active ) {
+
+					add_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+					add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+
+					if ( 'message' === $primary_action_btn ) {
+						$primary_button_args = function_exists( 'bb_member_get_profile_action_arguments' )
+						? bb_member_get_profile_action_arguments()
+						: array();
+						$primary_button_args['link_class'] = 'bb-rl-send-message-disabled';
+						$buttons['primary']                = bp_get_send_message_button( $primary_button_args );
+					} else {
+						$secondary_button_args = function_exists( 'bb_member_get_profile_action_arguments' )
+						? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
+						: array();
+						$secondary_button_args['link_class'] = 'bb-rl-send-message-disabled';
+						$buttons['secondary']               .= bp_get_send_message_button( $secondary_button_args );
+					}
+
+					remove_filter( 'bp_displayed_user_id', 'bb_member_loop_set_member_id' );
+					remove_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
+				}
+			}
+
+			return $buttons;
 		}
 	}
 }

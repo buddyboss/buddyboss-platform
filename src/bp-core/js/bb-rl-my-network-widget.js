@@ -29,7 +29,7 @@ function my_network_click_handler() {
 				function( response ) {
 					jQuery( link ).removeClass( 'loading' );
 					var targetList = jQuery( currentWidget ).find( widgetMemberList );
-					if ( response.success === 1 ) {
+					if ( 'undefined' !== typeof response.success && response.success === 1 ) {
 						jQuery( targetList ).fadeOut(
 							200,
 							function () {
@@ -43,7 +43,7 @@ function my_network_click_handler() {
 						jQuery( targetList ).fadeOut(
 							200,
 							function () {
-								var message = '<p>' + response.data + '</p>';
+								var message = ( 'undefined' !== typeof response.data ) ? '<p>' + response.data + '</p>' : '';
 								jQuery( targetList ).html( message );
 								jQuery( targetList ).fadeIn( 200 );
 							}

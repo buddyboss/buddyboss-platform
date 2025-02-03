@@ -4211,7 +4211,7 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			var title          = isHoverIn ? target.data( 'title' ) : target.data( 'title-displayed' );
+			var title          = target.data( 'title' );
 			var titleDisplayed = target.data( 'title-displayed' );
 
 			if (
@@ -4226,15 +4226,9 @@ window.bp = window.bp || {};
 			}
 
 			if ( isToggleActionButton ) {
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					if ( ! target.hasClass( 'following' ) ) {
-						target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
-					}
-					target.find( 'span' ).html( title );
-					target.html( title );
-				} else {
-					target.html( title );
-				}
+				target.find( 'span' ).html( title );
+				target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
+				target.attr( 'data-balloon-pos', 'up' );
 
 				if ( isHoverIn ) {
 					target.removeClass( 'bp-toggle-action-button' ).addClass( 'bp-toggle-action-button-hover' );

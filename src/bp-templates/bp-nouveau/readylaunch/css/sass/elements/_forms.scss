@@ -142,6 +142,14 @@
 		}
 	}
 
+	.bb-rl-notice {
+		margin-top: var(--bb-rl-space-100);
+
+		i {
+			font-weight: 500;
+		}
+	}
+
 	.bb-rl-textarea-field {
 		border: 1px solid var(--bb-rl-border-tertiary-color);
 		border-radius: 6px;
