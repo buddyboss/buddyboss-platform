@@ -1047,7 +1047,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		/**
 		 * Function to load translations at mu level.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.90
 		 */
 		public function bb_load_translations() {
 			$domain = 'buddyboss';
