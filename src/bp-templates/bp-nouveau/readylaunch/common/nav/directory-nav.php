@@ -11,7 +11,7 @@
 
 	<?php if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) : ?>
 
-		<ul class="component-navigation <?php bp_nouveau_directory_list_class(); ?>">
+		<ul class="bb-rl-component-navigation <?php bp_nouveau_directory_list_class(); ?>">
 
 			<?php
 			while ( bp_nouveau_nav_items() ) :
@@ -30,7 +30,7 @@
 
 			<?php endwhile; ?>
 
-		</ul><!-- .component-navigation -->
+		</ul><!-- .bb-rl-component-navigation -->
 
 	<?php endif; ?>
 
