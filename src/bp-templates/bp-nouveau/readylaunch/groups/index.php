@@ -20,15 +20,6 @@ bp_nouveau_template_notices();
 			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_get_total_group_count() : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
-			<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
-			<div class="bb-rl-action-button">
-				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
-			</div>
-		</div>
-	</div>
-
-	<div class="bb-rl-container-inner">
-		<div class="groups-directory-container">
 			<?php
 			/**
 			 * Fires before the display of the groups list filters.
@@ -39,6 +30,14 @@ bp_nouveau_template_notices();
 
 			bp_get_template_part( 'common/search-and-filters-bar' );
 			?>
+			<div class="bb-rl-action-button">
+				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="bb-rl-container-inner">
+		<div class="groups-directory-container">
 
 			<div class="screen-content groups-directory-content">
 

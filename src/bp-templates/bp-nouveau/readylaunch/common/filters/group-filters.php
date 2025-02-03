@@ -44,7 +44,7 @@ $group_types = bp_get_active_group_types( $args );
 
 if ( ! empty( $group_types ) ) {
 	?>
-	<div id="group-type-filters" class="component-filters clearfix">
+	<div id="group-type-filters" class="component-filters clearfix bb-rl-filter">
 		<div id="group-type-select" class="last filter">
 			<label class="bp-screen-reader-text" for="group-type-order-by">
 				<span><?php bp_nouveau_filter_label(); ?></span>
