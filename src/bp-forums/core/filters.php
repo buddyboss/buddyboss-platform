@@ -652,7 +652,7 @@ function bb_forums_hide_single_url( $content ) {
 /**
  * Add pretty links to spam, trash topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.7.90
  *
  * @param string $permalink Permalink.
  * @param object $post      Topic post object.

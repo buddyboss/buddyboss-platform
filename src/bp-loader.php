@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     2.7.80
+ * Version:     2.7.90
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -24,7 +24,7 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '2.7.80' );
+	define( 'BP_PLATFORM_VERSION', '2.7.90' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -458,7 +458,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
  * Load the buddyboss translation file for current language.
  *
  * @since BuddyPress 1.0.2
- * @since BuddyBoss [BBVERSION] Moved function from bp-core-functions.php and made logic updates.
+ * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
  *
  * @see load_textdomain() for a description of return values.
  *
@@ -478,7 +478,7 @@ function bp_core_load_buddypress_textdomain() {
 		/**
 		 * Filters the locations to load language files from.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.7.90
 		 *
 		 * @param array $value Array of directories to check for language files in.
 		 */
