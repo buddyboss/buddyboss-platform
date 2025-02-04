@@ -141,7 +141,7 @@ echo esc_attr( $has_no_thumbnail );
 		<video
 				playsinline
 				id="video-<?php echo esc_attr( $video_id ); ?>"
-				class="bb-rl-video-js bb-rl-single-activity-video"
+				class="video-js bb-rl-single-activity-video"
 				data-id="<?php echo esc_attr( $video_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"

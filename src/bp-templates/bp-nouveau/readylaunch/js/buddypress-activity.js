@@ -1996,8 +1996,8 @@ window.bp = window.bp || {};
 
 							var videoActionWrap = videoContainer.find( '.bb-rl-video-action-wrap' );
 							videoElement.insertAfter( videoActionWrap );
-							videoContainer.find( '.bb-rl-video-js' ).remove();
-							videoElement.addClass( 'bb-rl-video-js' );
+							videoContainer.find( '.video-js' ).remove();
+							videoElement.addClass( 'video-js' );
 
 							videojs(
 								videoElementId,
