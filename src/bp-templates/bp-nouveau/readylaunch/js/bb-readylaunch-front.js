@@ -639,7 +639,7 @@ window.bp = window.bp || {};
 					    fileType     = data.fileType, // 'media', 'document', or 'video'
 					    dropzoneObj  = data.dropzoneObj,
 					    draftData    = data.draftData || false,
-					    dropzoneData = data.dropzoneData || {};
+					    dropzoneData = data.dropzoneData || null;
 
 					// Iterate through the files and inject them.
 					commonData.forEach(
@@ -698,7 +698,7 @@ window.bp = window.bp || {};
 									editData.size     = file.size || 0;
 								}
 							}
-							if ( dropzoneData ) {
+							if ( ! _.isNull( dropzoneData ) ) {
 								dropzoneData.push( editData );
 							}
 
