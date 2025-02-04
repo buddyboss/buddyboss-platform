@@ -22,17 +22,13 @@ window.bp = window.bp || {};
 	);
 
 	var bpNouveau             = BP_Nouveau,
-		bbRlAjaxUrl           = bpNouveau.ajaxurl,
-		bbRlMedia             = bpNouveau.media,
-		bbRlIsSendAjaxRequest = bpNouveau.is_send_ajax_request,
-		bbRlActivity          = bpNouveau.activity,
-		bbRlNewest            = bpNouveau.newest,
-		bbbRlShowXComments    = bpNouveau.show_x_comments,
-		bbRlConfirm           = bpNouveau.confirm,
-		bbRlNonce             = bpNouveau.nonces,
-		bbRlDocument          = bpNouveau.document,
-		bbRlVideo             = bpNouveau.video,
-		bbRlIsAs3cfActive     = bpNouveau.is_as3cf_active;
+	    bbRlAjaxUrl           = bpNouveau.ajaxurl,
+	    bbRlMedia             = bpNouveau.media,
+	    bbRlIsSendAjaxRequest = bpNouveau.is_send_ajax_request,
+	    bbRlActivity          = bpNouveau.activity,
+	    bbRlNewest            = bpNouveau.newest,
+	    bbbRlShowXComments    = bpNouveau.show_x_comments,
+	    bbRlConfirm           = bpNouveau.confirm;
 
 	/**
 	 * [Activity description]
