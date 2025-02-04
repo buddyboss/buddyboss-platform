@@ -2790,21 +2790,6 @@ window.bp = window.bp || {};
 			}
 		},
 
-		createThumbnailFromUrl: function ( mock_file, dropzone_container ) {
-			var self = this, dropzone_obj_key = dropzone_container.data( 'key' );
-			self.dropzone_obj[ dropzone_obj_key ].createThumbnailFromUrl(
-				mock_file,
-				self.dropzone_obj[ dropzone_obj_key ].options.thumbnailWidth,
-				self.dropzone_obj[ dropzone_obj_key ].options.thumbnailHeight,
-				self.dropzone_obj[ dropzone_obj_key ].options.thumbnailMethod,
-				true,
-				function ( thumbnail ) {
-					self.dropzone_obj[ dropzone_obj_key ].emit( 'thumbnail', mock_file, thumbnail );
-					self.dropzone_obj[ dropzone_obj_key ].emit( 'complete', mock_file );
-				}
-			);
-		},
-
 		openUploader: function ( event ) {
 			var self = this;
 			event.preventDefault();
