@@ -6,6 +6,12 @@ window.bp = window.bp || {};
 (
 	function ( exports, $ ) {
 
+		var bpNouveauLocal    = BP_Nouveau,
+		    bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+		    bbRlMedia         = bpNouveauLocal.media,
+		    bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
+		    bbRlNonce         = bpNouveauLocal.nonces;
+
 		/**
 		 * [ReadLaunch description]
 		 *
@@ -414,7 +420,7 @@ window.bp = window.bp || {};
 				createDropzoneOptions : function ( options ) {
 					return _.extend(
 						{
-							url              : BP_Nouveau.ajaxurl,
+							url              : bbRlAjaxUrl,
 							timeout          : 3 * 60 * 60 * 1000,
 							autoProcessQueue : true,
 							addRemoveLinks   : true,
@@ -486,7 +492,7 @@ window.bp = window.bp || {};
 						'sending',
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
-							formData.append( '_wpnonce', BP_Nouveau.nonces[ nonceName ] );
+							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
@@ -547,12 +553,12 @@ window.bp = window.bp || {};
 						'error',
 						function ( file, response ) {
 							if ( file.accepted ) {
-								var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
+								var errorMessage = response && response.data && response.data.feedback || bbRlMedia.connection_lost_error;
 								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
 							} else {
 								Backbone.trigger(
 									'onError',
-									'<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (
+									'<div>' + bbRlMedia.invalid_media_type + '. ' + (
 										        response || ''
 									        ) + '<div>'
 								);
@@ -715,6 +721,7 @@ window.bp = window.bp || {};
 								mockFile.svg_icon           = ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '';
 							} else if ( 'video' === fileType ) {
 								mockFile.video_edit_data = editData;
+								mockFile.dataThumb       = ! _.isUndefined( file.thumb ) ? file.thumb : '';
 							}
 
 							if ( dropzoneObj ) {
