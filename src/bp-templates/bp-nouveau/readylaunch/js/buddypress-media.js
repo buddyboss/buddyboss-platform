@@ -2428,39 +2428,18 @@ window.bp = window.bp || {};
 						}
 
 						if ( edit_medias.length ) {
-							var mock_file       = false,
-								editMediaLength = edit_medias.length;
-							for ( var i = 0; i < editMediaLength; i++ ) {
-								mock_file = false;
-								self.dropzone_media[ dropzone_obj_key ].push(
-									{
-										'id': edit_medias[ i ].attachment_id,
-										'media_id': edit_medias[ i ].id,
-										'name': edit_medias[ i ].title,
-										'thumb': edit_medias[ i ].thumb,
-										'url': edit_medias[ i ].full,
-										'uuid': edit_medias[ i ].id,
-										'menu_order': i,
-										'saved': true
-									}
-								);
-
-								mock_file = {
-									name: edit_medias[ i ].title,
-									accepted: true,
-									kind: 'image',
-									upload: {
-										filename: edit_medias[ i ].title,
-										uuid: edit_medias[ i ].id
-									},
-									dataURL: edit_medias[ i ].url,
-									id: edit_medias[ i ].id
-								};
-
-								self.dropzone_obj[ dropzone_obj_key ].files.push( mock_file );
-								self.dropzone_obj[ dropzone_obj_key ].emit( 'addedfile', mock_file );
-								self.createThumbnailFromUrl( mock_file, dropzone_container );
-							}
+							var replyTopicId = parseInt( $( '#new-post' ).find( '#bbp_reply_id' ).val() );
+							bp.Readylaunch.Utilities.injectFiles(
+								{
+									commonData        : edit_medias,
+									id                : replyTopicId,
+									self              : this,
+									fileType          : 'media',
+									dropzoneObj       : self.dropzone_obj[ dropzone_obj_key ],
+									dropzoneData      : self.dropzone_media[ dropzone_obj_key ],
+									dropzoneContainer : dropzone_container,
+								}
+							);
 							self.addMediaIdsToForumsForm( dropzone_container );
 
 							// Disable other buttons( document/gif ).

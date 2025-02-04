@@ -599,7 +599,7 @@ window.bp = window.bp || {};
 				);
 				// END Toolbox Button.
 
-				bp.Nouveau.Activity.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						commonData  : activity_data.media,
 						id          : activity_data.id,
@@ -629,7 +629,7 @@ window.bp = window.bp || {};
 				);
 
 				// END Toolbox Button.
-				bp.Nouveau.Activity.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						commonData  : activity_data.document,
 						id          : activity_data.id,
@@ -657,7 +657,7 @@ window.bp = window.bp || {};
 					}
 				);
 				// END Toolbox Button.
-				bp.Nouveau.Activity.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						commonData  : activity_data.video,
 						id          : activity_data.id,

@@ -1650,7 +1650,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				self.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						toolbarDiv : toolbarDiv,
 						commonData : activity_comment_data.media,
@@ -1682,7 +1682,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				self.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						toolbarDiv : toolbarDiv,
 						commonData : activity_comment_data.document,
@@ -1714,7 +1714,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				self.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						toolbarDiv : toolbarDiv,
 						commonData : activity_comment_data.video,
@@ -2320,118 +2320,6 @@ window.bp = window.bp || {};
 							$( '.bb-rl-emojionearea-theatre' ).removeClass( 'show' ).addClass( 'hide' );
 						},
 					},
-				}
-			);
-		},
-
-		injectFiles: function ( data ) {
-			var commonData  = data.commonData,
-				id          = data.id,
-				fileType    = data.fileType, // 'media', 'document', or 'video'
-				dropzoneObj = data.dropzoneObj,
-				draftData   = data.draftData || false;
-
-			// Iterate through the files and inject them.
-			commonData.forEach(
-				function ( file, index ) {
-					var editData;
-					if ( 0 < parseInt( id, 10 ) ) {
-							editData = {
-								id        : file.attachment_id || file.doc_id || file.vid_id,
-								name      : file.name || file.full_name,
-								saved     : true,
-								group_id  : file.group_id || 0,
-								menu_order: file.menu_order || 0,
-								uuid      : file.attachment_id || file.doc_id || file.vid_id,
-								url       : file.url,
-								type      : fileType,
-						};
-						if ( 'media' === fileType ) {
-							editData.media_id = file.id;
-							editData.thumb    = file.thumb || '';
-							editData.album_id = file.album_id || 0;
-						} else if ( 'document' === fileType ) {
-							editData.document_id = file.id;
-							editData.size        = file.size || 0;
-							editData.full_name   = file.full_name || file.name;
-							editData.folder_id   = file.folder_id || 0;
-							editData.svg_icon    = file.svg_icon || '';
-						} else if ( 'video' === fileType ) {
-							editData.video_id = file.id;
-							editData.thumb    = file.thumb || '';
-							editData.size     = file.size || 0;
-							editData.album_id = file.album_id || 0;
-						}
-					} else {
-						editData = {
-							id        : file.id || file.doc_id || file.vid_id,
-							name      : file.name || file.full_name,
-							saved     : false,
-							group_id  : file.group_id || 0,
-							menu_order: file.menu_order || 0,
-							uuid      : file.id || file.doc_id || file.vid_id,
-							url       : file.url,
-							type      : fileType,
-						};
-
-						if ( 'media' === fileType ) {
-							editData.thumb    = file.thumb || '';
-							editData.album_id = file.album_id || 0;
-						} else if ( 'document' === fileType ) {
-							editData.size      = file.size || 0;
-							editData.full_name = file.full_name || file.name;
-							editData.folder_id = file.folder_id || 0;
-							editData.svg_icon  = file.svg_icon || '';
-						} else if ( 'video' === fileType ) {
-							editData.thumb    = file.thumb || '';
-							editData.album_id = file.album_id || 0;
-							editData.size     = file.size || 0;
-						}
-					}
-
-					var mockFile = {
-						name    : file.name || file.full_name || file.title,
-						size    : file.size || 0,
-						accepted: true,
-						kind    : 'media' === fileType ? 'image' : 'file',
-						upload  : {
-							filename: file.name || file.full_name || file.title,
-							uuid    : file.attachment_id || file.doc_id || file.vid_id,
-						},
-						dataURL : file.url,
-						id      : file.attachment_id || file.doc_id || file.vid_id,
-					};
-
-					if ( 'media' === fileType ) {
-						mockFile.media_edit_data = editData;
-					} else if ( 'document' === fileType ) {
-						mockFile.document_edit_data = editData;
-						mockFile.svg_icon           = ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '';
-					} else if ( 'video' === fileType ) {
-						mockFile.video_edit_data = editData;
-					}
-
-					if ( dropzoneObj ) {
-						dropzoneObj.files.push( mockFile );
-						dropzoneObj.emit( 'addedfile', mockFile );
-
-						// Handle thumbnails for media files.
-						if ( 'media' === fileType ) {
-							if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
-								$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
-								dropzoneObj.emit( 'thumbnail', file.thumb );
-							} else {
-								bp.Readylaunch.Utilities.createThumbnailFromUrl( mockFile, dropzoneObj );
-							}
-						}
-
-						dropzoneObj.emit( 'complete', mockFile );
-
-						if ( 'media' === fileType && true === draftData ) {
-							dropzoneObj.emit( 'dz-success' );
-							dropzoneObj.emit( 'dz-complete' );
-						}
-					}
 				}
 			);
 		},
