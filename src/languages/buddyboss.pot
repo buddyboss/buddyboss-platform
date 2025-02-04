@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.7.80\n"
+"Project-Id-Version: BuddyBoss Platform 2.7.90\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-01-17 08:41:57+00:00\n"
+"POT-Creation-Date: 2025-02-04 04:06:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -173,7 +173,7 @@ msgstr ""
 
 #: bp-activity/bb-activity-reactions.php:483
 #: bp-core/admin/settings/bb-admin-setting-reactions.php:27
-#: bp-core/admin/templates/upgrade-screen.php:81
+#: bp-core/admin/templates/upgrade-screen.php:44
 #: bp-core/bp-core-functions.php:9184 bp-core/classes/class-bb-reaction.php:233
 #: bp-core/classes/class-bb-reaction.php:263
 #: bp-core/classes/class-bb-reaction.php:264
@@ -1644,7 +1644,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:63
 #: bp-activity/classes/class-bp-activity-notification.php:64
-#: bp-core/admin/templates/upgrade-screen.php:84
+#: bp-core/admin/templates/upgrade-screen.php:47
 #: bp-core/bp-core-functions.php:2536
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:677
 #: bp-performance/classes/class-settings.php:91
@@ -4180,7 +4180,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3442
 #: bp-core/admin/bp-core-admin-functions.php:3449
-#: bp-core/admin/templates/upgrade-screen.php:72
+#: bp-core/admin/templates/upgrade-screen.php:35
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
 #: bp-notifications/bp-notifications-settings.php:500
@@ -6225,7 +6225,7 @@ msgid "Pinned Post"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:103
-#: bp-core/admin/templates/upgrade-screen.php:77
+#: bp-core/admin/templates/upgrade-screen.php:40
 msgid "Polls"
 msgstr ""
 
@@ -7189,41 +7189,17 @@ msgstr ""
 msgid "Unlock more social networking features for your websites"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:37
-msgid "Rapyd Cloud"
-msgstr ""
-
-#: bp-core/admin/templates/upgrade-screen.php:38
-msgid "The highest performance managed WordPress hosting on the planet"
-msgstr ""
-
-#: bp-core/admin/templates/upgrade-screen.php:41
-msgid ""
-"Many hosting providers claim to have the best performance. But when you add "
-"dynamic features and high concurrency, website performance suffers. Rapyd "
-"keeps your feature-rich websites fast and responsive, even during periods "
-"of very high traffic."
-msgstr ""
-
-#: bp-core/admin/templates/upgrade-screen.php:59
-msgid "Test Performance"
-msgstr ""
-
-#: bp-core/admin/templates/upgrade-screen.php:60
-msgid "View Pricing"
-msgstr ""
-
-#: bp-core/admin/templates/upgrade-screen.php:73
+#: bp-core/admin/templates/upgrade-screen.php:36
 msgid "Unlock social networking features for your website"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:76
+#: bp-core/admin/templates/upgrade-screen.php:39
 #: bp-core/bp-core-functions.php:2476
 #: bp-performance/classes/class-settings.php:98
 msgid "Member Profiles"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:78
+#: bp-core/admin/templates/upgrade-screen.php:41
 #: bp-core/bp-core-functions.php:2508
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
 #: bp-groups/bp-groups-functions.php:3817
@@ -7237,7 +7213,7 @@ msgstr ""
 msgid "Social Groups"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:79
+#: bp-core/admin/templates/upgrade-screen.php:42
 #: bp-core/bp-core-functions.php:2597
 #: bp-friends/classes/class-bp-friends-notification.php:63
 #: bp-friends/classes/class-bp-friends-notification.php:64
@@ -7245,11 +7221,11 @@ msgstr ""
 msgid "Member Connections"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:80
+#: bp-core/admin/templates/upgrade-screen.php:43
 msgid "Email Notifications"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:82
+#: bp-core/admin/templates/upgrade-screen.php:45
 #: bp-core/bp-core-functions.php:2522
 #: bp-core/compatibility/bp-incompatible-plugins-helper.php:599
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
@@ -7262,64 +7238,64 @@ msgstr ""
 msgid "Forum Discussions"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:83
+#: bp-core/admin/templates/upgrade-screen.php:46
 #: bp-core/bp-core-functions.php:2592
 #: bp-performance/classes/class-settings.php:119
 msgid "Private Messaging"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:85
+#: bp-core/admin/templates/upgrade-screen.php:48
 #: bp-core/bp-core-functions.php:2550
 msgid "Media Uploading"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:89
+#: bp-core/admin/templates/upgrade-screen.php:52
 msgid "Upgrade to Platform Pro"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:89
-#: bp-core/admin/templates/upgrade-screen.php:115
+#: bp-core/admin/templates/upgrade-screen.php:52
+#: bp-core/admin/templates/upgrade-screen.php:78
 msgid "Activated"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:90
-#: bp-core/admin/templates/upgrade-screen.php:116
+#: bp-core/admin/templates/upgrade-screen.php:53
+#: bp-core/admin/templates/upgrade-screen.php:79
 msgid "Learn More"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:102
+#: bp-core/admin/templates/upgrade-screen.php:65
 msgid "BuddyBoss Theme"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:103
+#: bp-core/admin/templates/upgrade-screen.php:66
 msgid "Get an elegant design with powerful features for your course and community"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:106
+#: bp-core/admin/templates/upgrade-screen.php:69
 msgid "Premium Interface"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:107
+#: bp-core/admin/templates/upgrade-screen.php:70
 msgid "Plug & Play Sites"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:108
+#: bp-core/admin/templates/upgrade-screen.php:71
 msgid "Premium LearnDash Interface"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:109
+#: bp-core/admin/templates/upgrade-screen.php:72
 msgid "Plug & Play Sections"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:110
+#: bp-core/admin/templates/upgrade-screen.php:73
 msgid "Member/Student Dashboard"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:111
+#: bp-core/admin/templates/upgrade-screen.php:74
 msgid "Events Calendar Interface"
 msgstr ""
 
-#: bp-core/admin/templates/upgrade-screen.php:115
+#: bp-core/admin/templates/upgrade-screen.php:78
 msgid "Get BuddyBoss Theme"
 msgstr ""
 
@@ -17042,7 +17018,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:1083 bp-groups/bp-groups-template.php:5602
 #: bp-notifications/bp-notifications-template.php:1020
-#: bp-templates/bp-nouveau/includes/template-tags.php:2260
+#: bp-templates/bp-nouveau/includes/template-tags.php:2264
 msgid "Order By:"
 msgstr ""
 
@@ -26500,22 +26476,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2519
+#: bp-templates/bp-nouveau/includes/template-tags.php:2523
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2701
+#: bp-templates/bp-nouveau/includes/template-tags.php:2705
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2733
-#: bp-templates/bp-nouveau/includes/template-tags.php:2757
+#: bp-templates/bp-nouveau/includes/template-tags.php:2737
+#: bp-templates/bp-nouveau/includes/template-tags.php:2761
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -28978,10 +28954,10 @@ msgstr ""
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:329
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:345
-#: bp-templates/bp-nouveau/includes/template-tags.php:2715
-#: bp-templates/bp-nouveau/includes/template-tags.php:2723
-#: bp-templates/bp-nouveau/includes/template-tags.php:2747
-#: bp-templates/bp-nouveau/includes/template-tags.php:2772
+#: bp-templates/bp-nouveau/includes/template-tags.php:2719
+#: bp-templates/bp-nouveau/includes/template-tags.php:2727
+#: bp-templates/bp-nouveau/includes/template-tags.php:2751
+#: bp-templates/bp-nouveau/includes/template-tags.php:2776
 msgid "Close (Esc)"
 msgstr ""
 
@@ -33689,29 +33665,29 @@ msgstr ""
 msgid "Loading suggestions..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2263
+#: bp-templates/bp-nouveau/includes/template-tags.php:2267
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2500
+#: bp-templates/bp-nouveau/includes/template-tags.php:2504
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2706
+#: bp-templates/bp-nouveau/includes/template-tags.php:2710
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2715
-#: bp-templates/bp-nouveau/includes/template-tags.php:2723
-#: bp-templates/bp-nouveau/includes/template-tags.php:2747
-#: bp-templates/bp-nouveau/includes/template-tags.php:2772
+#: bp-templates/bp-nouveau/includes/template-tags.php:2719
+#: bp-templates/bp-nouveau/includes/template-tags.php:2727
+#: bp-templates/bp-nouveau/includes/template-tags.php:2751
+#: bp-templates/bp-nouveau/includes/template-tags.php:2776
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2738
-#: bp-templates/bp-nouveau/includes/template-tags.php:2762
+#: bp-templates/bp-nouveau/includes/template-tags.php:2742
+#: bp-templates/bp-nouveau/includes/template-tags.php:2766
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
