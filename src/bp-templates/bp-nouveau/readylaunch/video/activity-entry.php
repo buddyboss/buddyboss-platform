@@ -53,7 +53,7 @@ $poster_full      = bp_get_video_activity_thumb();
 $has_no_thumbnail = ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== strpos( $poster_full, 'video-placeholder.jpg' ) ) ? ' has-no-thumbnail' : '';
 ?>
 
-<div class="bb-activity-video-elem 
+<div class="bb-rl-activity-video-elem
 <?php
 echo esc_attr( $video_id ) . ' ';
 echo $video_template->current_video > ( $max_length - 1 ) ? esc_attr( 'hide ' ) : '';
@@ -65,25 +65,25 @@ echo ( $more_video && ( $max_length - 1 ) === $video_template->current_video ) ?
 echo esc_attr( $has_no_thumbnail );
 ?>
 " data-id="<?php echo esc_attr( $video_id ); ?>">
-	<div class="video-action-wrap item-action-wrap">
+	<div class="bb-rl-video-action-wrap bb-rl-item-action-wrap">
 		<?php
 		if ( $can_edit && ( bp_loggedin_user_id() === $video_user_id || bp_current_user_can( 'bp_moderate' ) ) ) {
 			?>
-			<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+			<a href="#" class="bb-rl-video-action_more bb-rl-item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 			</a>
-			<div class="video-action_list item-action_list bb_more_dropdown">
+			<div class="bb-rl-video-action_list bb-rl-item-action_list bb_rl_more_dropdown">
 				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<ul>
 					<?php if ( ! in_array( $db_privacy, array( 'forums', 'comment', 'message' ), true ) ) { ?>
-						<li class="edit_thumbnail_video video-action-class">
+						<li class="bb_rl_edit_thumbnail_video bb-rl-video-action-class">
 							<a
 									href="#"
 									data-action="video"
 									data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
 									data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
-									class="ac-video-thumbnail-edit">
+									class="bb-rl-ac-video-thumbnail-edit">
 								<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
 							</a>
 						</li>
@@ -92,13 +92,13 @@ echo esc_attr( $has_no_thumbnail );
 					if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) && $can_move ) {
 						if ( $is_comment_vid ) {
 							?>
-							<li class="move_video move-disabled video-action-class" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+							<li class="bb_rl_move_video bb-rl-move-disabled bb-rl-video-action-class" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 							</li>
 							<?php
 						} else {
 							?>
-							<li class="move_video video-action-class">
+							<li class="bb_rl_move_video bb-rl-video-action-class">
 								<a
 										href="#"
 										data-action="video"
@@ -107,7 +107,7 @@ echo esc_attr( $has_no_thumbnail );
 										data-item-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"
 										data-type="<?php echo esc_attr( $move_type ); ?>"
 										id="<?php echo esc_attr( $move_id ); ?>"
-										class="ac-video-move">
+										class="bb-rl-ac-video-move">
 									<?php esc_html_e( 'Move', 'buddyboss' ); ?>
 								</a>
 							</li>
@@ -115,9 +115,9 @@ echo esc_attr( $has_no_thumbnail );
 						}
 					}
 					?>
-					<li class="delete_file video-action-class">
+					<li class="bb_rl_delete_file bb-rl-video-action-class">
 						<a
-								class="video-file-delete"
+								class="bb-rl-video-file-delete"
 								data-video-id="<?php echo esc_attr( $video_id ); ?>"
 								data-root-parent-activity-id="<?php echo esc_attr( $parent_root_activity_id ); ?>"
 								data-parent-activity-id="<?php echo esc_attr( $video_parent_activity_id ); ?>"
@@ -131,7 +131,7 @@ echo esc_attr( $has_no_thumbnail );
 					</li>
 				</ul>
 			</div>
-			<div class="bb_more_dropdown_overlay"></div>
+			<div class="bb_rl_more_dropdown_overlay"></div>
 			<?php
 		}
 		?>
@@ -141,7 +141,7 @@ echo esc_attr( $has_no_thumbnail );
 		<video
 				playsinline
 				id="video-<?php echo esc_attr( $video_id ); ?>"
-				class="video-js single-activity-video"
+				class="bb-rl-video-js bb-rl-single-activity-video"
 				data-id="<?php echo esc_attr( $video_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"
@@ -155,12 +155,12 @@ echo esc_attr( $has_no_thumbnail );
 				data-setup='{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
 			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>">
 		</video>
-		<p class="bb-video-loader"></p>
+		<p class="bb-rl-video-loader"></p>
 		<?php if ( ! empty( $video_length ) ) { ?>
-			<p class="bb-video-duration"><?php echo esc_html( $video_length ); ?></p>
+			<p class="bb-rl-video-duration"><?php echo esc_html( $video_length ); ?></p>
 		<?php } ?>
 		<a
-				class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap hide"
+				class="bb-rl-open-video-theatre bb-rl-video-cover-wrap bb-rl-item-cover-wrap hide"
 				data-id="<?php echo esc_attr( $video_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"
@@ -175,17 +175,17 @@ echo esc_attr( $has_no_thumbnail );
 			if ( $video_count > $max_length && ( $max_length - 1 ) === $video_template->current_video ) {
 				$count = $video_count - $max_length;
 				?>
-				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+				<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
 				<?php
 			}
 			if ( ! empty( $video_length ) ) {
 				?>
-				<p class="bb-video-duration"><?php echo esc_html( $video_length ); ?></p>
+				<p class="bb-rl-video-duration"><?php echo esc_html( $video_length ); ?></p>
 			<?php } ?>
 		</a>
 	<?php } else { ?>
 		<a
-				class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
+				class="bb-rl-open-video-theatre bb-rl-video-cover-wrap bb-rl-item-cover-wrap"
 				data-id="<?php echo esc_attr( $video_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"
@@ -201,17 +201,17 @@ echo esc_attr( $has_no_thumbnail );
 				$count = $video_count - $max_length;
 				if ( 1 === $count ) {
 					?>
-					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
 					<?php
 				} else {
 					?>
-					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
 					<?php
 				}
 			}
 			if ( ! empty( $video_length ) ) {
 				?>
-				<p class="bb-video-duration"><?php echo esc_html( $video_length ); ?></p>
+				<p class="bb-rl-video-duration"><?php echo esc_html( $video_length ); ?></p>
 			<?php } ?>
 		</a>
 	<?php } ?>

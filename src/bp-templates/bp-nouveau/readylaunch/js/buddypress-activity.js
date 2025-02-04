@@ -559,8 +559,8 @@ window.bp = window.bp || {};
 
 			comments.each(
 				function ( c, comment ) {
-					commentParents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
-					commentItems   = $( commentParents ).find( 'li' ).not( $( '.document-action-class, .media-action-class, .video-action-class' ) );
+					commentParents = $( comment ).children( 'ul' ).not( '.bb-rl-conflict-activity-ul-li-comment' );
+					commentItems   = $( commentParents ).find( 'li' ).not( $( '.bb-rl-document-action-class, .bb-rl-media-action-class, .bb-rl-video-action-class' ) );
 
 					if ( ! commentItems.length ) {
 						return;
@@ -796,9 +796,9 @@ window.bp = window.bp || {};
 						if ( 'undefined' !== typeof response && 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.video_symlink ) {
 
 							// Cache selectors.
-							var $documentDescriptionWrap = $( '.document-description-wrap' );
+							var $documentDescriptionWrap = $( '.bb-rl-document-description-wrap' );
 							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-open-document-theatre' );
-							var $documentDetailWrap      = $( '.document-detail-wrap.document-detail-wrap-description-popup' );
+							var $documentDetailWrap      = $( '.bb-rl-document-detail-wrap.bb-rl-document-detail-wrap-description-popup' );
 
 							// Update attributes for document theater.
 							if ( $documentDescriptionWrap.length && $documentTheatre.length ) {
@@ -1053,8 +1053,8 @@ window.bp = window.bp || {};
 			if (
 				isInsideModal &&
 				(
-					target.hasClass( 'bb-open-media-theatre' ) ||
-					target.hasClass( 'bb-open-video-theatre' ) ||
+					target.hasClass( 'bb-rl-open-media-theatre' ) ||
+					target.hasClass( 'bb-rl-open-video-theatre' ) ||
 					target.hasClass( 'bb-open-document-theatre' ) ||
 					target.hasClass( 'document-detail-wrap-description-popup' )
 				)
@@ -1983,7 +1983,7 @@ window.bp = window.bp || {};
 			modal.find( '.bb-rl-modal-activity-header h2' ).text( activityTitle );
 
 			// Reload video.
-			var videoItems = modal.find( '.bb-activity-video-elem' );
+			var videoItems = modal.find( '.bb-rl-activity-video-elem' );
 			videoItems.each(
 				function ( index, elem ) {
 					var videoContainer = $( elem );
@@ -1994,10 +1994,10 @@ window.bp = window.bp || {};
 							var videoElementId = videoElement.attr( 'id' ) + Math.floor( Math.random() * 10000 );
 							videoElement.attr( 'id', videoElementId );
 
-							var videoActionWrap = videoContainer.find( '.video-action-wrap' );
+							var videoActionWrap = videoContainer.find( '.bb-rl-video-action-wrap' );
 							videoElement.insertAfter( videoActionWrap );
-							videoContainer.find( '.video-js' ).remove();
-							videoElement.addClass( 'video-js' );
+							videoContainer.find( '.bb-rl-video-js' ).remove();
+							videoElement.addClass( 'bb-rl-video-js' );
 
 							videojs(
 								videoElementId,

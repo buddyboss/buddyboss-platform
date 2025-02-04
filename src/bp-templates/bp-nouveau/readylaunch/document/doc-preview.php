@@ -16,8 +16,8 @@ if (
 	true === $bp_document_image_preview &&
 	! in_array( $bp_get_document_extension, (array) $excluded_extensions, true ) // exclude file and audio extension.
 ) { ?>
-	<div class="document-preview-wrap">
+	<div class="bb-rl-document-preview-wrap">
 		<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
-	</div><!-- .document-preview-wrap -->
+	</div><!-- .bb-rl-document-preview-wrap -->
 	<?php
 }

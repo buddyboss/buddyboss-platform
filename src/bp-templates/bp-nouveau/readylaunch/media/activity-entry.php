@@ -39,7 +39,7 @@ $max_length     = $is_comment_pic ? bb_media_get_activity_comment_max_thumb_leng
 $more_media     = $media_count > $max_length;
 ?>
 
-<div class="bb-activity-media-elem media-activity
+<div class="bb-rl-activity-media-elem bb-rl-media-activity
 	<?php
 echo esc_attr( $bp_get_media_id ) . ' ';
 echo ( $media_template->current_media > ( $max_length - 1 ) ) ? esc_attr( 'hide ' ) : '';
@@ -51,28 +51,28 @@ echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) :
 echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
 ?>
 	" data-id="<?php echo esc_attr( $bp_get_media_id ); ?>">
-	<div class="media-action-wrap">
+	<div class="bb-rl-media-action-wrap">
 		<?php
 		if ( $can_move || $can_delete ) {
 			if ( bp_loggedin_user_id() === $media_user_id || bp_current_user_can( 'bp_moderate' ) ) {
 				?>
-				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="bb-rl-media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
-				<div class="media-action_list bb_more_dropdown">
+				<div class="bb-rl-media-action_list bb_rl_more_dropdown">
 					<?php bp_get_template_part( 'common/more-options-view' ); ?>
-					<ul class="conflict-activity-ul-li-comment">
+					<ul class="bb-rl-conflict-activity-ul-li-comment">
 						<?php
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							if ( $is_comment_pic ) {
 								?>
-								<li class="move_file media-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+								<li class="bb_rl_move_file bb-rl-media-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
 									<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php
 							} elseif ( $can_move ) {
 								?>
-								<li class="move_file media-action-class">
+								<li class="bb_rl_move_file bb-rl-media-action-class">
 									<a href="#" data-media-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php
@@ -81,20 +81,20 @@ echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ?
 						if ( $can_delete ) {
 							$item_id = ( bp_is_active( 'activity' ) ) ? ( bp_get_activity_comment_id() ?? bp_get_activity_id() ) : 0;
 							?>
-							<li class="delete_file media-action-class">
-								<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							<li class="bb_rl_delete_file bb-rl-media-action-class">
+								<a class="bb-rl-media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 							</li>
 							<?php
 						}
 						?>
 					</ul>
 				</div>
-				<div class="bb_more_dropdown_overlay"></div>
+				<div class="bb_rl_more_dropdown_overlay"></div>
 			<?php } ?>
 		<?php } ?>
-	</div> <!--.media-action-wrap-->
+	</div> <!--.bb-rl-media-action-wrap-->
 	<a href="#"
-	   class="bb-open-media-theatre entry-img"
+	   class="bb-rl-open-media-theatre bb-rl-entry-img"
 	   data-id="<?php echo esc_attr( $bp_get_media_id ); ?>"
 	   data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 	   data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
@@ -112,7 +112,7 @@ echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ?
 		if ( $media_count > $max_length && ( $max_length - 1 ) === $media_template->current_media ) {
 			$count = $media_count - $max_length;
 			?>
-			<span class="bb-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Photos', 'buddyboss' ); ?></span></span></span>
+			<span class="bb-rl-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Photos', 'buddyboss' ); ?></span></span></span>
 			<?php
 		}
 		?>

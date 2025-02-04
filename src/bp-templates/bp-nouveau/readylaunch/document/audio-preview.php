@@ -17,7 +17,7 @@ if ( $allow_extension && true === $bp_document_music_preview ) {
 }
 if ( $allow_extension ) {
 	?>
-	<div class="document-audio-wrap">
+	<div class="bb-rl-document-audio-wrap">
 		<audio controls controlsList="nodownload">
 			<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
 			<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
