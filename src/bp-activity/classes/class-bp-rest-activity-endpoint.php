@@ -2540,6 +2540,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
+		// Check if the user can read the activity as per privacy settings.
+		if ( ! empty( $request['id'] ) && function_exists( 'bb_validate_activity_privacy' ) ) {
+			$privacy_check = bb_validate_activity_privacy(
+				array(
+					'activity_id'     => $request['id'],
+					'validate_action' => 'view_activity',
+					'user_id'         => bp_loggedin_user_id(),
+				)
+			);
+
+			if ( is_wp_error( $privacy_check ) ) {
+				return false;
+			}
+		}
+
 		$activity = $this->get_activity_object( $request );
 
 		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );

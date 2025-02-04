@@ -584,6 +584,14 @@ button[data-balloon] {
   color: #32373c;
 }
 
+.nav-settings-subsubsub {
+  padding-bottom: 0;
+}
+
+.nav-settings-subsubsub .subsubsub {
+  float: none;
+}
+
 @media screen and (max-width: 782px) {
   #bp-admin-component-form .wp-list-table.plugins .plugin-title {
     display: block;
@@ -777,6 +785,13 @@ tr.bp-search-parent-field label {
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none.child-custom-post-type td {
   margin: 10px 10px 10px 0;
+}
+
+@media screen and (max-width: 782px) {
+  .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none td,
+  .buddyboss_page_bp-settings .section-bp_custom_post_type .form-table .child-no-padding.bp-display-none.child-custom-post-type td {
+    margin-right: 0;
+  }
 }
 
 /* Media */
@@ -1454,6 +1469,13 @@ body.post-type-reply #edit-slug-box {
   }
   .bp-new-notice {
     margin-bottom: 0.5em;
+  }
+  #bp-activities-form .wp-list-table th.column-primary.column-author,
+  form#bp-groups-form .wp-list-table th.column-primary.column-comment {
+    width: auto;
+  }
+  .wp-list-table.activities tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before, .wp-list-table.groups tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+    font-weight: 600;
   }
 }
 
@@ -2231,8 +2253,8 @@ tr.child-no-padding-first td {
 }
 
 @media screen and (max-width: 782px) {
-  .section-bp_registration tr.child-no-padding td,
-  .section-bp_registration tr.child-no-padding-first td {
+  .form-table tr.child-no-padding td,
+  .form-table tr.child-no-padding-first td {
     padding-right: 0;
   }
 }
@@ -2744,6 +2766,12 @@ h2.has_tutorial_btn .bbapp-tutorial-btn .bb-button_filled:hover {
   line-height: 1.5;
   border: 1px solid #ffc5ca;
   border-radius: 4px;
+}
+
+@media screen and (max-width: 782px) {
+  .bb-error-section {
+    margin-right: 0;
+  }
 }
 
 .bb-warning-section-wrap.hidden-header > th {
@@ -3753,6 +3781,10 @@ table.moderations .bp-block-user[data-bp-tooltip]:after {
   white-space: normal;
   width: 210px;
   text-align: center;
+}
+
+table.moderations.wp-list-table tr:not(.inline-edit-row):not(.no-items) td:not(.column-primary):before {
+  display: none;
 }
 
 .buddyboss_page_bp-moderation .dashicons {
@@ -5349,4 +5381,8 @@ h1.bb-advance-heading {
 
 .wrap--performance #resultTable table {
   width: 100%;
+}
+
+#customize-theme-controls .accordion-section-title button.accordion-trigger {
+  height: auto;
 }

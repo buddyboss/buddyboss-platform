@@ -346,10 +346,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( in_array( $activity_object->type, $disabled_actions ) ) {
 				$link = $activity_object->primary_link;
 				if ( empty( $link ) ) {
+					$item_id = ( 'groups' === $activity_object->component ? $activity_object->secondary_item_id : $activity_object->item_id );
 					if ( 'bbp_reply_create' == $activity_object->type ) {
-						$link = bbp_get_reply_url( $activity_object->secondary_item_id );
+						$link = bbp_get_reply_url( $item_id );
 					} elseif ( 'bbp_topic_create' == $activity_object->type ) {
-						$link = bbp_get_topic_permalink( $activity_object->secondary_item_id );
+						$link = bbp_get_topic_permalink( $item_id );
 					}
 				}
 			}
