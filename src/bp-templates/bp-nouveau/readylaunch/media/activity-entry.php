@@ -36,7 +36,7 @@ if ( $group_id > 0 ) {
 }
 $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 $max_length     = $is_comment_pic ? bb_media_get_activity_comment_max_thumb_length() : bb_media_get_activity_max_thumb_length();
-$more_media     = $media_count > $max_length ? true : false;
+$more_media     = $media_count > $max_length;
 ?>
 
 <div class="bb-activity-media-elem media-activity
