@@ -45,7 +45,29 @@ bp_nouveau_template_notices();
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
-						bp_nouveau_user_feedback( 'directory-groups-loading' );
+						?>
+						<div class="bb-rl-skeleton-grid <?php bp_nouveau_loop_classes(); ?>">
+							<?php for ( $i = 0; $i < 8; $i++ ) : ?>
+								<div class="bb-rl-skeleton-grid-block bb-rl-skeleton-grid-block--cover">
+									<div class="bb-rl-skeleton-cover bb-rl-skeleton-loader"></div>
+									<div class="bb-rl-skeleton-avatar bb-rl-skeleton-loader"></div>
+									<div class="bb-rl-skeleton-data">
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+									</div>
+									<div class="bb-rl-skeleton-loop">
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+									</div>
+									<div class="bb-rl-skeleton-footer">
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+									</div>
+								</div>
+							<?php endfor; ?>
+						</div>
+						<?php
+						// bp_nouveau_user_feedback( 'directory-groups-loading' );
 						echo '</div>';
 					} else {
 						bp_get_template_part( 'groups/groups-loop' );
