@@ -1311,3 +1311,70 @@
 .bb-media-privacy-wrap .activity-privacy.bb-open {
   display: block;
 }
+
+/* GIF Preview */
+div[class*="attached-gif-container"] .gif-play-button {
+  height: 60px;
+  width: 60px;
+  font-size: 60px;
+  position: absolute;
+  right: 50%;
+  margin-right: -30px;
+  top: 50%;
+  margin-top: -30px;
+}
+
+div[class*="attached-gif-container"] [class*="bb-icon"] {
+  font-family: bb-icons-rl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  color: var(--bb-rl-text-white-color);
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+  z-index: 11;
+  transition: all ease 0.3s;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+div[class*="attached-gif-container"] [class*="bb-icon"]:before {
+  content: "\e3d0";
+  font-size: 30px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+div[class*="attached-gif-container"] .gif-icon {
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-text-white-color);
+  position: absolute;
+  display: block;
+  height: 30px;
+  font-weight: 600;
+  width: 44px;
+  bottom: 0;
+  right: 0;
+  border-radius: var(--bb-rl-radius-md) 0 0 0;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  background-color: var(--bb-rl-background-black-color);
+  opacity: 0.45;
+}
+
+div[class*="attached-gif-container"] .gif-icon:after {
+  content: "GIF";
+}
+
+div[class*="attached-gif-container"] .gif-player {
+  display: inline-flex;
+  position: relative;
+  max-width: 480px;
+  overflow: hidden;
+  border-radius: var(--bb-rl-radius-md);
+}
