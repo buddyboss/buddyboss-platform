@@ -46,6 +46,8 @@ class BB_Group_Readylaunch {
 	public function __construct() {
 		add_filter( 'bb_group_subscription_button_args', array( $this, 'bb_rl_update_group_subscription_button' ), 10, 2 );
 		add_filter( 'bb_nouveau_get_groups_bubble_buttons', array( $this, 'bb_rl_get_groups_bubble_buttons' ), 10, 3 );
+
+		add_action( 'bb_rl_footer', array( $this, 'bb_rl_load_popup' ) );
 	}
 
 	public function bb_rl_update_group_subscription_button( $button, $r ) {
@@ -103,5 +105,9 @@ class BB_Group_Readylaunch {
 		}
 
 		return $buttons;
+	}
+
+	public function bb_rl_load_popup() {
+
 	}
 }
