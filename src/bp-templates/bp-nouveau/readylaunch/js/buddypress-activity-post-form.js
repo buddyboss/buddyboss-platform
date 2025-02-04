@@ -5495,7 +5495,6 @@ window.bp = window.bp || {};
 					[
 						new bp.Views.UserStatusHuddle( { model: this.model } ),
 						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
-						new bp.Views.ActivityToolbar( { model: this.model } ) // Add Toolbar to show in default view.
 					]
 				);
 
