@@ -20,8 +20,9 @@ $doc_attachment_url     = bp_get_document_attachment_url();
 $svg_icon               = bp_document_svg_icon( $extension, $attachment_id );
 $svg_icon_download      = bp_document_svg_icon( 'download' );
 $url                    = wp_get_attachment_url( $attachment_id );
-$filename               = basename( get_attached_file( $attachment_id ) );
-$size                   = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+$attached_file          = get_attached_file( $attachment_id );
+$filename               = basename( $attached_file );
+$size                   = is_file( $attached_file ) ? bp_document_size_format( filesize( $attached_file ) ) : 0;
 $download_url           = bp_document_download_link( $attachment_id, $document_id );
 $document_privacy       = bb_media_user_can_access( $document_id, 'document' );
 $can_download_btn       = true === (bool) $document_privacy['can_download'];
@@ -33,12 +34,10 @@ $can_delete             = true === (bool) $document_privacy['can_delete'];
 $extension_lists        = bp_document_extensions_list();
 $attachment_url         = '';
 $mirror_text            = '';
-
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$mirror_text         = bp_document_mirror_text( $attachment_id );
 }
-
 $class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
 $class_popup   = apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
 $click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );

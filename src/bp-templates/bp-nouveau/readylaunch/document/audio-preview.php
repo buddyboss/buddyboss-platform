@@ -11,12 +11,11 @@ $audio_url                    = '';
 $doc_extension                = bp_get_document_extension();
 $doc_preview_music_extensions = bp_get_document_preview_music_extensions();
 $bp_document_music_preview    = apply_filters( 'bp_document_music_preview', true );
-
-if ( in_array( $doc_extension, $doc_preview_music_extensions, true ) && $bp_document_music_preview ) {
+$allow_extension              = in_array( $doc_extension, $doc_preview_music_extensions, true );
+if ( $allow_extension && true === $bp_document_music_preview ) {
 	$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), bp_get_document_attachment_id(), $doc_extension );
 }
-
-if ( in_array( $doc_extension, $doc_preview_music_extensions, true ) ) {
+if ( $allow_extension ) {
 	?>
 	<div class="document-audio-wrap">
 		<audio controls controlsList="nodownload">

@@ -3,7 +3,6 @@
  * ReadyLaunch - The template for activity document code preview
  *
  * @since   BuddyBoss [BBVERSION]
- * @var string $download_url Download Url.
  *
  * @package BuddyBoss\Core
  * @version 1.0.0
@@ -20,8 +19,8 @@ $extension     = bp_get_document_extension();
  * @param bool $retval Whether document text preview.
  */
 $bp_document_text_preview = apply_filters( 'bp_document_text_preview', true );
-$sizes                    = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
-
+$file_path                = get_attached_file( $attachment_id );
+$sizes                    = is_file( $file_path ) ? $file_path : 0;
 if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 	if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 		$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
@@ -39,7 +38,6 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 		</div> <!-- .document-text-wrap -->
 		<?php
 		if ( true === $more_text ) {
-
 			printf(
 			/* translators: %s: download string */
 				'<div class="more_text_view">%s</div>',

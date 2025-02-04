@@ -20,22 +20,15 @@ $can_delete             = true === (bool) $document_privacy['can_delete'];
 $db_privacy             = bp_get_db_document_privacy();
 $is_comment_doc         = bp_document_is_activity_comment_document( $document_template->document );
 $document_user_id       = bp_get_document_user_id();
-
-$group_id = bp_get_document_group_id();
-if ( $group_id > 0 ) {
-	$move_id   = $group_id;
-	$move_type = 'group';
-} else {
-	$move_id   = $document_user_id;
-	$move_type = 'profile';
-}
+$group_id               = bp_get_document_group_id();
+$move_id                = ( 0 < $group_id ) ? $group_id : $document_user_id;
+$move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 ?>
 <div class="document-action-wrap">
 	<a href="#" class="document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>" data-balloon="<?php esc_attr_e( 'Expand', 'buddyboss' ); ?>"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 	<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php echo esc_attr( $document_id ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss' ); ?>">
 		<i class="bb-icon-l bb-icon-download"></i>
 	</a>
-
 	<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 		<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 	</a>
@@ -58,25 +51,19 @@ if ( $group_id > 0 ) {
 							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 						</li>
 						<?php
-					} else {
-						if ( $can_move ) {
-							?>
-							<li class="move_file document-action-class">
-								<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-							</li>
-							<?php
-						}
+					} elseif ( $can_move ) {
+						?>
+						<li class="move_file document-action-class">
+							<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+						</li>
+						<?php
 					}
 				}
-				$item_id = 0;
-				if ( bp_is_active( 'activity' ) ) {
-					$activity_comment_id = bp_get_activity_comment_id();
-					$item_id             = ( $activity_comment_id ) ? $activity_comment_id : bp_get_activity_id();
-				}
 				if ( $can_delete ) {
+					$item_id = ( bp_is_active( 'activity' ) ) ? ( bp_get_activity_comment_id() ?? bp_get_activity_id() ) : 0;
 					?>
 					<li class="delete_file document-action-class">
-						<a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
+						<a class="document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
 					</li>
 					<?php
 				}
