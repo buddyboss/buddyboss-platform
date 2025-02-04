@@ -698,6 +698,7 @@ class BuddyPress {
 			'BP_Core_Follow_Follower_Widget'               => 'core',
 			'BP_Group_Extension'                           => 'groups',
 			'BP_Group_Member_Query'                        => 'groups',
+			'BB_Group_Readylaunch'                        => 'groups',
 			'BP_Core_Members_Template'                     => 'members',
 			'BP_Core_Members_Widget'                       => 'members',
 			'BP_Core_Recently_Active_Widget'               => 'members',

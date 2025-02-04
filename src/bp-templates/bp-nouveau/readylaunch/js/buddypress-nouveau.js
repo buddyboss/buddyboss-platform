@@ -799,7 +799,7 @@ window.bp = window.bp || {};
 							filter = bbFilterElem.val();
 						}
 					}
-					
+
 
 					// Pre select saved scope filter.
 					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
@@ -936,7 +936,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
 			$document.on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
 			$document.on( 'click', '#message-threads .report-content', this.threadListReportPopup );
-			$document.on( 'click', '.bb-close-action-popup, .action-popup-overlay', this.closeActionPopup );
+			$document.on( 'click', '.bb-rl-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$document.on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$document.on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
 
@@ -1403,7 +1403,7 @@ window.bp = window.bp || {};
 					if ( 'undefined' !== typeof bp.Nouveau.ajax_request && null !== bp.Nouveau.ajax_request && false !== bp.Nouveau.ajax_request ) {
 						bp.Nouveau.ajax_request.abort();
 
-						$( '.component-navigation [data-bp-object]' ).each(
+						$( '.bb-rl-component-navigation [data-bp-object]' ).each(
 							function () {
 								$( this ).removeClass( 'loading' );
 							}
@@ -1414,7 +1414,7 @@ window.bp = window.bp || {};
 					gridfilters.find( '.layout-view' ).removeClass( 'active' );
 					$this.addClass( 'active' );
 					if ( 'list' === layout ) {
-						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
+						$this.parents( '.bb-rl-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
 					} else {
 						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
 					}
@@ -2734,7 +2734,7 @@ window.bp = window.bp || {};
 				! _.isUndefined( bbRLMedia.emoji ) &&
 				! $targetEl.closest( '.bb-rl-post-emoji' ).length &&
 				! $targetEl.is( '.bb-rl-emojioneemoji,.emojibtn' ) &&
-				! $targetEl.closest( '.emojionearea-theatre' ).length ) {
+				! $targetEl.closest( '.bb-rl-emojionearea-theatre' ).length ) {
 				bp.Nouveau.closeEmojiPicker();
 			}
 		},
@@ -2895,25 +2895,21 @@ window.bp = window.bp || {};
 				$moreOptionsList = $moreOptions.find( '.bb_more_options_list' ),
 				$body            = $( 'body' );
 
+			var isOpen = $moreOptionsList.hasClass( 'is_visible' );
+
+			$( '.bb_more_options' ).removeClass( 'more_option_active' );
+			$( '.bb_more_options_list' ).removeClass( 'is_visible open' );
+			$body.removeClass( 'user_more_option_open' );
+
 			if ( $target.hasClass( 'bb_more_options_action' ) || $target.parent().hasClass( 'bb_more_options_action' ) ) {
 				event.preventDefault();
 
-				if ( $target.closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
-					$moreOptions.removeClass( 'more_option_active' );
-					$moreOptionsList.removeClass( 'is_visible open' );
-					$body.removeClass( 'user_more_option_open' );
-				} else {
-					$moreOptionsList.removeClass( 'is_visible open' );
-					$target.closest( '.bb_more_options' ).addClass( 'more_option_active' );
-					$target.closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible open' );
+				if ( !isOpen ) {
+					$moreOptions.addClass( 'more_option_active' );
+					$moreOptionsList.addClass( 'is_visible open' );
 					$body.addClass( 'user_more_option_open' );
 				}
 
-			} else {
-				$moreOptions.removeClass( 'more_option_active' );
-				$moreOptionsList.removeClass( 'is_visible open' );
-				$body.removeClass( 'user_more_option_open' );
-				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 
 			if ( $target.closest( '.bs-dropdown-link' ).length > 0 ) {
@@ -4280,8 +4276,8 @@ window.bp = window.bp || {};
 
 		closeEmojiPicker: function () {
 			$( '.bb-rl-post-emoji.active, .emojionearea-button.active' ).removeClass( 'active' );
-			if ( $( '.emojionearea-theatre.show' ).length > 0 ) {
-				var $emojioneAreaTheatre = $( '.emojionearea-theatre' );
+			if ( $( '.bb-rl-emojionearea-theatre.show' ).length > 0 ) {
+				var $emojioneAreaTheatre = $( '.bb-rl-emojionearea-theatre' );
 				$emojioneAreaTheatre.removeClass( 'show' ).addClass( 'hide' );
 				$emojioneAreaTheatre.find( '.emojionearea-picker' ).addClass( 'hidden' );
 			}
