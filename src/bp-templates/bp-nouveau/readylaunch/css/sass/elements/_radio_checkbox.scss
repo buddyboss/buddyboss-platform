@@ -1,0 +1,112 @@
+/* Checkbox */
+.bb-rl-styled-checkbox {
+	position: absolute; // take it out of document flow
+	opacity: 0; // hide it
+
+	+ label {
+		cursor: pointer;
+		display: inline-block;
+		position: relative;
+		padding: 0;
+		line-height: 1;
+	}
+
+	// Box.
+	+ label:before {
+		content: "";
+		margin-right: var(--bb-rl-space-100);
+		display: inline-block;
+		vertical-align: text-top;
+		width: 20px;
+		height: 20px;
+		background: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-sm);
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+	}
+
+	// Box focus
+	&:focus + label:before {
+		border-color: var(--bb-rl-primary-color);
+	}
+
+	// Box checked
+	&:checked + label:before {
+		background: var(--bb-rl-primary-color);
+		border-color: var(--bb-rl-primary-color);
+	}
+
+	// Disabled state label.
+	&:disabled + label {
+		color: var(--bb-rl-border-disabled-color);
+		cursor: auto;
+	}
+
+	// Disabled box.
+	&:disabled + label:before {
+		box-shadow: none;
+		background: var(--bb-rl-border-disabled-color);
+	}
+
+	// Checkmark. Could be replaced with an image
+	&:checked + label:after {
+		content: "\e182";
+		position: absolute;
+		left: 3px;
+		top: 3px;
+		font-family: bb-icons-rl;
+		font-weight: 400;
+		color: var(--bb-rl-text-white-color);
+		font-size: 14px;
+		display: block;
+	}
+}
+
+/* Radio */
+.bb-rl-radio-style {
+	position: relative;
+	line-height: 1;
+
+	input[type="radio"] {
+		opacity: 0;
+		height: 0;
+		width: 0;
+	}
+
+	input[type="radio"] + span {
+		position: relative;
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+	}
+
+	input[type="radio"] + span:before {
+		content: "";
+		display: inline-block;
+		cursor: pointer;
+		position: relative;
+		overflow: hidden;
+		width: 16px;
+		height: 16px;
+		line-height: 1;
+		border: 2px solid var(--bb-rl-border-quaternary-color);
+		border-radius: 100%;
+	}
+
+	input[type="radio"]:checked + span:before {
+		border: 8px solid var(--bb-rl-background-brand-primary-color);
+	}
+
+	input[type="radio"]:checked + span:after {
+		content: "";
+		background-color: var(--bb-rl-background-color);
+		margin: auto;
+		width: 8px;
+		height: 8px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		text-align: center;
+		border-radius: 100%;
+	}
+}

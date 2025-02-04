@@ -26,9 +26,6 @@
 							<div class="activity-link-preview-image-cover">
 								<img src="{{{data.link_images[data.link_image_index]}}}"/>
 							</div>
-							<!-- <a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
-								<i class="bb-icon-l bb-icon-times"></i>
-							</a>-->
 							<div class="activity-link-preview-icons">
 								<# if ( data.link_images.length > 1 ) { #>
 									<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Change image', 'buddyboss' ) ?>" href="#" class="icon-exchange bb-rl-toolbar-button bp-tooltip" id="icon-exchange"><i class="bb-icons-rl-arrows-left-right"></i></a>
