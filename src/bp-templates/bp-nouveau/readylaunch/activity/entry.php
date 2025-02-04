@@ -113,18 +113,19 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			</div>
 
 		<?php else : ?>
-
-			<div class="bb-rl-activity-avatar bb-rl-item-avatar">
-				<a href="<?php echo $user_link; ?>">
-					<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
-				</a>
-			</div>
-			<div class="bb-rl-activity-header">
-				<?php
-				bp_activity_action();
-				bp_nouveau_activity_is_edited();
-				bp_nouveau_activity_privacy();
-				?>
+			<div class="bb-rl-activity-head">
+				<div class="bb-rl-activity-avatar bb-rl-item-avatar">
+					<a href="<?php echo $user_link; ?>">
+						<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
+					</a>
+				</div>
+				<div class="bb-rl-activity-header">
+					<?php
+					bp_activity_action();
+					bp_nouveau_activity_is_edited();
+					bp_nouveau_activity_privacy();
+					?>
+				</div>
 			</div>
 
 		<?php endif; ?>
