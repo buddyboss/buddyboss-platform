@@ -140,7 +140,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if (
 				(
-					bp_is_members_directory() &&
+					(
+						bp_is_members_directory() ||
+						bp_is_user()
+					) &&
 					! empty( $this->settings['members'] )
 				) ||
 				(
