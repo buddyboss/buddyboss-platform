@@ -2895,25 +2895,21 @@ window.bp = window.bp || {};
 				$moreOptionsList = $moreOptions.find( '.bb_more_options_list' ),
 				$body            = $( 'body' );
 
+			var isOpen = $moreOptionsList.hasClass( 'is_visible' );
+
+			$( '.bb_more_options' ).removeClass( 'more_option_active' );
+			$( '.bb_more_options_list' ).removeClass( 'is_visible open' );
+			$body.removeClass( 'user_more_option_open' );
+
 			if ( $target.hasClass( 'bb_more_options_action' ) || $target.parent().hasClass( 'bb_more_options_action' ) ) {
 				event.preventDefault();
 
-				if ( $target.closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
-					$moreOptions.removeClass( 'more_option_active' );
-					$moreOptionsList.removeClass( 'is_visible open' );
-					$body.removeClass( 'user_more_option_open' );
-				} else {
-					$moreOptionsList.removeClass( 'is_visible open' );
-					$target.closest( '.bb_more_options' ).addClass( 'more_option_active' );
-					$target.closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible open' );
+				if ( !isOpen ) {
+					$moreOptions.addClass( 'more_option_active' );
+					$moreOptionsList.addClass( 'is_visible open' );
 					$body.addClass( 'user_more_option_open' );
 				}
 
-			} else {
-				$moreOptions.removeClass( 'more_option_active' );
-				$moreOptionsList.removeClass( 'is_visible open' );
-				$body.removeClass( 'user_more_option_open' );
-				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 
 			if ( $target.closest( '.bs-dropdown-link' ).length > 0 ) {
