@@ -700,71 +700,12 @@ window.bp = window.bp || {};
 
 		createFolderInPopup: function ( event ) {
 			event.preventDefault();
-			var $document         = $( document ),
-				getParentFolderId = parseInt( $document.find( '.open-popup .bb-rl-folder-selected-id' ).val() ),
-				getCreateIn       = $document.find( '.open-popup .bb-rl-folder-create-from' ).val(),
-				$wrapHideShow     = $document.find( '.open-popup .bb-rl-privacy-field-wrap-hide-show' ),
-				$wrapHideShowMain = $document.find( '.bb-rl-popup-on-fly-create-folder .bb-rl-privacy-field-wrap-hide-show' );
-			if ( getParentFolderId > 0 ) {
-				$wrapHideShow.hide();
-			} else {
-				$wrapHideShow.show();
-			}
-
-			if ( 'group' === getCreateIn ) {
-				$wrapHideShowMain.hide();
-			} else {
-				if ( getParentFolderId > 0 ) {
-					$wrapHideShowMain.hide();
-				} else {
-					$wrapHideShowMain.show();
-				}
-			}
-
-			$( '.modal-container .bb-model-footer, .modal-container #bp-media-document-prev' ).hide();
-			$( '.bb-field-wrap-search' ).hide();
-			$( '.bb-rl-document-open-create-popup-folder' ).hide();
-			$( '.bb-rl-location-folder-list-wrap-main' ).hide();
-			$( '.bb-rl-create-popup-folder-wrap' ).show();
-			var eventTarget     = $( event.currentTarget ),
-				$folderLocation = eventTarget.closest( '.bb-rl-has-folderlocationUI' );
-			$folderLocation.find( '.bb-model-header' ).children().hide();
-			$folderLocation.find( '.bb-model-header' ).append( '<p>' + bbRlMedia.create_folder + '</p>' );
-			$( '.modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
-			$document.find( '.open-popup .error' ).hide();
+			this.createAlbumFolderInPopup( event, 'folder' );
 		},
 
 		createAlbumInPopup: function ( event ) {
 			event.preventDefault();
-			var $document         = $( document ),
-				getParentFolderId = parseInt( $document.find( '.open-popup .bb-rl-album-selected-id' ).val() ),
-				getCreateIn       = $document.find( '.open-popup .bb-rl-album-create-from' ).val(),
-				$wrapHideShow     = $document.find( '.open-popup .bb-rl-privacy-field-wrap-hide-show' ),
-				$wrapHideShowMain = $document.find( '.bb-rl-popup-on-fly-create-album .bb-rl-privacy-field-wrap-hide-show' );
-			if ( getParentFolderId > 0 ) {
-				$wrapHideShow.hide();
-			} else {
-				$wrapHideShow.show();
-			}
-
-			if ( 'group' === getCreateIn ) {
-				$wrapHideShowMain.hide();
-			} else {
-				$wrapHideShowMain.show();
-			}
-
-			$( '.modal-container .bb-model-footer' ).hide();
-			$( '.bb-field-wrap-search' ).hide();
-			$( '.bb-rl-document-open-create-popup-folder' ).hide();
-			$( '.bb-rl-location-album-list-wrap-main' ).hide();
-			$( '.bb-field-steps-2 #bp-media-prev' ).hide();
-			$( '.bb-rl-create-popup-album-wrap' ).show();
-			var eventTarget     = $( event.currentTarget ),
-				$folderLocation = eventTarget.closest( '.bb-rl-has-folderlocationUI' );
-			$folderLocation.find( '.bb-model-header' ).children().hide();
-			$folderLocation.find( '.bb-model-header' ).append( '<p>' + bbRlMedia.create_album_title + '</p>' );
-			$( '.modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
-			$document.find( '.open-popup .error' ).hide();
+			this.createAlbumFolderInPopup( event, 'album' );
 		},
 
 		savePrivacy: function ( event ) {
@@ -5927,6 +5868,44 @@ window.bp = window.bp || {};
 				$( '#bp-save-album-title' ).show();
 				$( '#bp-edit-album-title' ).hide();
 			}
+		},
+
+		createAlbumFolderInPopup: function ( event, actionType ) {
+			var $document         = $( document ),
+			    $openPopup        = $document.find( '.open-popup' ),
+			    getParentFolderId = parseInt( $openPopup.find( '.bb-rl-' + actionType + '-selected-id' ).val() ),
+			    getCreateIn       = $openPopup.find( '.bb-rl-' + actionType + '-create-from' ).val();
+			if ( getParentFolderId > 0 ) {
+				$openPopup.find( '.bb-rl-privacy-field-wrap-hide-show' ).hide();
+			} else {
+				$openPopup.find( '.bb-rl-privacy-field-wrap-hide-show' ).show();
+			}
+
+			if ( 'group' === getCreateIn ) {
+				$document.find( '.bb-rl-popup-on-fly-create-' + actionType + ' .bb-rl-privacy-field-wrap-hide-show' ).hide();
+			} else {
+				if ( 'folder' === actionType && getParentFolderId > 0 ) {
+					$document.find( '.bb-rl-popup-on-fly-create-' + actionType + ' .bb-rl-privacy-field-wrap-hide-show' ).hide();
+				} else {
+					$document.find( '.bb-rl-popup-on-fly-create-' + actionType + ' .bb-rl-privacy-field-wrap-hide-show' ).show();
+				}
+			}
+
+			$( '.modal-container .bb-model-footer, .modal-container #bp-media-document-prev' ).hide();
+			$( '.bb-field-wrap-search' ).hide();
+			$( '.bb-rl-document-open-create-popup-folder' ).hide();
+			$( '.bb-rl-location-' + actionType + '-list-wrap-main' ).hide();
+			if ( 'album' === actionType ) {
+				$( '.bb-field-steps-2 #bp-media-prev' ).hide();
+			}
+			$( '.bb-rl-create-popup-' + actionType + '-wrap' ).show();
+			var eventTarget     = $( event.currentTarget ),
+			    $folderLocation = eventTarget.closest( '.bb-rl-has-folderlocationUI' ),
+			    popupTitle      = 'folder' === actionType ? BP_Nouveau.media.create_folder : BP_Nouveau.media.create_album_title;
+			$folderLocation.find( '.bb-model-header' ).children().hide();
+			$folderLocation.find( '.bb-model-header' ).append( '<p>' + popupTitle + '</p>' );
+			$( '.modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
+			$document.find( '.open-popup .error' ).hide();
 		},
 	};
 
