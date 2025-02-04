@@ -643,8 +643,6 @@ class BuddyPress {
 
 		// These classes don't have a name that matches their component.
 		$irregular_map = array(
-			'BB_Hooks'                                     => 'core',
-			'BB_Options'                                   => 'core',
 			'BB_Mothership_Plugin_Connector'               => 'core',
 			'BB_Grd_Lvl_Ctrl'                              => 'core',
 			'BB_Presence'                                  => 'core',

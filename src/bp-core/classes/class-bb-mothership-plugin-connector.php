@@ -12,8 +12,8 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function __construct()
 	{
-		$this->pluginId     = 'buddyboss';
-		$this->pluginPrefix = 'BUDDYBOSS_';
+		$this->pluginId     = 'bb-platform-free';
+		$this->pluginPrefix = 'bb-platform-free';
 	}
 
 	/**
@@ -53,9 +53,7 @@ class BB_Mothership_Plugin_Connector extends AbstractPluginConnection
 	 */
 	public function updateLicenseKey(string $licenseKey): void
 	{
-		$opts                     = BB_Options::fetch();
-		$opts->mothership_license = $licenseKey;
-		$opts->store(false);
+		// Nothing to do here.
 	}
 
 	/**

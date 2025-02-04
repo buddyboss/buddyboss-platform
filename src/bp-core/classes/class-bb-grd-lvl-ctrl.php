@@ -170,7 +170,7 @@ class BB_Grd_Lvl_Ctrl implements StaticContainerAwareness
 
 		MeprGrdLvlCtrl::init( true );
 
-		/** @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store */ // phpcs:ignore
+		/** @var Store $store */ // phpcs:ignore
 		$store = self::getContainer()->get( Store::class )->fetch();
 
 		$btns = array();
