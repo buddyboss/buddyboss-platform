@@ -168,7 +168,8 @@ class BB_Grd_Lvl_Ctrl implements StaticContainerAwareness
 			return;
 		}
 
-		MeprGrdLvlCtrl::init( true );
+		// Initialize the ground level container.
+		self::init();
 
 		/** @var Store $store */ // phpcs:ignore
 		$store = self::getContainer()->get( Store::class )->fetch();
