@@ -677,8 +677,31 @@ window.bp = window.bp || {};
 						);
 					}
 
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
+					if ( ! _.isUndefined( response.data ) ) {
+						var scopes   = response.data.scopes;
+						var count    = response.data.count;
+						var newCount = '';
+						if (
+							scopeElem.length > 0 &&
+							scopeElem.hasClass( 'selected' ) &&
+							! _.isUndefined( scopes ) &&
+							! _.isUndefined( scopes[ data.scope ] ) &&
+							'' !== scopes[ data.scope ]
+						) {
+							newCount = scopes[ data.scope ];
+						} else if (
+							! _.isUndefined( scopes ) &&
+							! _.isUndefined( scopes.all ) &&
+							'' !== scopes.all
+						) {
+							newCount = scopes.all;
+						} else if ( ! _.isUndefined( count ) ) {
+							newCount = count;
+						}
+
+						if ( '' !== newCount ) {
+							$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( newCount );
+						}
 					}
 
 					if ( 'reset' !== data.method ) {
@@ -902,7 +925,7 @@ window.bp = window.bp || {};
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
 
 			// Scope filters.
-			$document.on( 'change', this.objectNavParent + ' [data-bp-member-scope-filter]', this, this.scopeQuery );
+			$document.on( 'change', this.objectNavParent + ' .bb-rl-scope-filter select', this, this.scopeQuery );
 
 			// Refreshing.
 			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
