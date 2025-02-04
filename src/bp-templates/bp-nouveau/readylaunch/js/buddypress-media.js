@@ -2525,45 +2525,18 @@ window.bp = window.bp || {};
 						}
 
 						if ( edit_documents.length ) {
-							var mock_file          = false,
-								editDocumentLength = edit_documents.length;
-							for ( var d = 0; d < editDocumentLength; d++ ) {
-								mock_file = false;
-								self.dropzone_media[ dropzone_obj_key ].push(
-									{
-										'id': edit_documents[ d ].attachment_id,
-										'document_id': edit_documents[ d ].id,
-										'name': edit_documents[ d ].name,
-										'type': 'document',
-										'title': edit_documents[ d ].name,
-										'size': edit_documents[ d ].size,
-										'url': edit_documents[ d ].url,
-										'uuid': edit_documents[ d ].id,
-										'menu_order': d,
-										'saved': true
-									}
-								);
-
-								mock_file = {
-									name: edit_documents[ d ].name,
-									size: edit_documents[ d ].size,
-									accepted: true,
-									kind: 'document',
-									upload: {
-										name: edit_documents[ d ].name,
-										filename: edit_documents[ d ].name,
-										title: edit_documents[ d ].name,
-										size: edit_documents[ d ].size,
-										uuid: edit_documents[ d ].id
-									},
-									dataURL: edit_documents[ d ].url,
-									id: edit_documents[ d ].id
-								};
-
-								self.dropzone_obj[ dropzone_obj_key ].files.push( mock_file );
-								self.dropzone_obj[ dropzone_obj_key ].emit( 'addedfile', mock_file );
-								self.dropzone_obj[ dropzone_obj_key ].emit( 'complete', mock_file );
-							}
+							var replyTopicId = parseInt( $( '#new-post' ).find( '#bbp_reply_id' ).val() );
+							bp.Readylaunch.Utilities.injectFiles(
+								{
+									commonData        : edit_documents,
+									id                : replyTopicId,
+									self              : this,
+									fileType          : 'document',
+									dropzoneObj       : self.dropzone_obj[ dropzone_obj_key ],
+									dropzoneData      : self.dropzone_media[ dropzone_obj_key ],
+									dropzoneContainer : dropzone_container,
+								}
+							);
 							self.addDocumentIdsToForumsForm( dropzone_container );
 
 							// Disable other buttons( media/gif ).
@@ -2650,46 +2623,18 @@ window.bp = window.bp || {};
 						}
 
 						if ( edit_videos.length ) {
-							var mock_file       = false,
-								editVideoLength = edit_videos.length;
-							for ( var v = 0; v < editVideoLength; v++ ) {
-								mock_file = false;
-								self.dropzone_media[ dropzone_obj_key ].push(
-									{
-										'id': edit_videos[ v ].attachment_id,
-										'video_id': edit_videos[ v ].id,
-										'name': edit_videos[ v ].name,
-										'type': 'video',
-										'title': edit_videos[ v ].name,
-										'size': edit_videos[ v ].size,
-										'url': edit_videos[ v ].url,
-										'uuid': edit_videos[ v ].id,
-										'thumb': edit_videos[ v ].thumb,
-										'menu_order': v,
-										'saved': true,
-									}
-								);
-
-								mock_file = {
-									name: edit_videos[ v ].name,
-									size: edit_videos[ v ].size,
-									accepted: true,
-									kind: 'video',
-									upload: {
-										name: edit_videos[ v ].name,
-										title: edit_videos[ v ].name,
-										size: edit_videos[ v ].size,
-										uuid: edit_videos[ v ].id
-									},
-									dataURL: edit_videos[ v ].url,
-									dataThumb: edit_videos[ v ].thumb,
-									id: edit_videos[ v ].id
-								};
-
-								self.dropzone_obj[ dropzone_obj_key ].files.push( mock_file );
-								self.dropzone_obj[ dropzone_obj_key ].emit( 'addedfile', mock_file );
-								self.dropzone_obj[ dropzone_obj_key ].emit( 'complete', mock_file );
-							}
+							var replyTopicId = parseInt( $( '#new-post' ).find( '#bbp_reply_id' ).val() );
+							bp.Readylaunch.Utilities.injectFiles(
+								{
+									commonData        : edit_videos,
+									id                : replyTopicId,
+									self              : this,
+									fileType          : 'video',
+									dropzoneObj       : self.dropzone_obj[ dropzone_obj_key ],
+									dropzoneData      : self.dropzone_media[ dropzone_obj_key ],
+									dropzoneContainer : dropzone_container,
+								}
+							);
 							self.addVideoIdsToForumsForm( dropzone_container );
 
 							// Disable other buttons( media/gif ).
