@@ -1,6 +1,7 @@
 /* jshint browser: true */
 /* global bp, bbReadyLaunchFront */
 /* @version 1.0.0 */
+
 window.bp = window.bp || {};
 
 (
@@ -793,7 +794,7 @@ window.bp = window.bp || {};
 			}
 		};
 
-		// Launch BP Zoom.
+		// Launch BP ReadyLaunch.
 		bp.Readylaunch.start();
 
 	}
