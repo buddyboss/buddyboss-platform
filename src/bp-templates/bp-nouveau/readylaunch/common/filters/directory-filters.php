@@ -18,7 +18,7 @@ $bb_get_filter_id = bp_nouveau_get_filter_id();
 
 <div id="bb-rl-dir-filters" class="component-filters clearfix">
 	<div id="bb-rl-<?php bp_nouveau_filter_container_id(); ?>" class="last filter bb-rl-filter">
-		<label class="bp-screen-reader-text" for="<?php echo esc_attr( $bb_get_filter_id ); ?>">
+		<label class="bb-rl-filter-label" for="<?php echo esc_attr( $bb_get_filter_id ); ?>">
 			<span ><?php bp_nouveau_filter_label(); ?></span>
 		</label>
 		<div class="select-wrap">

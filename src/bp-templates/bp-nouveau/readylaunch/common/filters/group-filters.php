@@ -46,7 +46,7 @@ if ( ! empty( $group_types ) ) {
 	?>
 	<div id="group-type-filters" class="component-filters clearfix bb-rl-filter">
 		<div id="group-type-select" class="last filter">
-			<label class="bp-screen-reader-text" for="group-type-order-by">
+			<label class="bb-rl-filter-label" for="group-type-order-by">
 				<span><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
@@ -71,7 +71,7 @@ if ( ! empty( $group_types ) ) {
 if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
 	<div id="bb-rl-groups-scope-filters" class="component-filters clearfix">
 		<div id="bb-rl-groups-scope-select" class="last filter bb-rl-scope-filter bb-rl-filter">
-			<label class="bp-screen-reader-text" for="bb-rl-groups-scope-options">
+			<label class="bb-rl-filter-label" for="bb-rl-groups-scope-options">
 				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
 			</label>
 			<div class="select-wrap">
