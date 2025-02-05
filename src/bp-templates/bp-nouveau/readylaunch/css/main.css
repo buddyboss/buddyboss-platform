@@ -503,6 +503,22 @@ ul.bp-list {
   color: var(--bb-rl-text-color);
 }
 
+.atwho-view ul li.list-loader {
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.atwho-view ul li.list-loader:before {
+  content: "";
+  display: inline-block;
+  height: 16px;
+  vertical-align: middle;
+  width: 16px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+}
+
 .atwho-view small {
   color: var(--bb-rl-text-secondary-color);
 }

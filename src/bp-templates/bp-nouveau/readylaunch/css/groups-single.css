@@ -279,3 +279,36 @@
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.request-membership:before {
   content: "\e308";
 }
+
+.bb-rl-modal-content .bb-rl-manage-group-container {
+  display: flex;
+}
+
+.bb-rl-modal-content .bb-rl-manage-group-container .bp-navs {
+  max-width: 248px;
+  width: 33%;
+  padding-right: 10px;
+  border-right: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-modal-content .bb-rl-manage-group-container .bp-navs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bb-rl-modal-content .bb-rl-manage-group-container .bp-navs ul li {
+  display: block;
+}
+
+.bb-rl-modal-content .bb-rl-manage-group-container .bp-navs ul li a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: 10px var(--bb-rl-space-200);
+  color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
