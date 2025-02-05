@@ -2827,7 +2827,7 @@ window.bp = window.bp || {};
 					imageCenter   = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2,
 					currentTarget = $( e.currentTarget );
 				if ( imageHeight <= currentTarget.closest( '#header-cover-image' ).height() ) {
-					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-rl-bb-model-header"><h4>' + bbRLMedia.cover_photo_size_error_header + '</h4><a class="bb-rl-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + bbRLMedia.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
+					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-rl-bb-model-header"><h4>' + bbRLMedia.cover_photo_size_error_header + '</h4><a class="bb-rl-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + bbRLMedia.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
 					e.preventDefault();
 					return;
 				}
