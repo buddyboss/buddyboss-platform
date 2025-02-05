@@ -4582,3 +4582,37 @@ body.admin-bar .bb-rl-left-panel {
   padding-left: var(--bb-rl-space-300);
   margin-bottom: var(--bb-rl-space-200);
 }
+
+.bb-rl-profile-header {
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-400) var(--bb-rl-space-300);
+}
+
+.bb-rl-profile-avatar {
+  width: 144px;
+  height: 144px;
+}
+
+.bb-rl-profile-avatar img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.bb-rl-main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-main-nav > ul > li > a {
+  display: inline-block;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  display: inline-flex;
+  align-items: center;
+}
