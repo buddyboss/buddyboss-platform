@@ -160,6 +160,7 @@
 		background-color: var(--bb-rl-background-secondary-color);
 		border-radius: var(--bb-rl-radius-lg);
 		position: relative;
+		width: 100%;
 
 		.bb-rl-document-preview-wrap {
 			display: flex;
@@ -263,6 +264,11 @@
 			}
 		}
 
+		&.is-visible .bb-rl-document-action-wrap > .bb-rl-document-action_more {
+			border-color: var(--bb-rl-border-secondary-color);
+			background-color: var(--bb-rl-background-secondary-hover-color);
+		}
+
 		.bb-rl-document-action-wrap {
 			position: absolute;
 			right: 15px;
@@ -274,8 +280,20 @@
 				right: 10px;
 			}
 
+			.bb_rl_more_dropdown {
+				width: 210px;
+			}
+
+			.bb-rl-document-action_more i {
+				font-weight: 700;
+			}
+
 			> a {
+				display: inline-flex;
+				padding: var(--bb-rl-space-50);
 				transition: all 0.3s ease;
+				border: 0.5px solid transparent;
+				border-radius: 6px;
 
 				i {
 					font-size: 24px;
@@ -341,7 +359,7 @@
 						}
 
 						&.bb_rl_copy_download_file_url a:before {
-							content: "\e1cc";
+							content: "\e20c";
 						}
 					}
 				}
@@ -831,8 +849,8 @@
 
 .bb-rl-more_dropdown-wrap {
 	position: absolute;
-	top: var(--bb-rl-space-100);
-	right: var(--bb-rl-space-100);
+	top: var(--bb-rl-space-200);
+	right: var(--bb-rl-space-200);
 	z-index: var(--bb-rl-z-index-dropdown);
 	visibility: hidden;
 	opacity: 0;
@@ -847,29 +865,26 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--bb-rl-text-white-color);
-	font-size: 16px;
+	color: var(--bb-rl-icon-tertiary-color);
+	font-size: 24px;
 	padding: var(--bb-rl-space-50);
-	background-color: rgba(0, 0, 0, 0.6);
-	border-radius: var(--bb-rl-radius-sm);
+	background-color: var(--bb-rl-background-black-color);
+	border: 1px solid transparent;
+	border-radius: var(--bb-rl-radius-full);
 
 	i {
 		font-style: normal;
 		font-weight: 700;
 	}
-
-	.is-visible &,
-	&:hover {
-		background-color: rgba(0, 0, 0, 0.8);
-	}
 }
 
 .bb_rl_more_dropdown {
 	position: absolute;
-	top: 30px;
+	top: 40px;
 	right: 0;
 	z-index: var(--bb-rl-z-index-dropdown);
 	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
 	border-radius: var(--bb-rl-radius-md);
 	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 	padding: var(--bb-rl-space-100) 0;
