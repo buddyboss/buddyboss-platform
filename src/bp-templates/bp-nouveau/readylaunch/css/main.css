@@ -4995,6 +4995,8 @@ body.admin-bar .bb-rl-left-panel {
 
 .bb-rl-groups .bp-list.grid .item-entry .group-footer-wrap {
   margin: var(--bb-rl-space-200) 0 0;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .bb-rl-groups .bp-list.grid .item-entry .groups-loop-buttons {
@@ -5217,6 +5219,13 @@ body.admin-bar .bb-rl-left-panel {
 
 .bb-rl-groups .item-entry .bs-group-members .bs-group-member [class*=" bb-icon-"]:hover {
   background-color: #e3e3e3;
+}
+
+.bb-rl-groups .item-entry .bb-rl-more-group-member a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .bb-rl-groups .item-list.grid .only-list-view {

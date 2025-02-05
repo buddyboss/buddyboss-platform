@@ -16,6 +16,8 @@
 
 			.group-footer-wrap {
 				margin: var(--bb-rl-space-200) 0 0;
+				flex-direction: column;
+				align-items: flex-start;
 			}
 
 			.groups-loop-buttons {
@@ -223,6 +225,15 @@
 						background-color: #e3e3e3;
 					}
 				}
+			}
+		}
+
+		.bb-rl-more-group-member {
+
+			a {
+
+				@include bb-rl-label-heading-bolder;
+				color: var(--bb-rl-text-tertiary-color);
 			}
 		}
 	}
