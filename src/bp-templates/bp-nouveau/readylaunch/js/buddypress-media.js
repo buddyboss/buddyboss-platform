@@ -2715,8 +2715,8 @@ window.bp = window.bp || {};
 			this.moveToIdPopup   = eventTarget.attr( 'id' );
 			this.moveToTypePopup = eventTarget.attr( 'data-type' );
 
-			if ( eventTarget.closest( '.activity-inner' ).length > 0 ) {
-				media_move_popup = eventTarget.closest( '.activity-inner' );
+			if ( eventTarget.closest( '.bb-rl-activity-inner' ).length > 0 ) {
+				media_move_popup = eventTarget.closest( '.bb-rl-activity-inner' );
 			} else if ( eventTarget.closest( '#media-stream.media' ).length > 0 ) {
 				media_move_popup = eventTarget.closest( '#media-stream.media' );
 			} else if ( eventTarget.closest( '.comment-item' ).length > 0 ) {
@@ -2728,13 +2728,13 @@ window.bp = window.bp || {};
 			media_parent_id = eventTarget.closest( '.bb-rl-media-action-wrap' ).siblings( 'a' ).data( 'album-id' );
 
 			media_move_popup.find( '.bb-rl-media-move' ).attr( 'id', media_id );
-			media_move_popup.find( '.bb-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
+			media_move_popup.find( '.bb-rl-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
 
 			// For Activity Feed.
 			if ( eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
 				currentTarget = '#' + eventTarget.closest( '.bb-rl-conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bb-rl-media-move-file';
 			} else {
-				currentTarget = '#' + eventTarget.closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bb-rl-media-move-file';
+				currentTarget = '#' + eventTarget.closest( 'li.activity-item' ).attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-media-move-file';
 			}
 
 			$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );
@@ -2817,11 +2817,11 @@ window.bp = window.bp || {};
 					$( this ).addClass( 'selected' ).parent().addClass( 'is_active' ).siblings().removeClass( 'is_active' ).children( 'span' ).removeClass( 'selected' );
 					var parentsOpen = $( document ).find( 'a.bb-rl-open-media-theatre[data-id="' + media_move_popup.find( '.bb-rl-media-move' ).attr( 'id' ) + '"]' ).data( 'album-id' );
 					if ( Number( parentsOpen ) === Number( $( e.currentTarget ).data( 'id' ) ) ) {
-						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
+						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-rl-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
 					} else {
-						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-model-footer .bb-rl-media-move' ).removeClass( 'is-disabled' );
+						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-rl-model-footer .bb-rl-media-move' ).removeClass( 'is-disabled' );
 					}
-					if ( $( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-model-footer .bb-rl-media-move' ).hasClass( 'is-disabled' ) ) {
+					if ( $( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-rl-model-footer .bb-rl-media-move' ).hasClass( 'is-disabled' ) ) {
 						return; // return if parent album is same.
 					}
 					$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-rl-album-selected-id' ).val( $( e.currentTarget ).data( 'id' ) );
@@ -2845,9 +2845,9 @@ window.bp = window.bp || {};
 					}
 
 					if ( parentsOpen === $( e.currentTarget ).data( 'id' ) ) {
-						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
+						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-rl-model-footer .bb-rl-media-move' ).addClass( 'is-disabled' );
 					} else {
-						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-model-footer .bb-rl-media-move' ).removeClass( 'is-disabled' );
+						$( e.currentTarget ).closest( '.bb-rl-media-move-file' ).find( '.bb-rl-model-footer .bb-rl-media-move' ).removeClass( 'is-disabled' );
 					}
 
 				}
@@ -5368,7 +5368,7 @@ window.bp = window.bp || {};
 				}
 			}
 
-			$( '.modal-container .bb-model-footer, .modal-container #bp-media-document-prev' ).hide();
+			$( '.bb-rl-modal-container .bb-rl-model-footer, .bb-rl-modal-container #bp-media-document-prev' ).hide();
 			$( '.bb-field-wrap-search' ).hide();
 			$( '.bb-rl-document-open-create-popup-folder' ).hide();
 			$( '.bb-rl-location-' + actionType + '-list-wrap-main' ).hide();
@@ -5379,18 +5379,18 @@ window.bp = window.bp || {};
 			var eventTarget     = $( event.currentTarget ),
 			    $folderLocation = eventTarget.closest( '.bb-rl-has-folderlocationUI' ),
 			    popupTitle      = 'folder' === actionType ? bbRlMedia.create_folder : bbRlMedia.create_album_title;
-			$folderLocation.find( '.bb-model-header' ).children().hide();
-			$folderLocation.find( '.bb-model-header' ).append( '<p>' + popupTitle + '</p>' );
-			$( '.modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
+			$folderLocation.find( '.bb-rl-modal-header' ).children().hide();
+			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
+			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {
-			$( '.modal-container .bb-model-footer' ).show();
+			$( '.bb-rl-modal-container .bb-rl-model-footer' ).show();
 			$( '.bb-field-wrap-search' ).show();
 			$( '.bb-rl-document-open-create-popup-folder' ).show();
 			if ( 'album' === actionType ) {
-				$( '.modal-container:visible .bb-rl-video-open-create-popup-album' ).show();
+				$( '.bb-rl-modal-container:visible .bb-rl-video-open-create-popup-album' ).show();
 			}
 			$( '.bb-rl-location-' + actionType + '-list-wrap-main' ).show();
 			if ( 'folder' === actionType ) {
@@ -5405,8 +5405,8 @@ window.bp = window.bp || {};
 				$( '.bb-rl-media-create-popup-album-submit.loading' ).removeClass( 'loading' );
 			}
 			var $folderLocationUi = $( event.currentTarget ).closest( '.bb-rl-has-folderlocationUI' );
-			$folderLocationUi.find( '.bb-model-header' ).children().show();
-			$folderLocationUi.find( '.bb-model-header p' ).hide();
+			$folderLocationUi.find( '.bb-rl-modal-header' ).children().show();
+			$folderLocationUi.find( '.bb-rl-modal-header p' ).hide();
 		},
 
 		submitCreateFolderAlbumInPopup : function ( event, actionType, folderOrAlbum ) {
@@ -5417,7 +5417,7 @@ window.bp = window.bp || {};
 			    targetPopup        = eventCurrentTarget.closest( '.open-popup' ),
 			    currentAction      = $( targetPopup ).find( '.bb-rl-' + actionType + '-create-popup-' + folderOrAlbum + '-submit' ),
 			    hiddenValue        = targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val(),
-			    titleSelector      = eventCurrentTarget.closest( '.modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
+			    titleSelector      = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
 			    title              = $.trim( titleSelector.val() );
 			if ( 'document' === actionType ) {
 				var pattern     = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
@@ -5442,8 +5442,8 @@ window.bp = window.bp || {};
 				privacy = 'grouponly';
 				groupId = this.moveToIdPopup;
 			} else {
-				privacy         = eventCurrentTarget.closest( '.modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' ).val();
-				privacySelector = eventCurrentTarget.closest( '.modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' );
+				privacy         = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' ).val();
+				privacySelector = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + ' #bb-rl-' + folderOrAlbum + '-privacy' );
 			}
 
 			if ( '' === title ) {
@@ -5501,9 +5501,9 @@ window.bp = window.bp || {};
 								}
 
 								targetPopup.find( 'ul' + listClass + ' span#' + newParent ).trigger( 'click' );
-								targetPopup.find( '.bb-model-footer' ).show();
+								targetPopup.find( '.bb-rl-model-footer' ).show();
 								if ( 'document' === actionType ) {
-									targetPopup.find( '.bb-model-footer, #bp-media-' + actionType + '-prev' ).show();
+									targetPopup.find( '.bb-rl-model-footer, #bp-media-' + actionType + '-prev' ).show();
 								}
 								targetPopup.find( '.bb-field-wrap-search' ).show();
 								targetPopup.find( '.bb-rl-' + actionType + '-open-create-popup-' + folderOrAlbum ).show();
@@ -5514,8 +5514,8 @@ window.bp = window.bp || {};
 								}
 								targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val();
 								targetPopup.find( '.bb-rl' + folderOrAlbum + '-selected-id' ).val( newParent );
-								targetPopup.find( '.bb-model-header' ).children().show();
-								targetPopup.find( '.bb-model-header p' ).hide();
+								targetPopup.find( '.bb-rl-modal-header' ).children().show();
+								targetPopup.find( '.bb-rl-modal-header p' ).hide();
 								titleSelector.val( '' );
 
 								if ( '' !== privacySelector ) {
