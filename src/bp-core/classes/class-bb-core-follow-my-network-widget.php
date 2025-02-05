@@ -66,10 +66,6 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			}
 		}
 
-		if ( empty( $instance['max_users'] ) ) {
-			$instance['max_users'] = 15;
-		}
-
 		// Get widget settings.
 		$settings = $this->parse_settings( $instance );
 
@@ -122,7 +118,6 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		$title = $settings['link_title'] ? '<a href="' . $members_dir_url . '">' . $title . '</a>' : $title;
 
 		do_action( 'bb_before_my_network_widget' );
-
 		echo $args['before_widget'];
 		echo $args['before_title']
 			. $title
@@ -142,7 +137,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		if ( bp_has_members(
 			array(
 				'include'             => $ids,
-				'per_page'            => $instance['max_users'],
+				'per_page'            => $settings['max_users'],
 				'populate_extras'     => false,
 				'member_type__not_in' => false,
 			)

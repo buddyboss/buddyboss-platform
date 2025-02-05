@@ -184,7 +184,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			$instance,
 			array(
 				'title'       => __( 'Recently Active Members', 'buddyboss' ),
-				'max_members' => 15,
+				'max_members' => 10,
 			),
 			'recently_active_members_widget_settings'
 		);

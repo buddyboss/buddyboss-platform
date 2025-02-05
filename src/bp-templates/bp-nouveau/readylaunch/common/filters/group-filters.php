@@ -44,9 +44,9 @@ $group_types = bp_get_active_group_types( $args );
 
 if ( ! empty( $group_types ) ) {
 	?>
-	<div id="group-type-filters" class="component-filters clearfix">
+	<div id="group-type-filters" class="component-filters clearfix bb-rl-filter">
 		<div id="group-type-select" class="last filter">
-			<label class="bp-screen-reader-text" for="group-type-order-by">
+			<label class="bb-rl-filter-label" for="group-type-order-by">
 				<span><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
@@ -65,4 +65,40 @@ if ( ! empty( $group_types ) ) {
 		</div>
 	</div>
 	<?php
+}
+
+// Group scope as dropdown.
+if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
+	<div id="bb-rl-groups-scope-filters" class="component-filters clearfix">
+		<div id="bb-rl-groups-scope-select" class="last filter bb-rl-scope-filter bb-rl-filter">
+			<label class="bb-rl-filter-label" for="bb-rl-groups-scope-options">
+				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
+			</label>
+			<div class="select-wrap">
+				<select id="bb-rl-groups-scope-options" data-bp-group-scope-filter="groups">
+					<?php
+					while ( bp_nouveau_nav_items() ) :
+						bp_nouveau_nav_item();
+						if ( 'bb-rl-groups-create' === bp_nouveau_get_nav_id() ) {
+							break;
+						}
+						?>
+						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
+							<?php 
+								if ( 'bb-rl-groups-all' === bp_nouveau_get_nav_id() ) {
+									esc_html_e( 'All', 'buddyboss' );
+								} else {
+									bp_nouveau_nav_link_text();
+								}
+							?>
+						</option>
+						<?php
+					endwhile;
+					?>
+				</select>
+				<span class="select-arrow" aria-hidden="true"></span>
+			</div>
+		</div>
+	</div>
+<?php
 }
