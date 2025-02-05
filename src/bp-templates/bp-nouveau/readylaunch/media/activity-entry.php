@@ -46,21 +46,18 @@ echo ( $media_template->current_media > ( $max_length - 1 ) ) ? esc_attr( 'hide 
 echo 1 === $media_count ? esc_attr( 'act-grid-1-1 ' ) : '';
 echo ( 1 === $media_count || $media_count > 1 ) && 0 === $media_template->current_media ? esc_attr( 'act-grid-1-1 ' ) : '';
 echo $media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';
-echo $width > $height ? 'bb-horizontal-layout' : '';
-echo $height > $width || $width === $height ? esc_attr( 'bb-vertical-layout' ) : '';
 echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ? esc_attr( ' no_more_option ' ) : '';
 ?>
 	" data-id="<?php echo esc_attr( $bp_get_media_id ); ?>">
-	<div class="bb-rl-media-action-wrap">
+	<div class="bb-rl-media-action-wrap bb-rl-more_dropdown-wrap">
 		<?php
 		if ( $can_move || $can_delete ) {
 			if ( bp_loggedin_user_id() === $media_user_id || bp_current_user_can( 'bp_moderate' ) ) {
 				?>
-				<a href="#" class="bb-rl-media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+				<a href="#" class="bb-rl-media-action_more bb_rl_more_dropdown__action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-dots-three"></i>
 				</a>
 				<div class="bb-rl-media-action_list bb_rl_more_dropdown">
-					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul class="bb-rl-conflict-activity-ul-li-comment">
 						<?php
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
