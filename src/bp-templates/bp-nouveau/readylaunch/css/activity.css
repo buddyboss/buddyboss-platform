@@ -1168,7 +1168,7 @@
   content: "\e3e2";
 }
 
-.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.download-activity:before {
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.cloud-download:before, .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.download-activity:before {
   content: "\e20c";
 }
 
