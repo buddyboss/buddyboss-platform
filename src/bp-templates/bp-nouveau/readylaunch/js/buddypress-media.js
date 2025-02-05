@@ -868,7 +868,7 @@ window.bp = window.bp || {};
 			var $target     = $( event.currentTarget ),
 			    isSelecting = ! $target.hasClass( 'selected' );
 
-			this.toggleMediaSelection( isSelecting );
+			this.setMediaSelectionState( isSelecting );
 
 			$target.toggleClass( 'selected', isSelecting ).data( 'bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselectall : BP_Nouveau.media.i18n_strings.selectall );
 		},
@@ -1677,95 +1677,59 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function () {
 			var self = this;
-
-			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
-				self.dropzone_obj.destroy();
-			}
-			self.dropzone_media = [];
-			var keySelector     = $( 'div#bp-group-messages-post-media-uploader' );
-			keySelector.html( '' );
-			keySelector.addClass( 'closed' ).removeClass( 'open' );
-			$( '#bp-group-messages-media-button' ).removeClass( 'active' );
-			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val( '' );
+			self.resetGroupMessagesAttachmentComponent( {
+				dropzoneObj  : self.dropzone_obj,
+				dropzoneData : self.dropzone_media,
+				type         : 'media',
+			} );
 		},
 
 		resetGroupMessagesDocumentComponent: function () {
 			var self = this;
-			if ( self.document_dropzone_obj && typeof self.document_dropzone_obj !== 'undefined' ) {
-				self.document_dropzone_obj.destroy();
-			}
-			self.dropzone_media = [];
-			var keySelector     = $( 'div#bp-group-messages-post-document-uploader' );
-			keySelector.html( '' );
-			keySelector.addClass( 'closed' ).removeClass( 'open' );
-			$( '#bp-group-messages-document-button' ).removeClass( 'active' );
-			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val( '' );
+			self.resetGroupMessagesAttachmentComponent( {
+				dropzoneObj  : self.document_dropzone_obj,
+				dropzoneData : self.dropzone_media,
+				type         : 'document',
+			} );
 		},
 
 		resetGroupMessagesVideoComponent: function () {
 			var self = this;
-			if ( self.video_dropzone_obj && typeof self.video_dropzone_obj !== 'undefined' ) {
-				self.video_dropzone_obj.destroy();
-			}
-			self.dropzone_media = [];
-			var keySelector     = $( 'div#bp-group-messages-post-video-uploader' );
-			keySelector.html( '' );
-			keySelector.addClass( 'closed' ).removeClass( 'open' );
-			$( '#bp-group-messages-video-button' ).removeClass( 'active' );
-			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_video' ).val( '' );
+			self.resetGroupMessagesAttachmentComponent( {
+				dropzoneObj  : self.video_dropzone_obj,
+				dropzoneData : self.dropzone_media,
+				type         : 'video',
+			} );
 		},
 
 		resetForumsMediaComponent: function ( dropzone_container_key ) {
 			var self = this;
-			$( '#forums-media-button' ).removeClass( 'active' );
-
-			if ( typeof dropzone_container_key !== 'undefined' ) {
-				if ( typeof self.dropzone_obj[ dropzone_container_key ] !== 'undefined' ) {
-					self.dropzone_obj[ dropzone_container_key ].destroy();
-					self.dropzone_obj.splice( dropzone_container_key, 1 );
-					self.dropzone_media.splice( dropzone_container_key, 1 );
-				}
-
-				var keySelector = $( 'div#forums-post-media-uploader' );
-				keySelector.html( '' );
-				keySelector.addClass( 'closed' ).removeClass( 'open' );
-			}
+			self.resetForumsAttachmentComponent( {
+				dropzoneObj       : self.dropzone_obj,
+				dropzoneData      : self.dropzone_media,
+				type              : 'media',
+				dropzoneContainer : dropzone_container_key
+			} );
 		},
 
 		resetForumsDocumentComponent: function ( dropzone_container_key ) {
 			var self = this;
-
-			$( '#forums-document-button' ).removeClass( 'active' );
-
-			if ( typeof dropzone_container_key !== 'undefined' ) {
-				if ( typeof self.dropzone_obj[ dropzone_container_key ] !== 'undefined' ) {
-					self.dropzone_obj[ dropzone_container_key ].destroy();
-					self.dropzone_obj.splice( dropzone_container_key, 1 );
-					self.dropzone_media.splice( dropzone_container_key, 1 );
-				}
-
-				var keySelector = $( 'div#forums-post-document-uploader' );
-				keySelector.html( '' );
-				keySelector.addClass( 'closed' ).removeClass( 'open' );
-			}
+			self.resetForumsAttachmentComponent( {
+				dropzoneObj       : self.dropzone_obj,
+				dropzoneData      : self.dropzone_media,
+				type              : 'document',
+				dropzoneContainer : dropzone_container_key
+			} );
 		},
 
 		resetForumsVideoComponent: function ( dropzone_container_key ) {
 			var self = this;
-
-			$( '#forums-video-button' ).removeClass( 'active' );
-
-			if ( typeof dropzone_container_key !== 'undefined' ) {
-				if ( typeof self.dropzone_obj[ dropzone_container_key ] !== 'undefined' ) {
-					self.dropzone_obj[ dropzone_container_key ].destroy();
-					self.dropzone_obj.splice( dropzone_container_key, 1 );
-					self.dropzone_media.splice( dropzone_container_key, 1 );
-				}
-
-				var keySelector = $( 'div#forums-post-video-uploader' );
-				keySelector.html( '' );
-				keySelector.addClass( 'closed' ).removeClass( 'open' );
-			}
+			self.resetForumsAttachmentComponent( {
+				dropzoneObj       : self.dropzone_obj,
+				dropzoneData      : self.dropzone_media,
+				type              : 'video',
+				dropzoneContainer : dropzone_container_key
+			} );
 		},
 
 		openForumsUploader: function ( event ) {
@@ -5765,7 +5729,7 @@ window.bp = window.bp || {};
 			}, 0 );
 		},
 
-		toggleMediaSelection : function ( select ) {
+		setMediaSelectionState : function ( select ) {
 			var $mediaList  = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ),
 			    isSelecting = select === true,
 			    actions     = ['media'];
@@ -5783,6 +5747,36 @@ window.bp = window.bp || {};
 					}
 				);
 			} );
+		},
+
+		resetGroupMessagesAttachmentComponent: function ( args ) {
+			var dropzoneObj = args.dropzoneObj;
+			if ( dropzoneObj && typeof dropzoneObj.destroy === 'function' ) {
+				dropzoneObj.destroy();
+			}
+			args.dropzoneData = [];
+			var keySelector   = $( 'div#bp-group-messages-post-' + args.type + '-uploader' );
+			keySelector.html( '' );
+			keySelector.addClass( 'closed' ).removeClass( 'open' );
+			$( '#bp-group-messages-' + args.type + '-button' ).removeClass( 'active' );
+			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_' + args.type ).val( '' );
+		},
+
+		resetForumsAttachmentComponent: function ( args ) {
+			$( '#forums-' + args.type + '-button' ).removeClass( 'active' );
+			var dropzoneObj       = args.dropzoneObj,
+			    dropzoneData      = args.dropzoneData,
+			    dropzoneContainer = args.dropzoneContainer;
+			if ( typeof dropzoneContainer !== 'undefined' ) {
+				if ( typeof dropzoneObj[ dropzoneContainer ] !== 'undefined' ) {
+					dropzoneObj[ dropzoneContainer ].destroy();
+					dropzoneObj.splice( dropzoneContainer, 1 );
+					dropzoneData.splice( dropzoneContainer, 1 );
+				}
+				var keySelector = $( 'div#forums-post-' + args.type + '-uploader' );
+				keySelector.html( '' );
+				keySelector.addClass( 'closed' ).removeClass( 'open' );
+			}
 		},
 	};
 
