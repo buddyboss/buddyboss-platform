@@ -1,3 +1,11 @@
+.bb-rl-action-popup {
+	display: none;
+
+	&.open {
+		display: block;
+	}
+}
+
 .bb-rl-modal-mask {
 	position: fixed;
 	z-index: 999991;

@@ -22,6 +22,12 @@
 	line-height: var(--bb-rl-base-line-small);
 }
 
+@mixin bb-rl-label-heading-md {
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 22px;
+}
+
 @mixin bb-rl-button {
 	display: inline-flex;
 	align-items: center;

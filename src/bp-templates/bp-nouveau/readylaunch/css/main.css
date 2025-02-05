@@ -2712,6 +2712,14 @@ button[data-balloon] {
   border-radius: 100%;
 }
 
+.bb-rl-action-popup {
+  display: none;
+}
+
+.bb-rl-action-popup.open {
+  display: block;
+}
+
 .bb-rl-modal-mask {
   position: fixed;
   z-index: 999991;

@@ -279,6 +279,10 @@
   content: "\e308";
 }
 
+.bb-rl-modal-content {
+  margin-bottom: calc(var(--bb-rl-space-200) / 2);
+}
+
 .bb-rl-modal-content .bb-rl-manage-group-container {
   display: flex;
 }
@@ -310,4 +314,98 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
+}
+
+.highlight.bb-rl-group-meta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.highlight.bb-rl-group-meta .bb-rl-group-meta-figure {
+  width: var(--bb-rl-space-300);
+  flex: 0 0 var(--bb-rl-space-300);
+}
+
+.highlight.bb-rl-group-meta .bb-rl-group-meta-figure i {
+  font-size: var(--bb-rl-space-300);
+  color: var(--bb-rl-icon-primary-color);
+}
+
+.highlight.bb-rl-group-meta .bb-rl-group-meta-data h3 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  margin-bottom: 2px;
+}
+
+.highlight.bb-rl-group-meta .bb-rl-group-meta-data .bb-rl-meta-desc {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  display: block;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-wrap-box {
+  border-top: 1px solid var(--bb-rl-border-color);
+  padding-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-box h3 {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-group-organizers {
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-organizers .item-entry {
+  padding: var(--bb-rl-space-100) 0;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-organizers .item-entry .list-wrap-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-organizers .item-entry .member-name {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.bb-rl-group-organizers .item-entry .list-meta {
+  display: flex;
+  align-items: center;
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+.bb-rl-group-organizers .item-avatar {
+  width: var(--bb-rl-space-600);
+}
+
+.bb-rl-group-organizers .item-avatar img {
+  width: var(--bb-rl-space-600);
+  height: auto;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.bb-rl-group-desc .group-description {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  font-weight: 400;
+  color: var(--bb-rl-text-secondary-color);
 }

@@ -32,7 +32,6 @@ window.bp = window.bp || {};
 				this.addListeners();
 				this.mobileSubMenu();
 				this.gridListFilter();
-				// this.collapsibleContextNav();
 
 				this.bbReloadWindow();
 			},
@@ -297,44 +296,6 @@ window.bp = window.bp || {};
 					$( '.header-aside div.menu-item-has-children' ).removeClass( 'selected' );
 				}
 			},
-
-			/**
-		 * Open context nav.
-		 * @param e
-		 */
-		collapsibleContextNav: function () {
-
-			$( document ).on( 'click', '.bb-rl-container .bb_more_options_action', function ( e ) {
-				e.preventDefault();
-
-				var $button = $( this );
-				var $dropdown = $button.siblings( '.bb_more_dropdown' );
-
-				// Close other dropdowns
-				$( '.bb_more_dropdown' ).not( $dropdown ).hide();
-				$( '.bb_more_options_action' ).not( $button ).removeClass( 'active' );
-
-				if ( $dropdown.is( ':visible' ) ) {
-					$dropdown.hide();
-					$button.removeClass( 'active' );
-				} else {
-					$dropdown.show();
-					$button.addClass( 'active' );
-				}
-			} );
-
-			// Close dropdown clicked outside
-			$( document ).on( 'click', function ( e ) {
-				if ( !$( e.target ).closest( '.bb-rl-context-wrap' ).length ) {
-					$( '.bb_more_dropdown' ).hide();
-					$( '.bb_more_options_action' ).removeClass( 'active' );
-				}
-			} );
-
-			$( document ).on( 'click', '.bb-rl-container .bb_more_dropdown', function ( e ) {
-				e.stopPropagation();
-			} );
-		},
 
 		/**
 			 * Show header notification dropdowns
