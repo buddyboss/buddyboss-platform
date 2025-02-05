@@ -2493,7 +2493,6 @@ window.bp = window.bp || {};
 
 				if ( ! $firstVisibleRadio.length ) {
 					$( '#report-category-other' ).attr( 'checked', true ).trigger( 'click' );
-					$( 'label[for="report-category-other"]' ).hide();
 				}
 
 				if ( 'undefined' !== typeof reportType ) {
