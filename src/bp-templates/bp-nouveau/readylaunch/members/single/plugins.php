@@ -5,9 +5,8 @@
  * 3rd-party plugins should use this template to easily add template
  * support to their plugins for the members component.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/plugins.php.
+ * @since BuddyBoss [BBVERSION]
  *
- * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
 

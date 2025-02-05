@@ -2,8 +2,6 @@
 /**
  * The template for members loop
  *
- * This template can be overridden by copying it to yourtheme/readylaunch/members/members-loop.php.
- *
  * @since BuddyBoss [BBVERSION]
  *
  * @version 1.0.0

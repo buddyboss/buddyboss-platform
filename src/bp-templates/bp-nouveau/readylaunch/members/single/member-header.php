@@ -2,9 +2,8 @@
 /**
  * The template for users header
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/member-header.php.
+ * @since BuddyBoss [BBVERSION]
  *
- * @since   BuddyPress 1.0.0
  * @version 1.0.0
  */
 
@@ -51,17 +50,18 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	if ( $bp_is_my_profile ) {
 		$my_profile = 'my_profile';
 	}
+
+	$bp_nouveau = bp_nouveau();
 	?>
 
-	<div id="cover-image-container" class="item-header-wrap <?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?> bb-cover-image-container">
+	<div id="bb-rl-profile-container" class="<?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?>">
 
-		<div id="item-header-cover-image" class="<?php echo esc_attr( bp_disable_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
-
+		<div id="bb-rl-profile-item-header" class="item-header-wrap flex">
 			<?php
 			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $bp_displayed_user_id ) ? 'bp-user-suspended' : '';
 			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $bp_displayed_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<div id="item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
+			<div id="bb-rl-item-header-avatar" class="<?php echo esc_attr( $moderation_class ); ?>">
 				<?php
 				if ( $is_enabled_online_status ) {
 					bb_user_presence_html( $bp_displayed_user_id );
@@ -69,139 +69,150 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 				if ( $bp_is_my_profile && ! bp_disable_avatar_uploads() ) {
 					?>
-					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
+					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
 					<?php
 				}
-
 				bp_displayed_user_avatar( 'type=full' );
-
-				if ( ! empty( $member_type ) ) {
-					echo wp_kses_post( $member_type );
-				}
 				?>
 			</div><!-- #item-header-avatar -->
 
-			<div id="item-header-content">
-				<div class="flex">
-					<div class="bb-user-content-wrap">
-						<div class="flex align-items-center member-title-wrap">
-							<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( $bp_displayed_user_id ) ); ?></h2>
+			<div id="bb-rl-item-header-content">
+				<div class="bb-user-content-wrap">
+					<div class="flex flex-column member-title-wrap">
+						<?php
+						if ( ! empty( $member_type ) ) {
+							echo wp_kses_post( $member_type );
+						}
+						?>
+						<h2 class="user-nicename"><?php echo wp_kses_post( bp_core_get_user_displayname( $bp_displayed_user_id ) ); ?></h2>
+					</div>
 
+					<?php
+					bp_nouveau_member_hook( 'before', 'header_meta' );
+					if ( ( $is_activity_enabled && $bp_activity_do_mentions ) || $bp_get_last_activity || $bb_get_member_joined_date ) :
+						?>
+						<div class="item-meta">
 							<?php
-							if ( ! empty( $member_type ) ) {
-								echo wp_kses_post( $member_type );
-							}
-							?>
-						</div>
-
-						<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
-
-						<div class="header-meta-wrap">
-
-							<?php if ( ( $is_activity_enabled && $bp_activity_do_mentions ) || $bp_get_last_activity || $bb_get_member_joined_date ) : ?>
-								<div class="item-meta">
-
-									<?php if ( $is_activity_enabled && $bp_activity_do_mentions && $is_enabled_member_handle ) : ?>
-										<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
-										<?php
-									endif;
-
-									if ( $is_activity_enabled && $bp_activity_do_mentions && $is_enabled_member_handle && $is_enabled_joined_date ) :
-										?>
-										<span class="separator">&bull;</span>
-										<?php
-									endif;
-
-									if ( $bb_get_member_joined_date && $is_enabled_joined_date ) :
-										echo wp_kses_post( $bb_get_member_joined_date );
-									endif;
-
-									if ( ( ( $is_activity_enabled && $bp_activity_do_mentions ) || $bb_get_member_joined_date ) && $bp_get_last_activity && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) :
-										?>
-										<span class="separator">&bull;</span>
-										<?php
-									endif;
-
-									bp_nouveau_member_hook( 'before', 'in_header_meta' );
-
-									if ( $bp_get_last_activity && $is_enabled_last_active ) :
-										echo wp_kses_post( $bp_get_last_activity );
-									endif;
-									?>
-								</div>
+							$nickname_field_id = bp_xprofile_nickname_field_id();
+							$hidden_fields     = bp_xprofile_get_hidden_fields_for_user();
+							if ( $is_activity_enabled && $bp_activity_do_mentions && ! in_array( $nickname_field_id, $hidden_fields, true ) && $is_enabled_member_handle ) :
+								?>
+								<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
 								<?php
 							endif;
-
-							if ( function_exists( 'bp_is_activity_follow_active' ) && $is_activity_enabled && bp_is_activity_follow_active() && ( $is_enabled_followers || $is_enabled_following ) ) {
+							if ( $is_activity_enabled && $bp_activity_do_mentions && $is_enabled_member_handle && $is_enabled_joined_date ) :
 								?>
-								<div class="flex align-items-top member-social">
-									<div class="flex align-items-center">
-										<?php
-										if ( $is_enabled_followers ) {
-											bb_get_followers_count();
-										}
-
-										if ( $is_enabled_following ) {
-											bb_get_following_count();
-										}
-										?>
-									</div>
-								</div>
+								<span class="separator">&bull;</span>
 								<?php
-							}
-
-							$additional_class = '';
-							if ( function_exists( 'bb_get_user_social_networks_field_value' ) ) {
-								$networks_field_value = bb_get_user_social_networks_field_value();
-								if ( is_array( $networks_field_value ) && count( $networks_field_value ) > 6 ) {
-									$additional_class = 'left-align';
-								}
-							}
-
-							if ( ! empty( $user_social_networks_urls ) ) {
+							endif;
+							if ( $bb_get_member_joined_date && $is_enabled_joined_date ) :
+								echo wp_kses_post( $bb_get_member_joined_date );
+							endif;
+							if ( ( ( $is_activity_enabled && $bp_activity_do_mentions ) || $bb_get_member_joined_date ) && $bp_get_last_activity && $is_enabled_last_active && ( $is_enabled_member_handle || $is_enabled_joined_date ) ) :
 								?>
-								<div class="flex align-items-center member-social-links <?php echo esc_attr( $additional_class ); ?>">
-									<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
-								</div>
+								<span class="separator">&bull;</span>
 								<?php
-							}
+							endif;
+							bp_nouveau_member_hook( 'before', 'in_header_meta' );
+							if ( $bp_get_last_activity && $is_enabled_last_active ) :
+								echo wp_kses_post( $bp_get_last_activity );
+							endif;
 							?>
-
-						</div><!-- .header-meta-wrap -->
-
-					</div><!-- .bb-user-content-wrap -->
-
-					<div class="member-header-actions-wrap">
+						</div>
 						<?php
-							bp_nouveau_member_header_buttons(
-								array(
-									'container_classes' => array( 'member-header-actions' ),
-									'prefix_link_text'  => '<i></i>',
-									'is_tooltips'       => false,
-									'button_attr'       => array(
-										'hover_type' => 'hover',
-									),
-								)
-							);
+					endif;
+					?>
+				</div><!-- .bb-user-content-wrap -->
 
-							bp_nouveau_member_header_bubble_buttons(
-								array(
-									'container_classes' => array( 'bb_more_options' ),
-									'is_tooltips'       => false,
-									'button_attr'       => array(
-										'hover_type' => 'static',
-									),
-								)
-							);
+				<div class="bb-rl-member-header-actions-wrap">
+					<?php
+						$args = array(
+							'container'         => 'div',
+							'button_element'    => 'button',
+							'container_classes' => array( 'bb-rl-member-header-actions', 'flex' ),
+							'prefix_link_text'  => '<i></i>',
+							'is_tooltips'       => false,
+							'button_attr'       => array(
+								'hover_type' => 'hover',
+							),
+							'type'              => 'profile',
+						);
+
+						$members_buttons = bp_nouveau_get_members_buttons( $args );
+						$allowed_keys    = array( 'member_friendship', 'member_follow', 'private_message' );
+						$members_buttons = array_intersect_key( $members_buttons, array_flip( $allowed_keys ) );
+						$output          = join( ' ', $members_buttons );
+
+						/**
+						 * On the member's header we need to reset the group button's global
+						 * once displayed as the friends component will use the member's loop
+						 */
+						if ( ! empty( $bp_nouveau->members->member_buttons ) ) {
+							unset( $bp_nouveau->members->member_buttons );
+						}
+
+						ob_start();
+						/**
+						 * Fires in the member header actions section.
+						 *
+						 * @since BuddyBoss [BBVERSION]
+						 */
+						do_action( 'bp_member_header_actions' );
+						$output .= ob_get_clean();
+
+						if ( $output ) {
+							bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+						}
+
+						// More menu.
+						$args = array(
+							'container'         => 'div',
+							'button_element'    => 'button',
+							'container_classes' => array( 'bb-rl-more_options', 'bb-rl-header-dropdown' ),
+							'is_tooltips'       => false,
+							'button_attr'       => array(
+								'hover_type' => 'static',
+							),
+							'type'              => 'profile',
+						);
+
+						$members_buttons = bp_nouveau_get_members_buttons( $args );
+						$excluded_keys   = array( 'member_friendship', 'member_follow', 'private_message' );
+						$members_buttons = array_diff_key( $members_buttons, array_flip( $excluded_keys ) );
+						$output          = join( ' ', $members_buttons );
+
+						/**
+						 * On the member's header we need to reset the group button's global
+						 * once displayed as the friends component will use the member's loop
+						 */
+						if ( ! empty( $bp_nouveau->members->member_buttons ) ) {
+							unset( $bp_nouveau->members->member_buttons );
+						}
+
+						ob_start();
+						/**
+						 * Fires in the member header actions section.
+						 *
+						 * @since BuddyBoss [BBVERSION]
+						 */
+						do_action( 'bp_member_header_bubble_actions' );
+						$output .= ob_get_clean();
+
+						if ( $output ) {
+							ob_start();
+							bp_get_template_part( 'common/more-options-view' );
+							$template_part_content = ob_get_clean();
+
+							$output = sprintf( '<a href="#" class="bb-rl-more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb-rl-more_options_list bb-rl-more_dropdown"> %2$s %3$s</div><div class="bb-rl-more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
+
+							bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
+						}
 						?>
-					</div><!-- .member-header-actions-wrap -->
-				</div>
-
+				</div><!-- .member-header-actions-wrap -->
 			</div><!-- #item-header-content -->
-
 		</div><!-- #item-header-cover-image -->
 	</div><!-- #cover-image-container -->
 	<?php

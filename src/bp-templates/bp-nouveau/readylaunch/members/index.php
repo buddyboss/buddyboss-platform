@@ -2,7 +2,7 @@
 /**
  * The ReadyLaunch template for members directory.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  *
  * @version 1.0.0
  */

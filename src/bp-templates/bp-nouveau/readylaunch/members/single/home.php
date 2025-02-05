@@ -2,9 +2,8 @@
 /**
  * The template for members home
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/home.php.
+ * @since BuddyBoss [BBVERSION]
  *
- * @since   BuddyPress 1.0.0
  * @version 1.0.0
  */
 
@@ -12,7 +11,27 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 ?>
 
 <div id="item-header" role="complementary" data-bp-item-id="<?php echo esc_attr( bp_displayed_user_id() ); ?>" data-bp-item-component="members" class="users-header single-headers">
-	<?php bp_nouveau_member_header_template_part(); ?>
+	<?php
+	$template = 'member-header';
+	/**
+	 * Fires before the display of a member's header.
+	 *
+	 * @since BuddyPress 1.2.0
+	 */
+	do_action( 'bp_before_member_header' );
+
+	// Get the template part for the header.
+	bp_nouveau_member_get_template_part( $template );
+
+	/**
+	 * Fires after the display of a member's header.
+	 *
+	 * @since BuddyPress 1.2.0
+	 */
+	do_action( 'bp_after_member_header' );
+
+	bp_nouveau_template_notices();
+	?>
 </div><!-- #item-header -->
 
 <div class="bp-wrap">

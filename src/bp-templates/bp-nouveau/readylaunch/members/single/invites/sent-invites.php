@@ -2,9 +2,8 @@
 /**
  * The template for sent invites
  *
- * This template can be overridden by copying it to yourtheme/buddypress/members/single/invites/sent-invites.php.
+ * @since BuddyBoss [BBVERSION]
  *
- * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 
