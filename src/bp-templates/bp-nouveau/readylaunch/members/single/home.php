@@ -31,16 +31,14 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 	do_action( 'bp_after_member_header' );
 
 	bp_nouveau_template_notices();
-	?>
-</div><!-- #item-header -->
 
-<div class="bp-wrap">
-	<?php
 	if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 		bp_get_template_part( 'members/single/parts/item-nav' );
 	}
 	?>
+</div><!-- #item-header -->
 
+<div class="bp-wrap">
 	<div id="item-body" class="item-body">
 		<?php bp_nouveau_member_template_part(); ?>
 	</div><!-- #item-body -->
