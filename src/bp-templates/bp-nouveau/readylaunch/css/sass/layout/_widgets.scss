@@ -1,0 +1,21 @@
+.bb-rl-widget-sidebar {
+
+	.widget {
+		background-color: var(--bb-rl-background-color);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-lg);
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+		.widget-title {
+
+			@include bb-rl-base-heading;
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+			padding: var(--bb-rl-space-50) 0 var(--bb-rl-space-100);
+			margin-bottom: var(--bb-rl-space-200);
+		}
+	}
+
+	.widget + .widget {
+		margin-top: var(--bb-rl-space-200);
+	}
+}
