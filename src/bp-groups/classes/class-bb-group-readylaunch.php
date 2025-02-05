@@ -117,7 +117,7 @@ class BB_Group_Readylaunch {
 		}
 
 		?>
-		<div class="bb-rl-action-popup" id="model--about-group-<?php echo esc_attr( $group_id ); ?>">
+		<div class="bb-rl-action-popup bb-rl-about-group" id="model--about-group-<?php echo esc_attr( $group_id ); ?>">
 			<transition name="modal">
 				<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 					<div class="bb-rl-modal-wrapper">
@@ -325,10 +325,10 @@ class BB_Group_Readylaunch {
 										remove_action( 'bp_action_variables', array( $this, 'setup_group_action_variables' ), 10, 1 );
 									?>
 								</div>
-								<footer class="bb-rl-model-footer flex">
+								<footer class="bb-rl-modal-footer flex">
 									<div>
-										<a href="#" class="bb-rl-button bb-rl-button--secondaryFill"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-										<button class="bb-rl-button submit-form bb-rl-button--brandFill"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></button>
+										<a href="#" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+										<button class="bb-rl-button submit-form bb-rl-button--brandFill bb-rl-button--small" form="group-settings-form"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></button>
 									</div>
 								</footer>
 							</div>

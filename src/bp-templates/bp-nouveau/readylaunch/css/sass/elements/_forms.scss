@@ -1,3 +1,36 @@
+.bb-readylaunch-template {
+
+	// Fieldset
+	fieldset {
+		font-family: inherit;
+		border: 0;
+		padding: 0;
+		margin: 0 0 var(--bb-rl-space-300);
+
+		legend {
+
+			@include bb-rl-base-heading;
+			margin-bottom: var(--bb-rl-space-200);
+		}
+	}
+
+	input,
+	textarea,
+	select {
+
+		@include bb-rl-label-heading-md-thin;
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: var(--bb-rl-radius-md);
+		padding: 5px var(--bb-rl-space-100);
+		color: var(--bb-rl-text-color);
+	}
+}
+
 .bb-rl-filter {
 	display: flex;
 	align-items: center;

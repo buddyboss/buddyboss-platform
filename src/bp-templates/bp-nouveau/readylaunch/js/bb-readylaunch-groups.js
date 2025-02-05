@@ -25,7 +25,40 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function () {
 			var self = this;
-			$( document ).on( 'click', '.bb-rl-manage-group-container .bp-navs a', self.loadManageSettings );
+			var $document = $( document );
+			$document.on( 'click', '.bb-rl-manage-group-container .bp-navs a', self.loadManageSettings );
+
+			$document.on( 'click', '.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button', function () {
+				//event.preventDefault();
+				var modalId = 'model--' + $( this ).attr( 'id' );
+				bp.Readylaunch.Groups.openModal( modalId );
+			} );
+
+			$document.on( 'click', '.bb-rl-modal-close-button', function () {
+				//event.preventDefault();
+				$( this ).closest( '.bb-rl-action-popup' ).removeClass( 'open' );
+			} );
+		},
+
+		openModal: function ( modalId ) {
+			var $modal = $( '#' + modalId );
+		
+			if ( !$modal.length ) {
+				return;
+			}
+
+			$modal.addClass( 'open' );
+
+			if ( $modal.hasClass( 'group-manage' ) ) {
+				bp.Readylaunch.Groups.initManageGroup( $modal );
+			}
+		},
+
+		initManageGroup: function ( $modal ) {
+			// Handle form submission
+			$modal.find( 'form' ).on( 'submit', function ( event ) {
+				event.preventDefault();				
+			} );
 		},
 
 		loadManageSettings: function ( e ) {
@@ -33,7 +66,7 @@ window.bp = window.bp || {};
 
 			var current = $( this );
 
-			var $submitButton = current.closest( '.bb-rl-model-footer' ).find( '.submit-form' );
+			var $submitButton = current.closest( '.bb-rl-modal-footer' ).find( '.submit-form' );
 
 			var $url = $( this ).attr( 'href' );
 

@@ -24,6 +24,14 @@
 	margin: 50px auto;
 	vertical-align: middle;
 	width: 90%;
+
+	.group-manage & {
+		max-width: 960px;
+	}
+
+	.bb-rl-about-group & {
+		max-width: 500px;
+	}
 }
 
 .bb-rl-modal-container {
@@ -61,12 +69,19 @@
 	max-height: calc(100vh - 220px);
 	overflow: auto;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+	.group-manage & {
+		padding-top: 0;
+		padding-bottom: 0;
+		margin-bottom: 0;
+	}
 }
 
 .bb-rl-modal-footer {
-	padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-300);
+	padding: 12px var(--bb-rl-space-300);
 	justify-content: flex-end;
 	gap: var(--bb-rl-space-100);
+	border-top: 1px solid var(--bb-rl-border-secondary-color);
 
 	.bb-rl-button {
 		padding: 4px var(--bb-rl-space-200);

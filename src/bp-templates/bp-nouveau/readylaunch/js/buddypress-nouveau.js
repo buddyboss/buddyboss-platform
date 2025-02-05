@@ -1001,27 +1001,6 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$document.keydown( this.mediumFormAction.bind( this ) );
-
-			$document.on( 'click', '.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button', function ( event ) {
-				event.preventDefault();
-				var modalId = 'model--' + $( this ).attr( 'id' );
-				bp.Nouveau.openModal( modalId );
-			} );
-
-			$document.on( 'click', '.bb-rl-modal-close-button', function ( event ) {
-				event.preventDefault();
-				$( this ).closest( '.bb-rl-action-popup' ).removeClass( 'open' );
-			} );
-		},
-
-		openModal: function ( modalId ) {
-			var $modal = $( '#' + modalId );
-		
-			if ( !$modal.length ) {
-				return;
-			}
-
-			$modal.addClass( 'open' );
 		},
 
 		/**

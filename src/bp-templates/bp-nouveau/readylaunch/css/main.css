@@ -2063,6 +2063,37 @@ button[data-balloon] {
   font-weight: 500;
 }
 
+.bb-readylaunch-template fieldset {
+  font-family: inherit;
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template fieldset legend {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template input,
+.bb-readylaunch-template textarea,
+.bb-readylaunch-template select {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  display: inline-block;
+  font-family: inherit;
+  font-style: inherit;
+  outline: none;
+  vertical-align: middle;
+  border-radius: var(--bb-rl-radius-md);
+  padding: 5px var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+}
+
 .bb-rl-filter {
   display: flex;
   align-items: center;
@@ -2740,6 +2771,14 @@ button[data-balloon] {
   width: 90%;
 }
 
+.group-manage .bb-rl-modal-wrapper {
+  max-width: 960px;
+}
+
+.bb-rl-about-group .bb-rl-modal-wrapper {
+  max-width: 500px;
+}
+
 .bb-rl-modal-container {
   width: auto;
   margin: 0 auto;
@@ -2778,10 +2817,17 @@ button[data-balloon] {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.group-manage .bb-rl-modal-content {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 .bb-rl-modal-footer {
-  padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-300);
+  padding: 12px var(--bb-rl-space-300);
   justify-content: flex-end;
   gap: var(--bb-rl-space-100);
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 .bb-rl-modal-footer .bb-rl-button {
