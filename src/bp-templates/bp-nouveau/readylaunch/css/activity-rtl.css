@@ -1194,7 +1194,7 @@
   display: flex;
   flex-direction: row;
   background-color: var(--bb-rl-background-secondary-color);
-  border-radius: var(--bb-rl-radius-sm);
+  border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-300);
 }
 
@@ -1286,7 +1286,7 @@
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap {
   position: absolute;
   left: 15px;
-  top: 21px;
+  bottom: 35px;
   z-index: var(--bb-rl-z-index-dropdown);
   transition: all 0.3s ease;
 }
@@ -1327,54 +1327,6 @@
   margin-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list {
-  position: absolute;
-  top: 36px;
-  left: 1px;
-  opacity: 0;
-  visibility: hidden;
-  background: #fff;
-  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
-  border-radius: 4px;
-  width: 198px;
-  z-index: 1;
-}
-
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul {
-  list-style: none;
-  margin: 5px 0 !important;
-  padding: 0 !important;
-}
-
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li {
-  margin: 0;
-  padding: 0;
-  list-style-type: none !important;
-}
-
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li a {
-  padding: 10px 14px !important;
-  display: block !important;
-  font-size: 13px;
-  line-height: 1;
-  color: #7f868f;
-}
-
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li a:hover {
-  background-color: #f5f5f5;
-  color: var(--bb-rl-primary);
-}
-
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li a:before {
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 18px;
-  display: inline-block;
-  margin-left: 10px;
-  width: 20px;
-  text-align: center;
-}
-
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_move_file.bb-rl-move-disabled a {
   pointer-events: none;
   opacity: 0.7;
@@ -1388,43 +1340,19 @@
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_move_file a:before {
-  content: "\ee9f";
+  content: "\e260";
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_delete_file a:before {
-  content: "\ef48";
+  content: "\e4a6";
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_privacy_file a:before {
-  content: "\eecc";
+  content: "\e308";
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_copy_download_file_url a:before {
-  content: "\ee3b";
-}
-
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list:after {
-  content: " ";
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 0;
-  margin: 0 auto;
-  left: 13px;
-  box-sizing: border-box;
-  border: 6px solid #000;
-  border-color: #fff transparent transparent #fff;
-  -webkit-transform-origin: 100% 0;
-  -ms-transform-origin: 100% 0;
-  transform-origin: 100% 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  box-shadow: -2px -3px 3px 0 rgba(0, 0, 0, 0.02);
-  z-index: 101;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: none;
+  content: "\e1cc";
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .document-expand {
@@ -1482,7 +1410,7 @@
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-preview-wrap {
   background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 4px 4px 0 0;
+  border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
   height: 200px;
   overflow: hidden;
   text-align: center;
@@ -1916,7 +1844,7 @@
   border-radius: var(--bb-rl-radius-md);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   padding: var(--bb-rl-space-100) 0;
-  width: 180px;
+  width: 190px;
   visibility: hidden;
   opacity: 0;
 }
