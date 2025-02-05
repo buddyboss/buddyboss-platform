@@ -864,62 +864,13 @@ window.bp = window.bp || {};
 
 		toggleSelectAllMedia: function ( event ) {
 			event.preventDefault();
-			var eventTarget = $( event.currentTarget );
-			if ( eventTarget.hasClass( 'selected' ) ) {
-				eventTarget.data( 'bp-tooltip', bbRlMedia.i18n_strings.selectall );
-				this.deselectAllMedia( event );
-			} else {
-				eventTarget.data( 'bp-tooltip', bbRlMedia.i18n_strings.unselectall );
-				this.selectAllMedia( event );
-			}
 
-			eventTarget.toggleClass( 'selected' );
-		},
+			var $target     = $( event.currentTarget ),
+			    isSelecting = ! $target.hasClass( 'selected' );
 
-		selectAllMedia: function ( event ) {
-			event.preventDefault();
+			this.toggleMediaSelection( isSelecting );
 
-			var $media_list = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' );
-			$media_list.find( '.bb-media-check-wrap [name="bb-media-select"]' ).each(
-				function () {
-					$( this ).prop( 'checked', true );
-					$( this ).closest( '.bb-item-thumb' ).addClass( 'selected' );
-					$( this ).closest( '.bb-media-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.unselect );
-				}
-			);
-
-			if ( $media_list.parent().parent().hasClass( 'album-single-view' ) ) {
-				$media_list.find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
-					function () {
-						$( this ).prop( 'checked', true );
-						$( this ).closest( '.bb-item-thumb' ).addClass( 'selected' );
-						$( this ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.unselect );
-					}
-				);
-			}
-		},
-
-		deselectAllMedia: function ( event ) {
-			event.preventDefault();
-
-			var $media_list = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' );
-			$media_list.find( '.bb-media-check-wrap [name="bb-media-select"]' ).each(
-				function () {
-					$( this ).prop( 'checked', false );
-					$( this ).closest( '.bb-item-thumb' ).removeClass( 'selected' );
-					$( this ).closest( '.bb-media-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.select );
-				}
-			);
-
-			if ( $media_list.parent().parent().hasClass( 'album-single-view' ) ) {
-				$media_list.find( '.bb-video-check-wrap [name="bb-video-select"]' ).each(
-					function () {
-						$( this ).prop( 'checked', false );
-						$( this ).closest( '.bb-item-thumb' ).removeClass( 'selected' );
-						$( this ).closest( '.bb-video-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', bbRlMedia.i18n_strings.select );
-					}
-				);
-			}
+			$target.toggleClass( 'selected', isSelecting ).data( 'bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselectall : BP_Nouveau.media.i18n_strings.selectall );
 		},
 
 		editAlbumTitle: function ( event ) {
@@ -5513,7 +5464,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type: 'POST',
-					url: BbbRlAjaxUrl,
+					url: bbRlAjaxUrl,
 					data: data,
 					success: function ( response ) {
 						if ( response.success ) {
@@ -5812,6 +5763,26 @@ window.bp = window.bp || {};
 				targetPopup.find( listClass + ' li span.selected' ).removeClass( 'selected' );
 				targetPopup.find( listClass + ' li.is_active' ).children( 'span' ).addClass( 'selected' );
 			}, 0 );
+		},
+
+		toggleMediaSelection : function ( select ) {
+			var $mediaList  = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ),
+			    isSelecting = select === true,
+			    actions     = ['media'];
+
+			if ( $mediaList.closest( '.album-single-view' ).length > 0 ) {
+				actions.push( 'video' );
+			}
+			actions.forEach( function ( actionType ) {
+				$mediaList.find( '.bb-' + actionType + '-check-wrap [name="bb-' + actionType + '-select"]' ).each(
+					function () {
+						var $this = $( this );
+						$this.prop( 'checked', isSelecting );
+						$this.closest( '.bb-item-thumb' ).toggleClass( 'selected', isSelecting );
+						$this.closest( '.bb-' + actionType + '-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselect : BP_Nouveau.media.i18n_strings.select );
+					}
+				);
+			} );
 		},
 	};
 
