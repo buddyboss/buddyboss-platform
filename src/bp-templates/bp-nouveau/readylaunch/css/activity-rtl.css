@@ -1041,6 +1041,7 @@
   line-height: 1.5;
   margin-bottom: var(--bb-rl-space-300);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  position: relative;
 }
 
 .bb-rl-activity-list .bb-rl-activity-head {
@@ -1059,6 +1060,145 @@
   height: 48px;
   width: 48px;
   border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap {
+  position: absolute;
+  left: var(--bb-rl-space-300);
+  top: var(--bb-rl-space-300);
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb-icon-ellipsis-h {
+  display: flex;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--bb-rl-icon-secondary-color);
+  cursor: pointer;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb-icon-ellipsis-h:after {
+  content: "\e1fe";
+  font-family: bb-icons-rl;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action {
+  display: inline-flex;
+  padding: var(--bb-rl-space-50);
+  transition: all 0.3s ease;
+  border: 0.5px solid transparent;
+  border-radius: 6px;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap:has(.is_visible) .bb-activity-more-options-action {
+  border-color: var(--bb-rl-border-secondary-color);
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_rl_more_dropdown__title {
+  display: none;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: var(--bb-rl-z-index-dropdown);
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  padding: var(--bb-rl-space-100) 0;
+  width: 210px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown.is_visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .bp-screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a {
+  display: flex;
+  align-items: center;
+  color: var(--bb-rl-text-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  cursor: pointer;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a:before {
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 20px;
+  font-weight: 400;
+  margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit:before {
+  content: "\e3b4";
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.delete-activity:before {
+  content: "\e4a6";
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.pin-activity:before {
+  content: "\e3e2";
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.download-activity:before {
+  content: "\e20c";
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.bb-icon-bell-slash:before {
+  content: "\e0d2";
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.bb-icon-bell:before {
+  content: "\e0d0";
+}
+
+.bb-rl-activity-list .bb-rl-activity-header p:first-child {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  display: block;
+  width: 100%;
+}
+
+.bb-rl-activity-list .bb-rl-activity-header p:first-child a {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-date {
+  display: inline-block;
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-date a {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: var(--bb-rl-font-size-sm);
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner {
