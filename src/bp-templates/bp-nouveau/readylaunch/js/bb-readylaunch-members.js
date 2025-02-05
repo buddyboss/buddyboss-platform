@@ -31,8 +31,10 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				var $modal= $( '#bb-rl-invite-modal' );
+				var $modalMask = $modal.find( '.bb-rl-modal-mask' );
 
 				if ( $modal.length ) {
+					$modalMask.show();
 					$modal.show();
 				}
 			} );
@@ -69,18 +71,24 @@ window.bp = window.bp || {};
 			}
 
 			var toastHTML = '<div class="' + toastClass + '">' + toastIcon + message + '</div>';
-			$modalWrapper.append( toastHTML );
+			$modal.append( toastHTML );
 
 			if ( type !== 'error' ) {
+				if ( hideModal ) {
+					setTimeout( function () {
+						$modalMask.fadeOut( 200 );
+					}, 500 );
+				}
 				setTimeout( function () {
-					$( '.bb-rl-toast-message' ).fadeOut( 500, function () {
+					$( '.bb-rl-toast-message' ).fadeOut( 300, function () {
 						$( this ).remove();
 					} );
-
-					if ( hideModal ) {
-						$modal.fadeOut(200);
-					}
-				}, 5000 );
+				}, 4000 );
+				if ( hideModal ) {
+					setTimeout( function () {
+						$modal.fadeOut( 500 );
+					}, 4500 );
+				}
 			}
 		},
 

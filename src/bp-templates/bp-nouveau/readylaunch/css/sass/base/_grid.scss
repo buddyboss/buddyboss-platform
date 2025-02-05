@@ -6,6 +6,10 @@
 
 	&.grid {
 
+		/* A sidebar-conditioned grid can be used on
+		single profile or group screens. */
+
+		/*
 		.bb-rl-has-sidebar & {
 
 			.item-entry {
@@ -45,6 +49,7 @@
 				}
 			}
 		}
+		*/
 
 		.item-entry {
 			flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));

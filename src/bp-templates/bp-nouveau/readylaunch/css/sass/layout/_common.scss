@@ -205,6 +205,18 @@
 
 	&.grid {
 
+		.bb-rl-skeleton-grid-block {
+
+			&.bb-rl-skeleton-grid-block--cover {
+				align-items: flex-start;
+				padding-top: 72px;
+			}
+		}
+
+		/* A sidebar-conditioned grid can be used on
+		single profile or group screens. */
+
+		/*
 		.bb-rl-has-sidebar & {
 
 			.bb-rl-skeleton-grid-block {
@@ -244,6 +256,7 @@
 				}
 			}
 		}
+		*/
 
 		.bb-rl-skeleton-grid-block {
 			flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));
@@ -292,6 +305,21 @@
 
 		.bb-rl-skeleton-cover {
 			display: none;
+		}
+
+		.bb-rl-skeleton-grid-block--cover {
+
+			.bb-rl-skeleton-footer {
+				width: 72px;
+				flex: 0 0 72px;
+
+				.bb-rl-skeleton-data-bit {
+
+					&:nth-of-type(1) {
+						width: 100%;
+					}
+				}
+			}
 		}
 	}
 }

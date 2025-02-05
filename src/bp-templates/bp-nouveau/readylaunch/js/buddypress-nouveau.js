@@ -1437,7 +1437,7 @@ window.bp = window.bp || {};
 					gridfilters.find( '.layout-view' ).removeClass( 'active' );
 					$this.addClass( 'active' );
 					if ( 'list' === layout ) {
-						$this.parents( '.bb-rl-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
+						$this.parents( '.bb-rl-container' ).find( '.bp-list' ).removeClass( 'grid' );
 					} else {
 						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
 					}

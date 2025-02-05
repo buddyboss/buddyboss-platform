@@ -115,8 +115,68 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 						<?php bp_nouveau_groups_loop_item(); ?>
 
 						<div class="group-footer-wrap <?php echo esc_attr( $group_members . ' ' . $join_button ); ?>">
-							<div class="group-members-wrap">
-								<?php bb_groups_loop_members(); ?>
+							<div class="group-members-wrap flex">
+								<?php
+									$group_id = bp_get_group_id();
+
+									if ( $group_id ) {
+										$members = new \BP_Group_Member_Query(
+											array(
+												'group_id'     => $group_id,
+												'per_page'     => 3,
+												'page'         => 1,
+												'group_role'   => array( 'member', 'mod', 'admin' ),
+												'exclude'      => false,
+												'search_terms' => false,
+												'type'         => 'active',
+											)
+										);
+
+										$total   = $members->total_users;
+										$members = array_values( $members->results );
+									
+										if ( ! empty( $members ) ) {
+											?>
+											<span class="bs-group-members">
+											<?php
+											foreach ( $members as $member ) {
+												$avatar = bp_core_fetch_avatar(
+													array(
+														'item_id'    => $member->ID,
+														'avatar_dir' => 'avatars',
+														'object'     => 'user',
+														'type'       => 'thumb',
+														'html'       => false,
+													)
+												);
+												?>
+												<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
+													<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+														<img src="<?php echo esc_url( $avatar ); ?>"
+															alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
+													</a>
+												</span>
+												<?php
+											}
+											?>
+											</span>
+											<?php
+											if ( $total - count( $members ) !== 0 ) {
+												$member_count = $total - count( $members );
+												?>
+												<span class="bb-rl-more-group-member">
+													<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">+ 
+														<?php
+														/* translators: Group member count. */
+														printf( wp_kses_post( _nx( '%s Member', '%s Members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
+														?>
+													</a>
+												</span>	
+												<?php
+											}
+										}
+									}
+								?>
 							</div>
 							<?php if ( bb_platform_group_element_enable( 'join-buttons' ) ) { ?>
 								<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
