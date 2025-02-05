@@ -31,7 +31,7 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				var $modal= $( '#bb-rl-invite-modal' );
-				
+
 				if ( $modal.length ) {
 					$modal.show();
 				}
@@ -40,9 +40,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
 				e.preventDefault();
 				bp.Readylaunch.Members.resetInviteMemberPopupForm.call( this, e );
-				
+
 				var $modal = $( this ).closest( '#bb-rl-invite-modal' );
-				
+
 				if ( $modal.length ) {
 					$modal.hide();
 				}
@@ -54,10 +54,10 @@ window.bp = window.bp || {};
 		showToastMessage: function ( message, type = 'info', hideModal = false ) {
 			var $modal = $( '#bb-rl-invite-modal' );
 			var $modalWrapper = $modal.find( '.bb-rl-modal-wrapper' );
-		
+
 			// Remove any existing toast messages
 			$( '.bb-rl-toast-message' ).remove();
-		
+
 			var toastClass = 'bb-rl-toast-message';
 			var toastIcon = '<span class="bb-rl-spinner"></span>';
 			if ( type === 'error' ) {
@@ -67,10 +67,10 @@ window.bp = window.bp || {};
 				toastClass += ' bb-rl-toast-message--success';
 				toastIcon += '<i class="bb-icons-rl-check-circle"></i>';
 			}
-		
+
 			var toastHTML = '<div class="' + toastClass + '">' + toastIcon + message + '</div>';
 			$modalWrapper.append( toastHTML );
-			
+
 			if ( type !== 'error' ) {
 				setTimeout( function () {
 					$( '.bb-rl-toast-message' ).fadeOut( 500, function () {
