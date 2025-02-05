@@ -19,6 +19,9 @@ if ( have_posts() ) :
 	endwhile;
 endif;
 
-bp_get_template_part( 'sidebar/right-sidebar' );
+if ( ! ( bp_is_members_directory() || bp_is_groups_directory() ) ) {
+	bp_get_template_part( 'sidebar/right-sidebar' );
+}
+
 
 bp_get_template_part( 'footer/readylaunch-footer' );
