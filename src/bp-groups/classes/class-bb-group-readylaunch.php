@@ -48,6 +48,9 @@ class BB_Group_Readylaunch {
 		add_filter( 'bb_nouveau_get_groups_bubble_buttons', array( $this, 'bb_rl_get_groups_bubble_buttons' ), 10, 3 );
 
 		add_action( 'bb_rl_footer', array( $this, 'bb_rl_load_popup' ) );
+
+		add_action( 'wp_ajax_group_manage_content', array( $this, 'group_manage_content' ) );
+		add_action( 'wp_ajax_nopriv_group_manage_content', array( $this, 'group_manage_content' ) );
 	}
 
 	public function bb_rl_update_group_subscription_button( $button, $r ) {
@@ -280,7 +283,7 @@ class BB_Group_Readylaunch {
 
 		if ( bp_is_item_admin() ) {
 			?>
-			<div class="bb-rl-action-popup group-manage" id="model--group-manage-<?php echo esc_attr( $group_id ); ?>" style="display: none;">
+			<div class="bb-rl-action-popup group-manage" id="model--group-manage-<?php echo esc_attr( $group_id ); ?>" style="">
 				<transition name="modal">
 					<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 						<div class="bb-rl-modal-wrapper">
@@ -308,7 +311,7 @@ class BB_Group_Readylaunch {
 								<footer class="bb-rl-model-footer flex">
 									<div>
 										<a href="#" class="bb-rl-button bb-rl-button--secondaryFill"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-										<a class="bb-rl-button bb-rl-button--brandFill" href="#"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></a>
+										<button class="bb-rl-button submit-form bb-rl-button--brandFill"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></button>
 									</div>
 								</footer>
 							</div>
@@ -326,7 +329,11 @@ class BB_Group_Readylaunch {
 
 	public function setup_group_action_variable( $action_variable, $position ) {
 		if ( 0 === $position ) {
-			return 'edit-details';
+			if ( ! empty( $_REQUEST['group_manage_action'] ) ) {
+				return $_REQUEST['group_manage_action'];
+			} else {
+				return 'edit-details';
+			}
 		}
 
 		return $action_variable;
@@ -334,8 +341,65 @@ class BB_Group_Readylaunch {
 
 	public function setup_group_action_variables( $action_variable ) {
 		$action_variable[] = 'admin';
-		$action_variable[] = 'edit-details';
+		if ( ! empty( $_REQUEST['group_manage_action'] ) ) {
+			$action_variable[] = $_REQUEST['group_manage_action'];
+		} else {
+			$action_variable[] = 'edit-details';
+		}
 
 		return array_unique( $action_variable );
+	}
+
+	public function group_manage_content() {
+		global $bp;
+
+		$url = $_REQUEST['url'];
+		if ( ! empty( $url ) ) {
+
+			$url = wp_parse_url( $url );
+
+			if ( ! empty( $url['path'] ) ) {
+				$path = array_filter( explode( '/', $url['path'] ) );
+				if ( ! empty( $path ) ) {
+					$admin_key = array_search( 'admin', $path );
+
+					if ( $admin_key !== false ) {
+						$next_key = $admin_key + 1;
+
+						if ( isset( $path[ $next_key ] ) ) {
+							$_REQUEST['group_manage_action'] = $path[ $next_key ];
+						}
+					}
+				}
+			}
+
+			$group_id = $_REQUEST['group_id'];
+			if ( ! empty( $group_id ) ) {
+				$groups_template = new BP_Groups_Template(
+					array(
+						'type'    => 'single-group',
+						'include' => $group_id,
+					)
+				);
+
+				$GLOBALS['groups_template']        = $groups_template;
+				$GLOBALS['groups_template']->group = current( $groups_template->groups );
+				$bp->groups->current_group = current( $groups_template->groups );
+			}
+
+			add_action( 'bp_action_variables', array( $this, 'setup_group_action_variables' ), 10, 1 );
+			add_action( 'bp_action_variable', array( $this, 'setup_group_action_variable' ), 10, 2 );
+			add_action( 'bp_current_action', array( $this, 'setup_group_manage_action' ), 10, 1 );
+			?>
+			<form action="<?php bp_group_admin_form_action(); ?>" name="group-settings-form" id="group-settings-form" class="standard-form search-form-has-reset" method="post" enctype="multipart/form-data">
+				<?php bp_nouveau_group_manage_screen(); ?>
+			</form><!-- #group-settings-form -->
+			<?php
+			remove_action( 'bp_action_variable', array( $this, 'setup_group_manage_action' ), 10, 1 );
+			remove_action( 'bp_action_variable', array( $this, 'setup_group_action_variable' ), 10, 2 );
+			remove_action( 'bp_action_variables', array( $this, 'setup_group_action_variables' ), 10, 1 );
+		}
+
+		wp_die();
 	}
 }

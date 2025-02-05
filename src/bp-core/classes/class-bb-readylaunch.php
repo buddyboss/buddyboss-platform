@@ -472,6 +472,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'bb-rl-groups',
 						'bbReadyLaunchGroupsVars',
 						array(
+							'group_id' => bp_get_current_group_id(),
 						)
 					);
 				}
