@@ -4249,104 +4249,11 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		injectMedias: function ( event ) {
-			var store       = bp.Nouveau.getStorage( 'bp-media' ),
-				scope       = store.scope || null, filter = store.filter || null,
-				eventTarget = $( event.currentTarget );
-			if ( eventTarget.hasClass( 'load-more' ) ) {
-				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
-
-				// Stop event propagation.
-				event.preventDefault();
-
-				eventTarget.find( 'a' ).first().addClass( 'loading' );
-
-				var searchElem = $( '#buddypress .dir-search input[type=search]' );
-				if ( searchElem.length ) {
-					search_terms = searchElem.val();
-				}
-
-				bp.Nouveau.objectRequest(
-					{
-						object: 'media',
-						scope: scope,
-						filter: filter,
-						search_terms: search_terms,
-						page: next_page,
-						method: 'append',
-						target: '#buddypress [data-bp-list] ul.bp-list'
-					}
-				).done(
-					function ( response ) {
-						if ( true === response.success ) {
-							eventTarget.remove();
-
-							// Update the current page.
-							self.current_page = next_page;
-
-							jQuery( window ).scroll();
-						}
-					}
-				);
-			}
+			this.injectAttachments( event, 'media' );
 		},
 
 		injectDocuments: function ( event ) {
-
-			var store = bp.Nouveau.getStorage( 'bp-document' ), sort = '', order_by = '',
-				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
-
-			if ( currentTarget.hasClass( 'load-more' ) ) {
-				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
-
-				// Stop event propagation.
-				event.preventDefault();
-
-				currentTarget.find( 'a' ).first().addClass( 'loading' );
-
-				var searchElem = $( '#buddypress .dir-search input[type=search]' );
-				if ( searchElem.length ) {
-					search_terms = searchElem.val();
-				}
-
-				if ( this.order_by && this.sort_by ) {
-					sort     = this.sort_by;
-					order_by = this.order_by;
-				} else if ( undefined !== store.extras ) {
-					sort     = store.extras.sort;
-					order_by = store.extras.orderby;
-				} else {
-					sort     = 'ASC';
-					order_by = 'title';
-				}
-
-				var queryData;
-				queryData = {
-					object: 'document',
-					scope: scope,
-					filter: filter,
-					search_terms: search_terms,
-					page: next_page,
-					method: 'append',
-					target: '#buddypress [data-bp-list] div#media-folder-document-data-table',
-					order_by: order_by,
-					sort: sort
-				};
-
-				bp.Nouveau.objectRequest(
-					queryData
-				).done(
-					function ( response ) {
-						if ( true === response.success ) {
-							currentTarget.parent( '.pager' ).remove();
-
-							// Update the current page.
-							self.current_page = next_page;
-
-							jQuery( window ).scroll();
-						}
-					}
-				);
-			}
+			this.injectAttachments( event, 'document' );
 		},
 
 		/* jshint ignore:start */
@@ -5776,6 +5683,75 @@ window.bp = window.bp || {};
 				var keySelector = $( 'div#forums-post-' + args.type + '-uploader' );
 				keySelector.html( '' );
 				keySelector.addClass( 'closed' ).removeClass( 'open' );
+			}
+		},
+
+		injectAttachments : function ( event, action ) {
+			var store       = bp.Nouveau.getStorage( 'bp-' + action ),
+			    scope       = store.scope || null,
+			    filter      = store.filter || null,
+			    eventTarget = $( event.currentTarget );
+			if ( eventTarget.hasClass( 'load-more' ) ) {
+				var next_page    = ( Number( this.current_page ) * 1 ) + 1,
+				    self         = this,
+				    search_terms = '';
+
+				// Stop event propagation.
+				event.preventDefault();
+
+				eventTarget.find( 'a' ).first().addClass( 'loading' );
+
+				var searchElem = $( '#buddypress .dir-search input[type=search]' );
+				if ( searchElem.length ) {
+					search_terms = searchElem.val();
+				}
+
+				var queryData = {
+					object       : action,
+					scope        : scope,
+					filter       : filter,
+					search_terms : search_terms,
+					page         : next_page,
+					method       : 'append',
+				};
+
+				if ( 'document' === action ) {
+					var sort = '', order_by = '';
+					if ( this.order_by && this.sort_by ) {
+						sort     = this.sort_by;
+						order_by = this.order_by;
+					} else if ( undefined !== store.extras ) {
+						sort     = store.extras.sort;
+						order_by = store.extras.orderby;
+					} else {
+						sort     = 'ASC';
+						order_by = 'title';
+					}
+
+					queryData.target   = '#buddypress [data-bp-list] div#media-folder-document-data-table';
+					queryData.order_by = order_by;
+					queryData.sort     = sort;
+				} else if ( 'media' === action ) {
+					queryData.target = '#buddypress [data-bp-list] ul.bp-list';
+				}
+
+				bp.Nouveau.objectRequest(
+					queryData
+				).done(
+					function ( response ) {
+						if ( true === response.success ) {
+							if ( 'document' === action ) {
+								eventTarget.parent( '.pager' ).remove();
+							} else if ( 'media' === action ) {
+								eventTarget.remove();
+							}
+							// Update the current page.
+							self.current_page = next_page;
+
+							jQuery( window ).scroll();
+						}
+					}
+				);
 			}
 		},
 	};
