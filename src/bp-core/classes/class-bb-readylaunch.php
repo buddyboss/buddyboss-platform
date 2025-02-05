@@ -115,7 +115,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_get_filter_id', array( $this, 'bb_rl_prefix_key' ) );
 				add_filter( 'bp_nouveau_get_nav_id', array( $this, 'bb_rl_prefix_key' ) );
 
-				add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_member_register_scripts' ), 99, 1 );
+				add_filter( 'bp_nouveau_register_scripts', array( $this, 'bb_rl_nouveau_register_scripts' ), 99, 1 );
 				add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 
 				add_filter( 'wp_ajax_bb_rl_invite_form', array( $this, 'bb_rl_invite_form_callback' ) );
@@ -467,6 +467,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_active( 'groups' ) ) {
 				if ( bp_is_group_single() ) {
 					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
+					wp_enqueue_script( 'bb-rl-groups' );
+					wp_localize_script(
+						'bb-rl-groups',
+						'bbReadyLaunchGroupsVars',
+						array(
+						)
+					);
 				}
 			}
 
@@ -479,9 +486,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'bbReadyLaunchMembersVars',
 					array(
 						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss' ),
-						'invite_valid_email' => esc_html__( 'Please enter a valid email address.', 'buddyboss' ),
-						'invite_sending_invite' => esc_html__( 'Sending invitation...', 'buddyboss' ),
-						'invite_error_notice' => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss' ),
+						'invite_valid_email'          => esc_html__( 'Please enter a valid email address.', 'buddyboss' ),
+						'invite_sending_invite'       => esc_html__( 'Sending invitation...', 'buddyboss' ),
+						'invite_error_notice'         => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss' ),
 					)
 				);
 			}
@@ -1119,7 +1126,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return array The same array with the specific messages scripts.
 		 */
-		function bb_rl_nouveau_member_register_scripts( $scripts = array() ) {
+		function bb_rl_nouveau_register_scripts( $scripts = array() ) {
 			if ( ! isset( $scripts['bp-nouveau'] ) ) {
 				return $scripts;
 			}
@@ -1129,6 +1136,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(
 					'bb-rl-members'             => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members%s.js',
+						'dependencies' => array( 'bp-nouveau' ),
+						'footer'       => true,
+					),
+					'bb-rl-groups'              => array(
+						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-groups%s.js',
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
 					),
@@ -1422,13 +1434,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					add_filter( 'bp_is_my_profile', 'bb_member_loop_set_my_profile' );
 
 					if ( 'message' === $primary_action_btn ) {
-						$primary_button_args = function_exists( 'bb_member_get_profile_action_arguments' )
+						$primary_button_args               = function_exists( 'bb_member_get_profile_action_arguments' )
 						? bb_member_get_profile_action_arguments()
 						: array();
 						$primary_button_args['link_class'] = 'bb-rl-send-message-disabled';
 						$buttons['primary']                = bp_get_send_message_button( $primary_button_args );
 					} else {
-						$secondary_button_args = function_exists( 'bb_member_get_profile_action_arguments' )
+						$secondary_button_args               = function_exists( 'bb_member_get_profile_action_arguments' )
 						? bb_member_get_profile_action_arguments( 'directory', 'secondary' )
 						: array();
 						$secondary_button_args['link_class'] = 'bb-rl-send-message-disabled';

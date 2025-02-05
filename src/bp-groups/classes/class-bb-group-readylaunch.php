@@ -280,7 +280,7 @@ class BB_Group_Readylaunch {
 
 		if ( bp_is_item_admin() ) {
 			?>
-			<div class="bb-rl-action-popup group-manage" id="model--group-manage-<?php echo esc_attr( $group_id ); ?>" style=";">
+			<div class="bb-rl-action-popup group-manage" id="model--group-manage-<?php echo esc_attr( $group_id ); ?>" style="display: none;">
 				<transition name="modal">
 					<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 						<div class="bb-rl-modal-wrapper">
