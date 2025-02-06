@@ -8,7 +8,7 @@
  */
 
 ?>
-<div class="bb-rl-media-move-file bb-rl-media-move-photo" style="display: none;">
+<div class="bb-rl-media-move-file bb-rl-media-move-photo bb-rl-modal-move-file" style="display: none;">
 	<transition name="modal">
 		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="bb-rl-modal-wrapper">
@@ -22,7 +22,7 @@
 						<?php bp_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-rl-model-footer">
-						<a href="#" class="bb-rl-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
+						<a href="#" class="bb-rl-create-album bb-rl-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
 						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-ac-media-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-media-move bb-rl-media-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</footer>
