@@ -45,8 +45,8 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 			</div><!-- #item-body -->
 		</div><!-- // .bp-wrap -->
 	</div>
-	<div class="bb-rl-secondary-container"></div>
-
-
-	<?php bp_nouveau_member_hook( 'after', 'home_content' ); ?>
+	<div class="bb-rl-secondary-container">
+		<?php bp_get_template_part( 'sidebar/right-sidebar' ); ?>
+	</div>
 </div>
+<?php bp_nouveau_member_hook( 'after', 'home_content' ); ?>
