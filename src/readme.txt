@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.7.91 =
+* Bug: Translations - Fixed an error caused by the latest French translations
+
 = 2.7.90 =
 * Bug: Courses - Fixed an issue where the member directory page displayed incorrect users when filtering by the Course option
 * Bug: Forums - Fixed a pagination issue for forum discussions
