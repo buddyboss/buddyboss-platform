@@ -68,17 +68,4 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 			<?php } ?>
 		<?php } ?>
 	</div>
-
-	<div id="item-header-cover-image" class="item-header-wrap <?php echo esc_attr( bp_disable_group_cover_image_uploads() ? 'bb-disable-cover-img' : 'bb-enable-cover-img' ); ?>">
-		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
-			<div id="item-header-avatar">
-				<?php if ( bp_is_item_admin() ) { ?>
-					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-						<i class="bb-icons-rl-camera"></i>
-					</a>
-					<span class="link-change-overlay"></span>
-				<?php } ?>
-			</div><!-- #item-header-avatar -->
-		<?php endif; ?>
-	</div><!-- #item-header-cover-image -->
 </div><!-- #cover-image-container -->

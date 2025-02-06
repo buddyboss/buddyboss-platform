@@ -463,3 +463,165 @@
   font-weight: 400;
   color: var(--bb-rl-text-secondary-color);
 }
+
+.bb-rl-group-cover-container {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+  padding: 0 var(--bb-rl-space-400);
+  margin-bottom: var(--bb-rl-space-400);
+}
+
+.bb-rl-group-cover-container #header-cover-image {
+  background-color: #fff;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 0;
+  display: block;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  overflow: hidden;
+  height: 300px;
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-img {
+  max-width: 100%;
+  min-width: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  min-height: 100%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  display: block;
+}
+
+.bb-rl-group-cover-container #header-cover-image.has-position .header-cover-img {
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap {
+  overflow: hidden;
+  height: 100%;
+  display: none;
+  width: 100%;
+  text-align: right;
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap .drag-element-helper {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 119;
+  top: 50%;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px 15px;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap .drag-element-helper > i {
+  margin-right: 5px;
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap > .button {
+  position: relative;
+  z-index: 1;
+  float: none;
+  margin: 12px 12px 0 0;
+  background-color: #f9f9f9;
+  color: #939597;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 6px 11px;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
+  content: "\ef30";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+  margin-left: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap > .button:hover, .bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap > .button:focus {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: none;
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap .guillotine-window {
+  position: absolute;
+  top: 0;
+}
+
+.bb-rl-group-cover-container #header-cover-image .header-cover-reposition-wrap img {
+  max-width: initial;
+  perspective: none !important;
+  backface-visibility: initial !important;
+}
+
+#header-cover-image a.link-change-cover-image,
+#header-cover-image a.position-change-cover-image {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  left: 12px;
+  top: 12px;
+  z-index: 3;
+  opacity: 0;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+#header-cover-image a.link-change-cover-image > i,
+#header-cover-image a.position-change-cover-image > i {
+  font-size: 34px;
+}
+
+#header-cover-image a.position-change-cover-image > i {
+  font-size: 34px;
+}
+
+#header-cover-image a.position-change-cover-image {
+  top: 55px;
+  display: none;
+}
+
+@media screen and (min-width: 1220px) {
+  #header-cover-image a.position-change-cover-image {
+    display: flex;
+  }
+  #header-cover-image #header-cover-image.has-cover-image {
+    background-image: none;
+  }
+}
+
+#header-cover-image:hover a.link-change-cover-image,
+#header-cover-image:hover a.position-change-cover-image {
+  opacity: 1;
+}

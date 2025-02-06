@@ -63,10 +63,39 @@ window.bp = window.bp || {};
 		},
 
 		initManageGroup: function ( $modal ) {
-			// Handle form submission
-			$modal.find( 'form' ).on( 'submit', function ( event ) {
-				event.preventDefault();				
-			} );
+			var form = $modal.find( 'form' );
+			$( document ).on(
+				'submit',
+				form,
+				function ( event ) {
+					event.preventDefault();
+
+					var current = $( event.target );
+					$action     = current.attr( 'action' );
+
+					var formData = new FormData( form.get( 0 ) );
+					formData.append( 'action', 'update_manage_content' );
+					formData.append( 'url',  $action );
+
+					history.pushState( {}, null, $action );
+
+					$.ajax(
+						{
+							method: 'POST',
+							url: BP_Nouveau.ajaxurl,
+							data: formData,
+							processData: false,
+							contentType: false,
+							success: function ( response ) {
+								console.log( response );
+							},
+							error: function ( xhr ) {
+								alert( 'Request failed. Please try again.' );
+							},
+						}
+					);
+				}
+			);
 		},
 
 		loadManageSettings: function ( e ) {
@@ -79,6 +108,8 @@ window.bp = window.bp || {};
 			var $url = $( this ).attr( 'href' );
 
 			if ( $url ) {
+
+				history.pushState( {}, null, $url );
 
 				$submitButton.prop( 'disabled', true );
 
