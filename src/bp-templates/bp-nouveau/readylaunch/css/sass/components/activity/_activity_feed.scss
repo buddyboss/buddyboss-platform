@@ -1,3 +1,31 @@
+/* Activity Nav */
+.activity-nav {
+	display: flex;
+	align-items: center;
+	list-style: none;
+	padding: 0;
+	margin: var(--bb-rl-space-400) 0;
+
+	li {
+		margin-right: var(--bb-rl-space-100);
+
+		&.selected a {
+			background-color: var(--bb-rl-background-color);
+			border-color: var(--bb-rl-border-quinery-color);
+		}
+
+		a {
+			background-color: var(--bb-rl-background-secondary-color);
+			color: var(--bb-rl-text-secondary-color);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			font-size: 14px;
+			font-weight: 500;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-full);
+		}
+	}
+}
+
 /* Activity Item */
 .bb-rl-activity-list {
 	list-style: none;
