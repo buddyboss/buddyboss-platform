@@ -467,6 +467,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register only if it's Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+
+				// BB icon version.
+				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
+				wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
 			}
 
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
@@ -513,10 +518,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$src = $wp_styles->registered[ $handle ]->src ?? '';
 
 				if (
-					false === strpos( $src, '/wp-includes/' ) &&
-					false === strpos( $src, '/buddyboss-platform/' ) &&
-					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
-					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
+					(
+						false === strpos( $src, '/wp-includes/' ) &&
+						false === strpos( $src, '/buddyboss-platform/' ) &&
+						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
+					) ||
+					'bp-nouveau-bb-icons' === $handle
 				) {
 					wp_dequeue_style( $handle );
 				}
