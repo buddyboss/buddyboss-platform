@@ -825,9 +825,9 @@ window.bp = window.bp || {};
 
 
 					// Pre select saved scope filter.
-					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
+					if ( $( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"]' ).length ) {
 						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== scope ) {
-							$( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
+							$( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
 						}
 					}
 
