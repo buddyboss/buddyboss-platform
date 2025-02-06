@@ -126,6 +126,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bb_member_directories_get_profile_actions', array( $this, 'bb_rl_member_directories_get_profile_actions' ), 10, 3 );
 
+				// override default images for the group cover and avatar image.
+				add_filter( 'bb_attachments_get_default_profile_group_cover_image', array( $this, 'bb_rl_group_default_group_cover_image' ), 999, 2 );
+				add_filter( 'bb_attachments_get_default_profile_group_avatar_image', array( $this, 'bb_rl_group_default_group_avatar_image' ), 999, 2 );
 			}
 		}
 
@@ -1398,6 +1401,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @param array  $buttons     Member profile actions.
 		 * @param int    $user_id     Member ID.
 		 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
+		 * 
+		 * @return array $buttons Filtered buttons.
 		 */
 		function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
 
@@ -1454,6 +1459,40 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $buttons;
+		}
+
+		/**
+		 * Filters default group cover image URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string|bool $cover_image_url Default cover URL, false otherwise.
+		 * @param string      $component       The component to get the settings for ("members" for user or "groups").
+		 * 
+		 * @return string|bool $cover_image_url Default cover URL, false otherwise.
+		 */
+		function bb_rl_group_default_group_cover_image( $cover_image_url, $component ) {
+			if ( 'groups' === $component ) {
+				$cover_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
+			}
+			return $cover_image_url;
+		}
+
+		/**
+		 * Filters default group avatar image URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
+		 * @param string      $component        The component to get the settings for ("members" for user or "groups").
+		 * 
+		 * @return string|bool $avatar_image_url Default avatar URL, false otherwise.
+		 */
+		function bb_rl_group_default_group_avatar_image( $avatar_image_url, $params ) {
+			if ( isset( $params['object'] ) && 'group' === $params['object'] ) {
+				$avatar_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_avatar_image.jpeg' );
+			}
+			return $avatar_image_url;
 		}
 	}
 }
