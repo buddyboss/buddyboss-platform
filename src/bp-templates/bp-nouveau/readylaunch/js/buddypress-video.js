@@ -13,11 +13,11 @@ window.bp = window.bp || {};
 	bp.Nouveau = bp.Nouveau || {};
 
 	var bpNouveauLocal = BP_Nouveau,
-	    bbRlMedia      = bpNouveauLocal.media,
-	    bbRlAjaxUrl    = bpNouveauLocal.ajaxurl,
-	    bbRlVideo      = bpNouveauLocal.video,
-	    bbRlNonce      = bpNouveauLocal.nonces,
-	    bbRlActivity   = bpNouveauLocal.activity;
+		bbRlMedia      = bpNouveauLocal.media,
+		bbRlAjaxUrl    = bpNouveauLocal.ajaxurl,
+		bbRlVideo      = bpNouveauLocal.video,
+		bbRlNonce      = bpNouveauLocal.nonces,
+		bbRlActivity   = bpNouveauLocal.activity;
 
 	/**
 	 * [Video description]
@@ -46,10 +46,10 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
-			var bodySelector = $( 'body' );
-			this.thumbnail_xhr          = null;
-			this.thumbnail_interval     = null;
-			this.thumbnail_max_interval = 6;
+			var bodySelector              = $( 'body' );
+			this.thumbnail_xhr            = null;
+			this.thumbnail_interval       = null;
+			this.thumbnail_max_interval   = 6;
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
 			this.video_thumb_dropzone_obj = [];
@@ -66,7 +66,7 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 			}
 			var uploaderVideoTemplate = document.getElementsByClassName( 'uploader-post-video-template' ).length ? document.getElementsByClassName( 'uploader-post-video-template' )[0].innerHTML : ''; // Check to avoid error if Node is missing.
-			this.videoOptions = {
+			this.videoOptions         = {
 				url: bbRlAjaxUrl,
 				timeout: 3 * 60 * 60 * 1000,
 				dictFileTooBig: bbRlVideo.dictFileTooBig,
@@ -112,7 +112,7 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function () {
 			var bpNouveau = $( '.bp-nouveau' ),
-			    $document = $( document );
+				$document = $( document );
 
 			$document.on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-thumbnail-submit', this.submitVideoThumbnail.bind( this ) );
@@ -155,17 +155,17 @@ window.bp = window.bp || {};
 			target.addClass( 'saving' );
 
 			var uploader                 = $( '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail' ),
-			    videoId                  = uploader.find( '.bb-rl-video-edit-thumbnail-hidden-video-id' ).val(),
-			    videoAttachmentId        = uploader.find( '.bb-rl-video-edit-thumbnail-hidden-attachment-id' ).val(),
-			    videoCheckedAttachmentId = uploader.find( 'input[type="radio"]:checked' ).val(),
-			    data                     = {
-				    'action'              : 'video_thumbnail_save',
-				    '_wpnonce'            : bbRlNonce.video,
-				    'video_thumbnail'     : self.dropzone_video_thumb,
-				    'video_id'            : videoId,
-				    'video_attachment_id' : videoAttachmentId,
-				    'video_default_id'    : videoCheckedAttachmentId,
-			    };
+				videoId                  = uploader.find( '.bb-rl-video-edit-thumbnail-hidden-video-id' ).val(),
+				videoAttachmentId        = uploader.find( '.bb-rl-video-edit-thumbnail-hidden-attachment-id' ).val(),
+				videoCheckedAttachmentId = uploader.find( 'input[type="radio"]:checked' ).val(),
+				data                     = {
+					'action'              : 'video_thumbnail_save',
+					'_wpnonce'            : bbRlNonce.video,
+					'video_thumbnail'     : self.dropzone_video_thumb,
+					'video_id'            : videoId,
+					'video_attachment_id' : videoAttachmentId,
+					'video_default_id'    : videoCheckedAttachmentId,
+			};
 
 			$.ajax(
 				{
@@ -178,8 +178,8 @@ window.bp = window.bp || {};
 							return;
 						}
 						var thumbnailSrc = response.data.thumbnail,
-						    activityElem = $( '.bb-activity-video-elem a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' ),
-						    videoThumb   = $( '.bb-video-thumb a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' );
+							activityElem = $( '.bb-activity-video-elem a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' ),
+							videoThumb   = $( '.bb-video-thumb a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' );
 
 						if ( videoThumb.find( 'img' ).length ) {
 							videoThumb.find( 'img' ).attr( 'src', thumbnailSrc );
@@ -200,9 +200,11 @@ window.bp = window.bp || {};
 							videoThumb.find( 'img' ).attr( 'src', thumbnailSrc );
 						}
 
-						self.dropzone_video_thumb.forEach( function ( thumb ) {
-							thumb.saved = true;
-						} );
+						self.dropzone_video_thumb.forEach(
+							function ( thumb ) {
+								thumb.saved = true;
+							}
+						);
 
 						if ( response.data.video_attachments ) {
 							$( '.video-action_list .edit_thumbnail_video a[data-video-attachment-id="' + response.data.video_attachment_id + '"]' ).attr( 'data-video-attachments', response.data.video_attachments );
@@ -223,8 +225,8 @@ window.bp = window.bp || {};
 		uploadVideoNavigate: function ( event ) {
 			event.preventDefault();
 			var target       = $( event.currentTarget ),
-			    currentPopup = $( target ).closest( '#bp-video-uploader' ),
-			    breadcrumb   = currentPopup.find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb' );
+				currentPopup = $( target ).closest( '#bp-video-uploader' ),
+				breadcrumb   = currentPopup.find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb' );
 
 			if ( $( target ).hasClass( 'bb-field-uploader-next' ) ) {
 				currentPopup.find( '.bb-field-steps-1' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
@@ -259,8 +261,8 @@ window.bp = window.bp || {};
 		 */
 		videoActivityActionButton: function ( event ) {
 			event.preventDefault();
-			var target = $( event.currentTarget ), $body = $( 'body' ),
-			    $activityVideoElem                       = target.closest( '.bb-rl-activity-video-elem' );
+			var target             = $( event.currentTarget ), $body = $( 'body' ),
+				$activityVideoElem = target.closest( '.bb-rl-activity-video-elem' );
 
 			$activityVideoElem.toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-rl-activity-video-elem' ).removeClass( 'is-visible' );
 			$activityVideoElem.find( '.bb_rl_more_dropdown' ).toggleClass( 'open' ).closest( '.activity-item' ).siblings().find( '.bb-rl-activity-video-elem .bb_rl_more_dropdown' ).removeClass( 'open' );
@@ -289,7 +291,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var $target     = $( event.currentTarget ),
-			    isSelecting = ! $target.hasClass( 'selected' );
+				isSelecting = ! $target.hasClass( 'selected' );
 
 			this.setVideoSelectionState( isSelecting );
 
@@ -336,10 +338,11 @@ window.bp = window.bp || {};
 
 			if ( self.current_tab === 'bp-video-dropzone-content' ) {
 				var post_content  = $( '#bp-video-post-content' ).val(),
-				    targetPopup   = $( event.currentTarget ).closest( '.open-popup' ),
-				    selectedAlbum = targetPopup.find( '.bb-rl-album-selected-id' ).val();
+					targetPopup   = $( event.currentTarget ).closest( '.open-popup' ),
+					selectedAlbum = targetPopup.find( '.bb-rl-album-selected-id' ).val();
 				if ( selectedAlbum.length && parseInt( selectedAlbum ) > 0 ) {
-					for ( var i = 0; i < self.dropzone_video.length; i++ ) {
+					var dropZoneLength = self.dropzone_video.length;
+					for ( var i = 0; i < dropZoneLength; i++ ) {
 						self.dropzone_video[ i ].album_id = selectedAlbum;
 					}
 				} else {
@@ -528,9 +531,9 @@ window.bp = window.bp || {};
 
 		openUploader : function ( event ) {
 			var self      = this,
-			    currentTarget,
-			    parentsOpen,
-			    $document = $( document );
+				currentTarget,
+				parentsOpen,
+				$document = $( document );
 			event.preventDefault();
 
 			this.moveToIdPopup   = bbRlVideo.move_to_id_popup;
@@ -590,8 +593,8 @@ window.bp = window.bp || {};
 					function ( e ) {
 						e.preventDefault();
 						var eventCurrentTarget        = $( e.currentTarget ),
-						    eventCurrentTargetClosest = eventCurrentTarget.closest( '.bb-rl-field-wrap' ),
-						    $itemSpanLastChild        = $( this ).closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
+							eventCurrentTargetClosest = eventCurrentTarget.closest( '.bb-rl-field-wrap' ),
+							$itemSpanLastChild        = $( this ).closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
 						if ( $( this ).parent().hasClass( 'is_active' ) ) {
 							return;
 						}
@@ -630,10 +633,10 @@ window.bp = window.bp || {};
 							return;
 						}
 						var eventCurrentTarget = $( e.currentTarget ),
-						    fieldWrapElem      = eventCurrentTarget.closest( '.bb-rl-field-wrap' ),
-						    spanLastChild      = (
-							    this
-						    ).closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
+							fieldWrapElem      = eventCurrentTarget.closest( '.bb-rl-field-wrap' ),
+							spanLastChild      = (
+								this
+							).closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
 						fieldWrapElem.find( '.bb-rl-album-selected-id' ).val( 0 );
 						fieldWrapElem.find( '.location-album-list li span' ).removeClass( 'selected' ).parent().removeClass( 'is_active' );
 						if ( spanLastChild.hasClass( 'is-disabled' ) ) {
@@ -699,7 +702,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly
+							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
 							}
 						} else {
@@ -817,12 +820,12 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var $document         = $( document ),
-			    target            = $( event.currentTarget ),
-			    parentActivityId  = target.attr( 'data-parent-activity-id' ),
-			    videoAttachmentId = target.attr( 'data-video-attachment-id' ),
-			    videoAttachments  = target.attr( 'data-video-attachments' ),
-			    videoId           = target.attr( 'data-video-id' ),
-			    popupSelector     = target.closest( '.bb-rl-activity-inner, #video-stream.video, #media-stream.media, .forums-video-wrap, .comment-item' );
+				target            = $( event.currentTarget ),
+				parentActivityId  = target.attr( 'data-parent-activity-id' ),
+				videoAttachmentId = target.attr( 'data-video-attachment-id' ),
+				videoAttachments  = target.attr( 'data-video-attachments' ),
+				videoId           = target.attr( 'data-video-id' ),
+				popupSelector     = target.closest( '.bb-rl-activity-inner, #video-stream.video, #media-stream.media, .forums-video-wrap, .comment-item' );
 
 			if ( ! popupSelector.length ) {
 				var singleAlbum = $( '#bp-media-single-album' );
@@ -868,7 +871,7 @@ window.bp = window.bp || {};
 				'.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-dropzone-content',
 				function ( e ) {
 					var $this   = $( this ),
-					    $target = $( e.target );
+						$target = $( e.target );
 					if ( $target.hasClass( 'bb-rl-custom-check' ) || $target.hasClass( 'bb-icon-l' ) || $target.hasClass( 'dz-remove' ) || $target.hasClass( 'dz-clickable' ) || $target.hasClass( 'bb-rl-close-thumbnail-custom' ) ) {
 						return;
 					}
@@ -904,11 +907,11 @@ window.bp = window.bp || {};
 
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail div.bb-rl-video-thumbnail-uploader-wrapper .bb-rl-video-thumbnail-uploader-dropzone-select' ).length ) {
 				var uploaderSelector          = '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail',
-				    $videoThumbnailUploadeEle = $( '.bb-rl-video-thumbnail-uploader' );
+					$videoThumbnailUploadeEle = $( '.bb-rl-video-thumbnail-uploader' );
 				$( uploaderSelector + ' .bb-rl-video-edit-thumbnail-hidden-video-id' ).val( videoId );
 				$( uploaderSelector + ' .bb-rl-video-edit-thumbnail-hidden-attachment-id' ).val( videoAttachmentId );
 
-				//Check to avoid error if Node is missing.
+				// Check to avoid error if Node is missing.
 				self.videoThumbnailOptions.previewTemplate = document.getElementsByClassName( 'bb-rl-uploader-post-video-thumbnail-template' ).length ? document.getElementsByClassName( 'bb-rl-uploader-post-video-thumbnail-template' )[ 0 ].innerHTML : '';
 				self.videoThumbnailOptions.thumbnailMethod = 'contain';
 				self.videoThumbnailOptions.thumbnailWidth  = null;
@@ -948,8 +951,8 @@ window.bp = window.bp || {};
 					'uploadprogress',
 					function ( element ) {
 						var circle                    = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ],
-						    radius                    = circle.r.baseVal.value,
-						    circumference             = radius * 2 * Math.PI;
+							radius                    = circle.r.baseVal.value,
+							circumference             = radius * 2 * Math.PI;
 						circle.style.strokeDasharray  = circumference + ' ' + circumference;
 						circle.style.strokeDashoffset = circumference;
 						circle.style.strokeDashoffset = circumference - element.upload.progress.toFixed( 0 ) / 100 * circumference;
@@ -963,8 +966,8 @@ window.bp = window.bp || {};
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if ( file.status === 'error' && (
-							            file.xhr && file.xhr.status === 0
-							) ) { // update server error text to user friendly
+										file.xhr && file.xhr.status === 0
+							) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
 							}
 						} else {
@@ -1257,7 +1260,7 @@ window.bp = window.bp || {};
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
-							} else if( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly
+							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
 							}
 						} else {
@@ -1381,12 +1384,12 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var video              = [],
-			    buddyPressSelector = $( '#buddypress' ),
-			    type               = target.attr( 'data-type' ),
-			    fromWhere          = target.data( 'item-from' ),
-			    rootParentActivity = target.data( 'root-parent-activity-id' ),
-			    id                 = '',
-			    activityId         = '';
+				buddyPressSelector = $( '#buddypress' ),
+				type               = target.attr( 'data-type' ),
+				fromWhere          = target.data( 'item-from' ),
+				rootParentActivity = target.data( 'root-parent-activity-id' ),
+				id                 = '',
+				activityId         = '';
 
 			if ( 'video' === type ) {
 				if ( ! confirm( bbRlVideo.i18n_strings.video_delete_confirm ) ) {
@@ -1472,7 +1475,7 @@ window.bp = window.bp || {};
 											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-content .activity-state' ).removeClass( 'has-comments' );
 										} else {
 											var totalLi         = parseInt( liCount ),
-											    actCommentsText = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+												actCommentsText = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
 											if ( actCommentsText.length ) {
 												var multipleCommentLabel = totalLi > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 												actCommentsText.text( multipleCommentLabel.replace( '%d', totalLi ) );
@@ -1487,9 +1490,9 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 								if ( 'yes' === bbRlVideo.is_video_directory ) {
 									var store     = bp.Nouveau.getStorage( 'bp-video' ),
-									    scope     = store.scope,
-									    $document = $( document ),
-									    scopeSelector;
+										scope     = store.scope,
+										$document = $( document ),
+										scopeSelector;
 									if ( scope === 'personal' ) {
 										scopeSelector = '#video-personal';
 									} else if ( scope === 'groups' ) {
@@ -1619,8 +1622,8 @@ window.bp = window.bp || {};
 
 			// call ajax to remove attachment video_thumbnail_delete.
 			var videoId                = $( '.bb-rl-video-edit-thumbnail-hidden-video-id' ).val(),
-			    videoAttachmentId      = $( '.bb-rl-video-edit-thumbnail-hidden-attachment-id' ).val(),
-			    thumbVideoAttachmentId = target.closest( '.bb-dropzone-wrap' ).find( 'input' ).val();
+				videoAttachmentId      = $( '.bb-rl-video-edit-thumbnail-hidden-attachment-id' ).val(),
+				thumbVideoAttachmentId = target.closest( '.bb-dropzone-wrap' ).find( 'input' ).val();
 
 			$.ajax(
 				{
@@ -1649,15 +1652,15 @@ window.bp = window.bp || {};
 							if ( $videoThumb.find( 'img' ).length ) {
 								$videoThumb.find( 'img' ).attr( 'src', response.data.thumbnail );
 							}
-							var $activityVideoElem = $('.bb-activity-video-elem a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]');
+							var $activityVideoElem = $( '.bb-activity-video-elem a.bb-rl-video-cover-wrap[data-id="' + videoId + '"]' );
 							if ( $activityVideoElem.find( 'img' ).length ) {
 								$activityVideoElem.find( 'img' ).attr( 'src', response.data.thumbnail );
 							}
-							var $activityVideoJs = $('.bb-activity-video-elem .video-js[data-id="' + videoId + '"]');
+							var $activityVideoJs = $( '.bb-activity-video-elem .video-js[data-id="' + videoId + '"]' );
 							if ( $activityVideoJs.find( '.vjs-poster' ).length ) {
 								$activityVideoJs.attr( 'poster', response.data.thumbnail ).find( 'video' ).attr( 'poster', response.data.thumbnail ).end().find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
 							}
-							var $theatreVideo = $('#theatre-video-' + videoId);
+							var $theatreVideo = $( '#theatre-video-' + videoId );
 							if ( $theatreVideo.length ) {
 								$theatreVideo.attr( 'poster', response.data.thumbnail ).find( 'video' ).attr( 'poster', response.data.thumbnail ).end().find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
 								$videoThumb.find( 'img' ).attr( 'src', response.data.thumbnail );
@@ -1706,7 +1709,7 @@ window.bp = window.bp || {};
 			eventCurrentTarget = $( event.currentTarget ),
 			$document          = $( document ),
 			video_id           = eventCurrentTarget.closest( '.bb-rl-video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'id' ),
-			video_parent_id    = eventCurrentTarget.closest('.bb-rl-video-action-wrap').siblings('a, div.video-js').data('album-id');
+			video_parent_id    = eventCurrentTarget.closest( '.bb-rl-video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'album-id' );
 
 			this.moveToIdPopup   = eventCurrentTarget.attr( 'id' );
 			this.moveToTypePopup = eventCurrentTarget.attr( 'data-type' );
@@ -1719,10 +1722,10 @@ window.bp = window.bp || {};
 			video_move_popup.find( '.bb-rl-video-move' ).attr( 'id', video_id );
 			video_move_popup.find( '.bb-rl-model-footer .bb-rl-video-move' ).addClass( 'is-disabled' );
 
-			// For Activity Feed
-			var currentTarget = (eventCurrentTarget.closest('.bb-rl-video-action_list').closest('li.comment-item').length) ?
-				'#' + eventCurrentTarget.closest('.bb-rl-video-action_list').closest('li').attr('id') + '.comment-item .bb-rl-video-move-file' :
-				'#' + eventCurrentTarget.closest('li.activity-item').attr('id') + ' > .bb-rl-activity-content .bb-rl-video-move-file';
+			// For Activity Feed.
+			var currentTarget = (eventCurrentTarget.closest( '.bb-rl-video-action_list' ).closest( 'li.comment-item' ).length) ?
+				'#' + eventCurrentTarget.closest( '.bb-rl-video-action_list' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bb-rl-video-move-file' :
+				'#' + eventCurrentTarget.closest( 'li.activity-item' ).attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-video-move-file';
 
 			$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventCurrentTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );
 
@@ -1794,8 +1797,8 @@ window.bp = window.bp || {};
 
 					$this.addClass( 'selected' ).parent().addClass( 'is_active' ).siblings().removeClass( 'is_active' ).children( 'span' ).removeClass( 'selected' );
 					var parentsOpen        = $document.find( 'a.bb-rl-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id' ),
-					    $videoMoveFileElem = $eventTarget.closest( '.bb-rl-video-move-file' ),
-					    $videoMoveElem     = $videoMoveFileElem.find( '.bb-rl-model-footer .bb-rl-video-move' );
+						$videoMoveFileElem = $eventTarget.closest( '.bb-rl-video-move-file' ),
+						$videoMoveElem     = $videoMoveFileElem.find( '.bb-rl-model-footer .bb-rl-video-move' );
 					if ( Number( parentsOpen ) === Number( $eventTarget.data( 'id' ) ) ) {
 						$videoMoveElem.addClass( 'is-disabled' );
 					} else {
@@ -1851,7 +1854,7 @@ window.bp = window.bp || {};
 		closeVideoMove: function ( event ) {
 			event.preventDefault();
 			var eventCurrentTarget = $( event.currentTarget ),
-			    spanLastChild      = eventCurrentTarget.closest( '.bb-rl-video-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' );
+				spanLastChild      = eventCurrentTarget.closest( '.bb-rl-video-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' );
 			if ( spanLastChild.data( 'id' ) !== 0 ) {
 				spanLastChild.remove();
 			}
@@ -1961,8 +1964,8 @@ window.bp = window.bp || {};
 
 		closeTheatre: function ( event ) {
 			event.preventDefault();
-			var self = this, target = $( event.currentTarget ),
-			    modelWrapper        = target.closest( '.bb-media-model-wrapper' );
+			var self         = this, target = $( event.currentTarget ),
+				modelWrapper = target.closest( '.bb-media-model-wrapper' );
 
 			if (
 				modelWrapper.hasClass( 'media-theatre' ) ||
@@ -2040,8 +2043,9 @@ window.bp = window.bp || {};
 			}
 
 			if ( typeof video_elements !== 'undefined' ) {
-				self.videos = [];
-				for ( i = 0; i < video_elements.length; i++ ) {
+				self.videos      = [];
+				var videosLength = video_elements.length;
+				for ( i = 0; i < videosLength; i++ ) {
 					var video_element = $( video_elements[ i ] );
 					if ( ! video_element.closest( '#bp-existing-media-content' ).length ) {
 
@@ -2068,7 +2072,7 @@ window.bp = window.bp || {};
 						if ( video_element.closest( '.bb-activity-video-elem' ).hasClass( 'has-no-thumbnail' ) ) {
 							m.thumbnail_class = 'has-no-thumbnail';
 
-						// Add class to video theatre for the video directory.
+							// Add class to video theatre for the video directory.
 						} else if ( video_element.closest( '.bb-video-thumb' ).hasClass( 'has-no-thumbnail' ) ) {
 							m.thumbnail_class = 'has-no-thumbnail';
 						}
@@ -2079,8 +2083,8 @@ window.bp = window.bp || {};
 			}
 		},
 		setCurrentVideo: function ( id ) {
-			var self = this, i;
-			for ( i = 0; i < self.videos.length; i++ ) {
+			var self = this, i, videosLength = self.videos.length;
+			for ( i = 0; i < videosLength; i++ ) {
 				if ( id === self.videos[ i ].id ) {
 					self.current_video = self.videos[ i ];
 					self.current_index = i;
@@ -2110,13 +2114,13 @@ window.bp = window.bp || {};
 
 				// hide privacy setting of video if activity is present.
 				if ( ( typeof bbRlActivity !== 'undefined' &&
-				       typeof self.current_video.activity_id !== 'undefined' &&
-				       self.current_video.activity_id !== 0 ) ||
-				     self.group_id ||
-				     self.current_video.is_forum ||
-				     self.current_video.group_id ||
-				     self.current_video.album_id ||
-				     self.current_video.is_message
+						typeof self.current_video.activity_id !== 'undefined' &&
+						self.current_video.activity_id !== 0 ) ||
+					self.group_id ||
+					self.current_video.is_forum ||
+					self.current_video.group_id ||
+					self.current_video.album_id ||
+					self.current_video.is_message
 				) {
 					video_privacy_wrap.hide();
 				}
@@ -2180,9 +2184,9 @@ window.bp = window.bp || {};
 		},
 
 		resetRemoveActivityCommentsData: function () {
-			var self = this,
-			    hiddenParentIdElem = $( '#hidden_parent_id' ),
-			    currentActivityId = hiddenParentIdElem.val();
+			var self               = this,
+				hiddenParentIdElem = $( '#hidden_parent_id' ),
+				currentActivityId  = hiddenParentIdElem.val();
 			if ( 'undefined' !== typeof currentActivityId ) {
 				self.activity_ajax = $.ajax(
 					{
@@ -2192,8 +2196,8 @@ window.bp = window.bp || {};
 							action: 'video_get_activity',
 							reset_comment: true,
 							id: currentActivityId,
-							group_id: !_.isUndefined( self.current_video.group_id ) ? self.current_video.group_id : 0,
-							video_id: !_.isUndefined( self.current_video.id ) ? self.current_video.id : 0,
+							group_id: ! _.isUndefined( self.current_video.group_id ) ? self.current_video.group_id : 0,
+							video_id: ! _.isUndefined( self.current_video.id ) ? self.current_video.id : 0,
 							nonce: bbRlNonce.video
 						},
 						success: function ( response ) {
@@ -2212,10 +2216,10 @@ window.bp = window.bp || {};
 				// For Like and comment - When open video module as popup and add like and comment.
 				// When we close the video module, then we fetch like and count and put into the main feed.
 				var activity_meta, activity_state, activity, html = false, classes = false;
-				activity = $( '.bb-media-model-wrapper.video [data-bp-activity-id="' + currentActivityId + '"]' );
+				activity       = $( '.bb-media-model-wrapper.video [data-bp-activity-id="' + currentActivityId + '"]' );
 				activity_state = activity.find( '.activity-state' );
 				if ( activity_state.length ) {
-					html = activity_state.html();
+					html    = activity_state.html();
 					classes = activity_state.attr( 'class' );
 					activity_state.remove();
 					activity_state = $( '[data-bp-activity-id="' + currentActivityId + '"] .activity-state' );
@@ -2226,7 +2230,7 @@ window.bp = window.bp || {};
 				}
 				activity_meta = activity.find( '.activity-meta' );
 				if ( activity_meta.length ) {
-					html = activity_meta.html();
+					html    = activity_meta.html();
 					classes = activity_meta.attr( 'class' );
 					activity_meta.remove();
 					activity_meta = $( '[data-bp-activity-id="' + currentActivityId + '"] > .activity-meta' );
@@ -2248,10 +2252,10 @@ window.bp = window.bp || {};
 			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
 
 			if ( typeof bbRlActivity !== 'undefined' &&
-			     self.current_video &&
-			     typeof self.current_video.activity_id !== 'undefined' &&
-			     self.current_video.activity_id !== 0 &&
-			     ! self.current_video.is_forum
+				self.current_video &&
+				typeof self.current_video.activity_id !== 'undefined' &&
+				self.current_video.activity_id !== 0 &&
+				! self.current_video.is_forum
 			) {
 
 				if ( self.activity_ajax !== false ) {
@@ -2280,7 +2284,7 @@ window.bp = window.bp || {};
 							nonce: bbRlNonce.video
 						},
 						success: function ( response ) {
-							if ( response.success && $( '.bb-media-model-wrapper.video:visible').length ) {
+							if ( response.success && $( '.bb-media-model-wrapper.video:visible' ).length ) {
 								var $figureElem = $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' );
 								$figureElem.html( response.data.video_data );
 								$figureElem.find( 'video' ).attr( 'autoplay', true );
@@ -2290,7 +2294,8 @@ window.bp = window.bp || {};
 
 								jQuery( window ).scroll();
 								setTimeout(
-									function () { // Waiting to load dummy image
+									function () {
+										// Waiting to load dummy image.
 										bp.Nouveau.reportPopUp();
 										bp.Nouveau.reportedPopup();
 									},
@@ -2308,8 +2313,8 @@ window.bp = window.bp || {};
 		openVideoActivityDescription: function ( event ) {
 			event.preventDefault();
 			var target           = $( event.currentTarget ),
-			    $descriptionElem = target.parents( '.activity-video-description' ),
-			    editVideoDesc    = $descriptionElem.find( '.bp-edit-video-activity-description' );
+				$descriptionElem = target.parents( '.activity-video-description' ),
+				editVideoDesc    = $descriptionElem.find( '.bp-edit-video-activity-description' );
 			if ( editVideoDesc.length < 1 ) {
 				return false;
 			}
@@ -2322,7 +2327,7 @@ window.bp = window.bp || {};
 		closeVideoActivityDescription: function ( event ) {
 			event.preventDefault();
 			var target           = $( event.currentTarget ),
-			    $descriptionElem = target.parents( '.activity-video-description' );
+				$descriptionElem = target.parents( '.activity-video-description' );
 
 			if ( $descriptionElem.length < 1 ) {
 				return false;
@@ -2336,7 +2341,7 @@ window.bp = window.bp || {};
 			$descriptionElem.find( '.bp-edit-video-activity-description' ).hide().removeClass( 'open' );
 		},
 
-		MediaActivityDescriptionUpdate: function( event ) {
+		MediaActivityDescriptionUpdate: function ( event ) {
 			var eventCurrentTarget = $( event.currentTarget );
 			if ( eventCurrentTarget.val().trim() !== '' ) {
 				eventCurrentTarget.closest( '.bp-edit-video-activity-description' ).addClass( 'has-content' );
@@ -2349,10 +2354,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var target        = $( event.currentTarget ),
-			    parent_wrap   = target.parents( '.activity-video-description' ),
-			    $descInput    = parent_wrap.find( '#add-activity-description' ),
-			    description   = $descInput.val(),
-			    attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
+				parent_wrap   = target.parents( '.activity-video-description' ),
+				$descInput    = parent_wrap.find( '#add-activity-description' ),
+				description   = $descInput.val(),
+				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
 
 			var data = {
 				'action'        : 'video_description_save',
@@ -2370,7 +2375,7 @@ window.bp = window.bp || {};
 					success : function ( response ) {
 						if ( response.success ) {
 							var $addVideoDesc = parent_wrap.find( '.bp-add-video-activity-description' ),
-							    $videoDesc    = parent_wrap.find( '.bp-video-activity-description' );
+								$videoDesc    = parent_wrap.find( '.bp-video-activity-description' );
 							$videoDesc.html( response.data.description ).show();
 							$addVideoDesc.show();
 							$descInput.val( response.data.description );
@@ -2396,7 +2401,7 @@ window.bp = window.bp || {};
 			var self = this, i = 0, $document = $( document );
 			if ( self.is_open_video && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_video.activity_id === data.id ) {
 
-				var $deleted_item = $document.find( '[data-bp-list="video"] .bb-rl-open-video-theatre[data-id="' + self.current_video.id + '"]' );
+				var $deleted_item             = $document.find( '[data-bp-list="video"] .bb-rl-open-video-theatre[data-id="' + self.current_video.id + '"]' );
 				var $deleted_item_parent_list = $deleted_item.parents( 'ul' );
 
 				$deleted_item.closest( 'li' ).remove();
@@ -2416,7 +2421,8 @@ window.bp = window.bp || {};
 
 				$document.find( '[data-bp-list="activity"] .bb-rl-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
 
-				for ( i = 0; i < self.videos.length; i++ ) {
+				var videosLength = self.videos.length;
+				for ( i = 0; i < videosLength; i++ ) {
 					if ( self.videos[ i ].activity_id === data.id ) {
 						self.videos.splice( i, 1 );
 						break;
@@ -2501,36 +2507,36 @@ window.bp = window.bp || {};
 			$( '.video-js:not(.loaded)' ).each(
 				function () {
 
-					var self   		= this;
-					var options 	= { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
-					var player_id 	= $( this ).attr( 'id' );
+					var self      = this;
+					var options   = { 'controlBar' : { 'volumePanel' : { 'inline' : false } } };
+					var player_id = $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
 					player[ $( this ).attr( 'id' ) ] = videojs(
 						self,
 						options,
-                        function onPlayerReady() {
-                            this.on(
-                                'ended',
-                                function () {
-                                }
-                            );
-                            this.on(
-                                    'play',
-                                function() {
-                                    $( '.video-js' ).each(
-                                        function () {
-                                            if ( videoIndex !== $( this ).attr( 'id' ) ) {
-                                                this.player.pause();
-                                            }
-                                        }
-                                    );
-                                }
-                                );
-                        }
+						function onPlayerReady() {
+							this.on(
+								'ended',
+								function () {
+								}
+							);
+							this.on(
+								'play',
+								function () {
+									$( '.video-js' ).each(
+										function () {
+											if ( videoIndex !== $( this ).attr( 'id' ) ) {
+												this.player.pause();
+											}
+										}
+									);
+								}
+							);
+						}
 					);
 
-					if ( player[ player_id ] !== undefined && ( $( this ).find('.skip-back').length === 0 && $( this ).find('.skip-forward').length === 0 ) ) {
+					if ( player[ player_id ] !== undefined && ( $( this ).find( '.skip-back' ).length === 0 && $( this ).find( '.skip-forward' ).length === 0 ) ) {
 						player[ player_id ].seekButtons(
 							{
 								forward: 5,
@@ -2538,7 +2544,7 @@ window.bp = window.bp || {};
 							}
 						);
 						setTimeout(
-							function() {
+							function () {
 								var vjsBlock = $( self ).parent();
 								vjsBlock.find( '.vjs-control-bar > .vjs-seek-button.skip-back, .vjs-control-bar > .vjs-seek-button.skip-forward' ).attr( 'data-balloon-pos', 'up' );
 								vjsBlock.find( '.vjs-control-bar > .vjs-seek-button.skip-back' ).attr( 'data-balloon', bbRlVideo.i18n_strings.video_skip_back_text );
@@ -2547,7 +2553,7 @@ window.bp = window.bp || {};
 							0
 						);
 					}
-					// Check if Video has played before and has the same id
+					// Check if Video has played before and has the same id.
 					if ( bp.Nouveau.Video.Player.playerTime > 0 && $( this ).attr( 'id' ) === 'theatre-' + bp.Nouveau.Video.Player.playerID ) {
 						player[ $( self ).parent().attr( 'id' ) ].currentTime( bp.Nouveau.Video.Player.playerTime );
 						player[ $( self ).parent().attr( 'id' ) ].play();
@@ -2568,8 +2574,8 @@ window.bp = window.bp || {};
 
 						fullscreen_btn.on(
 							'click touchstart',
-							function() {
-								// Set current time of video and id
+							function () {
+								// Set current time of video and id.
 								if ( player[ele_id].currentTime() > 0 ) {
 									bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
 									bp.Nouveau.Video.Player.playerID   = $( '#' + ele_id ).parent().find( '.video-js video' ).attr( 'id' );
@@ -2581,14 +2587,14 @@ window.bp = window.bp || {};
 
 						error_block.on(
 							'click',
-							function() {
+							function () {
 								$( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).trigger( 'click' );
 							}
 						);
 
 						video_block_main.on(
 							'click',
-							function(e) {
+							function (e) {
 
 								if ( $( e.target ).hasClass( 'video-js' ) ) {
 
@@ -2611,10 +2617,10 @@ window.bp = window.bp || {};
 						Enter_fullscreen_btn.attr( 'data-balloon', bbRlVideo.i18n_strings.video_fullscreen_text );
 					}
 
-					// Add video Picture in Picture notice
+					// Add video Picture in Picture notice.
 					$( self ).parent().find( '.video-js' ).append( '<div class="pcture-in-picture-notice">' + bbRlVideo.i18n_strings.video_picture_in_text + '</div>' );
 
-					// Add Tooltips to control buttons
+					// Add Tooltips to control buttons.
 					var vjsallControlsButton = $( self ).parent().find( '.vjs-control-bar > button, .vjs-control-bar > div' );
 					vjsallControlsButton.attr( 'data-balloon-pos', 'up' );
 
