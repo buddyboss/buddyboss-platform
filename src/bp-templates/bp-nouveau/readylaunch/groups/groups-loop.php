@@ -47,7 +47,7 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 			?>
 
 			<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $bp_group_id ); ?>" data-bp-item-component="groups">
-				<div class="list-wrap">
+				<div class="list-wrap bb-rl-group-block">
 					<?php
 					if ( ! bp_disable_group_cover_image_uploads() && bb_platform_group_element_enable( 'cover-images' ) ) {
 						$group_cover_image_url = bp_attachments_get_attachment(

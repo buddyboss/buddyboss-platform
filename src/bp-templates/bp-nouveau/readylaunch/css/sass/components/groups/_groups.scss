@@ -229,9 +229,9 @@
 			.bb-group-member.count-wrap {
 				margin-left: 8px;
 				max-width: none;
-	
+
 				a {
-	
+
 					@include bb-rl-label-heading-bolder;
 					color: var(--bb-rl-text-tertiary-color);
 					white-space: nowrap;
@@ -251,6 +251,32 @@
 
 		.only-grid-view {
 			display: none;
+		}
+	}
+}
+
+.bb-rl-group-block {
+
+	.item-meta-wrap {
+
+		p > span + span {
+
+			&::before {
+				content: "\2022";
+				display: inline-block;
+				margin: 0 6px 0 4px;
+				color: var(--bb-rl-background-tertiary-color);
+			}
+		}
+
+		p + p.last-activity {
+
+			&::before {
+				content: "\2022";
+				display: inline-block;
+				margin: 0 6px 0 4px;
+				color: var(--bb-rl-background-tertiary-color);
+			}
 		}
 	}
 }
