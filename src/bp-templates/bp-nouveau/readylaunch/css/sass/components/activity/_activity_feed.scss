@@ -272,6 +272,11 @@
 
 			.ac-emotion_item {
 				top: 0;
+
+				i,
+				img {
+					animation: popIn 0.2s ease-in-out 1;
+				}
 			}
 		}
 
@@ -293,6 +298,13 @@
 				display: block;
 				font-size: 28px;
 				line-height: 1;
+				transition: all linear 0.2s;
+				transform-origin: bottom;
+			}
+
+			i,
+			img {
+				display: block;
 				transition: all linear 0.2s;
 				transform-origin: bottom;
 			}

@@ -285,6 +285,15 @@ input[type="search"]::-webkit-search-results-decoration {
   }
 }
 
+@keyframes popIn {
+  0% {
+    transform: translateY(20%) scale(0.8);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
 .site.bb-readylaunch {
   background-color: var(--bb-rl-background-secondary-color);
   margin-right: 300px;

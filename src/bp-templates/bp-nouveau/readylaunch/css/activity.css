@@ -1300,6 +1300,11 @@
   top: 0;
 }
 
+.bb-rl-activity-list .ac-emotions_list.active .ac-emotion_item i,
+.bb-rl-activity-list .ac-emotions_list.active .ac-emotion_item img {
+  animation: popIn 0.2s ease-in-out 1;
+}
+
 .bb-rl-activity-list .ac-emotions_list .ac-emotion_item {
   display: flex;
   position: relative;
@@ -1319,6 +1324,13 @@
   display: block;
   font-size: 28px;
   line-height: 1;
+  transition: all linear 0.2s;
+  transform-origin: bottom;
+}
+
+.bb-rl-activity-list .ac-emotions_list .ac-emotion_item i,
+.bb-rl-activity-list .ac-emotions_list .ac-emotion_item img {
+  display: block;
   transition: all linear 0.2s;
   transform-origin: bottom;
 }
