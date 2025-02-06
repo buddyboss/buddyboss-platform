@@ -1699,3 +1699,23 @@ div[class*="attached-gif-container"] {
 		}
 	}
 }
+
+.bb-rl-load-more {
+	text-align: center;
+
+	.bb-rl-button {
+		font-size: 14px;
+	}
+
+	.loading:before {
+		content: "";
+		display: inline-block;
+		height: 18px;
+		width: 18px;
+		border: 2px solid var(--bb-rl-border-quaternary-color);
+		border-top-color: var(--bb-rl-border-tertiary-color);
+		border-radius: var(--bb-rl-radius-full);
+		animation: spin 3s infinite linear;
+		margin-right: var(--bb-rl-space-100);
+	}
+}

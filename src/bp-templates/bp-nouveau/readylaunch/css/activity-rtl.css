@@ -2646,6 +2646,26 @@ div[class*="attached-gif-container"] .gif-player {
   vertical-align: middle;
 }
 
+.bb-rl-load-more {
+  text-align: center;
+}
+
+.bb-rl-load-more .bb-rl-button {
+  font-size: 14px;
+}
+
+.bb-rl-load-more .loading:before {
+  content: "";
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  margin-left: var(--bb-rl-space-100);
+}
+
 .bb-rl-activity-comments > .ac-form {
   display: none;
 }
