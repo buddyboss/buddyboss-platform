@@ -1125,6 +1125,14 @@
 		&.bb_rl_delete_file a:before {
 			content: "\e4a6";
 		}
+
+		&.bb_rl_move_video a:before {
+			content: "\e260";
+		}
+
+		&.bb_rl_edit_thumbnail_video a:before {
+			content: "\e2ca";
+		}
 	}
 
 }

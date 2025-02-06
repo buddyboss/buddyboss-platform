@@ -2096,6 +2096,14 @@
   content: "\e4a6";
 }
 
+.bb_rl_more_dropdown li.bb_rl_move_video a:before {
+  content: "\e260";
+}
+
+.bb_rl_more_dropdown li.bb_rl_edit_thumbnail_video a:before {
+  content: "\e2ca";
+}
+
 .bb-media-length-2 .act-grid-1-2,
 .bb-media-length-2 .act-grid-1-1 {
   flex: 0 0 50%;

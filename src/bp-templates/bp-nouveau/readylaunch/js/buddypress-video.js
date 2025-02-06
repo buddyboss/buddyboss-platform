@@ -121,7 +121,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$document.on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 			$document.on( 'click', '.bp-video-uploader .modal-container .bb-field-uploader-actions', this.uploadVideoNavigate.bind( this ) );
-			$document.on( 'click', '.bb-activity-video-elem .video-action-wrap .video-action_more, #video-stream.video .bb-item-thumb .video-action-wrap .video-action_more, #media-stream.media .bb-video-thumb .video-action-wrap .video-action_more, .bb-activity-video-elem .video-action-wrap .video-action_list li a, .bb-media-model-container .activity-list .video-action-wrap.item-action-wrap > a, .bb-media-model-container .activity-list .video-action-wrap.item-action-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
+			$document.on( 'click', '.bb-rl-activity-video-elem .bb-rl-video-action-wrap .bb-rl-video-action_more, #video-stream.video .bb-item-thumb .bb-rl-video-action-wrap .bb-rl-video-action_more, #media-stream.media .bb-video-thumb .bb-rl-video-action-wrap .bb-rl-video-action_more, .bb-rl-activity-video-elem .bb-rl-video-action-wrap .video-action_list li a, .bb-media-model-container .activity-list .bb-rl-video-action-wrap.bb-rl-item-action-wrap > a, .bb-media-model-container .activity-list .bb-rl-video-action-wrap.bb-rl-item-action-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
 			$document.on( 'click', '.activity .bb-rl-video-move-activity, #media-stream .bb-rl-video-move-activity, #video-stream .bb-rl-video-move-activity', this.moveVideoIntoAlbum.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-open-create-popup-album', this.createAlbumInPopup.bind( this ) );
 			$document.on( 'click', '.bb-rl-ac-video-close-button', this.closeVideoMove.bind( this ) );
@@ -260,26 +260,26 @@ window.bp = window.bp || {};
 		videoActivityActionButton: function ( event ) {
 			event.preventDefault();
 			var target = $( event.currentTarget ), $body = $( 'body' ),
-			    $activityVideoElem                       = target.closest( '.bb-activity-video-elem' );
+			    $activityVideoElem                       = target.closest( '.bb-rl-activity-video-elem' );
 
-			$activityVideoElem.toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem' ).removeClass( 'is-visible' );
-			$activityVideoElem.find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.activity-item' ).siblings().find( '.bb-activity-video-elem .bb_more_dropdown' ).removeClass( 'open' );
+			$activityVideoElem.toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-rl-activity-video-elem' ).removeClass( 'is-visible' );
+			$activityVideoElem.find( '.bb_rl_more_dropdown' ).toggleClass( 'open' ).closest( '.activity-item' ).siblings().find( '.bb-rl-activity-video-elem .bb_rl_more_dropdown' ).removeClass( 'open' );
 			$body.addClass( 'video_more_option_open' );
 
 			if ( $activityVideoElem.length < 1 ) {
 				var $videoThumb = target.closest( '.bb-video-thumb' );
 				$videoThumb.toggleClass( 'is-visible' ).parent().siblings().find( '.bb-video-thumb' ).removeClass( 'is-visible' );
-				$videoThumb.find( '.bb_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-video-thumb' ).parent().siblings().find( '.bb_more_dropdown' ).removeClass( 'open' );
+				$videoThumb.find( '.bb_rl_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-video-thumb' ).parent().siblings().find( '.bb_rl_more_dropdown' ).removeClass( 'open' );
 			}
 
 			if ( target.closest( '.bb-media-model-container' ).length ) {
-				target.closest( '.video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_more_dropdown' ).toggleClass( 'open' );
+				target.closest( '.bb-rl-video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() === 'a' && (
-				! target.hasClass( 'video-action_more' )
+				! target.hasClass( 'bb-rl-video-action_more' )
 			) ) {
-				$activityVideoElem.removeClass( 'is-visible' ).find( '.bb_more_dropdown' ).removeClass( 'open' );
+				$activityVideoElem.removeClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).removeClass( 'open' );
 				target.closest( '.bb-item-thumb' ).removeClass( 'is-visible' );
 				$body.removeClass( 'video_more_option_open' );
 			}
