@@ -1100,7 +1100,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @param array  $component The data filter's data-bp-filter attribute value.
 		 */
 		public function bb_nouveau_get_filter_label_hook( $label, $component ) {
-			if ( 'members' === $component['object'] ) {
+			if ( 'members' === $component['object'] || 'groups' === $component['object'] ) {
 				$label = __( 'Order', 'buddyboss' );
 			}
 
