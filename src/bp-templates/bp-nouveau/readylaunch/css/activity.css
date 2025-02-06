@@ -1,3 +1,10 @@
+/* General Styling */
+.bb-rl-activity-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--bb-rl-space-400) 0;
+}
+
 [class*="bb-rl-activity-form"] {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
@@ -1020,13 +1027,6 @@
   width: 100% !important;
 }
 
-/* General Styling */
-.bb-rl-activity-page {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: var(--bb-rl-space-400) 0;
-}
-
 /* Activity Item */
 .bb-rl-activity-list {
   list-style: none;
@@ -1120,19 +1120,6 @@
   opacity: 1;
 }
 
-.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .bp-screen-reader-text {
-  border: 0;
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  word-wrap: normal !important;
-}
-
 .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a {
   display: flex;
   align-items: center;
@@ -1202,11 +1189,15 @@
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner {
-  margin-bottom: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner p {
   margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-activity-list .bb-rl-activity-inner p:last-child {
+  margin-bottom: 0;
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner > ol,
@@ -2512,4 +2503,111 @@ div[class*="attached-gif-container"] .gif-player {
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+}
+
+/* Activity Actions */
+.bb-rl-activity-footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--bb-rl-space-100) 0;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-activity-footer-actions .activity-state {
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-activity-footer-actions .activity-state-reactions {
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-activity-footer-actions .activity-state-reactions::after {
+  content: "";
+  background-color: var(--bb-rl-background-tertiary-color);
+  height: 4px;
+  width: 4px;
+  border-radius: var(--bb-rl-radius-full);
+  margin: 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-footer-actions .activity-reactions_count {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+  margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-footer-actions .comments-count {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+}
+
+.bb-rl-activity-footer-actions .reactions_item {
+  background-color: var(--bb-rl-background-color);
+  padding: 2px;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-activity-footer-actions .reactions_item:not(:first-child) {
+  margin-left: -4px;
+}
+
+.bb-rl-activity-footer-actions .reactions_item img {
+  height: 20px;
+  width: 20px;
+}
+
+.activity-meta {
+  display: flex;
+  align-items: center;
+}
+
+.activity-meta .generic-button a {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--bb-rl-space-200);
+}
+
+.activity-meta .generic-button a:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.activity-meta .generic-button a span {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.activity-meta .generic-button a.bp-like-button [class*="bb-icon"]:before {
+  content: "\e48e";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-tertiary-color);
+  font-size: 24px;
+  font-weight: 400;
+  font-style: normal;
+  margin-right: var(--bb-rl-space-50);
+}
+
+.activity-meta .generic-button a.bp-like-button img {
+  height: 18px;
+  width: 18px;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.activity-meta .generic-button a.acomment-reply:before {
+  content: "\e172";
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  color: var(--bb-rl-icon-tertiary-color);
+  margin-right: var(--bb-rl-space-50);
+  vertical-align: middle;
+}
+
+.bb-rl-activity-comments > .ac-form {
+  display: none;
 }

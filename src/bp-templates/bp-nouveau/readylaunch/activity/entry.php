@@ -153,9 +153,13 @@ $readylaunchClassExists = class_exists( 'BB_Activity_Readylaunch' );
 
 			bp_nouveau_activity_hook( 'after', 'activity_content' );
 			bb_activity_load_progress_bar_state();
-			bp_nouveau_activity_entry_buttons();
-			$readylaunchClassExists && BB_Activity_Readylaunch::bb_rl_activity_state();
 			?>
+			<div class="bb-rl-activity-footer-actions">
+				<?php
+					bp_nouveau_activity_entry_buttons();
+					$readylaunchClassExists && BB_Activity_Readylaunch::bb_rl_activity_state();
+				?>
+			</div>
 		</div>
 
 		<?php
