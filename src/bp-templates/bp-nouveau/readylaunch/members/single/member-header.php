@@ -206,7 +206,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							bp_get_template_part( 'common/more-options-view' );
 							$template_part_content = ob_get_clean();
 
-							$output = sprintf( '<a href="#" class="bb-rl-more_options_action bb_more_options_action" aria-label="%1$s"><i class="bb-icons-rl-dots-three"></i></a><div class="bb-rl-more_options_list bb_more_dropdown bb-rl-more_dropdown"> %2$s %3$s</div><div class="bb-rl-more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
+							$output = sprintf( '<a href="#" class="bb-rl-more_options_action bb_more_options_action" aria-label="%1$s"><i class="bb-icons-rl-dots-three"></i></a><div class="bb-rl-more_options_list bb_more_options_list bb_more_dropdown bb-rl-more_dropdown"> %2$s %3$s</div><div class="bb-rl-more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
 
 							bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 						}

@@ -166,7 +166,7 @@
 
 .bb-rl-profile-item-header .bb-rl-header-dropdown {
   position: absolute;
-  top: 0;
+  top: -8px;
   right: 0;
 }
 
@@ -213,6 +213,10 @@
   gap: var(--bb-rl-space-100);
 }
 
+.bb-rl-member-header-actions > li {
+  list-style-type: none;
+}
+
 .bb-rl-member-header-actions button.friendship-button,
 .bb-rl-member-header-actions button.follow-button,
 .bb-rl-member-header-actions a.send-message {
@@ -226,7 +230,7 @@
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  padding: 4px var(--bb-rl-space-100);
+  padding: 4px var(--bb-rl-space-200);
   font-size: 0.875rem;
 }
 
@@ -246,6 +250,26 @@
 
 .bb-rl-member-header-actions button.friendship-button:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-member-header-actions button.friendship-button.pending_friend {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+}
+
+.bb-rl-member-header-actions button.friendship-button.pending_friend:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-member-header-actions button.friendship-button.pending_friend:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-member-header-actions button.friendship-button.pending_friend:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 

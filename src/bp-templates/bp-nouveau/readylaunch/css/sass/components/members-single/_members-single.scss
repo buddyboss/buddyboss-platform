@@ -67,7 +67,7 @@
 
 	.bb-rl-header-dropdown {
 		position: absolute;
-		top: 0;
+		top: -8px;
 		right: 0;
 	}
 }
@@ -116,18 +116,27 @@
 .bb-rl-member-header-actions {
 	gap: var(--bb-rl-space-100);
 
+	> li {
+		list-style-type: none;
+	}
+
 	button.friendship-button,
 	button.follow-button,
 	a.send-message {
 
 		@include bb-rl-button;
-		padding: 4px var(--bb-rl-space-100);
+		padding: 4px var(--bb-rl-space-200);
 		font-size: 0.875rem;
 	}
 
 	button.friendship-button {
 
 		@include bb-rl-button--brand-fill;
+
+		&.pending_friend {
+
+			@include bb-rl-button-secondary-fill;
+		}
 	}
 
 	button.follow-button,
