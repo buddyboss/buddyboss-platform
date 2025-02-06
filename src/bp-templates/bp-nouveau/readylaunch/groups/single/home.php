@@ -52,29 +52,24 @@ if ( bp_has_groups() ) {
 				</div>
 				<?php bp_get_template_part( 'groups/single/parts/item-nav' ); ?>
 			</div>
-			<?php /* ?>
-			<div id="item-header" role="complementary" data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups" class="groups-header single-headers">
-				<?php bp_nouveau_group_header_template_part(); ?>
-			</div><!-- #item-header -->
 
+			<?php
+			if ( bp_group_use_cover_image_header() ) {
+				bp_get_template_part( 'groups/single/cover-image-header' );
+			}
+			?>
 			<div class="bp-wrap">
-				<?php
-				// if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-				// bp_get_template_part( 'groups/single/parts/item-nav' );
-				// }
-				?>
-
 				<div id="item-body" class="item-body">
 					<?php
-					// if ( bp_is_group_subgroups() ) {
-					// echo $template_content; // phpcs:ignore
-					// } else {
-					// bp_nouveau_group_template_part();
-					// }
+					 if ( bp_is_group_subgroups() ) {
+					  echo $template_content; // phpcs:ignore
+					 } else {
+					 	bp_nouveau_group_template_part();
+					 }
 					?>
 				</div><!-- #item-body -->
 			</div><!-- // .bp-wrap -->
- 			<?php */ ?>
+
 			</div>
 		<?php
 		bp_nouveau_group_hook( 'after', 'home_content' );

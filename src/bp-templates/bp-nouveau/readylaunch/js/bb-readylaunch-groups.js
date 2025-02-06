@@ -24,26 +24,34 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
-			var self = this;
+			var self      = this;
 			var $document = $( document );
 			$document.on( 'click', '.bb-rl-manage-group-container .bp-navs a', self.loadManageSettings );
 
-			$document.on( 'click', '.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button', function () {
-				//event.preventDefault();
-				var modalId = 'model--' + $( this ).attr( 'id' );
-				bp.Readylaunch.Groups.openModal( modalId );
-			} );
+			$document.on(
+				'click',
+				'.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button',
+				function (e) {
+					e.preventDefault();
+					var modalId = 'model--' + $( this ).attr( 'id' );
+					bp.Readylaunch.Groups.openModal( modalId );
+				}
+			);
 
-			$document.on( 'click', '.bb-rl-modal-close-button', function () {
-				//event.preventDefault();
-				$( this ).closest( '.bb-rl-action-popup' ).removeClass( 'open' );
-			} );
+			$document.on(
+				'click',
+				'.bb-rl-modal-close-button',
+				function (e) {
+					e.preventDefault();
+					$( this ).closest( '.bb-rl-action-popup' ).removeClass( 'open' );
+				}
+			);
 		},
 
 		openModal: function ( modalId ) {
 			var $modal = $( '#' + modalId );
-		
-			if ( !$modal.length ) {
+
+			if ( ! $modal.length ) {
 				return;
 			}
 
@@ -98,6 +106,7 @@ window.bp = window.bp || {};
 				);
 			}
 
+			return false;
 		},
 	};
 
