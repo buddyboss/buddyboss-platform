@@ -2548,9 +2548,8 @@ div[class*="attached-gif-container"] .gif-player {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--bb-rl-space-100) 0;
+  padding: var(--bb-rl-space-100) 0 0;
   border-top: 1px solid var(--bb-rl-border-secondary-color);
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 .bb-rl-activity-footer-actions .activity-state {
