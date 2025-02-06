@@ -5009,7 +5009,8 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var itemId, destinationId, containerClass, selectedIdClass,
-			    nameDocumentAsMedia  = 'document' === actionType ? 'media' : actionType;
+			    updateActionType    = 'document_folder' === actionType ? 'document' : actionType,
+			    nameDocumentAsMedia = 'document' === actionType ? 'media' : actionType;
 
 			if ( 'document_folder' === actionType ) {
 				itemId        = target.attr( 'id' );
@@ -5082,8 +5083,7 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						if ( response.success ) {
-							var updateActionType = 'document_folder' === actionType ? 'document' : actionType;
-							var isDir            = 'is_' + updateActionType + '_directory';
+							var isDir = 'is_' + updateActionType + '_directory';
 							if ( 'yes' === bbRlMedia[ isDir ] ) {
 								var store = bp.Nouveau.getStorage( 'bp-' + updateActionType );
 								var scope = store.scope, selector;
@@ -5136,7 +5136,7 @@ window.bp = window.bp || {};
 								$( document ).removeClass( 'open-popup' );
 							}
 							if ( 'document_folder' !== actionType ) {
-								target.closest( '.bb-rl-' + updateActionType + '-move-file' ).find( '.bb-rl-ac-' + updateActionType + '-close-button' ).trigger( 'click' );
+								target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( '.bb-rl-ac-' + updateActionType + '-close-button' ).trigger( 'click' );
 								if ( 'media' === actionType ) {
 									$( document ).find( 'a.bb-rl-open-' + nameDocumentAsMedia + '-theatre[data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
 								}
