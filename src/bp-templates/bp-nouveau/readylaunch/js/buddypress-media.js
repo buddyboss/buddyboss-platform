@@ -869,7 +869,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var $target     = $( event.currentTarget ),
-			    isSelecting = ! $target.hasClass( 'selected' );
+				isSelecting = ! $target.hasClass( 'selected' );
 
 			this.setMediaSelectionState( isSelecting );
 
@@ -1680,59 +1680,71 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function () {
 			var self = this;
-			self.resetGroupMessagesAttachmentComponent( {
-				dropzoneObj  : self.dropzone_obj,
-				dropzoneData : self.dropzone_media,
-				type         : 'media',
-			} );
+			self.resetGroupMessagesAttachmentComponent(
+				{
+					dropzoneObj  : self.dropzone_obj,
+					dropzoneData : self.dropzone_media,
+					type         : 'media',
+				}
+			);
 		},
 
 		resetGroupMessagesDocumentComponent: function () {
 			var self = this;
-			self.resetGroupMessagesAttachmentComponent( {
-				dropzoneObj  : self.document_dropzone_obj,
-				dropzoneData : self.dropzone_media,
-				type         : 'document',
-			} );
+			self.resetGroupMessagesAttachmentComponent(
+				{
+					dropzoneObj  : self.document_dropzone_obj,
+					dropzoneData : self.dropzone_media,
+					type         : 'document',
+				}
+			);
 		},
 
 		resetGroupMessagesVideoComponent: function () {
 			var self = this;
-			self.resetGroupMessagesAttachmentComponent( {
-				dropzoneObj  : self.video_dropzone_obj,
-				dropzoneData : self.dropzone_media,
-				type         : 'video',
-			} );
+			self.resetGroupMessagesAttachmentComponent(
+				{
+					dropzoneObj  : self.video_dropzone_obj,
+					dropzoneData : self.dropzone_media,
+					type         : 'video',
+				}
+			);
 		},
 
 		resetForumsMediaComponent: function ( dropzone_container_key ) {
 			var self = this;
-			self.resetForumsAttachmentComponent( {
-				dropzoneObj       : self.dropzone_obj,
-				dropzoneData      : self.dropzone_media,
-				type              : 'media',
-				dropzoneContainer : dropzone_container_key
-			} );
+			self.resetForumsAttachmentComponent(
+				{
+					dropzoneObj       : self.dropzone_obj,
+					dropzoneData      : self.dropzone_media,
+					type              : 'media',
+					dropzoneContainer : dropzone_container_key
+				}
+			);
 		},
 
 		resetForumsDocumentComponent: function ( dropzone_container_key ) {
 			var self = this;
-			self.resetForumsAttachmentComponent( {
-				dropzoneObj       : self.dropzone_obj,
-				dropzoneData      : self.dropzone_media,
-				type              : 'document',
-				dropzoneContainer : dropzone_container_key
-			} );
+			self.resetForumsAttachmentComponent(
+				{
+					dropzoneObj       : self.dropzone_obj,
+					dropzoneData      : self.dropzone_media,
+					type              : 'document',
+					dropzoneContainer : dropzone_container_key
+				}
+			);
 		},
 
 		resetForumsVideoComponent: function ( dropzone_container_key ) {
 			var self = this;
-			self.resetForumsAttachmentComponent( {
-				dropzoneObj       : self.dropzone_obj,
-				dropzoneData      : self.dropzone_media,
-				type              : 'video',
-				dropzoneContainer : dropzone_container_key
-			} );
+			self.resetForumsAttachmentComponent(
+				{
+					dropzoneObj       : self.dropzone_obj,
+					dropzoneData      : self.dropzone_media,
+					type              : 'video',
+					dropzoneContainer : dropzone_container_key
+				}
+			);
 		},
 
 		openForumsUploader: function ( event ) {
@@ -2866,9 +2878,9 @@ window.bp = window.bp || {};
 		 */
 		openDocumentMove: function ( event ) {
 			event.preventDefault();
-			var $document   = $( document ),
+			var $document        = $( document ),
 				currentTarget,
-				eventTarget = $( event.currentTarget );
+				eventTarget      = $( event.currentTarget );
 			this.moveToIdPopup   = eventTarget.attr( 'id' );
 			this.moveToTypePopup = eventTarget.attr( 'data-type' );
 			var action           = eventTarget.attr( 'data-action' );
@@ -5009,8 +5021,8 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var itemId, destinationId, containerClass, selectedIdClass,
-			    updateActionType    = 'document_folder' === actionType ? 'document' : actionType,
-			    nameDocumentAsMedia = 'document' === actionType ? 'media' : actionType;
+				updateActionType    = 'document_folder' === actionType ? 'document' : actionType,
+				nameDocumentAsMedia = 'document' === actionType ? 'media' : actionType;
 
 			if ( 'document_folder' === actionType ) {
 				itemId        = target.attr( 'id' );
@@ -5019,7 +5031,7 @@ window.bp = window.bp || {};
 				itemId          = target.attr( 'id' );
 				containerClass  = 'document' === actionType ? '.location-folder-list' : '.location-album-list';
 				selectedIdClass = 'document' === actionType ? '.bb-rl-folder-selected-id' : '.bb-rl-album-selected-id';
-				destinationId = target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( selectedIdClass ).val();
+				destinationId   = target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( selectedIdClass ).val();
 			}
 
 			if ( '' === itemId || '' === destinationId ) {
@@ -5041,8 +5053,8 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var attrSelector = 'video' === actionType ? 'li.bb_rl_move_video a[data-video-id="' + itemId + '"]' : 'a[data-media-id="' + itemId + '"]',
-			    activityId   = $( document ).find( attrSelector ).attr( 'data-parent-activity-id' ),
-			    groupId      = self.group_id;
+				activityId   = $( document ).find( attrSelector ).attr( 'data-parent-activity-id' ),
+				groupId      = self.group_id;
 			if ( 'media' === actionType && ! groupId ) {
 				groupId = false;
 				if ( 'group' === $( document ).find( attrSelector ).attr( 'data-type' ) ) {
@@ -5057,7 +5069,7 @@ window.bp = window.bp || {};
 				'activity_id' : activityId
 			};
 
-			// Add properties dynamically
+			// Add properties dynamically.
 			if ( 'folder' === folderOrAlbum ) {
 				if ( 'document' === actionType ) {
 					data.document_id = itemId;
@@ -5173,9 +5185,9 @@ window.bp = window.bp || {};
 
 		createAlbumFolderInPopup: function ( event, actionType, folderORAlbum ) {
 			var $document         = $( document ),
-			    $openPopup        = $document.find( '.open-popup' ),
-			    getParentFolderId = parseInt( $openPopup.find( '.bb-rl-' + folderORAlbum + '-selected-id' ).val() ),
-			    getCreateIn       = $openPopup.find( '.bb-rl-' + folderORAlbum + '-create-from' ).val();
+				$openPopup        = $document.find( '.open-popup' ),
+				getParentFolderId = parseInt( $openPopup.find( '.bb-rl-' + folderORAlbum + '-selected-id' ).val() ),
+				getCreateIn       = $openPopup.find( '.bb-rl-' + folderORAlbum + '-create-from' ).val();
 			if ( getParentFolderId > 0 ) {
 				$openPopup.find( '.bb-rl-privacy-field-wrap-hide-show' ).hide();
 			} else {
@@ -5202,8 +5214,8 @@ window.bp = window.bp || {};
 			}
 			$( '.bb-rl-create-popup-' + folderORAlbum + '-wrap' ).show();
 			var eventTarget     = $( event.currentTarget ),
-			    $folderLocation = eventTarget.closest( '.bb-rl-has-folderlocationUI' ),
-			    popupTitle      = 'folder' === folderORAlbum ? bbRlMedia.create_folder : bbRlMedia.create_album_title;
+				$folderLocation = eventTarget.closest( '.bb-rl-has-folderlocationUI' ),
+				popupTitle      = 'folder' === folderORAlbum ? bbRlMedia.create_folder : bbRlMedia.create_album_title;
 			$folderLocation.find( '.bb-rl-modal-header' ).children().hide();
 			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
@@ -5238,14 +5250,14 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			console.log( 'submitCreateFolderAlbumInPopup' );
 			var self               = this,
-			    eventCurrentTarget = $( event.currentTarget ),
-			    targetPopup        = eventCurrentTarget.closest( '.open-popup' ),
-			    currentAction      = $( targetPopup ).find( '.bb-rl-' + actionType + '-create-popup-' + folderOrAlbum + '-submit' ),
-			    hiddenValue        = targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val(),
-			    titleSelector      = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
-			    title              = $.trim( titleSelector.val() );
+				eventCurrentTarget = $( event.currentTarget ),
+				targetPopup        = eventCurrentTarget.closest( '.open-popup' ),
+				currentAction      = $( targetPopup ).find( '.bb-rl-' + actionType + '-create-popup-' + folderOrAlbum + '-submit' ),
+				hiddenValue        = targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val(),
+				titleSelector      = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
+				title              = $.trim( titleSelector.val() );
 			if ( 'document' === actionType ) {
-				var pattern     = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+				var pattern     = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 				var matches     = pattern.exec( title );
 				var matchStatus = Boolean( matches );
 				if ( title === '' || matchStatus ) {
@@ -5262,7 +5274,7 @@ window.bp = window.bp || {};
 			this.currentTargetParent = hiddenValue;
 
 			var currentAlbumFolder = this.currentTargetParent, groupId = 0, privacy = '', privacySelector = '',
-			    newParent                                                                                 = 0;
+				newParent          = 0;
 			if ( 'group' === this.moveToTypePopup ) {
 				privacy = 'grouponly';
 				groupId = this.moveToIdPopup;
@@ -5280,140 +5292,147 @@ window.bp = window.bp || {};
 			currentAction.addClass( 'loading' );
 
 			var mediaActionForVideo = 'video' === actionType ? 'media' : actionType,
-			    ajaxAction          = mediaActionForVideo + '_' + folderOrAlbum + '_save',
-			    listClass           = 'document' === actionType ? '.location-' + folderOrAlbum + '-list' : '.location-' + folderOrAlbum + '-list';
-			setTimeout( function () {
-				var data = {
-					'action'   : ajaxAction,
-					'_wpnonce' : bbRlNonce.media,
-					'title'    : title,
-					'privacy'  : privacy,
-					'parent'   : currentAlbumFolder,
-					'group_id' : groupId
-				};
-				$.ajax(
-					{
-						type    : 'POST',
-						url     : bbRlAjaxUrl,
-						data    : data,
-						async   : false,
-						success : function ( response ) {
-							if ( response.success ) {
-								if ( 'document' === actionType && $( '.document-data-table-head' ).length ) {
-									if ( parseInt( currentAlbumFolder ) === parseInt( bbRlMedia.current_folder ) ) {
-										// Prepend the activity if no parent.
-										bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
-										jQuery( window ).scroll();
+				ajaxAction          = mediaActionForVideo + '_' + folderOrAlbum + '_save',
+				listClass           = 'document' === actionType ? '.location-' + folderOrAlbum + '-list' : '.location-' + folderOrAlbum + '-list';
+			setTimeout(
+				function () {
+					var data = {
+						'action'   : ajaxAction,
+						'_wpnonce' : bbRlNonce.media,
+						'title'    : title,
+						'privacy'  : privacy,
+						'parent'   : currentAlbumFolder,
+						'group_id' : groupId
+					};
+					$.ajax(
+						{
+							type    : 'POST',
+							url     : bbRlAjaxUrl,
+							data    : data,
+							async   : false,
+							success : function ( response ) {
+								if ( response.success ) {
+									if ( 'document' === actionType && $( '.document-data-table-head' ).length ) {
+										if ( parseInt( currentAlbumFolder ) === parseInt( bbRlMedia.current_folder ) ) {
+											// Prepend the activity if no parent.
+											bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+											jQuery( window ).scroll();
+										}
+									} else {
 									}
-								} else {
-									//location.reload( true );
-								}
 
-								targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap ' + listClass ).remove();
-								targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).append( response.data.tree_view );
-								var targetPopupID  = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) : targetPopup,
-								    responseDataID = 'document' === actionType ? response.data.folder_id : response.data.album_id;
-								if ( bp.Nouveau.Media.folderLocationUI ) {
-									bp.Nouveau.Media.folderLocationUI( targetPopupID, responseDataID );
-								}
-								newParent = responseDataID;
+									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap ' + listClass ).remove();
+									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).append( response.data.tree_view );
+									var targetPopupID = 'document' === actionType ? '#' + $( targetPopup ).attr( 'id' ) : targetPopup,
+									responseDataID    = 'document' === actionType ? response.data.folder_id : response.data.album_id;
+									if ( bp.Nouveau.Media.folderLocationUI ) {
+										bp.Nouveau.Media.folderLocationUI( targetPopupID, responseDataID );
+									}
+									newParent = responseDataID;
 
-								if ( '' === response.data.tree_view ) {
-									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).hide();
-									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap-main span.bb-rl-no-' + folderOrAlbum + '-exists' ).show();
-								} else {
-									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap-main span.bb-rl-no-' + folderOrAlbum + '-exists' ).hide();
-									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).show();
-								}
+									if ( '' === response.data.tree_view ) {
+										targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).hide();
+										targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap-main span.bb-rl-no-' + folderOrAlbum + '-exists' ).show();
+									} else {
+										targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap-main span.bb-rl-no-' + folderOrAlbum + '-exists' ).hide();
+										targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap' ).show();
+									}
 
-								targetPopup.find( 'ul' + listClass + ' span#' + newParent ).trigger( 'click' );
-								targetPopup.find( '.bb-rl-model-footer' ).show();
-								if ( 'document' === actionType ) {
-									targetPopup.find( '.bb-rl-model-footer, #bp-media-' + actionType + '-prev' ).show();
-								}
-								targetPopup.find( '.bb-field-wrap-search' ).show();
-								targetPopup.find( '.bb-rl-' + actionType + '-open-create-popup-' + folderOrAlbum ).show();
-								targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap-main' ).show();
-								targetPopup.find( '.bb-rl-create-popup-' + folderOrAlbum + '-wrap' ).hide();
-								if ( 'media' === actionType ) {
-									targetPopup.find( '.bb-field-steps-2 #bp-media-prev' ).show();
-								}
-								targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val();
-								targetPopup.find( '.bb-rl' + folderOrAlbum + '-selected-id' ).val( newParent );
-								targetPopup.find( '.bb-rl-modal-header' ).children().show();
-								targetPopup.find( '.bb-rl-modal-header p' ).hide();
-								titleSelector.val( '' );
+									targetPopup.find( 'ul' + listClass + ' span#' + newParent ).trigger( 'click' );
+									targetPopup.find( '.bb-rl-model-footer' ).show();
+									if ( 'document' === actionType ) {
+										targetPopup.find( '.bb-rl-model-footer, #bp-media-' + actionType + '-prev' ).show();
+									}
+									targetPopup.find( '.bb-field-wrap-search' ).show();
+									targetPopup.find( '.bb-rl-' + actionType + '-open-create-popup-' + folderOrAlbum ).show();
+									targetPopup.find( '.bb-rl-location-' + folderOrAlbum + '-list-wrap-main' ).show();
+									targetPopup.find( '.bb-rl-create-popup-' + folderOrAlbum + '-wrap' ).hide();
+									if ( 'media' === actionType ) {
+										targetPopup.find( '.bb-field-steps-2 #bp-media-prev' ).show();
+									}
+									targetPopup.find( '.bb-rl-' + folderOrAlbum + '-selected-id' ).val();
+									targetPopup.find( '.bb-rl' + folderOrAlbum + '-selected-id' ).val( newParent );
+									targetPopup.find( '.bb-rl-modal-header' ).children().show();
+									targetPopup.find( '.bb-rl-modal-header p' ).hide();
+									titleSelector.val( '' );
 
-								if ( '' !== privacySelector ) {
-									privacySelector.val( 'public' );
-								}
+									if ( '' !== privacySelector ) {
+										privacySelector.val( 'public' );
+									}
 
-								$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)' ).each(
-									function ( i ) {
-										if ( i > 0 ) {
-											if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item' ).width() > $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb' ).width() ) {
-												$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span.hidden' ).append( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span' ).eq( 2 ) );
-												if ( ! $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item .more_options' ).length ) {
-													$( '<span class="more_options">...</span>' ).insertAfter( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span' ).eq( 0 ) );
+									$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)' ).each(
+										function ( i ) {
+											if ( i > 0 ) {
+												if ( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item' ).width() > $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb' ).width() ) {
+													$( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span.hidden' ).append( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span' ).eq( 2 ) );
+													if ( ! $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item .more_options' ).length ) {
+														$( '<span class="more_options">...</span>' ).insertAfter( $( targetPopup ).find( '.bb-rl-breadcrumbs-append-ul-li .breadcrumb .item span' ).eq( 0 ) );
+													}
 												}
 											}
 										}
+									);
+
+									if ( 'media' === actionType ) {
+											self.updateAlbumNavCount( response.data.album_count );
 									}
-								);
+									currentAction.removeClass( 'loading' );
+									if ( 'document' === actionType ) {
+											setTimeout(
+												function () {
+													var currentSelectedFolder = targetPopup.find( 'ul' + listClass + ' span#' + newParent );
+													currentSelectedFolder.trigger( 'click' );
+													var mediaPrivacy = $( targetPopup ).find( '#bb-document-privacy' );
 
-								if ( 'media' === actionType ) {
-									self.updateAlbumNavCount( response.data.album_count );
+													if ( Number( currentSelectedFolder.data( 'id' ) ) !== 0 ) {
+															mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
+															mediaPrivacy.val( currentSelectedFolder.parent().data( 'privacy' ) );
+															mediaPrivacy.prop( 'disabled', true );
+													} else {
+														mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
+														mediaPrivacy.val( 'public' );
+														mediaPrivacy.prop( 'disabled', false );
+													}
+												},
+												200
+											);
+									}
+								} else {
+									currentAction.removeClass( 'loading' );
 								}
-								currentAction.removeClass( 'loading' );
-								if ( 'document' === actionType ) {
-									setTimeout( function () {
-										var currentSelectedFolder = targetPopup.find( 'ul' + listClass + ' span#' + newParent );
-										currentSelectedFolder.trigger( 'click' );
-										var mediaPrivacy = $( targetPopup ).find( '#bb-document-privacy' );
-
-										if ( Number( currentSelectedFolder.data( 'id' ) ) !== 0 ) {
-											mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-											mediaPrivacy.val( currentSelectedFolder.parent().data( 'privacy' ) );
-											mediaPrivacy.prop( 'disabled', true );
-										} else {
-											mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-											mediaPrivacy.val( 'public' );
-											mediaPrivacy.prop( 'disabled', false );
-										}
-									}, 200 );
-								}
-							} else {
-								currentAction.removeClass( 'loading' );
 							}
 						}
-					}
-				);
-				this.currentTargetParent = newParent;
-				targetPopup.find( listClass + ' li.is_active' ).show().children( 'span, i' ).show().siblings( 'ul' ).hide();
-				targetPopup.find( listClass + ' li.is_active' ).siblings( 'li' ).show().children( 'span, i' ).show().siblings( 'ul' ).hide();
-				targetPopup.find( listClass + ' li span.selected' ).removeClass( 'selected' );
-				targetPopup.find( listClass + ' li.is_active' ).children( 'span' ).addClass( 'selected' );
-			}, 0 );
+					);
+					this.currentTargetParent = newParent;
+					targetPopup.find( listClass + ' li.is_active' ).show().children( 'span, i' ).show().siblings( 'ul' ).hide();
+					targetPopup.find( listClass + ' li.is_active' ).siblings( 'li' ).show().children( 'span, i' ).show().siblings( 'ul' ).hide();
+					targetPopup.find( listClass + ' li span.selected' ).removeClass( 'selected' );
+					targetPopup.find( listClass + ' li.is_active' ).children( 'span' ).addClass( 'selected' );
+				},
+				0
+			);
 		},
 
 		setMediaSelectionState : function ( select ) {
 			var $mediaList  = $( '#buddypress' ).find( '.media-list:not(.existing-media-list)' ),
-			    isSelecting = select === true,
-			    actions     = ['media'];
+				isSelecting = select === true,
+				actions     = ['media'];
 
 			if ( $mediaList.closest( '.album-single-view' ).length > 0 ) {
 				actions.push( 'video' );
 			}
-			actions.forEach( function ( actionType ) {
-				$mediaList.find( '.bb-' + actionType + '-check-wrap [name="bb-' + actionType + '-select"]' ).each(
-					function () {
-						var $this = $( this );
-						$this.prop( 'checked', isSelecting );
-						$this.closest( '.bb-item-thumb' ).toggleClass( 'selected', isSelecting );
-						$this.closest( '.bb-' + actionType + '-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselect : BP_Nouveau.media.i18n_strings.select );
-					}
-				);
-			} );
+			actions.forEach(
+				function ( actionType ) {
+					$mediaList.find( '.bb-' + actionType + '-check-wrap [name="bb-' + actionType + '-select"]' ).each(
+						function () {
+							var $this = $( this );
+							$this.prop( 'checked', isSelecting );
+							$this.closest( '.bb-item-thumb' ).toggleClass( 'selected', isSelecting );
+							$this.closest( '.bb-' + actionType + '-check-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselect : BP_Nouveau.media.i18n_strings.select );
+						}
+					);
+				}
+			);
 		},
 
 		resetGroupMessagesAttachmentComponent: function ( args ) {
@@ -5432,8 +5451,8 @@ window.bp = window.bp || {};
 		resetForumsAttachmentComponent: function ( args ) {
 			$( '#forums-' + args.type + '-button' ).removeClass( 'active' );
 			var dropzoneObj       = args.dropzoneObj,
-			    dropzoneData      = args.dropzoneData,
-			    dropzoneContainer = args.dropzoneContainer;
+				dropzoneData      = args.dropzoneData,
+				dropzoneContainer = args.dropzoneContainer;
 			if ( typeof dropzoneContainer !== 'undefined' ) {
 				if ( typeof dropzoneObj[ dropzoneContainer ] !== 'undefined' ) {
 					dropzoneObj[ dropzoneContainer ].destroy();
@@ -5448,13 +5467,13 @@ window.bp = window.bp || {};
 
 		injectAttachments : function ( event, action ) {
 			var store       = bp.Nouveau.getStorage( 'bp-' + action ),
-			    scope       = store.scope || null,
-			    filter      = store.filter || null,
-			    eventTarget = $( event.currentTarget );
+				scope       = store.scope || null,
+				filter      = store.filter || null,
+				eventTarget = $( event.currentTarget );
 			if ( eventTarget.hasClass( 'load-more' ) ) {
 				var next_page    = ( Number( this.current_page ) * 1 ) + 1,
-				    self         = this,
-				    search_terms = '';
+					self         = this,
+					search_terms = '';
 
 				// Stop event propagation.
 				event.preventDefault();
@@ -5555,12 +5574,12 @@ window.bp = window.bp || {};
 
 		saveItem: function ( event, actionType, folderOrAlbum, dropZoneData ) {
 			var target        = $( event.currentTarget ),
-			    isAlbum       = 'album' === actionType,
-			    isFolder      = 'folder' === actionType,
-			    isChildFolder = 'child_folder' === actionType,
-			    self          = this,
-			    title         = isChildFolder ? $( '#bp-media-create-child-folder #bb-album-child-title' ) : $( '#bb-album-title' ),
-			    privacy;
+				isAlbum       = 'album' === actionType,
+				isFolder      = 'folder' === actionType,
+				isChildFolder = 'child_folder' === actionType,
+				self          = this,
+				title         = isChildFolder ? $( '#bp-media-create-child-folder #bb-album-child-title' ) : $( '#bb-album-title' ),
+				privacy;
 			if ( isAlbum ) {
 				privacy = $( '#bb-rl-album-privacy' );
 			} else if ( isFolder ) {
@@ -5574,7 +5593,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var pattern = /[\\/?%*:|"<>]+/g,
-			    matchStatus = ( isFolder || isChildFolder ) && pattern.test( title.val() );
+				matchStatus = ( isFolder || isChildFolder ) && pattern.test( title.val() );
 
 			if ( $.trim( title.val() ) === '' || matchStatus ) {
 				title.addClass( 'error' );
