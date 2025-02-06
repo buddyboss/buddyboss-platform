@@ -54,9 +54,9 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 	$bp_nouveau = bp_nouveau();
 	?>
 
-	<div id="bb-rl-profile-container" class="<?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?>">
+	<div id="bb-rl-profile-container" class="<?php echo esc_attr( $profile_header_layout_style . ' ' . $social_networks_urls_div_class . ' ' . $my_profile ); ?> bb-rl-profile-container">
 
-		<div id="bb-rl-profile-item-header" class="item-header-wrap flex">
+		<div id="bb-rl-profile-item-header" class="bb-rl-profile-item-header item-header-wrap flex">
 			<?php
 			$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $bp_displayed_user_id ) ? 'bp-user-suspended' : '';
 			$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $bp_displayed_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
@@ -79,7 +79,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 				?>
 			</div><!-- #item-header-avatar -->
 
-			<div id="bb-rl-item-header-content">
+			<div id="bb-rl-item-header-content" class="bb-rl-profile-header-content">
 				<div class="bb-user-content-wrap">
 					<div class="flex flex-column member-title-wrap">
 						<?php

@@ -121,6 +121,14 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+.bb-rl-profile-item-header {
+  gap: var(--bb-rl-space-400);
+}
+
+.bb-rl-profile-header-content {
+  flex: 1;
+}
+
 .bb-rl-main-nav ul {
   list-style: none;
   margin: 0;
