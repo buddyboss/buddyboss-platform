@@ -65,15 +65,14 @@ echo ( $more_video && ( $max_length - 1 ) === $video_template->current_video ) ?
 echo esc_attr( $has_no_thumbnail );
 ?>
 " data-id="<?php echo esc_attr( $video_id ); ?>">
-	<div class="bb-rl-video-action-wrap bb-rl-item-action-wrap">
+	<div class="bb-rl-video-action-wrap bb-rl-item-action-wrap bb-rl-more_dropdown-wrap">
 		<?php
 		if ( $can_edit && ( bp_loggedin_user_id() === $video_user_id || bp_current_user_can( 'bp_moderate' ) ) ) {
 			?>
-			<a href="#" class="bb-rl-video-action_more bb-rl-item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-				<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+			<a href="#" class="bb-rl-video-action_more bb-rl-item-action_more bb_rl_more_dropdown__action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+				<i class="bb-icons-rl-dots-three"></i>
 			</a>
 			<div class="bb-rl-video-action_list bb-rl-item-action_list bb_rl_more_dropdown">
-				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<ul>
 					<?php if ( ! in_array( $db_privacy, array( 'forums', 'comment', 'message' ), true ) ) { ?>
 						<li class="bb_rl_edit_thumbnail_video bb-rl-video-action-class">

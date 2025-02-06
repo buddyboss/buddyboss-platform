@@ -1475,7 +1475,6 @@
   position: absolute;
   right: 15px;
   bottom: 35px;
-  z-index: var(--bb-rl-z-index-dropdown);
   transition: all 0.3s ease;
 }
 
@@ -1679,6 +1678,11 @@
 /* Video */
 .bb-rl-activity-video-elem {
   position: relative;
+}
+
+.bb-rl-activity-video-elem:hover .bb-rl-more_dropdown-wrap {
+  visibility: visible;
+  opacity: 1;
 }
 
 .bb-rl-activity-video-elem .video-js {
