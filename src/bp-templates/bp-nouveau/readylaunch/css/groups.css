@@ -101,17 +101,25 @@
 
 }*/
 /* SCSS Variables */
-/* Common styles */
 .bb-rl-groups .bp-list.grid .item-entry .list-wrap {
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .bb-rl-groups .bp-list.grid .item-entry .item {
   padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-rl-groups .bp-list.grid .item-entry .group-item-wrap {
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-groups .bp-list.grid .item-entry .group-footer-wrap {
-  margin: var(--bb-rl-space-200) 0 0;
+  margin: auto 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
@@ -125,14 +133,6 @@
   display: inline-block;
   margin-top: calc(-1 * var(--bb-rl-space-400));
   margin-left: var(--bb-rl-space-200);
-}
-
-.bb-rl-groups .bp-list.grid .group-avatar-wrap {
-  /* margin-left: $marg-lrg; */
-}
-
-.bb-rl-groups .bp-list.grid .group-avatar-wrap img.avatar {
-  /* margin-top: $marg-med; */
 }
 
 .bb-rl-groups .bp-list.grid .bs-group-cover a {
@@ -202,6 +202,7 @@
 .bb-rl-groups .item-entry .item-meta-wrap {
   display: flex;
   align-items: center;
+  flex-flow: wrap;
 }
 
 .bb-rl-groups .item-entry .item-meta {
@@ -361,13 +362,13 @@
 .bb-rl-group-block .item-meta-wrap p > span + span::before {
   content: "\2022";
   display: inline-block;
-  margin: 0 6px 0 4px;
+  margin: 0 6px 0 3px;
   color: var(--bb-rl-background-tertiary-color);
 }
 
 .bb-rl-group-block .item-meta-wrap p + p.last-activity::before {
   content: "\2022";
   display: inline-block;
-  margin: 0 6px 0 4px;
+  margin: 0 6px 0 3px;
   color: var(--bb-rl-background-tertiary-color);
 }

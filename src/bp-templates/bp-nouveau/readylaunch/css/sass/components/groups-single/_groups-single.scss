@@ -365,8 +365,8 @@
 	flex: 0 0 100%;
 	min-width: 0;
 	position: relative;
-	padding: 0 var(--bb-rl-space-400);;
-	margin-bottom: var(--bb-rl-space-400);;
+	padding: 0 var(--bb-rl-space-400);
+	margin-bottom: var(--bb-rl-space-400);
 
 	#header-cover-image {
 		background-color: #fff;
@@ -523,6 +523,7 @@
 	}
 
 	&:hover {
+
 		a.link-change-cover-image,
 		a.position-change-cover-image {
 			opacity: 1;
