@@ -4109,6 +4109,20 @@ body.admin-bar .bb-rl-left-panel {
   padding: var(--bb-rl-space-400) var(--bb-rl-space-600);
 }
 
+.bb-rl-content-wrapper {
+  display: flex;
+  gap: var(--bb-rl-space-400);
+}
+
+.bb-rl-content-wrapper .bb-rl-primary-container {
+  flex: 1;
+}
+
+.bb-rl-content-wrapper .bb-rl-secondary-container {
+  max-width: 320px;
+  flex: 0 0 320px;
+}
+
 .bb-rl-widget-sidebar .widget {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);

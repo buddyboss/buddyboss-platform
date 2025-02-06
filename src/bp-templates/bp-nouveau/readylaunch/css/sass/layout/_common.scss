@@ -428,3 +428,17 @@
 .bb-rl-content-wrapper {
 	padding: var(--bb-rl-space-400) var(--bb-rl-space-600);
 }
+
+.bb-rl-content-wrapper {
+	display: flex;
+	gap: var(--bb-rl-space-400);
+
+	.bb-rl-primary-container {
+		flex: 1;
+	}
+
+	.bb-rl-secondary-container {
+		max-width: 320px;
+		flex: 0 0 320px;
+	}
+}
