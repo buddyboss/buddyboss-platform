@@ -424,3 +424,7 @@
 .bb-rl-skeleton-loader {
 	animation: fade-in-out infinite 2s ease;
 }
+
+.bb-rl-content-wrapper {
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-600);
+}

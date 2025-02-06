@@ -4103,6 +4103,10 @@ body.admin-bar .bb-rl-left-panel {
   animation: fade-in-out infinite 2s ease;
 }
 
+.bb-rl-content-wrapper {
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-600);
+}
+
 .bb-rl-widget-sidebar .widget {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
