@@ -38,7 +38,7 @@ $document_folder_id = bp_get_document_folder_id();
 			?>
 		</div> <!-- .bb-rl-location-folder-list-wrap -->
 		<div class="bb_rl_ac_document_search_folder_list" style="display: none;">
-			<ul class="bb-rl-location-folder-list"></ul>
+			<ul class="location-folder-list"></ul>
 		</div>
 		<input type="hidden" class="bb-rl-folder-create-from" value="profile" readonly />
 		<input type="hidden" class="bb-rl-folder-selected-id" value="<?php echo $document_folder_id ? esc_attr( $document_folder_id ) : esc_attr( '0' ); ?>" data-value="<?php echo $document_folder_id ? esc_attr( $document_folder_id ) : esc_attr( '0' ); ?>" readonly />
