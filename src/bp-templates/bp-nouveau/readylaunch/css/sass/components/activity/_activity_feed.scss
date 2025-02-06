@@ -72,7 +72,7 @@
 			color: var(--bb-rl-icon-secondary-color);
 			cursor: pointer;
 
-			&:after {
+			&:before {
 				content: "\e1fe";
 				font-family: bb-icons-rl;
 				font-style: normal;
@@ -1736,5 +1736,53 @@ div[class*="attached-gif-container"] {
 		border-radius: var(--bb-rl-radius-full);
 		animation: spin 3s infinite linear;
 		margin-right: var(--bb-rl-space-100);
+	}
+}
+
+
+.bb-rl-activity-list {
+
+	.bb-rl-pin-action {
+		position: absolute;
+		right: 20px;
+		font-size: 22px;
+		line-height: 1;
+		top: 8px;
+
+		.bb-rl-pin-action_button,
+		.bb-rl-mute-action_button {
+			cursor: default;
+			display: none;
+		}
+
+		[class*="bb-icon"] {
+			font-size: 22px;
+			color: var(--bb-rl-icon-tertiary-color);
+		}
+	}
+
+	.bb-pinned,
+	.loading-pin {
+
+		.bp-activity-head {
+			margin-right: 55px;
+		}
+
+		.bb-rl-pin-action_button {
+			display: inline-block;
+		}
+
+	}
+
+	.bb-muted,
+	.loading-mute {
+
+		.bb-mute-action_button {
+			display: inline-block;
+		}
+	}
+
+	.bb-activity-more-options-wrap + .bb-rl-pin-action {
+		right: 45px;
 	}
 }

@@ -1104,7 +1104,7 @@
   cursor: pointer;
 }
 
-.bb-rl-activity-list .bb-activity-more-options-wrap .bb-icon-ellipsis-h:after {
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb-icon-ellipsis-h:before {
   content: "\e1fe";
   font-family: bb-icons-rl;
   font-style: normal;
@@ -2683,6 +2683,44 @@ div[class*="attached-gif-container"] .gif-player {
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
   margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-list .bb-rl-pin-action {
+  position: absolute;
+  right: 20px;
+  font-size: 22px;
+  line-height: 1;
+  top: 8px;
+}
+
+.bb-rl-activity-list .bb-rl-pin-action .bb-rl-pin-action_button,
+.bb-rl-activity-list .bb-rl-pin-action .bb-rl-mute-action_button {
+  cursor: default;
+  display: none;
+}
+
+.bb-rl-activity-list .bb-rl-pin-action [class*="bb-icon"] {
+  font-size: 22px;
+  color: var(--bb-rl-icon-tertiary-color);
+}
+
+.bb-rl-activity-list .bb-pinned .bp-activity-head,
+.bb-rl-activity-list .loading-pin .bp-activity-head {
+  margin-right: 55px;
+}
+
+.bb-rl-activity-list .bb-pinned .bb-rl-pin-action_button,
+.bb-rl-activity-list .loading-pin .bb-rl-pin-action_button {
+  display: inline-block;
+}
+
+.bb-rl-activity-list .bb-muted .bb-mute-action_button,
+.bb-rl-activity-list .loading-mute .bb-mute-action_button {
+  display: inline-block;
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap + .bb-rl-pin-action {
+  right: 45px;
 }
 
 .bb-rl-activity-comments > .ac-form {
