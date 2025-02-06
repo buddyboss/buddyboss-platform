@@ -2723,6 +2723,91 @@ div[class*="attached-gif-container"] .gif-player {
   right: 45px;
 }
 
+.location-folder-list-wrap .breadcrumbs-append-ul-li .item {
+  padding: 2px 0 22px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.location-folder-list-wrap .breadcrumbs-append-ul-li .item span {
+  display: inline-block !important;
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.location-folder-list-wrap .breadcrumbs-append-ul-li .item span:not(:first-child) {
+  content: "\e827";
+  font-family: bb-icons;
+  font-size: 20px;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
+}
+
+.location-folder-list {
+  overflow: auto;
+  max-height: 230px;
+  min-height: 230px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  border: 1px solid #e7e9ec;
+  border-radius: 4px;
+}
+
+.location-folder-list li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.location-folder-list li span {
+  padding: 8px 15px;
+  border-bottom: 1px solid #e7e9ec;
+  display: block;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.location-folder-list li span:before {
+  content: "\ee9f";
+  font-family: bb-icons;
+  color: #939597;
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.location-folder-list li ul {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.location-folder-list li .sub-menu-anchor {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  font-size: 34px;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+  display: inline-block;
+  height: auto;
+  width: auto;
+  transition: all ease 0.3s;
+}
+
 .bb-rl-activity-comments > .ac-form {
   display: none;
 }
