@@ -11,10 +11,10 @@
 ?>
 <div class="bb-rl-video-thumbnail-uploader <?php echo bb_video_is_ffmpeg_installed() ? 'generating_thumb ' : 'no_ffmpeg'; ?>" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-			<div class="modal-wrapper">
-				<div class="modal-container">
-					<header class="bb-model-header">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+			<div class="bb-rl-modal-wrapper">
+				<div class="bb-rl-modal-container">
+					<header class="bb-rl-modal-header">
 						<a href="#" class="bb-rl-video-thumbnail-upload-tab bb-rl-thumbnail-upload-tab selected bb-rl-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content" id="">
 							<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
 						</a>
@@ -82,7 +82,7 @@
 					</div>
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-video-id">
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-attachment-id">
-					<footer class="bb-model-footer flex align-items-center">
+					<footer class="bb-rl-model-footer flex align-items-center">
 						<a class="button push-right bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
