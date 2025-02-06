@@ -154,76 +154,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			bp_nouveau_activity_hook( 'after', 'activity_content' );
 			bb_activity_load_progress_bar_state();
 			bp_nouveau_activity_entry_buttons();
-
-			// Activity state.
-			$comment_count  = bp_activity_get_comment_count();
-			$reactions      = bb_active_reactions();
-			$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
-				array(
-					'item_id'     => $activity_id,
-					'item_type'   => 'activity',
-					'reaction_id' => array_keys( $reactions ),
-				)
-			);
+			if ( class_exists( 'BB_Activity_Readylaunch' ) ) {
+				BB_Activity_Readylaunch::bb_rl_activity_state();
+			}
 			?>
-			<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
-				<?php
-				if ( bb_is_reaction_activity_posts_enabled() ) {
-					$most_reactions = bb_get_activity_most_reactions( $activity_id, 'activity' );
-					if ( ! empty( $most_reactions ) ) {
-						?>
-						<div class="activity-state-reactions">
-							<?php
-							foreach ( $most_reactions as $reaction ) {
-								$icon = bb_activity_prepare_emotion_icon( $reaction['id'] );
-								?>
-								<div class="reactions_item">
-									<?php echo $icon; ?>
-								</div>
-								<?php
-							}
-							if ( $reaction_count > 0 ) {
-								?>
-								<div class="activity-reactions_count">
-									<?php
-									printf( _n( '%s Reaction', '%s Reactions', $reaction_count, 'buddyboss' ), $reaction_count );
-									?>
-								</div>
-								<?php
-							}
-							?>
-						</div>
-						<div class="activity-state-popup">
-							<div class="activity-state-popup_overlay"></div>
-							<div class="activity-state-popup_inner" id="reaction-content-<?php echo esc_attr( $activity_id ); ?>"></div>
-						</div>
-						<?php
-					}
-				}
-				if ( bp_activity_can_comment() ) {
-					?>
-					<?php
-					$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
-					if ( $comment_count > 0 ) {
-						$activity_state_comment_class['has-comments'] = 'has-comments';
-					}
-					$activity_state_class = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
-					?>
-					<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
-					<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
-						<?php
-						if ( $comment_count > 1 || 0 === $comment_count ) {
-							printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
-						} else {
-							printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
-						}
-						?>
-					</span>
-					</a>
-					<?php
-				}
-				?>
-			</div>
 		</div>
 
 		<?php

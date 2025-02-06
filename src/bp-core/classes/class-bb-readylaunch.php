@@ -71,6 +71,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$enabled = $this->bb_is_readylaunch_enabled();
 			if ( $enabled ) {
+				if (
+					bp_is_active( 'activity' ) &&
+					(
+						bp_is_activity_directory() ||
+						bp_is_single_activity()
+					)
+				) {
+					BB_Activity_Readylaunch::instance();
+				}
+
 				add_filter( 'template_include',
 					array(
 						$this,
