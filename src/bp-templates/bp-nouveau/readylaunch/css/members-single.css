@@ -110,6 +110,10 @@
   padding-bottom: var(--bb-rl-space-300);
 }
 
+.bb-rl-profile-container .bp-member-type {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 .bb-rl-profile-header {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);

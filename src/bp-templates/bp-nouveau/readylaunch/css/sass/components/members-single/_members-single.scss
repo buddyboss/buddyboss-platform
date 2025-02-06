@@ -2,6 +2,10 @@
 	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	margin-bottom: var(--bb-rl-space-200);
 	padding-bottom: var(--bb-rl-space-300);
+
+	.bp-member-type {
+		margin-bottom: var(--bb-rl-space-100);
+	}
 }
 
 .bb-rl-profile-header {
