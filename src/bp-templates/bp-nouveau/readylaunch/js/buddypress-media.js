@@ -5040,13 +5040,13 @@ window.bp = window.bp || {};
 			}
 			target.addClass( 'loading' );
 
-			var activityId = $( document ).find( 'a[data-media-id="' + itemId + '"]' ).attr( 'data-parent-activity-id' );
-
-			var groupId = self.group_id;
+			var attrSelector = 'video' === actionType ? 'li.bb_rl_move_video a[data-video-id="' + itemId + '"]' : 'a[data-media-id="' + itemId + '"]',
+			    activityId   = $( document ).find( attrSelector ).attr( 'data-parent-activity-id' ),
+			    groupId      = self.group_id;
 			if ( 'media' === actionType && ! groupId ) {
 				groupId = false;
-				if ( 'group' === $( document ).find( 'a[data-media-id="' + itemId + '"]' ).attr( 'data-type' ) ) {
-					groupId = $( document ).find( 'a[data-media-id="' + itemId + '"]' ).attr( 'id' );
+				if ( 'group' === $( document ).find( attrSelector ).attr( 'data-type' ) ) {
+					groupId = $( document ).find( attrSelector ).attr( 'id' );
 				}
 			}
 
