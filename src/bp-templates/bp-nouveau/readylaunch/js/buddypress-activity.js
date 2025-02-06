@@ -854,14 +854,14 @@ window.bp = window.bp || {};
 		/* jshint ignore:start */
 		togglePrivacyDropdown: function ( event ) {
 
-			var activityItem = $( event.currentTarget ).closest( '.bb-rl-activity-item' );
+			var activityItem = $( event.currentTarget ).closest( '.activity-item' );
 
 			// Stop event propagation.
 			event.preventDefault();
 
-			var privacyElement = activityItem.find( '.bb-rl-activity-privacy' );
+			var privacyElement = activityItem.find( '.activity-privacy' );
 
-			$( 'ul.bb-rl-activity-privacy' ).not( privacyElement ).removeClass( 'bb-open' ); // close other dropdowns.
+			$( 'ul.activity-privacy' ).not( privacyElement ).removeClass( 'bb-open' ); // close other dropdowns.
 
 			privacyElement.toggleClass( 'bb-open' );
 		},
