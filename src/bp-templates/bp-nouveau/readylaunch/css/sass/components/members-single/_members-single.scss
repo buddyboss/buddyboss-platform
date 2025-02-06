@@ -19,10 +19,33 @@
 
 .bb-rl-profile-item-header {
 	gap: var(--bb-rl-space-400);
+	position: relative;
+
+	.bb-rl-header-dropdown {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
 }
 
 .bb-rl-profile-header-content {
 	flex: 1;
+
+	h2 {
+		font-size: var(--bb-rl-font-size-2xl);
+		font-weight: 600;
+		line-height: var(--bb-rl-base-line-2xl);
+	}
+
+	.item-meta {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-tertiary-color);
+
+		.separator {
+			color: var(--bb-rl-background-tertiary-color);
+		}
+	}
 }
 
 .bb-rl-main-nav {

@@ -89,12 +89,14 @@
   --bb-rl-z-index-popover: 1060;
   --bb-rl-z-index-tooltip: 1070;
   --bb-rl-font-family-base: inter, serif;
+  --bb-rl-font-size-2xl: 20px;
   --bb-rl-font-size-base: 16px;
   --bb-rl-font-size-xs: 11px;
   --bb-rl-font-size-sm: 13px;
   --bb-rl-base-line-xs: 16px;
   --bb-rl-base-line-small: 20px;
   --bb-rl-base-line: 24px;
+  --bb-rl-base-line-2xl: 30px;
 }
 
 /* Dark Mode Variables */
@@ -123,10 +125,34 @@
 
 .bb-rl-profile-item-header {
   gap: var(--bb-rl-space-400);
+  position: relative;
+}
+
+.bb-rl-profile-item-header .bb-rl-header-dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .bb-rl-profile-header-content {
   flex: 1;
+}
+
+.bb-rl-profile-header-content h2 {
+  font-size: var(--bb-rl-font-size-2xl);
+  font-weight: 600;
+  line-height: var(--bb-rl-base-line-2xl);
+}
+
+.bb-rl-profile-header-content .item-meta {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-profile-header-content .item-meta .separator {
+  color: var(--bb-rl-background-tertiary-color);
 }
 
 .bb-rl-main-nav ul {
