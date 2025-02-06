@@ -5226,27 +5226,26 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e182";
 }
 
-.bb-rl-groups .item-entry .bs-group-members {
+.bb-rl-groups .item-entry .bb-group-members {
   display: flex;
   margin-bottom: 0;
   padding-right: 10px;
   margin-right: 5px;
 }
 
-.bb-rl-groups .item-entry .bs-group-members .bs-group-member {
-  max-width: 28px;
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member {
+  max-width: 24px;
   float: left;
-  margin-right: -9px;
+  margin-right: -4px;
   position: relative;
   z-index: 1;
 }
 
-.bb-rl-groups .item-entry .bs-group-members .bs-group-member a {
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member a {
   text-decoration: none;
 }
 
-.bb-rl-groups .item-entry .bs-group-members .bs-group-member img {
-  border: 2px solid transparent;
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member img {
   background-color: #fff;
   border-radius: 50%;
   float: left;
@@ -5255,12 +5254,12 @@ body.admin-bar .bb-rl-left-panel {
   display: block;
 }
 
-.bb-rl-groups .item-entry .bs-group-members .bs-group-member [class*=" bb-icon-"] {
-  height: 28px;
-  width: 28px;
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member [class*=" bb-icon-"] {
+  height: 24px;
+  width: 24px;
   font-size: 16px;
   color: #c3c4c8;
-  line-height: 28px;
+  line-height: 24px;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 2px solid #fff;
@@ -5271,15 +5270,21 @@ body.admin-bar .bb-rl-left-panel {
   justify-content: center;
 }
 
-.bb-rl-groups .item-entry .bs-group-members .bs-group-member [class*=" bb-icon-"]:hover {
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member [class*=" bb-icon-"]:hover {
   background-color: #e3e3e3;
 }
 
-.bb-rl-groups .item-entry .bb-rl-more-group-member a {
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member.count-wrap {
+  margin-left: 8px;
+  max-width: none;
+}
+
+.bb-rl-groups .item-entry .bb-group-members .bb-group-member.count-wrap a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-tertiary-color);
+  white-space: nowrap;
 }
 
 .bb-rl-groups .item-list.grid .only-list-view {

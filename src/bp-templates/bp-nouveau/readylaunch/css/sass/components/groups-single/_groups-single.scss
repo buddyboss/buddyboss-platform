@@ -99,6 +99,10 @@
 							font-size: var(--bb-rl-font-size-xs);
 							color: var(--bb-rl-text-tertiary-color);
 						}
+
+						.bb-rl-group-member-count-label {
+							display: none;
+						}
 					}
 				}
 			}

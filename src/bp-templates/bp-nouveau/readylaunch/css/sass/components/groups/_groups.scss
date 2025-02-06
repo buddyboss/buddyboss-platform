@@ -179,16 +179,16 @@
 			}
 		}
 
-		.bs-group-members {
+		.bb-group-members {
 			display: flex;
 			margin-bottom: 0;
 			padding-right: 10px;
 			margin-right: 5px;
 
-			.bs-group-member {
-				max-width: 28px;
+			.bb-group-member {
+				max-width: 24px;
 				float: left;
-				margin-right: -9px;
+				margin-right: -4px;
 				position: relative;
 				z-index: 1;
 
@@ -197,7 +197,6 @@
 				}
 
 				img {
-					border: 2px solid transparent;
 					background-color: #fff;
 					border-radius: 50%;
 					float: left;
@@ -207,11 +206,11 @@
 				}
 
 				[class*=" bb-icon-"] {
-					height: 28px;
-					width: 28px;
+					height: 24px;
+					width: 24px;
 					font-size: 16px;
 					color: #c3c4c8;
-					line-height: 28px;
+					line-height: 24px;
 					border-radius: 50%;
 					background-color: #f9f9f9;
 					border: 2px solid #fff;
@@ -226,14 +225,17 @@
 					}
 				}
 			}
-		}
 
-		.bb-rl-more-group-member {
-
-			a {
-
-				@include bb-rl-label-heading-bolder;
-				color: var(--bb-rl-text-tertiary-color);
+			.bb-group-member.count-wrap {
+				margin-left: 8px;
+				max-width: none;
+	
+				a {
+	
+					@include bb-rl-label-heading-bolder;
+					color: var(--bb-rl-text-tertiary-color);
+					white-space: nowrap;
+				}
 			}
 		}
 	}

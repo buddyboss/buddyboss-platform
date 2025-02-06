@@ -200,6 +200,10 @@
   color: var(--bb-rl-text-tertiary-color);
 }
 
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb-group-members .bb-group-member.count-wrap .bb-rl-group-member-count-label {
+  display: none;
+}
+
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_action i::before {
   content: "\e1fe";
   font-weight: 400;
