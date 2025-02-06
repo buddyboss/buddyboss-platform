@@ -281,17 +281,17 @@
 			top: 10px;
 			transition: all ease 0.2s;
 			transition-delay: 0.5s;
-			min-width: 40px;
+			min-width: 28px;
 
 			img {
-				width: 40px;
-				height: 40px;
+				width: 28px;
+				height: 28px;
 				object-fit: cover;
 			}
 
 			i {
 				display: block;
-				font-size: 40px;
+				font-size: 28px;
 				line-height: 1;
 				transition: all linear 0.2s;
 				transform-origin: bottom;
@@ -384,7 +384,7 @@
 				display: block;
 				color: var(--bb-rl-text-color);
 				font-size: 14px;
-				font-weight: 600;
+				font-weight: 500;
 				width: calc(100% - 70px);
 				text-overflow: ellipsis;
 				overflow: hidden;
@@ -397,6 +397,7 @@
 				float: left;
 				color: var(--bb-rl-text-tertiary-color);
 				font-size: var(--bb-rl-font-size-sm);
+				margin-top: var(--bb-rl-space-50);
 			}
 
 			.bb-rl-document-description {
@@ -410,6 +411,16 @@
 
 			.bb-rl-document-extension-description {
 				transition: opacity ease 0.3s;
+
+				&:before {
+					content: "";
+					display: inline-block;
+					vertical-align: middle;
+					height: 4px;
+					width: 4px;
+					background-color: var(--bb-rl-background-tertiary-color);
+					margin: 0 6px 0 0;
+				}
 			}
 
 			.bb-rl-document-helper-text {
@@ -900,7 +911,7 @@
 		background-color: rgba(0, 0, 0, 0.9);
 		color: var(--bb-rl-text-white-color);
 		display: inline-block;
-		padding: 6px 8px;
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 		border-radius: var(--bb-rl-radius-sm);
 		position: absolute;
 		left: var(--bb-rl-space-200);
@@ -1110,7 +1121,8 @@
 	}
 
 	.bb-rl-entry-img > img {
-		min-height: 290px;
+		height: 290px;
+		width: 100%;
 		object-fit: cover;
 	}
 
@@ -1143,6 +1155,7 @@
 
 		.bb-rl-entry-img > img {
 			height: 270px;
+			width: 100%;
 			object-fit: cover;
 		}
 
@@ -1166,6 +1179,7 @@
 
 		.bb-rl-entry-img > img {
 			height: 270px;
+			width: 100%;
 			object-fit: cover;
 		}
 	}
@@ -1267,13 +1281,10 @@
 			&:before {
 				content: "\e288";
 				font-family: bb-icons-rl;
-				font-size: 16px;
-				vertical-align: middle;
-				display: inline-block;
-				margin-right: 10px;
-				width: 20px;
-				text-align: center;
+				color: var(--bb-rl-icon-secondary-color);
+				font-size: 20px;
 				font-weight: 400;
+				margin-right: var(--bb-rl-space-100);
 			}
 
 			&.public:before {
