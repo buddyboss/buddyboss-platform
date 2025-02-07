@@ -328,7 +328,7 @@
 
 .bb-rl-manage-group-container form {
   width: 100%;
-  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
 
 .bb-rl-manage-group-container form .bp-screen-title {
