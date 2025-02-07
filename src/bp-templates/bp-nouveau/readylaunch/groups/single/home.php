@@ -32,11 +32,6 @@ if ( bp_has_groups() ) {
 							$tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 							?>
 							<div id="bb-rl-item-header-avatar">
-								<?php if ( bp_is_item_admin() ) { ?>
-									<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bb-rl-tooltip flex justify-center items-center" data-bb-rl-tooltip-pos="up" data-bb-rl-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
-										<i class="bb-icons-rl-camera"></i>
-									</a>
-								<?php } ?>
 								<?php bp_group_avatar(); ?>
 							</div><!-- #item-header-avatar -->
 						<?php endif; ?>
@@ -58,7 +53,7 @@ if ( bp_has_groups() ) {
 				bp_get_template_part( 'groups/single/cover-image-header' );
 			}
 			?>
-			<div class="bp-wrap">
+			<div class="bb-rl-detail-wrap">
 				<div id="item-body" class="item-body">
 					<?php
 					 if ( bp_is_group_subgroups() ) {
