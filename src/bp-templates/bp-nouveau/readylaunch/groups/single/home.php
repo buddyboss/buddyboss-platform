@@ -48,22 +48,24 @@ if ( bp_has_groups() ) {
 				<?php bp_get_template_part( 'groups/single/parts/item-nav' ); ?>
 			</div>
 
-			<?php
-			if ( bp_group_use_cover_image_header() ) {
-				bp_get_template_part( 'groups/single/cover-image-header' );
-			}
-			?>
-			<div class="bb-rl-detail-wrap">
-				<div id="item-body" class="item-body">
-					<?php
-					 if ( bp_is_group_subgroups() ) {
-					  echo $template_content; // phpcs:ignore
-					 } else {
-					 	bp_nouveau_group_template_part();
-					 }
-					?>
-				</div><!-- #item-body -->
-			</div><!-- // .bp-wrap -->
+			<div class="bb-rl-group-section">
+				<?php
+				if ( bp_group_use_cover_image_header() ) {
+					bp_get_template_part( 'groups/single/cover-image-header' );
+				}
+				?>
+				<div class="bb-rl-group-details">
+					<div id="item-body" class="item-body">
+						<?php
+						if ( bp_is_group_subgroups() ) {
+						echo $template_content; // phpcs:ignore
+						} else {
+							bp_nouveau_group_template_part();
+						}
+						?>
+					</div><!-- #item-body -->
+				</div><!-- // .bb-rl-group-details -->
+			</div>
 
 			</div>
 		<?php

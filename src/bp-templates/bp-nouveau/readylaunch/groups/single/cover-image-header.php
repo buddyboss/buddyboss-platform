@@ -26,7 +26,7 @@ $has_cover_image_position = '';
 $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
 ?>
 
-<div id="cover-image-container" class="bb-rl-group-cover-container">
+<div id="cover-image-container" class="bb-rl-group-cover">
 
 	<?php
 	if ( ! empty( $group_cover_image ) ) {
@@ -38,7 +38,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 	}
 	?>
 
-	<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $group_cover_height . ' width-' . $group_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?>">
+	<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $group_cover_height . ' width-' . $group_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?> bb-rl-header-cover">
 		<?php
 		if ( bp_group_use_cover_image_header() ) {
 
@@ -50,13 +50,13 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 			?>
 
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
+				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-camera"></i>
 				</a>
 			<?php } ?>
 
 			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() && bp_attachments_get_group_has_cover_image( bp_get_group_id() ) ) { ?>
-				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
+				<a href="#" class="position-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-arrows-out-cardinal"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
