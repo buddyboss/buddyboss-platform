@@ -172,19 +172,21 @@ window.bp = window.bp || {};
 			$document.click( this.togglePopupDropdown );
 
 			// forums.
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			var forumSelectors       = '.bb-rl-ac-reply-media-button, .bb-rl-ac-reply-document-button, .bb-rl-ac-reply-video-button, .bb-rl-ac-reply-gif-button';
 			var forumParentSelectors = '[data-bp-list="activity"], #bb-media-model-container .bb-rl-activity-list, #bb-rl-activity-modal .bb-rl-activity-list, .bb-rl-modal-activity-footer';
 			$bpElem.find( forumParentSelectors ).on(
 				'click',
 				forumSelectors,
 				function ( event ) {
-					if ( $( event.target ).hasClass( 'bb-rl-ac-reply-media-button' ) ) {
+					var eventCurrentTarget = $( event.currentTarget );
+					if ( eventCurrentTarget.hasClass( 'bb-rl-ac-reply-media-button' ) ) {
 						this.openCommentsMediaUploader( event );
-					} else if ( $( event.target ).hasClass( 'bb-rl-ac-reply-document-button' ) ) {
+					} else if ( eventCurrentTarget.hasClass( 'bb-rl-ac-reply-document-button' ) ) {
 						this.openCommentsDocumentUploader( event );
-					} else if ( $( event.target ).hasClass( 'bb-rl-ac-reply-video-button' ) ) {
+					} else if ( eventCurrentTarget.hasClass( 'bb-rl-ac-reply-video-button' ) ) {
 						this.openCommentsVideoUploader( event );
-					} else if ( $( event.target ).hasClass( 'bb-rl-ac-reply-gif-button' ) ) {
+					} else if ( eventCurrentTarget.hasClass( 'bb-rl-ac-reply-gif-button' ) ) {
 						this.openGifPicker( event );
 					}
 				}.bind( this )
@@ -1191,6 +1193,20 @@ window.bp = window.bp || {};
 				$load_more_btn.data( 'bp-autoloaded', 1 );
 				$load_more_btn.find( 'a' ).text( bbRlActivity.strings.loadingMore );
 				$load_more_btn.find( 'a' ).trigger( 'click' );
+			}
+		},
+
+		resetGifPicker: function ( comment_id ) {
+			var gifButton = $( '#bb-rl-ac-reply-gif-button-' + comment_id );
+			gifButton.closest( '.bb-rl-post-gif' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' ).empty();
+			gifButton.removeClass( 'active' );
+			$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' ).empty();
+
+			// add gif data if enabled or uploaded.
+			if ( ! _.isUndefined( this.models[ comment_id ] ) ) {
+				var model = this.models[ comment_id ];
+				model.set( 'gif_data', {} );
+				$( '#bb-rl-ac-reply-post-gif-' + comment_id ).find( '.bb-rl-activity-attached-gif-container' ).removeAttr( 'style' );
 			}
 		},
 
