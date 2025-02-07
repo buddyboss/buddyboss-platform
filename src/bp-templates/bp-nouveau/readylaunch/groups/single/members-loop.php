@@ -72,6 +72,50 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 				}
 			}
 
+			$member_block_button  = '';
+			$member_report_button = '';
+
+			if ( bp_is_active( 'moderation' ) && is_user_logged_in() ) {
+				// Member report button.
+				$report_button = bp_member_get_report_link(
+					array(
+						'button_element' => 'a',
+						'position'       => 30,
+						'report_user'    => true,
+						'parent_attr'    => array(
+							'id'    => 'user-report-' . $member_user_id,
+							'class' => '',
+						),
+						'button_attr'    => array(
+							'data-bp-content-id'   => $member_user_id,
+							'data-bp-content-type' => BP_Moderation_Members::$moderation_type_report,
+							'data-reported_type'   => bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $member_user_id ),
+						),
+
+					)
+				);
+				$member_report_button = ! is_super_admin( $member_user_id ) ? bp_get_button( $report_button ) : '';
+
+				// Member block button.
+				$block_button = bp_member_get_report_link(
+					array(
+						'button_element' => 'a',
+						'position'       => 30,
+						'parent_attr'    => array(
+							'id'    => 'user-block-' . $member_user_id,
+							'class' => '',
+						),
+						'button_attr'    => array(
+							'data-bp-content-id'   => $member_user_id,
+							'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
+							'data-reported_type'   => bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type, $member_user_id ),
+						),
+
+					)
+				);
+				$member_block_button = ! is_super_admin( $member_user_id ) ? bp_get_button( $block_button ) : '';
+			}
+
 			$bp_get_member_permalink = bp_get_group_member_domain();
 			?>
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
