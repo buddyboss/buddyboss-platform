@@ -1196,20 +1196,6 @@ window.bp = window.bp || {};
 			}
 		},
 
-		resetGifPicker: function ( comment_id ) {
-			var gifButton = $( '#bb-rl-ac-reply-gif-button-' + comment_id );
-			gifButton.closest( '.bb-rl-post-gif' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' ).empty();
-			gifButton.removeClass( 'active' );
-			$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' ).empty();
-
-			// add gif data if enabled or uploaded.
-			if ( ! _.isUndefined( this.models[ comment_id ] ) ) {
-				var model = this.models[ comment_id ];
-				model.set( 'gif_data', {} );
-				$( '#bb-rl-ac-reply-post-gif-' + comment_id ).find( '.bb-rl-activity-attached-gif-container' ).removeAttr( 'style' );
-			}
-		},
-
 		openCommentsMediaUploader: function (event) {
 			var self               = this,
 				target             = $( event.currentTarget ),
@@ -1281,14 +1267,11 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['document', 'video'].forEach(
+			['document', 'video', 'gif'].forEach(
 				function ( type ) {
 					self.destroyUploader( type, activityID );
 				}
 			);
-
-			var c_id = $( event.currentTarget ).data( 'ac-id' );
-			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
 				$( target ).closest( '.bb-rl-ac-form-container' ).find( '.dropzone.media-dropzone' ).trigger( 'click' );
@@ -1362,14 +1345,11 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['media', 'video'].forEach(
+			['media', 'video', 'gif'].forEach(
 				function ( type ) {
 					self.destroyUploader( type, activityID );
 				}
 			);
-
-			var c_id = $( event.currentTarget ).data( 'ac-id' );
-			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
 				$( target ).closest( '.bb-rl-ac-form-container' ).find( '.dropzone.document-dropzone' ).trigger( 'click' );
@@ -1443,14 +1423,11 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['media', 'document'].forEach(
+			['media', 'document', 'gif'].forEach(
 				function ( type ) {
 					self.destroyUploader( type, activityID );
 				}
 			);
-
-			var c_id = $( event.currentTarget ).data( 'ac-id' );
-			this.resetGifPicker( c_id );
 
 			if ( ! event.isCustomEvent ) {
 				$( target ).closest( '.bb-rl-ac-form-container' ).find( '.dropzone.video-dropzone' ).trigger( 'click' );
@@ -3623,7 +3600,7 @@ window.bp = window.bp || {};
 							) );
 							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icon-file' ).removeClass( 'bb-icon-file' ).addClass( 'bb-icon-file-' + fileExtension );
 						}
-						var tool_box = target.parents( '.ac-reply-toolbar' );
+						var tool_box = target.parents( '.bb-rl-ac-reply-toolbar' );
 						if ( tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ) ) {
 							tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' ).addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 						}
