@@ -78,9 +78,11 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		}
 
 		if ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) {
-			$ids = $follower;
+			$ids                  = $follower;
+			$see_all_query_string = '?bb-rl-scope=follower';
 		} else {
-			$ids = $following;
+			$ids                  = $following;
+			$see_all_query_string = '?bb-rl-scope=following';
 		}
 
 	
@@ -118,16 +120,17 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		$title = $settings['link_title'] ? '<a href="' . $members_dir_url . '">' . $title . '</a>' : $title;
 
 		do_action( 'bb_before_my_network_widget' );
+
 		echo $args['before_widget'];
 		echo $args['before_title']
 			. $title
-			. '<div class="bb-rl-see-all"><a href="' . $members_dir_url . '" class="count-more">' . esc_html__( 'See all', 'buddyboss' ) . '<i class="bb-icon-l bb-icon-angle-right"></i></a></div>'
+			. '<div class="bb-rl-see-all"><a target="_blank" href="' . $members_dir_url . $see_all_query_string .'" class="count-more">' . esc_html__( 'See all', 'buddyboss' ) . '<i class="bb-icon-l bb-icon-angle-right"></i></a></div>'
 			. $args['after_title'];
 		?>
 			<div class="bb-rl-members-item-options">
-				<a href="javascript:void(0);" id="bb-rl-my-network-followers"
+				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo $members_dir_url . '?bb-rl-scope=follower' ?>"
 					<?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Followers', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo $follower_count; ?></span></a>
-				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>"
+				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>" data-see-all-link="<?php echo $members_dir_url . '?bb-rl-scope=following' ?>"
 				<?php echo ( 'following' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>><?php esc_html_e( 'Following', 'buddyboss' ); ?><span class="bb-rl-widget-tab-count"><?php echo $following_count; ?></span></a>
 			</div>
 			<div class="bb-rl-my-network-members-list bb-rl-avatar-block">

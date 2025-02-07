@@ -60,7 +60,7 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 
 		// Define URLs based on widget class.
 		$updated_widget_urls = array(
-			'BP_Core_Recently_Active_Widget' => esc_url( bp_get_members_directory_permalink() . '?bb-rl-members-order-by=active' ),
+			'BP_Core_Recently_Active_Widget' => esc_url( bp_get_members_directory_permalink() . '?bb-rl-order-by=active&bb-rl-scope=all' ),
 		);
 	
 		$widget_class = get_class( $widget );
