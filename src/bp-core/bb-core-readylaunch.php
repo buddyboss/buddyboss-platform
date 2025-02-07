@@ -85,3 +85,53 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 
 }
 add_filter( 'widget_display_callback', 'bb_rl_modify_existing_widget_output', 10, 3 );
+
+/**
+ * Open wrapper of repeater set - on View profile screen
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global type $first_xpfield_in_repeater
+ */
+function bb_rl_view_profile_repeaters_print_group_html_start() {
+	$group_id            = bp_get_the_profile_group_id();
+	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	if ( $is_repeater_enabled ) {
+		global $repeater_set_being_displayed;
+
+		$current_field_id   = bp_get_the_profile_field_id();
+		$current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
+
+		if ( ! empty( $repeater_set_being_displayed ) && $repeater_set_being_displayed != $current_set_number ) {
+			// End of previous set.
+			echo "<div class='bb-rl-repeater-separator'></div>";
+		}
+
+		$repeater_set_being_displayed = $current_set_number;
+	}
+}
+
+remove_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
+add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_group_html_start' );
+
+
+/**
+ * Close wrapper of repeater set - on edit profile screen
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global boolean $first_xpfield_in_repeater
+ */
+function bb_rl_view_profile_repeaters_print_group_html_end() {
+	global $repeater_set_being_displayed;
+	if ( ! empty( $repeater_set_being_displayed ) ) {
+
+		// End of previous set.
+		echo "<div class='bb-rl-repeater-separator'></div>";
+
+		$repeater_set_being_displayed = false;
+	}
+}
+
+remove_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
+add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_group_html_end' );
