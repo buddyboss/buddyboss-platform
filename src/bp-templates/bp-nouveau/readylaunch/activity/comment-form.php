@@ -18,16 +18,20 @@ $media_active = bp_is_active( 'media' );
 
 <form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php echo esc_attr( $activity_id ); ?>" class="ac-form not-initialized"<?php bp_activity_comment_form_nojs_display(); ?>>
 	<div class="bb-rl-ac-form-container">
-		<div class="bb-rl-ac-reply-avatar">
-			<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
-		</div>
 		<div class="bb-rl-ac-reply-content">
+			<div class="bb-rl-ac-reply-avatar">
+				<?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?>
+			</div>
 			<div class="ac-textarea">
 				<label for="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="bp-screen-reader-text">
 					<?php esc_html_e( 'Comment', 'buddyboss' ); ?>
 				</label>
 				<div contenteditable="true" id="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="ac-input bp-suggestions" name="ac_input_<?php echo esc_attr( $activity_id ); ?>" data-placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>"></div>
-				<?php
+			</div>
+		</div><!-- .bb-rl-ac-reply-content -->
+		<div class="bb-rl-ac-reply-footer">
+			<input type="hidden" name="comment_form_id" value="<?php echo esc_attr( $activity_id ); ?>" />
+			<?php
 				if ( 'blogs' !== $activities_template->activity->component ) {
 					?>
 					<div id="bb-rl-ac-reply-toolbar-<?php echo esc_attr( $activity_id ); ?>" class="bb-rl-ac-reply-toolbar">
@@ -36,23 +40,23 @@ $media_active = bp_is_active( 'media' );
 							?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
 								<a href="#" id="bb-rl-ac-reply-media-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
-									<i class="bb-icon-l bb-icon-camera"></i>
+									<i class="bb-icons-rl-camera"></i>
 								</a>
 							</div>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
 								<a href="#" id="bb-rl-ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
-									<i class="bb-icon-l bb-icon-video"></i>
+									<i class="bb-icons-rl-video-camera"></i>
 								</a>
 							</div>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
 								<a href="#" id="bb-rl-ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
-									<i class="bb-icon-l bb-icon-attach"></i>
+									<i class="bb-icons-rl-paperclip-horizontal"></i>
 								</a>
 							</div>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 								<div class="bb-rl-gif-media-search">
 									<a href="#" id="bb-rl-ac-reply-gif-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
-										<i class="bb-icon-l bb-icon-gif"></i>
+										<i class="bb-icons-rl-gif"></i>
 									</a>
 									<div class="bb-rl-gif-media-search-dropdown"></div>
 								</div>
@@ -62,20 +66,18 @@ $media_active = bp_is_active( 'media' );
 					</div>
 					<?php
 				}
-				?>
-			</div>
-			<input type="hidden" name="comment_form_id" value="<?php echo esc_attr( $activity_id ); ?>" />
+			?>
+			<?php
+			printf(
+				'&nbsp; <button type="button" class="bb-rl-button bb-rl-button--secondaryFill ac-reply-cancel">%s</button>',
+				esc_html__( 'Cancel', 'buddyboss' )
+			);
+			?>
 			<div class="bb-rl-ac-submit-wrap">
 				<?php
 				bp_nouveau_submit_button( 'activity-new-comment' );
 				?>
 			</div>
-			<?php
-			printf(
-				'&nbsp; <button type="button" class="ac-reply-cancel">%s</button>',
-				esc_html__( 'Cancel', 'buddyboss' )
-			);
-			?>
 		</div>
 		<?php
 		if ( 'blogs' !== $activities_template->activity->component ) {

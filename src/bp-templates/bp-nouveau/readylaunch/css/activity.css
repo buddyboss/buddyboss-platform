@@ -2900,4 +2900,95 @@ div[class*="attached-gif-container"] .gif-player {
 
 .bb-rl-activity-comments > .ac-form {
   display: none;
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-comments > .ac-form .events-initiated:not(.has-content) .ac-input:before {
+  content: attr(data-placeholder);
+  font-size: 14px;
+  color: var(--bb-rl-text-tertiary-color);
+  position: absolute;
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-content {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-comments .ac-textarea {
+  flex: auto;
+}
+
+.bb-rl-activity-comments .ac-textarea .ac-input {
+  outline: none;
+  font-size: 14px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-activity-comments .ac-textarea .ac-input:before {
+  content: attr(data-placeholder);
+  font-size: 14px;
+  color: var(--bb-rl-text-tertiary-color);
+  position: absolute;
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-avatar {
+  padding: var(--bb-rl-space-200) 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-avatar img {
+  border-radius: var(--bb-rl-radius-full);
+  height: 32px;
+  width: 32px;
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-footer {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar {
+  display: flex;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .toolbar-button {
+  padding: var(--bb-rl-space-50);
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .toolbar-button [class*="bb-icon"] {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 24px;
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-footer .ac-reply-cancel {
+  font-size: 0.85rem;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin: 0 var(--bb-rl-space-100) 0 auto;
+}
+
+.bb-rl-activity-comments .bb-rl-ac-reply-footer .bb-rl-ac-submit-wrap input[type="submit"] {
+  font-size: 0.85rem;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+}
+
+.activity-item.has-comments .ac-form {
+  display: block;
 }
