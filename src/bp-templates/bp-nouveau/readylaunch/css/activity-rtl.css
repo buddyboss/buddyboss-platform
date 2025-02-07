@@ -2907,7 +2907,7 @@ div[class*="attached-gif-container"] .gif-player {
   margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
 }
 
-.bb-rl-activity-comments > .ac-form .events-initiated:not(.has-content) .ac-input:before {
+.bb-rl-activity-comments > .ac-form:not(.has-content) .ac-input:before {
   content: attr(data-placeholder);
   font-size: 14px;
   color: var(--bb-rl-text-tertiary-color);
@@ -2928,13 +2928,6 @@ div[class*="attached-gif-container"] .gif-player {
   outline: none;
   font-size: 14px;
   color: var(--bb-rl-text-color);
-}
-
-.bb-rl-activity-comments .ac-textarea .ac-input:before {
-  content: attr(data-placeholder);
-  font-size: 14px;
-  color: var(--bb-rl-text-tertiary-color);
-  position: absolute;
 }
 
 .bb-rl-activity-comments .bb-rl-ac-reply-avatar {
