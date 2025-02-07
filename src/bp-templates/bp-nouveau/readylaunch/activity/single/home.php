@@ -24,7 +24,7 @@ echo esc_attr( bp_current_action() ); ?>">
 	<?php
 	do_action( 'bp_before_single_activity_content' ); ?>
 
-	<ul id="bb-rl-activity-stream" class="bb-rl-activity-list bb-rl-item-list bp-list" data-bp-list="activity" data-ajax="<?php
+	<ul id="bb-rl-activity-stream" class="bb-rl-activity-list bb-rl-item-list bb-rl-list" data-bp-list="activity" data-ajax="<?php
 	echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php
 		if ( $is_send_ajax_request ) {

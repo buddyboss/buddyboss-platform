@@ -33,7 +33,7 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 	endif;
 	?>
 
-	<li class="bb-rl-activity bb_rl_activity_update bb-rl-activity-item bb-rl-activity-popup"></li>
+	<li class="activity activity_update activity-item bb-rl-activity-popup"></li>
 
 	<?php if ( $is_first_page ) : ?>
 		</ul>

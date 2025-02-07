@@ -786,7 +786,7 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
-			if ( $( 'body' ).hasClass( 'bb-rl-activity' ) && ! _.isUndefined( bbRlActivity.params.object ) ) {
+			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( bbRlActivity.params.object ) ) {
 				bp.draft_activity.object = bbRlActivity.params.object;
 
 				// Draft activity data.
@@ -5251,7 +5251,7 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content.
 							parsed_data_bp_activity.content = $( '<div>' ).html( parsed_data_bp_activity.content ).html();
 
-							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .bb-rl-activity-item' ),
+							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .activity-item' ),
 								activity_target         = activity_modal_item.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ),
 								activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-privacy-wrap' ).find( '.privacy' ),
 								activity_privacy_list   = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-activity-privacy li' );
