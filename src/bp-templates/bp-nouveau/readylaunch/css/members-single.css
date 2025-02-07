@@ -197,6 +197,7 @@
   padding: 0;
   display: flex;
   align-items: center;
+  flex-flow: wrap;
 }
 
 .bb-rl-main-nav > ul > li > a {

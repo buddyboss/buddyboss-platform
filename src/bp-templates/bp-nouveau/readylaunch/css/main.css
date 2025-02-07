@@ -4253,6 +4253,50 @@ body.admin-bar .bb-rl-left-panel {
   border-radius: 50%;
 }
 
+.bb-rl-member-social-links .social-networks-wrap {
+  display: flex;
+  align-items: center;
+  flex-flow: wrap;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-member-social-links .bb-rl-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--bb-rl-radius-md);
+  background-color: var(--bb-rl-background-secondary-color);
+  color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-member-social-links .bb-rl-social i {
+  font-size: 24px;
+}
+
+.bb-rl-profile-widget .bb-rl-profile-widget-field {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-profile-widget .bb-rl-profile-widget-field:last-of-type {
+  margin-bottom: 0;
+}
+
+.bb-rl-profile-widget .bb-rl-profile-widget-label {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.bb-rl-profile-widget .bb-rl-profile-widget-data {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  color: var(--bb-rl-text-color);
+}
+
 /* Common styles */
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
@@ -4447,7 +4491,7 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-primary-actions .generic-button a.follow-button.not_following i::before,
 .bb-rl-member-header-actions button.follow-button.not_following i::before,
 .bb-rl-member-header-actions .generic-button a.follow-button.not_following i::before {
-  content: "\e3d4";
+  content: "\e324";
 }
 
 .bb-rl-primary-actions button.follow-button.following i::before,
@@ -4775,6 +4819,7 @@ body.admin-bar .bb-rl-left-panel {
   padding: 0;
   display: flex;
   align-items: center;
+  flex-flow: wrap;
 }
 
 .bb-rl-main-nav > ul > li > a {
