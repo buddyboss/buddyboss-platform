@@ -222,13 +222,11 @@
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 
 		.bp-screen-title {
-
 			@include bb-rl-base-heading;
 			margin: 0 0 var(--bb-rl-space-200);
 		}
 
 		> label {
-
 			@include bb-rl-label-heading-md;
 			display: block;
 			margin: 0 0 var(--bb-rl-space-100);
@@ -243,6 +241,20 @@
 
 		> textarea {
 			min-height: 94px;
+		}
+
+		input[type="submit"] {
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+		}
+
+		ul,
+		 p {
+			 margin-bottom: var(--bb-rl-space-200);
+		 }
+
+		div.submit {
+			margin-top: var(--bb-rl-space-200);
 		}
 	}
 }
