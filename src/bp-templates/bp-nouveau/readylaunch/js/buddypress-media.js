@@ -2913,9 +2913,9 @@ window.bp = window.bp || {};
 			$( currentTarget ).find( '.bb-rl-location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.bb-rl-location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
 			if ( 'document' === action ) {
-				$( currentTarget ).find( '.bb-model-header h4 .target_name' ).text( bbRlMedia.move_to_file );
+				$( currentTarget ).find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_file );
 			} else {
-				$( currentTarget ).find( '.bb-model-header h4 .target_name' ).text( bbRlMedia.move_to_folder );
+				$( currentTarget ).find( '.bb-rl-modal-header h4 .target_name' ).text( bbRlMedia.move_to_folder );
 			}
 			$( currentTarget ).show();
 			$( currentTarget ).addClass( 'open-popup' );
