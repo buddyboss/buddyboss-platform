@@ -83,7 +83,7 @@
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-video-id">
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-attachment-id">
 					<footer class="bb-rl-model-footer flex align-items-center">
-						<a class="button push-right bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
+						<a class="bb-rl-button bb-rl-button--brandFill push-right bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

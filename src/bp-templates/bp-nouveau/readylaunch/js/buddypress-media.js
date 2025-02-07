@@ -269,7 +269,7 @@ window.bp = window.bp || {};
 			// Documents.
 			$document.on( 'click', '.directory.document  .media-folder_action__anchor, .directory.document  .media-folder_action__anchor li a, .bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
 			$document.on( 'click', '.bb-rl-activity-media-elem .bb_rl_copy_download_file_url a, .media-folder_action__list .bb_rl_copy_download_file_url a, .media .bb-photo-thumb .bb_rl_copy_download_file_url a', this.copyDownloadLink.bind( this ) );
-			$document.on( 'click', '.bb-rl-activity-media-elem.bb-rl-media-activity .bb-rl-media-action-wrap .bb-rl-media-action_more, #media-stream.media .bb-photo-thumb .bb-rl-media-action-wrap .bb-rl-media-action_more, .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_more, .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list li a', this.fileActivityActionButton.bind( this ) );
+			$document.on( 'click', '.bb-rl-activity-media-elem.bb-rl-media-activity .bb-rl-media-action-wrap .bb_rl_more_dropdown__action, #media-stream.media .bb-photo-thumb .bb-rl-media-action-wrap .bb_rl_more_dropdown__action, .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_more, .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list li a', this.fileActivityActionButton.bind( this ) );
 			$document.click( this.toggleFileActivityActionButton );
 			$document.on( 'click', '.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-expand .bb-rl-document-expand-anchor, .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_collapse', this.toggleCodePreview.bind( this ) );
 			$document.on( 'click', '.activity .bb-rl-document-move-activity, #media-stream .bb-rl-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
@@ -4363,7 +4363,7 @@ window.bp = window.bp || {};
 				eventTarget.closest( '.bb-photo-thumb' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' ).closest( '.bb-photo-thumb' ).parent().siblings().find( '.bb-photo-thumb .bb_rl_more_dropdown' ).removeClass( 'open' );
 			}
 
-			if ( event.currentTarget.tagName.toLowerCase() === 'a' && ( ! eventTarget.hasClass( 'bb-rl-document-action_more' ) && ! eventTarget.hasClass( 'bb-rl-media-action_more' ) ) ) {
+			if ( event.currentTarget.tagName.toLowerCase() === 'a' && ( ! eventTarget.hasClass( 'bb-rl-document-action_more' ) && ! eventTarget.hasClass( 'bb_rl_more_dropdown__action' ) ) ) {
 				eventTarget.closest( '.bb-rl-activity-media-elem' ).removeClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).removeClass( 'open' );
 				eventTarget.closest( '.bb-photo-thumb' ).removeClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).removeClass( 'open' );
 			}
@@ -4391,7 +4391,7 @@ window.bp = window.bp || {};
 				return event;
 			}
 
-			if ( $( element ).hasClass( 'bb-rl-document-action_more' ) || $( element ).parent().hasClass( 'bb-rl-document-action_more' ) || $( element ).hasClass( 'media-folder_action__anchor' ) || $( element ).parent().hasClass( 'media-folder_action__anchor' ) || $( element ).hasClass( 'bb-rl-media-action_more' ) || $( element ).parent().hasClass( 'bb-rl-media-action_more' ) || $( element ).hasClass( 'bb-rl-video-action_more' ) || $( element ).parent().hasClass( 'bb-rl-video-action_more' ) ) {
+			if ( $( element ).hasClass( 'bb-rl-document-action_more' ) || $( element ).parent().hasClass( 'bb-rl-document-action_more' ) || $( element ).hasClass( 'media-folder_action__anchor' ) || $( element ).parent().hasClass( 'media-folder_action__anchor' ) || $( element ).hasClass( 'bb_rl_more_dropdown__action' ) || $( element ).parent().hasClass( 'bb_rl_more_dropdown__action' ) ) {
 				return event;
 			}
 
@@ -4400,8 +4400,8 @@ window.bp = window.bp || {};
 			$( '.bb-photo-thumb.is-visible' ).removeClass( 'is-visible' );
 			$( '.bb-item-thumb.is-visible' ).removeClass( 'is-visible' );
 			$( '.bb-rl-activity-video-elem.is-visible' ).removeClass( 'is-visible' );
-			$( '.bb-rl-video-action-wrap.bb-rl-item-action-wrap.is-visible' ).removeClass( 'is-visible' );
-			$( '.bb-rl-video-action-wrap .bb_rl_more_dropdown' ).removeClass( 'open' );
+			$( '.bb-rl-more_dropdown-wrap.is-visible' ).removeClass( 'is-visible' );
+			$( '.bb-rl-more_dropdown-wrap .bb_rl_more_dropdown' ).removeClass( 'open' );
 			$( '.bb-rl-activity-media-elem .bb_rl_more_dropdown' ).removeClass( 'open' );
 			$( '.bb-photo-thumb .bb_rl_more_dropdown' ).removeClass( 'open' );
 			$( '.media-folder_items .bb_rl_more_dropdown' ).removeClass( 'open' );

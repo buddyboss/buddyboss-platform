@@ -121,7 +121,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$document.on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 			$document.on( 'click', '.bp-video-uploader .modal-container .bb-field-uploader-actions', this.uploadVideoNavigate.bind( this ) );
-			$document.on( 'click', '.bb-rl-activity-video-elem .bb-rl-video-action-wrap .bb-rl-video-action_more, #video-stream.video .bb-item-thumb .bb-rl-video-action-wrap .bb-rl-video-action_more, #media-stream.media .bb-video-thumb .bb-rl-video-action-wrap .bb-rl-video-action_more, .bb-rl-activity-video-elem .bb-rl-video-action-wrap .video-action_list li a, .bb-media-model-container .activity-list .bb-rl-video-action-wrap.bb-rl-item-action-wrap > a, .bb-media-model-container .activity-list .bb-rl-video-action-wrap.bb-rl-item-action-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
+			$document.on( 'click', '.bb-rl-more_dropdown-wrap .bb_rl_more_dropdown__action, .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .video-action_list li a, .bb-media-model-container .activity-list .bb-rl-more_dropdown-wrap > a, .bb-media-model-container .activity-list .bb-rl-more_dropdown-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
 			$document.on( 'click', '.activity .bb-rl-video-move-activity, #media-stream .bb-rl-video-move-activity, #video-stream .bb-rl-video-move-activity', this.moveVideoIntoAlbum.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-open-create-popup-album', this.createAlbumInPopup.bind( this ) );
 			$document.on( 'click', '.bb-rl-ac-video-close-button', this.closeVideoMove.bind( this ) );
@@ -275,11 +275,11 @@ window.bp = window.bp || {};
 			}
 
 			if ( target.closest( '.bb-media-model-container' ).length ) {
-				target.closest( '.bb-rl-video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
+				target.closest( '.bb-rl-more_dropdown-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() === 'a' && (
-				! target.hasClass( 'bb-rl-video-action_more' )
+				! target.hasClass( 'bb_rl_more_dropdown__action' )
 			) ) {
 				$activityVideoElem.removeClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).removeClass( 'open' );
 				target.closest( '.bb-item-thumb' ).removeClass( 'is-visible' );
@@ -1708,8 +1708,8 @@ window.bp = window.bp || {};
 			var video_move_popup,
 			eventCurrentTarget = $( event.currentTarget ),
 			$document          = $( document ),
-			video_id           = eventCurrentTarget.closest( '.bb-rl-video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'id' ),
-			video_parent_id    = eventCurrentTarget.closest( '.bb-rl-video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'album-id' );
+			video_id           = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a, div.video-js' ).data( 'id' ),
+			video_parent_id    = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ).siblings( 'a, div.video-js' ).data( 'album-id' );
 
 			this.moveToIdPopup   = eventCurrentTarget.attr( 'id' );
 			this.moveToTypePopup = eventCurrentTarget.attr( 'data-type' );
@@ -1723,8 +1723,8 @@ window.bp = window.bp || {};
 			video_move_popup.find( '.bb-rl-model-footer .bb-rl-video-move' ).addClass( 'is-disabled' );
 
 			// For Activity Feed.
-			var currentTarget = (eventCurrentTarget.closest( '.bb-rl-video-action_list' ).closest( 'li.comment-item' ).length) ?
-				'#' + eventCurrentTarget.closest( '.bb-rl-video-action_list' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bb-rl-video-move-file' :
+			var currentTarget = (eventCurrentTarget.closest( '.bb_rl_more_dropdown' ).closest( 'li.comment-item' ).length) ?
+				'#' + eventCurrentTarget.closest( '.bb_rl_more_dropdown' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bb-rl-video-move-file' :
 				'#' + eventCurrentTarget.closest( 'li.activity-item' ).attr( 'id' ) + ' > .bb-rl-activity-content .bb-rl-video-move-file';
 
 			$( currentTarget ).find( '.bb-rl-document-move' ).attr( 'id', eventCurrentTarget.closest( '.bb-rl-document-activity' ).attr( 'data-id' ) );

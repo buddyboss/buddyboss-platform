@@ -54,7 +54,7 @@ echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ?
 		if ( $can_move || $can_delete ) {
 			if ( bp_loggedin_user_id() === $media_user_id || bp_current_user_can( 'bp_moderate' ) ) {
 				?>
-				<a href="#" class="bb-rl-media-action_more bb_rl_more_dropdown__action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="bb_rl_more_dropdown__action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-dots-three"></i>
 				</a>
 				<div class="bb-rl-media-action_list bb_rl_more_dropdown">
