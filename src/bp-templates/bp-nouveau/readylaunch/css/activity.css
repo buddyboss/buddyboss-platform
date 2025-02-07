@@ -2438,15 +2438,18 @@ div[class*="attached-gif-container"] .gif-player {
   width: 100%;
 }
 
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-field-wrap,
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-field-wrap {
   padding: 0;
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap,
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-dropdown-wrap {
   position: relative;
 }
 
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap select,
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-dropdown-wrap select {
   font-size: var(--bb-rl-font-size-sm);
   background-color: var(--bb-rl-background-secondary-color);
@@ -2460,6 +2463,7 @@ div[class*="attached-gif-container"] .gif-player {
   padding-right: var(--bb-rl-space-300);
 }
 
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap:after,
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-dropdown-wrap:after {
   content: "\e136";
   color: var(--bb-rl-icon-secondary-color);
@@ -2553,7 +2557,8 @@ div[class*="attached-gif-container"] .gif-player {
   min-height: 230px;
 }
 
-.location-album-list.is-loading .bb-icon-spinner {
+.location-album-list.is-loading .bb-icon-spinner:before {
+  content: "";
   display: inline-block;
   height: 22px;
   width: 22px;
@@ -2723,30 +2728,29 @@ div[class*="attached-gif-container"] .gif-player {
   right: 45px;
 }
 
-.location-folder-list-wrap .breadcrumbs-append-ul-li .item {
-  padding: 2px 0 22px;
+.bb-rl-location-folder-list-wrap .bb-rl-breadcrumbs-append-ul-li .item {
+  padding: var(--bb-rl-space-100) 0;
   display: inline-block;
   vertical-align: middle;
-  font-size: 12px;
+  font-size: var(--bb-rl-font-size-sm);
   white-space: nowrap;
 }
 
-.location-folder-list-wrap .breadcrumbs-append-ul-li .item span {
-  display: inline-block !important;
-  max-width: 210px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.bb-rl-location-folder-list-wrap .bb-rl-breadcrumbs-append-ul-li .item span:not(:first-child):before {
+  content: "\e13a";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 16px;
   vertical-align: middle;
+  margin-right: var(--bb-rl-space-50);
 }
 
-.location-folder-list-wrap .breadcrumbs-append-ul-li .item span:not(:first-child) {
-  content: "\e827";
-  font-family: bb-icons;
-  font-size: 20px;
-  vertical-align: middle;
-  display: inline-block;
-  line-height: 1;
+.bb-rl-location-folder-list-wrap .bb-rl-breadcrumbs-append-ul-li .item span:not(.more_options) {
+  cursor: pointer;
+}
+
+.bb-rl-location-folder-list-wrap .bb-rl-breadcrumbs-append-ul-li .item span.hidden {
+  display: none !important;
 }
 
 .location-folder-list {
@@ -2779,12 +2783,21 @@ div[class*="attached-gif-container"] .gif-player {
   text-overflow: ellipsis;
 }
 
+.location-folder-list li span.selected {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
 .location-folder-list li span:before {
-  content: "\ee9f";
-  font-family: bb-icons;
-  color: #939597;
-  margin-right: 12px;
+  content: "\e260";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-right: var(--bb-rl-space-100);
   font-size: 16px;
+  vertical-align: middle;
+}
+
+.location-folder-list li:last-child span {
+  border-bottom: 0;
 }
 
 .location-folder-list li ul {
@@ -2798,7 +2811,8 @@ div[class*="attached-gif-container"] .gif-player {
   position: absolute;
   right: 5px;
   top: 50%;
-  font-size: 34px;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
   transform: translateY(-50%);
@@ -2806,6 +2820,31 @@ div[class*="attached-gif-container"] .gif-player {
   height: auto;
   width: auto;
   transition: all ease 0.3s;
+}
+
+.location-folder-list li .sub-menu-anchor:before {
+  content: "\e13a";
+  font-family: bb-icons-rl;
+}
+
+.location-folder-list.is-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  max-height: 230px;
+  min-height: 230px;
+}
+
+.location-folder-list.is-loading .bb-icon-spinner:before {
+  content: "";
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
 }
 
 .bb-rl-activity-comments > .ac-form {
