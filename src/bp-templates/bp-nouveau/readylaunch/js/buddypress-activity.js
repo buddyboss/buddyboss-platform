@@ -3658,7 +3658,7 @@ window.bp = window.bp || {};
 					commentForm.addClass( 'has-media' );
 					['media', 'document', 'video', 'gif'].forEach( function ( subType ) {
 						if ( tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ) ) {
-							var $buttonElement = tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' );
+							var $buttonElement = tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ).parents( '.bb-rl-post-elements-buttons-item' );
 							if ( type === subType ) {
 								$buttonElement.addClass( 'no-click' ).find( '.toolbar-button' ).addClass( 'active' );
 							} else {
@@ -3771,7 +3771,7 @@ window.bp = window.bp || {};
 						commentForm.removeClass( 'has-media' );
 						['media', 'document', 'video', 'gif'].forEach( function ( subType ) {
 							if ( tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ) ) {
-								var $buttonElement = tool_box.find( '.bb-rl-ac-reply-' + type + '-button' ).parents( '.bb-rl-post-elements-buttons-item' );
+								var $buttonElement = tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ).parents( '.bb-rl-post-elements-buttons-item' );
 								if ( type === subType ) {
 									$buttonElement.removeClass( 'no-click' ).find( '.toolbar-button' ).removeClass( 'active' );
 								} else {
