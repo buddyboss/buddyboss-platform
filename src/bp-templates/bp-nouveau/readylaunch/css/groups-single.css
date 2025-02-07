@@ -101,6 +101,7 @@
 
 }*/
 /* SCSS Variables */
+.bb-rl-secondary-header #object-nav #bb-rl-invite-groups-li,
 .bb-rl-secondary-header #object-nav #bb-rl-admin-groups-li {
   display: none !important;
 }
