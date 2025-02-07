@@ -565,11 +565,11 @@ window.bp = window.bp || {};
 						success : function ( response ) {
 							if ( response.success ) {
 								$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId + ' .bb-rl-document-activity .bb-rl-activity-inner .bb-activity-media-wrap .bb-rl-document-activity.' + id ).remove();
-								$( 'body #buddypress .bb-rl-activity-list .activity-comments .bb-rl-document-activity.' + id ).remove();
+								$( 'body #buddypress .bb-rl-activity-list .bb-rl-activity-comments .bb-rl-document-activity.' + id ).remove();
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-document-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									$( 'body .bb-rl-activity-comments li#acomment-' + activityId ).remove();
 								} else {
 									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
@@ -730,7 +730,7 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-media-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									$( 'body .bb-rl-activity-comments li#acomment-' + activityId ).remove();
 								} else {
 									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
@@ -1103,7 +1103,7 @@ window.bp = window.bp || {};
 				gif_container = target.closest( 'form' ).find( '.forums-attached-gif-container' );
 			e.preventDefault();
 
-			gif_container.closest( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 			var gif_container_key = gif_container.data( 'key' );
 			if ( typeof self.gif_data[ gif_container_key ] !== 'undefined' && typeof self.gif_data[ gif_container_key ].data !== 'undefined' && self.gif_data[ gif_container_key ].data.length ) {
 				var gifDataLength = self.gif_data[ gif_container_key ].data.length;
@@ -1188,7 +1188,7 @@ window.bp = window.bp || {};
 		resetForumsGifComponent: function ( e ) {
 			var target = $( e.target );
 			target.closest( 'form' ).find( '#whats-new-toolbar #forums-gif-button' ).removeClass( 'active' );
-			target.closest( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 			var $forums_attached_gif_container = target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' );
 			if ( $forums_attached_gif_container.length ) {
 				$forums_attached_gif_container.addClass( 'closed' );
@@ -1419,7 +1419,7 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function ( event ) {
 			var self                = this, target = $( event.currentTarget ),
-				gif_search_dropdown = target.closest( 'form' ).find( '.gif-media-search-dropdown' ), i = 0;
+				gif_search_dropdown = target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
 
 			if ( typeof window.Giphy !== 'undefined' && typeof bbRlMedia.gif_api_key !== 'undefined' ) {
@@ -1515,9 +1515,9 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
 				if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) ) {
-					target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
-					if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-						target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+					target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+					if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
+						target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 					}
 					target.find( '#bbpress-forums form' ).each(
 						function () {
@@ -1543,14 +1543,14 @@ window.bp = window.bp || {};
 						}
 					);
 
-					target.find( '.activity-comments form' ).each(
+					target.find( '.bb-rl-activity-comments form' ).each(
 						function () {
 							var $this           = jQuery( this );
-							var gif_box_comment = $this.find( '.ac-textarea' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
+							var gif_box_comment = $this.find( '.ac-textarea' ).find( '.bb-rl-ac-reply-attachments .activity-attached-gif-container' );
 							if ( gif_box_comment.length && $.trim( gif_box_comment.html() ) !== '' ) {
-									$this.find( '.ac-reply-gif-button' ).addClass( 'active' );
+									$this.find( '.bb-rl-ac-reply-gif-button' ).addClass( 'active' );
 							} else {
-								$this.find( '.ac-reply-gif-button' ).removeClass( 'active' );
+								$this.find( '.bb-rl-ac-reply-gif-button' ).removeClass( 'active' );
 							}
 						}
 					);
@@ -1563,13 +1563,13 @@ window.bp = window.bp || {};
 			var target    = $( event.currentTarget );
 
 			if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) &&
-				! $targetEl.closest( '.post-gif' ).length ) {
-				if ( $targetEl.closest( '.gif-media-search-dropdown' ).length ) {
+				! $targetEl.closest( '.bb-rl-post-gif' ).length ) {
+				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length ) {
 					return;
 				}
-				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
-				if ( $( '.gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-					target.find( '.gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+				target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+				if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
+					target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 				}
 				target.find( '#bbpress-forums form' ).each(
 					function () {
@@ -1595,14 +1595,14 @@ window.bp = window.bp || {};
 					}
 				);
 
-				target.find( '.activity-comments form' ).each(
+				target.find( '.bb-rl-activity-comments form' ).each(
 					function () {
 						var $this           = jQuery( this );
-						var gif_box_comment = $this.find( '.ac-textarea' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
+						var gif_box_comment = $this.find( '.ac-textarea' ).find( '.bb-rl-ac-reply-attachments .activity-attached-gif-container' );
 						if ( gif_box_comment.length && $.trim( gif_box_comment.html() ) !== '' ) {
-								$this.find( '.ac-reply-gif-button' ).addClass( 'active' );
+								$this.find( '.bb-rl-ac-reply-gif-button' ).addClass( 'active' );
 						} else {
-							$this.find( '.ac-reply-gif-button' ).removeClass( 'active' );
+							$this.find( '.bb-rl-ac-reply-gif-button' ).removeClass( 'active' );
 						}
 					}
 				);
@@ -1611,7 +1611,7 @@ window.bp = window.bp || {};
 
 		toggleGroupMessagesGifSelector: function ( event ) {
 			var self                = this, target = $( event.currentTarget ),
-				gif_search_dropdown = target.closest( 'form' ).find( '.gif-media-search-dropdown' ), i = 0;
+				gif_search_dropdown = target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
 
 			if ( typeof window.Giphy !== 'undefined' && typeof bbRlMedia.gif_api_key !== 'undefined' && self.giphy == null ) {
@@ -5875,7 +5875,7 @@ window.bp = window.bp || {};
 				var mainParentActivityData = $( '#bb-media-model-container [data-bp-activity-id="' + parentActivityId + '"]' );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-state' ).html( $( mainParentActivityData ).find( '.activity-state' ).html() );
 				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-meta' ).html( $( mainParentActivityData ).find( '.activity-meta' ).html() );
-				$( '[data-bp-activity-id="' + parentActivityId + '"] > .activity-comments' ).html( $( mainParentActivityData ).find( '.activity-comments' ).html() );
+				$( '[data-bp-activity-id="' + parentActivityId + '"] > .bb-rl-activity-comments' ).html( $( mainParentActivityData ).find( '.bb-rl-activity-comments' ).html() );
 			}
 			if ( hiddenParentIdElem.length ) {
 				hiddenParentIdElem.remove();
@@ -5891,7 +5891,7 @@ window.bp = window.bp || {};
 				self.activity_ajax.abort();
 			}
 
-			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .bb-rl-activity-comments' );
 			if ( on_page_activity_comments.length ) {
 				var form                                    = on_page_activity_comments.find( '#ac-form-' + self.current_media.activity_id );
 				self.current_media.parent_activity_comments = true;
@@ -5977,7 +5977,7 @@ window.bp = window.bp || {};
 				html = false, classes = false, form;
 			if ( self.current_media.parent_activity_comments ) {
 				activity          = $( '.bb-media-model-wrapper.media [data-bp-activity-id="' + self.current_media.activity_id + '"]' );
-				activity_comments = activity.find( '.activity-comments' );
+				activity_comments = activity.find( '.bb-rl-activity-comments' );
 				if ( activity_comments.length ) {
 					form = activity_comments.find( '#ac-form-' + self.current_media.activity_id );
 					this.purgeEditActivityForm( form );
@@ -5992,7 +5992,7 @@ window.bp = window.bp || {};
 					html    = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
 					activity_comments.remove();
-					activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
+					activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .bb-rl-activity-comments' );
 					if ( activity_comments.length ) {
 						activity_comments.attr( 'class', classes );
 						if ( activity_comments.find( '#ac-form-' + self.current_media.activity_id ).length === 0 ) {
@@ -6027,7 +6027,7 @@ window.bp = window.bp || {};
 			}
 			if ( self.current_document.parent_activity_comments ) {
 				activity          = $( '.bb-media-model-wrapper.document [data-bp-activity-id="' + self.current_document.activity_id + '"]' );
-				activity_comments = activity.find( '.activity-comments' );
+				activity_comments = activity.find( '.bb-rl-activity-comments' );
 
 				if ( activity_comments.length ) {
 					form = activity_comments.find( '#ac-form-' + self.current_document.activity_id );
@@ -6043,7 +6043,7 @@ window.bp = window.bp || {};
 					html    = activity_comments.html();
 					classes = activity_comments.attr( 'class' );
 					activity_comments.remove();
-					activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
+					activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .bb-rl-activity-comments' );
 					if ( activity_comments.length ) {
 						activity_comments.attr( 'class', classes );
 						if ( activity_comments.find( '#ac-form-' + self.current_document.activity_id ).length === 0 ) {
@@ -6479,7 +6479,7 @@ window.bp = window.bp || {};
 				self.activity_ajax.abort();
 			}
 
-			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
+			var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .bb-rl-activity-comments' );
 			if ( on_page_activity_comments.length ) {
 				var form                                       = on_page_activity_comments.find( '#ac-form-' + self.current_document.activity_id );
 				self.current_document.parent_activity_comments = true;
