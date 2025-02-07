@@ -1993,7 +1993,7 @@ window.bp = window.bp || {};
 							var videoElementId = videoElement.attr( 'id' ) + Math.floor( Math.random() * 10000 );
 							videoElement.attr( 'id', videoElementId );
 
-							var videoActionWrap = videoContainer.find( '.bb-rl-video-action-wrap' );
+							var videoActionWrap = videoContainer.find( '.bb-rl-more_dropdown-wrap' );
 							videoElement.insertAfter( videoActionWrap );
 							videoContainer.find( '.video-js' ).remove();
 							videoElement.addClass( 'video-js' );
