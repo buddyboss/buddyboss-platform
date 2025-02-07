@@ -59,6 +59,9 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 				<a href="#" class="position-change-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-arrows-out-cardinal"></i>
 				</a>
+				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="delete-cover-image bp-tooltip bb-rl-group-cover-ctrl" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Delete Cover Photo', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-trash"></i>
+				</a>
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></a>
