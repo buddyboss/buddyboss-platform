@@ -110,10 +110,8 @@ function bb_rl_view_profile_repeaters_print_group_html_start() {
 		$repeater_set_being_displayed = $current_set_number;
 	}
 }
-
 remove_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
 add_action( 'bp_before_profile_field_item', 'bb_rl_view_profile_repeaters_print_group_html_start' );
-
 
 /**
  * Close wrapper of repeater set - on edit profile screen
@@ -132,6 +130,69 @@ function bb_rl_view_profile_repeaters_print_group_html_end() {
 		$repeater_set_being_displayed = false;
 	}
 }
-
 remove_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
 add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_group_html_end' );
+
+
+/**
+ * Add social networks button to the member header area.
+ *
+ * @since BuddyBoss 1.0.0
+ * 
+ * @return string
+ */
+function bb_rl_get_user_social_networks_urls( $user_id = null ) {
+
+	global $wpdb;
+	global $bp;
+
+	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_id    = $social_networks_field->id;
+	$social_networks_text  = $social_networks_field->name;
+
+	$is_enabled_header_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
+
+	$html = '';
+
+	$original_option_values = array();
+
+	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) {
+		$providers = bp_xprofile_social_network_provider();
+
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+
+		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
+		$social_settings_options = $social_settings_field->get_children();
+
+		if (
+			isset( $original_option_values ) &&
+			! empty( $original_option_values ) &&
+			is_array( $original_option_values ) &&
+			! empty( $social_settings_options )
+		) {
+
+			$original_option_values = array_intersect_key( $original_option_values, array_flip( array_column( $social_settings_options, 'name' ) ) );
+			foreach ( $original_option_values as $key => $original_option_value ) {
+				if ( '' !== $original_option_value ) {
+					$key = bp_social_network_search_key( $key, $providers );
+					$html .= '<span class="bb-rl-social ' . esc_attr( $providers[ $key ]->value ) . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . esc_attr( $providers[ $key ]->name ) . '" href="' . esc_url( $original_option_value ) . '"><i class="bb-icons-rl-' . esc_attr( strtolower( $providers[ $key ]->value ) ) . '-logo"></i></a></span>';
+				}
+			}
+		}
+	}
+
+	if ( 'friends' === $level && is_user_logged_in() ) {
+		$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
+		if ( 'is_friend' === $member_friend_status ) {
+			$html = '<div class="social-networks-wrap">' . $html . '</div>';
+		} else {
+			$html = '';
+		}
+	} else {
+		$html = '<div class="social-networks-wrap">' . $html . '</div>';
+	}
+
+	return apply_filters( 'bb_rl_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
+}

@@ -3,7 +3,7 @@
  * BuddyBoss - Members Profile widget loop
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @version 1.0.0
  */
 
@@ -32,7 +32,7 @@ if ( bp_has_profile() ) {
 				</h2>
 				<div class="bb-rl-profile-widget-content <?php bp_the_profile_group_slug(); ?>">
 					<?php
-						while ( bp_profile_fields() ) :
+						while ( bp_profile_fields() ) {
 							bp_the_profile_field();
 
 							if (
@@ -49,18 +49,18 @@ if ( bp_has_profile() ) {
 
 							bp_nouveau_xprofile_hook( 'before', 'field_item' );
 
-							if ( bp_field_has_data() ) :
+							if ( bp_field_has_data() ) {
 								?>
-								<div class="bb-rl-profile-widget-field">
-									<div class="bb-rl-profile-widget-label"><?php bp_the_profile_field_name(); ?></div>
-									<div class="bb-rl-profile-widget-data"><?php bp_the_profile_field_value(); ?></div>
-								</div>
+									<div class="bb-rl-profile-widget-field">
+										<div class="bb-rl-profile-widget-label"><?php bp_the_profile_field_name(); ?></div>
+										<div class="bb-rl-profile-widget-data"><?php bp_the_profile_field_value(); ?></div>
+									</div>
 								<?php
-							endif;
+							}
 
 							bp_nouveau_xprofile_hook( '', 'field_item' );
 
-						endwhile;
+						}
 
 						bp_nouveau_xprofile_hook( 'after', 'field_items' );
 					?>
@@ -72,4 +72,26 @@ if ( bp_has_profile() ) {
 		}
 
 	endwhile;
+
+	// Social Links.
+	$user_social_networks_urls = '';
+	if ( bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
+
+		add_filter( 'bb_rl_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+		$user_social_networks_urls = bb_rl_get_user_social_networks_urls();
+		remove_filter( 'bb_rl_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+
+		if ( ! empty( $user_social_networks_urls ) ) {
+			?>
+			<div class="widget bb-rl-profile-widget">
+				<h2 class="bb-rl-profile-widget-header widget-title"><?php esc_html_e( 'Social', 'buddyboss' ); ?></h2>
+				<div class="flex align-items-center bb-rl-member-social-links">
+					<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
+				</div>
+			</div>	
+			<?php
+		}
+	}
+
+	unset( $user_social_networks_urls, $edit_profile_link );
 }
