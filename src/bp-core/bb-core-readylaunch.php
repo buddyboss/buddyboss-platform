@@ -31,6 +31,13 @@ function bb_rl_register_widgets () {
 						register_widget( 'BB_Core_Follow_My_Network_Widget' );
 					}
 				);
+
+				// Do not allow the widget to admin area, only be used for readylaunch.
+				add_action( 'widgets_init', function() {
+					if ( is_admin() ) {
+						unregister_widget( 'BB_Core_Follow_My_Network_Widget' );
+					}
+				}, 11 ); 
 			}
 		}
 	}
@@ -50,10 +57,23 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 
 	// Match any div containing 'more-block' as one of its classes.
 	if ( preg_match( '/(<div[^>]*\bmore-block\b[^>]*>.*?<\/div>)/s', $output, $matches ) ) {
-		$more_block = $matches[1];
 
-		// Replace class "more-block" with "bb-rl-see-all"
+		// Define URLs based on widget class.
+		$updated_widget_urls = array(
+			'BP_Core_Recently_Active_Widget' => esc_url( bp_get_members_directory_permalink() . '?bb-rl-members-order-by=active' ),
+		);
+	
+		$widget_class = get_class( $widget );
+		$more_block   = $matches[1];
+
+		// Replace class "more-block" with "bb-rl-see-all".
 		$updated_more_block = preg_replace( '/\bmore-block\b/', 'bb-rl-see-all', $more_block );
+
+		if ( ! empty( $updated_widget_urls[ $widget_class ] ) ) {
+
+			// Override the href inside the anchor tag.
+			$updated_more_block = preg_replace( '/href="([^"]*)"/', 'href="' . esc_url( $updated_widget_urls[ $widget_class ] ) . '"', $updated_more_block );
+		}
 
 		// Remove old div and insert the updated one into the title.
 		$output = str_replace( $more_block, '', $output );
