@@ -6800,10 +6800,11 @@ window.bp = window.bp || {};
 		},
 
 		resetActivityMedia: function ( activityId ) {
-			bp.Nouveau.Activity.destroyCommentMediaUploader( activityId );
-			bp.Nouveau.Activity.destroyCommentDocumentUploader( activityId );
-			bp.Nouveau.Activity.destroyCommentVideoUploader( activityId );
-			bp.Nouveau.Activity.resetGifPicker( activityId );
+			['media', 'document', 'video', 'gif'].forEach(
+				function ( type ) {
+					bp.Nouveau.Activity.destroyUploader( type, activityId );
+				}
+			);
 		},
 
 		purgeEditActivityForm: function ( form ) {
