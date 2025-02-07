@@ -162,8 +162,8 @@ window.bp = window.bp || {};
 			// Activity actions.
 			var activityParentSelectors = '[data-bp-list="activity"], #bb-rl-activity-modal, #bb-media-model-container .bb-rl-activity-list';
 			$bpElem.find( activityParentSelectors ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
-			$bpElem.find( activityParentSelectors ).on( 'click', '.bb-rl-activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
-			$bpElem.find( activityParentSelectors ).on( 'click', '.bb-rl-activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
+			$bpElem.find( activityParentSelectors ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
+			$bpElem.find( activityParentSelectors ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$bpElem.find( activityParentSelectors ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 
 			$( '#bb-media-model-container .bb-rl-activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
@@ -788,8 +788,8 @@ window.bp = window.bp || {};
 
 					if ( true === response.success ) {
 						var $privacy = activityItem.find( '.privacy' );
-						activityItem.find( '.bb-rl-activity-privacy li' ).removeClass( 'selected' );
-						activityItem.find( '.bb-rl-privacy-wrap' ).attr( 'data-bp-tooltip', target.text() );
+						activityItem.find( '.activity-privacy li' ).removeClass( 'selected' );
+						activityItem.find( '.privacy-wrap' ).attr( 'data-bp-tooltip', target.text() );
 						target.addClass( 'selected' );
 						$privacy.removeClass( 'public loggedin onlyme friends' ).addClass( privacyValue );
 
@@ -853,7 +853,6 @@ window.bp = window.bp || {};
 
 		/* jshint ignore:start */
 		togglePrivacyDropdown: function ( event ) {
-
 			var activityItem = $( event.currentTarget ).closest( '.activity-item' );
 
 			// Stop event propagation.
@@ -1165,11 +1164,11 @@ window.bp = window.bp || {};
 			}
 
 			// if privacy dropdown items, return.
-			if ( $( element ).closest( '.bb-rl-privacy-wrap' ).length ) {
+			if ( $( element ).closest( '.privacy-wrap' ).length ) {
 				return event;
 			}
 
-			$( 'ul.bb-rl-activity-privacy' ).removeClass( 'bb-open' );
+			$( 'ul.activity-privacy' ).removeClass( 'bb-open' );
 		},
 
 		// activity autoload.
@@ -2030,7 +2029,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.listenCommentInput( ce );
 
 			modal.find( '.bb-activity-more-options-wrap .bb-activity-more-options-action, .bb-rl-pin-action_button, .bb-rl-mute-action_button' ).attr( 'data-balloon-pos', 'left' );
-			modal.find( '.bb-rl-privacy-wrap' ).attr( 'data-bp-tooltip-pos', 'right' );
+			modal.find( '.privacy-wrap' ).attr( 'data-bp-tooltip-pos', 'right' );
 			modal.find( selector ).children( '.acomments-view-more' ).first().trigger( 'click' );
 
 			if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
