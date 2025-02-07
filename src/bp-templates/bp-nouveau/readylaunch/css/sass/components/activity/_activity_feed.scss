@@ -268,7 +268,7 @@
 
 		&.active {
 			display: flex;
-			bottom: 34px;
+			bottom: 40px;
 
 			.ac-emotion_item {
 				top: 0;
@@ -1674,7 +1674,7 @@ div[class*="attached-gif-container"] {
 	.generic-button a {
 		display: flex;
 		align-items: center;
-		padding: 0 var(--bb-rl-space-200);
+		padding: 6px var(--bb-rl-space-200);
 
 		&:hover {
 			background-color: var(--bb-rl-background-secondary-color);
@@ -1691,8 +1691,6 @@ div[class*="attached-gif-container"] {
 		&.bp-like-button {
 
 			[class*="bb-icon"]:before {
-				content: "\e48e";
-				font-family: bb-icons-rl;
 				color: var(--bb-rl-icon-tertiary-color);
 				font-size: 24px;
 				font-weight: 400;
