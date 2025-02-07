@@ -43,6 +43,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 					$args = false;
 
 					if ( 'BP_Xprofile_Profile_Completion_Widget' === $widget ) {
+						$args           = array();
 						$steps_options  = bp_core_profile_completion_steps_options();
 						$profile_groups = $steps_options['profile_groups'];
 						foreach ( $profile_groups as $single_group_details ) {

@@ -183,15 +183,19 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 		}
 	}
 
-	if ( 'friends' === $level && is_user_logged_in() ) {
-		$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
-		if ( 'is_friend' === $member_friend_status ) {
-			$html = '<div class="social-networks-wrap">' . $html . '</div>';
+	if ( $html !== '' ) {
+		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
+		if ( 'friends' === $level && is_user_logged_in() ) {
+			
+			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
+			if ( 'is_friend' === $member_friend_status ) {
+				$html = '<div class="social-networks-wrap">' . $html . '</div>';
+			} else {
+				$html = '';
+			}
 		} else {
-			$html = '';
+			$html = '<div class="social-networks-wrap">' . $html . '</div>';
 		}
-	} else {
-		$html = '<div class="social-networks-wrap">' . $html . '</div>';
 	}
 
 	return apply_filters( 'bb_rl_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
