@@ -32,7 +32,7 @@ $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 	<a href="#" target="_blank" class="bb-rl-document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 		<i class="bb-icons-rl-dots-three"></i>
 	</a>
-	<div class="bb-rl-document-action_list bb_rl_more_dropdown">
+	<div class="bb_rl_more_dropdown">
 		<ul class="bb-rl-conflict-activity-ul-li-comment">
 			<?php
 			if ( $can_download_btn ) {

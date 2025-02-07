@@ -1526,31 +1526,31 @@
   margin-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_move_file.bb-rl-move-disabled a {
+.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb_rl_more_dropdown ul li.bb_rl_move_file.bb-rl-move-disabled a {
   pointer-events: none;
   opacity: 0.7;
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_move_file.bb-rl-move-disabled[data-balloon]:after {
+.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb_rl_more_dropdown ul li.bb_rl_move_file.bb-rl-move-disabled[data-balloon]:after {
   content: attr(data-balloon);
   white-space: normal;
   max-width: 200px;
   width: 100%;
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_move_file a:before {
+.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb_rl_more_dropdown ul li.bb_rl_move_file a:before {
   content: "\e260";
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_delete_file a:before {
+.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb_rl_more_dropdown ul li.bb_rl_delete_file a:before {
   content: "\e4a6";
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_privacy_file a:before {
+.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb_rl_more_dropdown ul li.bb_rl_privacy_file a:before {
   content: "\e308";
 }
 
-.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb-rl-document-action_list ul li.bb_rl_copy_download_file_url a:before {
+.bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap .bb_rl_more_dropdown ul li.bb_rl_copy_download_file_url a:before {
   content: "\e20c";
 }
 
@@ -1661,7 +1661,7 @@
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity.is-visible .bb-rl-document-action-wrap,
-.bb-rl-activity-media-elem.bb-rl-document-activity.is-visible .bb-rl-document-action_list {
+.bb-rl-activity-media-elem.bb-rl-document-activity.is-visible .bb_rl_more_dropdown {
   opacity: 1;
   visibility: visible;
 }
