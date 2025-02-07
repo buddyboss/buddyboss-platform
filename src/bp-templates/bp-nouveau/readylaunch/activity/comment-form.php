@@ -53,6 +53,8 @@ $media_active = bp_is_active( 'media' );
 									<i class="bb-icons-rl-paperclip-horizontal"></i>
 								</a>
 							</div>
+							<span class="bb-rl-separator"></span>
+							<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="bb-rl-ac-reply-emoji-button-<?php echo esc_attr( $activity_id ); ?>"></div>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 								<div class="bb-rl-gif-media-search">
 									<a href="#" id="bb-rl-ac-reply-gif-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
@@ -61,7 +63,6 @@ $media_active = bp_is_active( 'media' );
 									<div class="bb-rl-gif-media-search-dropdown"></div>
 								</div>
 							</div>
-							<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="bb-rl-ac-reply-emoji-button-<?php echo esc_attr( $activity_id ); ?>"></div>
 						<?php endif; ?>
 					</div>
 					<?php

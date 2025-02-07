@@ -62,6 +62,7 @@
 			gap: var(--bb-rl-space-100);
 
 			.toolbar-button {
+				display: inline-flex;
 				padding: var(--bb-rl-space-50);
 
 				[class*="bb-icon"] {
@@ -69,6 +70,27 @@
 					font-size: 24px;
 				}
 			}
+		}
+
+		.bb-rl-post-emoji {
+			display: inline-flex;
+			align-items: center;
+
+			.emojionearea-button:before {
+				content: "\e436";
+				color: var(--bb-rl-icon-secondary-color);
+				font-family: bb-icons-rl;
+				font-size: 24px;
+			}
+		}
+
+		.bb-rl-separator {
+			display: inline-flex;
+			align-self: center;
+			width: 1px;
+			height: 16px;
+			background-color: var(--bb-rl-border-tertiary-color);
+			margin-bottom: 4px;
 		}
 
 		.ac-reply-cancel {
@@ -98,6 +120,83 @@
 .activity-item {
 
 	&.has-comments {
+
+		.bb-rl-activity-comments {
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+			margin-top: var(--bb-rl-space-100);
+
+			ul {
+				padding: 0;
+				list-style: none;
+
+				li {
+					position: relative;
+				}
+			}
+
+			li:not(:first-child) {
+
+				.bb-rl-acomment-content_wrap {
+					border-top-color: var(--bb-rl-border-color);
+				}
+			}
+		}
+
+		.bb-rl-acomment_inner {
+			display: flex;
+			gap: var(--bb-rl-space-200);
+
+			.bb-rl-acomment-meta a {
+				color: var(--bb-rl-text-primary-color);
+				font-size: 16px;
+				font-weight: 500;
+			}
+
+			.activity-time-since {
+				color: var(--bb-rl-text-tertiary-color);
+				font-size: var(--bb-rl-font-size-sm);
+				line-height: var(--bb-rl-base-line-small);
+			}
+
+			.bb-rl-acomment-content {
+				color: var(--bb-rl-text-color);
+				font-size: 14px;
+				padding: var(--bb-rl-space-100) 0;
+
+				p:not(:last-child) {
+					margin-bottom: var(--bb-rl-space-100);
+				}
+			}
+		}
+
+		.bb-rl-acomment-foot-actions {
+			padding-bottom: var(--bb-rl-space-100);
+
+			.generic-button {
+
+				a {
+					font-size: 14px;
+					line-height: 1;
+					color: var(--bb-rl-text-tertiary-color);
+				}
+			}
+		}
+
+		.bb-rl-acomment-avatar {
+			padding-top: var(--bb-rl-space-200);
+
+			img {
+				height: 48px;
+				width: 48px;
+				border-radius: var(--bb-rl-radius-full);
+			}
+		}
+
+		.bb-rl-acomment-content_wrap {
+			flex: auto;
+			border-top: 1px solid transparent;
+			padding-top: var(--bb-rl-space-200);
+		}
 
 		.ac-form {
 			display: block;
