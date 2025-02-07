@@ -974,7 +974,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
 
-			$document.on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
+			$document.on( 'click', '#header-cover-image a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$document.on( 'click', '#cover-photo-alert .bb-rl-model-close-button', this.coverPhotoCropperAlert );
 
@@ -2818,7 +2818,6 @@ window.bp = window.bp || {};
 		 *  Cover photo Cropper
 		 */
 		coverPhotoCropper: function ( e ) {
-
 			var picture, guillotineHeight, guillotineWidth, guillotineTop, guillotineScale;
 
 			if ( $( e.currentTarget ).hasClass( 'position-change-cover-image' ) ) {
