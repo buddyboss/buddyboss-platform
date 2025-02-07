@@ -161,7 +161,7 @@
 }
 
 .bb-rl-detail-wrap {
-	padding: 0 var(--bb-rl-space-400);
+	padding: 0 var(--bb-rl-space-400) var(--bb-rl-space-400);
 }
 
 .bb-rl-manage-group-container {
@@ -169,7 +169,7 @@
 	background: var(--bb-rl-background-color);
 	border-radius: var(--bb-rl-radius-lg);
 	padding: var(--bb-rl-space-300);
-	margin: 0 auto var(--bb-rl-space-400);
+	margin: 0 auto;
 	max-width: 960px;
 
 	.bp-navs {
