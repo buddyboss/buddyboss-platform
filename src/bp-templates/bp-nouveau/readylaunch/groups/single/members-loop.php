@@ -21,10 +21,6 @@ $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 
 if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group_role' ) ) {
-
-	bp_nouveau_group_hook( 'before', 'members_content' );
-	bp_nouveau_pagination( 'top' );
-	bp_nouveau_group_hook( 'before', 'members_list' );
 	?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list">
@@ -71,107 +67,123 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 				if ( bp_moderation_is_user_suspended( $member_user_id ) ) {
 					$moderation_class .= 'bp-user-suspended';
 				} elseif ( bb_moderation_is_user_blocked_by( $member_user_id ) ) {
-					$is_blocked       = true;
+					$is_blocked        = true;
 					$moderation_class .= ' bp-user-blocked';
 				}
 			}
+
+			$bp_get_member_permalink = bp_get_group_member_domain();
 			?>
-			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $group_member_id ); ?>" data-bp-item-component="members">
-				<div class="list-wrap <?php echo esc_attr( $footer_buttons_class ); ?> <?php echo esc_attr( $follow_class ); ?> <?php echo $member_loop_has_content ? esc_attr( ' has_hook_content' ) : esc_attr( '' ); ?> <?php echo ! empty( $profile_actions['secondary'] ) ? esc_attr( 'secondary-buttons' ) : esc_attr( 'no-secondary-buttons' ); ?> <?php echo ! empty( $primary_action_btn ) ? esc_attr( 'primary-button' ) : esc_attr( 'no-primary-buttons' ); ?>">
+			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
+				<div class="list-wrap
+				<?php
+					echo esc_attr( $footer_buttons_class ) .
+						esc_attr( $follow_class ) .
+						esc_attr( true === $member_loop_has_content ? ' has_hook_content' : '' ) .
+						esc_attr( ! empty( $profile_actions['secondary'] ) ? ' secondary-buttons' : ' no-secondary-buttons' ) .
+						esc_attr( ! empty( $primary_action_btn ) ? ' primary-button' : ' no-primary-buttons' );
+				?>
+				">
 
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
-							<a href="<?php bp_group_member_domain(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
+							<?php
+								$moderation_class = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $member_user_id ) ? 'bp-user-suspended' : '';
+								$moderation_class = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $member_user_id ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
+							?>
+							<a href="<?php echo esc_url( $bp_get_member_permalink ); ?>" class="<?php echo esc_attr( $moderation_class ); ?>">
 								<?php
 								if ( $enabled_online_status ) {
-									bb_user_presence_html( $group_member_id );
+									bb_user_presence_html( $member_user_id );
 								}
-								bp_group_member_avatar();
+									bp_member_avatar( bp_nouveau_avatar_args() );
 								?>
 							</a>
 						</div>
 
 						<div class="item">
+
 							<div class="item-block">
-								<?php
-								$is_enabled_member_type = ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() );
 
-								if ( $is_enabled_member_type ) {
-									echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
-								}
-								?>
-								<h2 class="list-title member-name">
-									<?php bp_group_member_link(); ?>
-								</h2>
-								<?php
-								if ( $is_enabled_member_type ) {
-									echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( bp_get_user_member_type( $member_user_id ) ) . '</p>';
-								}
+								<div class="bb-rl-item-block-heading">
+									<?php
+										$user_member_type = '';
+									if ( $enabled_profile_type && function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
+										$user_member_type = bp_get_user_member_type( $member_user_id );
+									}
 
-								if (
-									! $is_blocked &&
-									(
-										(
-											$enabled_last_active &&
-											$member_last_activity
-										) ||
-										(
-											$enabled_joined_date &&
-											$member_joined_date
-										)
-									)
-								) {
+									if ( ! empty( $user_member_type ) ) {
+										echo '<p class="item-meta member-type only-grid-view">' . wp_kses_post( $user_member_type ) . '</p>';
+									}
 									?>
-									<p class="item-meta last-activity">
-										<?php
+
+									<h2 class="list-title member-name">
+										<a href="<?php echo esc_url( $bp_get_member_permalink ); ?>"><?php bp_member_name(); ?></a>
+									</h2>
+
+									<?php
+									if ( ! empty( $user_member_type ) ) {
+										echo '<p class="item-meta member-type only-list-view">' . wp_kses_post( $user_member_type ) . '</p>';
+									}
+									?>
+								</div>
+
+								<div class="bb-rl-item-block-assets">
+									<?php
+									if ( ( $enabled_last_active && $member_last_activity ) || ( $enabled_joined_date && $member_joined_date ) ) :
+
+										echo '<p class="item-meta bb-rl-item-meta-asset">';
 										if ( $enabled_joined_date ) {
 											echo wp_kses_post( $member_joined_date );
 										}
 
 										if ( ( $enabled_last_active && $member_last_activity ) && ( $enabled_joined_date && $member_joined_date ) ) {
-											?>
-											<span class="separator">&bull;</span>
-											<?php
+											echo '<span class="separator">&bull;</span>';
 										}
 
+										echo '<span class="only-grid-view">';
+										if ( $enabled_last_active ) {
+											echo wp_kses_post( $member_last_activity );
+										}
+										echo '</span>';
+										echo '</p>';
+										endif;
+									?>
+
+									<div class="flex align-items-center follow-container justify-center bb-rl-item-meta-asset">
+										<?php echo wp_kses_post( $followers_count ); ?>
+									</div>
+
+									<div class="only-list-view bb-rl-last-activity bb-rl-item-meta-asset">
+										<?php
 										if ( $enabled_last_active ) {
 											echo wp_kses_post( $member_last_activity );
 										}
 										?>
-									</p>
-									<?php
-								}
-								?>
-							</div>
-							<?php
-							if ( ! $is_blocked ) {
-								?>
-								<div class="flex align-items-center follow-container justify-center">
-									<?php echo wp_kses_post( $followers_count ); ?>
+									</div>
 								</div>
-								<?php
-							}
-
-							if ( ! empty( $profile_actions['primary'] ) ) {
-							?>
-							<div class="flex only-grid-view align-items-center primary-action justify-center">
-								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 							</div>
-							<?php } ?>
 						</div><!-- // .item -->
 
-						<div class="member-buttons-wrap">
-							<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
-								<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
-									<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
-								</div>
-							<?php } ?>
+						<div class="bb-rl-member-buttons-wrap">
 
-							<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
-								<div class="flex only-list-view align-items-center primary-action justify-center">
-									<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+							<div class="bb-rl-item-actions flex items-center <?php echo empty( $profile_actions['primary'] ) ? 'bb-rl-idle-primary' : ''; ?>">
+								<div class="bb-rl-secondary-actions flex items-center">
+									<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
+										<div class="flex button-wrap member-button-wrap footer-button-wrap">
+											<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
+										</div>
+									<?php } ?>
 								</div>
-							<?php } ?>
+								<div class="bb-rl-primary-actions">
+									<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
+										<div class="flex align-items-center primary-action justify-center">
+											<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+
 						</div><!-- .member-buttons-wrap -->
 
 					</div>
@@ -185,14 +197,18 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 						</div>
 					</div>
 
-					<?php if ( ! empty( $member_switch_button ) ) { ?>
-						<div class="bb_more_options member-dropdown">
-							<a href="#" class="bb_more_options_action">
-								<i class="bb-icon-menu-dots-h"></i>
+					<?php if ( ! empty( $member_switch_button ) || ! empty( $member_report_button ) || ! empty( $member_block_button ) ) { ?>
+						<div class="bb_more_options member-dropdown bb-rl-context-wrap">
+							<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'More Options', 'buddyboss' ); ?>">
+								<i class="bb-icons-rl-dots-three"></i>
 							</a>
-							<div class="bb_more_options_list bb_more_dropdown">
+							<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
 								<?php bp_get_template_part( 'common/more-options-view' ); ?>
-								<?php echo wp_kses_post( bp_get_add_switch_button( $member_user_id ) ); ?>
+								<?php
+									echo wp_kses_post( $member_switch_button );
+									echo wp_kses_post( $member_report_button );
+									echo wp_kses_post( $member_block_button );
+								?>
 							</div>
 							<div class="bb_more_dropdown_overlay"></div>
 						</div><!-- .bb_more_options -->
@@ -204,43 +220,121 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 	</ul>
 
 	<?php
-	bp_nouveau_group_hook( 'after', 'members_list' );
 	bp_nouveau_pagination( 'bottom' );
-	bp_nouveau_group_hook( 'after', 'members_content' );
 } else {
 	bp_nouveau_user_feedback( 'group-members-none' );
 }
 ?>
 
+
 <!-- Remove Connection confirmation popup -->
-<div class="bb-remove-connection bb-action-popup" style="display: none">
+<div class="bb-remove-connection bb-action-popup bb-rl-modal" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
-			<div class="modal-wrapper">
-				<div class="modal-container">
-					<header class="bb-model-header">
+		<div class="modal-mask bb-white bbm-model-wrap bb-rl-modal-mask">
+			<div class="bb-rl-modal-wrapper">
+				<div class="bb-rl-modal-container">
+					<header class="bb-rl-modal-header">
 						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
-						<a class="bb-close-remove-connection bb-model-close-button" href="#">
-							<span class="bb-icon-l bb-icon-times"></span>
+						<a class="bb-close-remove-connection bb-rl-modal-close-button" href="#">
+							<span class="bb-icons-rl-x"></span>
 						</a>
 					</header>
-					<div class="bb-remove-connection-content bb-action-popup-content">
+					<div class="bb-remove-connection-content bb-action-popup-content bb-rl-modal-content">
 						<p>
 							<?php
-							echo sprintf(
+								printf(
 								/* translators: %s: The member name with HTML tags */
-								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
-								'<span class="bb-user-name"></span>'
-							);
-							?>
+									esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+									'<span class="bb-user-name"></span>'
+								);
+								?>
 						</p>
 					</div>
-					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+					<footer class="bb-rl-modal-footer flex items-center">
+						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>
 		</div>
 	</transition>
 </div> <!-- .bb-remove-connection -->
+
+<!-- Block member popup -->
+<div id="bb-rl-block-member" class="bb-rl-block-modal bb-rl-modal" style="display: none;">
+	<transition name="modal">
+		<div class="modal-mask bb-rl-modal-mask">
+			<div class="bb-rl-modal-wrapper">
+				<div class="bb-rl-modal-container">
+					<header class="bb-rl-modal-header">
+						<h4><span class="target_name"><?php echo esc_html__( 'Block Member?', 'buddyboss' ); ?></span></h4>
+						<a class="bb-rl-close-block-member bb-rl-modal-close-button" href="#">
+							<span class="bb-icons-rl-x"></span>
+						</a>
+					</header>
+					<div class="bb-rl-block-member-content bb-rl-modal-content">
+						<p>
+							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss' ); ?>
+						</p>
+						<div>
+							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
+						</div>
+						<ul>
+							<?php if ( bp_is_active( 'activity' ) ) : ?>
+								<li>
+									<?php
+										esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
+									?>
+								</li>
+							<?php endif; ?>
+							<li>
+								<?php
+									esc_html_e( 'Mention this member in posts', 'buddyboss' );
+								?>
+							</li>
+							<?php if ( bp_is_active( 'groups' ) ) : ?>
+								<li>
+									<?php
+										esc_html_e( 'Invite this member to groups', 'buddyboss' );
+									?>
+								</li>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'messages' ) ) : ?>
+								<li>
+									<?php
+										esc_html_e( 'Message this member', 'buddyboss' );
+									?>
+								</li>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'friends' ) ) : ?>
+								<li>
+									<?php
+										esc_html_e( 'Add this member as a connection', 'buddyboss' );
+									?>
+								</li>
+							<?php endif; ?>
+						</ul>
+
+						<div class="notice notice--plain notice--warning">
+							<?php if ( bp_is_active( 'friends' ) ) : ?>
+								<?php
+								printf(
+									wp_kses( __( '<span>%1$s</span> %2$s', 'buddyboss' ), array( 'span' => array() ) ),
+									esc_html__( 'Please note:', 'buddyboss' ),
+									esc_html__( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' )
+								);
+								?>
+							<?php endif; ?>
+
+							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss' ); ?>
+						</div>
+					</div>
+					<footer class="bb-rl-modal-footer flex items-center">
+						<a class="bb-rl-close-block-member bb-rl-close-modal bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
+						<input type="submit" name="block-member-submit" id="bb-rl-submit-block-member" form="bb-rl-block-member-form" value="Confirm" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+					</footer>
+				</div>
+			</div>
+		</div>
+	</transition>
+</div>

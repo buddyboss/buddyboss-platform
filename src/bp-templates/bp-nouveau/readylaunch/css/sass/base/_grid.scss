@@ -54,6 +54,11 @@
 		.item-entry {
 			flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));
 			max-width: calc(25% - (var(--bb-rl-space-200) * 3 / 4));
+
+			&.item-entry-header {
+				flex: 0 0 100%;
+				max-width: 100%;
+			}
 		}
 
 		@media screen and (max-width: $xl) {

@@ -380,6 +380,12 @@ input[type="search"]::-webkit-search-results-decoration {
   max-width: calc(25% - (var(--bb-rl-space-200) * 3 / 4));
 }
 
+.bb-rl-members ul.bp-list.grid .item-entry.item-entry-header,
+.bb-rl-groups ul.bp-list.grid .item-entry.item-entry-header {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
 @media screen and (max-width: 1200px) {
   .bb-rl-members ul.bp-list.grid .item-entry,
   .bb-rl-groups ul.bp-list.grid .item-entry {

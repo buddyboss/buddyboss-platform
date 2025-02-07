@@ -54,7 +54,7 @@ if ( bp_has_groups() ) {
 					bp_get_template_part( 'groups/single/cover-image-header' );
 				}
 				?>
-				<div class="bb-rl-group-details">
+				<div class="bb-rl-group-details bb-rl-container-inner">
 					<div id="item-body" class="item-body">
 						<?php
 						if ( bp_is_group_subgroups() ) {
