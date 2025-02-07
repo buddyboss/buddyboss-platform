@@ -1427,7 +1427,7 @@ window.bp = window.bp || {};
 			}
 
 			var currentTarget = event.currentTarget, activityID = currentTarget.id.match( /\d+$/ )[0];
-			['media', 'video'].forEach(
+			['media', 'document'].forEach(
 				function ( type ) {
 					self.destroyUploader( type, activityID );
 				}
