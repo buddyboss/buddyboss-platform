@@ -69,7 +69,7 @@
 			display: flex;
 			font-size: 24px;
 			line-height: 1;
-			color: var(--bb-rl-icon-secondary-color);
+			color: var(--bb-rl-icon-tertiary-color);
 			cursor: pointer;
 
 			&:before {
@@ -148,6 +148,7 @@
 					content: "\e4a6";
 				}
 
+				&.unpin-activity:before,
 				&.pin-activity:before {
 					content: "\e3e2";
 				}
@@ -185,7 +186,8 @@
 		.activity-date {
 			display: inline-block;
 
-			a {
+			a,
+			.bb-activity-edited-text {
 				color: var(--bb-rl-text-tertiary-color);
 				font-size: var(--bb-rl-font-size-sm);
 			}
@@ -1824,7 +1826,7 @@ div[class*="attached-gif-container"] {
 		right: 20px;
 		font-size: 22px;
 		line-height: 1;
-		top: 8px;
+		top: 30px;
 
 		.bb-rl-pin-action_button,
 		.bb-rl-mute-action_button {
@@ -1833,34 +1835,68 @@ div[class*="attached-gif-container"] {
 		}
 
 		[class*="bb-icon"] {
-			font-size: 22px;
+			font-size: 20px;
 			color: var(--bb-rl-icon-tertiary-color);
+
+			&:before {
+				margin: 0 4px 0 0;
+			}
 		}
 	}
 
 	.bb-pinned,
 	.loading-pin {
 
-		.bp-activity-head {
-			margin-right: 55px;
-		}
-
 		.bb-rl-pin-action_button {
 			display: inline-block;
 		}
-
 	}
 
-	.bb-muted,
+	.bb-muted {
+
+		.bb-rl-mute-action_button {
+			display: inline-block;
+		}
+	}
+
+	.loading-pin {
+
+		.bb-rl-pin-action_button {
+			display: inline-block;
+
+			[class*="bb-icon"]:before {
+				content: "";
+				display: inline-block;
+				height: 18px;
+				width: 18px;
+				border: 2px solid var(--bb-rl-border-quaternary-color);
+				border-top-color: var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-full);
+				animation: spin 3s infinite linear;
+			}
+		}
+	}
+
 	.loading-mute {
 
-		.bb-mute-action_button {
+		.bb-rl-mute-action_button {
 			display: inline-block;
+
+			[class*="bb-icon"]:before {
+				content: "";
+				display: inline-block;
+				height: 18px;
+				width: 18px;
+				border: 2px solid var(--bb-rl-border-quaternary-color);
+				border-top-color: var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-full);
+				animation: spin 3s infinite linear;
+			}
 		}
 	}
 
 	.bb-activity-more-options-wrap + .bb-rl-pin-action {
-		right: 45px;
+		right: 65px;
 	}
 }
 
