@@ -2049,6 +2049,10 @@ button[data-balloon] {
   display: block;
 }
 
+.dropzone.dz-max-files-reached .dz-default.dz-message {
+  display: none;
+}
+
 /* Checkbox */
 .bb-rl-styled-checkbox {
   position: absolute;
@@ -2204,6 +2208,11 @@ button[data-balloon] {
 .bb-rl-modal-header .bb-rl-modal-close-button {
   margin-right: auto;
   line-height: 1;
+}
+
+.bb-rl-modal-header .bb-rl-modal-close-button [class*="bb-icon"] {
+  color: var(--bb-rl-icon-color);
+  font-size: 24px;
 }
 
 .bb-rl-modal-content {
