@@ -1815,8 +1815,8 @@ window.bp = window.bp || {};
 				'click',
 				currentTarget + ' .breadcrumb .item > span',
 				function ( e ) {
-					var $this = this, $eventTarget = $( e.currentTarget );
-					if ( $this.hasClass( 'is-disabled' ) ) {
+					$eventTarget = $( e.currentTarget );
+					if ( $eventTarget.hasClass( 'is-disabled' ) ) {
 						return;
 					}
 
@@ -1824,7 +1824,7 @@ window.bp = window.bp || {};
 					$videoMoveFileElem.find( '.bb-rl-album-selected-id' ).val( 0 );
 					$videoMoveFileElem.find( '.location-album-list li span' ).removeClass( 'selected' ).parent().removeClass( 'is_active' );
 
-					var spanLastChild = $this.closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
+					var spanLastChild = $eventTarget.closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' );
 					if ( spanLastChild.hasClass( 'is-disabled' ) ) {
 						spanLastChild.remove();
 					}

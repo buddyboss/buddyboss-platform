@@ -2811,8 +2811,8 @@ div[class*="attached-gif-container"] .gif-player {
 
 .bb-rl-location-folder-list-wrap .bb-rl-breadcrumbs-append-ul-li .item {
   padding: var(--bb-rl-space-100) 0;
-  display: inline-block;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
   font-size: var(--bb-rl-font-size-sm);
   white-space: nowrap;
 }
