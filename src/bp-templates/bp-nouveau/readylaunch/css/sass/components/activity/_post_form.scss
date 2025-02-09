@@ -50,8 +50,13 @@
 	.bb-rl-activity-privacy-stage,
 	#bb-rl-editor-toolbar,
 	#bb-rl-whats-new-toolbar,
-	#bp-activity-privacy-point {
+	#bb-rl-activity-privacy-point {
 		display: none;
+	}
+
+	div#bb-rl-activity-privacy-point.bb-rl-activity-edit-group {
+		opacity: 0.5;
+		cursor: default;
 	}
 }
 
