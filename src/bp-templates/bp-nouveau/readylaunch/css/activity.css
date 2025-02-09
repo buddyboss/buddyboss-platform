@@ -2335,6 +2335,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background: var(--bb-rl-background-secondary-color);
 }
 
+.bb-media-privacy-wrap .activity-privacy li a {
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-media-privacy-wrap .activity-privacy li:before {
   content: "\e288";
   font-family: bb-icons-rl;
@@ -2445,7 +2449,10 @@ div[class*="attached-gif-container"] .gif-player {
 }
 
 .bb-rl-modal-move-file .db-modal-buttons {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bb-rl-space-100);
   margin-top: var(--bb-rl-space-200);
 }
 
@@ -2476,6 +2483,18 @@ div[class*="attached-gif-container"] .gif-player {
   pointer-events: none;
 }
 
+.bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button.loading:after {
+  content: "";
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  margin-left: var(--bb-rl-space-100);
+  animation: spin 3s infinite linear;
+}
+
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {
   margin-right: auto;
 }
@@ -2495,6 +2514,10 @@ div[class*="attached-gif-container"] .gif-player {
   border: 1px solid var(--bb-rl-border-tertiary-color);
   box-sizing: border-box;
   width: 100%;
+}
+
+.bb-rl-modal-move-file .bbm-model-wrap input.error {
+  border-color: var(--Border-danger-secondary);
 }
 
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-field-wrap,
@@ -2532,18 +2555,6 @@ div[class*="attached-gif-container"] .gif-player {
   top: 50%;
   right: var(--bb-rl-space-100);
   transform: translateY(-50%);
-}
-
-.bb-rl-modal-move-file .bb-rl-button.loading:before {
-  content: "";
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  border: 2px solid var(--bb-rl-border-quaternary-color);
-  border-top-color: var(--bb-rl-border-tertiary-color);
-  border-radius: var(--bb-rl-radius-full);
-  margin-right: var(--bb-rl-space-100);
-  animation: spin 3s infinite linear;
 }
 
 .bb-rl-location-album-list-wrap .bb-rl-breadcrumbs-append-ul-li .item {

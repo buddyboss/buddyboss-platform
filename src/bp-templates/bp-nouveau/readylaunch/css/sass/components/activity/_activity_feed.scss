@@ -1381,6 +1381,10 @@
 				background: var(--bb-rl-background-secondary-color);
 			}
 
+			a {
+				color: var(--bb-rl-text-secondary-color);
+			}
+
 			&:before {
 				content: "\e288";
 				font-family: bb-icons-rl;
@@ -1499,7 +1503,10 @@ div[class*="attached-gif-container"] {
 	}
 
 	.db-modal-buttons {
-		text-align: right;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: var(--bb-rl-space-100);
 		margin-top: var(--bb-rl-space-200);
 
 		.bb-rl-button {
@@ -1527,6 +1534,18 @@ div[class*="attached-gif-container"] {
 				cursor: default;
 				pointer-events: none;
 			}
+
+			&.loading:after {
+				content: "";
+				display: inline-block;
+				height: 18px;
+				width: 18px;
+				border: 2px solid var(--bb-rl-border-quaternary-color);
+				border-top-color: var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-full);
+				margin-left: var(--bb-rl-space-100);
+				animation: spin 3s infinite linear;
+			}
 		}
 
 		.bb-rl-create-album {
@@ -1551,6 +1570,10 @@ div[class*="attached-gif-container"] {
 			border: 1px solid var(--bb-rl-border-tertiary-color);
 			box-sizing: border-box;
 			width: 100%;
+
+			&.error {
+				border-color: var(--Border-danger-secondary);
+			}
 		}
 
 		.bb-rl-create-popup-folder-wrap,
@@ -1589,18 +1612,6 @@ div[class*="attached-gif-container"] {
 				}
 			}
 		}
-	}
-
-	.bb-rl-button.loading:before {
-		content: "";
-		display: inline-block;
-		height: 18px;
-		width: 18px;
-		border: 2px solid var(--bb-rl-border-quaternary-color);
-		border-top-color: var(--bb-rl-border-tertiary-color);
-		border-radius: var(--bb-rl-radius-full);
-		margin-right: var(--bb-rl-space-100);
-		animation: spin 3s infinite linear;
 	}
 }
 
