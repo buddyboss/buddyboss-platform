@@ -295,4 +295,15 @@ class BB_Group_Readylaunch {
 		</div>
 		<?php
 	}
+
+	public static function bb_readylaunch_invite( $group_id = 0 ) {
+		if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() && ! empty( $group_id ) ) {
+			$current_group = groups_get_group( $group_id );
+			$group_link    = bp_get_group_permalink( $current_group );
+			if ( $current_group->user_has_access ) {
+				$invite_link = trailingslashit( $group_link ) . 'invite';
+				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . __( 'Send Invites', 'buddyboss' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . __( 'Send Invites', 'buddyboss' ) . '</span></a></span>';
+			}
+		}
+	}
 }

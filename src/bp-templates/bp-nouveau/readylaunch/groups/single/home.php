@@ -39,7 +39,9 @@ if ( bp_has_groups() ) {
 					</div>
 					<div class="bb-rl-group-extra-info">
 						<?php
+							add_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
 							bb_groups_members();
+							remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
 							bb_group_single_header_actions();
 						?>
 					</div>

@@ -5722,7 +5722,7 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 			$member_label = ( 1 === (int) $member_count ) ? esc_html__( 'Member', 'buddyboss' ) : esc_html__( 'Members', 'buddyboss' );
 			?>
 			<span class="bb-group-member count-wrap">
-				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">+ 
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">+
 					<?php
 					printf(
 						'%s<span class="bb-rl-group-member-count-label"> %s</span>',
@@ -5734,6 +5734,8 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 			</span>
 			<?php
 		}
+
+		do_action( 'bb_groups_members_after', $group_id );
 		?>
 		</span>
 		<?php

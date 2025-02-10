@@ -93,6 +93,21 @@
 						}
 					}
 				}
+
+				.bb-group-member-invite {
+					margin: -5px -5px -5px 5px;
+					border-left: 1px solid var(--bb-rl-border-secondary-color);
+					display: flex;
+					text-align: center;
+					align-items: center;
+					justify-content: center;
+
+					a {
+						padding: 5px 10px 5px;
+						color: var(--bb-rl-text-tertiary-color);
+						font-size: var(--bb-rl-base-line-xs);
+					}
+				}
 			}
 
 			.bb_more_options_action {
