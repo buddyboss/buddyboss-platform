@@ -1317,7 +1317,8 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
 }
 
@@ -1333,6 +1334,27 @@
 .bb-rl-activity-list .bb-rl-activity-header .activity-date .bb-activity-edited-text {
   color: var(--bb-rl-text-tertiary-color);
   font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-to {
+  font-size: 0;
+  line-height: 1;
+  margin: 0 var(--bb-rl-space-50);
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-to:before {
+  content: "\e13a";
+  color: var(--bb-rl-icon-tertiary-color);
+  font-family: bb-icons-rl;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.bb-rl-activity-list .bb-rl-activity-header .activity-to + .avatar {
+  height: 24px;
+  width: 24px;
+  border-radius: var(--bb-rl-radius-full);
+  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-activity-list .bb-rl-activity-inner {

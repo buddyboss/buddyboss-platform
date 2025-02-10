@@ -175,7 +175,8 @@
 			font-size: 16px;
 			font-weight: 500;
 			line-height: 24px;
-			display: block;
+			display: flex;
+			align-items: center;
 			width: 100%;
 
 			a {
@@ -193,6 +194,26 @@
 			}
 		}
 
+		.activity-to {
+			font-size: 0;
+			line-height: 1;
+			margin: 0 var(--bb-rl-space-50);
+
+			&:before {
+				content: "\e13a";
+				color: var(--bb-rl-icon-tertiary-color);
+				font-family: bb-icons-rl;
+				font-size: 20px;
+				font-weight: 500;
+			}
+
+			+ .avatar {
+				height: 24px;
+				width: 24px;
+				border-radius: var(--bb-rl-radius-full);
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
 
 	}
 
