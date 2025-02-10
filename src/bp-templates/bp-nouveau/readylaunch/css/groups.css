@@ -135,6 +135,10 @@
   margin-left: var(--bb-rl-space-200);
 }
 
+.bb-rl-groups .bp-list.grid.bb-cover-disabled .group-avatar-wrap {
+  margin-top: var(--bb-rl-space-200);
+}
+
 .bb-rl-groups .bp-list.grid .bs-group-cover a {
   position: relative;
   display: block;

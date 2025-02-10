@@ -4102,6 +4102,10 @@ body.admin-bar .bb-rl-left-panel {
   align-items: center;
 }
 
+.bb-rl-sub-ctrls .subnav-filters .subnav-search {
+  margin: 0 var(--bb-rl-space-200);
+}
+
 @media screen and (max-width: 544px) {
   .bb-rl-sub-ctrls .subnav-filters {
     flex-flow: wrap;
@@ -5222,6 +5226,10 @@ body.guillotine-dragging * {
   display: inline-block;
   margin-top: calc(-1 * var(--bb-rl-space-400));
   margin-left: var(--bb-rl-space-200);
+}
+
+.bb-rl-groups .bp-list.grid.bb-cover-disabled .group-avatar-wrap {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-groups .bp-list.grid .bs-group-cover a {

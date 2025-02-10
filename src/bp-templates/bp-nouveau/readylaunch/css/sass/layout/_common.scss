@@ -4,6 +4,10 @@
 		display: flex;
 		align-items: center;
 
+		.subnav-search {
+			margin: 0 var(--bb-rl-space-200);
+		}
+
 		@media screen and (max-width: $sm) {
 			flex-flow: wrap;
 			gap: var(--bb-rl-space-100);
