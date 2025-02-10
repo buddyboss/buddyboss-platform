@@ -1178,52 +1178,49 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return string Modified pagination links output.
 		 */
-		function bb_rl_filter_paginate_links_output( $output, $args ) {
+		public function bb_rl_filter_paginate_links_output( $output, $args ) {
 
-			if ( bp_is_members_directory() ) {
+			// Add custom class to span tags (disabled or active links).
+			$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
 
-				// Add custom class to span tags (disabled or active links).
-				$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
+			$prev_label = esc_html__( 'Prev', 'buddyboss' );
+			$next_label = esc_html__( 'Next', 'buddyboss' );
 
-				$prev_label = esc_html__( 'Prev', 'buddyboss' );
-				$next_label = esc_html__( 'Next', 'buddyboss' );
+			// Use prev_text and next_text passed in the paginate_links arguments.
+			$prev_text = isset( $args['prev_text'] ) ? $args['prev_text'] : __( '&larr; Prev', 'buddyboss' );
+			$next_text = isset( $args['next_text'] ) ? $args['next_text'] : __( 'Next &rarr;', 'buddyboss' );
 
-				// Use prev_text and next_text passed in the paginate_links arguments.
-				$prev_text = isset( $args['prev_text'] ) ? $args['prev_text'] : __( '&larr; Prev', 'buddyboss' );
-				$next_text = isset( $args['next_text'] ) ? $args['next_text'] : __( 'Next &rarr;', 'buddyboss' );
+			// Ensure Previous and Next links are always visible (even if disabled).
+			if ( strpos( $output, 'prev bb-rl-page-numbers' ) === false ) {
+				$prev_disabled = sprintf(
+					'<span data-bb-rl-label="%s" class="prev bb-rl-page-numbers disabled">%s</span>',
+					$prev_label,
+					$prev_text
+				);
+				$output        = $prev_disabled . $output;
+			} else {
+				// Replace "Previous" link text with custom text and add data-bb-rl-label attribute.
+				$output = preg_replace(
+					'/<a(.*?)class="prev bb-rl-page-numbers(.*?)"(.*?)>(.*?)<\/a>/i',
+					'<a$1class="prev bb-rl-page-numbers$2"$3 data-bb-rl-label="' . $prev_label . '">' . $prev_text . '</a>',
+					$output
+				);
+			}
 
-				// Ensure Previous and Next links are always visible (even if disabled).
-				if ( strpos( $output, 'prev bb-rl-page-numbers' ) === false ) {
-					$prev_disabled = sprintf(
-						'<span data-bb-rl-label="%s" class="prev bb-rl-page-numbers disabled">%s</span>',
-						$prev_label,
-						$prev_text
-					);
-					$output        = $prev_disabled . $output;
-				} else {
-					// Replace "Previous" link text with custom text and add data-bb-rl-label attribute.
-					$output = preg_replace(
-						'/<a(.*?)class="prev bb-rl-page-numbers(.*?)"(.*?)>(.*?)<\/a>/i',
-						'<a$1class="prev bb-rl-page-numbers$2"$3 data-bb-rl-label="' . $prev_label . '">' . $prev_text . '</a>',
-						$output
-					);
-				}
-
-				if ( strpos( $output, 'next bb-rl-page-numbers' ) === false ) {
-					$next_disabled = sprintf(
-						'<span data-bb-rl-label="%s" class="next bb-rl-page-numbers disabled">%s</span>',
-						$next_label,
-						$next_text
-					);
-					$output       .= $next_disabled;
-				} else {
-					// Replace "Next" link text with custom text and add data-bb-rl-label attribute.
-					$output = preg_replace(
-						'/<a(.*?)class="next bb-rl-page-numbers(.*?)"(.*?)>(.*?)<\/a>/i',
-						'<a$1class="next bb-rl-page-numbers$2"$3 data-bb-rl-label="' . $next_label . '">' . $next_text . '</a>',
-						$output
-					);
-				}
+			if ( strpos( $output, 'next bb-rl-page-numbers' ) === false ) {
+				$next_disabled = sprintf(
+					'<span data-bb-rl-label="%s" class="next bb-rl-page-numbers disabled">%s</span>',
+					$next_label,
+					$next_text
+				);
+				$output       .= $next_disabled;
+			} else {
+				// Replace "Next" link text with custom text and add data-bb-rl-label attribute.
+				$output = preg_replace(
+					'/<a(.*?)class="next bb-rl-page-numbers(.*?)"(.*?)>(.*?)<\/a>/i',
+					'<a$1class="next bb-rl-page-numbers$2"$3 data-bb-rl-label="' . $next_label . '">' . $next_text . '</a>',
+					$output
+				);
 			}
 
 			return $output;
@@ -1375,7 +1372,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return array
 		 */
-		function bb_rl_theme_body_classes( $classes ) {
+		public function bb_rl_theme_body_classes( $classes ) {
 			global $post, $wp_query;
 
 			if ( is_active_sidebar( 'bb-readylaunch-members-sidebar' ) ) {
@@ -1394,7 +1391,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return array $args Filtered arguments.
 		 */
-		function bb_rl_override_send_message_button_text( $args ) {
+		public function bb_rl_override_send_message_button_text( $args ) {
 			$args['link_text'] = esc_html__( 'Message', 'buddyboss' );
 			return $args;
 		}
@@ -1407,10 +1404,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @param array  $buttons     Member profile actions.
 		 * @param int    $user_id     Member ID.
 		 * @param string $button_type Which type of buttons need "primary", "secondary" or "both".
-		 * 
+		 *
 		 * @return array $buttons Filtered buttons.
 		 */
-		function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
+		public function bb_rl_member_directories_get_profile_actions( $buttons, $user_id, $button_type ) {
 
 			$enabled_message_action = function_exists( 'bb_enabled_member_directory_profile_action' )
 				? bb_enabled_member_directory_profile_action( 'message' )
@@ -1474,10 +1471,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @param string|bool $cover_image_url Default cover URL, false otherwise.
 		 * @param string      $component       The component to get the settings for ("members" for user or "groups").
-		 * 
+		 *
 		 * @return string|bool $cover_image_url Default cover URL, false otherwise.
 		 */
-		function bb_rl_group_default_group_cover_image( $cover_image_url, $component ) {
+		public function bb_rl_group_default_group_cover_image( $cover_image_url, $component ) {
 			if ( 'groups' === $component ) {
 				$cover_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 			}
@@ -1491,10 +1488,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
 		 * @param string      $component        The component to get the settings for ("members" for user or "groups").
-		 * 
+		 *
 		 * @return string|bool $avatar_image_url Default avatar URL, false otherwise.
 		 */
-		function bb_rl_group_default_group_avatar_image( $avatar_image_url, $params ) {
+		public function bb_rl_group_default_group_avatar_image( $avatar_image_url, $params ) {
 			if ( isset( $params['object'] ) && 'group' === $params['object'] ) {
 				$avatar_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_avatar_image.jpeg' );
 			}
