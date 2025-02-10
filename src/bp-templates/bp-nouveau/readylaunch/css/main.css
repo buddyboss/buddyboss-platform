@@ -140,7 +140,10 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+body,
+.site-title {
+  font-family: var(--bb-rl-font-family-base);
   overflow-wrap: break-word;
 }
 
@@ -235,6 +238,10 @@ a {
   word-wrap: normal !important;
 }
 
+.mfp-hide {
+  display: none;
+}
+
 .bb-rl-container {
   margin-left: auto;
   margin-right: auto;
@@ -310,6 +317,62 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 1.5;
   font-optical-sizing: auto;
   font-style: normal;
+}
+
+.bb-rl-header .site-title {
+  font-weight: 500;
+  font-style: normal;
+  font-size: 30px;
+  font-display: swap;
+}
+
+body {
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--bb-rl-font-size-base);
+  font-display: swap;
+}
+
+h1 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 34px;
+  font-display: swap;
+}
+
+h2 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  font-display: swap;
+}
+
+h3 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  font-display: swap;
+}
+
+h4 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
+  font-display: swap;
+}
+
+h5 {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  font-display: swap;
+}
+
+h6 {
+  font-weight: 500;
+  font-style: normal;
+  font-size: 12px;
+  font-display: swap;
 }
 
 #wpadminbar {
@@ -2161,6 +2224,7 @@ button[data-balloon] {
   border-radius: 100%;
 }
 
+.modal-mask,
 .bb-rl-modal-mask {
   position: fixed;
   z-index: 999991;
@@ -2174,6 +2238,7 @@ button[data-balloon] {
   align-items: center;
 }
 
+.modal-wrapper,
 .bb-rl-modal-wrapper {
   max-width: 615px;
   margin: 50px auto;
@@ -2181,6 +2246,7 @@ button[data-balloon] {
   width: 90%;
 }
 
+.modal-container,
 .bb-rl-modal-container {
   width: auto;
   margin: 0 auto;
@@ -2192,6 +2258,7 @@ button[data-balloon] {
   transition: all 0.3s ease;
 }
 
+.bb-model-header,
 .bb-rl-modal-header {
   display: flex;
   align-items: center;
@@ -2199,6 +2266,7 @@ button[data-balloon] {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.bb-model-header h4,
 .bb-rl-modal-header h4 {
   margin: 0;
   font-size: var(--bb-rl-font-size-base);
@@ -2206,16 +2274,19 @@ button[data-balloon] {
   line-height: var(--bb-rl-base-line);
 }
 
-.bb-rl-modal-header .bb-rl-modal-close-button {
+.bb-model-close-button,
+.bb-rl-modal-close-button {
   margin-left: auto;
   line-height: 1;
 }
 
-.bb-rl-modal-header .bb-rl-modal-close-button [class*="bb-icon"] {
+.bb-model-close-button [class*="bb-icon"],
+.bb-rl-modal-close-button [class*="bb-icon"] {
   color: var(--bb-rl-icon-color);
   font-size: 24px;
 }
 
+.modal-content,
 .bb-rl-modal-content {
   font-size: var(--bb-rl-font-size-sm);
   max-height: calc(100vh - 220px);
@@ -2223,12 +2294,14 @@ button[data-balloon] {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.bb-model-footer,
 .bb-rl-model-footer {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-300);
   justify-content: flex-end;
   gap: var(--bb-rl-space-100);
 }
 
+.bb-model-footer .bb-rl-button,
 .bb-rl-model-footer .bb-rl-button {
   padding: 4px var(--bb-rl-space-200);
 }
