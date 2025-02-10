@@ -834,8 +834,8 @@ window.bp = window.bp || {};
 				} else if ( target.closest( '#bb-rl-media-model-container' ).length ) {
 					if ( target.closest( '.bb-video-container.bb-media-container.group-video' ).length > 0 ) {
 						popupSelector = target.closest( '.bb-video-container.bb-media-container.group-video' );
-					} else if ( target.closest( '.bb-rl-media-model-wrapper.video-theatre' ).siblings( '#video-stream' ).length > 0 ) {
-						popupSelector = target.closest( '.bb-rl-media-model-wrapper.video-theatre' ).parent();
+					} else if ( target.closest( '.bb-rl-media-model-wrapper.bb-rl-video-theatre' ).siblings( '#video-stream' ).length > 0 ) {
+						popupSelector = target.closest( '.bb-rl-media-model-wrapper.bb-rl-video-theatre' ).parent();
 					} else {
 						popupSelector = $( 'ul.bb-rl-activity-list li#activity-' + parentActivityId ).find( '.bb-rl-activity-inner' );
 					}
@@ -1968,8 +1968,8 @@ window.bp = window.bp || {};
 				modelWrapper = target.closest( '.bb-rl-media-model-wrapper' );
 
 			if (
-				modelWrapper.hasClass( 'media-theatre' ) ||
-				modelWrapper.hasClass( 'document-theatre' )
+				modelWrapper.hasClass( 'bb-rl-media-theatre' ) ||
+				modelWrapper.hasClass( 'bb-rl-document-theatre' )
 			) {
 				return false;
 			}
@@ -2611,7 +2611,7 @@ window.bp = window.bp || {};
 
 					}
 
-					if ( $( self ).closest( '.video-theatre' ).length ) {
+					if ( $( self ).closest( '.bb-rl-video-theatre' ).length ) {
 						var Enter_fullscreen_btn = $( this ).parent().find( '.vjs-fullscreen-control' );
 						Enter_fullscreen_btn.attr( 'data-balloon-pos', 'up' );
 						Enter_fullscreen_btn.attr( 'data-balloon', bbRlVideo.i18n_strings.video_fullscreen_text );

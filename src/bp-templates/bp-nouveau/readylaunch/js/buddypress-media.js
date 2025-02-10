@@ -5942,7 +5942,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( target.closest( '.document.document-theatre' ).length ) {
+			if ( target.closest( '.document.bb-rl-document-theatre' ).length ) {
 				self.closeDocumentTheatre( event );
 			}
 
@@ -6091,7 +6091,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var self = this,target = $( event.currentTarget );
 
-			if ( $( target ).closest( '.bb-rl-media-model-wrapper' ).hasClass( 'video-theatre' ) ) {
+			if ( $( target ).closest( '.bb-rl-media-model-wrapper' ).hasClass( 'bb-rl-video-theatre' ) ) {
 				return false;
 			}
 
@@ -6113,7 +6113,7 @@ window.bp = window.bp || {};
 		closeDocumentTheatre: function ( event ) {
 			event.preventDefault();
 			var self              = this;
-			var document_elements = $( document ).find( '.document-theatre' );
+			var document_elements = $( document ).find( '.bb-rl-document-theatre' );
 			document_elements.find( '.bb-rl-media-section' ).removeClass( 'bb-media-no-preview' ).find( '.document-preview' ).html( '' );
 			$( '.bb-media-info-section.document' ).show();
 			document_elements.hide();
@@ -6297,7 +6297,7 @@ window.bp = window.bp || {};
 			}
 			var target_text         = self.current_document.target_text;
 			var target_icon_class   = self.current_document.target_icon_class;
-			var document_elements   = $( document ).find( '.document-theatre' );
+			var document_elements   = $( document ).find( '.bb-rl-document-theatre' );
 			var extension           = self.current_document.extension;
 			var mirror_text_display = self.current_document.mirror_text;
 			document_elements.find( '.bb-rl-document-section' ).removeClass( 'bb-video-preview' );
