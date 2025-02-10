@@ -137,19 +137,12 @@ add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_grou
 /**
  * Add social networks button to the member header area.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION]
  * 
  * @return string
  */
 function bb_rl_get_user_social_networks_urls( $user_id = null ) {
-
-	global $wpdb;
-	global $bp;
-
-	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
-	$social_networks_id    = $social_networks_field->id;
-	$social_networks_text  = $social_networks_field->name;
-
+	$social_networks_id                 = bb_rl_get_user_social_networks_field_id();
 	$is_enabled_header_social_networks  = bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks();
 
 	$html = '';
@@ -199,4 +192,23 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 	}
 
 	return apply_filters( 'bb_rl_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
+}
+
+/**
+ * Get social network field id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * 
+ * @return int Social network xprofile field id.
+ */
+function bb_rl_get_user_social_networks_field_id() {
+	global $wpdb, $bp;
+
+	$social_networks_field = $wpdb->get_row( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_id    = $social_networks_field->id;
+	if ( ! empty( $social_networks_field->id ) ) {
+		return $social_networks_field->id;
+	}
+
+	return 0;
 }

@@ -8,8 +8,16 @@
  */
 
 $edit_profile_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' );
+$bp                = buddypress();
+$social_field_id   = bb_rl_get_user_social_networks_field_id();
+$args              = array();
+if ( ! empty( $social_field_id ) ) {
+	$args = array(
+		'exclude_fields' => $social_field_id,
+	);
+}
 
-if ( bp_has_profile() ) {
+if ( bp_has_profile( $args ) ) {
 
 	while ( bp_profile_groups() ) :
 		bp_the_profile_group();
