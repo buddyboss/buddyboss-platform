@@ -218,7 +218,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 #wpadminbar {
-	z-index: var(--bb-rl-z-index-fixed);
+	z-index: var(--bb-rl-z-index-adminbar);
 }
 
 @media screen and (max-width: $lg) {

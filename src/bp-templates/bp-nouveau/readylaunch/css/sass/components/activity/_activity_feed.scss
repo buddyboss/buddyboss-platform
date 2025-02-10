@@ -579,9 +579,14 @@
 .bb-rl-modal-activity-footer {
 	display: none;
 	border-top: 1px solid var(--bb-rl-border-secondary-color);
+	box-shadow: 0 -4px 8px 0 rgba(0, 0, 0, 0.08);
 
 	.logged-in & {
 		display: block;
+	}
+
+	.bb-closed-comments & {
+		display: none;
 	}
 
 	.bb-rl-ac-form-placeholder {

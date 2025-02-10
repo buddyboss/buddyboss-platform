@@ -1582,10 +1582,15 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-modal-activity-footer {
   display: none;
   border-top: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 -4px 8px 0 rgba(0, 0, 0, 0.08);
 }
 
 .logged-in .bb-rl-modal-activity-footer {
   display: block;
+}
+
+.bb-closed-comments .bb-rl-modal-activity-footer {
+  display: none;
 }
 
 .bb-rl-modal-activity-footer .bb-rl-ac-form-placeholder {
