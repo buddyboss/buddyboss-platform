@@ -20,12 +20,11 @@ $link_embed          = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
-$activity_popup_title   = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
-$readylaunchClassExists = class_exists( 'BB_Activity_Readylaunch' );
+$activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 ?>
 	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
 
-		<?php $readylaunchClassExists && BB_Activity_Readylaunch::bb_rl_activity_entry_bubble_buttons(); ?>
+		<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
 		<div class="bb-rl-pin-action">
 			<span class="bb-rl-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
@@ -156,8 +155,8 @@ $readylaunchClassExists = class_exists( 'BB_Activity_Readylaunch' );
 			?>
 			<div class="bb-rl-activity-footer-actions">
 				<?php
-					bp_nouveau_activity_entry_buttons();
-					$readylaunchClassExists && BB_Activity_Readylaunch::bb_rl_activity_state();
+				bp_nouveau_activity_entry_buttons();
+				bp_nouveau_activity_state();
 				?>
 			</div>
 		</div>
