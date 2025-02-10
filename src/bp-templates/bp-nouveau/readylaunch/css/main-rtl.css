@@ -221,6 +221,19 @@ a {
   align-items: flex-end;
 }
 
+.bp-screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
 .bb-rl-container {
   margin-right: auto;
   margin-left: auto;
@@ -269,6 +282,15 @@ input[type="search"]::-webkit-search-results-decoration {
   }
   100% {
     transform: rotate(-360deg);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: translateY(20%) scale(0.8);
+  }
+  100% {
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -2190,6 +2212,10 @@ button[data-balloon] {
   display: block;
 }
 
+.dropzone.dz-max-files-reached .dz-default.dz-message {
+  display: none;
+}
+
 /* Checkbox */
 .bb-rl-styled-checkbox {
   position: absolute;
@@ -2346,6 +2372,11 @@ button[data-balloon] {
   margin-right: auto;
   line-height: 1;
   color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-rl-modal-header .bb-rl-modal-close-button [class*="bb-icon"] {
+  color: var(--bb-rl-icon-color);
+  font-size: 24px;
 }
 
 .bb-rl-modal-content {

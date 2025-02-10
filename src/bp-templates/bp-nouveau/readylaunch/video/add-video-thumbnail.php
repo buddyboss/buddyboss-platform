@@ -11,30 +11,30 @@
 ?>
 <div class="bb-rl-video-thumbnail-uploader <?php echo bb_video_is_ffmpeg_installed() ? 'generating_thumb ' : 'no_ffmpeg'; ?>" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-			<div class="modal-wrapper">
-				<div class="modal-container">
-					<header class="bb-model-header">
-						<a href="#" class="bb-rl-video-thumbnail-upload-tab bb-rl-thumbnail-upload-tab selected bb-rl-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content" id="">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+			<div class="bb-rl-modal-wrapper">
+				<div class="bb-rl-modal-container">
+					<header class="bb-rl-modal-header">
+						<h4 class="bb-rl-video-thumbnail-upload-tab bb-rl-thumbnail-upload-tab selected bb-rl-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content">
 							<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
-						</a>
+						</h4>
 						<span id="bb-rl-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
-						<a class="bb-model-close-button bb-rl-video-thumbnail-uploader-close" id="" href="#">
-							<span class="bb-icon-l bb-icon-times"></span>
+						<a class="bb-rl-modal-close-button bb-rl-video-thumbnail-uploader-close" id="" href="#">
+							<span class="bb-icons-rl-x"></span>
 						</a>
 					</header>
-					<div class="bb-rl-video-thumbnail-content">
+					<div class="bb-rl-video-thumbnail-content bb-rl-modal-content">
 						<div class="bb-rl-video-thumbnail-auto-generated">
 							<ul class="bb-rl-video-thumb-list loading">
 								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader">
 									<div class="bb-rl-video-thumb-block">
-										<i class="bb-icon-l bb-icon-loader animate-spin"></i>
+										<i class="bb-rl-loader"></i>
 										<span><?php esc_html_e( 'Generating thumbnail…', 'buddyboss' ); ?></span>
 									</div>
 								</li>
 								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader">
 									<div class="bb-rl-video-thumb-block">
-										<i class="bb-icon-l bb-icon-loader animate-spin"></i>
+										<i class="bb-rl-loader"></i>
 										<span><?php esc_html_e( 'Generating thumbnail…', 'buddyboss' ); ?></span>
 									</div>
 								</li>
@@ -53,10 +53,13 @@
 											<div class="dz-image">
 												<img data-dz-thumbnail />
 											</div>
+											<div class="dz-details">
+												<div class="dz-filename" data-dz-name=""></div>
+											</div>
 											<div class="dz-progress-ring-wrap">
-												<i class="bb-icon-f bb-icon-camera"></i>
-												<svg class="dz-progress-ring" width="54" height="54">
-													<circle class="progress-ring__circle" stroke="white" stroke-width="3" fill="transparent" r="24.5" cx="27" cy="27" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
+												<i class="bb-icons-rl-fill bb-icons-rl-camera"></i>
+												<svg class="dz-progress-ring" width="48" height="48">
+													<circle class="progress-ring__circle" stroke="#4946FE" stroke-width="3" fill="transparent" r="21.5" cx="24" cy="24" stroke-dasharray="185.354, 185.354" stroke-dashoffset="185" />
 												</svg>
 											</div>
 											<div class="dz-error-message"><span data-dz-errormessage></span></div>
@@ -82,8 +85,8 @@
 					</div>
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-video-id">
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-attachment-id">
-					<footer class="bb-model-footer flex align-items-center">
-						<a class="button push-right bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
+					<footer class="bb-rl-model-footer flex align-items-center">
+						<a class="bb-rl-button bb-rl-button--brandFill push-right bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

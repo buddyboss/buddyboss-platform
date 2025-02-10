@@ -34,6 +34,9 @@ $activity_comment_id = bp_get_activity_comment_id();
 						<div class="bb-rl-acomment-meta">
 							<?php bp_nouveau_activity_comment_action(); ?>
 						</div>
+						<div class="bb-rl-acomment-meta__time">
+							<?php bp_nouveau_activity_comment_meta(); ?>
+						</div>
 						<div class="bb-rl-acomment-content">
 							<?php
 							bp_activity_comment_content();
@@ -50,7 +53,6 @@ $activity_comment_id = bp_get_activity_comment_id();
 					</div>
 					<div class="bb-rl-acomment-foot-actions">
 						<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
-						<?php bp_nouveau_activity_comment_meta(); ?>
 					</div>
 				</div>
 			</div>

@@ -21,7 +21,6 @@ if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
 $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
-
 ?>
 	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
 
@@ -45,12 +44,12 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 
 		<?php
 		global $activities_template;
-		$user_link = bp_get_activity_user_link();
-		$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+		$user_link           = bp_get_activity_user_link();
+		$user_link           = ! empty( $user_link ) ? esc_url( $user_link ) : '';
 		if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 			// If group activity.
-			$group_id        = (int) $activities_template->activity->item_id;
+			$group_id = (int) $activities_template->activity->item_id;
 			$group           = groups_get_group( $group_id );
 			$group_name      = bp_get_group_name( $group );
 			$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
@@ -88,7 +87,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 					</div>
 					<div class="bb-rl-activity-group-post-meta">
 						<span class="bb-rl-activity-post-author">
-							<?php bp_activity_action(); ?>
+							<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
 						</span>
 						<a href="<?php echo $activity_link; ?>">
 							<?php
@@ -120,11 +119,23 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 					</a>
 				</div>
 				<div class="bb-rl-activity-header">
-					<?php
-					bp_activity_action();
-					bp_nouveau_activity_is_edited();
-					bp_nouveau_activity_privacy();
-					?>
+					<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
+					<p class="activity-date">
+						<a href="<?php echo esc_url( bp_activity_get_permalink( $activity_id ) ); ?>">
+							<?php
+							$activity_date_recorded = bp_get_activity_date_recorded();
+							printf(
+								'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+								bp_core_get_iso8601_date( $activity_date_recorded ),
+								bp_core_time_since( $activity_date_recorded )
+							);
+							?>
+						</a>
+						<?php
+						bp_nouveau_activity_is_edited();
+						?>
+					</p>
+					<?php bp_nouveau_activity_privacy(); ?>
 				</div>
 			</div>
 
@@ -140,10 +151,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			endif;
 
 			bp_nouveau_activity_hook( 'after', 'activity_content' );
-			bp_nouveau_activity_state();
 			bb_activity_load_progress_bar_state();
-			bp_nouveau_activity_entry_buttons();
 			?>
+			<div class="bb-rl-activity-footer-actions">
+				<?php
+				bp_nouveau_activity_entry_buttons();
+				bp_nouveau_activity_state();
+				?>
+			</div>
 		</div>
 
 		<?php

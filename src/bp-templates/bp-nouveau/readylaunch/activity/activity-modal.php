@@ -11,11 +11,11 @@
 		<div class="bb-rl-modal-activity-header">
 			<h2></h2>
 			<a class="bb-rl-close-action-popup bb-rl-model-close-button" href="#">
-				<span class="bb-icon-l bb-icon-times"></span>
+				<span class="bb-icons-rl-x"></span>
 			</a>
 		</div>
 		<div class="bb-rl-modal-activity-body">
-			<ul class="bb-rl-activity-list bb-rl-item-list bp-list"></ul>
+			<ul class="bb-rl-activity-list bb-rl-item-list bb-rl-list"></ul>
 		</div>
 		<div class="bb-rl-footer-overflow">
 			<div class="bb-rl-modal-activity-footer activity-item">

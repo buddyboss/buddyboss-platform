@@ -447,7 +447,7 @@ window.bp = window.bp || {};
 					$selector.html( content );
 					break;
 			}
-			$selector.find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
+			$selector.find( 'li.activity-item' ).each( this.hideSingleUrl );
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bb-rl-suggestions' ).bp_mentions( bp.mentions.users );
@@ -544,7 +544,7 @@ window.bp = window.bp || {};
 
 			// prevent activity response to append to media model activity list element.
 			if ( 'activity' === data.object && '#buddypress [data-bp-list] ul.bb-rl-list' === data.target ) {
-				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-media-model-container ul.bb-rl-list)';
+				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-rl-media-model-container ul.bb-rl-list)';
 			}
 
 			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
@@ -594,7 +594,7 @@ window.bp = window.bp || {};
 				var $body                = $( 'body' ),
 					component_conditions = [
 						data.object === 'group_members' && $body.hasClass( 'group-members' ),
-						data.object === 'activity' && $( 'body.groups' ).hasClass( 'bb-rl-activity' ),
+						data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 						data.object === 'document' && $body.hasClass( 'documents' ),
 						data.object === 'manage_group_members' && $body.hasClass( 'manage-members' ),
 						data.object === 'document' && ( $body.hasClass( 'document' ) || $body.hasClass( 'documents' ) ),
@@ -762,7 +762,7 @@ window.bp = window.bp || {};
 							// Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
-							$( '.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);

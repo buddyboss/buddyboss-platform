@@ -69,6 +69,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$enabled = $this->bb_is_readylaunch_enabled();
 			if ( $enabled ) {
 				if (
+					bp_is_active( 'activity' ) &&
+					(
+						bp_is_activity_directory() ||
+						bp_is_single_activity()
+					)
+				) {
+					BB_Activity_Readylaunch::instance();
+				}
+
+				if (
 					bp_is_active( 'groups' ) &&
 					(
 						bp_is_groups_directory() ||
@@ -78,8 +88,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					BB_Group_Readylaunch::instance();
 				}
 
-				add_filter(
-					'template_include',
+				add_filter( 'template_include',
 					array(
 						$this,
 						'override_page_templates',
@@ -464,6 +473,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register only if it's Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+
+				// BB icon version.
+				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
+				wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
 			}
 
 			// Register only if it's Groups component.
@@ -539,10 +553,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$src = $wp_styles->registered[ $handle ]->src ?? '';
 
 				if (
-					false === strpos( $src, '/wp-includes/' ) &&
-					false === strpos( $src, '/buddyboss-platform/' ) &&
-					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
-					! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
+					(
+						false === strpos( $src, '/wp-includes/' ) &&
+						false === strpos( $src, '/buddyboss-platform/' ) &&
+						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						! $this->bb_has_allowed_suffix( $handle, $allow_suffix )
+					) ||
+					'bp-nouveau-bb-icons' === $handle
 				) {
 					wp_dequeue_style( $handle );
 				}

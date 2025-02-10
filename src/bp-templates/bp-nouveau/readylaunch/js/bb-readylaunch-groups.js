@@ -24,7 +24,6 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
-			var self      = this;
 			var $document = $( document );
 
 			$document.on(
@@ -40,7 +39,7 @@ window.bp = window.bp || {};
 
 					e.preventDefault();
 					bp.Readylaunch.Groups.openModal( modalId );
-				},
+				}
 			);
 
 			$document.on(

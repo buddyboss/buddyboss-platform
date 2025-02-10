@@ -60,7 +60,11 @@
 	.bb-rl-modal-close-button {
 		margin-left: auto;
 		line-height: 1;
-		color: var(--bb-rl-icon-primary-color);
+
+		[class*="bb-icon"] {
+			color: var(--bb-rl-icon-color);
+			font-size: 24px;
+		}
 	}
 }
 

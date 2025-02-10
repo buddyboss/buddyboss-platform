@@ -680,8 +680,8 @@ window.bp = window.bp || {};
 
 			// Update privacy status.
 			var bpListActivity     = $( '[data-bp-list="activity"] #bb-rl-activity-' + activity_data.id ),
-				privacy            = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).data( 'value' ),
-				privacy_edit_label = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).text();
+				privacy            = bpListActivity.find( 'ul.activity-privacy li.selected' ).data( 'value' ),
+				privacy_edit_label = bpListActivity.find( 'ul.activity-privacy li.selected' ).text();
 
 			if ( ! _.isUndefined( privacy ) ) {
 				self.postForm.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( privacy );
@@ -786,7 +786,7 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
-			if ( $( 'body' ).hasClass( 'bb-rl-activity' ) && ! _.isUndefined( bbRlActivity.params.object ) ) {
+			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( bbRlActivity.params.object ) ) {
 				bp.draft_activity.object = bbRlActivity.params.object;
 
 				// Draft activity data.
@@ -5251,10 +5251,10 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content.
 							parsed_data_bp_activity.content = $( '<div>' ).html( parsed_data_bp_activity.content ).html();
 
-							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .bb-rl-activity-item' ),
+							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .activity-item' ),
 								activity_target         = activity_modal_item.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ),
-								activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-privacy-wrap' ).find( '.privacy' ),
-								activity_privacy_list   = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-activity-privacy li' );
+								activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.privacy-wrap' ).find( '.privacy' ),
+								activity_privacy_list   = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.activity-privacy li' );
 							if ( activity_modal_item.length > 0 ) {
 								var content = activityElemSel.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ).html();
 								activity_target.empty();

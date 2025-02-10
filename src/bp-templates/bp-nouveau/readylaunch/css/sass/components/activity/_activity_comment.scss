@@ -1,0 +1,211 @@
+.ac-form {
+	display: none;
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-tertiary-color);
+	border-radius: var(--bb-rl-radius-lg);
+	margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-100);
+
+	&:not(.has-content) {
+
+		.ac-input:before {
+			content: attr(data-placeholder);
+			font-size: 14px;
+			color: var(--bb-rl-text-tertiary-color);
+			position: absolute;
+		}
+	}
+}
+
+.bb-rl-ac-reply-content {
+	display: flex;
+	align-items: center;
+	gap: var(--bb-rl-space-100);
+}
+
+.ac-textarea {
+	flex: auto;
+
+	.ac-input {
+		outline: none;
+		font-size: 14px;
+		color: var(--bb-rl-text-color);
+	}
+}
+
+.bb-rl-ac-reply-avatar {
+	padding: var(--bb-rl-space-200) 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+	img {
+		border-radius: var(--bb-rl-radius-full);
+		height: 32px;
+		width: 32px;
+	}
+}
+
+.bb-rl-ac-reply-footer {
+	display: flex;
+	align-items: center;
+	border-top: 1px solid var(--bb-rl-border-secondary-color);
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+	.bb-rl-ac-reply-toolbar {
+		display: flex;
+		gap: var(--bb-rl-space-100);
+
+		.toolbar-button {
+			display: inline-flex;
+			padding: var(--bb-rl-space-50);
+
+			[class*="bb-icon"] {
+				color: var(--bb-rl-icon-secondary-color);
+				font-size: 24px;
+			}
+		}
+	}
+
+	.bb-rl-post-emoji {
+		display: inline-flex;
+		align-items: center;
+
+		.emojionearea-button:before {
+			content: "\e436";
+			color: var(--bb-rl-icon-secondary-color);
+			font-family: bb-icons-rl;
+			font-size: 24px;
+		}
+	}
+
+	.bb-rl-separator {
+		display: inline-flex;
+		align-self: center;
+		width: 1px;
+		height: 16px;
+		background-color: var(--bb-rl-border-tertiary-color);
+		margin-bottom: 4px;
+	}
+
+	.ac-reply-cancel {
+		font-size: 0.85rem;
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		margin: 0 var(--bb-rl-space-100) 0 auto;
+	}
+
+	.bb-rl-ac-submit-wrap input[type="submit"] {
+		font-size: 0.85rem;
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		background-color: var(--bb-rl-background-brand-primary-color);
+		color: var(--bb-rl-text-white-color);
+		border: 1px solid var(--bb-rl-background-brand-primary-color);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		cursor: pointer;
+		border-radius: var(--bb-rl-radius-md);
+		transition: background-color 0.2s ease, bordfont / size / smer-color 0.2s ease, color 0.2s ease;
+		text-decoration: none;
+	}
+}
+
+.activity-item {
+
+	&.has-comments {
+
+		.bb-rl-activity-comments {
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+			margin-top: var(--bb-rl-space-100);
+
+			ul {
+				padding: 0;
+				list-style: none;
+
+				li {
+					position: relative;
+				}
+			}
+
+			li:not(:first-child) {
+
+				.bb-rl-acomment-content_wrap {
+					border-top-color: var(--bb-rl-border-color);
+				}
+			}
+		}
+
+		.bb-rl-acomment_inner {
+			display: flex;
+			gap: var(--bb-rl-space-200);
+
+			.bb-rl-acomment-meta a {
+				color: var(--bb-rl-text-primary-color);
+				font-size: 16px;
+				font-weight: 500;
+			}
+
+			.activity-time-since {
+				color: var(--bb-rl-text-tertiary-color);
+				font-size: var(--bb-rl-font-size-sm);
+				line-height: var(--bb-rl-base-line-small);
+			}
+
+			.bb-rl-acomment-content {
+				color: var(--bb-rl-text-color);
+				font-size: 14px;
+				padding: var(--bb-rl-space-100) 0;
+
+				p:not(:last-child) {
+					margin-bottom: var(--bb-rl-space-100);
+				}
+			}
+		}
+
+		.bb-rl-acomment-foot-actions {
+			padding-bottom: var(--bb-rl-space-100);
+
+			.generic-button {
+
+				a {
+					font-size: 14px;
+					line-height: 1;
+					color: var(--bb-rl-text-tertiary-color);
+				}
+			}
+		}
+
+		.bb-rl-acomment-avatar {
+			padding-top: var(--bb-rl-space-200);
+
+			img {
+				height: 48px;
+				width: 48px;
+				border-radius: var(--bb-rl-radius-full);
+			}
+		}
+
+		.bb-rl-acomment-content_wrap {
+			flex: auto;
+			border-top: 1px solid transparent;
+			padding-top: var(--bb-rl-space-200);
+		}
+
+		.ac-form {
+			display: block;
+		}
+	}
+}
+
+.acomments-view-more {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--bb-rl-text-color);
+	font-weight: 500;
+	margin-bottom: var(--bb-rl-space-100);
+	cursor: pointer;
+
+	&:before {
+		content: "\e01a";
+		font-size: 20px;
+		font-family: bb-icons-rl;
+	}
+}

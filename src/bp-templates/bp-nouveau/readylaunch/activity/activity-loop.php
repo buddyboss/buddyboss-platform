@@ -25,7 +25,7 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 	if ( bp_activity_has_more_items() ) :
 		?>
 		<li class="bb-rl-load-more">
-			<a class="button outline" href="<?php bp_activity_load_more_link(); ?>">
+			<a class="bb-rl-button bb-rl-button--brandFill" href="<?php bp_activity_load_more_link(); ?>">
 				<?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 			</a>
 		</li>
@@ -33,7 +33,7 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 	endif;
 	?>
 
-	<li class="bb-rl-activity bb_rl_activity_update bb-rl-activity-item bb-rl-activity-popup"></li>
+	<li class="activity activity_update activity-item bb-rl-activity-popup"></li>
 
 	<?php if ( $is_first_page ) : ?>
 		</ul>

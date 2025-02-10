@@ -403,4 +403,12 @@
 			}
 		}
 	}
+
+	&.dz-max-files-reached {
+
+		.dz-default.dz-message {
+			display: none;
+		}
+	}
 }
+

@@ -345,7 +345,19 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 			</div>';
 	}
 
-	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output );
+	/**
+	 * Filters the user reactions list for activity post.
+	 *
+	 * @since BuddyBoss 2.5.20
+	 * @since BuddyBoss [BBVERSION]
+	 * Added new params as $activity_id, $item_type, $is_popup.
+	 *
+	 * @param string $output      The user reactions list for activity post.
+	 * @param int    $activity_id The ID of the activity.
+	 * @param string $item_type   The type of the item.
+	 * @param bool   $is_popup    Whether the popup is enabled.
+	 */
+	return apply_filters( 'bb_get_activity_post_user_reactions_html', $output, $activity_id, $item_type, $is_popup );
 }
 
 /**
