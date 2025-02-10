@@ -113,6 +113,36 @@ class BB_Activity_Readylaunch {
 	 * @return bool|string
 	 */
 	public function bb_rl_activity_new_update_action( $action, $activity ) {
-		return bp_core_get_userlink( $activity->user_id );
+		switch ( $activity->component ) {
+			case 'activity':
+				if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
+					$mentioned_users      = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+					$mentioned_users_link = array_map(
+						function ( $mentioned_user ) {
+							return bp_core_get_userlink( $mentioned_user->ID );
+						},
+						$mentioned_users
+					);
+
+					$last_user_link = array_pop( $mentioned_users_link );
+
+					$action = sprintf(
+						__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss' ),
+						bp_core_get_userlink( $activity->user_id ),
+						bp_get_activity_avatar( array( 'type' => 'thumb', 'user_id' => $activity->user_id ) ),
+						$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
+						$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
+						$last_user_link
+					);
+				} else {
+					$action = bp_core_get_userlink( $activity->user_id );
+				}
+				break;
+			case 'groups':
+				$action = bp_core_get_userlink( $activity->user_id );
+		}
+
+
+		return $action;
 	}
 }
