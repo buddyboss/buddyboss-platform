@@ -24,6 +24,14 @@
 				}
 			}
 
+			@media screen and (min-width: 1200px) and (max-width: 1400px) {
+
+				.item-entry {
+					flex: 0 0 calc(100%);
+					max-width: calc(100%);
+				}
+			}
+
 			@media screen and (max-width: $md) {
 
 				.item-entry {

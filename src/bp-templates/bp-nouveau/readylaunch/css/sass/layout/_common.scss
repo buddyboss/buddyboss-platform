@@ -235,6 +235,14 @@
 				}
 			}
 
+			@media screen and (min-width: 1200px) and (max-width: 1400px) {
+
+				.bb-rl-skeleton-grid-block {
+					flex: 0 0 calc(100%);
+					max-width: calc(100%);
+				}
+			}
+
 			@media screen and (max-width: $md) {
 
 				.bb-rl-skeleton-grid-block {
