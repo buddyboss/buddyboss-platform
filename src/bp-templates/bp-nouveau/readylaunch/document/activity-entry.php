@@ -38,7 +38,7 @@ if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$mirror_text         = bp_document_mirror_text( $attachment_id );
 }
-$class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
+$class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-rl-open-document-theatre' );
 $class_popup   = apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
 $click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
 $video_url     = bb_document_video_get_symlink( $document_id );

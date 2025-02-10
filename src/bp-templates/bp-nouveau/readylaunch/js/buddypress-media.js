@@ -466,7 +466,7 @@ window.bp = window.bp || {};
 								var $document = $( document );
 								$document.find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
 								if ( response.data.document && response.data.document.video_symlink ) {
-									$document.find( 'a.bb-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
+									$document.find( 'a.bb-rl-open-document-theatre[data-id="' + itemId + '"]' ).attr( 'data-video-preview', response.data.document.video_symlink );
 								}
 							} else {
 								target.find( 'option[value="' + target.attr( 'data-privacy' ) + '"]' ).attr( 'selected', 'selected' );
@@ -5757,7 +5757,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 			var $document = $( document );
 			$document.on( 'click', '.bb-rl-open-media-theatre', this.openTheatre.bind( this ) );
-			$document.on( 'click', '.bb-open-document-theatre', this.openDocumentTheatre.bind( this ) );
+			$document.on( 'click', '.bb-rl-open-document-theatre', this.openDocumentTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-document-detail-wrap-description-popup', this.openDocumentTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-close-media-theatre', this.closeTheatre.bind( this ) );
 			$document.on( 'click', '.bb-close-document-theatre', this.closeDocumentTheatre.bind( this ) );
@@ -5935,6 +5935,7 @@ window.bp = window.bp || {};
 		},
 
 		openDocumentTheatre: function ( event ) {
+			console.log( 'openDocumentTheatre' );
 			event.preventDefault();
 			var target = $( event.currentTarget ), id, self = this;
 
@@ -5947,6 +5948,7 @@ window.bp = window.bp || {};
 			}
 
 			id = target.data( 'id' );
+			console.log( ' id ' + id );
 			self.setupGlobals();
 			self.setDocuments( target );
 			self.setCurrentDocument( id );
@@ -6170,13 +6172,13 @@ window.bp = window.bp || {};
 		},
 
 		setDocuments: function ( target ) {
-			var document_elements = $( '.bb-open-document-theatre' ), d = 0, self = this;
+			var document_elements = $( '.bb-rl-open-document-theatre' ), d = 0, self = this;
 
 			// check if on activity page, load only activity media in theatre.
 			if ( $( target ).closest( '.bp-search-ac-header' ).length ) {
-				document_elements = $( target ).closest( '.bp-search-ac-header' ).find( '.bb-open-document-theatre' );
+				document_elements = $( target ).closest( '.bp-search-ac-header' ).find( '.bb-rl-open-document-theatre' );
 			} else if ( $( 'body' ).hasClass( 'activity' ) && $( target ).closest( '.search-document-list' ).length === 0 ) {
-				document_elements = $( target ).closest( '.bb-activity-media-wrap' ).find( '.bb-open-document-theatre' );
+				document_elements = $( target ).closest( '.bb-activity-media-wrap' ).find( '.bb-rl-open-document-theatre' );
 			}
 
 			if ( typeof document_elements !== 'undefined' ) {
@@ -6566,10 +6568,10 @@ window.bp = window.bp || {};
 					self.next( event );
 				}
 			}
-			if ( self.is_open_document && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id == data.id ) {
+			if ( self.is_open_document && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id === data.id ) {
 
-				$( document ).find( '[data-bp-list="document"] .bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( 'div.ac-document-list[data-activity-id="' + self.current_document.activity_id + '"]' ).remove();
-				$( document ).find( '[data-bp-list="activity"] .bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( '.bb-rl-activity-media-elem' ).remove();
+				$( document ).find( '[data-bp-list="document"] .bb-rl-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( 'div.ac-document-list[data-activity-id="' + self.current_document.activity_id + '"]' ).remove();
+				$( document ).find( '[data-bp-list="activity"] .bb-rl-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( '.bb-rl-activity-media-elem' ).remove();
 
 				var documentsLength = self.documents.length;
 				for ( i = 0; i < documentsLength; i++ ) {

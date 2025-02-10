@@ -799,7 +799,7 @@ window.bp = window.bp || {};
 
 							// Cache selectors.
 							var $documentDescriptionWrap = $( '.bb-rl-document-description-wrap' );
-							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-open-document-theatre' );
+							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-rl-open-document-theatre' );
 							var $documentDetailWrap      = $( '.bb-rl-document-detail-wrap.bb-rl-document-detail-wrap-description-popup' );
 
 							// Update attributes for document theater.
@@ -1056,7 +1056,7 @@ window.bp = window.bp || {};
 				(
 					target.hasClass( 'bb-rl-open-media-theatre' ) ||
 					target.hasClass( 'bb-rl-open-video-theatre' ) ||
-					target.hasClass( 'bb-open-document-theatre' ) ||
+					target.hasClass( 'bb-rl-open-document-theatre' ) ||
 					target.hasClass( 'document-detail-wrap-description-popup' )
 				)
 			) {
