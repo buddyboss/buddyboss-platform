@@ -54,16 +54,23 @@ if ( bp_has_groups() ) {
 					bp_get_template_part( 'groups/single/cover-image-header' );
 				}
 				?>
-				<div class="bb-rl-group-details bb-rl-container-inner">
-					<div id="item-body" class="item-body">
-						<?php
-						if ( bp_is_group_subgroups() ) {
-						echo $template_content; // phpcs:ignore
-						} else {
-							bp_nouveau_group_template_part();
-						}
-						?>
-					</div><!-- #item-body -->
+				<div class="bb-rl-group-details bb-rl-details-entry">
+					<div class="bb-rl-content-wrapper">
+						
+						<div class="bb-rl-primary-container">
+							<div id="item-body" class="item-body">
+								<?php
+								if ( bp_is_group_subgroups() ) {
+								echo $template_content; // phpcs:ignore
+								} else {
+									bp_nouveau_group_template_part();
+								}
+								?>
+							</div><!-- #item-body -->
+						</div>
+						
+						<div class="bb-rl-secondary-container"></div>
+					</div>
 				</div><!-- // .bb-rl-group-details -->
 			</div>
 

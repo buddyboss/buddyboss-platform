@@ -216,8 +216,7 @@
 		/* A sidebar-conditioned grid can be used on
 		single profile or group screens. */
 
-		/*
-		.bb-rl-has-sidebar & {
+		.bb-rl-primary-container & {
 
 			.bb-rl-skeleton-grid-block {
 				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
@@ -256,7 +255,6 @@
 				}
 			}
 		}
-		*/
 
 		.bb-rl-skeleton-grid-block {
 			flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));
@@ -519,6 +517,71 @@
 
 .bb-rl-skeleton-loader {
 	animation: fade-in-out infinite 2s ease;
+}
+
+.bb-rl-content-wrapper {
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-600);
+}
+
+.bb-rl-content-wrapper {
+	display: flex;
+	gap: var(--bb-rl-space-400);
+
+	.bb-rl-primary-container {
+		flex: 1;
+	}
+
+	.bb-rl-secondary-container {
+		max-width: 320px;
+		flex: 0 0 320px;
+	}
+}
+
+.bp-dir-search-form {
+	position: relative;
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-tertiary-color);
+	border-radius: var(--bb-rl-radius-full);
+	display: inline-flex;
+	align-items: center;
+
+	&::before {
+		content: "\e30c";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		color: var(--bb-rl-icon-primary-color);
+		font-style: normal;
+		margin-right: var(--bb-rl-space-100);
+		position: absolute;
+		left: 12px;
+		top: 5px;
+	}
+
+	input[type="search"] {
+		border: 0;
+		padding-left: 36px;
+		background-color: transparent;
+		border-radius: var(--bb-rl-radius-full);
+	}
+
+	button[type="submit"] {
+		position: absolute;
+		left: 0;
+		top: 2px;
+		opacity: 0;
+	}
+
+	.search-form_reset {
+		display: none;
+		background-color: transparent;
+		border: 0;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: var(--bb-rl-space-100);
+		opacity: 0.4;
+	}
 }
 
 /*
