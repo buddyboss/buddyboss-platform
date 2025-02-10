@@ -544,7 +544,7 @@ window.bp = window.bp || {};
 
 			// prevent activity response to append to media model activity list element.
 			if ( 'activity' === data.object && '#buddypress [data-bp-list] ul.bb-rl-list' === data.target ) {
-				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-media-model-container ul.bb-rl-list)';
+				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-rl-media-model-container ul.bb-rl-list)';
 			}
 
 			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
