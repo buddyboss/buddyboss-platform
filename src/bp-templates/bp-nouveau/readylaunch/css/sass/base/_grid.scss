@@ -16,23 +16,7 @@
 				max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
 			}
 
-			@media screen and (max-width: 1400px) {
-
-				.item-entry {
-					flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-					max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-				}
-			}
-
-			@media screen and (max-width: $xl) {
-
-				.item-entry {
-					flex: 0 0 calc(100%);
-					max-width: calc(100%);
-				}
-			}
-
-			@media screen and (max-width: $lg) {
+			@media screen and (max-width: 1600px) {
 
 				.item-entry {
 					flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));

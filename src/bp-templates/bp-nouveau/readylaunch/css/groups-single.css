@@ -292,7 +292,9 @@
 
 .bb-rl-group-details .subnav-filters {
   display: flex;
+  flex-flow: wrap;
   align-items: center;
+  gap: var(--bb-rl-space-200);
   padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
   margin-bottom: var(--bb-rl-space-300);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
@@ -300,10 +302,6 @@
 
 .bb-rl-group-details .subnav-filters .group-search {
   margin-right: auto;
-}
-
-.bb-rl-group-details .subnav-filters .component-filters {
-  margin-left: var(--bb-rl-space-200);
 }
 
 #groups_members-order-select .select-wrap {
