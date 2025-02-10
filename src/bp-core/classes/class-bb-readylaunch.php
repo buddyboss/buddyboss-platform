@@ -111,22 +111,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'heartbeat_nopriv_received', array( $this, 'bb_heartbeat_unread_notifications' ), 12, 2 );
 
 				add_action( 'wp_ajax_bb_mark_notification_read', array( $this, 'bb_mark_notification_read' ) );
-				add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
-				add_filter( 'bp_groups_format_activity_action_activity_update', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 			}
-		}
-
-		/**
-		 * Update activity action for ReadyLaunch.
-		 * This function will only return the user link.
-		 *
-		 * @param string $action   The activity action.
-		 * @param object $activity The activity object.
-		 *
-		 * @return bool|string
-		 */
-		public function bb_rl_activity_new_update_action( $action, $activity ) {
-			return bp_core_get_userlink( $activity->user_id );
 		}
 
 		/**

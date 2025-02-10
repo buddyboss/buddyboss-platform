@@ -24,7 +24,9 @@ class BB_Activity_Readylaunch {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		add_filter( 'bb_get_activity_post_user_reactions_html' , array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
+		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
+		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
+		add_filter( 'bp_groups_format_activity_action_activity_update', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 	}
 
 	/**
@@ -61,7 +63,7 @@ class BB_Activity_Readylaunch {
 			$output .= '<div class="activity-state-reactions">';
 
 			foreach ( $most_reactions as $reaction ) {
-				$icon    = bb_activity_prepare_emotion_icon( $reaction['id'] );
+				$icon   = bb_activity_prepare_emotion_icon( $reaction['id'] );
 				$output .= sprintf(
 					'<div class="reactions_item">
 				%s
@@ -72,8 +74,8 @@ class BB_Activity_Readylaunch {
 
 			$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 				array(
-					'item_id'     => $activity_id,
-					'item_type'   => 'activity',
+					'item_id'   => $activity_id,
+					'item_type' => 'activity',
 				)
 			);
 			if ( ! empty( $reaction_count ) ) {
@@ -91,11 +93,26 @@ class BB_Activity_Readylaunch {
 		if ( $is_popup ) {
 			$output .= '<div class="activity-state-popup">
 				<div class="activity-state-popup_overlay"></div>
-				<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
+				<div class="activity-state-popup_inner" id="reaction-content-' . esc_attr( $activity_id ) . '">
 				</div>
 			</div>';
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Update activity action for ReadyLaunch.
+	 * This function will only return the user link.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $action   The activity action.
+	 * @param object $activity The activity object.
+	 *
+	 * @return bool|string
+	 */
+	public function bb_rl_activity_new_update_action( $action, $activity ) {
+		return bp_core_get_userlink( $activity->user_id );
 	}
 }
