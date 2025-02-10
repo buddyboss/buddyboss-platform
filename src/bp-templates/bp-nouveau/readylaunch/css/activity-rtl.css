@@ -3808,3 +3808,19 @@ div[class*="attached-gif-container"] .gif-player {
 .activity-item.has-comments .ac-form {
   display: block;
 }
+
+.acomments-view-more {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bb-rl-text-color);
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-100);
+  cursor: pointer;
+}
+
+.acomments-view-more:before {
+  content: "\e01a";
+  font-size: 20px;
+  font-family: bb-icons-rl;
+}
