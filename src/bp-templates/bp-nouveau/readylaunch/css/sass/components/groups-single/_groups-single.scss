@@ -195,34 +195,6 @@
 	}
 }
 
-#groups_members-order-select {
-
-	.select-wrap {
-		display: inline-flex;
-		align-items: center;
-		border: 1px solid var(--bb-rl-border-secondary-color);
-		border-radius: var(--bb-rl-radius-full);
-		background-color: transparent;
-		padding-left: var(--bb-rl-space-100);
-
-		&::before {
-			content: "\e268";
-			font-weight: 400;
-			font-family: bb-icons-rl;
-			font-size: 20px;
-			color: var(--bb-rl-icon-primary-color);
-			font-style: normal;
-			margin-right: var(--bb-rl-space-50);
-		}
-	}
-}
-
-select#bb-rl-groups_members-order-by {
-	border-radius: var(--bb-rl-radius-full);
-	background-color: transparent;
-	border: 0;
-}
-
 .bb-rl-manage-group-container {
 	display: flex;
 	background: var(--bb-rl-background-color);

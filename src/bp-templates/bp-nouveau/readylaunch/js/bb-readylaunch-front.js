@@ -90,20 +90,38 @@ window.bp = window.bp || {};
 			},
 
 			gridListFilter: function () {
-			$( '.bb-rl-filter select' ).select2( {
-				theme: 'rl',
-				containerCssClass: 'bb-rl-select2-container',
-				dropdownCssClass: 'bb-rl-select2-dropdown'
-			} );
-		},
+				$( '.bb-rl-filter select' ).each( function () {
+					let $this = $( this );
+					let customClass = '';
 
-		/**
-		 * Handles "Load More" click or dropdown open
-		 *
-		 * @param {Object} e Event object
-		 */
-		bbHandleLoadMore: function ( e ) {
-			e.preventDefault();
+					if ( $this.data( 'bb-caret' ) ) {
+						customClass += ' bb-rl-caret-icon ';
+					}
+
+					if ( $this.data( 'bb-icon' ) ) {
+						customClass += ' bb-rl-has-icon ';
+						customClass += ' ' + $this.data('bb-icon') + ' ';
+					}
+
+					if ( $this.data( 'bb-border' ) === 'rounded' ) {
+						customClass += ' bb-rl-rounded-border ';
+					}
+
+					$this.select2( {
+						theme: 'rl',
+						containerCssClass: 'bb-rl-select2-container ' + customClass,
+						dropdownCssClass: 'bb-rl-select2-dropdown'
+					} );
+				} );
+			},
+
+			/**
+			 * Handles "Load More" click or dropdown open
+			 *
+			 * @param {Object} e Event object
+			 */
+			bbHandleLoadMore: function ( e ) {
+				e.preventDefault();
 
 				// Identify the clicked element.
 				var $target = $( e.target ).closest( '.notification-link, .notification-header-tab-action, .bb-rl-load-more a' );
@@ -297,7 +315,7 @@ window.bp = window.bp || {};
 				}
 			},
 
-		/**
+			/**
 			 * Show header notification dropdowns
 			 *
 			 * @param event
