@@ -18,7 +18,8 @@
 		(
 			'members' !== $bp_current_component ||
 			bp_disable_advanced_profile_search()
-		)
+		) &&
+		! bp_is_directory()
 	) {
 		?>
 		<div class="subnav-search clearfix">
