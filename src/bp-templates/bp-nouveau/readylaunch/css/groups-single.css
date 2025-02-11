@@ -304,6 +304,11 @@
   margin-right: auto;
 }
 
+.bb-rl-group-details .subnav-filters .bb-rl-grid-filters {
+  margin-right: 0;
+  margin-left: auto;
+}
+
 .bb-rl-manage-group-container {
   display: flex;
   background: var(--bb-rl-background-color);
