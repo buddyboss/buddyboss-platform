@@ -26,7 +26,7 @@ class BP_Core extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'core',
-			__( 'BuddyBoss Core', 'buddyboss' ),
+			'BuddyBoss Core',
 			buddypress()->plugin_dir
 		);
 
@@ -70,7 +70,24 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of included and optional components.
 		 */
-		$bp->optional_components = apply_filters( 'bp_optional_components', array_keys( bp_core_get_components( 'optional' ) ) );
+		$bp->optional_components = apply_filters( 'bp_optional_components',
+			array(
+				'settings',
+				'notifications',
+				'groups',
+				'forums',
+				'activity',
+				'media',
+				'document',
+				'video',
+				'messages',
+				'friends',
+				'invites',
+				'moderation',
+				'search',
+				'blogs',
+			)
+		);
 
 		/**
 		 * Filters the required components.

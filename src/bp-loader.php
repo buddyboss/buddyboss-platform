@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     2.7.80
+ * Version:     2.7.91
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -24,12 +24,15 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '2.7.80' );
+	define( 'BP_PLATFORM_VERSION', '2.7.91' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
 	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
+
+// Load translation files.
+add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
 
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
@@ -77,13 +80,13 @@ if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
  * Show admin error message instead.
  */
 $bp_incompatible_plugins_list = array(
-	'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-	'buddypress-followers/loader.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+	'buddypress-global-search/buddypress-global-search.php',
+	'buddypress-followers/loader.php'
 );
 
-foreach ( $bp_incompatible_plugins_list as $incompatible_plugin => $error_message ) {
+foreach ( $bp_incompatible_plugins_list as $incompatible_plugin ) {
 	if ( in_array( $incompatible_plugin, $bp_plugins ) ) {
-		$bp_incompatible_plugins[] = $error_message;
+		$bp_incompatible_plugins[] = $incompatible_plugin;
 	}
 }
 
@@ -427,12 +430,16 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		if ( ! empty( $bp_incompatible_plugins ) ) {
-			foreach ( $bp_incompatible_plugins as $incompatible_plugin_message ) {
+			$incompatible_plugins_list_messages = array(
+				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+			);
+			foreach ( $bp_incompatible_plugins as $incompatible_plugin_key ) {
 				?>
 				<div id="message" class="error notice">
 					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
 					<?php
-					printf( '<p>%s</p>', $incompatible_plugin_message );
+					printf( '<p>%s</p>', $incompatible_plugins_list_messages[ $incompatible_plugin_key ] );
 					?>
 				</div>
 				<?php
@@ -445,4 +452,63 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	add_action( 'admin_notices', 'bp_duplicate_notice' );
 	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
+}
+
+/**
+ * Load the buddyboss translation file for current language.
+ *
+ * @since BuddyPress 1.0.2
+ * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
+ *
+ * @see load_textdomain() for a description of return values.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bp_core_load_buddypress_textdomain() {
+	$domain = 'buddyboss';
+	if ( ! is_textdomain_loaded( $domain ) ) {
+
+		$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
+		$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
+		$plugin_dir      = $plugin_dir_path;
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$plugin_dir = $plugin_dir . 'src';
+		}
+
+		/**
+		 * Filters the locations to load language files from.
+		 *
+		 * @since BuddyBoss 2.7.90
+		 *
+		 * @param array $value Array of directories to check for language files in.
+		 */
+		$locations = apply_filters(
+			'buddyboss_locale_locations',
+			array(
+				trailingslashit( WP_LANG_DIR . '/' . $domain ),
+				trailingslashit( WP_LANG_DIR ),
+				trailingslashit( WP_LANG_DIR . '/plugins' ),
+				trailingslashit( $plugin_dir . '/languages' ),
+			)
+		);
+
+		unload_textdomain( $domain );
+
+		// Try to load the translations from locations.
+		foreach ( $locations as $location ) {
+			if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
+				return true;
+			}
+		}
+
+		$plugin_folder       = plugin_basename( $plugin_dir_path );
+		$buddyboss_lang_path = $plugin_folder . '/languages';
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$buddyboss_lang_path = $plugin_folder . '/src/languages';
+		}
+
+		return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
+	}
+
+	return false;
 }

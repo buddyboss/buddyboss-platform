@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Requires PHP: 5.6.20
-Stable tag: 2.7.80
+Stable tag: 2.7.91
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.7.91 =
+* Bug: Translations - Fixed an error caused by the latest French translations
+
+= 2.7.90 =
+* Bug: Courses - Fixed an issue where the member directory page displayed incorrect users when filtering by the Course option
+* Bug: Forums - Fixed a pagination issue for forum discussions
+* Bug: Members - Fixed an issue where deleting a user account from the app disrupted pagination on the members page
+* Bug: Translations - Fixed a bug causing “PHP Notice” in the debug log after WordPress 6.7 and 6.7.1 updates
 
 = 2.7.80 =
 * Bug: Core - Fixed color functionality and spacing issues in the WordPress Customizer when using a default theme

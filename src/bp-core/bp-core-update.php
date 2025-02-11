@@ -553,6 +553,10 @@ function bp_version_updater() {
 			if ( function_exists( 'bb_migrate_xprofile_visibility' ) ) {
 				bb_migrate_xprofile_visibility( true );
 			}
+
+			if ( function_exists( 'bb_remove_deleted_user_last_activities' ) ) {
+				bb_remove_deleted_user_last_activities();
+			}
 		}
 	}
 
