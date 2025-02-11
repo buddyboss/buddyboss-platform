@@ -146,7 +146,6 @@ class BB_Activity_Readylaunch {
 				$action = bp_core_get_userlink( $activity->user_id );
 		}
 
-
 		return $action;
 	}
 }
