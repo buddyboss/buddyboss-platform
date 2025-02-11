@@ -495,6 +495,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
 					'nonce'    => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav' => esc_html__( 'More', 'buddyboss' ),
 				)
 			);
 		}
