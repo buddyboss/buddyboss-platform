@@ -183,6 +183,13 @@
 				}
 			}
 
+			&.leave-group {
+
+				&::before {
+					content: "\e42a";
+				}
+			}
+
 			&.delete-group {
 
 				&::before {

@@ -104,6 +104,34 @@ class BB_Group_Readylaunch {
 			);
 		}
 
+		if ( ! empty( $group->is_member ) ) {
+
+			$is_only_admin = false;
+			// Stop sole admins from abandoning their group.
+			$group_admins = groups_get_group_admins( $group->id );
+			if ( ( 1 === count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
+				$is_only_admin = true;
+			}
+
+			// Setup button attributes.
+			$buttons['leave_group'] = array(
+				'id'                => 'leave_group',
+				'component'         => 'groups',
+				'must_be_logged_in' => true,
+				'block_self'        => false,
+				'wrapper_class'     => 'group-button ' . $group->status,
+				'wrapper_id'        => 'groupbutton-' . $group->id,
+				'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' ),
+				'link_text'         => esc_html__( 'Leave group', 'buddyboss' ),
+				'link_class'        => 'group-button leave-group bp-toggle-action-button',
+				'button_attr'       => array(),
+			);
+
+			if ( $is_only_admin ) {
+				$buttons['leave_group']['button_attr']['data-only-admin'] = '1';
+			}
+		}
+
 		return $buttons;
 	}
 

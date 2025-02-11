@@ -4361,6 +4361,13 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e272";
 }
 
+.bb-rl-context-wrap .bb-rl-context-dropdown a.leave-group::before,
+.bb-rl-context-wrap .bb_more_dropdown a.leave-group::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.leave-group::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.leave-group::before {
+  content: "\e42a";
+}
+
 .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group::before,

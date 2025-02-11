@@ -125,6 +125,17 @@
 					}
 				}
 			}
+
+			.bb_more_options_list {
+				.leave-group,
+				.delete-group {
+					color: var(--bb-rl-text-danger-secondary-color);
+
+					&:before {
+						color: var(--bb-rl-text-danger-secondary-color);
+					}
+				}
+			}
 		}
 
 		.group-actions-absolute {
