@@ -1173,7 +1173,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'guillotine-js' => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/js/jquery.guillotine.min.js',
 						'dependencies' => array( 'jquery' ),
-						'version'      => $this->version,
+						'version'      => bp_get_version(),
 						'footer'       => true,
 					),
 				)
