@@ -3327,6 +3327,14 @@ button[data-balloon] {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
+.bb-rl-toast-message--warning .bb-rl-spinner {
+  display: none;
+}
+
+.bb-rl-toast-message--warning i {
+  color: var(--bb-rl-icon-warning-secondary-color);
+}
+
 .bb-rl-toast-message--success .bb-rl-spinner {
   display: none;
 }

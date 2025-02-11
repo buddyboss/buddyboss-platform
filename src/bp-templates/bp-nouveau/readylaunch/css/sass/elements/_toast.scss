@@ -34,6 +34,17 @@
 	}
 }
 
+.bb-rl-toast-message--warning {
+
+	.bb-rl-spinner {
+		display: none;
+	}
+
+	i {
+		color: var(--bb-rl-icon-warning-secondary-color);
+	}
+}
+
 .bb-rl-toast-message--success {
 
 	.bb-rl-spinner {
