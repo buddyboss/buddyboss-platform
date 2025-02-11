@@ -721,7 +721,6 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 					// now get html for each item
 					foreach ( $results as $item ) {
-						$html = $obj->get_html( $item->id, $args['template_type'] );
 
 						$result = array(
 							'id'    => $item->id,

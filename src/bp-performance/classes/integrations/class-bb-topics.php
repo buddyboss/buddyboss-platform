@@ -45,7 +45,11 @@ class BB_Topics extends Integration_Abstract {
 			'bp_suspend_forum_reply_suspended',     // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended',   // Any Forum Reply Unsuspended.
 			'bp_moderation_after_save',             // Update cache for topics when member blocked.
-			'bb_moderation_after_delete'            // Update cache for topics when member unblocked.
+			'bb_moderation_after_delete',            // Update cache for topics when member unblocked.
+
+			// Added purge support when adding favorite and subscription.
+			'bbp_add_user_favorite',     // When topic favorite added.
+			'bbp_add_user_subscription', // When topic subscription added.
 		);
 
 		$this->purge_event( 'bbp-topics', $purge_events );
