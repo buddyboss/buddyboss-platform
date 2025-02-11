@@ -131,6 +131,11 @@
 				width: 100%;
 				border: 0;
 				background-color: transparent;
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+					color: var(--bb-rl-text-primary-color);
+				}
 			}
 		}
 
@@ -474,6 +479,7 @@
 
 		li {
 			display: block;
+			width: 100%;
 
 			a {
 
@@ -485,7 +491,13 @@
 				align-items: center;
 				width: 100%;
 				border: 0;
+				border-radius: 0;
 				background-color: transparent;
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+					color: var(--bb-rl-text-primary-color);
+				}
 			}
 		}
 	}

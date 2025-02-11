@@ -3838,6 +3838,18 @@ body.admin-bar .bb-rl-left-panel {
   background-color: transparent;
 }
 
+.bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown .generic-button button:hover,
+.bb-rl-context-wrap .bb_more_dropdown .generic-button a:hover,
+.bb-rl-context-wrap .bb_more_dropdown .generic-button button:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown .generic-button a:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown .generic-button button:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button button:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  color: var(--bb-rl-text-primary-color);
+}
+
 .bb-rl-context-wrap .bb-rl-context-dropdown a::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button::before,
 .bb-rl-context-wrap .bb_more_dropdown a::before,
@@ -4187,6 +4199,7 @@ body.admin-bar .bb-rl-left-panel {
 
 #object-nav .bb-rl-sub-menu li {
   display: block;
+  width: 100%;
 }
 
 #object-nav .bb-rl-sub-menu li a {
@@ -4200,7 +4213,13 @@ body.admin-bar .bb-rl-left-panel {
   align-items: center;
   width: 100%;
   border: 0;
+  border-radius: 0;
   background-color: transparent;
+}
+
+#object-nav .bb-rl-sub-menu li a:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  color: var(--bb-rl-text-primary-color);
 }
 
 li.bb-rl-hideshow {
