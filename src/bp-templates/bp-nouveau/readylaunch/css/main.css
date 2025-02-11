@@ -4680,6 +4680,10 @@ body.admin-bar .bb-rl-left-panel {
   flex: 0 0 320px;
 }
 
+.bb-rl-content-wrapper .bb-rl-secondary-container:empty {
+  display: none;
+}
+
 @media screen and (max-width: 1200px) {
   .bb-rl-content-wrapper {
     flex-direction: column;

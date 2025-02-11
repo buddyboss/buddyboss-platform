@@ -539,6 +539,10 @@
 		flex: 0 0 320px;
 	}
 
+	.bb-rl-secondary-container:empty {
+		display: none;
+	}
+
 	@media screen and (max-width: $xl) {
 		flex-direction: column;
 
