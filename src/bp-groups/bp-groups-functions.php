@@ -5708,7 +5708,7 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 				)
 			);
 			?>
-			<span class="bb-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
+			<span class="bb-group-member" data-bp-tooltip-pos="down" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
 				<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 					<img src="<?php echo esc_url( $avatar ); ?>"
 						alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />

@@ -1,0 +1,133 @@
+.bb-rl-group-invites-dashboard {
+
+	.bb-rl-group-invites-container {
+		display: flex;
+
+		.bb-groups-invites-left {
+			max-width: 248px;
+			width: 33%;
+			padding-right: var(--bb-rl-space-200);
+			border-right: 1px solid var(--bb-rl-border-secondary-color);
+		}
+
+		.bb-groups-invites-right {
+			flex: 1;
+			padding: 0 var(--bb-rl-space-200);
+		}
+	}
+
+	#send-invites-control {
+		width: 100%;
+		border: 0;
+		max-height: 32vh;
+	}
+
+	.bp-navs .subnav {
+		list-style: none;
+		margin: 0 0 var(--bb-rl-space-200);
+		padding: 0;
+		display: flex;
+		align-items: center;
+
+		a {
+
+			@include bb-rl-label-heading-bolder;
+			border-radius: var(--bb-rl-radius-full);
+			padding: 6px var(--bb-rl-space-200);
+			color: var(--bb-rl-text-secondary-color);
+
+			&:hover {
+				background-color: var(--bb-rl-background-secondary-color);
+				color: var(--bb-rl-text-color);
+			}
+		}
+	}
+
+	.bp-invites-dropdown-options-loader-hide {
+		display: none;
+	}
+}
+
+.bb-rl-group-invites-container {
+
+	.group-invites-members-listing {
+		margin-top: var(--bb-rl-space-200);
+
+		li {
+			display: flex;
+			align-items: center;
+			margin-bottom: var(--bb-rl-space-200);
+
+			img.avatar {
+				border-radius: 50%;
+				width: var(--bb-rl-space-400);
+				border: 1px solid rgba(0, 0, 0, 0.08);
+				margin-right: var(--bb-rl-space-100);
+			}
+
+			.member-name a {
+
+				@include bb-rl-label-heading-md;
+			}
+
+			.action {
+				margin-left: auto;
+			}
+
+			.invite-button {
+				border: 0;
+				background-color: transparent;
+			}
+		}
+
+		.invite-button {
+
+			.icons::before {
+				content: "\e3d4";
+				font-family: bb-icons-rl;
+				font-size: 16px;
+				font-weight: 400;
+				line-height: 1;
+				transform: translateY(-50%);
+				color: var(--bb-rl-icon-secondary-color);
+			}
+		}
+	}
+
+	.bb-rl-members-is-friends {
+		margin: var(--bb-rl-space-100) 0;
+	}
+}
+
+#group_invites_search_form {
+	position: relative;
+
+	#group_invites_search {
+		border-radius: var(--bb-rl-radius-full);
+		padding-left: var(--bb-rl-space-400);
+		padding-right: var(--bb-rl-space-400);
+		width: 100%;
+	}
+
+	button[type="submit"] {
+		position: absolute;
+		left: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		border: 0;
+		background-color: transparent;
+		padding: 0;
+		line-height: 1;
+	}
+
+	.search-form_reset {
+		display: none;
+		background-color: transparent;
+		border: 0;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: var(--bb-rl-space-100);
+		opacity: 0.4;
+	}
+}

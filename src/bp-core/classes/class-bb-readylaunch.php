@@ -492,6 +492,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							'group_id' => bp_get_current_group_id(),
 						)
 					);
+					wp_enqueue_script( 'bb-rl-group-invites' );
 				}
 			}
 
@@ -1163,6 +1164,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'bb-rl-groups'              => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-groups%s.js',
 						'dependencies' => array( 'bp-nouveau' ),
+						'footer'       => true,
+					),
+					'bb-rl-group-invites'		=> array(
+						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-group-invites%s.js',
+						'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 						'footer'       => true,
 					),
 					'bp-nouveau-magnific-popup' => array(
