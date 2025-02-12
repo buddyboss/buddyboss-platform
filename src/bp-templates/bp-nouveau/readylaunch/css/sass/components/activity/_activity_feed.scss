@@ -709,12 +709,31 @@
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		}
 
-		.bb-rl-document-audio-wrap audio::-webkit-media-controls-enclosure {
-			border-radius: var(--bb-rl-radius-sm);
+		.bb-rl-document-audio-wrap audio {
+
+			&::-webkit-media-controls-enclosure {
+				border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+				background-color: var(--bb-rl-background-color);
+				padding: var(--bb-rl-space-200);
+			}
+
+			&::-webkit-media-controls-panel {
+				padding: 0;
+			}
 		}
 
-		&:has(.bb-rl-document-text-wrap) .bb-rl-document-description-wrap {
-			border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+		&:has(.bb-rl-document-text-wrap),
+		&:has(.bb-rl-document-audio-wrap),
+		&:has(.bb-rl-document-preview-wrap) {
+
+			.bb-rl-document-description-wrap {
+				border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+			}
+		}
+
+		&:has(.bb-rl-document-preview-wrap) {
+			display: flex;
+			flex-flow: column;
 		}
 
 		.document-text:not(.loaded):after {
@@ -925,7 +944,7 @@
 			float: left;
 
 			audio {
-				border-radius: 4px;
+				margin: var(--bb-rl-space-100) 0;
 				width: 100%;
 				float: left;
 				outline: 0;
@@ -933,8 +952,8 @@
 		}
 
 		.bb-rl-document-preview-wrap {
-			background-color: rgba(0, 0, 0, 0.05);
-			border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
+			background-color: var(--bb-rl-background-color);
+			border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 			height: 200px;
 			overflow: hidden;
 			text-align: center;

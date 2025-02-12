@@ -46,7 +46,6 @@ $user_can_edit = bp_document_user_can_edit( $document_id );
 ?>
 
 <div class="bb-rl-activity-media-elem bb-rl-document-activity <?php echo esc_attr( $document_id ); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>">
-	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
 	<div class="bb-rl-document-description-wrap">
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
@@ -100,6 +99,8 @@ $user_can_edit = bp_document_user_can_edit( $document_id );
 			<span class="bb-rl-document-helper-text"> <span> - </span><span class="bb-rl-document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="bb-rl-document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
 		</a>
 	</div>
+
+	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
 
 	<?php
 	// .bb-activity-document-actions.
