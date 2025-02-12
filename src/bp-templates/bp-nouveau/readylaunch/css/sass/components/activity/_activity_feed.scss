@@ -278,6 +278,48 @@
 			border-radius: var(--bb-rl-radius-lg);
 			width: 100%;
 		}
+
+		/* WP Post Activity */
+		&:has(.bb-content-wrp) {
+			display: flex;
+			flex-flow: column;
+			background-color: var(--bb-rl-background-secondary-color);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-md);
+			padding: var(--bb-rl-space-300);
+			gap: var(--bb-rl-space-200);
+
+			.bb-content-wrp {
+
+				.bb-post-title {
+					color: var(--bb-rl-text-color);
+					display: block;
+					font-size: var(--bb-rl-font-size-base);
+					font-weight: 600;
+					margin-bottom: var(--bb-rl-space-50);
+				}
+
+				p {
+					font-size: 14px;
+					color: var(--bb-rl-text-secondary-color);
+					line-height: 1.5;
+					margin: 0;
+				}
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-hover-color);
+				}
+			}
+
+			.bb-post-img-link {
+				order: 2;
+
+				img {
+					border-radius: var(--bb-rl-radius-lg);
+					max-width: 100%;
+				}
+			}
+		}
 	}
 
 	.activity-meta {
