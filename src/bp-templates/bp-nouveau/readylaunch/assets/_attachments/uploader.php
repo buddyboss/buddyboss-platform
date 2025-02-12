@@ -17,15 +17,20 @@
 	<?php else : ?>
 		<div id="{{data.container}}">
 			<div id="{{data.drop_element}}">
-				<div class="drag-drop-inside">
-					<p class="drag-drop-info"><?php esc_html_e( 'Drop your image here', 'buddyboss' ); ?></p>
+				<div class="drag-drop-inside bb-rl-drag-drop-wrapper">
 
 					<p class="drag-drop-buttons">
-						<label for="{{data.browse_button}}" class="<?php echo is_admin() ? 'screen-reader-text' : 'bp-screen-reader-text'; ?>">
-							<?php esc_html_e( 'Select your file', 'buddyboss' ); ?>
-						</label>
-						<input id="{{data.browse_button}}" type="button" value="<?php esc_attr_e( 'Select your file', 'buddyboss' ); ?>" class="button" />
+						<div class="bb-rl-drag-drop-button-wrap">
+							<i class="bb-icons-rl-camera"></i>
+							<label for="{{data.browse_button}}" class="<?php echo is_admin() ? 'screen-reader-text' : 'bp-screen-reader-text'; ?>">
+								<?php esc_html_e( 'Select your file', 'buddyboss' ); ?>
+							</label>
+							<input id="{{data.browse_button}}" type="button" value="<?php esc_attr_e( 'Select your file', 'buddyboss' ); ?>" class="button" />
+						</div>
 					</p>
+
+					<p class="drag-drop-info"><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></p>
+					<p class="drag-drop-subtitle"><?php esc_html_e( 'Or drag and drop', 'buddyboss' ); ?></p>					
 				</div>
 			</div>
 		</div>

@@ -23,7 +23,7 @@ if ( bp_is_group_create() ) {
 
 <p class="bp-help-text"><?php printf( __( 'Manage group members; promote to %1$s, co-%2$s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
 
-<dl class="groups-manage-members-list">
+<dl class="groups-manage-members-list bb-rl-groups-manage-members-list">
 
 	<?php
 	$bp_group_admin_ids = bp_group_admin_ids();
@@ -44,20 +44,22 @@ if ( bp_is_group_create() ) {
 						?>
 						<li class="member-entry clearfix">
 
-							<?php
-							echo bp_core_fetch_avatar(
-								array(
-									'item_id' => $bp_org_user_id,
-									'type'    => 'thumb',
-									'width'   => 30,
-									'height'  => 30,
-									'alt'     => '',
-								)
-							);
-							?>
-							<p class="list-title member-name">
-								<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
-							</p>
+							<div class="bb-rl-group-member-id">
+								<?php
+								echo bp_core_fetch_avatar(
+									array(
+										'item_id' => $bp_org_user_id,
+										'type'    => 'thumb',
+										'width'   => 30,
+										'height'  => 30,
+										'alt'     => '',
+									)
+								);
+								?>
+								<p class="list-title member-name">
+									<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
+								</p>
+							</div>
 
 							<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
 
@@ -92,21 +94,22 @@ if ( bp_is_group_create() ) {
 						$bp_mod_user_id = bp_get_member_user_id();
 						?>
 						<li class="members-entry clearfix">
-
-							<?php
-							echo bp_core_fetch_avatar(
-								array(
-									'item_id' => $bp_mod_user_id,
-									'type'    => 'thumb',
-									'width'   => 30,
-									'height'  => 30,
-									'alt'     => '',
-								)
-							);
-							?>
-							<p class="list-title member-name">
-								<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
-							</p>
+							<div class="bb-rl-group-member-id">
+								<?php
+								echo bp_core_fetch_avatar(
+									array(
+										'item_id' => $bp_mod_user_id,
+										'type'    => 'thumb',
+										'width'   => 30,
+										'height'  => 30,
+										'alt'     => '',
+									)
+								);
+								?>
+								<p class="list-title member-name">
+									<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
+								</p>
+							</div>
 
 							<div class="members-manage-buttons action text-links-list">
 								<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $bp_mod_user_id ) ); ?>" class="button confirm mod-promote-to-admin"><?php printf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) ); ?></a>
@@ -125,9 +128,11 @@ if ( bp_is_group_create() ) {
 
 
 	<dt class="gen-members-section section-title">
-		<?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ), 'buddyboss' ); ?>
+		<h3 class="bb-rl-section-sub-heading"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ), 'buddyboss' ); ?></h3>
 		<div class="group-search members-search bp-search search-wrapper" data-bp-search="manage_group_members">
-			<input id="bb_search_group_members" type="search" placeholder="Search Members" name="group_members_search" />
+			<div class="bb-rl-search-group-members-wrapper">
+				<input id="bb_search_group_members" type="search" placeholder="Search Members" name="group_members_search" />
+			</div>
 			<button type="reset" class="search-form_reset">
 				<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
@@ -154,19 +159,21 @@ if ( bp_is_group_create() ) {
 						?>
 
 						<li class="<?php bp_group_member_css_class(); ?> members-entry clearfix">
-							<?php bp_group_member_avatar_mini(); ?>
+							<div class="bb-rl-group-member-id">
+								<?php bp_group_member_avatar_mini(); ?>
 
-							<p class="list-title member-name">
-								<?php bp_group_member_link(); ?>
-								<span class="banned warn">
-										<?php
-										if ( bp_get_group_member_is_banned() ) :
-											/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-											esc_html_e( '(banned)', 'buddyboss' );
-										endif;
-										?>
-								</span>
-							</p>
+								<p class="list-title member-name">
+									<?php bp_group_member_link(); ?>
+									<span class="banned warn">
+											<?php
+											if ( bp_get_group_member_is_banned() ) :
+												/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
+												esc_html_e( '(banned)', 'buddyboss' );
+											endif;
+											?>
+									</span>
+								</p>
+							</div>
 
 							<?php
 							bp_nouveau_groups_manage_members_buttons(

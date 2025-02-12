@@ -660,3 +660,50 @@ body.guillotine-dragging * {
 	width: auto !important;
 	height: auto !important;
 }
+
+.bb-rl-drag-drop-button-wrap {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	margin-bottom: var(--bb-rl-space-100);
+
+	i {
+		font-size: 24px;
+		position: relative;
+		z-index: 1;
+		color: var(--bb-rl-icon-primary-color);
+		font-weight: 500;
+	}
+
+	input.button {
+		position: absolute;
+		display: inline-block;
+		opacity: 0;
+		z-index: 3;
+		width: 48px;
+		height: 48px;
+		border: 0;
+		background-color: transparent;
+		cursor: pointer;
+	}
+}
+
+.drag-drop .bb-rl-drag-drop-wrapper {
+
+	.drag-drop-info {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+	}
+
+	.drag-drop-subtitle {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-tertiary-color);
+	}
+}
