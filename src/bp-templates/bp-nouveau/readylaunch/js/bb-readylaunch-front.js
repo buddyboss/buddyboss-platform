@@ -705,7 +705,6 @@ window.bp = window.bp || {};
 					function ( e ) {
 						e.preventDefault();
 						$( this ).toggleClass( 'active open' ).next().toggleClass( 'active open' );
-						$( 'body' ).toggleClass( 'nav_more_option_open' );
 					}
 				);
 	
@@ -728,7 +727,6 @@ window.bp = window.bp || {};
 						var container = $( '.bb-rl-nav-more, .bb-rl-sub-menu' );
 						if ( ! container.is( e.target ) && container.has( e.target ).length === 0 ) {
 							$( '.bb-rl-nav-more' ).removeClass( 'active open' ).next().removeClass( 'active open' );
-							$( 'body' ).removeClass( 'nav_more_option_open' );
 						}
 					}
 				);
