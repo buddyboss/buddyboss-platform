@@ -1835,21 +1835,16 @@ window.bp = window.bp || {};
 							response = JSON.parse( response );
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list   = target.closest( 'ul.activity-list' );
-							var activity_stream;
-							if ( isInsideModal ) {
-								activity_stream = target.closest( '.buddypress-wrap' ).find( '#activity-stream' );
-							} else {
-								activity_stream = target.closest( '#activity-stream' );
-							}
-
-
+							var activity_list        = target.closest( 'ul.activity-list' );
+							var activity_stream      = target.closest( '.buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream' );
+							var isInsideTheatreModal = target.closest( '.bb-media-model-wrapper' ).length > 0;
 							if ( response.success ) {
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
 								var update_pinned_icon = false;
 								var is_group_activity  = false;
 								var activity_group_id  = '';
+								
 
 								if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
 									is_group_activity = true;
@@ -1865,7 +1860,7 @@ window.bp = window.bp || {};
 									! is_group_activity
 								) {
 									update_pinned_icon = true;
-								} else if (  activity_stream.hasClass( 'single-group' ) ) {
+								} else if ( activity_stream.hasClass( 'single-group' ) ) {
 									update_pinned_icon = true;
 								}
 
@@ -1918,6 +1913,15 @@ window.bp = window.bp || {};
 								}
 
 								if ( 'all' === scope && update_pinned_icon ) {
+
+									// Activity view more comments modal.
+									if ( isInsideModal ) {
+										var activityModal = target.closest( '#activity-modal' );
+										activityModal.find( '.bb-close-action-popup' ).trigger( 'click' );
+									} else if ( isInsideTheatreModal ) {
+										var theatreModal = target.closest( '.bb-media-model-wrapper' );
+										theatreModal.find( '.bb-close-media-theatre' ).trigger( 'click' );
+									}
 									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 									bp.Nouveau.refreshActivities();
 								}
@@ -2311,7 +2315,7 @@ window.bp = window.bp || {};
 				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			// Check if target is inside #activity-modal
-			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
+			var isInsideModal  = target.closest( '#activity-modal' ).length > 0;
 			var hasParentModal = isInsideModal ? '#activity-modal ' : '';
 
 			event.preventDefault();
