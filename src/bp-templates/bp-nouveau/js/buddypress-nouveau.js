@@ -2318,36 +2318,18 @@ window.bp = window.bp || {};
 
 						// User main nav update friends counts.
 						if ( $( '#friends-personal-li' ).length ) {
-							var friend_with_count    = $( '#friends-personal-li a span' );
-							var friend_without_count = $( '#friends-personal-li a' );
 
 							// Check friend count set.
-							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
-								// Check friend count > 0 then show the count span.
-								if ( '0' !== response.data.friend_count ) {
-									if ( ( friend_with_count ).length ) {
-										// Update count span.
-										$( friend_with_count ).html( response.data.friend_count );
-									} else {
-										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
-									}
-								} else {
-									// If no friend then hide count span.
-									$( friend_with_count ).hide();
-								}
-							} else if ( undefined !== response.data.friend_count ) {
-								if ( '0' !== response.data.friend_count ) {
-									if ( ( friend_with_count ).length ) {
-										// Update count span.
-										$( friend_with_count ).html( response.data.friend_count );
-									} else {
-										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
-									}
-								} else {
-									// If no friend then hide count span.
-									$( friend_with_count ).hide();
+							if ( undefined !== response.data.friend_count ) {
+
+								if ( $( self.objectNavParent + ' .bb-item-count' ).length > 0 ) {
+									dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'connections' ) ?
+									(
+										1 === parseInt( response.data.friend_count ) ?
+										BP_Nouveau.dir_labels.connections.singular : BP_Nouveau.dir_labels.connections.plural
+									)
+									: '';
+									$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.friend_count + '</span> ' + dir_label );
 								}
 							}
 						}
