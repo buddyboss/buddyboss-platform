@@ -40,6 +40,10 @@
 		margin-bottom: var(--bb-rl-space-300);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		position: relative;
+
+		&.bb-rl-activity-popup {
+			display: none;
+		}
 	}
 
 	.bb-rl-activity-head {

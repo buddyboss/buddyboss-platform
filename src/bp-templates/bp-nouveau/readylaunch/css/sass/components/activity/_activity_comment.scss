@@ -140,7 +140,7 @@
 				}
 			}
 
-			ul ul {
+			> ul > li > ul {
 				margin-left: var(--bb-rl-space-700);
 			}
 		}
@@ -187,6 +187,11 @@
 
 		.bb-rl-acomment-avatar {
 			padding-top: var(--bb-rl-space-200);
+
+			a {
+				display: block;
+				width: 48px;
+			}
 
 			img {
 				height: 48px;

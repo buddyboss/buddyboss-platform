@@ -1201,6 +1201,10 @@
   position: relative;
 }
 
+.bb-rl-activity-list li.activity-item.bb-rl-activity-popup {
+  display: none;
+}
+
 .bb-rl-activity-list .bb-rl-activity-head {
   display: flex;
   align-items: center;
@@ -3915,7 +3919,7 @@ div[class*="attached-gif-container"] .gif-player {
   position: relative;
 }
 
-.activity-item.has-comments .bb-rl-activity-comments ul ul {
+.activity-item.has-comments .bb-rl-activity-comments > ul > li > ul {
   margin-right: var(--bb-rl-space-700);
 }
 
@@ -3958,6 +3962,11 @@ div[class*="attached-gif-container"] .gif-player {
 
 .activity-item.has-comments .bb-rl-acomment-avatar {
   padding-top: var(--bb-rl-space-200);
+}
+
+.activity-item.has-comments .bb-rl-acomment-avatar a {
+  display: block;
+  width: 48px;
 }
 
 .activity-item.has-comments .bb-rl-acomment-avatar img {
