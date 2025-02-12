@@ -166,6 +166,8 @@ body {
 }
 
 a {
+  color: var(--bb-rl-primary-color);
+  outline: 0;
   text-decoration: none;
 }
 

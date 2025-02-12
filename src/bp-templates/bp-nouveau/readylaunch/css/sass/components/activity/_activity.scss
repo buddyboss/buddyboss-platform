@@ -5,6 +5,7 @@
 	padding: var(--bb-rl-space-400) 0;
 }
 
+@import "./code_mirror";
 @import "./post_form.scss";
 @import "./activity_loader.scss";
 @import "./activity_feed.scss";
