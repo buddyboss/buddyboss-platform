@@ -273,6 +273,11 @@
 			margin-bottom: var(--bb-rl-space-200);
 			border-radius: var(--bb-rl-radius-md);
 		}
+
+		iframe {
+			border-radius: var(--bb-rl-radius-lg);
+			width: 100%;
+		}
 	}
 
 	.activity-meta {
