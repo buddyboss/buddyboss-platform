@@ -77,7 +77,10 @@ window.bp = window.bp || {};
 			target.find( '#reaction-content-' + item_id + ' .reaction-loader' ).remove();
 			target.find( '#reaction-content-' + item_id + ' .activity_reaction_popup_error' ).remove();
 
-			if ( '' === $.trim( target.find( '#reaction-content-' + item_id ).html() ) ) {
+			if ( '' === $.trim( target.find( '#reaction-content-' + item_id ).html() ) || target.parent().hasClass( 'bb-has-reaction_update' ) ) {
+				if ( '' !== $.trim( target.find( '#reaction-content-' + item_id ).html() ) ) {
+					target.find( '#reaction-content-' + item_id ).html( '' );
+				}
 				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
 				self.loader[ item_id ]             = new bp.Views.ReactionPopup(
 					{
@@ -87,6 +90,7 @@ window.bp = window.bp || {};
 						item_type: item_type,
 					}
 				);
+				target.parent().removeClass( 'bb-has-reaction_update' );
 			}
 			target.show();
 		}
@@ -261,14 +265,14 @@ window.bp = window.bp || {};
 						$( element ).addClass( 'loading' );
 						paged = parseInt( paged, 10 ) + 1;
 
-						var arguments = {
+						var params = {
 							item_id: this.options.item_id,
 							item_type: this.options.item_type,
 							reaction_id: reaction_id,
 							page: paged
 						};
 
-						var selected_collection = arguments.item_id + '_' + arguments.reaction_id;
+						var selected_collection = params.item_id + '_' + params.reaction_id;
 
 						if ( 'undefined' == typeof bp.Nouveau.ActivityReaction.collections[ selected_collection ] ) {
 							bp.Nouveau.ActivityReaction.collections[ selected_collection ] = new bp.Collections.ActivityReactionCollection();
@@ -284,20 +288,20 @@ window.bp = window.bp || {};
 						};
 
 						if ( this.collection.length > 0 ) {
-							Object.assign( arguments, {
+							Object.assign( params, {
 								before: this.collection.last().get( 'id' ),
 							} );
 						}
 
 						_.extend(
 							this.collection.options,
-							_.pick( arguments, [ 'page', 'item_id', 'item_type', 'reaction_id', 'before' ] )
+							_.pick( params, [ 'page', 'item_id', 'item_type', 'reaction_id', 'before' ] )
 						);
 
 						this.args.collection = this.collection;
 						this.collection.fetch(
 							{
-								data: _.pick( arguments, [ 'page', 'item_id', 'item_type', 'reaction_id' ] ),
+								data: _.pick( params, [ 'page', 'item_id', 'item_type', 'reaction_id' ] ),
 								success: _.bind( this.onLoadMoreSuccessRender, this, target ),
 								error: _.bind( this.onLoadMoreFailedRender, this, target ),
 							}
@@ -448,14 +452,14 @@ window.bp = window.bp || {};
 					targetElement.find( '.activity_reaction_popup_error' ).remove();
 					targetElement.append( this.loader.show() );
 
-					var arguments = {
+					var params = {
 						item_id: this.options.item_id,
 						item_type: this.options.item_type,
 						reaction_id: targetElement.data( 'reaction-id' ),
 						page: targetElement.data( 'paged' )
 					};
 
-					var selected_collection = arguments.item_id + '_' + arguments.reaction_id;
+					var selected_collection = params.item_id + '_' + params.reaction_id;
 
 					if ( 'undefined' == typeof bp.Nouveau.ActivityReaction.collections[ selected_collection ] ) {
 						bp.Nouveau.ActivityReaction.collections[ selected_collection ] = new bp.Collections.ActivityReactionCollection();
@@ -466,7 +470,7 @@ window.bp = window.bp || {};
 					this.args.collection = this.collection;
 					this.collection.fetch(
 						{
-							data: _.pick( arguments, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ),
+							data: _.pick( params, [ 'page', 'per_page', 'item_id', 'item_type', 'reaction_id' ] ),
 							success: _.bind( this.onTabChangeSuccessRender, this, targetElement ),
 							error: _.bind( this.onTabChangeFailedRender, this, targetElement ),
 						}

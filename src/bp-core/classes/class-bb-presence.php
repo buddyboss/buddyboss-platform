@@ -500,6 +500,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_cookie_support' ), 1 );
 			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
 
+			$this->bb_load_translations();
+
 			if ( ! isset( $_GET['bypass'] ) ) { // phpcs:ignore
 				$this->bb_prepare_presence_mu();
 			}
@@ -1040,6 +1042,39 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			echo wp_json_encode( apply_filters( 'rest_post_dispatch_cache', $presence_data, $current_endpoint ) );
 			exit;
+		}
+
+		/**
+		 * Function to load translations at mu level.
+		 *
+		 * @since BuddyBoss 2.7.90
+		 */
+		public function bb_load_translations() {
+			$domain = 'buddyboss';
+			if ( function_exists( 'is_textdomain_loaded' ) && ! is_textdomain_loaded( $domain ) ) {
+				$mofile_custom  = sprintf( '%s-%s.mo', $domain, get_locale() );
+				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
+				if ( ! is_dir( $buddyboss_lang ) ) {
+					// File from the development version.
+					$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
+				}
+				if ( ! empty( $buddyboss_lang ) && function_exists( 'load_textdomain' ) ) {
+
+					$locations = array(
+						trailingslashit( WP_LANG_DIR . '/' . $domain ),
+						trailingslashit( WP_LANG_DIR ),
+						trailingslashit( WP_LANG_DIR . '/plugins' ),
+						trailingslashit( $buddyboss_lang ),
+					);
+			
+					// Try to load the translations from locations.
+					foreach ( $locations as $location ) {
+						if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
+							return true;
+						}
+					}
+				}
+			}
 		}
 	}
 

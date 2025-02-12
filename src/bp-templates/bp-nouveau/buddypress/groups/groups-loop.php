@@ -66,7 +66,7 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
 							<a href="<?php bp_group_permalink(); ?>">
 								<?php if ( ! empty( $group_cover_image_url ) ) { ?>
-									<img src="<?php echo esc_url( $group_cover_image_url ); ?>">
+									<img src="<?php echo esc_url( $group_cover_image_url ); ?>" alt="<?php esc_attr_e( 'Group cover image', 'buddyboss' ); ?>">
 								<?php } ?>
 							</a>
 						</div>

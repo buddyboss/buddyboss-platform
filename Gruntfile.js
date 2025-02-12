@@ -126,7 +126,10 @@ module.exports = function (grunt) {
 					expand: true,
 					ext: '.css',
 					flatten: true,
-					src: ['bp-core/admin/sass/*.scss'],
+					src: [
+						'bp-core/admin/sass/*.scss',
+						'!bp-core/admin/sass/tooltips.scss'
+					],
 					dest: SOURCE_DIR + 'bp-core/admin/css/'
 				},
 				pusher: {

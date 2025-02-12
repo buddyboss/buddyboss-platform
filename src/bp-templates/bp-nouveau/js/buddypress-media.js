@@ -205,7 +205,11 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-media-uploader-close', this.closeUploader.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-media', this.deleteMedia.bind( this ) );
 			bpNouveau.on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
-			$( '#buddypress [data-bp-list="media"]' ).on( 'bp_ajax_request', this.bp_ajax_media_request );
+			if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+				$( '#buddypress [data-bp-list="media"]' ).on( 'bp_ajax_request', this.bp_ajax_media_request );
+			} else {
+				this.bp_media_after_load();
+			}
 
 			// albums.
 			bpNouveau.on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
@@ -976,6 +980,12 @@ window.bp = window.bp || {};
 			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 === parseInt( data.response.scopes.personal ) ) {
 				$( '.bb-photos-actions' ).hide();
 			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && 0 !== parseInt( data.response.scopes.personal ) ) {
+				$( '.bb-photos-actions' ).show();
+			}
+		},
+
+		bp_media_after_load: function () {
+			if ( $( '.media-list.bb-photo-list' ).children().length ) {
 				$( '.bb-photos-actions' ).show();
 			}
 		},

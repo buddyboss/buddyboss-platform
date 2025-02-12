@@ -3429,6 +3429,10 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			(
 				'polls' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
 			)
 		)
 	) {
@@ -3493,6 +3497,10 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			(
 				'polls' === $type &&
 				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
 			)
 		)
 	) {
@@ -3722,10 +3730,18 @@ function bb_cpt_feed_enabled_disabled() {
 		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 	}
 
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+	}
+
 	$post_types = bb_feed_post_types();
 
 	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
 		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
 	}
 
 	foreach ( $post_types as $cpt ) {

@@ -147,6 +147,7 @@
 			.list-wrap-inner .item-avatar img {
 				border-radius: 50%;
 				max-width: 70px;
+				height: auto;
 			}
 
 			.only-grid-view {
@@ -190,6 +191,20 @@
 	border: 2px solid $white;
 	border-radius: 100%;
 	z-index: 1;
+
+	&.online {
+		position: absolute;
+		width: 15px;
+		height: 15px;
+		box-sizing: border-box;
+		right: 12px;
+		top: -5px;
+	}
+
+	&.offline {
+		opacity: 0;
+		visibility: hidden;
+	}
 
 	.bp-user-blocked > &,
 	.bp-user-suspended > &,

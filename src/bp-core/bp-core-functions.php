@@ -2343,60 +2343,6 @@ function bp_is_get_request() {
 /** Miscellaneous hooks *******************************************************/
 
 /**
- * Load the buddyboss translation file for current language.
- *
- * @since BuddyPress 1.0.2
- *
- * @see load_textdomain() for a description of return values.
- *
- * @return bool True on success, false on failure.
- */
-function bp_core_load_buddypress_textdomain() {
-	$domain = 'buddyboss';
-
-	/**
-	 * Filters the locale to be loaded for the language files.
-	 *
-	 * @since BuddyPress 1.0.2
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
-
-	/**
-	 * Filters the locations to load language files from.
-	 *
-	 * @since BuddyPress 2.2.0
-	 *
-	 * @param array $value Array of directories to check for language files in.
-	 */
-	$locations = apply_filters(
-		'buddypress_locale_locations',
-		array(
-			trailingslashit( WP_LANG_DIR . '/' . $domain ),
-			trailingslashit( WP_LANG_DIR ),
-		)
-	);
-
-	unload_textdomain( $domain );
-
-	// Try custom locations in WP_LANG_DIR.
-	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
-			return true;
-		}
-	}
-
-	$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
-	$buddyboss_lang_path = $plugin_folder . '/languages';
-	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-		$buddyboss_lang_path = $plugin_folder . '/src/languages';
-	}
-	return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
-}
-add_action( 'bp_core_loaded', 'bp_core_load_buddypress_textdomain' );
-
-/**
  * A JavaScript-free implementation of the search functions in BuddyPress.
  *
  * @since BuddyPress 1.0.1
@@ -2737,7 +2683,7 @@ function bp_core_get_components( $type = 'all' ) {
 	);
 
 	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
-		$plugin_data    = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+		$plugin_data    = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php', false, false );
 		$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
 		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
 			$optional_components['messages']['settings'] = bp_get_admin_url(
@@ -7916,6 +7862,9 @@ function bb_admin_icons( $id ) {
 		case 'bb_performance_activity':
 			$meta_icon = $bb_icon_bf . ' bb-icon-activity';
 			break;
+		case 'bb_advanced_telemetry':
+			$meta_icon = $bb_icon_bf . ' bb-icon-box';
+			break;
 		default:
 			$meta_icon = '';
 	}
@@ -9230,7 +9179,7 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -9883,7 +9832,7 @@ function bb_remove_deleted_user_last_activities() {
 	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
 
 	if ( $table_exists ) {
-		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE u.ID IS NULL AND a.component = 'members' AND a.type = 'last_activity'";
+		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE ( u.ID IS NULL OR u.user_status != 0 ) AND a.component = 'members' AND a.type = 'last_activity'";
 		$wpdb->query( $sql ); // phpcs:ignore
 
 		// Also remove duplicates last_activity per user if any.
@@ -9996,4 +9945,15 @@ function bb_get_all_headers() {
 	}
 
 	return $headers;
+}
+
+/**
+ * Function to return the minimum pro version to show notice for sso.
+ *
+ * @since BuddyBoss 2.7.40
+ *
+ * @return string
+ */
+function bb_pro_sso_version() {
+	return '2.6.30';
 }
