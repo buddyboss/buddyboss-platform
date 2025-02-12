@@ -412,3 +412,85 @@
 	}
 }
 
+// dropzone small UI
+.attachments--small {
+
+	div.dropzone {
+		padding: 0;
+		margin: 0;
+		position: static;
+		pointer-events: none;
+		gap: var(--bb-rl-space-200);
+
+		* {
+			pointer-events: auto;
+		}
+
+		&.dz-max-files-reached .dz-default.dz-message {
+			display: none;
+		}
+
+		&.dz-started {
+			height: auto;
+			overflow: initial;
+			padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
+
+			.dz-default.dz-message {
+				display: flex;
+			}
+		}
+
+		.dz-preview {
+			margin: 0;
+		}
+	}
+
+	[class*="attached-gif-container"] {
+		margin-bottom: 0;
+		background: none !important;
+		height: auto !important;
+		width: auto !important;
+		display: table;
+
+		.gif-image-container img {
+			background-color: var(--bb-content-alternate-background-color);
+			height: 100px;
+			width: 100px;
+			object-fit: cover;
+			border-radius: var(--bb-block-radius-inner);
+			margin: 0 0 0 6px;
+		}
+
+		.gif-image-remove {
+			box-shadow: 0 1px 1.5px rgba(0, 0, 0, 8%);
+			right: -8px;
+			top: -8px;
+
+			.bb-icon-times {
+				color: var(--bb-headings-color);
+				opacity: 0.4;
+			}
+
+			&:hover .bb-icon-times {
+				opacity: 1;
+			}
+		}
+
+		@media screen and (max-width: 560px) {
+			max-width: 100%;
+			background-repeat: no-repeat;
+		}
+	}
+
+	[class*="messages-attached-gif-container"] {
+
+		.gif-image-container img {
+			margin-bottom: 15px;
+		}
+	}
+
+	div.dropzone .dz-default.dz-message {
+		display: none;
+		margin: 0;
+	}
+}

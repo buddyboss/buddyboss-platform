@@ -2117,6 +2117,84 @@ button[data-balloon] {
   display: none;
 }
 
+.attachments--small div.dropzone {
+  padding: 0;
+  margin: 0;
+  position: static;
+  pointer-events: none;
+  gap: var(--bb-rl-space-200);
+}
+
+.attachments--small div.dropzone * {
+  pointer-events: auto;
+}
+
+.attachments--small div.dropzone.dz-max-files-reached .dz-default.dz-message {
+  display: none;
+}
+
+.attachments--small div.dropzone.dz-started {
+  height: auto;
+  overflow: initial;
+  padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
+}
+
+.attachments--small div.dropzone.dz-started .dz-default.dz-message {
+  display: flex;
+}
+
+.attachments--small div.dropzone .dz-preview {
+  margin: 0;
+}
+
+.attachments--small [class*="attached-gif-container"] {
+  margin-bottom: 0;
+  background: none !important;
+  height: auto !important;
+  width: auto !important;
+  display: table;
+}
+
+.attachments--small [class*="attached-gif-container"] .gif-image-container img {
+  background-color: var(--bb-content-alternate-background-color);
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: var(--bb-block-radius-inner);
+  margin: 0 6px 0 0;
+}
+
+.attachments--small [class*="attached-gif-container"] .gif-image-remove {
+  box-shadow: 0 1px 1.5px black;
+  left: -8px;
+  top: -8px;
+}
+
+.attachments--small [class*="attached-gif-container"] .gif-image-remove .bb-icon-times {
+  color: var(--bb-headings-color);
+  opacity: 0.4;
+}
+
+.attachments--small [class*="attached-gif-container"] .gif-image-remove:hover .bb-icon-times {
+  opacity: 1;
+}
+
+@media screen and (max-width: 560px) {
+  .attachments--small [class*="attached-gif-container"] {
+    max-width: 100%;
+    background-repeat: no-repeat;
+  }
+}
+
+.attachments--small [class*="messages-attached-gif-container"] .gif-image-container img {
+  margin-bottom: 15px;
+}
+
+.attachments--small div.dropzone .dz-default.dz-message {
+  display: none;
+  margin: 0;
+}
+
 /* Checkbox */
 .bb-rl-styled-checkbox {
   position: absolute;

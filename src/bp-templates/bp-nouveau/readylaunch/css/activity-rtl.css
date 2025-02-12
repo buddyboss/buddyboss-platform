@@ -3835,11 +3835,23 @@ div[class*="attached-gif-container"] .gif-player {
 .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .toolbar-button {
   display: inline-flex;
   padding: var(--bb-rl-space-50);
+  border: 0.5px solid transparent;
+}
+
+.bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .toolbar-button.active {
+  border-radius: var(--bb-rl-radius-md);
+  border-color: var(--bb-rl-border-secondary-color);
+  background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
 .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .toolbar-button [class*="bb-icon"] {
   color: var(--bb-rl-icon-secondary-color);
   font-size: 24px;
+}
+
+.bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .bb-rl-post-elements-buttons-item.disable {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .bb-rl-ac-reply-footer .bb-rl-post-emoji {
@@ -3958,6 +3970,7 @@ div[class*="attached-gif-container"] .gif-player {
   flex: auto;
   border-bottom: 1px solid var(--bb-rl-border-color);
   padding-top: var(--bb-rl-space-200);
+  width: 100%;
 }
 
 .activity-item.has-comments .ac-form {
