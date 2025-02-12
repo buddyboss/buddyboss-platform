@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.7.80\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-01-17 08:41:57+00:00\n"
+"POT-Creation-Date: 2025-02-12 09:54:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17023,7 +17023,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:1083 bp-groups/bp-groups-template.php:5602
 #: bp-notifications/bp-notifications-template.php:1020
-#: bp-templates/bp-nouveau/includes/template-tags.php:2241
+#: bp-templates/bp-nouveau/includes/template-tags.php:2245
 msgid "Order By:"
 msgstr ""
 
@@ -22830,7 +22830,7 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/generators/AssignmentsReportsGenerator.php:79
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:86
 #: bp-integrations/learndash/buddypress/generators/QuizzesReportsGenerator.php:57
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:145
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:147
 msgid "Score"
 msgstr ""
 
@@ -26473,22 +26473,22 @@ msgid "Yes, I'd like to create a new site"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:276
-#: bp-templates/bp-nouveau/includes/template-tags.php:2500
+#: bp-templates/bp-nouveau/includes/template-tags.php:2504
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:311
-#: bp-templates/bp-nouveau/includes/template-tags.php:2682
+#: bp-templates/bp-nouveau/includes/template-tags.php:2686
 #. translators: 1. Term agreement page. 2. Privacy page.
 msgid "I agree to the %1$s and %2$s."
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:318
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:324
-#: bp-templates/bp-nouveau/includes/template-tags.php:2714
-#: bp-templates/bp-nouveau/includes/template-tags.php:2738
+#: bp-templates/bp-nouveau/includes/template-tags.php:2718
+#: bp-templates/bp-nouveau/includes/template-tags.php:2742
 #. translators: Term agreement page.
 #. translators: Privacy page.
 msgid "I agree to the %s."
@@ -28951,10 +28951,10 @@ msgstr ""
 #: bp-moderation/screens/reported-content-popup.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:329
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:345
-#: bp-templates/bp-nouveau/includes/template-tags.php:2696
-#: bp-templates/bp-nouveau/includes/template-tags.php:2704
-#: bp-templates/bp-nouveau/includes/template-tags.php:2728
-#: bp-templates/bp-nouveau/includes/template-tags.php:2753
+#: bp-templates/bp-nouveau/includes/template-tags.php:2700
+#: bp-templates/bp-nouveau/includes/template-tags.php:2708
+#: bp-templates/bp-nouveau/includes/template-tags.php:2732
+#: bp-templates/bp-nouveau/includes/template-tags.php:2757
 msgid "Close (Esc)"
 msgstr ""
 
@@ -30611,7 +30611,7 @@ msgstr ""
 msgid "Are you sure you want to leave "
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/index.php:28
+#: bp-templates/bp-nouveau/buddypress/groups/index.php:31
 #: bp-templates/bp-nouveau/buddypress/groups/single/subgroups.php:28
 #. translators: %d is the group count
 msgid "<span class=\"bb-count\">%d</span> Group"
@@ -30832,7 +30832,7 @@ msgstr ""
 msgid "Are you sure you want to remove %s from your connections?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/members.php:24
+#: bp-templates/bp-nouveau/buddypress/groups/single/members.php:23
 #: bp-templates/bp-nouveau/buddypress/members/index.php:55
 #. translators: %d is the members count
 #. translators: %d is the member count
@@ -31113,35 +31113,35 @@ msgstr ""
 msgid "Sorry, no certificates were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:66
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:67
 #. translators: %d is the courses count
 msgid "<span class=\"bb-count\">%d</span> Course"
 msgid_plural "<span class=\"bb-count\">%d</span> Courses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:130
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:132
 msgid "%s out of %s steps completed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:135
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:137
 msgid "%s%% Complete"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:144
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:146
 msgid "Certificate"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:146
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:148
 msgid "Statistics"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:147
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:149
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:28
 msgid "Date"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:235
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:237
 msgid "Sorry, no %s were found."
 msgstr ""
 
@@ -33587,29 +33587,29 @@ msgstr ""
 msgid "Loading suggestions..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2244
+#: bp-templates/bp-nouveau/includes/template-tags.php:2248
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2481
+#: bp-templates/bp-nouveau/includes/template-tags.php:2485
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2687
+#: bp-templates/bp-nouveau/includes/template-tags.php:2691
 msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2696
-#: bp-templates/bp-nouveau/includes/template-tags.php:2704
-#: bp-templates/bp-nouveau/includes/template-tags.php:2728
-#: bp-templates/bp-nouveau/includes/template-tags.php:2753
+#: bp-templates/bp-nouveau/includes/template-tags.php:2700
+#: bp-templates/bp-nouveau/includes/template-tags.php:2708
+#: bp-templates/bp-nouveau/includes/template-tags.php:2732
+#: bp-templates/bp-nouveau/includes/template-tags.php:2757
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2719
-#: bp-templates/bp-nouveau/includes/template-tags.php:2743
+#: bp-templates/bp-nouveau/includes/template-tags.php:2723
+#: bp-templates/bp-nouveau/includes/template-tags.php:2747
 msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
@@ -35705,12 +35705,12 @@ msgid ""
 "to,was,what,when,where,who,will,with,www"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:126
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:128
 msgctxt "Course Progress Overview Label"
 msgid "%s Progress Overview"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:185
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:187
 msgctxt "Pending Certificate Status Label"
 msgid "Pending"
 msgstr ""
