@@ -6505,6 +6505,7 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
+			this.bodySelector = $( 'body' );
 
 			this.medias = [];
 			this.documents = [];
@@ -6640,6 +6641,8 @@ window.bp = window.bp || {};
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
 
+			self.bodySelector.addClass( 'media-modal-open' );
+
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
 
@@ -6747,6 +6750,8 @@ window.bp = window.bp || {};
 			}
 			$( '.bb-media-model-wrapper.video' ).hide();
 			self.is_open_document = true;
+
+			self.bodySelector.addClass( 'document-modal-open' );
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -6886,6 +6891,8 @@ window.bp = window.bp || {};
 
 			self.current_media = false;
 			self.getParentActivityHtml( target );
+
+			self.bodySelector.removeClass( 'media-modal-open' );
 		},
 
 		closeDocumentTheatre: function ( event ) {
@@ -6901,6 +6908,8 @@ window.bp = window.bp || {};
 
 			self.current_document = false;
 			self.getParentActivityHtml( $( event.currentTarget ) );
+
+			self.bodySelector.removeClass( 'document-modal-open' );
 		},
 
 		setMedias: function ( target ) {
