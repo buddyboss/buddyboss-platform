@@ -1,7 +1,7 @@
 /* jshint node:true */
 /* global module */
 module.exports = function (grunt) {
-	var sass       = require( 'node-sass' ),
+	var sass       = require( 'sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
 
