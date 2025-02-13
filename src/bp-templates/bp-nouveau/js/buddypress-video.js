@@ -2393,6 +2393,8 @@ window.bp = window.bp || {};
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
 
+			self.syncPinPostActivityOnCloseTheatre( target );
+
 			self.resetRemoveActivityCommentsData();
 
 			// Remove class from video theatre for the activity directory, forum topic and reply, video directory.
@@ -2436,6 +2438,9 @@ window.bp = window.bp || {};
 							$( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'figure' ).find( 'video' ).attr( 'autoplay', true );
 							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
+
+							bp.Nouveau.Video.Theatre.syncPinPostIconToTheatre();
+
 							$( window ).scroll();
 						} else {
 							$( '.bb-media-info-section.media' ).hide();
@@ -2704,6 +2709,8 @@ window.bp = window.bp || {};
 								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
 								$( '.bb-media-info-section:visible' ).show();
 
+								bp.Nouveau.Video.Theatre.syncPinPostIconToTheatre();
+
 								jQuery( window ).scroll();
 								setTimeout(
 									function () { // Waiting to load dummy image
@@ -2843,6 +2850,42 @@ window.bp = window.bp || {};
 				} else {
 					self.current_index = -1;
 					self.next( event );
+				}
+			}
+		},
+
+		syncPinPostActivityOnCloseTheatre: function( target ) {
+			var parentActivityId         = $( '#hidden_parent_id' ).val();
+			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
+			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdForModel ) ) {
+				if (
+					target.hasClass( 'bb-close-media-theatre' ) &&
+					'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
+					bp.Nouveau.Activity.activityPinHasUpdates 
+				) {
+					var $pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+					$pageActivitylistItem.addClass( 'activity-sync' );
+					// Refresh on pin post update from media theatre.
+					bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+					bp.Nouveau.refreshActivities();
+				}
+			}
+		},
+
+		syncPinPostIconToTheatre: function() {
+			var activityListModelSelector = '.bb-media-info-section:visible';
+			var $activityListModel        = $( activityListModelSelector + ' .activity-list' );
+
+			// Show pinned icon if already exits on main activity.
+			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			if ( parentActivityId > 0 ) {
+				var $mainActivity = $( 'body .buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream > .activity-list' ).children( '#activity-' + parentActivityId );
+				if ( $mainActivity.length > 0 && $mainActivity.hasClass( 'bb-pinned' ) && $mainActivity.find( '.button.unpin-activity' ).length > 0 ) {
+					var $parentActivityForModel  = $activityListModel.children( 'li.activity-item' );
+					var parentActivityIdForModel = ( 'undefined' !== typeof $parentActivityForModel ) ? parseInt( $parentActivityForModel.data( 'bp-activity-id' ) ) : 0;
+					if ( parentActivityId === parentActivityIdForModel ) {
+						$parentActivityForModel.addClass( 'bb-pinned' );
+					}
 				}
 			}
 		},
