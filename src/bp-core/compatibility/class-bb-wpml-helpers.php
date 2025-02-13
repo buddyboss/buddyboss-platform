@@ -357,8 +357,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			return $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT s.value 
-		                 FROM wp_icl_string_translations st
-		                 JOIN wp_icl_strings s ON st.string_id = s.id
+		                 FROM {$wpdb->prefix}icl_string_translations st
+		                 JOIN {$wpdb->prefix}icl_strings s ON st.string_id = s.id
 		                 WHERE s.context = %s
 		                 AND st.value LIKE %s
 		                 AND st.language = %s",
