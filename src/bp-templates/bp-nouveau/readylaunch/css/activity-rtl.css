@@ -4524,6 +4524,10 @@ div[class*="attached-gif-container"] .gif-player {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.bb-rl-ac-reply-footer .bb-rl-gif-media-search-dropdown {
+  right: -50px;
+}
+
 .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar {
   display: flex;
   gap: var(--bb-rl-space-100);
@@ -4544,6 +4548,10 @@ div[class*="attached-gif-container"] .gif-player {
 .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .toolbar-button [class*="bb-icon"] {
   color: var(--bb-rl-icon-secondary-color);
   font-size: 24px;
+}
+
+.bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .bb-rl-post-elements-buttons-item {
+  position: relative;
 }
 
 .bb-rl-ac-reply-footer .bb-rl-ac-reply-toolbar .bb-rl-post-elements-buttons-item.disable {

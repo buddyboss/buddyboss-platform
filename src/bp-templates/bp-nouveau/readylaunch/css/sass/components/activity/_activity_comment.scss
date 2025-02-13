@@ -48,6 +48,10 @@
 	border-top: 1px solid var(--bb-rl-border-secondary-color);
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 
+	.bb-rl-gif-media-search-dropdown {
+		left: -50px;
+	}
+
 	.bb-rl-ac-reply-toolbar {
 		display: flex;
 		gap: var(--bb-rl-space-100);
@@ -69,9 +73,13 @@
 			}
 		}
 
-		.bb-rl-post-elements-buttons-item.disable {
-			pointer-events: none;
-			opacity: 0.4;
+		.bb-rl-post-elements-buttons-item {
+			position: relative;
+
+			&.disable {
+				pointer-events: none;
+				opacity: 0.4;
+			}
 		}
 	}
 
