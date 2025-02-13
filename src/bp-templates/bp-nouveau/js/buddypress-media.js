@@ -7709,20 +7709,21 @@ window.bp = window.bp || {};
 		},
 
 		syncPinPostActivityOnCloseTheatre: function( target ) {
-			var parentActivityId         = $( '#hidden_parent_id' ).val();
+			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
 			var parentActivityIdForModel = target.closest( '.bb-media-model-wrapper' ).find( '#bb-media-model-container .activity-list li.activity-item' ).data( 'bp-activity-id' );
-			if ( parseInt( parentActivityId ) === parseInt( parentActivityIdForModel ) ) {
-				if (
-					target.hasClass( 'bb-close-media-theatre' ) &&
-					'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
-					bp.Nouveau.Activity.activityPinHasUpdates 
-				) {
-					var $pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
-					$pageActivitylistItem.addClass( 'activity-sync' );
-					// Refresh on pin post update from media theatre.
-					bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
-					bp.Nouveau.refreshActivities();
-				}
+			if ( 
+				parentActivityId > 0 &&
+				'undefined' !== typeof parentActivityIdForModel &&
+				parentActivityId === parseInt( parentActivityIdForModel ) &&
+				target.hasClass( 'bb-close-media-theatre' ) &&
+				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
+				bp.Nouveau.Activity.activityPinHasUpdates 
+			) {
+				var $pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+				$pageActivitylistItem.addClass( 'activity-sync' );
+				// Refresh on pin post update from media theatre.
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
 			}
 		},
 
