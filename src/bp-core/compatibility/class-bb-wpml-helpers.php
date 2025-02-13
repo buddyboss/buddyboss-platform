@@ -268,7 +268,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				defined( 'ICL_LANGUAGE_CODE' ) &&
 				$sitepress->is_translated_post_type( $args['post_type'] )
 			) {
-					global $wpdb;
+				global $wpdb;
+
 				$sql_query .= " AND EXISTS (
 						SELECT 1
 						FROM {$wpdb->prefix}icl_translations t
