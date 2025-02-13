@@ -2396,6 +2396,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   width: 100%;
 }
 
+.bb-rl-activity-media-elem.bb-rl-document-activity + .bb-rl-document-activity {
+  margin-top: var(--bb-rl-space-200);
+}
+
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-preview-wrap {
   display: flex;
   align-items: center;

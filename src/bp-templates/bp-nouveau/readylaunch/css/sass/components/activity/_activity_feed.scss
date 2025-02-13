@@ -690,6 +690,10 @@
 		position: relative;
 		width: 100%;
 
+		+ .bb-rl-document-activity {
+			margin-top: var(--bb-rl-space-200);
+		}
+
 		.bb-rl-document-preview-wrap {
 			display: flex;
 			align-items: center;
