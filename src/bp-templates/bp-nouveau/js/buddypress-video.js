@@ -2865,8 +2865,8 @@ window.bp = window.bp || {};
 				'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates &&
 				bp.Nouveau.Activity.activityPinHasUpdates 
 			) {
-				var $pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
-				$pageActivitylistItem.addClass( 'activity-sync' );
+				var $pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + parentActivityId + ']' );
+				$pageActivityListItem.addClass( 'activity-sync' );
 				// Refresh on pin post update from media theatre.
 				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 				bp.Nouveau.refreshActivities();

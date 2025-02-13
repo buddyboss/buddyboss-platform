@@ -1835,9 +1835,13 @@ window.bp = window.bp || {};
 							response = JSON.parse( response );
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list        = target.closest( 'ul.activity-list' );
-							var activity_stream      = target.closest( '.buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream' );
-							var isInsideTheatreModal = target.closest( '.bb-media-model-wrapper' ).length > 0;
+							var activity_list         = target.closest( 'ul.activity-list' );
+							var activity_stream       = target.closest( '.buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream' );
+							var isInsideTheatreModal  = target.closest( '.bb-media-model-wrapper' ).length > 0;
+							var $mainActivityList     = activity_stream.children( 'ul.activity-list' );
+							var $pageActivityListItem = $mainActivityList.children( '[data-bp-activity-id=' + activity_id + ']' );
+							var targetClassSelector   = '.' + target.attr('class').split(' ').join('.');
+							var $mainTargetElement    = $pageActivityListItem.find( targetClassSelector );
 							if ( response.success ) {
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
@@ -1889,6 +1893,21 @@ window.bp = window.bp || {};
 										}
 									});
 
+									// Menu sync for other activities in main activity stream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainActivityList.length > 0 ) {
+										
+										$mainActivityList.find( update_pin_actions ).each( function() {
+											var action = $( this ).find( '.unpin-activity' );
+											action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+
+											if ( is_group_activity ) {
+												action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+											} else {
+												action.find('span').html( BP_Nouveau.activity.strings.pinPost );
+											}
+										});
+									}
+
 									if ( update_pinned_icon ) {
 										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 									}
@@ -1901,6 +1920,18 @@ window.bp = window.bp || {};
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
 									}
+
+									// Menu sync for same activity in mainstream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainTargetElement.length > 0 ) {
+										$mainTargetElement.addClass( 'unpin-activity' );
+										$mainTargetElement.removeClass( 'pin-activity' );
+
+										if ( $mainTargetElement.closest( 'li.activity-item' ).hasClass('groups') ) {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
+										} else {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+										}
+									}
 								} else if ( 'unpin' === pin_action ) {
 									target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
 									target.addClass( 'pin-activity' );
@@ -1909,6 +1940,18 @@ window.bp = window.bp || {};
 										target.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
+									}
+
+									// Menu sync for same activity in mainstream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainTargetElement.length > 0 ) {
+										$mainTargetElement.addClass( 'pin-activity' );
+										$mainTargetElement.removeClass( 'unpin-activity' );
+
+										if ( $mainTargetElement.closest( 'li.activity-item' ).hasClass('groups') ) {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+										} else {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.pinPost );
+										}
 									}
 								}
 
@@ -4012,21 +4055,21 @@ window.bp = window.bp || {};
 			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
 				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
 				activityId = activityID !== undefined ? activityID : activityListItemId,
-				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
+				$pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
 			// If pin post udpate then refresh list.	
 			if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates && bp.Nouveau.Activity.activityPinHasUpdates ) {
-				if ( $pageActivitylistItem.length > 0 ) {
+				if ( $pageActivityListItem.length > 0 ) {
 
 					// Mock loader meanwhile the list refreshes.
-					$pageActivitylistItem.addClass( 'activity-sync' );
+					$pageActivityListItem.addClass( 'activity-sync' );
 				}
 				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 				bp.Nouveau.refreshActivities();
 			} else {
-				if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
+				if ( $pageActivityListItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
-					$pageActivitylistItem.addClass( 'activity-sync' );
+					$pageActivityListItem.addClass( 'activity-sync' );
 
 					var data = {
 						action: 'activity_sync_from_modal',
@@ -4039,7 +4082,7 @@ window.bp = window.bp || {};
 								return;
 							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
 								// success
-								$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
+								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
 								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 								jQuery( window ).scroll();
 
