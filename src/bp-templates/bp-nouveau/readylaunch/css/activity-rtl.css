@@ -1741,13 +1741,11 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .activity-nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
   list-style: none;
   padding: 0;
   margin: var(--bb-rl-space-400) 0;
-}
-
-.activity-nav li {
-  margin-left: var(--bb-rl-space-100);
 }
 
 .activity-nav li.selected a {
@@ -1756,6 +1754,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .activity-nav li a {
+  display: inline-block;
   background-color: var(--bb-rl-background-secondary-color);
   color: var(--bb-rl-text-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);

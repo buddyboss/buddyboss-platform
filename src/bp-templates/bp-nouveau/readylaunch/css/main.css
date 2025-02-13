@@ -271,6 +271,7 @@ a {
 }
 
 img.emoji,
+img.emotions,
 img.emojioneemoji {
   display: inline-block;
   margin: 3px;
