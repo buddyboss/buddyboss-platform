@@ -404,7 +404,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			bbp_register_theme_package(
 				array(
 					'id'      => 'default',
-					'name'    => __( 'Forums Default', 'buddyboss' ),
+					'name'    => 'Forums Default',
 					'version' => bbp_get_version(),
 					'dir'     => trailingslashit( $this->themes_dir . 'default' ),
 					'url'     => trailingslashit( $this->themes_url . 'default' ),
