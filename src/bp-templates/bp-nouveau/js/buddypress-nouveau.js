@@ -2323,7 +2323,7 @@ window.bp = window.bp || {};
 							if ( undefined !== response.data.friend_count ) {
 
 								if ( $( self.objectNavParent + ' .bb-item-count' ).length > 0 ) {
-									dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'connections' ) ?
+									var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'connections' ) ?
 									(
 										1 === parseInt( response.data.friend_count ) ?
 										BP_Nouveau.dir_labels.connections.singular : BP_Nouveau.dir_labels.connections.plural
