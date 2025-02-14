@@ -27440,7 +27440,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
@@ -31119,7 +31119,9 @@ span.icons:before {
 }
 
 .activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
-.acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification {
+.acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.media-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.document-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification {
   z-index: 999999;
 }
 
