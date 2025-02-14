@@ -104,12 +104,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bp_document_svg_icon', array( $this, 'bb_rl_document_svg_icon' ), 10, 2 );
 
-				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'bb_enqueue_scripts' ), 1 );
 
 				// Dequeue theme/plugins styles.
 				add_action( 'wp_enqueue_scripts', array( $this, 'bb_dequeue_styles' ), PHP_INT_MAX );
 				// Dequeue bbpress activity js.
 				add_filter( 'bbp_is_single_topic', array( $this, 'bb_dequeue_bbpress_activity_js' ), PHP_INT_MAX );
+				add_action( 'wp_head', array( $this, 'bb_rl_start_buffering' ), 0 );
+				add_action( 'wp_footer', array( $this, 'bb_rl_end_buffering' ), 999 );
 
 				add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 				add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -595,6 +597,50 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_dequeue_bbpress_activity_js() {
 			return false;
+		}
+
+		/**
+		 * Remove specific inline styles.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $buffer The buffer content.
+		 *
+		 * @return string The buffer content with specific inline styles removed.
+		 */
+		public function bb_rl_remove_specific_inline_styles( $buffer ) {
+			$remove_styles = array(
+				'buddyboss_theme-style',
+				'buddyboss_theme-bp-style',
+				'buddyboss_theme-forums-style',
+				'buddyboss_theme-learndash-style',
+				'buddyboss_theme_options-dynamic-css',
+				'buddyboss_theme-custom-style',
+				'bb_learndash_30_custom_colors',
+			);
+			foreach ( $remove_styles as $style ) {
+				$buffer = preg_replace( '/<style[^>]*id="' . preg_quote( $style, '/' ) . '"[^>]*>.*?<\/style>/s', '', $buffer );
+			}
+
+			return $buffer;
+		}
+
+		/**
+		 * Start buffering.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_start_buffering() {
+			ob_start( array( $this, 'bb_rl_remove_specific_inline_styles' ) );
+		}
+
+		/**
+		 * End buffering.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_end_buffering() {
+			ob_end_flush();
 		}
 
 		/**

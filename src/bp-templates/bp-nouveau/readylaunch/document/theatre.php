@@ -8,7 +8,7 @@
  */
 
 ?>
-<div class="bb-rl-media-model-wrapper bb-rl-internal-model document document-theatre" style="display: none;" id="buddypress">
+<div class="bb-rl-media-model-wrapper bb-rl-internal-model document bb-rl-document-theatre" style="display: none;" id="buddypress">
 	<a data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model bb-close-document-theatre" href="#">
 		<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14">
 			<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7" />
@@ -17,12 +17,12 @@
 	<div id="bb-rl-media-model-container" class="bb-rl-media-model-container bb-document-theater">
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section bb-rl-document-section">
-				<a class="theater-command bb-rl-prev-document" href="#previous">
+				<a class="bb-rl-theater-command bb-rl-prev-document" href="#previous">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30">
 						<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 29L1 15 15 1" opacity=".7" />
 					</svg>
 				</a>
-				<a class="theater-command bb-rl-next-document" href="#next">
+				<a class="bb-rl-theater-command bb-rl-next-document" href="#next">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30">
 						<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l14 14L1 29" opacity=".7" />
 					</svg>

@@ -133,7 +133,7 @@
   position: relative;
   display: inline-block;
   margin-top: calc(-1 * var(--bb-rl-space-400));
-  margin-left: var(--bb-rl-space-200);
+  margin-right: var(--bb-rl-space-200);
 }
 
 .bb-rl-groups .bp-list.grid.bb-cover-disabled .group-avatar-wrap {
@@ -151,8 +151,8 @@
 
 .bb-rl-groups .bp-list.grid .bs-group-cover img {
   position: absolute;
-  left: 0;
   right: 0;
+  left: 0;
   top: 0;
   bottom: 0;
   object-fit: cover;
@@ -167,7 +167,7 @@
 }
 
 .bb-rl-groups .bp-list:not(.grid) .item-entry .item-avatar {
-  margin-right: var(--bb-rl-space-200);
+  margin-left: var(--bb-rl-space-200);
 }
 
 .bb-rl-groups .bp-list:not(.grid) .item-entry .item {
@@ -222,7 +222,7 @@
 }
 
 .bb-rl-groups .item-entry .group-footer-wrap {
-  margin-left: auto;
+  margin-right: auto;
 }
 
 .bb-rl-groups .item-entry .group-footer-wrap button,
@@ -266,7 +266,7 @@
 .bb-rl-groups .item-entry .group-footer-wrap .generic-button a.group-button::before {
   content: "";
   display: inline-block;
-  margin-right: var(--bb-rl-space-50);
+  margin-left: var(--bb-rl-space-50);
   font-weight: 400;
   font-family: bb-icons-rl;
   font-size: 16px;
@@ -298,14 +298,14 @@
 .bb-rl-groups .item-entry .bb-group-members {
   display: flex;
   margin-bottom: 0;
-  padding-right: 10px;
-  margin-right: 5px;
+  padding-left: 10px;
+  margin-left: 5px;
 }
 
 .bb-rl-groups .item-entry .bb-group-members .bb-group-member {
   max-width: 24px;
-  float: left;
-  margin-right: -4px;
+  float: right;
+  margin-left: -4px;
   position: relative;
   z-index: 1;
 }
@@ -317,7 +317,7 @@
 .bb-rl-groups .item-entry .bb-group-members .bb-group-member img {
   background-color: #fff;
   border-radius: 50%;
-  float: left;
+  float: right;
   max-width: 100%;
   image-rendering: -webkit-optimize-contrast;
   display: block;
@@ -344,7 +344,7 @@
 }
 
 .bb-rl-groups .item-entry .bb-group-members .bb-group-member.count-wrap {
-  margin-left: 8px;
+  margin-right: 8px;
   max-width: none;
 }
 
@@ -367,13 +367,13 @@
 .bb-rl-group-block .item-meta-wrap p > span + span::before {
   content: "\2022";
   display: inline-block;
-  margin: 0 6px 0 3px;
+  margin: 0 3px 0 6px;
   color: var(--bb-rl-background-tertiary-color);
 }
 
 .bb-rl-group-block .item-meta-wrap p + p.last-activity::before {
   content: "\2022";
   display: inline-block;
-  margin: 0 6px 0 3px;
+  margin: 0 3px 0 6px;
   color: var(--bb-rl-background-tertiary-color);
 }

@@ -799,7 +799,7 @@ window.bp = window.bp || {};
 
 							// Cache selectors.
 							var $documentDescriptionWrap = $( '.bb-rl-document-description-wrap' );
-							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-open-document-theatre' );
+							var $documentTheatre         = $documentDescriptionWrap.find( '.bb-rl-open-document-theatre' );
 							var $documentDetailWrap      = $( '.bb-rl-document-detail-wrap.bb-rl-document-detail-wrap-description-popup' );
 
 							// Update attributes for document theater.
@@ -1056,7 +1056,7 @@ window.bp = window.bp || {};
 				(
 					target.hasClass( 'bb-rl-open-media-theatre' ) ||
 					target.hasClass( 'bb-rl-open-video-theatre' ) ||
-					target.hasClass( 'bb-open-document-theatre' ) ||
+					target.hasClass( 'bb-rl-open-document-theatre' ) ||
 					target.hasClass( 'document-detail-wrap-description-popup' )
 				)
 			) {
@@ -3608,12 +3608,13 @@ window.bp = window.bp || {};
 					if ( 'video' === type ) {
 						if ( file.dataURL && file.video_edit_data.thumb.length ) {
 							// Get Thumbnail image from response.
-							$( file.previewElement ).find( '.dz-video-thumbnail' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' " />' );
+							$( file.previewElement ).find( '.dz-image' ).prepend( '<img src=" ' + file.video_edit_data.thumb + ' "  alt=""/>' );
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-has-thumbnail' );
 						} else {
 							if ( bp.Nouveau.getVideoThumb ) {
-								bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+								bp.Nouveau.getVideoThumb( file, '.dz-image' );
 							}
+
 						}
 					}
 				}
@@ -3629,9 +3630,7 @@ window.bp = window.bp || {};
 
 					var tool_box    = target.parents( '.bb-rl-ac-reply-toolbar' );
 					var commentForm = target.closest( '.ac-form' );
-					if ( bp.Nouveau.dropZoneGlobalProgress ) {
-						bp.Nouveau.dropZoneGlobalProgress( this );
-					}
+
 					commentForm.addClass( 'has-media' );
 					['media', 'document', 'video', 'gif'].forEach( function ( subType ) {
 						if ( tool_box.find( '.bb-rl-ac-reply-' + subType + '-button' ) ) {
@@ -3649,23 +3648,41 @@ window.bp = window.bp || {};
 
 			dropzoneObj.on(
 				'uploadprogress',
-				function () {
+				function ( element ) {
 					var commentForm = target.closest( '.ac-form' );
 					commentForm.addClass( 'media-uploading' );
-					if ( bp.Nouveau.dropZoneGlobalProgress ) {
-						bp.Nouveau.dropZoneGlobalProgress( this );
-					}
+
+					var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ],
+					radius        = circle.r.baseVal.value,
+					circumference = radius * 2 * Math.PI;
+
+					circle.style.strokeDasharray  = circumference + ' ' + circumference;
+					circle.style.strokeDashoffset = circumference - (
+						element.upload.progress.toFixed( 0 ) / 100 * circumference
+					);
+					$( element.previewElement ).find( '.dz-progress [data-dz-progress]' ).text( element.upload.progress.toFixed( 0 ) + '%' );
 				}
 			);
 
 			dropzoneObj.on(
 				'success',
 				function ( file, response ) {
-					if ( 'video' === type && file.upload.progress === 100 ) {
-						$( file.previewElement ).find( '.dz-progress-ring circle' )[0].style.strokeDashoffset = 0;
-						$( file.previewElement ).find( '.dz-progress-count' ).text( '100% ' + BP_Nouveau.video.i18n_strings.video_uploaded_text );
-						$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
+					if ( 'document' === type ) {
+						var filename      = file.upload.filename,
+							fileExtension = filename.substr(
+								(
+									filename.lastIndexOf( '.' ) + 1
+								)
+							),
+							file_icon     = (
+								! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : ''
+							),
+							icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+						if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
+							$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icons-rl-file' ).addClass( icon_class );
+						}
 					}
+
 					if ( response.data.id ) {
 						file.id                  = response.id;
 						response.data.uuid       = file.upload.uuid;

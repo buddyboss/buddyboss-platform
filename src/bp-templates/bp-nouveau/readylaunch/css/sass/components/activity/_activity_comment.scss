@@ -48,6 +48,10 @@
 	border-top: 1px solid var(--bb-rl-border-secondary-color);
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 
+	.bb-rl-gif-media-search-dropdown {
+		left: -50px;
+	}
+
 	.bb-rl-ac-reply-toolbar {
 		display: flex;
 		gap: var(--bb-rl-space-100);
@@ -55,10 +59,26 @@
 		.toolbar-button {
 			display: inline-flex;
 			padding: var(--bb-rl-space-50);
+			border: 0.5px solid transparent;
+
+			&.active {
+				border-radius: var(--bb-rl-radius-md);
+				border-color: var(--bb-rl-border-secondary-color);
+				background-color: var(--bb-rl-background-secondary-hover-color);
+			}
 
 			[class*="bb-icon"] {
 				color: var(--bb-rl-icon-secondary-color);
 				font-size: 24px;
+			}
+		}
+
+		.bb-rl-post-elements-buttons-item {
+			position: relative;
+
+			&.disable {
+				pointer-events: none;
+				opacity: 0.4;
 			}
 		}
 	}
@@ -115,6 +135,10 @@
 			border-top: 1px solid var(--bb-rl-border-secondary-color);
 			margin-top: var(--bb-rl-space-100);
 
+			> .view-more-comments {
+				display: none;
+			}
+
 			ul {
 				padding: 0;
 				list-style: none;
@@ -124,11 +148,8 @@
 				}
 			}
 
-			li:not(:first-child) {
-
-				.bb-rl-acomment-content_wrap {
-					border-top-color: var(--bb-rl-border-color);
-				}
+			> ul > li > ul {
+				margin-left: var(--bb-rl-space-700);
 			}
 		}
 
@@ -175,6 +196,11 @@
 		.bb-rl-acomment-avatar {
 			padding-top: var(--bb-rl-space-200);
 
+			a {
+				display: block;
+				width: 48px;
+			}
+
 			img {
 				height: 48px;
 				width: 48px;
@@ -184,8 +210,9 @@
 
 		.bb-rl-acomment-content_wrap {
 			flex: auto;
-			border-top: 1px solid transparent;
+			border-bottom: 1px solid var(--bb-rl-border-color);
 			padding-top: var(--bb-rl-space-200);
+			width: 100%;
 		}
 
 		.ac-form {
@@ -197,15 +224,29 @@
 .acomments-view-more {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	color: var(--bb-rl-text-color);
+	gap: var(--bb-rl-space-50);
+	color: var(--bb-rl-primary-color);
+	font-size: var(--bb-rl-font-size-sm);
 	font-weight: 500;
-	margin-bottom: var(--bb-rl-space-100);
+	margin: 12px 0 12px var(--bb-rl-space-300);
 	cursor: pointer;
 
-	&:before {
-		content: "\e01a";
-		font-size: 20px;
+	> i {
+		display: none;
+	}
+
+	&:after {
+		content: "\e136";
+		font-size: 16px;
+		font-weight: 400;
 		font-family: bb-icons-rl;
+	}
+
+	&.loading:after {
+		display: none;
+	}
+
+	#bb-rl-ajax-loader {
+		width: 100%;
 	}
 }

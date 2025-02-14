@@ -199,11 +199,11 @@ echo esc_attr( $has_no_thumbnail );
 				$count = $video_count - $max_length;
 				if ( 1 === $count ) {
 					?>
-					<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'more video', 'buddyboss' ); ?></span></span></span>
 					<?php
 				} else {
 					?>
-					<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-rl-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'more videos', 'buddyboss' ); ?></span></span></span>
 					<?php
 				}
 			}

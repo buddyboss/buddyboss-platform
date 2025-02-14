@@ -25,7 +25,6 @@ $move_id                = ( 0 < $group_id ) ? $group_id : $document_user_id;
 $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 ?>
 <div class="bb-rl-document-action-wrap">
-	<a href="#" class="bb-rl-document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>" data-balloon="<?php esc_attr_e( 'Expand', 'buddyboss' ); ?>"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 	<a href="<?php echo esc_url( $download_url ); ?>" class="bb-rl-document-action_download" data-id="<?php echo esc_attr( $document_id ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss' ); ?>">
 		<i class="bb-icons-rl-arrow-circle-down"></i>
 	</a>
