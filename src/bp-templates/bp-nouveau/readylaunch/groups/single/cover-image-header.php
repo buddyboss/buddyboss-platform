@@ -35,6 +35,8 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 		if ( '' !== $group_cover_position ) {
 			$has_cover_image_position = ' has-position';
 		}
+	} else {
+		$group_cover_image = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 	}
 	?>
 

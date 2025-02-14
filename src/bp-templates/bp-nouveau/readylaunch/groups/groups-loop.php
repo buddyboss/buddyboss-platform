@@ -58,6 +58,10 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 							)
 						);
 						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
+
+						if ( empty( $group_cover_image_url ) ) {
+							$group_cover_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
+						}
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
 							<a href="<?php bp_group_permalink(); ?>">
