@@ -796,10 +796,11 @@
 			.bb-rl-document-description,
 			.bb-rl-document-extension-description,
 			.bb-rl-document-helper-text {
-				float: left;
+				display: inline-block;
+				vertical-align: middle;
 				color: var(--bb-rl-text-tertiary-color);
 				font-size: var(--bb-rl-font-size-sm);
-				margin-top: var(--bb-rl-space-50);
+				line-height: 1;
 			}
 
 			.bb-rl-document-description {
