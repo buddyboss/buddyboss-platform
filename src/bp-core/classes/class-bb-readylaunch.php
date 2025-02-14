@@ -1520,5 +1520,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 			return $avatar_image_url;
 		}
+
+		public static function bb_is_group_admin(){
+			return bp_is_active( 'groups' ) &&
+				   bp_is_group_single() &&
+				   bp_get_group_current_admin_tab();
+		}
 	}
 }

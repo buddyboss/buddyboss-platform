@@ -25,6 +25,10 @@ if ( bp_has_groups() ) {
 				<div class="bb-rl-group-info-wrap flex items-start justify-between">
 					<div class="bb-rl-group-info flex items-center">
 						<?php
+						if ( BB_Readylaunch::bb_is_group_admin() ) {
+							echo '<a href="' . esc_url( bp_get_group_permalink() ) . '" class="bb-rl-group-link"><i class="bb-icons-rl-arrow-left"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Back', 'buddyboss' ) . '</span></a>';
+						}
+
 						if ( ! bp_disable_group_avatar_uploads() ) :
 							$group_link       = bp_get_group_permalink();
 							$admin_link       = trailingslashit( $group_link . 'admin' );
@@ -37,28 +41,39 @@ if ( bp_has_groups() ) {
 						<?php endif; ?>
 						<h2 class="bb-rl-group-title"><?php echo wp_kses_post( bp_get_group_name() ); ?></h2>
 					</div>
-					<div class="bb-rl-group-extra-info">
-						<?php
-							add_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
-							bb_groups_members();
-							remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
-							bb_group_single_header_actions();
+
+					<?php
+					if ( ! BB_Readylaunch::bb_is_group_admin() ) {
 						?>
-					</div>
+							<div class="bb-rl-group-extra-info">
+							<?php
+								add_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
+								bb_groups_members();
+								remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
+								bb_group_single_header_actions();
+							?>
+							</div>
+						<?php
+					}
+					?>
 
 				</div>
-				<?php bp_get_template_part( 'groups/single/parts/item-nav' ); ?>
+				<?php
+				if ( ! BB_Readylaunch::bb_is_group_admin() ) {
+					bp_get_template_part( 'groups/single/parts/item-nav' );
+				}
+				?>
 			</div>
 
 			<div class="bb-rl-group-section">
 				<?php
-				if ( bp_group_use_cover_image_header() ) {
+				if ( bp_group_use_cover_image_header() && ! BB_Readylaunch::bb_is_group_admin() ) {
 					bp_get_template_part( 'groups/single/cover-image-header' );
 				}
 				?>
 				<div class="bb-rl-group-details bb-rl-details-entry">
 					<div class="bb-rl-content-wrapper">
-						
+
 						<div class="bb-rl-primary-container">
 							<div id="item-body" class="item-body">
 								<?php
@@ -70,7 +85,7 @@ if ( bp_has_groups() ) {
 								?>
 							</div><!-- #item-body -->
 						</div>
-						
+
 						<div class="bb-rl-secondary-container"></div>
 					</div>
 				</div><!-- // .bb-rl-group-details -->

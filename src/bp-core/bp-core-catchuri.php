@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.0.0
  */
 function bp_core_set_uri_globals() {
+	error_log( print_r( 'bp_core_set_uri_globals ---', 1 ) );
 	global $current_blog, $wp_rewrite;
 
 	// Don't catch URIs on non-root blogs unless multiblog mode is on.
