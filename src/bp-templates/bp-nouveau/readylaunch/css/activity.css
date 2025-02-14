@@ -2953,6 +2953,28 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-lg);
 }
 
+.bb-rl-activity-media-elem.no_more_option .bb-rl-photos-length {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  color: var(--bb-rl-text-white-color);
+  font-size: 20px;
+  font-weight: 600;
+  background-color: rgba(12, 12, 13, 0.5);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-activity-media-elem.no_more_option .bb-rl-photos-length strong {
+  font-weight: 600;
+}
+
+.bb-rl-activity-media-elem.no_more_option ~ .bb-rl-activity-media-elem {
+  display: none;
+}
+
 /* Video */
 .bb-rl-activity-video-elem {
   position: relative;
