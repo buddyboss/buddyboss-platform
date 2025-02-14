@@ -510,6 +510,16 @@ window.bp = window.bp || {};
 			// if object is members, media, document and object nav does not exists fallback to scope = all.
 			if ( [ 'members', 'media', 'activity', 'document' ].includes( data.object ) && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
 				data.scope = 'all';
+
+				if ( 'activity' === data.object ) {
+
+					// Check other next item from the filter dropdown as backward compability.
+					var activityScopeFilterSelector = this.objectNavParent + ' #bb-subnav-filter-show';
+					if ( $( activityScopeFilterSelector ).length ) {
+						var firstItemScope = $( activityScopeFilterSelector + ' > ul > li' ).first().data( 'bp-scope' );
+						data.scope = 'undefined' !== firstItemScope ? firstItemScope : data.scope;
+					}
+				}
 			}
 
 			// Prepare the search terms for the request.

@@ -124,9 +124,14 @@ window.bp = window.bp || {};
 			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
-			// Fix theme class type | should be removed in next release
-			if( $( '.actvity-head-bar' ).length ) {
+			// Fix theme class type for the backward compatibility.
+			if ( $( '.actvity-head-bar' ).length ) {
 				$( '.actvity-head-bar' ).addClass( 'activity-head-bar' ).removeClass( 'actvity-head-bar' );
+
+				// Remove old activity nav as we have new design for filter.
+				if ( $( '.activity-head-bar > nav.activity-type-navs' ).length && $( '.activity-head-bar .bb-subnav-filters-filtering' ).length ) {
+					$( '.activity-head-bar > nav.activity-type-navs' ).remove();
+				}
 			}
 
 			// Inject Activities.

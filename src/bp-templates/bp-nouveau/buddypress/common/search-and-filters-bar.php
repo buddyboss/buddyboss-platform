@@ -90,6 +90,9 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		$filters_labels   = bb_get_activity_filter_options_labels();
 	}
 
+	// Allow valid options only.
+	$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+
 	arsort( $activity_filters );
 	$default_selected = key( $activity_filters );
 	?>
@@ -106,21 +109,13 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 				<ul role="listbox">
 					<?php
 						if ( ! empty ( $activity_filters ) ) {
-							// Skip filters based on user login or component active.
-							$skip_conditions = array(
-								'friends'   => ! bp_is_active( 'friends' ),
-								'following' => ! bp_is_activity_follow_active(),
-								'groups'    => ! bp_is_active( 'groups' ),
-								'mentions'  => ! bp_activity_do_mentions(),
-							);
 							foreach( $activity_filters as $key => $is_enabled ) {
 
 								// Skip filters not enabled or without labels.
 								if (
 									empty( $is_enabled ) ||
 									empty( $filters_labels[ $key ] ) ||
-									( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() ) ||
-									( isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ] )
+									( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
 								) {
 									continue;
 								}
@@ -130,7 +125,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 								<?php
 							}
 
-							unset( $skip_conditions, $activity_filters );
+							unset( $activity_filters );
 						}
 					?>
 				</ul>

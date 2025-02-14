@@ -43,23 +43,18 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	) {
 
 		$activity_filters = bp_is_user_activity() ? bb_get_enabled_activity_timeline_filter_options() : bb_get_enabled_activity_filter_options();
-
+		$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
 		if ( ! empty( $activity_filters ) ) {
-
-			// Skip filters based on user login or component active.
-			$skip_conditions = array(
-				'friends'   => ! bp_is_active( 'friends' ),
-				'following' => ! bp_is_activity_follow_active(),
-				'groups'    => ! bp_is_active( 'groups' ),
-				'mentions'  => ! bp_activity_do_mentions(),
-			);
 			foreach ( $activity_filters as $key => $is_enabled ) {
 
 				// Skip filters based on conditions.
 				if (
 					empty( $is_enabled ) ||
-					( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() ) ||
-					isset( $skip_conditions[ $key ] ) && $skip_conditions[ $key ]
+					(
+						bp_is_activity_directory() &&
+						'all' !== $key &&
+						! is_user_logged_in()
+					)
 				) {
 					continue;
 				}
@@ -69,7 +64,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 				break;
 			}
 
-			unset( $skip_conditions, $activity_filters );
+			unset( $activity_filters );
 		}
 	}
 

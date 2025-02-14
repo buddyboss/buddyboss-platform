@@ -9957,3 +9957,32 @@ function bb_get_all_headers() {
 function bb_pro_sso_version() {
 	return '2.6.30';
 }
+
+/**
+ * Common function to filter activity filter options or labels based on related components and settings active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $filters Array of filter options.
+ * 
+ * @return array $filters Array of allowed filter options.
+ */
+function bb_filter_activity_filter_scope_keys( $filters = array() ) {
+
+	if ( ! empty( $filters ) && is_array( $filters ) ) {
+
+		// Remove filters based on component availability and respecting settings.
+		foreach ( array_keys( $filters ) as $key ) {
+			if (
+				( 'friends' === $key && ! bp_is_active( 'friends' ) ) ||
+				( 'following' === $key && ! bp_is_activity_follow_active() ) ||
+				( 'groups' === $key && ! bp_is_active( 'groups' ) ) ||
+				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) )
+			) {
+				unset( $filters[ $key ] );
+			}
+		}
+	}
+
+	return $filters;
+}
