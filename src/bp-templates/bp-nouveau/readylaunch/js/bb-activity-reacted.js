@@ -36,7 +36,7 @@ window.bp = window.bp || {};
 			this.types       = [];
 			this.fetchXhr    = null;
 			this.loader      = [];
-			this.loader_html = $( '<p class="reaction-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></p>' );
+			this.loader_html = $( '<p class="reaction-loader"><i class="bb-rl-loader"></i></p>' );
 
 			// Listen to events ("Add hooks!").
 			this.addListeners();
@@ -370,6 +370,13 @@ window.bp = window.bp || {};
 			template: bp.template( 'activity-reacted-popup-heading' ),
 			initialize: function ( options ) {
 				this.data = options.data;
+			},
+			events: {
+				'click .bb-rl-state-popup-close-button': 'closePopup',
+			},
+			closePopup: function ( e ) {
+				e.preventDefault();
+				$( e.currentTarget ).closest( '.activity-state-popup' ).hide();
 			},
 			render: function () {
 				this.$el.html( this.template( this.data ) );
