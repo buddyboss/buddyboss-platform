@@ -85,13 +85,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 								'object' => 'group',
 								'width' => 100,
 								'height' => 100,
+								'class' => 'avatar bb-hp-group-avatar'
 							)
 						);
 						?>
 					</a>
 				</div>
 				<div class="author-avatar">
-					<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
+					<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
 				</div>
 			</div>
 

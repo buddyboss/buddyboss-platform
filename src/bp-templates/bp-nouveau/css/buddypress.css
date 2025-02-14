@@ -5374,6 +5374,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin-right: 10px;
 }
 
+.activity-group-avatar a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
 .activity-group-avatar img {
   position: absolute;
   top: 0;

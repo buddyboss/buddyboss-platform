@@ -30,6 +30,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 						array(
 							'type'    => 'thumb',
 							'user_id' => bp_get_activity_comment_user_id(),
+							'class'   => 'avatar bb-hp-profile-avatar'
 						)
 					);
 					?>
