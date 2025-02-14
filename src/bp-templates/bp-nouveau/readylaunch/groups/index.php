@@ -29,10 +29,13 @@ bp_nouveau_template_notices();
 			do_action( 'bb_before_directory_groups_filters' );
 
 			bp_get_template_part( 'common/search-and-filters-bar' );
-			?>
-			<div class="bb-rl-action-button">
-				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
-			</div>
+
+			if ( bp_user_can_create_groups() ) {
+				?>
+				<div class="bb-rl-action-button">
+					<a href="<?php echo esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
+				</div>
+			<?php } ?>
 		</div>
 	</div>
 

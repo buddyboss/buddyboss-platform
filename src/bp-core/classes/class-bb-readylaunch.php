@@ -82,7 +82,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_active( 'groups' ) &&
 					(
 						bp_is_groups_directory() ||
-						bp_is_group_single()
+						bp_is_group_single() ||
+						bp_is_group_create()
 					)
 				) {
 					BB_Group_Readylaunch::instance();
@@ -173,7 +174,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				(
 					(
 						bp_is_groups_directory() ||
-						bp_is_group_single()
+						bp_is_group_single() ||
+						bp_is_group_create()
 					) &&
 					! empty( $this->settings['groups'] )
 				) ||
@@ -483,7 +485,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Register only if it's Groups component.
 			if ( bp_is_active( 'groups' ) ) {
-				if ( bp_is_group_single() ) {
+				if ( bp_is_group_single() || bp_is_group_create() ) {
 					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
 					wp_enqueue_script( 'bb-rl-groups' );
 					wp_localize_script(
