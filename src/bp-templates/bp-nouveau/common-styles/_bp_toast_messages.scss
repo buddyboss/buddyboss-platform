@@ -1,6 +1,9 @@
 // BP Toast Messages
 // @version 1.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 // 1. Global Styling
 
 // Global Styling
@@ -138,7 +141,7 @@
 
 				.actions {
 
-					@include center-vert();
+					@include mixins.center-vert();
 					align-self: center;
 					height: 24px;
 					width: 24px;
@@ -169,7 +172,7 @@
 			}
 
 			.toast-messages-action_link {
-				color: $blue;
+				color: variables.$blue;
 				cursor: pointer;
 			}
 

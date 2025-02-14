@@ -1,20 +1,23 @@
 // BP Lists Global Styles.
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 // @todo decide whether using .buddypress quasi namespace parent
 // is useful, causing issue with specificity on other
 // lists if they do not use it.
 
-@include clearfix-element(".bp-list");
+@include mixins.clearfix-element(".bp-list");
 
 .bp-list {
 
-	@include box-model();
-	//border-top: 1px solid $light-grey;
+	@include mixins.box-model();
+	//border-top: 1px solid variables.$light-grey;
 	clear: both;
 	list-style: none;
-	margin: $marg-lrg 0;
-	padding: $pad-sml 0;
+	margin: variables.$marg-lrg 0;
+	padding: variables.$pad-sml 0;
 	width: 100%;
 
 	// these clearfix rules simply because the element can't be classed
@@ -29,13 +32,13 @@
 	}
 
 	> li {
-		border-bottom: 1px solid $light-grey;
+		border-bottom: 1px solid variables.$light-grey;
 	}
 
 	li {
 		list-style: none;
-		margin: $marg-sml 0;
-		padding: $pad-sml 0;
+		margin: variables.$marg-sml 0;
+		padding: variables.$pad-sml 0;
 		position: relative;
 
 		.item-avatar {
@@ -58,7 +61,7 @@
 			.list-title {
 				clear: none; // some WP themes state clear:both
 
-				@include responsive-font(26);
+				@include mixins.responsive-font(26);
 				line-height: 1.1;
 				margin: 0 auto;
 			}
@@ -66,11 +69,11 @@
 
 		.meta,
 		.item-meta {
-			color: $light-text-plus;
+			color: variables.$light-text-plus;
 
-			@include font-size(12);
-			margin-bottom: $marg-sml;
-			margin-top: $marg-sml;
+			@include mixins.font-size(12);
+			margin-bottom: variables.$marg-sml;
+			margin-top: variables.$marg-sml;
 		}
 
 		.last-post {
@@ -84,17 +87,17 @@
 			.generic-button {
 				display: inline-block;
 
-				@include font-size(12);
-				margin: 0 $marg-sml 0 0;
+				@include mixins.font-size(12);
+				margin: 0 variables.$marg-sml 0 0;
 			}
 
 			// if this is a div wrapper
 			div.generic-button {
-				margin: $marg-sml 0;
+				margin: variables.$marg-sml 0;
 			}
 		}
 
-		@include medium-up() {
+		@include mixins.medium-up() {
 
 			.item-avatar {
 				float: left;
@@ -143,13 +146,13 @@
 
 				// if this is a div wrapper
 				div.generic-button {
-					margin: 0 0 $marg-sml;
+					margin: 0 0 variables.$marg-sml;
 				}
 			}
 
 			.generic-button {
 				display: block;
-				margin: 0  0 $marg-xsml 0;
+				margin: 0  0 variables.$marg-xsml 0;
 			}
 
 		} // close @media
@@ -201,8 +204,8 @@
 
 			.item-block {
 
-				@include dis-flex;
-				@include flex-align(flex-start);
+				@include mixins.dis-flex;
+				@include mixins.flex-align(flex-start);
 				-webkit-box-orient: vertical;
 				-webkit-box-direction: normal;
 				-ms-flex-flow: column;
@@ -217,7 +220,7 @@
 			}
 
 			.list-title {
-				margin: $marg-med 0 $marg-xsml;
+				margin: variables.$marg-med 0 variables.$marg-xsml;
 				font-size: 20px;
 
 				a {
@@ -239,7 +242,7 @@
 
 				> span {
 
-					@include font-size(12);
+					@include mixins.font-size(12);
 				}
 			}
 
@@ -292,11 +295,11 @@
 	}
 
 	li.item-entry {
-		margin-bottom: $marg-med;
+		margin-bottom: variables.$marg-med;
 
 		.item-avatar {
 
-			@include dis-flex;
+			@include mixins.dis-flex;
 			-webkit-box-pack: start;
 			-ms-flex-pack: start;
 			justify-content: flex-start;
@@ -329,10 +332,10 @@
 		}
 
 		.group-avatar-wrap {
-			margin-left: $marg-lrg;
+			margin-left: variables.$marg-lrg;
 
 			img.avatar {
-				margin-top: $marg-med;
+				margin-top: variables.$marg-med;
 			}
 
 		}
@@ -346,7 +349,7 @@
 	//Group Lists List
 	&:not(.grid) {
 
-		@include dis-flex;
+		@include mixins.dis-flex;
 		-webkit-box-orient: vertical;
 		-webkit-box-direction: normal;
 		-ms-flex-flow: column;
@@ -371,7 +374,7 @@
 
 			.list-wrap {
 
-				@include dis-flex;
+				@include mixins.dis-flex;
 				background: #fafafa;
 				border: 1px solid #eee;
 				padding: 15px;
@@ -379,14 +382,14 @@
 			}
 
 			.item-avatar {
-				margin-right: $marg-xsml;
+				margin-right: variables.$marg-xsml;
 				width: auto;
 			}
 
 			.item {
 
-				@include dis-flex;
-				@include flex-align(center);
+				@include mixins.dis-flex;
+				@include mixins.flex-align(center);
 				-webkit-box-pack: justify;
 				-ms-flex-pack: justify;
 				justify-content: space-between;
@@ -406,7 +409,7 @@
 				}
 
 				.group-members-wrap {
-					margin-right: $marg-med;
+					margin-right: variables.$marg-med;
 				}
 
 				.footer-button-wrap .generic-button {
@@ -430,7 +433,7 @@
 			.item-desc {
 				flex: 1;
 				padding-right: 20px;
-				margin-top: $marg-xsml;
+				margin-top: variables.$marg-xsml;
 
 				&:empty {
 					display: none;
@@ -445,7 +448,7 @@
 
 			.group-footer-wrap {
 
-				@include dis-flex;
+				@include mixins.dis-flex;
 				-webkit-box-pack: justify;
 				-ms-flex-pack: justify;
 				justify-content: space-between;
@@ -457,18 +460,18 @@
 				.item {
 					flex-direction: column;
 
-					@include flex-align(flex-start);
+					@include mixins.flex-align(flex-start);
 
 					.group-footer-wrap {
 
-						@include flex-align(flex-start);
-						margin-bottom: $marg-med;
+						@include mixins.flex-align(flex-start);
+						margin-bottom: variables.$marg-med;
 						flex-direction: column;
 					}
 
 					.footer-button-wrap,
 					.group-members-wrap {
-						margin-top: $marg-sml;
+						margin-top: variables.$marg-sml;
 					}
 
 				}
@@ -479,7 +482,7 @@
 
 				.item-avatar {
 					width: 100%;
-					margin-bottom: $marg-sml;
+					margin-bottom: variables.$marg-sml;
 				}
 
 				.list-wrap {
@@ -500,8 +503,8 @@
 
 	.bs-group-members {
 
-		@include dis-flex;
-		margin-bottom: $marg-med;
+		@include mixins.dis-flex;
+		margin-bottom: variables.$marg-med;
 		padding-right: 10px;
 		margin-right: 5px;
 
@@ -536,8 +539,8 @@
 				background-color: #f9f9f9;
 				border: 2px solid #fff;
 
-				@include dis-flex;
-				@include flex-align(center);
+				@include mixins.dis-flex;
+				@include mixins.flex-align(center);
 				-webkit-box-pack: center;
 				-ms-flex-pack: center;
 				justify-content: center;
@@ -558,7 +561,7 @@
 
 	.footer-button-wrap {
 
-		@include dis-flex;
+		@include mixins.dis-flex;
 
 		.action {
 			width: 100%;
@@ -582,25 +585,25 @@
 }
 
 // Ensure there's space between parent act list wrapper and filters bar
-@include medium-small-up() {
+@include mixins.medium-small-up() {
 
 	#activity-stream {
 		clear: both;
-		padding-top: $pad-med;
+		padding-top: variables.$pad-med;
 	}
 }
 
 .activity-list.bp-list {
 
-	background: $off-white;
-	border: 1px solid $bp-border-color;
+	background: variables.$off-white;
+	border: 1px solid variables.$bp-border-color;
 
 	.activity-item {
-		background: $white;
+		background: variables.$white;
 		border: 1px solid #b7b7b7;
 
-		@include box-shadow(0 0 6px #d2d2d2);
-		margin: $marg-lrg 0;
+		@include mixins.box-shadow(0 0 6px #d2d2d2);
+		margin: variables.$marg-lrg 0;
 	}
 
 	li:first-child {
@@ -619,15 +622,15 @@
 		text-align: center;
 	}
 
-	@include medium-up() {
+	@include mixins.medium-up() {
 
 		li {
 
-			@include flex-box-dir();
+			@include mixins.flex-box-dir();
 
 			.item {
 
-				@include box-item-size($grow: 1);
+				@include mixins.box-item-size($grow: 1);
 			}
 
 			.action {
@@ -636,7 +639,7 @@
 
 			.item-title {
 
-				@include font-size(22);
+				@include mixins.font-size(22);
 				text-align: left;
 
 				h3 {
@@ -650,7 +653,7 @@
 
 #notifications-user-list {
 	clear: both;
-	padding-top: $pad-med;
+	padding-top: variables.$pad-med;
 
 	.bb-sort-by-date .notifications-order-actions a [class*=" bb-icon-"] {
 		width: 20px;
@@ -665,7 +668,7 @@ body:not(.logged-in) {
 
 	.bp-list {
 
-		@include medium-up() {
+		@include mixins.medium-up() {
 
 			.item {
 				margin-right: 0;

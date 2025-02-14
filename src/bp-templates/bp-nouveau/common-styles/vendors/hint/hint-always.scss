@@ -18,41 +18,41 @@
 
 	&.#{$hintPrefix}top {
 
-		@include set-margin("translateY", -1, -50%);
+		@include hint-mixins.set-margin("translateY", -1, -50%);
 
 		&-left {
 
-			@include set-margin("translateY", -1, -100%);
+			@include hint-mixins.set-margin("translateY", -1, -100%);
 		}
 
 		&-right {
 
-			@include set-margin("translateY", -1, 0);
+			@include hint-mixins.set-margin("translateY", -1, 0);
 		}
 	}
 
 	&.#{$hintPrefix}bottom {
 
-		@include set-margin("translateY", 1, -50%);
+		@include hint-mixins.set-margin("translateY", 1, -50%);
 
 		&-left {
 
-			@include set-margin("translateY", 1, -100%);
+			@include hint-mixins.set-margin("translateY", 1, -100%);
 		}
 
 		&-right {
 
-			@include set-margin("translateY", 1, 0);
+			@include hint-mixins.set-margin("translateY", 1, 0);
 		}
 	}
 
 	&.#{$hintPrefix}left {
 
-		@include set-margin("translateX", -1);
+		@include hint-mixins.set-margin("translateX", -1);
 	}
 
 	&.#{$hintPrefix}right {
 
-		@include set-margin("translateX", 1);
+		@include hint-mixins.set-margin("translateX", 1);
 	}
 }

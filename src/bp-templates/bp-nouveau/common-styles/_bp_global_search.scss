@@ -3,6 +3,9 @@
 * Includes: core.css, accordion.css, menu.css
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .ui-helper-hidden {
 	display: none;
 }

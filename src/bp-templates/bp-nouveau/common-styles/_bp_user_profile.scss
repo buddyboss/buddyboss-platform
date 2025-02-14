@@ -1,5 +1,9 @@
 // BP User Profiles screen
 // @version 3.0.0
+
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 //
 // 0/ General :)
 // 1/ Profile Edit
@@ -11,7 +15,7 @@
 .buddypress-wrap {
 
 	.profile {
-		margin-top: $marg-xlrg;
+		margin-top: variables.$marg-xlrg;
 	}
 
 	.public {
@@ -35,24 +39,24 @@
 		// The groups tabs
 		.button-nav {
 			list-style: none;
-			margin: $marg-xlrg 0 $marg-sml;
+			margin: variables.$marg-xlrg 0 variables.$marg-sml;
 
 			li {
 				display: inline-block;
-				margin-right: $marg-sml;
+				margin-right: variables.$marg-sml;
 
 				a {
 
-					@include font-size(18);
+					@include mixins.font-size(18);
 				}
 			}
 		}
 
 		.editfield {
-			background: $off-white;
-			border: 1px solid $bp-border-color;
-			margin: $marg-med 0;
-			padding: $pad-med;
+			background: variables.$off-white;
+			border: 1px solid variables.$bp-border-color;
+			margin: variables.$marg-med 0;
+			padding: variables.$pad-med;
 
 			fieldset {
 				border: 0;
@@ -72,8 +76,8 @@
 			margin: 0 0 15px;
 			padding: 15px;
 			cursor: move;
-			background: $white;
-			border: 1px solid $bp-border-color;
+			background: variables.$white;
+			border: 1px solid variables.$bp-border-color;
 
 			.repeater_tools {
 				display: flex;
@@ -106,12 +110,12 @@
 			flex-direction: column;
 
 			legend {
-				margin-bottom: $marg-sml;
+				margin-bottom: variables.$marg-sml;
 			}
 
 			.description {
-				margin-top: -$marg-sml;
-				margin-bottom: $marg-sml;
+				margin-top: -variables.$marg-sml;
+				margin-bottom: variables.$marg-sml;
 				white-space: pre-line;
 				order: 2;
 			}
@@ -163,7 +167,7 @@ body.no-js {
 .buddypress-wrap {
 
 	.field-visibility-settings {
-		margin: $marg-sml 0;
+		margin: variables.$marg-sml 0;
 	}
 
 	.current-visibility-level {
@@ -173,13 +177,13 @@ body.no-js {
 
 	.field-visibility-settings,
 	.field-visibility-settings-header {
-		color: $light-text-plus;
+		color: variables.$light-text-plus;
 	}
 
 	.field-visibility-settings {
 
 		fieldset {
-			margin: $marg-xsml 0;
+			margin: variables.$marg-xsml 0;
 		}
 	}
 
@@ -206,7 +210,7 @@ body.no-js {
 
 			.field-visibility-settings-close {
 
-				@include font-size(12);
+				@include mixins.font-size(12);
 			}
 		}
 
@@ -214,7 +218,7 @@ body.no-js {
 			border: 1px solid #dedede;
 
 			textarea {
-				background: $white;
+				background: variables.$white;
 				width: 100%;
 			}
 		}
@@ -231,7 +235,7 @@ body.no-js {
 
 		.field-visibility-settings-header {
 
-			@include font-size(14);
+			@include mixins.font-size(14);
 			margin: 5px 0;
 		}
 
@@ -240,7 +244,7 @@ body.no-js {
 			legend,
 			label {
 
-				@include font-size(14);
+				@include mixins.font-size(14);
 			}
 		}
 
@@ -273,7 +277,7 @@ body.no-js {
 	.profile.public {
 
 		.profile-group-title {
-			border-bottom: 1px solid $bp-border-dark;
+			border-bottom: 1px solid variables.$bp-border-dark;
 		}
 	}
 }
@@ -290,7 +294,7 @@ body.register .buddypress-wrap .page ul {
 	.profile {
 
 		.bp-avatar-nav {
-			margin-top: $marg-lrg;
+			margin-top: variables.$marg-lrg;
 		}
 	}
 }
@@ -491,14 +495,14 @@ div.profile_completion_wrap {
 .pc_detailed_progress li.completed {
 
 	span.completed_staus {
-		color: $update-success;
+		color: variables.$update-success;
 	}
 }
 
 .pc_detailed_progress li.incomplete {
 
 	span.completed_staus {
-		color: $warn;
+		color: variables.$warn;
 	}
 }
 
@@ -529,7 +533,7 @@ div.profile_completion_wrap {
 	}
 
 	.pc_progress_rate {
-		stroke: $informational;
+		stroke: variables.$informational;
 	}
 }
 

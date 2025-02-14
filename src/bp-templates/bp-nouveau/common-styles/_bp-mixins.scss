@@ -3,6 +3,8 @@
 //
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+
 // This file provides some basic mixins for BP elements
 // such as box sizing, radius, calc etc
 
@@ -392,18 +394,18 @@
 
 		li.selected {
 			background: none;
-			border: 1px solid $med-light-grey;
+			border: 1px solid variables.$med-light-grey;
 			border-right-color: #fff;
 
 			a {
 				background: none;
-				color: $black;
+				color: variables.$black;
 				font-weight: 600;
 
 				span {
-					background: $dark-grey;
-					border: 1px solid $med-light-grey;
-					color: $white;
+					background: variables.$dark-grey;
+					border: 1px solid variables.$med-light-grey;
+					color: variables.$white;
 				}
 			}
 		}
@@ -447,7 +449,7 @@
 	@if $background {
 		$background: $background;
 	} @else {
-		$background: $background-bad;
+		$background: variables.$background-bad;
 	}
 
 	background-color: $background;
@@ -455,7 +457,7 @@
 	@if $border {
 		$border: $border;
 	} @else {
-		$border: $border-bad;
+		$border: variables.$border-bad;
 	}
 
 	border-color: $border;
@@ -468,7 +470,7 @@
 	@if $background {
 		$background: $background;
 	} @else {
-		$background: $background-short;
+		$background: variables.$background-short;
 	}
 
 	background-color: $background;
@@ -476,7 +478,7 @@
 	@if $border {
 		$border: $border;
 	} @else {
-		$border: $border-short;
+		$border: variables.$border-short;
 	}
 
 	border-color: $border;
@@ -489,7 +491,7 @@
 	@if $background {
 		$background: $background;
 	} @else {
-		$background: $background-good;
+		$background: variables.$background-good;
 	}
 
 	background-color: $background;
@@ -497,7 +499,7 @@
 	@if $border {
 		$border: $border;
 	} @else {
-		$border: $border-good;
+		$border: variables.$border-good;
 	}
 
 	border-color: $border;

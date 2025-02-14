@@ -1,17 +1,21 @@
 // Sitewide template error & info messages constructs.
 // @version 3.0.0.
+
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .warn {
-	color: $warn;
+	color: variables.$warn;
 }
 
 .bp-messages {
-	border: 1px solid $bp-border-dark;
-	margin: 0 0 $marg-med;
+	border: 1px solid variables.$bp-border-dark;
+	margin: 0 0 variables.$marg-med;
 
 	.sitewide-notices {
 		display: block;
-		margin: $marg-xsml;
-		padding: $pad-sml;
+		margin: variables.$marg-xsml;
+		padding: variables.$pad-sml;
 	}
 
 	// General info boxes
@@ -40,11 +44,11 @@
 	.bp-cover-image-status {
 
 		p.warning {
-			background: $informational;
+			background: variables.$informational;
 			border: 0;
 
-			@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
-			color: $white;
+			@include mixins.box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
+			color: variables.$white;
 		}
 	}
 }
@@ -59,15 +63,15 @@
 
 .bp-feedback:not(.custom-homepage-info) {
 
-	@include flex-box-dir();
-	@include flex-align();
+	@include mixins.flex-box-dir();
+	@include mixins.flex-align();
 }
 
 .bp-feedback {
 
-	@include message-box($border: none);
-	@include box-shadow( 0 1px 1px 1px rgba(0, 0, 0, 0.1) );
-	color: $light-text-plus;
+	@include mixins.message-box($border: none);
+	@include mixins.box-shadow( 0 1px 1px 1px rgba(0, 0, 0, 0.1) );
+	color: variables.$light-text-plus;
 
 	margin: 10px 0;
 	position: relative;
@@ -78,11 +82,11 @@
 	}
 
 	span.bp-icon {
-		color: $white;
+		color: variables.$white;
 		display: block;
 		font-family: dashicons;
 		left: 0;
-		margin-right: $marg-sml;
+		margin-right: variables.$marg-sml;
 		position: relative;
 		padding: 0  0.5em;
 	}
@@ -98,14 +102,14 @@
 
 	.text {
 
-		@include font-size(14);
+		@include mixins.font-size(14);
 		margin: 0;
-		padding: $pad-sml 0;
+		padding: variables.$pad-sml 0;
 	}
 }
 
 .bp-feedback.no-icon {
-	padding: $pad-sml;
+	padding: variables.$pad-sml;
 }
 
 .bp-feedback.small:before {
@@ -156,7 +160,7 @@ button[data-bp-close]:hover {
 
 	.bp-icon {
 
-		@include center-vert();
+		@include mixins.center-vert();
 	}
 }
 
@@ -164,7 +168,7 @@ button[data-bp-close]:hover {
 .bp-feedback.help {
 
 	.bp-icon {
-		background-color: $informational;
+		background-color: variables.$informational;
 
 		&:before {
 			content: "\f348";
@@ -176,7 +180,7 @@ button[data-bp-close]:hover {
 .bp-feedback.warning {
 
 	.bp-icon {
-		background-color: $warnings;
+		background-color: variables.$warnings;
 
 		&:before {
 			content: "\f534";
@@ -187,7 +191,7 @@ button[data-bp-close]:hover {
 .bp-feedback.loading {
 
 	.bp-icon {
-		background-color: $loading;
+		background-color: variables.$loading;
 
 		&:before {
 			content: "\f469";
@@ -200,7 +204,7 @@ button[data-bp-close]:hover {
 .bp-feedback.updated {
 
 	.bp-icon {
-		background-color: $update-success;
+		background-color: variables.$update-success;
 
 		&:before {
 			content: "\f147";
@@ -294,14 +298,14 @@ button[data-bp-close]:hover {
 }
 
 #pass-strength-result {
-	background-color: $pwd-background;
+	background-color: variables.$pwd-background;
 	border-color: #ddd;
 	border-style: solid;
 	border-width: 1px;
 	display: none;
 	font-weight: 700;
-	margin: $marg-sml 0 $marg-sml 0;
-	padding: $pad-sml;
+	margin: variables.$marg-sml 0 variables.$marg-sml 0;
+	padding: variables.$pad-sml;
 	text-align: center;
 	width: auto;
 
@@ -312,23 +316,23 @@ button[data-bp-close]:hover {
 
 	&.mismatch {
 
-		@include pwd-bad-colors($color: $white, $background: $black, $border: transparent);
+		@include mixins.pwd-bad-colors($color: variables.$white, $background: variables.$black, $border: transparent);
 	}
 
 	&.error,
 	&.bad {
 
-		@include pwd-bad-colors($color: $white);
+		@include mixins.pwd-bad-colors($color: variables.$white);
 	}
 
 	&.short {
 
-		@include pwd-short-colors($color: $white);
+		@include mixins.pwd-short-colors($color: variables.$white);
 	}
 
 	&.strong {
 
-		@include pwd-good-colors($color: $white);
+		@include mixins.pwd-good-colors($color: variables.$white);
 	}
 
 } // close #pass-strength-result
@@ -336,8 +340,8 @@ button[data-bp-close]:hover {
 .standard-form#signup_form div div.error {
 	background: #faa;
 	color: #a00;
-	margin: 0 0 $marg-sml 0;
-	padding: $pad-sml;
+	margin: 0 0 variables.$marg-sml 0;
+	padding: variables.$pad-sml;
 	width: 90%;
 }
 
@@ -345,7 +349,7 @@ button[data-bp-close]:hover {
 .accept,
 .reject {
 	float: left;
-	margin-left: $marg-sml;
+	margin-left: variables.$marg-sml;
 }
 
 // .bp-feedback messages  - Ajax specific (.bp-ajax-message)
@@ -355,16 +359,16 @@ button[data-bp-close]:hover {
 .members-list.grid { // this probably ought to serve the group loop too
 
 	.bp-ajax-message {
-		background: rgba($white, 0.9);
-		border: 1px solid $bp-border-color;
+		background: rgba(variables.$white, 0.9);
+		border: 1px solid variables.$bp-border-color;
 
-		@include font-size(14);
+		@include mixins.font-size(14);
 		left: 2%;
 
 		// postion absolute to prevent the element from expanding
 		// content height & breaking grid box heights.
 		position: absolute;
-		padding: $pad-sml $pad-med;
+		padding: variables.$pad-sml variables.$pad-med;
 		right: 2%;
 		top: 30px;
 	}

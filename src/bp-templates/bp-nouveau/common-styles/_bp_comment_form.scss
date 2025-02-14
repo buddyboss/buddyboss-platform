@@ -1,5 +1,9 @@
 // BP Activity Comments Form
 // @version 3.0.0
+
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 form.ac-form {
 	display: none;
 	margin: 15px 0;
@@ -20,13 +24,13 @@ form.ac-form {
 		}
 
 		.ac-textarea {
-			margin-bottom: $marg-med;
-			padding: 0 $pad-sml;
+			margin-bottom: variables.$marg-med;
+			padding: 0 variables.$pad-sml;
 
 			.ac-input[contenteditable="true"] {
 				background: transparent;
 				box-shadow: none;
-				color: $bp-text;
+				color: variables.$bp-text;
 				font-family: inherit;
 				font-size: 100%;
 				margin: 0;
@@ -58,7 +62,7 @@ form.ac-form {
 
 				&:focus {
 
-					@include box-shadow( 0 0 6px $med-light-grey );
+					@include mixins.box-shadow( 0 0 6px variables.$med-light-grey );
 				}
 			}
 
@@ -72,7 +76,7 @@ form.ac-form {
 
 				.post-elements-buttons-item {
 
-					@include center-vert();
+					@include mixins.center-vert();
 					margin-right: 10px;
 					position: relative;
 
@@ -110,7 +114,7 @@ form.ac-form {
 
 				&:before {
 					content: attr(data-placeholder);
-					color: $light-text;
+					color: variables.$light-text;
 					opacity: 0.5;
 					position: absolute;
 				}
@@ -128,7 +132,7 @@ form.ac-form {
 
 				&:before {
 					content: attr(data-placeholder);
-					color: $light-text;
+					color: variables.$light-text;
 					opacity: 0.5;
 				}
 			}
@@ -192,13 +196,13 @@ form.ac-form {
 
 	.ac-reply-content {
 		border: 1px solid transparent;
-		background-color: $light-grey;
-		border-radius: $block-radius-inner;
+		background-color: variables.$light-grey;
+		border-radius: variables.$block-radius-inner;
 		padding: 8px;
 		margin-left: 10px;
 
 		&:focus-within {
-			border-color: $highlight;
+			border-color: variables.$highlight;
 		}
 
 		.ac-textarea {
@@ -231,7 +235,7 @@ form.ac-form {
 		}
 
 		.ac-submit-wrap {
-			background-color: $blue;
+			background-color: variables.$blue;
 			border-radius: 50%;
 			height: 30px;
 			width: 30px;
@@ -259,7 +263,7 @@ form.ac-form {
 				&:before {
 					content: "\ef30";
 					font-size: 18px;
-					color: $black;
+					color: variables.$black;
 					animation: spin 2s infinite linear;
 					line-height: 1;
 				}
@@ -269,7 +273,7 @@ form.ac-form {
 				position: absolute;
 				inset: 0;
 				opacity: 0;
-				background-color: $blue;
+				background-color: variables.$blue;
 			}
 		}
 
@@ -372,7 +376,7 @@ form.ac-form {
 			height: 60px;
 			max-width: 60px !important;
 			position: relative;
-			background-color: $light-grey;
+			background-color: variables.$light-grey;
 
 			&:after {
 				content: "\e9ed";
@@ -520,7 +524,7 @@ form.ac-form {
 		}
 
 		.dz-preview.dz-file-preview .dz-details {
-			background-color: $light-grey;
+			background-color: variables.$light-grey;
 			min-height: 60px;
 			width: 60px;
 		}
@@ -819,13 +823,13 @@ form.ac-form {
 	-ms-flex: 1;
 	flex: 1;
 	min-width: 0;
-	color: $light-text;
-	padding-left: $pad-med;
+	color: variables.$light-text;
+	padding-left: variables.$pad-med;
 }
 
 .activity-comments li form.ac-form {
 	clear: both;
-	margin-right: $marg-med;
+	margin-right: variables.$marg-med;
 }
 
 .activity-comments form.root {

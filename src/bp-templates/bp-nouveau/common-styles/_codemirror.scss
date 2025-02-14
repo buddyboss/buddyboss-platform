@@ -1,5 +1,8 @@
 /* BASICS */
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;

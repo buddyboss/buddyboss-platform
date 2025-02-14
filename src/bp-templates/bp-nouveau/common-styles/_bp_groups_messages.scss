@@ -1,3 +1,6 @@
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 #group-messages-container {
 	background: #fff;
 	border: 1px solid #e7e9ec;
@@ -240,7 +243,7 @@
 	flex: 0 0 360px;
 	min-width: 0;
 
-	@include medium-max() {
+	@include mixins.medium-max() {
 		-ms-flex: 0 0 100%;
 		flex: 0 0 100%;
 		min-width: 0;
@@ -1143,7 +1146,7 @@ span.icons:before {
 				width: 24px;
 				display: inline-block;
 				border-radius: 100%;
-				background-color: $blue;
+				background-color: variables.$blue;
 				color: #fff;
 			}
 

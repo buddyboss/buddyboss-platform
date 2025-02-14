@@ -1,5 +1,8 @@
 // Emojione Area Filter Icons
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .emojionearea {
 
 	.emojionearea-picker {

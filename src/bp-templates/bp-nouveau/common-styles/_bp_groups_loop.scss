@@ -1,6 +1,9 @@
 // BP Groups loop.
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .buddypress-wrap {
 
 	.groups-list { // ul
@@ -16,21 +19,21 @@
 			}
 
 			.group-desc {
-				border: 1px solid $light-grey;
+				border: 1px solid variables.$light-grey;
 
-				@include border-radius(10px);
-				@include responsive-font(16);
-				color: $meta-text;
+				@include mixins.border-radius(10px);
+				@include mixins.responsive-font(16);
+				color: variables.$meta-text;
 				font-style: italic;
-				margin: $marg-sml auto 0;
-				padding: $pad-med;
+				margin: variables.$marg-sml auto 0;
+				padding: variables.$pad-med;
 			}
 
 			p {
 				margin: 0 0 0.5em;
 			}
 
-			@include medium-up() {
+			@include mixins.medium-up() {
 
 				.item {
 					margin-right: 0;
@@ -43,7 +46,7 @@
 				}
 
 				.item-meta {
-					margin-bottom: $marg-lrg;
+					margin-bottom: variables.$marg-lrg;
 				}
 
 				.last-activity {
@@ -166,7 +169,7 @@
 // We need to just adjust the loop item elements a little
 // to cope with the decreased width.
 
-@include medium-up() {
+@include mixins.medium-up() {
 
 	.buddypress { // body class
 

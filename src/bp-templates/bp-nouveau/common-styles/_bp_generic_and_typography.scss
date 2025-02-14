@@ -1,6 +1,9 @@
 // BP Generic elements, Typography and Images.
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 // ========= Generic Sitewide elements ========
 body {
 
@@ -11,7 +14,7 @@ body {
 		.bp-lists {
 
 			blockquote {
-				margin-left: $marg-sml;
+				margin-left: variables.$marg-sml;
 			}
 		}
 
@@ -21,7 +24,7 @@ body {
 		// box-modal() defaults to 'border-box' if no param passed
 		.bp-list .action {
 
-			@include box-model();
+			@include mixins.box-model();
 		}
 	}
 }
@@ -30,7 +33,7 @@ body {
 // or entry-content (2013, 2014, 2017) Lets adjust these restrictions
 body.buddypress {
 
-	@include medium-up() {
+	@include mixins.medium-up() {
 
 		.entry-header,
 		.site-content .entry-header,
@@ -46,7 +49,7 @@ body.buddypress {
 		.entry-content {
 			float: none;
 			max-width: none;
-			//padding: 0 $pad-xlrg;
+			//padding: 0 variables.$pad-xlrg;
 		}
 
 		// 2017 has a very large top padding we'll reduce that for bp screens
@@ -109,7 +112,7 @@ body.buddypress { // add weight
 
 /* Ensure .bp-wrap encloses it's children */
 
-@include clearfix-element(".bp-wrap");
+@include mixins.clearfix-element(".bp-wrap");
 
 // ====== BP Typographic Elements ======
 
@@ -132,8 +135,8 @@ body.buddypress {
 
 			.entry-title {
 
-				@include responsive-font(34);
-				color: $primary-headings;
+				@include mixins.responsive-font(34);
+				color: variables.$primary-headings;
 			}
 		}
 	}
@@ -146,41 +149,41 @@ body.buddypress {
 
 	dt.section-title {
 
-		@include responsive-font(22);
+		@include mixins.responsive-font(22);
 	}
 
 	.bp-label-text,
 	.message-threads {
 
-		@include responsive-font(16);
+		@include mixins.responsive-font(16);
 	}
 
 	.activity-header {
 
-		@include responsive-font(16);
+		@include mixins.responsive-font(16);
 	}
 
 	.activity-inner {
 
-		@include responsive-font(18);
+		@include mixins.responsive-font(18);
 	}
 
 	#whats-new-post-in {
 
-		@include font-size(16);
+		@include mixins.font-size(16);
 	}
 
 	.mini .activity-header,
 	.acomment-meta {
 
-		@include font-size(16);
+		@include mixins.font-size(16);
 	}
 
 	.dir-component-filters {
 
 		#activity-filter-by {
 
-			@include responsive-font(16);
+			@include mixins.responsive-font(16);
 		}
 	}
 
@@ -192,12 +195,12 @@ body.buddypress {
 
 		th {
 
-			@include responsive-font(16);
+			@include mixins.responsive-font(16);
 		}
 
 		td {
 
-			@include responsive-font(14);
+			@include mixins.responsive-font(14);
 		}
 	}
 
@@ -207,17 +210,17 @@ body.buddypress {
 
 		th {
 
-			@include responsive-font(18);
+			@include mixins.responsive-font(18);
 		}
 
 		td {
 
-			@include responsive-font(16);
+			@include mixins.responsive-font(16);
 		}
 	}
 
 	#notification-select {
 
-		@include responsive-font(14);
+		@include mixins.responsive-font(14);
 	}
 }

@@ -39,7 +39,7 @@
 
 	&:after {
 
-		@include vendor("transform", translateX($translateX));
+		@include hint-mixins.vendor("transform", translateX($translateX));
 	}
 
 	&:after {
@@ -52,7 +52,7 @@
 
 	&:hover {
 
-		@include set-margin("translateY", $transitionDirection, $translateX);
+		@include hint-mixins.set-margin("translateY", $transitionDirection, $translateX);
 	}
 }
 
@@ -80,14 +80,14 @@
 
 	&:hover {
 
-		@include set-margin("translateX", $transitionDirection);
+		@include hint-mixins.set-margin("translateX", $transitionDirection);
 	}
 }
 
 /**
  * set default color for tooltip arrows
  */
-@include arrow-border-color($hintDefaultColor);
+@include hint-mixins.arrow-border-color($hintDefaultColor);
 
 /**
  * top tooltip

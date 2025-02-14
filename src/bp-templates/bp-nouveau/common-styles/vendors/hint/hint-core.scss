@@ -20,7 +20,7 @@
 
 		// HACK: Trigger hardware accelerated rendering, otherwise transform was not
 		// working on a hidden element
-		@include vendor("transform", translate3d(0, 0, 0));
+		@include hint-mixins.vendor("transform", translate3d(0, 0, 0));
 
 		// HACK: visibility is set to hidden because IE & Opera don't support
 		// pointer-events on HTML content yet because of which hovering
@@ -32,8 +32,8 @@
 		// tooltip will make it appear
 		pointer-events: none;
 
-		@include vendor("transition", $hintTransitionDuration ease);
-		@include vendor("transition-delay", $hintHideDelay);
+		@include hint-mixins.vendor("transition", $hintTransitionDuration ease);
+		@include hint-mixins.vendor("transition-delay", $hintHideDelay);
 	}
 
 	&:hover:before,
@@ -45,7 +45,7 @@
 	&:hover:before,
 	&:hover:after {
 		// $hintShowDelay will apply as soon as element is hovered.
-		@include vendor("transition-delay", $hintShowDelay);
+		@include hint-mixins.vendor("transition-delay", $hintShowDelay);
 	}
 
 	/**

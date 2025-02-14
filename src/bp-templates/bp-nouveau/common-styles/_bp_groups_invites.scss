@@ -1,3 +1,6 @@
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 #group-invites-container {
 	background: #fff;
 	border: 1px solid #e7e9ec;

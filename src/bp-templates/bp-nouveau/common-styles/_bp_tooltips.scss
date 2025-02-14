@@ -1,7 +1,10 @@
 // BuddyPress Tooltips
 // @version 3.0.0
 
-@import "vendors/hint/hint";
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
+@use "vendors/hint/hint";
 
 //
 // Mixins
@@ -86,10 +89,10 @@ button[data-bp-tooltip] {
 		@include base-effects();
 		@include normalized-text();
 
-		background: $tooltip-background;
+		background: variables.$tooltip-background;
 		border-radius: 4px;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
-		color: $white;
+		color: variables.$white;
 		content: attr(data-bp-tooltip);
 		line-height: 1.3;
 		padding: 7px 15px;
@@ -100,7 +103,7 @@ button[data-bp-tooltip] {
 
 	&:before {
 
-		@include svg-arrow($tooltip-background);
+		@include svg-arrow(variables.$tooltip-background);
 		@include base-effects();
 
 		content: "";
@@ -144,7 +147,7 @@ button[data-bp-tooltip] {
 		&:after {
 			bottom: 100%;
 			left: 50%;
-			margin-bottom: 5px + $tooltip-arrow-height;
+			margin-bottom: 5px + variables.$tooltip-arrow-height;
 
 			@include transform(translate(-50%, 10px));
 			@include transform-origin(top);
@@ -179,7 +182,7 @@ button[data-bp-tooltip] {
 		&:after {
 			bottom: 100%;
 			left: 0;
-			margin-bottom: 5px + $tooltip-arrow-height;
+			margin-bottom: 5px + variables.$tooltip-arrow-height;
 
 			@include transform(translate(0, 10px));
 			@include transform-origin(top);
@@ -214,7 +217,7 @@ button[data-bp-tooltip] {
 		&:after {
 			bottom: 100%;
 			right: 0;
-			margin-bottom: 5px + $tooltip-arrow-height;
+			margin-bottom: 5px + variables.$tooltip-arrow-height;
 
 			@include transform(translate(0, 10px));
 			@include transform-origin(top);
@@ -248,7 +251,7 @@ button[data-bp-tooltip] {
 
 		&:after {
 			left: 50%;
-			margin-top: 5px + $tooltip-arrow-height;
+			margin-top: 5px + variables.$tooltip-arrow-height;
 			top: 100%;
 
 			@include transform(translate(-50%, -10px));
@@ -259,7 +262,7 @@ button[data-bp-tooltip] {
 			margin-top: 5px;
 			top: 100%;
 
-			@include svg-arrow($tooltip-background, "down");
+			@include svg-arrow(variables.$tooltip-background, "down");
 			@include transform(translate(-50%, -10px));
 		}
 
@@ -282,7 +285,7 @@ button[data-bp-tooltip] {
 
 		&:after {
 			left: 0;
-			margin-top: 5px + $tooltip-arrow-height;
+			margin-top: 5px + variables.$tooltip-arrow-height;
 			top: 100%;
 
 			@include transform(translate(0, -10px));
@@ -293,7 +296,7 @@ button[data-bp-tooltip] {
 			margin-top: 5px;
 			top: 100%;
 
-			@include svg-arrow($tooltip-background, "down");
+			@include svg-arrow(variables.$tooltip-background, "down");
 			@include transform(translate(0, -10px));
 		}
 
@@ -316,7 +319,7 @@ button[data-bp-tooltip] {
 
 		&:after {
 			right: 0;
-			margin-top: 5px + $tooltip-arrow-height;
+			margin-top: 5px + variables.$tooltip-arrow-height;
 			top: 100%;
 
 			@include transform(translate(0, -10px));
@@ -327,7 +330,7 @@ button[data-bp-tooltip] {
 			margin-top: 5px;
 			top: 100%;
 
-			@include svg-arrow($tooltip-background, "down");
+			@include svg-arrow(variables.$tooltip-background, "down");
 			@include transform(translate(0, -10px));
 		}
 
@@ -349,7 +352,7 @@ button[data-bp-tooltip] {
 	&[data-bp-tooltip-pos="left"] {
 
 		&:after {
-			margin-right: 5px + $tooltip-arrow-height;
+			margin-right: 5px + variables.$tooltip-arrow-height;
 			right: 100%;
 			top: 50%;
 
@@ -361,7 +364,7 @@ button[data-bp-tooltip] {
 			right: 100%;
 			top: 50%;
 
-			@include svg-arrow($tooltip-background, "left");
+			@include svg-arrow(variables.$tooltip-background, "left");
 			@include transform(translate(10px, -50%));
 		}
 
@@ -384,7 +387,7 @@ button[data-bp-tooltip] {
 
 		&:after {
 			left: 100%;
-			margin-left: 5px + $tooltip-arrow-height;
+			margin-left: 5px + variables.$tooltip-arrow-height;
 			top: 50%;
 
 			@include transform(translate(-10px, -50%));
@@ -395,7 +398,7 @@ button[data-bp-tooltip] {
 			margin-left: 5px;
 			top: 50%;
 
-			@include svg-arrow($tooltip-background, "right");
+			@include svg-arrow(variables.$tooltip-background, "right");
 			@include transform(translate(-10px, -50%));
 		}
 

@@ -1,6 +1,9 @@
 // BP Single Group Header Styles.
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .groups-header {
 
 	.bp-group-type-list {
@@ -24,19 +27,19 @@
 
 		#group-admins {
 
-			@include dis-flex;
-			margin-bottom: $marg-med;
+			@include mixins.dis-flex;
+			margin-bottom: variables.$marg-med;
 			padding-right: 10px;
 			margin-right: 5px;
 		}
 
 		.moderators-title {
 
-			@include font-size(14);
+			@include mixins.font-size(14);
 		}
 
 		.user-list {
-			margin: 0 0 $marg-xsml;
+			margin: 0 0 variables.$marg-xsml;
 
 			ul:after {
 				clear: both;
@@ -56,7 +59,7 @@
 
 			> li {
 
-				@include dis-flex;
+				@include mixins.dis-flex;
 				margin: 0 0 0 -6px;
 				position: relative;
 				z-index: 1;
@@ -85,8 +88,8 @@
 					background-color: #f9f9f9;
 					border: 2px solid #fff;
 
-					@include dis-flex;
-					@include flex-align(center);
+					@include mixins.dis-flex;
+					@include mixins.flex-align(center);
 					-webkit-box-pack: center;
 					-ms-flex-pack: center;
 					justify-content: center;
@@ -109,11 +112,11 @@
 
 		.parent-title {
 
-			@include font-size(14);
+			@include mixins.font-size(14);
 		}
 
 		.group-list {
-			margin: 0 0 $marg-xsml;
+			margin: 0 0 variables.$marg-xsml;
 
 			ul:after {
 				clear: both;
@@ -130,7 +133,7 @@
 
 		img.avatar {
 
-			@include box-shadow-none();
+			@include mixins.box-shadow-none();
 			float: none;
 			height: 30px;
 			margin: 0;
@@ -140,15 +143,15 @@
 	}
 
 	.desc-wrap {
-		background: $light-grey;
-		border: 1px solid $med-light-grey;
-		margin: 0 0 $marg-med;
-		padding: $pad-med;
+		background: variables.$light-grey;
+		border: 1px solid variables.$med-light-grey;
+		margin: 0 0 variables.$marg-med;
+		padding: variables.$pad-med;
 		text-align: center;
 
 		.group-description {
-			background: $off-white;
-			padding: $pad-med;
+			background: variables.$off-white;
+			padding: variables.$pad-med;
 			text-align: left;
 		}
 
@@ -184,7 +187,7 @@
 
 		#item-header-cover-image {
 
-			@include flex-align(center);
+			@include mixins.flex-align(center);
 			-webkit-box-orient: vertical;
 			-webkit-box-direction: normal;
 			-ms-flex-flow: column;
@@ -201,7 +204,7 @@
 
 			#item-header-content {
 
-				@include center-vert;
+				@include mixins.center-vert;
 				flex-direction: column;
 				width: 100%;
 
@@ -226,15 +229,15 @@
 
 			.group-item-actions {
 
-				@include dis-flex;
-				@include flex-align(center);
+				@include mixins.dis-flex;
+				@include mixins.flex-align(center);
 				flex-direction: row;
 				width: auto;
 			}
 
 			.groups-meta.action {
 
-				@include dis-flex;
+				@include mixins.dis-flex;
 				position: static;
 				max-width: initial;
 				width: auto;
@@ -262,7 +265,7 @@
 
 		.group-actions-wrap {
 
-			@include dis-flex();
+			@include mixins.dis-flex();
 			-webkit-box-pack: justify;
 			-ms-flex-pack: justify;
 			justify-content: space-between;
@@ -319,13 +322,13 @@
 
 			.group-actions-absolute {
 
-				@include dis-flex();
-				@include flex-align(center);
+				@include mixins.dis-flex();
+				@include mixins.flex-align(center);
 
 				.groups-meta {
 					display: block;
 					margin-bottom: 0;
-					margin-left: $marg-xsml;
+					margin-left: variables.$marg-xsml;
 					max-width: initial;
 					position: static;
 
@@ -380,13 +383,13 @@
 				}
 
 				.bb_more_options {
-					margin-left: $marg-xsml;
+					margin-left: variables.$marg-xsml;
 					margin-bottom: 0;
 				}
 
 				.bp-group-status {
 
-					@include align-self(center);
+					@include mixins.align-self(center);
 					margin: 0;
 
 					.group-type {
@@ -412,14 +415,14 @@
 
 			#item-actions,
 			#item-header-content {
-				padding-top: $marg-lrg;
-				padding-bottom: $marg-lrg;
+				padding-top: variables.$marg-lrg;
+				padding-bottom: variables.$marg-lrg;
 			}
 
 		}
 
 		.group-item-actions {
-			margin-left: $marg-med;
+			margin-left: variables.$marg-med;
 			text-align: right;
 			max-width: 25%;
 			display: table;
@@ -436,11 +439,11 @@
 
 			#item-actions,
 			#item-header-content {
-				padding-bottom: $marg-med;
+				padding-bottom: variables.$marg-med;
 			}
 
 			#item-actions {
-				margin-bottom: $marg-med;
+				margin-bottom: variables.$marg-med;
 			}
 
 		}
@@ -457,12 +460,12 @@
 
 				.group-actions-wrap {
 
-					@include center-vert();
+					@include mixins.center-vert();
 					flex-direction: column;
 					justify-content: center;
 
 					.bp-title {
-						margin-right: $marg-med;
+						margin-right: variables.$marg-med;
 					}
 
 					.moderators-lists {
@@ -482,7 +485,7 @@
 			&.centered #item-header-content {
 
 				> .bp-group-type {
-					margin-bottom: $marg-med;
+					margin-bottom: variables.$marg-med;
 				}
 
 				.group-actions-wrap {
@@ -509,7 +512,7 @@
 	@media screen and (max-width: 380px) {
 
 		.bb_more_options {
-			margin-bottom: $marg-sml;
+			margin-bottom: variables.$marg-sml;
 		}
 
 	}

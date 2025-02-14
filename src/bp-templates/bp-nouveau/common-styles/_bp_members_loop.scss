@@ -1,6 +1,9 @@
 // BP Members loop.
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .buddypress-wrap {
 
 	.members-list,
@@ -9,33 +12,33 @@
 		li {
 
 			.member-name {
-				margin-bottom: $marg-sml;
+				margin-bottom: variables.$marg-sml;
 			}
 
 			.user-update {
-				border: 1px solid $light-grey;
+				border: 1px solid variables.$light-grey;
 
-				@include border-radius(10px);
-				color: $meta-text;
+				@include mixins.border-radius(10px);
+				color: variables.$meta-text;
 
 				font-style: italic;
 
-				@include responsive-font(16);
-				margin: $marg-med auto;
-				padding: $pad-med;
+				@include mixins.responsive-font(16);
+				margin: variables.$marg-med auto;
+				padding: variables.$pad-med;
 
 				.activity-read-more {
 
 					display: block;
 
-					@include font-size(12);
+					@include mixins.font-size(12);
 					font-style: normal;
-					margin-top: $marg-sml;
+					margin-top: variables.$marg-sml;
 					padding-left: 2px;
 				}
 			}
 
-			@include medium-up() {
+			@include mixins.medium-up() {
 
 				.last-activity {
 					clear: left;
@@ -48,7 +51,7 @@
 				.followers-wrap,
 				.member-type {
 					font-size: 14px;
-					color: $light-text;
+					color: variables.$light-text;
 					margin-bottom: 15px;
 				}
 
@@ -68,7 +71,7 @@
 				}
 
 				.last-activity {
-					color: $light-text;
+					color: variables.$light-text;
 					font-size: 13px;
 					margin: 0 0 12px 0;
 				}
@@ -138,8 +141,8 @@
 			}
 
 			.list-wrap {
-				background: $off-white;
-				border: 1px solid $bp-border-color;
+				background: variables.$off-white;
+				border: 1px solid variables.$bp-border-color;
 				padding: 20px;
 				position: relative;
 			}
@@ -167,7 +170,7 @@
 
 		li {
 
-			@include medium-up() {
+			@include mixins.medium-up() {
 
 				.joined {
 					clear: left;
@@ -187,8 +190,8 @@
 } // close .buddypress-wrap
 
 .member-status {
-	background-color: $golden;
-	border: 2px solid $white;
+	background-color: variables.$golden;
+	border: 2px solid variables.$white;
 	border-radius: 100%;
 	z-index: 1;
 
@@ -238,7 +241,7 @@
 
 body:not(.logged-in) {
 
-	@include medium-small-up() {
+	@include mixins.medium-small-up() {
 
 		.members-list {
 
@@ -254,14 +257,14 @@ body:not(.logged-in) {
 	display: flex;
 	flex-flow: row wrap;
 
-	@include medium-up() {
+	@include mixins.medium-up() {
 
 		flex-flow: row-reverse;
 
 		.bp-profile-search-widget {
 			flex: 0 0 220px;
 			min-width: 0;
-			margin-left: $marg-xlrg;
+			margin-left: variables.$marg-xlrg;
 		}
 	}
 
@@ -270,7 +273,7 @@ body:not(.logged-in) {
 		min-width: 0;
 	}
 
-	@include medium-max() {
+	@include mixins.medium-max() {
 		flex-direction: column;
 
 		.bp-profile-search-widget {
@@ -280,12 +283,12 @@ body:not(.logged-in) {
 	}
 
 	.bp-field-wrap {
-		margin-bottom: $marg-lrg;
+		margin-bottom: variables.$marg-lrg;
 	}
 
 	.bps-description {
 		font-size: 13px;
-		margin: $marg-xsml 0;
+		margin: variables.$marg-xsml 0;
 		color: #767676;
 	}
 }
@@ -293,7 +296,7 @@ body:not(.logged-in) {
 .bp-profile-search-widget {
 
 	.bp-field-wrap {
-		margin-bottom: $marg-lrg;
+		margin-bottom: variables.$marg-lrg;
 	}
 
 	.bps-form-title {

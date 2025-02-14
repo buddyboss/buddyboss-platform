@@ -1,3 +1,6 @@
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 #wpadminbar #wp-admin-bar-bp-notifications-default {
 	width: 300px;
 	max-height: calc(90vh - 50px);

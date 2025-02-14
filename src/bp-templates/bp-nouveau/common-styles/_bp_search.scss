@@ -1,18 +1,21 @@
 // BP Directory Search elements
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .buddypress-wrap { // the ID is required to add weight to rules
 
-	@include clearfix-element(".bp-dir-search-form, .bp-messages-search-form");
+	@include mixins.clearfix-element(".bp-dir-search-form, .bp-messages-search-form");
 
 	form.bp-dir-search-form,
 	form.bp-messages-search-form,
 	form.bp-invites-search-form {
-		border: 1px solid $bp-border-color;
+		border: 1px solid variables.$bp-border-color;
 
 		width: 100%;
 
-		@include medium-lrg-up() {
+		@include mixins.medium-lrg-up() {
 			width: 15em;
 		}
 
@@ -26,7 +29,7 @@
 			background: none;
 			border: 0;
 
-			@include border-radius(0);
+			@include mixins.border-radius(0);
 		}
 
 		input[type="search"],
@@ -50,14 +53,14 @@
 
 			span {
 
-				@include font-size(18);
+				@include mixins.font-size(18);
 				line-height: 1.6;
 			}
 		}
 
 		button[type="submit"].bp-show {
 
-			@include show();
+			@include mixins.show();
 		}
 
 		input[type="search"]::-webkit-search-cancel-button {
@@ -103,7 +106,7 @@
 
 		button[type="submit"] {
 
-			@include show();
+			@include mixins.show();
 		}
 	}
 }

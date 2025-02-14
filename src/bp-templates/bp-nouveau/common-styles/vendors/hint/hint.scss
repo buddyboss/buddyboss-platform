@@ -15,13 +15,13 @@
  *
  */
 
-@import "hint-variables";
-@import "hint-mixins";
-@import "hint-core";
-@import "hint-position";
-@import "hint-sizes";
-@import "hint-theme";
-@import "hint-color-types";
-@import "hint-always";
-@import "hint-rounded";
-@import "hint-effects";
+@use "hint-variables";
+@use "hint-mixins";
+@use "hint-core";
+@use "hint-position";
+@use "hint-sizes";
+@use "hint-theme";
+@use "hint-color-types";
+@use "hint-always";
+@use "hint-rounded";
+@use "hint-effects";

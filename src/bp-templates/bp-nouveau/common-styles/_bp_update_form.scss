@@ -1,6 +1,9 @@
 // BP Whats new form handles user updates to groups or profiles
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .item-body {
 
 	.activity-update-form {
@@ -397,9 +400,9 @@
 
 .bp-nouveau-activity-form-placeholder-,
 .activity-update-form {
-	border: 1px solid $bp-border-dark;
+	border: 1px solid variables.$bp-border-dark;
 
-	margin: $marg-med 0;
+	margin: variables.$marg-med 0;
 
 	#whats-new-form-placeholder,
 	#whats-new-form.activity-form {
@@ -603,8 +606,8 @@
 	#whats-new-form-placeholder #whats-new-toolbar,
 	#whats-new-form #whats-new-toolbar {
 		padding: 12px 16px;
-		background-color: $light-grey;
-		border-top: 1px solid $bp-border-color;
+		background-color: variables.$light-grey;
+		border-top: 1px solid variables.$bp-border-color;
 
 		.medium-editor-placeholder {
 			background-color: transparent;
@@ -614,8 +617,8 @@
 	.whats-new-form-footer {
 		display: flex;
 		justify-content: space-between;
-		background-color: $light-grey;
-		border-top: 1px solid $bp-border-color;
+		background-color: variables.$light-grey;
+		border-top: 1px solid variables.$bp-border-color;
 	}
 
 	@media screen and (max-width: 580px) {
@@ -623,7 +626,7 @@
 		.whats-new-form-footer {
 			flex-direction: column;
 			align-items: center;
-			padding-top: $pad-med;
+			padding-top: variables.$pad-med;
 		}
 
 		.activity-form.focus-in #activity-form-submit-wrapper {
@@ -1282,7 +1285,7 @@
 }
 
 #whats-new-post-in-box {
-	margin: $marg-sml 0;
+	margin: variables.$marg-sml 0;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -1366,7 +1369,7 @@
 	}
 
 	li {
-		margin-bottom: $marg-sml;
+		margin-bottom: variables.$marg-sml;
 	}
 
 	.bp-activity-object {
@@ -1374,7 +1377,7 @@
 
 		label {
 
-			@include center-vert();
+			@include mixins.center-vert();
 			cursor: pointer;
 		}
 
@@ -1413,7 +1416,7 @@
 }
 
 #whats-new-post-in {
-	margin-right: $marg-sml;
+	margin-right: variables.$marg-sml;
 	display: none;
 }
 
@@ -1483,13 +1486,13 @@
 }
 
 #whats-new-submit {
-	margin: $marg-sml 0 $marg-sml auto;
+	margin: variables.$marg-sml 0 variables.$marg-sml auto;
 	display: flex;
 	flex-flow: row-reverse;
 
 	input {
 
-		@include font-size(14);
+		@include mixins.font-size(14);
 		line-height: 1;
 	}
 }
@@ -1824,17 +1827,17 @@ div[class*="attached-gif-container"] {
 
 		&.show {
 
-			@include center-vert();
+			@include mixins.center-vert();
 		}
 
 		[class*="bb-icon"] {
 			font-size: 30px;
-			color: $black;
+			color: variables.$black;
 			opacity: 0.4;
 		}
 
 		p {
-			color: $black;
+			color: variables.$black;
 			font-size: 13px;
 			font-weight: 500;
 			line-height: 1.5;

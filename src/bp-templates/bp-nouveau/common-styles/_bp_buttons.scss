@@ -1,6 +1,9 @@
 // BP Buttons, Submits, Icons and general clicky things styling.
 // @version 3.0.0
 
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 // Buttons by default are styled as simple boxes but we may
 // change that by adding a parent class ( on any close parent to
 // the element ) .text-link-list
@@ -21,17 +24,17 @@
 		.generic-button a,
 		.comment-reply-link,
 		a.bp-title-button {
-			background: $white; /* Old browsers */
-			border-color: $bp-border-dark;
+			background: variables.$white; /* Old browsers */
+			border-color: variables.$bp-border-dark;
 			border-style: solid;
 			border-width: 1px;
-			color: $dark-grey;
+			color: variables.$dark-grey;
 			cursor: pointer;
 			font-size: inherit;
 			font-weight: 400;
 			outline: none;
 			line-height: 1.3;
-			padding: $pad-xsml $pad-sml;
+			padding: variables.$pad-xsml variables.$pad-sml;
 			text-align: center;
 			text-decoration: none;
 			width: auto;
@@ -60,9 +63,9 @@
 		.generic-button a:hover,
 		.comment-reply-link:focus,
 		.comment-reply-link:hover {
-			background: $buttons-background;
-			border-color: darken($bp-border-dark, 20%);
-			color: $black;
+			background: variables.$buttons-background;
+			border-color: darken(variables.$bp-border-dark, 20%);
+			color: variables.$black;
 			outline: none;
 			text-decoration: none;
 		}
@@ -77,8 +80,8 @@
 		button.disabled,
 		div.pending a,
 		a.disabled {
-			border-color: $bp-border-color;
-			color: $light-text;
+			border-color: variables.$bp-border-color;
+			color: variables.$light-text;
 			cursor: default;
 		}
 
@@ -92,8 +95,8 @@
 		button.disabled:hover,
 		div.pending a:hover,
 		a.disabled:hover {
-			border-color: $bp-border-color;
-			color: $light-text;
+			border-color: variables.$bp-border-color;
+			color: variables.$light-text;
 		}
 
 		// provide a class to style elements as text only non button.
@@ -102,12 +105,12 @@
 			background: none;
 			border: 0;
 
-			@include box-shadow-none();
-			color: $light-text;
+			@include mixins.box-shadow-none();
+			color: variables.$light-text;
 
 			&.small {
 
-				@include font-size(13);
+				@include mixins.font-size(13);
 			}
 
 			&:focus,
@@ -168,18 +171,18 @@
 			a.button {
 				background: none;
 				border: none;
-				border-right: 1px solid $bp-border-color;
-				color: $light-text-plus;
+				border-right: 1px solid variables.$bp-border-color;
+				color: variables.$light-text-plus;
 				display: inline-block;
-				padding: $pad-xsml $pad-med;
+				padding: variables.$pad-xsml variables.$pad-med;
 
 				&:visited {
-					color: $text-link-visited;
+					color: variables.$text-link-visited;
 				}
 
 				&:focus,
 				&:hover {
-					color: $text-link-hover;
+					color: variables.$text-link-hover;
 				}
 
 			}
@@ -202,13 +205,13 @@
 
 				a,
 				button {
-					border: 1px solid $bp-border-dark;
+					border: 1px solid variables.$bp-border-dark;
 					display: block;
 					margin: 0;
 
 					&:focus,
 					&:hover {
-						background: $buttons-background;
+						background: variables.$buttons-background;
 					}
 				}
 			} // .action
@@ -236,25 +239,25 @@
 				text-decoration: underline;
 			}
 
-			@include medium-up {
+			@include mixins.medium-up {
 				float: right;
 			}
 			text-align: center;
 
 			a {
-				border: 1px solid $bp-border-dark;
+				border: 1px solid variables.$bp-border-dark;
 
-				@include border-radius(5px);
-				@include box-shadow(inset 0 0 6px 0 $light-grey);
+				@include mixins.border-radius(5px);
+				@include mixins.box-shadow(inset 0 0 6px 0 variables.$light-grey);
 				margin: 0.2em 0;
 				width: auto;
 
 				&:focus,
 				&:hover {
 					background: none;
-					border-color: $bp-border-dark;
+					border-color: variables.$bp-border-dark;
 
-					@include box-shadow(inset 0 0 12px 0 $light-grey );
+					@include mixins.box-shadow(inset 0 0 12px 0 variables.$light-grey );
 				}
 			}
 
@@ -262,11 +265,11 @@
 
 		&.bp-dir-vert-nav {
 
-			@include medium-up {
+			@include mixins.medium-up {
 
 				.create-button {
 					float: none;
-					padding-top: $pad-lrg;
+					padding-top: variables.$pad-lrg;
 
 
 					a {
@@ -286,7 +289,7 @@
 					background: none;
 					border: 0;
 
-					@include box-shadow-none();
+					@include mixins.box-shadow-none();
 					margin: 0;
 				}
 			}
@@ -341,7 +344,7 @@
 
 	.bp-invites-content .item-list li .invite-button span.icons:before {
 
-		@include responsive-font(32);
+		@include mixins.responsive-font(32);
 	}
 
 	// If icons are required for anchors e.g '<a class="button"'

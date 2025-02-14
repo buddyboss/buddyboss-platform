@@ -12,8 +12,8 @@
 
 // Import our partials mixins & variables files
 
-@use "../common-styles/_bp-variables";
-@use "../common-styles/_bp-mixins";
+@use "../common-styles/_bp-variables" as variables;
+@use "../common-styles/_bp-mixins" as mixins;
 
 
 // Sectional structuring allows us to locate elements

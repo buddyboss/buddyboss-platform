@@ -1,5 +1,9 @@
 
 // link previews
+
+@use "./_bp-variables" as variables;
+@use "./_bp-mixins" as mixins;
+
 .bb-url-scrapper-loading {
 	display: block;
 	font-size: 14px;
@@ -477,7 +481,7 @@
 		z-index: 11;
 	}
 
-	@include medium-small-max() {
+	@include mixins.medium-small-max() {
 		color: rgba(0, 0, 0, 1);
 	}
 }
