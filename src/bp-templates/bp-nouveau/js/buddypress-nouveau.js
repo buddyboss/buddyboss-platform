@@ -11,6 +11,10 @@ window.bp = window.bp || {};
 	var hideCardTimeout = null;
 	var popupCardLoaded = false;
 	var currentRequest = null;
+	var hoverProfileAvatar = false;
+	var hoverGroupAvatar = false;
+	var hoverProfileCardPopup = false;
+	var hoverGroupCardPopup = false;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -935,6 +939,7 @@ window.bp = window.bp || {};
 			// Profile/Group Popup Card.
 			$( document ).on( 'mouseenter', 'img.bb-hp-profile-avatar', function () {
 				hoverAvatar = true;
+				hoverProfileAvatar = true;
 				if ( ! popupCardLoaded ) {
 					if ( hideCardTimeout ) {
 						clearTimeout( hideCardTimeout );
@@ -944,6 +949,7 @@ window.bp = window.bp || {};
 			} );
 			$( document ).on( 'mouseenter', 'img.bb-hp-group-avatar, .activity-group-post-meta img.avatar', function () {
 				hoverAvatar = true;
+				hoverGroupAvatar = true;
 				if ( ! popupCardLoaded ) {
 					if ( hideCardTimeout ) {
 						clearTimeout( hideCardTimeout );
@@ -953,6 +959,15 @@ window.bp = window.bp || {};
 			} );
 			$( document ).on( 'mouseleave', 'img.bb-hp-profile-avatar, img.bb-hp-group-avatar, .activity-group-post-meta img.avatar', function ( event ) {
 				var relatedTarget = event.relatedTarget;
+				var idleProfileAvatar = $( this ).hasClass( 'bb-hp-profile-avatar' );
+    			var idleGroupAvatar = $( this ).hasClass( 'bb-hp-group-avatar' ) || $( this ).is( '.activity-group-post-meta img.avatar' );
+
+				if ( idleProfileAvatar ) {
+					hoverProfileAvatar = false;
+				}
+				if ( idleGroupAvatar ) {
+					hoverGroupAvatar = false;
+				}
 
 				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
 					var $newAvatar = $( relatedTarget );
@@ -972,19 +987,39 @@ window.bp = window.bp || {};
 						bp.Nouveau.groupPopupCard.call( '.author-avatar img.avatar' );
 					}
 				} else {
+					hoverProfileAvatar = false;
+					hoverGroupAvatar = false;
 					hoverAvatar = false;
 					if ( ! hoverCardPopup ) {
 						bp.Nouveau.checkHidePopupCard();
 					}
 				}
 			} );
-			$( document ).on( 'mouseenter', '#profile-card, #group-card', function () {
+			$( document ).on( 'mouseenter', '#profile-card', function () {
 				hoverCardPopup = true;
+				hoverProfileCardPopup = true;
 				if ( hideCardTimeout ) {
 					clearTimeout( hideCardTimeout );
 				}
 			} );
-			$( document ).on( 'mouseleave', '#profile-card, #group-card', function () {
+			$( document ).on( 'mouseenter', '#group-card', function () {
+				hoverCardPopup = true;
+				hoverGroupCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			} );
+			$( document ).on( 'mouseleave', '#profile-card', function () {
+				hoverProfileCardPopup = false;
+				setTimeout( function () {
+					hoverCardPopup = false;
+					if ( ! hoverAvatar ) {
+						bp.Nouveau.checkHidePopupCard();
+					}
+				}, 100 );
+			} );
+			$( document ).on( 'mouseleave', '#group-card', function () {
+				hoverGroupCardPopup = false;
 				setTimeout( function () {
 					hoverCardPopup = false;
 					if ( ! hoverAvatar ) {
@@ -4737,12 +4772,14 @@ window.bp = window.bp || {};
 					bp.Nouveau.cacheProfileCard[memberId] = data;
 
 					// Check if hovering over avatar or popup.
-					if ( hoverAvatar || hoverCardPopup ) {
-						$profileCard.removeClass( 'loading' );
-						bp.Nouveau.updateProfileCard( data, currentUser );
-						popupCardLoaded = true;
-					} else {
-						bp.Nouveau.hidePopupCard();
+					if ( hoverProfileAvatar || hoverProfileCardPopup ) {
+						if ( hoverAvatar || hoverCardPopup ) {
+							$profileCard.removeClass( 'loading' );
+							bp.Nouveau.updateProfileCard( data, currentUser );
+							popupCardLoaded = true;
+						} else {
+							bp.Nouveau.hidePopupCard();
+						}
 					}
 
 					bp.Nouveau.currentRequestMemberId = null;
@@ -4936,12 +4973,14 @@ window.bp = window.bp || {};
 					bp.Nouveau.cacheGroupCard[groupId] = data;
 
 					// Check if hovering over avatar or popup.
-					if ( hoverAvatar || hoverCardPopup ) {
-						$groupCard.removeClass( 'loading' );
-						bp.Nouveau.updateGroupCard( data, currentUser );
-						popupCardLoaded = true;
-					} else {
-						bp.Nouveau.hidePopupCard();
+					if ( hoverGroupAvatar || hoverGroupCardPopup ) {
+						if ( hoverAvatar || hoverCardPopup ) {
+							$groupCard.removeClass( 'loading' );
+							bp.Nouveau.updateGroupCard( data, currentUser );
+							popupCardLoaded = true;
+						} else {
+							bp.Nouveau.hidePopupCard();
+						}
 					}
 
 					bp.Nouveau.currentRequestGroupId = null;
