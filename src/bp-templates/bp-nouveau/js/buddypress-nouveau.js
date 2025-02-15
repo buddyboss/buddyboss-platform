@@ -4711,7 +4711,14 @@ window.bp = window.bp || {};
 				bp.Nouveau.abortOngoingRequest();
 			}
 
-			// Avoid duplicate AJAX requests for same memberId.
+			// Always update position
+			var position = setPopupPosition();
+			$profileCard.css( {
+				top: position.top + 'px',
+				left: position.left + 'px'
+			} );
+
+			// Avoid duplicate AJAX requests for same memberId
 			if ( bp.Nouveau.currentRequestMemberId === memberId ) {
 				$profileCard.addClass( 'show loading' );
 				return;
@@ -4725,11 +4732,7 @@ window.bp = window.bp || {};
 				var cachedProfileData = bp.Nouveau.cacheProfileCard[memberId];
 				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
 
-				var position = setPopupPosition();
-				$profileCard.css( {
-					top : position.top + 'px',
-					left: position.left + 'px',
-				} ).removeClass( 'loading' );
+				$profileCard.removeClass( 'loading' );
 				popupCardLoaded = true;
 				bp.Nouveau.currentRequestMemberId = null;
 				return;
@@ -4752,13 +4755,8 @@ window.bp = window.bp || {};
 				signal    : controller.signal, // Attach the signal to the request.
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
-					// Position popup near hovered avatar.
-					var position = setPopupPosition();
-					$profileCard.css( {
-						top : position.top + 'px',
-						left: position.left + 'px',
-					} ).addClass( 'show loading' );
 
+					$profileCard.addClass( 'show loading' );
 					if ( currentUser ) {
 						$profileCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
 					}
@@ -4913,6 +4911,13 @@ window.bp = window.bp || {};
 				bp.Nouveau.abortOngoingRequest();
 			}
 
+			// Always update position
+			var position = setPopupPosition();
+			$groupCard.css( {
+				top: position.top + 'px',
+				left: position.left + 'px'
+			} );
+
 			// Avoid duplicate AJAX requests for same groupId.
 			if ( bp.Nouveau.currentRequestGroupId === groupId ) {
 				$groupCard.addClass( 'show loading' );
@@ -4927,11 +4932,7 @@ window.bp = window.bp || {};
 				var cachedGroupData = bp.Nouveau.cacheGroupCard[groupId];
 				bp.Nouveau.updateGroupCard( cachedGroupData, currentUser );
 
-				var position = setPopupPosition();
-				$groupCard.css( {
-					top : position.top + 'px',
-					left: position.left + 'px',
-				} ).removeClass( 'loading' );
+				$groupCard.removeClass( 'loading' );
 				popupCardLoaded = true;
 				bp.Nouveau.currentRequestGroupId = null;
 				return;
@@ -4954,13 +4955,8 @@ window.bp = window.bp || {};
 				signal    : controller.signal, // Attach the signal to the request.
 				beforeSend: function () {
 					bp.Nouveau.resetGroupCard();
-					// Position popup near hovered avatar.
-					var position = setPopupPosition();
-					$groupCard.css( {
-						top : position.top + 'px',
-						left: position.left + 'px',
-					} ).addClass( 'show loading' );
 
+					$groupCard.addClass( 'show loading' );
 					$groupCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
 				},
 				success   : function ( data ) {
