@@ -545,7 +545,7 @@ class BP_Activity_Activity {
 			}
 		}
 
-		if ( ! empty( $r['order_by'] ) ) {
+		if ( isset( $r['filter'] ) && is_array( $r['filter'] ) && ! empty( $r['order_by'] ) ) {
 			$r['filter']['since_date_column'] = $r['order_by'];
 		}
 

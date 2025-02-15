@@ -7422,6 +7422,21 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 function bb_activity_update_date_updated( $activity_id, $time ) {
 	global $wpdb;
 
+	// Check if the time is empty then exit.
+	if ( empty( $time ) ) {
+		return false;
+	}
+
+	// Validate the date format (e.g., Y-m-d H:i:s).
+	$date = DateTime::createFromFormat( 'Y-m-d H:i:s', $time );
+
+	// Check if the date format is valid.
+	if ( false === $date || $date->format( 'Y-m-d H:i:s' ) !== $time ) {
+		return false;
+	}
+
+	unset( $date );
+
 	$bp = buddypress();
 
 	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET date_updated = %s WHERE id = %d", $time, $activity_id ); // phpcs:ignore

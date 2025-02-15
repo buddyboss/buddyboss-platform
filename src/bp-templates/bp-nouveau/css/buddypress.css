@@ -25970,6 +25970,10 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   cursor: pointer;
 }
 
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search .subnav-filters-opener > i {
+  color: #5a5a5a;
+}
+
 .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal {
   opacity: 0;
   visibility: hidden;
@@ -26123,10 +26127,32 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   transform: translateY(-50%);
 }
 
+.activity-head-bar .activity-type-navs + .bb-subnav-filters-search {
+  margin-left: 20px;
+}
+
+.has-sidebar #buddypress .bb-profile-grid:has(.widget-area) .activity-head-bar .bb-subnav-filters-container .subnav-filters-modal form.bp-dir-search-form input[type="search"] {
+  width: 200px;
+}
+
+@media screen and (min-width: 1131px) and (max-width: 1460px) {
+  .has-sidebar #buddypress .bb-profile-grid:has(.widget-area) .activity-head-bar {
+    flex-wrap: wrap;
+  }
+  .has-sidebar #buddypress .bb-profile-grid:has(.widget-area) .activity-head-bar .bb-subnav-filters-container {
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
 .activity-head-bar {
   display: flex;
   align-items: center;
   margin: 20px 0;
+}
+
+.activity-head-bar > .activity-type-navs {
+  flex: 0 0 auto;
 }
 
 .activity-head-bar > .subnav-filters {

@@ -124,6 +124,16 @@ window.bp = window.bp || {};
 			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
+			// Fix theme class type for the backward compatibility.
+			if ( $( '.actvity-head-bar' ).length ) {
+				$( '.actvity-head-bar' ).addClass( 'activity-head-bar' ).removeClass( 'actvity-head-bar' );
+
+				// Remove old activity nav as we have new design for filter.
+				if ( $( '.activity-head-bar > nav.activity-type-navs' ).length && $( '.activity-head-bar .bb-subnav-filters-filtering' ).length ) {
+					$( '.activity-head-bar > nav.activity-type-navs' ).remove();
+				}
+			}
+
 			// Inject Activities.
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
@@ -267,16 +277,37 @@ window.bp = window.bp || {};
 
 			$.extend(data, {
 				bp_heartbeat: (function() {
-					var  heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || {};
+					var heartbeatData = { scope: 'all' };
+
+					// Check if the page is a user activity page.
+					if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || { scope: 'just-me' };
+					} else {
+
+						// Otherwise, retrieve the activity data.
+						heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || { scope: 'all' };
+
+						// If the page is a single group activity page, set the scope to 'all'.
+						if ( $( 'body.activity.buddypress.groups.single-item' ).length ) {
+							heartbeatData.scope = 'all';
+						}
+					}
 
 					if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
 						var scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
-						if ( 'undefined' !== typeof heartbeatData.scope && heartbeatData.scope !== scope )  {
+
+						// Heartbeat check the value from the available.
+						if ( 'undefined' === typeof heartbeatData.scope || heartbeatData.scope !== scope ) {
 							heartbeatData.scope = scope; 
 
 							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+
 								// Add to the storage if page request 2.
-								bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+								if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+									bp.Nouveau.setStorage( 'bp-user-activity', 'scope', scope );
+								} else {
+									bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+								}
 							}	
 						}
 					}
@@ -424,7 +455,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		injectActivities: function( event ) {
-			var store = bp.Nouveau.getStorage( 'bp-activity' ),
+			var store = $( 'body.my-activity:not(.activity-singular)' ).length ? bp.Nouveau.getStorage( 'bp-user-activity' ) : bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
 			// Load newest activities.
@@ -524,6 +555,8 @@ window.bp = window.bp || {};
 
 				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
 					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+				} else if ( $( '#buddypress .activity-search.bp-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .activity-search.bp-search input[type=search]' ).val();
 				}
 
 				bp.Nouveau.objectRequest(
@@ -1898,6 +1931,20 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
+								if (
+									(
+										'' === scope ||
+										false === scope || 
+										(
+											'undefined' !== BP_Nouveau.is_send_ajax_request &&
+											'' === BP_Nouveau.is_send_ajax_request
+										)
+									) &&
+									$( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length
+								) {
+									// Get the filter selected.
+									scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+								}
 								var update_pinned_icon = false;
 								var is_group_activity  = false;
 								var activity_group_id  = '';
@@ -2008,7 +2055,7 @@ window.bp = window.bp || {};
 									}
 								}
 
-								if ( 'all' === scope && update_pinned_icon ) {
+								if ( update_pinned_icon ) {
 
 									// Activity view more comments modal.
 									if ( isInsideModal || isInsideTheatreModal ) {
@@ -2032,6 +2079,15 @@ window.bp = window.bp || {};
 									true
 								]
 							);
+
+							if ( isInsideModal ) {
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
+									bp.Nouveau.Activity.activityHasUpdates = true;
+								}
+								if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates ) {
+									bp.Nouveau.Activity.activityPinHasUpdates = true;
+								}
+							}
 						}
 					}
 				).fail(
@@ -4141,6 +4197,7 @@ window.bp = window.bp || {};
 
 								// Refresh activities after updating pin/unpin post status.
 								if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 									bp.Nouveau.refreshActivities();
 								}
 							}
@@ -4262,12 +4319,18 @@ window.bp = window.bp || {};
 			var order           = '';
 			var extras          = '';
 			var save_scope	    = false;
+			var user_timeline   = false;
 
 			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
 				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
 
 				if( $this.closest( '#bb-subnav-filter-show' ).length ) {
 					save_scope = true;
+
+					if( $( 'body' ).hasClass( 'my-activity') ) {
+						save_scope = false;
+						user_timeline = true;
+					}
 				}
 			}
 
@@ -4299,6 +4362,10 @@ window.bp = window.bp || {};
 				save_scope: save_scope,
 				event_element: $this,
 			};
+
+			if( user_timeline ) {
+				queryData.user_timeline = true;
+			}
 
 			bp.Nouveau.objectRequest( queryData );
 

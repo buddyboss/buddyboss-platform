@@ -3894,10 +3894,14 @@ function bb_update_to_2_6_90() {
 		}
 
 		// Migrate activity tabs settings to filters.
-		if ( ! bp_is_activity_tabs_active() ) {
+		$enable_activity_tabs = (bool) bp_get_option( '_bp_enable_activity_tabs', false );
+		if ( ! $enable_activity_tabs ) {
 			bp_update_option( 'bb_activity_filter_options', array( 'all' => 1 ) );
 			bp_update_option( 'bb_activity_timeline_filter_options', array( 'just-me' => 1 ) );
 		}
+
+		bp_update_option( 'bb_activity_sorting_options', array( 'date_recorded' => 1, 'date_updated'  => 1 ) );
+		bp_update_option( 'bb_enable_activity_search', true );
 
 		set_transient( 'bb_update_to_2_6_90', 'yes', HOUR_IN_SECONDS );
 	}

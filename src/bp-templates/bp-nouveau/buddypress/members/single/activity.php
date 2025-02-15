@@ -10,7 +10,6 @@
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
 bp_nouveau_activity_member_post_form();
 ?>
 <div class="activity-head-bar">

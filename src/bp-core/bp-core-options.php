@@ -1135,14 +1135,32 @@ function bp_get_activity_edit_time( $default = false ) {
  */
 function bp_is_activity_tabs_active( $default = false ) {
 
+	/* Update for the backward compatibility since setting is removed. */
+	// Retrieve the saved options.
+	$filters = bb_get_enabled_activity_filter_options();
+	
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
+	// Get only enabled options.
+	$filters = array_filter( $filters, function ( $value ) {
+		return 1 === (int) $value;
+	} );
+
+	if ( ! empty( $filters ) && count( $filters ) > 1 ) {
+		$default = true;
+	} else {
+		$default = false;
+	}
+
 	/**
 	 * Filters whether or not Activity Tabs are enabled.
 	 *
 	 * @since BuddyBoss 1.1.6
 	 *
-	 * @param bool $value Whether or not Activity Tabs are enabled.
+	 * @param bool $default Whether or not Activity Tabs are enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_tabs_active', (bool) bp_get_option( '_bp_enable_activity_tabs', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_tabs_active', $default );
 }
 
 /**
@@ -2797,6 +2815,10 @@ function bb_get_activity_filter_options_labels() {
 		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
 		'following' => __( "I'm following", 'buddyboss' ),
 	);
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
 	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
 }
 
@@ -2837,6 +2859,10 @@ function bb_get_activity_timeline_filter_options_labels() {
 		'mentions'  => __( 'Mentioned in', 'buddyboss' ),
 		'following' => __( 'Following', 'buddyboss' ),
 	);
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
 	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $filters );
 }
 
