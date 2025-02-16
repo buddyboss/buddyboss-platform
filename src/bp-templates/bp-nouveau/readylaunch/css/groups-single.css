@@ -631,6 +631,17 @@
   max-width: 960px;
 }
 
+.bb-rl-secondary-header .bb-rl-group-info .bb-rl-group-link {
+  color: var(--bb-rl-icon-primary-color);
+  margin-right: var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-100);
+  line-height: 1;
+}
+
+.bb-rl-secondary-header .bb-rl-group-info .bb-rl-group-link i {
+  font-size: var(--bb-rl-space-300);
+}
+
 .bb-rl-manage-group-container {
   display: flex;
 }
