@@ -2818,7 +2818,15 @@ function bb_get_enabled_activity_filter_options( $default = array(
 	'mentions'  => 1,
 	'following' => 1,
 ) ) {
-	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', bp_get_option( 'bb_activity_filter_options', $default ) );
+
+	$options = bp_get_option( 'bb_activity_filter_options', $default );
+	
+	// Always ensure 'all' is enabled.
+	if ( empty( $options['all'] ) ) {
+		$options['all'] = 1;
+	}
+
+	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', $options );
 }
 
 /**
@@ -2861,7 +2869,15 @@ function bb_get_enabled_activity_timeline_filter_options( $default = array(
 	'mentions'  => 1,
 	'following' => 1,
 ) ) {
-	return (array) apply_filters( 'bb_get_enabled_activity_timeline_filter_options', bp_get_option( 'bb_activity_timeline_filter_options', $default ) );
+
+	$options = bp_get_option( 'bb_activity_timeline_filter_options', $default );
+	
+	// Always ensure 'just-me' is enabled.
+	if ( empty( $options['just-me'] ) ) {
+		$options['just-me'] = 1;
+	}
+
+	return (array) apply_filters( 'bb_get_enabled_activity_timeline_filter_options', $options );
 }
 
 /**
@@ -2892,7 +2908,15 @@ function bb_get_enabled_activity_sorting_options( $default = array(
 	'date_recorded' => 1,
 	'date_updated'  => 1,
 ) ) {
-	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', bp_get_option( 'bb_activity_sorting_options', $default ) );
+
+	$options = bp_get_option( 'bb_activity_sorting_options', $default );
+	
+	// Always ensure 'date_recorded' is enabled.
+	if ( empty( $options['date_recorded'] ) ) {
+		$options['date_recorded'] = 1;
+	}
+
+	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', $options );
 }
 
 /**
