@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 21211;
+		$this->db_version = 23211;
 
 		/** Loading */
 
@@ -922,7 +922,7 @@ class BuddyPress {
 		bp_register_theme_package(
 			array(
 				'id'      => 'nouveau',
-				'name'    => __( 'BuddyPress Nouveau', 'buddyboss' ),
+				'name'    => 'BuddyPress Nouveau',
 				'version' => bp_get_version(),
 				'dir'     => trailingslashit( $this->themes_dir . '/bp-nouveau' ),
 				'url'     => trailingslashit( $this->themes_url . '/bp-nouveau' ),
