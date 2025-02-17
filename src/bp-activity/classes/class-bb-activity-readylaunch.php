@@ -115,6 +115,9 @@ class BB_Activity_Readylaunch {
 	 * @return bool|string
 	 */
 	public function bb_rl_activity_new_update_action( $action, $activity ) {
+		if ( empty( $activity ) ) {
+			return $action;
+		}
 		switch ( $activity->component ) {
 			case 'activity':
 				if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
@@ -123,10 +126,12 @@ class BB_Activity_Readylaunch {
 					$mentioned_users_avatar = [];
 					foreach ( $mentioned_users as $mentioned_user ) {
 						$mentioned_users_link[]   = bp_core_get_userlink( $mentioned_user->ID );
-						$mentioned_users_avatar[] = bp_get_activity_avatar( array(
-							'type'    => 'thumb',
-							'user_id' => $mentioned_user->ID,
-						) );
+						$mentioned_users_avatar[] = bp_core_fetch_avatar(
+							array(
+								'item_id' => $mentioned_user->ID,
+								'type'    => 'thumb',
+							)
+						);
 					}
 
 					// Get the last user link
@@ -144,8 +149,9 @@ class BB_Activity_Readylaunch {
 					$action = bp_core_get_userlink( $activity->user_id );
 				}
 				break;
-			case 'groups':
+			default:
 				$action = bp_core_get_userlink( $activity->user_id );
+				break;
 		}
 
 		return $action;
