@@ -51,6 +51,37 @@ $activity_comment_id = bp_get_activity_comment_id();
 							if ( bb_is_reaction_activity_comments_enabled() ) {
 								echo bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' );
 							}
+							if ( bp_activity_can_comment_reply() ) {
+								$activity_id   = bp_get_activity_id();
+								$replies_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
+									array(
+										'spam'     => 'ham_only',
+										'activity' => bp_activity_current_comment(),
+									)
+								);
+								$reply_count   = $replies_count['all_child_count'] ?? 0;
+
+								$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
+								if ( $reply_count > 0 ) {
+									$activity_state_comment_class['has-comments'] = 'has-comments';
+								}
+								$activity_state_class = apply_filters( 'bp_nouveau_get_activity_comment_buttons_activity_state', $activity_state_comment_class, $activity_id );
+								if ( $reply_count > 0 ) {
+									?>
+									<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
+										<span class="comments-count" data-comments-count="<?php echo esc_attr( $reply_count ); ?>">
+											<?php
+											if ( $reply_count > 1 ) {
+												printf( _x( '%d replies', 'placeholder: activity replies count', 'buddyboss' ), $reply_count );
+											} else {
+												printf( _x( '%d reply', 'placeholder: activity reply count', 'buddyboss' ), $reply_count );
+											}
+											?>
+										</span>
+									</a>
+									<?php
+								}
+							}
 							?>
 						</div>
 					</div>
