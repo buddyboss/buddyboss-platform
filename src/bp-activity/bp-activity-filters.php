@@ -474,7 +474,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 		if ( ! empty( $content_matches[1] ) ) {
 			foreach ( $content_matches[1] as $replacement ) {
 				$unique_index                  = '#BPAN' . $replace_count . '#';
-				$replacements[ $unique_index ] = filter_var( $replacement, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH );
+				$replacements[ $unique_index ] = str_replace( "\xef\xbb\xbf", '', $replacement );
 				$content                       = str_replace( $replacement, $unique_index, $content );
 				$replace_count++;
 			}
