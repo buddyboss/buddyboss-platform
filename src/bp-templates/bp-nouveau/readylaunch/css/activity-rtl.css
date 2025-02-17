@@ -4399,7 +4399,7 @@ div[class*="attached-gif-container"] .gif-player {
   .bb-rl-video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-default,
   .bb-rl-video-thumbnail-content .bb-dropzone-wrap .bb-rl-video-thumbnail-custom img,
   .bb-rl-video-thumbnail-content .bb-dropzone-wrap .dropzone .dz-preview .dz-image {
-    height: 106px;
+    height: auto;
   }
   .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li img {
     min-height: 100px;
@@ -4417,12 +4417,29 @@ div[class*="attached-gif-container"] .gif-player {
   .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li {
     width: calc(33.3333334% - 6.66666667px);
     flex: calc(33.3333334% - 6.66666667px);
-    margin-right: 10px !important;
+    margin-right: 10px;
     padding-right: 0;
     padding-left: 0;
   }
   .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li:first-child {
     margin-right: 0 !important;
+  }
+  .bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-dropzone-wrap {
+    width: 100%;
+  }
+  .bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated {
+    width: 100%;
+    display: inline-block;
+  }
+  .bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list {
+    flex-wrap: wrap;
+  }
+  .bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
   }
 }
 
