@@ -174,8 +174,13 @@ class BB_Group_Readylaunch {
 												<i class="bb-icons-rl-globe-simple"></i>
 											</div>
 											<div class="bb-rl-group-meta-data">
-												<h3><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></h3>
-												<span class="bb-rl-meta-desc flex"><?php echo esc_attr( bp_get_group_status_description() ); ?></span>
+												<h3><?php 
+												$group_meta = bp_nouveau_group_meta();
+												if (is_object($group_meta) && isset($group_meta->status)) {
+													echo wp_kses($group_meta->status, array('span' => array('class' => array())));
+												}
+												?></h3>
+												<span class="bb-rl-meta-desc flex"><?php echo esc_attr(bp_get_group_status_description()); ?></span>
 											</div>
 										</div>
 										<?php
@@ -342,5 +347,19 @@ class BB_Group_Readylaunch {
 				echo '<span class="bb-group-member-invite"><a data-balloon-pos="right" data-balloon="' . __( 'Send Invites', 'buddyboss' ) . '" href="' . esc_url( $invite_link ) . '"><i class="bb-icons-rl-user-plus"></i><span class="bb-rl-screen-reader-text">' . __( 'Send Invites', 'buddyboss' ) . '</span></a></span>';
 			}
 		}
+	}
+
+	public static function bb_rl_group_buttons( $buttons ) {
+		if (
+			isset( $buttons['group_membership'] ) &&
+			isset( $buttons['group_membership']['button_attr']['class'] )
+		) {
+			$buttons['group_membership']['button_attr']['class'] = str_replace( 'bp-toggle-action-button', '', $buttons['group_membership']['button_attr']['class'] );
+			if ( strpos( $buttons['group_membership']['button_attr']['class'], 'leave-group' ) !== false ) {
+				$buttons['group_membership']['button_attr']['class'] = str_replace( 'leave-group', 'leave_group', $buttons['group_membership']['button_attr']['class'] );
+			}
+		}
+
+		return $buttons;
 	}
 }

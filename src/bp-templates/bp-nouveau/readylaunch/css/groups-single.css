@@ -222,12 +222,12 @@
   margin-right: var(--bb-rl-space-100);
 }
 
-.bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_list .leave-group,
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_list .leave_group,
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_list .delete-group {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
-.bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_list .leave-group:before,
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_list .leave_group:before,
 .bb-rl-groups-single-wrapper .bb-rl-secondary-header .bb-rl-group-extra-info .bb_more_options_list .delete-group:before {
   color: var(--bb-rl-text-danger-secondary-color);
 }
@@ -284,7 +284,7 @@
   padding: var(--bb-rl-space-100);
 }
 
-.bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.join-group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave-group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.request-membership:before {
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.join-group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave-group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave_group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.request-membership:before {
   font-family: bb-icons-rl;
   margin-right: 5px;
 }
@@ -293,7 +293,7 @@
   content: "\e3d4";
 }
 
-.bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave-group:before {
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave_group:before, .bb-rl-groups-single-wrapper .bb-rl-secondary-header .group-actions-absolute button.group-button.leave-group:before {
   content: "\e182";
 }
 

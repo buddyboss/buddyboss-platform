@@ -132,7 +132,7 @@
 
 			.bb_more_options_list {
 
-				.leave-group,
+				.leave_group,
 				.delete-group {
 					color: var(--bb-rl-text-danger-secondary-color);
 
@@ -172,6 +172,7 @@
 
 				&.join-group:before,
 				&.leave-group:before,
+				&.leave_group:before,
 				&.request-membership:before {
 					font-family: bb-icons-rl;
 					margin-right: 5px;
@@ -181,6 +182,7 @@
 					content: "\e3d4";
 				}
 
+				&.leave_group:before,
 				&.leave-group:before {
 					content: "\e182";
 				}
