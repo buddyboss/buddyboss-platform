@@ -21,6 +21,7 @@ $group_cover_image        = bp_attachments_get_attachment(
 		'item_id'    => bp_get_group_id(),
 	)
 );
+$group_cover_position     = '';
 $has_cover_image          = '';
 $has_cover_image_position = '';
 $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id(), 'group' );
