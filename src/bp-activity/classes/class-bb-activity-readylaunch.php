@@ -77,7 +77,7 @@ class BB_Activity_Readylaunch {
 			$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 				array(
 					'item_id'   => $activity_id,
-					'item_type' => 'activity',
+					'item_type' => $item_type,
 				)
 			);
 			if ( ! empty( $reaction_count ) ) {
