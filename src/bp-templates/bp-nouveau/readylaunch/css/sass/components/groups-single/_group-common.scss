@@ -15,6 +15,10 @@
 			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 			padding: 12px var(--bb-rl-space-300);
 
+			&.bb-rl-no-border {
+				border-bottom: 0;
+			}
+
 			.bb-rl-group-info {
 
 				#bb-rl-item-header-avatar {

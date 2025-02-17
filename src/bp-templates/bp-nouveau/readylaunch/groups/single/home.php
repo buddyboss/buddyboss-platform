@@ -22,7 +22,7 @@ if ( bp_has_groups() ) {
 		<div class="bb-rl-groups-single-wrapper">
 
 			<div class="bb-rl-secondary-header flex flex-column">
-				<div class="bb-rl-group-info-wrap flex items-start justify-between">
+				<div class="bb-rl-group-info-wrap flex items-start justify-between <?php echo esc_attr( BB_Readylaunch::bb_is_group_admin() ? 'bb-rl-no-border' : '' ); ?>">
 					<div class="bb-rl-group-info flex items-center">
 						<?php
 						if ( BB_Readylaunch::bb_is_group_admin() ) {
