@@ -944,7 +944,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bp-messages-content, .messages-screen, .bb_more_options' );
+			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bp-messages-content, .messages-screen, .bb_more_options, .bb-rl-group-extra-info' );
 			$buttons.on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$buttons.on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 			$buttons.on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
