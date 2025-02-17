@@ -132,7 +132,7 @@
 
 			.bb_more_options_list {
 
-				.leave_group,
+				.leave-group,
 				.delete-group {
 					color: var(--bb-rl-text-danger-secondary-color);
 
@@ -165,9 +165,18 @@
 				margin-right: 10px;
 				line-height: var(--bb-rl-base-line-small);
 
+				&.not-subscribed,
 				&.subscribed {
 					font-size: var(--bb-rl-font-size-base);
 					padding: var(--bb-rl-space-100);
+				}
+
+				&.not-subscribed.bp-toggle-action-button-hover i:before {
+					content: "\e0d0";
+				}
+
+				&.subscribed.bp-toggle-action-button-hover i:before {
+					content: "\e0d2";
 				}
 
 				&.join-group:before,

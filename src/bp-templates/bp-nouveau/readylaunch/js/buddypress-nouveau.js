@@ -1724,14 +1724,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-
-				// support for buddyboss theme for button actions and icons and texts.
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title' ) );
-				} else {
-					target.text( target.data( 'title' ) );
-				}
-
+				target.text( target.data( 'title' ) );
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
 				return false;

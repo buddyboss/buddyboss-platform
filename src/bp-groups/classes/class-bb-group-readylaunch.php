@@ -52,7 +52,7 @@ class BB_Group_Readylaunch {
 
 	public function bb_rl_update_group_subscription_button( $button, $r ) {
 		$button['link_text']                           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="bb-icons-rl-bell"></i>', $button['link_text'] );
-		$button['button_attr']['data-title']           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="bb-icons-rl-bell"></i>', $button['button_attr']['data-title'] );
+		$button['button_attr']['data-title']           = $button['data-balloon'];
 		$button['button_attr']['data-title-displayed'] = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="bb-icons-rl-bell"></i>', $button['button_attr']['data-title-displayed'] );
 		$button['data-balloon-pos']                    = 'left';
 
@@ -174,7 +174,7 @@ class BB_Group_Readylaunch {
 												<i class="bb-icons-rl-globe-simple"></i>
 											</div>
 											<div class="bb-rl-group-meta-data">
-												<h3><?php 
+												<h3><?php
 												$group_meta = bp_nouveau_group_meta();
 												if (is_object($group_meta) && isset($group_meta->status)) {
 													echo wp_kses($group_meta->status, array('span' => array('class' => array())));
