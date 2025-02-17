@@ -33,13 +33,13 @@ do_action( 'bp_attachments_avatar_check_template' );
 <script id="tmpl-bp-avatar-delete" type="text/html">
 	<# if ( 'user' === data.object && 'custom' === data.item_id ) { #>
 		<p><?php esc_html_e( "If you'd like to delete default custom profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?></button>
+		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?></button>
 	<# } else if ( 'user' === data.object && 'custom' !== data.item_id ) { #>
 		<p><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></button>
+		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></button>
 	<# } else if ( 'group' === data.object ) { #>
 		<?php bp_nouveau_user_feedback( 'group-avatar-delete-info' ); ?>
-		<button type="button" class="button edit" id="bp-delete-avatar"><?php esc_html_e( 'Delete Group Profile Photo', 'buddyboss' ); ?></button>
+		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete Group Profile Photo', 'buddyboss' ); ?></button>
 	<# } else { #>
 		<?php
 			/**

@@ -21,7 +21,7 @@ if ( bp_is_group_create() ) {
 	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
 </h2>
 
-<p class="bp-help-text"><?php printf( __( 'Manage group members; promote to %1$s, co-%2$s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
+<p class="bp-help-text bb-rl-manage-description-text"><?php printf( __( 'Manage group members; promote to %1$s, co-%2$s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
 
 <dl class="groups-manage-members-list bb-rl-groups-manage-members-list">
 
@@ -29,9 +29,11 @@ if ( bp_is_group_create() ) {
 	$bp_group_admin_ids = bp_group_admin_ids();
 	if ( $bp_group_admin_ids ) :
 		?>
-		<dt class="admin-section section-title"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), 'buddyboss' ); ?></dt>
+		<dt class="admin-section section-title">
+			<h3 class="bb-rl-section-sub-heading"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), 'buddyboss' ); ?></h3>
+		</dt>
 		<dd class="admin-listing">
-			<p><?php printf( __( '%1$s have total control over the contents and settings of a group. That includes all the abilities of %2$s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %3$s, and delete the group.', 'buddyboss' ), get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) ); ?></p>
+			<p class="bb-rl-manage-description-text"><?php printf( __( '%1$s have total control over the contents and settings of a group. That includes all the abilities of %2$s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %3$s, and delete the group.', 'buddyboss' ), get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) ); ?></p>
 
 			<?php if ( bp_has_members( '&include=' . $bp_group_admin_ids . '&member_type__not_in=false' ) ) : ?>
 				<ul id="admins-list" class="item-list single-line">
@@ -82,7 +84,7 @@ if ( bp_is_group_create() ) {
 
 		<dd class="moderator-listing">
 
-			<p><?php printf( __( 'When a group member is promoted to be a %1$s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %2$s.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
+			<p class="bb-rl-manage-description-text"><?php printf( __( 'When a group member is promoted to be a %1$s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %2$s.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ) ); ?></p>
 
 			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() . '&member_type__not_in=false' ) ) : ?>
 				<ul id="mods-list" class="item-list single-line">
@@ -142,7 +144,7 @@ if ( bp_is_group_create() ) {
 
 	<dd class="general-members-listing">
 
-		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ), get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ); ?></p>
+		<p class="bb-rl-manage-description-text"><?php printf( __( 'When a member joins a group, he or she is assigned the %1$s role by default. %2$s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ), get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ); ?></p>
 		<div data-bp-list="manage_group_members">
 		<?php
 		if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) {

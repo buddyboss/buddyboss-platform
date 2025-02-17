@@ -5089,6 +5089,14 @@ body.guillotine-dragging * {
   content: "\e4a6";
 }
 
+.bb-rl-group-admin-subnav .bb-rl-admin-subnav-item#bb-rl-courses-groups-li a::before {
+  content: "\e62c";
+}
+
+.bb-rl-group-admin-subnav .bb-rl-admin-subnav-item#bb-rl-membership-requests-groups-li a::before {
+  content: "\e4d0";
+}
+
 .bb-rl-widget-sidebar .widget {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);

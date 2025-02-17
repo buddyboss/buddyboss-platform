@@ -108,5 +108,19 @@
 			}
 		}
 
+		&#bb-rl-courses-groups-li {
+
+			a::before {
+				content: "\e62c";
+			}
+		}
+
+		&#bb-rl-membership-requests-groups-li {
+
+			a::before {
+				content: "\e4d0";
+			}
+		}
+
 	}
 }

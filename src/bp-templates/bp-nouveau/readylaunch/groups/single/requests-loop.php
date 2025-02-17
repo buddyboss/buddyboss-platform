@@ -10,13 +10,7 @@
 
 if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests' ) ) ) {
 	?>
-	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Manage Membership Requests', 'buddyboss' ); ?>
-	</h2>
-
-	<?php bp_nouveau_pagination( 'top' ); ?>
-
-	<ul id="request-list" class="item-list bp-list membership-requests-list">
+	<ul id="request-list" class="item-list bp-list membership-requests-list bb-rl-requests-list">
 		<?php
 		while ( bp_group_membership_requests() ) :
 			bp_group_the_membership_request();
