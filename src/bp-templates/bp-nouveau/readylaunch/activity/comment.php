@@ -43,6 +43,9 @@ $activity_comment_id = bp_get_activity_comment_id();
 							do_action( 'bp_activity_after_comment_content', $activity_comment_id );
 							?>
 						</div>
+					</div>
+					<div class="bb-rl-acomment-foot-actions">
+						<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 						<div class="bb-rl-comment-reactions">
 							<?php
 							if ( bb_is_reaction_activity_comments_enabled() ) {
@@ -50,9 +53,6 @@ $activity_comment_id = bp_get_activity_comment_id();
 							}
 							?>
 						</div>
-					</div>
-					<div class="bb-rl-acomment-foot-actions">
-						<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 					</div>
 				</div>
 			</div>

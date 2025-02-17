@@ -181,7 +181,45 @@
 		}
 
 		.bb-rl-acomment-foot-actions {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
 			padding-bottom: var(--bb-rl-space-100);
+
+			.activity-meta {
+				order: 1;
+				border: 0;
+				margin: 0;
+				padding: 0;
+				width: auto;
+			}
+
+			.bb-rl-comment-reactions {
+				order: 2;
+
+				.activity-state-reactions {
+					display: flex;
+					align-items: center;
+					cursor: pointer;
+				}
+
+				.reactions_item {
+					background-color: var(--bb-rl-background-color);
+					padding: 2px;
+					border-radius: var(--bb-rl-radius-full);
+
+					img {
+						display: block;
+						height: 20px;
+						width: 20px;
+						margin: 0;
+					}
+
+					&:not(:first-child) {
+						margin-left: -4px;
+					}
+				}
+			}
 
 			.generic-button {
 

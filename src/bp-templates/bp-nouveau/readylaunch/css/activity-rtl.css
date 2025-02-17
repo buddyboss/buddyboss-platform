@@ -5206,7 +5206,45 @@ div[class*="attached-gif-container"] .gif-player {
 }
 
 .activity-item.has-comments .bb-rl-acomment-foot-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding-bottom: var(--bb-rl-space-100);
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .activity-meta {
+  order: 1;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions {
+  order: 2;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .activity-state-reactions {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item {
+  background-color: var(--bb-rl-background-color);
+  padding: 2px;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item img {
+  display: block;
+  height: 20px;
+  width: 20px;
+  margin: 0;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item:not(:first-child) {
+  margin-right: -4px;
 }
 
 .activity-item.has-comments .bb-rl-acomment-foot-actions .generic-button a {
