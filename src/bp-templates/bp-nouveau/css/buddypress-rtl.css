@@ -5222,11 +5222,19 @@ body.buddypress .buddypress-wrap .bb-modal-activity-header h2 {
   pointer-events: none;
 }
 
+.bb-internal-model .activity-comments.active .acomment-content .activity-read-more a {
+  pointer-events: none;
+}
+
 .bb-internal-model .activity-item.active .activity-header .activity-privacy li {
   pointer-events: none;
 }
 
 .bb-internal-model .activity-item.active .bb-activity-more-options a.button {
+  pointer-events: none;
+}
+
+.bb-internal-model .activity-item.active .activity-content .activity-read-more a {
   pointer-events: none;
 }
 
@@ -27440,7 +27448,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 @media screen and (max-width: 768px) {
