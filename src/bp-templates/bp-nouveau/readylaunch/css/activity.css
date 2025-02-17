@@ -4970,6 +4970,66 @@ div[class*="attached-gif-container"] .gif-player {
   animation: spin 3s infinite linear;
 }
 
+@media screen and (max-width: 544px) {
+  .bb-rl-activity-footer-actions {
+    flex-flow: column;
+    border-top: 0;
+  }
+  .bb-rl-activity-footer-actions .activity-state {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .bb-rl-activity-footer-actions .activity-state-reactions:after {
+    display: none;
+  }
+  .bb-rl-activity-list .activity-meta {
+    order: 2;
+    justify-content: space-between;
+    border-top: 1px solid var(--bb-rl-border-secondary-color);
+    margin-top: var(--bb-rl-space-200);
+    padding-top: var(--bb-rl-space-100);
+    width: 100%;
+  }
+  .bb-activity-video-wrap.bb-video-length-2, .bb-activity-video-wrap.bb-video-length-3, .bb-activity-video-wrap.bb-video-length-4, .bb-activity-video-wrap.bb-video-length-more {
+    gap: var(--bb-rl-space-100);
+  }
+  .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 {
+    padding: 0;
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap {
+    padding-top: 60%;
+  }
+  .bb-activity-video-wrap .bb-rl-item-cover-wrap {
+    padding-top: 60%;
+  }
+  .bb-media-length-more .act-grid-1-1,
+  .bb-media-length-more .act-grid-1-2,
+  .bb-media-length-5 .act-grid-1-1,
+  .bb-media-length-5 .act-grid-1-2,
+  .bb-media-length-4 .act-grid-1-1,
+  .bb-media-length-4 .act-grid-1-2,
+  .bb-media-length-3 .act-grid-1-1,
+  .bb-media-length-3 .act-grid-1-2,
+  .bb-media-length-2 .act-grid-1-1,
+  .bb-media-length-2 .act-grid-1-2 {
+    padding: 0;
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .bb-activity-video-wrap .bb-rl-item-cover-wrap:before {
+    font-size: 24px;
+    height: 46px;
+    width: 46px;
+  }
+  .bb-rl-activity-video-elem .bb-rl-video-duration {
+    font-size: 12px;
+  }
+}
+
 .ac-form {
   display: none;
   background-color: var(--bb-rl-background-color);
