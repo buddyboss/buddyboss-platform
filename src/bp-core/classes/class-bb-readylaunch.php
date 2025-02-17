@@ -495,7 +495,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							'group_id' => bp_get_current_group_id(),
 						)
 					);
-					wp_enqueue_script( 'bb-rl-group-invites' );
+
+					if ( bp_is_group_invites() ) {
+						wp_enqueue_script( 'bb-rl-group-invites' );
+					}
 				}
 			}
 

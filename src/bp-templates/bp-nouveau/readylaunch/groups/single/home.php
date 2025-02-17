@@ -19,7 +19,7 @@ if ( bp_has_groups() ) {
 	while ( bp_groups() ) :
 		bp_the_group();
 		?>
-		<div class="bb-rl-groups-single-wrapper">
+		<div class="bb-rl-groups-single-wrapper" data-bp-item-id="<?php echo esc_attr( bp_get_current_group_id() ); ?>" data-bp-item-component="<?php echo esc_attr( bp_current_component() ); ?>">
 
 			<div class="bb-rl-secondary-header flex flex-column">
 				<div class="bb-rl-group-info-wrap flex items-start justify-between <?php echo esc_attr( BB_Readylaunch::bb_is_group_admin() ? 'bb-rl-no-border' : '' ); ?>">
@@ -45,13 +45,39 @@ if ( bp_has_groups() ) {
 					<?php
 					if ( ! BB_Readylaunch::bb_is_group_admin() ) {
 						?>
-							<div class="bb-rl-group-extra-info">
-							<?php
-								add_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
-								bb_groups_members();
-								remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
-								bb_group_single_header_actions();
-							?>
+							<div class="bb-rl-group-extra-info" >
+								<?php
+									add_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
+									bb_groups_members();
+									remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
+									bb_group_single_header_actions();
+								?>
+
+								<!-- Leave Group confirmation popup -->
+								<div class="bb-leave-group-popup bb-action-popup" style="display: none">
+									<transition name="modal">
+										<div class="modal-mask bb-white bbm-model-wrap">
+											<div class="modal-wrapper">
+												<div class="modal-container">
+													<header class="bb-model-header">
+														<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+														<a class="bb-close-leave-group bb-model-close-button" href="#">
+															<span class="bb-icon-l bb-icon-times"></span>
+														</a>
+													</header>
+													<div class="bb-leave-group-content bb-action-popup-content">
+														<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
+													</div>
+													<footer class="bb-model-footer flex align-items-center">
+														<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+														<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+													</footer>
+
+												</div>
+											</div>
+										</div>
+									</transition>
+								</div> <!-- .bb-leave-group-popup -->
 							</div>
 						<?php
 					}

@@ -113,6 +113,8 @@ class BB_Group_Readylaunch {
 				$is_only_admin = true;
 			}
 
+			$nonce_url = wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' );
+
 			// Setup button attributes.
 			$buttons['leave_group'] = array(
 				'id'                => 'leave_group',
@@ -121,10 +123,17 @@ class BB_Group_Readylaunch {
 				'block_self'        => false,
 				'wrapper_class'     => 'group-button ' . $group->status,
 				'wrapper_id'        => 'groupbutton-' . $group->id,
-				'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' ),
+				'link_href'         => $nonce_url,
 				'link_text'         => esc_html__( 'Leave group', 'buddyboss' ),
-				'link_class'        => 'group-button leave-group bp-toggle-action-button',
-				'button_attr'       => array(),
+				'link_class'        => 'group-button leave-group',
+				'button_attr'       => array(
+					'data-title'           => esc_html__( 'Leave Group', 'buddyboss' ),
+					'data-title-displayed' => esc_html__( 'Leave group', 'buddyboss' ),
+					'data-bb-group-name'   => esc_attr( $group->name ),
+					'data-bb-group-link'   => esc_url( bp_get_group_permalink( $group ) ),
+					'data-bp-btn-action'   => 'leave_group',
+					'data-bp-nonce'        => $nonce_url,
+				),
 			);
 
 			if ( $is_only_admin ) {
