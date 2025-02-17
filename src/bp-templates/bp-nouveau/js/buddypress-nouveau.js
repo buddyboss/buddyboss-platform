@@ -879,12 +879,38 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content, #profile-card' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 
+				'click blur mouseover mouseout',
+				'[data-bp-btn-action], .awaiting_response_friend',
+				function( event ) {
+					// Set event.data to the current instance (bp.Nouveau) to maintain context for event handlers
+					// ensureing handlers like buttonAction, buttonRevert etc. have access to the bp.Nouveau methods and properties
+					event.data = this;
+			
+					switch( event.type ) {
+						case 'click':
+							this.buttonAction( event );
+							break;
+						case 'blur':
+							this.buttonRevert( event );
+							break;
+						case 'mouseover':
+							if ( $( event.target ).hasClass( 'awaiting_response_friend' ) ) {
+								this.awaitingButtonHover( event );
+							} else {
+								this.buttonHover( event );
+							}
+							break;
+						case 'mouseout':
+							if ( $( event.target ).hasClass( 'awaiting_response_friend' ) ) {
+								this.awaitingButtonHoverout( event );
+							} else {
+								this.buttonHoverout( event );
+							}
+							break;
+					}
+				}.bind( this )
+			);
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
