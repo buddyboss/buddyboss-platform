@@ -28,6 +28,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 		add_filter( 'bp_groups_format_activity_action_activity_update', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 3 );
+		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
 	}
 
 	/**
@@ -190,5 +191,38 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $buttons;
+	}
+
+	/**
+	 * Modify the reaction button HTML.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $button_html The default button HTML
+	 * @param array  $args        Button arguments
+	 *
+	 * @return string Modified button HTML
+	 */
+	public function bb_rl_modify_reaction_button_html( $button_html, $args ) {
+		if ( empty( $args['reaction_id'] ) ) {
+			return $button_html;
+		}
+
+		$prepared_icon = bb_activity_get_reaction_button( $args['reaction_id'], $args['has_reacted'] );
+
+		// Return your custom HTML structure
+		return sprintf(
+			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false" data-reacted-id="%6$s">
+				<span class="bp-screen-reader-text">%2$s</span>
+				%3$s
+				<span class="like-count reactions_item" style="%4$s">%2$s</span>
+			</a>',
+			$args['reaction_link'],
+			$args['icon_text'],
+			$prepared_icon['icon_html'],
+			$args['text_color'],
+			$args['reaction_button_class'],
+			$args['reaction_id']
+		);
 	}
 }
