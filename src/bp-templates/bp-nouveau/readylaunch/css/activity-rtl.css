@@ -5178,6 +5178,10 @@ div[class*="attached-gif-container"] .gif-player {
   margin-top: var(--bb-rl-space-100);
 }
 
+.activity-item.has-comments .bb-rl-activity-comments .bb-activity-more-options-wrap {
+  left: 0;
+}
+
 .activity-item.has-comments .bb-rl-activity-comments > .view-more-comments {
   display: none;
 }
@@ -5237,7 +5241,20 @@ div[class*="attached-gif-container"] .gif-player {
   width: auto;
 }
 
+.activity-item.has-comments .bb-rl-acomment-foot-actions .comment-reactions_count {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .comments-count {
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 14px;
+}
+
 .activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions {
+  display: flex;
+  align-items: center;
   order: 2;
 }
 
@@ -5245,6 +5262,15 @@ div[class*="attached-gif-container"] .gif-player {
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .activity-state-reactions:after {
+  content: "";
+  background-color: var(--bb-rl-background-tertiary-color);
+  height: 4px;
+  width: 4px;
+  border-radius: var(--bb-rl-radius-full);
+  margin: 0 var(--bb-rl-space-100);
 }
 
 .activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item {
