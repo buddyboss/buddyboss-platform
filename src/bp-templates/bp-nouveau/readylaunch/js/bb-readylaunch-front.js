@@ -1,5 +1,5 @@
-/* jshint browser: true */
-/* global bp, bbReadyLaunchFront */
+
+/* global bp, bbReadyLaunchFront, BP_Nouveau */
 /* @version 1.0.0 */
 
 window.bp = window.bp || {};
