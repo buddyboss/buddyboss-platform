@@ -3413,6 +3413,13 @@ div[class*="attached-gif-container"] {
 		.bb-activity-more-options-wrap + .bb-rl-pin-action {
 			right: 40px;
 		}
+
+		&.loading {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 100%;
+		}
 	}
 
 	.bp-add-media-activity-description {
@@ -3485,6 +3492,51 @@ div[class*="attached-gif-container"] {
 		input[type="reset"] {
 			color: var(--bb-rl-text-color);
 			background-color: var(--bb-rl-background-tertiary-color);
+		}
+	}
+}
+
+.bb-document-theater {
+
+	.bb-rl-document-text-file-data-hidden {
+		display: none;
+	}
+
+	.document-preview {
+		height: 100%;
+
+		.img-section {
+			height: 100%;
+		}
+
+		h3 {
+			font-size: 16px;
+			font-weight: 600;
+			text-align: center;
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+			margin: -16px -16px 0;
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
+		}
+	}
+
+	.CodeMirror {
+		height: calc(100vh - 185px);
+
+		pre {
+			font-size: 14px !important;
+		}
+	}
+
+	.document-audio {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		width: 100%;
+
+		audio {
+			width: 100%;
+			max-width: 800px;
 		}
 	}
 }

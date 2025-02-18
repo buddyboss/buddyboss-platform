@@ -5887,7 +5887,7 @@ window.bp = window.bp || {};
 		getMediasDescription: function () {
 			var self = this;
 
-			$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
+			$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
 
 			if ( self.activity_ajax !== false ) {
 				self.activity_ajax.abort();

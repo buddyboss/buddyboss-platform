@@ -5125,6 +5125,13 @@ div[class*="attached-gif-container"] .gif-player {
   right: 40px;
 }
 
+.bb-rl-media-model-container .bb-rl-activity-list.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+}
+
 .bb-rl-media-model-container .bp-add-media-activity-description {
   display: inline-block;
   font-size: var(--bb-rl-font-size-sm);
@@ -5196,6 +5203,48 @@ div[class*="attached-gif-container"] .gif-player {
 .bb-rl-media-model-container .description-new-submit input[type="reset"] {
   color: var(--bb-rl-text-color);
   background-color: var(--bb-rl-background-tertiary-color);
+}
+
+.bb-document-theater .bb-rl-document-text-file-data-hidden {
+  display: none;
+}
+
+.bb-document-theater .document-preview {
+  height: 100%;
+}
+
+.bb-document-theater .document-preview .img-section {
+  height: 100%;
+}
+
+.bb-document-theater .document-preview h3 {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  margin: -16px -16px 0;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
+}
+
+.bb-document-theater .CodeMirror {
+  height: calc(100vh - 185px);
+}
+
+.bb-document-theater .CodeMirror pre {
+  font-size: 14px !important;
+}
+
+.bb-document-theater .document-audio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.bb-document-theater .document-audio audio {
+  width: 100%;
+  max-width: 800px;
 }
 
 @media screen and (max-width: 544px) {
