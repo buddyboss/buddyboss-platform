@@ -16,6 +16,10 @@
 			{{ ' (' + data.popup_heading_count + ')' }}
 		<# } #>
 	</h4>
+
+	<a class="bb-rl-state-popup-close-button" href="#">
+		<span class="bb-icons-rl-x"></span>
+	</a>
 </script>
 
 <script type="text/html" id="tmpl-activity-reacted-popup-tab">

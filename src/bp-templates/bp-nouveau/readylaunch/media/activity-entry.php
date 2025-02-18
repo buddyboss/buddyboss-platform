@@ -109,7 +109,7 @@ echo ( $more_media && ( $max_length - 1 ) === $media_template->current_media ) ?
 		if ( $media_count > $max_length && ( $max_length - 1 ) === $media_template->current_media ) {
 			$count = $media_count - $max_length;
 			?>
-			<span class="bb-rl-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Photos', 'buddyboss' ); ?></span></span></span>
+			<span class="bb-rl-photos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'more photos', 'buddyboss' ); ?></span></span></span>
 			<?php
 		}
 		?>

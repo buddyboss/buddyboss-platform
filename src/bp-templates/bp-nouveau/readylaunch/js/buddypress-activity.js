@@ -2074,11 +2074,11 @@ window.bp = window.bp || {};
 				activity_type_is_blog: $target.parents( '.entry-content' ).length > 1,
 			};
 
-			if ( $target.prev( 'li.bb-rl-activity-comment' ).length > 0 ) {
+			if ( $target.prev( 'li.activity-comment' ).length > 0 ) {
 				// Load more in the current thread.
-				lastCommentTimeStamp        = $target.prev( 'li.bb-rl-activity-comment' ).data( 'bp-timestamp' );
+				lastCommentTimeStamp        = $target.prev( 'li.activity-comment' ).data( 'bp-timestamp' );
 				data.last_comment_timestamp = lastCommentTimeStamp;
-				addAfterListItemId          = $target.prev( 'li.bb-rl-activity-comment' ).data( 'bp-activity-comment-id' );
+				addAfterListItemId          = $target.prev( 'li.activity-comment' ).data( 'bp-activity-comment-id' );
 				data.last_comment_id        = addAfterListItemId;
 			}
 
@@ -2111,15 +2111,15 @@ window.bp = window.bp || {};
 							);
 
 							if ( 'undefined' !== typeof addAfterListItemId && '' !== addAfterListItemId ) {
-								var $addAfterElement = $targetList.find( 'li.bb-rl-activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
+								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
 								if ( $addAfterElement.length > 0 ) {
 									$addAfterElement.after( $newComments );
 								} else {
 									$targetList.append( $newComments );
 								}
-							} else if ( $targetList.children( '.bb-rl-activity-comment.comment-item' ).length > 0 ) {
+							} else if ( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
 								// Already comments in the list.
-								$targetList.children( '.bb-rl-activity-comment.comment-item' ).first().before( $newComments );
+								$targetList.children( '.activity-comment.comment-item' ).first().before( $newComments );
 							} else {
 								$targetList.html( $newComments );
 							}
@@ -2437,7 +2437,7 @@ window.bp = window.bp || {};
 				itemType   = 'activity_comment';
 			}
 
-			mainEl = isActivity ? target.parents( '.activity-item' ) : target.parents( '.bb-rl-activity-comment' ).first();
+			mainEl = isActivity ? target.parents( '.activity-item' ) : target.parents( '.activity-comment' ).first();
 			itemId = mainEl.data( isActivity ? 'bp-activity-id' : 'bp-activity-comment-id' );
 
 			var data = {
@@ -2504,7 +2504,7 @@ window.bp = window.bp || {};
 						var reactionUpdateClass = 'bb-has-reaction_update';
 						var reactionElem        = isActivity ?
 							$( '.activity[data-bp-activity-id=' + itemId + '] > .bb-rl-activity-content' ).find( '.activity-state-reactions' ) :
-							$( '.bb-rl-activity-comment[data-bp-activity-comment-id=' + itemId + '] > .bb-rl-acomment-display > .bb-rl-acomment_inner' ).find( '.activity-state-reactions' );
+							$( '.activity-comment[data-bp-activity-comment-id=' + itemId + '] > .bb-rl-acomment-display > .bb-rl-acomment_inner' ).find( '.activity-state-reactions' );
 						reactionElem.parent().addClass( reactionUpdateClass );
 					}
 
