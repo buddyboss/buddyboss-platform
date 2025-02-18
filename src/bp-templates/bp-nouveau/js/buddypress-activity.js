@@ -128,7 +128,19 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
-			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			if ( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) { 
+				$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			} else {
+				// For page request 1, call openEditActivityPopup after page is completely loaded.
+				$( window ).on( 'load', function() {
+					setTimeout(
+						function() {
+							bp.Nouveau.Activity.openEditActivityPopup();
+						}.bind( this ),
+						0
+					);
+				});
+			}
 
 			// Activity comments effect.
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
