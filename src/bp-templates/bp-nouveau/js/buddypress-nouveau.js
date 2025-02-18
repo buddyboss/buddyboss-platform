@@ -4702,9 +4702,6 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
 				currentUserId = BP_Nouveau.activity.params.user_id;
 			}
-			if ( ! currentUserId ) {
-				return;
-			}
 			// Skip showing profile card for current user
 			if ( parseInt( currentUserId ) === parseInt( memberId ) ) {
 				return;
