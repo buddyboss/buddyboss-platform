@@ -718,7 +718,7 @@ window.bp = window.bp || {};
 		openEditActivityPopup: function() {
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
-				if ( activity_item.length ) {
+				if ( activity_item.length && activity_item.children( '.bb-activity-more-options-wrap' ).find( '.button.edit-activity' ).length ) {
 					var activity_data        = activity_item.data( 'bp-activity' );
 					var activity_URL_preview = ( activity_item.data( 'link-url' ) ) !== '' ? activity_item.data( 'link-url' ) : null;
 
