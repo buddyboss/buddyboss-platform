@@ -33,6 +33,8 @@ class BB_Activity_Readylaunch {
 		add_action( 'wp_ajax_bb_rl_activity_loadmore_comments', array( $this, 'bb_rl_activity_loadmore_comments' ) );
 		add_action( 'wp_ajax_nopriv_bb_rl_activity_loadmore_comments', array( $this, 'bb_rl_activity_loadmore_comments' ) );
 		add_filter( 'bb_ajax_activity_sync_from_modal_args', array( $this, 'bb_rl_activity_sync_from_modal_args' ) );
+
+		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_activity_localize_scripts' ), 11 );
 	}
 
 	/**
@@ -448,5 +450,26 @@ class BB_Activity_Readylaunch {
 				$activity_id
 			)
 		);
+	}
+
+	/**
+	 * Localize the strings needed for the ReadyLaunch activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $params Associative array containing the js strings needed by scripts.
+	 *
+	 * @return array The same array with specific strings for the ReadyLaunch activity if needed.
+	 */
+	public function bb_rl_activity_localize_scripts( $params ) {
+		if ( empty( $params['activity']['strings'] ) ) {
+			return $params;
+		}
+		$params['activity']['strings'] = array(
+			'replyLabel'   => esc_html__( '%d Reply', 'buddyboss' ),
+			'repliesLabel' => esc_html__( '%d Replies', 'buddyboss' ),
+		);
+
+		return $params;
 	}
 }
