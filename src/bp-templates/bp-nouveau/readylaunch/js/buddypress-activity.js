@@ -216,7 +216,6 @@ window.bp = window.bp || {};
 				'#bb-rl-activity-stream .activity-state-comments > .comments-count',
 				function ( e ) {
 					e.preventDefault();
-					console.log( 'click' );
 					var activityId = $( this ).closest( '.activity-item' ).data( 'bp-activity-id' );
 					bp.Nouveau.Activity.launchActivityPopup( activityId, '' );
 				}

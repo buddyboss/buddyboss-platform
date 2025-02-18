@@ -2003,55 +2003,53 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 	}
 
 	$comment_loaded_count = 0;
-	if ( ! empty( $comment->children ) ) {
-		foreach ( (array) $comment->children as $comment_child ) {
+	foreach ( (array) $comment->children as $comment_child ) {
 
-			if (
-				false !== $r['limit_comments'] &&
-				(
-					$comment_loaded_count === $r['comment_load_limit']
-				)
-			) {
-				if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
-					$view_more_text = __( 'View more replies', 'buddyboss' );
-					$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
-				} else {
-					$view_more_text = __( 'View more comments', 'buddyboss' );
-					$view_more_icon = '';
-				}
-
-				$hidden_class = '';
-				if ( ! $r['is_ajax_load_more'] ) {
-					$hidden_class = 'acomments-view-more--hide';
-				}
-
-				echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . $view_more_icon . esc_html( $view_more_text ) . '</li>';
-				break;
-			}
-			// Put the comment into the global so it's available to filters.
-			$activities_template->activity->current_comment = $comment_child;
-
-			$template = bp_locate_template( 'activity/comment.php', false, false );
-
-			$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
-			if (
-				false !== $r['limit_comments'] &&
-				(
-					$comment->id === $comment_child->secondary_item_id ||
-					$comment->item_id === $comment->secondary_item_id ||
-					in_array( $comment->component, array( 'groups', 'blogs' ), true )
-				)
-			) {
-				// First level comments.
-				$comment_template_args['show_replies'] = false;
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment_loaded_count === $r['comment_load_limit']
+			)
+		) {
+			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
+				$view_more_text = __( 'View more replies', 'buddyboss' );
+				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
+			} else {
+				$view_more_text = __( 'View more comments', 'buddyboss' );
+				$view_more_icon = '';
 			}
 
-			load_template( $template, false, $comment_template_args );
+			$hidden_class = '';
+			if ( ! $r['is_ajax_load_more'] ) {
+				$hidden_class = 'acomments-view-more--hide';
+			}
 
-			unset( $activities_template->activity->current_comment );
-
-			++$comment_loaded_count;
+			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . $view_more_icon . esc_html( $view_more_text ) . '</li>';
+			break;
 		}
+		// Put the comment into the global so it's available to filters.
+		$activities_template->activity->current_comment = $comment_child;
+
+		$template = bp_locate_template( 'activity/comment.php', false, false );
+
+		$comment_template_args = array( 'limit_comments' => $r['limit_comments'] );
+		if (
+			false !== $r['limit_comments'] &&
+			(
+				$comment->id === $comment_child->secondary_item_id ||
+				$comment->item_id === $comment->secondary_item_id ||
+				in_array( $comment->component, array( 'groups', 'blogs' ), true )
+			)
+		) {
+			// First level comments.
+			$comment_template_args['show_replies'] = false;
+		}
+
+		load_template( $template, false, $comment_template_args );
+
+		unset( $activities_template->activity->current_comment );
+
+		++$comment_loaded_count;
 	}
 
 	if ( ! $r['is_ajax_load_more'] ) {
