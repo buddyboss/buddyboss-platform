@@ -1319,3 +1319,176 @@
   right: var(--bb-rl-space-100);
   opacity: 0.4;
 }
+
+.bb-rl-create-group {
+  background: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-300);
+  margin: 0 auto;
+  max-width: 960px;
+  width: 100%;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-create-group .bp-subhead {
+  font-family: var(--bb-rl-font-family-base);
+  font-size: var(--bb-rl-font-size-base);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  margin: calc(-1 * var(--bb-rl-space-200)) calc(-1 * var(--bb-rl-space-300)) var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  font-weight: 600;
+}
+
+.bb-rl-create-group .group-create-links {
+  padding-bottom: var(--bb-rl-space-200);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-create-group .group-create-links .button-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: stretch;
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li {
+  text-align: center;
+  color: var(--bb-rl-icon-tertiary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  flex: 1 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li a {
+  color: var(--bb-rl-icon-tertiary-color);
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li .bb-rl-group-creation-tab-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--bb-rl-radius-full);
+  background: var(--bb-rl-background-disabled-color);
+  border: 1px solid var(--bb-rl-background-disabled-color);
+  color: var(--bb-rl-text-tertiary-color);
+  font-weight: 500;
+  margin: 0 auto 5px;
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li.current a {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li.current a .bb-rl-group-creation-tab-number {
+  background: var(--bb-rl-background-color);
+  color: var(--bb-rl-primary-color);
+  border-color: var(--bb-rl-primary-color);
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li::before {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: var(--bb-rl-border-secondary-color);
+  position: absolute;
+  top: 10px;
+  left: 0;
+  z-index: -1;
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li:first-child:before {
+  width: 50%;
+  left: auto;
+  right: 0;
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li:last-child:before {
+  width: 50%;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content {
+  padding: var(--bb-rl-space-300) 0;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bp-screen-title {
+  font-size: var(--bb-rl-font-size-base);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content > h2.bp-screen-title {
+  display: none;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bp-screen-title {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content > label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  margin: 0 0 var(--bb-rl-space-100);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content > input,
+.bb-rl-create-group .bb-rl-create-screen-content > textarea {
+  width: 100%;
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content > textarea {
+  min-height: 94px;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content input[type="submit"],
+.bb-rl-create-group .bb-rl-create-screen-content button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: 0.875rem;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content input[type="submit"]:hover,
+.bb-rl-create-group .bb-rl-create-screen-content button[type="submit"]:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content input[type="submit"]:focus-within,
+.bb-rl-create-group .bb-rl-create-screen-content button[type="submit"]:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content input[type="submit"]:disabled,
+.bb-rl-create-group .bb-rl-create-screen-content button[type="submit"]:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content ul,
+.bb-rl-create-group .bb-rl-create-screen-content p {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content div.submit {
+  margin-top: var(--bb-rl-space-200);
+}
