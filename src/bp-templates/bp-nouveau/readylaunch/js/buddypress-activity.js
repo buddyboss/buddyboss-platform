@@ -3144,6 +3144,55 @@ window.bp = window.bp || {};
 							if ( commentsText.length ) {
 								var label = comment_count > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 								commentsText.text( label.replace( '%d', comment_count || 1 ) );
+								comment_count_span.attr( 'data-comments-count', comment_count );
+							}
+
+							// Update reply count with parent replies count.
+							var parentCommentId = commentData.comment_id;
+							if ( parentCommentId ) {
+								var $parentComment = $( '#bb-rl-acomment-' + parentCommentId ),
+								    processedIds   = {};
+
+								while ( $parentComment.length ) {
+									var parentId = $parentComment.data( 'bp-activity-comment-id' );
+									if ( processedIds[ parentId ] ) { // Skip if already processed.
+										break;
+									}
+									processedIds[ parentId ] = true;
+
+									var $reactionArea = $parentComment.find( '.bb-rl-comment-reactions' ).first(),
+									    $countElement = $reactionArea.find( '.acomments-count' ),
+									    currentCount  = 0,
+									    newCount;
+
+									if ( $countElement.length ) { // Get current count.
+										currentCount = parseInt( $countElement.attr( 'data-comments-count' ) );
+										if ( isNaN( currentCount ) ) {
+											var matches  = $countElement.text().match( /\d+/ );
+											currentCount = matches ? parseInt( matches[ 0 ] ) : 0;
+										}
+									}
+
+									newCount       = currentCount + 1;
+									var replyLabel = newCount > 1 ? bbRlActivity.strings.repliesLabel : bbRlActivity.strings.replyLabel;
+
+									// Update an or add count element.
+									if ( $countElement.length ) {
+										$countElement.attr( 'data-comments-count', newCount ).text( replyLabel.replace( '%d', newCount ) );
+									} else {
+										$reactionArea.append(
+											'<a href="#" class="activity-state-comments has-comments">' +
+											'<span class="acomments-count" data-comments-count="1">' +
+											bbRlActivity.strings.replyLabel.replace( '%d', 1 ) +
+											'</span>' +
+											'</a>'
+										);
+									}
+
+									// Add class and move to the next parent
+									$parentComment.addClass( 'has-child-comments' );
+									$parentComment = $parentComment.parent().closest( '.activity-comment' );
+								}
 							}
 
 							comment_count_span.parent( ':not( .has-comments )' ).addClass( 'has-comments' );
