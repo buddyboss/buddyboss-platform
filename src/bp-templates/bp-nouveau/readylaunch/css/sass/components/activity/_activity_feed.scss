@@ -1300,6 +1300,21 @@
 				&.vjs-fullscreen-control .vjs-icon-placeholder:before {
 					content: "\e0a6";
 				}
+
+				&.enlarge_button {
+
+					.vjs-icon-placeholder:before {
+						content: "\e0a6";
+					}
+
+					&:before {
+						display: none;
+					}
+
+					&:after {
+						left: 0;
+					}
+				}
 			}
 
 			.vjs-time-control {
@@ -1438,6 +1453,10 @@
 			display: none;
 		}
 	}
+}
+
+.bb-rl-single-activity-video.video-js .vjs-fullscreen-control {
+	display: none;
 }
 
 .bb-activity-video-wrap {

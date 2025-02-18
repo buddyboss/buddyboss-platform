@@ -3125,6 +3125,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   content: "\e0a6";
 }
 
+.bb-rl-activity-video-elem .video-js .vjs-control-bar button.enlarge_button .vjs-icon-placeholder:before {
+  content: "\e0a6";
+}
+
+.bb-rl-activity-video-elem .video-js .vjs-control-bar button.enlarge_button:before {
+  display: none;
+}
+
+.bb-rl-activity-video-elem .video-js .vjs-control-bar button.enlarge_button:after {
+  right: 0;
+}
+
 .bb-rl-activity-video-elem .video-js .vjs-control-bar .vjs-time-control {
   font-size: 14px;
   font-weight: 500;
@@ -3247,6 +3259,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-activity-video-elem.no_more_option ~ .bb-rl-activity-video-elem {
+  display: none;
+}
+
+.bb-rl-single-activity-video.video-js .vjs-fullscreen-control {
   display: none;
 }
 

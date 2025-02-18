@@ -2098,7 +2098,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 			// refresh video.
-			$( '.bb-rl-media-model-wrapper.video .bb-rl-media-section' ).find( 'figure' ).addClass( 'loading' ).html( '<i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
+			$( '.bb-rl-media-model-wrapper.video .bb-rl-media-section' ).find( 'figure' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
 
 			// privacy.
 			var video_privacy_wrap = $( '.bb-rl-media-section .bb-media-privacy-wrap' );
@@ -2249,7 +2249,7 @@ window.bp = window.bp || {};
 		getActivity: function () {
 			var self = this;
 
-			$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-l bb-icon-spinner animate-spin"></i>' );
+			$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
 
 			if ( typeof bbRlActivity !== 'undefined' &&
 				self.current_video &&
@@ -2562,12 +2562,12 @@ window.bp = window.bp || {};
 						bp.Nouveau.Video.Player.playerID   = '';
 					}
 
-					if ( $( self ).hasClass( 'single-activity-video' ) ) {
+					if ( $( self ).hasClass( 'bb-rl-single-activity-video' ) ) {
 						var ele_id     = $( this ).attr( 'id' );
 						var cus_button = player[ $( this ).attr( 'id' ) ].controlBar.addChild( 'button' );
 						cus_button.addClass( 'vjs-icon-square' );
 						var fullscreen_btn = $( this ).find( '.vjs-icon-square' ).addClass( 'enlarge_button' );
-						fullscreen_btn.attr( 'data-balloon-pos', 'up' );
+						fullscreen_btn.attr( 'data-balloon-pos', 'left' );
 						fullscreen_btn.attr( 'data-balloon', bbRlVideo.i18n_strings.video_enlarge_text );
 						var error_block      = $( this ).find( '.vjs-error-display.vjs-modal-dialog' );
 						var video_block_main = $( this );
