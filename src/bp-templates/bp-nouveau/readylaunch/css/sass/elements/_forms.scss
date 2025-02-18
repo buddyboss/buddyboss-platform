@@ -101,11 +101,12 @@
 }
 
 /* Selec2 custom theme/styling */
-.bb-rl-select2-dropdown {
+.bb-rl-select2-dropdown,
+.select2-dropdown.bb-rl-select2-dropdown {
 	top: 42px;
 	background-color: var(--bb-rl-background-color);
 	border: 1px solid var(--bb-rl-border-secondary-color);
-	border-radius: var(--bb-rl-radius-md);
+	border-radius: 8px;
 	padding: var(--bb-rl-space-100) 0;
 	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 	width: auto !important;
@@ -149,6 +150,10 @@
 		height: auto;
 		display: inline-flex;
 		align-items: center;
+
+		&.select2-selection--single {
+			display: inline-flex;
+		}
 
 		.select2-selection__rendered {
 

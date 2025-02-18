@@ -24,7 +24,7 @@
 			list-style: none;
 			margin: 0;
 			padding: 0;
-			display:flex;
+			display: flex;
 			justify-content: stretch;
 
 			li {
@@ -64,7 +64,7 @@
 				}
 
 				&::before {
-					content: '';
+					content: "";
 					display: block;
 					height: 1px;
 					width: 100%;
