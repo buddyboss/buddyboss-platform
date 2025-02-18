@@ -370,17 +370,9 @@ class BB_Activity_Readylaunch {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_rl_activity_state() {
-		global $wpdb, $bp;
 
-		$activity_id = bp_get_activity_id();
-
-		$comment_count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d",
-				$activity_id
-			)
-		);
-
+		$activity_id    = bp_get_activity_id();
+		$comment_count  = $this->bb_rl_get_activity_comment_count( $activity_id );
 		$reactions      = bb_active_reactions();
 		$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
 			array(
@@ -436,5 +428,25 @@ class BB_Activity_Readylaunch {
 		$args['display_comments'] = false;
 
 		return $args;
+	}
+
+	/**
+	 * Get activity comment count.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $activity_id The activity ID.
+	 *
+	 * @return int
+	 */
+	public function bb_rl_get_activity_comment_count( $activity_id ) {
+		global $wpdb, $bp;
+
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d",
+				$activity_id
+			)
+		);
 	}
 }

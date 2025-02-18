@@ -20,7 +20,8 @@ $link_embed          = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
-$activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$activity_popup_title        = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Activity_Readylaunch::instance() : false;
 ?>
 	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
 
@@ -156,8 +157,6 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			<div class="bb-rl-activity-footer-actions">
 				<?php
 				bp_nouveau_activity_entry_buttons();
-
-				$bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Activity_Readylaunch::instance() : false;
 				$bb_rl_activity_class_exists ? $bb_rl_activity_class_exists->bb_rl_activity_state() : '';
 				?>
 			</div>
@@ -182,7 +181,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				$class .= bb_is_activity_comment_threading_enabled() ? ' bb-rl-threaded-comments bb-rl-threaded-level-' . bb_get_activity_comment_threading_depth() : '';
 			}
 			?>
-			<div class="<?php echo esc_attr( $class ); ?>"></div>
+			<div class="<?php echo esc_attr( $class ); ?>">
+				<?php
+				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
+				if ( is_user_logged_in() && ! $comment_count ) {
+					bp_nouveau_activity_comment_form();
+				}
+				?>
+			</div>
 
 			<?php
 		}
