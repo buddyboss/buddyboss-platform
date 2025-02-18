@@ -2370,6 +2370,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'media_ids' => $media_ids,
 				'sort'      => 'ASC',
 				'order_by'  => 'menu_order',
+				'status'    => function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $value->status ? bb_media_get_scheduled_status() : bb_media_get_published_status(),
 			)
 		);
 

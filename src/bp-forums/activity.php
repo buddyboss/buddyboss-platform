@@ -346,10 +346,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( in_array( $activity_object->type, $disabled_actions ) ) {
 				$link = $activity_object->primary_link;
 				if ( empty( $link ) ) {
+					$item_id = ( 'groups' === $activity_object->component ? $activity_object->secondary_item_id : $activity_object->item_id );
 					if ( 'bbp_reply_create' == $activity_object->type ) {
-						$link = bbp_get_reply_url( $activity_object->secondary_item_id );
+						$link = bbp_get_reply_url( $item_id );
 					} elseif ( 'bbp_topic_create' == $activity_object->type ) {
-						$link = bbp_get_topic_permalink( $activity_object->secondary_item_id );
+						$link = bbp_get_topic_permalink( $item_id );
 					}
 				}
 			}
@@ -1135,6 +1136,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 * @return string The formatted activity action.
 		 */
 		function bbp_format_activity_action_new_post( $type = '', $action = '', $activity = false ) {
+			// Capture the original arguments
+			$original_args = func_get_args();
 
 			// Get actions.
 			$actions = $this->bbp_get_activity_actions();
@@ -1145,7 +1148,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Bail if intercepted.
-			$intercept = bbp_maybe_intercept( __FUNCTION__, func_get_args() );
+			$intercept = bbp_maybe_intercept( __FUNCTION__, $original_args );
 			if ( bbp_is_intercepted( $intercept ) ) {
 				return $intercept;
 			}

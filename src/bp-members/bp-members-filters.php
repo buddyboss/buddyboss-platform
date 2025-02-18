@@ -560,7 +560,7 @@ add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_fol
  *
  * This is intended to speed up @mentions lookups for a majority of use cases.
  *
- * @since buddyboss 1.8.6
+ * @since BuddyBoss 1.8.6
  *
  * @see   bp_activity_mentions_script()
  */
@@ -737,7 +737,7 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 }
 
 // Load Account Settings Notifications.
-add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+add_action( 'bp_loaded', 'bb_load_members_account_settings_notifications' );
 
 /**
  * Register the Account Settings notifications.

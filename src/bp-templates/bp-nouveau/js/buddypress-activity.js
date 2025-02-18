@@ -125,7 +125,7 @@ window.bp = window.bp || {};
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities.
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
 			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
@@ -133,6 +133,24 @@ window.bp = window.bp || {};
 			// Activity comments effect.
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
 			$( 'body' ).on( 'click', '.bb-close-action-popup', this.closeActivity );
+
+			$( document ).on( 'activityModalOpened', function( event, data ) {
+				var activityId = data.activityId;
+		
+				$( document ).on( 'click', function( event ) {
+					if (
+						$( '#activity-modal:visible' ).length > 0 &&
+						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
+						! $( event.target ).closest( '#activity-modal' ).length &&
+						! $( event.target ).closest( '.gif-media-search-dropdown-standalone' ).length &&
+						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
+						! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
+					) {
+						this.closeActivity( event );
+						this.activitySyncOnModalClose( event, activityId );
+					}
+				}.bind( this ) );
+			}.bind( this ) );
 
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"], #activity-modal' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
@@ -149,9 +167,6 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-video-button', this.openCommentsVideoUploader.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #activity-modal .activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
-
-			// Activity More Option Dropdown.
-			$( document ).on( 'click', this.toggleActivityOption.bind( this ) );
 
 			// Reaction actions.
 			$( document ).on( 'click', '.activity-state-popup_overlay', bp.Nouveau, this.closeActivityState.bind( this ) );
@@ -328,7 +343,7 @@ window.bp = window.bp || {};
 			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );
 
 			// Update the Load Newest li if it already exists.
-			if ( $( '#buddypress [data-bp-list="activity"] li' ).first().hasClass( 'load-newest' ) ) {
+			if ( $( '#buddypress [data-bp-list="activity"]' ).first().hasClass( 'load-newest' ) ) {
 				var newest_link = $( '#buddypress [data-bp-list="activity"] .load-newest a' ).html();
 				$( '#buddypress [data-bp-list="activity"] .load-newest a' ).html( newest_link.replace( /([0-9]+)/, newest_activities_count ) );
 
@@ -467,7 +482,7 @@ window.bp = window.bp || {};
 						page                : next_page,
 						method              : 'append',
 						exclude_just_posted : this.just_posted.join( ',' ),
-						target              : '#buddypress [data-bp-list] ul.bp-list'
+						target              : '#buddypress [data-bp-list]:not( #bb-schedule-posts_modal [data-bp-list="activity"] ) ul.bp-list'
 					}
 				).done(
 					function( response ) {
@@ -564,6 +579,8 @@ window.bp = window.bp || {};
 			var currentTargetList = $( event.currentTarget ).parent(),
 				parentId = currentTargetList.data( 'parent_comment_id' ),
 				activityId = $( currentTargetList ).data( 'activity_id' );
+
+			$( document ).trigger( 'activityModalOpened', { activityId: activityId } );
 
 			$( event.currentTarget ).parents( '.activity-comments' ).find( '.ac-form' ).each( function () {
 				var form = $( this );
@@ -790,7 +807,6 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		activityActions: function( event ) {
-
 			var parent                     = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
 				activity_id                = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
 				activity_state             = activity_item.find( '.activity-state' ),
@@ -947,6 +963,13 @@ window.bp = window.bp || {};
 									target.removeClass( 'loading' );
 								}
 							);
+
+							// Add flag for ajax load for getting reactions.
+							if ( 'activity_comment' === item_type ) {
+								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							} else if ( 'activity' === item_type ) {
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							}
 						}
 
 						// Add "Likes/Emotions" menu item on activity directory nav menu.
@@ -1056,6 +1079,7 @@ window.bp = window.bp || {};
 
 							if ( activity_comment_id ) {
 								deleted_comments_count = 1;
+								var hidden_comments_count = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' );
 
 								// Move the form if needed.
 								activity_item.append( activity_comment_li.find( 'form' ) );
@@ -1068,6 +1092,8 @@ window.bp = window.bp || {};
 									}
 								);
 
+								deleted_comments_count += hidden_comments_count !== undefined ? parseFloat( hidden_comments_count ) : 0;
+
 								// Update the button count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
 								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
@@ -1076,6 +1102,8 @@ window.bp = window.bp || {};
 								if ( comments_text.length ) {
 									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
 									comments_text.text( label.replace( '%d', comment_count ) );
+								} else {
+									comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
 								}
 
 								// Update the show all count.
@@ -1176,7 +1204,14 @@ window.bp = window.bp || {};
 							content.after( response.data.feedback );
 							content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 						} else {
-							$( content ).html( response.data.contents ).slideDown( 300 );
+							if ( $( content ).children( '.bb-poll-view' ).length ) {
+								// Make sure to replace content but not .bb-poll-view.
+								$( content ).children( ':not(.bb-poll-view)' ).remove();
+								$( content ).prepend( response.data.contents ).slideDown( 300 );
+
+							} else {
+								$( content ).html( response.data.contents ).slideDown( 300 );
+							}
 
 							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 							jQuery( window ).scroll();
@@ -1255,7 +1290,7 @@ window.bp = window.bp || {};
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				if ( target.hasClass( 'acomment-edit' ) && target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
+				if ( target.closest( 'li' ).data( 'bp-activity-comment' ) ) {
 					activity_comment_data = target.closest( 'li' ).data( 'bp-activity-comment' );
 				}
 
@@ -1263,6 +1298,7 @@ window.bp = window.bp || {};
 
 				form.removeClass( 'root' );
 				$( '.ac-form' ).addClass( 'not-initialized' );
+				$( '.ac-form' ).find( '.ac-input:not(.emojionearea)' ).html( '' );
 
 				bp.Nouveau.Activity.clearFeedbackNotice( form );
 
@@ -1336,6 +1372,24 @@ window.bp = window.bp || {};
 				target.closest( '.acomment-display' ).addClass( 'display-focus' );
 				target.closest( '.comment-item' ).addClass( 'comment-item-focus' );
 
+				var activity_data_nickname;
+				var activity_user_id;
+				var current_user_id;
+
+				if ( ! _.isNull( activity_comment_data ) ) {
+					activity_data_nickname = activity_comment_data.nickname;
+				}
+
+				if ( ! _.isNull( activity_comment_data ) ) {
+					activity_user_id = activity_comment_data.user_id;
+				}
+
+				var atWho = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;';
+
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+					current_user_id = BP_Nouveau.activity.params.user_id;
+				}
+
 				var peak_offset = ( $( window ).height() / 2 - 75 );
 
 				var scrollOptions = {
@@ -1375,11 +1429,22 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Tag user on comment replies.
+				if (
+					! target.hasClass( 'acomment-edit' ) &&
+					! target.hasClass( 'button' ) &&
+					! target.hasClass( 'activity-state-comments' ) &&
+					current_user_id !== activity_user_id
+				) {
+					$( hasParentModal + '#ac-input-' + activity_id ).html( atWho );
+					form.addClass( 'has-content' );
+				}
+
 				// Place caret at the end of the content.
 				if (
 					'undefined' !== typeof window.getSelection &&
 					'undefined' !== typeof document.createRange &&
-					( target.hasClass( 'acomment-edit' ) && ! _.isNull( activity_comment_data ) )
+					! _.isNull( activity_comment_data )
 				) {
 					var range = document.createRange();
 					range.selectNodeContents( $( hasParentModal + '#ac-input-' + activity_id )[0] );
@@ -1623,6 +1688,8 @@ window.bp = window.bp || {};
 									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
 									comments_text.text( label.replace( '%d', comment_count || 1 ) );
 								}
+
+								comment_count_span.parent( ':not( .has-comments )' ).addClass( 'has-comments' );
 
 								// Increment the 'Show all x comments' string, if present.
 								show_all_a = $( activity_item ).find( '.show-all a' );
@@ -3002,11 +3069,10 @@ window.bp = window.bp || {};
 				activityID = currentTarget.id.match( /\d+$/ )[ 0 ],
 				$gifAttachmentEl = $( hasParentModal + '#ac-reply-post-gif-' + activityID );
 
-			var scrollTop = $( window ).scrollTop(),
-				offset = $( currentTarget ).offset(),
-				topPosition = Math.round( offset.top ),
-				leftPosition = Math.round( offset.left ),
-				transformValue = 'translate(' + ( leftPosition + 50 ) + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px)  translate(-100%, -100%)';
+			var scrollTop    = $( window ).scrollTop(),
+				offset       = $( currentTarget ).offset(),
+				topPosition  = Math.round( offset.top ),
+				leftPosition = Math.round( offset.left );
 
 			if ( $gifPickerEl.is( ':empty' ) ) {
 				var model = new bp.Models.ACReply(),
@@ -3019,10 +3085,6 @@ window.bp = window.bp || {};
 				this.models[ activityID ] = model;
 			}
 
-			if ( isInsideModal ) {
-				$gifPickerEl.css( 'transform', transformValue );
-			}
-
 			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
 			if ( $( currentTarget ).hasClass( 'active' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
 				$( currentTarget ).removeClass( 'active' );
@@ -3031,6 +3093,20 @@ window.bp = window.bp || {};
 			}
 
 			$gifPickerEl.toggleClass( 'open' );
+			var pickerLeftPosition = leftPosition + $gifPickerEl.width() - 70;
+			var commentLevel       = $( currentTarget ).parents( 'li' ).length;
+
+			if ( commentLevel > 2 ) {
+				pickerLeftPosition = leftPosition + $gifPickerEl.width() - 110;
+			}
+
+			if ( $( currentTarget ).closest( '.post-elements-buttons-item' ).index() > 1 ) {
+				pickerLeftPosition = leftPosition + $gifPickerEl.width() - 180;
+			}
+			var transformValue = 'translate(' + ( pickerLeftPosition ) + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px)  translate(-100%, -100%)';
+			if ( isInsideModal ) {
+				$gifPickerEl.css( 'transform', transformValue );
+			}
 			this.destroyCommentMediaUploader( activityID );
 			this.destroyCommentDocumentUploader( activityID );
 			this.destroyCommentVideoUploader( activityID );
@@ -3180,25 +3256,6 @@ window.bp = window.bp || {};
 			);
 		},
 
-		toggleActivityOption: function( event ) {
-
-			if ( $( event.target ).hasClass( 'bb-activity-more-options-action' ) || $( event.target ).parent().hasClass( 'bb-activity-more-options-action' ) ) {
-
-				if ( $( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).hasClass( 'is_visible open' ) ) {
-					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
-					$( 'body' ).removeClass( 'more_option_open' );
-				} else {
-					$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
-					$( event.target ).closest( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).addClass( 'is_visible open' );
-					$( 'body' ).addClass( 'more_option_open' );
-				}
-
-			} else {
-				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
-				$( 'body' ).removeClass( 'more_option_open' );
-			}
-		},
-
 		navigateToSpecificComment: function () {
 
 			setTimeout(
@@ -3304,7 +3361,15 @@ window.bp = window.bp || {};
 					if ( self.dropzone_obj ) {
 						self.dropzone_obj.files.push( mock_file );
 						self.dropzone_obj.emit( 'addedfile', mock_file );
-						self.createThumbnailFromUrl( mock_file );
+
+						if ( undefined !== typeof BP_Nouveau.is_as3cf_active && '1' === BP_Nouveau.is_as3cf_active ) {
+							$( self.dropzone_obj.files[i].previewElement ).find( 'img' ).attr( 'src', activity_comment_data.media[i].thumb );
+							self.dropzone_obj.emit( 'thumbnail', activity_comment_data.media[i].thumb );
+							self.dropzone_obj.emit( 'complete', mock_file );
+						} else {
+							self.createThumbnailFromUrl( mock_file );
+						}
+
 						self.dropzone_obj.emit( 'dz-success' );
 						self.dropzone_obj.emit( 'dz-complete' );
 					}
@@ -3512,6 +3577,7 @@ window.bp = window.bp || {};
 			var form_submit_btn_attr_val = form_submit_btn.attr( 'data-add-edit-label' );
 			form_submit_btn.attr( 'data-add-edit-label', form_submit_btn.val() ).val( form_submit_btn_attr_val );
 
+			form.find( '.post-elements-buttons-item' ).removeClass( 'disable' );
 			form.find( '.post-elements-buttons-item .toolbar-button' ).removeClass( 'active' );
 
 			form.find( '#ac-input-' + form_activity_id ).html( '' );
@@ -3929,12 +3995,20 @@ window.bp = window.bp || {};
 			}
 		},
 
-		activitySyncOnModalClose: function ( e ) {
+		activitySyncOnModalClose: function ( e, activityID ) {
 			e.preventDefault();
 
-			var currentTargetModal = $( e.currentTarget ).parents( '.bb-activity-model-wrapper' ),
-				$activityListItem = $( currentTargetModal ).find( 'ul.activity-list > li' ),
-				activityId = $activityListItem.data( 'bp-activity-id' ),
+			var currentTargetModal;
+
+			if ( $( e.currentTarget ).is( document ) ) {
+				currentTargetModal = $( '.bb-activity-model-wrapper' );
+			} else {
+				currentTargetModal = $( e.currentTarget ).parents( '.bb-activity-model-wrapper' );
+			}
+
+			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
+				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
+				activityId = activityID !== undefined ? activityID : activityListItemId,
 				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
 			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
@@ -3986,6 +4060,9 @@ window.bp = window.bp || {};
 		},
 
 		initializeEmojioneArea: function ( isModal, parentSelector, activityId ) {
+			if( ! $.fn.emojioneArea ) {
+				return;
+			}
 			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
 				{
 					standalone: true,
@@ -4030,7 +4107,7 @@ window.bp = window.bp || {};
 					},
 				}
 			);
-		},
+		}
 
 	};
 

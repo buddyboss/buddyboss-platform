@@ -203,7 +203,7 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
 function bp_video_uploading_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo bp_get_admin_url( // phpcs:ignore
 			add_query_arg(
@@ -224,10 +224,8 @@ function bp_video_uploading_tutorial() {
  * Print the FFMPEG notice.
  */
 function bp_video_admin_setting_callback_video_section() {
-	?>
-	<?php
 
-	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
+	if ( ! ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) ) {
 		?>
 		<p class="alert">
 			<?php
@@ -239,7 +237,7 @@ function bp_video_admin_setting_callback_video_section() {
 			?>
 		</p>
 		<?php
-	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+	} elseif ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$ffmpeg = bb_video_check_is_ffmpeg_binary();
 		if ( ! empty( trim( $ffmpeg->error ) ) ) {
 			?>

@@ -60,7 +60,7 @@ class BP_Video_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'video',
-			__( 'Videos', 'buddyboss' ),
+			'Videos',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
@@ -149,6 +149,9 @@ class BP_Video_Component extends BP_Component {
 		}
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+
+		$this->published_status = 'published';
+		$this->scheduled_status = 'scheduled';
 
 		// Global tables for video component.
 		$global_tables = array(

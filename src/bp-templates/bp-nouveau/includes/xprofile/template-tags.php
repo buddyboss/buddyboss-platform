@@ -64,10 +64,15 @@ function bp_nouveau_xprofile_edit_visibilty() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_base_account_has_xprofile() {
-	return (bool) bp_has_profile(
-		array(
-			'profile_group_id' => bp_xprofile_base_group_id(),
-			'fetch_field_data' => false,
-		)
+	$fields = $_POST['signup_profile_field_ids'] ?? array();
+	$args   = array(
+		'profile_group_id' => bp_xprofile_base_group_id(),
+		'fetch_field_data' => false,
 	);
+
+	if ( ! empty( $fields ) ) {
+		$args['include_fields'] = $fields;
+	}
+
+	return (bool) bp_has_profile( $args );
 }

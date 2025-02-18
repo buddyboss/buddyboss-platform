@@ -1077,6 +1077,11 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	$bp->avatar_admin->resized = $avatar_attachment->shrink( $bp->avatar_admin->original['file'], $ui_available_width );
 	$bp->avatar_admin->image   = new stdClass();
 
+	if ( is_wp_error( $bp->avatar_admin->resized ) ) {
+		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
+		return false;
+	}
+
 	// We only want to handle one image after resize.
 	if ( empty( $bp->avatar_admin->resized ) ) {
 		$bp->avatar_admin->image->file = $bp->avatar_admin->original['file'];
@@ -1474,9 +1479,14 @@ function bp_avatar_ajax_set() {
 		}
 
 		if ( ! bp_avatar_handle_capture( $webcam_avatar, $avatar_data['item_id'] ) ) {
+			$feedback_code = 1;
+			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+				$feedback_code = 5;
+			}
+
 			wp_send_json_error(
 				array(
-					'feedback_code' => 1,
+					'feedback_code' => $feedback_code,
 				)
 			);
 
@@ -1715,6 +1725,10 @@ function bp_core_get_upload_dir( $type = 'upload_path' ) {
 	if ( isset( $bp->avatar->$type ) ) {
 		$retval = $bp->avatar->$type;
 	} else {
+		if ( ! isset( $bp->avatar ) ) {
+			$bp->avatar = new stdClass();
+		}
+
 		// If this value has been set in a constant, just use that.
 		if ( defined( $constant ) ) {
 			$retval = constant( $constant );

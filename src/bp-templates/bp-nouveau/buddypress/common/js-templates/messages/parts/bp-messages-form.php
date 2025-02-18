@@ -55,7 +55,7 @@ $os = bb_core_get_os();
 	<?php
 	if ( 'mac' === $os ) {
 		?>
-		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Return+Shift', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
+		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift+Return', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
 		<?php
 	} elseif ( 'window' === $os ) {
 		?>

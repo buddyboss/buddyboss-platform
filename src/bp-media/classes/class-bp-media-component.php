@@ -68,7 +68,7 @@ class BP_Media_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'media',
-			__( 'Photos', 'buddyboss' ),
+			'Photos',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
@@ -176,6 +176,9 @@ class BP_Media_Component extends BP_Component {
 		}
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+
+		$this->published_status = 'published';
+		$this->scheduled_status = 'scheduled';
 
 		// Global tables for media component.
 		$global_tables = array(

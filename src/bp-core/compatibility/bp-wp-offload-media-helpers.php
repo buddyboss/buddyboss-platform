@@ -71,6 +71,7 @@ class BB_AS3CF_Plugin_Compatibility {
 
 		add_filter( 'bb_media_offload_delivered', array( $this, 'bb_media_offload_delivered' ) );
 		add_filter( 'bb_media_offload_delivery_provider', array( $this, 'bb_media_offload_delivery_provider' ) );
+		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_offload_localize_scripts' ) );
 
 	}
 
@@ -349,6 +350,21 @@ class BB_AS3CF_Plugin_Compatibility {
 		return $delivery_provider;
 	}
 
+	/**
+	 * Add extra parameter into localize scripts for offload media plugin.
+	 *
+	 * @since BuddyBoss 2.6.20
+	 *
+	 * @param array $params Localize scripts parameter.
+	 *
+	 * @return array
+	 */
+	public function bb_offload_localize_scripts( $params = array() ) {
+		if ( bp_is_active( 'activity' ) && bp_is_active( 'media' ) ) {
+			$params['is_as3cf_active'] = true;
+		}
+		return $params;
+	}
 }
 
 BB_AS3CF_Plugin_Compatibility::instance();

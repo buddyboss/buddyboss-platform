@@ -452,9 +452,6 @@ function bp_do_activation_redirect() {
 		}
 		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes.
 	}
-
-	// Redirect to dashboard and trigger the Hello screen.
-	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddyboss' ) ) );
 }
 
 /**
@@ -682,16 +679,21 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-integrations',
 		),
 		'4' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-upgrade' ), 'admin.php' ) ),
+			'name'  => __( 'Upgrade', 'buddyboss' ),
+			'class' => 'bb-upgrade',
+		),
+		'5' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
 			'name'  => __( 'Tools', 'buddyboss' ),
 			'class' => 'bp-tools',
 		),
-		'5' => array(
+		'6' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
 			'name'  => __( 'Help', 'buddyboss' ),
 			'class' => 'bp-help',
 		),
-		'6' => array(
+		'7' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
@@ -1551,10 +1553,14 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 					$url
 				);
 				$unsuspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
+				$suspend_id           = bp_is_active( 'moderation' ) ? BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type ) : '';
+				$meta_value           = ! empty( $suspend_id ) ? bb_suspend_get_meta( $suspend_id, 'suspend' ) : '';
 				$actions['unsuspend'] = sprintf(
-					'<a class="bp-unsuspend-user ham" href="%1$s" data-action="unsuspend">%2$s</a>',
-					esc_url( $unsuspend_link ),
-					esc_html__( 'Unsuspend', 'buddyboss' )
+					'<a class="ham %1$s" href="%2$s" data-action="unsuspend" %3$s>%4$s</a>',
+					! empty( $meta_value ) ? 'disabled' : 'bp-unsuspend-user',
+					! empty( $meta_value ) ? '#' : esc_url( $unsuspend_link ),
+					! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '',
+					esc_html__( 'Unsuspend', 'buddyboss' ),
 				);
 
 				// If not already spammed, create spam link.
@@ -1567,12 +1573,18 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 					$url
 				);
 				$suspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
+				$suspend_id         = bp_is_active( 'moderation' ) ? BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type ) : '';
+				$meta_value         = ! empty( $suspend_id ) ? bb_suspend_get_meta( $suspend_id, 'unsuspend' ) : '';
 				$actions['suspend'] = sprintf(
-					'<a class="submitdelete bp-suspend-user" href="%1$s" data-action="suspend">%2$s</a>',
-					esc_url( $suspend_link ),
+					'<a class="submitdelete %1$s" href="%2$s" data-action="suspend" %3$s>%4$s</a>',
+					! empty( $meta_value ) ? 'disabled' : 'bp-suspend-user',
+					! empty( $meta_value ) ? '#' : esc_url( $suspend_link ),
+					! empty( $meta_value ) ? 'data-bp-tooltip-pos="up" data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '',
 					esc_html__( 'Suspend', 'buddyboss' )
 				);
 			}
+
+			unset( $suspend_link, $suspend_id, $meta_value );
 		}
 	}
 
@@ -3393,6 +3405,8 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		return $retval[ $type ];
 	}
 
+	$bb_pro_notice = '';
+
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
@@ -3402,9 +3416,25 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.50', '<' ) &&
 		! empty( $type ) &&
-		'reaction' === $type
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			)
+		)
 	) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
@@ -3412,7 +3442,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			esc_html__( 'to unlock', 'buddyboss' )
 		);
-	} else {
+	} elseif ( ! function_exists( 'bb_platform_pro' ) || ! bbp_pro_is_license_valid() ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
 			esc_html__( 'Install', 'buddyboss' ),
@@ -3453,10 +3483,26 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 	}
 
 	if (
-		! empty( $type ) &&
-		'reaction' === $type &&
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+		! empty( $type ) &&
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			)
+		)
 	) {
 		$pro_class = 'bb-pro-inactive';
 	}
@@ -3684,10 +3730,18 @@ function bb_cpt_feed_enabled_disabled() {
 		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 	}
 
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+	}
+
 	$post_types = bb_feed_post_types();
 
 	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
 		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
 	}
 
 	foreach ( $post_types as $cpt ) {
@@ -3715,4 +3769,135 @@ function bb_cpt_feed_enabled_disabled() {
 	// Mapping the component pages in page settings except registration pages.
 	bp_core_add_page_mappings( $bp->active_components, 'keep', false );
 	bp_update_option( 'bp-active-components', $bp->active_components );
+}
+
+
+/**
+ * Register the BuddyBoss Upgrade submenu page.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @param string $active_tab Current tab name.
+ *
+ * return array
+ */
+function bb_core_get_upgrade_settings_admin_tabs( $active_tab = '' ) {
+
+	// Tabs for the BuddyBoss > Tools.
+	$tabs = array(
+		'0' => array(
+			'href' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bb-upgrade',
+						'tab'  => 'bb-upgrade',
+					),
+					'admin.php'
+				)
+			),
+			'name' => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'slug' => 'bb-upgrade',
+		),
+		'1' => array(
+			'href' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bb-upgrade',
+						'tab'  => 'bb-integrations',
+					),
+					'admin.php'
+				)
+			),
+			'name' => __( 'Integrations', 'buddyboss' ),
+			'slug' => 'bb-integrations',
+		),
+	);
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 2.6.30
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bb_core_get_upgrade_admin_tabs', $tabs );
+}
+
+/**
+ * Output the performance tabs in the admin area.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @return void
+ */
+function bb_core_upgrade_admin_tabs() {
+
+	$tabs_html    = '';
+	$idle_class   = '';
+	$active_class = 'current';
+
+	// phpcs:ignore
+	$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bb-upgrade';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyPress 2.6.30
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs = apply_filters( 'bb_core_upgrade_admin_tabs', bb_core_get_upgrade_settings_admin_tabs( $active_tab ) );
+
+	$count = count( array_values( $tabs ) );
+	$i     = 1;
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+
+		$is_current = strtolower( trim( $tab_data['slug'] ) ) === strtolower( trim( $active_tab ) );
+
+		if ( 'bb-upgrade' === $tab_data['slug'] && 'bb-performance-tester' === $active_tab ) {
+			$is_current = true;
+		}
+
+		$tab_class = $is_current ? $active_class : $idle_class;
+		if ( $i === $count ) {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		} else {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		}
+
+		++$i;
+	}
+
+	echo wp_kses_post( $tabs_html );
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyPress 2.6.30
+	 */
+	do_action( 'bb_upgrade_settings_admin_tabs' );
+}
+
+/**
+ * Web performance tester class.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * return object
+ */
+function bb_web_performance_tester() {
+	if ( ! class_exists( 'BB_Performance_Tester' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-performance-tester.php';
+	}
+	static $bb_wpt = null;
+
+	if ( null !== $bb_wpt ) {
+		return $bb_wpt;
+	}
+
+	$bb_wpt = new BB_Performance_Tester();
+
+	return $bb_wpt;
 }

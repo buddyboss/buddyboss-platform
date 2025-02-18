@@ -154,6 +154,7 @@ class BP_Video_Template {
 			'group_id'         => false,
 			'privacy'          => false,
 			'moderation_query' => true,
+			'status'           => bb_video_get_published_status(),
 		);
 
 		$r = bp_parse_args( $args, $defaults );
@@ -178,6 +179,7 @@ class BP_Video_Template {
 					'album_id'         => $album_id,
 					'privacy'          => $privacy,
 					'moderation_query' => $moderation_query,
+					'status'           => $status,
 				)
 			);
 
@@ -199,6 +201,7 @@ class BP_Video_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
+					'status'       => $status,
 				)
 			);
 		}

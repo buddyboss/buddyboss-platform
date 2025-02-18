@@ -125,6 +125,7 @@ function bb_search_set_block_template_content( $query_result, $query, $template_
 		bp_search_is_search() &&
 		function_exists( 'wp_is_block_theme' ) &&
 		wp_is_block_theme() &&
+		isset( $query['slug__in'] ) && 
 		in_array( 'search', $query['slug__in'], true )
 	) {
 		add_filter( 'bp_locate_template_and_load', '__return_false' );

@@ -244,15 +244,15 @@ class BP_XProfile_ProfileData {
 		do_action_ref_array( 'xprofile_data_before_save', array( $this ) );
 
 		if ( $this->is_valid_field() ) {
+			$table = bp_core_get_table_prefix() . 'bp_xprofile_data';
 			if ( $this->exists() && strlen( trim( $this->value ) ) ) {
-				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_data} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
+				$result = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d", $this->value, $this->last_updated, $this->user_id, $this->field_id ) );
 
 			} elseif ( $this->exists() && empty( $this->value ) ) {
 				// Data removed, delete the entry.
 				$result = $this->delete();
 
 			} else {
-				$table    = bp_core_get_table_prefix() . 'bp_xprofile_data';
 				$result   = $wpdb->query( $wpdb->prepare( "INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated ) );
 				$this->id = $wpdb->insert_id;
 			}
@@ -303,6 +303,22 @@ class BP_XProfile_ProfileData {
 		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE field_id = %d AND user_id = %d", $this->field_id, $this->user_id ) );
 		if ( empty( $deleted ) ) {
 			return false;
+		}
+		
+		if ( $deleted ) {
+
+			// Delete profile visibility on user's field delete.
+			$user_visibility_levels = bp_get_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', true );
+			if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
+				$user_visibility_levels = array();
+			}
+
+			if ( ! empty( $user_visibility_levels ) && is_array( $user_visibility_levels ) && array_key_exists( $this->field_id, $user_visibility_levels ) ) {
+				unset( $user_visibility_levels[ $this->field_id ] );
+				bp_update_user_meta( $this->user_id, 'bp_xprofile_visibility_levels', $user_visibility_levels );
+			}
+
+			BB_XProfile_Visibility::delete_specific_data_for_user( $this->field_id, $this->user_id );
 		}
 
 		/**
@@ -517,7 +533,7 @@ class BP_XProfile_ProfileData {
 		// Prime caches.
 		if ( ! empty( $uncached_ids ) ) {
 			$uncached_ids_sql = implode( ',', $uncached_ids );
-			$table            = $bp->profile->table_name_data;
+			$table            = bp_core_get_table_prefix() . 'bp_xprofile_data';
 			$queried_data     = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, field_id, value, last_updated FROM {$table} WHERE field_id = %d AND user_id IN ({$uncached_ids_sql})", $field_id ) );
 
 			// Rekey.

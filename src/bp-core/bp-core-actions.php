@@ -125,7 +125,7 @@ add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
 add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 
 // Load Post Notifications.
-add_action( 'bp_core_components_included', 'bb_load_post_notifications' );
+add_action( 'bp_loaded', 'bb_load_post_notifications' );
 add_action( 'comment_post', 'bb_post_new_comment_reply_notification', 20, 3 );
 add_action( 'wp_insert_comment', 'bb_post_new_comment_reply_notification_helper', 20, 2 );
 add_action( 'transition_comment_status', 'bb_post_comment_on_status_change', 20, 3 );
@@ -182,6 +182,11 @@ add_action(
 	10,
 	2
 );
+
+// remove admin notices for the upgrade page.
+add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
+// load the web performance loader class.
+add_action( 'bp_admin_init', 'bb_load_web_performance_tester', 999 );
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -603,7 +608,7 @@ add_action( 'bp_ready', 'bb_forums_subscriptions_redirect' );
  */
 function bb_load_presence_api_mu() {
 	if ( class_exists( 'BB_Presence' ) ) {
-		BB_Presence::bb_load_presence_api_mu_plugin();
+		BB_Presence::bb_load_presence_api_mu_plugin( false );
 	}
 }
 
@@ -620,7 +625,7 @@ function bb_check_presence_load_directly() {
 	}
 }
 
-add_action( 'bp_init', 'bb_check_presence_load_directly' );
+add_action( 'bp_admin_init', 'bb_check_presence_load_directly' );
 
 /**
  * Register the post comment reply notifications.
@@ -690,9 +695,9 @@ function bb_post_new_comment_reply_notification( $comment_id, $comment_approved,
 
 	$comment_author_id        = ! empty( $comment_author ) ? $comment_author->ID : $commentdata['user_id'];
 	$comment_content          = $commentdata['comment_content'];
-	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID ) : $commentdata['comment_author'];
 	$comment_link             = get_comment_link( $comment_id );
 	$parent_comment_author_id = (int) $parent_comment->user_id;
+	$comment_author_name      = ! empty( $comment_author ) ? bp_core_get_user_displayname( $comment_author->ID, $parent_comment_author_id ) : $commentdata['comment_author'];
 
 	// Send an email if the user hasn't opted-out.
 	if ( ! empty( $parent_comment_author_id ) ) {
@@ -947,7 +952,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 		) {
 
 			// Poster name.
-			$reply_author_name = bp_core_get_user_displayname( $comment_user_id );
+			$reply_author_name = bp_core_get_user_displayname( $comment_user_id, $user_id );
 			$author_id         = $comment_user_id;
 
 			/** Mail */
@@ -1169,3 +1174,67 @@ function bb_bg_process_log_load() {
 }
 
 add_action( 'bp_init', 'bb_bg_process_log_load' );
+
+/**
+ * Remove notices from the buddyboss upgrade screens.
+ *
+ * @since BuddyBoss 2.6.30
+ */
+function bb_remove_admin_notices() {
+	$screen = get_current_screen();
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+		remove_all_actions( 'admin_notices' );
+
+		// Additional check for the common WordPress error/warning hooks.
+		remove_all_actions( 'all_admin_notices' );
+	}
+}
+
+/**
+ * Load the web performance tester.
+ *
+ * @since BuddyBoss 2.6.30
+ *
+ * @return void
+ */
+function bb_load_web_performance_tester() {
+	$active_tab  = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : ''; // phpcs:ignore
+	$active_page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : ''; // phpcs:ignore
+
+	if ( 'bb-upgrade' === $active_page && 'bb-performance-tester' === $active_tab ) {
+		bb_web_performance_tester();
+	}
+}
+
+/**
+ * Delete the upgrade notice transient when administrators logout.
+ *
+ * @since BuddyBoss 2.7.10
+ *
+ * @param int $user_id The ID of the user who is logging out.
+ *
+ * @return void
+ */
+function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
+	$user = get_userdata( $user_id );
+	if ( user_can( $user, 'manage_options' ) ) {
+		delete_transient( 'bb_pro_upgrade_notice_dismissed' );
+	}
+
+	unset( $user );
+}
+
+add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
+
+/**
+ * Function to load telemetry class.
+ *
+ * @since BuddyBoss 2.7.40
+ */
+function bb_telemetry_load() {
+	if ( class_exists( 'BB_Telemetry' ) ) {
+		BB_Telemetry::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_telemetry_load' );

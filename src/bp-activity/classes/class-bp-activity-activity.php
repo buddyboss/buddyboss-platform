@@ -159,6 +159,15 @@ class BP_Activity_Activity {
 	public $error_type = 'bool';
 
 	/**
+	 * Status of the current item.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @var string
+	 */
+	public $status;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyPress 1.5.0
@@ -227,6 +236,7 @@ class BP_Activity_Activity {
 		$this->mptt_right        = (int) $row->mptt_right;
 		$this->is_spam           = (int) $row->is_spam;
 		$this->privacy           = $row->privacy;
+		$this->status            = $row->status;
 
 		// Generate dynamic 'action' when possible.
 		if ( ! empty( $row->action ) ) {
@@ -265,6 +275,7 @@ class BP_Activity_Activity {
 		$this->mptt_right        = apply_filters_ref_array( 'bp_activity_mptt_right_before_save', array( $this->mptt_right, &$this ) );
 		$this->is_spam           = apply_filters_ref_array( 'bp_activity_is_spam_before_save', array( $this->is_spam, &$this ) );
 		$this->privacy           = apply_filters_ref_array( 'bp_activity_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->status            = apply_filters_ref_array( 'bb_activity_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current activity item gets saved.
@@ -295,11 +306,16 @@ class BP_Activity_Activity {
 			}
 		}
 
+		$prev_activity_status = '';
+
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->id );
+
+			$prev_activity_status = self::bb_get_activity_status( $this->id );
+
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -311,6 +327,11 @@ class BP_Activity_Activity {
 			$this->id = $wpdb->insert_id;
 
 			// If an existing activity item, prevent any changes to the content generating new @mention notifications.
+		} elseif (
+			bb_get_activity_scheduled_status() === $prev_activity_status &&
+			bb_get_activity_published_status() === $this->status
+		) {
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 		} else {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
@@ -422,6 +443,7 @@ class BP_Activity_Activity {
 				'spam'              => 'ham_only',      // Spam status.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
+				'status'            => false,           // Filter by status.
 			),
 			'bb_get_activities'
 		);
@@ -582,10 +604,20 @@ class BP_Activity_Activity {
 			$where_conditions['in'] = "a.id IN ({$in})";
 		}
 
-		// The filter activities by their privacy
+		// The filter activities by their privacy.
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "a.privacy IN ({$privacy})";
+		}
+
+		// Check the status of items.
+		if ( ! empty( $r['status'] ) ) {
+			if ( is_array( $r['status'] ) ) {
+				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$where_conditions['status'] = "a.status IN ({$status})";
+			} else {
+				$where_conditions['status'] = "a.status = '{$r['status']}'";
+			}
 		}
 
 		// Process meta_query into SQL.
@@ -901,10 +933,10 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
-			}
 
-			if ( empty( $activity->action ) ) {
-				$activity->action = bp_activity_generate_action_string( $activity );
+				if ( empty( $activity->action ) ) {
+					$activity->action = bp_activity_generate_action_string( $activity );
+				}
 			}
 
 			$activities[] = $activity;
@@ -1319,6 +1351,7 @@ class BP_Activity_Activity {
 				'secondary_item_id' => false,
 				'date_recorded'     => false,
 				'hide_sitewide'     => false,
+				'status'            => false,
 			)
 		);
 
@@ -1378,6 +1411,11 @@ class BP_Activity_Activity {
 		// Hidden sitewide.
 		if ( ! empty( $r['hide_sitewide'] ) ) {
 			$where_args[] = $wpdb->prepare( 'hide_sitewide = %d', $r['hide_sitewide'] );
+		}
+
+		// Status.
+		if ( ! empty( $r['status'] ) ) {
+			$where_args[] = $wpdb->prepare( 'status = %s', $r['status'] );
 		}
 
 		// Bail if no where arguments.
@@ -1531,7 +1569,7 @@ class BP_Activity_Activity {
 
 		// Merge the comments with the activity items.
 		foreach ( (array) $activities as $key => $activity ) {
-			if ( isset( $activity_comments[ $activity->id ] ) ) {
+			if ( ! empty( $activity ) && isset( $activity_comments[ $activity->id ] ) ) {
 
 				$activities[ $key ]->children        = $activity_comments[ $activity->id ];
 				$comments_count                      = self::bb_get_all_activity_comment_children_count(
@@ -1752,7 +1790,7 @@ class BP_Activity_Activity {
 							) ",
 							$args['last_comment_id'],
 							$args['last_comment_id'],
-							date_i18n( 'Y-m-d H:i:s', $args['last_comment_timestamp'] )
+							date_i18n( 'Y-m-d H:i:s', strtotime( $args['last_comment_timestamp'] ) )
 						);
 					}
 
@@ -2329,5 +2367,35 @@ class BP_Activity_Activity {
 			'all_child_count' => $all_child_count,
 			'top_level_count' => $top_level_count,
 		);
+	}
+
+	/**
+	 * Get activity status by id.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @param int $activity_id Activity Id.
+	 *
+	 * @return string Activity status.
+	 */
+	public static function bb_get_activity_status( $activity_id = 0 ) {
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$bp        = buddypress();
+		$cache_key = 'bb_get_activity_status_' . $activity_id;
+		$status    = wp_cache_get( $cache_key, 'bp_activity' );
+
+		if ( false === $status ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$status = $wpdb->get_var( $wpdb->prepare( "SELECT `status` FROM {$bp->activity->table_name} WHERE id = %d", $activity_id ) );
+			wp_cache_set( $cache_key, $status, 'bp_activity' );
+		}
+
+		return $status;
 	}
 }

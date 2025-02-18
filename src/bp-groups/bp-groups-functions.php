@@ -732,8 +732,16 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 		groups_update_membermeta( $new_member->id, 'joined_from', 'admin' );
 	}
 
+	/**
+	 * Apply filter to modified value to record group activity for group join.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @param bool $value Allow record activity.
+	 */
+	$allow_record_activity = (bool) apply_filters( 'bb_group_join_groups_record_activity', true );
 	// Record this in activity feeds.
-	if ( bp_is_active( 'activity' ) ) {
+	if ( bp_is_active( 'activity' ) && true === $allow_record_activity ) {
 		groups_record_activity(
 			array(
 				'type'    => 'joined_group',
@@ -1759,12 +1767,14 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'         => false,
-			'content'    => false,
-			'user_id'    => bp_loggedin_user_id(),
-			'group_id'   => 0,
-			'privacy'    => 'public',
-			'error_type' => 'bool',
+			'id'            => false,
+			'content'       => false,
+			'user_id'       => bp_loggedin_user_id(),
+			'group_id'      => 0,
+			'privacy'       => 'public',
+			'error_type'    => 'bool',
+			'status'        => bb_get_activity_published_status(),
+			'recorded_time' => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1811,14 +1821,17 @@ function groups_post_update( $args = '' ) {
 
 	$activity_id = groups_record_activity(
 		array(
-			'id'         => $id,
-			'user_id'    => $user_id,
-			'action'     => $action,
-			'content'    => $content_filtered,
-			'type'       => 'activity_update',
-			'item_id'    => $group_id,
-			'privacy'    => $privacy,
-			'error_type' => $error_type,
+			'id'            => $id,
+			'user_id'       => $user_id,
+			'action'        => $action,
+			'content'       => $content_filtered,
+			'type'          => 'activity_update',
+			'item_id'       => $group_id,
+			'privacy'       => $privacy,
+			'error_type'    => $error_type,
+			'status'        => $status,
+			'recorded_time' => $recorded_time,
+
 		)
 	);
 
@@ -4024,7 +4037,7 @@ function bp_group_type_short_code_callback( $atts ) {
 		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav bp-shortcode-wrap">
 			<div class="screen-content">
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
-					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
+					<?php bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'groups' ) ); ?>
 				</div>
 				<div id="groups-dir-list" class="groups dir-list">
 					<?php
@@ -4405,7 +4418,7 @@ function bp_group_directory_page_content() {
 
 	$page_ids = bp_core_get_directory_page_ids();
 
-	if ( ! empty( $page_ids['groups'] ) ) {
+	if ( ! empty( $page_ids['groups'] ) && ! bp_is_group_subgroups() ) {
 		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
 		echo apply_filters( 'the_content', $group_page_content );
 	}

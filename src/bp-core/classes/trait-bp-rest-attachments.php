@@ -114,13 +114,22 @@ trait BP_REST_Attachments {
 		);
 
 		// Bail if any error happened.
-		if ( false === $cover ) {
+		if ( ! $cover ) {
+
+			$error_message = esc_html__( 'There was a problem uploading the cover image.', 'buddyboss' );
+			$error_reason  = 'unknown';
+
+			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+				$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
+				$error_reason  = 'image_no_editor';
+			}
+
 			return new WP_Error(
 				"bp_rest_attachments_{$this->object}_cover_upload_error",
-				__( 'There was a problem uploading the cover image.', 'buddyboss' ),
+				$error_message,
 				array(
 					'status' => 500,
-					'reason' => 'unknown',
+					'reason' => $error_reason,
 				)
 			);
 		}
@@ -299,6 +308,21 @@ trait BP_REST_Attachments {
 		}
 
 		$resized = $this->avatar_instance->shrink( $file, $ui_available_width );
+
+		if ( is_wp_error( $resized ) ) {
+			return new WP_Error(
+				"bp_rest_attachments_{$this->object}_avatar_upload_error",
+				sprintf(
+					/* translators: %s: the upload error message */
+					__( 'Upload Error: %s', 'buddyboss' ),
+					$resized->get_error_message()
+				),
+				array(
+					'status' => 500,
+					'reason' => 'resize_error',
+				)
+			);
+		}
 
 		// We only want to handle one image after resize.
 		if ( empty( $resized ) ) {

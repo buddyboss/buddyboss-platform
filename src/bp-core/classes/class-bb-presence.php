@@ -34,7 +34,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var object
 		 */
-		public static object $wpdb;
+		public static $wpdb;
 
 		/**
 		 * This will use for last activity cache time.
@@ -43,7 +43,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var int
 		 */
-		public static int $cache_time;
+		public static $cache_time;
 
 		/**
 		 * Activity table name to store last activity.
@@ -52,7 +52,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var string
 		 */
-		public static string $table_name;
+		public static $table_name;
 
 		/**
 		 * Download plugin text which appears on admin side.
@@ -61,7 +61,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *
 		 * @var string
 		 */
-		public static string $download_plugin_text;
+		public static $download_plugin_text;
 
 		/**
 		 * Get the instance of this class.
@@ -374,8 +374,12 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @since BuddyBoss 2.3.1
 		 */
 		public static function bb_check_native_presence_load_directly( $bypass = false ) {
-			$bb_check_native_presence_load_directly = get_transient( 'bb_check_native_presence_load_directly' );
-			if ( ! empty( $bb_check_native_presence_load_directly ) && ! $bypass ) {
+			$bb_check_native_presence_load_directly = get_site_option( 'bb_check_native_presence_load_directly', 0 );
+			if (
+				0 !== $bb_check_native_presence_load_directly &&
+				$bb_check_native_presence_load_directly + WEEK_IN_SECONDS > microtime( true ) &&
+				! $bypass
+			) {
 				return;
 			}
 
@@ -399,7 +403,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				update_option( 'bb_use_core_native_presence', false );
 			}
 
-			set_transient( 'bb_check_native_presence_load_directly', 'true', WEEK_IN_SECONDS );
+			update_site_option( 'bb_check_native_presence_load_directly', microtime( true ) );
 		}
 
 		/**
@@ -495,6 +499,8 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_cookie_support' ), 1 );
 			add_filter( 'bb_rest_cache_pre_current_user_id', array( $this, 'bb_jwt_auth_support' ), 2 );
+
+			$this->bb_load_translations();
 
 			if ( ! isset( $_GET['bypass'] ) ) { // phpcs:ignore
 				$this->bb_prepare_presence_mu();
@@ -1036,6 +1042,39 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			echo wp_json_encode( apply_filters( 'rest_post_dispatch_cache', $presence_data, $current_endpoint ) );
 			exit;
+		}
+
+		/**
+		 * Function to load translations at mu level.
+		 *
+		 * @since BuddyBoss 2.7.90
+		 */
+		public function bb_load_translations() {
+			$domain = 'buddyboss';
+			if ( function_exists( 'is_textdomain_loaded' ) && ! is_textdomain_loaded( $domain ) ) {
+				$mofile_custom  = sprintf( '%s-%s.mo', $domain, get_locale() );
+				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
+				if ( ! is_dir( $buddyboss_lang ) ) {
+					// File from the development version.
+					$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
+				}
+				if ( ! empty( $buddyboss_lang ) && function_exists( 'load_textdomain' ) ) {
+
+					$locations = array(
+						trailingslashit( WP_LANG_DIR . '/' . $domain ),
+						trailingslashit( WP_LANG_DIR ),
+						trailingslashit( WP_LANG_DIR . '/plugins' ),
+						trailingslashit( $buddyboss_lang ),
+					);
+			
+					// Try to load the translations from locations.
+					foreach ( $locations as $location ) {
+						if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
+							return true;
+						}
+					}
+				}
+			}
 		}
 	}
 

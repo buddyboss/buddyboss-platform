@@ -132,10 +132,18 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 		}
 
+		if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+		}
+
 		$bp_allowed_cpt = bb_feed_post_types();
 
 		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
 			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+		}
+
+		if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
 		}
 
 		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_allowed_cpt );
@@ -1687,8 +1695,12 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		$cu_post_types = get_post_types( $args, $output );
 
-		foreach ( $cu_post_types as $cu ) {
-			$singular_label_name = strtolower( $cu->labels->singular_name );
+		if ( ! empty( $cu_post_types ) ) {
+			foreach ( $cu_post_types as $cu ) {
+				$singular_label_name = strtolower( $cu->labels->singular_name );
+			}
+		} else {
+			$singular_label_name = 'post';
 		}
 
 		// Build the complete activity action string.

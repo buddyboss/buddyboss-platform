@@ -289,6 +289,14 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
+	if ( empty( $media ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	$media_personal_count = 0;
 	$media_group_count    = 0;
 	$media_all_count      = 0;
@@ -1315,7 +1323,8 @@ function bp_nouveau_ajax_media_get_media_description() {
 								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
 									<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 								</span>
-							<div class="bb-activity-more-options">
+							<div class="bb-activity-more-options bb_more_dropdown">
+								<?php bp_get_template_part( 'common/more-options-view' ); ?>
 								<div class="generic-button">
 									<a id="activity-media-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-media-download download-activity">
 										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>

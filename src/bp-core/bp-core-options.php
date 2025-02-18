@@ -31,19 +31,19 @@ function bp_get_default_options() {
 		/* XProfile **********************************************************/
 
 		// Default profile groups name.
-		'bp-xprofile-base-group-name'                => __( 'Details', 'buddyboss' ),
+		'bp-xprofile-base-group-name'                => 'Details',
 
 		// Default fullname field name.
-		'bp-xprofile-firstname-field-name'           => __( 'First Name', 'buddyboss' ),
+		'bp-xprofile-firstname-field-name'           => 'First Name',
 
 		// Default fullname field name.
-		'bp-xprofile-lastname-field-name'            => __( 'Last Name', 'buddyboss' ),
+		'bp-xprofile-lastname-field-name'            => 'Last Name',
 
 		// Default fullname field name.
-		'bp-xprofile-nickname-field-name'            => __( 'Nickname', 'buddyboss' ),
+		'bp-xprofile-nickname-field-name'            => 'Nickname',
 
 		// Default fullname field name. (for backward compat).
-		'bp-xprofile-fullname-field-name'            => __( 'Name', 'buddyboss' ),
+		'bp-xprofile-fullname-field-name'            => 'Name',
 
 		'bp-display-name-format'                     => 'first_name',
 
@@ -189,6 +189,8 @@ function bp_get_default_options() {
 		'bb_ajax_request_page_load'                  => 1,
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
+
+		'bb-enable-sso'                              => false,
 	);
 
 	/**

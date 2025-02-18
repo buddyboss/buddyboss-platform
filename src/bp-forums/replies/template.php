@@ -154,7 +154,7 @@ function bbp_has_replies( $args = '' ) {
 		's'                        => $default_reply_search,      // Maybe search
 		'moderation_query'         => false,
 		'update_post_family_cache' => true,
-		
+
 	);
 
 	// What are the default allowed statuses (based on user caps)
@@ -1153,8 +1153,10 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  * Return the author display_name of the reply
  *
  * @since                          bbPress (r2667)
+ * @since BuddyBoss 2.5.90 Added the `$viewer_user_id` parameter.
  *
  * @param int $reply_id Optional. Reply id
+ * @param int $viewer_user_id Optional. Reply viewer user id
  *
  * @return string Reply's author's display name
  * @uses                           bbp_is_reply_anonymous() To check if the reply is by an
@@ -1166,7 +1168,7 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  *                                 the author display name and reply id
  * @uses                           bbp_get_reply_id() To get the reply id
  */
-function bbp_get_reply_author_display_name( $reply_id = 0 ) {
+function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
 	// User is not a guest.
@@ -1175,8 +1177,8 @@ function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 		// Get the author ID.
 		$author_id = bbp_get_reply_author_id( $reply_id );
 
-		// Get the author display name.
-		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
+		// Get the author display name based on the last name privacy.
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id, $viewer_user_id ) : '';
 
 		if ( empty( $author_name ) ) {
 			$author_name = get_the_author_meta( 'display_name', $author_id );
@@ -2249,8 +2251,22 @@ function bbp_get_reply_trash_link( $args = '' ) {
 	$actions = array();
 	$reply   = bbp_get_reply( bbp_get_reply_id( (int) $r['id'] ) );
 
-	if ( empty( $reply ) || ! current_user_can( 'delete_reply', $reply->ID ) ) {
+	if ( empty( $reply ) ) {
 		return;
+	} elseif ( ! current_user_can( 'delete_reply', $reply->ID ) ) {
+
+		// Is groups component active.
+		if ( bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_reply_author_id( $reply->ID );
+			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
+			if ( ! $allow_delete ) {
+				return;
+			}
+		} else {
+			return;
+		}
 	}
 
 	if ( bbp_is_reply_trash( $reply->ID ) ) {

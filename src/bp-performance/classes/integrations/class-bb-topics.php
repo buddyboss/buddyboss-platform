@@ -45,7 +45,11 @@ class BB_Topics extends Integration_Abstract {
 			'bp_suspend_forum_reply_suspended',     // Any Forum Reply Suspended.
 			'bp_suspend_forum_reply_unsuspended',   // Any Forum Reply Unsuspended.
 			'bp_moderation_after_save',             // Update cache for topics when member blocked.
-			'bb_moderation_after_delete'            // Update cache for topics when member unblocked.
+			'bb_moderation_after_delete',            // Update cache for topics when member unblocked.
+
+			// Added purge support when adding favorite and subscription.
+			'bbp_add_user_favorite',     // When topic favorite added.
+			'bbp_add_user_subscription', // When topic subscription added.
 		);
 
 		$this->purge_event( 'bbp-topics', $purge_events );
@@ -104,9 +108,12 @@ class BB_Topics extends Integration_Abstract {
 
 		if ( $cache_bb_topics ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/topics',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 					'purge_deep_events' => array_keys( $purge_single_events ),
@@ -116,7 +123,7 @@ class BB_Topics extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/topics/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);

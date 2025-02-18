@@ -145,6 +145,15 @@ class BP_Media {
 	var $description;
 
 	/**
+	 * Status of the current media item.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @var string
+	 */
+	public $status;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -197,6 +206,7 @@ class BP_Media {
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+		$this->status        = $row->status;
 
 		// Added fallback to get description.
 		if ( empty( $this->description ) ) {
@@ -230,6 +240,7 @@ class BP_Media {
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_media_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->status        = apply_filters_ref_array( 'bb_media_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current media item gets saved.
@@ -264,9 +275,9 @@ class BP_Media {
 
 		// If we have an existing ID, update the media item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, description = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->description, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, description = %s, status = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->description, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, status ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -311,6 +322,7 @@ class BP_Media {
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total media items
 	 *                                           for the query. Default: false.
+	 *     @type array|string $status            String or Array of media items status. Default: published.
 	 * }
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located medias
@@ -342,6 +354,7 @@ class BP_Media {
 				'activity_id'      => false,           // Filter by activity id.
 				'group_id'         => false,           // Filter by group id.
 				'moderation_query' => false,           // Filter to include moderation.
+				'status'           => bb_media_get_published_status(), // Filter by status.
 			)
 		);
 
@@ -456,6 +469,16 @@ class BP_Media {
 
 		if ( ! $r['video'] ) {
 			$where_conditions['type'] = "m.type = 'photo'";
+		}
+
+		// Check the status of media item.
+		if ( ! empty( $r['status'] ) ) {
+			if ( is_array( $r['status'] ) ) {
+				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$where_conditions['status'] = "m.status IN ({$status})";
+			} else {
+				$where_conditions['status'] = "m.status = '{$r['status']}'";
+			}
 		}
 
 		/**
@@ -686,6 +709,7 @@ class BP_Media {
 				$media->message_id    = (int) $media->message_id;
 				$media->group_id      = (int) $media->group_id;
 				$media->menu_order    = (int) $media->menu_order;
+				$media->status        = isset( $media->status ) ? $media->status : bb_media_get_published_status();
 			}
 
 			// fetch attachment data.
@@ -1071,6 +1095,7 @@ class BP_Media {
 				'group_id'      => false,
 				'privacy'       => false,
 				'date_created'  => false,
+				'status'        => false,
 			)
 		);
 
@@ -1125,6 +1150,11 @@ class BP_Media {
 		// Date created.
 		if ( ! empty( $r['date_created'] ) ) {
 			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
+		}
+
+		// Status.
+		if ( ! empty( $r['status'] ) ) {
+			$where_args[] = $wpdb->prepare( 'status = %s', $r['status'] );
 		}
 
 		// Bail if no where arguments.

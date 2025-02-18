@@ -41,7 +41,8 @@ if ( $group_id > 0 ) {
 	<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 		<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 	</a>
-	<div class="document-action_list">
+	<div class="document-action_list bb_more_dropdown">
+		<?php bp_get_template_part( 'common/more-options-view' ); ?>
 		<ul class="conflict-activity-ul-li-comment">
 			<?php
 			if ( $can_download_btn ) {
@@ -85,4 +86,5 @@ if ( $group_id > 0 ) {
 			?>
 		</ul>
 	</div>
+	<div class="bb_more_dropdown_overlay"></div>
 </div>

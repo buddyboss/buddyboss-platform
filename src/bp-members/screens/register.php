@@ -107,7 +107,7 @@ function bp_core_screen_signup() {
 			}
 
 			// Check that the passwords match.
-			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
+			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
 				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
 			}
 		}
@@ -160,8 +160,12 @@ function bp_core_screen_signup() {
 							</div>',
 							__( 'This is a required field.', 'buddyboss' )
 						);
-					} else {                    // Validate xprofile
+					} else {
+						// Validate xprofile.
 						if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) {
+							if ( is_array( $message ) ) {
+								$message = implode( '<br>', $message ) . '</br>';
+							}
 							$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
 								'<div class="bp-messages bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
@@ -362,7 +366,7 @@ function bp_signup_check_email_username() {
 		}
 
 		// Check that the passwords match.
-		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
+		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && strcasecmp( $_POST['signup_email'], $_POST['signup_email_confirm'] ) !== 0 ) {
 			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
 		}
 	}

@@ -74,7 +74,7 @@ function bp_admin_setting_callback_admin_admin_bar() {
 function bp_admin_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -139,7 +139,7 @@ function bp_admin_setting_callback_private_network_public_content() {
 function bp_privacy_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -196,7 +196,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 function bp_posts_in_activity_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -332,7 +332,7 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 function bp_activity_settings_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -786,7 +786,7 @@ function bb_admin_setting_callback_default_profile_cover_size() {
 function bp_profile_photos_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -815,7 +815,7 @@ function bp_profile_photos_tutorial() {
 function bb_group_headers_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -844,7 +844,7 @@ function bb_group_headers_tutorial() {
 function bp_group_avatar_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1087,13 +1087,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 		<div class="preview-switcher-main">
 
-			<div class="button-group preview-switcher">
-				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
-					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
-				<?php endif; ?>
-			</div>
-
 			<div class="web-preview-wrap preview-block active" id="web-preview">
 				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
@@ -1102,17 +1095,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
-
-			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-				<div class="app-preview-wrap preview-block" id="app-preview">
-					<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['app_background_color'] ); ?>">
-						<img src="<?php echo esc_url( $app_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
-					</div>
-					<div class="preview-item-avatar">
-						<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
-					</div>
-				</div>
-			<?php endif; ?>
 
 		</div>
 
@@ -1177,7 +1159,7 @@ function bb_admin_setting_callback_default_group_cover_size() {
 function bb_profile_headers_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 			<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1318,6 +1300,9 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		<?php
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
+				if ( false !== strpos( $profile_action['element_class'], 'bp-hide' ) ) {
+					continue;
+				}
 				?>
 				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
@@ -1435,7 +1420,7 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 function bp_group_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1526,7 +1511,7 @@ function bp_admin_setting_callback_group_auto_join() {
 function bp_group_types_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1592,7 +1577,7 @@ function bp_admin_setting_callback_group_restrict_invites() {
 function bp_group_hierarchies_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1976,7 +1961,7 @@ function bp_admin_setting_callback_enable_profile_gravatar() {
 function bp_email_invites_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2096,7 +2081,7 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
 function bp_profile_names_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2291,7 +2276,7 @@ function bb_admin_setting_group_header_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2413,7 +2398,7 @@ function bb_admin_setting_group_elements( $args ) {
 function bp_group_directories_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2491,7 +2476,7 @@ function bp_admin_setting_callback_register_page_url() {
 function bp_admin_registration_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2530,7 +2515,7 @@ function bp_admin_setting_callback_group_messages() {
 function bp_admin_moderation_block_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2557,7 +2542,7 @@ function bp_admin_moderation_block_setting_tutorial() {
 function bp_admin_moderation_report_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2697,7 +2682,7 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
 function bp_admin_on_screen_notification_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2794,7 +2779,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	<?php
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
 		?>
-		<div class="bp-feedback info">
+		<div class="bp-feedback info bp-feedback--clean bp-feedback--vmiddle">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
 				<?php
@@ -3015,7 +3000,7 @@ function bb_admin_setting_callback_group_subscriptions() {
 function bb_profile_slug_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3042,7 +3027,7 @@ function bb_profile_slug_tutorial() {
 function bb_registration_restrictions_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3369,7 +3354,7 @@ function bb_admin_setting_callback_enable_activity_pinned_posts() {
 function bb_admin_redirection_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3672,14 +3657,14 @@ function bb_reactions_settings_callback_reactions_button() {
 function bb_admin_performance_general_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 127197, // @todo update when release.
+						'article' => 127427,
 					),
 					'admin.php'
 				)
@@ -3699,14 +3684,14 @@ function bb_admin_performance_general_setting_tutorial() {
 function bb_admin_performance_activity_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 127197, // @todo update when release.
+						'article' => 127427,
 					),
 					'admin.php'
 				)

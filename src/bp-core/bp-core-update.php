@@ -487,6 +487,22 @@ function bp_version_updater() {
 			bb_update_to_2_5_80();
 		}
 
+		if ( $raw_db_version < 21111 ) {
+			bb_update_to_2_6_10();
+		}
+
+		if ( $raw_db_version < 21121 ) {
+			bb_update_to_2_6_20();
+		}
+
+		if ( $raw_db_version < 21151 ) {
+			bb_update_to_2_6_51();
+		}
+
+		if ( $raw_db_version < 21161 ) {
+			bb_update_to_2_6_70();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -531,6 +547,15 @@ function bp_version_updater() {
 			// Run migration about group.
 			if ( function_exists( 'bb_group_migration' ) ) {
 				bb_group_migration();
+			}
+
+			// Run migration about profile fields visibility.
+			if ( function_exists( 'bb_migrate_xprofile_visibility' ) ) {
+				bb_migrate_xprofile_visibility( true );
+			}
+
+			if ( function_exists( 'bb_remove_deleted_user_last_activities' ) ) {
+				bb_remove_deleted_user_last_activities();
 			}
 		}
 	}
@@ -1197,6 +1222,8 @@ function bp_add_activation_redirect() {
 
 		}
 	}
+
+	bb_remove_deleted_user_last_activities();
 
 	// Add the transient to redirect.
 	set_transient( '_bp_activation_redirect', true, 30 );
@@ -3492,4 +3519,297 @@ function bb_update_to_2_5_80() {
 	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
 	bp_update_option( 'bb_ajax_request_page_load', 2 );
 	bp_update_option( 'bb_load_activity_per_request', 10 );
+}
+
+/**
+ * Purge the existing old cache to implement the new 30 days cache expiry system.
+ * Remove symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return void
+ */
+function bb_update_to_2_6_10() {
+	global $wpdb;
+
+	// Purge all the cache for API.
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_all();
+	}
+
+	if ( function_exists( 'bp_media_symlink_path' ) ) {
+		$media_symlinks_path = bp_media_symlink_path();
+		bb_remove_symlinks( $media_symlinks_path );
+	}
+
+	if ( function_exists( 'bp_document_symlink_path' ) ) {
+		$document_symlinks_path = bp_document_symlink_path();
+		bb_remove_symlinks( $document_symlinks_path );
+	}
+
+	if ( function_exists( 'bb_video_symlink_path' ) ) {
+		$video_symlinks_path = bb_video_symlink_path();
+		bb_remove_symlinks( $video_symlinks_path );
+	}
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_activity' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_activity' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_activity' AND column_name = 'status'" ); //phpcs:ignore
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_activity ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `privacy`" ); //phpcs:ignore
+		}
+	}
+
+	// Check if the 'bp_media' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_media'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_media' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_media' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_media ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
+	}
+
+	// Check if the 'bp_document' table exists.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_document'" );
+	if ( $table_exists ) {
+
+		// Add 'status' column in 'bp_document' table.
+		$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema= '" . DB_NAME . "' AND table_name = '{$bp_prefix}bp_document' AND column_name = 'status'" ); //phpcs:ignore
+
+		if ( empty( $row ) ) {
+			$wpdb->query( "ALTER TABLE {$bp_prefix}bp_document ADD `status` varchar( 20 ) NOT NULL DEFAULT 'published' AFTER `menu_order`" ); //phpcs:ignore
+		}
+	}
+}
+
+/**
+ * Remove from the directory symlinks of media, documents and videos.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @param string $folder_path The folder path.
+ *
+ * @return void
+ */
+function bb_remove_symlinks( $folder_path ) {
+	// Open the folder.
+	if ( $handle = opendir( $folder_path ) ) {
+		// Loop through the folder contents.
+		while ( false !== ( $entry = readdir( $handle ) ) ) {
+
+			// Skip ., .. and index.html.
+			if ( '.' === $entry || '..' === $entry || 'index.html' === $entry ) {
+				continue;
+			}
+
+			// Full path to the entry.
+			$entry_path = $folder_path . '/' . $entry;
+
+			// Check if the entry is a symlink.
+			if ( is_link( $entry_path ) ) {
+				// Delete the symlink.
+				unlink( $entry_path );
+			}
+		}
+		// Close the folder handle.
+		closedir( $handle );
+	}
+}
+
+/**
+ * Add keys for user_suspended, hide_parent, hide_sitewide columns.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @return void
+ */
+function bb_update_to_2_6_20() {
+	global $wpdb;
+
+	$bp_prefix = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+
+	// Check if the 'bp_suspend' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bp_suspend' ) );
+	if ( $table_exists ) {
+
+		// Get all existing indexes for the table.
+		$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $bp_prefix . 'bp_suspend' ) );
+
+		// Array to store parts of the ALTER TABLE query.
+		$alter_statements = array();
+
+		// Add key for user_suspended if it doesn't exist.
+		if ( ! in_array( 'user_suspended', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY user_suspended (user_suspended)';
+		}
+
+		// Add key for hide_parent if it doesn't exist.
+		if ( ! in_array( 'hide_parent', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY hide_parent (hide_parent)';
+		}
+
+		// Add key for hide_sitewide if it doesn't exist.
+		if ( ! in_array( 'hide_sitewide', $indexes, true ) ) {
+			$alter_statements[] = 'ADD KEY hide_sitewide (hide_sitewide)';
+		}
+
+		// If there are any statements to execute, run the ALTER TABLE query.
+		if ( ! empty( $alter_statements ) ) {
+			$alter_query = "ALTER TABLE {$bp_prefix}bp_suspend " . implode( ', ', $alter_statements );
+			$wpdb->query( $alter_query ); //phpcs:ignore
+		}
+	}
+
+	// Run migration.
+	$is_already_run = get_transient( 'bb_migrate_xprofile_visibility' );
+	if ( ! $is_already_run ) {
+
+		// Remove deleted user last_activity on update.
+		bb_remove_deleted_user_last_activities();
+
+		// Migrate xprofile visibility data.
+		bb_core_install_xprofile_visibility();
+		bb_migrate_xprofile_visibility( true );
+		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
+	}
+
+}
+
+/**
+ * Remove duplicate last_activity entries from activity table.
+ * For count fix, create the last_activity entries for the users based on the registered date.
+ *
+ * @since BuddyBoss 2.6.51
+ *
+ * @return void
+ */
+function bb_update_to_2_6_51() {
+	// Remove deleted user last_activity on update.
+	bb_remove_deleted_user_last_activities();
+
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+
+	$insert_query = "INSERT INTO {$bp_prefix}bp_activity (user_id, component, type, action, content, primary_link, item_id, secondary_item_id, date_recorded, hide_sitewide, mptt_left, mptt_right, is_spam)
+		SELECT
+		    u.ID AS user_id,
+		    'members' AS component,
+		    'last_activity' AS type,
+		    '' AS action,
+		    '' AS content,
+		    '' AS primary_link,
+		    0 AS item_id,
+		    0 AS secondary_item_id,
+		    u.user_registered AS date_recorded,
+		    0 AS hide_sitewide,
+		    0 AS mptt_left,
+		    0 AS mptt_right,
+		    0 AS is_spam
+		FROM
+		    {$bp_prefix}users u
+		LEFT JOIN
+		    {$bp_prefix}bp_activity a ON u.ID = a.user_id AND a.component = 'members' AND a.type = 'last_activity'
+		WHERE
+		    u.user_status = 0
+		    AND a.user_id IS NULL;
+		";
+
+	// Insert the last_activity entries for the users based on the registered date.
+	$wpdb->query( $insert_query ); // phpcs:ignore
+
+	// Insert query to add 'last_activity' meta for users who don't have it.
+	$insert_query = "INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value) SELECT u.ID, 'last_activity', u.user_registered FROM {$wpdb->users} u LEFT JOIN {$wpdb->usermeta} um ON u.ID = um.user_id AND um.meta_key = 'last_activity' AND u.user_status = 0 WHERE um.user_id IS NULL;";
+
+	// Insert the last_activity meta for the users who don't have it.
+	$wpdb->query($insert_query); // phpcs:ignore
+}
+
+/**
+ * Delete all existing group entries from the suspended table that were added when a user was suspended.
+ *
+ * @since BuddyBoss 2.6.80
+ *
+ * @return void
+ */
+function bb_update_to_2_6_70() {
+	global $wpdb;
+	$bp_prefix             = function_exists( 'bp_core_get_table_prefix' ) ? bp_core_get_table_prefix() : $wpdb->base_prefix;
+	$suspend_table         = $bp_prefix . 'bp_suspend';
+	$suspend_details_table = $bp_prefix . 'bp_suspend_details';
+	$moderation_table      = $bp_prefix . 'bp_moderation';
+	$moderation_meta_table = $bp_prefix . 'bp_moderation_meta';
+
+	// Check if the 'bp_suspend' table exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $suspend_table ) );
+	if ( $table_exists ) {
+
+		// Get the IDs of the rows that will be deleted.
+		$ids_to_delete = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$suspend_table} WHERE item_type = %s AND reported = 0",
+				'groups'
+			)
+		);
+
+		if ( ! empty( $ids_to_delete ) ) {
+
+			// Convert IDs array to a comma-separated list for the IN clause.
+			$ids_placeholder = implode( ',', array_fill( 0, count( $ids_to_delete ), '%d' ) );
+
+			$suspend_details_table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $suspend_details_table ) );
+			if ( $suspend_details_table_exists ) {
+
+				// Delete related entries from the suspend details table.
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$suspend_details_table} WHERE suspend_id IN ($ids_placeholder)",
+						$ids_to_delete
+					)
+				);
+			}
+
+			$moderation_table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $moderation_table ) );
+			if ( $moderation_table_exists ) {
+
+				// Delete related entries from the moderation table.
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$moderation_table} WHERE moderation_id IN ($ids_placeholder)",
+						$ids_to_delete
+					)
+				);
+			}
+
+			$moderation_meta_table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $moderation_meta_table ) );
+			if ( $moderation_meta_table_exists ) {
+
+				// Delete related entries from the moderation meta table.
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$moderation_meta_table} WHERE moderation_id IN ($ids_placeholder)",
+						$ids_to_delete
+					)
+				);
+			}
+
+			// Delete the rows from the suspend table.
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$suspend_table} WHERE ID IN ($ids_placeholder)",
+					$ids_to_delete
+				)
+			);
+		}
+	}
 }

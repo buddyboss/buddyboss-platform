@@ -103,7 +103,7 @@ function xprofile_admin( $message = '', $type = 'error' ) {
 
 			// Delete field
 		} elseif ( ( false !== $field_id ) && ( 'delete_field' === $mode ) ) {
-			xprofile_admin_delete_field( $field_id, 'field' );
+			xprofile_admin_delete_field( $field_id, 'field', true );
 
 			// Delete option
 		} elseif ( ! empty( $option_id ) && 'delete_option' === $mode ) {

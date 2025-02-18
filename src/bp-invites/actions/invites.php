@@ -60,6 +60,7 @@ function bp_member_invite_submit() {
 	$invite_wrong_array      = array();
 	$invite_exists_array     = array();
 	$invite_restricted_array = array();
+	$invite_duplicate_array  = array();
 	$duplicate_email_inputs  = array();
 
 	foreach ( $_POST['email'] as $key => $value ) {
@@ -73,6 +74,8 @@ function bp_member_invite_submit() {
 		if ( '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) {
 			if ( email_exists( (string) $_POST['email'][ $key ][0] ) ) {
 				$invite_exists_array[] = $_POST['email'][ $key ][0];
+			} elseif ( bb_is_email_address_already_invited( $_POST['email'][ $key ][0], bp_loggedin_user_id() ) ) {
+				$invite_duplicate_array[] = $_POST['email'][ $key ][0];
 			} elseif ( bb_is_allowed_register_email_address( $_POST['email'][ $key ][0] ) ) {
 				$invite_correct_array[] = array(
 					'name'        => $_POST['invitee'][ $key ][0],
@@ -198,7 +201,7 @@ function bp_member_invite_submit() {
 	}
 
 	$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
-	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email=' . urlencode( implode( ', ', $query_string ) ) . '&exists=' . urlencode( implode( ', ', $invite_exists_array ) ) . '&restricted=' . urlencode( implode( ', ', $invite_restricted_array ) ) . '&failed=' . urlencode( implode( ',', array_filter( $failed_invite ) ) ) );
+	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email=' . urlencode( implode( ', ', $query_string ) ) . '&exists=' . urlencode( implode( ', ', $invite_exists_array ) ) . '&restricted=' . urlencode( implode( ', ', $invite_restricted_array ) ) . '&failed=' . urlencode( implode( ',', array_filter( $failed_invite ) ) ) . '&duplicates=' . urlencode( implode( ', ', $invite_duplicate_array ) ) );
 
 }
 add_action( 'bp_actions', 'bp_member_invite_submit' );

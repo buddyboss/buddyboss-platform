@@ -132,12 +132,12 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 				// If member is already a suspended , show a generic metabox.
 				add_meta_box(
-						'bp_xprofile_user_admin_empty_profile',
-						__( 'Member marked as suspended', 'buddyboss' ),
-						array( $this, 'user_admin_suspended_metabox' ),
-						$screen_id,
-						'normal',
-						'core'
+					'bp_xprofile_user_admin_empty_profile',
+					__( 'Member marked as suspended', 'buddyboss' ),
+					array( $this, 'user_admin_suspended_metabox' ),
+					$screen_id,
+					'normal',
+					'core'
 				);
 
 			} elseif ( ! bp_is_user_spammer( $user_id ) && bp_has_profile( $profile_args ) ) {
@@ -249,6 +249,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 					// Validate xprofile
 					if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) {
+						$message     = is_array( $message ) ? reset( $message ) : $message;
 						$redirect_to = add_query_arg(
 							array(
 								'error'   => '4',
@@ -289,12 +290,15 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					// Update the field data and visibility level.
 					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 					$field_updated = xprofile_set_field_data( $field_id, $user_id, $value, $is_required[ $field_id ] );
-					$value         = xprofile_get_field_data( $field_id, $user_id );
 
+					// We need to pass post value here.
+					// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
 					$new_values[ $field_id ] = array(
 						'value'      => $value,
 						'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
 					);
+
+					$value = xprofile_get_field_data( $field_id, $user_id );
 
 					if ( ! $field_updated ) {
 						$errors = true;
@@ -366,16 +370,29 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				return;
 			}
 
+			$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $r['profile_group_id'], 'is_repeater_enabled' );
+			$meta_box_id         = 'profile-edit-form-id'; // Default for non empty id.
+			$meta_box_class      = '';
+			$profile_field_class = 'bp-profile-field';
+			if ( $is_repeater_enabled ) {
+				$meta_box_class                      = ' bb_admin_repeater_group';
+				$meta_box_id                         = 'profile-edit-form-' . esc_attr( $r['profile_group_id'] );
+				$profile_field_class                .= ' editfield';
+				$r['repeater_show_main_fields_only'] = false;
+			}
+
 			// Bail if no profile fields are available.
 			if ( ! bp_has_profile( $r ) ) {
 				return;
 			}
+			?>
+			<div class="profile-edit<?php echo esc_attr( $meta_box_class ); ?>" id="<?php echo esc_attr( $meta_box_id ); ?>">
+			<?php
 
 			// Loop through profile groups & fields.
 			while ( bp_profile_groups() ) :
-				bp_the_profile_group(); ?>
+				bp_the_profile_group();
 
-				<?php
 				if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
 					$ids     = bp_get_the_profile_group_field_ids();
 					$ids_arr = explode( ',', $ids );
@@ -386,29 +403,36 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				} else {
 					$ids = bp_get_the_profile_group_field_ids();
 				}
+
+				if ( $is_repeater_enabled ) {
+					?>
+					<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $r['user_id'] ); ?>" />
+					<input type="hidden" name="group[]" id="group" value="<?php echo esc_attr( $r['profile_group_id'] ); ?>" />
+					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( $_SERVER['REQUEST_URI'] ) : ''; ?>" />
+					<?php
+				}
 				?>
-			<input type="hidden" name="field_ids[]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
+				<input type="hidden" name="field_ids[<?php echo esc_attr( $r['profile_group_id'] ); ?>]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
 
 				<?php if ( bp_get_the_profile_group_description() ) : ?>
 
-				<p class="description"><?php bp_the_profile_group_description(); ?></p>
-
-			<?php endif; ?>
-
-				<?php
-				while ( bp_profile_fields() ) :
-					bp_the_profile_field();
-					?>
-
+					<p class="description"><?php bp_the_profile_group_description(); ?></p>
 
 					<?php
+				endif;
+
+				while ( bp_profile_fields() ) :
+					bp_the_profile_field();
+
 					$field = new BP_XProfile_Field( bp_get_the_profile_field_id() );
 					if ( 'membertypes' === $field->type ) {
 						continue;
 					}
+
+					do_action( 'bp_before_profile_field_html', array( 'group_id' => $r['profile_group_id'] ) );
 					?>
 
-				<div<?php bp_field_css_class( 'bp-profile-field' ); ?>>
+				<div<?php bp_field_css_class( $profile_field_class ); ?>>
 					<fieldset>
 
 					<?php
@@ -455,9 +479,8 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 							<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
 						</div>
 
-					<?php endif; ?>
-
-					<?php
+						<?php
+					endif;
 
 					/**
 					 * Fires at end of custom profile field items on your xprofile screen tab.
@@ -470,10 +493,16 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					</fieldset>
 				</div>
 
-			<?php endwhile; // End bp_profile_fields(). ?>
+					<?php
+					do_action( 'bp_after_profile_field_html', array( 'group_id' => $r['profile_group_id'] ) );
+				endwhile;
 
-				<?php
+				do_action( 'bp_after_profile_field_content', array( 'group_id' => $r['profile_group_id'] ) );
+				// End bp_profile_fields().
 		endwhile; // End bp_profile_groups.
+			?>
+			</div>
+			<?php
 		}
 
 		/**
@@ -485,7 +514,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -565,6 +594,5 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		</div>
 			<?php
 		}
-
 	}
 endif; // End class_exists check.

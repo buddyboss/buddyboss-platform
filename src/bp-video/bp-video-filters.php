@@ -306,6 +306,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	remove_action( 'bp_groups_posted_update', 'bp_video_groups_activity_update_video_meta', 10, 4 );
 	remove_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
+	remove_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
 
 	$video_ids = bp_video_add_handler( $post_video, $post_privacy );
 
@@ -313,6 +314,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	add_action( 'bp_groups_posted_update', 'bp_video_groups_activity_update_video_meta', 10, 4 );
 	add_action( 'bp_activity_comment_posted', 'bp_video_activity_comments_update_video_meta', 10, 3 );
 	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_video_activity_comments_update_video_meta', 10, 3 );
+	add_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
 
 	// save video meta for activity.
 	if ( ! empty( $activity_id ) ) {

@@ -715,6 +715,20 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				return false;
 			}
 
+			$privacy_check = bb_validate_activity_privacy(
+				array(
+					'activity_id'     => $r['item_id'],
+					'activity_type'   => $r['item_type'],
+					'user_id'         => (int) $r['user_id'],
+					'validate_action' => 'reaction',
+				)
+			);
+		
+			// Bail if activity privacy restrict.
+			if ( is_wp_error( $privacy_check ) ) {
+				return ( 'wp_error' === $r['error_type'] ) ? $privacy_check : false;
+			}
+
 			/**
 			 * Fires before the add user item reaction in DB.
 			 *

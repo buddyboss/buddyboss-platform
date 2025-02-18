@@ -330,6 +330,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	remove_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
 	remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+	remove_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
 
 	$media_ids = bp_media_add_handler( $medias, $_POST['privacy'] );
 
@@ -337,6 +338,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
 	add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+	add_action( 'bp_activity_posted_update', 'bb_activity_at_name_send_emails', 12, 3 );
 
 	// save media meta for activity.
 	if ( ! empty( $activity_id ) ) {
@@ -829,7 +831,11 @@ function bp_media_forums_save_gif_data( $post_id ) {
 			bp_activity_update_meta( $main_activity_id, '_gif_data', $gdata );
 			bp_activity_update_meta( $main_activity_id, '_gif_raw_data', $gif_data );
 		}
-	} else {
+	} elseif (
+		isset( $_POST['action'] ) &&
+		in_array( $_POST['action'], array( 'bbp-edit-reply', 'bbp-edit-topic', 'bbp-edit-forum' ), true ) &&
+		empty( $_POST['bbp_media_gif'] )
+	) {
 		delete_post_meta( $post_id, '_gif_data' );
 		delete_post_meta( $post_id, '_gif_raw_data' );
 

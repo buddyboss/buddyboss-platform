@@ -20,22 +20,40 @@ bp_get_template_part( 'groups/single/parts/members-subnav' );
 </div>
 
 <?php
+$is_send_ajax_request = bb_is_send_ajax_request();
 switch ( bp_action_variable( 0 ) ) :
 
 	// Groups/All Members
 	case 'all-members':
 		?>
-		<div id="members-group-list" class="group_members dir-list" data-bp-list="group_members">
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-members-loading' ); ?></div>
-		</div><!-- .group_members.dir-list -->
+		<div id="members-group-list" class="group_members dir-list" data-bp-list="group_members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<?php
+			if ( $is_send_ajax_request ) {
+				?>
+				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-members-loading' ); ?></div>
+				<?php
+			} else {
+				bp_get_template_part( 'groups/single/members-loop' );
+			}
+			?>
+		</div>
 		<?php
 		break;
 
 	case 'leaders':
 		?>
-		<div id="members-group-list" class="group_members dir-list" data-bp-list="group_members">
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-leaders-loading' ); ?></div>
-		</div><!-- .group_leaders.dir-list -->
+		<div id="members-group-list" class="group_members dir-list" data-bp-list="group_members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+			<?php
+			if ( $is_send_ajax_request ) {
+				?>
+				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-leaders-loading' ); ?></div>
+				?>
+				<?php
+			} else {
+				bp_get_template_part( 'groups/single/members-loop' );
+			}
+			?>
+		</div>
 		<?php
 		break;
 

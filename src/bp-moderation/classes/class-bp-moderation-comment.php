@@ -331,7 +331,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 				)
 			);
 			if ( ! empty( $comment_report_link ) ) {
-				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list">%s</div></div>', esc_html__( 'More Options', 'buddyboss' ), $comment_report_link );
+				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss' ), esc_html__( 'Options', 'buddyboss' ), $comment_report_link );
 			}
 		}
 

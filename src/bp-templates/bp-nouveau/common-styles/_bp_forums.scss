@@ -1025,6 +1025,7 @@ fieldset div.avatar {
 		.bb-content-inr-wrap {
 			display: table;
 			width: 100%;
+			box-sizing: border-box;
 
 			> .bb-icon-corner-down-right {
 				float: left;
@@ -1183,6 +1184,19 @@ fieldset div.avatar {
 			display: block;
 			padding: 12px;
 			background-color: #fafafa;
+
+			> ul {
+				margin-bottom: 0;
+
+				li {
+					list-style: disc;
+					margin-bottom: 0;
+
+					&:before {
+						display: inline;
+					}
+				}
+			}
 		}
 
 		.bb-video-wrapper .fluid-width-video-wrapper {

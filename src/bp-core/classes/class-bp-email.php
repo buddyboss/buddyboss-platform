@@ -142,6 +142,15 @@ class BP_Email {
 	protected $tokens = array();
 
 	/**
+	 * Original token names and values for this email.
+	 *
+	 * @since BuddyBoss 2.7.00
+	 *
+	 * @var string[] Associative pairing of token name (key) and replacement value (value).
+	 */
+	protected $original_tokens = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * Set the email type and default "from" and "reply to" name and address.
@@ -847,20 +856,23 @@ class BP_Email {
 	 *
 	 * @param string|array|int|WP_User $to_address Either an email address, user ID, WP_User object,
 	 *                                             or an array containing any combination of the above.
-	 * @param string                   $name Optional. If $to_address is a string, this is the recipient's name.
-	 * @param string                   $operation Optional. If "replace", $to_address replaces current setting (default).
-	 *                                            If "add", $to_address is added to the current setting.
+	 * @param string                   $name       Optional. If $to_address is a string, this is the recipient's name.
+	 * @param string                   $operation  Optional. If "replace", $to_address replaces current setting
+	 *                                             (default). If "add", $to_address is added to the current setting.
+	 *
 	 * @return BP_Email
 	 */
 	public function set_to( $to_address, $name = '', $operation = 'replace' ) {
 		$to = ( $operation !== 'replace' ) ? $this->to : array();
+
+		$tokens = $this->get( 'original_tokens' );
 
 		if ( is_array( $to_address ) ) {
 			foreach ( $to_address as $address ) {
 				$to[] = new BP_Email_Recipient( $address );
 			}
 		} else {
-			$to[] = new BP_Email_Recipient( $to_address, $name );
+			$to[] = new BP_Email_Recipient( $to_address, $name, $tokens );
 		}
 
 		/**
@@ -953,5 +965,29 @@ class BP_Email {
 		 * @param BP_Email $this Current instance of the email type class.
 		 */
 		return apply_filters( 'bp_email_validate', $retval, $this );
+	}
+
+	/**
+	 * Original tokens for this email.
+	 *
+	 * @since BuddyBoss 2.7.00
+	 *
+	 * @param string[] $tokens Associative array, contains key/value pairs of token name/value.
+	 *                         Values are a string or a callable function.
+	 *
+	 * @return BP_Email
+	 */
+	public function bb_set_original_tokens( array $tokens ) {
+		/**
+		 * Filters the new value of the email's "original tokens" property.
+		 *
+		 * @since BuddyBoss 2.7.00
+		 *
+		 * @param string[] $tokens Associative pairing of token names (key) and replacement values (value).
+		 * @param BP_Email $this   Current instance of the email type class.
+		 */
+		$this->original_tokens = apply_filters( 'bb_email_set_original_tokens', $tokens, $this );
+
+		return $this;
 	}
 }

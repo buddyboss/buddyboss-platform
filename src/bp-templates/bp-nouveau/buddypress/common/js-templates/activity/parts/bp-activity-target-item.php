@@ -22,7 +22,7 @@
 		<span class="bp-item-name">{{data.name}}</span>
 
 		<span class="bb-radio-style privacy-radio <# if ( data.selected ) { #>selected<# } #>">
-			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
+			<input type="radio" id="bp-item-opt-{{data.id}}" class="bp-activity-object__radio" name="group-privacy" data-title="{{data.name}}" data-id="{{data.id}}" <# if ( data.allow_schedule ) { #> data-allow-schedule-post="{{data.allow_schedule}}" <# } #> <# if ( data.allow_polls ) { #> data-allow-polls="{{data.allow_polls}}" <# } #> value="opt-value-{{data.id}}" <# if ( data.selected ) { #> checked <# } #>><span></span>
 		</span>
 	</label>
 </script>

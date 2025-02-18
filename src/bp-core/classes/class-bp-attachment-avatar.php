@@ -404,6 +404,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 				2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ),
 				3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ),
 				4 => __( 'Your profile photo was deleted successfully!', 'buddyboss' ),
+				5 => __( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ),
 			);
 		} elseif ( ! empty( $group_id ) ) {
 			$script_data['bp_params'] = array(

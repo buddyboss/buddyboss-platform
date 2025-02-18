@@ -59,7 +59,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$this->register_tab();
 			$this->register_hook();
 
-			if ( $this->is_active() ) {
+			if ( $this->is_active() && is_admin() && ! wp_doing_ajax() ) {
 				$this->register_fields();
 				do_action( 'bp_admin_tab_fields_registered', $this->tab_name, $this );
 				add_action( 'bp_admin_init', array( $this, 'maybe_save_admin_settings' ), 100 );
@@ -102,6 +102,8 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			$screen    = get_current_screen();
 			$screen_id = $screen ? $screen->id : '';
 
+			$min = bp_core_get_minified_asset_suffix();
+
 			if (
 				'buddyboss_page_bp-settings' === $screen_id ||
 				'bp-member-type' === $screen_id
@@ -112,11 +114,21 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			wp_enqueue_script(
 				'bp-admin',
-				buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
+				buddypress()->plugin_url . 'bp-core/admin/js/settings-page'. $min . '.js',
 				array( 'jquery', 'jquery-ui-sortable' ),
 				buddypress()->version,
 				true
 			);
+
+			if ( 'buddyboss_page_bb-upgrade' === $screen_id ) {
+				wp_enqueue_script(
+					'bb-upgrade',
+					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade'. $min . '.js',
+					array( 'jquery', 'underscore' ),
+					buddypress()->version,
+					true
+				);
+			}
 
 			$email_template = '';
 
@@ -434,7 +446,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							true
 						)
 					) {
-						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						$value = isset( $_POST[ $setting_name ] ) ? wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					} elseif (
 						in_array(
 							$setting_name,
@@ -521,7 +533,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				?>
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" href="
+				<a class="button" target="_blank" href="
 				<?php
 				echo esc_url(
 					bp_get_admin_url(

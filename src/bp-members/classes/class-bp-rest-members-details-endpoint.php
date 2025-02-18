@@ -320,13 +320,22 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 				$request->set_param( 'user_nav', $navs );
 
+				$show_for_displayed_user = $nav['show_for_displayed_user'];
+				if (
+					'shop' === $id &&
+					! empty( $logged_user_id ) &&
+					(int) $logged_user_id === (int) $current_user_id
+				) {
+					$show_for_displayed_user = true;
+				}
+
 				$tab = array(
 					'id'                      => ( 'activity' === $id ? 'activities' : $id ), // Needs this slug to suppport: hide_in_app in app.
 					'title'                   => $name,
 					'default'                 => false,
 					'link'                    => $link,
 					'count'                   => ( $this->bp_rest_nav_has_count( $nav ) ? $this->bp_rest_get_nav_count( $nav ) : '' ),
-					'show_for_displayed_user' => $nav['show_for_displayed_user'],
+					'show_for_displayed_user' => $show_for_displayed_user,
 					'children'                => array(),
 				);
 
@@ -1180,6 +1189,49 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					),
 				),
 			);
+
+			$items[] = $item_courses;
+		}
+
+		// Memberpress courses.
+		if (
+			class_exists( 'memberpress\courses\helpers\Options' ) &&
+			function_exists( 'bb_meprlms_profile_courses_slug' ) &&
+			class_exists( 'BB_Platform_Pro' ) &&
+			function_exists( 'bb_meprlms_enable' ) &&
+			bb_meprlms_enable()
+		) {
+			$slug        = bb_meprlms_profile_courses_slug();
+			$course_link = trailingslashit( bp_loggedin_user_domain() . $slug );
+			$name        = esc_html__( 'Courses', 'buddyboss' );
+
+			$item_courses = array(
+				'ID'       => $slug,
+				'title'    => $name,
+				'url'      => esc_url( $course_link ),
+				'count'    => '',
+				'children' => array(
+					array(
+						'ID'    => $slug,
+						'title' => sprintf(
+							/* translators: My Courses */
+							__( 'My %s', 'buddyboss' ),
+							$name
+						),
+						'url'   => esc_url( $course_link ),
+						'count' => '',
+					),
+				),
+			);
+
+			if ( user_can( bp_loggedin_user_id(), 'administrator' ) ) {
+				$item_courses['children'][] = array(
+					'ID'    => bb_meprlms_profile_instructor_courses_slug(),
+					'title' => esc_html__( 'My Created Courses', 'buddyboss' ),
+					'url'   => esc_url( trailingslashit( $course_link . 'instructor-courses' ) ),
+					'count' => '',
+				);
+			}
 
 			$items[] = $item_courses;
 		}

@@ -151,20 +151,23 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 								</div>
 								<?php
 							}
+
+							if ( ! empty( $profile_actions['primary'] ) ) {
 							?>
 							<div class="flex only-grid-view align-items-center primary-action justify-center">
 								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 							</div>
+							<?php } ?>
 						</div><!-- // .item -->
 
 						<div class="member-buttons-wrap">
-							<?php if ( $profile_actions['secondary'] ) { ?>
+							<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
 								<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
 									<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
 								</div>
 							<?php } ?>
 
-							<?php if ( $profile_actions['primary'] ) { ?>
+							<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
 								<div class="flex only-list-view align-items-center primary-action justify-center">
 									<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 								</div>
@@ -187,9 +190,11 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 							<a href="#" class="bb_more_options_action">
 								<i class="bb-icon-menu-dots-h"></i>
 							</a>
-							<div class="bb_more_options_list">
+							<div class="bb_more_options_list bb_more_dropdown">
+								<?php bp_get_template_part( 'common/more-options-view' ); ?>
 								<?php echo wp_kses_post( bp_get_add_switch_button( $member_user_id ) ); ?>
 							</div>
+							<div class="bb_more_dropdown_overlay"></div>
 						</div><!-- .bb_more_options -->
 					<?php } ?>
 				</div>

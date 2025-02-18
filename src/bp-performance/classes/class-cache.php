@@ -109,6 +109,13 @@ class Cache {
 		$this->week_in_seconds   = WEEK_IN_SECONDS;
 		$this->month_in_seconds  = MONTH_IN_SECONDS;
 		$this->year_in_seconds   = YEAR_IN_SECONDS;
+
+		$this->bb_performance_purge_schedule_cron();
+
+		add_action( 'bb_performance_purge_expired_cache_hook', array( $this, 'purge_expired_cache' ) );
+
+		// Re-schedule when update the timezone.
+		add_action( 'updated_option', array( $this, 'bb_performance_purge_reschedule_cron' ), 10, 3 );
 	}
 
 	/**
@@ -497,6 +504,103 @@ class Cache {
 			}
 		} else {
 			$this->purge_groups_by_user_id( $user_id, $group_names );
+		}
+	}
+
+	/**
+	 * Returns the cache expiry time.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @return int Cache expiry in seconds.
+	 */
+	public static function cache_expiry() {
+
+		$cache_expiry = self::instance()->month_in_seconds;
+
+		/**
+		 * Filters the cache expiry time.
+		 *
+		 * @since BuddyBoss 2.6.10
+		 *
+		 * @param int $cache_expiry Expiry time for cache.
+		 */
+		return apply_filters( 'bb_performance_cache_expiry_time', $cache_expiry );
+	}
+
+	/**
+	 * Purges expired cache via background job.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @return void
+	 */
+	public function purge_expired_cache() {
+		global $wpdb;
+
+		// Current GMT time in Y-m-d H:i:s format.
+		$current_gmt_time = current_time( 'mysql', true );
+
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $this->cache_table WHERE cache_expire < %s",
+				$current_gmt_time
+			)
+		);
+	}
+
+	/**
+	 * Schedule performance cache purge cron event.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @return void
+	 */
+	public function bb_performance_purge_schedule_cron() {
+
+		// Check if the cron job is not already scheduled.
+		$is_scheduled = wp_next_scheduled( 'bb_performance_purge_expired_cache_hook' );
+
+		// WP datetime.
+		$final_date         = date_i18n( 'Y-m-d H:i:s', strtotime( 'today 23:30' ) );
+		$local_datetime     = date_create( $final_date, wp_timezone() );
+		$schedule_timestamp = $local_datetime->getTimestamp();
+
+		if ( ! $is_scheduled ) {
+			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_performance_purge_expired_cache_hook' );
+		}
+	}
+
+	/**
+	 * Re-Schedule event to clear the cron for cache.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @param string $option    Name of the option to update.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $new_value The new option value.
+	 *
+	 * @return void
+	 */
+	public function bb_performance_purge_reschedule_cron( $option, $old_value = '', $new_value = '' ) {
+
+		// Avoid clearing multiple time.
+		static $is_reschedule = false;
+
+		// Check if the updated option is 'timezone_string'.
+		if (
+			(
+				'timezone_string' === $option ||
+				'gmt_offset' === $option
+			) &&
+			$old_value !== $new_value &&
+			! $is_reschedule
+		) {
+			if ( wp_next_scheduled( 'bb_performance_purge_expired_cache_hook' ) ) {
+				wp_clear_scheduled_hook( 'bb_performance_purge_expired_cache_hook' );
+			}
+			$this->bb_performance_purge_schedule_cron();
+			$is_reschedule = true;
 		}
 	}
 }

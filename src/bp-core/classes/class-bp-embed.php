@@ -267,11 +267,20 @@ class BP_Embed extends WP_Embed {
 		if (
 			! empty( $type ) &&
 			is_object( $type ) &&
-			! empty( $type->component ) &&
-			'bbpress' === $type->component &&
 			! empty( $type->type ) &&
 			in_array( $type->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) &&
-			metadata_exists( 'post', $type->item_id, '_link_embed' )
+			(
+				(
+					// Check the type of activity and return if not a bbPress activity.
+					! empty( $type->component ) &&
+					'bbpress' === $type->component &&
+					metadata_exists( 'post', $type->item_id, '_link_embed' )
+				) ||
+				(
+					// Check the type of activity and return if bbPress activity and link preview is disable.
+					false === bbp_use_autoembed()
+				)
+			)
 		) {
 			return $content;
 		}

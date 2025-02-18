@@ -155,6 +155,7 @@ class BP_Media_Template {
 			'privacy'          => false,
 			'video'            => false,
 			'moderation_query' => true,
+			'status'           => bb_media_get_published_status(),
 		);
 		$r        = bp_parse_args( $args, $defaults );
 		extract( $r );
@@ -178,6 +179,7 @@ class BP_Media_Template {
 					'album_id'         => $album_id,
 					'privacy'          => $privacy,
 					'moderation_query' => $moderation_query,
+					'status'           => $status,
 				)
 			);
 
@@ -199,6 +201,7 @@ class BP_Media_Template {
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
 					'video'        => $video,
+					'status'       => $status,
 				)
 			);
 		}

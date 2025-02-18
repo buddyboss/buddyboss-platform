@@ -239,7 +239,7 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 				)
 			) {
 
-				$poster_name   = bp_core_get_user_displayname( $activity->user_id );
+				$poster_name   = bp_core_get_user_displayname( $activity->user_id, $user_id );
 				$title_text    = get_the_title( $comment_post );
 				$reply_content = apply_filters( 'comment_text', $comment->comment_content, $comment, array() );
 				$reply_url     = get_comment_link( $comment );

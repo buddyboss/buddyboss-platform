@@ -486,7 +486,7 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 		if ( 'directory' === $context || 'user' === $context ) {
 			$component = bp_current_component();
 
-			if ( 'friends' === $component ) {
+			if ( function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === $component ) {
 				$context   = 'friends';
 				$component = 'members';
 			}

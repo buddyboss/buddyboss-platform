@@ -247,6 +247,7 @@ function messages_new_message( $args = '' ) {
 
 		// Loop the recipients and convert all usernames to user_ids where needed.
 		foreach ( (array) $r['recipients'] as $recipient ) {
+			$recipient_id = 0;
 
 			// Trim spaces and skip if empty.
 			$recipient = trim( $recipient );
@@ -256,10 +257,14 @@ function messages_new_message( $args = '' ) {
 
 			// Check user_login / nicename columns first
 			// @see http://buddypress.trac.wordpress.org/ticket/5151.
-			if ( bp_is_username_compatibility_mode() ) {
-				$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
-			} else {
-				$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+			if ( ! bb_is_rest() ) {
+
+				// Exclude api requests as they pass user ids so it shouldn't conflict with user_login of other.
+				if ( bp_is_username_compatibility_mode() ) {
+					$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
+				} else {
+					$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+				}
 			}
 
 			// Check against user ID column if no match and if passed recipient is numeric.
@@ -940,8 +945,6 @@ function messages_notification_new_message( $raw_args = array() ) {
 		return;
 	}
 
-	$sender_name = bp_core_get_user_displayname( $sender_id );
-
 	if ( ! isset( $message ) ) {
 		$message = '';
 	}
@@ -958,6 +961,8 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	// Email each recipient.
 	foreach ( $recipients as $recipient ) {
+
+		$sender_name = bp_core_get_user_displayname( $sender_id, $recipient->user_id );
 
 		if ( $sender_id == $recipient->user_id || false === bb_is_notification_enabled( $recipient->user_id, $type_key ) ) {
 			continue;
@@ -2015,7 +2020,7 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 
 		if ( in_array( $email_type, array( 'messages-unread', 'group-message-email' ), true ) ) {
 			$messages    = current( $messages );
-			$sender_name = bp_core_get_user_displayname( $messages['sender_id'] );
+			$sender_name = bp_core_get_user_displayname( $messages['sender_id'], $recipients_id );
 
 			$tokens['message_id']  = $messages['message_id'];
 			$tokens['usermessage'] = stripslashes( $messages['message'] );

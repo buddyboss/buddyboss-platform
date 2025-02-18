@@ -54,43 +54,45 @@ $more_media     = $media_template->media_count > $max_length ? true : false;
 			$item_id = 0;
 			if ( bp_loggedin_user_id() === bp_get_media_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 				?>
-					<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
-					</a>
-					<div class="media-action_list">
-						<ul class="conflict-activity-ul-li-comment">
-							<?php
-							if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-								if ( $is_comment_pic ) {
-									?>
-										<li class="move_file media-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-											<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-										</li>
-										<?php
-								} elseif ( $can_move ) {
-									?>
-									<li class="move_file media-action-class">
-										<a href="#" data-media-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-									</li>
-									<?php
-								}
-							}
-							$item_id = 0;
-							if ( bp_is_active( 'activity' ) ) {
-								$bp_get_activity_comment_id = bp_get_activity_comment_id();
-								$item_id                    = $bp_get_activity_comment_id ? $bp_get_activity_comment_id : bp_get_activity_id();
-							}
-							if ( $can_delete ) {
+				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+				</a>
+				<div class="media-action_list bb_more_dropdown">
+					<?php bp_get_template_part( 'common/more-options-view' ); ?>
+					<ul class="conflict-activity-ul-li-comment">
+						<?php
+						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+							if ( $is_comment_pic ) {
 								?>
-								<li class="delete_file media-action-class">
-									<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+								<li class="move_file media-action-class move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+									<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+								</li>
+								<?php
+							} elseif ( $can_move ) {
+								?>
+								<li class="move_file media-action-class">
+									<a href="#" data-media-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-action="activity" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
 								</li>
 								<?php
 							}
+						}
+						$item_id = 0;
+						if ( bp_is_active( 'activity' ) ) {
+							$bp_get_activity_comment_id = bp_get_activity_comment_id();
+							$item_id                    = $bp_get_activity_comment_id ? $bp_get_activity_comment_id : bp_get_activity_id();
+						}
+						if ( $can_delete ) {
 							?>
-						</ul>
-					</div>
-				<?php } ?>
+							<li class="delete_file media-action-class">
+								<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>" data-item-from="activity" data-item-id="<?php echo esc_attr( $bp_get_media_id ); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						}
+						?>
+					</ul>
+				</div>
+				<div class="bb_more_dropdown_overlay"></div>
+			<?php } ?>
 		<?php } ?>
 	</div> <!--.media-action-wrap-->
 	<a href="#"

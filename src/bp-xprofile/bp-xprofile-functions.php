@@ -531,6 +531,11 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
 
 	$current_visibility_levels[ $field_id ] = $visibility_level;
 
+	// Save into separate visibility table.
+	$field_visibility        = new BB_XProfile_Visibility( $field_id, $user_id );
+	$field_visibility->value = $visibility_level;
+	$field_visibility->save();
+
 	return bp_update_user_meta( $user_id, 'bp_xprofile_visibility_levels', $current_visibility_levels );
 }
 
@@ -550,19 +555,26 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
 		return $current_level;
 	}
 
-	$current_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-	$current_level  = isset( $current_levels[ $field_id ] ) ? $current_levels[ $field_id ] : '';
-
 	// Use the user's stored level, unless custom visibility is disabled.
 	$field = xprofile_get_field( $field_id );
 	if ( isset( $field->allow_custom_visibility ) && 'disabled' === $field->allow_custom_visibility ) {
 		$current_level = $field->default_visibility;
-	}
+	} else {
 
-	// If we're still empty, it means that overrides are permitted, but the
-	// user has not provided a value. Use the default value.
-	if ( empty( $current_level ) ) {
-		$current_level = $field->default_visibility;
+		// Check if data available in the visibility table.
+		$field_visibility = new BB_XProfile_Visibility( $field_id, $user_id );
+		if ( ! empty( $field_visibility->id ) ) {
+			$current_level = $field_visibility->value;
+		} else {
+			$current_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+			$current_level  = isset( $current_levels[ $field_id ] ) ? $current_levels[ $field_id ] : '';
+		}
+
+		// If we're still empty, it means that overrides are permitted, but the
+		// user has not provided a value. Use the default value.
+		if ( empty( $current_level ) && isset( $field->allow_custom_visibility ) ) {
+			$current_level = $field->default_visibility;
+		}
 	}
 
 	return $current_level;
@@ -814,7 +826,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 
-	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean );
+	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
@@ -951,6 +963,7 @@ function bp_xprofile_update_display_name( $user_id ) {
  */
 function xprofile_remove_data( $user_id ) {
 	BP_XProfile_ProfileData::delete_data_for_user( $user_id );
+	BB_XProfile_Visibility::delete_data_for_user( $user_id );
 }
 add_action( 'wpmu_delete_user', 'xprofile_remove_data' );
 add_action( 'delete_user', 'xprofile_remove_data' );
@@ -1432,6 +1445,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
  * @param int   $user_id The id of the profile owner.
  * @param array $levels  An array of visibility levels ('public', 'friends', 'loggedin', 'adminsonly' etc) to be
  *                       checked against.
+ *
  * @return array $field_ids The fields that match the requested visibility levels for the given user.
  */
 function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array() ) {
@@ -1439,41 +1453,74 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		$levels = (array) $levels;
 	}
 
-	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
-		$user_visibility_levels = array();
-	}
-
-	// Parse the user-provided visibility levels with the default levels, which may take
-	// precedence.
 	$default_visibility_levels = BP_XProfile_Group::fetch_default_visibility_levels();
 
-	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
-		// If the admin has forbidden custom visibility levels for this field, replace
-		// the user-provided setting with the default specified by the admin.
-		if (
-			isset( $defaults['allow_custom'] ) &&
-			isset( $defaults['default'] ) &&
-			(
-				empty( $user_visibility_levels[ $d_field_id ] ) ||
-				'disabled' === $defaults['allow_custom']
-			)
-		) {
-			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
-		}
-	}
+	if ( BB_XProfile_Visibility::user_data_exists( $user_id ) ) {
 
-	$field_ids = array();
-	foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
-		if ( in_array( $field_visibility, $levels ) ) {
-			$field_ids[] = $field_id;
+		// Get the field ids based on visibility.
+		$field_ids = BB_XProfile_Visibility::get_user_field_ids_by_visibility_levels( $user_id, $levels );
+
+		// Parse the user-provided visibility levels with the default levels, which may take precedence.
+		foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
+
+			// If the admin has forbidden custom visibility levels for this field, replace
+			// the user-provided setting with the default specified by the admin.
+			if (
+				isset( $defaults['allow_custom'] ) &&
+				isset( $defaults['default'] ) &&
+				'disabled' === $defaults['allow_custom']
+			) {
+
+				// Custom level but disabled custom visibility and custom visibility is not specific level then unset field id.
+				if (
+					in_array( $d_field_id, $field_ids, true ) &&
+					! in_array( $defaults['default'], $levels, true )
+				) {
+					unset( $field_ids[ $d_field_id ] );
+
+					// Disabled custom visibility and custom visibility is in specific level add field id.
+				} elseif ( in_array( $defaults['default'], $levels, true ) ) {
+					$field_ids[ $d_field_id ] = $d_field_id;
+				}
+			}
+		}
+
+	} else {
+
+		$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
+			$user_visibility_levels = array();
+		}
+
+		foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
+			// If the admin has forbidden custom visibility levels for this field, replace
+			// the user-provided setting with the default specified by the admin.
+			if (
+				isset( $defaults['allow_custom'] ) &&
+				isset( $defaults['default'] ) &&
+				(
+					empty( $user_visibility_levels[ $d_field_id ] ) ||
+					'disabled' === $defaults['allow_custom']
+				)
+			) {
+				$user_visibility_levels[ $d_field_id ] = $defaults['default'];
+			}
+		}
+
+		$field_ids = array();
+		if ( ! empty( $user_visibility_levels ) ) {
+			foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
+				if ( in_array( $field_visibility, $levels, true ) ) {
+					$field_ids[] = $field_id;
+				}
+			}
 		}
 	}
 
 	// Never allow the Nickname field to be excluded.
 	$nickname_field_id = bp_xprofile_nickname_field_id();
 	if ( in_array( $nickname_field_id, $field_ids ) ) {
-		$key = array_search( 1, $field_ids );
+		$key = array_search( $nickname_field_id, $field_ids );
 		unset( $field_ids[ $key ] );
 	}
 
@@ -2007,20 +2054,41 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 		return;
 	}
 
-	$user = get_user_by( 'id', $user_id );
+	$user              = get_user_by( 'id', $user_id );
+	$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
 	if ( isset( $user->first_name ) ) {
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+		$firstname_field_id = bp_xprofile_firstname_field_id();
+		xprofile_set_field_data( $firstname_field_id, $user->ID, $user->first_name );
+
+		// Check if firstname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $firstname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $firstname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $firstname_field_id, $user_id, $visibility );
+		}
 	}
 
 	if ( isset( $user->last_name ) ) {
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
+		$lastname_field_id  = bp_xprofile_lastname_field_id();
+		xprofile_set_field_data( $lastname_field_id, $user->ID, $user->last_name );
+
+		// Check if lastname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $lastname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $lastname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $lastname_field_id, $user_id, $visibility );
+		}
 	}
 
 	if ( isset( $user->nickname ) ) {
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
-	}
+		$nickname_field_id  = bp_xprofile_nickname_field_id();
+		xprofile_set_field_data( $nickname_field_id, $user->ID, $user->nickname );
 
+		// Check if nickname field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $nickname_field_id ] ) ) {
+			$visibility         = xprofile_get_field_visibility_level( $nickname_field_id, $user_id );
+			xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
+		}
+	}
 }
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
 
@@ -2037,7 +2105,6 @@ add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
  *
  * @return void
  */
-
 function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
 	if ( ! empty( $errors ) ) {
@@ -2062,7 +2129,6 @@ function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old
 		if ( ! $field_id || $field_id == $nickname_id ) {
 			bp_update_user_meta( $user_id, 'nickname', $new_value['value'] );
 		}
-
 	}
 
 	bp_xprofile_update_display_name( $user_id );
@@ -2073,7 +2139,7 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
  * Return Transient name using logged in User ID.
  *
  * @param string $key - Transient prefix key
- * @param int $widget_id - Widget id part of transient name string
+ * @param int    $widget_id - Widget id part of transient name string
  *
  * @return string $transient_name
  *
@@ -2085,7 +2151,6 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
 	$transient_name = $key . $user_id . $widget_id;
 
 	return apply_filters( 'bp_xprofile_get_profile_completion_transient_name', $transient_name );
-
 }
 
 /**
@@ -2130,7 +2195,7 @@ function bp_xprofile_get_user_profile_progress_data( $settings ) {
  */
 function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
-	if( empty($group_ids) ){
+	if ( empty( $group_ids ) ) {
 		$group_ids = array();
 	}
 
@@ -2315,7 +2380,7 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 	/* Groups */
 
 	$loggedin_user_domain = bp_loggedin_user_domain();
-	$profile_slug          = bp_get_profile_slug();
+	$profile_slug         = bp_get_profile_slug();
 
 	// Calculate Total Progress percentage.
 	$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
@@ -2325,7 +2390,7 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 	// Group specific details
 	$listing_number = 1;
-	if( isset( $user_progress_arr['groups'] ) ){
+	if ( isset( $user_progress_arr['groups'] ) ) {
 		foreach ( $user_progress_arr['groups'] as $group_id => $group_details ) {
 
 			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
@@ -2595,5 +2660,262 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 		);
 
 		$bb_background_updater->save()->dispatch();
+	}
+}
+
+/**
+ * Function to save the xprofile fields data.
+ *
+ * @since BuddyBoss 2.5.90
+ *
+ * @param array $posted_field_ids Request array.
+ * @param array $is_required      Field is required or not.
+ *
+ * @return bool
+ */
+function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = array() ) {
+	$errors = false;
+
+	// Now we've checked for required fields, lets save the values.
+	$old_values = $new_values = array();
+
+	if ( ! empty( $posted_field_ids ) ) {
+		foreach ( (array) $posted_field_ids as $field_id ) {
+
+			// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
+			$value = $_POST[ 'field_' . $field_id ] ?? '';
+
+			$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
+
+			// Save the old and new values. They will be
+			// passed to the filter and used to determine
+			// whether an activity item should be posted.
+			$old_values[ $field_id ] = array(
+				'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
+				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
+			);
+
+			// Update the field data and visibility level.
+			xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, ( $is_required[ $field_id ] ?? false ) );
+
+			// We need to pass post value here.
+			// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
+			$new_values[ $field_id ] = array(
+				'value'      => $value,
+				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
+			);
+
+			$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
+
+			if ( ! $field_updated ) {
+				$errors = true;
+			} else {
+
+				/**
+				 * Fires on each iteration of an XProfile field being saved with no error.
+				 *
+				 * @since BuddyPress 1.1.0
+				 *
+				 * @param int    $field_id ID of the field that was saved.
+				 * @param string $value    Value that was saved to the field.
+				 */
+				do_action( 'xprofile_profile_field_data_updated', $field_id, $value );
+			}
+		}
+	}
+
+	/**
+	 * Fires after all XProfile fields have been saved for the current profile.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param int   $value            Displayed user ID.
+	 * @param array $posted_field_ids Array of field IDs that were edited.
+	 * @param bool  $errors           Whether or not any errors occurred.
+	 * @param array $old_values       Array of original values before updated.
+	 * @param array $new_values       Array of newly saved values after update.
+	 */
+	do_action( 'xprofile_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
+
+	return $errors;
+}
+
+/**
+ * Background job for migrating the user profile visibility data's to visibility table.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @param bool $background True if run in the background.
+ * @param int  $page       Page number as offset for getting users.
+ *
+ * @return void|array
+ */
+function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
+	global $wpdb, $bb_background_updater;
+
+	$page = ! empty( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : $page;
+	$bp   = buddypress();
+	$args = array(
+		'number' => apply_filters( 'bb_migrate_xprofile_visibility_users_number', 100 ),
+		'paged'  => $page,
+		'fields' => 'ID',
+	);
+
+	$users = get_users( $args );
+
+	// Delete old count status on starting migration from repair community or no users exists.
+	if ( ( ! $background && 1 === $page ) || empty( $users ) ) {
+		delete_site_option( 'bb_xprofile_visibility_migrated_count' );
+	}
+
+	// No more users to process.
+	if ( empty( $users ) ) {
+
+		if ( ! $background ) {
+			/* translators: Status of current action. */
+			$statement = __( 'Migrate visibility settings of profile fields to the new structure&hellip; %s', 'buddyboss' );
+
+			// All done!
+			return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			);
+		}
+
+		return;
+	}
+
+	foreach ( $users as $user_id ) {
+
+		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		if ( ! empty( $visibility_levels ) ) {
+			$default_field_ids = array(
+				bp_xprofile_firstname_field_id(),
+				bp_xprofile_lastname_field_id(),
+				bp_xprofile_nickname_field_id(),
+			);
+
+			foreach ( $default_field_ids as $default_field_id ) {
+				if ( empty( $visibility_levels[ $default_field_id ] ) ) {
+					$visibility_level = xprofile_get_field_visibility_level( $default_field_id, $user_id );
+					xprofile_set_field_visibility_level( $default_field_id, $user_id, $visibility_level );
+				}
+			}
+		} else {
+			// Get all profile field data for the user and set the visibility levels.
+			$profile_data = BP_XProfile_ProfileData::get_all_for_user( $user_id );
+			foreach ( $profile_data as $field_name => $field_data ) {
+				if ( ! empty( $field_data ) && ! empty( $field_data['field_id'] ) ) {
+					$visibility_level = xprofile_get_field_visibility_level( $field_data['field_id'], $user_id );
+					xprofile_set_field_visibility_level( $field_data['field_id'], $user_id, $visibility_level );
+				}
+			}
+		}
+
+		$visibility_levels = get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		if ( ! empty( $visibility_levels ) ) {
+
+			// Query existing entries for the user.
+			$existing_entries = $wpdb->get_results(
+				$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+					"SELECT field_id, value FROM {$bp->profile->table_name_visibility} WHERE user_id = %d",
+					$user_id
+				),
+				OBJECT_K
+			);
+
+			// Prepare placeholders for the insert and update queries.
+			$update_placeholders = array();
+			$insert_placeholders = array();
+			$delete_placeholders = array();
+
+			// Collect field IDs that need to be deleted.
+			$fields_to_delete = array_diff_key( $existing_entries, $visibility_levels );
+
+			if ( ! empty( $fields_to_delete ) ) {
+				foreach ( $fields_to_delete as $field_id => $entry ) {
+					$delete_placeholders[] = $wpdb->prepare( '%d', $field_id );
+				}
+			}
+
+			$current_time = bp_core_current_time();
+			foreach ( $visibility_levels as $field_id => $level ) {
+				if ( isset( $existing_entries[ $field_id ] ) ) {
+					if ( $existing_entries[ $field_id ]->value !== $level ) {
+
+						// Prepare an update query.
+						$update_placeholders[] = $wpdb->prepare(
+							// phpcs:ignore
+							"UPDATE {$bp->profile->table_name_visibility} SET value = %s, last_updated = %s WHERE user_id = %d AND field_id = %d",
+							$level,
+							$current_time,
+							$user_id,
+							$field_id
+						);
+					}
+				} else {
+					// Prepare an insert query.
+					$insert_placeholders[] = $wpdb->prepare( '(%d, %d, %s, %s)', $field_id, $user_id, $level, $current_time );
+				}
+			}
+
+			// Execute delete queries.
+			if ( ! empty( $delete_placeholders ) ) {
+				$delete_placeholders = implode( ', ', $delete_placeholders );
+				$delete_query        = "DELETE FROM {$bp->profile->table_name_visibility} WHERE user_id = %d AND field_id IN ({$delete_placeholders})";
+				$wpdb->query( $wpdb->prepare( $delete_query, $user_id ) ); // phpcs:ignore
+			}
+
+			// Execute update queries.
+			foreach ( $update_placeholders as $update_query ) {
+				$wpdb->query( $update_query ); // phpcs:ignore
+			}
+
+			// Insert new entries.
+			if ( ! empty( $insert_placeholders ) ) {
+				$insert_placeholders = implode( ', ', $insert_placeholders );
+				$insert_query        = "INSERT INTO {$bp->profile->table_name_visibility} ( field_id, user_id, value, last_updated ) VALUES {$insert_placeholders}";
+				$wpdb->query( $insert_query ); // phpcs:ignore
+			}
+		} else {
+
+			// Delete if somehow old data exists and no visibility user meta data exists.
+			$delete_query = "DELETE FROM {$bp->profile->table_name_visibility} WHERE user_id = %d";
+			$wpdb->query( $wpdb->prepare( $delete_query, $user_id ) ); // phpcs:ignore
+		}
+	}
+
+	// If running in the background, schedule the next batch.
+	if ( $background ) {
+		$bb_background_updater->data(
+			array(
+				'type'     => 'migrate_xprofile_visibility',
+				'group'    => 'bb_migrate_xprofile_visibility',
+				'priority' => 3,
+				'callback' => 'bb_migrate_xprofile_visibility',
+				'args'     => array( true, $page + 1 ),
+			)
+		);
+
+		$bb_background_updater->save()->dispatch();
+
+	} else {
+
+		$total = ( (int) get_site_option( 'bb_xprofile_visibility_migrated_count', 0 ) + count( $users ) );
+		update_site_option( 'bb_xprofile_visibility_migrated_count', $total );
+
+		$records_updated = sprintf(
+		/* translators: total users */
+			_n( '%s user visibility data migrated successfully', '%s users visibility data migrated successfully', $total, 'buddyboss' ),
+			bp_core_number_format( $total )
+		);
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $page + 1,
+			'records' => $records_updated,
+		);
 	}
 }

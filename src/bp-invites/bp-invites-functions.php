@@ -257,12 +257,17 @@ function bp_invites_member_invite_register_screen_message() {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
 				?>
 				<script>
-					jQuery(document).ready(function () {
-						if ( jQuery(".field_type_membertypes").length) {
-							jQuery(".field_type_membertypes fieldset select").val("<?php echo esc_js( $member_type_post_id ); ?>");
-							jQuery(".field_type_membertypes fieldset select").attr('disabled', 'disabled');
+					jQuery( document ).ready( function () {
+						// On form submission remove disabled attribute from the select.
+						jQuery( "#signup-form" ).on( "submit", function() {
+							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
+						} );
+
+						if ( jQuery( ".field_type_membertypes" ).length ) {
+							jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
+							jQuery( ".field_type_membertypes fieldset select" ).val( "<?php echo esc_js( $member_type_post_id ); ?>" );
 						}
-					});
+					} );
 				</script>
 				<?php
 
@@ -658,4 +663,42 @@ function bb_get_member_invitation_query() {
 	}
 
 	return apply_filters( 'bb_get_member_invitation_query', $cache );
+}
+
+/**
+ * Check if the invite already sent to particular email address by perticular inviter id if $inviter_id passed.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @param string $email      Email address to check for existing invite.
+ * @param int    $inviter_id Id of the inviter to cross check already existing invite.
+ *
+ * @return bool $is_already_invited True|False.
+ */
+function bb_is_email_address_already_invited( $email, $inviter_id = 0 ) {
+
+	$args = array(
+		'post_type'   => 'bp-invite',
+		'post_status' => 'publish',
+		'meta_key'    => '_bp_invitee_email',
+		'meta_value'  => $email,
+		'numberposts' => 1,
+	);
+
+	if ( ! empty( $inviter_id ) ) {
+		$args['author'] = $inviter_id;
+	}
+
+	// Get invites.
+	$invites            = get_posts( $args );
+	$is_already_invited = ! empty( $invites );
+
+	/**
+	 * Filter to check if email address already invited.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 *
+	 * @param bool $is_already_invited True|False.
+	 */
+	return apply_filters( 'bb_is_email_address_already_invited', $is_already_invited, $email, $inviter_id, $invites );
 }

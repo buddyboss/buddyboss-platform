@@ -527,12 +527,14 @@ function bp_core_get_user_displaynames( $user_ids ) {
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
+ * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
+ * @param int $current_user_id                 Optional. ID of the user viewing the profile.
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
-function bp_core_get_user_displayname( $user_id_or_username ) {
+function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 0 ) {
 	if ( empty( $user_id_or_username ) ) {
 		return false;
 	}
@@ -547,7 +549,11 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		return false;
 	}
 
-	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id() );
+	if ( empty( $current_user_id ) ) {
+		$current_user_id = bp_loggedin_user_id();
+	}
+
+	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 	if ( empty( $list_fields ) ) {
 		$full_name = get_the_author_meta( 'display_name', $user_id );
 		if ( empty( $full_name ) ) {
@@ -555,7 +561,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		}
 	} else {
 		$last_name_field_id = bp_xprofile_lastname_field_id();
-		if ( in_array( $last_name_field_id, $list_fields ) ) {
+		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
 			$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
 			$full_name = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
 		} else {
@@ -576,7 +582,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id );
+	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id, $current_user_id );
 }
 add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
@@ -1265,7 +1271,20 @@ function bp_last_activity_migrate() {
 	// Wipe out existing last_activity data in the activity table -
 	// this helps to prevent duplicates when pulling from the usermeta
 	// table.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity'", $bp->members->id ) );
+
+	// Remove usermeta entries for deleted users.
+	$delete_query = "DELETE um FROM {$wpdb->usermeta} um LEFT JOIN {$wpdb->users} u ON um.user_id = u.ID WHERE um.meta_key = 'last_activity' AND u.ID IS NULL;";
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$wpdb->query( $delete_query );
+
+	// Remove duplicate last_activity on user meta.
+	// Query to delete duplicates based on the provided SQL logic.
+	$delete_query = "DELETE dups FROM {$wpdb->usermeta} AS dups INNER JOIN ( SELECT user_id, MAX(umeta_id) AS max_id  FROM {$wpdb->usermeta} WHERE meta_key = 'last_activity' GROUP BY user_id ) AS keepers ON dups.user_id = keepers.user_id AND dups.meta_key = 'last_activity' AND dups.umeta_id <> keepers.max_id;";
+	// Execute the query
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$wpdb->query( $delete_query );
 
 	$sql = "INSERT INTO {$bp->members->table_name_last_activity} (`user_id`, `component`, `type`, `action`, `content`, `primary_link`, `item_id`, `date_recorded` ) (
 		  SELECT user_id, '{$bp->members->id}' as component, 'last_activity' as type, '' as action, '' as content, '' as primary_link, 0 as item_id, meta_value AS date_recorded
@@ -1274,6 +1293,7 @@ function bp_last_activity_migrate() {
 		    meta_key = 'last_activity'
 	);";
 
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	return $wpdb->query( $sql );
 }
 
@@ -2281,6 +2301,18 @@ function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $firstname );
 		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $lastname );
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
+
+		$default_field_ids = array(
+			bp_xprofile_firstname_field_id(),
+			bp_xprofile_lastname_field_id(),
+			bp_xprofile_nickname_field_id(),
+		);
+
+		// Set visibility levels for the default fields.
+		foreach ( $default_field_ids as $field_id ) {
+			$visibility = xprofile_get_field_visibility_level( $field_id, $user_id );
+			xprofile_set_field_visibility_level( $field_id, $user_id, $visibility );
+		}
 
 		bp_xprofile_update_display_name( $user_id );
 	}
@@ -3844,7 +3876,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 	echo '<div id="buddypress" class="buddypress-wrap bp-dir-hori-nav bp-shortcode-wrap">';
 	echo '<div class="members">';
 	echo '<div class="subnav-filters filters no-ajax" id="subnav-filters">';
-	bp_get_template_part( 'common/filters/grid-filters' );
+	bp_get_template_part( 'common/filters/grid-filters', null, array( 'shortcode_type' => 'members' ) );
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
 
@@ -3926,21 +3958,21 @@ function bp_get_user_member_type( $user_id ) {
 
 	$member_type = __( 'Member', 'buddyboss' );
 
-	if ( true === bp_member_type_enable_disable() ) {
-		if ( true === bp_member_type_display_on_profile() ) {
+	if (
+		true === bp_member_type_enable_disable() &&
+		true === bp_member_type_display_on_profile() &&
+		! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user_id ), true )
+	) {
+		// Get the profile type.
+		$type     = bp_get_member_type( $user_id );
+		$type_obj = bp_get_member_type_object( $type );
 
-			// Get the profile type.
-			$type = bp_get_member_type( $user_id );
-
-			// Output the.
-			if ( $type_obj = bp_get_member_type_object( $type ) ) {
-				$member_type = $type_obj->labels['singular_name'];
-			}
-
-			$string = '<span class="bp-member-type bb-current-member-' . esc_attr( $type ) . '">' . $member_type . '</span>';
-		} else {
-			$string = '<span class="bp-member-type">' . $member_type . '</span>';
+		// Output the.
+		if ( ! empty( $type_obj ) && isset( $type_obj->labels ) ) {
+			$member_type = $type_obj->labels['singular_name'];
 		}
+
+		$string = '<span class="bp-member-type bb-current-member-' . esc_attr( $type ) . '">' . $member_type . '</span>';
 	} else {
 		$string = '<span class="bp-member-type">' . $member_type . '</span>';
 	}
@@ -4266,7 +4298,10 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 		$get_selected_member_type_on_register = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->base_prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) );
 		if ( ! empty( $get_selected_member_type_on_register ) ) {
 			$get_selected_member_type_on_register = trim( $get_selected_member_type_on_register );
+		} else {
+			$get_selected_member_type_on_register = '';
 		}
+
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
@@ -5011,10 +5046,10 @@ function bb_member_loop_set_member_id( $id ) {
 
 		// This will fix the issues in theme members directory page & members connections tab send message issue.
 		if ( is_user_logged_in() && bp_loggedin_user_id() === $id ) {
-			if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+			if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
 				return bp_get_member_user_id();
-			} elseif ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+			} elseif ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
 				return bp_get_member_user_id();
 			} else {
@@ -5022,7 +5057,8 @@ function bb_member_loop_set_member_id( $id ) {
 			}
 		} else {
 			if (
-				'friends' === bp_current_component() &&
+				function_exists( 'bp_get_friends_slug' ) &&
+				bp_get_friends_slug() === bp_current_component() &&
 				( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() )
 			) {
 				// This will fix the issues in theme members directory page & members connections tab send message issue.
@@ -5048,12 +5084,12 @@ function bb_member_loop_set_member_id( $id ) {
  */
 function bb_member_loop_set_my_profile( $my_profile ) {
 
-	if ( 'my-friends' === bp_current_action() && 'friends' === bp_current_component() ) {
+	if ( 'my-friends' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
 			return false;
 		}
 	}
-	if ( 'requests' === bp_current_action() && 'friends' === bp_current_component() ) {
+	if ( 'requests' === bp_current_action() && function_exists( 'bp_get_friends_slug' ) && bp_get_friends_slug() === bp_current_component() ) {
 		if ( $my_profile && bp_loggedin_user_id() === bp_displayed_user_id() ) {
 			return false;
 		}

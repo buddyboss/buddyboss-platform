@@ -60,14 +60,10 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 			<?php
 			echo '</div>';
 		}
+		if ( ! $is_send_ajax_request ) {
+			bp_get_template_part( 'activity/activity-loop' );
+		}
 		?>
-		<ul class="<?php bp_nouveau_loop_classes(); ?>">
-			<?php
-			if ( ! $is_send_ajax_request ) {
-				bp_get_template_part( 'activity/activity-loop' );
-			}
-			?>
-		</ul>
 	</div><!-- .activity -->
 
 <?php

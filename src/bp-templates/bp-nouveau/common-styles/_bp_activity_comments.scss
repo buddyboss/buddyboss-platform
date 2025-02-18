@@ -141,6 +141,7 @@
 
 			p {
 				margin-bottom: 0.5em;
+				word-break: break-word;
 
 				&:last-child {
 					margin-bottom: 0;
@@ -148,6 +149,10 @@
 
 				&:empty {
 					min-height: 1em;
+				}
+
+				a {
+					word-break: break-all;
 				}
 			}
 
@@ -582,6 +587,10 @@
 	}
 
 } // close .buddypress-wrap
+
+#buddypress.buddypress-wrap .bb-activity-media-elem .bb_more_dropdown.open {
+	overflow: initial;
+}
 
 // Single Activity Comment Entry View
 body.activity-permalink {

@@ -51,13 +51,22 @@ if ( false === $bb_changelog_data ) {
 				}
 				if ( preg_match( '/^\d/', trim( wp_strip_all_tags( $line ) ) ) ) {
 					$version = trim( wp_strip_all_tags( $line ) );
+
+					// Reset the version content when a new version is detected.
+					$version_content = '';
 				} else {
 					$version_content .= $line;
 				}
 				$versions[ $version ] = $version_content;
 			}
 		}
-		$bb_changelog_data = $versions[ $api->version ];
+
+		$changelog_version = $api->version;
+		// If the current version is less than the latest version, then set the changelog version to the current version.
+		if ( version_compare( BP_PLATFORM_VERSION, $api->version, '<' ) ) {
+			$changelog_version = BP_PLATFORM_VERSION;
+		}
+		$bb_changelog_data = $versions[ $changelog_version ];
 		wp_cache_set( $cache_key, $bb_changelog_data, 'bp' );
 	}
 }

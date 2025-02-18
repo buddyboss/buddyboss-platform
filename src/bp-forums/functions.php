@@ -1297,3 +1297,59 @@ function bb_update_groups_discussion_subscriptions_background_process( $subscrip
 		}
 	}
 }
+
+/**
+ * Function to check if the moderator can delete the topic/reply.
+ *
+ * @since BuddyBoss 2.6.70
+ *
+ * @param object $obj  Topic or reply data.
+ * @param array  $args {
+ *     An associative array of topic or reply parameters.
+ *     @type int $author_id Author id of the topic or reply.
+ *     @type int $forum_id  Forum id of the topic or reply.
+ * }
+ *
+ * @return bool
+ */
+function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
+	$allow_delete = true;
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'author_id' => bbp_get_topic_author_id( $obj->ID ),
+			'forum_id'  => bbp_get_topic_forum_id( $obj->ID ),
+		)
+	);
+
+	if ( empty( $r['author_id'] ) || empty( $r['forum_id'] ) ) {
+		return false;
+	}
+
+	$author_id       = $r['author_id'];
+	$group_id        = bbp_get_forum_group_ids( $r['forum_id'] );
+	$group_id        = ! empty( $group_id ) ? current( $group_id ) : 0;
+	$current_user_id = get_current_user_id();
+
+	// If group moderator then no delete link, if topic author is admin/group organizer/moderator.
+	if (
+		! empty( $group_id ) &&
+		groups_is_user_mod( $current_user_id, $group_id )
+	) {
+		if (
+			(
+				groups_is_user_admin( $author_id, $group_id ) ||
+				groups_is_user_mod( $author_id, $group_id ) ||
+				user_can( $author_id, 'administrator' )
+			)
+			&& $author_id !== $current_user_id
+		) {
+			$allow_delete = false;
+		}
+	} else {
+		$allow_delete = false;
+	}
+
+	return $allow_delete;
+}

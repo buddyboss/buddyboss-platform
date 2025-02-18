@@ -178,7 +178,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
 									</div>
 								</td>
 							</tr>
@@ -469,7 +469,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
 									</div>
 								</td>
 							</tr>
@@ -1551,13 +1551,11 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 			'to'      => $old_email,
 			/* translators: Site admin email change notification email subject. %s: Site title */
 			'subject' => __( '[%s] Notice of Admin Email Change', 'buddyboss' ),
-			'message' => $email_change_text,
+			'message' => bp_email_core_wp_get_template( $email_change_text, get_user_by( 'email', $new_email ) ),
 			'headers' => '',
 		);
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
-
-		$email_change_email = bp_email_core_wp_get_template( $email_change_email, get_user_by( 'email', $new_email ) );
 
 		return $email_change_email;
 	}

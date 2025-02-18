@@ -239,6 +239,10 @@ jQuery( document ).ready( function() {
 				jQuery( this ).find( 'input[type="number"]' ).before( html_error );
 				return_val = false;
 			}
+			if ( jQuery( this ).find( 'input[type="tel"]' ).length && jQuery( this ).find( 'input[type="tel"] ').val() == '' ) {
+				jQuery( this ).find( 'input[type="tel"]' ).before( html_error );
+				return_val = false;
+			}
 			if ( jQuery( this ).find( 'textarea' ).length && jQuery( this ).find( 'textarea' ).val() == '' ) {
 				jQuery( this ).find( 'textarea' ).before( html_error );
 				return_val = false;
@@ -258,6 +262,18 @@ jQuery( document ).ready( function() {
 						jQuery( this ).find( 'legend' ).next().append( html_error );
 						return_val = false;
 					}
+			}
+			if ( jQuery( this ).find( 'input[type="radio"]' ).length ) {
+				var checked_radio = 0;
+				jQuery( this ).find( 'input[type="radio"]' ).each( function () {
+					if ( jQuery( this ).prop( 'checked' ) == true ) {
+						checked_radio++;
+					}
+				} );
+				if ( 0 >= checked_radio ) {
+					jQuery( this ).find( 'legend' ).next().append( html_error );
+					return_val = false;
+				}
 			}
 		});
 		if ( jQuery( document ).find( signup_email ).length && jQuery( document ).find( signup_email ).val() == '' ) {
@@ -321,8 +337,8 @@ jQuery( document ).ready( function() {
 
 
 	function bp_register_validate_email() {
-		var email1 				 = emailSelector.val(),
-			email2 				 = confirmEmailSelector.val(),
+		var email1 				 = emailSelector.val().toLowerCase(),
+			email2 				 = confirmEmailSelector.val().toLowerCase(),
 		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			errorMessageSelector = jQuery( '#email-strength-result' );
 
@@ -350,8 +366,8 @@ jQuery( document ).ready( function() {
 			return;
 		}
 
-		var email1 				 = emailSelector.val(),
-		    email2 				 = confirmEmailSelector.val(),
+		var email1 				 = emailSelector.val().toLowerCase(),
+		    email2 				 = confirmEmailSelector.val().toLowerCase(),
 		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			errorMessageSelector = jQuery( '#email-strength-result' );
 

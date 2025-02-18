@@ -26,7 +26,7 @@ function bp_core_load_profile_search() {
 	}
 
 	// Added this action and function because of Geo my WP plugin checking if this function exists.
-	if ( ! function_exists( 'bps_buddypress' ) && in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	if ( ! function_exists( 'bps_buddypress' ) && in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
 		add_action( 'bp_include', 'bps_buddypress' );
 		function bps_buddypress() {
 		}

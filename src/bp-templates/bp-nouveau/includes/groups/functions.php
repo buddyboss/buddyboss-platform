@@ -450,22 +450,28 @@ function bp_nouveau_groups_invites_custom_message( $message = '' ) {
  * Format a Group for a json reply
  *
  * @since BuddyPress 3.0.0
+ *
+ * @param object $item The group object
+ *
+ * @return array $args The group data.
  */
 function bp_nouveau_prepare_group_for_js( $item ) {
 	if ( empty( $item->id ) ) {
 		return array();
 	}
 
-	$item_avatar_url = bp_disable_group_avatar_uploads() ? '' : bp_core_fetch_avatar( array(
-		'item_id'    => $item->id,
-		'object'     => 'group',
-		'type'       => 'thumb',
-		'width'      => 100,
-		'height'     => 100,
-		'html'       => false
-	) );
+	$item_avatar_url = bp_disable_group_avatar_uploads() ? '' : bp_core_fetch_avatar(
+		array(
+			'item_id' => $item->id,
+			'object'  => 'group',
+			'type'    => 'thumb',
+			'width'   => 100,
+			'height'  => 100,
+			'html'    => false,
+		)
+	);
 
-	return array(
+	$args = array(
 		'id'             => $item->id,
 		'name'           => bp_get_group_name( $item ),
 		'avatar_url'     => $item_avatar_url,
@@ -475,6 +481,26 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'group_document' => ( bp_is_active( 'document' ) && bp_is_group_document_support_enabled() && bb_document_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 		'group_video'    => ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && bb_video_user_can_upload( bp_loggedin_user_id(), $item->id ) ),
 	);
+
+	$allow_schedule = function_exists( 'bb_is_enabled_activity_schedule_posts_filter' ) ? bb_is_enabled_activity_schedule_posts_filter() : false;
+	$allow_polls    = function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls( false ) : false;
+	if ( $allow_schedule || $allow_polls ) {
+		$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $item->id );
+		$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $item->id );
+		if ( $is_admin || $is_mod ) {
+			if ( $allow_schedule ) {
+				$args['allow_schedule'] = 'enabled';
+			}
+			if ( $allow_polls ) {
+				$args['allow_polls'] = 'enabled';
+			}
+			if ( bp_is_active( 'activity' ) && bp_is_activity_directory() ) {
+				$args['group_url'] = trailingslashit( bp_get_group_permalink( $item ) . bp_get_activity_slug() );
+			}
+		}
+	}
+
+	return $args;
 }
 
 /**

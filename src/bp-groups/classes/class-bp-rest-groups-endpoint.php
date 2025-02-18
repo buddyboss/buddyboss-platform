@@ -774,6 +774,26 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'create_album'       => ( bp_is_active( 'media' ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $item->id ) ),
 			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
 			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
+			'can_schedule'       => function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
+									bb_is_enabled_activity_schedule_posts() &&
+									function_exists( 'bb_can_user_schedule_activity' ) &&
+									bb_can_user_schedule_activity(
+										array(
+											'object'   => 'group',
+											'group_id' => $item->id,
+											'user_id'  => bp_loggedin_user_id(),
+										)
+									),
+			'can_create_poll'    => function_exists( 'bb_is_enabled_activity_post_polls' ) &&
+									bb_is_enabled_activity_post_polls( false ) &&
+									function_exists( 'bb_can_user_create_poll_activity' ) &&
+									bb_can_user_create_poll_activity(
+										array(
+											'object'   => 'group',
+											'group_id' => $item->id,
+											'user_id'  => bp_loggedin_user_id(),
+										)
+									),
 		);
 
 		// BuddyBoss Platform support.
@@ -868,22 +888,30 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
 		// If this is the 'edit' context, fill in more details--similar to "populate_extras".
-		if ( 'edit' === $context ) {
-			$data['total_member_count'] = groups_get_groupmeta( $item->id, 'total_member_count' );
-			$data['last_activity']      = bp_rest_prepare_date_response( groups_get_groupmeta( $item->id, 'last_activity' ) );
+		if ( 'edit' === $context || 'view' === $context ) {
+			$data['last_activity'] = bp_rest_prepare_date_response( groups_get_groupmeta( $item->id, 'last_activity' ) );
 
 			// Add admins and moderators to their respective arrays.
+			$args = array( 'admin' );
+			if ( 'edit' === $context ) {
+				$args[]                     = 'mod';
+				$data['total_member_count'] = groups_get_total_member_count( $item->id );
+			}
 			$admin_mods = groups_get_group_members(
 				array(
 					'group_id'   => $item->id,
-					'group_role' => array(
-						'admin',
-						'mod',
-					),
+					'group_role' => $args,
 				)
 			);
 
 			foreach ( (array) $admin_mods['members'] as $user ) {
+				$user->avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => $user->ID,
+						'object'  => 'user',
+						'html'    => false,
+					)
+				);
 				// Make sure to unset private data.
 				$private_keys = array_intersect(
 					array_keys( get_object_vars( $user ) ),
@@ -900,7 +928,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 				if ( ! empty( $user->is_admin ) ) {
 					$data['admins'][] = $user;
-				} else {
+				} elseif ( ! empty( $user->is_mod ) ) {
 					$data['mods'][] = $user;
 				}
 			}
@@ -1391,7 +1419,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'admins'             => array(
-					'context'     => array( 'edit' ),
+					'context'     => array( 'view', 'edit' ),
 					'description' => __( 'Group administrators.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'array',
@@ -1415,7 +1443,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'integer',
 				),
 				'last_activity'      => array(
-					'context'     => array( 'edit' ),
+					'context'     => array( 'view', 'edit' ),
 					'description' => __( "The date the Group was last active, in the site's timezone.", 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
@@ -1516,6 +1544,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the group type details will pass.', 'buddyboss' ),
 					'type'        => 'array',
+					'readonly'    => true,
+				),
+				'can_schedule'       => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Check current user can schedule activities in perticular group.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 			),

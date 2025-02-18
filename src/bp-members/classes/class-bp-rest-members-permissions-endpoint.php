@@ -138,6 +138,8 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			: bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
 		);
 
+		$data['can_create_poll'] = bp_current_user_can( 'administrator' );
+
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$response = rest_ensure_response( $data );
 
@@ -267,6 +269,12 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 				'can_create_message_video'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_poll'             => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the poll into activity or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

@@ -29,7 +29,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 	 * @since BuddyBoss 1.5.6
 	 */
 	public function __construct() {
-
+		parent::__construct();
 		$this->item_type = self::$type;
 
 		// Manage hidden list.
@@ -394,9 +394,10 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		$suspended_record = BP_Core_Suspend::get_recode( $item_sub_id, $item_sub_type );
 
-		if ( empty( $suspended_record ) ) {
+		// @todo Removed below creator logic as we are adding site admin new organizer when the group creator is suspended and we do not want to moderate group.
+		/* if ( empty( $suspended_record ) ) {
 			$suspended_record = BP_Core_Suspend::get_recode( $group->creator_id, BP_Moderation_Members::$moderation_type );
-		}
+		} */
 
 		if ( empty( $suspended_record ) ) {
 			return;

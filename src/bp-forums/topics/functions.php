@@ -174,7 +174,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** Discussion Title */
 
 	if ( ! empty( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = sanitize_text_field( $_POST['bbp_topic_title'] );
+		$topic_title = sanitize_text_field( wp_unslash( $_POST['bbp_topic_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -669,7 +669,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	/** Discussion Title */
 
 	if ( ! empty( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = esc_attr( strip_tags( $_POST['bbp_topic_title'] ) );
+		$topic_title = sanitize_text_field( wp_unslash( $_POST['bbp_topic_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -2321,8 +2321,22 @@ function bbp_toggle_topic_handler( $action = '' ) {
 
 	// What is the user doing here?.
 	if ( ! current_user_can( 'edit_topic', $topic->ID ) || ( 'bbp_toggle_topic_trash' === $action && ! current_user_can( 'delete_topic', $topic->ID ) ) ) {
-		bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that.', 'buddyboss' ) );
-		return;
+
+		if ( 'bbp_toggle_topic_trash' === $action && bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_topic_author_id( $topic->ID );
+			$forum_id     = bbp_get_topic_forum_id( $topic->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $topic, $args );
+			if ( ! $allow_delete ) {
+				bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+				return;
+			}
+		} else {
+			bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+			return;
+		}
 	}
 
 	// What action are we trying to perform?.
@@ -3650,7 +3664,7 @@ function bbp_get_topic_tag_names( $topic_id = 0, $sep = ', ' ) {
 function bbp_topic_content_autoembed() {
 	global $wp_embed;
 
-	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
 		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}

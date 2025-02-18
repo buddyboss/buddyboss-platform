@@ -159,6 +159,15 @@ class BP_Document {
 	var $description;
 
 	/**
+	 * Status of the current document item.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @var string
+	 */
+	public $status;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
@@ -214,6 +223,7 @@ class BP_Document {
 		$this->date_created  = $row->date_created;
 		$this->date_modified = $row->date_modified;
 		$this->extension     = bp_document_extension( $this->attachment_id );
+		$this->status        = $row->status;
 
 		// Added fallback to get description.
 		if ( empty( $this->description ) ) {
@@ -269,6 +279,7 @@ class BP_Document {
 				'folder'         => true,
 				'user_directory' => true,
 				'meta_query'     => false,           // Filter by document meta.
+				'status'         => bb_document_get_published_status(), // Filter by status.
 			)
 		);
 
@@ -391,6 +402,16 @@ class BP_Document {
 
 		if ( ! empty( $meta_query_sql['where'] ) ) {
 			$where_conditions[] = $meta_query_sql['where'];
+		}
+
+		// Check the status of document item.
+		if ( ! empty( $r['status'] ) ) {
+			if ( is_array( $r['status'] ) ) {
+				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$where_conditions['status'] = "d.status IN ({$status})";
+			} else {
+				$where_conditions['status'] = "d.status = '{$r['status']}'";
+			}
 		}
 
 		/**
@@ -681,6 +702,7 @@ class BP_Document {
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
 				$document->extension     = ( $thumb_gen ? bp_document_extension( $document->attachment_id ) : false ); // Get document extension.
+				$document->status        = isset( $document->status ) ? $document->status : bb_document_get_published_status();
 			}
 
 			$group_name = '';
@@ -1525,6 +1547,7 @@ class BP_Document {
 	 * @int    $group_id          Optional. The group ID to filter by.
 	 * @string    $privacy        Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
+	 * @string $status            Optional. The status to filter by.
 	 *                    }
 	 * @param bool  $from Context of deletion from. ex. attachment, activity etc.
 	 *
@@ -1548,6 +1571,7 @@ class BP_Document {
 				'group_id'      => false,
 				'privacy'       => false,
 				'date_created'  => false,
+				'status'        => false,
 			)
 		);
 
@@ -1602,6 +1626,11 @@ class BP_Document {
 		// Date created.
 		if ( ! empty( $r['date_created'] ) ) {
 			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
+		}
+
+		// Status.
+		if ( ! empty( $r['status'] ) ) {
+			$where_args[] = $wpdb->prepare( 'status = %s', $r['status'] );
 		}
 
 		// Bail if no where arguments.
@@ -1907,6 +1936,7 @@ class BP_Document {
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
 		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
+		$this->status        = apply_filters_ref_array( 'bb_document_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.
@@ -1939,9 +1969,9 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s, description = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->description, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, message_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s, description = %s, status = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->description, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, description, folder_id, activity_id, message_id, group_id, privacy, menu_order, date_created, date_modified ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, description, folder_id, activity_id, message_id, group_id, privacy, menu_order, date_created, date_modified, status ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
