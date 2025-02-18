@@ -5761,6 +5761,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-document-detail-wrap-description-popup', this.openDocumentTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-close-media-theatre', this.closeTheatre.bind( this ) );
 			$document.on( 'click', '.bb-close-document-theatre', this.closeDocumentTheatre.bind( this ) );
+			$document.on( 'click', '.bb-icons-rl-sidebar-simple', this.ToggleTheatreSidebar.bind( this ) );
 			$document.on( 'click', '.bb-rl-prev-media', this.previous.bind( this ) );
 			$document.on( 'click', '.bb-rl-next-media', this.next.bind( this ) );
 			$document.on( 'click', '.bb-rl-prev-document', this.previousDocument.bind( this ) );
@@ -6125,6 +6126,12 @@ window.bp = window.bp || {};
 
 			self.current_document = false;
 			self.getParentActivityHtml( $( event.currentTarget ) );
+		},
+
+		ToggleTheatreSidebar: function ( event ) {
+			event.preventDefault();
+			var $this = $( event.currentTarget );
+			$this.closest( '.bb-rl-media-model-container' ).toggleClass( 'bb-rl-media-toggle-sidebar' );
 		},
 
 		setMedias: function ( target ) {

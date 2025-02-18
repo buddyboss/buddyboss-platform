@@ -53,7 +53,7 @@
 			</div>
 			<div class="bb-media-info-section document">
 				<ul class="bb-rl-activity-list bb-rl-item-list bb-rl-list">
-					<span><i class="bb-icon-spin5 animate-spin"></i></span>
+					<span><i class="bb-rl-loader"></i></span>
 				</ul>
 			</div>
 		</div>
