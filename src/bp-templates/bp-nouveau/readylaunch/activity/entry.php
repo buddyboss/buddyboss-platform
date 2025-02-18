@@ -156,7 +156,9 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			<div class="bb-rl-activity-footer-actions">
 				<?php
 				bp_nouveau_activity_entry_buttons();
-				bp_nouveau_activity_state();
+
+				$bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Activity_Readylaunch::instance() : false;
+				$bb_rl_activity_class_exists ? $bb_rl_activity_class_exists->bb_rl_activity_state() : '';
 				?>
 			</div>
 		</div>
@@ -180,18 +182,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				$class .= bb_is_activity_comment_threading_enabled() ? ' bb-rl-threaded-comments bb-rl-threaded-level-' . bb_get_activity_comment_threading_depth() : '';
 			}
 			?>
-			<div class="<?php echo esc_attr( $class ); ?>">
-				<?php
-				if ( bp_activity_get_comment_count() ) {
-					bp_activity_comments();
-				}
-
-				if ( is_user_logged_in() ) {
-					bp_nouveau_activity_comment_form();
-				}
-				?>
-
-			</div>
+			<div class="<?php echo esc_attr( $class ); ?>"></div>
 
 			<?php
 		}
