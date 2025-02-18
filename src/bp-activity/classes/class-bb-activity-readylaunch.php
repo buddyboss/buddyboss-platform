@@ -462,13 +462,15 @@ class BB_Activity_Readylaunch {
 	 * @return array The same array with specific strings for the ReadyLaunch activity if needed.
 	 */
 	public function bb_rl_activity_localize_scripts( $params ) {
-		if ( empty( $params['activity']['strings'] ) ) {
+		if ( ! isset( $params['activity']['strings'] ) ) {
 			return $params;
 		}
-		$params['activity']['strings'] = array(
-			'replyLabel'   => esc_html__( '%d Reply', 'buddyboss' ),
-			'repliesLabel' => esc_html__( '%d Replies', 'buddyboss' ),
+		$reply_strings = array(
+			'replyLabel'   => __( '%d Reply', 'buddyboss' ),
+			'repliesLabel' => __( '%d Replies', 'buddyboss' ),
 		);
+
+		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
 
 		return $params;
 	}

@@ -886,14 +886,15 @@ window.bp = window.bp || {};
 		 */
 		activityActions: function ( event ) {
 			var parent        = event.data,
-				target        = $( event.target ),
-				activityItem  = $( event.currentTarget ),
-				activityId    = activityItem.data( 'bp-activity-id' ),
-				stream        = $( event.delegateTarget ),
-				activityState = activityItem.find( '.activity-state' ),
-				commentsText  = activityItem.find( '.comments-count' ),
-				self          = this,
-				$body         = $( 'body' );
+			    target        = $( event.target ),
+			    activityItem  = $( event.currentTarget ),
+			    activityId    = activityItem.data( 'bp-activity-id' ),
+			    stream        = $( event.delegateTarget ),
+			    activityState = activityItem.find( '.activity-state' ),
+			    commentsText  = activityItem.find( '.comments-count' ),
+			    repliesText   = '',
+			    self          = this,
+			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
 			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0;
@@ -902,6 +903,7 @@ window.bp = window.bp || {};
 			if ( isInsideModal ) {
 				activityState = activityItem.closest( '#bb-rl-activity-modal' ).find( '.activity-state' );
 				commentsText  = activityItem.closest( '#bb-rl-activity-modal' ).find( '.comments-count' );
+				repliesText   = activityItem.closest( '#bb-rl-activity-modal' ).find( '.acomments-count' );
 			}
 
 			// In case the target is set to a `span` or `i` tag inside the link.
@@ -950,6 +952,7 @@ window.bp = window.bp || {};
 						activityState: activityState,
 						activityItem : activityItem,
 						commentsText : commentsText,
+						repliesText  : repliesText,
 						activityId   : activityId,
 					}
 				);
@@ -2472,18 +2475,19 @@ window.bp = window.bp || {};
 			event.preventDefault(); // Stop event propagation.
 
 			var parent                 = args.parent,
-				target                 = args.target,
-				activityState          = args.activityState,
-				activityItem           = args.activityItem,
-				commentsText           = args.commentsText,
-				activityId             = args.activityId,
-				activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
-				activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
-				li_parent,
-				comment_count_span,
-				comment_count,
-				show_all_a,
-				deleted_comments_count = 0;
+			    target                 = args.target,
+			    activityState          = args.activityState,
+			    activityItem           = args.activityItem,
+			    commentsText           = args.commentsText,
+			    repliesText            = args.repliesText,
+			    activityId             = args.activityId,
+			    activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
+			    activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
+			    li_parent,
+			    comment_count_span,
+			    comment_count,
+			    show_all_a,
+			    deleted_comments_count = 0;
 
 			var commentsList = target.closest( '.bb-rl-activity-comments' );
 			commentsList.addClass( 'active' );
@@ -2569,8 +2573,49 @@ window.bp = window.bp || {};
 							if ( commentsText.length ) {
 								var label = comment_count > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 								commentsText.text( label.replace( '%d', comment_count ) );
+								comment_count_span.attr( 'data-comments-count', comment_count );
 							} else {
 								comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
+							}
+
+							// Update the reply count with parent replies count.
+							var $parentComment        = activity_comment_li.closest( '.activity-comment' ),
+							    processedIds          = {},
+							    totalCommentsToDelete = 1; // Start with 1 for the current comment
+							if ( activity_comment_li.hasClass( 'has-child-comments' ) ) {
+								// Only search for children if we know they exist
+								var childCount = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' ) || 0;
+								totalCommentsToDelete += childCount;
+								totalCommentsToDelete += activity_comment_li.find( '.activity-comment:visible' ).length;
+							}
+
+							var $currentParent = $parentComment;
+							while ( $currentParent.length ) {
+								var parentId = $currentParent.data( 'bp-activity-comment-id' );
+								if ( processedIds[ parentId ] ) {
+									break;
+								}
+								processedIds[ parentId ] = true;
+
+								var $reactionArea = $currentParent.find( '.bb-rl-comment-reactions' ).first(),
+								    $countElement = $reactionArea.find( '.acomments-count' );
+								if ( $countElement.length ) {
+									var currentCount = parseInt( $countElement.attr( 'data-comments-count' ) );
+									if ( isNaN( currentCount ) ) {
+										var matches  = $countElement.text().match( /\d+/ );
+										currentCount = matches ? parseInt( matches[ 0 ] ) : 0;
+									}
+
+									var newCount = Math.max( 0, currentCount - totalCommentsToDelete );
+									if ( 0 === newCount ) {
+										$reactionArea.find( '.activity-state-comments' ).remove();
+									} else {
+										var replyLabel = newCount > 1 ? bbRlActivity.strings.repliesLabel : bbRlActivity.strings.replyLabel;
+										var newText    = replyLabel.replace( '%d', newCount );
+										$countElement.attr( 'data-comments-count', newCount ).text( newText );
+									}
+								}
+								$currentParent = $currentParent.parent().closest( '.activity-comment' );
 							}
 
 							// Update the show all count.
