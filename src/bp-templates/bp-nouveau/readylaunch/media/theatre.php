@@ -8,23 +8,23 @@
 
 ?>
 <div class="bb-rl-media-model-wrapper bb-rl-internal-model media bb-rl-media-theatre" style="display: none;" id="buddypress">
-	<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model" href="#">
-		<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14">
-			<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7" />
-		</svg>
-	</a>
 	<div id="bb-rl-media-model-container" class="bb-rl-media-model-container">
+		<div class="bb-rl-media-model-header">
+			<h2>John Muller's Post</h2>
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
+				<i class="bb-icons-rl-sidebar-simple"></i>
+			</a>
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model" href="#">
+				<i class="bb-icons-rl-x"></i>
+			</a>
+		</div>
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section">
 				<a class="bb-rl-theater-command bb-rl-prev-media" href="#previous">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30">
-						<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 29L1 15 15 1" opacity=".7" />
-					</svg>
+					<i class="bb-icons-rl-caret-left"></i>
 				</a>
 				<a class="bb-rl-theater-command bb-rl-next-media" href="#next">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30">
-						<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l14 14L1 29" opacity=".7" />
-					</svg>
+					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<figure class="">
 					<img src="" alt="" />
