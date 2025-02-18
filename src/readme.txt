@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.00 =
+* Bug: Core- Fixed an issue with the invites table sorting
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Groups - Fixed an issue where groups with the “Hide all groups of this type from Groups Directory” setting were also hidden from the backend Groups Directory
+
 = 2.7.91 =
 * Bug: Translations - Fixed an error caused by the latest French translations
 
