@@ -2464,7 +2464,6 @@ function bb_nouveau_get_edit_activity_comment_data() {
 	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
 
-
 /**
  * Get edited activity comment log.
  *

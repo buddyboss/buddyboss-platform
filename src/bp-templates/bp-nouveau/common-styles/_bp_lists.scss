@@ -498,6 +498,34 @@
 
 	}
 
+	.footer-button-wrap {
+
+		@include dis-flex;
+
+		.action {
+			width: 100%;
+
+			.generic-button {
+				float: left;
+			}
+
+		}
+
+	}
+
+	@media screen and (max-width: 375px) {
+
+		> li {
+			min-width: 280px;
+		}
+
+	}
+
+}
+
+.buddypress-wrap ul.bp-list.groups-dir-list,
+.bb-group-card {
+
 	.bs-group-members {
 
 		@include dis-flex;
@@ -506,6 +534,7 @@
 		margin-right: 5px;
 
 		.bs-group-member {
+			display: block;
 			max-width: 28px;
 			float: left;
 			margin-right: -9px;
@@ -555,30 +584,6 @@
 	.group-footer-wrap:not(.group-join-button-hidden) .bs-group-members {
 		margin-left: -4px;
 	}
-
-	.footer-button-wrap {
-
-		@include dis-flex;
-
-		.action {
-			width: 100%;
-
-			.generic-button {
-				float: left;
-			}
-
-		}
-
-	}
-
-	@media screen and (max-width: 375px) {
-
-		> li {
-			min-width: 280px;
-		}
-
-	}
-
 }
 
 // Ensure there's space between parent act list wrapper and filters bar

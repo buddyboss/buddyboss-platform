@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH, AbortController */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -6,6 +6,15 @@ window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+	var hoverAvatar = false;
+	var hoverCardPopup = false;
+	var hideCardTimeout = null;
+	var popupCardLoaded = false;
+	var currentRequest = null;
+	var hoverProfileAvatar = false;
+	var hoverGroupAvatar = false;
+	var hoverProfileCardPopup = false;
+	var hoverGroupCardPopup = false;
 
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
@@ -92,6 +101,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.lazyLoad( '.lazy' );
 				}
 			);
+
+			// Initialize cache
+			this.cacheProfileCard = {};
+			this.cacheGroupCard = {};
 		},
 
 		/*
@@ -866,12 +879,38 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 
+				'click blur mouseover mouseout',
+				'[data-bp-btn-action], .awaiting_response_friend',
+				function( event ) {
+					// Set event.data to the current instance (bp.Nouveau) to maintain context for event handlers
+					// ensureing handlers like buttonAction, buttonRevert etc. have access to the bp.Nouveau methods and properties
+					event.data = this;
+			
+					switch( event.type ) {
+						case 'click':
+							this.buttonAction( event );
+							break;
+						case 'blur':
+							this.buttonRevert( event );
+							break;
+						case 'mouseover':
+							if ( $( event.target ).hasClass( 'awaiting_response_friend' ) ) {
+								this.awaitingButtonHover( event );
+							} else {
+								this.buttonHover( event );
+							}
+							break;
+						case 'mouseout':
+							if ( $( event.target ).hasClass( 'awaiting_response_friend' ) ) {
+								this.awaitingButtonHoverout( event );
+							} else {
+								this.buttonHoverout( event );
+							}
+							break;
+					}
+				}.bind( this )
+			);
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
@@ -922,6 +961,100 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
+
+			// Profile/Group Popup Card.
+			$( document ).on( 'mouseenter', 'img.bb-hp-profile-avatar', function () {
+				hoverAvatar = true;
+				hoverProfileAvatar = true;
+				if ( ! popupCardLoaded ) {
+					if ( hideCardTimeout ) {
+						clearTimeout( hideCardTimeout );
+					}
+					bp.Nouveau.profilePopupCard.call( this );
+				}
+			} );
+			$( document ).on( 'mouseenter', 'img.bb-hp-group-avatar, .activity-group-post-meta img.avatar', function () {
+				hoverAvatar = true;
+				hoverGroupAvatar = true;
+				if ( ! popupCardLoaded ) {
+					if ( hideCardTimeout ) {
+						clearTimeout( hideCardTimeout );
+					}
+					bp.Nouveau.groupPopupCard.call( this );
+				}
+			} );
+			$( document ).on( 'mouseleave', 'img.bb-hp-profile-avatar, img.bb-hp-group-avatar, .activity-group-post-meta img.avatar', function ( event ) {
+				var relatedTarget = event.relatedTarget;
+				var idleProfileAvatar = $( this ).hasClass( 'bb-hp-profile-avatar' );
+    			var idleGroupAvatar = $( this ).hasClass( 'bb-hp-group-avatar' ) || $( this ).is( '.activity-group-post-meta img.avatar' );
+
+				if ( idleProfileAvatar ) {
+					hoverProfileAvatar = false;
+				}
+				if ( idleGroupAvatar ) {
+					hoverGroupAvatar = false;
+				}
+
+				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
+					var $newAvatar = $( relatedTarget );
+					// Hide the current popup
+					if ( $( '#profile-card' ).hasClass( 'show' ) ) {
+						bp.Nouveau.hidePopupCard();
+					} else if ( $( '#group-card' ).hasClass( 'show' ) ) {
+						bp.Nouveau.hidePopupCard();
+					}
+
+					// Check which avatar is hovered
+					if ( $newAvatar.closest( '.author-avatar' ).length > 0 || $newAvatar.is( '.author-avatar' ) ) {
+						// Show profile popup for the new avatar
+						bp.Nouveau.profilePopupCard.call( '.group-avatar img.avatar' );
+					} else if ( $newAvatar.closest( '.group-avatar' ).length > 0 ) {
+						// Show group popup for the new avatar
+						bp.Nouveau.groupPopupCard.call( '.author-avatar img.avatar' );
+					}
+				} else {
+					hoverProfileAvatar = false;
+					hoverGroupAvatar = false;
+					hoverAvatar = false;
+					if ( ! hoverCardPopup ) {
+						bp.Nouveau.checkHidePopupCard();
+					}
+				}
+			} );
+			$( document ).on( 'mouseenter', '#profile-card', function () {
+				hoverCardPopup = true;
+				hoverProfileCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			} );
+			$( document ).on( 'mouseenter', '#group-card', function () {
+				hoverCardPopup = true;
+				hoverGroupCardPopup = true;
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
+				}
+			} );
+			$( document ).on( 'mouseleave', '#profile-card', function () {
+				hoverProfileCardPopup = false;
+				setTimeout( function () {
+					hoverCardPopup = false;
+					if ( ! hoverAvatar ) {
+						bp.Nouveau.checkHidePopupCard();
+					}
+				}, 100 );
+			} );
+			$( document ).on( 'mouseleave', '#group-card', function () {
+				hoverGroupCardPopup = false;
+				setTimeout( function () {
+					hoverCardPopup = false;
+					if ( ! hoverAvatar ) {
+						bp.Nouveau.checkHidePopupCard();
+					}
+				}, 100 );
+			} );
+
+			$( window ).on( 'scroll', this.hidePopupCard );
 		},
 
 		/**
@@ -1970,6 +2103,14 @@ window.bp = window.bp || {};
 			// Stop event propagation.
 			event.preventDefault();
 
+			// Clear cache for a specific profile/group.
+			if ( target.closest( '#profile-card' ).length ) {
+				bp.Nouveau.clearCacheProfileCard( item_id );
+			}
+			if ( target.closest( '#group-card' ).length ) {
+				bp.Nouveau.clearCacheGroupCard( item_id );
+			}
+
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 
 				// support for buddyboss theme for button actions and icons and texts.
@@ -2100,7 +2241,7 @@ window.bp = window.bp || {};
 			target.addClass( 'pending loading' );
 
 			var current_page = '';
-			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) ) {
+			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) || $( document.body ).hasClass( 'activity' ) ) {
 				current_page = 'directory';
 			} else if ( $( document.body ).hasClass( 'bp-user' ) ) {
 				current_page = 'single';
@@ -4452,6 +4593,445 @@ window.bp = window.bp || {};
 				$( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options' ).removeClass( 'is_visible open' );
 				$( 'body' ).removeClass( 'more_option_open' );
 			}
+		},
+
+		/**
+		 * Function to cancel ongoing AJAX request.
+		 */
+		abortOngoingRequest: function () {
+			if ( currentRequest ) {
+				currentRequest.abort();
+				currentRequest = null;
+			}
+		},
+
+		/**
+		 * Helper function to clear cache for a specific member.
+		 */
+		clearCacheProfileCard: function ( memberId ) {
+			if ( this.cacheProfileCard[memberId] ) {
+				delete this.cacheProfileCard[memberId];
+			}
+		},
+
+		/**
+		 * Helper function to reset profile popup cards.
+		 */
+		resetProfileCard: function () {
+			var $profileCard = $( '#profile-card' );
+
+			$profileCard.attr( 'data-bp-item-id', '' ).removeClass( 'show loading' );
+			$profileCard.find( '.bb-card-footer, .skeleton-card-footer' ).removeClass( 'bb-card-footer--plain' );
+			$profileCard.find( '.bb-card-profile-type' ).removeClass( 'hasMemberType' ).text( '' ).removeAttr( 'style' );
+			$profileCard.find( '.card-profile-status' ).removeClass( 'active' );
+			$profileCard.find( '.bb-card-heading' ).text( '' );
+			$profileCard.find( '.card-meta-joined span, .card-meta-last-active, .card-meta-followers' ).text( '' );
+			$profileCard.find( '.bb-card-avatar img' ).attr( 'src', '' );
+			$profileCard.find( '.card-button-follow' ).attr( 'data-bp-btn-action', '' ).attr( 'id', '' );
+			$profileCard.find( '.follow-button.generic-button' ).removeClass( 'following not_following' ).attr( 'id', '' );
+			$profileCard.find( '.send-message' ).attr( 'href', '' );
+			$profileCard.find( '.bb-card-action-connect' ).html( '' );
+			$profileCard.find( '.bb-card-action-follow' ).html( '' );
+		},
+
+		/**
+		 * Helper function to update and populate profile popup cards with data.
+		 */
+		updateProfileCard: function ( data, currentUser ) {
+			var $profileCard    = $( '#profile-card' );
+			var registeredDate  = new Date( data.registered_date );
+			var joinedDate      = new Intl.DateTimeFormat( 'en-US', {
+				year : 'numeric',
+				month: 'short'
+			} ).format( registeredDate );
+			var activeStatus    = data.last_activity === 'Active now' ? 'active' : '';
+			var memberTypeClass = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? 'hasMemberType' : '';
+			var memberType      = data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ? data.member_types[0].labels.singular_name : '';
+			var memberTypeCSS   = {};
+			if ( data.member_types && Array.isArray( data.member_types ) && data.member_types.length > 0 ) {
+				var labelColors                   = data.member_types[0].label_colors || {};
+				memberTypeCSS.color               = labelColors.color || '';
+				memberTypeCSS['background-color'] = labelColors['background-color'] || '';
+			}
+
+			$profileCard.addClass( 'show' ).attr( 'data-bp-item-id', data.id );
+			$profileCard.find( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+			$profileCard.find( '.card-profile-status' ).addClass( activeStatus );
+			$profileCard.find( '.bb-card-heading' ).text( data.profile_name );
+			$profileCard.find( '.bb-card-profile-type' ).addClass( memberTypeClass ).text( memberType ).css( memberTypeCSS );
+			$profileCard.find( '.card-meta-joined span' ).text( joinedDate );
+			$profileCard.find( '.card-meta-last-active' ).text( data.last_activity );
+			$profileCard.find( '.card-meta-followers' ).text( data.followers );
+			$profileCard.find( '.bb-card-footer .card-button-profile' ).attr( 'href', data.link );
+
+			if ( currentUser ) {
+				$profileCard.find( '.bb-card-footer' ).addClass( 'bb-card-footer--plain' );
+			}
+
+			var $followButtonWrapper = $profileCard.find( '.bb-card-action-follow' );
+			if ( $followButtonWrapper.length ) {
+				$followButtonWrapper.html( data.follow_button_html );
+			}
+
+			var $connectButtonWrapper = $profileCard.find( '.bb-card-action-connect' );
+			if ( $connectButtonWrapper.length ) {
+				$connectButtonWrapper.html( data.friend_button_html );
+			}
+
+			var $messageButton = $profileCard.find( '.send-message' );
+			if ( $messageButton.length && data.can_send_message ) {
+				$messageButton.attr( 'href', data.message_url );
+			}
+		},
+
+		/**
+		 * Profile popup card for avatars.
+		 */
+		profilePopupCard: function () {
+			var $avatar = $( this );
+			var offset  = $avatar.offset();
+			var $li     = $avatar.closest( '.comment-item, .activity-item' );
+			if ( ! $li.attr( 'data-bb-profile-card' ) || ! $li.attr( 'data-bb-profile-card' ).length ) {
+				return;
+			}
+			var memberId = $li.attr( 'data-bb-profile-card' );
+			if ( ! memberId ) {
+				return;
+			}
+			var currentUserId = 0;
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+				currentUserId = BP_Nouveau.activity.params.user_id;
+			}
+			// Skip showing profile card for current user
+			if ( parseInt( currentUserId ) === parseInt( memberId ) ) {
+				return;
+			}
+			var currentUser  = parseInt( currentUserId ) === parseInt( memberId );
+			var restUrl      = BP_Nouveau.rest_url;
+			var url          = restUrl + '/members/' + memberId + '/info';
+			var $profileCard = $( '#profile-card' );
+
+			function setPopupPosition() {
+				var popupTop, popupLeft;
+				if ( window.innerWidth <= 560 ) {
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = 5;
+				} else if ( window.innerWidth <= 800 ) {
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 20;
+				} else {
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 100;
+				}
+				return {
+					top : popupTop - $( window ).scrollTop(),
+					left: popupLeft - $( window ).scrollLeft(),
+				};
+			}
+
+			// Cancel any ongoing request if it's for a different memberId.
+			if ( bp.Nouveau.currentRequestMemberId && bp.Nouveau.currentRequestMemberId !== memberId ) {
+				bp.Nouveau.abortOngoingRequest();
+			}
+
+			// Always update position
+			var position = setPopupPosition();
+			$profileCard.css( {
+				top: position.top + 'px',
+				left: position.left + 'px'
+			} );
+
+			// Avoid duplicate AJAX requests for same memberId
+			if ( bp.Nouveau.currentRequestMemberId === memberId ) {
+				$profileCard.addClass( 'show loading' );
+				return;
+			}
+
+			// Set current request memberId.
+			bp.Nouveau.currentRequestMemberId = memberId;
+
+			// Check cache.
+			if ( bp.Nouveau.cacheProfileCard[memberId] ) {
+				var cachedProfileData = bp.Nouveau.cacheProfileCard[memberId];
+				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
+
+				$profileCard.removeClass( 'loading' );
+				popupCardLoaded = true;
+				bp.Nouveau.currentRequestMemberId = null;
+				return;
+			}
+
+			// Set up a new AbortController for current request.
+			var controller = new AbortController();
+			currentRequest = controller;
+
+			if ( popupCardLoaded ) {
+				return;
+			}
+
+			$.ajax( {
+				url       : url,
+				method    : 'GET',
+				headers   : {
+					'X-WP-Nonce': BP_Nouveau.rest_nonce
+				},
+				signal    : controller.signal, // Attach the signal to the request.
+				beforeSend: function () {
+					bp.Nouveau.resetProfileCard();
+
+					$profileCard.addClass( 'show loading' );
+					if ( currentUser ) {
+						$profileCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
+					}
+				},
+				success   : function ( data ) {
+					// Check if this request was aborted.
+					if ( controller.signal.aborted ) {
+						return;
+					}
+					// Cache profile data.
+					bp.Nouveau.cacheProfileCard[memberId] = data;
+
+					// Check if hovering over avatar or popup.
+					if ( hoverProfileAvatar || hoverProfileCardPopup ) {
+						if ( hoverAvatar || hoverCardPopup ) {
+							$profileCard.removeClass( 'loading' );
+							bp.Nouveau.updateProfileCard( data, currentUser );
+							popupCardLoaded = true;
+						} else {
+							bp.Nouveau.hidePopupCard();
+						}
+					}
+
+					bp.Nouveau.currentRequestMemberId = null;
+				},
+				error     : function ( xhr, status, error ) {
+					console.error( 'Error fetching member info:', error );
+					$profileCard.html( '<span>Failed to load data.</span>' );
+					bp.Nouveau.currentRequestMemberId = null;
+				}
+			} );
+		},
+
+		/**
+		 * Helper function to clear cache for a specific group.
+		 */
+		clearCacheGroupCard: function ( groupId ) {
+			if ( this.cacheGroupCard[groupId] ) {
+				delete this.cacheGroupCard[groupId];
+			}
+		},
+
+		/**
+		 * Helper function to reset group popup cards.
+		 */
+		resetGroupCard: function () {
+			var $groupCard = $( '#group-card' );
+
+			$groupCard.attr( 'data-bp-item-id', '' ).removeClass( 'show loading' );
+			$groupCard.find( '.bb-card-heading' ).text( '' );
+			$groupCard.find( '.bb-card-footer, .skeleton-card-footer' ).removeClass( 'bb-card-footer--plain' );
+			$groupCard.find( '.card-meta-type, .card-meta-status, .card-meta-last-active' ).text( '' );
+			$groupCard.find( '.bb-card-avatar img' ).attr( 'src', '' );
+			$groupCard.find( '.card-button-group' ).attr( 'href', '' );
+			$groupCard.find( '.bs-group-members' ).html( '' );
+			$groupCard.find( '.bb-card-action-join' ).html( '' );
+		},
+
+		/**
+		 * Helper function to update and populate group popup cards with data.
+		 */
+		updateGroupCard: function ( data ) {
+			var $groupCard             = $( '#group-card' );
+			var groupMembers           = data.group_members || [];
+			var $groupMembersContainer = $( '.bs-group-members' );
+			var membersLabel           = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
+
+			$groupCard.addClass( 'show' ).attr( 'data-bp-item-id', data.id );
+			$groupCard.find( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
+			$groupCard.find( '.bb-card-heading' ).text( data.name );
+			$groupCard.find( '.card-meta-status' ).text( data.status );
+			$groupCard.find( '.card-meta-type' ).text( data.group_type_label );
+			$groupCard.find( '.card-meta-last-active' ).text( data.last_activity );
+			$groupCard.find( '.bb-card-footer .card-button-group' ).attr( 'href', data.link );
+
+			groupMembers.forEach( function ( member ) {
+				var memberHtml =
+					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="' + member.name + '">' +
+						'<a href="' + member.link + '">' +
+							'<img src="' + member.avatar_urls.thumb + '" alt="' + member.name + '" class="round">' +
+						'</a>' +
+					'</span>';
+				$groupMembersContainer.append( memberHtml );
+			} );
+
+			if ( data.members_count > 3 ) {
+				var moreIconHtml =
+					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+ ' + ( Number( data.members_count ) - 3 ) + ' ' + membersLabel + '">' +
+						'<a href="' + data.group_members_url + '">' +
+							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
+						'</a>' +
+					'</span>';
+				$groupMembersContainer.append( moreIconHtml );
+			}
+
+			if ( ! data.can_join ) {
+				$groupCard.find( '.bb-card-footer' ).addClass( 'bb-card-footer--plain' );
+			}
+
+			var $joinGroupButton = $groupCard.find( '.bb-card-action-join' );
+			if ( $joinGroupButton.length && data.can_join ) {
+				$joinGroupButton.html( data.join_button );
+			}
+		},
+
+		/**
+		 * Group popup card for avatars.
+		 */
+		groupPopupCard: function () {
+			var $avatar = $( this );
+			var offset  = $avatar.offset();
+			var $li     = $avatar.closest( '.activity-item' );
+			var groupId = 0;
+			if ( $li.hasClass( 'groups' ) ) {
+				var liClass = $li.attr( 'class' ).match( /group-\d+/ );
+				groupId     = liClass[0].replace( 'group-', '' );
+			}
+			if ( ! groupId ) {
+				return;
+			}
+			var cardData      = $li.attr( 'data-bb-profile-card' );
+			var memberId      = cardData.user_id;
+			var currentUserId = 0;
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
+				currentUserId = BP_Nouveau.activity.params.user_id;
+			}
+			var currentUser = currentUserId === memberId;
+			var restUrl     = BP_Nouveau.rest_url;
+			var url         = restUrl + '/groups/' + groupId + '/info';
+			var $groupCard  = $( '#group-card' );
+
+			function setPopupPosition() {
+				var popupTop, popupLeft;
+				if ( window.innerWidth <= 560 ) {
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = 5;
+				} else if ( window.innerWidth <= 800 ) {
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 20;
+				} else {
+					popupTop  = offset.top + $avatar.outerHeight() + 10;
+					popupLeft = offset.left + $avatar.outerWidth() - 100;
+				}
+				return {
+					top : popupTop - $( window ).scrollTop(),
+					left: popupLeft - $( window ).scrollLeft(),
+				};
+			}
+
+			// Cancel any ongoing request if it's for a different groupId.
+			if ( bp.Nouveau.currentRequestGroupId && bp.Nouveau.currentRequestGroupId !== groupId ) {
+				bp.Nouveau.abortOngoingRequest();
+			}
+
+			// Always update position
+			var position = setPopupPosition();
+			$groupCard.css( {
+				top: position.top + 'px',
+				left: position.left + 'px'
+			} );
+
+			// Avoid duplicate AJAX requests for same groupId.
+			if ( bp.Nouveau.currentRequestGroupId === groupId ) {
+				$groupCard.addClass( 'show loading' );
+				return;
+			}
+
+			// Set current request groupId.
+			bp.Nouveau.currentRequestGroupId = groupId;
+
+			// Check cache.
+			if ( bp.Nouveau.cacheGroupCard[groupId] ) {
+				var cachedGroupData = bp.Nouveau.cacheGroupCard[groupId];
+				bp.Nouveau.updateGroupCard( cachedGroupData, currentUser );
+
+				$groupCard.removeClass( 'loading' );
+				popupCardLoaded = true;
+				bp.Nouveau.currentRequestGroupId = null;
+				return;
+			}
+
+			// Set up a new AbortController for current request.
+			var controller = new AbortController();
+			currentRequest = controller;
+
+			if ( popupCardLoaded ) {
+				return;
+			}
+
+			$.ajax( {
+				url       : url,
+				method    : 'GET',
+				headers   : {
+					'X-WP-Nonce': BP_Nouveau.rest_nonce
+				},
+				signal    : controller.signal, // Attach the signal to the request.
+				beforeSend: function () {
+					bp.Nouveau.resetGroupCard();
+
+					$groupCard.addClass( 'show loading' );
+					$groupCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
+				},
+				success   : function ( data ) {
+					// Check if this request was aborted.
+					if ( controller.signal.aborted ) {
+						return;
+					}
+
+					// Cache group data.
+					bp.Nouveau.cacheGroupCard[groupId] = data;
+
+					// Check if hovering over avatar or popup.
+					if ( hoverGroupAvatar || hoverGroupCardPopup ) {
+						if ( hoverAvatar || hoverCardPopup ) {
+							$groupCard.removeClass( 'loading' );
+							bp.Nouveau.updateGroupCard( data, currentUser );
+							popupCardLoaded = true;
+						} else {
+							bp.Nouveau.hidePopupCard();
+						}
+					}
+
+					bp.Nouveau.currentRequestGroupId = null;
+				},
+				error     : function ( xhr, status, error ) {
+					console.error( 'Error fetching group info:', error );
+					$groupCard.html( '<span>Failed to load data.</span>' );
+					bp.Nouveau.currentRequestGroupId = null;
+				}
+			} );
+		},
+
+		/**
+		 * Hide popup card on mouse leave.
+		 */
+		checkHidePopupCard: function () {
+			if ( ! hoverAvatar && ! hoverCardPopup ) {
+				hideCardTimeout = setTimeout( function () {
+					bp.Nouveau.hidePopupCard();
+				}, 100 );
+			}
+		},
+
+		/**
+		 * Hide popup card.
+		 */
+		hidePopupCard: function () {
+			$( '.bb-popup-card' ).removeClass( 'show' );
+			bp.Nouveau.resetProfileCard();
+			bp.Nouveau.resetGroupCard();
+			hideCardTimeout = null;
+			popupCardLoaded = false;
 		},
 	};
 
