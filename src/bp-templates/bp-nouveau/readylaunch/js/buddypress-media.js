@@ -5905,7 +5905,7 @@ window.bp = window.bp || {};
 				} ).join( '' );
 
 				// Add or update thumbnail container.
-				var $mediaSection = $( '.bb-rl-media-section' );
+				var $mediaSection = $( '.media.bb-rl-media-theatre .bb-rl-media-section' );
 				var $thumbnails   = $mediaSection.find( '.bb-rl-media-thumbnails' );
 
 				if ( ! $thumbnails.length ) {
@@ -6424,7 +6424,9 @@ window.bp = window.bp || {};
 			}
 
 			var mediaId   = $clicked.data( 'id' );
-			var mediaData = self.medias.find( media => media.id == mediaId );
+			var mediaData = self.medias.find( function ( media ) {
+				return media.id === mediaId;
+			} );
 
 			if ( mediaData ) {
 				self.updateMedia( mediaData, $clicked );
@@ -6438,7 +6440,7 @@ window.bp = window.bp || {};
 			if ( self.medias[ self.current_index + 1 ] ) {
 				self.updateMedia(
 					self.medias[ self.current_index + 1 ],
-					$( '.bb-rl-media-thumb' ).eq( self.current_index + 1 )
+					$( '.media.bb-rl-media-theatre .bb-rl-media-thumb' ).eq( self.current_index + 1 )
 				);
 			}
 		},
@@ -6450,34 +6452,38 @@ window.bp = window.bp || {};
 			if ( self.medias[ self.current_index - 1 ] ) {
 				self.updateMedia(
 					self.medias[ self.current_index - 1 ],
-					$( '.bb-rl-media-thumb' ).eq( self.current_index - 1 )
+					$( '.media.bb-rl-media-theatre .bb-rl-media-thumb' ).eq( self.current_index - 1 )
 				);
 			}
 		},
 
 		updateMedia: function ( mediaData, $thumbnail ) {
-			var self = this;
+			var self     = this;
+			var $theatre = $( '.media.bb-rl-media-theatre' );
 
-			// Update main image.
-			$( '.bb-rl-media-section figure img' ).attr( 'src', mediaData.attachment );
+			// Update main image
+			$theatre.find( '.bb-rl-media-section figure img' ).attr( 'src', mediaData.attachment );
 
-			// Update thumbnail active state.
-			$( '.bb-rl-media-thumb' ).removeClass( 'active' );
+			// Update thumbnail active state
+			$theatre.find( '.bb-rl-media-thumb' ).removeClass( 'active' );
 			$thumbnail.addClass( 'active' );
 
-			// Update current media and index.
-			self.current_index = self.medias.findIndex( media => media.id == mediaData.id );
+			// Update current media and index
+			self.current_index = self.medias.findIndex( function ( media ) {
+				return media.id === mediaData.id;
+			} );
 			self.current_media = mediaData;
 
-			// Update navigation visibility.
-			self.nextLink.toggle( !! self.medias[ self.current_index + 1 ] );
-			self.previousLink.toggle( !! self.medias[ self.current_index - 1 ] );
+			// Update navigation visibility
+			self.nextLink.toggle( Boolean( self.medias[ self.current_index + 1 ] ) );
+			self.previousLink.toggle( Boolean( self.medias[ self.current_index - 1 ] ) );
 
-			// Cancel existing AJAX request if any.
+			// Cancel existing AJAX request if any
 			if ( self.activity_ajax ) {
 				self.activity_ajax.abort();
 			}
 
+			// Get new description
 			self.activity_ajax = $.ajax( {
 				type       : 'POST',
 				url        : bbRlAjaxUrl,
@@ -6489,12 +6495,12 @@ window.bp = window.bp || {};
 					nonce         : bbRlNonce.media
 				},
 				beforeSend : function () {
-					$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
+					$theatre.find( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
 				},
 				success    : function ( response ) {
 					if ( response.success ) {
-						$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
-						$( '.bb-media-info-section:visible' ).show();
+						$theatre.find( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
+						$theatre.find( '.bb-media-info-section:visible' ).show();
 
 						// Batch UI updates in a single animation frame
 						requestAnimationFrame( function () {
@@ -6503,7 +6509,7 @@ window.bp = window.bp || {};
 							bp.Nouveau.reportedPopup();
 						} );
 					} else {
-						$( '.bb-media-info-section.media' ).hide();
+						$theatre.find( '.bb-media-info-section.media' ).hide();
 					}
 				}
 			} );
