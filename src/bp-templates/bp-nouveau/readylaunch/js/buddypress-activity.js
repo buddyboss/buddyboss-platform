@@ -2479,7 +2479,6 @@ window.bp = window.bp || {};
 			    activityState          = args.activityState,
 			    activityItem           = args.activityItem,
 			    commentsText           = args.commentsText,
-			    repliesText            = args.repliesText,
 			    activityId             = args.activityId,
 			    activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
 			    activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
@@ -3880,7 +3879,8 @@ window.bp = window.bp || {};
 					}
 
 					// Get a target list based on modal or regular view.
-					var $targetList = settings.isModal ? $( '.bb-rl-internal-model .bb-rl-activity-comments' ) : $( '.bb-rl-internal-model .bb-rl-activity-comments' ).find( '[data-activity_id=\'' + settings.activityId + '\'][data-parent_comment_id=\'' + settings.parentCommentId + '\']' );
+					var activityCommentsElem = $( '.bb-rl-internal-model .bb-rl-activity-comments' );
+					var $targetList = settings.isModal ? activityCommentsElem : activityCommentsElem.find( '[data-activity_id=\'' + settings.activityId + '\'][data-parent_comment_id=\'' + settings.parentCommentId + '\']' );
 
 					var $newComments = $( $.parseHTML( response.data.comments ) );
 
