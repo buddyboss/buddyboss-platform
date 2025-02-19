@@ -5858,6 +5858,9 @@ window.bp = window.bp || {};
 			self.setCurrentMedia( id );
 			self.showMedia();
 			self.navigationCommands();
+			if ( self.current_activity_data ) {
+				self.generateAndDisplayMediaThumbnails( target );  // Generate thumbnails after setting up media.
+			}
 			self.getParentActivityHtml( target );
 			self.getMediasDescription();
 
@@ -5888,36 +5891,6 @@ window.bp = window.bp || {};
 
 		getMediasDescription: function () {
 			var self = this;
-
-			// Create thumbnails if we have media data.
-			if (
-				self.current_activity_data &&
-				self.current_activity_data.media &&
-				self.current_activity_data.media.length > 1
-			) {
-				var thumbnailsHtml = self.current_activity_data.media.map( function ( media ) {
-					return '<div class="bb-rl-media-thumb' + ( media.id === self.current_media.id ? ' active' : '' ) +
-					       '" data-id="' + media.id +
-					       '" data-attachment-id="' + media.attachment_id +
-					       '" data-activity-id="' + self.current_media.activity_id + '">' +
-					       '<img src="' + media.thumb +
-					       '" alt="' + (
-						       media.name || ''
-					       ) +
-					       '" data-full-img="' + media.url + '"/>' +
-					       '</div>';
-				} ).join( '' );
-
-				// Add or update thumbnail container.
-				var $mediaSection = $( '.media.bb-rl-media-theatre .bb-rl-media-section' );
-				var $thumbnails   = $mediaSection.find( '.bb-rl-media-thumbnails' );
-
-				if ( ! $thumbnails.length ) {
-					$mediaSection.append( '<div class="bb-rl-media-thumbnails">' + thumbnailsHtml + '</div>' );
-				} else {
-					$thumbnails.html( thumbnailsHtml );
-				}
-			}
 
 			if ( self.activity_ajax !== false ) {
 				self.activity_ajax.abort();
@@ -5966,7 +5939,6 @@ window.bp = window.bp || {};
 		},
 
 		openDocumentTheatre: function ( event ) {
-			console.log( 'openDocumentTheatre' );
 			event.preventDefault();
 			var target = $( event.currentTarget ), id, self = this;
 
@@ -5979,7 +5951,6 @@ window.bp = window.bp || {};
 			}
 
 			id = target.data( 'id' );
-			console.log( ' id ' + id );
 			self.setupGlobals();
 			self.setDocuments( target );
 			self.setCurrentDocument( id );
@@ -6419,6 +6390,44 @@ window.bp = window.bp || {};
 			self.navigationDocumentCommands();
 		},
 
+		generateAndDisplayMediaThumbnails: function ( target ) {
+			var self = this;
+
+			// Store activity data to use for media thumbnail
+			self.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+
+			if (
+				! self.current_activity_data ||
+				! self.current_activity_data.media ||
+				self.current_activity_data.media.length <= 1
+			) {
+				return;
+			}
+
+			var thumbnailsHtml = self.current_activity_data.media.map( function ( media ) {
+				return '<div class="bb-rl-media-thumb' + ( media.id === self.current_media.id ? ' active' : '' ) +
+				       '" data-id="' + media.id +
+				       '" data-attachment-id="' + media.attachment_id +
+				       '" data-activity-id="' + self.current_media.activity_id + '">' +
+				       '<img src="' + media.thumb +
+				       '" alt="' + (
+					       media.name || ''
+				       ) +
+				       '" data-full-img="' + media.url + '"/>' +
+				       '</div>';
+			} ).join( '' );
+
+			// Add or update thumbnail container
+			var $mediaSection = $( '.media.bb-rl-media-theatre .bb-rl-media-section' );
+			var $thumbnails   = $mediaSection.find( '.bb-rl-media-thumbnails' );
+
+			if ( ! $thumbnails.length ) {
+				$mediaSection.append( '<div class="bb-rl-media-thumbnails">' + thumbnailsHtml + '</div>' );
+			} else {
+				$thumbnails.html( thumbnailsHtml );
+			}
+		},
+
 		handleThumbnailClick: function ( event ) {
 			var self     = this;
 			var $clicked = $( event.currentTarget );
@@ -6440,12 +6449,21 @@ window.bp = window.bp || {};
 		next: function ( event ) {
 			event.preventDefault();
 			var self = this;
-
-			if ( self.medias[ self.current_index + 1 ] ) {
+			if ( self.current_activity_data && self.medias[ self.current_index + 1 ] ) {
 				self.updateMedia(
 					self.medias[ self.current_index + 1 ],
 					$( '.media.bb-rl-media-theatre .bb-rl-media-thumb' ).eq( self.current_index + 1 )
 				);
+			} else {
+				self.resetRemoveActivityCommentsData();
+				if ( typeof self.medias[ self.current_index + 1 ] !== 'undefined' ) {
+					self.current_index = self.current_index + 1;
+					self.current_media = self.medias[ self.current_index ];
+					self.showMedia();
+					self.getMediasDescription();
+				} else {
+					self.nextLink.hide();
+				}
 			}
 		},
 
@@ -6453,11 +6471,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var self = this;
 
-			if ( self.medias[ self.current_index - 1 ] ) {
+			if ( self.current_activity_data && self.medias[ self.current_index - 1 ] ) {
 				self.updateMedia(
 					self.medias[ self.current_index - 1 ],
 					$( '.media.bb-rl-media-theatre .bb-rl-media-thumb' ).eq( self.current_index - 1 )
 				);
+			} else {
+				self.resetRemoveActivityCommentsData();
+				if ( typeof self.medias[ self.current_index - 1 ] !== 'undefined' ) {
+					self.current_index = self.current_index - 1;
+					self.current_media = self.medias[ self.current_index ];
+					self.showMedia();
+					self.getMediasDescription();
+				} else {
+					self.previousLink.hide();
+				}
 			}
 		},
 
