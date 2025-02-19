@@ -5594,7 +5594,7 @@ div[class*="attached-gif-container"] .gif-player {
 }
 
 .activity-item.has-comments .bb-rl-acomment_inner .bb-rl-acomment-meta a {
-  color: var(--bb-rl-text-primary-color);
+  color: var(--bb-rl-text-color);
   font-size: 16px;
   font-weight: 500;
 }
@@ -5709,6 +5709,12 @@ div[class*="attached-gif-container"] .gif-player {
 
 .activity-item.has-comments .ac-form {
   display: block;
+}
+
+.activity-item.has-comments .suspended-comment-item .bb-rl-acomment-content {
+  opacity: 0.7;
+  pointer-events: none;
+  padding-top: 0;
 }
 
 .acomments-view-more {
