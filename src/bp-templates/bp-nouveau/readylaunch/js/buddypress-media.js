@@ -2400,7 +2400,7 @@ window.bp = window.bp || {};
 					function ( file ) {
 						if ( self.dropzone_media.length ) {
 							for ( var i in self.dropzone_media ) {
-								if ( file.upload.uuid == self.dropzone_media[ i ].uuid ) {
+								if ( file.upload.uuid === self.dropzone_media[ i ].uuid ) {
 
 									if ( typeof self.dropzone_media[ i ].saved !== 'undefined' && ! self.dropzone_media[ i ].saved ) {
 										self.removeAttachment( self.dropzone_media[ i ].id );
@@ -2693,7 +2693,7 @@ window.bp = window.bp || {};
 					function ( file ) {
 						if ( self.dropzone_media.length ) {
 							for ( var i in self.dropzone_media ) {
-								if ( file.upload.uuid == self.dropzone_media[ i ].uuid ) {
+								if ( file.upload.uuid === self.dropzone_media[ i ].uuid ) {
 
 									if ( typeof self.dropzone_media[ i ].saved !== 'undefined' && ! self.dropzone_media[ i ].saved ) {
 										self.removeAttachment( self.dropzone_media[ i ].id );
@@ -5775,6 +5775,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-activity-description-new-reset', this.closeMediaActivityDescription.bind( this ) );
 			$document.on( 'keyup', '.bp-edit-media-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind( this ) );
 			$document.on( 'click', '#bp-activity-description-new-submit', this.submitMediaActivityDescription.bind( this ) );
+			$document.on( 'click', '.bb-rl-media-thumb', this.handleThumbnailClick.bind( this ) );
 			$document.click( this.togglePopupDropdown );
 
 			document.addEventListener( 'keyup', this.checkPressedKeyDocuments.bind( this ) );
@@ -5841,9 +5842,10 @@ window.bp = window.bp || {};
 		},
 
 		openTheatre: function ( event ) {
-			console.log( 'openTheatre' );
 			event.preventDefault();
 			var target = $( event.currentTarget ), id, self = this;
+			// Store activity data to use for media thumbnail.
+			this.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
 
 			if ( target.closest( '#bp-existing-media-content' ).length ) {
 				return false;
@@ -5887,7 +5889,31 @@ window.bp = window.bp || {};
 		getMediasDescription: function () {
 			var self = this;
 
-			$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
+			// Create thumbnails if we have media data.
+			if ( self.current_activity_data?.media?.length > 1 ) {
+				var thumbnailsHtml = self.current_activity_data.media.map( function ( media ) {
+					return '<div class="bb-rl-media-thumb' + ( media.id === self.current_media.id ? ' active' : '' ) +
+					       '" data-id="' + media.id +
+					       '" data-attachment-id="' + media.attachment_id +
+					       '" data-activity-id="' + self.current_media.activity_id + '">' +
+					       '<img src="' + media.thumb +
+					       '" alt="' + (
+						       media.name || ''
+					       ) +
+					       '" data-full-img="' + media.url + '"/>' +
+					       '</div>';
+				} ).join( '' );
+
+				// Add or update thumbnail container.
+				var $mediaSection = $( '.bb-rl-media-section' );
+				var $thumbnails   = $mediaSection.find( '.bb-rl-media-thumbnails' );
+
+				if ( ! $thumbnails.length ) {
+					$mediaSection.append( '<div class="bb-rl-media-thumbnails">' + thumbnailsHtml + '</div>' );
+				} else {
+					$thumbnails.html( thumbnailsHtml );
+				}
+			}
 
 			if ( self.activity_ajax !== false ) {
 				self.activity_ajax.abort();
@@ -6389,34 +6415,100 @@ window.bp = window.bp || {};
 			self.navigationDocumentCommands();
 		},
 
+		handleThumbnailClick: function ( event ) {
+			var self     = this;
+			var $clicked = $( event.currentTarget );
+
+			if ( $clicked.hasClass( 'active' ) ) {
+				return;
+			}
+
+			var mediaId   = $clicked.data( 'id' );
+			var mediaData = self.medias.find( media => media.id == mediaId );
+
+			if ( mediaData ) {
+				self.updateMedia( mediaData, $clicked );
+			}
+		},
+
 		next: function ( event ) {
 			event.preventDefault();
 			var self = this;
-			self.resetRemoveActivityCommentsData();
-			if ( typeof self.medias[ self.current_index + 1 ] !== 'undefined' ) {
-				self.current_index = self.current_index + 1;
-				self.current_media = self.medias[ self.current_index ];
-				self.showMedia();
-				self.getMediasDescription();
-			} else {
-				self.nextLink.hide();
+
+			if ( self.medias[ self.current_index + 1 ] ) {
+				self.updateMedia(
+					self.medias[ self.current_index + 1 ],
+					$( '.bb-rl-media-thumb' ).eq( self.current_index + 1 )
+				);
 			}
 		},
 
 		previous: function ( event ) {
 			event.preventDefault();
 			var self = this;
-			self.resetRemoveActivityCommentsData();
-			if ( typeof self.medias[ self.current_index - 1 ] !== 'undefined' ) {
-				self.current_index = self.current_index - 1;
-				self.current_media = self.medias[ self.current_index ];
-				self.showMedia();
-				self.getMediasDescription();
-			} else {
-				self.previousLink.hide();
+
+			if ( self.medias[ self.current_index - 1 ] ) {
+				self.updateMedia(
+					self.medias[ self.current_index - 1 ],
+					$( '.bb-rl-media-thumb' ).eq( self.current_index - 1 )
+				);
 			}
 		},
 
+		updateMedia: function ( mediaData, $thumbnail ) {
+			var self = this;
+
+			// Update main image.
+			$( '.bb-rl-media-section figure img' ).attr( 'src', mediaData.attachment );
+
+			// Update thumbnail active state.
+			$( '.bb-rl-media-thumb' ).removeClass( 'active' );
+			$thumbnail.addClass( 'active' );
+
+			// Update current media and index.
+			self.current_index = self.medias.findIndex( media => media.id == mediaData.id );
+			self.current_media = mediaData;
+
+			// Update navigation visibility.
+			self.nextLink.toggle( !! self.medias[ self.current_index + 1 ] );
+			self.previousLink.toggle( !! self.medias[ self.current_index - 1 ] );
+
+			// Cancel existing AJAX request if any.
+			if ( self.activity_ajax ) {
+				self.activity_ajax.abort();
+			}
+
+			self.activity_ajax = $.ajax( {
+				type       : 'POST',
+				url        : bbRlAjaxUrl,
+				data       : {
+					action        : 'media_get_media_description',
+					id            : mediaData.id,
+					attachment_id : mediaData.attachment_id,
+					activity_id   : mediaData.activity_id,
+					nonce         : bbRlNonce.media
+				},
+				beforeSend : function () {
+					$( '.bb-media-info-section .bb-rl-activity-list' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
+				},
+				success    : function ( response ) {
+					if ( response.success ) {
+						$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
+						$( '.bb-media-info-section:visible' ).show();
+
+						// Batch UI updates in a single animation frame
+						requestAnimationFrame( function () {
+							$( window ).scroll();
+							bp.Nouveau.reportPopUp();
+							bp.Nouveau.reportedPopup();
+						} );
+					} else {
+						$( '.bb-media-info-section.media' ).hide();
+					}
+				}
+			} );
+		},
+		
 		nextDocument: function ( event ) {
 			event.preventDefault();
 
