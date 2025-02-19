@@ -71,6 +71,7 @@
   --bb-rl-radius-xs: 2px;
   --bb-rl-radius-sm: 4px;
   --bb-rl-radius-md: 6px;
+  --bb-rl-radius-base: 8px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;
@@ -2194,9 +2195,24 @@ button[data-balloon] {
   font-style: inherit;
   outline: none;
   vertical-align: middle;
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: var(--bb-rl-radius-base);
   padding: 5px var(--bb-rl-space-100);
   color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template input[type="submit"],
+.bb-readylaunch-template textarea[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  border-radius: var(--bb-rl-radius-md);
 }
 
 .bb-readylaunch-template select {
@@ -2213,7 +2229,7 @@ button[data-balloon] {
   font-style: inherit;
   outline: none;
   vertical-align: middle;
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: var(--bb-rl-radius-base);
   color: var(--bb-rl-text-color);
   font-size: 14px;
   font-weight: 400;
@@ -4990,6 +5006,12 @@ body.admin-bar .bb-rl-left-panel {
   opacity: 0.4;
 }
 
+.bb-rl-entry-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
 /*
 * Cover photo cropper
 */
@@ -6014,6 +6036,7 @@ body.guillotine-dragging * {
   --bb-rl-radius-xs: 2px;
   --bb-rl-radius-sm: 4px;
   --bb-rl-radius-md: 6px;
+  --bb-rl-radius-base: 8px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;

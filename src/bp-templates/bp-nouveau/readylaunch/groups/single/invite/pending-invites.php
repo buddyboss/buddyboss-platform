@@ -9,6 +9,9 @@
  */
 ?>
 <div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel">
+	<div class="bb-rl-group-invites-header">
+		<h2 class="bb-rl-entry-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
+	</div>
 	<?php
 	bp_get_template_part( 'groups/single/parts/invite-subnav' );
 	?>

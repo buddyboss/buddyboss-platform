@@ -9,14 +9,18 @@
  */
 ?>
 <div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel">
-	<?php
-	if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
-		bp_get_template_part( 'groups/single/parts/invite-subnav' );
-	}
-	?>
+	<div class="bb-rl-group-invites-header">
+		<h2 class="bb-rl-entry-title"><?php _e( 'Send Invites', 'buddyboss' ); ?></h2>
+	</div>
 	<div id="group-invites-container" class="bb-rl-group-invites-container">
 		<div class="bb-groups-invites-left">
 			<div class="bb-groups-invites-left-inner">
+
+				<?php
+				if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
+					bp_get_template_part( 'groups/single/parts/invite-subnav' );
+				}
+				?>
 
 				<div class="group-invites-search subnav-search clearfix" role="search">
 					<div class="bp-search">
@@ -65,7 +69,7 @@
 			<form id="send_group_invite_form" class="standard-form" data-select2-id="send_group_invite_form">
 				<div class="bb-groups-invites-right-top">
 					<div class="bb-title-wrap">
-						<h2 class="bb-title"><?php _e( 'Send Invites', 'buddyboss' ); ?></h2>
+						<h2 class="bb-title"><?php _e( 'Selected Members', 'buddyboss' ); ?></h2>
 						<div class="bb-more-invites-wrap"><a class="bb-add-invites" href="#"><span class="bb-icon-rl bb-icon-plus"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 					</div>
 					<div class="bp-invites-feedback">
@@ -85,7 +89,7 @@
 								<div id="bp-invites-submit-loader" class="bp-invites-submit-loader-hide">
 									<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 								</div>
-								<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>" id="send_group_invite_button" class="small">
+								<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send Invite', 'buddyboss' ); ?>" id="send_group_invite_button" class="small">
 								<input type="submit" name="bp_invites_reset" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>" id="bp_invites_reset" class="small">
 							</div>
 						</div>

@@ -600,6 +600,11 @@
 	}
 }
 
+.bb-rl-entry-title {
+
+	@include bb-rl-base-heading-xl;
+}
+
 /*
 * Cover photo cropper
 */

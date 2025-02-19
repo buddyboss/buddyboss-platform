@@ -24,9 +24,15 @@
 		font-style: inherit;
 		outline: none;
 		vertical-align: middle;
-		border-radius: var(--bb-rl-radius-md);
+		border-radius: var(--bb-rl-radius-base);
 		padding: 5px var(--bb-rl-space-100);
 		color: var(--bb-rl-text-color);
+
+		&[type="submit"] {
+
+			@include bb-rl-button;
+			border-radius: var(--bb-rl-radius-md);
+		}
 	}
 
 	select {
@@ -44,7 +50,7 @@
 		font-style: inherit;
 		outline: none;
 		vertical-align: middle;
-		border-radius: var(--bb-rl-radius-md);
+		border-radius: var(--bb-rl-radius-base);
 		color: var(--bb-rl-text-color);
 
 		@include bb-rl-label-heading-md-thin;
