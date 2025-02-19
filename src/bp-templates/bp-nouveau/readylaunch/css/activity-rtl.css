@@ -5548,7 +5548,7 @@ div[class*="attached-gif-container"] .gif-player {
   margin-right: var(--bb-rl-space-100);
 }
 
-.activity-item.has-comments .bb-rl-acomment-foot-actions .comments-count {
+.activity-item.has-comments .bb-rl-acomment-foot-actions .acomments-count {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
 }
