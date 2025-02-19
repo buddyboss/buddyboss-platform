@@ -2694,6 +2694,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-detail-wrap .bb-rl-document-helper-text {
+  display: none;
   position: relative;
   top: -10px;
   opacity: 0;
@@ -4857,6 +4858,7 @@ div[class*="attached-gif-container"] .gif-player {
 }
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > i {
+  background-color: var(--bb-rl-background-color);
   font-size: 20px;
   font-weight: 200;
   line-height: 1;
@@ -5343,6 +5345,15 @@ div[class*="attached-gif-container"] .gif-player {
     width: 100%;
     flex: 0 0 100%;
     max-width: 100%;
+  }
+  .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-entry-img > i {
+    font-size: 40px;
+  }
+  .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-description-wrap {
+    padding: var(--bb-rl-space-100);
+  }
+  .bb-rl-activity-media-elem.bb-rl-document-activity .bb-rl-document-action-wrap {
+    top: 12px;
   }
   .bb-activity-video-wrap .bb-rl-item-cover-wrap:before {
     font-size: 24px;
