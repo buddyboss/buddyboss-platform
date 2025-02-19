@@ -74,9 +74,7 @@ class BB_Activity_Readylaunch {
 			foreach ( $most_reactions as $reaction ) {
 				$icon   = bb_activity_prepare_emotion_icon( $reaction['id'] );
 				$output .= sprintf(
-					'<div class="reactions_item">
-				%s
-				</div>',
+					'<div class="reactions_item">%s</div>',
 					$icon
 				);
 			}
@@ -88,10 +86,15 @@ class BB_Activity_Readylaunch {
 				)
 			);
 			if ( ! empty( $reaction_count ) ) {
+				$reaction_text = $reaction_count === 1 ?
+					esc_html__( 'reaction', 'buddyboss' ) :
+					esc_html__( 'reactions', 'buddyboss' );
+
 				$output .= sprintf(
-					'<div class="%1$s">%2$s</div>',
+					'<div class="%1$s">%2$s %3$s</div>',
 					$reaction_count_class,
-					$reaction_count
+					$reaction_count,
+					$reaction_text
 				);
 			}
 
