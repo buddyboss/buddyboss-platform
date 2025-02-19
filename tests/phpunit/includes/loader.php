@@ -6,9 +6,7 @@ $multisite = (int) ( defined( 'WP_TESTS_MULTISITE') && WP_TESTS_MULTISITE );
 system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.php' ) . ' ' . escapeshellarg( WP_TESTS_CONFIG_PATH ) . ' ' . escapeshellarg( WP_TESTS_DIR ) . ' ' . $multisite );
 
 // Bootstrap BP
-if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
-	require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
-}
+require dirname( __FILE__ ) . '/../../../bp-loader.php';
 
 // Bail from redirects as they throw 'headers already sent' warnings.
 tests_add_filter( 'wp_redirect', '__return_false' );
