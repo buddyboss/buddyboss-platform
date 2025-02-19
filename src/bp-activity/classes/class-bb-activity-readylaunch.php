@@ -35,6 +35,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_ajax_activity_sync_from_modal_args', array( $this, 'bb_rl_activity_sync_from_modal_args' ) );
 
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_activity_localize_scripts' ), 11 );
+		add_filter( 'bb_document_get_image_sizes', array( $this, 'bb_rl_modify_document_image_sizes' ), 20 );
 	}
 
 	/**
@@ -473,5 +474,25 @@ class BB_Activity_Readylaunch {
 		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
 
 		return $params;
+	}
+
+	/**
+	 * Modify document image sizes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $sizes The image sizes.
+	 *
+	 * @return array
+	 */
+	public function bb_rl_modify_document_image_sizes( $sizes ) {
+		if ( isset( $sizes['bb-document-image-preview-activity-image'] ) ) {
+			$sizes['bb-document-image-preview-activity-image'] = array(
+				'width'  => 700,
+				'height' => 'auto'
+			);
+		}
+
+		return $sizes;
 	}
 }
