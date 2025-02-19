@@ -36,6 +36,8 @@ class BB_Activity_Readylaunch {
 
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_activity_localize_scripts' ), 11 );
 		add_filter( 'bb_document_get_image_sizes', array( $this, 'bb_rl_modify_document_image_sizes' ), 20 );
+		add_filter( 'bb_media_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
+		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 	}
 
 	/**
@@ -497,5 +499,16 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $sizes;
+	}
+
+	/**
+	 * Modify activity max thumb length.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int
+	 */
+	public function bb_rl_modify_activity_max_thumb_length() {
+		return 4;
 	}
 }
