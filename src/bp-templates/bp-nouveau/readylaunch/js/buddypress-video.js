@@ -194,7 +194,7 @@ window.bp = window.bp || {};
 							videoElem.attr( 'poster', thumbnailSrc ).find( 'video' ).attr( 'poster', thumbnailSrc ).end().find( '.vjs-poster' ).css( 'background-image', 'url("' + thumbnailSrc + '")' ).find( 'img' ).attr( 'src', thumbnailSrc );
 						}
 
-						var theatreVideo = $( '#theatre-video-' + videoId );
+						var theatreVideo = $( '#bb-rl-theatre-video-' + videoId );
 						if ( theatreVideo.length ) {
 							theatreVideo.attr( 'poster', thumbnailSrc ).find( 'video' ).attr( 'poster', thumbnailSrc ).end().find( '.vjs-poster' ).css( 'background-image', 'url("' + thumbnailSrc + '")' );
 							videoThumb.find( 'img' ).attr( 'src', thumbnailSrc );
@@ -1660,7 +1660,7 @@ window.bp = window.bp || {};
 							if ( $activityVideoJs.find( '.vjs-poster' ).length ) {
 								$activityVideoJs.attr( 'poster', response.data.thumbnail ).find( 'video' ).attr( 'poster', response.data.thumbnail ).end().find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
 							}
-							var $theatreVideo = $( '#theatre-video-' + videoId );
+							var $theatreVideo = $( '#bb-rl-theatre-video-' + videoId );
 							if ( $theatreVideo.length ) {
 								$theatreVideo.attr( 'poster', response.data.thumbnail ).find( 'video' ).attr( 'poster', response.data.thumbnail ).end().find( '.vjs-poster' ).css( 'background-image', 'url("' + response.data.thumbnail + '")' );
 								$videoThumb.find( 'img' ).attr( 'src', response.data.thumbnail );
