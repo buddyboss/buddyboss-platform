@@ -5890,7 +5890,11 @@ window.bp = window.bp || {};
 			var self = this;
 
 			// Create thumbnails if we have media data.
-			if ( self.current_activity_data?.media?.length > 1 ) {
+			if (
+				self.current_activity_data &&
+				self.current_activity_data.media &&
+				self.current_activity_data.media.length > 1
+			) {
 				var thumbnailsHtml = self.current_activity_data.media.map( function ( media ) {
 					return '<div class="bb-rl-media-thumb' + ( media.id === self.current_media.id ? ' active' : '' ) +
 					       '" data-id="' + media.id +

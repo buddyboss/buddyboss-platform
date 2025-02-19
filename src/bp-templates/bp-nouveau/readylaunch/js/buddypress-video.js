@@ -1815,7 +1815,7 @@ window.bp = window.bp || {};
 				'click',
 				currentTarget + ' .breadcrumb .item > span',
 				function ( e ) {
-					$eventTarget = $( e.currentTarget );
+					var $eventTarget = $( e.currentTarget );
 					if ( $eventTarget.hasClass( 'is-disabled' ) ) {
 						return;
 					}
