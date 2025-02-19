@@ -71,25 +71,68 @@
 			}
 
 			.action {
-				margin-left: auto;
+				order: -1;
+				line-height: 1;
+				margin-right: 12px;
+				display: inline-block;
+				height: 16px;
+
+				button {
+					padding: 0;
+				}
 			}
 
 			.invite-button {
 				border: 0;
 				background-color: transparent;
 			}
+
+			&.selected {
+
+				.invite-button {
+
+					.icons {
+						border: 1px solid var(--bb-rl-background-brand-primary-color);
+						background-color: var(--bb-rl-background-brand-primary-color);
+					}
+
+					.icons::before {
+						content: "\e182";
+					}
+				}
+			}
 		}
 
 		.invite-button {
+			padding: 0;
+			line-height: 1;
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			margin: 0;
+			border: 0;
+			position: relative;
+
+			.icons {
+				position: absolute;
+				left: 0;
+				top: 0;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 16px;
+				height: 16px;
+				border: 1px solid var(--bb-rl-border-quaternary-color);
+				border-radius: var(--bb-rl-radius-sm);
+			}
 
 			.icons::before {
-				content: "\e3d4";
+				content: "";
 				font-family: bb-icons-rl;
-				font-size: 16px;
+				font-size: 10px;
 				font-weight: 400;
 				line-height: 1;
-				transform: translateY(-50%);
-				color: var(--bb-rl-icon-secondary-color);
+				color: var(--bb-rl-text-white-color);
 			}
 		}
 	}
