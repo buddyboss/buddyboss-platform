@@ -3615,13 +3615,68 @@ div[class*="attached-gif-container"] {
 		}
 	}
 
-	.bb-rl-activity-list .activity-meta {
-		order: 2;
-		justify-content: space-between;
-		border-top: 1px solid var(--bb-rl-border-secondary-color);
-		margin-top: var(--bb-rl-space-200);
-		padding-top: var(--bb-rl-space-100);
-		width: 100%;
+	.bb-rl-activity-list {
+
+		.bb-rl-activity-head {
+
+			p:first-child {
+				font-size: 15px;
+				line-height: 20px;
+			}
+
+			img.avatar {
+				height: 22px;
+				width: 22px;
+			}
+
+			.bb-rl-activity-avatar {
+				margin-right: 10px;
+			}
+
+			.activity-date {
+
+				a,
+				.bb-activity-edited-text {
+					font-size: 12px;
+				}
+			}
+
+			.bb-media-privacy-wrap {
+
+				&:before {
+					margin: 0 4px;
+				}
+
+				.privacy:before {
+					font-size: 14px;
+				}
+			}
+		}
+
+		.activity-meta {
+			order: 2;
+			justify-content: space-between;
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+			margin-top: var(--bb-rl-space-200);
+			padding-top: var(--bb-rl-space-100);
+			width: 100%;
+		}
+
+		.bb-activity-more-options-wrap + .bb-rl-pin-action {
+			right: 55px;
+		}
+
+		.bb-rl-pin-action [class*="bb-icon"] {
+			font-size: 18px;
+		}
+
+		li.activity-item {
+			padding: var(--bb-rl-space-200);
+		}
+
+		.bb-activity-more-options-wrap {
+			right: var(--bb-rl-space-200);
+		}
 	}
 
 	.bb-activity-video-wrap {
