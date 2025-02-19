@@ -2070,6 +2070,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\e0d2";
 }
 
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.ac-video-thumbnail-edit:before {
+  content: "\e2ca";
+}
+
 .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.bb-icon-bell:before {
   content: "\e0d0";
 }
@@ -4520,6 +4524,17 @@ div[class*="attached-gif-container"] .gif-player {
   margin: 0;
 }
 
+.bb-rl-activity-footer-actions .activity-state-reactions .reactions_item i {
+  display: flex;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.bb-rl-activity-footer-actions .activity-state-reactions .reactions_item i:before {
+  margin: 0;
+}
+
 .activity-meta {
   display: flex;
   align-items: center;
@@ -4549,12 +4564,22 @@ div[class*="attached-gif-container"] .gif-player {
   font-weight: 400;
   font-style: normal;
   margin-right: var(--bb-rl-space-50);
+  margin-left: 0;
 }
 
 .activity-meta .generic-button a.bp-like-button img {
   height: 18px;
   width: 18px;
   margin-right: var(--bb-rl-space-100);
+}
+
+.activity-meta .generic-button a.bp-like-button.has-reaction [class*="bb-icon"] {
+  display: flex;
+}
+
+.activity-meta .generic-button a.bp-like-button.has-reaction [class*="bb-icon"]:before {
+  font-weight: 200;
+  color: inherit;
 }
 
 .activity-meta .generic-button a.acomment-reply:before {

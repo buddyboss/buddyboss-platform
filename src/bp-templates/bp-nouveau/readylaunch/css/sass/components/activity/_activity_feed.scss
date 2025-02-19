@@ -168,6 +168,10 @@
 					content: "\e0d2";
 				}
 
+				&.ac-video-thumbnail-edit:before {
+					content: "\e2ca";
+				}
+
 				&.bb-icon-bell:before {
 					content: "\e0d0";
 				}
@@ -2774,6 +2778,17 @@ div[class*="attached-gif-container"] {
 				width: 20px;
 				margin: 0;
 			}
+
+			i {
+				display: flex;
+				font-size: 20px;
+				font-weight: 200;
+				line-height: 1;
+
+				&:before {
+					margin: 0;
+				}
+			}
 		}
 	}
 }
@@ -2807,12 +2822,25 @@ div[class*="attached-gif-container"] {
 				font-weight: 400;
 				font-style: normal;
 				margin-right: var(--bb-rl-space-50);
+				margin-left: 0;
 			}
 
 			img {
 				height: 18px;
 				width: 18px;
 				margin-right: var(--bb-rl-space-100);
+			}
+
+			&.has-reaction {
+
+				[class*="bb-icon"] {
+					display: flex;
+
+					&:before {
+						font-weight: 200;
+						color: inherit;
+					}
+				}
 			}
 		}
 
