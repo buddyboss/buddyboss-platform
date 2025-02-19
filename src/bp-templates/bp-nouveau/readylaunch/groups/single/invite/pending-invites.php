@@ -8,16 +8,15 @@
  * @version 1.2.3
  */
 ?>
-<div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel">
+<div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel bb-rl-group-invites-dashboard--pending-invites">
 	<div class="bb-rl-group-invites-header">
 		<h2 class="bb-rl-entry-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
 	</div>
 	<?php
 	bp_get_template_part( 'groups/single/parts/invite-subnav' );
 	?>
-	<div id="group-invites-container" class="bb-rl-group-invites-container">
+	<div id="group-invites-container" class="bb-rl-group-invites-container bb-rl-group-invites-container--pending-invites">
 		<div class="group-invites-column">
-			<h2 class="bb-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
 			<div class="subnav-filters group-subnav-filters bp-invites-filters">
 				<div>
 					<div class="group-invites-search subnav-search clearfix" role="search">
