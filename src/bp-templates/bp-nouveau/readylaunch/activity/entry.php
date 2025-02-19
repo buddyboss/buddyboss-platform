@@ -183,6 +183,9 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			?>
 			<div class="<?php echo esc_attr( $class ); ?>">
 				<?php
+				if ( bp_activity_get_comment_count() ) {
+					bp_activity_comments();
+				}
 				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
 				if ( is_user_logged_in() && ! $comment_count ) {
 					bp_nouveau_activity_comment_form();
