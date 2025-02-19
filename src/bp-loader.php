@@ -31,6 +31,8 @@ if ( ! defined( 'BP_PLATFORM_API' ) ) {
 	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
+print_r( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) );
+
 // Load translation files.
 add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
 
