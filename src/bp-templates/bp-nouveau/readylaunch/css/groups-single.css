@@ -1352,13 +1352,16 @@
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-group-invites-dashboard.bb-rl-group-dashboard-panel {
+  padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
+}
+
 .bb-rl-group-invites-dashboard .bb-rl-group-invites-container {
   display: flex;
 }
 
 .bb-rl-group-invites-dashboard .bb-rl-group-invites-container .bb-groups-invites-left {
-  max-width: 248px;
-  width: 33%;
+  width: 300px;
   padding-right: var(--bb-rl-space-200);
   border-right: 1px solid var(--bb-rl-border-secondary-color);
 }
@@ -1402,6 +1405,7 @@
 
 .bb-rl-group-invites-container .group-invites-members-listing {
   margin-top: var(--bb-rl-space-200);
+  padding: 0 var(--bb-rl-space-50);
 }
 
 .bb-rl-group-invites-container .group-invites-members-listing li {
@@ -1482,13 +1486,54 @@
   color: var(--bb-rl-text-white-color);
 }
 
+.bb-rl-group-invites-container .group-invites-members-listing .bp-invites-feedback {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
 .bb-rl-group-invites-container .bb-rl-members-is-friends {
   margin: var(--bb-rl-space-100) 0;
+  padding: 0 var(--bb-rl-space-50);
+}
+
+.bb-rl-group-invites-container .bb-rl-members-is-friends .bp-group-message-wrap {
+  display: flex;
+  align-items: center;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-group-invites-container .bb-rl-members-is-friends .bp-group-message-wrap label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.bb-rl-group-invites-container .group-invites-search input[type="checkbox"] + label::before {
+  border-color: var(--bb-rl-border-quaternary-color);
+}
+
+.bb-rl-group-invites-container .group-invites-search input[type="checkbox"]:checked + label::before {
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-group-invites-container .group-invites-search input[type="checkbox"]:checked + label::after {
+  line-height: 14px;
+}
+
+body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-dropdown--below {
+  display: none;
+}
+
+.bb-rl-group-invites-container #send_group_invite_form .select2-search__field {
+  display: none;
 }
 
 .bb-rl-group-invites-container .select2-container--default .select2-selection--multiple {
   border: 0;
   background-color: transparent;
+}
+
+.bb-rl-group-invites-container .select2-container--default.select2-container--focus .select2-selection--multiple {
+  border: 0;
 }
 
 .bb-rl-group-invites-container .select2-container--default .select2-selection--multiple .select2-selection__rendered {
@@ -1537,6 +1582,11 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   margin-right: var(--bb-rl-space-50);
   border-radius: 50%;
+}
+
+.bb-rl-group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback,
+.bb-rl-group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .bp-invites-feedback {
+  display: none;
 }
 
 #group_invites_search_form {

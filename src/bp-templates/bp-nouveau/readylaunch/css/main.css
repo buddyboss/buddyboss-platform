@@ -1835,6 +1835,22 @@ button[data-balloon] {
   border-color: var(--bb-rl-border-danger-secondary-color);
 }
 
+.bp-feedback {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bp-feedback > [class*="bb-icons"] {
+  margin-right: var(--bb-rl-space-100);
+  font-size: 20px;
+}
+
 /*
 
 <div class="notice notice--info">
@@ -2090,6 +2106,11 @@ button[data-balloon] {
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+}
+
+.bb-readylaunch-template .animate-spin {
+  animation: spin 2s infinite linear;
+  display: inline-block;
 }
 
 .bb-rl-option-wrap {

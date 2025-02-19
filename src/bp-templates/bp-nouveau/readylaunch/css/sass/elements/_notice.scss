@@ -187,6 +187,22 @@
 	}
 }
 
+.bp-feedback {
+	display: flex;
+	align-items: center;
+	padding: var(--bb-rl-space-100);
+	border: 1px solid transparent;
+	border-radius: var(--bb-rl-radius-md);
+	font-size: var(--bb-rl-font-size-sm);
+	font-weight: 500;
+	background-color: var(--bb-rl-background-secondary-color);
+
+	> [class*="bb-icons"] {
+		margin-right: var(--bb-rl-space-100);
+		font-size: 20px;
+	}
+}
+
 /*
 
 <div class="notice notice--info">
