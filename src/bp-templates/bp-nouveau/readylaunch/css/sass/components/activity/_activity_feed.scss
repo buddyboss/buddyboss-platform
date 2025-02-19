@@ -154,6 +154,11 @@
 					content: "\e4a6";
 				}
 
+				&.reported-content:before,
+				&.report-content:before {
+					content: "\e244";
+				}
+
 				&.unpin-activity:before,
 				&.pin-activity:before {
 					content: "\e3e2";

@@ -2058,6 +2058,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\e4a6";
 }
 
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.reported-content:before, .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.report-content:before {
+  content: "\e244";
+}
+
 .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.unpin-activity:before, .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.pin-activity:before {
   content: "\e3e2";
 }
