@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.7.91\n"
+"Project-Id-Version: BuddyBoss Platform 2.8.00\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-02-15 07:21:36+00:00\n"
+"POT-Creation-Date: 2025-02-19 01:27:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1373,7 +1373,7 @@ msgid "Site Wide Activity RSS Feed"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4352
-#: bp-activity/bp-activity-template.php:4361 bp-core/bp-core-options.php:2860
+#: bp-activity/bp-activity-template.php:4361 bp-core/bp-core-options.php:2868
 #: bp-members/bp-members-admin.php:61
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1027
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
@@ -3467,7 +3467,7 @@ msgid "Dismiss this notice."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:528
-#: bp-core/classes/class-bb-telemetry.php:561
+#: bp-core/classes/class-bb-telemetry.php:568
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:399
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:301
 msgid "Sorry, something goes wrong please try again."
@@ -6134,7 +6134,7 @@ msgid "Telemetry"
 msgstr ""
 
 #: bp-core/admin/settings/bb-admin-setting-performance.php:105
-#: bp-core/classes/class-bb-telemetry.php:542
+#: bp-core/classes/class-bb-telemetry.php:549
 msgid "About Telemetry"
 msgstr ""
 
@@ -9054,31 +9054,31 @@ msgstr ""
 msgid "I'm following"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2855
+#: bp-core/bp-core-options.php:2863
 msgid "Personal posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2856
+#: bp-core/bp-core-options.php:2864
 msgid "Reacted to"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2857
+#: bp-core/bp-core-options.php:2865
 msgid "From groups"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2858
+#: bp-core/bp-core-options.php:2866
 msgid "From connections"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2859
+#: bp-core/bp-core-options.php:2867
 msgid "Mentioned in"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2898
+#: bp-core/bp-core-options.php:2914
 msgid "Most recent"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2899
+#: bp-core/bp-core-options.php:2915
 msgid "Recent activity"
 msgstr ""
 
@@ -10202,11 +10202,11 @@ msgstr ""
 msgid "An error occurred while sending the telemetry report."
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:521
+#: bp-core/classes/class-bb-telemetry.php:528
 msgid "Help us improve BuddyBoss"
 msgstr ""
 
-#: bp-core/classes/class-bb-telemetry.php:529
+#: bp-core/classes/class-bb-telemetry.php:536
 #. translators: %1$s and %2$s are links.
 msgid ""
 "We gather statistics about how our users use the product. We aggregate this "
