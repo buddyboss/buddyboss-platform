@@ -5059,7 +5059,7 @@ div[class*="attached-gif-container"] .gif-player {
 }
 
 .bb-rl-media-model-container.bb-rl-media-toggle-sidebar .bb-media-info-section {
-  width: 500px;
+  width: 560px;
   opacity: 1;
   visibility: visible;
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
@@ -5313,11 +5313,11 @@ div[class*="attached-gif-container"] .gif-player {
     line-height: 20px;
   }
   .bb-rl-activity-list .bb-rl-activity-head img.avatar {
-    height: 44px;
-    width: 44px;
+    height: 40px;
+    width: 40px;
   }
   .bb-rl-activity-list .bb-rl-activity-head .bb-rl-activity-avatar {
-    margin-right: 12px;
+    margin-right: 10px;
   }
   .bb-rl-activity-list .bb-rl-activity-head .activity-date a,
   .bb-rl-activity-list .bb-rl-activity-head .activity-date .bb-activity-edited-text {
