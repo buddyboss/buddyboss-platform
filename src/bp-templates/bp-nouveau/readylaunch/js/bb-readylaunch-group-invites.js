@@ -664,9 +664,11 @@ window.bp = window.bp || {};
 
 					var userId   = $( this ).attr( 'data-bp-user-id' );
 					var userName = $( this ).attr( 'data-bp-user-name' );
+					var userAvatar = $( this ).closest( 'li' ).find( '.item-avatar img' ).attr( 'src' );
 					var data     = {
 						id: userId,
-						text: userName
+						text: userName,
+						avatar: userAvatar
 					};
 
 					if ( $( this ).closest( 'li' ).hasClass( 'selected' ) ) {
@@ -701,6 +703,7 @@ window.bp = window.bp || {};
 						$( this ).closest( 'li' ).addClass( 'selected' );
 						if ( ! $group_invites_select.find( "option[value='" + data.id + "']" ).length ) { // jshint ignore:line
 							var newOption = new Option( data.text, data.id, true, true );
+							$( newOption ).attr( 'data-avatar', data.avatar );
 							$group_invites_select.append( newOption ).trigger( 'change' );
 						}
 						$( this ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.cancel_invite_tooltip );
@@ -1169,6 +1172,20 @@ window.bp = window.bp || {};
 								results: data && data.success ? data.data.results : []
 							};
 						}
+					},
+					templateSelection: function( data ) {
+						if ( !data.id ) {
+							return data.text;
+						}
+						
+						var $selection = $(
+							'<div class="bb-rl-select2-selection-user">' +
+								'<img class="select2-user-avatar" src="' + $( data.element ).data( 'avatar' ) + '"/>' +
+								'<span class="select2-selection-user__name">' + data.text + '</span>' +
+							'</div>'
+						);
+						
+						return $selection;
 					}
 				}
 			);
