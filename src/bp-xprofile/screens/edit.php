@@ -140,8 +140,19 @@ function xprofile_screen_edit_profile() {
 			}
 
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
-				$errors                                = true;
-				$validations[]                         = is_array( $message ) ? reset( $message ) : $message;
+				$errors = true;
+
+				// Add social networks validation messages to validations array.
+				if ( is_array( $message ) ) {
+					if ( 'socialnetworks' === $field->type ) {
+						$validations = array_merge( $validations, array_values( $message ) );
+					} else {
+						$validations[] = reset( $message );
+					}
+				} else {
+					$validations[] = $message;
+				}
+
 				$social_fields_validation[ $field_id ] = $message;
 			}
 		}
@@ -233,9 +244,10 @@ function xprofile_screen_edit_profile() {
 				bp_core_add_message( __( 'Changes saved.', 'buddyboss' ) );
 			}
 
-			// Redirect back to the edit screen to display the updates and message.
-			bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 		}
+
+		// Redirect back to the edit screen to display the updates and message.
+		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 	}
 
 	/**
