@@ -57,42 +57,46 @@ window.bp = window.bp || {};
 		showActivityReactions: function( event ) {
 			event.preventDefault();
 
-			var self        = bp.Nouveau.ActivityReaction,
-				target_init = $( event.currentTarget ),
-				target      = target_init.next( '.activity-state-popup' ),
-				item_id     = 0,
-				item_type   = '';
+			var self            = bp.Nouveau.ActivityReaction,
+			    $target_init    = $( event.currentTarget ),
+			    $container      = $target_init.closest( '.activity-comment, .activity-item' ),
+			    isComment       = $container.hasClass( 'activity-comment' ),
+			    item_id         = ( $container.data( isComment ? 'bp-activity-comment-id' : 'bp-activity-id' ) || '0' ).toString(),
+			    item_type       = isComment ? 'activity_comment' : 'activity',
+			    $popup          = $target_init.closest( isComment ? '.bb-rl-comment-reactions' : '.activity-state' ).find( '.activity-state-popup' ),
+			    collection_key  = item_id + '_0',
+			    $contentElement = $popup.find( '#reaction-content-' + item_id );
 
-			if ( 0 < target_init.parents( '.acomment-display' ).first().length ) {
-				item_id   = target_init.parents( '.activity-comment' ).first().data( 'bp-activity-comment-id' ).toString();
-				item_type = 'activity_comment';
-			} else {
-				item_id   = target_init.parents( '.activity-item' ).data( 'bp-activity-id' ).toString();
-				item_type = 'activity';
+			// Clear existing loaders and errors.
+			$contentElement.find( '.reaction-loader, .activity_reaction_popup_error' ).remove();
+
+			// Initialize or refresh content if needed
+			if ( ! $contentElement.length || ! $contentElement.html().trim() || $popup.parent().hasClass( 'bb-has-reaction_update' ) ) {
+				$contentElement.html( '' );
+
+				// Create or get a collection.
+				self.collections[ collection_key ] = self.collections[ collection_key ] || new bp.Collections.ActivityReactionCollection();
+
+				// Initialize loader view
+				self.loader[ item_id ] = new bp.Views.ReactionPopup( {
+					collection    : self.collections[ collection_key ],
+					item_id       : item_id,
+					targetElement : $contentElement,
+					item_type     : item_type
+				} );
+
+				$popup.parent().removeClass( 'bb-has-reaction_update' );
 			}
 
-			var collection_key = item_id + '_0';
+			// Show popup
+			$popup.addClass( 'active' ).show();
 
-			// remove the pop-up.
-			target.find( '#reaction-content-' + item_id + ' .reaction-loader' ).remove();
-			target.find( '#reaction-content-' + item_id + ' .activity_reaction_popup_error' ).remove();
-
-			if ( '' === $.trim( target.find( '#reaction-content-' + item_id ).html() ) || target.parent().hasClass( 'bb-has-reaction_update' ) ) {
-				if ( '' !== $.trim( target.find( '#reaction-content-' + item_id ).html() ) ) {
-					target.find( '#reaction-content-' + item_id ).html( '' );
+			// Handle click outside
+			$( document ).one( 'click.activity-reactions', function ( e ) {
+				if ( ! $( e.target ).closest( '.activity-state-popup, .activity-state-reactions' ).length ) {
+					$popup.removeClass( 'active' ).hide();
 				}
-				self.collections[ collection_key ] = new bp.Collections.ActivityReactionCollection();
-				self.loader[ item_id ]             = new bp.Views.ReactionPopup(
-					{
-						collection: self.collections[ collection_key ],
-						item_id: item_id,
-						targetElement: target.find( '#reaction-content-' + item_id ),
-						item_type: item_type,
-					}
-				);
-				target.parent().removeClass( 'bb-has-reaction_update' );
-			}
-			target.show();
+			} );
 		}
 	};
 
