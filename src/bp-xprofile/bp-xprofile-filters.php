@@ -1175,7 +1175,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 	foreach ( $value as $k => $v ) {
 		$v = trim( $v );
 		// Skip validation for empty fields unless required.
-		if ( ! empty( $v ) && ! filter_var( $v, FILTER_VALIDATE_URL ) ) {
+		if ( ! empty( $v ) && ! wp_http_validate_url( $v ) ) {
 			$key = bp_social_network_search_key( $k, $providers );
 			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
