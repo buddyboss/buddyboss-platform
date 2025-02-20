@@ -2251,6 +2251,14 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Show loader while video loads.
+			var $videoSection = $( '.bb-rl-media-model-wrapper.video .bb-rl-media-section' ),
+			    $figure       = $videoSection.find( 'figure' );
+
+			// Hide current video and show loader.
+			$figure.find( '.video-js' ).hide();
+			$figure.addClass( 'loading' ).append( '<i class="bb-rl-loader"></i>' );
+
 			// Get video ID - either from an object or directly.
 			var videoId = typeof videoData === 'object' ? videoData.id : videoData;
 
@@ -2292,6 +2300,28 @@ window.bp = window.bp || {};
 			} else if ( ! skipVideoPlayer ) {
 				self.getVideosDescription();
 			}
+
+			// Handle video loading state in getActivity or getVideosDescription success callback.
+			var originalSuccess        = self.activity_ajax.success;
+			self.activity_ajax.success = function ( response ) {
+				if ( response.success ) {
+					var $videoElem = $figure.find( '.video-js' );
+					if ( $videoElem.length ) {
+						$videoElem.one( 'loadeddata', function () {
+							// Remove loader and show video once loaded.
+							$figure.removeClass( 'loading' ).find( '.bb-rl-loader' ).remove();
+							$videoElem.show();
+						} ).one( 'error', function () {
+							// Handle video load error.
+							$figure.removeClass( 'loading' ).find( '.bb-rl-loader' ).remove();
+						} );
+					}
+				}
+				// Call original success handler.
+				if ( originalSuccess ) {
+					originalSuccess.apply( this, arguments );
+				}
+			};
 		},
 
 		handleThumbnailClick: function ( event ) {
