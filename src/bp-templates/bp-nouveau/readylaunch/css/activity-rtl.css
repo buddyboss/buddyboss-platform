@@ -3329,12 +3329,13 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   padding-right: var(--bb-rl-space-50);
 }
 
-.bb-activity-video-wrap.bb-video-length-4, .bb-activity-video-wrap.bb-video-length-more {
+.bb-activity-video-wrap.bb-video-length-4, .bb-activity-video-wrap.bb-video-length-5, .bb-activity-video-wrap.bb-video-length-more {
   gap: 8px;
 }
 
 .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1,
-.bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1,
+.bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-1,
+.bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1,
 .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 {
   flex: 0 0 calc(50% - 8px);
   max-width: 50%;
@@ -3342,7 +3343,8 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 }
 
 .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap,
-.bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap,
+.bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap,
+.bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap,
 .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap {
   padding-top: 100%;
 }
@@ -4042,16 +4044,16 @@ div[class*="attached-gif-container"] .gif-player {
   .bb-rl-activity-list .bb-activity-more-options-wrap {
     left: var(--bb-rl-space-200);
   }
-  .bb-activity-video-wrap.bb-video-length-2, .bb-activity-video-wrap.bb-video-length-3, .bb-activity-video-wrap.bb-video-length-4, .bb-activity-video-wrap.bb-video-length-more {
+  .bb-activity-video-wrap.bb-video-length-2, .bb-activity-video-wrap.bb-video-length-3, .bb-activity-video-wrap.bb-video-length-4, .bb-activity-video-wrap.bb-video-length-5, .bb-activity-video-wrap.bb-video-length-5, .bb-activity-video-wrap.bb-video-length-more {
     gap: var(--bb-rl-space-100);
   }
-  .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 {
+  .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-2, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 {
     padding: 0;
     width: 100%;
     flex: 0 0 100%;
     max-width: 100%;
   }
-  .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap {
+  .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-2 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-3 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-4 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-5 .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-1 .bb-rl-item-cover-wrap, .bb-activity-video-wrap.bb-video-length-more .bb-rl-activity-video-elem.act-grid-1-2 .bb-rl-item-cover-wrap {
     padding-top: 60%;
   }
   .bb-activity-video-wrap .bb-rl-item-cover-wrap {

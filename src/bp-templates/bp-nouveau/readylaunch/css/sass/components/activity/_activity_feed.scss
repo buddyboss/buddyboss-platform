@@ -1528,6 +1528,7 @@ div.vjs-menu {
 	}
 
 	&.bb-video-length-4,
+	&.bb-video-length-5,
 	&.bb-video-length-more {
 		gap: 8px;
 
@@ -2302,6 +2303,8 @@ div[class*="attached-gif-container"] {
 		&.bb-video-length-2,
 		&.bb-video-length-3,
 		&.bb-video-length-4,
+		&.bb-video-length-5,
+		&.bb-video-length-5,
 		&.bb-video-length-more {
 			gap: var(--bb-rl-space-100);
 
