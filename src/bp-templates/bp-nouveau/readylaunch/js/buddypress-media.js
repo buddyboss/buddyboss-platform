@@ -6391,7 +6391,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			$clicked.closest( '.bb-rl-media-section .figure' ).addClass( 'loading' ).html( '<i class="bb-rl-loader"></i>' );
+			var $figure       = $( '.bb-rl-media-model-wrapper.media .bb-rl-media-section' ).find( 'figure' ),
+			    $currentImage = $figure.find( 'img' );
+
+			$currentImage.hide();
+			$figure.addClass( 'loading' ).append( '<i class="bb-rl-loader"></i>' );
 
 			var mediaId   = $clicked.data( 'id' ),
 			    mediaData = self.medias.find( function ( media ) {
@@ -6448,10 +6452,17 @@ window.bp = window.bp || {};
 
 		updateMedia: function ( mediaData, $thumbnail ) {
 			var self     = this,
-			    $theatre = $( '.media.bb-rl-media-theatre' );
+			    $theatre = $( '.media.bb-rl-media-theatre' ),
+			    $figure  = $theatre.find( '.bb-rl-media-section figure' ),
+			    $image   = $figure.find( 'img' );
 
-			// Update main image.
-			$theatre.find( '.bb-rl-media-section figure img' ).attr( 'src', mediaData.attachment );
+			// Update image source and show when loaded.
+			$image.one( 'load', function () {
+				$figure.removeClass( 'loading' ).find( '.bb-rl-loader' ).remove();
+				$image.show();
+			} ).one( 'error', function () {
+				$figure.removeClass( 'loading' ).find( '.bb-rl-loader' ).remove();
+			} ).attr( 'src', mediaData.attachment );
 
 			// Update thumbnail active state.
 			$theatre.find( '.bb-rl-media-thumb' ).removeClass( 'active' );
