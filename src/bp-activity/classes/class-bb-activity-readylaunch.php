@@ -38,6 +38,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_document_get_image_sizes', array( $this, 'bb_rl_modify_document_image_sizes' ), 20 );
 		add_filter( 'bb_media_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
+		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
 	}
 
 	/**
@@ -511,5 +512,31 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_modify_activity_max_thumb_length() {
 		return 4;
+	}
+
+	/**
+	 * Add additional user data to reactions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $reaction_data The reaction data array
+	 * @param array $args          The arguments passed to bb_activity_get_reacted_users_data
+	 *
+	 * @return array Modified reaction data
+	 */
+	public function bb_rl_modify_user_data_to_reactions( $reaction_data, $args ) {
+		if ( empty( $reaction_data['reactions'] ) ) {
+			return $reaction_data;
+		}
+		foreach ( $reaction_data['reactions'] as $key => $user_data ) {
+			if ( bp_is_active( 'follow' ) ) {
+				$followers = bp_get_follower_ids( array( 'user_id' => $user_data['user_id'] ) );
+			} elseif ( function_exists( 'bp_get_followers' ) ) {
+				$followers = bp_get_followers( array( 'user_id' => $user_data['user_id'] ) );
+			}
+			$reaction_data['reactions'][ $key ]['followers_count'] = ! empty( $followers ) ? count( $followers ) : 0;
+		}
+
+		return $reaction_data;
 	}
 }

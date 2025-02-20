@@ -429,6 +429,7 @@ function bb_activity_get_reacted_users_data( $args ) {
 
 			$user_reactions[] = array(
 				'id'          => $reaction->id,
+				'user_id'     => $reaction->user_id,
 				'name'        => bp_core_get_user_displayname( $reaction->user_id ),
 				'member_type' => array(
 					'label' => $member_type ?? $type,
