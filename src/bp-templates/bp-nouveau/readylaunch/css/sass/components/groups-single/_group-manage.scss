@@ -95,6 +95,18 @@
 		div.submit {
 			margin-top: var(--bb-rl-space-200);
 		}
+
+		.bp-feedback {
+			margin-bottom: var(--bb-rl-space-200);
+		
+			> p {
+				margin: 0;
+		
+				+ p {
+					margin-top: var(--bb-rl-space-100);
+				}
+			}
+		}
 	}
 
 	#drag-drop-area {

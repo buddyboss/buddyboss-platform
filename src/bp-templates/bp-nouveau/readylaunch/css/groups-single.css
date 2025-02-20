@@ -781,6 +781,18 @@
   margin-top: var(--bb-rl-space-200);
 }
 
+.bb-rl-manage-group-container form .bp-feedback {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-manage-group-container form .bp-feedback > p {
+  margin: 0;
+}
+
+.bb-rl-manage-group-container form .bp-feedback > p + p {
+  margin-top: var(--bb-rl-space-100);
+}
+
 .bb-rl-manage-group-container #drag-drop-area {
   border: 1px dashed var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-lg);

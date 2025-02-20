@@ -1852,6 +1852,14 @@ button[data-balloon] {
   font-size: 20px;
 }
 
+.bp-feedback > p {
+  margin: 0;
+}
+
+.bp-feedback > p + p {
+  margin-top: var(--bb-rl-space-100);
+}
+
 /*
 
 <div class="notice notice--info">
