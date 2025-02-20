@@ -1926,7 +1926,7 @@ window.bp = window.bp || {};
 			$document.on( 'keyup', '.bp-edit-video-activity-description #add-activity-description', this.MediaActivityDescriptionUpdate.bind( this ) );
 			$document.on( 'click', '#bp-activity-description-new-submit', this.submitVideoActivityDescription.bind( this ) );
 			$document.on( 'bp_activity_ajax_delete_request_video', this.videoActivityDeleted.bind( this ) );
-
+			$document.on( 'click', '.bb-rl-video-thumb', this.handleThumbnailClick.bind( this ) );
 		},
 		openTheatre: function ( event ) {
 			event.preventDefault();
@@ -1935,6 +1935,8 @@ window.bp = window.bp || {};
 			if ( target.closest( '#bp-existing-video-content' ).length ) {
 				return false;
 			}
+			// Store activity data to use for video thumbnail.
+			this.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
 
 			self.setupGlobals();
 			self.setVideos( target );
@@ -1944,6 +1946,9 @@ window.bp = window.bp || {};
 			self.showVideo();
 			self.navigationCommands();
 
+			if ( self.current_activity_data ) {
+				self.generateAndDisplayVideoThumbnails( target ); // Generate thumbnails after setting up video.
+			}
 			if (
 				typeof bbRlActivity !== 'undefined' &&
 				self.current_video &&
@@ -2150,37 +2155,149 @@ window.bp = window.bp || {};
 		next: function ( event ) {
 			event.preventDefault();
 			var self = this, activity_id;
-			if ( typeof self.videos[ self.current_index + 1 ] !== 'undefined' ) {
-				self.current_index = self.current_index + 1;
-				activity_id        = self.current_video.activity_id;
-				self.current_video = self.videos[ self.current_index ];
-				self.showVideo();
-				if ( activity_id !== self.current_video.activity_id && self.current_video.privacy !== 'comment' ) {
-					self.getActivity();
-				} else {
-					self.getVideosDescription();
-				}
+			if ( self.current_activity_data && self.videos[ self.current_index + 1 ] ) {
+				self.updateVideoState(
+					self.videos[ self.current_index + 1 ],
+					$( '.video.bb-rl-video-theatre .bb-rl-video-thumb' ).eq( self.current_index + 1 )
+				);
 			} else {
-				self.nextLink.hide();
+				if ( typeof self.videos[ self.current_index + 1 ] !== 'undefined' ) {
+					self.current_index = self.current_index + 1;
+					activity_id        = self.current_video.activity_id;
+					self.current_video = self.videos[ self.current_index ];
+					self.showVideo();
+					if ( activity_id !== self.current_video.activity_id && self.current_video.privacy !== 'comment' ) {
+						self.getActivity();
+					} else {
+						self.getVideosDescription();
+					}
+				} else {
+					self.nextLink.hide();
+				}
 			}
 		},
 
 		previous: function ( event ) {
 			event.preventDefault();
 			var self = this, activity_id;
-			if ( typeof self.videos[ self.current_index - 1 ] !== 'undefined' ) {
-				self.current_index = self.current_index - 1;
-				activity_id        = self.current_video.activity_id;
-				self.current_video = self.videos[ self.current_index ];
-				self.showVideo();
-				if ( activity_id !== self.current_video.activity_id && self.current_video.privacy !== 'comment' ) {
-					self.getActivity();
-				} else {
-					self.getVideosDescription();
-				}
+			if ( self.current_activity_data && self.videos[ self.current_index - 1 ] ) {
+				self.updateVideoState(
+					self.videos[ self.current_index - 1 ],
+					$( '.video.bb-rl-video-theatre .bb-rl-video-thumb' ).eq( self.current_index - 1 )
+				);
 			} else {
-				self.previousLink.hide();
+				if ( typeof self.videos[ self.current_index - 1 ] !== 'undefined' ) {
+					self.current_index = self.current_index - 1;
+					activity_id        = self.current_video.activity_id;
+					self.current_video = self.videos[ self.current_index ];
+					self.showVideo();
+					if ( activity_id !== self.current_video.activity_id && self.current_video.privacy !== 'comment' ) {
+						self.getActivity();
+					} else {
+						self.getVideosDescription();
+					}
+				} else {
+					self.previousLink.hide();
+				}
 			}
+		},
+
+		generateAndDisplayVideoThumbnails: function ( target ) {
+			var self = this;
+
+			// Store activity data to use for video thumbnail.
+			self.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+
+			if (
+				! self.current_activity_data ||
+				! self.current_activity_data.video ||
+				self.current_activity_data.video.length <= 1
+			) {
+				return;
+			}
+
+			var thumbnailsHtml = self.current_activity_data.video.map( function ( video ) {
+				// Get video thumbnail or use default placeholder.
+				var thumbUrl = video.thumb || BP_Nouveau.activity.strings.video_default_url;
+
+				return '<div class="bb-rl-video-thumb' + ( video.id === self.current_video.id ? ' active' : '' ) +
+				       '" data-id="' + video.id +
+				       '" data-vid-id="' + video.vid_id +
+				       '" data-activity-id="' + video.activity_id + '">' +
+				       '<img src="' + thumbUrl +
+				       '" alt="' + (
+					       video.name || ''
+				       ) +
+				       '" data-video-url="' + video.url + '"/>' +
+				       '</div>';
+			} ).join( '' );
+
+			// Add thumbnails to theater.
+			var $videoSection   = $( '.video.bb-rl-video-theatre .bb-rl-media-section' );
+			var $existingThumbs = $videoSection.find( '.bb-rl-video-thumb-list' );
+
+			if ( $existingThumbs.length ) {
+				$existingThumbs.html( thumbnailsHtml );
+			} else {
+				$videoSection.append( '<div class="bb-rl-video-thumb-list">' + thumbnailsHtml + '</div>' );
+			}
+		},
+
+		updateVideoState: function ( videoData, $thumbnail, skipVideoPlayer ) {
+			var self = this;
+
+			// If already active, skip.
+			if ( $thumbnail.hasClass( 'active' ) ) {
+				return;
+			}
+
+			// Get video ID - either from an object or directly.
+			var videoId = typeof videoData === 'object' ? videoData.id : videoData;
+
+			// Update the current video and index.
+			self.current_index = self.videos.findIndex( function ( video ) {
+				return video.id === videoId;
+			} );
+
+			// Update current video data.
+			if ( typeof videoData === 'object' ) {
+				self.current_video = videoData;
+			} else {
+				self.current_video = $.extend( {}, self.current_video, {
+					id          : videoId,
+					activity_id : $thumbnail.data( 'activity-id' )
+				} );
+			}
+
+			// Update navigation visibility.
+			if ( self.nextVideoLink && self.previousVideoLink ) {
+				self.nextVideoLink.toggle( Boolean( self.videos[ self.current_index + 1 ] ) );
+				self.previousVideoLink.toggle( Boolean( self.videos[ self.current_index - 1 ] ) );
+			}
+
+			// Update thumbnail active state.
+			$( '.bb-rl-video-thumb' ).removeClass( 'active' );
+			$thumbnail.addClass( 'active' );
+
+			// Update activity if needed.
+			if (
+				typeof bbRlActivity !== 'undefined' &&
+				self.current_video &&
+				typeof self.current_video.activity_id !== 'undefined' &&
+				self.current_video.activity_id !== 0 &&
+				! self.current_video.is_forum &&
+				self.current_video.privacy !== 'comment'
+			) {
+				self.getActivity();
+			} else if ( ! skipVideoPlayer ) {
+				self.getVideosDescription();
+			}
+		},
+
+		handleThumbnailClick: function ( event ) {
+			event.preventDefault();
+			var $target = $( event.currentTarget );
+			this.updateVideoState( $target.data( 'id' ), $target, true );
 		},
 
 		resetRemoveActivityCommentsData: function () {
