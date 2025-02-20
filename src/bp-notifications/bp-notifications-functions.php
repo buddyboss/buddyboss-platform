@@ -1968,34 +1968,65 @@ add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_desc
  */
 function bb_notification_read_for_moderated_members() {
 	$current_user_id = bp_loggedin_user_id();
-
-	if ( ! $current_user_id ) {
+	if ( empty( $current_user_id ) ) {
 		return;
 	}
 
-	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
-
-	if ( $read_notification_migration ) {
+	if ( bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true ) ) {
 		return;
 	}
 
 	global $bp, $wpdb;
-	$select_sql  = "SELECT id FROM ( SELECT DISTINCT id FROM {$bp->notifications->table_name}";
-	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . bp_loggedin_user_id();
+
+	$batch_size = 200; // Process notifications in batches.
+
+	// Build the base query.
+	$select_sql = "SELECT id FROM ( SELECT DISTINCT id FROM {$bp->notifications->table_name}";
+	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . $current_user_id;
 
 	$select_sql_where = array();
-	$all_users        = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
+	$moderated_users  = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
 
-	if ( ! empty( $all_users ) ) {
-		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $all_users ) . ' )';
-		$select_sql        .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $all_users ) . ' )';
+	if ( ! empty( $moderated_users ) ) {
+		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $moderated_users ) . ' )';
+		$select_sql         .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $moderated_users ) . ' )';
 	}
+
 	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
 
 	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' ) ) AS notifications';
+	do {
+		// Get a batch of notification IDs.
+		$notification_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT id FROM ( {$select_sql} ) AS batch_select LIMIT %d",
+				$batch_size
+			)
+		);
+		if ( empty( $notification_ids ) ) {
+			break;
+		}
+		$notification_count = count( $notification_ids );
 
-	$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ({$select_sql})";
-	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// Update notifications in current batch.
+		$placeholders = array_fill( 0, count( $notification_ids ), '%d' );
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$bp->notifications->table_name} SET is_new = 0 WHERE id IN (" . implode( ',', $placeholders ) . ")",
+				$notification_ids
+			)
+		);
+
+		// Clear notifications cache for this batch.
+		foreach ( $notification_ids as $notification_id ) {
+			wp_cache_delete( $notification_id, 'bp-notifications' );
+		}
+
+		// Small pause between batches to prevent server overload.
+		if ( count( $notification_ids ) === $batch_size ) {
+			usleep( 100000 ); // 0.1 second pause.
+		}
+	} while ( $notification_count === $batch_size );
 
 	// Clear notifications cache.
 	if (
@@ -2008,6 +2039,7 @@ function bb_notification_read_for_moderated_members() {
 		wp_cache_flush();
 	}
 
+	// Mark migration as complete.
 	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 }
 
