@@ -190,7 +190,7 @@ function bp_get_default_options() {
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
 
-		'bb-enable-content-counts'                   => 1,
+		'bb-enable-content-counts'                   => 0,
 		'bb-enable-sso'                              => false,
 	);
 
@@ -2768,7 +2768,7 @@ function bb_is_send_ajax_request() {
  *
  * @return bool true if counts should be displayed, false otherwise.
  */
-function bb_enable_content_counts( $default = true ) {
+function bb_enable_content_counts( $default = false ) {
 
 	/**
 	 * Filter to modify the behavior of the group counts feature.

@@ -507,7 +507,7 @@ function bp_version_updater() {
 			bb_on_update_moderation_friends_count_update();
 		}
 
-		if ( $raw_db_version < 21331 ) {
+		if ( $raw_db_version < 23331 ) {
 			bb_update_to_2_6_80();
 		}
 
