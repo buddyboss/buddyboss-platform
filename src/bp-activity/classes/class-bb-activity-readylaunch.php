@@ -534,7 +534,15 @@ class BB_Activity_Readylaunch {
 			} elseif ( function_exists( 'bp_get_followers' ) ) {
 				$followers = bp_get_followers( array( 'user_id' => $user_data['user_id'] ) );
 			}
-			$reaction_data['reactions'][ $key ]['followers_count'] = ! empty( $followers ) ? count( $followers ) : 0;
+			$followers_count = 0;
+			if ( ! empty( $followers ) ) {
+				$followers_count = sprintf(
+				/* translators: %d: follower count */
+					_n( '%d follower', '%d followers', count( $followers ), 'buddyboss' ),
+					count( $followers )
+				);
+			}
+			$reaction_data['reactions'][ $key ]['followers_count'] = $followers_count;
 		}
 
 		return $reaction_data;
