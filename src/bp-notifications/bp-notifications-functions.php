@@ -1966,82 +1966,180 @@ add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_desc
  *
  * @since BuddyBoss 2.2.7
  */
+/**
+ * Mark notifications as read for moderated members
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function bb_notification_read_for_moderated_members() {
+	// Early bail if no logged-in user.
 	$current_user_id = bp_loggedin_user_id();
 	if ( empty( $current_user_id ) ) {
 		return;
 	}
 
+	// Check if migration already completed.
 	if ( bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true ) ) {
 		return;
 	}
 
 	global $bp, $wpdb;
 
-	$batch_size = 200; // Process notifications in batches.
+	// Get moderated user IDs
+	$moderated_users = function_exists( 'bb_moderation_moderated_user_ids' ) ?
+		bb_moderation_moderated_user_ids() :
+		array();
 
-	// Build the base query.
-	$select_sql = "SELECT id FROM ( SELECT DISTINCT id FROM {$bp->notifications->table_name}";
-	$select_sql .= ' WHERE is_new = 1 AND user_id = ' . $current_user_id;
+	// Build base WHERE conditions.
+	$where_conditions = array(
+		'is_new = 1',
+		$wpdb->prepare( 'user_id = %d', $current_user_id )
+	);
 
-	$select_sql_where = array();
-	$moderated_users  = ( function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array() );
-
+	// Add moderated users conditions if any exist.
 	if ( ! empty( $moderated_users ) ) {
-		$select_sql_where[] = 'secondary_item_id IN ( ' . implode( ',', $moderated_users ) . ' )';
-		$select_sql         .= " AND component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' ) AND item_id IN ( " . implode( ',', $moderated_users ) . ' )';
+		$placeholders = array_fill( 0, count( $moderated_users ), '%d' );
+		$where_conditions[] = $wpdb->prepare(
+			"( ( component_action IN ('bb_connections_request_accepted', 'bb_connections_new_request')
+            AND item_id IN (" . implode( ',', $placeholders ) . ") )
+            OR secondary_item_id IN (" . implode( ',', $placeholders ) . ") )",
+			array_merge( $moderated_users, $moderated_users )
+		);
 	}
 
-	$select_sql_where[] = "secondary_item_id NOT IN ( SELECT DISTINCT ID from {$wpdb->users} )";
+	// Add condition for invalid users.
+	$where_conditions[] = "secondary_item_id NOT IN (SELECT DISTINCT ID FROM {$wpdb->users})";
 
-	$select_sql .= ' AND ( ' . implode( ' OR ', $select_sql_where ) . ' ) ) AS notifications';
+	// Combine all conditions
+	$where_clause = implode( ' AND ', $where_conditions );
+
+	// Get total count for progress tracking.
+	$total_count = (int) $wpdb->get_var(
+		"SELECT COUNT(DISTINCT id)
+        FROM {$bp->notifications->table_name}
+        WHERE {$where_clause}"
+	);
+
+	if ( $total_count === 0 ) {
+		bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+		return;
+	}
+
+	$batch_size = apply_filters( 'bb_notification_batch_size', 200 );
+	$start_time = time();
+	$processed = 0;
+
 	do {
-		// Get a batch of notification IDs.
+		// Check for timeout or memory limits
+		if ( bb_notification_should_stop_processing( $start_time ) ) {
+			wp_schedule_single_event(
+				time() + MINUTE_IN_SECONDS,
+				'bb_process_remaining_notifications',
+				array( $current_user_id )
+			);
+			return;
+		}
+
+		// Get batch of notification IDs
 		$notification_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT id FROM ( {$select_sql} ) AS batch_select LIMIT %d",
+				"SELECT DISTINCT id
+                FROM {$bp->notifications->table_name}
+                WHERE {$where_clause}
+                LIMIT %d",
 				$batch_size
 			)
 		);
+
 		if ( empty( $notification_ids ) ) {
 			break;
 		}
-		$notification_count = count( $notification_ids );
 
-		// Update notifications in current batch.
+		// Update notifications in current batch
 		$placeholders = array_fill( 0, count( $notification_ids ), '%d' );
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$bp->notifications->table_name} SET is_new = 0 WHERE id IN (" . implode( ',', $placeholders ) . ")",
+				"UPDATE {$bp->notifications->table_name}
+                SET is_new = 0
+                WHERE id IN (" . implode( ',', $placeholders ) . ")",
 				$notification_ids
 			)
 		);
 
-		// Clear notifications cache for this batch.
+		// Clear notifications cache for this batch
 		foreach ( $notification_ids as $notification_id ) {
 			wp_cache_delete( $notification_id, 'bp-notifications' );
 		}
 
-		// Small pause between batches to prevent server overload.
-		if ( count( $notification_ids ) === $batch_size ) {
-			usleep( 100000 ); // 0.1 second pause.
-		}
-	} while ( $notification_count === $batch_size );
+		$processed += count( $notification_ids );
 
-	// Clear notifications cache.
-	if (
-		function_exists( 'wp_cache_flush_group' ) &&
-		function_exists( 'wp_cache_supports' ) &&
-		wp_cache_supports( 'flush_group' )
-	) {
+		/**
+		 * Action to hook into after processing each batch
+		 *
+		 * @since [BBVERSION]
+		 *
+		 * @param int $processed Number of processed items
+		 * @param int $total_count Total items to process
+		 */
+		do_action( 'bb_notification_batch_processed', $processed, $total_count );
+
+	} while ( $processed < $total_count );
+
+	// Mark migration as complete
+	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+
+	// Final cache cleanup
+	if ( function_exists( 'wp_cache_flush_group' ) &&
+		 function_exists( 'wp_cache_supports' ) &&
+		 wp_cache_supports( 'flush_group' ) ) {
 		wp_cache_flush_group( 'bp-notifications' );
 	} else {
 		wp_cache_flush();
 	}
-
-	// Mark migration as complete.
-	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 }
+
+/**
+ * Check if we should stop processing based on time and memory constraints
+ *
+ * @since [BBVERSION]
+ *
+ * @param int $start_time The time when processing started
+ * @return bool
+ */
+function bb_notification_should_stop_processing( $start_time ) {
+	// Check time limit (default 20 seconds)
+	$time_limit = apply_filters( 'bb_notification_process_time_limit', 20 );
+	if ( ( time() - $start_time ) >= $time_limit ) {
+		return true;
+	}
+
+	// Check memory limit (default 10MB before limit)
+	$memory_limit = wp_convert_hr_to_bytes( ini_get( 'memory_limit' ) );
+	$memory_usage = memory_get_usage( true );
+
+	/*
+	 * Memory threshold.
+	 */
+	$memory_threshold = apply_filters( 'bb_notification_memory_threshold', 10 * MB_IN_BYTES );
+
+	return ( $memory_limit - $memory_usage ) < $memory_threshold;
+}
+
+/**
+ * Handle remaining notifications processing
+ *
+ * @since [BBVERSION]
+ *
+ * @param int $user_id The user ID to process notifications for
+ * @return void
+ */
+function bb_process_remaining_notifications( $user_id ) {
+	if ( ! empty( $user_id ) ) {
+		bb_notification_read_for_moderated_members();
+	}
+}
+add_action( 'bb_process_remaining_notifications', 'bb_process_remaining_notifications' );
 
 add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
 
