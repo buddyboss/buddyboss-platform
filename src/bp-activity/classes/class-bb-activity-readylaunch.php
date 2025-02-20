@@ -472,8 +472,9 @@ class BB_Activity_Readylaunch {
 			return $params;
 		}
 		$reply_strings = array(
-			'replyLabel'   => __( '%d Reply', 'buddyboss' ),
-			'repliesLabel' => __( '%d Replies', 'buddyboss' ),
+			'replyLabel'        => __( '%d Reply', 'buddyboss' ),
+			'repliesLabel'      => __( '%d Replies', 'buddyboss' ),
+			'video_default_url' => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
 		);
 
 		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
