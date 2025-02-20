@@ -139,16 +139,12 @@ function xprofile_screen_edit_profile() {
 				}
 			}
 
-			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
+			if ( empty( $social_fields_validation[ $field_id ] ) && isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
 				$errors = true;
 
 				// Add social networks validation messages to validations array.
 				if ( is_array( $message ) ) {
-					if ( 'socialnetworks' === $field->type ) {
-						$validations = array_merge( $validations, array_values( $message ) );
-					} else {
-						$validations[] = reset( $message );
-					}
+					$validations = array_merge( $validations, array_values( $message ) );
 				} else {
 					$validations[] = $message;
 				}
@@ -211,8 +207,17 @@ function xprofile_screen_edit_profile() {
 			}
 
 			// Save other social fields.
-			if ( ! empty( $social_posted_id ) && isset( $_POST[ 'field_' . $social_posted_id ] ) ) {
+			if ( ! empty( $social_posted_id ) && isset( $_POST[ 'field_' . $social_posted_id ] ) && count( $social_fields_validation ) <= 1 ) {
 				bb_xprofile_save_fields( $posted_field_ids, $is_required );
+			}
+		}
+
+		// Required fields error.
+		if ( ! empty( $errors ) && ! empty( $is_required_fields_error ) ) {
+			if ( count( $is_required_fields_error ) > 1 ) {
+				$validations[] = __( 'Please fill in all required fields, and save your changes again.', 'buddyboss' );
+			} else {
+				$validations[] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
 			}
 		}
 
@@ -221,17 +226,6 @@ function xprofile_screen_edit_profile() {
 
 			// Add validation messages all together.
 			bp_core_add_message( implode( "\n", $validations ), 'error' );
-
-			// There are errors.
-		} elseif ( ! empty( $errors ) ) {
-			if ( count( $is_required_fields_error ) > 1 ) {
-				bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ), 'error' );
-			} else {
-				$message_error = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
-				bp_core_add_message( $message_error, 'error' );
-			}
-
-			// No errors.
 		} else {
 
 			// Reset the errors var.
@@ -243,7 +237,6 @@ function xprofile_screen_edit_profile() {
 			} else {
 				bp_core_add_message( __( 'Changes saved.', 'buddyboss' ) );
 			}
-
 		}
 
 		// Redirect back to the edit screen to display the updates and message.
