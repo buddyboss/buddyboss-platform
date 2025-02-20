@@ -3719,7 +3719,7 @@ div[class*="attached-gif-container"] .gif-play-button {
   margin-top: -30px;
 }
 
-div[class*="attached-gif-container"] [class*="bb-icon"] {
+div[class*="attached-gif-container"] .gif-play-button [class*="bb-icon"] {
   font-family: bb-icons-rl;
   display: flex;
   align-items: center;
@@ -3739,8 +3739,9 @@ div[class*="attached-gif-container"] [class*="bb-icon"] {
   border-radius: var(--bb-rl-radius-full);
 }
 
-div[class*="attached-gif-container"] [class*="bb-icon"]:before {
+div[class*="attached-gif-container"] .gif-play-button [class*="bb-icon"]:before {
   content: "\e3d0";
+  font-family: bb-icons-rl;
   font-size: 30px;
   font-weight: 500;
   opacity: 0.8;
@@ -3769,7 +3770,7 @@ div[class*="attached-gif-container"] .gif-icon:after {
 div[class*="attached-gif-container"] .gif-player {
   display: inline-flex;
   position: relative;
-  max-width: 480px;
+  max-width: 380px;
   overflow: hidden;
   border-radius: var(--bb-rl-radius-md);
 }
@@ -4385,6 +4386,43 @@ div[class*="attached-gif-container"] .gif-player {
 
 .bb-rl-media-thumbnails .bb-rl-media-thumb.active {
   border-color: var(--bb-rl-primary-color);
+}
+
+/* Emoji and GIF Picker in theater */
+.bb-rl-emojionearea-theatre.show .emojionearea-picker:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+  z-index: 999992;
+  left: unset;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  transition: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .bb-rl-emojionearea-theatre .emojionearea-picker.emojionearea-picker-position-top.level-2 .emojionearea-wrapper:after {
+    display: none;
+  }
+  .bb-rl-emojionearea-theatre .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
+    left: inherit;
+    right: 98px;
+  }
+}
+
+.bb-rl-gif-media-search-dropdown.bb-rl-gif-media-search-dropdown-standalone {
+  z-index: 999992;
+  top: 0;
+  right: 0;
+  bottom: inherit;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+}
+
+.bb-rl-gif-media-search-dropdown.bb-rl-gif-media-search-dropdown-standalone .gif-search-content .gif-search-results {
+  max-height: 280px;
 }
 
 /* Move media modal */

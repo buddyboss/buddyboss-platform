@@ -2151,35 +2151,37 @@ button[data-balloon] {
 }
 
 .attachments--small [class*="attached-gif-container"] {
-  margin-bottom: 0;
+  margin-bottom: var(--bb-rl-space-200);
   background: none !important;
   height: auto !important;
   width: auto !important;
   display: table;
+  position: relative;
 }
 
 .attachments--small [class*="attached-gif-container"] .gif-image-container img {
-  background-color: var(--bb-content-alternate-background-color);
+  background-color: var(--bb-rl-background-secondary-color);
   height: 100px;
   width: 100px;
   object-fit: cover;
-  border-radius: var(--bb-block-radius-inner);
-  margin: 0 0 0 6px;
+  border-radius: var(--bb-rl-radius-md);
+  margin: 0 0 0 var(--bb-rl-space-200);
 }
 
 .attachments--small [class*="attached-gif-container"] .gif-image-remove {
-  box-shadow: 0 1px 1.5px black;
+  box-shadow: none;
   right: -8px;
   top: -8px;
-}
-
-.attachments--small [class*="attached-gif-container"] .gif-image-remove .bb-icon-times {
-  color: var(--bb-headings-color);
-  opacity: 0.4;
-}
-
-.attachments--small [class*="attached-gif-container"] .gif-image-remove:hover .bb-icon-times {
-  opacity: 1;
+  position: absolute;
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 14px;
+  padding: 2px;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 560px) {

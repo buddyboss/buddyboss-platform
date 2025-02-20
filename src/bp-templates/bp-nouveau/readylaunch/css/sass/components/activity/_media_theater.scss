@@ -306,3 +306,55 @@
 		}
 	}
 }
+
+/* Emoji and GIF Picker in theater */
+.bb-rl-emojionearea-theatre {
+
+	&.show {
+
+		.emojionearea-picker:not(.hidden) {
+			opacity: 1;
+			visibility: visible;
+			z-index: 999992;
+			right: unset;
+			margin: 0;
+			position: fixed;
+			top: 0;
+			left: 0;
+			transition: none;
+		}
+	}
+
+	@media screen and (max-width: 1000px) {
+
+		.emojionearea-picker.emojionearea-picker-position-top {
+
+			&.level-2 .emojionearea-wrapper:after {
+				display: none;
+			}
+
+			.emojionearea-wrapper:after {
+				right: inherit;
+				left: 98px;
+			}
+		}
+
+	}
+}
+
+.bb-rl-gif-media-search-dropdown {
+
+	&.bb-rl-gif-media-search-dropdown-standalone {
+		z-index: 999992;
+		top: 0;
+		left: 0;
+		bottom: inherit;
+		margin: 0;
+		padding: 0;
+		position: fixed;
+
+		.gif-search-content .gif-search-results {
+			max-height: 280px;
+		}
+	}
+}

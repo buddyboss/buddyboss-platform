@@ -1922,7 +1922,7 @@ div[class*="attached-gif-container"] {
 		margin-top: -30px;
 	}
 
-	[class*="bb-icon"] {
+	.gif-play-button [class*="bb-icon"] {
 		font-family: bb-icons-rl;
 		display: flex;
 		align-items: center;
@@ -1943,6 +1943,7 @@ div[class*="attached-gif-container"] {
 
 		&:before {
 			content: "\e3d0";
+			font-family: bb-icons-rl;
 			font-size: 30px;
 			font-weight: 500;
 			opacity: 0.8;
@@ -1972,7 +1973,7 @@ div[class*="attached-gif-container"] {
 	.gif-player {
 		display: inline-flex;
 		position: relative;
-		max-width: 480px;
+		max-width: 380px;
 		overflow: hidden;
 		border-radius: var(--bb-rl-radius-md);
 	}
