@@ -1,0 +1,55 @@
+.bb-rl-profile-edit {
+	max-width: 720px;
+	margin: 0 auto;
+	background-color: var(--bb-rl-background-color);
+	border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-profile-edit-wrapper {
+	padding: var(--bb-rl-space-400);
+
+	input[type="text"],
+	input[type="email"],
+	input[type="password"],
+	input[type="url"],
+	input[type="tel"],
+	input[type="number"],
+	select,
+	textarea {
+		width: 100%;
+	}
+
+	fieldset legend {
+
+		@include bb-rl-label-heading-md;
+		margin-bottom: var(--bb-rl-space-100);
+		color: var(--bb-rl-text-secondary-color);
+	}
+
+	#profile-group-edit-submit {
+
+		@include bb-rl-button--brand-fill;
+	}
+
+	#btn_add_repeater_set {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+	}
+}
+
+.bb-rl-profile-edit-header {
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+	h2 {
+
+		@include bb-rl-base-heading-xl;
+	}
+}
+
+.bb-rl-main-nav-profile-edit {
+	padding: 0 0 var(--bb-rl-space-200);
+	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+	margin-bottom: var(--bb-rl-space-400);
+}

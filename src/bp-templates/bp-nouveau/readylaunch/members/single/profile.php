@@ -14,7 +14,7 @@ if ( ! bp_is_user_profile_edit() ) {
 bp_nouveau_member_hook( 'before', 'profile_content' );
 ?>
 
-<div class="profile <?php echo bp_current_action(); ?>">
+<div class="profile <?php echo bp_current_action(); ?> bb-rl-profile-edit">
 	<?php
 	switch ( bp_current_action() ) :
 

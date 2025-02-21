@@ -11,7 +11,7 @@
 <nav class="<?php bp_nouveau_single_item_nav_classes(); ?> bb-rl-main-nav" id="object-nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'buddyboss' ); ?>">
 
 	<?php if ( bp_nouveau_has_nav( array( 'type' => 'primary' ) ) ) : ?>
-		<ul>
+		<ul class="bb-rl-main-nav-list">
 			<?php
 			while ( bp_nouveau_nav_items() ) :
 				bp_nouveau_nav_item();
