@@ -489,6 +489,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				);
 			}
 
+			if ( bp_is_user_profile_edit() || bp_is_user_profile() ) {
+				wp_enqueue_script( 'bb-rl-xprofile' );
+			}
+
 			wp_localize_script(
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
@@ -1140,6 +1144,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 						'dependencies' => array( 'jquery' ),
 						'footer'       => false,
+					),
+					'bb-rl-xprofile'   => array(
+						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-xprofile%s.js',
+						'dependencies' => array( 'bp-nouveau', 'jquery-ui-sortable' ),
+						'footer'       => true,
 					),
 				)
 			);
