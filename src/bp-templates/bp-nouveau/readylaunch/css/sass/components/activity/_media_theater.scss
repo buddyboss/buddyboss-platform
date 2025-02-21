@@ -27,10 +27,12 @@
 	&.bb-rl-media-toggle-sidebar {
 
 		.bb-media-info-section {
-			width: 560px;
+			width: 580px;
 			opacity: 1;
 			visibility: visible;
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+			overflow: auto;
+			overflow-x: hidden;
 		}
 
 		.bb-rl-media-section {
