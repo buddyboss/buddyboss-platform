@@ -976,6 +976,7 @@
 						> i,
 						> img {
 							font-size: 20px;
+							line-height: 1;
 							margin: 0 8px 0 0;
 						}
 
@@ -1065,6 +1066,16 @@
 					}
 				}
 
+				.activity-state_user__info {
+					max-width: calc(100% - 155px);
+				}
+
+				.followers-count {
+					color: var(--bb-rl-text-tertiary-color);
+					font-size: var(--bb-rl-font-size-sm);
+					line-height: 1;
+				}
+
 				.activity-state_user__name {
 					color: var(--bb-rl-text-color);
 					font-size: 14px;
@@ -1073,7 +1084,6 @@
 					text-transform: capitalize;
 					overflow: hidden;
 					text-overflow: ellipsis;
-					max-width: calc(100% - 155px);
 
 					a {
 						color: var(--bb-rl-text-color);
