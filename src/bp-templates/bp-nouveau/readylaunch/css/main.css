@@ -5321,6 +5321,9 @@ li.bb-rl-hideshow {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  border: 1px solid transparent;
 }
 
 .bb-rl-profile-edit-wrapper #profile-group-edit-submit:hover {
@@ -5350,6 +5353,10 @@ li.bb-rl-hideshow {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
+  float: left;
+  margin-right: var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
 }
 
 .bb-rl-profile-edit-wrapper #btn_add_repeater_set:hover {
@@ -5364,6 +5371,69 @@ li.bb-rl-hideshow {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-profile-edit-wrapper #btn_add_repeater_set .bb-icon-plus {
+  margin-right: var(--bb-rl-space-100);
+  line-height: 1;
+}
+
+.bb-rl-profile-edit-wrapper #btn_add_repeater_set .bb-icon-plus::before {
+  content: "\e3d4";
+  font-family: bb-icons-rl;
+  font-size: 14px;
+  font-style: normal;
+}
+
+.bb-rl-profile-edit-wrapper .repeater_group_outer {
+  background-color: var(--bb-rl-background-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-profile-edit-wrapper .repeater_tools {
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-profile-edit-wrapper .repeater_tools .repeater_set_title {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line);
+  margin-right: auto;
+}
+
+.bb-rl-profile-edit-wrapper .repeater_tools .dashicons::before {
+  content: "";
+  font-family: bb-icons-rl;
+  font-size: 20px;
+  color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-profile-edit-wrapper .repeater_tools .dashicons.dashicons-edit::before {
+  content: "\e3ae";
+}
+
+.bb-rl-profile-edit-wrapper .repeater_tools .dashicons.dashicons-trash::before {
+  content: "\e4a6";
+}
+
+.bb-rl-profile-edit-wrapper .repeater_tools > a {
+  padding: 0 var(--bb-rl-space-50);
+  cursor: pointer;
+}
+
+.bb-rl-profile-edit-wrapper .repeater_group_inner {
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-profile-edit-wrapper .repeater_group_inner fieldset {
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-profile-edit-wrapper .repeater_sets_sortable {
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-profile-edit-header {

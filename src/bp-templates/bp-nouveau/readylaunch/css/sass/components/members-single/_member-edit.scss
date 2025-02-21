@@ -29,12 +29,90 @@
 	#profile-group-edit-submit {
 
 		@include bb-rl-button--brand-fill;
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		font-size: 0.875rem;
+		border: 1px solid transparent;
 	}
 
 	#btn_add_repeater_set {
 
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
+		float: left;
+		margin-right: var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		font-size: 0.875rem;
+
+		.bb-icon-plus {
+			margin-right: var(--bb-rl-space-100);
+			line-height: 1;
+
+			&::before {
+				content: "\e3d4";
+				font-family: bb-icons-rl;
+				font-size: 14px;
+				font-style: normal;
+			}
+		}
+	}
+
+	.repeater_group_outer {
+		background-color: var(--bb-rl-background-secondary-color);
+		border-radius: var(--bb-rl-radius-md);
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-100);
+	}
+
+	.repeater_tools {
+		display: flex;
+		align-items: center;
+
+		.repeater_set_title {
+
+			@include bb-rl-base-heading;
+			margin-right: auto;
+		}
+
+		.dashicons {
+
+			&::before {
+				content: "";
+				font-family: bb-icons-rl;
+				font-size: 20px;
+				color: var(--bb-rl-icon-secondary-color);
+			}
+
+			&.dashicons-edit {
+
+				&::before {
+					content: "\e3ae";
+				}
+			}
+
+			&.dashicons-trash {
+
+				&::before {
+					content: "\e4a6";
+				}
+			}
+		}
+
+		> a {
+			padding: 0 var(--bb-rl-space-50);
+			cursor: pointer;
+		}
+	}
+
+	.repeater_group_inner {
+		margin: var(--bb-rl-space-200) 0 0;
+
+		fieldset {
+			margin: 0 0 var(--bb-rl-space-200);
+		}
+	}
+
+	.repeater_sets_sortable {
+		margin-bottom: var(--bb-rl-space-200);
 	}
 }
 
