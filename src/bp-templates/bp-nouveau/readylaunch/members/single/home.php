@@ -52,10 +52,15 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 			</div><!-- #item-body -->
 		</div><!-- // .bp-wrap -->
 	</div>
-	<div class="bb-rl-secondary-container">
-		<?php
+	<?php
 		if ( ! bp_is_user_profile_edit() ) {
-			bp_get_template_part( 'sidebar/right-sidebar' );
+			?>
+			<div class="bb-rl-secondary-container">
+				<?php
+					bp_get_template_part( 'sidebar/right-sidebar' );
+				?>
+			</div>
+			<?php
 		}
 		?>
 	</div>
