@@ -24,8 +24,12 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <body <?php body_class( 'bb-readylaunch-template' ); ?>>
-<?php wp_body_open(); ?>
-<?php bp_get_template_part( 'sidebar/left-sidebar' ); ?>
+<?php
+wp_body_open();
+if ( ! bp_is_user_profile_edit() ) {
+	bp_get_template_part( 'sidebar/left-sidebar' );
+}
+?>
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
