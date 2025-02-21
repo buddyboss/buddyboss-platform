@@ -1237,7 +1237,7 @@ div.video-js {
 
 	.vjs-poster > img {
 		position: absolute;
-		object-fit: contain;
+		object-fit: cover;
 		height: 100%;
 		width: 100%;
 	}
@@ -1434,6 +1434,43 @@ div.video-js {
 
 	&.vjs-has-started ~ .bb-rl-video-duration {
 		display: none;
+	}
+
+	&.vjs-error {
+
+		&:after,
+		.vjs-big-play-button {
+			display: none;
+		}
+
+		.vjs-error-display {
+			background: rgba(0, 0, 0, 0.8);
+
+			.vjs-modal-dialog-content {
+				color: var(--bb-rl-text-white-color);
+				font-size: 14px;
+				line-height: 24px;
+				letter-spacing: -0.24px;
+				top: 50%;
+				transform: translateY(-50%);
+				height: auto;
+				margin-top: 30px;
+			}
+
+			&:before {
+				content: "\e4dc";
+				font-family: bb-icons-rl;
+				font-size: 48px;
+				font-weight: 500;
+				color: var(--bb-rl-text-white-color);
+				text-shadow: none;
+				margin-top: -35px;
+			}
+		}
+
+		~ .bb-rl-video-duration {
+			display: none;
+		}
 	}
 }
 
