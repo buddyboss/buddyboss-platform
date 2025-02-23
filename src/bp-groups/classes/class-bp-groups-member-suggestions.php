@@ -125,7 +125,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 				'page'       => 1,
 				'per_page'   => $this->args['limit'],
 			);
-			$group_users = new BP_Group_Member_Query( $group_query );
+			$group_users = new BB_Group_Member_Query( $group_query );
 
 			if ( $group_users->results ) {
 				$user_query['exclude'] = wp_list_pluck( $group_users->results, 'ID' );
@@ -148,7 +148,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		}
 
 		if ( isset( $user_query['group_id'] ) ) {
-			$user_query = new BP_Group_Member_Query( $user_query );
+			$user_query = new BB_Group_Member_Query( $user_query );
 		} else {
 			$user_query = new BP_User_Query( $user_query );
 		}
