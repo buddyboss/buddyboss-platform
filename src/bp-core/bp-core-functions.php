@@ -9957,3 +9957,7 @@ function bb_get_all_headers() {
 function bb_pro_sso_version() {
 	return '2.6.30';
 }
+
+function bb_get_enabled_readylaunch() {
+	return bp_get_option( 'bb_readylaunch', array() );
+}
