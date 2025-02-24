@@ -48,19 +48,14 @@ jobs:
 
     - name: Install specific dependencies first
       run: |
-        npm install grunt@1.6.1 --save-dev
-        npm install stylelint@13.13.0 --save-dev
-        npm install cosmiconfig@8.0.0 --save-dev
-        npm install js-yaml@4.1.0 --save-dev
-        npm install parse-json@5.2.0 --save-dev
-        npm install path-type@4.0.0 --save-dev
-        npm install argparse@2.0.1 --save-dev
-        npm install stylelint-config-recommended-scss@4.3.0 --save-dev
-        npm install stylelint-scss@3.21.0 --save-dev
-        npm install stylelint-config-recommended@5.0.0 --save-dev
+        npm install grunt@0.4.5 --save-dev --force
+        npm install grunt@1.4.1 --save-dev --force
+        npm install stylelint@13.13.1 --save-dev --force
+        npm install grunt-json2php@0.1.4 --save-dev --force
+        npm install grunt-stylelint@0.17.0 --save-dev --force
 
     - name: Install remaining dependencies
-      run: npm install --legacy-peer-deps --no-audit
+      run: npm install --legacy-peer-deps --no-audit --force
 
     - name: Display npm and node versions
       run: |
