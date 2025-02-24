@@ -2236,7 +2236,7 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 
 	static $cache = array();
 
-	if( empty( $user_id ) ) {
+	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
