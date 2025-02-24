@@ -2,7 +2,7 @@ name: NodeJS with Grunt
 
 on:
   push:
-    branches: 
+    branches:
       - "release"
       - "main"
       - "master"
@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x, 16.x]
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
@@ -38,14 +38,14 @@ jobs:
 
     - name: Install dependencies
       run: |
-        npm install --no-package-lock
+        npm install
         npm install grunt-cli -g
-      
+
     - name: Display npm and node versions
       run: |
         npm -v
         node -v
-        
+
     - name: List installed packages
       run: npm list --depth=0
 
