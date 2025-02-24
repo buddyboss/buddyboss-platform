@@ -2,6 +2,7 @@
 
 require_once dirname( __FILE__ ) . '/factory.php';
 
+#[\AllowDynamicProperties]
 class BP_UnitTestCase extends WP_UnitTestCase {
 
 	protected $temp_has_bp_moderate = array();
