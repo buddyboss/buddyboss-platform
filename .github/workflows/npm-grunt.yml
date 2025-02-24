@@ -21,6 +21,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x, 16.x]
+      fail-fast: false
 
     steps:
     - uses: actions/checkout@v4
@@ -35,6 +36,12 @@ jobs:
 
     - name: Clean npm cache
       run: npm cache clean --force
+
+    - name: Set npm version for Node 14
+      if: matrix.node-version == '14.x'
+      run: |
+        npm install -g npm@6.14.18
+        npm cache clean --force
 
     - name: Install dependencies
       run: |
