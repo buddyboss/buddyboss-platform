@@ -33,7 +33,28 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Build
+    - name: Clean npm cache
+      run: npm cache clean --force
+
+    - name: Install dependencies
       run: |
-        npm ci
-        grunt
+        npm install --no-package-lock
+        npm install grunt-cli -g
+      
+    - name: Display npm and node versions
+      run: |
+        npm -v
+        node -v
+        
+    - name: List installed packages
+      run: npm list --depth=0
+
+    - name: Run Grunt
+      run: grunt
+      
+    - name: Upload npm logs if failure
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: npm-logs
+        path: ~/.npm/_logs/
