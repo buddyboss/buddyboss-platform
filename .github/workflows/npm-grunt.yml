@@ -43,10 +43,17 @@ jobs:
         npm install -g npm@6.14.18
         npm cache clean --force
 
-    - name: Install dependencies
+    - name: Install Grunt CLI
+      run: npm install -g grunt-cli
+
+    - name: Install specific peer dependencies
       run: |
-        npm install
-        npm install grunt-cli -g
+        npm install grunt@0.4.5 --save-dev
+        npm install stylelint@14.0.0 --save-dev
+        npm install cosmiconfig@8.0.0 --save-dev
+
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
 
     - name: Display npm and node versions
       run: |
