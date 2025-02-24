@@ -2277,10 +2277,10 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 	// Prepare the query with parameters.
 	$retval = $wpdb->prepare(
 		$query,
-		BP_Moderation_Members::$moderation_type,     // ms.item_type = 'user'
-		$user_id,                                    // m.user_id = 2
-		BP_Moderation_Members::$moderation_type,     // ms.item_type = 'user'
-		$user_id,                                    // ms.item_id = 2
+		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
+		$user_id,                                // m.user_id = 2.
+		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
+		$user_id                                 // ms.item_id = 2.
 	);
 
 	$cache[ $cache_key ] = $retval;

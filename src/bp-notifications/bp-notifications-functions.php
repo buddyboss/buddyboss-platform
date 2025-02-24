@@ -2004,9 +2004,6 @@ function bb_notification_read_for_moderated_members() {
 			)";
 	}
 
-	// Add condition to exclude existing users from the notifications.
-	$update_query .= " AND u.ID IS NULL";
-
 	// Execute the optimized query.
 	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 

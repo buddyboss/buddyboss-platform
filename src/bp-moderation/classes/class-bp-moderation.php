@@ -207,7 +207,7 @@ class BP_Moderation {
 
 		$bp        = buddypress();
 		$cache_key = 'bb_check_moderation_' . $item_type . '_' . $item_id . '_' . $user_report;
-		$found  = null;
+		$found     = null;
 		$result    = wp_cache_get( $cache_key, 'bp_moderation', false, $found );
 
 		if ( ( false === $result && null == $found ) || true === $force_check ) {
