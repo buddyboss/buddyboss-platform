@@ -36,7 +36,7 @@
 		}
 
 		.bb-rl-media-section {
-			width: calc(100% - 500px);
+			width: calc(100% - 580px);
 		}
 
 		.bb-rl-media-model-header .bb-rl-toggle-theatre-sidebar {
@@ -276,6 +276,25 @@
 			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 			margin: -16px -16px 0;
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-200);
+		}
+	}
+
+	.bb-rl-media-section.bb-media-no-preview .img-section {
+		justify-content: center;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+
+		> i {
+			font-size: 55px;
+			color: var(--bb-rl-icon-secondary-color);
+			margin-bottom: var(--bb-rl-space-100);
+		}
+
+		p {
+			font-size: 18px;
+			font-weight: 500;
+			color: var(--bb-rl-text-secondary-color);
 		}
 	}
 
