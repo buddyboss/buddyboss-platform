@@ -37,14 +37,18 @@ jobs:
     - name: Clean npm cache
       run: npm cache clean --force
 
-    - name: Set npm version for Node 14
-      if: matrix.node-version == '14.x'
+    - name: Install build essentials
       run: |
-        npm install -g npm@6.14.18
-        npm cache clean --force
+        sudo apt-get update
+        sudo apt-get install -y build-essential python2.7
 
     - name: Install Grunt CLI
       run: npm install -g grunt-cli
+
+    - name: Install node-sass binary
+      run: |
+        npm config set sass-binary-site=https://npm.taobao.org/mirrors/node-sass
+        npm install node-sass@7.0.0 --save-dev --force
 
     - name: Install specific dependencies first
       run: |
