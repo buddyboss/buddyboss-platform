@@ -1,10 +1,10 @@
- name: Grunt CI
+name: Grunt CI
 
 on:
   push:
-    branches: [ release, master ]
+    branches: [release, master]
   pull_request:
-    branches: [ release, master ]
+    branches: [release, master]
 
 jobs:
   build:
