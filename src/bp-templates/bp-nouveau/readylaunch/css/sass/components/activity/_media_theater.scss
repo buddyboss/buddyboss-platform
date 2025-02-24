@@ -381,3 +381,39 @@
 		}
 	}
 }
+
+
+@media screen and (max-width: 1120px) {
+
+	.bb-rl-media-model-container {
+
+		.bb-rl-media-model-inner {
+			height: 100%;
+			display: block;
+			overflow: auto;
+
+			.bb-media-info-section {
+				height: 0;
+				overflow: hidden;
+			}
+		}
+
+		.bb-rl-media-section {
+			height: 100%;
+		}
+
+		&.bb-rl-media-toggle-sidebar {
+
+			.bb-rl-media-section {
+				width: 100%;
+			}
+
+			.bb-media-info-section {
+				width: auto;
+				height: auto;
+				overflow: visible;
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+			}
+		}
+	}
+}
