@@ -1559,6 +1559,21 @@ div.video-js {
 			display: none;
 		}
 	}
+
+	.has-no-thumbnail & {
+
+		.vjs-error-display {
+			background: var(--bb-rl-background-tertiary-color);
+
+			.vjs-modal-dialog-content {
+				color: var(--bb-rl-text-color);
+			}
+
+			&:before {
+				color: var(--bb-rl-icon-color);
+			}
+		}
+	}
 }
 
 div.vjs-menu {

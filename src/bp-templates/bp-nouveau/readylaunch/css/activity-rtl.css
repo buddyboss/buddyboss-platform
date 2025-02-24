@@ -3364,6 +3364,18 @@ div.video-js.vjs-error ~ .bb-rl-video-duration {
   display: none;
 }
 
+.has-no-thumbnail div.video-js .vjs-error-display {
+  background: var(--bb-rl-background-tertiary-color);
+}
+
+.has-no-thumbnail div.video-js .vjs-error-display .vjs-modal-dialog-content {
+  color: var(--bb-rl-text-color);
+}
+
+.has-no-thumbnail div.video-js .vjs-error-display:before {
+  color: var(--bb-rl-icon-color);
+}
+
 div.vjs-menu .vjs-menu-content {
   background: var(--bb-rl-background-black-color);
   border-radius: 5px;
