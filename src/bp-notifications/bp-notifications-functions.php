@@ -1968,92 +1968,49 @@ add_filter( 'bp_get_the_notification_description', 'bb_get_the_notification_desc
  */
 function bb_notification_read_for_moderated_members() {
 	$current_user_id = bp_loggedin_user_id();
-	if ( empty( $current_user_id ) ) {
+
+	if ( ! $current_user_id ) {
 		return;
 	}
 
-	if ( bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true ) ) {
+	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+
+	if ( $read_notification_migration ) {
 		return;
 	}
 
 	global $bp, $wpdb;
 
-	$moderated_users = function_exists( 'bb_moderation_moderated_user_ids' ) ? bb_moderation_moderated_user_ids() : array();
+	// Get the moderated user IDs using the relevant function, if available.
+	$all_users_sql = function_exists( 'bb_moderation_moderated_user_ids_sql' ) ? bb_moderation_moderated_user_ids_sql() : '';
 
-	$select_sql_where = array(
-		'is_new = 1',
-		"user_id = $current_user_id",
-	);
+	// Start building the query with JOINs instead of nested SELECT.
+	$update_query  = "
+		UPDATE {$bp->notifications->table_name} n
+		LEFT JOIN {$wpdb->users} u
+			ON n.secondary_item_id = u.ID
+		SET n.is_new = 0
+		WHERE n.is_new = 1
+		AND n.user_id = {$current_user_id}
+	";
 
-	if ( ! empty( $moderated_users ) ) {
-		$moderated_users_in = implode( ',', $moderated_users );
-		$select_sql_where[] = "component_action IN ('bb_connections_request_accepted', 'bb_connections_new_request')";
-		$select_sql_where[] = "item_id IN ($moderated_users_in)";
-		$select_sql_where[] = "(secondary_item_id IN ($moderated_users_in) OR secondary_item_id NOT IN (SELECT DISTINCT ID FROM {$wpdb->users}))";
-	} else {
-		$select_sql_where[] = "secondary_item_id NOT IN (SELECT DISTINCT ID FROM {$wpdb->users})";
+	// Handle conditions for moderated users IDs if the SQL is provided.
+	if ( ! empty( $all_users_sql ) ) {
+		$update_query .= "
+			AND (
+				n.secondary_item_id IN ( {$all_users_sql} )
+				AND n.component_action IN ( 'bb_connections_request_accepted', 'bb_connections_new_request' )
+				AND n.item_id IN ( {$all_users_sql} )
+			)";
 	}
 
-	$where_clause = implode( ' AND ', $select_sql_where );
+	// Add condition to exclude existing users from the notifications.
+	$update_query .= " AND u.ID IS NULL";
 
-	$total_count = (int) $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->notifications->table_name} WHERE $where_clause" );
-	if ( 0 === $total_count ) {
-		bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
+	// Execute the optimized query.
+	$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		return;
-	}
-
-	$batch_size = apply_filters( 'bb_notification_batch_size', 200 );
-	$start_time = time();
-	$processed  = 0;
-
-	do {
-		// Check for timeout or memory limits.
-		if ( bb_notification_should_stop_processing( $start_time ) ) {
-			wp_schedule_single_event(
-				time() + MINUTE_IN_SECONDS,
-				'bb_process_remaining_notifications',
-				array( $current_user_id )
-			);
-
-			return;
-		}
-
-		// Get a batch of notification IDs.
-		$notification_ids = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT id FROM {$bp->notifications->table_name} WHERE $where_clause LIMIT %d",
-				$batch_size
-			)
-		);
-
-		if ( empty( $notification_ids ) ) {
-			break;
-		}
-
-		// Update notifications in current batch.
-		$placeholders = array_fill( 0, count( $notification_ids ), '%d' );
-		$wpdb->query(
-			$wpdb->prepare(
-				"UPDATE {$bp->notifications->table_name} SET is_new = 0 WHERE id IN (" . implode( ',', $placeholders ) . ")",
-				$notification_ids
-			)
-		);
-
-		// Clear notifications cache for this batch.
-		foreach ( $notification_ids as $notification_id ) {
-			wp_cache_delete( $notification_id, 'bp-notifications' );
-		}
-
-		$processed += count( $notification_ids );
-
-		do_action( 'bb_notification_batch_processed', $processed, $total_count );
-	} while ( $processed < $total_count );
-
-	// Mark migration as complete.
-	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
-
-	// Final cache cleanup.
+	// Clear notifications cache.
 	if (
 		function_exists( 'wp_cache_flush_group' ) &&
 		function_exists( 'wp_cache_supports' ) &&
@@ -2063,6 +2020,9 @@ function bb_notification_read_for_moderated_members() {
 	} else {
 		wp_cache_flush();
 	}
+
+	// Mark the notification migration as completed for the current user.
+	bp_update_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 }
 
 add_action( 'bp_init', 'bb_notification_read_for_moderated_members', 9 );
@@ -2216,48 +2176,3 @@ function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id,
 
 }
 add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
-
-/**
- * Check if we should stop processing based on time and memory constraints
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $start_time The time when processing started.
- *
- * @return bool
- */
-function bb_notification_should_stop_processing( $start_time ) {
-	// Check time limit (default 20 seconds).
-	$time_limit = apply_filters( 'bb_notification_process_time_limit', 20 );
-	if ( ( time() - $start_time ) >= $time_limit ) {
-		return true;
-	}
-
-	// Check memory limit (default 10MB before limit).
-	$memory_limit = wp_convert_hr_to_bytes( ini_get( 'memory_limit' ) );
-	$memory_usage = memory_get_usage( true );
-
-	/*
-	 * Memory threshold.
-	 */
-	$memory_threshold = apply_filters( 'bb_notification_memory_threshold', 10 * MB_IN_BYTES );
-
-	return ( $memory_limit - $memory_usage ) < $memory_threshold;
-}
-
-/**
- * Handle remaining notifications processing.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $user_id The user ID to process notifications for.
- *
- * @return void
- */
-function bb_process_remaining_notifications( $user_id ) {
-	if ( ! empty( $user_id ) ) {
-		bb_notification_read_for_moderated_members();
-	}
-}
-
-add_action( 'bb_process_remaining_notifications', 'bb_process_remaining_notifications' );
