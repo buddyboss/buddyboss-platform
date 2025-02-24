@@ -51,10 +51,3 @@ jobs:
 
     - name: Run Grunt
       run: grunt
-      
-    - name: Upload npm logs if failure
-      if: failure()
-      uses: actions/upload-artifact@v3
-      with:
-        name: npm-logs
-        path: ~/.npm/_logs/
