@@ -1975,7 +1975,7 @@ function bb_notification_read_for_moderated_members() {
 
 	$read_notification_migration = bp_get_user_meta( $current_user_id, 'bb_read_notification_migration', true );
 
-	if ( $read_notification_migration ) {
+	if ( ! bp_is_active( 'moderation' ) || $read_notification_migration ) {
 		return;
 	}
 
