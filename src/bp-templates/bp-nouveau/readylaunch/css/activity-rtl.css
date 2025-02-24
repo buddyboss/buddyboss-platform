@@ -3376,6 +3376,57 @@ div.video-js.vjs-error ~ .bb-rl-video-duration {
   color: var(--bb-rl-icon-color);
 }
 
+div.video-js.vjs-picture-in-picture {
+  pointer-events: none;
+}
+
+div.video-js.vjs-picture-in-picture:after {
+  display: none;
+}
+
+div.video-js.vjs-picture-in-picture video,
+div.video-js.vjs-picture-in-picture .vjs-control-bar,
+div.video-js.vjs-picture-in-picture .vjs-big-play-button {
+  display: none;
+}
+
+div.video-js.vjs-picture-in-picture .pcture-in-picture-notice {
+  color: var(--bb-rl-text-white-color);
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 40px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+}
+
+div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
+  content: "\e64c";
+  font-weight: 400;
+  color: var(--bb-rl-text-white-color);
+  display: block;
+  font-size: 48px;
+  font-family: bb-icons-rl;
+  text-shadow: none;
+  margin-top: -65px;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+@media screen and (max-width: 544px) {
+  div.video-js.vjs-picture-in-picture .pcture-in-picture-notice {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+}
+
 div.vjs-menu .vjs-menu-content {
   background: var(--bb-rl-background-black-color);
   border-radius: 5px;
