@@ -5672,6 +5672,11 @@ div[class*="attached-gif-container"] .gif-player {
   font-size: 20px;
   font-weight: 200;
   line-height: 1;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > i:before {
+  margin: 0;
 }
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__avatar .activity-state_user__reaction > img {
@@ -5686,6 +5691,15 @@ div[class*="attached-gif-container"] .gif-player {
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__info {
   max-width: calc(100% - 155px);
+}
+
+.bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__data {
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__data:not(:last-child) {
+  margin-bottom: var(--bb-rl-space-50);
 }
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .followers-count {

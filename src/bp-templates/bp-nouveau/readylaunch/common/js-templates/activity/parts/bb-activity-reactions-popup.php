@@ -108,7 +108,7 @@
 									</div>
 									<div class="activity-state_user__data">
 										<# if ( user.followers_count ) { #>
-											<span class="followers-count">• {{ user.followers_count }}</span>
+											<span class="followers-count">{{ user.followers_count }}</span>
 										<# } #>
 									</div>
 								</div>
@@ -180,7 +180,7 @@
 												</div>
 												<div class="activity-state_user__data">
 													<# if ( user.followers_count ) { #>
-														<span class="followers-count">• {{ user.followers_count }}</span>
+														<span class="followers-count">{{ user.followers_count }}</span>
 													<# } #>
 												</div>
 											</div>
@@ -243,7 +243,7 @@
 		</div>
 		<div class="activity-state_user__data">
 			<# if ( data.followers_count ) { #>
-				<span class="followers-count">• {{ data.followers_count }}</span>
+				<span class="followers-count">{{ data.followers_count }}</span>
 			<# } #>
 		</div>
 	</div>

@@ -1052,6 +1052,11 @@
 							font-size: 20px;
 							font-weight: 200;
 							line-height: 1;
+							border-radius: var(--bb-rl-radius-full);
+
+							&:before {
+								margin: 0;
+							}
 						}
 
 						> img {
@@ -1068,6 +1073,15 @@
 
 				.activity-state_user__info {
 					max-width: calc(100% - 155px);
+				}
+
+				.activity-state_user__data {
+					display: flex;
+					align-items: center;
+
+					&:not(:last-child) {
+						margin-bottom: var(--bb-rl-space-50);
+					}
 				}
 
 				.followers-count {
