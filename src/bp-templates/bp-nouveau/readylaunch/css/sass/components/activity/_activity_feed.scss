@@ -483,6 +483,75 @@
 	}
 }
 
+/* Disable click events on activity while sync after closing activity modal */
+#bb-rl-activity-stream .activity-item.activity-sync {
+	pointer-events: none;
+}
+
+#bb-rl-activity-stream .activity-item.activity-sync .bb-rl-activity-footer-actions {
+	border-top: 0;
+}
+
+.activity-sync-loader {
+	position: relative;
+	width: 100%;
+	height: 1px;
+	overflow-x: hidden;
+	display: none;
+
+	.activity-sync & {
+		display: block;
+	}
+}
+
+.activity-sync-bar {
+	position: absolute;
+	opacity: 0.9;
+	background: var(--bb-rl-border-secondary-color);
+	width: 150%;
+	height: 2px;
+}
+
+.activity-sync-progress {
+	position: absolute;
+	background: var(--bb-rl-primary-color);
+	height: 2px;
+}
+
+.inc {
+	animation: increase 2s infinite;
+}
+
+.dec {
+	animation: decrease 2s 0.5s infinite;
+}
+
+@keyframes increase {
+
+	from {
+		left: -5%;
+		width: 5%;
+	}
+
+	to {
+		left: 130%;
+		width: 100%;
+	}
+}
+
+@keyframes decrease {
+
+	from {
+		left: -80%;
+		width: 80%;
+	}
+
+	to {
+		left: 110%;
+		width: 10%;
+	}
+}
+
 /* Group Activity */
 .bb-rl-activity-head-group {
 	display: flex;
