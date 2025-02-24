@@ -473,3 +473,8 @@ div.xdsoft_datetimepicker {
 		}
 	}
 }
+
+/* At who list */
+.atwho-container .atwho-view {
+	z-index: var(--bb-rl-z-index-modal);
+}
