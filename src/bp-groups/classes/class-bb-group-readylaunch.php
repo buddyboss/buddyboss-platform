@@ -49,6 +49,9 @@ class BB_Group_Readylaunch {
 		add_filter( 'bb_group_creation_tab_number', array( $this, 'bb_group_creation_tab_number' ), 10, 2 );
 
 		add_action( 'bb_rl_footer', array( $this, 'bb_rl_load_popup' ) );
+
+		// Remove post content.
+		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 	}
 
 	public function bb_rl_update_group_subscription_button( $button, $r ) {
