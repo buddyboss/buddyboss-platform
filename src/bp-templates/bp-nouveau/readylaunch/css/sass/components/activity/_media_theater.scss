@@ -328,6 +328,7 @@
 	justify-content: center;
 	gap: var(--bb-rl-space-200);
 	margin-top: var(--bb-rl-space-200);
+	overflow: auto;
 
 	> div {
 		width: 48px;
@@ -336,6 +337,7 @@
 		border: 2px solid transparent;
 		overflow: hidden;
 		cursor: pointer;
+		flex: none;
 
 		img {
 			width: 100%;

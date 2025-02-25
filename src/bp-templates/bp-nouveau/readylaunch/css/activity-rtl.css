@@ -4632,6 +4632,7 @@ div[class*="attached-gif-container"] .gif-player {
   justify-content: center;
   gap: var(--bb-rl-space-200);
   margin-top: var(--bb-rl-space-200);
+  overflow: auto;
 }
 
 .bb-rl-video-thumb-list > div,
@@ -4642,6 +4643,7 @@ div[class*="attached-gif-container"] .gif-player {
   border: 2px solid transparent;
   overflow: hidden;
   cursor: pointer;
+  flex: none;
 }
 
 .bb-rl-video-thumb-list > div img,
