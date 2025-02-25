@@ -39,6 +39,9 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_media_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
+
+		// Remove post content.
+		remove_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
 	}
 
 	/**

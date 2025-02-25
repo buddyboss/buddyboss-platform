@@ -677,8 +677,31 @@ window.bp = window.bp || {};
 						);
 					}
 
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
-						$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( response.data.count );
+					if ( ! _.isUndefined( response.data ) ) {
+						var scopes   = response.data.scopes;
+						var count    = response.data.count;
+						var newCount = '';
+						if (
+							scopeElem.length > 0 &&
+							scopeElem.hasClass( 'selected' ) &&
+							! _.isUndefined( scopes ) &&
+							! _.isUndefined( scopes[ data.scope ] ) &&
+							'' !== scopes[ data.scope ]
+						) {
+							newCount = scopes[ data.scope ];
+						} else if (
+							! _.isUndefined( scopes ) &&
+							! _.isUndefined( scopes.all ) &&
+							'' !== scopes.all
+						) {
+							newCount = scopes.all;
+						} else if ( ! _.isUndefined( count ) ) {
+							newCount = count;
+						}
+
+						if ( '' !== newCount ) {
+							$( '.bb-rl-entry-heading .bb-rl-heading-count' ).text( newCount );
+						}
 					}
 
 					if ( 'reset' !== data.method ) {
@@ -778,9 +801,21 @@ window.bp = window.bp || {};
 					// Notifications always need to start with Newest ones.
 					extras = ( undefined !== objectData.extras && 'notifications' !== object ) ? objectData.extras : null;
 
+					// Pre select saved sort filter.
+					if ( $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).length ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== objectData.filter ) {
+							filter = objectData.filter;
+							$( self.objectNavParent + ' [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+						} else if ( '-1' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() && '0' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() ) {
+							filter = $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val();
+						}
+					}
+
 					var bbFilterElem = $( '#buddypress [data-bp-filter="' + object + '"]' );
-					if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && bbFilterElem.length ) {
-						if ( undefined !== objectData.filter ) {
+
+					// Pre select saved sort filter.
+					if ( bbFilterElem.length ) {
+						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== objectData.filter ) {
 							filter = objectData.filter;
 							bbFilterElem.find( 'option[value="' + filter + '"]' ).prop( 'selected', true );
 						} else if ( '-1' !== bbFilterElem.val() && '0' !== bbFilterElem.val() ) {
@@ -788,10 +823,11 @@ window.bp = window.bp || {};
 						}
 					}
 
+
 					// Pre select saved scope filter.
-					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
+					if ( $( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"]' ).length ) {
 						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== scope ) {
-							$( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
+							$( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
 						}
 					}
 
@@ -889,7 +925,7 @@ window.bp = window.bp || {};
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
 
 			// Scope filters.
-			$document.on( 'change', this.objectNavParent + ' [data-bp-member-scope-filter]', this, this.scopeQuery );
+			$document.on( 'change', this.objectNavParent + ' .bb-rl-scope-filter select', this, this.scopeQuery );
 
 			// Refreshing.
 			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
@@ -908,7 +944,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bp-messages-content, .messages-screen' );
+			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bp-messages-content, .messages-screen, .bb_more_options, .bb-rl-group-extra-info' );
 			$buttons.on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$buttons.on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 			$buttons.on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
@@ -938,7 +974,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
 
-			$document.on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
+			$document.on( 'click', '#header-cover-image a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$document.on( 'click', '#cover-photo-alert .bb-rl-model-close-button', this.coverPhotoCropperAlert );
 
@@ -1367,12 +1403,12 @@ window.bp = window.bp || {};
 
 			$( document ).on(
 				'click',
-				'.grid-filters .layout-view:not(.active)',
+				'.bb-rl-grid-filters .layout-view:not(.active)',
 				function ( e ) {
 					e.preventDefault();
 
 					var $this       = $( this ),
-						gridfilters = $this.parents( '.grid-filters' ),
+						gridfilters = $this.parents( '.bb-rl-grid-filters' ),
 						object      = gridfilters.data( 'object' );
 
 					if ( 'friends' === object ) {
@@ -1400,7 +1436,11 @@ window.bp = window.bp || {};
 					var layout = $this.hasClass( 'layout-list-view' ) ? 'list' : 'grid';
 					gridfilters.find( '.layout-view' ).removeClass( 'active' );
 					$this.addClass( 'active' );
-					$this.parents( '.bb-rl-wrap' ).find( '.bb-rl-list' ).toggleClass( 'grid', 'grid' === layout ).removeClass( 'grid', 'list' === layout );
+					if ( 'list' === layout ) {
+						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
+					} else {
+						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
+					}
 
 					bp.Nouveau.ajax_request = $.ajax(
 						{
@@ -1504,11 +1544,11 @@ window.bp = window.bp || {};
 		 */
 		scopeQuery: function ( event ) {
 			var self   = event.data,
-				target = $( event.currentTarget ).parent(),
+				target = $( event.currentTarget ),
 				scope  = 'all',
 				object;
 
-			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! target.attr( 'data-bp-scope' ) ) {
+			if ( target.hasClass( 'no-ajax' ) || target.hasClass( 'no-ajax' ) || ! target.find( ':selected' ).attr( 'data-bp-scope' ) ) {
 				return event;
 			}
 
@@ -1684,14 +1724,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-
-				// support for buddyboss theme for button actions and icons and texts.
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title' ) );
-				} else {
-					target.text( target.data( 'title' ) );
-				}
-
+				target.text( target.data( 'title' ) );
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
 				return false;
@@ -2453,7 +2486,6 @@ window.bp = window.bp || {};
 
 				if ( ! $firstVisibleRadio.length ) {
 					$( '#report-category-other' ).attr( 'checked', true ).trigger( 'click' );
-					$( 'label[for="report-category-other"]' ).hide();
 				}
 
 				if ( 'undefined' !== typeof reportType ) {
@@ -2779,7 +2811,6 @@ window.bp = window.bp || {};
 		 *  Cover photo Cropper
 		 */
 		coverPhotoCropper: function ( e ) {
-
 			var picture, guillotineHeight, guillotineWidth, guillotineTop, guillotineScale;
 
 			if ( $( e.currentTarget ).hasClass( 'position-change-cover-image' ) ) {
@@ -2878,25 +2909,21 @@ window.bp = window.bp || {};
 				$moreOptionsList = $moreOptions.find( '.bb_more_options_list' ),
 				$body            = $( 'body' );
 
+			var isOpen = $moreOptionsList.hasClass( 'is_visible' );
+
+			$( '.bb_more_options' ).removeClass( 'more_option_active' );
+			$( '.bb_more_options_list' ).removeClass( 'is_visible open' );
+			$body.removeClass( 'user_more_option_open' );
+
 			if ( $target.hasClass( 'bb_more_options_action' ) || $target.parent().hasClass( 'bb_more_options_action' ) ) {
 				event.preventDefault();
 
-				if ( $target.closest( '.bb_more_options' ).find( '.bb_more_options_list' ).hasClass( 'is_visible' ) ) {
-					$moreOptions.removeClass( 'more_option_active' );
-					$moreOptionsList.removeClass( 'is_visible open' );
-					$body.removeClass( 'user_more_option_open' );
-				} else {
-					$moreOptionsList.removeClass( 'is_visible open' );
-					$target.closest( '.bb_more_options' ).addClass( 'more_option_active' );
-					$target.closest( '.bb_more_options' ).find( '.bb_more_options_list' ).addClass( 'is_visible open' );
+				if ( !isOpen ) {
+					$moreOptions.addClass( 'more_option_active' );
+					$moreOptionsList.addClass( 'is_visible open' );
 					$body.addClass( 'user_more_option_open' );
 				}
 
-			} else {
-				$moreOptions.removeClass( 'more_option_active' );
-				$moreOptionsList.removeClass( 'is_visible open' );
-				$body.removeClass( 'user_more_option_open' );
-				$( '.optionsOpen' ).removeClass( 'optionsOpen' );
 			}
 
 			if ( $target.closest( '.bs-dropdown-link' ).length > 0 ) {
@@ -4194,7 +4221,7 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			var title          = isHoverIn ? target.data( 'title' ) : target.data( 'title-displayed' );
+			var title          = target.data( 'title' );
 			var titleDisplayed = target.data( 'title-displayed' );
 
 			if (
@@ -4209,15 +4236,9 @@ window.bp = window.bp || {};
 			}
 
 			if ( isToggleActionButton ) {
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					if ( ! target.hasClass( 'following' ) ) {
-						target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
-					}
-					target.find( 'span' ).html( title );
-					target.html( title );
-				} else {
-					target.html( title );
-				}
+				target.find( 'span' ).html( title );
+				target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
+				target.attr( 'data-balloon-pos', 'up' );
 
 				if ( isHoverIn ) {
 					target.removeClass( 'bp-toggle-action-button' ).addClass( 'bp-toggle-action-button-hover' );

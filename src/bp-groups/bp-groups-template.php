@@ -5705,7 +5705,7 @@ function bp_group_creation_tabs() {
 				<?php
 			}
 
-				echo $counter . '. ' . $step['name'];
+			echo apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) . $step['name'];
 
 			if ( $is_enabled ) {
 				?>
