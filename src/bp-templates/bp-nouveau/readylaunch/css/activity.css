@@ -3433,6 +3433,42 @@ div.video-js.vjs-picture-in-picture .pcture-in-picture-notice:before {
   }
 }
 
+@media screen and (max-width: 768px) {
+  div.video-js {
+    bottom: 10px;
+  }
+  div.video-js .vjs-seek-button,
+  div.video-js .vjs-time-control,
+  div.video-js .vjs-duration,
+  div.video-js .vjs-playback-rate,
+  div.video-js .vjs-picture-in-picture-control {
+    display: none;
+  }
+  div.video-js button {
+    width: 3em;
+  }
+  div.video-js .enlarge_button {
+    background-color: transparent !important;
+    padding: 0;
+    border: 0;
+    width: 4em;
+    font-size: 10px;
+    line-height: 1.3;
+    box-shadow: none;
+    text-shadow: none;
+    font-family: inherit;
+    display: block;
+    z-index: 1111;
+  }
+  div.video-js.vjs-error .vjs-error-display .vjs-modal-dialog-content {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  div.video-js.vjs-error .vjs-error-display:before {
+    font-size: 36px;
+  }
+}
+
 div.vjs-menu .vjs-menu-content {
   background: var(--bb-rl-background-black-color);
   border-radius: 5px;
