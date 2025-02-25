@@ -4536,6 +4536,14 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-context-wrap,
 .bb-rl-container .bb_more_options {
   position: relative;
+  display: inline-flex;
+}
+
+.bb-rl-context-wrap .bb-rl-context-btn,
+.bb-rl-context-wrap .bb_more_options_action,
+.bb-rl-container .bb_more_options .bb-rl-context-btn,
+.bb-rl-container .bb_more_options .bb_more_options_action {
+  display: inline-flex;
 }
 
 .bb-rl-context-wrap .bb-rl-context-btn i,
@@ -4591,6 +4599,13 @@ body.admin-bar .bb-rl-left-panel {
   display: inline-flex;
   align-items: center;
   width: 100%;
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a:hover,
+.bb-rl-context-wrap .bb_more_dropdown .generic-button a:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown .generic-button a:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a:hover {
+  background-color: var(--bb-rl-background-secondary-color);
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown a::before,

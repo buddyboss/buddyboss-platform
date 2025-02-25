@@ -74,8 +74,10 @@
   --bb-rl-icon-warning-secondary-color: #e8b931;
   --bb-rl-icon-danger-primary-color: #900b09;
   --bb-rl-icon-danger-secondary-color: #ec221f;
+  --bb-rl-radius-xs: 2px;
   --bb-rl-radius-sm: 4px;
   --bb-rl-radius-md: 6px;
+  --bb-rl-radius-base: 8px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;

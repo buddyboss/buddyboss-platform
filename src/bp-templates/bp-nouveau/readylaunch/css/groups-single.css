@@ -1095,6 +1095,7 @@
 .bb-rl-group-member-id {
   display: flex;
   align-items: center;
+  margin-right: auto;
 }
 
 .bb-rl-group-member-id img.avatar {
@@ -1231,6 +1232,22 @@
 .bb-rl-group-manage-form .group-settings-selections .bp-radio-wrap > label {
   display: inline-flex;
   align-items: center;
+}
+
+.bb-rl-group-manage-form .bb_more_dropdown .members-manage-buttons > a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: 10px var(--bb-rl-space-200);
+  color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.bb-rl-group-manage-form .bb_more_dropdown .members-manage-buttons > a:hover {
+  background-color: var(--bb-rl-background-secondary-color);
 }
 
 .bb-rl-group-manage-form .bb-zoom-setting-tab .bb-zoom-setting-tabs ul {

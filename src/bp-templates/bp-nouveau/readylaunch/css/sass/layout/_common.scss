@@ -88,9 +88,11 @@
 .bb-rl-context-wrap,
 .bb-rl-container .bb_more_options {
 	position: relative;
+	display: inline-flex;
 
 	.bb-rl-context-btn,
 	.bb_more_options_action {
+		display: inline-flex;
 
 		i {
 			font-size: 24px;
@@ -132,6 +134,10 @@
 				display: inline-flex;
 				align-items: center;
 				width: 100%;
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-color);
+				}
 			}
 		}
 

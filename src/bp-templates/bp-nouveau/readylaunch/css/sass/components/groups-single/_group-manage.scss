@@ -324,6 +324,7 @@
 .bb-rl-group-member-id {
 	display: flex;
 	align-items: center;
+	margin-right: auto;
 
 	img.avatar {
 		border-radius: 50%;
@@ -416,6 +417,27 @@
 			> label {
 				display: inline-flex;
 				align-items: center;
+			}
+		}
+	}
+
+	.bb_more_dropdown {
+
+		.members-manage-buttons {
+
+			> a {
+
+				@include bb-rl-label-heading-bolder;
+				padding: 10px var(--bb-rl-space-200);
+				color: var(--bb-rl-text-secondary-color);
+				white-space: nowrap;
+				display: inline-flex;
+				align-items: center;
+				width: 100%;
+
+				&:hover {
+					background-color: var(--bb-rl-background-secondary-color);
+				}
 			}
 		}
 	}

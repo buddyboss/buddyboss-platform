@@ -177,15 +177,21 @@ if ( bp_is_group_create() ) {
 								</p>
 							</div>
 
-							<?php
-							bp_nouveau_groups_manage_members_buttons(
-								array(
-									'container'         => 'div',
-									'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
-									'parent_element'    => '  ',
-								)
-							);
-							?>
+							<div class="bb_more_options action">
+								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
+								<div class="bb_more_options_list bb_more_dropdown">
+									<?php
+									bp_nouveau_groups_manage_members_buttons(
+										array(
+											'container'         => 'div',
+											'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
+											'parent_element'    => '  ',
+										)
+									);
+									?>
+								</div>
+								<div class="bb_more_dropdown_overlay"></div>
+							</div>
 
 						</li>
 
