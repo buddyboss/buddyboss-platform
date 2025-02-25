@@ -57,12 +57,17 @@
 
 		.bb-rl-activity-avatar {
 			margin-right: var(--bb-rl-space-200);
+			min-width: 48px;
 		}
 
 		img.avatar {
 			height: 48px;
 			width: 48px;
 			border-radius: var(--bb-rl-radius-full);
+		}
+
+		.bb-rl-activity-header {
+			margin-right: 40px;
 		}
 	}
 
@@ -578,6 +583,7 @@
 
 	.bb-rl-activity-header--group {
 		flex: 1;
+		padding-right: 40px;
 
 		.bb-rl-activity-post-author > p {
 			display: inline;
@@ -2432,6 +2438,10 @@ div[class*="attached-gif-container"] {
 			p:first-child {
 				font-size: 15px;
 				line-height: 20px;
+			}
+
+			.bb-rl-activity-avatar {
+				min-width: 40px;
 			}
 
 			img.avatar {
