@@ -213,7 +213,7 @@ window.bp = window.bp || {};
 
 			$document.on(
 				'click',
-				'#bb-rl-activity-stream .activity-state-comments > .comments-count',
+				'#bb-rl-activity-stream .activity-state-comments > .comments-count, #bb-rl-activity-stream .activity-meta > .generic-button .acomment-reply',
 				function ( e ) {
 					e.preventDefault();
 					var activityId = $( this ).closest( '.activity-item' ).data( 'bp-activity-id' );
