@@ -71,8 +71,5 @@ jobs:
         npm -v
         node -v
 
-    - name: List installed packages
-      run: npm list --depth=0
-
     - name: Run Grunt
       run: grunt
