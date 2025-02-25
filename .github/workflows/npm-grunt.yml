@@ -40,7 +40,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential python3
+        sudo apt-get install -y build-essential python3 gcc g++ make
 
     - name: Setup Python 3
       run: |
@@ -50,10 +50,11 @@ jobs:
     - name: Install Grunt CLI
       run: npm install -g grunt-cli
 
-    - name: Install node-sass binary
+    - name: Install and rebuild node-sass
       run: |
-        npm config set sass-binary-site=https://npm.taobao.org/mirrors/node-sass
+        npm config set sass-binary-site=https://github.com/sass/node-sass/releases/download
         npm install node-sass@7.0.0 --save-dev --force
+        npm rebuild node-sass
 
     - name: Install specific dependencies first
       run: |
@@ -66,10 +67,12 @@ jobs:
     - name: Install remaining dependencies
       run: npm install --legacy-peer-deps --no-audit --force
 
-    - name: Display npm and node versions
+    - name: Display versions
       run: |
         npm -v
         node -v
+        python --version
+        gcc --version
 
     - name: Run Grunt
-      run: grunt
+      run: grunt --verbose
