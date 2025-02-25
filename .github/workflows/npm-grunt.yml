@@ -4,12 +4,10 @@ on:
   push:
     branches:
       - "release"
-      - "main"
       - "master"
   pull_request:
     branches:
       - "release"
-      - "main"
       - "master"
   # Enable manual trigger
   workflow_dispatch:
