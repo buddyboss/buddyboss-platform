@@ -37,14 +37,14 @@ jobs:
     - name: Clean npm cache
       run: npm cache clean --force
 
-    - name: Install build essentials
+    - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential python2
+        sudo apt-get install -y build-essential python3
 
-    - name: Setup Python 2
+    - name: Setup Python 3
       run: |
-        sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
         python --version
 
     - name: Install Grunt CLI
