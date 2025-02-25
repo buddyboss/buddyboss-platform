@@ -5735,7 +5735,7 @@ div[class*="attached-gif-container"] .gif-player {
 }
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__info {
-  max-width: calc(100% - 155px);
+  max-width: calc(100% - 75px);
 }
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__data {
@@ -5761,6 +5761,7 @@ div[class*="attached-gif-container"] .gif-player {
   text-transform: capitalize;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
 }
 
 .bb-rl-activity-list .activity-state-popup .activity-state-popup_tab .activity-state-popup_tab_item .activity-state_user .activity-state_user__name a {
