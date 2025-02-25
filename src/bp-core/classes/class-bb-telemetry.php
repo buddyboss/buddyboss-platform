@@ -300,7 +300,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return bool True if the domain is not allowlisted, false otherwise.
 		 */
 		public function bb_whitelist_domain_for_telemetry() {
-			return true;
 			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? wp_unslash( $_SERVER['SERVER_NAME'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 			$whitelist_domain = array(
@@ -366,8 +365,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-member-type-enable-disable',
 					'bp-member-type-display-on-profile',
 					'bp-disable-avatar-uploads',
-					'bp-disable-cover-image-uploads',
-					'bp-disable-group-avatar-uploads',
 					'bp-disable-group-cover-image-uploads',
 					'bp-disable-group-type-creation',
 					'bp-disable-account-deletion',
@@ -429,6 +426,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
 					'bb-enable-content-counts',
+					'bp-profile-avatar-type',
+					'bp-default-profile-avatar-type',
+					'bp-enable-profile-gravatar',
+					'bp-disable-cover-image-uploads',
+					'bp-default-profile-cover-type',
+					'bp-disable-group-avatar-uploads',
+					'bp-default-group-avatar-type',
+					'bp-disable-group-cover-image-uploads',
+					'bp-default-group-cover-type'
 				)
 			);
 
