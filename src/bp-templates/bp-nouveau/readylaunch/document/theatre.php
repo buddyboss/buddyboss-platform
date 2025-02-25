@@ -9,23 +9,23 @@
 
 ?>
 <div class="bb-rl-media-model-wrapper bb-rl-internal-model document bb-rl-document-theatre" style="display: none;" id="buddypress">
-	<a data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model bb-close-document-theatre" href="#">
-		<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14">
-			<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7" />
-		</svg>
-	</a>
 	<div id="bb-rl-media-model-container" class="bb-rl-media-model-container bb-document-theater">
+		<div class="bb-rl-media-model-header">
+			<h2>John Muller's Post</h2>
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
+				<i class="bb-icons-rl-sidebar-simple"></i>
+			</a>
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model bb-close-document-theatre" href="#">
+				<i class="bb-icons-rl-x"></i>
+			</a>
+		</div>
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section bb-rl-document-section">
 				<a class="bb-rl-theater-command bb-rl-prev-document" href="#previous">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30">
-						<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 29L1 15 15 1" opacity=".7" />
-					</svg>
+					<i class="bb-icons-rl-caret-left"></i>
 				</a>
 				<a class="bb-rl-theater-command bb-rl-next-document" href="#next">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30">
-						<path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l14 14L1 29" opacity=".7" />
-					</svg>
+					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<div class="document-preview"></div>
 				-
@@ -53,7 +53,7 @@
 			</div>
 			<div class="bb-media-info-section document">
 				<ul class="bb-rl-activity-list bb-rl-item-list bb-rl-list">
-					<span><i class="bb-icon-spin5 animate-spin"></i></span>
+					<span><i class="bb-rl-loader"></i></span>
 				</ul>
 			</div>
 		</div>

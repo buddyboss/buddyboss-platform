@@ -69,7 +69,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 								if ( $reply_count > 0 ) {
 									?>
 									<a href="#" class="<?php echo esc_attr( trim( implode( ' ', $activity_state_class ) ) ); ?>">
-										<span class="comments-count" data-comments-count="<?php echo esc_attr( $reply_count ); ?>">
+										<span class="acomments-count" data-comments-count="<?php echo esc_attr( $reply_count ); ?>">
 											<?php
 											if ( $reply_count > 1 ) {
 												printf( _x( '%d replies', 'placeholder: activity replies count', 'buddyboss' ), $reply_count );

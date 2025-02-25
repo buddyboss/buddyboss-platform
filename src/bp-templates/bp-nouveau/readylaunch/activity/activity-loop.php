@@ -8,7 +8,7 @@
 
 bp_nouveau_before_loop();
 
-if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
+if ( bp_has_activities( bp_ajax_querystring( 'activity' ) . '&display_comments=false' ) ) :
 
 	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page'];
 	if ( $is_first_page ) :

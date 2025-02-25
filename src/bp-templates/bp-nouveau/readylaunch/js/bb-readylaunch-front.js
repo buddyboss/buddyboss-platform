@@ -552,6 +552,15 @@ window.bp = window.bp || {};
 								response.data.saved      = false;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 
+								if( 'video' === mediaType ) {
+									var thumbnailCheck = setInterval( function () {
+										if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+											response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+											clearInterval( thumbnailCheck );
+										}
+									});
+								}
+
 								view[ modelKey ].push( response.data );
 								view.model.set( modelKey, view[ modelKey ] );
 							}

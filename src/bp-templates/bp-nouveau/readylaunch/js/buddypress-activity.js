@@ -204,10 +204,20 @@ window.bp = window.bp || {};
 			$( '.bb-rl-activity-model-wrapper, .bb-rl-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$document.on(
 				'click',
-				'#bb-rl-activity-stream .bb-rl-activity-comments .view-more-comments, #bb-rl-activity-stream .activity-state-comments > .comments-count',
+				'#bb-rl-activity-stream .bb-rl-activity-comments .view-more-comments',
 				function ( e ) {
 					e.preventDefault();
 					$( this ).parents( 'li.activity-item' ).find( '.bb-rl-activity-comments > ul > li.acomments-view-more, .bb-rl-activity-comments > .activity-actions > ul > li.acomments-view-more' ).trigger( 'click' );
+				}
+			);
+
+			$document.on(
+				'click',
+				'#bb-rl-activity-stream .activity-state-comments > .comments-count',
+				function ( e ) {
+					e.preventDefault();
+					var activityId = $( this ).closest( '.activity-item' ).data( 'bp-activity-id' );
+					bp.Nouveau.Activity.launchActivityPopup( activityId, '' );
 				}
 			);
 
@@ -876,14 +886,15 @@ window.bp = window.bp || {};
 		 */
 		activityActions: function ( event ) {
 			var parent        = event.data,
-				target        = $( event.target ),
-				activityItem  = $( event.currentTarget ),
-				activityId    = activityItem.data( 'bp-activity-id' ),
-				stream        = $( event.delegateTarget ),
-				activityState = activityItem.find( '.activity-state' ),
-				commentsText  = activityItem.find( '.comments-count' ),
-				self          = this,
-				$body         = $( 'body' );
+			    target        = $( event.target ),
+			    activityItem  = $( event.currentTarget ),
+			    activityId    = activityItem.data( 'bp-activity-id' ),
+			    stream        = $( event.delegateTarget ),
+			    activityState = activityItem.find( '.activity-state' ),
+			    commentsText  = activityItem.find( '.comments-count' ),
+			    repliesText   = '',
+			    self          = this,
+			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
 			var isInsideModal        = target.closest( '#bb-rl-activity-modal' ).length > 0;
@@ -892,6 +903,7 @@ window.bp = window.bp || {};
 			if ( isInsideModal ) {
 				activityState = activityItem.closest( '#bb-rl-activity-modal' ).find( '.activity-state' );
 				commentsText  = activityItem.closest( '#bb-rl-activity-modal' ).find( '.comments-count' );
+				repliesText   = activityItem.closest( '#bb-rl-activity-modal' ).find( '.acomments-count' );
 			}
 
 			// In case the target is set to a `span` or `i` tag inside the link.
@@ -940,6 +952,7 @@ window.bp = window.bp || {};
 						activityState: activityState,
 						activityItem : activityItem,
 						commentsText : commentsText,
+						repliesText  : repliesText,
 						activityId   : activityId,
 					}
 				);
@@ -962,8 +975,12 @@ window.bp = window.bp || {};
 			}
 
 			// Displaying the comment form.
+			var activityStateComments = target.closest( '#bb-rl-activity-modal' ).find( '.activity-state-comments' );
 			if (
-				target.hasClass( 'activity-state-comments' ) ||
+				(
+					activityStateComments.length > 0 &&
+					target.hasClass( 'activity-state-comments' )
+				) ||
 				target.hasClass( 'acomment-reply' ) ||
 				target.parent().hasClass( 'acomment-reply' ) ||
 				target.hasClass( 'acomment-edit' )
@@ -1974,6 +1991,14 @@ window.bp = window.bp || {};
 			modal.find( 'ul.bb-rl-activity-list' ).html( activityContent );
 			modal.find( '.bb-rl-modal-activity-header h2' ).text( activityTitle );
 
+			if ( modal.find( '.activity-state-comments .comments-count' ).data( 'comments-count' ) > 0 ) {
+				bp.Nouveau.Activity.initialLoadComment( {
+					activityID : activityID,
+					parentID   : activityID,
+					modal      : modal
+				} );
+			}
+
 			// Reload video.
 			var videoItems = modal.find( '.bb-rl-activity-video-elem' );
 			videoItems.each(
@@ -2036,132 +2061,32 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer' );
 		},
 
+		initialLoadComment: function ( args ) {
+			this.loadMoreComments( {
+				target          : args.modal.find( '.bb-rl-activity-comments' ),
+				activityId      : args.activityID,
+				parentCommentId : args.parentID || 0,
+				isModal         : true
+			} );
+		},
+
 		viewMoreComments: function ( e ) {
 			e.preventDefault();
+			var $target           = $( e.currentTarget );
+			var currentTargetList = $target.parent();
 
-			var $target              = $( e.currentTarget ),
-				currentTargetList    = $target.parent(),
-				activityId           = $( currentTargetList ).data( 'activity_id' ),
-				commentsList         = $target.closest( '.bb-rl-activity-comments' ),
-				commentsActivityItem = $target.closest( '.activity-item' ),
-				parentCommentId      = $( currentTargetList ).data( 'parent_comment_id' ),
-				lastCommentTimeStamp = '',
-				addAfterListItemId   = '';
-
-			var skeleton =
-				'<div id="bb-rl-ajax-loader">' +
-				'<div class="bb-rl-activity-placeholder bb-activity-tiny-placeholder">' +
-				'<div class="bb-rl-activity-placeholder_head">' +
-				'<div class="bb-rl-activity-placeholder_avatar bb-rl-bg-animation bb-rl-loading-bg"></div>' +
-				'<div class="bb-rl-activity-placeholder_details">' +
-				'<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>' +
-				'<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>' +
-				'</div>' +
-				'</div>' +
-				'</div>' +
-				'</div>';
-
-			$target.addClass( 'loading' ).removeClass( 'acomments-view-more--hide' );
-			commentsList.addClass( 'active' );
-			commentsActivityItem.addClass( 'active' );
-			$target.html( skeleton );
-
-			var data = {
-				action               : 'activity_loadmore_comments',
-				activity_id          : activityId,
-				parent_comment_id    : parentCommentId,
-				offset               : $target.parents( '.bb-rl-activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
-				activity_type_is_blog: $target.parents( '.entry-content' ).length > 1,
-			};
-
-			if ( $target.prev( 'li.activity-comment' ).length > 0 ) {
-				// Load more in the current thread.
-				lastCommentTimeStamp        = $target.prev( 'li.activity-comment' ).data( 'bp-timestamp' );
-				data.last_comment_timestamp = lastCommentTimeStamp;
-				addAfterListItemId          = $target.prev( 'li.activity-comment' ).data( 'bp-activity-comment-id' );
-				data.last_comment_id        = addAfterListItemId;
-			}
-
-			bp.Nouveau.ajax( data, 'activity' ).done(
-				function ( response ) {
-					if ( false === response.success ) {
-						$target.html( '<p class=\'error\'>' + response.data.message + '</p>' ).removeClass( 'acomments-view-more--hide' );
-						commentsList.removeClass( 'active' );
-						commentsActivityItem.removeClass( 'active' );
-						return;
-					}
-					if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
-						// success.
-						var $targetList  = $( '.bb-rl-internal-model .bb-rl-activity-comments' ).find( '[data-activity_id=\'' + activityId + '\'][data-parent_comment_id=\'' + parentCommentId + '\']' );
-						var $newComments = $( $.parseHTML( response.data.comments ) );
-						if ( $targetList.length > 0 && $newComments.length > 0 ) {
-
-							// Iterate through new comments to handle duplicates.
-							$newComments.each(
-								function () {
-									if ( 'LI' === this.nodeName && 'undefined' !== this.id && '' !== this.id ) {
-											var newCommentId = this.id;
-											// Check if this comment ID already exists within the target list.
-											var $existingComment = $targetList.children( '#' + newCommentId );
-										if ( $existingComment.length > 0 ) {
-											$existingComment.remove(); // If it exists, remove the existing comment.
-										}
-									}
-								}
-							);
-
-							if ( 'undefined' !== typeof addAfterListItemId && '' !== addAfterListItemId ) {
-								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-activity-comment-id=\'' + addAfterListItemId + '\']' );
-								if ( $addAfterElement.length > 0 ) {
-									$addAfterElement.after( $newComments );
-								} else {
-									$targetList.append( $newComments );
-								}
-							} else if ( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
-								// Already comments in the list.
-								$targetList.children( '.activity-comment.comment-item' ).first().before( $newComments );
-							} else {
-								$targetList.html( $newComments );
-							}
-
-							// Replace fake image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							setTimeout(
-								function () {
-									jQuery( window ).scroll();
-								},
-								200
-							);
-						}
-						$target.remove();
-						commentsList.removeClass( 'active' );
-						commentsActivityItem.removeClass( 'active' );
-
-						var scrollOptions = {
-							offset: 0,
-							easing: 'swing'
-						};
-
-						if ( ! $target.hasClass( 'acomments-view-more--root' ) ) {
-							$( '.bb-rl-modal-activity-body' ).scrollTo( '#bb-rl-acomment-' + parentCommentId, 500, scrollOptions );
-						}
-
-						if ( 'undefined' !== typeof bp.Nouveau ) {
-							bp.Nouveau.reportPopUp();
-							bp.Nouveau.reportedPopup();
-						}
-
-						var action_tooltip = $targetList.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
-						action_tooltip.attr( 'data-balloon-pos', 'left' );
-					}
-
-				}
-			).fail(
-				function ( $xhr ) {
-					$target.html( '<p class=\'error\'>' + $xhr.statusText + '</p>' ).removeClass( 'acomments-view-more--hide' );
-					commentsList.removeClass( 'active' );
-					commentsActivityItem.removeClass( 'active' );
-				}
-			);
+			this.loadMoreComments( {
+				target               : $target,
+				currentTargetList    : $target.parent(),
+				activityId           : $( currentTargetList ).data( 'activity_id' ),
+				commentsList         : $target.closest( '.bb-rl-activity-comments' ),
+				commentsActivityItem : $target.closest( '.activity-item' ),
+				parentCommentId      : $( currentTargetList ).data( 'parent_comment_id' ),
+				lastCommentTimestamp : $target.prev( 'li.activity-comment' ).data( 'bp-timestamp' ),
+				addAfterListItemId   : '',
+				lastCommentId        : $target.prev( 'li.activity-comment' ).data( 'bp-activity-comment-id' ),
+				isModal              : false,
+			} );
 		},
 
 		autoloadMoreComments: function () {
@@ -2550,18 +2475,18 @@ window.bp = window.bp || {};
 			event.preventDefault(); // Stop event propagation.
 
 			var parent                 = args.parent,
-				target                 = args.target,
-				activityState          = args.activityState,
-				activityItem           = args.activityItem,
-				commentsText           = args.commentsText,
-				activityId             = args.activityId,
-				activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
-				activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
-				li_parent,
-				comment_count_span,
-				comment_count,
-				show_all_a,
-				deleted_comments_count = 0;
+			    target                 = args.target,
+			    activityState          = args.activityState,
+			    activityItem           = args.activityItem,
+			    commentsText           = args.commentsText,
+			    activityId             = args.activityId,
+			    activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
+			    activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
+			    li_parent,
+			    comment_count_span,
+			    comment_count,
+			    show_all_a,
+			    deleted_comments_count = 0;
 
 			var commentsList = target.closest( '.bb-rl-activity-comments' );
 			commentsList.addClass( 'active' );
@@ -2647,8 +2572,49 @@ window.bp = window.bp || {};
 							if ( commentsText.length ) {
 								var label = comment_count > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 								commentsText.text( label.replace( '%d', comment_count ) );
+								comment_count_span.attr( 'data-comments-count', comment_count );
 							} else {
 								comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
+							}
+
+							// Update the reply count with parent replies count.
+							var $parentComment        = activity_comment_li.closest( '.activity-comment' ),
+							    processedIds          = {},
+							    totalCommentsToDelete = 1; // Start with 1 for the current comment
+							if ( activity_comment_li.hasClass( 'has-child-comments' ) ) {
+								// Only search for children if we know they exist
+								var childCount = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' ) || 0;
+								totalCommentsToDelete += childCount;
+								totalCommentsToDelete += activity_comment_li.find( '.activity-comment:visible' ).length;
+							}
+
+							var $currentParent = $parentComment;
+							while ( $currentParent.length ) {
+								var parentId = $currentParent.data( 'bp-activity-comment-id' );
+								if ( processedIds[ parentId ] ) {
+									break;
+								}
+								processedIds[ parentId ] = true;
+
+								var $reactionArea = $currentParent.find( '.bb-rl-comment-reactions' ).first(),
+								    $countElement = $reactionArea.find( '.acomments-count' );
+								if ( $countElement.length ) {
+									var currentCount = parseInt( $countElement.attr( 'data-comments-count' ) );
+									if ( isNaN( currentCount ) ) {
+										var matches  = $countElement.text().match( /\d+/ );
+										currentCount = matches ? parseInt( matches[ 0 ] ) : 0;
+									}
+
+									var newCount = Math.max( 0, currentCount - totalCommentsToDelete );
+									if ( 0 === newCount ) {
+										$reactionArea.find( '.activity-state-comments' ).remove();
+									} else {
+										var replyLabel = newCount > 1 ? bbRlActivity.strings.repliesLabel : bbRlActivity.strings.replyLabel;
+										var newText    = replyLabel.replace( '%d', newCount );
+										$countElement.attr( 'data-comments-count', newCount ).text( newText );
+									}
+								}
+								$currentParent = $currentParent.parent().closest( '.activity-comment' );
 							}
 
 							// Update the show all count.
@@ -3177,6 +3143,55 @@ window.bp = window.bp || {};
 							if ( commentsText.length ) {
 								var label = comment_count > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 								commentsText.text( label.replace( '%d', comment_count || 1 ) );
+								comment_count_span.attr( 'data-comments-count', comment_count );
+							}
+
+							// Update reply count with parent replies count.
+							var parentCommentId = commentData.comment_id;
+							if ( parentCommentId ) {
+								var $parentComment = $( '#bb-rl-acomment-' + parentCommentId ),
+								    processedIds   = {};
+
+								while ( $parentComment.length ) {
+									var parentId = $parentComment.data( 'bp-activity-comment-id' );
+									if ( processedIds[ parentId ] ) { // Skip if already processed.
+										break;
+									}
+									processedIds[ parentId ] = true;
+
+									var $reactionArea = $parentComment.find( '.bb-rl-comment-reactions' ).first(),
+									    $countElement = $reactionArea.find( '.acomments-count' ),
+									    currentCount  = 0,
+									    newCount;
+
+									if ( $countElement.length ) { // Get current count.
+										currentCount = parseInt( $countElement.attr( 'data-comments-count' ) );
+										if ( isNaN( currentCount ) ) {
+											var matches  = $countElement.text().match( /\d+/ );
+											currentCount = matches ? parseInt( matches[ 0 ] ) : 0;
+										}
+									}
+
+									newCount       = currentCount + 1;
+									var replyLabel = newCount > 1 ? bbRlActivity.strings.repliesLabel : bbRlActivity.strings.replyLabel;
+
+									// Update an or add count element.
+									if ( $countElement.length ) {
+										$countElement.attr( 'data-comments-count', newCount ).text( replyLabel.replace( '%d', newCount ) );
+									} else {
+										$reactionArea.append(
+											'<a href="#" class="activity-state-comments has-comments">' +
+											'<span class="acomments-count" data-comments-count="1">' +
+											bbRlActivity.strings.replyLabel.replace( '%d', 1 ) +
+											'</span>' +
+											'</a>'
+										);
+									}
+
+									// Add class and move to the next parent
+									$parentComment.addClass( 'has-child-comments' );
+									$parentComment = $parentComment.parent().closest( '.activity-comment' );
+								}
 							}
 
 							comment_count_span.parent( ':not( .has-comments )' ).addClass( 'has-comments' );
@@ -3792,6 +3807,157 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+		},
+
+		loadMoreComments : function ( options ) {
+			var defaults = {
+				target               : null,
+				activityId           : null,
+				parentCommentId      : 0,
+				isModal              : false,
+				lastCommentId        : '',
+				lastCommentTimestamp : ''
+			};
+
+			var settings = $.extend( {}, defaults, options );
+			var $target  = settings.target;
+
+			// Common skeleton HTML
+			var skeleton =
+				    '<div id="bb-rl-ajax-loader">' +
+				    '<div class="bb-rl-activity-placeholder bb-activity-tiny-placeholder">' +
+				    '<div class="bb-rl-activity-placeholder_head">' +
+				    '<div class="bb-rl-activity-placeholder_avatar bb-rl-bg-animation bb-rl-loading-bg"></div>' +
+				    '<div class="bb-rl-activity-placeholder_details">' +
+				    '<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>' +
+				    '<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>' +
+				    '</div>' +
+				    '</div>' +
+				    '</div>' +
+				    '</div>';
+
+			// Common loading states
+			$target.addClass( 'loading' );
+			if ( ! settings.isModal ) {
+				settings.commentsList.addClass( 'active' );
+				settings.commentsActivityItem.addClass( 'active' );
+			}
+			$target.html( skeleton );
+
+			// Prepare ajax data
+			var data = {
+				action                : settings.isModal ? 'bb_rl_activity_loadmore_comments' : 'activity_loadmore_comments',
+				activity_id           : settings.activityId,
+				parent_comment_id     : settings.parentCommentId,
+				offset                : settings.isModal ? 0 : $target.parents( '.bb-rl-activity-comments' ).find( 'ul[data-parent_comment_id ="' + settings.parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
+				activity_type_is_blog : $target.parents( '.entry-content' ).length > 1
+			};
+
+			// Add timestamp and comment ID if available
+			if ( settings.lastCommentTimestamp ) {
+				data.last_comment_timestamp = settings.lastCommentTimestamp;
+			}
+			if ( settings.lastCommentId ) {
+				data.last_comment_id = settings.lastCommentId;
+			}
+
+			// Make AJAX request
+			bp.Nouveau.ajax( data, 'activity' ).done( function ( response ) {
+				if ( false === response.success ) {
+					$target.html( '<p class=\'error\'>' + response.data.message + '</p>' ).removeClass( 'acomments-view-more--hide' );
+					if ( ! settings.isModal ) {
+						settings.commentsList.removeClass( 'active' );
+						settings.commentsActivityItem.removeClass( 'active' );
+					}
+					return;
+				}
+
+				if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.comments ) {
+					var $activityItem = $target.closest( '.activity-item' );
+					if ( ! $activityItem.hasClass( 'has-comments' ) ) {
+						$activityItem.addClass( 'has-comments' );
+					}
+
+					// Get a target list based on modal or regular view.
+					var activityCommentsElem = $( '.bb-rl-internal-model .bb-rl-activity-comments' );
+					var $targetList = settings.isModal ? activityCommentsElem : activityCommentsElem.find( '[data-activity_id=\'' + settings.activityId + '\'][data-parent_comment_id=\'' + settings.parentCommentId + '\']' );
+
+					var $newComments = $( $.parseHTML( response.data.comments ) );
+
+					if ( $targetList.length > 0 && $newComments.length > 0 ) {
+						// Handle duplicates
+						$newComments.each( function () {
+							if ( 'LI' === this.nodeName && 'undefined' !== this.id && '' !== this.id ) {
+								var newCommentId     = this.id;
+								var $existingComment = $targetList.children( '#' + newCommentId );
+								if ( $existingComment.length > 0 ) {
+									$existingComment.remove();
+								}
+							}
+						} );
+
+						// Insert comments based on context
+						if ( settings.isModal ) {
+							$targetList.html( $newComments );
+						} else {
+							if ( settings.lastCommentId ) {
+								var $addAfterElement = $targetList.find( 'li.activity-comment[data-bp-activity-comment-id=\'' + settings.lastCommentId + '\']' );
+								if ( $addAfterElement.length > 0 ) {
+									$addAfterElement.after( $newComments );
+								} else {
+									$targetList.append( $newComments );
+								}
+							} else if ( $targetList.children( '.activity-comment.comment-item' ).length > 0 ) {
+								$targetList.children( '.activity-comment.comment-item' ).first().before( $newComments );
+							} else {
+								$targetList.html( $newComments );
+							}
+						}
+
+						// Common post-load operations
+						setTimeout( function () {
+							jQuery( window ).scroll();
+						}, 200 );
+
+						// Scroll to comment if needed
+						if ( ! $target.hasClass( 'acomments-view-more--root' ) ) {
+							$( '.bb-rl-modal-activity-body' ).scrollTo( '#bb-rl-acomment-' + settings.parentCommentId, 500, {
+								offset : 0,
+								easing : 'swing'
+							} );
+						}
+
+						// Initialize popups
+						if ( 'undefined' !== typeof bp.Nouveau ) {
+							bp.Nouveau.reportPopUp();
+							bp.Nouveau.reportedPopup();
+						}
+
+						// Set tooltip position
+						var action_tooltip = $targetList.find( '.bb-activity-more-options-wrap' ).find( '.bb-activity-more-options-action' );
+						action_tooltip.attr( 'data-balloon-pos', 'left' );
+					}
+
+					if ( ! settings.isModal ) {
+						$target.remove();
+						settings.commentsList.removeClass( 'active' );
+						settings.commentsActivityItem.removeClass( 'active' );
+					}
+
+					// Handle comment form if present
+					if ( 'undefined' !== typeof response.data.comment_form ) {
+						var $activityComments = $( '.bb-rl-internal-model .bb-rl-activity-comments > ul' );
+						$activityComments.after( response.data.comment_form );
+						$activityComments.find( '#ac-form-' + settings.activityId ).removeClass( 'not-initialized' ).addClass( 'root' ).find( '#ac-input-' + settings.activityId ).focus();
+					}
+				}
+			} ).fail( function ( $xhr ) {
+				$target.html( '<p class=\'error\'>' + $xhr.statusText + '</p>' ).removeClass( 'acomments-view-more--hide' );
+				if ( ! settings.isModal ) {
+					settings.commentsList.removeClass( 'active' );
+					settings.commentsActivityItem.removeClass( 'active' );
+				}
+			} );
 		},
 	};
 

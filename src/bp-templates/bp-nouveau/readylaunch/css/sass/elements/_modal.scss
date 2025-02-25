@@ -168,6 +168,10 @@
 				color: var(--bb-rl-icon-primary-color);
 				font-style: normal;
 			}
+
+			[class*="bb-icon"] {
+				display: none;
+			}
 		}
 	}
 
@@ -176,7 +180,6 @@
 		max-height: calc(100vh - 220px);
 		overflow: auto;
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
-		margin-bottom: calc(var(--bb-rl-radius-lg) / 2);
 		color: var(--bb-rl-text-secondary-color);
 	}
 
