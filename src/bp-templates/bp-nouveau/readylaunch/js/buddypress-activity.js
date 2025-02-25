@@ -172,7 +172,7 @@ window.bp = window.bp || {};
 			$document.click( this.togglePopupDropdown );
 
 			// forums.
-			$( '#buddypress [data-bp-list="activity"], #bb-rl-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-rl-media-model-container .bb-rl-activity-list, #activity-modal .bb-rl-activity-list, .bb-rl-modal-activity-footer' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			var forumSelectors       = '.bb-rl-ac-reply-media-button, .bb-rl-ac-reply-document-button, .bb-rl-ac-reply-video-button, .bb-rl-ac-reply-gif-button';
 			var forumParentSelectors = '[data-bp-list="activity"], #bb-rl-media-model-container .bb-rl-activity-list, #bb-rl-activity-modal .bb-rl-activity-list, .bb-rl-modal-activity-footer';
 			$bpElem.find( forumParentSelectors ).on(
