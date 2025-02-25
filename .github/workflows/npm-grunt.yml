@@ -47,14 +47,29 @@ jobs:
         sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
         python --version
 
+    - name: Update npm and node-gyp for Node 16
+      if: matrix.node-version == '16.x'
+      run: |
+        npm install -g npm@latest
+        npm install -g node-gyp@latest
+        npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
+
     - name: Install Grunt CLI
       run: npm install -g grunt-cli
 
-    - name: Install and rebuild node-sass
+    - name: Install node-sass for Node 14
+      if: matrix.node-version == '14.x'
       run: |
         npm config set sass-binary-site=https://github.com/sass/node-sass/releases/download
         npm install node-sass@7.0.0 --save-dev --force
         npm rebuild node-sass
+
+    - name: Install node-sass for Node 16
+      if: matrix.node-version == '16.x'
+      run: |
+        npm config set sass-binary-site=https://github.com/sass/node-sass/releases/download
+        npm install node-sass@7.0.3 --save-dev --force
+        npm rebuild node-sass --update-binary
 
     - name: Install specific dependencies first
       run: |
@@ -73,6 +88,7 @@ jobs:
         node -v
         python --version
         gcc --version
+        node-gyp -v
 
     - name: Run Grunt
       run: grunt --verbose
