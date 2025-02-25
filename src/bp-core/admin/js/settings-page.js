@@ -2543,7 +2543,7 @@ window.bp = window.bp || {};
 				);
 			}
 
-			$( '.post-type-reply #post' ).on( 'submit', function ( event ) {
+			$( '.post-type-forum #post, .post-type-topic #post, .post-type-reply #post' ).on( 'submit', function ( event ) {
 				var content = $( '#content' ).val();
 
 				var decodedContent = $( '<textarea>' ).html( content ).text();
