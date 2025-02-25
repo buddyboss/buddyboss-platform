@@ -50,8 +50,8 @@ jobs:
     - name: Update npm and node-gyp for Node 16
       if: matrix.node-version == '16.x'
       run: |
-        npm install -g npm@latest
-        npm install -g node-gyp@latest
+        npm install -g npm@8.19.4
+        npm install -g node-gyp@9.4.0
         npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
 
     - name: Install Grunt CLI
@@ -67,8 +67,8 @@ jobs:
     - name: Install node-sass for Node 16
       if: matrix.node-version == '16.x'
       run: |
-        npm config set sass-binary-site=https://github.com/sass/node-sass/releases/download
-        npm install node-sass@7.0.3 --save-dev --force
+        export SASS_BINARY_SITE=https://github.com/sass/node-sass/releases/download
+        npm install node-sass@7.0.3 --save-dev --force --unsafe-perm
         npm rebuild node-sass --update-binary
 
     - name: Install specific dependencies first
@@ -86,9 +86,6 @@ jobs:
       run: |
         npm -v
         node -v
-        python --version
-        gcc --version
-        node-gyp -v
 
     - name: Run Grunt
       run: grunt --verbose
