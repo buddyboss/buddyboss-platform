@@ -329,8 +329,8 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
-	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
-	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
+	$link_title       = ! empty( $_POST['link_title'] ) ? sanitize_text_field( wp_unslash( $_POST['link_title'] ) ) : '';
+	$link_description = ! empty( $_POST['link_description'] ) ? sanitize_text_field( wp_unslash( $_POST['link_description'] ) ) : '';
 	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
 
 	// Check if link embed was used.
@@ -358,12 +358,14 @@ function bp_activity_save_link_data( $activity ) {
 	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
+		$link_title            = wp_kses_post( $link_title );
 		$preview_data['title'] = $link_title;
 		// Add post title in activity meta. will help to search link preview's title in feed.
 		bp_activity_update_meta( $activity->id, 'post_title', $link_title );
 	}
 
 	if ( ! empty( $link_description ) ) {
+		$link_description            = wp_kses_post( $link_description );
 		$preview_data['description'] = $link_description;
 	}
 

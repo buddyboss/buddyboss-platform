@@ -55,6 +55,7 @@ function bp_register_invite_type_sections_filters_actions() {
 	add_filter( 'posts_distinct_request', 'bb_invites_modify_posts_distinct_request', 10, 2 );
 	add_filter( 'posts_join_request', 'bb_invites_modify_posts_join_request', 10, 2 );
 	add_filter( 'posts_where_request', 'bb_invites_modify_posts_where_request', 10, 2 );
+	add_action( 'load-edit.php', 'bp_invite_add_request_filter' );
 
 }
 
@@ -199,31 +200,30 @@ function bp_invite_sort_items( $qv ) {
 	switch ( $qv['orderby'] ) {
 
 		case 'inviter':
-			$qv['meta_key'] = '_bp_invites_inviter_name';
+			$qv['meta_key'] = '_bp_inviter_name';
 			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'invitee_name':
-			$qv['meta_key'] = '_bp_invites_invitee_name';
+			$qv['meta_key'] = '_bp_invitee_name';
 			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'invitee_email':
-			$qv['meta_key'] = '_bp_invites_invitee_email';
+			$qv['meta_key'] = '_bp_invitee_email';
 			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'date_invited':
-			$qv['meta_key'] = '_bp_invites_date_invited';
-			$qv['orderby']  = 'meta_value_num';
+			$qv['orderby'] = 'date';
 
 			break;
 
 		case 'status':
-			$qv['meta_key'] = '_bp_invites_status';
+			$qv['meta_key'] = '_bp_invitee_status';
 			$qv['orderby']  = 'meta_value_num';
 
 			break;
