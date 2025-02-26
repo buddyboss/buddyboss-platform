@@ -3949,6 +3949,16 @@ window.bp = window.bp || {};
 						var $activityComments = $( '.bb-rl-internal-model .bb-rl-modal-activity-footer' );
 						$activityComments.find( '.bb-rl-ac-form-placeholder' ).after( response.data.comment_form );
 						$activityComments.find( '#ac-form-' + settings.activityId ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + settings.activityId ).focus();
+
+						var form = $activityComments.find( '#ac-form-' + settings.activityId );
+						bp.Nouveau.Activity.clearFeedbackNotice( form );
+						form.removeClass( 'events-initiated' );
+						var ce = $activityComments.find( '.ac-input[contenteditable]' );
+						bp.Nouveau.Activity.listenCommentInput( ce );
+
+						if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) ) {
+							bp.Nouveau.Activity.initializeEmojioneArea( true, '#bb-rl-activity-modal ', settings.activityId );
+						}
 					}
 				}
 			} ).fail( function ( $xhr ) {
