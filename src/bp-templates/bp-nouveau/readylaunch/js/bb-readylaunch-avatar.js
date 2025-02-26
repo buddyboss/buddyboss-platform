@@ -266,7 +266,6 @@ window.bp = window.bp || {};
 
 			this.views.add( { id: 'crop', view: avatar } );
 
-			//avatar.inject( '.bp-avatar' );
 			// Inject into the new container instead of .bp-avatar
 			avatar.inject( '.bb-rl-crop-container' );
 
@@ -670,6 +669,9 @@ window.bp = window.bp || {};
 			className: 'items',
 
 			initialize: function() {
+				// Reset the collection first to remove old models
+				this.collection.reset( this.collection.models[ this.collection.models.length - 1 ] );
+
 				_.each( this.collection.models, this.addItemView, this );
 			},
 
