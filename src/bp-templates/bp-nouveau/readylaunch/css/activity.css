@@ -2063,6 +2063,14 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   content: "\e4a6";
 }
 
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.close-activity-comment:before {
+  content: "\e174";
+}
+
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.unclose-activity-comment:before {
+  content: "\e172";
+}
+
 .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.reported-content:before, .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.report-content:before {
   content: "\e244";
 }
@@ -3997,6 +4005,29 @@ div[class*="attached-gif-container"] .gif-player {
   max-width: 380px;
   overflow: hidden;
   border-radius: var(--bb-rl-radius-md);
+}
+
+/* Activity closed comment notice */
+.bb-rl-activity-closed-comments-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bb-rl-text-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: 1.8;
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-md);
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-activity-closed-comments-notice:before {
+  content: "\e174";
+  font-family: bb-icons-rl;
+  font-size: 20px;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-right: var(--bb-rl-space-100);
+  line-height: 1;
 }
 
 /* Activity Actions */

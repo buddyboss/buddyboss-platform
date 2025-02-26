@@ -159,6 +159,14 @@
 					content: "\e4a6";
 				}
 
+				&.close-activity-comment:before {
+					content: "\e174";
+				}
+
+				&.unclose-activity-comment:before {
+					content: "\e172";
+				}
+
 				&.reported-content:before,
 				&.report-content:before {
 					content: "\e244";
@@ -2217,6 +2225,30 @@ div[class*="attached-gif-container"] {
 		border-radius: var(--bb-rl-radius-md);
 	}
 }
+
+/* Activity closed comment notice */
+.bb-rl-activity-closed-comments-notice {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--bb-rl-text-secondary-color);
+	font-size: var(--bb-rl-font-size-sm);
+	line-height: 1.8;
+	background-color: var(--bb-rl-background-secondary-color);
+	padding: var(--bb-rl-space-100);
+	border-radius: var(--bb-rl-radius-md);
+	margin-top: var(--bb-rl-space-100);
+
+	&:before {
+		content: "\e174";
+		font-family: bb-icons-rl;
+		font-size: 20px;
+		color: var(--bb-rl-icon-secondary-color);
+		margin-right: var(--bb-rl-space-100);
+		line-height: 1;
+	}
+}
+
 
 /* Activity Actions */
 .bb-rl-activity-footer-actions {
