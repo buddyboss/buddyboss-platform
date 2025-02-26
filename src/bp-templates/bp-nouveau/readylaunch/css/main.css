@@ -556,6 +556,11 @@ span.atwho-inserted {
   font-size: var(--bb-rl-base-line);
 }
 
+.bb-rl-screen-content .emoji,
+.bb-rl-screen-content .emojioneemoji {
+  vertical-align: middle;
+}
+
 .bb-rl-gif-media-search-dropdown {
   position: absolute;
   left: 0;
