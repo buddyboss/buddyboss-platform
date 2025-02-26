@@ -165,14 +165,6 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 		<?php
 		bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-		$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
-		if ( ! empty( $closed_notice ) ) {
-			?>
-
-			<div class='bb-rl-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
-			<?php
-		}
-
 		if ( bp_activity_can_comment() ) {
 			$class = 'bb-rl-activity-comments';
 			if ( 'blogs' === bp_get_activity_object_name() ) {
@@ -198,8 +190,15 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			<?php
 		}
 		bp_nouveau_activity_hook( 'after', 'entry_comments' );
-		?>
 
+		$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
+		if ( ! empty( $closed_notice ) ) {
+			?>
+
+			<div class='bb-rl-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
+			<?php
+		}
+		?>
 	</li>
 
 <?php
