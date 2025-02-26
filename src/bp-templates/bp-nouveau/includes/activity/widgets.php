@@ -144,6 +144,11 @@ class BP_Latest_Activities extends WP_Widget {
 
 		$scope = implode( ',', $scope );
 
+		// Do not add the scope if comments are selected in the filter
+		if ( is_array( $type ) && 1 === count( $type ) && 'new_blog_comment' === current( $type ) ) {
+			$scope = '';
+		}
+
 		/**
 		 * Globalize the activity widget arguments.
 		 * @see bp_nouveau_activity_widget_query() to override
