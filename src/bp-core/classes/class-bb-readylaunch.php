@@ -89,7 +89,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					BB_Group_Readylaunch::instance();
 				}
 
-				add_filter( 'template_include',
+				add_filter(
+					'template_include',
 					array(
 						$this,
 						'override_page_templates',
@@ -140,6 +141,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// override default images for the avatar image.
 				add_filter( 'bb_attachments_get_default_profile_group_avatar_image', array( $this, 'bb_rl_group_default_group_avatar_image' ), 999, 2 );
+
+				add_filter( 'bp_core_register_common_scripts', array( $this, 'bb_rl_register_common_scripts' ), 999, 1 );
 			}
 		}
 
@@ -1216,7 +1219,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'dependencies' => array( 'bp-nouveau' ),
 						'footer'       => true,
 					),
-					'bb-rl-group-invites'		=> array(
+					'bb-rl-group-invites'       => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-group-invites%s.js',
 						'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 						'footer'       => true,
@@ -1226,7 +1229,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'dependencies' => array( 'jquery' ),
 						'footer'       => false,
 					),
-					'guillotine-js' => array(
+					'guillotine-js'             => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/js/jquery.guillotine.min.js',
 						'dependencies' => array( 'jquery' ),
 						'version'      => bp_get_version(),
@@ -1554,10 +1557,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $avatar_image_url;
 		}
 
-		public static function bb_is_group_admin(){
+		public static function bb_is_group_admin() {
 			return bp_is_active( 'groups' ) &&
-				   bp_is_group_single() &&
-				   bp_get_group_current_admin_tab();
+					bp_is_group_single() &&
+					bp_get_group_current_admin_tab();
+		}
+
+		public function bb_rl_register_common_scripts( $scripts ) {
+			$min = bp_core_get_minified_asset_suffix();
+			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
+
+			if ( isset( $scripts['bp-avatar'] ) ) {
+				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
+			}
+
+			if ( isset( $scripts['bp-plupload'] ) ) {
+				$scripts['bp-plupload']['file'] = "{$url}bb-readylaunch-plupload{$min}.js";
+			}
+
+			return $scripts;
 		}
 	}
 }
