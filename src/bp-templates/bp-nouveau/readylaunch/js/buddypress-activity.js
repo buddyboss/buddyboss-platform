@@ -2221,7 +2221,7 @@ window.bp = window.bp || {};
 
 							var content_text = $activity_comment_input.text();
 
-							if ( content_text !== '' || content.indexOf( 'bb-rl-emojioneemoji' ) >= 0 ) {
+							if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								$activity_comment_input.closest( 'form' ).addClass( 'has-content' );
 							} else {
 								$activity_comment_input.closest( 'form' ).removeClass( 'has-content' );
