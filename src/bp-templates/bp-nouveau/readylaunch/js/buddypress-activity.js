@@ -2645,11 +2645,13 @@ window.bp = window.bp || {};
 									closestParentElement.removeClass( 'has-child-comments' );
 								}
 
-								if ( 'undefined' !== typeof closestNestedParentElement ) {
+								if ( 'undefined' !== typeof closestNestedParentElement && closestNestedParentElement.length ) {
 									var closestParentElementList = closestNestedParentElement.find( '> ul' );
-									var trimmedList              = closestParentElementList.html().trim();
-									if ( '' === trimmedList ) {
-										closestNestedParentElement.removeClass( 'has-child-comments' );
+									if ( closestParentElementList.length ) {
+										var trimmedList = closestParentElementList.html();
+										if ( trimmedList && '' === trimmedList.trim() ) {
+											closestNestedParentElement.removeClass( 'has-child-comments' );
+										}
 									}
 								}
 							}
