@@ -185,6 +185,8 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				<?php
 				if ( bp_activity_get_comment_count() ) {
 					bp_activity_comments();
+				} else {
+					echo '<ul data-activity_id=' . esc_attr( $activity_id ) . ' data-parent_comment_id=' . esc_attr( $activity_id ) . '></ul>';
 				}
 				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
 				if ( is_user_logged_in() && ! $comment_count ) {

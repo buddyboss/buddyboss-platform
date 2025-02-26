@@ -1997,6 +1997,10 @@ window.bp = window.bp || {};
 					parentID   : activityID,
 					modal      : modal
 				} );
+			} else {
+				if ( ! modal.find( '#bb-rl-activity-' + activityID ).hasClass( 'has-comments' ) ) {
+					modal.find( '#bb-rl-activity-' + activityID ).addClass( 'has-comments' );
+				}
 			}
 
 			// Reload video.
