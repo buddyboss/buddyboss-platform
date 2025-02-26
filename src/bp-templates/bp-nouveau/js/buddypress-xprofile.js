@@ -11,6 +11,7 @@ window.bp = window.bp || {};
 
     // Collapse repeater sets on page load, if there are more than one sets
     var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
+    window.deleteFieldEvent = false;
 
     if ( repeater_set_count > 0 ) {
         var repeater_set_sequence = [];
@@ -81,6 +82,7 @@ window.bp = window.bp || {};
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
+        var $form = $delete_button.closest( '#profile-edit-form' );
         e.preventDefault();
         if ( $delete_button.hasClass( 'disabled' ) ) {
             return;
@@ -141,6 +143,10 @@ window.bp = window.bp || {};
             if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
                 //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
             }
+
+            // Save the form
+            $form.submit();
+            window.deleteFieldEvent = true;
         }
     });
 
@@ -232,7 +238,7 @@ window.bp = window.bp || {};
 		} );
 
 		window.onbeforeunload = function() {
-			if ( shouldconfirm ) {
+			if ( shouldconfirm && !window.deleteFieldEvent ) {
 				return BP_Nouveau.unsaved_changes;
 			}
 		};
