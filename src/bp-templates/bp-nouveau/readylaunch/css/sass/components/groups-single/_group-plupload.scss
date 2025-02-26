@@ -26,3 +26,25 @@
 		}
 	}
 }
+
+.bb-rl-avatar-panel {
+	padding: var(--bb-rl-space-300);
+
+	#avatar-to-crop {
+		overflow: hidden;
+		width: 400px;
+		height: 400px;
+	}
+}
+
+.bb-rl-avatar-zoom-controls {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bb-rl-avatar-zoom-slider {
+    flex: 1;
+    width: 100%;
+}

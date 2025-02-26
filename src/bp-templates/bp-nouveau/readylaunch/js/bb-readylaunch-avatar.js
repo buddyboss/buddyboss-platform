@@ -772,19 +772,49 @@ window.bp = window.bp || {};
 					crop_bottom = nh + crop_top;
 				}
 
-				// Add the cropping interface
-				tocrop.Jcrop(
-					{
-						onChange: _.bind( self.showPreview, self ),
-						onSelect: _.bind( self.showPreview, self ),
-						aspectRatio: self.options.aspectRatio,
-						setSelect: [ crop_left, crop_top, crop_right, crop_bottom ]
-						},
-					function() {
-						// Get the Jcrop API
-						bp.Avatar.jcropapi = this;
-					}
-				);
+				// Initialize Jcrop with additional settings
+				tocrop.Jcrop({
+					onChange: _.bind(self.showPreview, self),
+					onSelect: _.bind(self.showPreview, self),
+					aspectRatio: self.options.aspectRatio,
+					setSelect: [crop_left, crop_top, crop_right, crop_bottom],
+					// Add these settings to enable smooth scaling
+					allowResize: false,
+					allowMove: true
+				}, function() {
+					// Get the Jcrop API
+					bp.Avatar.jcropapi = this;
+					
+					// Store original image dimensions
+					self.originalWidth = tocrop.width();
+					self.originalHeight = tocrop.height();
+					
+					// Add zoom functionality
+					self.$el.find('.bb-rl-avatar-zoom-slider').on('input change', function() {
+						var zoomValue = parseInt($(this).val()) / 100;
+						var newWidth = self.originalWidth * zoomValue;
+						var newHeight = self.originalHeight * zoomValue;
+						
+						// Update image size
+						tocrop.width(newWidth).height(newHeight);
+						
+						// Update Jcrop
+						bp.Avatar.jcropapi.destroy();
+						bp.Avatar.jcropapi = null;
+						
+						tocrop.Jcrop({
+							onChange: _.bind(self.showPreview, self),
+							onSelect: _.bind(self.showPreview, self),
+							aspectRatio: self.options.aspectRatio,
+							setSelect: [crop_left, crop_top, crop_right, crop_bottom],
+							allowResize: false,
+							allowMove: true,
+							trueSize: [newWidth, newHeight]
+						}, function() {
+							bp.Avatar.jcropapi = this;
+						});
+					});
+				});
 			},
 
 			cropAvatar: function( event ) {
