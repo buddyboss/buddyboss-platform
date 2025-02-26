@@ -3946,9 +3946,9 @@ window.bp = window.bp || {};
 
 					// Handle comment form if present
 					if ( 'undefined' !== typeof response.data.comment_form ) {
-						var $activityComments = $( '.bb-rl-internal-model .bb-rl-activity-comments > ul' );
-						$activityComments.after( response.data.comment_form );
-						$activityComments.find( '#ac-form-' + settings.activityId ).removeClass( 'not-initialized' ).addClass( 'root' ).find( '#ac-input-' + settings.activityId ).focus();
+						var $activityComments = $( '.bb-rl-internal-model .bb-rl-modal-activity-footer' );
+						$activityComments.find( '.bb-rl-ac-form-placeholder' ).after( response.data.comment_form );
+						$activityComments.find( '#ac-form-' + settings.activityId ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + settings.activityId ).focus();
 					}
 				}
 			} ).fail( function ( $xhr ) {
