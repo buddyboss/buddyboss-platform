@@ -258,9 +258,17 @@ window.bp = window.bp || {};
 
 			// Create the Avatars view
 			var avatar = new bp.Views.Avatars( { collection: this.avatars } );
+
+			// Instead of injecting directly into .bp-avatar, inject into a new container
+			if ( !$( '.bp-avatar-crop-container' ).length ) {
+				$( '.bp-avatar' ).append( '<div class="bb-rl-crop-container"></div>' );
+			}
+
 			this.views.add( { id: 'crop', view: avatar } );
 
-			avatar.inject( '.bp-avatar' );
+			//avatar.inject( '.bp-avatar' );
+			// Inject into the new container instead of .bp-avatar
+			avatar.inject( '.bb-rl-crop-container' );
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
 				this.removeWarning();
@@ -281,6 +289,9 @@ window.bp = window.bp || {};
 				crop = this.views.get( 'crop' );
 				crop.get( 'view' ).remove();
 				this.views.remove( { id: 'crop', view: crop } );
+
+				// Remove the crop container but preserve the uploader
+				$( '.bb-rl-crop-container').remove();
 			}
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {

@@ -1882,6 +1882,35 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   color: var(--bb-rl-icon-primary-color);
 }
 
+.bb-rl-crop-container {
+  position: fixed;
+  z-index: 999991;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3sease;
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-crop-container > .items {
+  max-width: 448px;
+  margin: 50px auto;
+}
+
+.bb-rl-crop-container > .items > .item {
+  width: auto;
+  margin: 0 auto;
+  padding: 0;
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3sease;
+}
+
 .bb-rl-create-group {
   background: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);

@@ -167,10 +167,10 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				if ( ! uploader.settings.multi_selection ) {
+				/* if ( ! uploader.settings.multi_selection ) {
 					// Called when files are added to queue.
 					$( self ).trigger( 'bp-uploader-hide' );
-				}
+				} */
 
 				_.each(
 					files,
