@@ -1950,6 +1950,20 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
+.bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-reply,
+.bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-edit,
+.bb-rl-activity-list li.activity-item.bb-closed-comments .edit-activity {
+  display: none !important;
+}
+
+.bb-rl-activity-list li.activity-item.bb-closed-comments > .activity-comments > .ac-form {
+  display: none !important;
+}
+
+.bb-rl-activity-list li.activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
+  display: none;
+}
+
 .bb-rl-activity-list .bb-rl-activity-head {
   display: flex;
   align-items: center;
