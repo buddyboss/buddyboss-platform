@@ -45,12 +45,12 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 
 		<?php
 		global $activities_template;
-		$user_link           = bp_get_activity_user_link();
-		$user_link           = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+		$user_link = bp_get_activity_user_link();
+		$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
 		if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 			// If group activity.
-			$group_id = (int) $activities_template->activity->item_id;
+			$group_id        = (int) $activities_template->activity->item_id;
 			$group           = groups_get_group( $group_id );
 			$group_name      = bp_get_group_name( $group );
 			$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
@@ -148,7 +148,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			if ( bp_nouveau_activity_has_content() ) :
 				?>
 				<div class="bb-rl-activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-			<?php
+				<?php
 			endif;
 
 			bp_nouveau_activity_hook( 'after', 'activity_content' );
@@ -181,7 +181,13 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 					echo '<ul data-activity_id=' . esc_attr( $activity_id ) . ' data-parent_comment_id=' . esc_attr( $activity_id ) . '></ul>';
 				}
 				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
-				if ( is_user_logged_in() && ! $comment_count ) {
+				if (
+					is_user_logged_in() &&
+					(
+						! $comment_count ||
+						bp_is_single_activity()
+					)
+				) {
 					bp_nouveau_activity_comment_form();
 				}
 				?>
