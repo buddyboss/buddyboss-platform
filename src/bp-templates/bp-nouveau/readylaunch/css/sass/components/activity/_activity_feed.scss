@@ -230,7 +230,6 @@
 			a {
 				color: var(--bb-rl-text-color);
 				display: inline-block;
-				vertical-align: middle;
 
 				img {
 					height: 24px;
@@ -239,6 +238,10 @@
 					margin: 0 6px 0 0;
 				}
 			}
+		}
+
+		p:has(img.avatar) a {
+			vertical-align: middle;
 		}
 
 		.activity-date {
@@ -597,7 +600,7 @@
 	.bb-rl-activity-group-heading a {
 		font-size: var(--bb-rl-font-size-base);
 		font-weight: 500;
-		line-height: var(--bb-rl-base-line);
+		line-height: 1;
 		color: var(--bb-rl-text-color);
 	}
 
@@ -605,8 +608,8 @@
 
 		.bb-rl-activity-post-author,
 		> a {
-			display: inline-block;
-			vertical-align: middle;
+			display: inline-flex;
+			align-items: center;
 		}
 	}
 

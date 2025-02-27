@@ -2124,7 +2124,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-rl-activity-list .bb-rl-activity-header p:first-child a {
   color: var(--bb-rl-text-color);
   display: inline-block;
-  vertical-align: middle;
 }
 
 .bb-rl-activity-list .bb-rl-activity-header p:first-child a img {
@@ -2132,6 +2131,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 24px;
   vertical-align: middle;
   margin: 0 0 0 6px;
+}
+
+.bb-rl-activity-list .bb-rl-activity-header p:has(img.avatar) a {
+  vertical-align: middle;
 }
 
 .bb-rl-activity-list .bb-rl-activity-header .activity-date {
@@ -2461,14 +2464,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-activity-head-group .bb-rl-activity-group-heading a {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
-  line-height: var(--bb-rl-base-line);
+  line-height: 1;
   color: var(--bb-rl-text-color);
 }
 
 .bb-rl-activity-head-group .bb-rl-activity-group-post-meta .bb-rl-activity-post-author,
 .bb-rl-activity-head-group .bb-rl-activity-group-post-meta > a {
-  display: inline-block;
-  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
 }
 
 .bb-rl-activity-head-group .bb-rl-activity-header--group {
