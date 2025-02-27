@@ -149,7 +149,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					! empty( $this->settings['groups'] )
 				) ||
 				(
-					bp_is_activity_directory() &&
+					(
+						bp_is_activity_directory() ||
+						bp_is_single_activity()
+					) &&
 					! empty( $this->settings['activity'] )
 				)
 			) {
