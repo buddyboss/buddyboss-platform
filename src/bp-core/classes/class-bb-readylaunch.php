@@ -147,6 +147,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bb_attachments_get_default_profile_group_avatar_image', array( $this, 'bb_rl_group_default_group_avatar_image' ), 999, 2 );
 
 				add_filter( 'bp_core_register_common_scripts', array( $this, 'bb_rl_register_common_scripts' ), 999, 1 );
+				add_filter( 'bp_core_register_common_styles', array( $this, 'bb_rl_register_common_styles' ), 999, 1 );
 			}
 		}
 
@@ -521,6 +522,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 
 			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-nouveau' ), bp_get_version(), true );
+
+			// Enqueue Cropper.js
+			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
+			wp_enqueue_style( 'bb-readylaunch-cropper-css' );
 
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
@@ -1614,6 +1619,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_register_common_scripts( $scripts ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
+			
+			// Add Cropper.js to the common scripts
+			$scripts['bb-readylaunch-cropper-js'] = array(
+				'file'         => "{$url}bb-readylaunch-cropper{$min}.js",
+				'dependencies' => array( 'jquery' ),
+				'version'      => '1.6.2',
+				'footer'       => true,
+			);
 
 			if ( isset( $scripts['bp-avatar'] ) ) {
 				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
@@ -1624,6 +1637,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $scripts;
+		}
+
+		public function bb_rl_register_common_styles( $styles ) {
+			$min = bp_core_get_minified_asset_suffix();
+			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
+
+			$styles['bb-readylaunch-cropper-css'] = array(
+				'file'         => "{$url}cropper{$min}.css",
+				'dependencies' => array(),
+				'version'      => '1.6.2',
+			);
+			
+			return $styles;
 		}
 	}
 }

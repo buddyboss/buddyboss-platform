@@ -64,3 +64,32 @@
     flex: 1;
     width: 100%;
 }
+
+/* Cropper.js round avatar styles */
+.cropper-view-box {
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #39f;
+    outline: 0;
+}
+
+.cropper-face {
+    background-color: inherit !important;
+}
+
+.cropper-dashed, 
+.cropper-point.point-se, 
+.cropper-point.point-sw, 
+.cropper-point.point-nw, 
+.cropper-point.point-ne {
+    display: none !important;
+}
+
+.cropper-line {
+    background-color: transparent;
+}
+
+/* Make the preview image round as well */
+#avatar-crop-preview {
+    border-radius: 50%;
+    overflow: hidden;
+}

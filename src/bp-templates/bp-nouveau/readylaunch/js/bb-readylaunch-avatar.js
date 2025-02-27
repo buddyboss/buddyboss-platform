@@ -27,7 +27,7 @@ window.bp = window.bp || {};
 
 			// Init some vars
 			this.views    = new Backbone.Collection();
-			this.jcropapi = {};
+			this.cropperInstance = null;
 			this.warning  = null;
 
 			// Set up nav
@@ -129,11 +129,11 @@ window.bp = window.bp || {};
 				this.avatars.reset();
 			}
 
-			// Reset the Jcrop API
-			if ( ! _.isEmpty( this.jcropapi ) ) {
-				this.jcropapi.destroy();
-				this.jcropapi = {};
-			}
+			// Reset the Cropper instance
+			/* if (this.cropperInstance) {
+				this.cropperInstance.destroy();
+				this.cropperInstance = null;
+			} */
 
 			// Load the required view
 			switch ( view ) {
@@ -280,10 +280,10 @@ window.bp = window.bp || {};
 
 			// Remove the crop view
 			if ( ! _.isUndefined( this.views.get( 'crop' ) ) ) {
-				// Remove the JCrop API
-				if ( ! _.isEmpty( this.jcropapi ) ) {
-					this.jcropapi.destroy();
-					this.jcropapi = {};
+				// Destroy the Cropper instance
+				if (this.cropperInstance) {
+					this.cropperInstance.destroy();
+					this.cropperInstance = null;
 				}
 				crop = this.views.get( 'crop' );
 				crop.get( 'view' ).remove();
@@ -418,6 +418,12 @@ window.bp = window.bp || {};
 		},
 
 		deleteView:function() {
+			// Destroy the Cropper instance if it exists
+			if (this.cropperInstance) {
+				this.cropperInstance.destroy();
+				this.cropperInstance = null;
+			}
+
 			// Create the delete model
 			var delete_model = new Backbone.Model(
 				_.pick(
@@ -737,89 +743,63 @@ window.bp = window.bp || {};
 			},
 
 			initCropper: function() {
-				var self           = this,
-					tocrop         = this.$el.find( '#avatar-to-crop img' ),
-					availableWidth = this.$el.width(),
-					selection      = {}, crop_top, crop_bottom, crop_left, crop_right, nh, nw;
-
-				if ( ! _.isUndefined( this.options.full_h ) && ! _.isUndefined( this.options.full_w ) ) {
+				var self = this,
+					tocrop = this.$el.find('#avatar-to-crop img'),
+					availableWidth = this.$el.width();
+			
+				if (!_.isUndefined(this.options.full_h) && !_.isUndefined(this.options.full_w)) {
 					this.options.aspectRatio = this.options.full_w / this.options.full_h;
 				}
-
-				selection.w = this.model.get( 'width' );
-				selection.h = this.model.get( 'height' );
-
-				/**
-				 * Make sure the crop preview is at the right of the avatar
-				 * if the available width allowes it.
-				 */
-				if ( this.options.full_w + selection.w + 20 < availableWidth ) {
-					$( '#avatar-to-crop' ).addClass( 'adjust' );
-					this.$el.find( '.avatar-crop-management' ).addClass( 'adjust' );
+			
+				// Make sure the crop preview is at the right of the avatar
+				// if the available width allows it.
+				if (this.options.full_w + this.model.get('width') + 20 < availableWidth) {
+					$('#avatar-to-crop').addClass('adjust');
+					this.$el.find('.avatar-crop-management').addClass('adjust');
 				}
-
-				// Set minimum dimensions for the image
-				var minWidth = 400;
-				var minHeight = 400;
-
-				// Calculate crop area (384x384) positioned 16px from top and left
-				crop_left = 16;
-				crop_top = 16;
-				crop_right = crop_left + 384;
-				crop_bottom = crop_top + 384;
-
-				// Initialize Jcrop with additional settings
-				tocrop.Jcrop({
-					onChange: _.bind(self.showPreview, self),
-					onSelect: _.bind(self.showPreview, self),
-					aspectRatio: self.options.aspectRatio,
-					setSelect: [crop_left, crop_top, crop_right, crop_bottom],
-					allowResize: false,
-					allowMove: false,
-					allowSelect: false,
-					boxWidth: Math.max(minWidth, selection.w),
-        			boxHeight: Math.max(minHeight, selection.h),
-					addClass: 'bb-rl-jcrop'
-				}, function() {
-					$( '.bb-rl-jcrop > div > div:eq(0)' ).addClass( 'bb-rl-jcrop-holder' );
-					// Get the Jcrop API
-					bp.Avatar.jcropapi = this;
-					
-					// Store original image dimensions
-					self.originalWidth = tocrop.width();
-					self.originalHeight = tocrop.height();
-					
-					// Add zoom functionality
-					self.$el.find( '.bb-rl-avatar-zoom-slider' ).on( 'input change', function() {
-						var zoomValue = parseInt( $(this ).val() ) / 100;
-						var newWidth = self.originalWidth * zoomValue;
-						var newHeight = self.originalHeight * zoomValue;
+			
+				// Store original image dimensions
+				this.originalWidth = tocrop.width();
+				this.originalHeight = tocrop.height();
+			
+				// Initialize Cropper.js
+				this.cropper = new Cropper(tocrop[0], {
+					aspectRatio: 1,
+					viewMode: 1,
+					dragMode: 'move',
+					autoCropArea: 1,
+					minContainerWidth: 400,
+					minContainerHeight: 400,
+					cropBoxMovable: false,
+					cropBoxResizable: false,
+					toggleDragModeOnDblclick: false,
+					crop: function(event) {
+						// Update the model with crop coordinates
+						self.model.set({
+							x: Math.round(event.detail.x),
+							y: Math.round(event.detail.y),
+							w: Math.round(event.detail.width),
+							h: Math.round(event.detail.height)
+						});
+			
+						// Update preview
+						self.showPreview(event.detail);
+					},
+					ready: function() {
+						// Store the cropper instance
+						bp.Avatar.cropperInstance = this;
+						console.log('zzz');
+						console.log(bp.Avatar.cropperInstance);
 						
-						// Update image size
-						tocrop.width( newWidth ).height( newHeight );
 						
-						// Update Jcrop
-						bp.Avatar.jcropapi.destroy();
-						bp.Avatar.jcropapi = null;
 						
-						tocrop.Jcrop({
-							addClass: 'bb-rl-jcrop',
-							onChange: _.bind(self.showPreview, self),
-							onSelect: _.bind(self.showPreview, self),
-							aspectRatio: self.options.aspectRatio,
-							setSelect: [crop_left, crop_top, crop_right, crop_bottom],
-							allowResize: false,
-							allowMove: false,
-							allowSelect: false,
-							boxWidth: Math.max(minWidth, newWidth),
-							boxHeight: Math.max(minHeight, newHeight),
-							trueSize: [newWidth, newHeight]
-						}, function() {
-							$( '.bb-rl-jcrop > div > div:eq(0)' ).addClass( 'bb-rl-jcrop-holder' );
-							bp.Avatar.jcropapi = this;
-						} );
-					} );
-				} );
+						// Add zoom functionality
+						self.$el.find('.bb-rl-avatar-zoom-slider').on('input change', function() {
+							var zoomValue = parseInt($(this).val()) / 100;
+							bp.Avatar.cropperInstance.zoomTo(zoomValue);
+						});
+					}
+				});
 			},
 
 			cropAvatar: function( event ) {
@@ -828,31 +808,27 @@ window.bp = window.bp || {};
 				bp.Avatar.setAvatar( this.model );
 			},
 
-			showPreview: function( coords ) {
-				if ( ! coords.w || ! coords.h ) {
+			showPreview: function(coords) {
+				if (!coords.width || !coords.height) {
 					return;
 				}
-
-				if ( parseInt( coords.w, 10 ) > 0 ) {
+			
+				if (parseInt(coords.width, 10) > 0) {
 					var fw = this.options.full_w;
 					var fh = this.options.full_h;
-					var rx = fw / coords.w;
-					var ry = fh / coords.h;
-
-					// Update the model
-					this.model.set( { x: coords.x, y: coords.y, w: coords.w, h: coords.h } );
-
-					$( '#avatar-crop-preview' ).css(
-						{
-							maxWidth:'none',
-							width: Math.round( rx * this.model.get( 'width' ) ) + 'px',
-							height: Math.round( ry * this.model.get( 'height' ) ) + 'px',
-							marginLeft: '-' + Math.round( rx * this.model.get( 'x' ) ) + 'px',
-							marginTop: '-' + Math.round( ry * this.model.get( 'y' ) ) + 'px'
-						}
-					);
+					var rx = fw / coords.width;
+					var ry = fh / coords.height;
+			
+					$('#avatar-crop-preview').css({
+						maxWidth: 'none',
+						width: Math.round(rx * this.model.get('width')) + 'px',
+						height: Math.round(ry * this.model.get('height')) + 'px',
+						marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+						marginTop: '-' + Math.round(ry * coords.y) + 'px',
+						borderRadius: '50%'
+					});
 				}
-			}
+			},
 		}
 	);
 
