@@ -40,7 +40,7 @@ window.bp = window.bp || {};
 			 */
 			addListeners : function () {
 				var $document = $( document );
-				$( '.bb-nouveau-list' ).scroll( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
+				$( '.bb-nouveau-list' ).on( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
 				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 				$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
@@ -59,7 +59,10 @@ window.bp = window.bp || {};
 			bbScrollHeaderDropDown : function ( e ) {
 				var el = e.target;
 				if ( 'notification-list' === el.id ) {
-					if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! el.classList.contains( 'loading' ) ) {
+					var scrollThreshold = 30; // pixels from bottom
+					var bottomReached = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
+
+					if (bottomReached && !el.classList.contains('loading')) {
 						var load_more = $( el ).find( '.bb-rl-load-more' );
 						if ( load_more.length ) {
 							el.classList.add( 'loading' );
