@@ -211,6 +211,12 @@
 				}
 			}
 		}
+
+		.notification-header-actions {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-200);
+		}
 	}
 
 	.notification-link {

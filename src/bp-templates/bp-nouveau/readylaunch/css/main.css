@@ -2849,6 +2849,12 @@ body.admin-bar .bb-rl-header {
   opacity: 0.6;
 }
 
+.header-aside .notification-wrap .notification-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+}
+
 .header-aside .notification-link {
   display: inline-block;
   padding: 4px;
