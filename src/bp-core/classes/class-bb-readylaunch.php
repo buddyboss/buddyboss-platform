@@ -81,7 +81,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					BB_Activity_Readylaunch::instance();
 				}
 
-				add_filter( 'template_include',
+				add_filter(
+					'template_include',
 					array(
 						$this,
 						'override_page_templates',
@@ -267,13 +268,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						! empty( bp_get_forum_page_id() )
 					)
 				) {
-					add_settings_field( $name, $label, array(
-						$this,
-						'bb_enable_setting_callback_page_directory',
-					), 'bb-readylaunch', 'bb_readylaunch', compact( 'enabled_pages', 'name', 'label', 'description' ) );
-					register_setting( 'bb-readylaunch', $name, array(
-						'default' => array(),
-					) );
+					add_settings_field(
+						$name,
+						$label,
+						array(
+							$this,
+							'bb_enable_setting_callback_page_directory',
+						),
+						'bb-readylaunch',
+						'bb_readylaunch',
+						compact( 'enabled_pages', 'name', 'label', 'description' )
+					);
+					register_setting(
+						'bb-readylaunch',
+						$name,
+						array(
+							'default' => array(),
+						)
+					);
 				}
 			}
 		}
@@ -327,35 +339,52 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $args
+		 * @param array $args {
+		 *     Array of arguments.
+		 *
+		 *     @type string $name  The name/key of the page.
+		 *     @type mixed  $label The label text or array for button type.
+		 * }
+		 * @return void
 		 */
 		public function bb_enable_setting_callback_page_directory( $args ) {
-			extract( $args );
+			// Bail if args is not an array.
+			if ( ! is_array( $args ) ) {
+				return;
+			}
 
-			// Switch to the root blog if not already on it.
+			// Bail if required fields are missing.
+			if ( empty( $args['name'] ) || empty( $args['label'] ) ) {
+				return;
+			}
+
+			$name  = sanitize_key( $args['name'] );
+			$label = $args['label'];
+
+			// Maybe switch to root blog.
+			$switched = false;
 			if ( ! bp_is_root_blog() ) {
-				switch_to_blog( bp_get_root_blog_id() );
+				$switched = switch_to_blog( bp_get_root_blog_id() );
 			}
 
 			$checked = ! empty( $this->settings ) && isset( $this->settings[ $name ] );
 
-			// For the button.
-			if ( 'button' === $name ) {
+			if ( 'button' === $name && is_array( $label ) ) {
 				printf(
-					'<p><a href="%s" class="button">%s</a></p>',
+					'<p><a href="%1$s" class="button">%2$s</a></p>',
 					esc_url( $label['link'] ),
 					esc_html( $label['label'] )
 				);
 			} else {
 				printf(
-					'<input type="checkbox" value="1" name="bb-readylaunch[%s]" %s />',
+					'<input type="checkbox" value="1" name="bb-readylaunch[%1$s]" id="bb-readylaunch-%1$s" %2$s />',
 					esc_attr( $name ),
 					checked( $checked, true, false )
 				);
 			}
 
-			// Restore the current blog if switched.
-			if ( ! bp_is_root_blog() ) {
+			// Maybe restore current blog.
+			if ( $switched ) {
 				restore_current_blog();
 			}
 		}
@@ -667,7 +696,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return array|bool The active courses array if any section is active, false otherwise.
 		 */
-		public function bb_is_active_any_left_sidebar_section( bool $data ) {
+		public function bb_is_active_any_left_sidebar_section( $data ) {
+			$data = (bool) $data;
 			$args = apply_filters(
 				'bb_readylaunch_left_sidebar_middle_content',
 				array(
@@ -749,7 +779,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 									?>
 									<div class="item-avatar">
 										<a href="<?php echo esc_url( $item['permalink'] ); ?>">
-											<?php echo $item['thumbnail']; ?>
+											<?php
+											echo wp_kses(
+												$item['thumbnail'],
+												array(
+													'img' => array(
+														'src' => true,
+														'class' => true,
+														'id' => true,
+														'width' => true,
+														'height' => true,
+														'alt' => true,
+													),
+												)
+											);
+											?>
 										</a>
 									</div>
 									<?php
@@ -796,6 +840,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $response The existing heartbeat response array.
+		 * @param array $data The data passed to the heartbeat request.
 		 *
 		 * @return array The modified heartbeat response array with unread notifications' data.
 		 */
@@ -870,7 +915,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$user_id = bp_loggedin_user_id();
 
-			$id = isset( $_POST['read_notification_ids'] ) ? sanitize_text_field( $_POST['read_notification_ids'] ) : '';
+			$id = ! empty( $_POST['read_notification_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['read_notification_ids'] ) ) : '';
 			if ( 'all' !== $id ) {
 				if ( false !== strpos( $id, ',' ) ) {
 					$id = array_map( 'intval', explode( ',', $id ) );
@@ -879,7 +924,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				}
 			}
 
-			$deleted_notification_ids = isset( $_POST['deleted_notification_ids'] ) ? sanitize_text_field( $_POST['deleted_notification_ids'] ) : '';
+			$deleted_notification_ids = ! empty( $_POST['deleted_notification_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['deleted_notification_ids'] ) ) : '';
 			$deleted_notification_ids = ! empty( $deleted_notification_ids ) ? array_map( 'intval', explode( ',', $deleted_notification_ids ) ) : array();
 			if ( ! empty( $deleted_notification_ids ) ) {
 				foreach ( $deleted_notification_ids as $deleted_notification_id ) {
