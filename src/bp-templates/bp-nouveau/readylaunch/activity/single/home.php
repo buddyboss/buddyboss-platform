@@ -10,8 +10,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 
 <div id="bb-rl-single-activity-edit-form-wrap" style="display: none;">
-	<div id="bb-rl-activity-form" class="bb-rl-activity-update-form <?php
-	echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : ''; ?>"></div>
+	<div id="bb-rl-activity-form" class="bb-rl-activity-update-form 
+	<?php
+	echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : '';
+	?>
+	">
+	</div>
 </div>
 
 <?php
@@ -19,13 +23,15 @@ bp_nouveau_template_notices();
 bp_nouveau_before_single_activity_content();
 ?>
 
-<div class="activity" data-bp-single="<?php
-echo esc_attr( bp_current_action() ); ?>">
+<div class="activity" data-bp-single="<?php echo esc_attr( bp_current_action() ); ?>">
 	<?php
-	do_action( 'bp_before_single_activity_content' ); ?>
+	do_action( 'bp_before_single_activity_content' );
+	?>
 
 	<ul id="bb-rl-activity-stream" class="bb-rl-activity-list bb-rl-item-list bb-rl-list" data-bp-list="activity" data-ajax="<?php
-	echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+	echo esc_attr( $is_send_ajax_request ? 'true' : 'false' );
+	?>
+	">
 		<?php
 		if ( $is_send_ajax_request ) {
 			echo '<li id="bb-rl-ajax-loader">';
@@ -57,5 +63,6 @@ echo esc_attr( bp_current_action() ); ?>">
 	</ul>
 
 	<?php
-	do_action( 'bp_after_single_activity_content' ); ?>
+	do_action( 'bp_after_single_activity_content' );
+	?>
 </div>
