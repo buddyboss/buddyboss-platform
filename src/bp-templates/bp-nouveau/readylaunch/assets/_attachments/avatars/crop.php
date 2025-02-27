@@ -15,12 +15,12 @@
 			<img data-skip-lazy="" class="skip-lazy" src="{{{data.url}}}"/>
 		</div>
 		<div class="bb-rl-avatar-zoom-controls">
-			<input type="range" class="bb-rl-avatar-zoom-slider" min="100" max="200" value="100">
+			<input type="range" class="bb-rl-zoom-slider" min="100" max="200" value="100">
 		</div>
 	</div>
 	<div class="avatar-crop-management">
 		<div id="avatar-crop-actions">
-			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop Photo', 'buddyboss' ); ?></button>
+			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop', 'buddyboss' ); ?></button>
             <a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 		</div>
 	</div>

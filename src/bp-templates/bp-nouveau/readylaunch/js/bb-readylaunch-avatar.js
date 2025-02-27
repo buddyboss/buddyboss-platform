@@ -281,7 +281,7 @@ window.bp = window.bp || {};
 			// Remove the crop view
 			if ( ! _.isUndefined( this.views.get( 'crop' ) ) ) {
 				// Destroy the Cropper instance
-				if (this.cropperInstance) {
+				if ( this.cropperInstance ) {
 					this.cropperInstance.destroy();
 					this.cropperInstance = null;
 				}
@@ -419,7 +419,7 @@ window.bp = window.bp || {};
 
 		deleteView:function() {
 			// Destroy the Cropper instance if it exists
-			if (this.cropperInstance) {
+			if ( this.cropperInstance ) {
 				this.cropperInstance.destroy();
 				this.cropperInstance = null;
 			}
@@ -744,18 +744,18 @@ window.bp = window.bp || {};
 
 			initCropper: function() {
 				var self = this,
-					tocrop = this.$el.find('#avatar-to-crop img'),
+					tocrop = this.$el.find( '#avatar-to-crop img' ),
 					availableWidth = this.$el.width();
 			
-				if (!_.isUndefined(this.options.full_h) && !_.isUndefined(this.options.full_w)) {
+				if ( !_.isUndefined( this.options.full_h ) && !_.isUndefined( this.options.full_w ) ) {
 					this.options.aspectRatio = this.options.full_w / this.options.full_h;
 				}
 			
 				// Make sure the crop preview is at the right of the avatar
 				// if the available width allows it.
-				if (this.options.full_w + this.model.get('width') + 20 < availableWidth) {
-					$('#avatar-to-crop').addClass('adjust');
-					this.$el.find('.avatar-crop-management').addClass('adjust');
+				if ( this.options.full_w + this.model.get( 'width' ) + 20 < availableWidth ) {
+					$( '#avatar-to-crop' ).addClass( 'adjust' );
+					this.$el.find( '.avatar-crop-management' ).addClass( 'adjust' );
 				}
 			
 				// Store original image dimensions
@@ -763,7 +763,7 @@ window.bp = window.bp || {};
 				this.originalHeight = tocrop.height();
 			
 				// Initialize Cropper.js
-				this.cropper = new Cropper(tocrop[0], {
+				this.cropper = new Cropper( tocrop[0], {
 					aspectRatio: 1,
 					viewMode: 1,
 					dragMode: 'move',
@@ -773,33 +773,52 @@ window.bp = window.bp || {};
 					cropBoxMovable: false,
 					cropBoxResizable: false,
 					toggleDragModeOnDblclick: false,
-					crop: function(event) {
+					crop: function( event ) {
 						// Update the model with crop coordinates
-						self.model.set({
-							x: Math.round(event.detail.x),
-							y: Math.round(event.detail.y),
-							w: Math.round(event.detail.width),
-							h: Math.round(event.detail.height)
-						});
+						self.model.set( {
+							x: Math.round( event.detail.x ),
+							y: Math.round( event.detail.y ),
+							w: Math.round( event.detail.width ),
+							h: Math.round( event.detail.height )
+						} );
 			
 						// Update preview
-						self.showPreview(event.detail);
+						self.showPreview( event.detail );
 					},
 					ready: function() {
-						// Store the cropper instance
-						bp.Avatar.cropperInstance = this;
-						console.log('zzz');
-						console.log(bp.Avatar.cropperInstance);
+						// Store the cropper instance correctly
+						bp.Avatar.cropperInstance = self.cropper;
 						
+						var $slider = self.$el.find( '.bb-rl-zoom-slider' );
+
+						// Set initial value
+						updateSliderBackground( $slider[0] );
 						
-						
-						// Add zoom functionality
-						self.$el.find('.bb-rl-avatar-zoom-slider').on('input change', function() {
-							var zoomValue = parseInt($(this).val()) / 100;
-							bp.Avatar.cropperInstance.zoomTo(zoomValue);
-						});
+						// Add zoom functionality for slider
+						$slider.on( 'input change', function() {
+							// Update the slider background
+    						updateSliderBackground(this);
+
+							var zoomValue = parseInt( $( this ).val() ) / 100;
+							bp.Avatar.cropperInstance.zoomTo( zoomValue );
+						} );
+
+						// Function to update slider background
+						function updateSliderBackground( slider ) {
+							if ( !slider ) return;
+							
+							var min = slider.min || 100;
+							var max = slider.max || 200;
+							var value = slider.value || 100;
+							
+							// Calculate percentage
+							var percentage = ( ( value - min ) / ( max - min ) ) * 100;
+							
+							// Set the CSS variable
+							slider.style.setProperty( '--slider-value', percentage + '%' );
+						}
 					}
-				});
+				} );
 			},
 
 			cropAvatar: function( event ) {
@@ -808,25 +827,25 @@ window.bp = window.bp || {};
 				bp.Avatar.setAvatar( this.model );
 			},
 
-			showPreview: function(coords) {
-				if (!coords.width || !coords.height) {
+			showPreview: function( coords ) {
+				if ( !coords.width || !coords.height ) {
 					return;
 				}
 			
-				if (parseInt(coords.width, 10) > 0) {
+				if ( parseInt( coords.width, 10 ) > 0 ) {
 					var fw = this.options.full_w;
 					var fh = this.options.full_h;
 					var rx = fw / coords.width;
 					var ry = fh / coords.height;
 			
-					$('#avatar-crop-preview').css({
+					$( '#avatar-crop-preview' ).css( {
 						maxWidth: 'none',
-						width: Math.round(rx * this.model.get('width')) + 'px',
-						height: Math.round(ry * this.model.get('height')) + 'px',
-						marginLeft: '-' + Math.round(rx * coords.x) + 'px',
-						marginTop: '-' + Math.round(ry * coords.y) + 'px',
+						width: Math.round( rx * this.model.get( 'width' ) ) + 'px',
+						height: Math.round(ry * this.model.get( 'height' ) ) + 'px',
+						marginLeft: '-' + Math.round( rx * coords.x ) + 'px',
+						marginTop: '-' + Math.round( ry * coords.y ) + 'px',
 						borderRadius: '50%'
-					});
+					} );
 				}
 			},
 		}
