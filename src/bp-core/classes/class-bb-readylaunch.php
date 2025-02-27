@@ -68,6 +68,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$enabled = $this->bb_is_readylaunch_enabled();
 			if ( $enabled ) {
+				add_filter( 'bp_core_avatar_full_width', array( $this, 'bb_rl_avatar_full_width' ) );
+				add_filter( 'bp_core_avatar_full_height', array( $this, 'bb_rl_avatar_full_height' ) );
+				add_filter( 'bp_core_avatar_thumb_width', array( $this, 'bb_rl_avatar_thumb_width' ) );
+				add_filter( 'bp_core_avatar_thumb_height', array( $this, 'bb_rl_avatar_thumb_height' ) );
 				if (
 					bp_is_active( 'activity' ) &&
 					(
@@ -144,6 +148,50 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bp_core_register_common_scripts', array( $this, 'bb_rl_register_common_scripts' ), 999, 1 );
 			}
+		}
+
+		/**
+		 * Override full width for avatar in ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int
+		 */
+		public function bb_rl_avatar_full_width() {
+			return 384;
+		}
+
+		/**
+		 * Override full height for avatar in ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int
+		 */
+		public function bb_rl_avatar_full_height() {
+			return 384;
+		}
+
+		/**
+		 * Override thumb width for avatar in ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int
+		 */
+		public function bb_rl_avatar_thumb_width() {
+			return 200;
+		}
+
+		/**
+		 * Override thumb height for avatar in ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return int
+		 */
+		public function bb_rl_avatar_thumb_height() {
+			return 200;
 		}
 
 		/**

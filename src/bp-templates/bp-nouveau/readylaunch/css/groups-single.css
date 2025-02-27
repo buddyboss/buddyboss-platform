@@ -1911,21 +1911,34 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   transition: all 0.3sease;
 }
 
+.bb-rl-crop-container .avatar-crop-management {
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-crop-container #avatar-crop-actions {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+}
+
+.bb-rl-jcrop .bb-rl-jcrop-holder {
+  border-radius: 50%;
+}
+
 .bb-rl-avatar-panel {
-  padding: var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-300) var(--bb-rl-space-300) var(--bb-rl-space-100);
 }
 
 .bb-rl-avatar-panel #avatar-to-crop {
   overflow: hidden;
   width: 400px;
   height: 400px;
+  margin: 0 auto var(--bb-rl-space-100);
 }
 
 .bb-rl-avatar-zoom-controls {
-  margin: 10px 0;
+  margin: var(--bb-rl-space-50) 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-avatar-zoom-slider {

@@ -758,19 +758,15 @@ window.bp = window.bp || {};
 					this.$el.find( '.avatar-crop-management' ).addClass( 'adjust' );
 				}
 
-				if ( selection.h <= selection.w ) {
-					crop_top    = Math.round( selection.h / 4 );
-					nh          = nw     = Math.round( selection.h / 2 );
-					crop_bottom = nh + crop_top;
-					crop_left   = ( selection.w - nw ) / 2;
-					crop_right  = nw + crop_left;
-				} else {
-					crop_left   = Math.round( selection.w / 4 );
-					nh          = nw     = Math.round( selection.w / 2 );
-					crop_right  = nw + crop_left;
-					crop_top    = ( selection.h - nh ) / 2;
-					crop_bottom = nh + crop_top;
-				}
+				// Set minimum dimensions for the image
+				var minWidth = 400;
+				var minHeight = 400;
+
+				// Calculate crop area (384x384) positioned 16px from top and left
+				crop_left = 16;
+				crop_top = 16;
+				crop_right = crop_left + 384;
+				crop_bottom = crop_top + 384;
 
 				// Initialize Jcrop with additional settings
 				tocrop.Jcrop({
@@ -778,10 +774,14 @@ window.bp = window.bp || {};
 					onSelect: _.bind(self.showPreview, self),
 					aspectRatio: self.options.aspectRatio,
 					setSelect: [crop_left, crop_top, crop_right, crop_bottom],
-					// Add these settings to enable smooth scaling
 					allowResize: false,
-					allowMove: true
+					allowMove: false,
+					allowSelect: false,
+					boxWidth: Math.max(minWidth, selection.w),
+        			boxHeight: Math.max(minHeight, selection.h),
+					addClass: 'bb-rl-jcrop'
 				}, function() {
+					$( '.bb-rl-jcrop > div > div:eq(0)' ).addClass( 'bb-rl-jcrop-holder' );
 					// Get the Jcrop API
 					bp.Avatar.jcropapi = this;
 					
@@ -790,31 +790,36 @@ window.bp = window.bp || {};
 					self.originalHeight = tocrop.height();
 					
 					// Add zoom functionality
-					self.$el.find('.bb-rl-avatar-zoom-slider').on('input change', function() {
-						var zoomValue = parseInt($(this).val()) / 100;
+					self.$el.find( '.bb-rl-avatar-zoom-slider' ).on( 'input change', function() {
+						var zoomValue = parseInt( $(this ).val() ) / 100;
 						var newWidth = self.originalWidth * zoomValue;
 						var newHeight = self.originalHeight * zoomValue;
 						
 						// Update image size
-						tocrop.width(newWidth).height(newHeight);
+						tocrop.width( newWidth ).height( newHeight );
 						
 						// Update Jcrop
 						bp.Avatar.jcropapi.destroy();
 						bp.Avatar.jcropapi = null;
 						
 						tocrop.Jcrop({
+							addClass: 'bb-rl-jcrop',
 							onChange: _.bind(self.showPreview, self),
 							onSelect: _.bind(self.showPreview, self),
 							aspectRatio: self.options.aspectRatio,
 							setSelect: [crop_left, crop_top, crop_right, crop_bottom],
 							allowResize: false,
-							allowMove: true,
+							allowMove: false,
+							allowSelect: false,
+							boxWidth: Math.max(minWidth, newWidth),
+							boxHeight: Math.max(minHeight, newHeight),
 							trueSize: [newWidth, newHeight]
 						}, function() {
+							$( '.bb-rl-jcrop > div > div:eq(0)' ).addClass( 'bb-rl-jcrop-holder' );
 							bp.Avatar.jcropapi = this;
-						});
-					});
-				});
+						} );
+					} );
+				} );
 			},
 
 			cropAvatar: function( event ) {
