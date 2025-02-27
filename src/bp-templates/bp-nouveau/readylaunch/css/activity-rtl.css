@@ -1964,6 +1964,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
+.bb-rl-activity-list li.activity-item.bb-closed-comments .bb-rl-activity-closed-comments-notice {
+  display: flex;
+}
+
 .bb-rl-activity-list .bb-rl-activity-head {
   display: flex;
   align-items: center;
@@ -4023,7 +4027,7 @@ div[class*="attached-gif-container"] .gif-player {
 
 /* Activity closed comment notice */
 .bb-rl-activity-closed-comments-notice {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   color: var(--bb-rl-text-secondary-color);

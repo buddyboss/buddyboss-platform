@@ -62,6 +62,10 @@
 			.generic-button:has(.edit-activity) {
 				display: none;
 			}
+
+			.bb-rl-activity-closed-comments-notice {
+				display: flex;
+			}
 		}
 	}
 
@@ -2245,7 +2249,7 @@ div[class*="attached-gif-container"] {
 
 /* Activity closed comment notice */
 .bb-rl-activity-closed-comments-notice {
-	display: flex;
+	display: none;
 	align-items: center;
 	justify-content: center;
 	color: var(--bb-rl-text-secondary-color);
