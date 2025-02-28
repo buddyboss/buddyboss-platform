@@ -5997,8 +5997,105 @@ div[class*="attached-gif-container"] .gif-player {
   position: relative;
 }
 
+.activity-item.has-comments .bb-rl-activity-comments ul li .ac-form {
+  margin-right: var(--bb-rl-space-300);
+}
+
 .activity-item.has-comments .bb-rl-activity-comments > ul > li > ul {
   margin-right: var(--bb-rl-space-700);
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .acomments-view-more {
+  position: relative;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .acomments-view-more:before {
+  content: "";
+  background-color: transparent;
+  width: 36px;
+  position: absolute;
+  right: -56px;
+  top: -18px;
+  height: 32px;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  border-bottom-color: var(--bb-rl-border-tertiary-color);
+  border-right-color: var(--bb-rl-border-tertiary-color);
+  border-bottom-right-radius: 10px;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul > li > ul li:not(:last-child) {
+  position: relative;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul > li > ul li:not(:last-child):before {
+  content: "";
+  width: 2px;
+  height: 100%;
+  background-color: var(--bb-rl-border-tertiary-color);
+  position: absolute;
+  right: -32px;
+  display: inline-block;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul > li ul .bb-rl-item-avatar {
+  position: relative;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul > li ul .bb-rl-item-avatar:before {
+  content: "";
+  width: 16px;
+  position: absolute;
+  right: -32px;
+  top: -9px;
+  height: 32px;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  border-bottom-color: var(--bb-rl-border-tertiary-color);
+  border-right-color: var(--bb-rl-border-tertiary-color);
+  border-bottom-right-radius: 10px;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .has-child-comments > .bb-rl-acomment-display {
+  position: relative;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .has-child-comments > .bb-rl-acomment-display:before {
+  content: "";
+  width: 2px;
+  height: calc(100% - 50px);
+  background-color: var(--bb-rl-border-tertiary-color);
+  position: absolute;
+  right: 24px;
+  top: 65px;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .bb-rl-comment-item-focus .bb-rl-display-focus:not(.bp-hide) + .bb-rl-acomment-edit-form + ul {
+  position: relative;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .bb-rl-comment-item-focus .bb-rl-display-focus:not(.bp-hide) + .bb-rl-acomment-edit-form + ul:before {
+  content: "";
+  width: 2px;
+  height: 100%;
+  background-color: var(--bb-rl-border-tertiary-color);
+  position: absolute;
+  right: -32px;
+  top: 3px;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .bb-rl-comment-item-focus .bb-rl-display-focus {
+  position: relative;
+}
+
+.activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul .bb-rl-comment-item-focus .bb-rl-display-focus:before {
+  content: "";
+  width: 2px;
+  height: calc(100% - 50px);
+  background-color: var(--bb-rl-border-tertiary-color);
+  position: absolute;
+  right: 24px;
+  top: 65px;
 }
 
 .activity-item.has-comments .bb-rl-acomment_inner {
