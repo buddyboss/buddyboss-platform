@@ -151,39 +151,17 @@ window.bp = window.bp || {};
 				this.avatars.reset();
 			}
 
-			// Reset the Cropper instance
-			/* if (this.cropperInstance) {
-				this.cropperInstance.destroy();
-				this.cropperInstance = null;
-			} */
-
 			// Load the required view
 			switch ( view ) {
 				case 'upload':
 					this.uploaderView();
-					break;
-
-				case 'delete':
-					this.deleteView();
 					break;
 			}
 		},
 
 		resetViews: function() {
 			// Reset to the uploader view
-			this.nav.trigger( 'bp-avatar-view:changed', 'upload' );
-
-			// Reset to the uploader nav
-			_.each(
-				this.navItems.models,
-				function( model ) {
-					if ( model.id === 'upload' ) {
-						model.set( { active: 1 } );
-					} else {
-						model.set( { active: 0 } );
-					}
-				}
-			);
+			this.setView( 'upload' );
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
 				this.removeWarning();
@@ -192,46 +170,8 @@ window.bp = window.bp || {};
 		},
 
 		setupNav: function() {
-			var self = this,
-				initView, activeView;
-
-			this.navItems = new Backbone.Collection();
-
-			_.each(
-				BP_Uploader.settings.nav,
-				function( item, index ) {
-					if ( ! _.isObject( item ) ) {
-						return;
-					}
-
-					// Reset active View
-					activeView = 0;
-
-					if ( 0 === index ) {
-						initView   = item.id;
-						activeView = 1;
-					}
-
-					self.navItems.add(
-						{
-							id     : item.id,
-							name   : item.caption,
-							href   : '#',
-							active : activeView,
-							hide   : _.isUndefined( item.hide ) ? 0 : item.hide
-						}
-					);
-				}
-			);
-
-			this.nav = new bp.Views.Nav( { collection: this.navItems } );
-			this.nav.inject( '.bp-avatar-nav' );
-
 			// Activate the initial view (uploader)
-			this.setView( initView );
-
-			// Listen to nav changes (it's like a do_action!)
-			this.nav.on( 'bp-avatar-view:changed', _.bind( this.setView, this ) );
+			this.setView( 'upload' );
 		},
 
 		uploaderView: function() {
@@ -370,9 +310,6 @@ window.bp = window.bp || {};
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
 					}
-
-					// Inject the Delete nav
-					bp.Avatar.navItems.get( 'delete' ).set( { hide: 0 } );
 
 					/**
 					 * Set the Attachment object
@@ -514,9 +451,6 @@ window.bp = window.bp || {};
 							}
 						);
 
-						// Remove the Delete nav
-						bp.Avatar.navItems.get( 'delete' ).set( { active: 0, hide: 1 } );
-
 						/**
 						 * Reset the Attachment object
 						 *
@@ -585,117 +519,6 @@ window.bp = window.bp || {};
 			this.warning.inject( '.bp-avatar-status' );
 		}
 	};
-
-	// Main Nav view
-	bp.Views.Nav = bp.View.extend(
-		{
-			tagName:    'ul',
-			className:  'avatar-nav-items',
-
-			events: {
-				'click .bp-avatar-nav-item' : 'toggleView'
-			},
-
-			initialize: function() {
-				var hasAvatar = _.findWhere( this.collection.models, { id: 'delete' } );
-
-				// Display a message to inform about the delete tab
-				if ( 1 !== hasAvatar.get( 'hide' ) ) {
-					bp.Avatar.displayWarning( BP_Uploader.strings.avatar_size_warning + '<br/>' + BP_Uploader.strings.has_avatar_warning );
-				}
-
-				_.each( this.collection.models, this.addNavItem, this );
-				this.collection.on( 'change:hide', this.showHideNavItem, this );
-			},
-
-			addNavItem: function( item ) {
-				/**
-				 * The delete nav is not added if no avatar
-				 * is set for the object
-				 */
-				if ( 1 === item.get( 'hide' ) ) {
-					return;
-				}
-
-				this.views.add( new bp.Views.NavItem( { model: item } ) );
-			},
-
-			showHideNavItem: function( item ) {
-				var isRendered = null;
-
-				/**
-				 * Loop in views to show/hide the nav item
-				 * BuddyPress is only using this for the delete nav
-				 */
-				_.each(
-					this.views._views[''],
-					function( view ) {
-						if ( 1 === view.model.get( 'hide' ) ) {
-							view.remove();
-						}
-
-						// Check to see if the nav is not already rendered
-						if ( item.get( 'id' ) === view.model.get( 'id' ) ) {
-							isRendered = true;
-						}
-					}
-				);
-
-				// Add the Delete nav if not rendered
-				if ( ! _.isBoolean( isRendered ) ) {
-					this.addNavItem( item );
-				}
-			},
-
-			toggleView: function( event ) {
-				event.preventDefault();
-
-				// First make sure to remove all warnings
-				bp.Avatar.removeWarning();
-
-				var active = $( event.target ).data( 'nav' );
-
-				_.each(
-					this.collection.models,
-					function( model ) {
-						if ( model.id === active ) {
-							model.set( { active: 1 } );
-							this.trigger( 'bp-avatar-view:changed', model.id );
-						} else {
-							model.set( { active: 0 } );
-						}
-					},
-					this
-				);
-			}
-		}
-	);
-
-	// Nav item view
-	bp.Views.NavItem = bp.View.extend(
-		{
-			tagName:    'li',
-			className:  'avatar-nav-item',
-			template: bp.template( 'bp-avatar-nav' ),
-
-			initialize: function() {
-				if ( 1 === this.model.get( 'active' ) ) {
-					this.el.className += ' current';
-				}
-				this.el.id += 'bp-avatar-' + this.model.get( 'id' );
-
-				this.model.on( 'change:active', this.setCurrentNav, this );
-			},
-
-			setCurrentNav: function( model ) {
-				if ( 1 === model.get( 'active' ) ) {
-					this.$el.addClass( 'current' );
-				} else {
-					this.$el.removeClass( 'current' );
-				}
-			}
-		}
-	);
 
 	// Avatars view
 	bp.Views.Avatars = bp.View.extend(

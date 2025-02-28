@@ -58,7 +58,12 @@ if ( bp_is_group() ) {
 // Add has-avatar or no-avatar class based on whether an avatar exists
 $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-rl-avatar-container--no-avatar';
 ?>
-<div class="bp-avatar-nav"></div>
+<div class="bb-rl-avatar-headline">
+	<h3><?php esc_html_e( "Profile", 'buddyboss' ); ?></h3>
+</div>
+<div class="bb-rl-avatar-caption">
+	<?php esc_html_e( "For best results, upload an image that is 300px by 300px or larger.", 'buddyboss' ); ?>
+</div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-avatar-photo">
 		<a class="bb-rl-remove-avatar-button" href="#">

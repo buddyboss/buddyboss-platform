@@ -220,7 +220,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 				font-size: 16px;
 				font-weight: 500;
 			}
-			
 		}
 	}
 
@@ -237,5 +236,22 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 			height: 176px;
 			padding: 0;
 		}
+	}
+}
+
+.bb-rl-avatar-caption {
+
+	@include bb-rl-label-heading-md-thin;
+	color: var(--bb-rl-text-secondary-color);
+	margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-avatar-headline {
+
+	h3 {
+
+		@include bb-rl-base-heading;
+		color: var(--bb-rl-text-color);
+		margin: 0 0 var(--bb-rl-space-100);
 	}
 }
