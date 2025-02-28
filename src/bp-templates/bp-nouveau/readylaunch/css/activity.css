@@ -1968,6 +1968,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: flex;
 }
 
+.bb-rl-activity-list li.activity-item.bb-closed-comments .ac-form {
+  display: none;
+}
+
 .bb-rl-activity-list .bb-rl-activity-head {
   display: flex;
   align-items: center;

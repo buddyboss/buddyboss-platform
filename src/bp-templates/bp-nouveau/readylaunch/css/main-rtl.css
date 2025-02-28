@@ -3106,6 +3106,8 @@ body.admin-bar .bb-rl-header {
   font-family: bb-icons-rl !important;
   color: var(--bb-rl-text-white-color);
   font-size: 12px;
+  opacity: 1;
+  margin: 0;
 }
 
 .notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-activity:before {
