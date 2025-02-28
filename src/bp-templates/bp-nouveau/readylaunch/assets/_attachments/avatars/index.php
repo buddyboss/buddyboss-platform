@@ -15,9 +15,59 @@
  * This action is for internal use, please do not use it
  */
 do_action( 'bp_attachments_avatar_check_template' );
+
+// Get the current avatar if it exists
+$avatar_url = '';
+$has_avatar = false;
+$container_class = 'bb-rl-avatar-container';
+$avatar_id = 0;
+$avatar_label = '';
+
+if ( bp_is_group() ) {
+    $group_id = bp_get_current_group_id();
+	$avatar_id = $group_id;
+	$avatar_label = __("Group", 'buddyboss');
+    if ( bp_get_group_has_avatar( $group_id ) ) {
+		$has_avatar = true;
+        $avatar_url = bp_core_fetch_avatar( array(
+            'item_id'    => $group_id,
+            'object'     => 'group',
+            'type'       => 'full',
+            'avatar_dir' => 'group-avatars',
+            'alt'        => __( 'Group Profile Photo', 'buddyboss' ),
+            'html'       => false,
+        ) );
+    }
+	$container_class .= ' bb-rl-avatar-container--group';
+} elseif ( bp_is_user() ) {
+    $user_id = bp_displayed_user_id();
+	$avatar_id = $user_id;
+	$avatar_label = __("Profile", 'buddyboss');
+    if ( bp_get_user_has_avatar( $user_id ) ) {
+		$has_avatar = true;
+        $avatar_url = bp_core_fetch_avatar( array(
+            'item_id' => $user_id,
+            'object'  => 'user',
+            'type'    => 'full',
+            'html'    => false,
+        ) );
+    }
+	$container_class .= ' bb-rl-avatar-container--user';
+}
+
+// Add has-avatar or no-avatar class based on whether an avatar exists
+$container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-rl-avatar-container--no-avatar';
 ?>
 <div class="bp-avatar-nav"></div>
-<div class="bp-avatar"></div>
+<div class="<?php echo esc_attr( $container_class ); ?>">
+	<div class="bb-rl-avatar-photo">
+		<a class="bb-rl-remove-avatar-button" href="#">
+			<i class="bb-icons-rl-x"></i>
+		</a>
+		<img src="<?php echo esc_url( $avatar_url ); ?>" class="group-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="<?php echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) ); ?>" />
+	</div>
+	<div class="bp-avatar"></div>
+</div>
 <div class="bp-avatar-status"></div>
 
 <script type="text/html" id="tmpl-bp-avatar-nav">
