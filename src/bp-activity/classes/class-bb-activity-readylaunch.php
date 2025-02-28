@@ -40,6 +40,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
 		add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
 	}
 
 	/**
@@ -573,5 +574,16 @@ class BB_Activity_Readylaunch {
 		);
 
 		return $html;
+	}
+
+	/**
+	 * Modify activity comment threading depth.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool
+	 */
+	public function bb_rl_modify_activity_comment_threading_depth() {
+		return 2;
 	}
 }
