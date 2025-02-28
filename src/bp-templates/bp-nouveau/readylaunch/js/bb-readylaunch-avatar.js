@@ -70,6 +70,28 @@ window.bp = window.bp || {};
 					self.resetViews();
 				}
 			);
+
+			// Add click handler for the remove avatar button
+			$( document ).on(
+				'click',
+				'.bb-rl-remove-avatar-button',
+				function( e ) {
+					e.preventDefault();
+					
+					// Create a model with the necessary data for deletion
+					var deleteModel = new Backbone.Model(
+						_.pick(
+							BP_Uploader.settings.defaults.multipart_params.bp_params,
+							'object',
+							'item_id',
+							'nonces'
+						)
+					);
+					
+					// Call the deleteAvatar method
+					self.deleteAvatar( deleteModel );
+				}
+			);
 		},
 
 		removeLegacyUI: function() {
@@ -368,6 +390,9 @@ window.bp = window.bp || {};
 						)
 					);
 
+					// Update container class to reflect has avatar state
+					$( '.bb-rl-avatar-container' ).removeClass( 'bb-rl-avatar-container--no-avatar' ).addClass( 'bb-rl-avatar-container--has-avatar' );
+
 					// Show 'Remove' button when upload a new avatar.
 					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
 						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).removeClass( 'bp-hide' );
@@ -507,6 +532,9 @@ window.bp = window.bp || {};
 								{ url: response.avatar, action: 'deleted' }
 							)
 						);
+
+						// Update container class to reflect no avatar state
+						$( '.bb-rl-avatar-container' ).removeClass( 'bb-rl-avatar-container--has-avatar' ).addClass( 'bb-rl-avatar-container--no-avatar' );
 
 					if ( $( '.header-aside-inner .user-link .avatar' ).length  && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
 						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
