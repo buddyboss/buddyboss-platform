@@ -2052,6 +2052,25 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Activity.toggleMultiMediaOptions( form, '', '.bb-rl-modal-activity-footer' );
+
+			if( ! modal.find( '.bb-rl-modal-activity-body' ).hasClass( 'bb-rl-modal-activity-body-scroll-event-initiated' ) ) {
+				modal.find( '.bb-rl-modal-activity-body' ).on( 'scroll', function () {
+					// check if .bb-rl-modal-activity-body has scrolled to bottom
+					var $this = $(this);
+
+					// Add a small buffer (1px) to account for potential floating point differences
+					var scrollBuffer = 1;
+					var scrolledToBottom = Math.ceil($this.scrollTop() + $this.innerHeight() + scrollBuffer) >= $this.prop('scrollHeight');
+					
+					if (scrolledToBottom) {
+						modal.addClass('bb-rl-modal-activity-body-scrolled-to-bottom');
+					} else {
+						modal.removeClass('bb-rl-modal-activity-body-scrolled-to-bottom');
+					}
+				} );
+				modal.find( '.bb-rl-modal-activity-body' ).addClass( 'bb-rl-modal-activity-body-scroll-event-initiated' );
+				console.log('test');
+			}
 		},
 
 		initialLoadComment: function ( args ) {
