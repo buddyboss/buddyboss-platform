@@ -1016,8 +1016,8 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// If form is edit activity comment, then reset it.
-				self.resetActivityCommentForm( $form );
+				// Rest the Comment Form.
+				self.resetActivityCommentForm( $form, 'hardReset' );
 
 				// Stop event propagation.
 				event.preventDefault();
