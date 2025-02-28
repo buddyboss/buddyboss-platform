@@ -8,7 +8,7 @@
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
-
+<div class="bb-rl-inner-container bb-rl-activity-page">
 <div id="bb-rl-single-activity-edit-form-wrap" style="display: none;">
 	<div id="bb-rl-activity-form" class="bb-rl-activity-update-form 
 	<?php
@@ -65,4 +65,5 @@ bp_nouveau_before_single_activity_content();
 	<?php
 	do_action( 'bp_after_single_activity_content' );
 	?>
+</div>
 </div>
