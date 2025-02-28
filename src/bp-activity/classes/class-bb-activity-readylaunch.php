@@ -41,6 +41,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
 		add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
+		add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_submit_button' ), 10 );
 	}
 
 	/**
@@ -585,5 +586,22 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_modify_activity_comment_threading_depth() {
 		return 2;
+	}
+
+	/**
+	 * Modify submit button.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $button The submit button array.
+	 *
+	 * @return array Modified submit button array.
+	 */
+	public function bb_rl_modify_submit_button( $button ) {
+		if ( isset( $button['activity-new-comment'] ) ) {
+			$button['activity-new-comment']['attributes']['value']               = esc_html__( 'Comment', 'buddyboss' );
+			$button['activity-new-comment']['attributes']['data-add-edit-label'] = esc_html__( 'Reply', 'buddyboss' );
+		}
+		return $button;
 	}
 }

@@ -1628,13 +1628,9 @@ window.bp = window.bp || {};
 		editActivityCommentForm: function ( form, activity_comment_data ) {
 			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
 				toolbarDiv     = form.find( '#bb-rl-ac-reply-toolbar-' + formActivityId ),
-				formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' ),
 				self           = this;
 
 			form.find( '#ac-input-' + formActivityId ).html( activity_comment_data.content );
-
-			var form_submit_btn_attr_val = formSubmitBtn.attr( 'data-add-edit-label' );
-			formSubmitBtn.attr( 'data-add-edit-label', formSubmitBtn.val() ).val( form_submit_btn_attr_val );
 
 			var uploaderButtons = [];
 			// Inject medias.
@@ -1788,15 +1784,11 @@ window.bp = window.bp || {};
 
 			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
 				formItemId     = form.attr( 'data-item-id' ),
-				formAcomment   = $( '[data-bp-activity-comment-id="' + formItemId + '"]' ),
-				formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' );
+				formAcomment   = $( '[data-bp-activity-comment-id="' + formItemId + '"]' );
 
 			formAcomment.find( '#bb-rl-acomment-display-' + formItemId ).removeClass( 'bp-hide' );
 			form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
-
-			var form_submit_btn_attr_val = formSubmitBtn.attr( 'data-add-edit-label' );
-			formSubmitBtn.attr( 'data-add-edit-label', formSubmitBtn.val() ).val( form_submit_btn_attr_val );
-
+			
 			form.find( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
 			form.find( '.bb-rl-post-elements-buttons-item .bb-rl-toolbar-button' ).removeClass( 'active' );
 
@@ -1813,8 +1805,7 @@ window.bp = window.bp || {};
 		// Reinitialize reply/edit comment form and append in activity modal footer.
 		reinitializeActivityCommentForm: function ( form ) {
 
-			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val(),
-				formSubmitBtn  = form.find( 'input[name="ac_form_submit"]' );
+			var formActivityId = form.find( 'input[name="comment_form_id"]' ).val();
 
 			if ( form.hasClass( 'acomment-edit' ) ) {
 				var formItemId   = form.attr( 'data-item-id' );
@@ -1823,10 +1814,7 @@ window.bp = window.bp || {};
 				formAcomment.find( '#bb-rl-acomment-display-' + formItemId ).removeClass( 'bp-hide' );
 				form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
 			}
-
-			var form_submit_btn_attr_val = formSubmitBtn.attr( 'data-add-edit-label' );
-			formSubmitBtn.attr( 'data-add-edit-label', formSubmitBtn.val() ).val( form_submit_btn_attr_val );
-
+			
 			form.find( '#ac-input-' + formActivityId ).html( '' );
 			form.removeClass( 'has-content has-gif has-media' );
 			$( '.bb-rl-modal-activity-footer' ).addClass( 'active' ).append( form );
@@ -2864,6 +2852,35 @@ window.bp = window.bp || {};
 						$( '[data-bp-activity-comment-id="' + itemId + '"]' ).append( form );
 					}
 				}
+			}
+
+
+			// Change the button text to Reply or Comment.
+			var formSubmitBtn = form.find( 'input[name="ac_form_submit"]' );
+
+			// Store original values as data attributes if not already set.
+			if ( ! formSubmitBtn.data( 'original-comment' )) {
+				formSubmitBtn.data( 'original-comment', formSubmitBtn.val() ); // Store initial value (Comment).
+				formSubmitBtn.data( 'original-reply', formSubmitBtn.attr( 'data-add-edit-label' ) ); // Store initial data-add-edit-label (Reply).
+			}
+
+
+			isReply = false;
+			if ( target.hasClass( 'acomment-reply' ) && activityId !== itemId ) {
+				isReply = true;
+			} else if ( target.hasClass( 'acomment-edit' ) ) {
+				var activityId      = target.closest( '.comment-item' ).parent().data( 'activity_id' ),
+					parentCommentId = target.closest( '.comment-item' ).parent().data( 'parent_comment_id' );
+				
+				isReply = activityId === parentCommentId ? false : true;
+			}
+			var originalCommentText = formSubmitBtn.data('original-comment'),
+				originalReplyText   = formSubmitBtn.data('original-reply');
+
+			if ( isReply ) {
+				formSubmitBtn.val( originalReplyText ).attr( 'data-add-edit-label', originalCommentText );
+			} else {
+				formSubmitBtn.val( originalCommentText ).attr( 'data-add-edit-label', originalReplyText );
 			}
 
 			form.removeClass( 'not-initialized' );
