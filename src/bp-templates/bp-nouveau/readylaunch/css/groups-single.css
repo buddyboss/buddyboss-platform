@@ -1920,11 +1920,31 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   margin: var(--bb-rl-space-50) 0;
 }
 
-.bb-rl-jcrop .bb-rl-jcrop-holder {
-  border-radius: 50%;
+.bb-rl-avatar-panel-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) var(--bb-rl-space-300);
+  margin: var(--bb-rl-space-50) 0;
+}
+
+.bb-rl-avatar-panel-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--bb-rl-text-color);
+  margin-right: auto;
+}
+
+.bb-rl-avatar-panel-header i {
+  font-size: 24px;
+  color: var(--bb-rl-icon-primary-color);
 }
 
 .bb-rl-avatar-panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 220px);
   padding: var(--bb-rl-space-300) var(--bb-rl-space-300) var(--bb-rl-space-100);
 }
 

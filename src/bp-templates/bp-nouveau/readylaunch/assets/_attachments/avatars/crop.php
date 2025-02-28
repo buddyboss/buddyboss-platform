@@ -10,6 +10,12 @@
 
 ?>
 <script id="tmpl-bp-avatar-item" type="text/html">
+	<div class="bb-rl-avatar-panel-header">
+		<h3><?php esc_html_e( 'Crop Photo', 'buddyboss' ); ?></h3>
+		<a class="bb-rl-modal-close-button avatar-crop-cancel" href="#">
+			<i class="bb-icons-rl-x"></i>
+		</a>
+	</div>
 	<div class="bb-rl-avatar-panel">
 		<div id="avatar-to-crop">
 			<img data-skip-lazy="" class="skip-lazy" src="{{{data.url}}}"/>

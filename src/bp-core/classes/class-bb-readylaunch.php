@@ -1622,7 +1622,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			
 			// Add Cropper.js to the common scripts
 			$scripts['bb-readylaunch-cropper-js'] = array(
-				'file'         => "{$url}bb-readylaunch-cropper{$min}.js",
+				'file'         => "{$url}cropper{$min}.js",
 				'dependencies' => array( 'jquery' ),
 				'version'      => '1.6.2',
 				'footer'       => true,
