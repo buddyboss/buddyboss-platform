@@ -11,9 +11,59 @@
  * @version 3.1.0
  */
 
+ // Get the current cover image if it exists
+$cover_image_url = '';
+$has_cover_image = false;
+$container_class = 'bb-rl-cover-container';
+$group_id = 0;
+$cover_label = '';
+
+if ( bp_is_group() ) {
+    $group_id = bp_get_current_group_id();
+    $cover_label = __("Group", 'buddyboss');
+    if ( bp_attachments_get_group_has_cover_image( $group_id ) ) {
+        $has_cover_image = true;
+        $cover_image_url = bp_attachments_get_attachment(
+            'url',
+            array(
+                'object_dir' => 'groups',
+                'item_id'    => $group_id,
+            )
+        );
+    }
+    $container_class .= ' bb-rl-cover-container--group';
+} elseif ( bp_is_user() ) {
+    $user_id = bp_displayed_user_id();
+    $cover_label = __("Profile", 'buddyboss');
+    if ( bp_attachments_get_attachment(
+        'url',
+        array(
+            'object_dir' => 'members',
+            'item_id'    => $user_id,
+        )
+    ) ) {
+        $has_cover_image = true;
+        $cover_image_url = bp_attachments_get_attachment(
+            'url',
+            array(
+                'object_dir' => 'members',
+                'item_id'    => $user_id,
+            )
+        );
+    }
+    $container_class .= ' bb-rl-cover-container--user';
+}
+
+// Add has-cover-image or no-cover-image class based on whether a cover image exists
+$container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' bb-rl-cover-container--no-cover';
 ?>
 
-<div class="bp-cover-image"></div>
+<div class="<?php echo esc_attr( $container_class ); ?>">
+	<div class="bb-rl-cover-preview">
+		<img src="<?php echo esc_url( $cover_image_url ); ?>" class="group-cover-image" alt="<?php echo esc_attr( sprintf( __( '%s cover image', 'buddyboss' ), $cover_label ) ); ?>" />
+	</div>
+	<div class="bp-cover-image"></div>
+</div>
 <div class="bp-cover-image-status"></div>
 <div class="bp-cover-image-manage"></div>
 

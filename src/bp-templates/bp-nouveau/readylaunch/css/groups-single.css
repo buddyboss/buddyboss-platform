@@ -2134,6 +2134,62 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   margin: 0 0 var(--bb-rl-space-100);
 }
 
+.bb-rl-cover-container {
+  position: relative;
+  width: 100%;
+  height: 160px;
+}
+
+.bb-rl-cover-container.bb-rl-cover-container--has-cover .bb-rl-cover-preview {
+  opacity: 1;
+  z-index: 10;
+}
+
+.bb-rl-cover-container.bb-rl-cover-container--has-cover .bp-uploader-window,
+.bb-rl-cover-container.bb-rl-cover-container--has-cover .bp-cover-image {
+  opacity: 0;
+}
+
+.bb-rl-cover-container.bb-rl-cover-container--no-cover .bp-cover-image {
+  opacity: 1;
+}
+
+.bb-rl-cover-container .bb-rl-cover-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  overflow: hidden;
+  opacity: 0;
+}
+
+.bb-rl-cover-container .bb-rl-cover-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 10;
+}
+
+.bb-rl-cover-container .bp-cover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.bb-rl-cover-container .bp-uploader-window .bb-rl-drag-drop-wrapper {
+  width: 100%;
+  height: 160px;
+  padding: 0;
+}
+
 .bb-rl-create-group {
   background: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);

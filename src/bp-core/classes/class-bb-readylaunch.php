@@ -1636,6 +1636,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$scripts['bp-plupload']['file'] = "{$url}bb-readylaunch-plupload{$min}.js";
 			}
 
+			if ( isset( $scripts['bp-cover-image'] ) ) {
+				$scripts['bp-cover-image']['file'] = "{$url}bb-readylaunch-cover-image{$min}.js";
+			}
+
 			return $scripts;
 		}
 
