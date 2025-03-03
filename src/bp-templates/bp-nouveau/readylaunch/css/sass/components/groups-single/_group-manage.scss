@@ -319,6 +319,10 @@
 		padding: 0;
 		margin: 0;
 	}
+
+	.bb_more_options {
+		margin-left: var(--bb-rl-space-300);
+	}
 }
 
 .bb-rl-group-member-id {
@@ -339,7 +343,7 @@
 
 		> a {
 
-			@include bb-rl-base-heading-bolder;
+			@include bb-rl-base-heading;
 			color: var(--bb-rl-text-color);
 		}
 	}
