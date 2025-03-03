@@ -177,7 +177,7 @@ if ( bp_is_group_create() ) {
 								</p>
 							</div>
 
-							<div class="members-manage-buttons text-links-list">
+							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
 								<select class="member-action-dropdown" onchange="window.location.href=this.value">
 									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
 									<?php
@@ -217,6 +217,9 @@ if ( bp_is_group_create() ) {
 									}
 									?>
 								</select>
+								<div class="bb-rl-group-member-action-wrapper">
+									<a href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></a>
+								</div>
 							</div>
 
 

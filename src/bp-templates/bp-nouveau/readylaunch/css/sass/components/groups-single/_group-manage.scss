@@ -624,3 +624,26 @@
 		width: 245px;
 	}
 }
+
+.bb-rl-groups-manage-members-list {
+
+	.bb-rl-members-manage-dropdown {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+	}
+
+	.bb-rl-group-member-action-button {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+		padding: 6px var(--bb-rl-space-200);
+		font-size: 0.875rem;
+
+		&.disabled {
+			background-color: var(--bb-rl-background-tertiary-color);
+			color: var(--bb-rl-text-disabled-color);
+			cursor: not-allowed;
+		}
+	}
+}
