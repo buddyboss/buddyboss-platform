@@ -2005,6 +2005,24 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-left: 40px;
 }
 
+.bb-rl-activity-list .bb-rl-activity-head .bb-rl-activity-avatar.bb-rl-multiple-avatars {
+  min-height: 48px;
+  min-width: 56px;
+  position: relative;
+}
+
+.bb-rl-activity-list .bb-rl-activity-head .bb-rl-activity-avatar.bb-rl-multiple-avatars img.avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-rl-activity-list .bb-rl-activity-head .bb-rl-activity-avatar.bb-rl-multiple-avatars > a:last-child {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+}
+
 .bb-rl-activity-list .bb-activity-more-options-wrap {
   position: absolute;
   left: var(--bb-rl-space-300);

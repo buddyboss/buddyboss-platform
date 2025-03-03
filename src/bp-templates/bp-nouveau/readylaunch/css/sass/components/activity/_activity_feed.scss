@@ -108,6 +108,24 @@
 		.bb-rl-activity-header {
 			margin-right: 40px;
 		}
+
+		.bb-rl-activity-avatar.bb-rl-multiple-avatars {
+			min-height: 48px;
+			min-width: 56px;
+			position: relative;
+
+			img.avatar {
+				height: 32px;
+				width: 32px;
+				border-radius: var(--bb-rl-radius-full);
+			}
+
+			> a:last-child {
+				position: absolute;
+				top: 16px;
+				left: 24px;
+			}
+		}
 	}
 
 	.bb-activity-more-options-wrap {
