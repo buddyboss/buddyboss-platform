@@ -42,6 +42,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
 		add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_submit_button' ), 10 );
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_rl_activity_content_with_changed_avatar' ), 9999, 2 );
 	}
 
 	/**
@@ -608,5 +609,32 @@ class BB_Activity_Readylaunch {
 			$button['activity-new-comment']['attributes']['value'] = esc_html__( 'Comment', 'buddyboss' );
 		}
 		return $button;
+	}
+
+	/**
+	 * Modify activity content with changed avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content The original content.
+	 * @param object $activity The activity object.
+	 *
+	 * @return string Modified content.
+	 */
+	public function bb_rl_activity_content_with_changed_avatar( $content, $activity ) {
+		if ( 'profile' === $activity->component && 'new_avatar' === $activity->type ) {
+			$full_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id' => $activity->user_id,
+					'object'  => 'user',
+					'type'    => 'full',
+					'html'    => true,
+				)
+			);
+
+			$content = '<div class="bb-rl-activity-avatar bb-rl-item-avatar">' . $full_avatar . '</div>';
+		}
+
+		return $content;
 	}
 }
