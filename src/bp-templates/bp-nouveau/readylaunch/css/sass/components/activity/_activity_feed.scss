@@ -2549,13 +2549,17 @@ div[class*="attached-gif-container"] {
 		}
 	}
 
+	.bb-rl-activity-head-group .bb-rl-activity-group-post-meta {
+		display: inline-block;
+	}
+
 	.bb-rl-activity-list {
 
 		.bb-rl-activity-head {
 
 			p:first-child {
-				font-size: 15px;
-				line-height: 20px;
+				font-size: 13px;
+				line-height: 18px;
 			}
 
 			.bb-rl-activity-avatar {
