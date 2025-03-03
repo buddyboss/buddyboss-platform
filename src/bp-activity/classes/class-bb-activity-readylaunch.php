@@ -632,7 +632,7 @@ class BB_Activity_Readylaunch {
 				)
 			);
 
-			$content = '<div class="bb-rl-activity-avatar bb-rl-item-avatar">' . $full_avatar . '</div>';
+			$content = '<div class="bb-rl-activity-content-avatar bb-rl-item-content-avatar">' . $full_avatar . '</div>';
 		}
 
 		return $content;
