@@ -2119,9 +2119,9 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-rl-activity-list .bb-rl-activity-header p:first-child {
   color: var(--bb-rl-text-tertiary-color);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 20px;
   width: 100%;
 }
 
@@ -2135,10 +2135,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 24px;
   vertical-align: middle;
   margin: 0 0 0 6px;
-}
-
-.bb-rl-activity-list .bb-rl-activity-header p:has(img.avatar) a {
-  vertical-align: middle;
 }
 
 .bb-rl-activity-list .bb-rl-activity-header .activity-date {
@@ -2472,6 +2468,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-activity-head-group .bb-rl-activity-group-post-meta {
+  display: flex;
+  align-items: center;
+}
+
 .bb-rl-activity-head-group .bb-rl-activity-group-post-meta .bb-rl-activity-post-author,
 .bb-rl-activity-head-group .bb-rl-activity-group-post-meta > a {
   display: inline-flex;
@@ -2486,6 +2487,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-activity-head-group .bb-rl-activity-header--group .bb-rl-activity-post-author > p {
   display: inline;
   font-size: 13px;
+  line-height: 20px;
   color: var(--bb-rl-text-tertiary-color);
 }
 
@@ -2495,9 +2497,9 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-activity-head-group .bb-rl-activity-header--group .bb-rl-activity-post-author > p a {
   font-weight: 600;
-  color: var(--bb-rl-text-tertiary-color);
+  color: var(--bb-rl-text-secondary-color);
   font-size: var(--bb-rl-font-size-sm);
-  line-height: 1;
+  line-height: 20px;
 }
 
 .bb-rl-activity-head-group .bb-rl-activity-header--group .time-since {
