@@ -1254,6 +1254,10 @@
   background-color: var(--bb-rl-background-secondary-color);
 }
 
+.bb-rl-group-manage-form #bp-group-edit-courses-submit-wrapper {
+  margin-top: var(--bb-rl-space-200);
+}
+
 .bb-rl-group-manage-form .bb-zoom-setting-tab .bb-zoom-setting-tabs ul {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: 0 0 var(--bb-rl-space-200);
