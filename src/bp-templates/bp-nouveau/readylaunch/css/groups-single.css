@@ -1092,6 +1092,10 @@
   margin: 0;
 }
 
+.bb-rl-groups-manage-members-list .bb_more_options {
+  margin-left: var(--bb-rl-space-300);
+}
+
 .bb-rl-group-member-id {
   display: flex;
   align-items: center;
@@ -1112,7 +1116,7 @@
 
 .bb-rl-group-member-id .member-name > a {
   font-size: var(--bb-rl-font-size-base);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--bb-rl-base-line);
   color: var(--bb-rl-text-color);
 }

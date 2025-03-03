@@ -80,7 +80,7 @@ if ( bp_is_group_create() ) {
 	<?php endif; ?>
 
 	<?php if ( bp_group_has_moderators() ) : ?>
-		<dt class="moderator-section section-title"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ), 'buddyboss' ); ?></dt>
+		<dt class="moderator-section section-title bb-rl-section-sub-heading"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ), 'buddyboss' ); ?></dt>
 
 		<dd class="moderator-listing">
 
