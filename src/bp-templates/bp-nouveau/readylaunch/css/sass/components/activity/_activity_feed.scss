@@ -370,6 +370,10 @@
 			width: 100%;
 		}
 
+		.bb-rl-item-content-avatar img {
+			border-radius: var(--bb-rl-radius-md);
+		}
+
 		/* WP Post Activity */
 		&:has(.bb-content-wrp) {
 			display: flex;

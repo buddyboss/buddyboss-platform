@@ -2259,6 +2259,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   width: 100%;
 }
 
+.bb-rl-activity-list .bb-rl-activity-inner .bb-rl-item-content-avatar img {
+  border-radius: var(--bb-rl-radius-md);
+}
+
 .bb-rl-activity-list .bb-rl-activity-inner:has(.bb-content-wrp) {
   display: flex;
   flex-flow: column;
