@@ -27,6 +27,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
 		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 		add_filter( 'bp_groups_format_activity_action_activity_update', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
+		add_filter( 'bp_groups_format_activity_action_joined_group', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
+		add_filter( 'bp_get_activity_action_pre_meta', array( $this, 'bb_rl_remove_secondary_avatars_for_connected_users' ), 11, 2 );
 		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 3 );
 		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
 
@@ -135,6 +137,7 @@ class BB_Activity_Readylaunch {
 		if ( empty( $activity ) ) {
 			return $action;
 		}
+		$user_link = bp_core_get_userlink( $activity->user_id );
 		switch ( $activity->component ) {
 			case 'activity':
 				if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
@@ -155,19 +158,28 @@ class BB_Activity_Readylaunch {
 					$last_user_link = array_pop( $mentioned_users_link );
 
 					$action = sprintf(
+						/* translators: %1$s: user link, %2$s: mentioned users avatar, %3$s: mentioned users link, %4$s: mentioned users link and, %5$s: last mentioned user link */
 						__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss' ),
-						bp_core_get_userlink( $activity->user_id ),
+						$user_link,
 						$mentioned_users_avatar ? implode( ', ', $mentioned_users_avatar ) : '',
 						$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
 						$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
 						$last_user_link
 					);
 				} else {
-					$action = bp_core_get_userlink( $activity->user_id );
+					$action = $user_link;
+				}
+				break;
+			case 'groups':
+				if ( 'joined_group' === $activity->type ) {
+					/* translators: %s: user link */
+					$action = sprintf( __( '%s joined the group', 'buddyboss' ), $user_link );
+				} else {
+					$action = $user_link;
 				}
 				break;
 			default:
-				$action = bp_core_get_userlink( $activity->user_id );
+				$action = $user_link;
 				break;
 		}
 
@@ -221,8 +233,8 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $button_html The default button HTML
-	 * @param array  $args        Button arguments
+	 * @param string $button_html The default button HTML.
+	 * @param array  $args        Button arguments.
 	 *
 	 * @return string Modified button HTML
 	 */
@@ -636,5 +648,27 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Remove secondary avatars from friendship activities.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $action   The activity action HTML.
+	 * @param object $activity The activity object.
+	 *
+	 * @return string The filtered activity action HTML.
+	 */
+	public function bb_rl_remove_secondary_avatars_for_connected_users( $action, $activity ) {
+		if ( 'friends' === $activity->component && 'friendship_created' === $activity->type ) {
+			$user_link   = bp_core_get_userlink( $activity->user_id );
+			$friend_link = bp_core_get_userlink( $activity->secondary_item_id );
+
+			/* translators: %1$s: user link, %2$s: friend link */
+			return sprintf( __( '%1$s & %2$s are now connected', 'buddyboss' ), $user_link, $friend_link );
+		}
+
+		return $action;
 	}
 }

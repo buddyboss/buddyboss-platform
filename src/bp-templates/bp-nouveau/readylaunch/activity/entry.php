@@ -112,12 +112,22 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				</div>
 			</div>
 
-		<?php else : ?>
+		<?php else :
+			$friendship_created = false;
+			if ( bp_is_active( 'friends' ) && 'friendship_created' === $activities_template->activity->type ) {
+				$friendship_created = true;
+			}
+			?>
 			<div class="bb-rl-activity-head">
-				<div class="bb-rl-activity-avatar bb-rl-item-avatar">
+				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>">
 					<a href="<?php echo $user_link; ?>">
 						<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
 					</a>
+					<?php
+					if ( $friendship_created ) {
+						echo bp_get_activity_secondary_avatar( $activities_template->activity->secondary_item_id );
+					}
+					?>
 				</div>
 				<div class="bb-rl-activity-header">
 					<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
