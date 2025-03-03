@@ -29,10 +29,25 @@ window.bp = window.bp || {};
 			// Inform about the needed dimensions
 			this.displayWarning( BP_Uploader.strings.cover_image_warnings.dimensions );
 
-			// Set up the delete view if needed
-			if ( true === BP_Uploader.settings.defaults.multipart_params.bp_params.has_cover_image ) {
-				this.deleteView();
-			}
+			// Add click handler for the remove cover button
+            $( document ).on(
+                'click',
+                '.bb-rl-remove-cover-button',
+                function( e ) {
+                    e.preventDefault();
+                    
+                    // Create a model with the necessary data for deletion
+                    var deleteModel = new Backbone.Model(
+                        _.pick(
+                            BP_Uploader.settings.defaults.multipart_params.bp_params,
+                            ['object', 'item_id', 'nonces']
+                        )
+                    );
+                    
+                    // Call the deleteCoverImage method
+                    bp.CoverImage.deleteCoverImage( deleteModel );
+                }
+            );
 		},
 
 		uploaderView: function() {
@@ -63,40 +78,8 @@ window.bp = window.bp || {};
 			coverImageUploadProgress.inject( '.bp-cover-image-status' );
 		},
 
-		deleteView: function() {
-			// Create the delete model
-			var delete_model = new Backbone.Model(
-				_.pick(
-					BP_Uploader.settings.defaults.multipart_params.bp_params,
-					['object', 'item_id', 'nonces']
-				)
-			);
-
-			// Do not add it if already there!
-			if ( ! _.isUndefined( this.views.get( 'delete' ) ) ) {
-				return;
-			}
-
-			// Create the delete view
-			var deleteView = new bp.Views.DeleteCoverImage( { model: delete_model } );
-
-			// Add it to views
-			this.views.add( { id: 'delete', view: deleteView } );
-
-			// Display it
-			deleteView.inject( '.bp-cover-image-manage' );
-		},
-
 		deleteCoverImage: function( model ) {
-			var self = this,
-				deleteView;
-
-			// Remove the delete view
-			if ( ! _.isUndefined( this.views.get( 'delete' ) ) ) {
-				deleteView = this.views.get( 'delete' );
-				deleteView.get( 'view' ).remove();
-				this.views.remove( { id: 'delete', view: deleteView } );
-			}
+			var self = this;
 
 			// Remove the cover photo !
 			bp.ajax.post(
@@ -170,6 +153,12 @@ window.bp = window.bp || {};
 							)
 						);
 
+						// Update UI for the cover image preview
+						$( '.bb-rl-cover-preview img' ).attr( 'src', '' );
+						$( '.bb-rl-cover-container' )
+							.removeClass( 'bb-rl-cover-container--has-cover' )
+							.addClass( 'bb-rl-cover-container--no-cover' );
+
 				}
 			).fail(
 				function( response ) {
@@ -193,9 +182,6 @@ window.bp = window.bp || {};
 						);
 
 						coverImageStatus.inject( '.bp-cover-image-status' );
-
-						// Put back the delete view
-						bp.CoverImage.deleteView();
 				}
 			);
 		},
@@ -238,22 +224,6 @@ window.bp = window.bp || {};
 					// initially remove the warning
 					$( '.bp-cover-image-status > .warning' ).remove();
 
-					// Image is too small
-					/*if ( 0 === model.get( 'feedback_code' ) ) {
-						message = BP_Uploader.strings.cover_image_warnings.dimensions;
-						type    = 'warning';
-
-					// Success, Rock n roll!
-					} else {
-						message = BP_Uploader.strings.feedback_messages[ model.get( 'feedback_code' ) ];
-						type = 'success';
-					}
-
-					this.views.set( '.bp-uploader-progress', new bp.Views.CoverImageStatus( {
-						value : message,
-						type  : type
-					} ) );*/
-
 					/*
 					* if image url is defined meaning cover image uploaded successfully
 					* so feedback message should always be 1
@@ -291,9 +261,6 @@ window.bp = window.bp || {};
 					$( '#header-cover-image .header-cover-reposition-wrap img' ).prop( 'src', model.get( 'url' ) );
 					$( '#header-cover-image' ).removeClass( 'has-position' ).find( '.header-cover-img' ).removeAttr( 'data-top' ).removeAttr( 'style' );
 
-					// Add the delete view
-					bp.CoverImage.deleteView();
-
 					$( '.group-create #header-cover-image' ).css(
 						{
 							'background-image': 'url( ' + model.get( 'url' ) + ' )',
@@ -316,6 +283,12 @@ window.bp = window.bp || {};
 							{ url: model.get( 'url' ), action: 'uploaded' }
 						)
 					);
+
+					// Update UI for the cover image preview
+					$( '.bb-rl-cover-preview img' ).attr( 'src', model.get( 'url' ) );
+					$( '.bb-rl-cover-container' )
+						.removeClass( 'bb-rl-cover-container--no-cover' )
+						.addClass( 'bb-rl-cover-container--has-cover' );
 				}
 			}
 		}

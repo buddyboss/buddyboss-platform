@@ -58,8 +58,17 @@ if ( bp_is_group() ) {
 $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' bb-rl-cover-container--no-cover';
 ?>
 
+<div class="bb-rl-image-headline">
+	<h3><?php esc_html_e( "Cover", 'buddyboss' ); ?></h3>
+</div>
+<div class="bb-rl-image-caption">
+	<?php esc_html_e( "For best results, upload an image that is 1200px by 300px or larger.", 'buddyboss' ); ?>
+</div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-cover-preview">
+		<a class="bb-rl-remove-cover-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete Group Cover Photo', 'buddyboss' ); ?>">
+			<i class="bb-icons-rl-x"></i>
+		</a>
 		<img src="<?php echo esc_url( $cover_image_url ); ?>" class="group-cover-image" alt="<?php echo esc_attr( sprintf( __( '%s cover image', 'buddyboss' ), $cover_label ) ); ?>" />
 	</div>
 	<div class="bp-cover-image"></div>
@@ -68,32 +77,6 @@ $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' b
 <div class="bp-cover-image-manage"></div>
 
 <?php bp_attachments_get_template_part( 'uploader' ); ?>
-
-<script id="tmpl-bp-cover-image-delete" type="text/html">
-	<# if ( 'user' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to delete your current cover photo, use the delete Cover Photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit bb-rl-delete-cover" id="bp-delete-cover-image">
-			<?php
-			esc_html_e( 'Delete My Cover Photo', 'buddyboss' );
-			?>
-		</button>
-	<# } else if ( 'group' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to remove the existing group cover photo but not upload a new one, please use the delete group cover photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit bb-rl-delete-cover" id="bp-delete-cover-image">
-			<?php
-			esc_html_e( 'Delete Group Cover Photo', 'buddyboss' );
-			?>
-		</button>
-	<# } else { #>
-		<?php
-			/**
-			 * Fires inside the cover photo delete frontend template markup if no other data.object condition is met.
-			 *
-			 * @since BuddyPress 3.0.0
-			 */
-			do_action( 'bp_attachments_cover_image_delete_template' ); ?>
-	<# } #>
-</script>
 
 <?php
 	/**
