@@ -78,7 +78,7 @@ class BB_Activity_Readylaunch {
 			$output .= '<div class="activity-state-reactions">';
 
 			foreach ( $most_reactions as $reaction ) {
-				$icon   = bb_activity_prepare_emotion_icon( $reaction['id'] );
+				$icon    = bb_activity_prepare_emotion_icon( $reaction['id'] );
 				$output .= sprintf(
 					'<div class="reactions_item">%s</div>',
 					$icon
@@ -138,8 +138,8 @@ class BB_Activity_Readylaunch {
 			case 'activity':
 				if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
 					$mentioned_users        = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
-					$mentioned_users_link   = [];
-					$mentioned_users_avatar = [];
+					$mentioned_users_link   = array();
+					$mentioned_users_avatar = array();
 					foreach ( $mentioned_users as $mentioned_user ) {
 						$mentioned_users_link[]   = bp_core_get_userlink( $mentioned_user->ID );
 						$mentioned_users_avatar[] = bp_core_fetch_avatar(
@@ -476,11 +476,15 @@ class BB_Activity_Readylaunch {
 			return $params;
 		}
 		$reply_strings = array(
-			'replyLabel'        => __( '%d Reply', 'buddyboss' ),
-			'repliesLabel'      => __( '%d Replies', 'buddyboss' ),
-			'video_default_url' => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
-			'replyButtonText'   => __( 'Reply', 'buddyboss' ),
-			'commentButtonText' => __( 'Comment', 'buddyboss' ),
+			/* Translators: %d: reply count */
+			'replyLabel'         => __( '%d Reply', 'buddyboss' ),
+			/* Translators: %d: reply count */
+			'repliesLabel'       => __( '%d Replies', 'buddyboss' ),
+			'video_default_url'  => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
+			'replyButtonText'    => __( 'Reply', 'buddyboss' ),
+			'commentButtonText'  => __( 'Comment', 'buddyboss' ),
+			'replyPlaceholder'   => __( 'Write a reply...', 'buddyboss' ),
+			'commentPlaceholder' => __( 'Write a comment...', 'buddyboss' ),
 		);
 
 		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
