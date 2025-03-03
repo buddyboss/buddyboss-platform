@@ -148,6 +148,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bp_core_register_common_scripts', array( $this, 'bb_rl_register_common_scripts' ), 999, 1 );
 				add_filter( 'bp_core_register_common_styles', array( $this, 'bb_rl_register_common_styles' ), 999, 1 );
+
+				remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
 			}
 		}
 
