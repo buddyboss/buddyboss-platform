@@ -216,8 +216,11 @@ window.bp = window.bp || {};
 				'#bb-rl-activity-stream .activity-state-comments > .comments-count, #bb-rl-activity-stream .activity-meta > .generic-button .acomment-reply',
 				function ( e ) {
 					e.preventDefault();
-					var activityId = $( this ).closest( '.activity-item' ).data( 'bp-activity-id' );
-					bp.Nouveau.Activity.launchActivityPopup( activityId, '' );
+					var liElem     = $( this ).closest( '.activity-item' );
+					var activityId = liElem.data('bp-activity-id');
+					if ( '' === liElem.find( '.bb-rl-activity-comments > ul' ).html() ) {
+						bp.Nouveau.Activity.launchActivityPopup( activityId, '' );
+					}
 				}
 			);
 
@@ -978,8 +981,11 @@ window.bp = window.bp || {};
 			var activityStateComments = target.closest( '#bb-rl-activity-modal' ).find( '.activity-state-comments' );
 			if (
 				(
-					activityStateComments.length > 0 &&
-					target.hasClass( 'activity-state-comments' )
+					target.hasClass('activity-state-comments') &&
+					(
+						activityStateComments.length > 0 ||
+						'' !== target.closest( '.activity-item' ).find( '.bb-rl-activity-comments > ul' ).html()
+					)
 				) ||
 				target.hasClass( 'acomment-reply' ) ||
 				target.parent().hasClass( 'acomment-reply' ) ||
@@ -2939,10 +2945,13 @@ window.bp = window.bp || {};
 			    },
 			    div_editor      = ce.get( 0 );
 
-			if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
-				if ( isInsideModal ) {
+			if (!jQuery('body').hasClass('bb-is-mobile')) {
+				console.log('1clicked');
+				if (isInsideModal) {
+					console.log('1a1');
 					$( '.bb-rl-modal-activity-body' ).scrollTo( form, 500, scrollOptions );
 				} else {
+					console.log('1a2');
 					$.scrollTo( form, 500, scrollOptions );
 				}
 			} else {
