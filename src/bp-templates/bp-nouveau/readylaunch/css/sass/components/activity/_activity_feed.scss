@@ -71,6 +71,20 @@
 				display: none;
 			}
 		}
+
+		&.friendship_created,
+		&.updated_profile {
+
+			.bb-rl-activity-head {
+				border-bottom: 0;
+				padding-bottom: 0;
+			}
+		}
+
+		&.joined_group .bb-rl-activity-head-group {
+			border-bottom: 0;
+			padding-bottom: 0;
+		}
 	}
 
 	.bb-rl-activity-head {
