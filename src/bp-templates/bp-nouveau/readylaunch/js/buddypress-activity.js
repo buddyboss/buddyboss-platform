@@ -2928,17 +2928,21 @@ window.bp = window.bp || {};
 			target.closest( '.comment-item' ).addClass( 'bb-rl-comment-item-focus' );
 
 			var activity_data_nickname = ! _.isNull( activity_comment_data ) ? activity_comment_data.nickname : '',
-				activity_user_id       = ! _.isNull( activity_comment_data ) ? activity_comment_data.user_id : '',
-				atWho                  = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;',
-				current_user_id        = ! _.isUndefined( bbRlActivity.params.user_id ) ? bbRlActivity.params.user_id : '',
-				peak_offset            = (
-					$( window ).height() / 2 - 75
-				),
-				scrollOptions          = {
-					offset: - peak_offset,
-					easing: 'swing'
-			},
-				div_editor             = ce.get( 0 );
+			    activity_user_id       = ! _.isNull( activity_comment_data ) ? activity_comment_data.user_id : '';
+
+			var atWho = '';
+			if ( ! _.isUndefined( activity_data_nickname ) ) {
+				atWho = '<span class="atwho-inserted" data-atwho-at-query="@" contenteditable="false">@' + activity_data_nickname + '</span>&nbsp;';
+			}
+			var current_user_id = ! _.isUndefined( bbRlActivity.params.user_id ) ? bbRlActivity.params.user_id : '',
+			    peak_offset     = (
+				    $( window ).height() / 2 - 75
+			    ),
+			    scrollOptions   = {
+				    offset : -peak_offset,
+				    easing : 'swing'
+			    },
+			    div_editor      = ce.get( 0 );
 
 			if ( ! jQuery( 'body' ).hasClass( 'bb-is-mobile' ) ) {
 				if ( isInsideModal ) {
@@ -2972,6 +2976,7 @@ window.bp = window.bp || {};
 
 			// Tag user on comment replies.
 			if (
+				'' !== atWho &&
 				! target.hasClass( 'acomment-edit' ) &&
 				! target.hasClass( 'button' ) &&
 				! target.hasClass( 'activity-state-comments' ) &&
