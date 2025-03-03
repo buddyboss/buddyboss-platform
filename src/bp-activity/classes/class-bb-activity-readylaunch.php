@@ -479,6 +479,8 @@ class BB_Activity_Readylaunch {
 			'replyLabel'        => __( '%d Reply', 'buddyboss' ),
 			'repliesLabel'      => __( '%d Replies', 'buddyboss' ),
 			'video_default_url' => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
+			'replyButtonText'   => __( 'Reply', 'buddyboss' ),
+			'commentButtonText' => __( 'Comment', 'buddyboss' ),
 		);
 
 		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
@@ -499,7 +501,7 @@ class BB_Activity_Readylaunch {
 		if ( isset( $sizes['bb-document-image-preview-activity-image'] ) ) {
 			$sizes['bb-document-image-preview-activity-image'] = array(
 				'width'  => 700,
-				'height' => 'auto'
+				'height' => 'auto',
 			);
 		}
 
@@ -599,8 +601,7 @@ class BB_Activity_Readylaunch {
 	 */
 	public function bb_rl_modify_submit_button( $button ) {
 		if ( isset( $button['activity-new-comment'] ) ) {
-			$button['activity-new-comment']['attributes']['value']               = esc_html__( 'Comment', 'buddyboss' );
-			$button['activity-new-comment']['attributes']['data-add-edit-label'] = esc_html__( 'Reply', 'buddyboss' );
+			$button['activity-new-comment']['attributes']['value'] = esc_html__( 'Comment', 'buddyboss' );
 		}
 		return $button;
 	}

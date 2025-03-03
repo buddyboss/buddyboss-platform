@@ -1943,6 +1943,7 @@ window.bp = window.bp || {};
 			modal.find( '.bb-rl-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.addClass( 'root' );
 			form.find( '#ac-input-' + activityId ).focus();
+			form.find( 'input[name="ac_form_submit"]' ).val( bbRlActivity.strings.commentButtonText );
 			bp.Nouveau.Activity.clearFeedbackNotice( form );
 		},
 
@@ -2875,15 +2876,8 @@ window.bp = window.bp || {};
 
 
 			// Change the button text to Reply or Comment.
-			var formSubmitBtn = form.find( 'input[name="ac_form_submit"]' );
-
-			// Store original values as data attributes if not already set.
-			if ( ! formSubmitBtn.data( 'original-comment' )) {
-				formSubmitBtn.data( 'original-comment', formSubmitBtn.val() ); // Store initial value (Comment).
-				formSubmitBtn.data( 'original-reply', formSubmitBtn.attr( 'data-add-edit-label' ) ); // Store initial data-add-edit-label (Reply).
-			}
-
-			var isReply = false;
+			var formSubmitBtn = form.find('input[name="ac_form_submit"]'),
+				isReply = false;
 			if (
 				(
 					target.children( '.acomments-count' ).length > 0 ||
@@ -2898,13 +2892,11 @@ window.bp = window.bp || {};
 
 				isReply = activityId !== parentCommentId;
 			}
-			var originalCommentText = formSubmitBtn.data( 'original-comment' ),
-			    originalReplyText   = formSubmitBtn.data( 'original-reply' );
 
 			if ( isReply ) {
-				formSubmitBtn.val( originalReplyText ).attr( 'data-add-edit-label', originalCommentText );
+				formSubmitBtn.val( bbRlActivity.strings.replyButtonText );
 			} else {
-				formSubmitBtn.val( originalCommentText ).attr( 'data-add-edit-label', originalReplyText );
+				formSubmitBtn.val( bbRlActivity.strings.commentButtonText );
 			}
 
 			form.removeClass( 'not-initialized' );

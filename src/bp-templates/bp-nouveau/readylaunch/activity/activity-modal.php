@@ -77,7 +77,7 @@
 							</div>
 							<button type="button" class="bb-rl-button bb-rl-button--secondaryFill ac-reply-cancel">Cancel</button>
 							<div class="bb-rl-ac-submit-wrap">
-								<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Comment', 'buddyboss' ); ?>" data-add-edit-label="<?php esc_attr_e( 'Reply', 'buddyboss' ); ?>">
+								<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Comment', 'buddyboss' ); ?>">
 							</div>
 						</div>
 					</div>
