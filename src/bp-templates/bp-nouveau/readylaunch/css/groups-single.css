@@ -772,7 +772,7 @@
   cursor: not-allowed;
 }
 
-.bb-rl-manage-group-container form ul,
+.bb-rl-manage-group-container form ul:not(.select2-results__options),
 .bb-rl-manage-group-container form p {
   margin-bottom: var(--bb-rl-space-200);
 }
@@ -1380,6 +1380,10 @@
 
 .bb-rl-group-manage-form .bb-zoom-setting-content .bp-radio-wrap {
   margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-group-settings select {
+  width: 245px;
 }
 
 .bb-rl-group-invites-dashboard.bb-rl-group-dashboard-panel {

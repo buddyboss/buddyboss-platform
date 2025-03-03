@@ -32,6 +32,7 @@ window.bp = window.bp || {};
 				this.addListeners();
 				this.mobileSubMenu();
 				this.gridListFilter();
+				this.styledSelect();
 
 				this.bbReloadWindow();
 			},
@@ -110,7 +111,28 @@ window.bp = window.bp || {};
 					$this.select2( {
 						theme: 'rl',
 						containerCssClass: 'bb-rl-select2-container ' + customClass,
-						dropdownCssClass: 'bb-rl-select2-dropdown'
+						dropdownCssClass: 'bb-rl-select2-dropdown',
+						dropdownParent: $this.parent()
+					} );
+				} );
+			},
+
+			styledSelect: function () {
+				$( '.bb-rl-styled-select select' ).each( function () {
+					let $this = $( this );
+					let customClass = '';
+
+					// Check if parent container has specific class
+					let $parent = $this.closest( '.bb-rl-styled-select' );
+					if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
+						customClass += ' bb-rl-select-default';
+					}
+
+					$this.select2( {
+						theme: 'bb-rl-select2',
+						containerCssClass: 'bb-rl-select2-container ' + customClass,
+						dropdownCssClass: 'bb-rl-select2-dropdown',
+						dropdownParent: $this.parent()
 					} );
 				} );
 			},

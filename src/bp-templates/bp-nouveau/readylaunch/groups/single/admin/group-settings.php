@@ -21,7 +21,7 @@ if ( bp_is_group_create() ) : ?>
 	</h2>
 <?php endif; ?>
 
-<div class="group-settings-selections">
+<div class="group-settings-selections bb-rl-group-settings bb-rl-styled-select bb-rl-styled-select--default">
 
 	<fieldset class="radio group-status-type">
 		<legend><?php esc_html_e( 'Group visibility', 'buddyboss' ); ?></legend>

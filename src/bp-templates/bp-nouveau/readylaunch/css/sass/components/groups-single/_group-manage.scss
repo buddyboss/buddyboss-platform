@@ -87,7 +87,7 @@
 			font-size: 0.875rem;
 		}
 
-		ul,
+		ul:not(.select2-results__options),
 		p {
 			margin-bottom: var(--bb-rl-space-200);
 		}
@@ -607,5 +607,12 @@
 		.bp-radio-wrap {
 			margin-bottom: var(--bb-rl-space-100);
 		}
+	}
+}
+
+.bb-rl-group-settings {
+
+	select {
+		width: 245px;
 	}
 }
