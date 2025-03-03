@@ -26,9 +26,6 @@ window.bp = window.bp || {};
 			// Set up views
 			this.uploaderView();
 
-			// Inform about the needed dimensions
-			this.displayWarning( BP_Uploader.strings.cover_image_warnings.dimensions );
-
 			// Add click handler for the remove cover button
             $( document ).on(
                 'click',
@@ -184,24 +181,6 @@ window.bp = window.bp || {};
 						coverImageStatus.inject( '.bp-cover-image-status' );
 				}
 			);
-		},
-
-		removeWarning: function() {
-			if ( ! _.isNull( this.warning ) ) {
-				this.warning.remove();
-			}
-		},
-
-		displayWarning: function( message ) {
-			this.removeWarning();
-
-			this.warning = new bp.Views.uploaderWarning(
-				{
-					value: message
-				}
-			);
-
-			this.warning.inject( '.bp-cover-image-status' );
 		}
 	};
 
@@ -221,9 +200,6 @@ window.bp = window.bp || {};
 
 				if ( ! _.isUndefined( model.get( 'url' ) ) ) {
 
-					// initially remove the warning
-					$( '.bp-cover-image-status > .warning' ).remove();
-
 					/*
 					* if image url is defined meaning cover image uploaded successfully
 					* so feedback message should always be 1
@@ -240,10 +216,6 @@ window.bp = window.bp || {};
 								}
 						)
 					);
-
-					if ( model.get( 'feedback_code' ) === 0 ) { // add suggested dimensions if true
-						$( '.bp-cover-image-status' ).append( '<p class="warning">' + BP_Uploader.strings.cover_image_warnings.dimensions + '</p>' );
-					}
 
 					// Update the header of the page and reset the position
 					if ( $( '#header-cover-image .header-cover-img' ).length ) {
