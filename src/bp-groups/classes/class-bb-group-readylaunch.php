@@ -372,4 +372,24 @@ class BB_Group_Readylaunch {
 
 		return $html;
 	}
+
+	public static function bb_readylaunch_manage_member_actions( $buttons, $group, $type ) {
+		if ( 'manage_members' !== $type ) {
+			return $buttons;
+		}
+
+		unset( $buttons['unban_member'], $buttons['ban_member'], $buttons['remove_member'] );
+
+		return $buttons;
+	}
+
+	public static function bb_readylaunch_manage_negative_member_actions( $buttons, $group, $type ) {
+		if ( 'manage_members' !== $type ) {
+			return $buttons;
+		}
+
+		unset( $buttons['promote_mod'], $buttons['promote_admin'] );
+
+		return $buttons;
+	}
 }

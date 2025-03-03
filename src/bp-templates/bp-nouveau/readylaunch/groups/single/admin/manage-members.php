@@ -30,7 +30,7 @@ if ( bp_is_group_create() ) {
 	if ( $bp_group_admin_ids ) :
 		?>
 		<dt class="admin-section section-title">
-			<h3 class="bb-rl-section-sub-heading"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), 'buddyboss' ); ?></h3>
+			<h3 class="bb-rl-section-sub-heading"><?php echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ); ?></h3>
 		</dt>
 		<dd class="admin-listing">
 			<p class="bb-rl-manage-description-text"><?php printf( __( '%1$s have total control over the contents and settings of a group. That includes all the abilities of %2$s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %3$s, and delete the group.', 'buddyboss' ), get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ), strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) ); ?></p>
@@ -177,17 +177,62 @@ if ( bp_is_group_create() ) {
 								</p>
 							</div>
 
-							<div class="bb_more_options action">
-								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
-								<div class="bb_more_options_list bb_more_dropdown">
+							<div class="members-manage-buttons text-links-list">
+								<select class="member-action-dropdown" onchange="window.location.href=this.value">
+									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
 									<?php
+									// Get the action buttons HTML.
+									ob_start();
+									add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_member_actions', 20, 3 );
 									bp_nouveau_groups_manage_members_buttons(
 										array(
 											'container'         => 'div',
 											'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
-											'parent_element'    => '  ',
+											'parent_element'    => '',
 										)
 									);
+									remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_member_actions', 20, 3 );
+									$buttons_html = ob_get_clean();
+
+									// Extract all links using a simple regex pattern.
+									preg_match_all( '/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/', $buttons_html, $matches );
+
+									$member_actions = array();
+									if ( ! empty( $matches[1] ) && ! empty( $matches[2] ) ) {
+										foreach ( $matches[1] as $index => $url ) {
+											$member_actions[] = array(
+												'url'  => $url,
+												'text' => strip_tags( html_entity_decode( $matches[2][ $index ] ) ),
+											);
+										}
+									}
+
+										// Output each action as a dropdown option.
+									foreach ( $member_actions as $action ) {
+										printf(
+											'<option value="%s">%s</option>',
+											esc_attr( $action['url'] ),
+											esc_html( trim( $action['text'] ) )
+										);
+									}
+									?>
+								</select>
+							</div>
+
+
+							<div class="bb_more_options action">
+								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
+								<div class="bb_more_options_list bb_more_dropdown">
+									<?php
+										add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_negative_member_actions', 20, 3 );
+										bp_nouveau_groups_manage_members_buttons(
+											array(
+												'container'         => 'div',
+												'container_classes' => array( 'members-manage-buttons', 'text-links-list' ),
+												'parent_element'    => '',
+											)
+										);
+										remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_readylaunch_manage_negative_member_actions', 20, 3 );
 									?>
 								</div>
 								<div class="bb_more_dropdown_overlay"></div>
