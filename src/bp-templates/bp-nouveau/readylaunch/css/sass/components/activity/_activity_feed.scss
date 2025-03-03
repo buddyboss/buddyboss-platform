@@ -226,9 +226,9 @@
 
 		p:first-child {
 			color: var(--bb-rl-text-tertiary-color);
-			font-size: 16px;
+			font-size: 14px;
 			font-weight: 500;
-			line-height: 24px;
+			line-height: 20px;
 			width: 100%;
 
 			a {
@@ -242,10 +242,6 @@
 					margin: 0 6px 0 0;
 				}
 			}
-		}
-
-		p:has(img.avatar) a {
-			vertical-align: middle;
 		}
 
 		.activity-date {
@@ -609,6 +605,8 @@
 	}
 
 	.bb-rl-activity-group-post-meta {
+		display: flex;
+		align-items: center;
 
 		.bb-rl-activity-post-author,
 		> a {
@@ -624,6 +622,7 @@
 		.bb-rl-activity-post-author > p {
 			display: inline;
 			font-size: 13px;
+			line-height: 20px;
 			color: var(--bb-rl-text-tertiary-color);
 
 			.avatar {
@@ -632,9 +631,9 @@
 
 			a {
 				font-weight: 600;
-				color: var(--bb-rl-text-tertiary-color);
+				color: var(--bb-rl-text-secondary-color);
 				font-size: var(--bb-rl-font-size-sm);
-				line-height: 1;
+				line-height: 20px;
 			}
 		}
 
