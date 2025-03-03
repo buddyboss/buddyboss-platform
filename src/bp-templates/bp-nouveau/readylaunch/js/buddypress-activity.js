@@ -2883,18 +2883,23 @@ window.bp = window.bp || {};
 				formSubmitBtn.data( 'original-reply', formSubmitBtn.attr( 'data-add-edit-label' ) ); // Store initial data-add-edit-label (Reply).
 			}
 
-
-			isReply = false;
-			if ( target.hasClass( 'acomment-reply' ) && activityId !== itemId ) {
+			var isReply = false;
+			if (
+				(
+					target.children( '.acomments-count' ).length > 0 ||
+					target.hasClass( 'acomment-reply' )
+				) &&
+				activityId !== itemId
+			) {
 				isReply = true;
 			} else if ( target.hasClass( 'acomment-edit' ) ) {
-				var activityId      = target.closest( '.comment-item' ).parent().data( 'activity_id' ),
-					parentCommentId = target.closest( '.comment-item' ).parent().data( 'parent_comment_id' );
-				
-				isReply = activityId === parentCommentId ? false : true;
+				activityId          = target.closest( '.comment-item' ).parent().data( 'activity_id' );
+				var parentCommentId = target.closest( '.comment-item' ).parent().data( 'parent_comment_id' );
+
+				isReply = activityId !== parentCommentId;
 			}
-			var originalCommentText = formSubmitBtn.data('original-comment'),
-				originalReplyText   = formSubmitBtn.data('original-reply');
+			var originalCommentText = formSubmitBtn.data( 'original-comment' ),
+			    originalReplyText   = formSubmitBtn.data( 'original-reply' );
 
 			if ( isReply ) {
 				formSubmitBtn.val( originalReplyText ).attr( 'data-add-edit-label', originalCommentText );
