@@ -1942,7 +1942,8 @@ window.bp = window.bp || {};
 			modal.find( '.comment-item' ).removeClass( 'bb-rl-comment-item-focus' );
 			modal.find( '.bb-rl-modal-activity-footer' ).addClass( 'active' ).append( form );
 			form.addClass( 'root' );
-			form.find( '#ac-input-' + activityId ).focus().attr( 'placeholder', bbRlActivity.strings.commentPlaceholder );
+			form.find('#ac-input-' + activityId).focus();
+			form.find( '.bb-rl-ac-reply-content .ac-input' ).attr( 'data-placeholder', bbRlActivity.strings.commentPlaceholder );
 			form.find( 'input[name="ac_form_submit"]' ).val( bbRlActivity.strings.commentButtonText );
 			bp.Nouveau.Activity.clearFeedbackNotice( form );
 		},
@@ -2895,10 +2896,10 @@ window.bp = window.bp || {};
 
 			if ( isReply ) {
 				formSubmitBtn.val( bbRlActivity.strings.replyButtonText );
-				form.find( '.ac-input' ).attr( 'data-placeholder', bbRlActivity.strings.replyPlaceholder );
+				form.find( '.bb-rl-ac-reply-content .ac-input' ).attr( 'data-placeholder', bbRlActivity.strings.replyPlaceholder );
 			} else {
 				formSubmitBtn.val( bbRlActivity.strings.commentButtonText );
-				form.find( '.ac-input' ).attr( 'data-placeholder', bbRlActivity.strings.commentPlaceholder );
+				form.find( '.bb-rl-ac-reply-content .ac-input' ).attr( 'data-placeholder', bbRlActivity.strings.commentPlaceholder );
 			}
 
 			form.removeClass( 'not-initialized' );
