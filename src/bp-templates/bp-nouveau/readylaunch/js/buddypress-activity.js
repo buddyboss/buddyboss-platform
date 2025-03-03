@@ -2077,7 +2077,6 @@ window.bp = window.bp || {};
 					}
 				} );
 				modal.find( '.bb-rl-modal-activity-body' ).addClass( 'bb-rl-modal-activity-body-scroll-event-initiated' );
-				console.log('test');
 			}
 		},
 
