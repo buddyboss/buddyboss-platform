@@ -234,6 +234,27 @@
   border-radius: var(--bb-rl-radius-full);
 }
 
+.bb-rl-message-lists .bb-rl-thread-item .bb-rl-thread-avatar .thread-multiple-avatar {
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.bb-rl-message-lists .bb-rl-thread-item .bb-rl-thread-avatar .thread-multiple-avatar img {
+  height: 24px;
+  width: 24px;
+}
+
+.bb-rl-message-lists .bb-rl-thread-item .bb-rl-thread-avatar .thread-multiple-avatar img + img {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+}
+
+.bb-rl-message-lists .bb-rl-thread-item.bb-rl-group-thread .bb-rl-thread-avatar img {
+  border-radius: var(--bb-rl-radius-md);
+}
+
 .bb-rl-message-lists .bb-rl-thread-item .bb-rl-thread-content {
   flex: 1;
   max-width: calc(100% - 48px);

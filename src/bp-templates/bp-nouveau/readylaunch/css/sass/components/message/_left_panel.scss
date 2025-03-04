@@ -96,6 +96,30 @@
 				width: 40px;
 				border-radius: var(--bb-rl-radius-full);
 			}
+
+			.thread-multiple-avatar {
+				width: 40px;
+				height: 40px;
+				position: relative;
+
+				img {
+					height: 24px;
+					width: 24px;
+
+					+ img {
+						position: absolute;
+						left: 16px;
+						top: 16px;
+					}
+				}
+			}
+		}
+
+		&.bb-rl-group-thread {
+
+			.bb-rl-thread-avatar img {
+				border-radius: var(--bb-rl-radius-md);
+			}
 		}
 
 		.bb-rl-thread-content {
