@@ -1001,6 +1001,10 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$document.keydown( this.mediumFormAction.bind( this ) );
+
+			// group manage actions.
+			$document.on('change', '.groups-manage-members-list select.member-action-dropdown', this.groupManageAction.bind( this ) );
+			$document.on('click', '.groups-manage-members-list .bb-rl-group-member-action-button:not(.disabled)', this.groupManageActionClick.bind( this ) );
 		},
 
 		/**
@@ -4372,6 +4376,27 @@ window.bp = window.bp || {};
 			}
 
 			self.objectRequest( queryData );
+		},
+
+		groupManageAction: function ( event ) {
+			var target = $( event.currentTarget );
+			var currentValue = target.val();
+			var action_button = target.parents( '.members-manage-buttons' ).find( '.bb-rl-group-member-action-button' );
+			if ( currentValue ) {
+				action_button.removeClass('disabled');
+			} else {
+				action_button.addClass('disabled');
+			}
+		},
+
+		groupManageActionClick: function ( event ) {
+			var target = $( event.currentTarget );
+			var action_url = target.parents( '.members-manage-buttons' ).find( '.member-action-dropdown' ).val();
+			if ( action_url ) {
+				window.location.href = action_url;
+			}
+
+			return false;
 		},
 	};
 

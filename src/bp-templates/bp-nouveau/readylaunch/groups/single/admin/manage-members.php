@@ -119,14 +119,14 @@ if ( bp_is_group_create() ) {
 							</div>
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
-								<select class="member-action-dropdown" onchange="window.location.href=this.value">
+								<select class="member-action-dropdown">
 									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
 									<option value="<?php bp_group_member_promote_admin_link( array( 'user_id' => $bp_mod_user_id ) ); ?>">
 										<?php printf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) ); ?>
 									</option>
 								</select>
 								<div class="bb-rl-group-member-action-wrapper">
-									<a href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></a>
+									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 								</div>
 							</div>
 
@@ -199,7 +199,7 @@ if ( bp_is_group_create() ) {
 							</div>
 
 							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
-								<select class="member-action-dropdown" onchange="window.location.href=this.value">
+								<select class="member-action-dropdown">
 									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
 									<?php
 									// Get the action buttons HTML.
@@ -239,7 +239,7 @@ if ( bp_is_group_create() ) {
 									?>
 								</select>
 								<div class="bb-rl-group-member-action-wrapper">
-									<a href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></a>
+									<button class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
 								</div>
 							</div>
 
