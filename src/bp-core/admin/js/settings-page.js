@@ -2552,7 +2552,7 @@ window.bp = window.bp || {};
 
 				// Check for escaped HTML tags
 				if ( escapedHtmlRegex.test( content ) ) {
-					alert( 'Your content contains escaped HTML tags. Please fix them before submitting.' );
+					alert( BP_ADMIN.forum_validation.escaped_html_tags );
 					event.preventDefault();
 					return;
 				}
@@ -2569,7 +2569,7 @@ window.bp = window.bp || {};
 				} );
 
 				if ( !isValid ) {
-					alert( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.' );
+					alert( BP_ADMIN.forum_validation.malformed_ul_li );
 					event.preventDefault();
 					return;
 				}
