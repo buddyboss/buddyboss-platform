@@ -8,10 +8,11 @@
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
 ?>
 
 <input type="hidden" id="thread-id" value="" />
-<div class="bp-messages-container bp-view-message">
+<div class="bp-messages-container bp-view-message bp-rl-messages-container">
 	<div class="bp-messages-nav-panel loading">
 		<div class="message-header-loading bp-hide">
 			<div class="message-header-loading_top">

@@ -155,8 +155,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						bp_is_single_activity()
 					) &&
 					! empty( $this->settings['activity'] )
+				) ||
+				(
+					bp_is_messages_component()
 				)
 			) {
+
 				return true;
 			}
 
