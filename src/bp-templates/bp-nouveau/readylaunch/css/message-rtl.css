@@ -297,6 +297,10 @@
   opacity: 1;
 }
 
+.bb-rl-message-lists .bb-rl-message-thread-options.more_option_active .bb_more_options_action i {
+  opacity: 1;
+}
+
 .bb-rl-message-lists .bb-rl-message-thread-options .message_action__list {
   position: absolute;
   top: 30px;
@@ -323,8 +327,41 @@
   cursor: pointer;
 }
 
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li > a:before {
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 0 0 var(--bb-rl-space-100);
+}
+
 .bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li > a:hover {
   background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.unread a:before {
+  content: "\e224";
+}
+
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.hide_thread a:before {
+  content: "\e20c";
+}
+
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.view_members a:before {
+  content: "\e68e";
+}
+
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.report_thread a:before {
+  content: "\e244";
+}
+
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.report_member_thread a:before {
+  content: "\e3de";
+}
+
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.delete_thread a:before,
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.delete_messages a:before {
+  content: "\e4a6";
 }
 
 .bb-rl-message-lists .bb-rl-message-thread-options .message_action__list.is_visible {

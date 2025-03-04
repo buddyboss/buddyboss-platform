@@ -164,6 +164,13 @@
 			}
 		}
 
+		&.more_option_active {
+
+			.bb_more_options_action i {
+				opacity: 1;
+			}
+		}
+
 		.message_action__list {
 			position: absolute;
 			top: 30px;
@@ -178,18 +185,54 @@
 			list-style: none;
 			display: none;
 
-			li > a {
-				display: flex;
-				align-items: center;
-				color: var(--bb-rl-text-secondary-color);
-				font-size: var(--bb-rl-font-size-sm);
-				font-weight: 500;
-				line-height: var(--bb-rl-base-line-small);
-				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-				cursor: pointer;
+			li {
 
-				&:hover {
-					background-color: var(--bb-rl-background-secondary-color);
+				> a {
+					display: flex;
+					align-items: center;
+					color: var(--bb-rl-text-secondary-color);
+					font-size: var(--bb-rl-font-size-sm);
+					font-weight: 500;
+					line-height: var(--bb-rl-base-line-small);
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+					cursor: pointer;
+
+					&:before {
+						font-family: bb-icons-rl;
+						color: var(--bb-rl-icon-secondary-color);
+						font-size: 20px;
+						font-weight: 400;
+						margin: 0 var(--bb-rl-space-100) 0 0;
+					}
+
+					&:hover {
+						background-color: var(--bb-rl-background-secondary-color);
+					}
+				}
+
+				&.unread a:before {
+					content: "\e224";
+				}
+
+				&.hide_thread a:before {
+					content: "\e20c";
+				}
+
+				&.view_members a:before {
+					content: "\e68e";
+				}
+
+				&.report_thread a:before {
+					content: "\e244";
+				}
+
+				&.report_member_thread a:before {
+					content: "\e3de";
+				}
+
+				&.delete_thread a:before,
+				&.delete_messages a:before {
+					content: "\e4a6";
 				}
 			}
 
