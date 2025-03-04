@@ -3293,8 +3293,8 @@ button[data-balloon] {
   border: 0;
   padding: 0;
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
 }
 
@@ -3302,13 +3302,46 @@ button[data-balloon] {
   content: "\e4f6";
   font-weight: 400;
   font-family: bb-icons-rl;
-  font-size: var(--bb-rl-font-size-base);
+  font-size: var(--bb-rl-base-line);
   color: var(--bb-rl-icon-primary-color);
   font-style: normal;
 }
 
 .bb-readylaunch-template .bb-model-header .mfp-close [class*="bb-icon"] {
   display: none;
+}
+
+.bb-readylaunch-template .bb-model-header .bb-model-close-button {
+  margin-left: auto;
+  line-height: 1;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
+.bb-readylaunch-template .bb-model-header .bb-model-close-button .bb-icon-times {
+  display: inline-flex;
+  line-height: 1;
+  align-items: center;
+}
+
+.bb-readylaunch-template .bb-model-header .bb-model-close-button .bb-icon-times::before {
+  content: "\e4f6";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-base-line);
+  color: var(--bb-rl-icon-primary-color);
+  font-style: normal;
+}
+
+.bb-readylaunch-template .bb-model-header .bp-upload-tab {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--bb-rl-text-color);
 }
 
 .bb-readylaunch-template .bb-report-type-wrp {
@@ -3388,10 +3421,15 @@ button[data-balloon] {
   padding: 5px var(--bb-rl-space-100);
 }
 
-.bb-readylaunch-template .bb-model-footer {
-  display: flex;
+.bb-readylaunch-template .bb-report-type-wrp .bb-model-footer {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
   margin: var(--bb-rl-space-200) -24px 0;
+}
+
+.bb-readylaunch-template .bb-model-footer {
+  display: flex;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  margin: var(--bb-rl-space-200) 0 0;
   justify-content: flex-end;
   gap: var(--bb-rl-space-100);
   border-top: 1px solid var(--bb-rl-border-secondary-color);
@@ -3481,6 +3519,103 @@ button[data-balloon] {
   font-size: 20px;
   color: var(--bb-rl-border-danger-secondary-color);
   font-style: normal;
+}
+
+.bb-readylaunch-template .modal-container #bp-media-post-content {
+  height: 112px;
+  border: 0;
+  padding: var(--bb-rl-space-200) 0;
+  width: 100%;
+  resize: none;
+}
+
+.bb-readylaunch-template .bbm-uploader-model-wrap .media-uploader-wrapper {
+  margin: 0 0 var(--bb-rl-space-200);
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  padding-top: var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template .bbm-uploader-model-wrap .bb-field-steps {
+  padding: 0 var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .bb-model-footer .bb-uploader-steps-prev,
+.bb-readylaunch-template .bb-model-footer #bp-media-submit,
+.bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+}
+
+.bb-readylaunch-template .bb-model-footer #bp-media-submit,
+.bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit {
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-readylaunch-template .bb-model-footer #bp-media-submit:hover,
+.bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-readylaunch-template .bb-model-footer #bp-media-submit:focus-within,
+.bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-readylaunch-template .bb-model-footer #bp-media-submit:disabled,
+.bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .bb-model-footer .bb-uploader-steps-prev {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+}
+
+.bb-readylaunch-template .bb-model-footer .bb-uploader-steps-prev:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-readylaunch-template .bb-model-footer .bb-uploader-steps-prev:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-readylaunch-template .bb-model-footer .bb-uploader-steps-prev:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-readylaunch-template .bb-field-uploader-next {
+  color: var(--bb-rl-text-color);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-readylaunch-template .bb-field-uploader-next i.bb-icon-folder {
+  line-height: 1;
+}
+
+.bb-readylaunch-template .bb-field-uploader-next i.bb-icon-folder::before {
+  content: "\e256";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-icon-primary-color);
 }
 
 .bb-rl-container-inner .bp-pagination,
