@@ -123,7 +123,8 @@
 			display: none;
 		}
 
-		.generic-button {
+		.generic-button,
+		> ul li {
 
 			a {
 
@@ -211,6 +212,12 @@
 			position: absolute;
 			width: 1px;
 			word-wrap: normal;
+		}
+
+		> ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
 		}
 	}
 }

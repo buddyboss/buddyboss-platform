@@ -4634,9 +4634,13 @@ body.admin-bar .bb-rl-left-panel {
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a,
+.bb-rl-context-wrap .bb-rl-context-dropdown > ul li a,
 .bb-rl-context-wrap .bb_more_dropdown .generic-button a,
+.bb-rl-context-wrap .bb_more_dropdown > ul li a,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown .generic-button a,
-.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a {
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown > ul li a,
+.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a,
+.bb-rl-container .bb_more_options .bb_more_dropdown > ul li a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -4649,9 +4653,13 @@ body.admin-bar .bb-rl-left-panel {
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown .generic-button a:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown > ul li a:hover,
 .bb-rl-context-wrap .bb_more_dropdown .generic-button a:hover,
+.bb-rl-context-wrap .bb_more_dropdown > ul li a:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown .generic-button a:hover,
-.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a:hover {
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown > ul li a:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown .generic-button a:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown > ul li a:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
@@ -4730,6 +4738,15 @@ body.admin-bar .bb-rl-left-panel {
   position: absolute;
   width: 1px;
   word-wrap: normal;
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown > ul,
+.bb-rl-context-wrap .bb_more_dropdown > ul,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown > ul,
+.bb-rl-container .bb_more_options .bb_more_dropdown > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .bb-rl-skeleton-grid {
