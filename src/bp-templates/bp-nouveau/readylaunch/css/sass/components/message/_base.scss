@@ -13,10 +13,10 @@
 }
 
 .bp-rl-messages-container {
-    display: flex;
+	display: flex;
 	border: 1px solid var(--bb-rl-border-secondary-color);
-    border-top: 0;
-    background-color: var(--bb-rl-background-color);
+	border-top: 0;
+	background-color: var(--bb-rl-background-color);
 
 	.bb-rl-messages-nav-panel {
 		flex: 0 0 385px;

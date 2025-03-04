@@ -107,7 +107,7 @@
 }
 
 .site.bb-readylaunch {
-  margin-left: 0;
+  margin-right: 0;
 }
 
 .messages-wrapper {
@@ -151,7 +151,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 10px;
+  right: 10px;
   font-family: bb-icons-rl;
   font-size: 16px;
   line-height: 1;
@@ -165,14 +165,14 @@
   line-height: 1.2;
   border-radius: var(--bb-rl-radius-full);
   border: 1px solid var(--bb-rl-border-tertiary-color);
-  padding: 6px 6px 6px 35px;
+  padding: 6px 35px 6px 6px;
   width: 100%;
 }
 
 .messages-search #user_messages_search_submit {
   position: absolute;
   top: 50%;
-  left: 10px;
+  right: 10px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -191,7 +191,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 12px;
+  left: 12px;
   cursor: pointer;
 }
 

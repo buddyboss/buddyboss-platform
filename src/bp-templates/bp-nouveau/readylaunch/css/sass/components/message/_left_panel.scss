@@ -1,0 +1,67 @@
+.bb-rl-messages-filters {
+	padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.messages-search {
+	position: relative;
+
+	&:before {
+		content: "\e30c";
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		left: 10px;
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		line-height: 1;
+		color: var(--bb-rl-icon-secondary-color);
+		pointer-events: none;
+	}
+
+	input[type="search"] {
+		color: var(--bb-rl-text-tertiary-color);
+		font-size: var(--bb-rl-font-size-sm);
+		line-height: 1.2;
+		border-radius: var(--bb-rl-radius-full);
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		padding: 6px 6px 6px 35px;
+		width: 100%;
+	}
+
+	#user_messages_search_submit {
+		position: absolute;
+		top: 50%;
+		left: 10px;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		opacity: 0;
+		height: 16px;
+		width: 16px;
+		cursor: pointer;
+	}
+
+	#user_messages_search_reset {
+		font-size: 14px;
+		color: var(--bb-rl-icon-tertiary-color);
+		background-color: transparent;
+		border: 0;
+		padding: 0;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 12px;
+		cursor: pointer;
+
+		.bb-icon-times:before {
+			content: "\e4f6";
+			font-family: bb-icons-rl;
+		}
+	}
+}
