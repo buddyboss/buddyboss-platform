@@ -65,10 +65,15 @@ if ( bp_is_group_create() ) {
 
 							<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
 
-								<p class="action text-links-list">
-									<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ); ?></a>
-								</p>
-
+								<div class="bb_more_options action">
+									<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
+									<div class="bb_more_options_list bb_more_dropdown">
+										<div class="generic-button">
+											<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $bp_org_user_id ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ); ?></a>
+										</div>
+									</div>
+									<div class="bb_more_dropdown_overlay"></div>
+								</div>
 							<?php endif; ?>
 
 						</li>
@@ -113,11 +118,27 @@ if ( bp_is_group_create() ) {
 								</p>
 							</div>
 
-							<div class="members-manage-buttons action text-links-list">
-								<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $bp_mod_user_id ) ); ?>" class="button confirm mod-promote-to-admin"><?php printf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) ); ?></a>
-								<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ); ?></a>
+							<div class="members-manage-buttons text-links-list bb-rl-members-manage-dropdown">
+								<select class="member-action-dropdown" onchange="window.location.href=this.value">
+									<option value=""><?php esc_html_e( 'Select Action', 'buddyboss' ); ?></option>
+									<option value="<?php bp_group_member_promote_admin_link( array( 'user_id' => $bp_mod_user_id ) ); ?>">
+										<?php printf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) ); ?>
+									</option>
+								</select>
+								<div class="bb-rl-group-member-action-wrapper">
+									<a href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></a>
+								</div>
 							</div>
 
+							<div class="bb_more_options action">
+								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
+								<div class="bb_more_options_list bb_more_dropdown">
+									<div class="generic-button">
+										<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $bp_mod_user_id ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ); ?></a>
+									</div>
+								</div>
+								<div class="bb_more_dropdown_overlay"></div>
+							</div>
 						</li>
 
 					<?php endwhile; ?>
@@ -221,7 +242,6 @@ if ( bp_is_group_create() ) {
 									<a href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></a>
 								</div>
 							</div>
-
 
 							<div class="bb_more_options action">
 								<a href="#" class="bb_more_options_action" aria-label="More Options"><i class="bb-icons-rl-dots-three"></i></a>
