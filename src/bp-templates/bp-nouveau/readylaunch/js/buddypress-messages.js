@@ -514,10 +514,10 @@ window.bp = window.bp || {};
 					$( filters_view.$el ).find( 'input[type=search]' ).val( collection.options.search_terms );
 				}
 
-				$( '.bb-rl-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
+				$( '.bb-rl-messages-threads-list .bb-rl-message-lists > li .bb-rl-thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
-					var date_width = $( this ).find( '.thread-date' ).width();
-					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					var date_width = $( this ).find( '.bb-rl-thread-date' ).width();
+					$( this ).find( '.bb-rl-thread-excerpt' ).css( { 'max-width': available_width - date_width } );
 					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
 				} );
 
@@ -995,7 +995,7 @@ window.bp = window.bp || {};
 			$( 'body' ).removeClass( 'message_more_option_open' );
 
 			var is_current_thread = 'no';
-			if ( parseInt( thread_id ) === parseInt( $( event.currentTarget ).closest( '#bp-message-thread-header' ).find( '.message_action__list' ).data( 'bp-thread-id' ) ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
+			if ( parseInt( thread_id ) === parseInt( $( event.currentTarget ).closest( '#bp-message-thread-header' ).find( '.message_action__list' ).data( 'bp-thread-id' ) ) || $( event.currentTarget ).closest( '.bb-rl-thread-item' ).hasClass( 'current' ) ) {
 				is_current_thread = 'yes';
 			}
 
@@ -1047,7 +1047,7 @@ window.bp = window.bp || {};
 				'delete' === action
 			) {
 				target.parents( '.message_actions' ).addClass( 'loading' );
-				target.parents( '.message-thread-options' ).addClass( 'loading' );
+				target.parents( '.bb-rl-message-thread-options' ).addClass( 'loading' );
 			}
 
 			if ( 1 === $( event.currentTarget ).closest( '#bp-message-thread-header' ).length && ( 'delete' === action || 'delete_thread' === action ) ) {
@@ -1060,7 +1060,7 @@ window.bp = window.bp || {};
 				if ( ! confirm( BP_Nouveau.messages.delete_confirmation ) ) {
 					bp.Nouveau.Messages.removeFeedback();
 					target.parents( '.message_actions' ).removeClass( 'loading' );
-					target.parents( '.message-thread-options' ).removeClass( 'loading' );
+					target.parents( '.bb-rl-message-thread-options' ).removeClass( 'loading' );
 					return;
 				}
 			}
@@ -1069,7 +1069,7 @@ window.bp = window.bp || {};
 				if ( ! confirm( BP_Nouveau.messages.delete_thread_confirmation ) ) {
 					bp.Nouveau.Messages.removeFeedback();
 					target.parents( '.message_actions' ).removeClass( 'loading' );
-					target.parents( '.message-thread-options' ).removeClass( 'loading' );
+					target.parents( '.bb-rl-message-thread-options' ).removeClass( 'loading' );
 					return;
 				}
 			}
@@ -1226,7 +1226,7 @@ window.bp = window.bp || {};
 							$.each(
 								response.ids,
 								function( index, value ) {
-									$( '#bb-rl-messages-threads-list .message-lists .thread-item.' + value ).addClass( 'unread' );
+									$( '#bb-rl-messages-threads-list .bb-rl-message-lists .bb-rl-thread-item.' + value ).addClass( 'unread' );
 								}
 							);
 						} else if ( 'read' === action && ! _.isUndefined( response.ids ) ) {
@@ -1234,7 +1234,7 @@ window.bp = window.bp || {};
 							$.each(
 								response.ids,
 								function( index, value ) {
-									$( '#bb-rl-messages-threads-list .message-lists .thread-item.' + value ).removeClass( 'unread' );
+									$( '#bb-rl-messages-threads-list .bb-rl-message-lists .bb-rl-thread-item.' + value ).removeClass( 'unread' );
 								}
 							);
 						}
@@ -1243,7 +1243,7 @@ window.bp = window.bp || {};
 					}
 
 					target.parents( '.message_actions' ).removeClass( 'loading' );
-					target.parents( '.message-thread-options' ).removeClass( 'loading' );
+					target.parents( '.bb-rl-message-thread-options' ).removeClass( 'loading' );
 				}
 			).fail(
 				function( response ) {
@@ -1274,7 +1274,7 @@ window.bp = window.bp || {};
 					}
 
 					target.parents( '.message_actions' ).removeClass( 'loading' );
-					target.parents( '.message-thread-options' ).removeClass( 'loading' );
+					target.parents( '.bb-rl-message-thread-options' ).removeClass( 'loading' );
 				}
 			);
 
@@ -1685,7 +1685,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( 'undefined' !== typeof this.hideLoader && true === this.hideLoader ) {
-					$( '#message-threads' ).empty();
+					$( '#bb-rl-message-threads' ).empty();
 				}
 
 				return resp.threads;
@@ -4130,21 +4130,21 @@ window.bp = window.bp || {};
 	bp.Views.userThreads = bp.Nouveau.Messages.View.extend(
 		{
 			tagName   : 'div',
-			className : 'bp-messages-user-threads',
+			className : 'bb-rl-messages-user-threads',
 			loadingFeedback : false,
 
 			events: {
-				'click .bp-message-link' : 'changePreview',
+				'click .bb-rl-message-link' : 'changePreview',
 				'scroll' : 'scrolled',
 				'click .close-conversation' : 'doAction',
-				'click .message-thread-options > .bb_more_options_action' : 'ToggleOptions',
+				'click .bb-rl-message-thread-options > .bb_more_options_action' : 'ToggleOptions',
 				'click .bb_more_options_list a' : 'doThreadAction',
 				'click .bb_more_options_list button' : 'doThreadAction',
 			},
 
 			initialize: function() {
 				var Views = [
-					new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'message-threads', className: 'message-lists' } )
+					new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'bb-rl-message-threads', className: 'bb-rl-message-lists' } )
 				];
 
 				this.listenTo( Backbone, 'relistelements', this.updateThreadsList );
@@ -4235,7 +4235,7 @@ window.bp = window.bp || {};
 									thread.set( { sender_is_you: false } );
 								}
 
-								if ( $( document.body ).find( '#message-threads li.' + thread_id ).hasClass( 'current' ) ) {
+								if ( $( document.body ).find( '#bb-rl-message-threads li.' + thread_id ).hasClass( 'current' ) ) {
 									thread.set( { unread: false } );
 								} else if ( parseInt( response.message.sender_id ) !== parseInt( BP_Nouveau.current.message_user_id ) ) {
 									thread.set( { unread: true } );
@@ -4300,10 +4300,10 @@ window.bp = window.bp || {};
 					this.requestThreads( hideLoader );
 				}
 
-				$( '.bb-rl-messages-threads-list .message-lists > li .thread-subject' ).each( function () {
+				$( '.bb-rl-messages-threads-list .bb-rl-message-lists > li .bb-rl-thread-subject' ).each( function () {
 					var available_width = $( this ).width() - 10;
-					var date_width = $( this ).find( '.thread-date' ).width();
-					$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+					var date_width = $( this ).find( '.bb-rl-thread-date' ).width();
+					$( this ).find( '.bb-rl-thread-excerpt' ).css( { 'max-width': available_width - date_width } );
 					$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
 				} );
 
@@ -4433,7 +4433,7 @@ window.bp = window.bp || {};
 
 			cleanContent: function() {
 				_.each(
-					this.views._views['#message-threads'],
+					this.views._views['#bb-rl-message-threads'],
 					function( view ) {
 						view.remove();
 					}
@@ -4447,7 +4447,7 @@ window.bp = window.bp || {};
 					thread.set( 'active', true );
 				}
 
-				this.views.add( '#message-threads', new bp.Views.userThread( { model: thread } ), { at: this.collection.indexOf( thread ) } );
+				this.views.add( '#bb-rl-message-threads', new bp.Views.userThread( { model: thread } ), { at: this.collection.indexOf( thread ) } );
 			},
 
 			setActiveThread: function( active ) {
@@ -4515,7 +4515,7 @@ window.bp = window.bp || {};
 				}
 
 				$.each(
-					$( '.thread-content' ),
+					$( '.bb-rl-thread-content' ),
 					function() {
 						$( this ).removeClass( 'current' );
 					}
@@ -4563,7 +4563,7 @@ window.bp = window.bp || {};
 			},
 
 			ToggleOptions: function( event ) {
-				$( event.currentTarget ).closest( '.thread-item' ).toggleClass( 'optionsOpen' ).siblings().removeClass( 'optionsOpen' );
+				$( event.currentTarget ).closest( '.bb-rl-thread-item' ).toggleClass( 'optionsOpen' ).siblings().removeClass( 'optionsOpen' );
 			},
 
 			doThreadAction: function( event ) {
@@ -4576,7 +4576,7 @@ window.bp = window.bp || {};
 		{
 			tagName   : 'li',
 			template  : bp.template( 'bp-messages-thread' ),
-			className : 'thread-item',
+			className : 'bb-rl-thread-item',
 
 			events: {
 				'click .message-check' : 'singleSelect'
@@ -4588,7 +4588,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( this.model.get( 'is_group' ) && 1 === this.model.get( 'is_group_thread' ) ) {
-					this.el.className += ' group-thread';
+					this.el.className += ' bb-rl-group-thread';
 				}
 
 				if ( 1 === this.model.get( 'can_user_send_message_in_thread' ) || true === this.model.get( 'can_user_send_message_in_thread' ) ) {
@@ -4744,11 +4744,11 @@ window.bp = window.bp || {};
 				$( '.bb-messages-search-no-thread-found' ).remove();
 				$( '.bb-messages-no-thread-found' ).remove();
 				$( '.messages-search-loader' ).remove();
-				$( '.bb-rl-messages-threads-list .message-lists > li .thread-subject' ).each(
+				$( '.bb-rl-messages-threads-list .bb-rl-message-lists > li .bb-rl-thread-subject' ).each(
 					function () {
 						var available_width = $( this ).width() - 10;
-						var date_width      = $( this ).find( '.thread-date' ).width();
-						$( this ).find( '.thread-excerpt' ).css( { 'max-width': available_width - date_width } );
+						var date_width      = $( this ).find( '.bb-rl-thread-date' ).width();
+						$( this ).find( '.bb-rl-thread-excerpt' ).css( { 'max-width': available_width - date_width } );
 						$( this ).find( '.typing-indicator' ).css( { 'max-width': available_width - date_width } );
 					}
 				);
@@ -4764,7 +4764,7 @@ window.bp = window.bp || {};
 				} else if ( 'unarchived' === bp.Nouveau.Messages.threadType ) {
 					no_result_view = new bp.Views.MessagesSearchNoThreads();
 				}
-				no_result_view.render().$el.appendTo( '.bp-messages-user-threads' );
+				no_result_view.render().$el.appendTo( '.bb-rl-messages-user-threads' );
 
 				if ( 'error' === response.type ) {
 					bp.Nouveau.Messages.displaySearchFeedback( response.feedback, response.type );
@@ -5154,7 +5154,7 @@ window.bp = window.bp || {};
 					$( document.body ).find( '#bb-rl-messages-threads-list li.' + first_message.thread_id ).length &&
 					'undefined' !== typeof first_message.display_date_list
 				) {
-					var list_date = $( document.body ).find( '#bb-rl-messages-threads-list li.' + first_message.thread_id + ' .thread-date' );
+					var list_date = $( document.body ).find( '#bb-rl-messages-threads-list li.' + first_message.thread_id + ' .bb-rl-thread-date' );
 					list_date.find( 'time' ).attr( 'datetime', first_message.date.toISOString() );
 					list_date.find( 'time' ).html( first_message.display_date_list );
 				}
@@ -5740,7 +5740,7 @@ window.bp = window.bp || {};
 			},
 
 			composeMessage: function() {
-				$( '#message-threads .thread-item.current' ).removeClass( 'current' );
+				$( '#bb-rl-message-threads .bb-rl-thread-item.current' ).removeClass( 'current' );
 				bp.Nouveau.Messages.composeView();
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) ) {
@@ -5867,16 +5867,16 @@ window.bp = window.bp || {};
 				$( '#thread-id' ).val( thread_id );
 
 				$.each(
-					$( '.thread-content' ),
+					$( '.bb-rl-thread-content' ),
 					function() {
 						var _this = $( this );
 						if ( _this.data( 'thread-id' ) == thread_id ) {
-							_this.closest( '.thread-item' ).addClass( 'current' );
-							if ( _this.closest( '.thread-item' ).hasClass( 'unread' ) ) {
-								_this.closest( '.thread-item' ).removeClass( 'unread' );
+							_this.closest( '.bb-rl-thread-item' ).addClass( 'current' );
+							if ( _this.closest( '.bb-rl-thread-item' ).hasClass( 'unread' ) ) {
+								_this.closest( '.bb-rl-thread-item' ).removeClass( 'unread' );
 							}
 						} else {
-							_this.closest( '.thread-item' ).removeClass( 'current' );
+							_this.closest( '.bb-rl-thread-item' ).removeClass( 'current' );
 						}
 					}
 				);
@@ -5931,16 +5931,16 @@ window.bp = window.bp || {};
 				$( '#thread-id' ).val( thread_id );
 
 				$.each(
-					$( '.thread-content' ),
+					$( '.bb-rl-thread-content' ),
 					function() {
 						var _this = $( this );
 						if ( _this.data( 'thread-id' ) == thread_id ) {
-							_this.closest( '.thread-item' ).addClass( 'current' );
-							if ( _this.closest( '.thread-item' ).hasClass( 'unread' ) ) {
-								_this.closest( '.thread-item' ).removeClass( 'unread' );
+							_this.closest( '.bb-rl-thread-item' ).addClass( 'current' );
+							if ( _this.closest( '.bb-rl-thread-item' ).hasClass( 'unread' ) ) {
+								_this.closest( '.bb-rl-thread-item' ).removeClass( 'unread' );
 							}
 						} else {
-							_this.closest( '.thread-item' ).removeClass( 'current' );
+							_this.closest( '.bb-rl-thread-item' ).removeClass( 'current' );
 						}
 					}
 				);

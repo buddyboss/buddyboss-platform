@@ -921,8 +921,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$document.on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
-			$document.on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
-			$document.on( 'click', '#message-threads .report-content', this.threadListReportPopup );
+			$document.on( 'click', '#bb-rl-message-threads .block-member', this.threadListBlockPopup );
+			$document.on( 'click', '#bb-rl-message-threads .report-content', this.threadListReportPopup );
 			$document.on( 'click', '.bb-rl-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$document.on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$document.on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
@@ -2410,7 +2410,7 @@ window.bp = window.bp || {};
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
-			var blockMember = $( '#message-threads .block-member' );
+			var blockMember = $( '#bb-rl-message-threads .block-member' );
 			if ( blockMember.length > 0 ) {
 				blockMember.magnificPopup(
 					{
@@ -2438,7 +2438,7 @@ window.bp = window.bp || {};
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
-			var blockMember = $( '#message-threads .report-content' );
+			var blockMember = $( '#bb-rl-message-threads .report-content' );
 			if ( blockMember.length > 0 ) {
 
 				$( '#bb-report-content .form-item-category' ).show();

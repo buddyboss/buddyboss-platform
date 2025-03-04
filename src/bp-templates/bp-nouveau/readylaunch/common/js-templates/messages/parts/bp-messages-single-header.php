@@ -44,7 +44,7 @@
 	#>
 
 	<header class="single-message-thread-header">
-		<div class="thread-avatar {{ threadAvatarClass }}">
+		<div class="bb-rl-thread-avatar {{ threadAvatarClass }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
@@ -129,13 +129,13 @@
 				if ( 1 < data.group_joined_date.length ) {
 				#>
 				<dd>
-					<span class="thread-date"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> {{data.group_joined_date}}</span>
+					<span class="bb-rl-thread-date"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> {{data.group_joined_date}}</span>
 				</dd>
 				<#
 				}
 			} else { #>
 				<dd>
-					<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
+					<span class="bb-rl-thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 				</dd>
 			<# } #>
 		</dl>

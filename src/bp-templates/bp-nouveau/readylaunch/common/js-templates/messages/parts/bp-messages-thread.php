@@ -69,7 +69,7 @@
 	}
 	#>
 
-	<div class="bb_more_options message-thread-options">
+	<div class="bb_more_options bb-rl-message-thread-options">
 		<a href="#" class="bb_more_options_action bp-tooltip">
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
@@ -158,8 +158,8 @@
 		</ul>
 	</div>
 
-	<a class="bp-message-link bp-message-link-{{data.id}}" href="../{{data.id}}/" data-thread-id="{{data.id}}">
-		<div class="thread-avatar {{ threadAvatarClass }}">
+	<a class="bb-rl-message-link bb-rl-message-link-{{data.id}}" href="../{{data.id}}/" data-thread-id="{{data.id}}">
+		<div class="bb-rl-thread-avatar {{ threadAvatarClass }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">
@@ -200,8 +200,8 @@
 			<# } #>
 		</div>
 
-		<div class="thread-content {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-content' : '' }}" data-thread-id="{{data.id}}">
-			<div class="thread-to">
+		<div class="bb-rl-thread-content {{ ( data.is_user_suspended || data.is_user_blocked ) && ! data.is_group_thread ? 'bp-suspended-content' : '' }}" data-thread-id="{{data.id}}">
+			<div class="bb-rl-thread-to">
 
 				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
 					<span class="user-name">{{data.group_name}}</span>
@@ -217,10 +217,10 @@
 				<# } #>
 			</div>
 
-			<div class="thread-subject">
+			<div class="bb-rl-thread-subject">
 				<div class="typing-indicator bp-hide"></div>
 				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
-					<span class="thread-excerpt">
+					<span class="bb-rl-thread-excerpt">
 						<span class="last-message-sender">
 							<#
 							var displayName = false;
@@ -254,7 +254,7 @@
 						{{{dataExcerpt}}}
 					</span>
 				<# } #>
-				<div class="thread-date">
+				<div class="bb-rl-thread-date">
 					<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
 				</div>
 			</div>
