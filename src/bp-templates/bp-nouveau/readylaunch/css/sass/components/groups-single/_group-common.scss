@@ -323,6 +323,11 @@
 
 .bb-rl-group-section {
 	padding: 0 var(--bb-rl-space-500);
+
+	@media screen and (max-width: $lg) {
+		padding-left: var(--bb-rl-space-200);
+		padding-right: var(--bb-rl-space-200);
+	}
 }
 
 .bb-rl-group-cover {

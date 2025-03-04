@@ -1003,8 +1003,8 @@ window.bp = window.bp || {};
 			$document.keydown( this.mediumFormAction.bind( this ) );
 
 			// group manage actions.
-			$document.on('change', '.groups-manage-members-list select.member-action-dropdown', this.groupManageAction.bind( this ) );
-			$document.on('click', '.groups-manage-members-list .bb-rl-group-member-action-button:not(.disabled)', this.groupManageActionClick.bind( this ) );
+			$document.on('change', '.bb-rl-groups-manage-members-list select.member-action-dropdown', this.groupManageAction.bind( this ) );
+			$document.on('click', '.bb-rl-groups-manage-members-list .bb-rl-group-member-action-button:not(.disabled)', this.groupManageActionClick.bind( this ) );
 		},
 
 		/**
@@ -4381,6 +4381,16 @@ window.bp = window.bp || {};
 		groupManageAction: function ( event ) {
 			var target = $( event.currentTarget );
 			var currentValue = target.val();
+
+			// Reset all other select elements
+			$( '.bb-rl-groups-manage-members-list select.member-action-dropdown' ).not( target ).each( function() {
+				$( this ).val( '' ).trigger( 'change.select2' );
+			} );
+
+			// Disable all action buttons
+			$( '.bb-rl-group-member-action-button' ).addClass( 'disabled' );
+	
+			// Enable only the button related to the changed select
 			var action_button = target.parents( '.members-manage-buttons' ).find( '.bb-rl-group-member-action-button' );
 			if ( currentValue ) {
 				action_button.removeClass('disabled');

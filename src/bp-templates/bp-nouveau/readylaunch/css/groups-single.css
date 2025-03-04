@@ -432,6 +432,13 @@
   padding: 0 var(--bb-rl-space-500);
 }
 
+@media screen and (max-width: 992px) {
+  .bb-rl-group-section {
+    padding-left: var(--bb-rl-space-200);
+    padding-right: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-group-cover {
   flex: 0 0 100%;
   min-width: 0;
@@ -1086,6 +1093,13 @@
   margin-bottom: var(--bb-rl-space-300);
 }
 
+@media screen and (max-width: 992px) {
+  .bb-rl-groups-manage-members-list .members-entry,
+  .bb-rl-groups-manage-members-list .member-entry {
+    flex-flow: wrap;
+  }
+}
+
 .bb-rl-groups-manage-members-list ul.item-list {
   list-style: none;
   padding: 0;
@@ -1227,6 +1241,12 @@
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-requests-list li {
+    flex-flow: wrap;
+  }
 }
 
 .bb-rl-group-manage-form .group-settings-selections .bp-radio-wrap {
@@ -1436,6 +1456,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 .bb-rl-group-invites-dashboard.bb-rl-group-dashboard-panel {
