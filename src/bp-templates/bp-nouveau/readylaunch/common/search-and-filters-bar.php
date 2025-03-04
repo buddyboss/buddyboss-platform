@@ -74,5 +74,13 @@
 	) {
 		bp_get_template_part( 'common/filters/group-filters' );
 	}
+
+	if (
+		'media' === $bp_current_component ||
+		'document' === $bp_current_component ||
+		'video' === $bp_current_component
+	) {
+		bp_get_template_part( 'common/filters/common-filters' );
+	}
 	?>
 </div><!-- search & filters -->
