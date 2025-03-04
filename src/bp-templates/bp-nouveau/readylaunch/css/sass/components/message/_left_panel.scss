@@ -41,6 +41,7 @@
 		transform: translateY(-50%);
 		background: none;
 		border: none;
+		padding: 0;
 		opacity: 0;
 		height: 16px;
 		width: 16px;
@@ -125,6 +126,13 @@
 		.bb-rl-thread-content {
 			flex: 1;
 			max-width: calc(100% - 48px);
+
+			.bb-rl-thread-to {
+				max-width: calc(100% - 85px);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
 
 			.user-name {
 				font-size: 16px;
