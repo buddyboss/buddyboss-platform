@@ -12,21 +12,21 @@
 ?>
 
 <input type="hidden" id="thread-id" value="" />
-<div class="bp-messages-container bp-view-message bp-rl-messages-container">
-	<div class="bp-messages-nav-panel loading">
-		<div class="message-header-loading bp-hide">
-			<div class="message-header-loading_top">
-				<div class="message-header-loading_title bb-bg-animation bb-loading-bg"></div>
-				<div class="message-header-loading_option bb-bg-animation bb-loading-bg"></div>
+<div class="bb-rl-messages-container bb-rl-view-message bp-rl-messages-container">
+	<div class="bb-rl-messages-nav-panel loading">
+		<div class="bb-rl-message-header-loading bp-hide">
+			<div class="bb-rl-message-header-loading_top">
+				<div class="bb-rl-message-header-loading_title bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-rl-message-header-loading_option bb-bg-animation bb-loading-bg"></div>
 			</div>
-			<div class="message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
+			<div class="bb-rl-message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
 		</div>
-		<div id="bb-messages-thread-list-nav"></div>
-		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
-		<div class="bp-messages-search-feedback"></div>
-		<div class="bp-messages-threads-list bp-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bp-messages-threads-list"></div>
+		<div id="bb-rl-messages-thread-list-nav"></div>
+		<div class="subnav-filters filters user-subnav bb-rl-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
+		<div class="bb-rl-messages-search-feedback"></div>
+		<div class="bb-rl-messages-threads-list bb-rl-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bb-rl-messages-threads-list"></div>
 	</div>
-	<div class="bp-messages-content"></div>
+	<div class="bb-rl-messages-content"></div>
 
 </div>
 
