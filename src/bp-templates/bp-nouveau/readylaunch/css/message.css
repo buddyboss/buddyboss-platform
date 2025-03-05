@@ -609,3 +609,8 @@
   font-weight: 600;
   margin-bottom: 5px;
 }
+
+.messages-search-loader {
+  text-align: center;
+  padding: var(--bb-rl-space-200) 0 0;
+}
