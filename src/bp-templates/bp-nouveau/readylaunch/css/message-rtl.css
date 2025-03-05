@@ -201,6 +201,13 @@
   font-family: bb-icons-rl;
 }
 
+.bb-rl-messages-user-threads {
+  min-height: 550px;
+  max-height: calc(80vh - 118px);
+  height: calc(80vh - 118px);
+  overflow: auto;
+}
+
 .bb-rl-message-lists {
   list-style: none;
   padding: var(--bb-rl-space-100);
