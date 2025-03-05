@@ -362,6 +362,7 @@
 			display: flex;
 			padding: var(--bb-rl-space-50);
 			border-radius: var(--bb-rl-radius-md);
+			color: var(--bb-rl-icon-tertiary-color);
 
 			&:hover {
 				background-color: var(--bb-rl-background-secondary-color);
@@ -448,9 +449,10 @@
 
 	#compose {
 		background-color: var(--bb-rl-background-tertiary-color);
-		border-radius: var(--bb-rl-radius-md);
+		border-radius: 6px;
 		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 		font-size: var(--bb-rl-font-size-sm);
+		line-height: 1;
 		font-weight: 400;
 		color: var(--bb-rl-text-color);
 		display: flex;

@@ -477,6 +477,7 @@
   display: flex;
   padding: var(--bb-rl-space-50);
   border-radius: var(--bb-rl-radius-md);
+  color: var(--bb-rl-icon-tertiary-color);
 }
 
 #bb-rl-messages-thread-list-nav .message-action-options .bb_more_options_action:hover {
@@ -558,9 +559,10 @@
 
 #bb-rl-messages-thread-list-nav #compose {
   background-color: var(--bb-rl-background-tertiary-color);
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: 6px;
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
   font-size: var(--bb-rl-font-size-sm);
+  line-height: 1;
   font-weight: 400;
   color: var(--bb-rl-text-color);
   display: flex;
@@ -691,7 +693,7 @@
 }
 
 .single-message-thread-header > .actions .message_action__anchor {
-  font-size: 20px;
+  font-size: 24px;
   color: var(--bb-rl-icon-tertiary-color);
   padding: var(--bb-rl-space-50);
   border-radius: var(--bb-rl-radius-md);
