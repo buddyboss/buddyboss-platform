@@ -112,7 +112,7 @@ class BP_Moderation_Component extends BP_Component {
 
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[ $this->id ];
+		$default_directory_title  = isset( $default_directory_titles[ $this->id ] ) ? $default_directory_titles[ $this->id ] : '';
 
 		// All globals for moderation component.
 		// Note that global_tables is included in this array.
