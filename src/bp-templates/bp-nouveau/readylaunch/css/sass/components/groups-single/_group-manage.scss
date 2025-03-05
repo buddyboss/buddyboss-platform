@@ -312,6 +312,10 @@
 		display: flex;
 		align-items: center;
 		margin-bottom: var(--bb-rl-space-300);
+
+		@media screen and (max-width: $lg) {
+			flex-flow: wrap;
+		}
 	}
 
 	ul.item-list {
@@ -407,6 +411,10 @@
 				padding: 6px var(--bb-rl-space-200);
 				font-size: 0.875rem;
 			}
+		}
+
+		@media screen and (max-width: $md) {
+			flex-flow: wrap;
 		}
 	}
 }
@@ -644,6 +652,7 @@
 			background-color: var(--bb-rl-background-tertiary-color);
 			color: var(--bb-rl-text-disabled-color);
 			cursor: not-allowed;
+			pointer-events: none;
 		}
 	}
 }

@@ -432,6 +432,13 @@
   padding: 0 var(--bb-rl-space-500);
 }
 
+@media screen and (max-width: 992px) {
+  .bb-rl-group-section {
+    padding-left: var(--bb-rl-space-200);
+    padding-right: var(--bb-rl-space-200);
+  }
+}
+
 .bb-rl-group-cover {
   flex: 0 0 100%;
   min-width: 0;
@@ -1086,6 +1093,13 @@
   margin-bottom: var(--bb-rl-space-300);
 }
 
+@media screen and (max-width: 992px) {
+  .bb-rl-groups-manage-members-list .members-entry,
+  .bb-rl-groups-manage-members-list .member-entry {
+    flex-flow: wrap;
+  }
+}
+
 .bb-rl-groups-manage-members-list ul.item-list {
   list-style: none;
   padding: 0;
@@ -1227,6 +1241,12 @@
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-requests-list li {
+    flex-flow: wrap;
+  }
 }
 
 .bb-rl-group-manage-form .group-settings-selections .bp-radio-wrap {
@@ -1436,6 +1456,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 .bb-rl-group-invites-dashboard.bb-rl-group-dashboard-panel {
@@ -2265,6 +2286,124 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   width: 100%;
   height: 160px;
   padding: 0;
+}
+
+.bb-rl-media-stream {
+  padding: var(--bb-rl-space-300);
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-media-stream .media-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--bb-rl-space-300);
+}
+
+.bb-rl-media-stream .bb-item-thumb {
+  position: relative;
+  z-index: 1;
+}
+
+.bb-rl-media-stream .bb-item-thumb .media-action-wrap {
+  position: absolute;
+  top: var(--bb-rl-space-100);
+  right: var(--bb-rl-space-100);
+  z-index: 2;
+  opacity: 1;
+}
+
+.bb-rl-media-stream .bb-item-thumb .bb-item-cover-wrap {
+  position: relative;
+  overflow: hidden;
+  padding-top: 100%;
+  display: block;
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-media-stream .bb-item-thumb .bb-item-cover-wrap img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 0;
+  min-height: 100%;
+  width: auto;
+  min-width: 100%;
+  object-fit: cover;
+}
+
+.bb-rl-media-stream .bb-item-thumb .bb-action-check-wrap {
+  position: absolute;
+  transition: 0.3s all;
+  top: 21px;
+  left: 15px;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1;
+  z-index: 2;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.bb-rl-media-container .bb-member-media-header {
+  display: flex;
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-media-container .bb-member-media-header .bb-media-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+  margin-left: auto;
+}
+
+.bb-rl-media-container .bb-media-actions-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions {
+  margin-left: auto;
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
 }
 
 .bb-rl-create-group {
