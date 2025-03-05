@@ -3521,12 +3521,25 @@ button[data-balloon] {
   font-style: normal;
 }
 
+.bb-readylaunch-template .modal-container .bb-field-steps {
+  display: none;
+}
+
+.bb-readylaunch-template .modal-container .bb-field-steps.bb-field-steps-1 {
+  display: block;
+}
+
 .bb-readylaunch-template .modal-container #bp-media-post-content {
   height: 112px;
   border: 0;
   padding: var(--bb-rl-space-200) 0;
   width: 100%;
   resize: none;
+}
+
+.bb-readylaunch-template .bp-media-photo-uploader #bp-media-prev,
+.bb-readylaunch-template .bp-media-photo-uploader #bp-media-photo-next {
+  display: none;
 }
 
 .bb-readylaunch-template .bbm-uploader-model-wrap .media-uploader-wrapper {
