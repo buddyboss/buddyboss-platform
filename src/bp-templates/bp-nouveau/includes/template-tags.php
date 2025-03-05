@@ -253,6 +253,7 @@ function bp_nouveau_template_notices() {
 
 		// Reset just after rendering it.
 		$bp_nouveau->template_message = array();
+		$bp->template_message         = '';
 
 		/**
 		 * Fires after the display of any template_notices feedback messages.
