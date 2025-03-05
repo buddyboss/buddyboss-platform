@@ -2225,7 +2225,7 @@ function bb_moderation_migration_on_update() {
 /**
  * Fetch all moderated user or check the user is moderated or not SQL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.10
  *
  * @param int $user_id User ID.
  *
