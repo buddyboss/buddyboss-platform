@@ -110,10 +110,6 @@ class BP_Moderation_Component extends BP_Component {
 			'suspend'    => $bp->table_prefix . 'bp_suspend_meta',
 		);
 
-		// Fetch the default directory title.
-		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = isset( $default_directory_titles[ $this->id ] ) ? $default_directory_titles[ $this->id ] : '';
-
 		// All globals for moderation component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
@@ -123,7 +119,6 @@ class BP_Moderation_Component extends BP_Component {
 				'has_directory'   => false,
 				'global_tables'   => $global_tables,
 				'meta_tables'     => $meta_tables,
-				'directory_title' => isset( $bp->pages->moderation->title ) ? $bp->pages->moderation->title : $default_directory_title,
 			)
 		);
 	}
