@@ -145,9 +145,8 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
+					<a href="#" class="message_action__anchor"> <i class="bb-icons-rl-dots-three"></i> </a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
-						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<li class="unread">
 								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
@@ -228,7 +227,6 @@
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
-						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<li class="unread">
 								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>">
