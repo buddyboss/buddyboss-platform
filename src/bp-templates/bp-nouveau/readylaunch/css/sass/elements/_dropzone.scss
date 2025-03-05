@@ -233,7 +233,8 @@
 				border-color: transparent;
 			}
 
-			.dz-image img {
+			.dz-image img,
+			.dz-video-thumbnail img {
 				opacity: 1;
 			}
 
@@ -246,6 +247,23 @@
 	}
 
 	.dz-image {
+		height: 160px;
+
+		img {
+			width: 165px;
+			height: 100%;
+			margin: 0 auto;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			object-fit: cover;
+			opacity: 0;
+			border-radius: var(--bb-rl-radius-md);
+		}
+	}
+
+	.dz-video-thumbnail {
 		height: 160px;
 
 		img {
@@ -296,6 +314,10 @@
 			overflow: hidden;
 			margin-top: var(--bb-rl-space-50);
 			padding: 0 var(--bb-rl-space-100) 0;
+		}
+
+		.dz-size {
+			text-align: center;
 		}
 	}
 

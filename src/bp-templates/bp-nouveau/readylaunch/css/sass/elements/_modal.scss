@@ -479,6 +479,7 @@
 
 		i.bb-icon-folder {
 			line-height: 1;
+			font-style: normal;
 
 			&::before {
 				content: "\e256";
@@ -542,9 +543,11 @@
 	}
 
 	.location-folder-list-wrap-main,
+	.bb-rl-location-folder-list-wrap-main,
 	.bb-rl-location-album-list-wrap-main {
 
 		.no-folder-exists,
+		.bb-rl-no-folder-exists,
 		.bb-rl-no-album-exists {
 			display: block;
 			margin: var(--bb-rl-space-200) 0 0;

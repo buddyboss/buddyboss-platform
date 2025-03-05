@@ -2725,7 +2725,8 @@ button[data-balloon] {
   border-color: transparent;
 }
 
-.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-image img {
+.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-image img,
+.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-video-thumbnail img {
   opacity: 1;
 }
 
@@ -2740,6 +2741,23 @@ button[data-balloon] {
 }
 
 .dropzone .dz-image img {
+  width: 165px;
+  height: 100%;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 0;
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.dropzone .dz-video-thumbnail {
+  height: 160px;
+}
+
+.dropzone .dz-video-thumbnail img {
   width: 165px;
   height: 100%;
   margin: 0 auto;
@@ -2787,6 +2805,10 @@ button[data-balloon] {
   overflow: hidden;
   margin-top: var(--bb-rl-space-50);
   padding: 0 var(--bb-rl-space-100) 0;
+}
+
+.dropzone .dz-details .dz-size {
+  text-align: center;
 }
 
 .dropzone .dz-remove {
@@ -3652,6 +3674,7 @@ button[data-balloon] {
 
 .bb-readylaunch-template .bb-field-uploader-next i.bb-icon-folder {
   line-height: 1;
+  font-style: normal;
 }
 
 .bb-readylaunch-template .bb-field-uploader-next i.bb-icon-folder::before {
@@ -3711,8 +3734,13 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template .location-folder-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .location-folder-list-wrap-main .bb-rl-no-folder-exists,
 .bb-readylaunch-template .location-folder-list-wrap-main .bb-rl-no-album-exists,
+.bb-readylaunch-template .bb-rl-location-folder-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-folder-list-wrap-main .bb-rl-no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-folder-list-wrap-main .bb-rl-no-album-exists,
 .bb-readylaunch-template .bb-rl-location-album-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-album-list-wrap-main .bb-rl-no-folder-exists,
 .bb-readylaunch-template .bb-rl-location-album-list-wrap-main .bb-rl-no-album-exists {
   display: block;
   margin: var(--bb-rl-space-200) 0 0;
