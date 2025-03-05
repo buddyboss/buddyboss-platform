@@ -47,15 +47,15 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php echo esc_attr( $video_id ); ?>" data-date-created="<?php bp_video_date_created(); ?>">
 	<div class="bb-video-thumb bb-item-thumb <?php echo esc_attr( $has_no_thumbnail ); ?>">
-		<div class="video-action-wrap item-action-wrap">
+		<div class="video-action-wrap item-action-wrap bb_more_options action">
 			<?php
 			$report_btn = bp_video_get_report_link( array( 'id' => $video_id ) );
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
-				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+				<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-dots-three"></i>
 				</a>
-				<div class="video-action_list item-action_list bb_more_dropdown">
+				<div class="video-action_list item-action_list bb_more_dropdown bb_more_options_list">
 					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
