@@ -160,7 +160,7 @@
 }
 
 .messages-search input[type="search"] {
-  color: var(--bb-rl-text-tertiary-color);
+  color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   line-height: 1.2;
   border-radius: var(--bb-rl-radius-full);
@@ -321,8 +321,9 @@
 }
 
 .bb-rl-message-lists .bb-rl-message-thread-options .bb_more_options_action i:before {
-  font-size: 22px;
   content: "\e1fe";
+  color: var(--bb-rl-icon-color);
+  font-size: 22px;
   font-family: bb-icons-rl;
   font-style: normal;
   font-weight: 700;
@@ -573,4 +574,38 @@
   line-height: 1;
   font-style: normal;
   margin: 0;
+}
+
+.no-message-wrap {
+  padding: var(--bb-rl-space-500) var(--bb-rl-space-300);
+  text-align: center;
+}
+
+.no-message-wrap .bb-icon {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 50px;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+.no-message-wrap .bb-icon:before {
+  content: "\e174";
+  font-family: bb-icons-rl;
+}
+
+.no-message-wrap .no-message-content {
+  font-size: 14px;
+  color: var(--bb-rl-text-tertiary-color);
+  letter-spacing: -0.24px;
+  line-height: 1.5;
+  max-width: 310px;
+  margin: 0 auto;
+  padding: 0 40px 20px;
+}
+
+.no-message-wrap .no-message-content h3 {
+  color: var(--bb-rl-text-color);
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
 }
