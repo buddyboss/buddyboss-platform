@@ -2347,7 +2347,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -2381,7 +2381,7 @@ window.bp = window.bp || {};
 							self.dropzone_media.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -2615,7 +2615,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.document-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-album" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-album" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -4510,7 +4510,7 @@ window.bp = window.bp || {};
 		submitPopup: function ( event ) {
 
 			// return if modern is not visible.
-			if ( $( document ).find( '.modal-wrapper:visible' ).length < 1 ) {
+			if ( $( document ).find( '.bb-rl-modal-wrapper:visible' ).length < 1 ) {
 				return;
 			}
 
@@ -4635,11 +4635,11 @@ window.bp = window.bp || {};
 						var subType = 'media' === type ? 'document' : type;
 						if ( ! jQuery( '.forum-' + subType + '-error-popup' ).length ) {
 							if ( 'media' === type ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							} else if ( 'document' === type ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							} else if ( 'video' === type ) {
-								$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup forum-video-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-video-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup forum-video-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-video-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 						}
 
@@ -4710,7 +4710,7 @@ window.bp = window.bp || {};
 					} else {
 						if ( 'media' === type ) {
 							if ( ! jQuery( '.forum-' + type + '-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						} else if ( 'document' === type || 'video' === type ) {
@@ -4885,13 +4885,13 @@ window.bp = window.bp || {};
 						if ( 'media' === type || 'document' === type ) {
 							if ( ! jQuery( '.group-' + subType + '-error-popup' ).length ) {
 								if ( 'document' === type ) {
-									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup group-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup group-document-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								} else {
-									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+									$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 								}
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-video-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+							$( 'body' ).append( '<div id="bp-video-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-video-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 						}
 						this.removeFile( file );
 					}
@@ -4957,7 +4957,7 @@ window.bp = window.bp || {};
 					} else {
 						if ( 'media' === type ) {
 							if ( ! jQuery( '.group-message-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup group-message-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup group-message-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						} else if ( 'document' === type || 'video' === type ) {
@@ -5026,7 +5026,7 @@ window.bp = window.bp || {};
 
 			if ( 'document_folder' === actionType ) {
 				itemId        = target.attr( 'id' );
-				destinationId = $( '#media-folder-document-data-table #bb-rl-media-move-folder .modal-mask .modal-wrapper #bb-rl-media-create-album-popup .bb-rl-field-wrap .bb-rl-folder-selected-id' ).val();
+				destinationId = $( '#media-folder-document-data-table #bb-rl-media-move-folder .bb-rl-modal-mask .bb-rl-modal-wrapper #bb-rl-media-create-album-popup .bb-rl-field-wrap .bb-rl-folder-selected-id' ).val();
 			} else {
 				itemId          = target.attr( 'id' );
 				containerClass  = 'document' === actionType ? '.location-folder-list' : '.location-album-list';

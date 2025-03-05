@@ -3537,6 +3537,10 @@ button[data-balloon] {
   resize: none;
 }
 
+.bb-readylaunch-template .modal-container .bb-leave-group-content {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
 .bb-readylaunch-template .bp-media-photo-uploader #bp-media-prev,
 .bb-readylaunch-template .bp-media-photo-uploader #bp-media-photo-next {
   display: none;
@@ -10938,6 +10942,10 @@ div[class*="attached-gif-container"] .gif-player {
   border-radius: var(--bb-rl-radius-full);
   margin-left: var(--bb-rl-space-100);
   animation: spin 3s infinite linear;
+}
+
+.bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-media-move {
+  margin-left: var(--bb-rl-space-100);
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {

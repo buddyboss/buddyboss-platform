@@ -139,8 +139,8 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 	<!-- Leave Group confirmation popup -->
 	<div class="bb-leave-group-popup bb-action-popup" style="display: none">
 		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
+			<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+				<div class="bb-rl-modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
 							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
@@ -152,10 +152,9 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
-
 					</div>
 				</div>
 			</div>

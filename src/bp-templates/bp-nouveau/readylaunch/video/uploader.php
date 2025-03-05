@@ -13,8 +13,8 @@
 ?>
 <div id="bp-video-uploader" style="display: none;" class="bp-video-uploader open-popup">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-			<div class="modal-wrapper">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+			<div class="bb-rl-modal-wrapper">
 				<div class="modal-container has-folderlocationUI">
 
 					<header class="bb-model-header">

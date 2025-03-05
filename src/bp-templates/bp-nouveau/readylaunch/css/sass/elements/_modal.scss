@@ -366,7 +366,7 @@
 
 		.bb-field-steps {
 			display: none;
-		
+
 			&.bb-field-steps-1 {
 				display: block;
 			}
@@ -378,6 +378,10 @@
 			padding: var(--bb-rl-space-200) 0;
 			width: 100%;
 			resize: none;
+		}
+
+		.bb-leave-group-content {
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		}
 	}
 

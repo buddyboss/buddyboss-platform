@@ -13,8 +13,8 @@
 
 <div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-			<div class="modal-wrapper">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+			<div class="bb-rl-modal-wrapper">
 				<div class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
