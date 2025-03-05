@@ -439,3 +439,138 @@
 .bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible) {
   z-index: 11;
 }
+
+#bb-rl-messages-thread-list-nav {
+  padding: var(--bb-rl-space-200);
+}
+
+#bb-rl-messages-thread-list-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#bb-rl-messages-thread-list-nav .subnav {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+#bb-rl-messages-thread-list-nav #inbox-personal-li > a {
+  color: var(--bb-rl-text-color);
+  font-size: 16px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+#bb-rl-messages-thread-list-nav #compose-action-personal-li {
+  margin-right: auto;
+}
+
+#bb-rl-messages-thread-list-nav #compose-action-personal-li #compose-action {
+  font-size: 0;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .bb_more_options_action {
+  display: flex;
+  padding: var(--bb-rl-space-50);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .bb_more_options_action:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .bb_more_options_action i {
+  display: flex;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .bb_more_options_action i:before {
+  content: "\e1fe";
+  font-size: 24px;
+  line-height: 1;
+  font-family: bb-icons-rl;
+  font-style: normal;
+  font-weight: 700;
+  margin: 0;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options.more_option_active .bb_more_options_action {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options {
+  position: relative;
+  display: inline-block;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list {
+  position: absolute;
+  top: 30px;
+  left: 4px;
+  z-index: var(--bb-rl-z-index-dropdown);
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  padding: var(--bb-rl-space-100) 0;
+  width: 220px;
+  list-style: none;
+  display: none;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list.is_visible {
+  display: block;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list li > a {
+  display: flex;
+  align-items: center;
+  color: var(--bb-rl-text-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  cursor: pointer;
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list li > a:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list li > a:before {
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 0 0 var(--bb-rl-space-100);
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list li.archived-messages a:before {
+  content: "\e00c";
+}
+
+#bb-rl-messages-thread-list-nav .message-action-options .message_action__list li.notification_preferences a:before {
+  content: "\e0d0";
+}
+
+#bb-rl-messages-thread-list-nav #compose {
+  background-color: var(--bb-rl-background-tertiary-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  color: var(--bb-rl-text-color);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+#bb-rl-messages-thread-list-nav #compose:before {
+  content: "\e3d4";
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  line-height: 1;
+  font-style: normal;
+  margin: 0;
+}
