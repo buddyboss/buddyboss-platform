@@ -133,8 +133,8 @@
 							</div>
 						<?php endif; ?>
 
-						<a class="button push-right" id="bp-video-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
-						<a id="bp-video-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
+						<a class="button push-right bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-video-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+						<a id="bp-video-prev" class="bb-uploader-steps-prev bb-field-uploader-actions bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
 					</footer>
 
 				</div>

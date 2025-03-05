@@ -31,7 +31,7 @@
 					endif;
 					?>
 					<footer class="bb-model-footer">
-						<a class="button" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 					</footer>
 
 				</div>

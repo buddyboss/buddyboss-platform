@@ -2610,7 +2610,7 @@ button[data-balloon] {
 }
 
 .dropzone.document-dropzone .dz-button:before {
-  content: "\e2e2";
+  content: "\e39a";
 }
 
 .dropzone.document-dropzone .dz-icon {
@@ -3342,6 +3342,7 @@ button[data-balloon] {
   font-weight: 600;
   line-height: 28px;
   color: var(--bb-rl-text-color);
+  margin-right: var(--bb-rl-space-100);
 }
 
 .bb-readylaunch-template .bb-report-type-wrp {
@@ -3529,7 +3530,8 @@ button[data-balloon] {
   display: block;
 }
 
-.bb-readylaunch-template .modal-container #bp-media-post-content {
+.bb-readylaunch-template .modal-container #bp-media-post-content,
+.bb-readylaunch-template .modal-container #bp-video-post-content {
   height: 112px;
   border: 0;
   padding: var(--bb-rl-space-200) 0;
@@ -3544,6 +3546,31 @@ button[data-balloon] {
 .bb-readylaunch-template .bp-media-photo-uploader #bp-media-prev,
 .bb-readylaunch-template .bp-media-photo-uploader #bp-media-photo-next {
   display: none;
+}
+
+.bb-readylaunch-template .bp-media-photo-uploader .bb-field-steps-1.controls-added #bp-media-prev,
+.bb-readylaunch-template .bp-media-photo-uploader .bb-field-steps-1.controls-added #bp-media-photo-next {
+  display: inline-flex !important;
+}
+
+.bb-readylaunch-template .bp-media-document-uploader #bp-media-document-next,
+.bb-readylaunch-template .bp-media-document-uploader #bp-media-document-prev {
+  display: none;
+}
+
+.bb-readylaunch-template .bp-media-document-uploader .bb-field-steps-1.controls-added #bp-media-document-next,
+.bb-readylaunch-template .bp-media-document-uploader .bb-field-steps-1.controls-added #bp-media-document-prev {
+  display: inline-flex !important;
+}
+
+.bb-readylaunch-template .bp-video-uploader #bp-video-next,
+.bb-readylaunch-template .bp-video-uploader #bp-video-prev {
+  display: none;
+}
+
+.bb-readylaunch-template .bp-video-uploader .bb-field-steps-1.controls-added #bp-video-next,
+.bb-readylaunch-template .bp-video-uploader .bb-field-steps-1.controls-added #bp-video-prev {
+  display: inline-flex !important;
 }
 
 .bb-readylaunch-template .bbm-uploader-model-wrap .media-uploader-wrapper {
@@ -3633,6 +3660,66 @@ button[data-balloon] {
   font-family: bb-icons-rl;
   font-size: var(--bb-rl-base-line-small);
   color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  margin-bottom: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap input {
+  width: 100%;
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap .error-box {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  margin: var(--bb-rl-space-100) 0 0;
+  display: block;
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  margin-bottom: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap input {
+  width: 100%;
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap + .bb-field-wrap {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.bb-readylaunch-template .location-folder-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .location-folder-list-wrap-main .bb-rl-no-album-exists,
+.bb-readylaunch-template .bb-rl-location-album-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-album-list-wrap-main .bb-rl-no-album-exists {
+  display: block;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-modal-wrapper .bb-rl-has-warning .bb-rl-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .bb-rl-container-inner .bp-pagination,

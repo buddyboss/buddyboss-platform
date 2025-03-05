@@ -103,7 +103,7 @@
 								</select>
 							</div>
 						<?php endif; ?>
-						<a class="button pull-right" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+						<a class="button pull-right bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
 						<a id="bp-media-document-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
