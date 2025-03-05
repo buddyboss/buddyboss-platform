@@ -69,11 +69,14 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// Forum/Topic.
 			add_filter( 'bbp_after_has_topics_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
 			add_filter( 'bbp_after_has_replies_parse_args', array( $this, 'bb_wpml_member_profile_topic_reply' ) );
-			
+
 			// Fix incorrect search results for Global Search for translated/non-translated posts.
 			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
 
 			add_action( 'bb_get_the_profile_field_options_select_html', array( $this, 'bb_wpml_profile_field_options_order' ), 10, 2 );
+
+			add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_wpml_groups_dir_search_where_conditions' ), 10, 2 );
+			add_filter( 'Bp_Search_Groups_sql', array( $this, 'bb_wpml_groups_search_global_sql' ), 10, 2 );
 		}
 
 		/**
@@ -265,9 +268,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				defined( 'ICL_LANGUAGE_CODE' ) &&
 				$sitepress->is_translated_post_type( $args['post_type'] )
 			) {
-			        global $wpdb;
+				global $wpdb;
+
 				$sql_query .= " AND EXISTS (
-						SELECT 1 
+						SELECT 1
 						FROM {$wpdb->prefix}icl_translations t
 						WHERE t.element_type = CONCAT('post_', %s)
 						AND t.language_code = %s
@@ -313,9 +317,12 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				}
 
 				// Sort the array by the 'text' element.
-				usort( $options, function ( $a, $b ) {
-					return strcmp( $a['text'], $b['text'] );
-				} );
+				usort(
+					$options,
+					function ( $a, $b ) {
+						return strcmp( $a['text'], $b['text'] );
+					}
+				);
 
 				if ( 'desc' === $order_by ) {
 					$first   = array_shift( $options );
@@ -335,6 +342,78 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			return $html;
 		}
 
+		/**
+		 * Retrieves the translated group name from WPML.
+		 *
+		 * @since BuddyBoss 2.8.10
+		 *
+		 * @param string $search_term The original search term.
+		 *
+		 * @return string|false The translated group name if found, otherwise false.
+		 */
+		public static function bb_get_wpml_translated_group_name( $search_term ) {
+			if ( ! class_exists( 'Sitepress' ) || empty( $search_term ) ) {
+				return false;
+			}
+
+			global $wpdb;
+
+			return $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT s.value
+		                 FROM {$wpdb->prefix}icl_string_translations st
+		                 JOIN {$wpdb->prefix}icl_strings s ON st.string_id = s.id
+		                 WHERE s.context = %s
+		                 AND st.value LIKE %s
+		                 AND st.language = %s",
+					'Buddypress Multilingual',
+					'%' . $wpdb->esc_like( $search_term ) . '%',
+					ICL_LANGUAGE_CODE
+				)
+			);
+		}
+
+		/**
+		 * Modifies the WHERE conditions in BuddyPress group search to
+		 * include translated names.
+		 *
+		 * @param array $where The existing WHERE conditions.
+		 * @param array $r     The search query arguments.
+		 *
+		 * @return array Modified WHERE conditions.
+		 */
+		public function bb_wpml_groups_dir_search_where_conditions( $where, $r ) {
+			if ( isset( $r['search_terms'] ) && $r['search_terms'] ) {
+				$translated_name = self::bb_get_wpml_translated_group_name( $r['search_terms'] );
+
+				if ( ! empty( $translated_name ) ) {
+					$where['search'] = str_replace( $r['search_terms'], $translated_name, $where['search'] );
+				}
+			}
+
+			return $where;
+		}
+
+		/**
+		 * Modifies the SQL query for searching BuddyPress groups by replacing
+		 * the search term with its translated version.
+		 *
+		 * @param string $sql_query The original SQL query.
+		 * @param array  $args      The search query arguments.
+		 *
+		 * @return string Modified SQL query.
+		 */
+		public function bb_wpml_groups_search_global_sql( $sql_query, $args ) {
+			if ( isset( $args['search_term'] ) && $args['search_term'] ) {
+				$translated_name = self::bb_get_wpml_translated_group_name( $args['search_term'] );
+
+				if ( ! empty( $translated_name ) ) {
+					$sql_query = str_replace( $args['search_term'], $translated_name, $sql_query );
+				}
+			}
+
+			return $sql_query;
+		}
 	}
 
 	BB_WPML_Helpers::instance();

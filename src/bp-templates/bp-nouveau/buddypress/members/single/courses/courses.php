@@ -56,42 +56,33 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 ?>
 <div id="learndash_profile" class="<?php echo empty( $user_courses ) ? 'user-has-no-lessons' : ''; ?>">
 	<div id="course_list">
+		<?php if ( bb_enable_content_counts() ) {
+			?>
+			<div class="bb-item-count">
+				<?php
+					$count = count( $user_courses );
+					printf(
+						wp_kses(
+							/* translators: %d is the courses count */
+							_n(
+								'<span class="bb-count">%d</span> Course',
+								'<span class="bb-count">%d</span> Courses',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+
+					unset( $count );
+				?>
+			</div>
 		<?php
+		}
+
 		if ( ! empty( $user_courses ) ) {
 			foreach ( $user_courses as $course_id ) {
-
-				/**
-				 * Do not show the free/open course unless those are explicitly started by the users
-				 *
-				 */
-
-				//Check user have enrolled for course
-				$since = ld_course_access_from( $course_id, $user_id );
-
-				/**
-				 * if $since is empty then this could be a free/open course
-				 * however we need to check for learndash group level course enrollment status
-				 */
-				if ( empty( $since ) ) {
-
-					//Check user has mass enrolled for course
-					$since = learndash_user_group_enrolled_to_course_from( $user_id, $course_id );
-
-					/**
-					 * if $since is still empty then we absolutely sure that the course is free/open
-					 * now we only need to check "Has user started taking course? or Did he completed it?"
-					 */
-					if ( empty( $since ) ) {
-
-						//Check user has started course(topic or lesson)
-						$course_status = learndash_course_status( $course_id, $user_id, true );
-
-						if ( 'not_started' === $course_status ) {
-							continue;
-						}
-					}
-				}
-
 				$course      = get_post( $course_id );
 				$course_link = get_permalink( $course_id );
 				$progress    = learndash_course_progress(

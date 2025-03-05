@@ -9,6 +9,33 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
+$bp_current_action    = bp_current_action();
+if ( bp_is_user() && bb_enable_content_counts() && 'my-video' === $bp_current_action ) {
+	?>
+	<div class="bb-item-count">
+		<?php
+		if ( ! $is_send_ajax_request ) {
+			$count = bp_video_get_total_video_count();
+			printf(
+				wp_kses(
+					/* translators: %d is the video count */
+					_n(
+						'<span class="bb-count">%d</span> Video',
+						'<span class="bb-count">%d</span> Videos',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				(int) $count
+			);
+
+			unset( $count );
+		}
+		?>
+	</div>
+	<?php
+}
 ?>
 <div class="bb-video-container bb-media-container member-video">
 	<?php
@@ -17,7 +44,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	bp_get_template_part( 'media/theatre' );
 	bp_get_template_part( 'document/theatre' );
 
-	switch ( bp_current_action() ) :
+	switch ( $bp_current_action ) :
 
 		// Home/Video.
 		case 'my-video':
