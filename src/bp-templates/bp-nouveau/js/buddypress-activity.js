@@ -128,7 +128,19 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
-			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			if ( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) { 
+				$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			} else {
+				// For page request 1, call openEditActivityPopup after page is completely loaded.
+				$( window ).on( 'load', function() {
+					setTimeout(
+						function() {
+							bp.Nouveau.Activity.openEditActivityPopup();
+						}.bind( this ),
+						0
+					);
+				});
+			}
 
 			// Activity comments effect.
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
@@ -143,7 +155,8 @@ window.bp = window.bp || {};
 						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
 						! $( event.target ).closest( '#activity-modal' ).length &&
 						! $( event.target ).closest( '.gif-media-search-dropdown-standalone' ).length &&
-						! $( event.target ).closest( '.emojionearea-theatre' ).length
+						! $( event.target ).closest( '.emojionearea-theatre' ).length &&
+						! $( event.target ).hasClass( 'dz-hidden-input' ) // Dropzone file input for media upload which is outside modal.
 					) {
 						this.closeActivity( event );
 						this.activitySyncOnModalClose( event, activityId );
@@ -705,7 +718,7 @@ window.bp = window.bp || {};
 		openEditActivityPopup: function() {
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
-				if ( activity_item.length ) {
+				if ( activity_item.length && activity_item.children( '.bb-activity-more-options-wrap' ).find( '.button.edit-activity' ).length ) {
 					var activity_data        = activity_item.data( 'bp-activity' );
 					var activity_URL_preview = ( activity_item.data( 'link-url' ) ) !== '' ? activity_item.data( 'link-url' ) : null;
 
@@ -962,6 +975,13 @@ window.bp = window.bp || {};
 									target.removeClass( 'loading' );
 								}
 							);
+
+							// Add flag for ajax load for getting reactions.
+							if ( 'activity_comment' === item_type ) {
+								$( '.activity-comment[data-bp-activity-comment-id=' + item_id + '] > .acomment-display > .acomment_inner' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							} else if ( 'activity' === item_type ) {
+								$( '.activity[data-bp-activity-id=' + item_id + '] > .activity-content' ).find( '.activity-state-reactions' ).parent().addClass( 'bb-has-reaction_update' );
+							}
 						}
 
 						// Add "Likes/Emotions" menu item on activity directory nav menu.

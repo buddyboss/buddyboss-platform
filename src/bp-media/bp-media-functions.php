@@ -843,6 +843,31 @@ function bp_media_get_total_media_count() {
 }
 
 /**
+ * Get the album count of a user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int album count of the user.
+ */
+function bb_media_get_total_album_count() {
+
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+	bp_has_albums( bp_ajax_querystring( 'albums' ) );
+	global $media_album_template;
+	$count = $media_album_template->total_album_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+
+	/**
+	 * Filters the total media album count for a given user.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $count Total media album count for a given user.
+	 */
+	return apply_filters( 'bb_media_get_total_album_count', (int) $count );
+}
+
+/**
  * Get the groups media count of a given user.
  *
  * @return int media count of the user.
@@ -2563,13 +2588,21 @@ function bp_media_download_link( $attachment_id, $media_id ) {
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['media_type'] ) {
+
+			// Remove action to remove meta query for forums while download check.
+			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+
+			// Add pre_get_posts action hook back.
+			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
 		if ( $can_download_btn ) {
 			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
+			exit();
 		}
 	}
 }
@@ -4030,7 +4063,14 @@ function bb_media_delete_older_symlinks() {
 	return $list;
 
 }
-bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
+
+add_action(
+	'bp_init',
+	function () {
+		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
+	}
+);
+
 
 /**
  * Check the GIPHY key is valid or not.

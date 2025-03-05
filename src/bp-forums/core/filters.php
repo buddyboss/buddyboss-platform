@@ -307,6 +307,8 @@ add_filter( 'bbp_get_forum_content', 'convert_chars' );
 add_filter( 'bbp_get_forum_content', 'wpautop' );
 add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
+add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 2 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -645,4 +647,25 @@ function bb_forums_hide_single_url( $content ) {
 	}
 
 	return $content;
+}
+
+/**
+ * Add pretty links to spam, trash topics.
+ *
+ * @since BuddyBoss 2.7.90
+ *
+ * @param string $permalink Permalink.
+ * @param object $post      Topic post object.
+ *
+ * @return string
+ */
+function bb_pretty_link_trash_topics( $permalink, $post ) {
+	if ( 'topic' === $post->post_type && ( bbp_is_topic_trash( $post->ID ) || bbp_is_topic_spam( $post->ID ) ) ) {
+		$url = trailingslashit( trailingslashit( bbp_get_topic_slug() ) . get_post_field( 'post_name', $post->ID ) );
+
+		// Force pretty permalink even for spam and trashed topics.
+		$permalink = home_url( $url );
+	}
+
+	return $permalink;
 }
