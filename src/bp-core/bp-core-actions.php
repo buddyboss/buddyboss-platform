@@ -1238,3 +1238,16 @@ function bb_telemetry_load() {
 }
 
 add_action( 'bp_init', 'bb_telemetry_load' );
+
+/**
+ * Function to load readylaunch class.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_readylaunch() {
+	if ( class_exists( 'BB_Readylaunch' ) ) {
+		return BB_Readylaunch::instance();
+	}
+}
+
+add_action( 'bp_init', 'bb_load_readylaunch' );

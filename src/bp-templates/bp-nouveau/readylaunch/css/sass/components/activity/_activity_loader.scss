@@ -1,0 +1,119 @@
+// Loading animation
+
+.bb-rl-activity-placeholder {
+	background: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	padding: 20px 15px;
+	border-radius: var(--bb-rl-radius-md);
+	margin-bottom: var(--bb-rl-space-100);
+
+	.bb-rl-activity-placeholder_avatar {
+		height: 48px;
+		width: 48px;
+		border-radius: 50%;
+		margin-right: var(--bb-rl-radius-md);
+	}
+
+	.bb-rl-activity-placeholder_head {
+		display: flex;
+		margin-bottom: var(bb-rl-space-200);
+	}
+
+	.bb-rl-activity-placeholder_details {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		width: calc(100% - 68px);
+
+		.bb-rl-activity-placeholder_title,
+		.bb-rl-activity-placeholder_description {
+			max-width: 107px;
+			height: 17px;
+			border-radius: var(--bb-rl-radius-md);
+			margin-bottom: var(--bb-rl-space-100);
+		}
+
+		.bb-rl-activity-placeholder_description {
+			max-width: 202px;
+			height: 12px;
+		}
+	}
+
+	.bb-rl-activity-placeholder_content {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		gap: 8px;
+		margin-bottom: var(bb-rl-space-200);
+
+		.bb-rl-activity-placeholder_title {
+			height: 18px;
+			border-radius: var(--bb-rl-radius-md);
+			width: 100%;
+		}
+	}
+
+	.bb-rl-activity-placeholder_actions {
+		display: flex;
+		justify-content: space-between;
+
+		.bb-rl-activity-placeholder_description {
+			height: 13px;
+			border-radius: var(--bb-rl-radius-md);
+			width: 100%;
+			max-width: 98px;
+		}
+	}
+
+	&.bb-activity-tiny-placeholder {
+		border: 0;
+		padding: 0;
+		margin: 0;
+		background-color: transparent;
+
+		.bb-rl-activity-placeholder_avatar {
+			height: 32px;
+			width: 32px;
+		}
+
+		.bb-rl-activity-placeholder_head {
+			margin-bottom: 3px;
+			margin-top: 3px;
+		}
+
+		.bb-rl-activity-placeholder_details {
+
+			.bb-rl-activity-placeholder_title {
+				max-width: 300px;
+				height: 55px;
+			}
+
+			.bb-rl-activity-placeholder_description {
+				max-width: 118px;
+				height: 18px;
+			}
+		}
+	}
+}
+
+.bb-rl-loading-bg {
+	background-color: var(--bb-rl-background-secondary-color);
+	animation: fade-in-out infinite 2s ease;
+}
+
+@keyframes fade-in-out {
+
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
