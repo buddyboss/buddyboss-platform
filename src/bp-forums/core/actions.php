@@ -680,8 +680,8 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		return;
 	}
 
-	$link_title       = ! empty( $link_preview_data['link_title'] ) ? filter_var( $link_preview_data['link_title'] ) : '';
-	$link_description = ! empty( $link_preview_data['link_description'] ) ? filter_var( $link_preview_data['link_description'] ) : '';
+	$link_title       = ! empty( $link_preview_data['link_title'] ) ? sanitize_text_field( wp_unslash( $link_preview_data['link_title'] ) ) : '';
+	$link_description = ! empty( $link_preview_data['link_description'] ) ? sanitize_text_field( wp_unslash( $link_preview_data['link_description'] ) ) : '';
 	$link_image       = ! empty( $link_preview_data['link_image'] ) ? filter_var( $link_preview_data['link_image'], FILTER_VALIDATE_URL ) : '';
 
 	// Check if link embed was used.
@@ -709,10 +709,12 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
+		$link_title            = wp_kses_post( $link_title );
 		$preview_data['title'] = $link_title;
 	}
 
 	if ( ! empty( $link_description ) ) {
+		$link_description            = wp_kses_post( $link_description );
 		$preview_data['description'] = $link_description;
 	}
 
