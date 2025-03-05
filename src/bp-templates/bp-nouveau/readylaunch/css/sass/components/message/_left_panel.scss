@@ -253,6 +253,10 @@
 					content: "\e224";
 				}
 
+				&.read a:before {
+					content: "\e220";
+				}
+
 				&.hide_thread a:before {
 					content: "\e20c";
 				}

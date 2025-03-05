@@ -379,6 +379,10 @@
   content: "\e224";
 }
 
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.read a:before {
+  content: "\e220";
+}
+
 .bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.hide_thread a:before {
   content: "\e20c";
 }
