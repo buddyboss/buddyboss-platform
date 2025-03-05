@@ -1,0 +1,48 @@
+.bb-rl-messages-content {
+	flex: 1;
+	min-width: 0;
+	padding: 0;
+
+	#bp-message-thread-list {
+		background: transparent;
+		border: 0;
+		border-top: 1px solid var(--bb-content-border-color);
+		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		height: auto;
+		min-height: 0;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		list-style: none;
+		margin: 0;
+		overflow: auto;
+	}
+}
+
+.bp-messages-content-wrapper {
+	display: flex;
+	flex-flow: column;
+	height: 80vh;
+	max-height: 80vh;
+	min-height: 670px;
+}
+
+.message-thread-header {
+	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.single-message-thread-header {
+	display: flex;
+	align-items: center;
+	padding: 12px var(--bb-rl-space-200);
+
+	.bb-rl-thread-avatar {
+		margin-right: var(--bb-rl-space-100);
+
+		img {
+			height: 40px;
+			width: 40px;
+			border-radius: var(--bb-rl-radius-full);
+		}
+	}
+}
