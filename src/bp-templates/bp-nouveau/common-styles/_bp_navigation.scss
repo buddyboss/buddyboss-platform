@@ -145,6 +145,7 @@
 			nav {
 				border-bottom: 1px solid $bp-border-color;
 				border-top: 1px solid $bp-border-color;
+				margin-bottom: 20px;
 
 				@include box-shadow( 0 2px 12px 0 $off-white);
 			}
@@ -455,5 +456,61 @@
 				}
 			}
 		}
+	}
+}
+
+// Directory Count Styling
+.bb-item-count {
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.3;
+
+	.item-body-inner > & {
+		margin-bottom: 20px;
+
+		+ .subnav-filters {
+			float: right;
+		}
+	}
+
+	.item-body > & {
+		margin-bottom: 20px;
+
+		&.bb-group-members-count {
+			margin-top: 20px;
+
+			+ .members-search {
+				float: left;
+			}
+		}
+	}
+
+	body.directory .main-navs + & {
+		margin-bottom: 10px;
+
+		~ #media-stream .bp-feedback {
+			margin-top: 15px;
+		}
+	}
+}
+
+.item-body,
+.item-body-inner {
+
+	&:has(.bb-item-count + .subnav-filters) .bb-item-count {
+		float: left;
+		margin: 10px 0 0;
+	}
+
+	&:has(.group-search + .bb-item-count) .group-search {
+		margin-top: 10px;
+	}
+}
+
+.bp-search + .bb-item-count {
+	margin-top: 35px !important;
+
+	+ .subnav-filters {
+		margin-top: 25px;
 	}
 }
