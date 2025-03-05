@@ -425,6 +425,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
+					'bb-enable-content-counts',
 					'bp-profile-avatar-type',
 					'bp-default-profile-avatar-type',
 					'bp-enable-profile-gravatar',

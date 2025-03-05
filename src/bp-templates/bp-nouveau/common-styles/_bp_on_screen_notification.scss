@@ -30,7 +30,9 @@
 		z-index: 1099;
 
 		.activity-modal-open &,
-		.acomments-modal-open & {
+		.acomments-modal-open &,
+		.media-modal-open &,
+		.document-modal-open & {
 			z-index: 999999;
 		}
 
