@@ -408,14 +408,16 @@
   display: block;
 }
 
-.bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible),
-.bb-rl-message-lists .bb-rl-thread-item:hover {
+.bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible), .bb-rl-message-lists .bb-rl-thread-item:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible) .bb-rl-message-thread-options,
-.bb-rl-message-lists .bb-rl-thread-item:hover .bb-rl-message-thread-options {
+.bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible) .bb-rl-message-thread-options, .bb-rl-message-lists .bb-rl-thread-item:hover .bb-rl-message-thread-options {
   display: block;
+}
+
+.bb-rl-message-lists .bb-rl-thread-item.current {
+  background-color: var(--bb-rl-background-secondary-color);
 }
 
 .bb-rl-message-lists .bb-rl-thread-item:has(.message_action__list.is_visible) {

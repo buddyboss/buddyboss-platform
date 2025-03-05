@@ -285,12 +285,19 @@
 		}
 	}
 
-	.bb-rl-thread-item:has(.message_action__list.is_visible),
-	.bb-rl-thread-item:hover {
-		background-color: var(--bb-rl-background-secondary-color);
+	.bb-rl-thread-item {
 
-		.bb-rl-message-thread-options {
-			display: block;
+		&:has(.message_action__list.is_visible),
+		&:hover {
+			background-color: var(--bb-rl-background-secondary-color);
+
+			.bb-rl-message-thread-options {
+				display: block;
+			}
+		}
+
+		&.current {
+			background-color: var(--bb-rl-background-secondary-color);
 		}
 	}
 
