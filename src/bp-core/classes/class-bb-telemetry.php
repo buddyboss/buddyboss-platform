@@ -434,7 +434,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-disable-group-avatar-uploads',
 					'bp-default-group-avatar-type',
 					'bp-disable-group-cover-image-uploads',
-					'bp-default-group-cover-type'
+					'bp-default-group-cover-type',
 					'bb_activity_filter_options',
 					'bb_activity_timeline_filter_options',
 					'bb_activity_sorting_options',
