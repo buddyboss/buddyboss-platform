@@ -345,7 +345,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		/**
 		 * Retrieves the translated group name from WPML.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.10
 		 *
 		 * @param string $search_term The original search term.
 		 *

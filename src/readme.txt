@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.7.2
 Requires PHP: 5.6.20
-Stable tag: 2.8.00
+Stable tag: 2.8.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.10 =
+* Enhancement: Added new settings to allow admins to enable or disable member and group counts on the Members and Groups directory pages
+* Bug: Activity - Fixed an issue where email notifications were not being sent for second, third, and fourth-tier replies, ensuring all reply levels trigger email notifications
+* Bug: Activity - Fixed an issue where the "Abort" link was incorrectly displayed in comments
+* Bug: Activity - Fixed issues with the pin post functionality in the media theatre and activity "view more comments" popup
+* Bug: Activity - Removed extra question mark-like symbols around mentioned usernames in the Comments API
+* Bug: Core - Fixed an API issue where the privacy checkbox was not displayed in the app
+* Bug: Events Calendar - Fixed an issue where the “Latest Updates” widget did not display any activity when the Events Calendar plugin was activated.
+* Bug: Groups - Fixed an issue where the Groups widget displayed the "See All" button even when all groups were already listed
+* Bug: Members - Fixed an issue where the wrong display name was shown to non-connected users
+* Bug: Moderation - Optimised the query for suspended users to prevent crashes on sites with a large number of users
+* Bug: Notifications - Fixed an issue where the sort-by-date option on the notifications screen displayed a duplicated icon on the initial load
+* Bug: PM Pro - Fixed an error that occurred when deleting a user with a 'Paid Memberships Pro' membership
+* Bug: Profile - Fixed an issue in the Edit Profile > Biography section where incorrect validation messages were displayed while editing social links
+* Bug: WPML - Fixed an issue where the Group Directory search was not working in other languages
 
 = 2.8.00 =
 * Bug: Core- Fixed an issue with the invites table sorting
