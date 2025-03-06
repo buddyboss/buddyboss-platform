@@ -3881,7 +3881,7 @@ function bb_update_to_2_8_11() {
 			}
 
 			// Populate 'date_updated' with the value of 'date_recorded'.
-			$wpdb->query( "UPDATE {$activity_table} SET `date_updated` = `date_recorded` WHERE date_updated IS NULL OR date_updated = '' OR date_updated = '0000-00-00 00:00:00'" ); // phpcs:ignore
+			$wpdb->query( "UPDATE {$activity_table} SET `date_updated` = `date_recorded` WHERE date_updated IS NULL OR date_updated = '0000-00-00 00:00:00'" ); // phpcs:ignore
 
 			// Get all existing indexes for the table.
 			$indexes = $wpdb->get_col( $wpdb->prepare( 'SELECT index_name FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = DATABASE() AND table_name = %s', $activity_table ) ); //phpcs:ignore
