@@ -741,6 +741,28 @@ body.guillotine-dragging * {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		gap: var(--bb-rl-space-300);
+
+		.load-more {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+
+			.button {
+				@include bb-rl-button;
+				@include bb-rl-button-secondary-fill;
+				font-size: var(--bb-rl-font-size-sm);
+				padding: 6px var(--bb-rl-space-200);
+				margin-right: 10px;
+				line-height: var(--bb-rl-base-line-small);
+	
+				[class*="bb-icons-rl-"] {
+					margin-left: 6px;
+					font-size: 16px;
+				}
+	
+			}
+			
+		}
 	}
 
 	.bb-item-thumb {

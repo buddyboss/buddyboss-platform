@@ -5605,6 +5605,57 @@ body.guillotine-dragging * {
   gap: var(--bb-rl-space-300);
 }
 
+.bb-rl-media-stream .media-list .load-more,
+.bb-rl-media-stream .video-list .load-more {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.bb-rl-media-stream .media-list .load-more .button,
+.bb-rl-media-stream .video-list .load-more .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 6px var(--bb-rl-space-200);
+  margin-right: 10px;
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-media-stream .media-list .load-more .button:hover,
+.bb-rl-media-stream .video-list .load-more .button:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-media-stream .media-list .load-more .button:focus,
+.bb-rl-media-stream .video-list .load-more .button:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-media-stream .media-list .load-more .button:disabled,
+.bb-rl-media-stream .video-list .load-more .button:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-media-stream .media-list .load-more .button [class*="bb-icons-rl-"],
+.bb-rl-media-stream .video-list .load-more .button [class*="bb-icons-rl-"] {
+  margin-left: 6px;
+  font-size: 16px;
+}
+
 .bb-rl-media-stream .bb-item-thumb {
   position: relative;
   z-index: 1;
