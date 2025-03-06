@@ -282,10 +282,12 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				$name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $name );
 				$name = trim( $name );
 
+				$get_nav_count = $this->bp_rest_get_nav_count( $group, $nav );
+
 				$tab = array(
 					'id'              => $id,
 					'title'           => $name,
-					'count'           => $this->bp_rest_get_nav_count( $group, $nav ),
+					'count'           => ( $get_nav_count ? $get_nav_count : '' ),
 					'position'        => $nav['position'],
 					'default'         => false,
 					'user_has_access' => $nav['user_has_access'],
@@ -524,7 +526,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
 				$tabs[ $key ]['slug']     = $item['slug'];
-				$tabs[ $key ]['count']    = $this->get_group_tab_count( $item['slug'], $type );
+				$tabs[ $key ]['count']    = ! empty( $item['count'] ) ? $this->get_group_tab_count( $item['slug'], $type ) : '';
 			}
 		}
 
@@ -537,14 +539,17 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @return mixed|void
 	 */
 	public function bp_rest_legacy_get_groups_directory_nav_items() {
-		$nav_items = array();
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$nav_items    = array();
 
 		$nav_items['all'] = array(
 			'text'     => __( 'All Groups', 'buddyboss' ),
 			'slug'     => 'all',
-			'count'    => bp_get_total_group_count(),
 			'position' => 5,
 		);
+		if ( $enable_count ) {
+			$nav_items['all']['count'] = bp_get_total_group_count();
+		}
 
 		if ( is_user_logged_in() ) {
 
@@ -555,9 +560,12 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				$nav_items['personal'] = array(
 					'text'     => __( 'My Groups', 'buddyboss' ),
 					'slug'     => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
-					'count'    => $my_groups_count,
 					'position' => 15,
 				);
+
+				if ( $enable_count ) {
+					$nav_items['personal']['count'] = $my_groups_count;
+				}
 			}
 
 			// If the user can create groups, add the create nav.
@@ -570,6 +578,8 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				);
 			}
 		}
+
+		unset( $enable_count );
 
 		return apply_filters( 'bp_rest_legacy_get_groups_directory_nav_items', $nav_items );
 	}
@@ -622,23 +632,27 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @return int The count attribute for the nav item.
 	 */
 	protected function bp_rest_get_nav_count( $group, $nav ) {
-		$nav_item = $nav['slug'];
-
-		if ( 'members' === $nav_item || 'all-members' === $nav_item ) {
-			$count = $group->total_member_count;
-		} elseif ( 'subgroups' === $nav_item ) {
-			$count = count( bp_get_descendent_groups( $group->id, bp_loggedin_user_id() ) );
-		} elseif ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item && function_exists( 'bp_is_group_media_support_enabled' ) ) {
-			$count = bp_media_get_total_group_media_count( $group->id );
-		} elseif ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item && function_exists( 'bp_is_group_albums_support_enabled' ) ) {
-			$count = bp_media_get_total_group_album_count( $group->id );
-		} elseif ( 'leaders' === $nav_item ) {
-			$admins = groups_get_group_admins( $group->id );
-			$mods   = groups_get_group_mods( $group->id );
-			$count  = count( $admins ) + count( $mods );
-		} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
-			$count = bp_video_get_total_group_video_count( $group->id );
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		if ( $enable_count ) {
+			$nav_item = $nav['slug'];
+			if ( 'members' === $nav_item || 'all-members' === $nav_item ) {
+				$count = $group->total_member_count;
+			} elseif ( 'subgroups' === $nav_item ) {
+				$count = count( bp_get_descendent_groups( $group->id, bp_loggedin_user_id() ) );
+			} elseif ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item && function_exists( 'bp_is_group_media_support_enabled' ) ) {
+				$count = bp_media_get_total_group_media_count( $group->id );
+			} elseif ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item && function_exists( 'bp_is_group_albums_support_enabled' ) ) {
+				$count = bp_media_get_total_group_album_count( $group->id );
+			} elseif ( 'leaders' === $nav_item ) {
+				$admins = groups_get_group_admins( $group->id );
+				$mods   = groups_get_group_mods( $group->id );
+				$count  = count( $admins ) + count( $mods );
+			} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
+				$count = bp_video_get_total_group_video_count( $group->id );
+			}
 		}
+
+		unset( $enable_count );
 
 		if ( ! isset( $count ) ) {
 			return false;

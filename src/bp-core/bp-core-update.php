@@ -3846,7 +3846,7 @@ function bb_on_update_moderation_friends_count_update() {
 /**
  * Enable the member and group directory count option for existing installations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.10
  *
  * @return void
  */

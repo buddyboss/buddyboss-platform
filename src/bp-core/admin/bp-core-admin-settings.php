@@ -3770,7 +3770,7 @@ function bb_admin_performance_setting_activity_callback() {
 /**
  * Setting for enable content count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.10
  */
 function bb_admin_setting_callback_content_counts() {
 	?>

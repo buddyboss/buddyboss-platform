@@ -1,0 +1,89 @@
+name: NodeJS with Grunt
+
+on:
+  push:
+    branches:
+      - "release"
+      - "master"
+  pull_request:
+    branches:
+      - "release"
+      - "master"
+  # Enable manual trigger
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Clean npm cache
+      run: npm cache clean --force
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential python3 gcc g++ make
+
+    - name: Setup Python 3
+      run: |
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+        python --version
+
+    - name: Update npm and node-gyp for Node 16
+      if: matrix.node-version == '16.x'
+      run: |
+        npm install -g npm@8.19.4
+        npm install -g node-gyp@9.4.0
+        npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
+
+    - name: Install Grunt CLI
+      run: npm install -g grunt-cli
+
+    - name: Install node-sass for Node 14
+      if: matrix.node-version == '14.x'
+      run: |
+        npm config set sass-binary-site=https://github.com/sass/node-sass/releases/download
+        npm install node-sass@7.0.0 --save-dev --force
+        npm rebuild node-sass
+
+    - name: Install node-sass for Node 16
+      if: matrix.node-version == '16.x'
+      run: |
+        export SASS_BINARY_SITE=https://github.com/sass/node-sass/releases/download
+        npm install node-sass@7.0.3 --save-dev --force --unsafe-perm
+        npm rebuild node-sass --update-binary
+
+    - name: Install specific dependencies first
+      run: |
+        npm install grunt@0.4.5 --save-dev --force
+        npm install grunt@1.4.1 --save-dev --force
+        npm install stylelint@13.13.1 --save-dev --force
+        npm install grunt-json2php@0.1.4 --save-dev --force
+        npm install grunt-stylelint@0.17.0 --save-dev --force
+
+    - name: Install remaining dependencies
+      run: npm install --legacy-peer-deps --no-audit --force
+
+    - name: Display versions
+      run: |
+        npm -v
+        node -v
+
+    - name: Run Grunt
+      run: grunt --verbose
