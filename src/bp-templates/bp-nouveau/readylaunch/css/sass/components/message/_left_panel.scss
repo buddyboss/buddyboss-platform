@@ -508,3 +508,48 @@
 	text-align: center;
 	padding: var(--bb-rl-space-200) 0 0;
 }
+
+/* Loading Threads */
+.bp-user-messages-loading.loading {
+	border: 0;
+	padding: 15px;
+	text-align: center;
+
+	.message-user-loading {
+		display: flex;
+		justify-content: center;
+		padding: 15px 0;
+		max-width: 100%;
+	}
+
+	.message-user-loading_avatar {
+		height: 52px;
+		width: 52px;
+		border-radius: 50%;
+		margin-right: 15px;
+	}
+
+	.message-user-loading_details {
+		display: flex;
+		justify-content: center;
+		flex-flow: column;
+		flex: 1;
+		width: calc(100% - 68px);
+	}
+
+	.message-user-loading_details {
+
+		.message-user-loading_description,
+		.message-user-loading_title {
+			width: 107px;
+			height: 14px;
+			border-radius: 15px;
+			margin-bottom: 6px;
+			max-width: 100%;
+		}
+
+		.message-user-loading_description {
+			width: 202px;
+		}
+	}
+}

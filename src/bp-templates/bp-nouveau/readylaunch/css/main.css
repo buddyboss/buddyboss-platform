@@ -470,6 +470,23 @@ ul.bp-list {
   padding: 0;
 }
 
+.bb-rl-loading-bg {
+  background-color: var(--bb-rl-background-secondary-color);
+  animation: fade-in-out infinite 2s ease;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .atwho-view {
   background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);

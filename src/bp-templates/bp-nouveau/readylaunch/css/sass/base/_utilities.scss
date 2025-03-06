@@ -53,6 +53,27 @@ ul.bp-list {
 	padding: 0;
 }
 
+// Loading Animation
+.bb-rl-loading-bg {
+	background-color: var(--bb-rl-background-secondary-color);
+	animation: fade-in-out infinite 2s ease;
+}
+
+@keyframes fade-in-out {
+
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
 // Mention
 .atwho-view {
 	background-color: var(--bb-rl-background-color);
