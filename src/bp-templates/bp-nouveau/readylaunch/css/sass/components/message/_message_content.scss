@@ -47,6 +47,24 @@
 		}
 	}
 
+	.thread-multiple-avatar {
+		height: 40px;
+		width: 40px;
+		position: relative;
+
+		img {
+			height: 24px;
+			width: 24px;
+		}
+
+		a + a img {
+			position: absolute;
+			left: 16px;
+			top: 14px;
+		}
+
+	}
+
 	.thread-participants dd {
 		line-height: 1;
 	}
