@@ -190,6 +190,7 @@ function bp_get_default_options() {
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
 
+		'bb-enable-content-counts'                   => 0,
 		'bb-enable-sso'                              => false,
 	);
 
@@ -1137,7 +1138,7 @@ function bp_is_activity_tabs_active( $default = false ) {
 	/* Update for the backward compatibility since setting is removed. */
 	// Retrieve the saved options.
 	$filters = bb_get_enabled_activity_filter_options();
-	
+
 	// Common function to get only allowed ones.
 	$filters = bb_filter_activity_filter_scope_keys( $filters );
 
@@ -2775,6 +2776,28 @@ function bb_is_send_ajax_request() {
 	return (bool) ( 2 === bb_get_ajax_request_page_load() );
 }
 
+/**
+ * Determines whether to show counts at the pages like Memebers, Groups etc.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @param bool $default Optional. Default value to use if the option is not set. Default true.
+ *
+ * @return bool true if counts should be displayed, false otherwise.
+ */
+function bb_enable_content_counts( $default = false ) {
+
+	/**
+	 * Filter to modify the behavior of the group counts feature.
+	 *
+	 * @since BuddyBoss 2.8.10
+	 *
+	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
+	 * @param int  $default     The default value if the setting is not configured. Default false.
+	 */
+	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bp_get_option( 'bb-enable-content-counts', $default ) );
+}
+
 
 /**
  * Get all activity filters option labels.
@@ -2825,7 +2848,7 @@ function bb_get_enabled_activity_filter_options( $default = array() ) {
 	}
 
 	$options = bp_get_option( 'bb_activity_filter_options', $default );
-	
+
 	// Always ensure 'all' is enabled.
 	if ( empty( $options['all'] ) ) {
 		$options['all'] = 1;
@@ -2881,7 +2904,7 @@ function bb_get_enabled_activity_timeline_filter_options( $default = array() ) {
 	}
 
 	$options = bp_get_option( 'bb_activity_timeline_filter_options', $default );
-	
+
 	// Always ensure 'just-me' is enabled.
 	if ( empty( $options['just-me'] ) ) {
 		$options['just-me'] = 1;
@@ -2925,7 +2948,7 @@ function bb_get_enabled_activity_sorting_options( $default = array() ) {
 	}
 
 	$options = bp_get_option( 'bb_activity_sorting_options', $default );
-	
+
 	// Always ensure 'date_recorded' is enabled.
 	if ( empty( $options['date_recorded'] ) ) {
 		$options['date_recorded'] = 1;

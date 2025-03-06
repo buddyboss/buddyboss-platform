@@ -713,9 +713,58 @@ window.bp = window.bp || {};
 						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
 					}
 
-					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
-						for ( var i in response.data.scopes ) {
-							$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
+					if ( ! _.isUndefined( response.data ) ) {
+						// Update count for inner page heading.
+						var dir_label_type = '';
+						if ( $( 'body' ).hasClass( 'bp-user' ) && ( 'members' === data.object || 'groups' === data.object ) ) {
+							data.scope = 'personal';
+						}
+
+						if ( 'personal' === data.scope && 'members' === data.object ) {
+							dir_label_type = 'connections';
+						} else if ( 'following' === data.scope ) {
+							dir_label_type = 'followers';
+						} else {
+							dir_label_type = data.object;
+						}
+
+						var dir_count = 0;
+						if ( null === data.template || '' === dir_label_type ) {
+							dir_count = 'undefined' !== typeof response.data.scopes ? ( response.data.scopes[ data.scope ] || 0 ) : 0;
+						} else {
+							dir_count = response.data.count || 0;
+						}
+						var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( dir_label_type ) ?
+							(
+								1 === parseInt( dir_count ) ?
+								BP_Nouveau.dir_labels[dir_label_type].singular : BP_Nouveau.dir_labels[dir_label_type].plural
+							)
+							: '';
+
+						if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
+							$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
+							$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+
+							if ( 'member_notifications' === data.template ) {
+								$( '#notifications-personal-li.selected' ).find( 'span' ).text( response.data.count );
+							}
+						}
+
+						if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.scopes ) ) {
+							for ( var i in response.data.scopes ) {
+								$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text( response.data.scopes[ i ] );
+							}
+
+							if (
+								(
+									$( 'body.groups' ).hasClass( 'single-item' ) ||
+									$( 'body.bp-user' ).hasClass( 'single' ) ||
+									$( 'body.directory' ).hasClass( 'media' ) ||
+									$( 'body.directory' ).hasClass( 'video' )
+								) && ( 'media' === data.object || 'video' === data.object )
+							) {
+								$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.scopes[ data.scope ] + '</span> ' + dir_label );
+							}
 						}
 					}
 
@@ -2303,36 +2352,18 @@ window.bp = window.bp || {};
 
 						// User main nav update friends counts.
 						if ( $( '#friends-personal-li' ).length ) {
-							var friend_with_count    = $( '#friends-personal-li a span' );
-							var friend_without_count = $( '#friends-personal-li a' );
 
 							// Check friend count set.
-							if ( undefined !== response.data.is_user && response.data.is_user && undefined !== response.data.friend_count ) {
-								// Check friend count > 0 then show the count span.
-								if ( '0' !== response.data.friend_count ) {
-									if ( ( friend_with_count ).length ) {
-										// Update count span.
-										$( friend_with_count ).html( response.data.friend_count );
-									} else {
-										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
-									}
-								} else {
-									// If no friend then hide count span.
-									$( friend_with_count ).hide();
-								}
-							} else if ( undefined !== response.data.friend_count ) {
-								if ( '0' !== response.data.friend_count ) {
-									if ( ( friend_with_count ).length ) {
-										// Update count span.
-										$( friend_with_count ).html( response.data.friend_count );
-									} else {
-										// If no friend then add count span.
-										$( friend_without_count ).append( '<span class="count">' + response.data.friend_count + '</span>' );
-									}
-								} else {
-									// If no friend then hide count span.
-									$( friend_with_count ).hide();
+							if ( undefined !== response.data.friend_count ) {
+
+								if ( $( self.objectNavParent + ' .bb-item-count' ).length > 0 ) {
+									var dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'connections' ) ?
+									(
+										1 === parseInt( response.data.friend_count ) ?
+										BP_Nouveau.dir_labels.connections.singular : BP_Nouveau.dir_labels.connections.plural
+									)
+									: '';
+									$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.friend_count + '</span> ' + dir_label );
 								}
 							}
 						}
@@ -4177,7 +4208,7 @@ window.bp = window.bp || {};
 				 // Create a DOM parser
 				 var parser = new DOMParser();
 				 var doc = parser.parseFromString( urlText, 'text/html' );
-				 
+
 				 // Exclude the mention links from the urlText
 				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
 				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
@@ -4426,7 +4457,7 @@ window.bp = window.bp || {};
 
 			if (
 				'' === scope ||
-				false === scope || 
+				false === scope ||
 				(
 					'undefined' !== BP_Nouveau.is_send_ajax_request &&
 					'' === BP_Nouveau.is_send_ajax_request

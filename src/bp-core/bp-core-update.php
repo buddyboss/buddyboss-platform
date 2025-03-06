@@ -503,8 +503,12 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
-		if ( $raw_db_version < 23311 ) {
+		if ( $raw_db_version < 23221 ) {
 			bb_update_to_2_6_80();
+		}
+
+		if ( $raw_db_version < 23311 ) {
+			bb_update_to_2_8_11();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3819,16 +3823,27 @@ function bb_update_to_2_6_70() {
 }
 
 /**
+ * Enable the member and group directory count option for existing installations.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @return void
+ */
+function bb_update_to_2_6_80() {
+	bp_update_option( 'bb-enable-content-counts', 1 );
+}
+
+/**
  * Add updated_time column in activity table.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_update_to_2_6_80() {
+function bb_update_to_2_8_11() {
 
 	// Run migration.
-	$is_already_run = get_transient( 'bb_update_to_2_6_80' );
+	$is_already_run = get_transient( 'bb_update_to_2_8_11' );
 	if ( ! $is_already_run ) {
 
 		global $wpdb;
@@ -3848,7 +3863,7 @@ function bb_update_to_2_6_80() {
 				// Handle case when WordPress creates the column automatically from the create query.
 
 				// Get the current column order.
-				$columns = $wpdb->get_results( "SHOW COLUMNS FROM {$activity_table}", ARRAY_A ); // phpcs:ignore 
+				$columns = $wpdb->get_results( "SHOW COLUMNS FROM {$activity_table}", ARRAY_A ); // phpcs:ignore
 
 				$column_positions = array();
 				foreach ( $columns as $index => $column ) {
@@ -3887,6 +3902,6 @@ function bb_update_to_2_6_80() {
 		bp_update_option( 'bb_activity_sorting_options', array( 'date_recorded' => 1, 'date_updated'  => 1 ) );
 		bp_update_option( 'bb_enable_activity_search', true );
 
-		set_transient( 'bb_update_to_2_6_80', 'yes', HOUR_IN_SECONDS );
+		set_transient( 'bb_update_to_2_8_11', 'yes', HOUR_IN_SECONDS );
 	}
 }
