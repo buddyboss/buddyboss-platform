@@ -4912,11 +4912,12 @@ window.bp = window.bp || {};
 							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
-						if ( $( event.target ).hasClass( 'message_action__list' ) || $( event.target ).parents().hasClass( 'message_action__list' ) || $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+						if ( $( event.target ).hasClass( 'message_action__list' ) || $( event.target ).parents().hasClass( 'message_action__list' ) || $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) || $( event.target ).hasClass( 'bb_more_options' ) || $( event.target ).parent().hasClass( 'bb_more_options' ) ) {
 							return event;
 						} else {
 							$( '.message-action-options.more_option_active' ).removeClass( 'more_option_active' );
 							$( '.message_action__list.open' ).removeClass( 'open is_visible' );
+							$( '.bb_more_options.bb-rl-message-thread-options' ).removeClass( 'more_option_active' );
 						}
 					}
 				);
