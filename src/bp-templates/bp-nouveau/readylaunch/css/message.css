@@ -292,6 +292,15 @@
   white-space: nowrap;
 }
 
+.bb-rl-message-lists .bb-rl-thread-item .bb-rl-thread-content .bb-rl-thread-excerpt .emoji {
+  max-width: 14px;
+  vertical-align: middle;
+  line-height: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: auto;
+}
+
 .bb-rl-message-lists .bb-rl-thread-item .bb-rl-thread-date {
   font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-tertiary-color);
@@ -932,4 +941,12 @@
 
 #bp-message-thread-list > li .bp-message-content-wrap p:last-child {
   margin-bottom: 0;
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap img.emoji,
+#bp-message-thread-list > li .bp-message-content-wrap img.emojioneemoji {
+  margin: 1px 3px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
 }

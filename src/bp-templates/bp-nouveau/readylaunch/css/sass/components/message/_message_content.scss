@@ -280,6 +280,14 @@
 					margin-bottom: 0;
 				}
 			}
+
+			img.emoji,
+			img.emojioneemoji {
+				margin: 1px 3px;
+				width: 18px;
+				height: 18px;
+				vertical-align: middle;
+			}
 		}
 	}
 }
