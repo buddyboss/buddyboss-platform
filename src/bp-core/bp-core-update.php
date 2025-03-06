@@ -3827,7 +3827,7 @@ function bb_update_to_2_6_70() {
  * Enable the member and group directory count option for existing installations.
  * Add updated_time column in activity table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.10
  *
  * @return void
  */

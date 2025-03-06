@@ -3974,7 +3974,7 @@ function bb_admin_setting_callback_enable_activity_search() {
 /*
  * Setting for enable content count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.10
  */
 function bb_admin_setting_callback_content_counts() {
    ?>

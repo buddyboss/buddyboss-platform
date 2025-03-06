@@ -2779,7 +2779,7 @@ function bb_is_send_ajax_request() {
 /**
  * Determines whether to show counts at the pages like Memebers, Groups etc.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.10
  *
  * @param bool $default Optional. Default value to use if the option is not set. Default true.
  *
@@ -2790,7 +2790,7 @@ function bb_enable_content_counts( $default = false ) {
 	/**
 	 * Filter to modify the behavior of the group counts feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.10
 	 *
 	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
 	 * @param int  $default     The default value if the setting is not configured. Default false.
