@@ -68,7 +68,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			do_action( 'bp_before_directory_media' );
 		?>
 
-		<div class="bb-rl-media-directory-container flex">
+		<div class="bb-rl-media-directory-container">
 
 			<?php
 				/**
@@ -97,7 +97,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					bp_get_template_part( 'document/theatre' );
 				?>
 
-                <div id="bb-rl-media-dir-list" class="media dir-list bb-rl-media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+                <div id="bb-rl-media-dir-list" class="media dir-list bb-rl-media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 						if ( $is_send_ajax_request ) {
 							echo '<div id="bp-ajax-loader">';

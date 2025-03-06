@@ -150,6 +150,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_core_register_common_styles', array( $this, 'bb_rl_register_common_styles' ), 999, 1 );
 
 				remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
+				remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
 			}
 		}
 
@@ -1621,7 +1622,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_register_common_scripts( $scripts ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
-			
+
 			// Add Cropper.js to the common scripts
 			$scripts['bb-readylaunch-cropper-js'] = array(
 				'file'         => "{$url}cropper{$min}.js",
@@ -1654,7 +1655,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'dependencies' => array(),
 				'version'      => '1.6.2',
 			);
-			
+
 			return $styles;
 		}
 	}
