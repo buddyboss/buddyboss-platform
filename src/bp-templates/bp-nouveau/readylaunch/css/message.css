@@ -808,3 +808,33 @@
 .single-message-thread-header .bb_more_dropdown li.delete_messages a:before {
   content: "\e4a6";
 }
+#bp-message-thread-list .divider-date {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+  position: relative;
+}
+
+#bp-message-thread-list .divider-date:before {
+  content: "";
+  height: 1px;
+  background-color: var(--bb-rl-border-secondary-color);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+#bp-message-thread-list .divider-date .bp-single-message-wrap {
+  text-align: center;
+}
+
+#bp-message-thread-list .divider-date .bp-message-content-wrap {
+  display: inline-block;
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-tertiary-color);
+  line-height: 1.5;
+  padding: 0 var(--bb-rl-space-200);
+  background-color: var(--bb-rl-background-color);
+  position: relative;
+}
