@@ -4909,10 +4909,15 @@ window.bp = window.bp || {};
 							return event;
 						} else {
 							$( '.message_actions.open' ).removeClass( 'open' );
-							$( '.message_action__list.open' ).removeClass( 'open' );
 							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
+						if ( $( event.target ).hasClass( 'message_action__list' ) || $( event.target ).parents().hasClass( 'message_action__list' ) || $( event.target ).hasClass( 'bb_more_options_action' ) || $( event.target ).parent().hasClass( 'bb_more_options_action' ) ) {
+							return event;
+						} else {
+							$( '.message-action-options.more_option_active' ).removeClass( 'more_option_active' );
+							$( '.message_action__list.open' ).removeClass( 'open is_visible' );
+						}
 					}
 				);
 
