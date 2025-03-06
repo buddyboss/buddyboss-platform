@@ -23,11 +23,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 				if ( is_user_logged_in() ) {
 
-					echo '<div class="bb-rl-video-actions flex items-center">';
+					echo '<div class="bb-rl-video-actions bb-rl-actions-buttons flex items-center">';
 
 					if ( bp_is_profile_albums_support_enabled() ) {
 						?>
-						<a href="#" id="bb-create-video-album" class="bb-create-video-album button small"><i class="bb-icon-l bb-icon-image-video"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+						<a href="#" id="bb-create-video-album" class="action-secondary bb-create-video-album button small">
+							<i class="bb-icons-rl-images"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
+						</a>
 						<?php
 					}
 
@@ -36,7 +38,9 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						bb_user_can_create_video()
 					) {
 						?>
-						<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+						<a class="action-primary bb-add-videos button small" id="bp-add-video" href="#" >
+							<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
+						</a>
 						<?php
 					}
 

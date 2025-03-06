@@ -526,6 +526,106 @@ h6 {
   }
 }
 
+.bb-rl-secondary-header .bb-rl-actions-buttons {
+  margin-left: var(--bb-rl-space-200);
+  padding-left: var(--bb-rl-space-200);
+  position: relative;
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons:before {
+  content: "|";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 6px var(--bb-rl-space-200);
+  margin-right: 10px;
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-secondary:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-secondary:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-secondary:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-secondary [class*="bb-icons-rl-"] {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 6px var(--bb-rl-space-200);
+  margin-right: 10px;
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-primary:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-primary:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-primary:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .action-primary [class*="bb-icons-rl-"] {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .button {
+  margin-right: 0;
+}
+
+.bb-rl-secondary-header .bb-rl-actions-buttons .button ~ .button {
+  margin-left: var(--bb-rl-space-100);
+}
+
 .bb-rl-entry-heading h2 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;

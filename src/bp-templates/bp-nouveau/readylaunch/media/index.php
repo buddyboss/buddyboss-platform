@@ -25,21 +25,21 @@ $is_send_ajax_request = bb_is_send_ajax_request();
                         bb_user_can_create_media()
                 ) {
 
-					echo '<div class="bb-rl-media-actions flex items-center">';
+					echo '<div class="bb-rl-media-actions bb-rl-actions-buttons flex items-center">';
 
 					$bp_is_profile_albums_support_enabled = bp_is_profile_albums_support_enabled();
 					if ( $bp_is_profile_albums_support_enabled ) {
 						?>
-                        <a href="#" id="bb-create-album" class="bb-create-album button small">
-                            <i class="bb-icon-l bb-icon-image-video"></i>
+                        <a href="#" id="bb-create-album" class="action-secondary bb-create-album button small">
+                            <i class="bb-icons-rl-images"></i>
 							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
                         </a>
 						<?php
 					}
 
 					?>
-                    <a class="bb-add-photos button small" id="bp-add-media" href="#">
-                        <i class="bb-icon-l bb-icon-upload"></i>
+                    <a class="bb-add-photos button small action-primary" id="bp-add-media" href="#">
+                        <i class="bb-icons-rl-plus"></i>
 						<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
                     </a>
 
