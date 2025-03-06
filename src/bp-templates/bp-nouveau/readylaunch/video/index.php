@@ -65,7 +65,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			do_action( 'bp_before_directory_video' );
 		?>
 
-		<div class="bb-rl-video-directory-container flex">
+		<div class="bb-rl-video-directory-container">
 
 			<?php
 				/**
@@ -85,7 +85,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 			<div class="screen-content bb-rl-video-directory-content">
 
-				<div id="bb-rl-video-dir-list" class="video dir-list bb-rl-video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div id="bb-rl-video-dir-list" class="video dir-list bb-rl-video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 						if ( $is_send_ajax_request ) {
 							echo '<div id="bp-ajax-loader">';
