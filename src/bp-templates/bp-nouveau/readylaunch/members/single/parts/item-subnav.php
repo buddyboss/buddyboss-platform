@@ -30,6 +30,11 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 			if ( 'archived' === $nav_item->slug ) {
 				continue;
 			}
+
+			// Change the nav_item -> name "New Message" to "New"
+			if ( 'New Message' === $nav_item->name  ) {
+				$nav_item->name = 'New';
+			}
 			?>
 
 			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
