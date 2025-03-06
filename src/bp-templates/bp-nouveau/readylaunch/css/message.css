@@ -808,6 +808,7 @@
 .single-message-thread-header .bb_more_dropdown li.delete_messages a:before {
   content: "\e4a6";
 }
+
 #bp-message-thread-list .divider-date {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
   position: relative;
@@ -837,4 +838,55 @@
   padding: 0 var(--bb-rl-space-200);
   background-color: var(--bb-rl-background-color);
   position: relative;
+}
+
+#bp-message-thread-list > li {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+#bp-message-thread-list > li .bp-single-message-wrap {
+  display: flex;
+}
+
+#bp-message-thread-list > li .bp-avatar-wrap {
+  margin-right: var(--bb-rl-space-100);
+  width: 40px;
+}
+
+#bp-message-thread-list > li .bp-avatar-wrap img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+#bp-message-thread-list > li .bp-single-message-content {
+  flex: 1;
+}
+
+#bp-message-thread-list > li .bp-user-link {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  margin-right: var(--bb-rl-space-50);
+}
+
+#bp-message-thread-list > li .bp-user-link strong {
+  font-weight: 500;
+}
+
+#bp-message-thread-list > li .message-metadata time {
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap {
+  font-size: 14px;
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap p {
+  margin-bottom: 5px;
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap p:last-child {
+  margin-bottom: 0;
 }
