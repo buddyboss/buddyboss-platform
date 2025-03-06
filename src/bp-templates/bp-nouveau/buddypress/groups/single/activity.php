@@ -51,7 +51,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo strtolower( $sorting_labels[ $default_selected ] ); ?></span>
+				<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 
@@ -64,7 +64,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 								continue;
 							}
 							?>
-							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
+							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
 							<?php
 						}
 					}

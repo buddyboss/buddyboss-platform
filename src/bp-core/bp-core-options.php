@@ -2809,15 +2809,20 @@ function bb_get_activity_filter_options_labels() {
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array(
-	'all'       => 1,
-	'just-me'   => 1,
-	'favorites' => 1,
-	'groups'    => 1,
-	'friends'   => 1,
-	'mentions'  => 1,
-	'following' => 1,
-) ) {
+function bb_get_enabled_activity_filter_options( $default = array() ) {
+
+	// Set default options if not provided.
+	if ( empty( $default ) ) {
+		$default = array(
+			'all'       => 1,
+			'just-me'   => 1,
+			'favorites' => 1,
+			'groups'    => 1,
+			'friends'   => 1,
+			'mentions'  => 1,
+			'following' => 1,
+		);
+	}
 
 	$options = bp_get_option( 'bb_activity_filter_options', $default );
 	
@@ -2861,14 +2866,19 @@ function bb_get_activity_timeline_filter_options_labels() {
  *
  * @return array Array of enabled activity timeline filters options.
  */
-function bb_get_enabled_activity_timeline_filter_options( $default = array(
-	'just-me'   => 1,
-	'favorites' => 1,
-	'groups'    => 1,
-	'friends'   => 1,
-	'mentions'  => 1,
-	'following' => 1,
-) ) {
+function bb_get_enabled_activity_timeline_filter_options( $default = array() ) {
+
+	// Set default options if not provided.
+	if ( empty( $default ) ) {
+		$default = array(
+			  'just-me'   => 1,
+			  'favorites' => 1,
+			  'groups'    => 1,
+			  'friends'   => 1,
+			  'mentions'  => 1,
+			  'following' => 1,
+		);
+	}
 
 	$options = bp_get_option( 'bb_activity_timeline_filter_options', $default );
 	
@@ -2904,10 +2914,15 @@ function bb_get_activity_sorting_options_labels() {
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $default = array(
-	'date_recorded' => 1,
-	'date_updated'  => 1,
-) ) {
+function bb_get_enabled_activity_sorting_options( $default = array() ) {
+
+	// Set default options if not provided.
+	if ( empty( $default ) ) {
+		$default = array(
+			'date_recorded' => 1,
+			'date_updated'  => 1,
+		);
+	}
 
 	$options = bp_get_option( 'bb_activity_sorting_options', $default );
 	

@@ -7449,32 +7449,53 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
 }
 
 /**
- * Get parent activity id of the activity item.
+ * Get parent activity object of the activity item.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param object $activity Activity object.
- *
+ * 
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_activity_object( $activity ) {
-
+	global $wpdb;
+	$bp       = buddypress();
 	$is_media = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
 
-	// Loop through find the parent id until the item_id and secondary_item_id are same.
+	// Loop until the item_id and secondary_item_id are the same.
 	while (
 		$activity->item_id !== $activity->secondary_item_id &&
 		(
-			// Get medias individual activity if muliple uploaded.
+			// Get media's individual activity if multiple were uploaded.
 			( $is_media && 'groups' !== $activity->component ) ||
 			( ! $is_media && 'activity_comment' === $activity->type )
 		)
 	) {
-		$temp_activity = new BP_Activity_Activity( $activity->item_id );
-		if ( empty( $temp_activity->id ) ) {
-			unset( $temp_activity );
+		$item_id = (int) $activity->item_id;
+
+		// Try to get from cache first.
+		$cache_key     = 'bb_activity_parent_' . $item_id;
+		$temp_activity = wp_cache_get( $cache_key, 'bb_activity_parents' );
+
+		if ( false === $temp_activity ) {
+			// Fetch from database if not in cache.
+			$temp_activity = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM {$bp->activity->table_name} WHERE id = %d",
+					$item_id
+				)
+			);
+
+			// Cache the result if found.
+			if ( $temp_activity ) {
+				wp_cache_set( $cache_key, $temp_activity, 'bb_activity_parents' );
+			}
+		}
+
+		if ( empty( $temp_activity ) || empty( $temp_activity->id ) ) {
 			return $activity;
 		}
+
 		$activity = $temp_activity;
 	}
 
@@ -7492,12 +7513,36 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_id ) {
+	global $wpdb;
+	$bp = buddypress();
+
+	// Early bail if activity is invalid.
+	if ( empty( $activity ) || empty( $activity->id ) ) {
+		return $activity;
+	}
 
 	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
 	while ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) {
-		$temp_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-		if ( empty( $temp_activity->id ) ) {
-			unset( $temp_activity );
+		// Use direct database query instead of creating a BP_Activity_Activity object.
+		$secondary_item_id = (int) $activity->secondary_item_id;
+
+		// Try to get from cache first.
+		$cache_key     = 'bb_activity_comment_parent_' . $secondary_item_id . '_' . $main_activity_id;
+		$temp_activity = wp_cache_get( $cache_key, 'bb_activity_comment_parents' );
+		if ( false === $temp_activity ) {
+			// If not in cache, fetch from database.
+			$temp_activity = $wpdb->get_row( $wpdb->prepare( 
+				"SELECT * FROM {$bp->activity->table_name} WHERE id = %d", 
+				$secondary_item_id 
+			) );
+
+			// Cache the result if found.
+			if ( $temp_activity ) {
+				wp_cache_set( $cache_key, $temp_activity, 'bb_activity_comment_parents' );
+			}
+		}
+
+		if ( empty( $temp_activity ) || empty( $temp_activity->id ) ) {
 			return $activity;
 		}
 		$activity = $temp_activity;
