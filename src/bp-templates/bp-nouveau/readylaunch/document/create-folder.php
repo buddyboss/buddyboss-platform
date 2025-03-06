@@ -13,8 +13,8 @@
 
 <div id="bp-media-create-folder" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
-			<div class="modal-wrapper">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+			<div class="bb-rl-modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
@@ -31,7 +31,7 @@
 					endif;
 					?>
 					<footer class="bb-model-footer">
-						<a class="button" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 					</footer>
 
 				</div>

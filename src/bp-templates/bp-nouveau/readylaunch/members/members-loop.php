@@ -274,7 +274,7 @@ bp_nouveau_after_loop();
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup bb-rl-modal" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap bb-rl-modal-mask">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="bb-rl-modal-wrapper">
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">
@@ -307,7 +307,7 @@ bp_nouveau_after_loop();
 <!-- Block member popup -->
 <div id="bb-rl-block-member" class="bb-rl-block-modal bb-rl-modal" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-rl-modal-mask">
+		<div class="bb-rl-modal-mask">
 			<div class="bb-rl-modal-wrapper">
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">

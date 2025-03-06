@@ -2610,7 +2610,7 @@ button[data-balloon] {
 }
 
 .dropzone.document-dropzone .dz-button:before {
-  content: "\e2e2";
+  content: "\e39a";
 }
 
 .dropzone.document-dropzone .dz-icon {
@@ -2725,7 +2725,8 @@ button[data-balloon] {
   border-color: transparent;
 }
 
-.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-image img {
+.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-image img,
+.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-video-thumbnail img {
   opacity: 1;
 }
 
@@ -2740,6 +2741,23 @@ button[data-balloon] {
 }
 
 .dropzone .dz-image img {
+  width: 165px;
+  height: 100%;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  opacity: 0;
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.dropzone .dz-video-thumbnail {
+  height: 160px;
+}
+
+.dropzone .dz-video-thumbnail img {
   width: 165px;
   height: 100%;
   margin: 0 auto;
@@ -2787,6 +2805,10 @@ button[data-balloon] {
   overflow: hidden;
   margin-top: var(--bb-rl-space-50);
   padding: 0 var(--bb-rl-space-100) 0;
+}
+
+.dropzone .dz-details .dz-size {
+  text-align: center;
 }
 
 .dropzone .dz-remove {
@@ -3342,6 +3364,7 @@ button[data-balloon] {
   font-weight: 600;
   line-height: 28px;
   color: var(--bb-rl-text-color);
+  margin-right: var(--bb-rl-space-100);
 }
 
 .bb-readylaunch-template .bb-report-type-wrp {
@@ -3521,12 +3544,55 @@ button[data-balloon] {
   font-style: normal;
 }
 
-.bb-readylaunch-template .modal-container #bp-media-post-content {
+.bb-readylaunch-template .modal-container .bb-field-steps {
+  display: none;
+}
+
+.bb-readylaunch-template .modal-container .bb-field-steps.bb-field-steps-1 {
+  display: block;
+}
+
+.bb-readylaunch-template .modal-container #bp-media-post-content,
+.bb-readylaunch-template .modal-container #bp-video-post-content {
   height: 112px;
   border: 0;
   padding: var(--bb-rl-space-200) 0;
   width: 100%;
   resize: none;
+}
+
+.bb-readylaunch-template .modal-container .bb-leave-group-content {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template .bp-media-photo-uploader #bp-media-prev,
+.bb-readylaunch-template .bp-media-photo-uploader #bp-media-photo-next {
+  display: none;
+}
+
+.bb-readylaunch-template .bp-media-photo-uploader .bb-field-steps-1.controls-added #bp-media-prev,
+.bb-readylaunch-template .bp-media-photo-uploader .bb-field-steps-1.controls-added #bp-media-photo-next {
+  display: inline-flex !important;
+}
+
+.bb-readylaunch-template .bp-media-document-uploader #bp-media-document-next,
+.bb-readylaunch-template .bp-media-document-uploader #bp-media-document-prev {
+  display: none;
+}
+
+.bb-readylaunch-template .bp-media-document-uploader .bb-field-steps-1.controls-added #bp-media-document-next,
+.bb-readylaunch-template .bp-media-document-uploader .bb-field-steps-1.controls-added #bp-media-document-prev {
+  display: inline-flex !important;
+}
+
+.bb-readylaunch-template .bp-video-uploader #bp-video-next,
+.bb-readylaunch-template .bp-video-uploader #bp-video-prev {
+  display: none;
+}
+
+.bb-readylaunch-template .bp-video-uploader .bb-field-steps-1.controls-added #bp-video-next,
+.bb-readylaunch-template .bp-video-uploader .bb-field-steps-1.controls-added #bp-video-prev {
+  display: inline-flex !important;
 }
 
 .bb-readylaunch-template .bbm-uploader-model-wrap .media-uploader-wrapper {
@@ -3608,6 +3674,7 @@ button[data-balloon] {
 
 .bb-readylaunch-template .bb-field-uploader-next i.bb-icon-folder {
   line-height: 1;
+  font-style: normal;
 }
 
 .bb-readylaunch-template .bb-field-uploader-next i.bb-icon-folder::before {
@@ -3616,6 +3683,71 @@ button[data-balloon] {
   font-family: bb-icons-rl;
   font-size: var(--bb-rl-base-line-small);
   color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  margin-bottom: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap input {
+  width: 100%;
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap .error-box {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-secondary-color);
+  margin: var(--bb-rl-space-100) 0 0;
+  display: block;
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  margin-bottom: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap input {
+  width: 100%;
+}
+
+.bb-readylaunch-template #bp-media-create-album .bb-field-wrap + .bb-field-wrap {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.bb-readylaunch-template .location-folder-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .location-folder-list-wrap-main .bb-rl-no-folder-exists,
+.bb-readylaunch-template .location-folder-list-wrap-main .bb-rl-no-album-exists,
+.bb-readylaunch-template .bb-rl-location-folder-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-folder-list-wrap-main .bb-rl-no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-folder-list-wrap-main .bb-rl-no-album-exists,
+.bb-readylaunch-template .bb-rl-location-album-list-wrap-main .no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-album-list-wrap-main .bb-rl-no-folder-exists,
+.bb-readylaunch-template .bb-rl-location-album-list-wrap-main .bb-rl-no-album-exists {
+  display: block;
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.bb-rl-modal-wrapper .bb-rl-has-warning .bb-rl-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .bb-rl-container-inner .bp-pagination,
@@ -10925,6 +11057,10 @@ div[class*="attached-gif-container"] .gif-player {
   border-radius: var(--bb-rl-radius-full);
   margin-left: var(--bb-rl-space-100);
   animation: spin 3s infinite linear;
+}
+
+.bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-media-move {
+  margin-left: var(--bb-rl-space-100);
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {
