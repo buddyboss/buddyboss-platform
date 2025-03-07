@@ -297,7 +297,7 @@ if ( 'video' === $media_template->media->type ) {
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
 		<a
-			class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
+			class="bb-rl-open-media-theatre bb-rl-entry-img bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 			data-id="<?php echo esc_attr( $bp_media_id ); ?>"
 			data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
 			data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
