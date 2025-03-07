@@ -5088,14 +5088,41 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e42a";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group::before {
   content: "\e4a6";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.ac-media-move:before, .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-document-move:before,
+.bb-rl-context-wrap .bb_more_dropdown a.ac-media-move:before,
+.bb-rl-context-wrap .bb_more_dropdown a.ac-document-move:before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-media-move:before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-document-move:before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.ac-media-move:before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-move:before {
+  content: "\e836";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-ac-video-move:before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-ac-video-move:before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-ac-video-move:before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-ac-video-move:before {
+  content: "\e260";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-ac-video-thumbnail-edit:before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-ac-video-thumbnail-edit:before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-ac-video-thumbnail-edit:before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-ac-video-thumbnail-edit:before {
+  content: "\e2ca";
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown .bp-screen-reader-text,

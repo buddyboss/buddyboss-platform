@@ -197,12 +197,26 @@
 				}
 			}
 
+			&.bb-rl-media-file-delete,
 			&.bb-rl-video-file-delete,
 			&.delete-group {
 
 				&::before {
 					content: "\e4a6";
 				}
+			}
+
+			&.ac-media-move:before,
+			&.ac-document-move:before {
+				content: "\e836";
+			}
+
+			&.bb-rl-ac-video-move:before {
+				content: "\e260";
+			}
+
+			&.bb-rl-ac-video-thumbnail-edit:before {
+				content: "\e2ca";
 			}
 		}
 
