@@ -5817,7 +5817,7 @@ window.bp = window.bp || {};
 						 * In the user activity timeline, user is posting on other user's timeline
 						 * it will not have activity to prepend/append because of scope and privacy.
 						 */
-						if ( '' === response.activity && response.is_user_activity && response.is_active_activity_tabs ) {
+						if ( '' === response.activity && response.is_user_activity ) {
 							toPrepend = false;
 						}
 
@@ -5883,6 +5883,15 @@ window.bp = window.bp || {};
 									scheduleUrl,
 									true
 								);
+							}
+						}
+
+						var active_user_list = $( '.bb-subnav-filters-filtering .subnav-filters-modal ul li.selected' ).data( 'bp-scope' );
+						if ( response.is_user_activity && '' !== response.activity ) {
+							if ( 'just-me' === active_user_list ) {
+								toPrepend = true;
+							} else {
+								toPrepend = false;
 							}
 						}
 

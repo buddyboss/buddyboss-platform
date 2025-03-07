@@ -193,6 +193,17 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
+// Update activity date_update when any reaction.
+add_filter( 'bp_activity_add_user_favorite', 'bb_activity_update_date_updated_on_reactions', 10, 2 );
+add_filter( 'bp_activity_remove_user_favorite', 'bb_activity_update_date_updated_on_reactions', 10, 2 );
+
+// Clear activity parent cache when activity is deleted or saved.	
+add_action( 'bp_activity_after_delete', 'bb_clear_activity_parent_cache' );
+add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
+add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
+add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' );
+add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3796,4 +3807,208 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
+}
+
+/**
+ * Update date_updated on reactions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id ID of the activity item being favorited.
+ * @param int $user_id     ID of the user doing the favoriting.
+ *
+ * @return void
+ */
+function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
+	$time     = bp_core_current_time();
+	$activity = bb_activity_get_raw_db_object( $activity_id );
+
+	if ( ! empty( $activity ) ) {
+		if ( 'activity_comment' === $activity->type || in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
+
+			// Check if the item_id and secondary_item_id are same.
+			if ( $activity->item_id === $activity->secondary_item_id && ! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
+	
+				// Update the date_updated of the parent activity item.
+				bb_activity_update_date_updated( $activity->item_id, $time );
+	
+				// Clear the cache for the parent activity item.
+				bp_activity_clear_cache_for_activity( $activity );
+			} else {
+				// Get the parent activity id if the activity is a comment or the sub media, document, video activity.
+				$main_activity_object = bb_activity_get_comment_parent_activity_object( $activity );
+	
+				// Update the date_updated of the parent activity item.
+				bb_activity_update_date_updated( $main_activity_object->id, $time );
+	
+				// Clear the cache for the parent activity item.
+				bp_activity_clear_cache_for_activity( $main_activity_object );
+	
+				// If individual medias activity then also get the most parent activity.
+				if (
+					(
+						(
+							in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
+							'activity_update' === $main_activity_object->type
+						)
+					) && ! empty( $main_activity_object->secondary_item_id )
+				) {
+					// Update the date_updated of the parent activity item.
+					bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $time );
+
+					// Fetch the activity directly from the database.
+					$intermediate_activity = bb_activity_get_raw_db_object( $main_activity_object->secondary_item_id );
+					if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
+	
+						// Clear the cache for the parent activity item.
+						bp_activity_clear_cache_for_activity( $intermediate_activity );
+						unset( $intermediate_activity );
+					}
+				}
+	
+				// Get the parent comment activity object.
+				$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_object->id );
+	
+				// Update the date_updated of the parent comment activity item.
+				bb_activity_update_date_updated( $parent_comment_activity_object->id, $time );
+	
+				// Clear the cache for the parent activity item.
+				bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
+	
+			}
+		}
+	
+		// Update the date_updated of the activity item.
+		bb_activity_update_date_updated( $activity_id, $time );
+	
+		// Clear the cache for the activity item.
+		bp_activity_clear_cache_for_activity( $activity );
+	
+		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+			BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+		}
+
+	}
+}
+
+/**
+ * Clear activity parent cache for one or more activities.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Activity_Activity|array $activities Activity object or array of objects.
+ *
+ * @return void
+ */
+function bb_clear_activity_parent_cache( $activities ) {
+
+	// Early bail if no activities provided.
+	if ( empty( $activities ) ) {
+		return;
+	}
+
+	// Get activity IDs based on input type.
+	$activity_ids = array();
+	if ( is_object( $activities ) && $activities instanceof BP_Activity_Activity ) {
+		$activity_ids = array( $activities->id );
+	} elseif ( is_array( $activities ) ) {
+		$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+	}
+
+	// Clear cache for each activity ID.
+	if ( ! empty( $activity_ids ) ) {
+		foreach ( $activity_ids as $activity_id ) {
+			wp_cache_delete( 'bb_activity_parent_' . $activity_id, 'bb_activity_parents' );
+		}
+	}
+}
+
+/**
+ * Clear activity comment parent cache.
+ * 
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Activity_Activity|array $activities Activity object or array of objects.
+ *
+ * @return void
+ */
+function bb_clear_activity_comment_parent_cache( $activities ) {
+
+	// Early bail if no activities provided.
+	if ( empty( $activities ) ) {
+		return;
+	}
+
+	// Get activity IDs based on input type.
+	$activity_ids = array();
+	if ( is_object( $activities ) && $activities instanceof BP_Activity_Activity ) {
+		$activity_ids = array( $activities->id );
+	} elseif ( is_array( $activities ) ) {
+		$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+	}
+
+	// Clear cache for each activity ID.
+	if ( ! empty( $activity_ids ) ) {
+		global $wpdb;
+		$bp = buddypress();
+		foreach ( $activity_ids as $activity_id ) {
+			$main_activity_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT item_id FROM {$bp->activity->table_name} WHERE id = %d",
+					$activity_id
+				)
+			);
+			if ( $main_activity_id ) {
+				wp_cache_delete( 
+					'bb_activity_comment_parent_' . $activity_id . '_' . $main_activity_id, 
+					'bb_activity_comment_parents' 
+				);
+			}
+		}
+	}
+}
+
+/**
+ * Clear all activity comment parent caches for a main activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $activities Array of activities.
+ *
+ * @return void
+ */
+function bb_clear_activity_all_comment_parent_caches( $activities ) {
+
+	// Early bail if no activities provided.
+	if ( empty( $activities ) ) {
+		return;
+	}
+
+	$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+
+	// Clear cache for each activity ID.
+	if ( ! empty( $activity_ids ) ) {
+		global $wpdb;
+		$bp = buddypress();
+		foreach ( $activity_ids as $activity_id ) {
+			$comment_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM {$bp->activity->table_name} 
+					WHERE item_id = %d AND type = 'activity_comment'",
+					$activity_id
+				)
+			);
+
+			if ( ! empty( $comment_ids )) {
+
+				// Clear cache for each comment.
+				foreach ( $comment_ids as $comment_id ) {
+					wp_cache_delete( 
+						'bb_activity_comment_parent_' . $comment_id . '_' . $activity_id, 
+						'bb_activity_comment_parents' 
+					);
+				}
+			}
+		}
+	}
 }

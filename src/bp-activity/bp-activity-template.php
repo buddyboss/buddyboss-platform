@@ -218,7 +218,13 @@ function bp_has_activities( $args = '' ) {
 			: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
 		);
 
-	$scope = bp_activity_default_scope( $scope );
+	if ( bp_is_user_activity() || bp_is_activity_directory() ) {
+
+		// Scope from the heartbeat passed from the filter dropdown.	
+		$scope = ! empty( $args['scope'] ) ? $args['scope'] : $scope;
+	}	
+
+	$scope = bp_activity_default_scope( $scope );	
 
 	// Group filtering.
 	if ( bp_is_group() ) {
@@ -335,7 +341,25 @@ function bp_has_activities( $args = '' ) {
 		$r['filter'] = array(
 			'object' => $_GET['afilter'],
 		);
-	} elseif ( ! empty( $r['user_id'] ) || ! empty( $r['object'] ) || ! empty( $r['action'] ) || ! empty( $r['primary_id'] ) || ! empty( $r['secondary_id'] ) || ! empty( $r['offset'] ) || ! empty( $r['since'] ) ) {
+	} elseif (
+		( 
+			'just-me' === $scope &&
+			bp_is_activity_directory()
+		) ||
+		(
+			! empty( $r['user_id'] ) ||
+			! empty( $r['object'] ) ||
+			! empty( $r['action'] ) ||
+			! empty( $r['primary_id'] ) ||
+			! empty( $r['secondary_id'] ) ||
+			! empty( $r['offset'] ) ||
+			! empty( $r['since'] )
+		)
+	) {
+		if ( 'just-me' === $scope && bp_is_activity_directory() ) {
+			$r['user_id'] = bp_loggedin_user_id();
+		}
+	
 		$r['filter'] = array(
 			'user_id'      => $r['user_id'],
 			'object'       => $r['object'],
@@ -775,6 +799,15 @@ function bp_activity_date_recorded() {
 }
 
 /**
+ * Output the date the activity was updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_activity_date_updated() {
+	echo bb_get_activity_date_updated();
+}
+
+/**
  * Return the date the activity was recorded.
  *
  * @since BuddyPress 1.2.0
@@ -794,6 +827,28 @@ function bp_get_activity_date_recorded() {
 	 * @param int $date_recorded The activity's date.
 	 */
 	return apply_filters( 'bp_get_activity_date_recorded', $activities_template->activity->date_recorded );
+}
+
+/**
+ * Return the date the activity was updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The date the activity was updated.
+ */
+function bb_get_activity_date_updated() {
+	global $activities_template;
+
+	/**
+	 * Filters the date the activity was updated.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $date_updated The activity's date.
+	 */
+	return apply_filters( 'bb_get_activity_date_updated', $activities_template->activity->date_updated );
 }
 
 /**
