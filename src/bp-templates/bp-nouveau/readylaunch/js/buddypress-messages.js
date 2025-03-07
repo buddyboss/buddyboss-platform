@@ -3398,7 +3398,7 @@ window.bp = window.bp || {};
 			render: function() {
 				this.$el.html( this.template( this.model.toJSON() ) );
 				this.$self        = this.$el.find( '#messages-gif-button' );
-				this.$gifPickerEl = this.$el.find( '.gif-media-search-dropdown' );
+				this.$gifPickerEl = this.$el.find( '.bb-rl-gif-media-search-dropdown' );
 				return this;
 			},
 
@@ -3517,7 +3517,7 @@ window.bp = window.bp || {};
 				var $targetEl = $( event.target );
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) &&
-					! $targetEl.closest( '.post-gif' ).length) {
+					! $targetEl.closest( '.bb-rl-post-gif' ).length) {
 
 					var gif_box = this.$self.parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
 					if ( gif_box.length > 0 && $.trim( gif_box.html() ) == '' ) {
