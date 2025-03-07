@@ -150,7 +150,7 @@ if ( 'video' === $media_template->media->type ) {
 				<p class="bb-video-duration"><?php echo esc_html( $length_formatted['length_formatted'] ); ?></p>
 			<?php } ?>
 			<a
-				class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
+				class="bb-rl-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 				data-id="<?php echo esc_attr( $bp_media_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $poster_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
