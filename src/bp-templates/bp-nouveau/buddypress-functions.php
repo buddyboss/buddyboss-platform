@@ -445,11 +445,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 					array(
 						'dependencies' => array(),
 						'version'      => $this->version,
-						'type'         => 'screen',
 					)
 				);
 
-				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'], $data['type'] );
+				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'] );
 
 				if ( $min ) {
 					wp_style_add_data( $handle, 'suffix', $min );
