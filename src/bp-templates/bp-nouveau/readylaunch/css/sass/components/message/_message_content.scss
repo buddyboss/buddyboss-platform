@@ -289,5 +289,17 @@
 				vertical-align: middle;
 			}
 		}
+
+		.bb-activity-media-wrap {
+			margin: var(--bb-rl-space-100) 0;
+		}
+
+		.bb-activity-media-elem img {
+			border-radius: var(--bb-rl-radius-lg);
+		}
 	}
+}
+
+.bp-message-content-wrap .bp-messages.loading {
+	display: none;
 }
