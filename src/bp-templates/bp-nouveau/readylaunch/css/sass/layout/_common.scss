@@ -197,6 +197,7 @@
 				}
 			}
 
+			&.bb-rl-video-file-delete,
 			&.delete-group {
 
 				&::before {
@@ -754,14 +755,14 @@ body.guillotine-dragging * {
 				padding: 6px var(--bb-rl-space-200);
 				margin-right: 10px;
 				line-height: var(--bb-rl-base-line-small);
-	
+
 				[class*="bb-icons-rl-"] {
 					margin-left: 6px;
 					font-size: 16px;
 				}
-	
+
 			}
-			
+
 		}
 	}
 
@@ -782,7 +783,7 @@ body.guillotine-dragging * {
 			position: absolute;
 			bottom: var(--bb-rl-space-100);
 			left: var(--bb-rl-space-100);
-			z-index: 2;
+			z-index: 1;
 			opacity: 1;
 		}
 
