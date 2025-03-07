@@ -737,7 +737,7 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 }
 
 // Load Account Settings Notifications.
-add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+add_action( 'bp_loaded', 'bb_load_members_account_settings_notifications' );
 
 /**
  * Register the Account Settings notifications.

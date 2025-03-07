@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.6.2
+Tested up to: 6.7.2
 Requires PHP: 5.6.20
-Stable tag: 2.7.40
+Stable tag: 2.8.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,83 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.10 =
+* Enhancement: Added new settings to allow admins to enable or disable member and group counts on the Members and Groups directory pages
+* Bug: Activity - Fixed an issue where email notifications were not being sent for second, third, and fourth-tier replies, ensuring all reply levels trigger email notifications
+* Bug: Activity - Fixed an issue where the "Abort" link was incorrectly displayed in comments
+* Bug: Activity - Fixed issues with the pin post functionality in the media theatre and activity "view more comments" popup
+* Bug: Activity - Removed extra question mark-like symbols around mentioned usernames in the Comments API
+* Bug: Core - Fixed an API issue where the privacy checkbox was not displayed in the app
+* Bug: Events Calendar - Fixed an issue where the “Latest Updates” widget did not display any activity when the Events Calendar plugin was activated.
+* Bug: Groups - Fixed an issue where the Groups widget displayed the "See All" button even when all groups were already listed
+* Bug: Members - Fixed an issue where the wrong display name was shown to non-connected users
+* Bug: Moderation - Optimised the query for suspended users to prevent crashes on sites with a large number of users
+* Bug: Notifications - Fixed an issue where the sort-by-date option on the notifications screen displayed a duplicated icon on the initial load
+* Bug: PM Pro - Fixed an error that occurred when deleting a user with a 'Paid Memberships Pro' membership
+* Bug: Profile - Fixed an issue in the Edit Profile > Biography section where incorrect validation messages were displayed while editing social links
+* Bug: WPML - Fixed an issue where the Group Directory search was not working in other languages
+
+= 2.8.00 =
+* Bug: Core- Fixed an issue with the invites table sorting
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Groups - Fixed an issue where groups with the “Hide all groups of this type from Groups Directory” setting were also hidden from the backend Groups Directory
+
+= 2.7.91 =
+* Bug: Translations - Fixed an error caused by the latest French translations
+
+= 2.7.90 =
+* Bug: Courses - Fixed an issue where the member directory page displayed incorrect users when filtering by the Course option
+* Bug: Forums - Fixed a pagination issue for forum discussions
+* Bug: Members - Fixed an issue where deleting a user account from the app disrupted pagination on the members page
+* Bug: Translations - Fixed a bug causing “PHP Notice” in the debug log after WordPress 6.7 and 6.7.1 updates
+
+= 2.7.80 =
+* Bug: Core - Fixed color functionality and spacing issues in the WordPress Customizer when using a default theme
+* Bug: Profiles - Fixed an issue where adding or removing repeater fields in a repeater fieldset was not functioning correctly
+* Bug: Performance - Removed an unused variable from class-bp-search.php and ensured network search functionality works as expected
+
+= 2.7.70 =
+* Enhancement: Forums - Added a new hook to control forum-related notifications
+* Enhancement: Social Login - Enhanced the web social login registration process to auto-populate fields with data from the social account, allowing users to manually complete any remaining mandatory fields
+* Bug: Activity - Fixed an issue where the “Add More” media button was not working correctly in the activity modal popup
+* Bug: Activity - Fixed an issue where the “Read More” link in the new topic activity entry did not redirect to the correct discussion page
+* Bug: Activity - Fixed an issue where the “Who Reacted” pop-up on the newsfeed did not update to reflect a user’s most recent reaction change
+* Bug: Core - Fixed an issue where the grunt uglify command encountered errors due to strict mode argument handling
+* Bug: Email - Fixed an issue where media file previews in email notifications did not display correctly in Gmail
+* Bug: Groups - Fixed an issue where documents uploaded to discussions within private groups were downloadable and are now restricted
+* Bug: Groups - Fixed an issue where the “Hide all groups of this group type from Groups Directory” setting was not functioning correctly
+* Bug: Groups - Fixed the issue where some groups were not showing in activity post selection due to incorrect filtering
+* Bug: Media - Fixed an issue where changing the video thumbnail required a page reload; it now updates automatically upon clicking the change button
+* Bug: Media - Fixed an issue where the “Select” option in the Photos tab of group/user profile pages was missing functionality for deleting multiple selected images
+* Bug: Members - Fixed an issue where the member status UI was not displaying properly with the default theme enabled
+* Bug: Styling - Fixed an issue where the box style for icon file export displayed incorrectly when the icon style was set to filled
+* Bug: Translations - Fixed an issue where French translation strings were not updated correctly
+
+= 2.7.60 =
+* Bug: Activity - Fixed a security issue where private or connections-related activity post comments could be exposed using inspection tools
+* Bug: Activity - Fixed an issue where the reaction tab was still displayed after the activity tab was disabled on the news feed page
+* Bug: Activity - Fixed cursor placement issue in the draft activity form popup on Safari browsers
+* Bug: Core - Fixed a error that occurred when clicking the link in the confirmation email to change the admin email id
+* Bug: Core - Fixed an issue where copying text on mobile devices (Android and iOS) was not working as expected
+* Bug: Core - Fixed an issue where member’s last activity time did not align with the timezone selected
+* Bug: Core - Fixed an issue where non-English pages/URLs could not be added as public content, they now work correctly when site privacy is enabled
+* Bug: Core - Fixed UI spacing issues in the General Settings admin card on smaller screens within BuddyBoss settings
+* Bug: Core - Code refactoring to improve security and fix vulnerabilities
+* Bug: Elementor - Fixed an issue where the page count in search results was incorrect for pages edited with Elementor
+* Bug: Forum - Fixed an issue where disabling autocomplete in the forum search bar caused the page to reload with search results after typing a character
+* Bug: Forums - Fixed a JavaScript error on the Forums > Discussions page caused by the BuddyBoss Platform plugin, ensuring compatibility with Yoast SEO features like meta descriptions and readability analysis
+* Bug: Groups - Fixed an issue where a Private Group incorrectly displayed a message indicating it was a subgroup, even when it was a parent group
+* Bug: Members - Fixed spacing issue with the display name separator when the first name contains multiple names and no last name, in the member list API for logged-out users
+* Bug: Messages - Fixed an issue where the “More Options” button remained active after closing the dropdown
+* Bug: Messages - Fixed the alignment issue with the upload media button on the message screen
+* Bug: Profiles - Fixed an issue where profile avatars were distorted on the Members index page when using default WordPress themes like Twenty Twenty One
+* Bug: Translations - Fixed an issue where the title of the “Like/Likes” modal was not translatable
+
+= 2.7.50 =
+* Enhancement: Core - Updated all “View Tutorial” links across the platform to open in a new tab
+* Enhancement: Core- Updated Telemetry configuration to be anonymous by default
+* Bug: Translations - Addressed translation compatibility issues for BuddyBoss with WordPress 6.7, 6.7.1, and ensured support for future WordPress updates.
 
 = 2.7.40 =
 * Enhancement: MemberPress - We have added full integration of MemberPress into Buddyboss including their most recent Courses feature

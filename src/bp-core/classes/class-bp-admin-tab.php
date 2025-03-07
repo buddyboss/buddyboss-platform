@@ -446,7 +446,14 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							true
 						)
 					) {
-						$value = isset( $_POST[ $setting_name ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						$value = '';
+						if ( isset( $_POST[ $setting_name ] ) ) {
+							if ( 'bp-enable-private-network-public-content' === $setting_name ) {
+								$value = wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							} else {
+								$value = sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							}
+						}
 					} elseif (
 						in_array(
 							$setting_name,
@@ -533,7 +540,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				?>
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" href="
+				<a class="button" target="_blank" href="
 				<?php
 				echo esc_url(
 					bp_get_admin_url(

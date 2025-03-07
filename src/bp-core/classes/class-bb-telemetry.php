@@ -68,7 +68,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			self::$wpdb = $wpdb;
 
-			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'complete' );
+			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' );
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -134,7 +134,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
 			);
 
-			$raw_response = bbapp_remote_post( base64_decode( $api_url ), $args );
+			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args );
 			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
 				unset( $data, $auth_key, $api_url, $args );
 
@@ -365,8 +365,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-member-type-enable-disable',
 					'bp-member-type-display-on-profile',
 					'bp-disable-avatar-uploads',
-					'bp-disable-cover-image-uploads',
-					'bp-disable-group-avatar-uploads',
 					'bp-disable-group-cover-image-uploads',
 					'bp-disable-group-type-creation',
 					'bp-disable-account-deletion',
@@ -427,6 +425,16 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
+					'bb-enable-content-counts',
+					'bp-profile-avatar-type',
+					'bp-default-profile-avatar-type',
+					'bp-enable-profile-gravatar',
+					'bp-disable-cover-image-uploads',
+					'bp-default-profile-cover-type',
+					'bp-disable-group-avatar-uploads',
+					'bp-default-group-avatar-type',
+					'bp-disable-group-cover-image-uploads',
+					'bp-default-group-cover-type'
 				)
 			);
 
@@ -533,7 +541,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 						?>
 					</p>
 					<p>
-						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary">
+						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary" target="_blank" >
 							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
 						</a>
 					</p>

@@ -2343,66 +2343,6 @@ function bp_is_get_request() {
 /** Miscellaneous hooks *******************************************************/
 
 /**
- * Load the buddyboss translation file for current language.
- *
- * @since BuddyPress 1.0.2
- *
- * @see load_textdomain() for a description of return values.
- *
- * @return bool True on success, false on failure.
- */
-function bp_core_load_buddypress_textdomain() {
-	$domain = 'buddyboss';
-
-	/**
-	 * Filters the locale to be loaded for the language files.
-	 *
-	 * @since BuddyPress 1.0.2
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddypress_locale', get_locale() ) );
-
-	$plugin_dir = BP_PLUGIN_DIR;
-	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-		$plugin_dir = $plugin_dir . 'src';
-	}
-
-	/**
-	 * Filters the locations to load language files from.
-	 *
-	 * @since BuddyPress 2.2.0
-	 *
-	 * @param array $value Array of directories to check for language files in.
-	 */
-	$locations = apply_filters(
-		'buddypress_locale_locations',
-		array(
-			trailingslashit( WP_LANG_DIR . '/' . $domain ),
-			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( $plugin_dir . '/languages' ),
-		)
-	);
-
-	unload_textdomain( $domain );
-
-	// Try custom locations in WP_LANG_DIR.
-	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
-			return true;
-		}
-	}
-
-	$plugin_folder       = plugin_basename( BP_PLUGIN_DIR );
-	$buddyboss_lang_path = $plugin_folder . '/languages';
-	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-		$buddyboss_lang_path = $plugin_folder . '/src/languages';
-	}
-	return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
-}
-add_action( 'bp_core_loaded', 'bp_core_load_buddypress_textdomain' );
-
-/**
  * A JavaScript-free implementation of the search functions in BuddyPress.
  *
  * @since BuddyPress 1.0.1
@@ -2743,7 +2683,7 @@ function bp_core_get_components( $type = 'all' ) {
 	);
 
 	if ( class_exists( 'BB_Platform_Pro' ) && function_exists( 'is_plugin_active' ) && is_plugin_active( 'buddyboss-platform-pro/buddyboss-platform-pro.php' ) ) {
-		$plugin_data    = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php' );
+		$plugin_data    = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . 'buddyboss-platform-pro/buddyboss-platform-pro.php', false, false );
 		$plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : 0;
 		if ( $plugin_version && version_compare( $plugin_version, '1.0.9', '>' ) ) {
 			$optional_components['messages']['settings'] = bp_get_admin_url(
@@ -6135,6 +6075,24 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 		return $response;
 	}
 
+	// Allow endpoints for terms and privacy policy pages.
+	if ( '/wp/v2/pages' === $current_endpoint ) {
+		$query_params = $request->get_query_params();
+		if ( ! empty( $query_params['include'] ) ) {
+			$page_ids = bp_core_get_directory_page_ids();
+			// Get terms and privacy policy page IDs.
+			$terms       = isset( $page_ids['terms'] ) ? (int) $page_ids['terms'] : false;
+			$privacy     = isset( $page_ids['privacy'] ) ? (int) $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+			$valid_pages = array( $terms, $privacy );
+			if ( ! empty( $valid_pages ) ) {
+				$matches = array_intersect( $query_params['include'], $valid_pages );
+				if ( count( $matches ) === count( $query_params['include'] ) ) {
+					return $response;
+				}
+			}
+		}
+	}
+
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
@@ -6175,7 +6133,7 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 						$endpoints                = str_replace( '//', '/', $endpoints );
 						$endpoints                = str_replace( '///', '/', $endpoints );
 						$endpoints                = '/' . ltrim( $endpoints, '/' );
-						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						$current_endpoint_allowed = preg_match( '@' . preg_quote( $endpoints, '@' ) . '$@i', end( $exploded_endpoint ) );
 						if ( $current_endpoint_allowed ) {
 							return true;
 						}
@@ -9239,7 +9197,7 @@ function bb_reactions_get_settings_sections() {
 function bp_admin_reaction_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -9892,7 +9850,7 @@ function bb_remove_deleted_user_last_activities() {
 	$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$bp_prefix}bp_activity'" );
 
 	if ( $table_exists ) {
-		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE u.ID IS NULL AND a.component = 'members' AND a.type = 'last_activity'";
+		$sql = "DELETE a FROM {$bp_prefix}bp_activity a LEFT JOIN {$wpdb->users} u ON a.user_id = u.ID WHERE ( u.ID IS NULL OR u.user_status != 0 ) AND a.component = 'members' AND a.type = 'last_activity'";
 		$wpdb->query( $sql ); // phpcs:ignore
 
 		// Also remove duplicates last_activity per user if any.

@@ -503,6 +503,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
+		if ( $raw_db_version < 23221 ) {
+			bb_update_to_2_6_80();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -552,6 +556,10 @@ function bp_version_updater() {
 			// Run migration about profile fields visibility.
 			if ( function_exists( 'bb_migrate_xprofile_visibility' ) ) {
 				bb_migrate_xprofile_visibility( true );
+			}
+
+			if ( function_exists( 'bb_remove_deleted_user_last_activities' ) ) {
+				bb_remove_deleted_user_last_activities();
 			}
 		}
 	}
@@ -3808,4 +3816,15 @@ function bb_update_to_2_6_70() {
 			);
 		}
 	}
+}
+
+/**
+ * Enable the member and group directory count option for existing installations.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @return void
+ */
+function bb_update_to_2_6_80() {
+	bp_update_option( 'bb-enable-content-counts', 1 );
 }

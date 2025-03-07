@@ -25,7 +25,7 @@ class BP_Notifications_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'notifications',
-			__( 'Notifications', 'buddyboss' ),
+			'Notifications',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30,
@@ -223,23 +223,8 @@ class BP_Notifications_Component extends BP_Component {
 			// Setup the logged in user variables.
 			$notifications_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 
-			// Pending notification requests.
-			$count = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
-			if ( ! empty( $count ) ) {
-				$title = sprintf(
-					/* translators: %s: Unread notification count for the current user */
-					__( 'Notifications %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
-				);
-				$unread = sprintf(
-					/* translators: %s: Unread notification count for the current user */
-					__( 'Unread %s', 'buddyboss' ),
-					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
-				);
-			} else {
-				$title  = __( 'Notifications', 'buddyboss' );
-				$unread = __( 'Unread', 'buddyboss' );
-			}
+			$title  = __( 'Notifications', 'buddyboss' );
+			$unread = __( 'Unread', 'buddyboss' );
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
@@ -312,6 +297,7 @@ class BP_Notifications_Component extends BP_Component {
 				'bp_notifications',
 				'notification_meta',
 				'bp_notifications_unread_count',
+				'bp_notifications_read_count',
 				'bp_notifications_grouped_notifications',
 			)
 		);

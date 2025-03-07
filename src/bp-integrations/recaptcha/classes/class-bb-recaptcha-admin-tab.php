@@ -370,7 +370,7 @@ class BB_Recaptcha_Admin_Tab extends BP_Admin_Integration_tab {
 	public function setting_callback_recaptcha_tutorial() {
 		?>
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 				echo esc_url(
 					bp_get_admin_url(

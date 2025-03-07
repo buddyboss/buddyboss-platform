@@ -68,7 +68,7 @@ class BP_Media_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'media',
-			__( 'Photos', 'buddyboss' ),
+			'Photos',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
@@ -261,20 +261,7 @@ class BP_Media_Component extends BP_Component {
 
 			$slug       = bp_get_media_slug();
 			$media_link = trailingslashit( $user_domain . $slug );
-
-			// Only grab count if we're on a user page and current user has access.
-			if ( bp_is_user() ) {
-				$count     = bp_media_get_total_media_count( bp_displayed_user_id() );
-				$class     = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name  = __( 'Photos', 'buddyboss' );
-				$nav_name .= sprintf(
-					' <span class="%s">%s</span>',
-					esc_attr( $class ),
-					$count
-				);
-			} else {
-				$nav_name = __( 'Photos', 'buddyboss' );
-			}
+			$nav_name   = __( 'Photos', 'buddyboss' );
 
 			// Add 'Photos' to the main navigation.
 			$main_nav = array(
