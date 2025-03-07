@@ -197,14 +197,14 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 				$results['scopes']['following'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
 				remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 			}
-		}
 
-		// Followers.
-		if ( ! empty( $counts['followers'] ) ) {
-			add_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );
-			bp_has_members( bp_ajax_querystring( 'members' ) );
-			$results['scopes']['followers'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-			remove_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );	
+			// Followers.
+			if ( ! empty( $counts['followers'] ) ) {
+				add_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );
+				bp_has_members( bp_ajax_querystring( 'members' ) );
+				$results['scopes']['followers'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+				remove_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );	
+			}
 		}
 	}
 
@@ -361,6 +361,11 @@ function bp_nouveau_ajax_save_cover_position() {
  * Object template results members followers scope.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $querystring The querystring for the BP loop.	
+ * @param string $object The current object for the querystring.
+ *
+ * @return string Modified querystring
  */
 function bb_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
 	if ( 'members' !== $object ) {
