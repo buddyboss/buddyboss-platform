@@ -6540,7 +6540,7 @@ window.bp = window.bp || {};
 				}
 			} );
 		},
-		
+
 		nextDocument: function ( event ) {
 			event.preventDefault();
 

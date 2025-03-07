@@ -276,7 +276,7 @@ if ( 'video' === $media_template->media->type ) {
 							?>
 							<li class="delete_file">
 								<a
-									class="media-file-delete"
+									class="bb-rl-media-file-delete"
 									data-media-id="<?php echo esc_attr( $bp_media_id ); ?>"
 									data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
 									data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"

@@ -97,7 +97,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					bp_get_template_part( 'document/theatre' );
 				?>
 
-                <div id="bb-rl-media-dir-list" class="media dir-list bb-rl-media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+                <div id="media-stream" class="media dir-list bb-rl-media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 						if ( $is_send_ajax_request ) {
 							echo '<div id="bp-ajax-loader">';
