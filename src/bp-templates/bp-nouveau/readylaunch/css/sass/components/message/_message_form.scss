@@ -124,10 +124,15 @@
 	border-top: 1px solid var(--bb-rl-border-secondary-color);
 	border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 	margin: 0;
-	padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+	padding: 12px var(--bb-rl-space-300);
 
 	.post-elements-buttons-item {
-		margin-right: 12px;
+		display: flex;
+		margin-right: var(--bb-rl-space-200);
+
+		.toolbar-button {
+			display: flex;
+		}
 
 		[class*="bb-icons-"] {
 			color: var(--bb-rl-icon-secondary-color);
