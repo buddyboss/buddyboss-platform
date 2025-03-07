@@ -967,6 +967,21 @@
   display: none;
 }
 
+.bp-message-content_foot_note {
+  font-size: 12px;
+  color: var(--bb-rl-text-tertiary-color);
+  text-align: left;
+  margin: -10px var(--bb-rl-space-300) var(--bb-rl-space-200);
+}
+
+.bp-message-content_foot_note .space_note {
+  margin-left: var(--bb-rl-space-200);
+}
+
+.bp-message-content_foot_note strong {
+  font-weight: 600;
+}
+
 .bb-rl-messages-content .send-reply {
   margin: 0;
   width: auto;

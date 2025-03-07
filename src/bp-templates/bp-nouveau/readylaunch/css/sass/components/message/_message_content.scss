@@ -303,3 +303,18 @@
 .bp-message-content-wrap .bp-messages.loading {
 	display: none;
 }
+
+.bp-message-content_foot_note {
+	font-size: 12px;
+	color: var(--bb-rl-text-tertiary-color);
+	text-align: right;
+	margin: -10px var(--bb-rl-space-300) var(--bb-rl-space-200);
+
+	.space_note {
+		margin-right: var(--bb-rl-space-200);
+	}
+
+	strong {
+		font-weight: 600;
+	}
+}
