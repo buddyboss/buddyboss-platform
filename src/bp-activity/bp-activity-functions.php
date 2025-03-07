@@ -7479,15 +7479,10 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
 
 		if ( false === $temp_activity ) {
 			// Fetch from database if not in cache.
-			$temp_activity = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM {$bp->activity->table_name} WHERE id = %d",
-					$item_id
-				)
-			);
+			$temp_activity = bb_activity_get_raw_db_object( $item_id );
 
 			// Cache the result if found.
-			if ( $temp_activity ) {
+			if ( ! empty( $temp_activity ) ) {
 				wp_cache_set( $cache_key, $temp_activity, 'bb_activity_parents' );
 			}
 		}
@@ -7531,13 +7526,10 @@ function bb_activity_get_comment_parent_comment_activity_object( $activity, $mai
 		$temp_activity = wp_cache_get( $cache_key, 'bb_activity_comment_parents' );
 		if ( false === $temp_activity ) {
 			// If not in cache, fetch from database.
-			$temp_activity = $wpdb->get_row( $wpdb->prepare( 
-				"SELECT * FROM {$bp->activity->table_name} WHERE id = %d", 
-				$secondary_item_id 
-			) );
+			$temp_activity = bb_activity_get_raw_db_object( $secondary_item_id );
 
 			// Cache the result if found.
-			if ( $temp_activity ) {
+			if ( ! empty( $temp_activity ) ) {
 				wp_cache_set( $cache_key, $temp_activity, 'bb_activity_comment_parents' );
 			}
 		}
@@ -7581,4 +7573,32 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	 * @param object $activity Activity data object.
 	 */
 	return apply_filters( 'bb_blogs_format_activity_action_disabled_post_type_feed', $action, $activity );
+}
+
+/**
+ * Get the raw database object for an activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id The ID of the activity.
+ *
+ * @return object|false The raw database object for the activity, or false if not found.
+ */
+function bb_activity_get_raw_db_object( $activity_id ) {
+	global $wpdb;
+	$bp = buddypress();
+
+	// Fetch the activity directly from the database.
+	$activity = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT * FROM {$bp->activity->table_name} WHERE id = %d",
+			(int) $activity_id
+		)
+	);
+
+	if ( empty( $activity ) || empty( $activity->id ) ) {
+		return false;
+	}
+
+	return $activity;
 }

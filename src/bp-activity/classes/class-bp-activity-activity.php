@@ -377,17 +377,8 @@ class BP_Activity_Activity {
 					// Update the date_updated of the parent activity item.
 					bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $this->date_updated );
 
-					global $wpdb;
-					$bp = buddypress();
-
 					// Fetch the activity directly from the database.
-					$intermediate_activity = $wpdb->get_row(
-						$wpdb->prepare(
-							"SELECT * FROM {$bp->activity->table_name} WHERE id = %d",
-							(int) $main_activity_object->secondary_item_id
-						)
-					);
-
+					$intermediate_activity = bb_activity_get_raw_db_object( $main_activity_object->secondary_item_id );
 					if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
 
 						// Clear the cache for the parent activity item.
