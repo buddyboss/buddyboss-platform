@@ -295,6 +295,31 @@ span.atwho-inserted {
 	}
 }
 
+// Emoji Picker
+.emojionearea-standalone.emojionearea {
+
+	.emojionearea-picker {
+		border-radius: var(--bb-rl-radius-lg);
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+
+		.emojionearea-wrapper:after {
+			display: none;
+		}
+
+		&.emojionearea-filters-position-top {
+
+			.emojionearea-filters .emojionearea-filter:first-of-type {
+				border-top-left-radius: var(--bb-rl-radius-lg);
+			}
+
+			.emojionearea-filters {
+				border-top-right-radius: var(--bb-rl-radius-lg);
+				border-top-left-radius: var(--bb-rl-radius-lg);
+			}
+		}
+	}
+}
+
 // XDSoft DateTime Picker
 div.xdsoft_datetimepicker {
 	font-family: var(--bb-rl-font-family-base);

@@ -210,3 +210,14 @@
 	display: flex;
 	align-items: center;
 }
+
+#whats-new-formatting-toolbar {
+
+	.emojionearea .emojionearea-picker {
+		top: auto;
+		bottom: 40px;
+		right: 100%;
+		left: inherit;
+		margin-right: -25px;
+	}
+}

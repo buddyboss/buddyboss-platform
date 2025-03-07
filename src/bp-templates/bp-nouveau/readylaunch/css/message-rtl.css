@@ -1198,3 +1198,11 @@
   display: flex;
   align-items: center;
 }
+
+#whats-new-formatting-toolbar .emojionearea .emojionearea-picker {
+  top: auto;
+  bottom: 40px;
+  left: 100%;
+  right: inherit;
+  margin-left: -25px;
+}
