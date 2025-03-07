@@ -47,8 +47,6 @@ jQuery( document ).ready(
 							return bp_select2.i18n.removeAllItems;
 						}
 					},
-					dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
-					containerCssClass: 'bb-select-container',
 					tokenSeparators: [ ',' ],
 					ajax: {
 						url: bbpCommonJsData.ajax_url,
@@ -79,6 +77,14 @@ jQuery( document ).ready(
 							};
 						}
 					}
+				} );
+
+				// Apply CSS classes after initialization
+				jQuery( element ).next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-select-container' );
+				
+				// Add class to dropdown when it opens
+				jQuery( element ).on( 'select2:open', function() {
+					jQuery( '.select2-dropdown' ).addClass( 'bb-select-dropdown bb-tag-list-dropdown' );
 				} );
 
 				// Add element into the Arrdata array.
@@ -268,8 +274,6 @@ jQuery( document ).ready(
 									return bp_select2.i18n.removeAllItems;
 								}
 							},
-							dropdownCssClass: 'bb-select-dropdown bb-tag-list-dropdown',
-							containerCssClass: 'bb-select-container',
 							tokenSeparators: [ ',' ],
 							ajax: {
 								url: bbpCommonJsData.ajax_url,
@@ -300,6 +304,18 @@ jQuery( document ).ready(
 									};
 								}
 							}
+						} );
+
+						// Apply CSS classes after initialization
+						var $container = jQuery( element ).siblings( '.select2-container' ).first();
+						if ( $container.length ) {
+							$container.addClass( 'bb-select-container' );
+							$container.find( '.select2-selection' ).addClass( 'bb-select-container' );
+						}
+						
+						// Add class to dropdown when it opens
+						jQuery( element ).on( 'select2:open', function() {
+							jQuery( '.select2-dropdown' ).addClass( 'bb-select-dropdown bb-tag-list-dropdown' );
 						} );
 
 						// Add element into the Arrdata array.
