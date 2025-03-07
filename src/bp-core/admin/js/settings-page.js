@@ -2470,16 +2470,26 @@ window.bp = window.bp || {};
 			// Redirection select box Select2
 			if( typeof $.fn.select2 !== 'undefined' ) {
 				if( $( '#bb-login-redirection' ).length > 0 ) {
-					$( '#bb-login-redirection' ).select2({
-						containerCssClass: 'custom-select2',
-						dropdownCssClass: 'custom-dropdown-select2'
-					});
+					$( '#bb-login-redirection' ).select2();
+
+					// Apply CSS classes after initialization
+					$('#bb-login-redirection').next('.select2-container').find( '.select2-selection' ).addClass('custom-select2');
+        
+					// Add class to dropdown when it opens
+					$( '#bb-login-redirection' ).on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'custom-dropdown-select2' );
+					} );
 				}
 				if( $( '#bb-logout-redirection' ).length > 0 ) {
-					$( '#bb-logout-redirection' ).select2({
-						containerCssClass: 'custom-select2',
-						dropdownCssClass: 'custom-dropdown-select2'
-					});
+					$( '#bb-logout-redirection' ).select2();
+
+					// Apply CSS classes after initialization
+					$( '#bb-logout-redirection' ).next( '.select2-container' ).find( '.select2-selection' ).addClass( 'custom-select2' );
+        
+					// Add class to dropdown when it opens
+					$( '#bb-logout-redirection' ).on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'custom-dropdown-select2' );
+					} );
 				}
 			}
 
