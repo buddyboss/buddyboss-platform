@@ -3036,6 +3036,8 @@ body.admin-bar .bb-rl-header {
 }
 
 .notification-list .notification-content .posted img {
+  height: 20px;
+  width: 20px;
   vertical-align: middle;
 }
 
