@@ -1281,6 +1281,9 @@ function bp_nouveau_nav_has_count() {
 					} elseif ( 'following' === $nav_item->slug ) {
 						$counts = bp_total_follow_counts();
 						$count  = $counts['following'];
+					} elseif ( 'followers' === $nav_item->slug ) {
+						$counts = bp_total_follow_counts();
+						$count  = $counts['followers'];
 					}
 				} elseif ( bp_is_groups_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
@@ -1368,6 +1371,9 @@ function bp_nouveau_get_nav_count() {
 						// Following count.
 						$counts = bp_total_follow_counts();
 						$count  = $counts['following'];
+					} elseif ( 'followers' === $nav_item->slug ) {
+						$counts = bp_total_follow_counts();
+						$count  = $counts['followers'];
 					}
 				} elseif ( bp_is_groups_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
