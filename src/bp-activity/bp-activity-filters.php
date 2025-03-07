@@ -3855,8 +3855,18 @@ function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) 
 				// Update the date_updated of the parent activity item.
 				bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $time );
 
-				$intermediate_activity = new BP_Activity_Activity( $main_activity_object->secondary_item_id );
-				if ( ! empty( $intermediate_activity->id ) ) {
+				global $wpdb;
+				$bp = buddypress();
+
+				// Fetch the activity directly from the database.
+				$intermediate_activity = $wpdb->get_row(
+					$wpdb->prepare(
+						"SELECT * FROM {$bp->activity->table_name} WHERE id = %d",
+						(int) $main_activity_object->secondary_item_id
+					)
+				);
+
+				if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
 
 					// Clear the cache for the parent activity item.
 					bp_activity_clear_cache_for_activity( $intermediate_activity );
