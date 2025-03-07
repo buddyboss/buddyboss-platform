@@ -947,7 +947,7 @@ function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user(
 		array(
 			'ID'           => $user_id,
-			'display_name' => bp_core_get_user_displayname( $user_id ),
+			'display_name' => bp_core_get_user_displayname( $user_id, $user_id ), // Passing the same $user_id as the current user_id
 		)
 	);
 }
