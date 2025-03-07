@@ -1129,6 +1129,24 @@
   font-size: 24px;
 }
 
+#message-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button:before,
+#message-reply-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button:before {
+  content: "\e436";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 24px;
+}
+
+#message-form-submit-wrapper .bb-rl-separator,
+#message-reply-form-submit-wrapper .bb-rl-separator {
+  display: inline-flex;
+  align-self: center;
+  width: 1px;
+  height: 16px;
+  background-color: var(--bb-rl-border-tertiary-color);
+  margin: 0 -6px 2px 8px;
+}
+
 #message-reply-new-submit {
   margin-right: auto;
 }

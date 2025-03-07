@@ -138,6 +138,22 @@
 			color: var(--bb-rl-icon-secondary-color);
 			font-size: 24px;
 		}
+
+		.emojionearea .emojionearea-button:before {
+			content: "\e436";
+			color: var(--bb-rl-icon-secondary-color);
+			font-family: bb-icons-rl;
+			font-size: 24px;
+		}
+	}
+
+	.bb-rl-separator {
+		display: inline-flex;
+		align-self: center;
+		width: 1px;
+		height: 16px;
+		background-color: var(--bb-rl-border-tertiary-color);
+		margin: 0 8px 2px -6px;
 	}
 }
 
