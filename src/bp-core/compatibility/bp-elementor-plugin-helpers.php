@@ -104,50 +104,7 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 		 * @return void
 		 */
 		public function maintenance_mode_template() {
-			if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
-				return;
-			}
-
-			static $user = null;
-
-			if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
-				return;
-			}
-
-			$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
-
-			if ( $is_login_page ) {
-				return;
-			}
-
-			if ( null === $user ) {
-				$user = wp_get_current_user();
-			}
-
-			$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
-
-			if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
-				return;
-			}
-
-			if ( 'custom' === $exclude_mode ) {
-				$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
-				$user_roles    = $user->roles;
-
-				if ( is_multisite() && is_super_admin() ) {
-					$user_roles[] = 'super_admin';
-				}
-
-				$compare_roles = array_intersect( $user_roles, $exclude_roles );
-
-				if ( ! empty( $compare_roles ) ) {
-					return;
-				}
-			}
-
-			$mode = get_option( 'elementor_maintenance_mode_mode' );
-
-			if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
+			if ( bb_is_elementor_maintenance_mode_enabled() ) {
 				remove_action( 'template_redirect', 'bp_template_redirect', 10 );
 			}
 		}
