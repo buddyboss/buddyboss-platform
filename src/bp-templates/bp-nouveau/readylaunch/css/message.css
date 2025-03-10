@@ -956,6 +956,25 @@
   vertical-align: middle;
 }
 
+#bp-message-thread-list > li .bp-message-content-wrap ol,
+#bp-message-thread-list > li .bp-message-content-wrap ul {
+  list-style: disc;
+  list-style-position: inside;
+  padding: 0;
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap ol {
+  list-style: decimal;
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap blockquote {
+  font-style: italic;
+  background-color: var(--bb-rl-background-secondary-color);
+  border-left: 2px solid var(--bb-rl-background-tertiary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 #bp-message-thread-list > li .bb-activity-media-wrap {
   margin: var(--bb-rl-space-100) 0;
 }

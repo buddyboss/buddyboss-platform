@@ -289,6 +289,25 @@
 				height: 18px;
 				vertical-align: middle;
 			}
+
+			ol,
+			ul {
+				list-style: disc;
+				list-style-position: inside;
+				padding: 0;
+			}
+
+			ol {
+				list-style: decimal;
+			}
+
+			blockquote {
+				font-style: italic;
+				background-color: var(--bb-rl-background-secondary-color);
+				border-left: 2px solid var(--bb-rl-background-tertiary-color);
+				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+				margin-bottom: var(--bb-rl-space-200);
+			}
 		}
 
 		.bb-activity-media-wrap {
