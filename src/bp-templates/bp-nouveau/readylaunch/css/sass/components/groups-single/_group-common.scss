@@ -225,6 +225,23 @@
 			margin-left: auto;
 		}
 	}
+
+	#request-membership-form {
+
+		textarea {
+			width: 100%;
+			min-height: 120px;
+			margin: var(--bb-rl-space-200) 0;
+		}
+
+		#group-request-send {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			font-size: var(--bb-rl-font-size-sm);
+		}
+	}
 }
 
 .highlight.bb-rl-group-meta {

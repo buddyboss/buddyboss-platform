@@ -354,14 +354,25 @@
 }
 
 .bb-rl-requests-list {
+	margin-bottom: 0;
 
 	li {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		gap: var(--bb-rl-space-200);
 		padding: var(--bb-rl-space-300);
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-lg);
 		margin-bottom: var(--bb-rl-space-100);
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+
+		.item-card {
+			display: flex;
+			align-items: center;
+		}
 
 		@include bb-rl-label-heading;
 		color: var(--bb-rl-text-tertiary-color);
@@ -389,7 +400,7 @@
 			align-items: center;
 		}
 
-		> .action {
+		.item-card .action {
 			margin-left: auto;
 			display: flex;
 			align-items: center;
@@ -410,6 +421,34 @@
 				@include bb-rl-button--secondary-outline;
 				padding: 6px var(--bb-rl-space-200);
 				font-size: 0.875rem;
+			}
+
+			.button.accept,
+			.button.reject {
+
+				&::before {
+					content: "";
+					font-family: bb-icons-rl;
+					font-size: 16px;
+					font-weight: 400;
+					line-height: 1;
+					font-style: normal;
+					margin-right: var(--bb-rl-space-50);
+				}
+			}
+
+			.button.accept {
+
+				&::before {
+					content: "\e182";
+				}
+			}
+
+			.button.reject {
+
+				&::before {
+					content: "\e4f6";
+				}
 			}
 		}
 
