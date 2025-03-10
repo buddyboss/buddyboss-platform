@@ -1937,6 +1937,7 @@ window.bp = window.bp || {};
 			}
 			// Store activity data to use for video thumbnail.
 			this.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+			var modalTitle = target.closest( '.activity-item' ).data( 'activity-popup-title' );
 
 			self.setupGlobals();
 			self.setVideos( target );
@@ -1949,6 +1950,9 @@ window.bp = window.bp || {};
 			if ( self.current_activity_data ) {
 				self.generateAndDisplayVideoThumbnails( target ); // Generate thumbnails after setting up video.
 			}
+
+			$( '.bb-rl-media-model-wrapper .bb-rl-media-model-header h2' ).text( modalTitle );
+
 			if (
 				typeof bbRlActivity !== 'undefined' &&
 				self.current_video &&

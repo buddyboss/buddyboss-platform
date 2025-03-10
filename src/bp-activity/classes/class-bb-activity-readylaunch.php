@@ -27,6 +27,8 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
 		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 		add_filter( 'bp_groups_format_activity_action_activity_update', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
+		add_filter( 'bp_groups_format_activity_action_joined_group', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
+		add_filter( 'bp_get_activity_action_pre_meta', array( $this, 'bb_rl_remove_secondary_avatars_for_connected_users' ), 11, 2 );
 		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 3 );
 		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
 
@@ -39,6 +41,10 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_media_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
+		add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
+		add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_submit_button' ), 10 );
+		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_rl_activity_content_with_changed_avatar' ), 9999, 2 );
 
 		// Remove post content.
 		remove_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
@@ -78,7 +84,7 @@ class BB_Activity_Readylaunch {
 			$output .= '<div class="activity-state-reactions">';
 
 			foreach ( $most_reactions as $reaction ) {
-				$icon   = bb_activity_prepare_emotion_icon( $reaction['id'] );
+				$icon    = bb_activity_prepare_emotion_icon( $reaction['id'] );
 				$output .= sprintf(
 					'<div class="reactions_item">%s</div>',
 					$icon
@@ -134,12 +140,13 @@ class BB_Activity_Readylaunch {
 		if ( empty( $activity ) ) {
 			return $action;
 		}
+		$user_link = bp_core_get_userlink( $activity->user_id );
 		switch ( $activity->component ) {
 			case 'activity':
 				if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
 					$mentioned_users        = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
-					$mentioned_users_link   = [];
-					$mentioned_users_avatar = [];
+					$mentioned_users_link   = array();
+					$mentioned_users_avatar = array();
 					foreach ( $mentioned_users as $mentioned_user ) {
 						$mentioned_users_link[]   = bp_core_get_userlink( $mentioned_user->ID );
 						$mentioned_users_avatar[] = bp_core_fetch_avatar(
@@ -154,19 +161,28 @@ class BB_Activity_Readylaunch {
 					$last_user_link = array_pop( $mentioned_users_link );
 
 					$action = sprintf(
+						/* translators: %1$s: user link, %2$s: mentioned users avatar, %3$s: mentioned users link, %4$s: mentioned users link and, %5$s: last mentioned user link */
 						__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s%5$s', 'buddyboss' ),
-						bp_core_get_userlink( $activity->user_id ),
+						$user_link,
 						$mentioned_users_avatar ? implode( ', ', $mentioned_users_avatar ) : '',
 						$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
 						$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
 						$last_user_link
 					);
 				} else {
-					$action = bp_core_get_userlink( $activity->user_id );
+					$action = $user_link;
+				}
+				break;
+			case 'groups':
+				if ( 'joined_group' === $activity->type ) {
+					/* translators: %s: user link */
+					$action = sprintf( __( '%s joined the group', 'buddyboss' ), $user_link );
+				} else {
+					$action = $user_link;
 				}
 				break;
 			default:
-				$action = bp_core_get_userlink( $activity->user_id );
+				$action = $user_link;
 				break;
 		}
 
@@ -220,8 +236,8 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $button_html The default button HTML
-	 * @param array  $args        Button arguments
+	 * @param string $button_html The default button HTML.
+	 * @param array  $args        Button arguments.
 	 *
 	 * @return string Modified button HTML
 	 */
@@ -476,9 +492,15 @@ class BB_Activity_Readylaunch {
 			return $params;
 		}
 		$reply_strings = array(
-			'replyLabel'        => __( '%d Reply', 'buddyboss' ),
-			'repliesLabel'      => __( '%d Replies', 'buddyboss' ),
-			'video_default_url' => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
+			/* Translators: %d: reply count */
+			'replyLabel'         => __( '%d Reply', 'buddyboss' ),
+			/* Translators: %d: reply count */
+			'repliesLabel'       => __( '%d Replies', 'buddyboss' ),
+			'video_default_url'  => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
+			'replyButtonText'    => __( 'Reply', 'buddyboss' ),
+			'commentButtonText'  => __( 'Comment', 'buddyboss' ),
+			'replyPlaceholder'   => __( 'Write a reply...', 'buddyboss' ),
+			'commentPlaceholder' => __( 'Write a comment...', 'buddyboss' ),
 		);
 
 		$params['activity']['strings'] = array_merge( $params['activity']['strings'], $reply_strings );
@@ -499,7 +521,7 @@ class BB_Activity_Readylaunch {
 		if ( isset( $sizes['bb-document-image-preview-activity-image'] ) ) {
 			$sizes['bb-document-image-preview-activity-image'] = array(
 				'width'  => 700,
-				'height' => 'auto'
+				'height' => 'auto',
 			);
 		}
 
@@ -549,5 +571,107 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $reaction_data;
+	}
+
+	/**
+	 * Modify document description HTML for ReadyLaunch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $html The original HTML content.
+	 */
+	public function bb_rl_modify_document_description_html( $html ) {
+		// Add ReadyLaunch specific classes to existing HTML structure.
+		$html = str_replace(
+			array(
+				'class="bp-activity-head"',
+				'class="activity-avatar item-avatar"',
+				'class="activity-header"',
+			),
+			array(
+				'class="bb-rl-activity-head"',
+				'class="bb-rl-activity-avatar bb-rl-item-avatar"',
+				'class="bb-rl-activity-header"',
+			),
+			$html
+		);
+
+		return $html;
+	}
+
+	/**
+	 * Modify activity comment threading depth.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool
+	 */
+	public function bb_rl_modify_activity_comment_threading_depth() {
+		return 2;
+	}
+
+	/**
+	 * Modify submit button.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $button The submit button array.
+	 *
+	 * @return array Modified submit button array.
+	 */
+	public function bb_rl_modify_submit_button( $button ) {
+		if ( isset( $button['activity-new-comment'] ) ) {
+			$button['activity-new-comment']['attributes']['value'] = esc_html__( 'Comment', 'buddyboss' );
+		}
+		return $button;
+	}
+
+	/**
+	 * Modify activity content with changed avatar.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content The original content.
+	 * @param object $activity The activity object.
+	 *
+	 * @return string Modified content.
+	 */
+	public function bb_rl_activity_content_with_changed_avatar( $content, $activity ) {
+		if ( 'profile' === $activity->component && 'new_avatar' === $activity->type ) {
+			$full_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id' => $activity->user_id,
+					'object'  => 'user',
+					'type'    => 'full',
+					'html'    => true,
+				)
+			);
+
+			$content = '<div class="bb-rl-activity-content-avatar bb-rl-item-content-avatar">' . $full_avatar . '</div>';
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Remove secondary avatars from friendship activities.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $action   The activity action HTML.
+	 * @param object $activity The activity object.
+	 *
+	 * @return string The filtered activity action HTML.
+	 */
+	public function bb_rl_remove_secondary_avatars_for_connected_users( $action, $activity ) {
+		if ( 'friends' === $activity->component && 'friendship_created' === $activity->type ) {
+			$user_link   = bp_core_get_userlink( $activity->user_id );
+			$friend_link = bp_core_get_userlink( $activity->secondary_item_id );
+
+			/* translators: %1$s: user link, %2$s: friend link */
+			return sprintf( __( '%1$s & %2$s are now connected', 'buddyboss' ), $user_link, $friend_link );
+		}
+
+		return $action;
 	}
 }

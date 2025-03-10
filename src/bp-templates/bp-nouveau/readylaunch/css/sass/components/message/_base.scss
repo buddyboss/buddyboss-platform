@@ -1,0 +1,31 @@
+// Hide left panel on message page
+.bb-rl-left-panel {
+	display: none;
+}
+
+.site.bb-readylaunch {
+	margin-left: 0;
+}
+
+.messages-wrapper {
+	max-width: 1600px;
+	margin: 0 auto;
+}
+
+.bp-rl-messages-container {
+	display: flex;
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	border-top: 0;
+	background-color: var(--bb-rl-background-color);
+
+	.bb-rl-messages-nav-panel {
+		flex: 0 0 385px;
+		min-width: 0;
+		border-right: 1px solid var(--bb-rl-border-secondary-color);
+	}
+
+	.bb-rl-messages-content {
+		flex: 1;
+		min-width: 0;
+	}
+}

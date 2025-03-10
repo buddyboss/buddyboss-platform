@@ -5864,6 +5864,9 @@ window.bp = window.bp || {};
 			self.getParentActivityHtml( target );
 			self.getMediasDescription();
 
+			var modalTitle = target.closest( '.activity-item' ).data( 'activity-popup-title' );
+			$( '.bb-rl-media-model-wrapper .bb-rl-media-model-header h2' ).text( modalTitle );
+
 			$( '.bb-rl-media-model-wrapper.document' ).hide();
 			var currentVideo = document.getElementById( $( '.bb-rl-media-model-wrapper.video video' ).attr( 'id' ) );
 			if ( currentVideo ) {
@@ -5916,6 +5919,9 @@ window.bp = window.bp || {};
 			self.navigationDocumentCommands();
 			self.getParentActivityHtml( target );
 			self.getDocumentsDescription();
+
+			var modalTitle = target.closest( '.activity-item' ).data( 'activity-popup-title' );
+			$( '.bb-rl-media-model-wrapper .bb-rl-media-model-header h2' ).text( modalTitle );
 
 			// Stop audio if it is playing before opening theater.
 			if ( $.inArray( self.current_document.extension, bbRlDocument.mp3_preview_extension.split( ',' ) ) !== -1 ) {

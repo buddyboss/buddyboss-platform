@@ -45,12 +45,12 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 
 		<?php
 		global $activities_template;
-		$user_link           = bp_get_activity_user_link();
-		$user_link           = ! empty( $user_link ) ? esc_url( $user_link ) : '';
+		$user_link = bp_get_activity_user_link();
+		$user_link = ! empty( $user_link ) ? esc_url( $user_link ) : '';
 		if ( bp_is_active( 'groups' ) && ! bp_is_group() && buddypress()->groups->id === bp_get_activity_object_name() ) :
 
 			// If group activity.
-			$group_id = (int) $activities_template->activity->item_id;
+			$group_id        = (int) $activities_template->activity->item_id;
 			$group           = groups_get_group( $group_id );
 			$group_name      = bp_get_group_name( $group );
 			$group_name      = ! empty( $group_name ) ? esc_html( $group_name ) : '';
@@ -112,12 +112,22 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				</div>
 			</div>
 
-		<?php else : ?>
+		<?php else :
+			$friendship_created = false;
+			if ( bp_is_active( 'friends' ) && 'friendship_created' === $activities_template->activity->type ) {
+				$friendship_created = true;
+			}
+			?>
 			<div class="bb-rl-activity-head">
-				<div class="bb-rl-activity-avatar bb-rl-item-avatar">
+				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>">
 					<a href="<?php echo $user_link; ?>">
 						<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
 					</a>
+					<?php
+					if ( $friendship_created ) {
+						echo bp_get_activity_secondary_avatar( $activities_template->activity->secondary_item_id );
+					}
+					?>
 				</div>
 				<div class="bb-rl-activity-header">
 					<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
@@ -148,7 +158,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			if ( bp_nouveau_activity_has_content() ) :
 				?>
 				<div class="bb-rl-activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-			<?php
+				<?php
 			endif;
 
 			bp_nouveau_activity_hook( 'after', 'activity_content' );
@@ -165,14 +175,6 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 		<?php
 		bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-		$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
-		if ( ! empty( $closed_notice ) ) {
-			?>
-
-			<div class='bb-rl-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
-			<?php
-		}
-
 		if ( bp_activity_can_comment() ) {
 			$class = 'bb-rl-activity-comments';
 			if ( 'blogs' === bp_get_activity_object_name() ) {
@@ -185,9 +187,17 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				<?php
 				if ( bp_activity_get_comment_count() ) {
 					bp_activity_comments();
+				} else {
+					echo '<ul data-activity_id=' . esc_attr( $activity_id ) . ' data-parent_comment_id=' . esc_attr( $activity_id ) . '></ul>';
 				}
 				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
-				if ( is_user_logged_in() && ! $comment_count ) {
+				if (
+					is_user_logged_in() &&
+					(
+						! $comment_count ||
+						bp_is_single_activity()
+					)
+				) {
 					bp_nouveau_activity_comment_form();
 				}
 				?>
@@ -196,8 +206,15 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			<?php
 		}
 		bp_nouveau_activity_hook( 'after', 'entry_comments' );
-		?>
 
+		$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
+		if ( ! empty( $closed_notice ) ) {
+			?>
+
+			<div class='bb-rl-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
+			<?php
+		}
+		?>
 	</li>
 
 <?php
