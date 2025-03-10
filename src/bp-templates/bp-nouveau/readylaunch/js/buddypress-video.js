@@ -1689,7 +1689,7 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function ( event ) {
-			bp.Nouveau.Media.saveItem( event, 'album', 'video', bbRlNonce.video );
+			bp.Nouveau.Media.saveItem( event, 'album', 'video');
 		},
 
 		injectVideos: function ( event ) {
