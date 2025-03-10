@@ -485,6 +485,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-nouveau' ), bp_get_version(), true );
 
+			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css", array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
 			// Register only if it's Activity component.
