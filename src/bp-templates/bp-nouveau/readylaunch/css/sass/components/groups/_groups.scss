@@ -150,7 +150,7 @@
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 				white-space: nowrap;
 
-				&.group-button {
+				&.group-button:not(.bp-toggle-action-button) {
 
 					&::before {
 						content: "";
@@ -163,22 +163,22 @@
 						color: var(--bb-rl-icon-secondary-color);
 						font-style: normal;
 					}
-				}
 
-				&.join-group::before {
-					content: "\e3d4";
-				}
+					&.join-group::before {
+						content: "\e3d4";
+					}
 
-				&.request-membership::before {
-					content: "\e2fe";
-				}
+					&.request-membership::before {
+						content: "\e2fe";
+					}
 
-				&.request-membership::before {
-					content: "\e2fe";
-				}
+					&.request-membership::before {
+						content: "\e2fe";
+					}
 
-				&.membership-requested::before {
-					content: "\e182";
+					&.membership-requested::before {
+						content: "\e182";
+					}
 				}
 			}
 		}

@@ -4242,6 +4242,7 @@ window.bp = window.bp || {};
 			if ( isToggleActionButton ) {
 				target.find( 'span' ).html( title );
 				target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
+				target.attr( 'data-balloon-pos', 'up' );
 
 				if ( isHoverIn ) {
 					target.removeClass( 'bp-toggle-action-button' ).addClass( 'bp-toggle-action-button-hover' );
