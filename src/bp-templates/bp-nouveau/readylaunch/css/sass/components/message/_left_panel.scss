@@ -278,6 +278,10 @@
 					content: "\e20c";
 				}
 
+				&.unhide_thread a:before {
+					content: "\e4c0";
+				}
+
 				&.view_members a:before {
 					content: "\e68e";
 				}

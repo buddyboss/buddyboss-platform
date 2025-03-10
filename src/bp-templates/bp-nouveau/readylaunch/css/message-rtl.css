@@ -402,6 +402,10 @@
   content: "\e20c";
 }
 
+.bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.unhide_thread a:before {
+  content: "\e4c0";
+}
+
 .bb-rl-message-lists .bb-rl-message-thread-options .message_action__list li.view_members a:before {
   content: "\e68e";
 }
@@ -847,6 +851,10 @@
 
 .single-message-thread-header .bb_more_dropdown li.hide_thread a:before {
   content: "\e20c";
+}
+
+.single-message-thread-header .bb_more_dropdown li.unhide_thread a:before {
+  content: "\e4c0";
 }
 
 .single-message-thread-header .bb_more_dropdown li.view_members a:before {

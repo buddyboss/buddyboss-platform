@@ -17,6 +17,29 @@
 		margin: 0;
 		overflow: auto;
 	}
+
+	.bp-messages-notice .bp-feedback {
+		display: flex;
+		background-color: var(--bb-rl-background-secondary-color);
+		flex-direction: column;
+		align-items: center;
+		padding: var(--bb-rl-space-200);
+		border: 0;
+		margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		border-radius: var(--bb-rl-radius-md);
+
+		p {
+			font-size: var(--bb-rl-font-size-sm);
+			color: var(--bb-rl-text-secondary-color);
+			margin: 0;
+		}
+
+		.generic-button a {
+			font-weight: 500;
+			font-size: 14px;
+			color: var(--bb-rl-primary-color);
+		}
+	}
 }
 
 .bp-messages-content-wrapper {
@@ -176,6 +199,10 @@
 
 			&.hide_thread a:before {
 				content: "\e20c";
+			}
+
+			&.unhide_thread a:before {
+				content: "\e4c0";
 			}
 
 			&.view_members a:before {
