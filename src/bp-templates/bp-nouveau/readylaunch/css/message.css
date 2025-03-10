@@ -698,6 +698,30 @@
   overflow: auto;
 }
 
+.bb-rl-messages-content .bp-messages-notice .bp-feedback {
+  display: flex;
+  background-color: var(--bb-rl-background-secondary-color);
+  flex-direction: column;
+  align-items: center;
+  padding: var(--bb-rl-space-200);
+  border: 0;
+  margin: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-messages-content .bp-messages-notice .bp-feedback p {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-secondary-color);
+  margin: 0;
+}
+
+.bb-rl-messages-content .bp-messages-notice .bp-feedback .generic-button a {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--bb-rl-primary-color);
+}
+
 .bp-messages-content-wrapper {
   display: flex;
   flex-flow: column;
@@ -903,6 +927,10 @@
   padding: 0 var(--bb-rl-space-200);
   background-color: var(--bb-rl-background-color);
   position: relative;
+}
+
+#bp-message-thread-list .divider-date .message-metadata {
+  margin: 0;
 }
 
 #bp-message-thread-list > li {

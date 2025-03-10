@@ -30,6 +30,7 @@
 
 		p {
 			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
 			color: var(--bb-rl-text-secondary-color);
 			margin: 0;
 		}
@@ -257,6 +258,10 @@
 			padding: 0 var(--bb-rl-space-200);
 			background-color: var(--bb-rl-background-color);
 			position: relative;
+		}
+
+		.message-metadata {
+			margin: 0;
 		}
 	}
 
