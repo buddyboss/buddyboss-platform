@@ -4113,8 +4113,9 @@ function bp_activity_at_message_notification( $activity_id, $receiver_user_id ) 
 	$notifications = BP_Core_Notification::get_all_for_user( $receiver_user_id, 'all' );
 
 	// Don't leave multiple notifications for the same activity item.
+	// Ignore the bb_activity_comment notification as the email notification not sent for comment when there is a mention as well.
 	foreach ( $notifications as $notification ) {
-		if ( $activity_id == $notification->item_id ) {
+		if ( $activity_id == $notification->item_id && 'bb_activity_comment' !== $notification->component_action ) {
 			return;
 		}
 	}
