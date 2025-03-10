@@ -4521,6 +4521,7 @@ div[class*="attached-gif-container"] .gif-player {
   top: 50%;
   transform: translateY(-50%);
   right: var(--bb-rl-space-300);
+  z-index: var(--bb-rl-z-index-dropdown);
 }
 
 .bb-rl-media-model-container .bb-rl-theater-command.bb-rl-prev-media {

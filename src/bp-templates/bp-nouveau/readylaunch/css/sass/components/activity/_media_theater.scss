@@ -127,6 +127,7 @@
 		top: 50%;
 		transform: translateY(-50%);
 		right: var(--bb-rl-space-300);
+		z-index: var(--bb-rl-z-index-dropdown);
 
 		&.bb-rl-prev-media {
 			left: var(--bb-rl-space-300);
