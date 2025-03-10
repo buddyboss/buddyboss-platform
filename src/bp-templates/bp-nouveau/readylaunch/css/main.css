@@ -3748,6 +3748,7 @@ button[data-balloon] {
 
 .bb-readylaunch-template .bb-model-footer .bb-uploader-steps-prev,
 .bb-readylaunch-template .bb-model-footer #bp-media-submit,
+.bb-readylaunch-template .bb-model-footer #bp-video-create-album-submit,
 .bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit {
   display: inline-flex;
   align-items: center;
@@ -3764,6 +3765,7 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template .bb-model-footer #bp-media-submit,
+.bb-readylaunch-template .bb-model-footer #bp-video-create-album-submit,
 .bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -3771,16 +3773,19 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template .bb-model-footer #bp-media-submit:hover,
+.bb-readylaunch-template .bb-model-footer #bp-video-create-album-submit:hover,
 .bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
 .bb-readylaunch-template .bb-model-footer #bp-media-submit:focus-within,
+.bb-readylaunch-template .bb-model-footer #bp-video-create-album-submit:focus-within,
 .bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
 .bb-readylaunch-template .bb-model-footer #bp-media-submit:disabled,
+.bb-readylaunch-template .bb-model-footer #bp-video-create-album-submit:disabled,
 .bb-readylaunch-template .bb-model-footer #bp-media-create-album-submit:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
@@ -3852,10 +3857,12 @@ button[data-balloon] {
   display: block;
 }
 
+.bb-readylaunch-template #bp-video-create-album .bb-field-wrap,
 .bb-readylaunch-template #bp-media-create-album .bb-field-wrap {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.bb-readylaunch-template #bp-video-create-album .bb-field-wrap label,
 .bb-readylaunch-template #bp-media-create-album .bb-field-wrap label {
   font-size: 14px;
   font-weight: 500;
@@ -3865,10 +3872,12 @@ button[data-balloon] {
   color: var(--bb-rl-text-color);
 }
 
+.bb-readylaunch-template #bp-video-create-album .bb-field-wrap input,
 .bb-readylaunch-template #bp-media-create-album .bb-field-wrap input {
   width: 100%;
 }
 
+.bb-readylaunch-template #bp-video-create-album .bb-field-wrap + .bb-field-wrap,
 .bb-readylaunch-template #bp-media-create-album .bb-field-wrap + .bb-field-wrap {
   padding-top: 0;
   padding-bottom: 0;

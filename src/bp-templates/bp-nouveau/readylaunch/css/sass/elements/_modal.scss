@@ -452,6 +452,7 @@
 
 		.bb-uploader-steps-prev,
 		#bp-media-submit,
+		#bp-video-create-album-submit,
 		#bp-media-create-album-submit {
 
 			@include bb-rl-button;
@@ -460,6 +461,7 @@
 		}
 
 		#bp-media-submit,
+		#bp-video-create-album-submit,
 		#bp-media-create-album-submit {
 
 			@include bb-rl-button--brand-fill;
@@ -518,6 +520,7 @@
 		}
 	}
 
+	#bp-video-create-album,
 	#bp-media-create-album {
 
 		.bb-field-wrap {
