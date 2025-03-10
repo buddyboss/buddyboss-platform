@@ -931,6 +931,10 @@
   font-weight: 500;
 }
 
+#bp-message-thread-list > li .message-metadata {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
 #bp-message-thread-list > li .message-metadata time {
   font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-tertiary-color);

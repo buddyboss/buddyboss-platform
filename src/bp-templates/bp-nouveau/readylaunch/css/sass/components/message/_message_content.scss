@@ -266,9 +266,13 @@
 			}
 		}
 
-		.message-metadata time {
-			font-size: var(--bb-rl-font-size-sm);
-			color: var(--bb-rl-text-tertiary-color);
+		.message-metadata {
+			margin-bottom: var(--bb-rl-space-100);
+
+			time {
+				font-size: var(--bb-rl-font-size-sm);
+				color: var(--bb-rl-text-tertiary-color);
+			}
 		}
 
 		.bp-message-content-wrap {
