@@ -12,7 +12,13 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">
-	<div class="bb-rl-left-panel-widget">
+	<?php
+	if ( BB_Readylaunch::bb_is_group_admin() ) {
+		bp_get_template_part( 'groups/single/parts/admin-subnav' );
+	} else {
+		?>
+
+		<div class="bb-rl-left-panel-widget">
 		<?php
 		wp_nav_menu(
 			array(
@@ -25,26 +31,26 @@ defined( 'ABSPATH' ) || exit;
 		);
 		?>
 	</div>
-	<?php
-	$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section( true );
-	if ( ! empty( $active_left_sidebar_section['groups']['items'] ) ) {
-		?>
+		<?php
+		$active_left_sidebar_section = bb_load_readylaunch()->bb_is_active_any_left_sidebar_section( true );
+		if ( ! empty( $active_left_sidebar_section['groups']['items'] ) ) {
+			?>
 		<div class="bb-rl-left-panel-widget">
 			<?php bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['groups'] ); ?>
 		</div>
-		<?php
-	}
+			<?php
+		}
 
-	if ( ! empty( $active_left_sidebar_section['courses']['items'] ) ) {
-		?>
+		if ( ! empty( $active_left_sidebar_section['courses']['items'] ) ) {
+			?>
 		<div class="bb-rl-left-panel-widget">
 			<?php bb_load_readylaunch()->bb_render_left_sidebar_middle_html( $active_left_sidebar_section['courses'] ); ?>
 		</div>
-		<?php
+			<?php
 
-	}
-	?>
-	<div class="bb-rl-left-panel-widget">
+		}
+		?>
+		<div class="bb-rl-left-panel-widget">
 		<?php
 		wp_nav_menu(
 			array(
@@ -57,4 +63,7 @@ defined( 'ABSPATH' ) || exit;
 		);
 		?>
 	</div>
+		<?php
+	}
+	?>
 </div>

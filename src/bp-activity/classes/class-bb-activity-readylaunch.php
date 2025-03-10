@@ -45,6 +45,9 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
 		add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_submit_button' ), 10 );
 		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_rl_activity_content_with_changed_avatar' ), 9999, 2 );
+
+		// Remove post content.
+		remove_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
 	}
 
 	/**
