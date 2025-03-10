@@ -1449,8 +1449,11 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model.toJSON() ) );
 
 				if ( bp.Views.activitySchedulePost !== undefined ) {
-					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
-					$( '.bb-rl-activity-form' ).addClass( 'bb-rl-activity-form--schedule' );
+					// Check if template exists before adding the view.
+					if ( document.getElementById( 'tmpl-activity-schedule-post' ) ) {
+						this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+						$( '.bb-rl-activity-form' ).addClass( 'bb-rl-activity-form--schedule' );
+					}
 				}
 
 				return this;
@@ -4141,9 +4144,12 @@ window.bp = window.bp || {};
 					this.views.add( this.activityLinkPreview );
 				}
 
-				if ( ! _.isUndefined( bp.Views.activityPollView ) ) {
-					this.activityPollView = new bp.Views.activityPollView( { model: this.model } );
-					this.views.add( this.activityPollView );
+				if (!_.isUndefined(bp.Views.activityPollView)) {
+					var pollViewTemplate = document.getElementById( 'tmpl-bb-activity-poll-view' );
+					if ( pollViewTemplate ) {
+						this.activityPollView = new bp.Views.activityPollView( { model: this.model }) ;
+						this.views.add(this.activityPollView);
+					}
 				}
 
 				if ( ! _.isUndefined( window.Dropzone ) ) {
@@ -4393,9 +4399,13 @@ window.bp = window.bp || {};
 				// Show placeholder form.
 				$( '#bb-rl-activity-form-placeholder' ).show();
 
-				// Add BB Poll View.
-				if ( ! _.isUndefined( bp.Views.activityPollForm ) ) {
-					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+				// Add BB Poll View with template check.
+				if ( !_.isUndefined( bp.Views.activityPollForm ) ) {
+					// Check if poll templates exist.
+					var pollFormTemplate = document.getElementById( 'tmpl-bb-activity-poll-form' );
+					if ( pollFormTemplate ) {
+						this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+					}
 				}
 
 				this.views.add(

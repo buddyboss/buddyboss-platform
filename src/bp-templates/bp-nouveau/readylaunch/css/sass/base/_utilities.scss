@@ -80,6 +80,27 @@ ul.bp-list {
 	padding: 0;
 }
 
+// Loading Animation
+.bb-rl-loading-bg {
+	background-color: var(--bb-rl-background-secondary-color);
+	animation: fade-in-out infinite 2s ease;
+}
+
+@keyframes fade-in-out {
+
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
 // Mention
 .atwho-view {
 	background-color: var(--bb-rl-background-color);
@@ -173,6 +194,14 @@ span.atwho-inserted {
 		content: "\e436";
 		font-family: bb-icons-rl;
 		font-size: var(--bb-rl-base-line);
+	}
+}
+
+.bb-rl-screen-content {
+
+	.emoji,
+	.emojioneemoji {
+		vertical-align: middle;
 	}
 }
 
@@ -290,6 +319,31 @@ span.atwho-inserted {
 		left: var(--bb-rl-space-300);
 		top: 50%;
 		transform: translateY(-50%);
+	}
+}
+
+// Emoji Picker
+.emojionearea-standalone.emojionearea {
+
+	.emojionearea-picker {
+		border-radius: var(--bb-rl-radius-lg);
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+
+		.emojionearea-wrapper:after {
+			display: none;
+		}
+
+		&.emojionearea-filters-position-top {
+
+			.emojionearea-filters .emojionearea-filter:first-of-type {
+				border-top-left-radius: var(--bb-rl-radius-lg);
+			}
+
+			.emojionearea-filters {
+				border-top-right-radius: var(--bb-rl-radius-lg);
+				border-top-left-radius: var(--bb-rl-radius-lg);
+			}
+		}
 	}
 }
 

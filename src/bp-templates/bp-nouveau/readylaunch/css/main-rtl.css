@@ -573,6 +573,23 @@ ul.bp-list {
   padding: 0;
 }
 
+.bb-rl-loading-bg {
+  background-color: var(--bb-rl-background-secondary-color);
+  animation: fade-in-out infinite 2s ease;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .atwho-view {
   background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
@@ -657,6 +674,11 @@ span.atwho-inserted {
   content: "\e436";
   font-family: bb-icons-rl;
   font-size: var(--bb-rl-base-line);
+}
+
+.bb-rl-screen-content .emoji,
+.bb-rl-screen-content .emojioneemoji {
+  vertical-align: middle;
 }
 
 .bb-rl-gif-media-search-dropdown {
@@ -772,6 +794,24 @@ span.atwho-inserted {
   right: var(--bb-rl-space-300);
   top: 50%;
   transform: translateY(-50%);
+}
+
+.emojionearea-standalone.emojionearea .emojionearea-picker {
+  border-radius: var(--bb-rl-radius-lg);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+}
+
+.emojionearea-standalone.emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+  display: none;
+}
+
+.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters .emojionearea-filter:first-of-type {
+  border-top-right-radius: var(--bb-rl-radius-lg);
+}
+
+.emojionearea-standalone.emojionearea .emojionearea-picker.emojionearea-filters-position-top .emojionearea-filters {
+  border-top-left-radius: var(--bb-rl-radius-lg);
+  border-top-right-radius: var(--bb-rl-radius-lg);
 }
 
 div.xdsoft_datetimepicker {
@@ -2879,6 +2919,7 @@ button[data-balloon] {
   background: none !important;
   height: auto !important;
   width: auto !important;
+  min-height: auto !important;
   display: table;
   position: relative;
 }
@@ -3841,6 +3882,12 @@ body.admin-bar .bb-rl-header {
   opacity: 0.6;
 }
 
+.header-aside .notification-wrap .notification-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+}
+
 .header-aside .notification-link {
   display: inline-block;
   padding: 4px;
@@ -4005,6 +4052,8 @@ body.admin-bar .bb-rl-header {
 }
 
 .notification-list .notification-content .posted img {
+  height: 20px;
+  width: 20px;
   vertical-align: middle;
 }
 
@@ -4029,12 +4078,49 @@ body.admin-bar .bb-rl-header {
   opacity: 0;
 }
 
+.notification-list .bb-rl-load-more {
+  margin-top: var(--bb-rl-space-100);
+}
+
+.notification-list .bb-rl-load-more .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+.notification-list .bb-rl-load-more .button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.notification-list .bb-rl-load-more .button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.notification-list .bb-rl-load-more .button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
 .notification-listing .notification-list li .notification-avatar {
   position: relative;
 }
 
 .notification-listing .notification-list li .notification-avatar img {
   max-width: 32px;
+  max-height: 32px;
+  object-fit: cover;
 }
 
 .notification-listing .notification-list li .notification-avatar [class*="bb-icon"] {
@@ -4055,6 +4141,8 @@ body.admin-bar .bb-rl-header {
   font-family: bb-icons-rl !important;
   color: var(--bb-rl-text-white-color);
   font-size: 12px;
+  opacity: 1;
+  margin: 0;
 }
 
 .notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-activity:before {
@@ -4077,8 +4165,12 @@ body.admin-bar .bb-rl-header {
   content: "\e16c";
 }
 
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-poll {
+.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-poll:before {
   content: "\e150";
+}
+
+.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-image:before {
+  content: "\e10e";
 }
 
 .notification-listing .notification-list li .notification-content {
