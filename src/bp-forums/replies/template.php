@@ -1376,7 +1376,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 
 		// Only wrap in link if profile exists
 		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_reply_author_id( $reply_id ) ) ) {
-			$author_link = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link );
+			$author_link = sprintf( '<a href="%1$s"%2$s%3$s%5$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link, ' data-bb-hp-profile="' . bbp_get_reply_author_id( $reply_id ) . '"' );
 		}
 
 		// Role is not linked
