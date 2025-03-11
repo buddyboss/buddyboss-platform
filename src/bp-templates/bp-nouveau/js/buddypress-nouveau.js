@@ -963,7 +963,7 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile/Group Popup Card.
-			$( document ).on( 'mouseenter', 'img.bb-hp-profile-avatar', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-profile] img.avatar', function () {
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
 				if ( ! popupCardLoaded ) {
@@ -973,7 +973,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.profilePopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseenter', 'img.bb-hp-group-avatar, .activity-group-post-meta img.avatar', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-group] img.avatar', function () {
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
 				if ( ! popupCardLoaded ) {
@@ -983,10 +983,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseleave', 'img.bb-hp-profile-avatar, img.bb-hp-group-avatar, .activity-group-post-meta img.avatar', function ( event ) {
+			$( document ).on( 'mouseleave', '[data-bb-hp-profile] img.avatar, [data-bb-hp-group] img.avatar', function ( event ) {
 				var relatedTarget = event.relatedTarget;
-				var idleProfileAvatar = $( this ).hasClass( 'bb-hp-profile-avatar' );
-    			var idleGroupAvatar = $( this ).hasClass( 'bb-hp-group-avatar' ) || $( this ).is( '.activity-group-post-meta img.avatar' );
+				var idleProfileAvatar = $( this ).closest( '[data-bb-hp-profile]' ).length > 0;
+    			var idleGroupAvatar = $(this).closest( '[data-bb-hp-group]' ).length > 0;
 
 				if ( idleProfileAvatar ) {
 					hoverProfileAvatar = false;
@@ -4688,13 +4688,20 @@ window.bp = window.bp || {};
 		 * Profile popup card for avatars.
 		 */
 		profilePopupCard: function () {
+			$( '#buddypress #profile-card' ).remove();
+			var profileCardTemplate = bp.template( 'profile-card-popup' );
+			var renderedProfileCard = profileCardTemplate();
+			if ( $( '#buddypress' ).length ) {
+				$( '#buddypress' ).append( renderedProfileCard );
+			}
+
 			var $avatar = $( this );
 			var offset  = $avatar.offset();
-			var $li     = $avatar.closest( '.comment-item, .activity-item' );
-			if ( ! $li.attr( 'data-bb-profile-card' ) || ! $li.attr( 'data-bb-profile-card' ).length ) {
+			var $profileNode = $avatar.closest( '[data-bb-hp-profile]' );
+			if ( ! $profileNode.attr( 'data-bb-hp-profile' ) || ! $profileNode.attr( 'data-bb-hp-profile' ).length ) {
 				return;
 			}
-			var memberId = $li.attr( 'data-bb-profile-card' );
+			var memberId = $profileNode.attr( 'data-bb-hp-profile' );
 			if ( ! memberId ) {
 				return;
 			}
@@ -4889,6 +4896,13 @@ window.bp = window.bp || {};
 		 * Group popup card for avatars.
 		 */
 		groupPopupCard: function () {
+			$( '#buddypress #group-card' ).remove();
+			var groupCardTemplate = bp.template( 'group-card-popup' );
+			var renderedGroupCard = groupCardTemplate();
+			if ( $( '#buddypress' ).length ) {
+				$( '#buddypress' ).append( renderedGroupCard );
+			}
+
 			var $avatar = $( this );
 			var offset  = $avatar.offset();
 			var $li     = $avatar.closest( '.activity-item' );
