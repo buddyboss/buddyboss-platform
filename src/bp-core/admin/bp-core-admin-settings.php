@@ -3766,3 +3766,24 @@ function bb_admin_performance_setting_activity_callback() {
 	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
 	<?php
 }
+
+/**
+ * Setting for enable content count.
+ *
+ * @since BuddyBoss 2.8.10
+ */
+function bb_admin_setting_callback_content_counts() {
+	?>
+
+	<input id="bb-enable-content-counts" name="bb-enable-content-counts" type="checkbox" value="1" <?php checked( bb_enable_content_counts() ); ?> />
+	<label for="bb-enable-content-counts"><?php esc_html_e( 'Enable content counts across your site', 'buddyboss' ); ?></label>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}

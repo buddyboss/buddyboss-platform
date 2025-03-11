@@ -416,15 +416,19 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 
 		if ( ! empty( $tabs_items ) ) {
+			$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+			
 			foreach ( $tabs_items as $key => $item ) {
+				$count = $enable_count ? bp_core_number_format( $item['count'] ) : '';
 				if ( 'group' === $key ) {
 					$key = 'groups';
 				}
 				$tabs[ $key ]['title']    = $item['text'];
-				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
+				$tabs[ $key ]['count']    = $count;
 				$tabs[ $key ]['position'] = $item['position'];
 				$tabs[ $key ]['slug']     = $item['slug'];
 			}
+			unset( $enable_count, $count );
 		}
 
 		return $tabs;

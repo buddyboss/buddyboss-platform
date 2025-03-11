@@ -2221,3 +2221,69 @@ function bb_moderation_migration_on_update() {
 		$wpdb->query( "CREATE INDEX suspend_conditions ON {$bp_prefix}bp_suspend(user_suspended, hide_parent, hide_sitewide)" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 }
+
+/**
+ * Fetch all moderated user or check the user is moderated or not SQL.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @param int $user_id User ID.
+ *
+ * @return array|bool
+ */
+function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
+	global $wpdb, $bp;
+
+	static $cache = array();
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( ! empty( $user_id ) ) {
+		$cache_key = 'bb_moderation_moderated_user_' . $user_id;
+	}
+
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
+	$query = "SELECT DISTINCT user_id FROM (
+		SELECT ms.item_id as user_id
+		FROM
+		    {$bp->moderation->table_name} ms
+		LEFT JOIN
+		    {$bp->moderation->table_name_reports} m
+		    ON ms.id = m.moderation_id
+		WHERE
+		    ms.item_type = %s
+		    AND (
+		        (ms.reported = 1 AND m.user_report = 0 AND m.user_id = %d )
+		        OR ms.user_suspended = 1
+		    )
+		UNION
+		SELECT m.user_id as user_id
+		FROM
+		    {$bp->moderation->table_name} ms
+		LEFT JOIN
+		    {$bp->moderation->table_name_reports} m
+		    ON ms.id = m.moderation_id
+		WHERE
+		    ms.item_type = %s
+		    AND (
+			(ms.item_id = %d AND ms.reported != 0 AND m.user_report != 1)
+		) ) AS combined_results";
+
+	// Prepare the query with parameters.
+	$retval = $wpdb->prepare(
+		$query,
+		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
+		$user_id,                                // m.user_id = 2.
+		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
+		$user_id                                 // ms.item_id = 2.
+	);
+
+	$cache[ $cache_key ] = $retval;
+
+	return $retval;
+}

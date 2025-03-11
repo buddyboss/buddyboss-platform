@@ -4438,7 +4438,7 @@ function bp_activity_new_comment_notification_helper( $comment_id, $params ) {
 
 	bp_activity_new_comment_notification( $comment_id, $params['user_id'], $params );
 }
-add_action( 'bp_activity_comment_posted', 'bp_activity_new_comment_notification_helper', 10, 2 );
+add_action( 'bp_activity_comment_posted', 'bp_activity_new_comment_notification_helper', 13, 2 );
 
 /** Embeds *******************************************************************/
 
