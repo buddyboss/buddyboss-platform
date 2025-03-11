@@ -20,8 +20,6 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 		function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 
-			$bp_prefix = bp_core_get_table_prefix();
-
 			$query_placeholder = array();
 
 			if ( $only_totalrow_count ) {
@@ -68,73 +66,21 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
 
 			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
-
-				// Get groups the current user is a member of for non-admin users.
-				$group_memberships = bp_get_user_groups(
-					get_current_user_id(),
-					array(
-						'is_admin' => null,
-						'is_mod'   => null,
-					)
-				);
-
-				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
-
-				// Get all public groups.
-				$public_groups = groups_get_groups(
-					array(
-						'fields'   => 'ids',
-						'status'   => 'public',
-						'per_page' => - 1,
-					)
-				);
-
-				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
-					$public_groups = $public_groups['groups'];
-				} else {
-					$public_groups = array();
-				}
-
-				// Build the SQL condition for forum visibility.
-				if ( ! empty( $group_memberships ) || ! empty( $public_groups ) ) {
-					// Forums not associated with any group are always visible.
-					$where_sql .= ' AND ( pm.meta_value IS NULL';
-
-					// Forums in public groups are visible to everyone.
-					if ( ! empty( $public_groups ) ) {
-						$public_in = array_map(
-							function ( $group_id ) {
-								return '\'' . maybe_serialize( array( $group_id ) ) . '\'';
-							},
-							$public_groups
-						);
-						
-						$public_in = implode( ',', $public_in );
-						$where_sql .= ' OR pm.meta_value IN (' . $public_in . ')';
-					}
-
-					// Forums in private/hidden groups are only visible to members.
-					if ( ! empty( $group_memberships ) ) {
-						$private_groups = array_diff( $group_memberships, $public_groups );
-						
-						if ( ! empty( $private_groups ) ) {
-							$private_in = array_map(
-								function ( $group_id ) {
-									return '\'' . maybe_serialize( array( $group_id ) ) . '\'';
-								},
-								$private_groups
-							);
-							
-							$private_in = implode( ',', $private_in );
-							$where_sql .= ' OR pm.meta_value IN (' . $private_in . ')';
-						}
-					}
-
-					$where_sql .= ')';
-				} else {
-					// If no groups are accessible, only show forums not associated with any group
-					$where_sql .= ' AND pm.meta_value IS NULL';
-				}
+				$bp      = buddypress();
+				$user_id = get_current_user_id();
+				
+				// Build the SQL condition for forum visibility using subqueries
+				$where_sql .= ' AND ( pm.meta_value IS NULL';
+				
+				// Single optimized subquery for both public groups and user's groups
+				$where_sql .= " OR pm.meta_value IN (
+					SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
+					FROM {$bp->groups->table_name} g
+					LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id AND m.user_id = {$user_id} AND m.is_confirmed = 1
+					WHERE g.status = 'public' OR m.id IS NOT NULL
+				)";
+				
+				$where_sql .= ')';
 			}
 
 			$where_sql .= ')';
@@ -152,7 +98,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
 			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			error_log( $query );
+
 			return apply_filters(
 				'Bp_Search_Forums_sql',
 				$query,
