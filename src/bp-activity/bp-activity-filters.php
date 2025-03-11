@@ -185,17 +185,6 @@ add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template'
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
 
-// Profile card template for activity.
-add_action( 'bp_after_directory_activity_list', 'bb_activity_add_profile_card_template' );
-add_action( 'bp_after_single_activity_content', 'bb_activity_add_profile_card_template' );
-add_action( 'bp_after_group_activity_content', 'bb_activity_add_profile_card_template' );
-add_action( 'bp_after_member_activity_content', 'bb_activity_add_profile_card_template' );
-
-// Group card template for activity.
-add_action( 'bp_after_directory_activity_list', 'bb_activity_add_group_card_template' );
-add_action( 'bp_after_group_activity_content', 'bb_activity_add_group_card_template' );
-add_action( 'bp_after_member_activity_content', 'bb_activity_add_group_card_template' );
-
 add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
@@ -3808,22 +3797,4 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 	$querystring['per_page'] = bb_get_load_activity_per_request();
 
 	return http_build_query( $querystring );
-}
-
-/**
- * Add profile hover card template.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_activity_add_profile_card_template() {
-	bp_get_template_part( 'activity/profile-card' );
-}
-
-/**
- * Add group hover card template.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_activity_add_group_card_template() {
-	bp_get_template_part( 'activity/group-card' );
 }

@@ -2,7 +2,7 @@
 /**
  * The template for groups card.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/activity/group-card.php.
+ * This template can be overridden by copying it to yourtheme/buddypress/groups/group-card.php.
  *
  * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
