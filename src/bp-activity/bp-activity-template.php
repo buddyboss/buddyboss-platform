@@ -1178,6 +1178,9 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 	);
 	extract( $r, EXTR_SKIP );
 
+
+	$attribute = '';
+
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
 		case 'groups':
@@ -1196,6 +1199,8 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$link  = bp_get_group_permalink( $group );
 				$name  = $group->name;
 			}
+
+			$attribute = 'data-bb-hp-group="' . $group->id . '"';
 
 			if ( empty( $alt ) ) {
 				$alt = __( 'Group logo', 'buddyboss' );
@@ -1225,12 +1230,16 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
+			$attribute = 'data-bb-hp-profile="' . $item_id . '"';
+
 			break;
 		default:
 			$object  = 'user';
 			$item_id = $activities_template->activity->user_id;
 			$email   = $activities_template->activity->user_email;
 			$link    = bp_core_get_userlink( $item_id, false, true );
+
+			$attribute = 'data-bb-hp-profile="' . $item_id . '"';
 
 			if ( empty( $alt ) ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
@@ -1302,9 +1311,10 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 		$avatar = apply_filters( 'bp_get_activity_secondary_avatar', $avatar );
 
 		return sprintf(
-			'<a href="%s" class="%s">%s</a>',
+			'<a href="%s" class="%s" %s>%s</a>',
 			$link,
 			$link_class,
+			$attribute,
 			$avatar
 		);
 	}
@@ -1347,6 +1357,8 @@ function bp_get_activity_action( $args = array() ) {
 		)
 	);
 
+	error_log('---------bp_get_activity_action---------');
+
 	/**
 	 * Filters the activity action before the action is inserted as meta.
 	 *
@@ -1363,10 +1375,15 @@ function bp_get_activity_action( $args = array() ) {
 		)
 	);
 
+	error_log( print_r( $action, 1 ) );
+
 	// Prepend the activity action meta (link, time since, etc...).
 	if ( ! empty( $action ) && empty( $r['no_timestamp'] ) ) {
 		$action = bp_insert_activity_meta( $action );
 	}
+
+	error_log( print_r( '----- /// -----', 1 ) );
+	error_log( print_r( $action, 1 ) );
 
 	/**
 	 * Filters the activity action after the action has been inserted as meta.
