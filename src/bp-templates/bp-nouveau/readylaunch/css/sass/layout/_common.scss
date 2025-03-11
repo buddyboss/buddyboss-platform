@@ -768,6 +768,7 @@ body.guillotine-dragging * {
 			justify-content: flex-start;
 
 			.button {
+
 				@include bb-rl-button;
 				@include bb-rl-button-secondary-fill;
 				font-size: var(--bb-rl-font-size-sm);

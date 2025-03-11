@@ -46,6 +46,7 @@
 		}
 
 		.action-secondary {
+
 			@include bb-rl-button;
 			@include bb-rl-button-secondary-fill;
 			font-size: var(--bb-rl-font-size-sm);
@@ -57,10 +58,11 @@
 				font-size: 16px;
 				margin-right: 6px;
 			}
-			
+
 		}
 
 		.action-primary {
+
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
 			font-size: var(--bb-rl-font-size-sm);
