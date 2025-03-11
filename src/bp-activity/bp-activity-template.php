@@ -1178,7 +1178,6 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 	);
 	extract( $r, EXTR_SKIP );
 
-
 	$attribute = '';
 
 	// Set item_id and object (default to user).
@@ -1357,8 +1356,6 @@ function bp_get_activity_action( $args = array() ) {
 		)
 	);
 
-	error_log('---------bp_get_activity_action---------');
-
 	/**
 	 * Filters the activity action before the action is inserted as meta.
 	 *
@@ -1375,15 +1372,10 @@ function bp_get_activity_action( $args = array() ) {
 		)
 	);
 
-	error_log( print_r( $action, 1 ) );
-
 	// Prepend the activity action meta (link, time since, etc...).
 	if ( ! empty( $action ) && empty( $r['no_timestamp'] ) ) {
 		$action = bp_insert_activity_meta( $action );
 	}
-
-	error_log( print_r( '----- /// -----', 1 ) );
-	error_log( print_r( $action, 1 ) );
 
 	/**
 	 * Filters the activity action after the action has been inserted as meta.
