@@ -18,6 +18,12 @@
 	padding: 12px var(--bb-rl-space-300);
 	margin-bottom: var(--bb-rl-space-400);
 
+	@media screen and (max-width: 900px) {
+		flex-flow: wrap;
+		gap: var(--bb-rl-space-100);
+		justify-content: center;
+	}
+
 	@media screen and (max-width: 782px) {
 		margin-left: -15px;
 		margin-right: -15px;
@@ -39,7 +45,7 @@
 .bb-rl-sub-ctrls {
 	margin-left: auto;
 
-	@media screen and (max-width: 782px) {
+	@media screen and (max-width: 900px) {
 		flex-flow: wrap;
 		gap: var(--bb-rl-space-100);
 		margin-right: auto;
@@ -579,6 +585,7 @@ div.xdsoft_datetimepicker {
 				font-weight: 500;
 				padding: 7px var(--bb-rl-space-200);
 				border-radius: var(--bb-rl-radius-full);
+				white-space: nowrap;
 
 				.count {
 					display: none;

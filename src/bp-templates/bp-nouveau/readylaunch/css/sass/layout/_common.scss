@@ -37,9 +37,14 @@
 		margin-left: var(--bb-rl-space-200);
 	}
 
+	.bb-rl-filter {
+		white-space: nowrap;
+	}
+
 	.subnav-filters + .bb-rl-action-button {
 		display: inline-flex;
 		align-items: center;
+		white-space: nowrap;
 
 		.bb-rl-button {
 			padding: 4px var(--bb-rl-space-200);

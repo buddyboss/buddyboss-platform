@@ -2368,6 +2368,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-container .bb-member-media-header {
   display: flex;
   margin: 0 0 var(--bb-rl-space-200);
+  padding: 0 var(--bb-rl-space-300);
 }
 
 .bb-rl-media-container .bb-member-media-header .bb-media-meta {

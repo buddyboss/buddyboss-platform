@@ -517,6 +517,14 @@ h6 {
   margin-bottom: var(--bb-rl-space-400);
 }
 
+@media screen and (max-width: 900px) {
+  .bb-rl-secondary-header {
+    flex-flow: wrap;
+    gap: var(--bb-rl-space-100);
+    justify-content: center;
+  }
+}
+
 @media screen and (max-width: 782px) {
   .bb-rl-secondary-header {
     margin-left: -15px;
@@ -538,7 +546,7 @@ h6 {
   margin-left: auto;
 }
 
-@media screen and (max-width: 782px) {
+@media screen and (max-width: 900px) {
   .bb-rl-sub-ctrls {
     flex-flow: wrap;
     gap: var(--bb-rl-space-100);
@@ -1044,6 +1052,7 @@ div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time.xdsof
   font-weight: 500;
   padding: 7px var(--bb-rl-space-200);
   border-radius: var(--bb-rl-radius-full);
+  white-space: nowrap;
 }
 
 .bb-rl-secondary-header #object-nav ul li a .count {
@@ -4897,9 +4906,14 @@ body.admin-bar .bb-rl-left-panel {
   margin-left: var(--bb-rl-space-200);
 }
 
+.bb-rl-sub-ctrls .bb-rl-filter {
+  white-space: nowrap;
+}
+
 .bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button .bb-rl-button {
