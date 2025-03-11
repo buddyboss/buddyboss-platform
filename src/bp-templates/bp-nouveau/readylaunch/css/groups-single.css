@@ -334,6 +334,43 @@
   margin-left: auto;
 }
 
+.bb-rl-group-details #request-membership-form textarea {
+  width: 100%;
+  min-height: 120px;
+  margin: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-group-details #request-membership-form #group-request-send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-group-details #request-membership-form #group-request-send:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-group-details #request-membership-form #group-request-send:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-group-details #request-membership-form #group-request-send:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
 .highlight.bb-rl-group-meta {
   display: flex;
   align-items: flex-start;
@@ -1135,9 +1172,14 @@
   color: var(--bb-rl-text-color);
 }
 
+.bb-rl-requests-list {
+  margin-bottom: 0;
+}
+
 .bb-rl-requests-list li {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: var(--bb-rl-space-200);
   padding: var(--bb-rl-space-300);
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-lg);
@@ -1146,6 +1188,15 @@
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-requests-list li:last-of-type {
+  margin-bottom: 0;
+}
+
+.bb-rl-requests-list li .item-card {
+  display: flex;
+  align-items: center;
 }
 
 .bb-rl-requests-list li .item-avatar {
@@ -1172,7 +1223,7 @@
   align-items: center;
 }
 
-.bb-rl-requests-list li > .action {
+.bb-rl-requests-list li .item-card .action {
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -1180,7 +1231,7 @@
   gap: var(--bb-rl-space-100);
 }
 
-.bb-rl-requests-list li > .action a.accept {
+.bb-rl-requests-list li .item-card .action a.accept {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1198,20 +1249,20 @@
   font-size: 0.875rem;
 }
 
-.bb-rl-requests-list li > .action a.accept:hover {
+.bb-rl-requests-list li .item-card .action a.accept:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
-.bb-rl-requests-list li > .action a.accept:focus-within {
+.bb-rl-requests-list li .item-card .action a.accept:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
-.bb-rl-requests-list li > .action a.accept:disabled {
+.bb-rl-requests-list li .item-card .action a.accept:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
 
-.bb-rl-requests-list li > .action a.reject {
+.bb-rl-requests-list li .item-card .action a.reject {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1229,18 +1280,37 @@
   font-size: 0.875rem;
 }
 
-.bb-rl-requests-list li > .action a.reject:hover {
+.bb-rl-requests-list li .item-card .action a.reject:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.bb-rl-requests-list li > .action a.reject:focus {
+.bb-rl-requests-list li .item-card .action a.reject:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-rl-requests-list li > .action a.reject:disabled {
+.bb-rl-requests-list li .item-card .action a.reject:disabled {
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-requests-list li .item-card .action .button.accept::before,
+.bb-rl-requests-list li .item-card .action .button.reject::before {
+  content: "";
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  font-style: normal;
+  margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-requests-list li .item-card .action .button.accept::before {
+  content: "\e182";
+}
+
+.bb-rl-requests-list li .item-card .action .button.reject::before {
+  content: "\e4f6";
 }
 
 @media screen and (max-width: 800px) {
@@ -2298,6 +2368,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-container .bb-member-media-header {
   display: flex;
   margin: 0 0 var(--bb-rl-space-200);
+  padding: 0 var(--bb-rl-space-300);
 }
 
 .bb-rl-media-container .bb-member-media-header .bb-media-meta {
