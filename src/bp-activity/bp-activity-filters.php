@@ -184,7 +184,6 @@ add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
-
 add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
