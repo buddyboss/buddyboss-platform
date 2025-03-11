@@ -1143,9 +1143,43 @@ function bb_elementor_library_template() {
 add_action( 'bp_loaded', 'bb_elementor_library_template' );
 
 /**
+ * Helper functions for the gravity forms compatibility.
+ *
+ * @since BuddyBoss 2.2.1
+ */
+function bb_wp_gravity_forms_compatibility_helper() {
+
+	if ( class_exists( 'GFForms' ) ) {
+		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
+	}
+
+}
+add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+/**
+ * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
+ *
+ * @since BuddyBoss 2.6.60
+ *
+ * @param array $allow_handle Allowed handles.
+ *
+ * @return array
+ */
+function mpcs_add_buddyboss_style( $allow_handle ) {
+	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
+		$allow_handle[] = 'bp-nouveau';
+	}
+
+	return $allow_handle;
+
+}
+
+add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
+
+/**
  * Helper function to check if Elementor Maintenance Mode is enabled.
  *
- * @since BuddyBoss x.x.x
+ * @return bool
  */
 function bb_is_elementor_maintenance_mode_enabled() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\Elementor\Plugin' ) ) {
@@ -1197,37 +1231,3 @@ function bb_is_elementor_maintenance_mode_enabled() {
 		return false;
 	}
 }
-
-/**
- * Helper functions for the gravity forms compatibility.
- *
- * @since BuddyBoss 2.2.1
- */
-function bb_wp_gravity_forms_compatibility_helper() {
-
-	if ( class_exists( 'GFForms' ) ) {
-		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
-	}
-
-}
-add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
-
-/**
- * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
- *
- * @since BuddyBoss 2.6.60
- *
- * @param array $allow_handle Allowed handles.
- *
- * @return array
- */
-function mpcs_add_buddyboss_style( $allow_handle ) {
-	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
-		$allow_handle[] = 'bp-nouveau';
-	}
-
-	return $allow_handle;
-
-}
-
-add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
