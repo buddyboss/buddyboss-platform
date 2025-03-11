@@ -67,7 +67,9 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
 
-			if ( bp_is_active( 'groups' ) ) {
+			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
+
+				// Get groups the current user is a member of for non-admin users.
 				$group_memberships = bp_get_user_groups(
 					get_current_user_id(),
 					array(
@@ -78,6 +80,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
 
+				// Get all public groups.
 				$public_groups = groups_get_groups(
 					array(
 						'fields'   => 'ids',
@@ -92,20 +95,45 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 					$public_groups = array();
 				}
 
-				$group_memberships = array_merge( $public_groups, $group_memberships );
-				$group_memberships = array_unique( $group_memberships );
+				// Build the SQL condition for forum visibility.
+				if ( ! empty( $group_memberships ) || ! empty( $public_groups ) ) {
+					// Forums not associated with any group are always visible.
+					$where_sql .= ' AND ( pm.meta_value IS NULL';
 
-				if ( ! empty( $group_memberships ) ) {
-					$in = array_map(
-						function ( $group_id ) {
-							return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-						},
-						$group_memberships
-					);
+					// Forums in public groups are visible to everyone.
+					if ( ! empty( $public_groups ) ) {
+						$public_in = array_map(
+							function ( $group_id ) {
+								return '\'' . maybe_serialize( array( $group_id ) ) . '\'';
+							},
+							$public_groups
+						);
+						
+						$public_in = implode( ',', $public_in );
+						$where_sql .= ' OR pm.meta_value IN (' . $public_in . ')';
+					}
 
-					$in = implode( '', $in );
+					// Forums in private/hidden groups are only visible to members.
+					if ( ! empty( $group_memberships ) ) {
+						$private_groups = array_diff( $group_memberships, $public_groups );
+						
+						if ( ! empty( $private_groups ) ) {
+							$private_in = array_map(
+								function ( $group_id ) {
+									return '\'' . maybe_serialize( array( $group_id ) ) . '\'';
+								},
+								$private_groups
+							);
+							
+							$private_in = implode( ',', $private_in );
+							$where_sql .= ' OR pm.meta_value IN (' . $private_in . ')';
+						}
+					}
 
-					$where_sql .= ' OR pm.meta_value IN (' . trim( $in, ',' ) . ')';
+					$where_sql .= ')';
+				} else {
+					// If no groups are accessible, only show forums not associated with any group
+					$where_sql .= ' AND pm.meta_value IS NULL';
 				}
 			}
 
@@ -124,7 +152,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 
 			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
 			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
+			error_log( $query );
 			return apply_filters(
 				'Bp_Search_Forums_sql',
 				$query,
