@@ -514,3 +514,22 @@
 		margin-top: 25px;
 	}
 }
+
+
+@media (max-width: 600px) {
+
+	/* Allow flex items to wrap on smaller screens */
+	.bp-secondary-header {
+		flex-wrap: wrap;
+	}
+
+	/* Make the member count take up the full width */
+	.bb-item-count {
+		flex-basis: 100%;
+		margin-bottom: 1rem;
+
+		+ .push-right {
+			margin-left: 0;
+		}
+	}
+}
