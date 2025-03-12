@@ -4858,10 +4858,6 @@ div[class*="attached-gif-container"] .gif-player {
   animation: spin 3s infinite linear;
 }
 
-.bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-media-move {
-  margin-left: var(--bb-rl-space-100);
-}
-
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {
   margin-right: auto;
   font-size: 0.875rem;
