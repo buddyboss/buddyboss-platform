@@ -191,6 +191,24 @@
 		background: none;
 		display: none;
 
+		&.loading {
+
+			.bb_more_options_action {
+
+				i:before {
+					content: "";
+					display: inline-block;
+					height: 18px;
+					width: 18px;
+					border: 2px solid var(--bb-rl-border-quaternary-color);
+					border-top-color: var(--bb-rl-border-tertiary-color);
+					border-radius: var(--bb-rl-radius-full);
+					animation: spin 3s infinite linear;
+					margin-top: 4px;
+				}
+			}
+		}
+
 		.bb_more_options_action {
 			padding: var(--bb-rl-space-50);
 			cursor: pointer;
