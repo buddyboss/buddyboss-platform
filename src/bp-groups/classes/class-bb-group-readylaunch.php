@@ -157,11 +157,7 @@ class BB_Group_Readylaunch {
 		$group = groups_get_group( $group_id );
 
 		?>
-		<div class="bb-rl-action-popup bb-rl-about-group" id="model--about-group-
-		<?php
-			echo esc_attr( $group_id );
-		?>
-		">
+		<div class="bb-rl-action-popup bb-rl-about-group" id="model--about-group-<?php echo esc_attr( $group_id ); ?>">
 			<transition name="modal">
 				<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 					<div class="bb-rl-modal-wrapper">

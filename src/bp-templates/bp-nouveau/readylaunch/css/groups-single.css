@@ -2358,13 +2358,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   padding: 0;
 }
 
-.bb-rl-media-stream .media-list,
-.bb-rl-media-stream .video-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--bb-rl-space-300);
-}
-
 .bb-rl-media-container .bb-member-media-header {
   display: flex;
   margin: 0 0 var(--bb-rl-space-200);
