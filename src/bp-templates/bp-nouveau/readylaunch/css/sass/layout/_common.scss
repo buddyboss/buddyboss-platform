@@ -757,6 +757,7 @@ body.guillotine-dragging * {
 	border-radius: var(--bb-rl-radius-lg);
 
 	.media-list,
+	.document-list,
 	.video-list {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);

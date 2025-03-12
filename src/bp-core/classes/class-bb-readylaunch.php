@@ -151,6 +151,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
 				remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
+				remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
 			}
 		}
 

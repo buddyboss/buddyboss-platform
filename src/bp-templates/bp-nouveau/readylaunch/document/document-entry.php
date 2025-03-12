@@ -100,7 +100,7 @@ if ( $attachment_id ) {
 }
 
 ?>
-<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php echo esc_attr( $doc_user_id ); ?>"
+<div class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php echo esc_attr( $doc_user_id ); ?>"
 data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php echo esc_attr( $doc_activity_id ); ?>"
 data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
 id="div-listing-<?php echo esc_attr( $document_id ); ?>">

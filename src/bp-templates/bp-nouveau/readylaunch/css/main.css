@@ -5744,6 +5744,7 @@ body.guillotine-dragging * {
 }
 
 .bb-rl-media-stream .media-list,
+.bb-rl-media-stream .document-list,
 .bb-rl-media-stream .video-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -5751,6 +5752,7 @@ body.guillotine-dragging * {
 }
 
 .bb-rl-media-stream .media-list .load-more,
+.bb-rl-media-stream .document-list .load-more,
 .bb-rl-media-stream .video-list .load-more {
   display: flex;
   align-items: center;
@@ -5758,6 +5760,7 @@ body.guillotine-dragging * {
 }
 
 .bb-rl-media-stream .media-list .load-more .button,
+.bb-rl-media-stream .document-list .load-more .button,
 .bb-rl-media-stream .video-list .load-more .button {
   display: inline-flex;
   align-items: center;
@@ -5779,16 +5782,19 @@ body.guillotine-dragging * {
 }
 
 .bb-rl-media-stream .media-list .load-more .button:hover,
+.bb-rl-media-stream .document-list .load-more .button:hover,
 .bb-rl-media-stream .video-list .load-more .button:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
 .bb-rl-media-stream .media-list .load-more .button:focus,
+.bb-rl-media-stream .document-list .load-more .button:focus,
 .bb-rl-media-stream .video-list .load-more .button:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
 .bb-rl-media-stream .media-list .load-more .button:disabled,
+.bb-rl-media-stream .document-list .load-more .button:disabled,
 .bb-rl-media-stream .video-list .load-more .button:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
@@ -5796,6 +5802,7 @@ body.guillotine-dragging * {
 }
 
 .bb-rl-media-stream .media-list .load-more .button [class*="bb-icons-rl-"],
+.bb-rl-media-stream .document-list .load-more .button [class*="bb-icons-rl-"],
 .bb-rl-media-stream .video-list .load-more .button [class*="bb-icons-rl-"] {
   margin-left: 6px;
   font-size: 16px;

@@ -51,7 +51,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			do_action( 'bp_before_directory_document' );
 		?>
 
-		<div class="bb-rl-document-directory-container flex">
+		<div class="bb-rl-document-directory-container">
 
 			<?php
 				/**
@@ -71,7 +71,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 			<div class="screen-content bb-rl-document-directory-content">
 
-				<div id="bb-rl-document-dir-list" class="documents dir-list bb-rl-document" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div id="bb-rl-document-dir-list" class="documents dir-list bb-rl-document bb-rl-media-stream" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 						if ( $is_send_ajax_request ) {
 							echo '<div id="bp-ajax-loader">';
