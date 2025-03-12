@@ -59,6 +59,11 @@
 	text-decoration: none;
 }
 
+@mixin bb-rl-button--small {
+	padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+	font-size: 0.875rem;
+}
+
 @mixin bb-button-secondary-hover {
 	background-color: var(--bb-secondary-button-background-hover);
 	color: var(--bb-secondary-button-text-hover);

@@ -15,7 +15,7 @@
 	<transition name="modal">
 		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="bb-rl-modal-wrapper">
-				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
+				<div id="boss-media-create-album-popup" class="bb-rl-create-folder-popup modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>

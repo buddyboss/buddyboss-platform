@@ -2117,7 +2117,7 @@ button[data-balloon] {
 }
 
 .bb-rl-button.bb-rl-button--small {
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
 }
 
@@ -3835,11 +3835,23 @@ button[data-balloon] {
   color: var(--bb-rl-icon-primary-color);
 }
 
-.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap {
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap,
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
-.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap label {
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show {
+  padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy,
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy {
+  width: 100%;
+}
+
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap label,
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap label {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -3848,17 +3860,18 @@ button[data-balloon] {
   color: var(--bb-rl-text-color);
 }
 
-.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap input {
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap input,
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap input {
   width: 100%;
 }
 
-.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap .error-box {
+.bb-readylaunch-template #bp-media-create-folder .bb-field-wrap .error-box,
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap .error-box {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
   color: var(--bb-rl-text-secondary-color);
   margin: var(--bb-rl-space-100) 0 0;
-  display: block;
 }
 
 .bb-readylaunch-template #bp-video-create-album .bb-field-wrap,
@@ -3902,6 +3915,19 @@ button[data-balloon] {
 
 .bb-rl-modal-wrapper .bb-rl-has-warning .bb-rl-field-wrap {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-modal-wrapper .error-box {
+  display: none;
+}
+
+.bb-rl-modal-wrapper input.error {
+  border-color: var(--bb-rl-border-danger-secondary-color);
+  color: var(--bb-rl-text-danger-secondary-color);
+}
+
+.bb-rl-modal-wrapper input.error + .error-box {
+  display: block;
 }
 
 .bb-rl-container-inner .bp-pagination,
@@ -5198,19 +5224,19 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e42a";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.document-file-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group::before,
-.bb-rl-context-wrap .bb_more_dropdown a.document-file-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group::before,
-.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.document-file-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group::before,
-.bb-rl-container .bb_more_options .bb_more_dropdown a.document-file-delete::before {
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete::before {
   content: "\e4a6";
 }
 
@@ -5262,10 +5288,10 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e20c";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown li.copy_download_file_url a::before,
-.bb-rl-context-wrap .bb_more_dropdown li.copy_download_file_url a::before,
-.bb-rl-container .bb_more_options .bb-rl-context-dropdown li.copy_download_file_url a::before,
-.bb-rl-container .bb_more_options .bb_more_dropdown li.copy_download_file_url a::before {
+.bb-rl-context-wrap .bb-rl-context-dropdown li.bb_rl_copy_download_file_url a::before,
+.bb-rl-context-wrap .bb_more_dropdown li.bb_rl_copy_download_file_url a::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown li.bb_rl_copy_download_file_url a::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown li.bb_rl_copy_download_file_url a::before {
   content: "\e1ca";
 }
 
@@ -5955,6 +5981,16 @@ body.guillotine-dragging * {
 
 .bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap .error-box {
   display: none;
+  margin-top: var(--bb-rl-space-50);
+}
+
+.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap input.error {
+  border-color: var(--bb-rl-border-danger-secondary-color);
+  color: var(--bb-rl-text-danger-secondary-color);
+}
+
+.bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_name_edit_wrap input.error + .error-box {
+  display: block;
 }
 
 .bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_icon {
@@ -11679,11 +11715,12 @@ div[class*="attached-gif-container"] .gif-player {
   background-color: transparent;
   border-top: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button {
-  font-size: 0.85rem;
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button.is-disabled {
@@ -11710,6 +11747,7 @@ div[class*="attached-gif-container"] .gif-player {
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {
   margin-right: auto;
+  font-size: 0.875rem;
 }
 
 .bb-rl-modal-move-file .bbm-model-wrap label {

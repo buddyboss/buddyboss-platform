@@ -4832,11 +4832,12 @@ div[class*="attached-gif-container"] .gif-player {
   background-color: transparent;
   border-top: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button {
-  font-size: 0.85rem;
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-button.is-disabled {
@@ -4863,6 +4864,7 @@ div[class*="attached-gif-container"] .gif-player {
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {
   margin-right: auto;
+  font-size: 0.875rem;
 }
 
 .bb-rl-modal-move-file .bbm-model-wrap label {

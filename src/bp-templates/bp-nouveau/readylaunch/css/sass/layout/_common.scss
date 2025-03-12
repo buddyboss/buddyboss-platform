@@ -205,7 +205,7 @@
 			&.bb-rl-media-file-delete,
 			&.bb-rl-video-file-delete,
 			&.delete-group,
-			&.document-file-delete {
+			&.bb-rl-document-file-delete {
 
 				&::before {
 					content: "\e4a6";
@@ -245,7 +245,7 @@
 			}
 		}
 
-		li.copy_download_file_url {
+		li.bb_rl_copy_download_file_url {
 
 			a {
 
@@ -906,6 +906,16 @@ body.guillotine-dragging * {
 
 				.error-box {
 					display: none;
+					margin-top: var(--bb-rl-space-50);
+				}
+
+				input.error {
+					border-color: var(--bb-rl-border-danger-secondary-color);
+					color: var(--bb-rl-text-danger-secondary-color);
+				}
+
+				input.error + .error-box {
+					display: block;
 				}
 			}
 

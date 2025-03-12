@@ -271,7 +271,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 						<li class="download_file">
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
 						</li>
-						<li class="copy_download_file_url">
+						<li class="bb_rl_copy_download_file_url">
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 						</li>
 						<?php
@@ -350,7 +350,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					if ( $can_delete ) {
 						?>
 						<li class="delete_file">
-							<a class="document-file-delete" data-item-from="listing"
+							<a class="bb-rl-document-file-delete" data-item-from="listing"
 							data-item-preview-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 							data-item-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 							data-item-id="<?php echo esc_attr( $document_id ); ?>"

@@ -30,10 +30,11 @@
 		background-color: transparent;
 		border-top: 1px solid var(--bb-rl-border-secondary-color);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+		gap: var(--bb-rl-space-100);
 
 		.bb-rl-button {
-			font-size: 0.85rem;
-			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+
+			@include bb-rl-button--small;
 
 			&.is-disabled {
 				opacity: 0.6;
@@ -60,6 +61,7 @@
 
 		.bb-rl-create-album {
 			margin-right: auto;
+			font-size: 0.875rem;
 		}
 	}
 
