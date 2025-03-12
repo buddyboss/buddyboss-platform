@@ -174,6 +174,7 @@
 	cursor: pointer;
 	opacity: 0.5;
 	pointer-events: none;
+	position: relative;
 
 	&:before {
 		display: block;

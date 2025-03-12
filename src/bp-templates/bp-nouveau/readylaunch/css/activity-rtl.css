@@ -97,7 +97,7 @@
   --bb-rl-z-index-modal: 1050;
   --bb-rl-z-index-popover: 1060;
   --bb-rl-z-index-tooltip: 1070;
-  --bb-rl-font-family-base: inter, serif;
+  --bb-rl-font-family-base: InterText, serif;
   --bb-rl-font-size-base: 16px;
   --bb-rl-font-size-xs: 11px;
   --bb-rl-font-size-sm: 13px;
@@ -2287,7 +2287,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   max-width: 100%;
 }
 
-.bb-rl-activity-list .activity-meta {
+.bb-rl-activity-list .bp-generic-meta {
   position: relative;
 }
 
@@ -4149,30 +4149,30 @@ div[class*="attached-gif-container"] .gif-player {
   margin: 0;
 }
 
-.activity-meta {
+.bp-generic-meta {
   display: flex;
   align-items: center;
 }
 
-.activity-meta .generic-button a {
+.bp-generic-meta .generic-button a {
   display: flex;
   align-items: center;
   padding: 6px var(--bb-rl-space-200);
 }
 
-.activity-meta .generic-button a:hover {
+.bp-generic-meta .generic-button a:hover {
   background-color: var(--bb-rl-background-secondary-color);
   border-radius: var(--bb-rl-radius-md);
 }
 
-.activity-meta .generic-button a span {
+.bp-generic-meta .generic-button a span {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
 }
 
-.activity-meta .generic-button a.bp-like-button [class*="bb-icon"]:before {
+.bp-generic-meta .generic-button a.bp-like-button [class*="bb-icon"]:before {
   color: var(--bb-rl-icon-tertiary-color);
   font-size: 24px;
   font-weight: 400;
@@ -4181,22 +4181,22 @@ div[class*="attached-gif-container"] .gif-player {
   margin-right: 0;
 }
 
-.activity-meta .generic-button a.bp-like-button img {
+.bp-generic-meta .generic-button a.bp-like-button img {
   height: 18px;
   width: 18px;
   margin-left: var(--bb-rl-space-100);
 }
 
-.activity-meta .generic-button a.bp-like-button.has-reaction [class*="bb-icon"] {
+.bp-generic-meta .generic-button a.bp-like-button.has-reaction [class*="bb-icon"] {
   display: flex;
 }
 
-.activity-meta .generic-button a.bp-like-button.has-reaction [class*="bb-icon"]:before {
+.bp-generic-meta .generic-button a.bp-like-button.has-reaction [class*="bb-icon"]:before {
   font-weight: 200;
   color: inherit;
 }
 
-.activity-meta .generic-button a.acomment-reply:before {
+.bp-generic-meta .generic-button a.acomment-reply:before {
   content: "\e172";
   font-family: bb-icons-rl;
   font-size: 24px;
@@ -4523,6 +4523,7 @@ div[class*="attached-gif-container"] .gif-player {
   top: 50%;
   transform: translateY(-50%);
   left: var(--bb-rl-space-300);
+  z-index: var(--bb-rl-z-index-dropdown);
 }
 
 .bb-rl-media-model-container .bb-rl-theater-command.bb-rl-prev-media {
