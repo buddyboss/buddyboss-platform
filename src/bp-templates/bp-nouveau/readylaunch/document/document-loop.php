@@ -77,21 +77,17 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			</div>
 		</div><!-- .document-data-table-head -->
 
-		<div id="media-folder-document-data-table" class="bb-rl-media-stream">
+		<div id="media-folder-document-data-table">
 		<?php
 		bp_get_template_part( 'document/activity-document-move' );
 		bp_get_template_part( 'document/activity-document-folder-move' );
 	endif;
-	?>
-	<div class="document-list">
-		<?php
-		while ( bp_document() ) :
-			bp_the_document();
-			bp_get_template_part( 'document/document-entry' );
-		endwhile;
-		?>
-	</div>
-	<?php
+
+	while ( bp_document() ) :
+		bp_the_document();
+
+		bp_get_template_part( 'document/document-entry' );
+	endwhile;
 
 	if ( bp_document_has_more_items() ) :
 		?>
