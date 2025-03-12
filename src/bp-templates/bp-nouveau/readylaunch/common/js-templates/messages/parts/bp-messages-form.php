@@ -15,7 +15,7 @@ $os = bb_core_get_os();
 
 	<div class="bp-messages-form-header">
 		<label class="bp-new-message-heading" for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
-		<a href="#" class="bp-close-compose-form"><span class="bb-icon-l bb-icon-times"></span></a>
+		<a href="#" class="bp-close-compose-form"><span class="bb-icons-rl-x"></span></a>
 	</div>
 
 	<div class="bp-messages-feedback"></div>
