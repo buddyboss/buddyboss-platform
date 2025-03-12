@@ -1,0 +1,54 @@
+.user-item-wrp {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: var(--bb-rl-space-100);
+	position: relative;
+	border-radius: var(--bb-rl-radius-md);
+	margin: 0 -10px;
+
+	&:hover {
+		background-color: var(--bb-rl-background-secondary-color);
+	}
+
+	.user-avatar {
+		height: 40px;
+		width: 40px;
+		margin-right: var(--bb-rl-space-200);
+
+		img {
+			width: 40px;
+			height: 40px;
+			border-radius: var(--bb-rl-radius-full);
+			margin: var(--bb-rl-space-100);
+		}
+
+		> a {
+			position: absolute;
+			inset: 0;
+		}
+	}
+
+	.user-name {
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--bb-rl-text-color);
+		line-height: 1.5;
+
+		a {
+			color: var(--bb-rl-text-color);
+		}
+	}
+
+	.user-actions {
+		margin-left: auto;
+
+		> a {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			font-size: var(--bb-rl-font-size-sm);
+			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		}
+	}
+}
