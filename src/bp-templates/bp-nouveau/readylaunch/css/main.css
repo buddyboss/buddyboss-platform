@@ -6017,6 +6017,7 @@ body.guillotine-dragging * {
   text-align: center;
   color: var(--bb-rl-text-tertiary-color);
   padding: 2px 0;
+  margin-bottom: var(--bb-rl-space-50);
 }
 
 .bb-rl-media-stream.bb-rl-document .media-folder_items .media-folder_visibility {

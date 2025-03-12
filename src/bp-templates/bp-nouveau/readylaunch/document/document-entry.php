@@ -231,7 +231,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 			}
 			?>
 			<select data-item-type="<?php echo esc_attr( $document_type ); ?>"
-					data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-folder-privacy" class="hide">
+					data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-rl-folder-privacy" class="hide">
 				<?php
 				foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
 					if ( 'grouponly' === $key ) {
