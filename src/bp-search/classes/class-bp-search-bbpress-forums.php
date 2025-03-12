@@ -71,13 +71,13 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$bp      = buddypress();
 				$user_id = get_current_user_id();
 
-				// For forums not associated with groups, apply post_status filter
+				// For forums not associated with groups, apply post_status filter.
 				$where_sql = '( ( pm.meta_value IS NULL AND ' . $post_status_sql . ' )';
 
 				// For forums associated with groups, check group membership.
 				$group_query = "SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
-					FROM {$bp->groups->table_name} g
-					LEFT JOIN {$bp->groups->table_name_members} m 
+					FROM {$bp->groups->global_tables['table_name']} g
+					LEFT JOIN {$bp->groups->global_tables['table_name_members']} m 
 						ON g.id = m.group_id 
 						AND m.user_id = {$user_id} 
 						AND m.is_confirmed = 1
