@@ -63,27 +63,31 @@ if ( ! class_exists( 'Bp_Search_bbPress_Forums' ) ) :
 				$post_status = array( 'publish' );
 			}
 
-			$where_sql = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\')';
+			// Create the post_status SQL condition once.
+			$post_status_sql = "post_status IN ('" . join( "','", $post_status ) . "')";
 
+			// Different logic for group-enabled sites with non-admin users.
 			if ( bp_is_active( 'groups' ) && ! current_user_can( 'administrator' ) ) {
 				$bp      = buddypress();
 				$user_id = get_current_user_id();
-				
-				// Build the SQL condition for forum visibility using subqueries
-				$where_sql .= ' AND ( pm.meta_value IS NULL';
-				
-				// Single optimized subquery for both public groups and user's groups
-				$where_sql .= " OR pm.meta_value IN (
-					SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
-					FROM {$bp->groups->table_name} g
-					LEFT JOIN {$bp->groups->table_name_members} m ON g.id = m.group_id AND m.user_id = {$user_id} AND m.is_confirmed = 1
-					WHERE g.status = 'public' OR m.id IS NOT NULL
-				)";
-				
-				$where_sql .= ')';
-			}
 
-			$where_sql .= ')';
+				// For forums not associated with groups, apply post_status filter
+				$where_sql = '( ( pm.meta_value IS NULL AND ' . $post_status_sql . ' )';
+
+				// For forums associated with groups, check group membership.
+				$group_query = "SELECT DISTINCT CONCAT('a:1:{i:0;i:', g.id, ';}')
+					FROM {$bp->groups->table_name} g
+					LEFT JOIN {$bp->groups->table_name_members} m 
+						ON g.id = m.group_id 
+						AND m.user_id = {$user_id} 
+						AND m.is_confirmed = 1
+					WHERE g.status = 'public' OR m.id IS NOT NULL";
+
+				$where_sql .= " OR pm.meta_value IN ({$group_query}) )";
+			} else {
+				// For admins or sites without groups, just use post_status.
+				$where_sql = '( ' . $post_status_sql . ' )';
+			}
 
 			$where[] = $where_sql;
 
