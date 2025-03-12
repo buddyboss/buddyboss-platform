@@ -213,7 +213,8 @@
 			}
 
 			&.ac-media-move:before,
-			&.ac-document-move:before {
+			&.ac-document-move:before,
+			&.ac-folder-move:before {
 				content: "\e24a";
 			}
 
@@ -227,6 +228,10 @@
 
 			&.ac-document-rename::before {
 				content: "\e34c";
+			}
+
+			&.ac-document-privacy::before {
+				content: "\e2fa";
 			}
 		}
 

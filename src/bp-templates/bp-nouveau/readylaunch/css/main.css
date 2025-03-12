@@ -5214,13 +5214,16 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e4a6";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.ac-media-move:before, .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-document-move:before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.ac-media-move:before, .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-document-move:before, .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-folder-move:before,
 .bb-rl-context-wrap .bb_more_dropdown a.ac-media-move:before,
 .bb-rl-context-wrap .bb_more_dropdown a.ac-document-move:before,
+.bb-rl-context-wrap .bb_more_dropdown a.ac-folder-move:before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-media-move:before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-document-move:before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-folder-move:before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.ac-media-move:before,
-.bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-move:before {
+.bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-move:before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.ac-folder-move:before {
   content: "\e24a";
 }
 
@@ -5243,6 +5246,13 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-document-rename::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-rename::before {
   content: "\e34c";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.ac-document-privacy::before,
+.bb-rl-context-wrap .bb_more_dropdown a.ac-document-privacy::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.ac-document-privacy::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-privacy::before {
+  content: "\e2fa";
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown li.download_file a::before,
