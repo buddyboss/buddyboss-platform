@@ -963,7 +963,7 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
 			// Profile/Group Popup Card.
-			$( document ).on( 'mouseenter', '[data-bb-hp-profile] img.avatar', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function () {
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
 				if ( ! popupCardLoaded ) {
@@ -973,7 +973,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.profilePopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseenter', '[data-bb-hp-group] img.avatar', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function () {
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
 				if ( ! popupCardLoaded ) {
@@ -983,10 +983,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.groupPopupCard.call( this );
 				}
 			} );
-			$( document ).on( 'mouseleave', '[data-bb-hp-profile] img.avatar, [data-bb-hp-group] img.avatar', function ( event ) {
+			$( document ).on( 'mouseleave', '[data-bb-hp-profile], [data-bb-hp-group]', function ( event ) {
 				var relatedTarget = event.relatedTarget;
-				var idleProfileAvatar = $( this ).closest( '[data-bb-hp-profile]' ).length > 0;
-    			var idleGroupAvatar = $(this).closest( '[data-bb-hp-group]' ).length > 0;
+				var idleProfileAvatar = $( this ).is( '[data-bb-hp-profile]' );
+				var idleGroupAvatar = $( this ).is( '[data-bb-hp-group]' );
 
 				if ( idleProfileAvatar ) {
 					hoverProfileAvatar = false;
@@ -995,7 +995,7 @@ window.bp = window.bp || {};
 					hoverGroupAvatar = false;
 				}
 
-				if ( $( relatedTarget ).closest( '.author-avatar, .group-avatar' ).length > 0 ) {
+				if ( $( relatedTarget ).closest( '[data-bb-hp-profile], [data-bb-hp-group]' ).length > 0 ) {
 					var $newAvatar = $( relatedTarget );
 					// Hide the current popup
 					if ( $( '#profile-card' ).hasClass( 'show' ) ) {
@@ -1005,12 +1005,12 @@ window.bp = window.bp || {};
 					}
 
 					// Check which avatar is hovered
-					if ( $newAvatar.closest( '.author-avatar' ).length > 0 || $newAvatar.is( '.author-avatar' ) ) {
+					if ( $newAvatar.find("img[class^='user-'][class$='-avatar']").length > 0 || $newAvatar.is( '[data-bb-hp-profile]' ) ) {
 						// Show profile popup for the new avatar
-						bp.Nouveau.profilePopupCard.call( '.group-avatar img.avatar' );
-					} else if ( $newAvatar.closest( '.group-avatar' ).length > 0 ) {
+						bp.Nouveau.profilePopupCard.call( '[data-bb-hp-group]' );
+					} else if ( $newAvatar.find("img[class^='group-'][class$='-avatar']").length > 0 || $newAvatar.is( '[data-bb-hp-group]' ) ) {
 						// Show group popup for the new avatar
-						bp.Nouveau.groupPopupCard.call( '.author-avatar img.avatar' );
+						bp.Nouveau.groupPopupCard.call( '[data-bb-hp-profile]' );
 					}
 				} else {
 					hoverProfileAvatar = false;
@@ -4697,11 +4697,11 @@ window.bp = window.bp || {};
 
 			var $avatar = $( this );
 			var offset  = $avatar.offset();
-			var $profileNode = $avatar.closest( '[data-bb-hp-profile]' );
-			if ( ! $profileNode.attr( 'data-bb-hp-profile' ) || ! $profileNode.attr( 'data-bb-hp-profile' ).length ) {
+
+			if ( ! $avatar.attr( 'data-bb-hp-profile' ) || ! $avatar.attr( 'data-bb-hp-profile' ).length ) {
 				return;
 			}
-			var memberId = $profileNode.attr( 'data-bb-hp-profile' );
+			var memberId = $avatar.attr( 'data-bb-hp-profile' );
 			if ( ! memberId ) {
 				return;
 			}
