@@ -3575,16 +3575,6 @@ window.bp = window.bp || {};
 			initialize: function () {
 				this.model = new bp.Models.Activity();
 			},
-
-			events: {
-				'change input[name="privacy"]': 'privacyChange'
-			},
-
-			privacyChange: function(e) {
-				if ( e.target.value !== 'group' ) {
-					$( '#whats-new' ).attr( 'data-suggestions-group-id', false ).data( 'suggestions-group-id', false );
-				}
-			}
 		}
 	);
 
@@ -4233,6 +4223,9 @@ window.bp = window.bp || {};
 				} else {
 					$( '#privacy-status-submit' ).click();
 					this.model.set( 'object', 'user' );
+
+					// Update the post area to not have the suggestions-group-id
+					$( '#whats-new' ).attr( 'data-suggestions-group-id', false ).data( 'suggestions-group-id', false );
 
 					// Update multi media options dependent on profile/group view
 					Backbone.trigger('mediaprivacytoolbar');
