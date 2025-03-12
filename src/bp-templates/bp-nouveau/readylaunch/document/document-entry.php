@@ -255,12 +255,14 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 		$show = true;
 	}
 	?>
-	<div class="media-folder_actions">
+	<div class="media-folder_actions bb_more_options action">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
-			<div class="media-folder_action__list bb_more_dropdown">
+			<a href="#" class="media-folder_action__anchor bb_more_options_action">
+				<i class="bb-icons-rl-dots-three"></i>
+			</a>
+			<div class="media-folder_action__list bb_more_dropdown bb_more_options_list">
 				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<ul>
 					<?php
