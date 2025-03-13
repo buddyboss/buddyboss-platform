@@ -1320,12 +1320,30 @@
   font-size: 24px;
 }
 
+#message-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button,
+#message-reply-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button {
+  border: 0.5px solid transparent;
+  padding: var(--bb-rl-space-50);
+}
+
 #message-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button:before,
 #message-reply-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button:before {
   content: "\e436";
   color: var(--bb-rl-icon-secondary-color);
   font-family: bb-icons-rl;
   font-size: 24px;
+}
+
+#message-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button.active,
+#message-reply-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button.active {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+#message-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button.active:before,
+#message-reply-form-submit-wrapper .post-elements-buttons-item .emojionearea .emojionearea-button.active:before {
+  color: var(--bb-rl-icon-color);
 }
 
 #message-form-submit-wrapper .bb-rl-separator,
@@ -1386,6 +1404,27 @@
 #whats-new-toolbar {
   display: flex;
   align-items: center;
+}
+
+#whats-new-formatting-toolbar a.toolbar-button,
+#whats-new-messages-toolbar a.toolbar-button,
+#whats-new-toolbar a.toolbar-button {
+  border: 0.5px solid transparent;
+  padding: var(--bb-rl-space-50);
+}
+
+#whats-new-formatting-toolbar a.toolbar-button.active,
+#whats-new-messages-toolbar a.toolbar-button.active,
+#whats-new-toolbar a.toolbar-button.active {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+#whats-new-formatting-toolbar a.toolbar-button.active [class*="bb-icons-"],
+#whats-new-messages-toolbar a.toolbar-button.active [class*="bb-icons-"],
+#whats-new-toolbar a.toolbar-button.active [class*="bb-icons-"] {
+  color: var(--bb-rl-icon-color);
 }
 
 #whats-new-formatting-toolbar .emojionearea .emojionearea-picker {
