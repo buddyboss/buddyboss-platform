@@ -4725,7 +4725,10 @@ window.bp = window.bp || {};
 
 			// Avoid duplicate AJAX requests for same memberId.
 			if ( bp.Nouveau.currentRequestMemberId === memberId ) {
-				$profileCard.addClass( 'show loading' );
+				$profileCard.addClass( 'show' );
+				if ( !bp.Nouveau.cacheProfileCard[memberId] ) {
+					$profileCard.addClass( 'loading' );
+				}
 				return;
 			}
 
@@ -4777,7 +4780,10 @@ window.bp = window.bp || {};
 					// Check if hovering over avatar or popup.
 					if ( hoverProfileAvatar || hoverProfileCardPopup ) {
 						if ( hoverAvatar || hoverCardPopup ) {
-							$profileCard.removeClass( 'loading' );
+							// Get a fresh reference to the profile card
+							var $currentProfileCard = $( '#profile-card' );
+							$currentProfileCard.removeClass( 'loading' );
+
 							bp.Nouveau.updateProfileCard( data, currentUser );
 							popupCardLoaded = true;
 						} else {
@@ -4926,7 +4932,10 @@ window.bp = window.bp || {};
 
 			// Avoid duplicate AJAX requests for same groupId.
 			if ( bp.Nouveau.currentRequestGroupId === groupId ) {
-				$groupCard.addClass( 'show loading' );
+				$groupCard.addClass( 'show' );
+				if ( !bp.Nouveau.cacheGroupCard[groupId] ) {
+					$groupCard.addClass( 'loading' );
+				}
 				return;
 			}
 
@@ -4977,7 +4986,10 @@ window.bp = window.bp || {};
 					// Check if hovering over avatar or popup.
 					if ( hoverGroupAvatar || hoverGroupCardPopup ) {
 						if ( hoverAvatar || hoverCardPopup ) {
-							$groupCard.removeClass( 'loading' );
+							// Get a fresh reference to the group card
+							var $currentGroupCard = $( '#group-card' );
+							$currentGroupCard.removeClass( 'loading' );
+
 							bp.Nouveau.updateGroupCard( data );
 							popupCardLoaded = true;
 						} else {
