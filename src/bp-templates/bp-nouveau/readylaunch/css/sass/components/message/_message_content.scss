@@ -371,6 +371,48 @@
 			border-radius: var(--bb-rl-radius-lg);
 		}
 	}
+
+	.bb-activity-video-wrap,
+	.bb-activity-media-wrap {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-100);
+	}
+
+	.bb-activity-video-elem,
+	.bb-activity-media-elem {
+
+		img {
+			height: 152px;
+			width: 152px;
+			object-fit: cover;
+			border-radius: var(--bb-rl-radius-lg);
+		}
+	}
+
+	.bb-video-cover-wrap {
+		position: relative;
+
+		&:before {
+			content: "\e3d0";
+			font-family: bb-icons-rl;
+			color: var(--bb-rl-icon-tertiary-color);
+			font-size: 32px;
+			font-weight: 500;
+			height: 56px;
+			width: 56px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: var(--bb-rl-radius-full);
+			background-color: var(--bb-rl-background-black-color);
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
 }
 
 #bp-message-load-more {
