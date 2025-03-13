@@ -4210,7 +4210,7 @@ window.bp = window.bp || {};
 				 // Create a DOM parser
 				 var parser = new DOMParser();
 				 var doc = parser.parseFromString( urlText, 'text/html' );
-				 
+
 				 // Exclude the mention links from the urlText
 				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
 				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
@@ -4696,59 +4696,44 @@ window.bp = window.bp || {};
 			}
 
 			var $avatar = $( this );
-			var offset  = $avatar.offset();
 
 			if ( ! $avatar.attr( 'data-bb-hp-profile' ) || ! $avatar.attr( 'data-bb-hp-profile' ).length ) {
 				return;
 			}
+
 			var memberId = $avatar.attr( 'data-bb-hp-profile' );
 			if ( ! memberId ) {
 				return;
 			}
+
 			var currentUserId = 0;
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
 				currentUserId = BP_Nouveau.activity.params.user_id;
 			}
+
 			// Skip showing profile card for current user
 			if ( parseInt( currentUserId ) === parseInt( memberId ) ) {
 				return;
 			}
-			var currentUser  = parseInt( currentUserId ) === parseInt( memberId );
-			var restUrl      = BP_Nouveau.rest_url;
-			var url          = restUrl + '/members/' + memberId + '/info';
-			var $profileCard = $( '#profile-card' );
 
-			function setPopupPosition() {
-				var popupTop, popupLeft;
-				if ( window.innerWidth <= 560 ) {
-					popupTop  = offset.top + $avatar.outerHeight() + 10;
-					popupLeft = 5;
-				} else if ( window.innerWidth <= 800 ) {
-					popupTop  = offset.top + $avatar.outerHeight() + 10;
-					popupLeft = offset.left + $avatar.outerWidth() - 20;
-				} else {
-					popupTop  = offset.top + $avatar.outerHeight() + 10;
-					popupLeft = offset.left + $avatar.outerWidth() - 100;
-				}
-				return {
-					top : popupTop - $( window ).scrollTop(),
-					left: popupLeft - $( window ).scrollLeft(),
-				};
-			}
+			var currentUser = parseInt( currentUserId ) === parseInt( memberId );
+			var restUrl = BP_Nouveau.rest_url;
+			var url = restUrl + '/members/' + memberId + '/info';
+			var $profileCard = $( '#profile-card' );
 
 			// Cancel any ongoing request if it's for a different memberId.
 			if ( bp.Nouveau.currentRequestMemberId && bp.Nouveau.currentRequestMemberId !== memberId ) {
 				bp.Nouveau.abortOngoingRequest();
 			}
 
-			// Always update position
-			var position = setPopupPosition();
+			// Always update position.
+			var position = bp.Nouveau.setPopupPosition( $avatar );
 			$profileCard.css( {
 				top: position.top + 'px',
 				left: position.left + 'px'
 			} );
 
-			// Avoid duplicate AJAX requests for same memberId
+			// Avoid duplicate AJAX requests for same memberId.
 			if ( bp.Nouveau.currentRequestMemberId === memberId ) {
 				$profileCard.addClass( 'show loading' );
 				return;
@@ -4818,6 +4803,25 @@ window.bp = window.bp || {};
 					bp.Nouveau.currentRequestMemberId = null;
 				}
 			} );
+		},
+
+		setPopupPosition: function( $element ) {
+			var offset = $element.offset();
+			var popupTop, popupLeft;
+			if ( window.innerWidth <= 560 ) {
+				popupTop  = offset.top + $element.outerHeight() + 10;
+				popupLeft = 5;
+			} else if ( window.innerWidth <= 800 ) {
+				popupTop  = offset.top + $element.outerHeight() + 10;
+				popupLeft = offset.left + $element.outerWidth() - 20;
+			} else {
+				popupTop  = offset.top + $element.outerHeight() + 10;
+				popupLeft = offset.left + $element.outerWidth() - 100;
+			}
+			return {
+				top : popupTop - $( window ).scrollTop(),
+				left: popupLeft - $( window ).scrollLeft(),
+			};
 		},
 
 		/**
@@ -4904,7 +4908,6 @@ window.bp = window.bp || {};
 			}
 
 			var $avatar = $( this );
-			var offset  = $avatar.offset();
 			var $li     = $avatar.closest( '.activity-item' );
 			var groupId = 0;
 			if ( $li.hasClass( 'groups' ) ) {
@@ -4925,31 +4928,13 @@ window.bp = window.bp || {};
 			var url         = restUrl + '/groups/' + groupId + '/info';
 			var $groupCard  = $( '#group-card' );
 
-			function setPopupPosition() {
-				var popupTop, popupLeft;
-				if ( window.innerWidth <= 560 ) {
-					popupTop  = offset.top + $avatar.outerHeight() + 10;
-					popupLeft = 5;
-				} else if ( window.innerWidth <= 800 ) {
-					popupTop  = offset.top + $avatar.outerHeight() + 10;
-					popupLeft = offset.left + $avatar.outerWidth() - 20;
-				} else {
-					popupTop  = offset.top + $avatar.outerHeight() + 10;
-					popupLeft = offset.left + $avatar.outerWidth() - 100;
-				}
-				return {
-					top : popupTop - $( window ).scrollTop(),
-					left: popupLeft - $( window ).scrollLeft(),
-				};
-			}
-
 			// Cancel any ongoing request if it's for a different groupId.
 			if ( bp.Nouveau.currentRequestGroupId && bp.Nouveau.currentRequestGroupId !== groupId ) {
 				bp.Nouveau.abortOngoingRequest();
 			}
 
 			// Always update position
-			var position = setPopupPosition();
+			var position = bp.Nouveau.setPopupPosition( $groupCard );
 			$groupCard.css( {
 				top: position.top + 'px',
 				left: position.left + 'px'
