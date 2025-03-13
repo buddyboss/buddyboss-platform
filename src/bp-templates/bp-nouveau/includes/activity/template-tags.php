@@ -823,10 +823,11 @@ function bp_nouveau_get_activity_comment_action() {
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
 			/* translators: 1: User profile link, 2: Username, 3: Edited text */
-			__( '<a class="author-name" href="%1$s">%2$s</a>%3$s', 'buddyboss' ),
+			__( '<a class="author-name" href="%1$s" %4$s>%2$s</a>%3$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
-			bb_nouveau_activity_comment_is_edited()
+			bb_nouveau_activity_comment_is_edited(),
+			'data-bb-hp-profile="' . esc_attr( bp_get_activity_comment_user_id() ) . '"',
 		)
 	);
 }
