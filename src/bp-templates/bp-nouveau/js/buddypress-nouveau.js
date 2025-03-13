@@ -4681,6 +4681,10 @@ window.bp = window.bp || {};
 				$( '#buddypress' ).append( renderedProfileCard );
 			}
 
+			if ( $( '#bbpress-forums' ).length ) {
+				$( '#bbpress-forums' ).append( renderedProfileCard );
+			}
+
 			var $avatar = $( this );
 
 			if ( ! $avatar.attr( 'data-bb-hp-profile' ) || ! $avatar.attr( 'data-bb-hp-profile' ).length ) {
@@ -4891,6 +4895,10 @@ window.bp = window.bp || {};
 			var renderedGroupCard = groupCardTemplate();
 			if ( $( '#buddypress' ).length ) {
 				$( '#buddypress' ).append( renderedGroupCard );
+			}
+
+			if ( $( '#bbpress-forums' ).length ) {
+				$( '#bbpress-forums' ).append( renderedGroupCard );
 			}
 
 			var $avatar = $( this );
