@@ -232,7 +232,7 @@
 		background-color: transparent;
 		visibility: hidden;
 		opacity: 0.6;
-		
+
 		&.active {
 			visibility: visible;
 		}
@@ -250,55 +250,55 @@
 			margin-right: var(--bb-rl-space-100);
 			transition: none;
 			border: 0.5px solid transparent;
-	
+
 			b {
 				display: flex;
 				font-size: 0;
 				line-height: 24px;
 				height: auto;
 				width: auto;
-	
+
 				&:before {
 					color: var(--bb-rl-icon-secondary-color);
 					font-family: bb-icons-rl;
 					font-size: 24px;
 				}
 			}
-	
+
 			&.medium-editor-button-active {
 				background-color: var(--bb-rl-background-secondary-hover-color);
 				border-color: var(--bb-rl-border-secondary-color);
-	
+
 				b:before {
 					color: var(--bb-rl-icon-color);
 				}
 			}
 		}
-	
+
 		.medium-editor-action-bold b:before {
 			content: "\e5be";
 		}
-	
+
 		.medium-editor-action-italic b:before {
 			content: "\e5c0";
 		}
-	
+
 		.medium-editor-action-unorderedlist b:before {
 			content: "\e2f2";
 		}
-	
+
 		.medium-editor-action-orderedlist b:before {
 			content: "\e2f6";
 		}
-	
+
 		.medium-editor-action-quote b:before {
 			content: "\e660";
 		}
-	
+
 		.medium-editor-action-anchor b:before {
 			content: "\e2e2";
 		}
-	
+
 		.medium-editor-action-pre b:before {
 			content: "\e1bc";
 		}
@@ -306,7 +306,7 @@
 		.medium-editor-toolbar-form {
 			background-color: transparent;
 			border-radius: 0;
-	
+
 			.medium-editor-toolbar-input {
 				color: var(--bb-rl-text-color);
 				background-color: transparent;
@@ -314,35 +314,35 @@
 				height: 35px;
 				border-radius: var(--bb-rl-radius-md);
 				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-	
+
 				&.isNotValid {
 					border-color: var(--bb-rl-border-danger-secondary-color);
 				}
-	
+
 				&:focus {
 					color: var(--bb-rl-text-color);
 				}
-	
+
 				&::-webkit-input-placeholder {
 					color: var(--bb-rl-text-color);
 				}
 			}
-	
-	
+
+
 			> a {
 				font-size: 0;
-	
+
 				&:before {
 					content: "\e182";
 					color: var(--bb-rl-icon-secondary-color);
 					font-family: bb-icons-rl;
 					font-size: 22px;
 				}
-	
+
 				&.medium-editor-toolbar-save:before {
 					content: "\e182";
 				}
-	
+
 				&.medium-editor-toolbar-close:before {
 					content: "\e4f6";
 				}

@@ -1046,6 +1046,78 @@
   border-radius: var(--bb-rl-radius-lg);
 }
 
+#bp-message-thread-list .bb-activity-video-wrap,
+#bp-message-thread-list .bb-activity-media-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
+}
+
+#bp-message-thread-list .bb-activity-video-elem img,
+#bp-message-thread-list .bb-activity-media-elem img {
+  height: 152px;
+  width: 152px;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+#bp-message-thread-list .bb-video-cover-wrap {
+  position: relative;
+}
+
+#bp-message-thread-list .bb-video-cover-wrap:before {
+  content: "\e3d0";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-tertiary-color);
+  font-size: 32px;
+  font-weight: 500;
+  height: 56px;
+  width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bb-rl-radius-full);
+  background-color: var(--bb-rl-background-black-color);
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+
+#bp-message-thread-list .activity-attached-gif-container {
+  display: inline-block;
+  height: auto;
+  width: auto;
+  max-width: 360px;
+  max-height: 360px;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+#bp-message-thread-list .activity-attached-gif-container .gif-image-container {
+  margin: 15px 0 0;
+}
+
+#bp-message-thread-list .activity-attached-gif-container .gif-player {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  min-width: 65px;
+  min-height: 65px;
+  position: relative;
+  max-width: 480px;
+}
+
+#bp-message-thread-list .activity-attached-gif-container .gif-player video {
+  height: auto;
+  max-width: 360px;
+  max-height: 360px;
+  width: 100%;
+  border-radius: var(--bb-rl-radius-lg);
+  background-color: var(--bb-rl-background-color);
+}
+
 #bp-message-load-more {
   position: absolute;
   top: 60px;
@@ -1147,8 +1219,9 @@
   color: var(--bb-body-text-color);
   content: attr(data-placeholder);
   position: absolute;
+  top: 0;
   right: 0;
-  padding: 0 15px;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
   font-style: normal;
   opacity: 0.5;
 }
@@ -1227,6 +1300,7 @@
   border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
   margin: 0;
   padding: 12px var(--bb-rl-space-300);
+  position: relative;
 }
 
 #message-form-submit-wrapper .post-elements-buttons-item,
@@ -1312,7 +1386,6 @@
 #whats-new-formatting-toolbar,
 #whats-new-messages-toolbar,
 #whats-new-toolbar {
-  position: relative;
   display: flex;
   align-items: center;
 }
@@ -1323,6 +1396,133 @@
   left: 100%;
   right: inherit;
   margin-left: -25px;
+}
+
+#bp-message-content .medium-editor-toolbar {
+  top: -40px;
+  right: 15px;
+  background-color: transparent;
+  visibility: hidden;
+  opacity: 0.6;
+}
+
+#bp-message-content .medium-editor-toolbar.active {
+  visibility: visible;
+}
+
+#bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
+  opacity: 1;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action {
+  padding: var(--bb-rl-space-50);
+  background-color: transparent;
+  border-radius: var(--bb-rl-radius-md);
+  height: auto;
+  min-width: auto;
+  margin-left: var(--bb-rl-space-100);
+  transition: none;
+  border: 0.5px solid transparent;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action b {
+  display: flex;
+  font-size: 0;
+  line-height: 24px;
+  height: auto;
+  width: auto;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action b:before {
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 24px;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action.medium-editor-button-active {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action.medium-editor-button-active b:before {
+  color: var(--bb-rl-icon-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-bold b:before {
+  content: "\e5be";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-italic b:before {
+  content: "\e5c0";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-unorderedlist b:before {
+  content: "\e2f2";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-orderedlist b:before {
+  content: "\e2f6";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-quote b:before {
+  content: "\e660";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-anchor b:before {
+  content: "\e2e2";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-pre b:before {
+  content: "\e1bc";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  color: var(--bb-rl-text-color);
+  background-color: transparent;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  height: 35px;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input.isNotValid {
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input:focus {
+  color: var(--bb-rl-text-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
+  color: var(--bb-rl-text-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form > a {
+  font-size: 0;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form > a:before {
+  content: "\e182";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 22px;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form > a.medium-editor-toolbar-save:before {
+  content: "\e182";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form > a.medium-editor-toolbar-close:before {
+  content: "\e4f6";
+}
+
+#bp-message-content #message-reply-form-submit-wrapper:has(.medium-editor-toolbar.active) {
+  margin-top: 40px;
 }
 
 .user-item-wrp {
