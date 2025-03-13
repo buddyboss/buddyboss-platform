@@ -2197,6 +2197,7 @@ button[data-balloon] {
 
 .attachments--small [class*="attached-gif-container"] {
   margin-bottom: var(--bb-rl-space-200);
+  margin-bottom: 0;
   background: none !important;
   height: auto !important;
   width: auto !important;
@@ -2212,6 +2213,7 @@ button[data-balloon] {
   object-fit: cover;
   border-radius: var(--bb-rl-radius-md);
   margin: 0 0 0 var(--bb-rl-space-200);
+  margin: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
 }
 
 .attachments--small [class*="attached-gif-container"] .gif-image-remove {

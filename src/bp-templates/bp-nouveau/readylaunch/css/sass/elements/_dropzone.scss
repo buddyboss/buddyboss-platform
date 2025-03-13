@@ -446,7 +446,7 @@
 	}
 
 	[class*="attached-gif-container"] {
-		margin-bottom: var(--bb-rl-space-200);
+		margin-bottom: 0;
 		background: none !important;
 		height: auto !important;
 		width: auto !important;
@@ -460,7 +460,7 @@
 			width: 100px;
 			object-fit: cover;
 			border-radius: var(--bb-rl-radius-md);
-			margin: 0 0 0 var(--bb-rl-space-200);
+			margin: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
 		}
 
 		.gif-image-remove {
