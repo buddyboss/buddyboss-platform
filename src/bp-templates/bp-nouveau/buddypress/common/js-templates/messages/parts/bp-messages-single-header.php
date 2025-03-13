@@ -67,7 +67,7 @@
 			<# } else { #>
 			<# var recipient = _.first(other_recipients) ? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-			<a <# if ( ! ( recipient.is_user_suspended || recipient.is_user_blocked ) ) { #>href="{{{recipient.user_link}}} data-bb-hp-profile="{{recipient.id}}""<# } #>>
+			<a <# if ( ! ( recipient.is_user_suspended || recipient.is_user_blocked ) ) { #>href="{{{recipient.user_link}}}" data-bb-hp-profile="{{recipient.id}}"<# } #>>
 				<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 				<# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
 					{{{recipient.user_presence}}}
