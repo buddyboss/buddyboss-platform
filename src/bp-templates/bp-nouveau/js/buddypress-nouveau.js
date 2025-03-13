@@ -941,29 +941,39 @@ window.bp = window.bp || {};
 			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function () {
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
-				if ( ! popupCardLoaded ) {
-					if ( hideCardTimeout ) {
-						clearTimeout( hideCardTimeout );
-					}
-					bp.Nouveau.profilePopupCard.call( this );
+				
+				// Clear pending hide timeouts
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
 				}
+				
+				// Close open group card
 				if( $( '#group-card' ).hasClass( 'show' ) ) {
 					bp.Nouveau.hidePopupCard();
+					// Reset the loaded flag when switching between different card types
+					popupCardLoaded = false;
 				}
+				
+				// Always attempt to load the profile card
 				bp.Nouveau.profilePopupCard.call( this );
 			} );
 			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function () {
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
-				if ( ! popupCardLoaded ) {
-					if ( hideCardTimeout ) {
-						clearTimeout( hideCardTimeout );
-					}
-					bp.Nouveau.groupPopupCard.call( this );
+				
+				// Clear pending hide timeouts
+				if ( hideCardTimeout ) {
+					clearTimeout( hideCardTimeout );
 				}
+				
+				// Close open profile card
 				if ( $( '#profile-card' ).hasClass( 'show' ) ) {
 					bp.Nouveau.hidePopupCard();
+					// Reset the loaded flag when switching between different card types
+					popupCardLoaded = false;
 				}
+				
+				// Always attempt to load the group card
 				bp.Nouveau.groupPopupCard.call( this );
 			} );
 			$( document ).on( 'mouseleave', '[data-bb-hp-profile], [data-bb-hp-group]', function ( event ) {
