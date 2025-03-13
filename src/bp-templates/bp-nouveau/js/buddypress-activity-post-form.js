@@ -4230,6 +4230,8 @@ window.bp = window.bp || {};
 					// Update multi media options dependent on profile/group view
 					Backbone.trigger('mediaprivacytoolbar');
 				}
+
+				bp.mentions.clearCache();
 			}
 		}
 	);
