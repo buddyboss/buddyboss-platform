@@ -202,7 +202,7 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	$group      = bp_groups_get_activity_group( $activity->item_id );
-	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	/*
 	 * Changed group details are stored in groupmeta, keyed by the activity
