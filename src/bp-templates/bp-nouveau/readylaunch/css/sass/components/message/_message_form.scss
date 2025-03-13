@@ -46,8 +46,9 @@
 			color: var(--bb-body-text-color);
 			content: attr(data-placeholder);
 			position: absolute;
+			top: 0;
 			left: 0;
-			padding: 0 15px;
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 			font-style: normal;
 			opacity: 0.5;
 		}
