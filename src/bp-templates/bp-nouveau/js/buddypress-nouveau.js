@@ -4791,21 +4791,21 @@ window.bp = window.bp || {};
 			} );
 		},
 
-		setPopupPosition: function( $element ) {
+		setPopupPosition: function ( $element ) {
 			var offset = $element.offset();
 			var popupTop, popupLeft;
 			if ( window.innerWidth <= 560 ) {
-				popupTop  = offset.top + $element.outerHeight() + 10;
+				popupTop = offset.top + $element.outerHeight() + 10;
 				popupLeft = 5;
 			} else if ( window.innerWidth <= 800 ) {
-				popupTop  = offset.top + $element.outerHeight() + 10;
+				popupTop = offset.top + $element.outerHeight() + 10;
 				popupLeft = offset.left + $element.outerWidth() - 20;
 			} else {
-				popupTop  = offset.top + $element.outerHeight() + 10;
+				popupTop = offset.top + $element.outerHeight() + 10;
 				popupLeft = offset.left + $element.outerWidth() - 100;
 			}
 			return {
-				top : popupTop - $( window ).scrollTop(),
+				top: popupTop - $( window ).scrollTop(),
 				left: popupLeft - $( window ).scrollLeft(),
 			};
 		},
@@ -4894,25 +4894,15 @@ window.bp = window.bp || {};
 			}
 
 			var $avatar = $( this );
-			var $li     = $avatar.closest( '.activity-item' );
-			var groupId = 0;
-			if ( $li.hasClass( 'groups' ) ) {
-				var liClass = $li.attr( 'class' ).match( /group-\d+/ );
-				groupId     = liClass[0].replace( 'group-', '' );
-			}
+
+			var groupId = $avatar.attr( 'data-bb-hp-group' );
 			if ( ! groupId ) {
 				return;
 			}
-			var cardData      = $li.attr( 'data-bb-profile-card' );
-			var memberId      = cardData.user_id;
-			var currentUserId = 0;
-			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
-				currentUserId = BP_Nouveau.activity.params.user_id;
-			}
-			var currentUser = currentUserId === memberId;
-			var restUrl     = BP_Nouveau.rest_url;
-			var url         = restUrl + '/groups/' + groupId + '/info';
-			var $groupCard  = $( '#group-card' );
+
+			var restUrl = BP_Nouveau.rest_url;
+			var url = restUrl + '/groups/' + groupId + '/info';
+			var $groupCard = $( '#group-card' );
 
 			// Cancel any ongoing request if it's for a different groupId.
 			if ( bp.Nouveau.currentRequestGroupId && bp.Nouveau.currentRequestGroupId !== groupId ) {
@@ -4938,7 +4928,7 @@ window.bp = window.bp || {};
 			// Check cache.
 			if ( bp.Nouveau.cacheGroupCard[groupId] ) {
 				var cachedGroupData = bp.Nouveau.cacheGroupCard[groupId];
-				bp.Nouveau.updateGroupCard( cachedGroupData, currentUser );
+				bp.Nouveau.updateGroupCard( cachedGroupData );
 
 				$groupCard.removeClass( 'loading' );
 				popupCardLoaded = true;
@@ -4980,7 +4970,7 @@ window.bp = window.bp || {};
 					if ( hoverGroupAvatar || hoverGroupCardPopup ) {
 						if ( hoverAvatar || hoverCardPopup ) {
 							$groupCard.removeClass( 'loading' );
-							bp.Nouveau.updateGroupCard( data, currentUser );
+							bp.Nouveau.updateGroupCard( data );
 							popupCardLoaded = true;
 						} else {
 							bp.Nouveau.hidePopupCard();
