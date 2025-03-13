@@ -4910,7 +4910,7 @@ window.bp = window.bp || {};
 			}
 
 			// Always update position
-			var position = bp.Nouveau.setPopupPosition( $groupCard );
+			var position = bp.Nouveau.setPopupPosition( $avatar );
 			$groupCard.css( {
 				top: position.top + 'px',
 				left: position.left + 'px'
