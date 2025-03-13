@@ -1227,6 +1227,7 @@
   border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
   margin: 0;
   padding: 12px var(--bb-rl-space-300);
+  position: relative;
 }
 
 #message-form-submit-wrapper .post-elements-buttons-item,
@@ -1323,6 +1324,88 @@
   right: 100%;
   left: inherit;
   margin-right: -25px;
+}
+
+#bp-message-content .medium-editor-toolbar {
+  top: -40px;
+  left: 15px;
+  background-color: transparent;
+  visibility: hidden;
+  opacity: 0.6;
+}
+
+#bp-message-content .medium-editor-toolbar.active {
+  visibility: visible;
+}
+
+#bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
+  opacity: 1;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action {
+  padding: var(--bb-rl-space-50);
+  background-color: transparent;
+  border-radius: var(--bb-rl-radius-md);
+  height: auto;
+  min-width: auto;
+  margin-right: var(--bb-rl-space-100);
+  transition: none;
+  border: 0.5px solid transparent;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action b {
+  display: flex;
+  font-size: 0;
+  line-height: 24px;
+  height: auto;
+  width: auto;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action b:before {
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 24px;
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action.medium-editor-button-active {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action.medium-editor-button-active b:before {
+  color: var(--bb-rl-icon-color);
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-bold b:before {
+  content: "\e5be";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-italic b:before {
+  content: "\e5c0";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-unorderedlist b:before {
+  content: "\e2f2";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-orderedlist b:before {
+  content: "\e2f6";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-quote b:before {
+  content: "\e660";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-anchor b:before {
+  content: "\e2e2";
+}
+
+#bp-message-content .medium-editor-toolbar .medium-editor-action-pre b:before {
+  content: "\e1bc";
+}
+
+#bp-message-content #message-reply-form-submit-wrapper:has(.medium-editor-toolbar.active) {
+  margin-top: 40px;
 }
 
 .user-item-wrp {

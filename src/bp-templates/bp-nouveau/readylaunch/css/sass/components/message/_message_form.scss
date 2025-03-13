@@ -128,6 +128,7 @@
 	border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 	margin: 0;
 	padding: 12px var(--bb-rl-space-300);
+	position: relative;
 
 	.post-elements-buttons-item {
 		display: flex;
@@ -220,5 +221,88 @@
 		right: 100%;
 		left: inherit;
 		margin-right: -25px;
+	}
+}
+
+#bp-message-content {
+
+	.medium-editor-toolbar {
+		top: -40px;
+		left: 15px;
+		background-color: transparent;
+		visibility: hidden;
+		opacity: 0.6;
+		
+		&.active {
+			visibility: visible;
+		}
+
+		&.medium-editor-toolbar-active {
+			opacity: 1;
+		}
+
+		.medium-editor-action {
+			padding: var(--bb-rl-space-50);
+			background-color: transparent;
+			border-radius: var(--bb-rl-radius-md);
+			height: auto;
+			min-width: auto;
+			margin-right: var(--bb-rl-space-100);
+			transition: none;
+			border: 0.5px solid transparent;
+	
+			b {
+				display: flex;
+				font-size: 0;
+				line-height: 24px;
+				height: auto;
+				width: auto;
+	
+				&:before {
+					color: var(--bb-rl-icon-secondary-color);
+					font-family: bb-icons-rl;
+					font-size: 24px;
+				}
+			}
+	
+			&.medium-editor-button-active {
+				background-color: var(--bb-rl-background-secondary-hover-color);
+				border-color: var(--bb-rl-border-secondary-color);
+	
+				b:before {
+					color: var(--bb-rl-icon-color);
+				}
+			}
+		}
+	
+		.medium-editor-action-bold b:before {
+			content: "\e5be";
+		}
+	
+		.medium-editor-action-italic b:before {
+			content: "\e5c0";
+		}
+	
+		.medium-editor-action-unorderedlist b:before {
+			content: "\e2f2";
+		}
+	
+		.medium-editor-action-orderedlist b:before {
+			content: "\e2f6";
+		}
+	
+		.medium-editor-action-quote b:before {
+			content: "\e660";
+		}
+	
+		.medium-editor-action-anchor b:before {
+			content: "\e2e2";
+		}
+	
+		.medium-editor-action-pre b:before {
+			content: "\e1bc";
+		}
+	#message-reply-form-submit-wrapper:has(.medium-editor-toolbar.active) {
+		margin-top: 40px;
 	}
 }
