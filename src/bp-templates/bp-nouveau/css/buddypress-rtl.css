@@ -5374,6 +5374,12 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   margin-left: 10px;
 }
 
+.activity-group-avatar a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
 .activity-group-avatar img {
   position: absolute;
   top: 0;
@@ -13678,6 +13684,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 #bp-message-thread-list .bp-message-content-wrap + .bb-activity-video-wrap,
 #bp-message-thread-list .bp-message-content-wrap + .bb-activity-media-wrap {
   margin-top: 8px;
+}
+
+#bp-message-thread-list a.bp-user-avatar {
+  display: inline-block;
 }
 
 #bp-message-thread-list img.avatar {
@@ -27852,7 +27862,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-activity-video-elem .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-video-thumb .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before,
 .bb-media-section .video-js .vjs-control-bar .vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 @media screen and (max-width: 768px) {

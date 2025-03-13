@@ -13686,6 +13686,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   margin-top: 8px;
 }
 
+#bp-message-thread-list a.bp-user-avatar {
+  display: inline-block;
+}
+
 #bp-message-thread-list img.avatar {
   float: left;
   margin: 0 10px 0 0;
