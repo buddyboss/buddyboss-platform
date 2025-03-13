@@ -413,6 +413,39 @@
 			transform: translate(-50%, -50%);
 		}
 	}
+
+	.activity-attached-gif-container {
+		display: inline-block;
+		height: auto;
+		width: auto;
+		max-width: 360px;
+		max-height: 360px;
+		background-repeat: no-repeat;
+		position: relative;
+
+		.gif-image-container {
+			margin: 15px 0 0;
+		}
+
+		.gif-player {
+			display: flex;
+			align-items: center;
+			justify-self: center;
+			min-width: 65px;
+			min-height: 65px;
+			position: relative;
+			max-width: 480px;
+
+			video {
+				height: auto;
+				max-width: 360px;
+				max-height: 360px;
+				width: 100%;
+				border-radius: var(--bb-rl-radius-lg);
+				background-color: var(--bb-rl-background-color);
+			}
+		}
+    }
 }
 
 #bp-message-load-more {
