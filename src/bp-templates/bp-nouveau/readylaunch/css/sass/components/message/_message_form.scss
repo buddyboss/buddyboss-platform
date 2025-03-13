@@ -162,10 +162,6 @@
 	}
 }
 
-#message-reply-new-submit {
-	margin-left: auto;
-}
-
 #message-new-submit,
 #message-reply-new-submit {
 	display: flex;
@@ -177,6 +173,7 @@
 	opacity: 0.5;
 	pointer-events: none;
 	position: relative;
+	margin-left: auto;
 
 	&:before {
 		display: block;
@@ -197,6 +194,7 @@
 	min-width: auto;
 	margin: 0;
 	padding: 0;
+	cursor: pointer;
 	-webkit-tap-highlight-color: transparent;
 }
 

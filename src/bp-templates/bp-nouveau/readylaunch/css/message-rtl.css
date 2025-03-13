@@ -1338,10 +1338,6 @@
   margin: 0 -6px 2px 8px;
 }
 
-#message-reply-new-submit {
-  margin-right: auto;
-}
-
 #message-new-submit,
 #message-reply-new-submit {
   display: flex;
@@ -1353,6 +1349,7 @@
   opacity: 0.5;
   pointer-events: none;
   position: relative;
+  margin-right: auto;
 }
 
 #message-new-submit:before,
@@ -1374,6 +1371,7 @@
   min-width: auto;
   margin: 0;
   padding: 0;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
