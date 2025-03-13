@@ -879,38 +879,13 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen, #profile-card' ).on( 
-				'click blur mouseover mouseout',
-				'[data-bp-btn-action], .awaiting_response_friend',
-				function( event ) {
-					// Set event.data to the current instance (bp.Nouveau) to maintain context for event handlers
-					// ensureing handlers like buttonAction, buttonRevert etc. have access to the bp.Nouveau methods and properties
-					event.data = this;
-			
-					switch( event.type ) {
-						case 'click':
-							this.buttonAction( event );
-							break;
-						case 'blur':
-							this.buttonRevert( event );
-							break;
-						case 'mouseover':
-							if ( $( event.target ).hasClass( 'awaiting_response_friend' ) ) {
-								this.awaitingButtonHover( event );
-							} else {
-								this.buttonHover( event );
-							}
-							break;
-						case 'mouseout':
-							if ( $( event.target ).hasClass( 'awaiting_response_friend' ) ) {
-								this.awaitingButtonHoverout( event );
-							} else {
-								this.buttonHoverout( event );
-							}
-							break;
-					}
-				}.bind( this )
-			);
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .bp-messages-content' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list, #buddypress .messages-screen' ).on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
+
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$( document ).on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$( document ).on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
@@ -1055,6 +1030,15 @@ window.bp = window.bp || {};
 			} );
 
 			$( window ).on( 'scroll', this.hidePopupCard );
+		},
+
+		bindPopoverEvents: function() {
+			$( document ).on( 'click', '#profile-card [data-bp-btn-action]', this, this.buttonAction );
+			$( document ).on( 'blur', '#profile-card [data-bp-btn-action]', this, this.buttonRevert );
+			$( document ).on( 'mouseover', '#profile-card [data-bp-btn-action]', this, this.buttonHover );
+			$( document ).on( 'mouseout', '#profile-card [data-bp-btn-action]', this, this.buttonHoverout );
+			$( document ).on( 'mouseover', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHover );
+			$( document ).on( 'mouseout', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHoverout );
 		},
 
 		/**
@@ -4682,6 +4666,8 @@ window.bp = window.bp || {};
 			if ( $messageButton.length && data.can_send_message ) {
 				$messageButton.attr( 'href', data.message_url );
 			}
+
+			bp.Nouveau.bindPopoverEvents();
 		},
 
 		/**
