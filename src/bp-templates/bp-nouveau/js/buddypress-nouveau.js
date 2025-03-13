@@ -947,6 +947,10 @@ window.bp = window.bp || {};
 					}
 					bp.Nouveau.profilePopupCard.call( this );
 				}
+				if( $( '#group-card' ).hasClass( 'show' ) ) {
+					bp.Nouveau.hidePopupCard();
+				}
+				bp.Nouveau.profilePopupCard.call( this );
 			} );
 			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function () {
 				hoverAvatar = true;
@@ -957,6 +961,10 @@ window.bp = window.bp || {};
 					}
 					bp.Nouveau.groupPopupCard.call( this );
 				}
+				if ( $( '#profile-card' ).hasClass( 'show' ) ) {
+					bp.Nouveau.hidePopupCard();
+				}
+				bp.Nouveau.groupPopupCard.call( this );
 			} );
 			$( document ).on( 'mouseleave', '[data-bb-hp-profile], [data-bb-hp-group]', function ( event ) {
 				var relatedTarget = event.relatedTarget;
@@ -970,28 +978,10 @@ window.bp = window.bp || {};
 					hoverGroupAvatar = false;
 				}
 
-				if ( $( relatedTarget ).closest( '[data-bb-hp-profile], [data-bb-hp-group]' ).length > 0 ) {
-					var $newAvatar = $( relatedTarget );
-					// Hide the current popup
-					if ( $( '#profile-card' ).hasClass( 'show' ) ) {
-						bp.Nouveau.hidePopupCard();
-					} else if ( $( '#group-card' ).hasClass( 'show' ) ) {
-						bp.Nouveau.hidePopupCard();
-					}
-
-					// Check which avatar is hovered
-					if ( $newAvatar.find("img[class^='user-'][class$='-avatar']").length > 0 || $newAvatar.is( '[data-bb-hp-profile]' ) ) {
-						// Show profile popup for the new avatar
-						bp.Nouveau.profilePopupCard.call( '[data-bb-hp-group]' );
-					} else if ( $newAvatar.find("img[class^='group-'][class$='-avatar']").length > 0 || $newAvatar.is( '[data-bb-hp-group]' ) ) {
-						// Show group popup for the new avatar
-						bp.Nouveau.groupPopupCard.call( '[data-bb-hp-profile]' );
-					}
-				} else {
-					hoverProfileAvatar = false;
-					hoverGroupAvatar = false;
+				// Only hide popup if we're not moving to another hoverable element or popup card
+				if ( $( relatedTarget ).closest( '[data-bb-hp-profile], [data-bb-hp-group], #profile-card, #group-card' ).length === 0 ) {
 					hoverAvatar = false;
-					if ( ! hoverCardPopup ) {
+					if ( !hoverCardPopup ) {
 						bp.Nouveau.checkHidePopupCard();
 					}
 				}
