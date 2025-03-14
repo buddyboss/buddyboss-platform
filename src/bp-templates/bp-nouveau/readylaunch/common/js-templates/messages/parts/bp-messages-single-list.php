@@ -161,14 +161,14 @@
 				<# if ( data.document ) { #>
 					<div class="bb-activity-media-wrap bb-media-length-{{data.document.length}}">
 						<# for ( i in data.document ) { #>
-							<div class="bb-activity-media-elem document-activity " data-id="">
+							<div class="bb-rl-activity-media-elem bb-rl-document-activity " data-id="">
 								<# if ( data.document[i].id ) { #>
-									<div class="document-description-wrap">
-										<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
+									<div class="bb-rl-document-description-wrap">
+										<a href="{{data.document[i].url}}" class="bb-rl-entry-img bb-rl-open-document-theatre" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
 											<i class="{{data.document[i].svg_icon}}" ></i>
 										</a>
 										<a href="{{data.document[i].url}}"
-											class="document-detail-wrap bb-open-document-theatre"
+											class="bb-rl-document-detail-wrap bb-rl-document-detail-wrap-description-popup"
 											data-id="{{data.document[i].id}}"
 											data-activity-id=""
 											data-icon-class={{data.document[i].svg_icon}}"
@@ -184,25 +184,24 @@
 											data-document-title="{{data.document[i].document_title}}"
 											data-video-preview="{{data.document[i].video}}"
 											data-mirror-text="{{data.document[i].mirror_text}}">
-											<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
-											<span class="document-description">{{data.document[i].size}}</span>
-											{{{data.document[i].extension_description}}}
-											<span class="document-helper-text"> <span> - </span> <span class="document-helper-text-inner">{{data.document[i].download_text}}</span></span>
+											<span class="bb-rl-document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
+											<span class="bb-rl-document-description">{{data.document[i].size}}</span>
+											<span class="bb-rl-document-extension-description">{{{data.document[i].extension_description}}}</span>
+											<span class="bb-rl-document-helper-text"> <span> - </span> <span class="bb-rl-document-helper-text-inner">{{data.document[i].download_text}}</span></span>
 										</a>
 									</div>
-									<div class="document-action-wrap">
+									<div class="bb-rl-document-action-wrap">
 										<a href="#" class="document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="{{data.document[i].collapse}}" data-balloon="{{data.document[i].expand}}"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
-										<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
-											<i class="bb-icon-l bb-icon-download"></i>
+										<a href="{{data.document[i].url}}" class="bb-rl-document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
+											<i class="bb-icons-rl-arrow-circle-down"></i>
 										</a>
 
-										<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
-											<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+										<a href="#" target="_blank" class="bb-rl-document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
+											<i class="bb-icons-rl-dots-three"></i>
 										</a>
-										<div class="document-action_list bb_more_dropdown">
-											<?php bp_get_template_part( 'common/more-options-view' ); ?>
+										<div class="bb_rl_more_dropdown">
 											<ul>
-												<li class="copy_download_file_url">
+												<li class="bb_rl_copy_download_file_url bb-rl-document-action-class">
 													<a href="{{data.document[i].url}}">{{data.document[i].copy_download_link}}</a>
 												</li>
 											</ul>

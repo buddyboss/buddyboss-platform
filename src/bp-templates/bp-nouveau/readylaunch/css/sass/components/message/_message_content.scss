@@ -365,6 +365,15 @@
 
 		.bb-activity-media-wrap {
 			margin: var(--bb-rl-space-100) 0;
+
+			&:has(.bb-rl-document-activity) {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.bb-rl-document-activity {
+				max-width: 495px;
+			}
 		}
 
 		.bb-activity-media-elem img {

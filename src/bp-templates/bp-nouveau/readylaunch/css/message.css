@@ -1042,6 +1042,15 @@
   margin: var(--bb-rl-space-100) 0;
 }
 
+#bp-message-thread-list > li .bb-activity-media-wrap:has(.bb-rl-document-activity) {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#bp-message-thread-list > li .bb-activity-media-wrap .bb-rl-document-activity {
+  max-width: 495px;
+}
+
 #bp-message-thread-list > li .bb-activity-media-elem img {
   border-radius: var(--bb-rl-radius-lg);
 }
