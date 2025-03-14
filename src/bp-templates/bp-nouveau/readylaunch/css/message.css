@@ -1054,7 +1054,7 @@
   gap: var(--bb-rl-space-100);
 }
 
-#bp-message-thread-list .bb-activity-video-elem img,
+#bp-message-thread-list .bb-rl-activity-video-elem img,
 #bp-message-thread-list .bb-activity-media-elem img {
   height: 152px;
   width: 152px;
@@ -1062,11 +1062,11 @@
   border-radius: var(--bb-rl-radius-lg);
 }
 
-#bp-message-thread-list .bb-video-cover-wrap {
+#bp-message-thread-list .bb-rl-video-cover-wrap {
   position: relative;
 }
 
-#bp-message-thread-list .bb-video-cover-wrap:before {
+#bp-message-thread-list .bb-rl-video-cover-wrap:before {
   content: "\e3d0";
   font-family: bb-icons-rl;
   color: var(--bb-rl-icon-tertiary-color);
