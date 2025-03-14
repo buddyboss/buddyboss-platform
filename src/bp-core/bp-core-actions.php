@@ -923,7 +923,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 	// Replace @mention text with userlinks.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . $user_id . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $post_type_comment->comment_content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
 			$pattern                            = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';

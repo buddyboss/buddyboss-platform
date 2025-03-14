@@ -4191,8 +4191,8 @@ function bp_get_allowedtags() {
 				'aria-label'         => array(),
 				'class'              => array(),
 				'data-bp-tooltip'    => array(),
-				'data-bb-hp-profile' => array(),
-				'data-bb-hp-group'   => array(),
+				'data-bb-hp-profile' => array(), // used to show the profie hover popup.
+				'data-bb-hp-group'   => array(), // used to show the group hover popup.
 				'id'                 => array(),
 				'rel'                => array(),
 			),
