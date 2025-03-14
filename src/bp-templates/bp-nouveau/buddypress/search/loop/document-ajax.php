@@ -61,7 +61,7 @@ if ( $attachment_id && $bp_doc_activity_id ) {
 				<div class="media-folder_modified">
 					<div class="media-folder_details__bottom">
 						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>">
+							<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_user_id() ); ?>">
 								<?php echo esc_html( bp_get_document_author() ); ?>
 							</a>
 						</span>

@@ -4188,11 +4188,13 @@ function bp_get_allowedtags() {
 		$allowedtags,
 		array(
 			'a'       => array(
-				'aria-label'      => array(),
-				'class'           => array(),
-				'data-bp-tooltip' => array(),
-				'id'              => array(),
-				'rel'             => array(),
+				'aria-label'         => array(),
+				'class'              => array(),
+				'data-bp-tooltip'    => array(),
+				'data-bb-hp-profile' => array(), // used to show the profie hover popup.
+				'data-bb-hp-group'   => array(), // used to show the group hover popup.
+				'id'                 => array(),
+				'rel'                => array(),
 			),
 			'img'     => array(
 				'src'    => array(),
