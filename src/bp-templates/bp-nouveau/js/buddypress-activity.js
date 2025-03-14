@@ -128,7 +128,19 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
-			$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			if ( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) { 
+				$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
+			} else {
+				// For page request 1, call openEditActivityPopup after page is completely loaded.
+				$( window ).on( 'load', function() {
+					setTimeout(
+						function() {
+							bp.Nouveau.Activity.openEditActivityPopup();
+						}.bind( this ),
+						0
+					);
+				});
+			}
 
 			// Activity comments effect.
 			$( '#activity-stream' ).on( 'click', '.acomments-view-more', this.showActivity );
@@ -706,7 +718,7 @@ window.bp = window.bp || {};
 		openEditActivityPopup: function() {
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
 				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
-				if ( activity_item.length ) {
+				if ( activity_item.length && activity_item.children( '.bb-activity-more-options-wrap' ).find( '.button.edit-activity' ).length ) {
 					var activity_data        = activity_item.data( 'bp-activity' );
 					var activity_URL_preview = ( activity_item.data( 'link-url' ) ) !== '' ? activity_item.data( 'link-url' ) : null;
 
@@ -1835,21 +1847,20 @@ window.bp = window.bp || {};
 							response = JSON.parse( response );
 						}
 						if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.feedback ) {
-							var activity_list   = target.closest( 'ul.activity-list' );
-							var activity_stream;
-							if ( isInsideModal ) {
-								activity_stream = target.closest( '.buddypress-wrap' ).find( '#activity-stream' );
-							} else {
-								activity_stream = target.closest( '#activity-stream' );
-							}
-
-
+							var activity_list         = target.closest( 'ul.activity-list' );
+							var activity_stream       = target.closest( '.buddypress-wrap:not(.bb-internal-model)' ).find( '#activity-stream' );
+							var isInsideTheatreModal  = target.closest( '.bb-media-model-wrapper' ).length > 0;
+							var $mainActivityList     = activity_stream.children( 'ul.activity-list' );
+							var $pageActivityListItem = $mainActivityList.children( '[data-bp-activity-id=' + activity_id + ']' );
+							var targetClassSelector   = '.' + target.attr('class').split(' ').join('.');
+							var $mainTargetElement    = $pageActivityListItem.find( targetClassSelector );
 							if ( response.success ) {
 
 								var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
 								var update_pinned_icon = false;
 								var is_group_activity  = false;
 								var activity_group_id  = '';
+								
 
 								if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
 									is_group_activity = true;
@@ -1865,7 +1876,7 @@ window.bp = window.bp || {};
 									! is_group_activity
 								) {
 									update_pinned_icon = true;
-								} else if (  activity_stream.hasClass( 'single-group' ) ) {
+								} else if ( activity_stream.hasClass( 'single-group' ) ) {
 									update_pinned_icon = true;
 								}
 
@@ -1894,6 +1905,21 @@ window.bp = window.bp || {};
 										}
 									});
 
+									// Menu sync for other activities in main activity stream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainActivityList.length > 0 ) {
+										
+										$mainActivityList.find( update_pin_actions ).each( function() {
+											var action = $( this ).find( '.unpin-activity' );
+											action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
+
+											if ( is_group_activity ) {
+												action.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+											} else {
+												action.find('span').html( BP_Nouveau.activity.strings.pinPost );
+											}
+										});
+									}
+
 									if ( update_pinned_icon ) {
 										target.closest( 'li.activity-item' ).addClass( 'bb-pinned' );
 									}
@@ -1906,6 +1932,18 @@ window.bp = window.bp || {};
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.unpinPost );
 									}
+
+									// Menu sync for same activity in mainstream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainTargetElement.length > 0 ) {
+										$mainTargetElement.addClass( 'unpin-activity' );
+										$mainTargetElement.removeClass( 'pin-activity' );
+
+										if ( $mainTargetElement.closest( 'li.activity-item' ).hasClass('groups') ) {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.unpinGroupPost );
+										} else {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.unpinPost );
+										}
+									}
 								} else if ( 'unpin' === pin_action ) {
 									target.closest( 'li.activity-item' ).removeClass( 'bb-pinned' );
 									target.addClass( 'pin-activity' );
@@ -1915,11 +1953,31 @@ window.bp = window.bp || {};
 									} else {
 										target.find('span').html( BP_Nouveau.activity.strings.pinPost );
 									}
+
+									// Menu sync for same activity in mainstream.
+									if ( ( isInsideModal || isInsideTheatreModal ) && $mainTargetElement.length > 0 ) {
+										$mainTargetElement.addClass( 'pin-activity' );
+										$mainTargetElement.removeClass( 'unpin-activity' );
+
+										if ( $mainTargetElement.closest( 'li.activity-item' ).hasClass('groups') ) {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.pinGroupPost );
+										} else {
+											$mainTargetElement.find('span').html( BP_Nouveau.activity.strings.pinPost );
+										}
+									}
 								}
 
 								if ( 'all' === scope && update_pinned_icon ) {
-									bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
-									bp.Nouveau.refreshActivities();
+
+									// Activity view more comments modal.
+									if ( isInsideModal || isInsideTheatreModal ) {
+										if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates ) {
+											bp.Nouveau.Activity.activityPinHasUpdates = true;
+										}
+									} else {
+										bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+										bp.Nouveau.refreshActivities();
+									}
 								}
 							}
 
@@ -2311,7 +2369,7 @@ window.bp = window.bp || {};
 				dropzone_container = target.closest( '.bp-ac-form-container' ).find( '#ac-reply-post-media-uploader-' + key );
 
 			// Check if target is inside #activity-modal
-			var isInsideModal = target.closest( '#activity-modal' ).length > 0;
+			var isInsideModal  = target.closest( '#activity-modal' ).length > 0;
 			var hasParentModal = isInsideModal ? '#activity-modal ' : '';
 
 			event.preventDefault();
@@ -4009,42 +4067,54 @@ window.bp = window.bp || {};
 			var $activityListItem = currentTargetModal.find( 'ul.activity-list > li' ),
 				activityListItemId = $activityListItem.data( 'bp-activity-id' ),
 				activityId = activityID !== undefined ? activityID : activityListItemId,
-				$pageActivitylistItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
+				$pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
-			if ( $pageActivitylistItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
+			// If pin post udpate then refresh list.	
+			if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates && bp.Nouveau.Activity.activityPinHasUpdates ) {
+				if ( $pageActivityListItem.length > 0 ) {
 
-				$pageActivitylistItem.addClass( 'activity-sync' );
+					// Mock loader meanwhile the list refreshes.
+					$pageActivityListItem.addClass( 'activity-sync' );
+				}
+				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+				bp.Nouveau.refreshActivities();
+			} else {
+				if ( $pageActivityListItem.length > 0 && bp.Nouveau.Activity.activityHasUpdates ) {
 
-				var data = {
-					action: 'activity_sync_from_modal',
-					activity_id: activityId,
-				};
+					$pageActivityListItem.addClass( 'activity-sync' );
 
-				bp.Nouveau.ajax( data, 'activity' ).done(
-					function ( response ) {
-						if ( false === response.success ) {
-							return;
-						} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
-							// success
-							$pageActivitylistItem.replaceWith( $.parseHTML( response.data.activity ) );
-							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
-							jQuery( window ).scroll();
+					var data = {
+						action: 'activity_sync_from_modal',
+						activity_id: activityId,
+					};
 
-							// Refresh activities after updating pin/unpin post status.
-							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
-								bp.Nouveau.refreshActivities();
+					bp.Nouveau.ajax( data, 'activity' ).done(
+						function ( response ) {
+							if ( false === response.success ) {
+								return;
+							} else if ( 'undefined' !== typeof response.data && 'undefined' !== typeof response.data.activity ) {
+								// success
+								$pageActivityListItem.replaceWith( $.parseHTML( response.data.activity ) );
+								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+								jQuery( window ).scroll();
+
+								// Refresh activities after updating pin/unpin post status.
+								if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
+									bp.Nouveau.refreshActivities();
+								}
 							}
 						}
-					}
-				).fail(
-					function ( $xhr ) {
-						console.error('Request failed:', $xhr);
-					}
-				);
+					).fail(
+						function ( $xhr ) {
+							console.error('Request failed:', $xhr);
+						}
+					);
+				}
 			}
 
-			bp.Nouveau.Activity.activityHasUpdates = false;
-			bp.Nouveau.Activity.currentActivityId = null;
+			bp.Nouveau.Activity.activityHasUpdates    = false;
+			bp.Nouveau.Activity.activityPinHasUpdates = false;
+			bp.Nouveau.Activity.currentActivityId     = null;
 		},
 
 		discardGifEmojiPicker: function () {
