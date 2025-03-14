@@ -3884,6 +3884,20 @@ window.bp = window.bp || {};
 								};
 							}
 						},
+						templateSelection: function( data ) {
+							if ( !data.id ) {
+								return data.text;
+							}
+							
+							var $selection = $(
+								'<div class="bb-rl-select2-selection-user">' +
+									'<img class="select2-user-avatar" src="' + data.image + '"/>' +
+									'<span class="select2-selection-user__name">' + data.text + '</span>' +
+								'</div>'
+							);
+							
+							return $selection;
+						},
 						templateResult: function ( data ) {
 							return ( data.html ? data.html : data.text );
 						},

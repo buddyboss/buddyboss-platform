@@ -1716,9 +1716,6 @@
   background-color: var(--bb-rl-background-color) !important;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-full);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  color: var(--bb-rl-text-color);
   display: flex;
   align-items: center;
   flex-flow: row-reverse;
@@ -1726,6 +1723,25 @@
   gap: var(--bb-rl-space-50);
   margin-right: var(--bb-rl-space-100);
   margin-top: 0;
+}
+
+#send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice .bb-rl-select2-selection-user {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+#send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-user-avatar {
+  height: 20px;
+  width: 20px;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+#send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection-user__name {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
 }
 
 #send_message_form .select2-container--default .select2-selection--multiple {
