@@ -4701,7 +4701,7 @@ window.bp = window.bp || {};
 		 * Profile popup card for avatars.
 		 */
 		profilePopupCard: function () {
-			$( '#buddypress #profile-card' ).remove();
+			$( '#buddypress #profile-card, #bbpress-forums #profile-card' ).remove();
 			var profileCardTemplate = bp.template( 'profile-card-popup' );
 			var renderedProfileCard = profileCardTemplate();
 			if ( $( '#buddypress' ).length ) {
@@ -4923,7 +4923,7 @@ window.bp = window.bp || {};
 		 * Group popup card for avatars.
 		 */
 		groupPopupCard: function () {
-			$( '#buddypress #group-card' ).remove();
+			$( '#buddypress #group-card, #bbpress-forums #group-card' ).remove();
 			var groupCardTemplate = bp.template( 'group-card-popup' );
 			var renderedGroupCard = groupCardTemplate();
 			if ( $( '#buddypress' ).length ) {
