@@ -434,14 +434,47 @@
 			height: auto;
 			overflow: initial;
 			padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
+			gap: var(--bb-rl-space-100);
 
 			.dz-default.dz-message {
 				display: flex;
 			}
 		}
 
+		.dz-button:before {
+			margin-bottom: 0;
+		}
+
 		.dz-preview {
 			margin: 0;
+			width: 80px;
+			height: 72px;
+		}
+
+		&.dz-started .dz-default.dz-message {
+			max-width: 80px;
+			min-height: 72px;
+			max-height: 72px;
+		}
+
+		.dz-preview .dz-progress-ring-wrap {
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.dz-filename,
+		.dz-details,
+		.dz-size,
+		.dz-global-progress {
+			display: none;
+		}
+
+		.dz-remove {
+			z-index: 11;
+		}
+
+		&.document-dropzone .dz-preview.dz-complete:not(.dz-error) .dz-details {
+			top: 12px;
 		}
 	}
 

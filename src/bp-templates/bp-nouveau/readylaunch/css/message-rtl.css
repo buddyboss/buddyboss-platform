@@ -1042,6 +1042,15 @@
   margin: var(--bb-rl-space-100) 0;
 }
 
+#bp-message-thread-list > li .bb-activity-media-wrap:has(.bb-rl-document-activity) {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#bp-message-thread-list > li .bb-activity-media-wrap .bb-rl-document-activity {
+  max-width: 495px;
+}
+
 #bp-message-thread-list > li .bb-activity-media-elem img {
   border-radius: var(--bb-rl-radius-lg);
 }
@@ -1054,7 +1063,7 @@
   gap: var(--bb-rl-space-100);
 }
 
-#bp-message-thread-list .bb-activity-video-elem img,
+#bp-message-thread-list .bb-rl-activity-video-elem img,
 #bp-message-thread-list .bb-activity-media-elem img {
   height: 152px;
   width: 152px;
@@ -1062,11 +1071,11 @@
   border-radius: var(--bb-rl-radius-lg);
 }
 
-#bp-message-thread-list .bb-video-cover-wrap {
+#bp-message-thread-list .bb-rl-video-cover-wrap {
   position: relative;
 }
 
-#bp-message-thread-list .bb-video-cover-wrap:before {
+#bp-message-thread-list .bb-rl-video-cover-wrap:before {
   content: "\e3d0";
   font-family: bb-icons-rl;
   color: var(--bb-rl-icon-tertiary-color);
@@ -1306,7 +1315,7 @@
 #message-form-submit-wrapper .post-elements-buttons-item,
 #message-reply-form-submit-wrapper .post-elements-buttons-item {
   display: flex;
-  margin-left: var(--bb-rl-space-200);
+  margin-left: var(--bb-rl-space-100);
 }
 
 #message-form-submit-wrapper .post-elements-buttons-item .toolbar-button,
@@ -1716,9 +1725,6 @@
   background-color: var(--bb-rl-background-color) !important;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-full);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  color: var(--bb-rl-text-color);
   display: flex;
   align-items: center;
   flex-flow: row-reverse;
@@ -1726,6 +1732,25 @@
   gap: var(--bb-rl-space-50);
   margin-left: var(--bb-rl-space-100);
   margin-top: 0;
+}
+
+#send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice .bb-rl-select2-selection-user {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+#send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-user-avatar {
+  height: 20px;
+  width: 20px;
+  object-fit: cover;
+  border-radius: var(--bb-rl-radius-full);
+}
+
+#send_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection-user__name {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
 }
 
 #send_message_form .select2-container--default .select2-selection--multiple {

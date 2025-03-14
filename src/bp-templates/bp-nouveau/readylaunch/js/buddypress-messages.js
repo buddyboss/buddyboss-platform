@@ -2495,9 +2495,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
 					function() {
-						if ( bp.Nouveau.dropZoneGlobalProgress ) {
-							bp.Nouveau.dropZoneGlobalProgress( this );
-						}
 						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
@@ -2924,7 +2921,7 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'triggerMediaInProgress' );
 
 						if ( bp.Nouveau.getVideoThumb ) {
-							bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+							bp.Nouveau.getVideoThumb( file, '.dz-image' );
 						}
 
 						var tool_box = self.$el.parents( '#bp-message-content' );

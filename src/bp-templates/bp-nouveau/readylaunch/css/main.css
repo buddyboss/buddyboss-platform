@@ -3107,14 +3107,47 @@ button[data-balloon] {
   height: auto;
   overflow: initial;
   padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
+  gap: var(--bb-rl-space-100);
 }
 
 .attachments--small div.dropzone.dz-started .dz-default.dz-message {
   display: flex;
 }
 
+.attachments--small div.dropzone .dz-button:before {
+  margin-bottom: 0;
+}
+
 .attachments--small div.dropzone .dz-preview {
   margin: 0;
+  width: 80px;
+  height: 72px;
+}
+
+.attachments--small div.dropzone.dz-started .dz-default.dz-message {
+  max-width: 80px;
+  min-height: 72px;
+  max-height: 72px;
+}
+
+.attachments--small div.dropzone .dz-preview .dz-progress-ring-wrap {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.attachments--small div.dropzone .dz-filename,
+.attachments--small div.dropzone .dz-details,
+.attachments--small div.dropzone .dz-size,
+.attachments--small div.dropzone .dz-global-progress {
+  display: none;
+}
+
+.attachments--small div.dropzone .dz-remove {
+  z-index: 11;
+}
+
+.attachments--small div.dropzone.document-dropzone .dz-preview.dz-complete:not(.dz-error) .dz-details {
+  top: 12px;
 }
 
 .attachments--small [class*="attached-gif-container"] {

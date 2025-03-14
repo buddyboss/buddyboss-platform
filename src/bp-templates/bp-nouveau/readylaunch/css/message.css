@@ -1315,7 +1315,7 @@
 #message-form-submit-wrapper .post-elements-buttons-item,
 #message-reply-form-submit-wrapper .post-elements-buttons-item {
   display: flex;
-  margin-right: var(--bb-rl-space-200);
+  margin-right: var(--bb-rl-space-100);
 }
 
 #message-form-submit-wrapper .post-elements-buttons-item .toolbar-button,
