@@ -309,6 +309,9 @@ add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
 add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 2 );
 
+add_filter( 'posts_where', 'bbp_modify_topics_where_for_sticky', 10, 2 );
+add_filter( 'posts_orderby', 'bbp_modify_topics_orderby_for_sticky', 10, 2 );
+
 /** Deprecated ****************************************************************/
 
 /**
@@ -668,4 +671,115 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
 	}
 
 	return $permalink;
+}
+
+/**
+ * Modify the WHERE clause of the topics query to handle sticky topics.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $where    The WHERE clause of the query.
+ * @param WP_Query $wp_query The WP_Query instance.
+ *
+ * @return string Modified WHERE clause.
+ */
+function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
+	global $wpdb;
+
+	// Only modify if it's a bbp_topic query with 'show_stickies' set to true.
+	if (
+		! isset( $wp_query->query_vars['post_type'] ) ||
+		bbp_get_forum_post_type() !== $wp_query->query_vars['post_type'] ||
+		empty( $wp_query->query_vars['show_stickies'] )
+	) {
+		return $where;
+	}
+
+	// Get sticky topics (both super stickies and normal stickies).
+	$super_stickies = bbp_get_super_stickies();
+	$stickies       = array();
+
+	// If in a forum, get the stickies for this specific forum.
+	if ( ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ) {
+		$stickies = bbp_get_stickies( $wp_query->query_vars['post_parent'] );
+	}
+
+	// Combine the stickies.
+	$sticky_ids = array_unique( array_merge( $super_stickies, $stickies ) );
+
+	// If we have sticky topics, exclude them from the main query.
+	// They will be prepended later in the order by clause.
+	if ( ! empty( $sticky_ids ) ) {
+		$sticky_ids_csv = implode( ',', array_map( 'absint', $sticky_ids ) );
+		$where         .= " AND {$wpdb->posts}.ID NOT IN ($sticky_ids_csv)";
+	}
+
+	return $where;
+}
+
+/**
+ * Modify the ORDER BY clause of the topics query to handle sticky topics.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $orderby  The ORDER BY clause of the query.
+ * @param WP_Query $wp_query The WP_Query instance.
+ *
+ * @return string Modified ORDER BY clause
+ */
+function bbp_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
+	global $wpdb;
+
+	// Only modify if it's a bbp_topic query with 'show_stickies' set to true.
+	if (
+		! isset( $wp_query->query_vars['post_type'] ) ||
+		bbp_get_topic_post_type() !== $wp_query->query_vars['post_type'] ||
+		empty( $wp_query->query_vars['show_stickies'] )
+	) {
+		return $orderby;
+	}
+
+	// Get sticky topics (both super stickies and normal stickies).
+	$super_stickies = bbp_get_super_stickies();
+	$stickies       = array();
+
+	// If in a forum, get the stickies for this specific forum.
+	if ( ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ) {
+		$stickies = bbp_get_stickies( $wp_query->query_vars['post_parent'] );
+	}
+
+	// Combine the stickies.
+	$sticky_ids = array_unique( array_merge( $super_stickies, $stickies ) );
+
+	// If we have sticky topics, modify the ORDER BY clause to include them first.
+	if ( ! empty( $sticky_ids ) ) {
+		// Create a CASE statement that orders super stickies first, then forum stickies, then regular topics.
+		$case_parts = array();
+
+		// Super stickies come first.
+		if ( ! empty( $super_stickies ) ) {
+			$super_stickies_csv = implode( ',', array_map( 'absint', $super_stickies ) );
+			$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($super_stickies_csv) THEN 1";
+		}
+
+		// Forum stickies come second.
+		if ( ! empty( $stickies ) ) {
+			$forum_stickies = array_diff( $stickies, $super_stickies ); // Remove any super stickies from forum stickies.
+			if ( ! empty( $forum_stickies ) ) {
+				$forum_stickies_csv = implode( ',', array_map( 'absint', $forum_stickies ) );
+				$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($forum_stickies_csv) THEN 2";
+			}
+		}
+
+		// Regular topics come last.
+		$case_parts[] = 'ELSE 3';
+
+		// Build the CASE statement.
+		$case_statement = 'CASE ' . implode( ' ', $case_parts ) . ' END';
+
+		// Add the CASE statement to the ORDER BY clause.
+		$orderby = "$case_statement, " . $orderby;
+	}
+
+	return $orderby;
 }
