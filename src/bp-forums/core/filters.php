@@ -686,16 +686,24 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
 function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
 	global $wpdb;
 
-	// Only modify if it's a bbp_topic query with 'show_stickies' set to true.
+	// Bail if no post_type in query vars or show_stickies is not enabled.
 	if (
 		! isset( $wp_query->query_vars['post_type'] ) ||
-		bbp_get_forum_post_type() !== $wp_query->query_vars['post_type'] ||
 		empty( $wp_query->query_vars['show_stickies'] )
 	) {
 		return $where;
 	}
 
-	// Get sticky topics (both super stickies and normal stickies).
+	// Get post types.
+	$forum_post_type   = bbp_get_forum_post_type();
+	$current_post_type = $wp_query->query_vars['post_type'];
+
+	// Only proceed if we're dealing with forums.
+	if ( $forum_post_type !== $current_post_type ) {
+		return $where;
+	}
+
+	// Get sticky topics.
 	$super_stickies = bbp_get_super_stickies();
 	$stickies       = array();
 
@@ -704,11 +712,10 @@ function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
 		$stickies = bbp_get_stickies( $wp_query->query_vars['post_parent'] );
 	}
 
-	// Combine the stickies.
-	$sticky_ids = array_unique( array_merge( $super_stickies, $stickies ) );
+	// Combine the stickies and ensure they're all integers.
+	$sticky_ids = array_filter( array_unique( array_merge( $super_stickies, $stickies ) ) );
 
 	// If we have sticky topics, exclude them from the main query.
-	// They will be prepended later in the order by clause.
 	if ( ! empty( $sticky_ids ) ) {
 		$sticky_ids_csv = implode( ',', array_map( 'absint', $sticky_ids ) );
 		$where         .= " AND {$wpdb->posts}.ID NOT IN ($sticky_ids_csv)";
@@ -725,21 +732,29 @@ function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
  * @param string   $orderby  The ORDER BY clause of the query.
  * @param WP_Query $wp_query The WP_Query instance.
  *
- * @return string Modified ORDER BY clause
+ * @return string Modified ORDER BY clause.
  */
 function bbp_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
 	global $wpdb;
 
-	// Only modify if it's a bbp_topic query with 'show_stickies' set to true.
+	// Bail if no post_type in query vars or show_stickies is not enabled.
 	if (
 		! isset( $wp_query->query_vars['post_type'] ) ||
-		bbp_get_topic_post_type() !== $wp_query->query_vars['post_type'] ||
 		empty( $wp_query->query_vars['show_stickies'] )
 	) {
 		return $orderby;
 	}
 
-	// Get sticky topics (both super stickies and normal stickies).
+	// Get post types.
+	$topic_post_type   = bbp_get_topic_post_type();
+	$current_post_type = $wp_query->query_vars['post_type'];
+
+	// Only proceed if we're dealing with topics.
+	if ( $topic_post_type !== $current_post_type ) {
+		return $orderby;
+	}
+
+	// Get sticky topics.
 	$super_stickies = bbp_get_super_stickies();
 	$stickies       = array();
 
@@ -748,8 +763,8 @@ function bbp_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
 		$stickies = bbp_get_stickies( $wp_query->query_vars['post_parent'] );
 	}
 
-	// Combine the stickies.
-	$sticky_ids = array_unique( array_merge( $super_stickies, $stickies ) );
+	// Combine the stickies and ensure they're all integers.
+	$sticky_ids = array_filter( array_unique( array_merge( $super_stickies, $stickies ) ) );
 
 	// If we have sticky topics, modify the ORDER BY clause to include them first.
 	if ( ! empty( $sticky_ids ) ) {
@@ -758,15 +773,19 @@ function bbp_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
 
 		// Super stickies come first.
 		if ( ! empty( $super_stickies ) ) {
-			$super_stickies_csv = implode( ',', array_map( 'absint', $super_stickies ) );
-			$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($super_stickies_csv) THEN 1";
+			$super_stickies = array_filter( array_map( 'absint', $super_stickies ) );
+			if ( ! empty( $super_stickies ) ) {
+				$super_stickies_csv = implode( ',', $super_stickies );
+				$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($super_stickies_csv) THEN 1";
+			}
 		}
 
 		// Forum stickies come second.
 		if ( ! empty( $stickies ) ) {
 			$forum_stickies = array_diff( $stickies, $super_stickies ); // Remove any super stickies from forum stickies.
+			$forum_stickies = array_filter( array_map( 'absint', $forum_stickies ) );
 			if ( ! empty( $forum_stickies ) ) {
-				$forum_stickies_csv = implode( ',', array_map( 'absint', $forum_stickies ) );
+				$forum_stickies_csv = implode( ',', $forum_stickies );
 				$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($forum_stickies_csv) THEN 2";
 			}
 		}
