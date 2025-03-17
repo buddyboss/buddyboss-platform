@@ -4321,6 +4321,9 @@ window.bp = window.bp || {};
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
 			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
 
+			// Reset the pagination for the scope.
+			bp.Nouveau.Activity.current_page = 1;
+
 			// Filter activity with below selections
 			var objectNavParent = bp.Nouveau.objectNavParent;
 			var object          = 'activity';
