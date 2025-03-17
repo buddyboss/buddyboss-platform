@@ -1165,6 +1165,11 @@
   display: none;
 }
 
+#message_content img.emoji,
+#message_content img.emojioneemoji {
+  vertical-align: middle;
+}
+
 .bp-message-content_foot_note {
   font-size: 12px;
   color: var(--bb-rl-text-tertiary-color);
