@@ -602,6 +602,10 @@ class BuddyPress {
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
 			require $this->plugin_dir . 'cli/wp-cli-bp.php';
 		}
+
+		if ( bb_get_enabled_readylaunch() ) {
+			require $this->plugin_dir . 'bp-core/bb-core-readylaunch.php';
+		}
 	}
 
 	/**
@@ -694,6 +698,7 @@ class BuddyPress {
 			'BP_Core_Follow_Follower_Widget'               => 'core',
 			'BP_Group_Extension'                           => 'groups',
 			'BP_Group_Member_Query'                        => 'groups',
+			'BB_Group_Readylaunch'                        => 'groups',
 			'BP_Core_Members_Template'                     => 'members',
 			'BP_Core_Members_Widget'                       => 'members',
 			'BP_Core_Recently_Active_Widget'               => 'members',

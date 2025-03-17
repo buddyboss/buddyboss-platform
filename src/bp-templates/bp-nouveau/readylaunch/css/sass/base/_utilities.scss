@@ -1,10 +1,29 @@
-
+.bp-screen-reader-text,
+.bb-screen-reader-text,
+.bb-rl-screen-reader-text {
+	border: 0;
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
 
 .bb-rl-secondary-header {
 	background-color: var(--bb-rl-background-color);
 	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	padding: 12px var(--bb-rl-space-300);
 	margin-bottom: var(--bb-rl-space-400);
+
+	@media screen and (max-width: 782px) {
+		margin-left: -15px;
+		margin-right: -15px;
+		flex-direction: column;
+		gap: var(--bb-rl-space-100);
+	}
 }
 
 .bb-rl-entry-heading {
@@ -13,11 +32,19 @@
 
 		@include bb-rl-base-heading;
 		color: var(--bb-rl-text-color);
+		white-space: nowrap;
 	}
 }
 
 .bb-rl-sub-ctrls {
 	margin-left: auto;
+
+	@media screen and (max-width: 782px) {
+		flex-flow: wrap;
+		gap: var(--bb-rl-space-100);
+		margin-right: auto;
+		justify-content: center;
+	}
 }
 
 .bb-rl-grid-filters {
@@ -1525,4 +1552,44 @@ div.vjs-menu {
 /* At who list */
 .atwho-container .atwho-view {
 	z-index: var(--bb-rl-z-index-modal);
+}
+
+/* Group and Member single navigations */
+.bb-rl-secondary-header #object-nav {
+	padding: 12px var(--bb-rl-space-300);
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		align-items: center;
+
+		li {
+			list-style: none;
+			margin: 0 var(--bb-rl-space-50) 0 0;
+			padding: 0;
+			display: flex;
+			align-items: center;
+
+			a {
+				color: var(--bb-rl-text-secondary-color);
+				font-size: var(--bb-rl-font-size-sm);
+				font-weight: 500;
+				padding: 7px var(--bb-rl-space-200);
+				border-radius: var(--bb-rl-radius-full);
+
+				.count {
+					display: none;
+				}
+			}
+
+			&.selected a,
+			a:hover {
+				color: var(--bb-rl-text-color);
+				background-color: var(--bb-rl-background-secondary-color);
+			}
+		}
+	}
+
 }

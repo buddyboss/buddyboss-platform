@@ -69,7 +69,7 @@
   --bb-rl-icon-danger-primary-color: #900b09;
   --bb-rl-icon-danger-secondary-color: #ec221f;
   --bb-rl-radius-sm: 4px;
-  --bb-rl-radius-md: 8px;
+  --bb-rl-radius-md: 6px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;
@@ -93,6 +93,7 @@
   --bb-rl-font-size-base: 16px;
   --bb-rl-font-size-xs: 11px;
   --bb-rl-font-size-sm: 13px;
+  --bb-rl-base-line-xs: 16px;
   --bb-rl-base-line-small: 20px;
   --bb-rl-base-line: 24px;
 }

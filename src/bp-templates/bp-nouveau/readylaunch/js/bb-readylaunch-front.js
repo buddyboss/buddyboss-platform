@@ -31,6 +31,8 @@ window.bp = window.bp || {};
 				// Listen to events ("Add hooks!").
 				this.addListeners();
 				this.mobileSubMenu();
+				this.gridListFilter();
+				// this.collapsibleContextNav();
 
 				this.bbReloadWindow();
 			},
@@ -50,27 +52,28 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-			},
+		},
+
 			/**
-			 * [scrollHeaderDropDown description]
-			 *
-			 * @param e
-			 */
-			bbScrollHeaderDropDown : function ( e ) {
-				var el = e.target;
-				if ( 'notification-list' === el.id ) {
-					var scrollThreshold = 30; // pixels from bottom
+		 * [scrollHeaderDropDown description]
+		 *
+		 * @param e
+		 */
+		bbScrollHeaderDropDown: function ( e ) {
+			var el = e.target;
+			if ( 'notification-list' === el.id ) {
+				var scrollThreshold = 30; // pixels from bottom
 					var bottomReached = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
 
-					if (bottomReached && !el.classList.contains('loading')) {
-						var load_more = $( el ).find( '.bb-rl-load-more' );
-						if ( load_more.length ) {
-							el.classList.add( 'loading' );
-							load_more.find( 'a' ).trigger( 'click' );
-						}
+					if (bottomReached && ! el.classList.contains( 'loading' ) ) {
+					var load_more = $( el ).find( '.bb-rl-load-more' );
+					if ( load_more.length ) {
+						el.classList.add( 'loading' );
+						load_more.find( 'a' ).trigger( 'click' );
 					}
 				}
-			},
+			}
+		},
 
 			// Add Mobile menu toggle button.
 			mobileSubMenu : function () {
@@ -90,13 +93,21 @@ window.bp = window.bp || {};
 				);
 			},
 
-			/**
-			 * Handles "Load More" click or dropdown open
-			 *
-			 * @param {Object} e Event object
-			 */
-			bbHandleLoadMore : function ( e ) {
-				e.preventDefault();
+			gridListFilter: function () {
+			$( '.bb-rl-filter select' ).select2( {
+				theme: 'rl',
+				containerCssClass: 'bb-rl-select2-container',
+				dropdownCssClass: 'bb-rl-select2-dropdown'
+			} );
+		},
+
+		/**
+		 * Handles "Load More" click or dropdown open
+		 *
+		 * @param {Object} e Event object
+		 */
+		bbHandleLoadMore: function ( e ) {
+			e.preventDefault();
 
 				// Identify the clicked element.
 				var $target = $( e.target ).closest( '.notification-link, .notification-header-tab-action, .bb-rl-load-more a' );
@@ -291,6 +302,44 @@ window.bp = window.bp || {};
 			},
 
 			/**
+		 * Open context nav.
+		 * @param e
+		 */
+		collapsibleContextNav: function () {
+
+			$( document ).on( 'click', '.bb-rl-container .bb_more_options_action', function ( e ) {
+				e.preventDefault();
+
+				var $button = $( this );
+				var $dropdown = $button.siblings( '.bb_more_dropdown' );
+
+				// Close other dropdowns
+				$( '.bb_more_dropdown' ).not( $dropdown ).hide();
+				$( '.bb_more_options_action' ).not( $button ).removeClass( 'active' );
+
+				if ( $dropdown.is( ':visible' ) ) {
+					$dropdown.hide();
+					$button.removeClass( 'active' );
+				} else {
+					$dropdown.show();
+					$button.addClass( 'active' );
+				}
+			} );
+
+			// Close dropdown clicked outside
+			$( document ).on( 'click', function ( e ) {
+				if ( !$( e.target ).closest( '.bb-rl-context-wrap' ).length ) {
+					$( '.bb_more_dropdown' ).hide();
+					$( '.bb_more_options_action' ).removeClass( 'active' );
+				}
+			} );
+
+			$( document ).on( 'click', '.bb-rl-container .bb_more_dropdown', function ( e ) {
+				e.stopPropagation();
+			} );
+		},
+
+		/**
 			 * Show header notification dropdowns
 			 *
 			 * @param event

@@ -19,6 +19,5 @@ if ( have_posts() ) :
 	endwhile;
 endif;
 
-bp_get_template_part( 'sidebar/right-sidebar' );
 
 bp_get_template_part( 'footer/readylaunch-footer' );
