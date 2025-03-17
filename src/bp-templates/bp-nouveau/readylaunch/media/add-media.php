@@ -13,7 +13,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 	<div class="bb-media-actions-wrap">
 		<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
 		<div class="bb-media-actions">
-			<a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
+			<a href="#" id="bp-add-media" class="bb-add-media button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 

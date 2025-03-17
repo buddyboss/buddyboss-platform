@@ -23,14 +23,40 @@
 		.bb-video-actions {
 			margin-left: auto;
 
-			.bb-add-media,
+			/* .bb-add-media,
 			.bb-add-video {
 
 				@include bb-rl-button;
 				@include bb-rl-button-secondary-fill;
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 				font-size: 0.875rem;
+			} */
+
+			.bb-add-media,
+			.bb-add-video {
+
+				i {
+					font-size: 16px;
+					margin-right: var(--bb-rl-space-50);
+				}
 			}
 		}
+	}
+}
+
+.bb-rl-media-actions-wrap {
+	gap: 12px;
+	margin-bottom: var(--bb-rl-space-200);
+	padding-bottom: var(--bb-rl-space-200);
+	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+	.bb-media-actions-wrap {
+		margin-bottom: 0;
+	}
+
+	.bb-member-media-header {
+		margin: 0;
+		padding: 0;
+		gap: var(--bb-rl-space-100);
 	}
 }

@@ -120,7 +120,8 @@
 .bb-readylaunch-template input[type="radio"] {
 
 	+ label {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 		position: relative;
 		cursor: pointer;
 		padding: 0;
@@ -155,5 +156,9 @@
 	&:checked + label:before {
 		border-width: 4px;
 		border-color: var(--bb-rl-background-brand-primary-color);
+	}
+
+	&.bs-styled-radio:checked + label:after {
+		opacity: 0;
 	}
 }

@@ -220,7 +220,7 @@
 			&.ac-media-move:before,
 			&.ac-document-move:before,
 			&.ac-folder-move:before {
-				content: "\e24a";
+				content: "\e83c";
 			}
 
 			&.bb-rl-ac-video-move:before {
@@ -1042,5 +1042,29 @@ li.bb-rl-hideshow {
 		margin-left: var(--bb-rl-space-50);
 		font-weight: 500;
 		color: var(--bb-rl-icon-primary-color);
+	}
+}
+
+.bb-rl-documents-header-wrap {
+	display: flex;
+	align-items: center;
+	padding-bottom: var(--bb-rl-space-200);
+	margin-bottom: var(--bb-rl-space-200);
+	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+	gap: var(--bb-rl-space-100);
+
+	.media-search-form {
+		margin-right: auto;
+	}
+
+	.bb-media-actions {
+
+		.bb-rl-button {
+
+			i {
+				font-size: 16px;
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
 	}
 }

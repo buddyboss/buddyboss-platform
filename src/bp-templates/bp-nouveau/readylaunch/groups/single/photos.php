@@ -23,31 +23,31 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		// Home/Media.
 		case 'photos':
 			?>
-			<div class="bb-media-actions-wrap">
-				<?php
-				$current_group_id    = bp_get_current_group_id();
-				$bp_loggedin_user_id = bp_loggedin_user_id();
-				if (
-					bp_is_group_media() &&
-					(
-						groups_can_user_manage_media( $bp_loggedin_user_id, $current_group_id ) ||
-						groups_is_user_mod( $bp_loggedin_user_id, $current_group_id ) ||
-						groups_is_user_admin( $bp_loggedin_user_id, $current_group_id )
-					)
-				) {
-					bp_get_template_part( 'media/add-media' );
-				} else {
-					?>
-					<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
-					<?php
-				}
-				?>
-			</div>
-			<?php
-			bp_nouveau_group_hook( 'before', 'media_content' );
-			bp_get_template_part( 'media/actions' );
-			?>
 			<div id="media-stream" class="media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div class="bb-media-actions-wrap bb-rl-media-actions-wrap">
+					<?php
+					$current_group_id    = bp_get_current_group_id();
+					$bp_loggedin_user_id = bp_loggedin_user_id();
+					if (
+						bp_is_group_media() &&
+						(
+							groups_can_user_manage_media( $bp_loggedin_user_id, $current_group_id ) ||
+							groups_is_user_mod( $bp_loggedin_user_id, $current_group_id ) ||
+							groups_is_user_admin( $bp_loggedin_user_id, $current_group_id )
+						)
+					) {
+						bp_get_template_part( 'media/add-media' );
+					} else {
+						?>
+						<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
+						<?php
+					}
+					?>
+					<?php
+					bp_nouveau_group_hook( 'before', 'media_content' );
+					bp_get_template_part( 'media/actions' );
+					?>
+				</div>
 				<?php
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
