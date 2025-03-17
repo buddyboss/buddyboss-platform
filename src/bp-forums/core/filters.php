@@ -309,7 +309,6 @@ add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
 add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 2 );
 
-add_filter( 'posts_where', 'bb_modify_topics_where_for_sticky', 10, 2 );
 add_filter( 'posts_orderby', 'bb_modify_topics_orderby_for_sticky', 10, 2 );
 
 /** Deprecated ****************************************************************/
@@ -671,53 +670,6 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
 	}
 
 	return $permalink;
-}
-
-/**
- * Modify the WHERE clause of the topics query to handle sticky topics.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string   $where    The WHERE clause of the query.
- * @param WP_Query $wp_query The WP_Query instance.
- *
- * @return string Modified WHERE clause.
- */
-function bb_modify_topics_where_for_sticky( $where, $wp_query ) {
-	global $wpdb;
-
-	// Bail if no post_type in query vars or show_stickies is not enabled.
-	if (
-		! isset( $wp_query->query_vars['post_type'] ) ||
-		empty( $wp_query->query_vars['show_stickies'] )
-	) {
-		return $where;
-	}
-
-	// Only proceed if we're dealing with forums.
-	if ( bbp_get_forum_post_type() !== $wp_query->query_vars['post_type'] ) {
-		return $where;
-	}
-
-	// Get sticky topics.
-	$super_stickies = bbp_get_super_stickies();
-	$stickies       = array();
-
-	// If in a forum, get the stickies for this specific forum.
-	if ( ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ) {
-		$stickies = bbp_get_stickies( $wp_query->query_vars['post_parent'] );
-	}
-
-	// Combine the stickies and ensure they're all integers.
-	$sticky_ids = array_filter( array_unique( array_merge( $super_stickies, $stickies ) ) );
-
-	// If we have sticky topics, exclude them from the main query.
-	if ( ! empty( $sticky_ids ) ) {
-		$sticky_ids_csv = implode( ',', array_map( 'absint', $sticky_ids ) );
-		$where         .= " AND {$wpdb->posts}.ID NOT IN ($sticky_ids_csv)";
-	}
-
-	return $where;
 }
 
 /**
