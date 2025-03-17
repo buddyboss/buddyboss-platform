@@ -134,10 +134,27 @@
 			}
 		}
 
-		.message_actions.open {
+		.message_actions {
 
-			.message_action__anchor {
-				background-color: var(--bb-rl-background-secondary-color);
+			&.open {
+
+				.message_action__anchor {
+					background-color: var(--bb-rl-background-secondary-color);
+				}
+			}
+
+			&.loading {
+
+				.message_action__anchor [class*="bb-icons"]:before {
+					content: "";
+					display: inline-block;
+					height: 22px;
+					width: 22px;
+					border: 2px solid var(--bb-rl-border-quaternary-color);
+					border-top-color: var(--bb-rl-border-tertiary-color);
+					border-radius: var(--bb-rl-radius-full);
+					animation: spin 3s infinite linear;
+				}
 			}
 		}
 	}
@@ -348,10 +365,94 @@
 
 		.bb-activity-media-wrap {
 			margin: var(--bb-rl-space-100) 0;
+
+			&:has(.bb-rl-document-activity) {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.bb-rl-document-activity {
+				max-width: 495px;
+			}
 		}
 
 		.bb-activity-media-elem img {
 			border-radius: var(--bb-rl-radius-lg);
+		}
+	}
+
+	.bb-activity-video-wrap,
+	.bb-activity-media-wrap {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-100);
+	}
+
+	.bb-rl-activity-video-elem,
+	.bb-activity-media-elem {
+
+		img {
+			height: 152px;
+			width: 152px;
+			object-fit: cover;
+			border-radius: var(--bb-rl-radius-lg);
+		}
+	}
+
+	.bb-rl-video-cover-wrap {
+		position: relative;
+
+		&:before {
+			content: "\e3d0";
+			font-family: bb-icons-rl;
+			color: var(--bb-rl-icon-tertiary-color);
+			font-size: 32px;
+			font-weight: 500;
+			height: 56px;
+			width: 56px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: var(--bb-rl-radius-full);
+			background-color: var(--bb-rl-background-black-color);
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+
+	.activity-attached-gif-container {
+		display: inline-block;
+		height: auto;
+		width: auto;
+		max-width: 360px;
+		max-height: 360px;
+		background-repeat: no-repeat;
+		position: relative;
+
+		.gif-image-container {
+			margin: 15px 0 0;
+		}
+
+		.gif-player {
+			display: flex;
+			align-items: center;
+			justify-self: center;
+			min-width: 65px;
+			min-height: 65px;
+			position: relative;
+			max-width: 480px;
+
+			video {
+				height: auto;
+				max-width: 360px;
+				max-height: 360px;
+				width: 100%;
+				border-radius: var(--bb-rl-radius-lg);
+				background-color: var(--bb-rl-background-color);
+			}
 		}
 	}
 }
@@ -392,6 +493,14 @@
 
 .bp-message-content-wrap .bp-messages.loading {
 	display: none;
+}
+
+#message_content {
+
+	img.emoji,
+	img.emojioneemoji {
+		vertical-align: middle;
+	}
 }
 
 .bp-message-content_foot_note {

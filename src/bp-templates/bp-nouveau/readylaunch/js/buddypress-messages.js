@@ -2495,9 +2495,6 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
 					function() {
-						if ( bp.Nouveau.dropZoneGlobalProgress ) {
-							bp.Nouveau.dropZoneGlobalProgress( this );
-						}
 						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
@@ -2924,7 +2921,7 @@ window.bp = window.bp || {};
 						Backbone.trigger( 'triggerMediaInProgress' );
 
 						if ( bp.Nouveau.getVideoThumb ) {
-							bp.Nouveau.getVideoThumb( file, '.dz-video-thumbnail' );
+							bp.Nouveau.getVideoThumb( file, '.dz-image' );
 						}
 
 						var tool_box = self.$el.parents( '#bp-message-content' );
@@ -3883,6 +3880,20 @@ window.bp = window.bp || {};
 									}
 								};
 							}
+						},
+						templateSelection: function( data ) {
+							if ( !data.id ) {
+								return data.text;
+							}
+							
+							var $selection = $(
+								'<div class="bb-rl-select2-selection-user">' +
+									'<img class="select2-user-avatar" src="' + data.image + '"/>' +
+									'<span class="select2-selection-user__name">' + data.text + '</span>' +
+								'</div>'
+							);
+							
+							return $selection;
 						},
 						templateResult: function ( data ) {
 							return ( data.html ? data.html : data.text );
