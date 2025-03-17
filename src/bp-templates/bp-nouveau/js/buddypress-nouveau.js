@@ -2919,7 +2919,6 @@ window.bp = window.bp || {};
 		},
 		reportActions: function () {
 			var _this = this;
-
 			$( document ).on(
 				'click',
 				'.bb-cancel-report-content',
@@ -2932,8 +2931,18 @@ window.bp = window.bp || {};
 			);
 			$( document ).on(
 				'click',
+				'#bb-report-content .report-submit.button',
+				function ( e ) {
+					e.preventDefault();
+					$( 'form#bb-report-content' ).trigger( 'submit' );
+				}
+			);
+			$( document ).on(
+				'click',
 				'input[type=radio][name=report_category]',
-				function () {
+				function (e) {
+					e.stopPropagation();
+
 					if ( 'other' === this.value ) {
 						$( this ).closest( '.moderation-popup' ).find( '.bp-other-report-cat' ).closest( '.form-item' ).removeClass( 'bp-hide' );
 					} else {
@@ -2942,9 +2951,10 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( '#bb-report-content' ).submit(
+			$( document ).on(
+				'submit',
+				'#bb-report-content',
 				function ( e ) {
-
 					if ( $( '#report-category-other' ).is( ':checked' ) && '' === $( '#report-note' ).val() ) {
 						$( '#notes-error' ).show();
 						return false;
