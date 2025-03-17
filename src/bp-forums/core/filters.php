@@ -706,13 +706,15 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 
 	$sticky_ids_csv = implode( ',', $sticky_ids );
 
-	// Modify WHERE clause to include sticky topics even if they are spam.
+	// Get spam status ID.
 	$spam_status = bbp_get_spam_status_id();
+
+	// Modify WHERE clause to include sticky topics even if they are spam.
 	if ( ! empty( $spam_status ) ) {
 		$clauses['where'] .= " OR ({$wpdb->posts}.ID IN ({$sticky_ids_csv}) AND {$wpdb->posts}.post_status = '{$spam_status}')";
 	}
 
-	// Modify ORDER BY clause to prioritize sticky topics.
+	// Modify ORDER BY clause to prioritize sticky topics **without changing spam order**.
 	$case_statements = array();
 
 	if ( ! empty( $super_stickies ) ) {
@@ -728,10 +730,12 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 		}
 	}
 
-	$case_statements[] = 'ELSE 3';
+	// DO NOT modify spam sticky post order; just keep them where they are.
+	$case_statements[] = 'ELSE 3'; // Normal posts after stickies.
 	$case_sql          = 'CASE ' . implode( ' ', $case_statements ) . ' END';
 
-	$clauses['orderby'] = "$case_sql, " . $clauses['orderby'];
+	// Keep the existing order of spam posts by **preserving their default sorting**.
+	$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC, " . $clauses['orderby'];
 
 	return $clauses;
 }
