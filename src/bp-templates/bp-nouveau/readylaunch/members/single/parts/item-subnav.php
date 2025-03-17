@@ -2,8 +2,9 @@
 /**
  * The template for single members item sub navigation
  *
- * @since BuddyBoss [BBVERSION]
+ * This template can be overridden by copying it to yourtheme/buddypress/members/single/parts/item-subnav.php.
  *
+ * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
 ?>
@@ -28,6 +29,11 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 			$nav_item = bp_nouveau()->current_nav_item;
 			if ( 'archived' === $nav_item->slug ) {
 				continue;
+			}
+
+			// Change the nav_item -> name "New Message" to "New"
+			if ( 'New Message' === $nav_item->name  ) {
+				$nav_item->name = 'New';
 			}
 			?>
 

@@ -20,8 +20,8 @@ $link_embed          = $activity_metas['_link_embed'][0] ?? '';
 if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
-$activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
-
+$activity_popup_title        = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Activity_Readylaunch::instance() : false;
 ?>
 	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo $link_preview_string; ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
 
@@ -88,7 +88,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 					</div>
 					<div class="bb-rl-activity-group-post-meta">
 						<span class="bb-rl-activity-post-author">
-							<?php bp_activity_action(); ?>
+							<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
 						</span>
 						<a href="<?php echo $activity_link; ?>">
 							<?php
@@ -112,19 +112,42 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				</div>
 			</div>
 
-		<?php else : ?>
-
-			<div class="bb-rl-activity-avatar bb-rl-item-avatar">
-				<a href="<?php echo $user_link; ?>">
-					<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
-				</a>
-			</div>
-			<div class="bb-rl-activity-header">
-				<?php
-				bp_activity_action();
-				bp_nouveau_activity_is_edited();
-				bp_nouveau_activity_privacy();
-				?>
+		<?php else :
+			$friendship_created = false;
+			if ( bp_is_active( 'friends' ) && 'friendship_created' === $activities_template->activity->type ) {
+				$friendship_created = true;
+			}
+			?>
+			<div class="bb-rl-activity-head">
+				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>">
+					<a href="<?php echo $user_link; ?>">
+						<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
+					</a>
+					<?php
+					if ( $friendship_created ) {
+						echo bp_get_activity_secondary_avatar( $activities_template->activity->secondary_item_id );
+					}
+					?>
+				</div>
+				<div class="bb-rl-activity-header">
+					<?php bp_activity_action( array( 'no_timestamp' => true ) ); ?>
+					<p class="activity-date">
+						<a href="<?php echo esc_url( bp_activity_get_permalink( $activity_id ) ); ?>">
+							<?php
+							$activity_date_recorded = bp_get_activity_date_recorded();
+							printf(
+								'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+								bp_core_get_iso8601_date( $activity_date_recorded ),
+								bp_core_time_since( $activity_date_recorded )
+							);
+							?>
+						</a>
+						<?php
+						bp_nouveau_activity_is_edited();
+						?>
+					</p>
+					<?php bp_nouveau_activity_privacy(); ?>
+				</div>
 			</div>
 
 		<?php endif; ?>
@@ -135,26 +158,22 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			if ( bp_nouveau_activity_has_content() ) :
 				?>
 				<div class="bb-rl-activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-			<?php
+				<?php
 			endif;
 
 			bp_nouveau_activity_hook( 'after', 'activity_content' );
-			bp_nouveau_activity_state();
 			bb_activity_load_progress_bar_state();
-			bp_nouveau_activity_entry_buttons();
 			?>
+			<div class="bb-rl-activity-footer-actions">
+				<?php
+				bp_nouveau_activity_entry_buttons();
+				$bb_rl_activity_class_exists ? $bb_rl_activity_class_exists->bb_rl_activity_state() : '';
+				?>
+			</div>
 		</div>
 
 		<?php
 		bp_nouveau_activity_hook( 'before', 'entry_comments' );
-
-		$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
-		if ( ! empty( $closed_notice ) ) {
-			?>
-
-			<div class='bb-rl-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
-			<?php
-		}
 
 		if ( bp_activity_can_comment() ) {
 			$class = 'bb-rl-activity-comments';
@@ -168,20 +187,34 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				<?php
 				if ( bp_activity_get_comment_count() ) {
 					bp_activity_comments();
+				} else {
+					echo '<ul data-activity_id=' . esc_attr( $activity_id ) . ' data-parent_comment_id=' . esc_attr( $activity_id ) . '></ul>';
 				}
-
-				if ( is_user_logged_in() ) {
+				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
+				if (
+					is_user_logged_in() &&
+					(
+						! $comment_count ||
+						bp_is_single_activity()
+					)
+				) {
 					bp_nouveau_activity_comment_form();
 				}
 				?>
-
 			</div>
 
 			<?php
 		}
 		bp_nouveau_activity_hook( 'after', 'entry_comments' );
-		?>
 
+		$closed_notice = bb_get_close_activity_comments_notice( $activity_id );
+		if ( ! empty( $closed_notice ) ) {
+			?>
+
+			<div class='bb-rl-activity-closed-comments-notice'><?php echo esc_html( $closed_notice ); ?></div>
+			<?php
+		}
+		?>
 	</li>
 
 <?php

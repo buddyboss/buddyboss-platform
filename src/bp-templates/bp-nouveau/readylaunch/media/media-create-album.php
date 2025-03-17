@@ -1,19 +1,19 @@
 <?php
 /**
- * The template for media create album
+ * ReadyLaunch - The template for media create album.
  *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Core
  * @version 1.0.0
  */
 
 ?>
 
-<div class="create-popup-album-wrap popup-on-fly-create-album" style="display: none;">
+<div class="bb-rl-create-popup-album-wrap bb-rl-popup-on-fly-create-album" style="display: none;">
 
-	<div class="bb-field-wrap">
-		<label for="new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
-		<input id="new_album_name_input" class="popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
+	<div class="bb-rl-field-wrap">
+		<label for="bb_rl_new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
+		<input id="bb_rl_new_album_name_input" class="bb-rl-popup-on-fly-create-album-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
 	</div>
 	<?php
 	if ( ! bp_is_group() ) :
@@ -21,7 +21,7 @@
 	endif;
 	?>
 	<div class="db-modal-buttons">
-		<a class="close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-		<a class="button bp-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
+		<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+		<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
 	</div>
 </div>

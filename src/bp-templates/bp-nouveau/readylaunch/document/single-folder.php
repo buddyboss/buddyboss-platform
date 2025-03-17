@@ -2,9 +2,11 @@
 /**
  * The template for document single folder
  *
- * @since BuddyBoss [BBVERSION]
+ * This template can be overridden by copying it to yourtheme/buddypress/document/single-folder.php.
  *
- * @version 1.0.0
+ * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();

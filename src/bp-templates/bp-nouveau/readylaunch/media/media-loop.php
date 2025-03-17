@@ -2,8 +2,9 @@
 /**
  * The template for media loop
  *
- * @since BuddyBoss [BBVERSION]
+ * This template can be overridden by copying it to yourtheme/buddypress/media/media-loop.php.
  *
+ * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 
@@ -33,7 +34,7 @@ if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 	if ( bp_media_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Show More', 'buddyboss' ); ?><i class="bb-icons-rl-caret-down"></i></a>
 		</li>
 		<?php
 	endif;

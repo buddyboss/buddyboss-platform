@@ -599,7 +599,7 @@ window.bp = window.bp || {};
 				);
 				// END Toolbox Button.
 
-				bp.Nouveau.Activity.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						commonData  : activity_data.media,
 						id          : activity_data.id,
@@ -629,7 +629,7 @@ window.bp = window.bp || {};
 				);
 
 				// END Toolbox Button.
-				bp.Nouveau.Activity.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						commonData  : activity_data.document,
 						id          : activity_data.id,
@@ -657,7 +657,7 @@ window.bp = window.bp || {};
 					}
 				);
 				// END Toolbox Button.
-				bp.Nouveau.Activity.injectFiles(
+				bp.Readylaunch.Utilities.injectFiles(
 					{
 						commonData  : activity_data.video,
 						id          : activity_data.id,
@@ -680,8 +680,8 @@ window.bp = window.bp || {};
 
 			// Update privacy status.
 			var bpListActivity     = $( '[data-bp-list="activity"] #bb-rl-activity-' + activity_data.id ),
-				privacy            = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).data( 'value' ),
-				privacy_edit_label = bpListActivity.find( 'ul.bb-rl-activity-privacy li.selected' ).text();
+				privacy            = bpListActivity.find( 'ul.activity-privacy li.selected' ).data( 'value' ),
+				privacy_edit_label = bpListActivity.find( 'ul.activity-privacy li.selected' ).text();
 
 			if ( ! _.isUndefined( privacy ) ) {
 				self.postForm.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( privacy );
@@ -786,7 +786,7 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
-			if ( $( 'body' ).hasClass( 'bb-rl-activity' ) && ! _.isUndefined( bbRlActivity.params.object ) ) {
+			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( bbRlActivity.params.object ) ) {
 				bp.draft_activity.object = bbRlActivity.params.object;
 
 				// Draft activity data.
@@ -1449,8 +1449,11 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model.toJSON() ) );
 
 				if ( bp.Views.activitySchedulePost !== undefined ) {
-					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
-					$( '.bb-rl-activity-form' ).addClass( 'bb-rl-activity-form--schedule' );
+					// Check if template exists before adding the view.
+					if ( document.getElementById( 'tmpl-activity-schedule-post' ) ) {
+						this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
+						$( '.bb-rl-activity-form' ).addClass( 'bb-rl-activity-form--schedule' );
+					}
 				}
 
 				return this;
@@ -4141,9 +4144,12 @@ window.bp = window.bp || {};
 					this.views.add( this.activityLinkPreview );
 				}
 
-				if ( ! _.isUndefined( bp.Views.activityPollView ) ) {
-					this.activityPollView = new bp.Views.activityPollView( { model: this.model } );
-					this.views.add( this.activityPollView );
+				if (!_.isUndefined(bp.Views.activityPollView)) {
+					var pollViewTemplate = document.getElementById( 'tmpl-bb-activity-poll-view' );
+					if ( pollViewTemplate ) {
+						this.activityPollView = new bp.Views.activityPollView( { model: this.model }) ;
+						this.views.add(this.activityPollView);
+					}
 				}
 
 				if ( ! _.isUndefined( window.Dropzone ) ) {
@@ -4393,9 +4399,13 @@ window.bp = window.bp || {};
 				// Show placeholder form.
 				$( '#bb-rl-activity-form-placeholder' ).show();
 
-				// Add BB Poll View.
-				if ( ! _.isUndefined( bp.Views.activityPollForm ) ) {
-					this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+				// Add BB Poll View with template check.
+				if ( !_.isUndefined( bp.Views.activityPollForm ) ) {
+					// Check if poll templates exist.
+					var pollFormTemplate = document.getElementById( 'tmpl-bb-activity-poll-form' );
+					if ( pollFormTemplate ) {
+						this.views.add( new bp.Views.activityPollForm( { model: this.model } ) );
+					}
 				}
 
 				this.views.add(
@@ -5251,10 +5261,10 @@ window.bp = window.bp || {};
 							// Update the content property with the decoded content.
 							parsed_data_bp_activity.content = $( '<div>' ).html( parsed_data_bp_activity.content ).html();
 
-							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .bb-rl-activity-item' ),
+							var activity_modal_item     = $( '#bb-rl-activity-modal .bb-rl-activity-list .activity-item' ),
 								activity_target         = activity_modal_item.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ),
-								activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-privacy-wrap' ).find( '.privacy' ),
-								activity_privacy_list   = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.bb-rl-activity-privacy li' );
+								activity_privacy_status = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.privacy-wrap' ).find( '.privacy' ),
+								activity_privacy_list   = activity_modal_item.find( '.bb-rl-media-privacy-wrap' ).find( '.activity-privacy li' );
 							if ( activity_modal_item.length > 0 ) {
 								var content = activityElemSel.find( '.bb-rl-activity-content' ).find( '.bb-rl-activity-inner' ).html();
 								activity_target.empty();
@@ -5495,7 +5505,6 @@ window.bp = window.bp || {};
 					[
 						new bp.Views.UserStatusHuddle( { model: this.model } ),
 						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } ),
-						new bp.Views.ActivityToolbar( { model: this.model } ) // Add Toolbar to show in default view.
 					]
 				);
 

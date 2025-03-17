@@ -447,7 +447,7 @@ window.bp = window.bp || {};
 					$selector.html( content );
 					break;
 			}
-			$selector.find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
+			$selector.find( 'li.activity-item' ).each( this.hideSingleUrl );
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bb-rl-suggestions' ).bp_mentions( bp.mentions.users );
@@ -544,7 +544,7 @@ window.bp = window.bp || {};
 
 			// prevent activity response to append to media model activity list element.
 			if ( 'activity' === data.object && '#buddypress [data-bp-list] ul.bb-rl-list' === data.target ) {
-				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-media-model-container ul.bb-rl-list)';
+				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-rl-media-model-container ul.bb-rl-list)';
 			}
 
 			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
@@ -594,7 +594,7 @@ window.bp = window.bp || {};
 				var $body                = $( 'body' ),
 					component_conditions = [
 						data.object === 'group_members' && $body.hasClass( 'group-members' ),
-						data.object === 'activity' && $( 'body.groups' ).hasClass( 'bb-rl-activity' ),
+						data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 						data.object === 'document' && $body.hasClass( 'documents' ),
 						data.object === 'manage_group_members' && $body.hasClass( 'manage-members' ),
 						data.object === 'document' && ( $body.hasClass( 'document' ) || $body.hasClass( 'documents' ) ),
@@ -762,7 +762,7 @@ window.bp = window.bp || {};
 							// Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
-							$( '.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);
@@ -821,9 +821,9 @@ window.bp = window.bp || {};
 					}
 
 					// Pre select saved scope filter.
-					if ( $( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"]' ).length ) {
+					if ( $( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"]' ).length ) {
 						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== scope ) {
-							$( self.objectNavParent + ' [data-bp-member-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
+							$( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"] option[data-bp-scope="' + scope + '"]' ).prop( 'selected', true );
 						}
 					}
 
@@ -940,7 +940,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bp-messages-content, .messages-screen' );
+			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bb-rl-messages-content, .messages-screen, .bb_more_options, .bb-rl-group-extra-info' );
 			$buttons.on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$buttons.on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 			$buttons.on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
@@ -953,8 +953,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$document.on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
-			$document.on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
-			$document.on( 'click', '#message-threads .report-content', this.threadListReportPopup );
+			$document.on( 'click', '#bb-rl-message-threads .block-member', this.threadListBlockPopup );
+			$document.on( 'click', '#bb-rl-message-threads .report-content', this.threadListReportPopup );
 			$document.on( 'click', '.bb-rl-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$document.on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$document.on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
@@ -970,7 +970,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
 
-			$document.on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
+			$document.on( 'click', '#header-cover-image a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper );
 
 			$document.on( 'click', '#cover-photo-alert .bb-rl-model-close-button', this.coverPhotoCropperAlert );
 
@@ -997,6 +997,10 @@ window.bp = window.bp || {};
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$document.keydown( this.mediumFormAction.bind( this ) );
+
+			// group manage actions.
+			$document.on('change', '.bb-rl-groups-manage-members-list select.member-action-dropdown', this.groupManageAction.bind( this ) );
+			$document.on('click', '.bb-rl-groups-manage-members-list .bb-rl-group-member-action-button:not(.disabled)', this.groupManageActionClick.bind( this ) );
 		},
 
 		/**
@@ -1433,7 +1437,7 @@ window.bp = window.bp || {};
 					gridfilters.find( '.layout-view' ).removeClass( 'active' );
 					$this.addClass( 'active' );
 					if ( 'list' === layout ) {
-						$this.parents( '.bb-rl-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
+						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).removeClass( 'grid' );
 					} else {
 						$this.parents( '.buddypress-wrap' ).find( '.bp-list' ).addClass( 'grid' );
 					}
@@ -1720,14 +1724,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-
-				// support for buddyboss theme for button actions and icons and texts.
-				if ( $( document.body ).hasClass( 'buddyboss-theme' ) && typeof target.data( 'balloon' ) !== 'undefined' ) {
-					target.attr( 'data-balloon', target.data( 'title' ) );
-				} else {
-					target.text( target.data( 'title' ) );
-				}
-
+				target.text( target.data( 'title' ) );
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
 				return false;
@@ -2446,7 +2443,7 @@ window.bp = window.bp || {};
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
-			var blockMember = $( '#message-threads .block-member' );
+			var blockMember = $( '#bb-rl-message-threads .block-member' );
 			if ( blockMember.length > 0 ) {
 				blockMember.magnificPopup(
 					{
@@ -2474,7 +2471,7 @@ window.bp = window.bp || {};
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
-			var blockMember = $( '#message-threads .report-content' );
+			var blockMember = $( '#bb-rl-message-threads .report-content' );
 			if ( blockMember.length > 0 ) {
 
 				$( '#bb-report-content .form-item-category' ).show();
@@ -2489,7 +2486,6 @@ window.bp = window.bp || {};
 
 				if ( ! $firstVisibleRadio.length ) {
 					$( '#report-category-other' ).attr( 'checked', true ).trigger( 'click' );
-					$( 'label[for="report-category-other"]' ).hide();
 				}
 
 				if ( 'undefined' !== typeof reportType ) {
@@ -2815,7 +2811,6 @@ window.bp = window.bp || {};
 		 *  Cover photo Cropper
 		 */
 		coverPhotoCropper: function ( e ) {
-
 			var picture, guillotineHeight, guillotineWidth, guillotineTop, guillotineScale;
 
 			if ( $( e.currentTarget ).hasClass( 'position-change-cover-image' ) ) {
@@ -2823,7 +2818,7 @@ window.bp = window.bp || {};
 					imageCenter   = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2,
 					currentTarget = $( e.currentTarget );
 				if ( imageHeight <= currentTarget.closest( '#header-cover-image' ).height() ) {
-					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-rl-bb-model-header"><h4>' + bbRLMedia.cover_photo_size_error_header + '</h4><a class="bb-rl-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + bbRLMedia.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
+					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-rl-bb-model-header"><h4>' + bbRLMedia.cover_photo_size_error_header + '</h4><a class="bb-rl-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + bbRLMedia.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
 					e.preventDefault();
 					return;
 				}
@@ -4378,6 +4373,37 @@ window.bp = window.bp || {};
 			}
 
 			self.objectRequest( queryData );
+		},
+
+		groupManageAction: function ( event ) {
+			var target = $( event.currentTarget );
+			var currentValue = target.val();
+
+			// Reset all other select elements
+			$( '.bb-rl-groups-manage-members-list select.member-action-dropdown' ).not( target ).each( function() {
+				$( this ).val( '' ).trigger( 'change.select2' );
+			} );
+
+			// Disable all action buttons
+			$( '.bb-rl-group-member-action-button' ).addClass( 'disabled' );
+
+			// Enable only the button related to the changed select
+			var action_button = target.parents( '.members-manage-buttons' ).find( '.bb-rl-group-member-action-button' );
+			if ( currentValue ) {
+				action_button.removeClass('disabled');
+			} else {
+				action_button.addClass('disabled');
+			}
+		},
+
+		groupManageActionClick: function ( event ) {
+			var target = $( event.currentTarget );
+			var action_url = target.parents( '.members-manage-buttons' ).find( '.member-action-dropdown' ).val();
+			if ( action_url ) {
+				window.location.href = action_url;
+			}
+
+			return false;
 		},
 	};
 

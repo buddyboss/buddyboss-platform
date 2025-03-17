@@ -3,8 +3,8 @@
 	@include bb-rl-button;
 
 	&.bb-rl-button--small {
-		padding: 4px var(--bb-rl-space-100);
-		font-size: 0.875rem;
+
+		@include bb-rl-button--small;
 	}
 
 	&.bb-rl-button--brandFill {

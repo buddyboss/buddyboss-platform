@@ -2,18 +2,20 @@
 /**
  * The template for document folder create
  *
- * @since BuddyBoss [BBVERSION]
+ * This template can be overridden by copying it to yourtheme/buddypress/document/create-folder.php.
  *
- * @version 1.0.0
+ * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 ?>
 
 <div id="bp-media-create-folder" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap">
-			<div class="modal-wrapper">
-				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+			<div class="bb-rl-modal-wrapper">
+				<div id="boss-media-create-album-popup" class="bb-rl-create-folder-popup modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
@@ -29,7 +31,7 @@
 					endif;
 					?>
 					<footer class="bb-model-footer">
-						<a class="button" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-create-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 					</footer>
 
 				</div>

@@ -47,7 +47,7 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 			?>
 
 			<li <?php bp_group_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( $bp_group_id ); ?>" data-bp-item-component="groups">
-				<div class="list-wrap">
+				<div class="list-wrap bb-rl-group-block">
 					<?php
 					if ( ! bp_disable_group_cover_image_uploads() && bb_platform_group_element_enable( 'cover-images' ) ) {
 						$group_cover_image_url = bp_attachments_get_attachment(
@@ -58,6 +58,10 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 							)
 						);
 						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
+
+						if ( empty( $group_cover_image_url ) ) {
+							$group_cover_image_url = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
+						}
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
 							<a href="<?php bp_group_permalink(); ?>">
@@ -115,8 +119,10 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 						<?php bp_nouveau_groups_loop_item(); ?>
 
 						<div class="group-footer-wrap <?php echo esc_attr( $group_members . ' ' . $join_button ); ?>">
-							<div class="group-members-wrap">
-								<?php bb_groups_loop_members(); ?>
+							<div class="group-members-wrap flex">
+								<?php
+									bb_groups_members();
+								?>
 							</div>
 							<?php if ( bb_platform_group_element_enable( 'join-buttons' ) ) { ?>
 								<div class="groups-loop-buttons footer-button-wrap"><?php bp_nouveau_groups_loop_buttons(); ?></div>
@@ -133,8 +139,8 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 	<!-- Leave Group confirmation popup -->
 	<div class="bb-leave-group-popup bb-action-popup" style="display: none">
 		<transition name="modal">
-			<div class="modal-mask bb-white bbm-model-wrap">
-				<div class="modal-wrapper">
+			<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+				<div class="bb-rl-modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
 							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
@@ -146,10 +152,9 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
 						</footer>
-
 					</div>
 				</div>
 			</div>

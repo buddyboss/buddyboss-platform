@@ -3,7 +3,7 @@
  * BuddyBoss - Video Actions, This template is used to render the video actions.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @version 1.0.0
  */
 

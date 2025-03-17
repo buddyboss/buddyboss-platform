@@ -2,78 +2,139 @@
 /**
  * BuddyBoss Video templates
  *
- * @since BuddyBoss [BBVERSION]
- * 
- * @version 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/video/index.php.
+ *
+ * @package BuddyBoss\Core
+ *
+ * @since   BuddyBoss [BBVERSION]
+ * @version [BBVERSION]
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
-
-bp_nouveau_before_video_directory_content();
-bp_nouveau_template_notices();
 ?>
+<div class="bb-rl-video-directory-wrapper">
+	<div class="bb-rl-secondary-header flex items-center">
+		<div class="bb-rl-entry-heading">
+			<h2><?php esc_html_e( 'Videos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_core_get_all_member_count() : ''; ?></span></h2>
+		</div>
+		<div class="bb-rl-sub-ctrls flex items-center">
+			<?php
+				bp_get_template_part( 'common/search-and-filters-bar' );
 
-<div class="screen-content">
-	<?php
-	bp_nouveau_video_hook( 'before_directory', 'list' );
+				if ( is_user_logged_in() ) {
 
-	/**
-	 * Fires before the display of the members list tabs.
-	 *
-	 * @since BuddyBoss 1.7.0
-	 */
-	do_action( 'bp_before_directory_video_tabs' );
+					echo '<div class="bb-rl-video-actions bb-rl-actions-buttons flex items-center">';
 
-	if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
-		bp_get_template_part( 'common/nav/directory-nav' );
-	}
-	?>
+					if ( bp_is_profile_albums_support_enabled() ) {
+						?>
+						<a href="#" id="bb-create-video-album" class="action-secondary bb-create-video-album button small">
+							<i class="bb-icons-rl-images"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
+						</a>
+						<?php
+					}
 
-	<div class="video-options">
+					if (
+						bp_is_profile_video_support_enabled() &&
+						bb_user_can_create_video()
+					) {
+						?>
+						<a class="action-primary bb-add-videos button small" id="bp-add-video" href="#" >
+							<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
+						</a>
+						<?php
+					}
+
+					bp_get_template_part( 'video/uploader' );
+
+					bp_get_template_part( 'video/create-album' );
+
+					echo '</div>';
+				}
+
+				bp_get_template_part( 'media/theatre' );
+				bp_get_template_part( 'video/theatre' );
+				bp_get_template_part( 'document/theatre' );
+			?>
+		</div>
+	</div>
+
+	<div class="bb-rl-container-inner">
+
 		<?php
-		bp_get_template_part( 'common/search-and-filters-bar' );
+			/**
+			 * Fires before the display of the video.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bp_before_directory_video' );
+		?>
 
-		if ( is_user_logged_in() ) :
+		<div class="bb-rl-video-directory-container">
 
-			if ( ( bp_is_profile_video_support_enabled() && bb_user_can_create_video() ) ) {
-				?>
-				<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+			<?php
+				/**
+				 * Fires before the display of the video list tabs.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bp_before_directory_video_tabs' );
+
+				/**
+				 * Fires before the display of the video content.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bp_before_directory_video_content' );
+			?>
+
+			<div class="screen-content bb-rl-video-directory-content">
+
+				<div id="video-stream" class="video dir-list bb-rl-video bb-rl-media-stream" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+						if ( $is_send_ajax_request ) {
+							echo '<div id="bp-ajax-loader">';
+							bp_nouveau_user_feedback( 'directory-video-loading' );
+							echo '</div>';
+						} else {
+							bp_get_template_part( 'video/video-loop' );
+						}
+					?>
+				</div><!-- .video -->
+
+
 				<?php
-			}
-
-			if ( ( bp_is_profile_albums_support_enabled() ) ) {
+					/**
+					 * Fires and displays the video content.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 */
+					do_action( 'bp_directory_video_content' );
 				?>
-				<a href="#" id="bb-create-video-album" class="bb-create-video-album button small"><i class="bb-icon-l bb-icon-image-video"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
-				<?php
-			}
+			</div><!-- // .screen-content -->
 
-			bp_get_template_part( 'video/uploader' );
+			<?php
 
-			bp_get_template_part( 'video/create-album' );
+				bp_get_template_part( 'sidebar/right-sidebar' );
 
-		endif;
+				/**
+				 * Fires after the display of the video content.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 */
+				do_action( 'bp_after_directory_video_content' );
+			?>
+
+		</div>
+
+		<?php
+			/**
+			 * Fires after the display of the video.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bp_after_directory_video' );
 		?>
 	</div>
 
-	<?php
-	bp_get_template_part( 'media/theatre' );
-	bp_get_template_part( 'video/theatre' );
-	bp_get_template_part( 'document/theatre' );
-	?>
-
-	<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
-		<?php
-		if ( $is_send_ajax_request ) {
-			echo '<div id="bp-ajax-loader">';
-			bp_nouveau_user_feedback( 'directory-video-loading' );
-			echo '</div>';
-		} else {
-			bp_get_template_part( 'video/video-loop' );
-		}
-		?>
-	</div><!-- .video -->
-
-	<?php bp_nouveau_after_video_directory_content(); ?>
-
-</div><!-- // .screen-content -->
+</div>
 

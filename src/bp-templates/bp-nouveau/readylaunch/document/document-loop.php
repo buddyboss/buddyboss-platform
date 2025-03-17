@@ -2,9 +2,11 @@
 /**
  * The template for document loop
  *
- * @since BuddyBoss [BBVERSION]
+ * This template can be overridden by copying it to yourtheme/buddypress/document/document-loop.php.
  *
- * @version 1.0.0
+ * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Core
+ * @version 1.4.0
  */
 
 bp_nouveau_before_loop();
@@ -41,41 +43,8 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			$active_group_class = 'asce';
 		}
 		?>
-		<div class="document-data-table-head">
-			<div class="data-head data-head-name <?php echo esc_attr( $active_title_class ); ?>" data-target="name">
-				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
-					<i class="bb-icon-f bb-icon-caret-down"></i>
-				</span>
-			</div>
-			<div class="data-head data-head-modified <?php echo esc_attr( $active_date_class ); ?>" data-target="modified">
-				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-f bb-icon-caret-down"></i>
-				</span>
-			</div>
-			<div class="data-head data-head-origin <?php echo esc_attr( $active_group_class ); ?>" data-target="group">
-				<?php
-				if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $scope ) && 'personal' !== $scope ) {
-					?>
-					<span>
-					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
-						<i class="bb-icon-f bb-icon-caret-down"></i>
-					</span>
-					<?php
-				}
-				?>
-			</div>
 
-			<div class="data-head data-head-visibility <?php echo esc_attr( $active_privacy_class ); ?>" data-target="visibility">
-				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
-					<i class="bb-icon-f bb-icon-caret-down"></i>
-				</span>
-			</div>
-		</div><!-- .document-data-table-head -->
-
-		<div id="media-folder-document-data-table">
+		<div id="media-folder-document-data-table" class="document-list item-list bp-list bb-document-list grid">
 		<?php
 		bp_get_template_part( 'document/activity-document-move' );
 		bp_get_template_part( 'document/activity-document-folder-move' );

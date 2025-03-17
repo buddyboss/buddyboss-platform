@@ -1,10 +1,15 @@
 <?php
 /**
- * BuddyBoss - Video Albums Create, This template is used to create a new album.
+ * BuddyBoss - Video Albums Create
  *
- * @since BuddyBoss [BBVERSION]
- * 
- * @version 1.0.0
+ * This template is used to create a new album.
+ *
+ * This template can be overridden by copying it to yourtheme/buddypress/video/create-album.php.
+ *
+ * @package BuddyBoss\Core
+ *
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 $bp_is_group = bp_is_group();

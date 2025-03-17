@@ -2057,17 +2057,17 @@ window.bp = window.bp || {};
 							var iconsArray = [];
 							$( this ).closest( 'td' ).find( 'select.extension-icon option' ).each(
 								function(){
-									var iconClass = $( this ).val();
+									var iconClass = $( this ).attr('data-value');
 									var text      = this.innerText;
 									var item      = '<li><i class="' + iconClass + '"></i><span>' + text + '</span></li>';
 									iconsArray.push( item );
 								}
 							);
 
-							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray + '</ul></div></div>' );
+							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray.join('') + '</ul></div></div>' );
 
 							// Set the button value to the first el of the array by default.
-							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon' ).val();
+							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).attr('data-value');
 							var currentSelectedIconText = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).text();
 							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( '<li><i class="' + currentSelectedIcon + '"></i><span>' + currentSelectedIconText + '</span></li>' );
 						}
@@ -2113,7 +2113,7 @@ window.bp = window.bp || {};
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
 					totalCount     = 1;
 					var media_type = 'bp_document';
-					if ( 
+					if (
 						$( this ).closest('tr.custom-extension').length > 0 &&
 						$( this ).closest('tr.custom-extension').hasClass('video-extensions')
 					) {
@@ -2906,7 +2906,7 @@ window.bp = window.bp || {};
 		// Show telemetry no-reporting setting and mark as checked.
 		var $no_reporting_setting = jQuery( '.bb-setting-telemetry-no-reporting' );
 		$no_reporting_setting.removeClass( 'bp-hide' );
-	
+
 		// Update telemetry mode description with data from the first telemetry input field.
 		var notice_text = jQuery( '#bb_advanced_telemetry input[name="bb_advanced_telemetry_reporting"]' ).first().data( 'notice' );
 		jQuery( '.bb-telemetry-mode-description' ).html( notice_text );

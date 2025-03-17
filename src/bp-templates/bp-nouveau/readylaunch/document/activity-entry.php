@@ -1,9 +1,9 @@
 <?php
 /**
- * The template for activity document entry
+ * ReadyLaunch - The template for activity document entry.
  *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Core
  * @version 1.0.0
  */
 
@@ -20,8 +20,9 @@ $doc_attachment_url     = bp_get_document_attachment_url();
 $svg_icon               = bp_document_svg_icon( $extension, $attachment_id );
 $svg_icon_download      = bp_document_svg_icon( 'download' );
 $url                    = wp_get_attachment_url( $attachment_id );
-$filename               = basename( get_attached_file( $attachment_id ) );
-$size                   = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+$attached_file          = get_attached_file( $attachment_id );
+$filename               = basename( $attached_file );
+$size                   = is_file( $attached_file ) ? bp_document_size_format( filesize( $attached_file ) ) : 0;
 $download_url           = bp_document_download_link( $attachment_id, $document_id );
 $document_privacy       = bb_media_user_can_access( $document_id, 'document' );
 $can_download_btn       = true === (bool) $document_privacy['can_download'];
@@ -38,20 +39,18 @@ if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$mirror_text         = bp_document_mirror_text( $attachment_id );
 }
-
-$class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
-$class_popup   = apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
+$class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-rl-open-document-theatre' );
+$class_popup   = apply_filters( 'bp_document_activity_theater_description_class', 'bb-rl-document-detail-wrap-description-popup' );
 $click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
 $video_url     = bb_document_video_get_symlink( $document_id );
 $user_can_edit = bp_document_user_can_edit( $document_id );
 ?>
 
-<div class="bb-activity-media-elem document-activity <?php echo esc_attr( $document_id ); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
-	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
-	<div class="document-description-wrap">
+<div class="bb-rl-activity-media-elem bb-rl-document-activity <?php echo esc_attr( $document_id ); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>">
+	<div class="bb-rl-document-description-wrap">
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
-				class="entry-img <?php echo esc_attr( $class_theatre ); ?>"
+				class="bb-rl-entry-img <?php echo esc_attr( $class_theatre ); ?>"
 				data-id="<?php echo esc_attr( $document_id ); ?>"
 				data-attachment-full=""
 				data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
@@ -71,11 +70,11 @@ $user_can_edit = bp_document_user_can_edit( $document_id );
 				data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
 				data-can-edit="<?php echo esc_attr( $user_can_edit ); ?>"
 				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
-			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>
+			<i class="<?php echo esc_attr( $svg_icon ); ?>"></i>
 		</a>
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
-				class="document-detail-wrap <?php echo esc_attr( $class_popup ); ?>"
+				class="bb-rl-document-detail-wrap <?php echo esc_attr( $class_popup ); ?>"
 				data-id="<?php echo esc_attr( $document_id ); ?>"
 				data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 				data-attachment-full=""
@@ -95,12 +94,14 @@ $user_can_edit = bp_document_user_can_edit( $document_id );
 				data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
 				data-can-edit="<?php echo esc_attr( $user_can_edit ); ?>"
 				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
-			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
-			<span class="document-description"><?php echo esc_html( $size ); ?></span>
-			<span class="document-extension-description"><?php echo esc_html( bp_document_get_extension_description( $extension ) ); ?></span>
-			<span class="document-helper-text"> <span> - </span><span class="document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
+			<span class="bb-rl-document-title"><?php echo esc_html( $filename ); ?></span>
+			<span class="bb-rl-document-description"><?php echo esc_html( $size ); ?></span>
+			<span class="bb-rl-document-extension-description"><?php echo esc_html( bp_document_get_extension_description( $extension ) ); ?></span>
+			<span class="bb-rl-document-helper-text"> <span> - </span><span class="bb-rl-document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="bb-rl-document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
 		</a>
 	</div>
+
+	<?php bp_get_template_part( 'document/activity-document-preview' ); ?> <!-- .bb-code-extension-files-preview. -->
 
 	<?php
 	// .bb-activity-document-actions.
@@ -110,4 +111,4 @@ $user_can_edit = bp_document_user_can_edit( $document_id );
 	bp_get_template_part( 'document/code-preview' );
 	?>
 
-</div> <!-- .bb-activity-media-elem -->
+</div> <!-- .bb-rl-activity-media-elem -->

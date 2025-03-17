@@ -1,10 +1,17 @@
-/* jshint browser: true */
-/* global bp, bbReadyLaunchFront */
+
+/* global bp, bbReadyLaunchFront, BP_Nouveau */
 /* @version 1.0.0 */
+
 window.bp = window.bp || {};
 
 (
 	function ( exports, $ ) {
+
+		var bpNouveauLocal    = BP_Nouveau,
+		    bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+		    bbRlMedia         = bpNouveauLocal.media,
+		    bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
+		    bbRlNonce         = bpNouveauLocal.nonces;
 
 		/**
 		 * [ReadLaunch description]
@@ -25,6 +32,7 @@ window.bp = window.bp || {};
 				this.addListeners();
 				this.mobileSubMenu();
 				this.gridListFilter();
+				this.styledSelect();
 
 				this.bbReloadWindow();
 				this.initBBNavOverflow();
@@ -35,7 +43,7 @@ window.bp = window.bp || {};
 			 */
 			addListeners : function () {
 				var $document = $( document );
-				$( '.bb-nouveau-list' ).scroll( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
+				$( '.bb-nouveau-list' ).on( 'scroll', this.bbScrollHeaderDropDown.bind( this ) );
 				$document.on( 'click', '.notification-link, .notification-header-tab-action, .bb-rl-load-more a', this.bbHandleLoadMore.bind( this ) );
 				$document.on( 'heartbeat-send', this.bbHeartbeatSend.bind( this ) );
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
@@ -55,7 +63,10 @@ window.bp = window.bp || {};
 			bbScrollHeaderDropDown: function ( e ) {
 				var el = e.target;
 				if ( 'notification-list' === el.id ) {
-					if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! el.classList.contains( 'loading' ) ) {
+					var scrollThreshold = 30; // pixels from bottom
+					var bottomReached = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
+
+					if (bottomReached && ! el.classList.contains( 'loading' ) ) {
 						var load_more = $( el ).find( '.bb-rl-load-more' );
 						if ( load_more.length ) {
 							el.classList.add( 'loading' );
@@ -84,10 +95,49 @@ window.bp = window.bp || {};
 			},
 
 			gridListFilter: function () {
-				$( '.bb-rl-filter select' ).select2( {
+				$( '.bb-rl-filter select' ).each( function () {
+					let $this = $( this );
+					let customClass = '';
+
+					if ( $this.data( 'bb-caret' ) ) {
+						customClass += ' bb-rl-caret-icon ';
+					}
+
+					if ( $this.data( 'bb-icon' ) ) {
+						customClass += ' bb-rl-has-icon ';
+						customClass += ' ' + $this.data('bb-icon') + ' ';
+					}
+
+					if ( $this.data( 'bb-border' ) === 'rounded' ) {
+						customClass += ' bb-rl-rounded-border ';
+					}
+
+					$this.select2( {
 					theme: 'rl',
-					containerCssClass: 'bb-rl-select2-container',
-					dropdownCssClass: 'bb-rl-select2-dropdown'
+					containerCssClass: 'bb-rl-select2-container'+ customClass,
+					dropdownCssClass: 'bb-rl-select2-dropdown',
+						dropdownParent: $this.parent()
+					} );
+				} );
+			},
+
+			styledSelect: function () {
+				$( '.bb-rl-styled-select select' ).each( function () {
+					let $this = $( this );
+					let customClass = '';
+
+					// Check if parent container has specific class
+					let $parent = $this.closest( '.bb-rl-styled-select' );
+					if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
+						customClass += ' bb-rl-select-default';
+					}
+
+					$this.select2( {
+						theme: 'bb-rl-select2',
+						containerCssClass: 'bb-rl-select2-container ' + customClass,
+						dropdownCssClass: 'bb-rl-select2-dropdown',
+						dropdownParent: $this.parent()
+					} );
 				} );
 			},
 
@@ -425,7 +475,7 @@ window.bp = window.bp || {};
 				createDropzoneOptions : function ( options ) {
 					return _.extend(
 						{
-							url              : BP_Nouveau.ajaxurl,
+							url              : bbRlAjaxUrl,
 							timeout          : 3 * 60 * 60 * 1000,
 							autoProcessQueue : true,
 							addRemoveLinks   : true,
@@ -497,7 +547,7 @@ window.bp = window.bp || {};
 						'sending',
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
-							formData.append( '_wpnonce', BP_Nouveau.nonces[ nonceName ] );
+							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
@@ -527,6 +577,15 @@ window.bp = window.bp || {};
 								response.data.uuid       = file.upload.uuid;
 								response.data.saved      = false;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+
+								if( 'video' === mediaType ) {
+									var thumbnailCheck = setInterval( function () {
+										if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+											response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+											clearInterval( thumbnailCheck );
+										}
+									});
+								}
 
 								view[ modelKey ].push( response.data );
 								view.model.set( modelKey, view[ modelKey ] );
@@ -558,12 +617,12 @@ window.bp = window.bp || {};
 						'error',
 						function ( file, response ) {
 							if ( file.accepted ) {
-								var errorMessage = response && response.data && response.data.feedback || BP_Nouveau.media.connection_lost_error;
+								var errorMessage = response && response.data && response.data.feedback || bbRlMedia.connection_lost_error;
 								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
 							} else {
 								Backbone.trigger(
 									'onError',
-									'<div>' + BP_Nouveau.media.invalid_media_type + '. ' + (
+									'<div>' + bbRlMedia.invalid_media_type + '. ' + (
 										        response || ''
 									        ) + '<div>'
 								);
@@ -637,6 +696,123 @@ window.bp = window.bp || {};
 					$( parentAttachmentSelector ).removeClass( 'empty' ).closest( parentSelector ).addClass( 'focus-in--attm' );
 				},
 
+				injectFiles: function ( data ) {
+					var commonData   = data.commonData,
+					    id           = data.id,
+					    fileType     = data.fileType, // 'media', 'document', or 'video'
+					    dropzoneObj  = data.dropzoneObj,
+					    draftData    = data.draftData || false,
+					    dropzoneData = data.dropzoneData || null;
+
+					// Iterate through the files and inject them.
+					commonData.forEach(
+						function ( file, index ) {
+							var editData;
+							if ( 0 < parseInt( id, 10 ) ) {
+								editData = {
+									id        : file.attachment_id || file.doc_id || file.vid_id,
+									name      : file.name || file.full_name,
+									saved     : true,
+									group_id  : file.group_id || 0,
+									menu_order: file.menu_order || 0,
+									uuid      : file.attachment_id || file.doc_id || file.vid_id,
+									url       : file.url,
+									type      : fileType,
+								};
+								if ( 'media' === fileType ) {
+									editData.media_id = file.id;
+									editData.thumb    = file.thumb || '';
+									editData.album_id = file.album_id || 0;
+								} else if ( 'document' === fileType ) {
+									editData.document_id = file.id;
+									editData.size        = file.size || 0;
+									editData.full_name   = file.full_name || file.name;
+									editData.folder_id   = file.folder_id || 0;
+									editData.svg_icon    = file.svg_icon || '';
+								} else if ( 'video' === fileType ) {
+									editData.video_id = file.id;
+									editData.thumb    = file.thumb || '';
+									editData.size     = file.size || 0;
+									editData.album_id = file.album_id || 0;
+								}
+							} else {
+								editData = {
+									id        : file.id || file.doc_id || file.vid_id,
+									name      : file.name || file.full_name,
+									saved     : false,
+									group_id  : file.group_id || 0,
+									menu_order: file.menu_order || 0,
+									uuid      : file.id || file.doc_id || file.vid_id,
+									url       : file.url,
+									type      : fileType,
+								};
+
+								if ( 'media' === fileType ) {
+									editData.thumb    = file.thumb || '';
+									editData.album_id = file.album_id || 0;
+								} else if ( 'document' === fileType ) {
+									editData.size      = file.size || 0;
+									editData.full_name = file.full_name || file.name;
+									editData.folder_id = file.folder_id || 0;
+									editData.svg_icon  = file.svg_icon || '';
+								} else if ( 'video' === fileType ) {
+									editData.thumb    = file.thumb || '';
+									editData.album_id = file.album_id || 0;
+									editData.size     = file.size || 0;
+								}
+							}
+							if ( ! _.isNull( dropzoneData ) ) {
+								dropzoneData.push( editData );
+							}
+
+							var mockFile = {
+								name    : file.name || file.full_name || file.title,
+								size    : file.size || 0,
+								accepted: true,
+								kind    : 'media' === fileType ? 'image' : 'file',
+								upload  : {
+									filename: file.name || file.full_name || file.title,
+									uuid    : file.attachment_id || file.doc_id || file.vid_id,
+								},
+								dataURL : file.url,
+								id      : file.attachment_id || file.doc_id || file.vid_id,
+							};
+
+							if ( 'media' === fileType ) {
+								mockFile.media_edit_data = editData;
+							} else if ( 'document' === fileType ) {
+								mockFile.document_edit_data = editData;
+								mockFile.svg_icon           = ! _.isUndefined( file.svg_icon ) ? file.svg_icon : '';
+							} else if ( 'video' === fileType ) {
+								mockFile.video_edit_data = editData;
+								mockFile.dataThumb       = ! _.isUndefined( file.thumb ) ? file.thumb : '';
+							}
+
+							if ( dropzoneObj ) {
+								dropzoneObj.files.push( mockFile );
+								dropzoneObj.emit( 'addedfile', mockFile );
+
+								// Handle thumbnails for media files.
+								if ( 'media' === fileType ) {
+									if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+										$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
+										dropzoneObj.emit( 'thumbnail', file.thumb );
+									} else {
+										bp.Readylaunch.Utilities.createThumbnailFromUrl( mockFile, dropzoneObj );
+									}
+								}
+
+								dropzoneObj.emit( 'complete', mockFile );
+
+								if ( 'media' === fileType && true === draftData ) {
+									dropzoneObj.emit( 'dz-success' );
+									dropzoneObj.emit( 'dz-complete' );
+								}
+							}
+						}
+					);
+				},
+
 				createThumbnailFromUrl : function ( mock_file, dropzoneObj, dropzone_container ) {
 					var self             = this,
 					    dropzone_obj_key = dropzone_container && dropzone_container.data ? dropzone_container.data( 'key' ) : '',
@@ -686,13 +862,13 @@ window.bp = window.bp || {};
 				$('#object-nav > ul').each(function () {
 					self.bbNavOverflow(this, 90);
 				});
-	
+
 				window.addEventListener('resize', function () {
 					$('#object-nav > ul').each(function () {
 						self.bbNavOverflow(this, 90);
 					});
 				});
-	
+
 				window.addEventListener('load', function () {
 					$('#object-nav > ul').each(function () {
 						self.bbNavOverflow(this, 90);
@@ -707,14 +883,14 @@ window.bp = window.bp || {};
 						$( this ).toggleClass( 'active open' ).next().toggleClass( 'active open' );
 					}
 				);
-	
+
 				$( document ).on(
 					'click',
 					'.bb-rl-hideshow .bb-rl-sub-menu a',
 					function ( e ) {
 						// e.preventDefault();
 						$( 'body' ).trigger( 'click' );
-	
+
 						// add 'current' and 'selected' class
 						var currentLI = $( this ).parent();
 						currentLI.parent( '.bb-rl-sub-menu' ).find( 'li' ).removeClass( 'current selected' );
@@ -735,20 +911,20 @@ window.bp = window.bp || {};
 			// Handle navigation overflow with a dropdown.
 			bbNavOverflow: function ( elem, reduceWidth ) {
 				var $elem = $( elem );
-	
+
 				function run_alignMenu() {
 					$elem.append( $( $elem.children( 'li.bb-rl-hideshow' ).children( 'ul' ) ).html() );
 					$elem.children( 'li.bb-rl-hideshow' ).remove();
 					alignMenu( elem );
 				}
-	
+
 				function alignMenu( obj ) {
 					var self = $( obj ),
 						w = 0,
 						i = -1,
 						menuhtml = '',
 						mw = self.width() - reduceWidth;
-	
+
 					$.each( self.children( 'li' ), function () {
 						i++;
 						w += $( this ).outerWidth( true );
@@ -757,24 +933,24 @@ window.bp = window.bp || {};
 							$( this ).remove();
 						}
 					} );
-	
+
 					self.append( '<li class="bb-rl-hideshow menu-item-has-children1" data-no-dynamic-translation>' +
 						'<a class="bb-rl-nav-more" href="#">' + bbReadyLaunchFront.more_nav + '<i class="bb-icons-rl-caret-down"></i></a>' +
 						'<ul class="bb-rl-sub-menu" data-no-dynamic-translation>' + menuhtml + '</ul>' +
 						'</li>' );
-	
+
 					if ( self.find( 'li.bb-rl-hideshow' ).find( 'li' ).length > 0 ) {
 						self.find( 'li.bb-rl-hideshow' ).show();
 					} else {
 						self.find( 'li.bb-rl-hideshow' ).hide();
 					}
 				}
-	
+
 				run_alignMenu();
 			}
 		};
 
-		// Launch BP Zoom.
+		// Launch BP ReadyLaunch.
 		bp.Readylaunch.start();
 
 	}

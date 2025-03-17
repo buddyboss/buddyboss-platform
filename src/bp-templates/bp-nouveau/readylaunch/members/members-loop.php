@@ -182,9 +182,9 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 										}
 
 										echo '<span class="only-grid-view">';
-											if ( $enabled_last_active ) {
-												echo wp_kses_post( $member_last_activity );
-											}
+										if ( $enabled_last_active ) {
+											echo wp_kses_post( $member_last_activity );
+										}
 										echo '</span>';
 										echo '</p>';
 									endif;
@@ -195,7 +195,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 									</div>
 
 									<div class="only-list-view bb-rl-last-activity bb-rl-item-meta-asset">
-										<?php 
+										<?php
 										if ( $enabled_last_active ) {
 											echo wp_kses_post( $member_last_activity );
 										}
@@ -207,7 +207,7 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 
 						<div class="bb-rl-member-buttons-wrap">
 
-							<div class="bb-rl-item-actions flex items-center <?php echo empty($profile_actions['primary']) ? 'bb-rl-idle-primary' : ''; ?>">
+							<div class="bb-rl-item-actions flex items-center <?php echo empty( $profile_actions['primary'] ) ? 'bb-rl-idle-primary' : ''; ?>">
 								<div class="bb-rl-secondary-actions flex items-center">
 									<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
 										<div class="flex button-wrap member-button-wrap footer-button-wrap">
@@ -272,7 +272,7 @@ bp_nouveau_after_loop();
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup bb-rl-modal" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-white bbm-model-wrap bb-rl-modal-mask">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="bb-rl-modal-wrapper">
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">
@@ -284,7 +284,7 @@ bp_nouveau_after_loop();
 					<div class="bb-remove-connection-content bb-action-popup-content bb-rl-modal-content">
 						<p>
 							<?php
-							echo sprintf(
+							printf(
 								/* translators: %s: The member name with HTML tags */
 								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
 								'<span class="bb-user-name"></span>'
@@ -305,7 +305,7 @@ bp_nouveau_after_loop();
 <!-- Block member popup -->
 <div id="bb-rl-block-member" class="bb-rl-block-modal bb-rl-modal" style="display: none;">
 	<transition name="modal">
-		<div class="modal-mask bb-rl-modal-mask">
+		<div class="bb-rl-modal-mask">
 			<div class="bb-rl-modal-wrapper">
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">
@@ -361,7 +361,7 @@ bp_nouveau_after_loop();
 							<?php if ( bp_is_active( 'friends' ) ) : ?>
 								<?php
 								printf(
-									wp_kses( __( '<span>%s</span> %s', 'buddyboss' ), array( 'span' => array() ) ),
+									wp_kses( __( '<span>%1$s</span> %2$s', 'buddyboss' ), array( 'span' => array() ) ),
 									esc_html__( 'Please note:', 'buddyboss' ),
 									esc_html__( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' )
 								);

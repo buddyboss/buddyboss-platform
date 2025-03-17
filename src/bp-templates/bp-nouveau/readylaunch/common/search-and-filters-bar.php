@@ -18,7 +18,8 @@
 		(
 			'members' !== $bp_current_component ||
 			bp_disable_advanced_profile_search()
-		)
+		) &&
+		! bp_is_directory()
 	) {
 		?>
 		<div class="subnav-search clearfix">
@@ -41,14 +42,18 @@
 	if (
 		(
 			'members' === $bp_current_component ||
-			'groups' === $bp_current_component ) ||
 			(
-				bp_is_user() &&
-				(
-					! bp_is_current_action( 'requests' ) &&
-					! bp_is_current_action( 'mutual' )
-				)
+				'groups' === $bp_current_component &&
+				! bp_is_group_single()
 			)
+		) ||
+		(
+			bp_is_user() &&
+			(
+				! bp_is_current_action( 'requests' ) &&
+				! bp_is_current_action( 'mutual' )
+			)
+		)
 	) {
 		bp_get_template_part( 'common/filters/directory-filters' );
 	}
@@ -63,8 +68,19 @@
 		bp_get_template_part( 'common/filters/member-filters' );
 	}
 
-	if ( 'groups' === $bp_current_component ) {
+	if (
+		'groups' === $bp_current_component &&
+		! bp_is_group_single()
+	) {
 		bp_get_template_part( 'common/filters/group-filters' );
+	}
+
+	if (
+		'media' === $bp_current_component ||
+		'document' === $bp_current_component ||
+		'video' === $bp_current_component
+	) {
+		bp_get_template_part( 'common/filters/common-filters' );
 	}
 	?>
 </div><!-- search & filters -->

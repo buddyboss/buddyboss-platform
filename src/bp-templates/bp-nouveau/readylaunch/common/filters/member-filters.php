@@ -36,7 +36,7 @@ if ( $is_member_type_enabled ) {
 		?>
 		<div id="bb-rl-member-type-filters" class="component-filters clearfix">
 			<div id="bb-rl-member-type-select" class="last filter bb-rl-filter">
-				<label class="bp-screen-reader-text" for="bb-rl-member-type-order-by">
+				<label class="bb-rl-filter-label" for="bb-rl-member-type-order-by">
 					<span><?php esc_html_e( 'Type', 'buddyboss' ); ?></span>
 				</label>
 				<div class="select-wrap">
@@ -65,11 +65,11 @@ if ( $is_member_type_enabled ) {
 if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
 	<div id="bb-rl-members-scope-filters" class="component-filters clearfix">
 		<div id="bb-rl-members-scope-select" class="last filter bb-rl-scope-filter bb-rl-filter">
-			<label class="bp-screen-reader-text" for="bb-rl-members-scope-options">
+			<label class="bb-rl-filter-label" for="bb-rl-members-scope-options">
 				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="bb-rl-members-scope-options" data-bp-member-scope-filter="members">
+				<select id="bb-rl-members-scope-options" data-bp-members-scope-filter="members">
 					<?php
 					while ( bp_nouveau_nav_items() ) :
 						bp_nouveau_nav_item();

@@ -1,24 +1,23 @@
 <?php
 /**
- * The template for activity document doc preview
+ * ReadyLaunch - The template for activity document doc preview.
  *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Core
  * @version 1.0.0
  */
 
 $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
 $attachment_url            = bp_get_document_attachment_image_activity_thumbnail();
 $bp_get_document_extension = bp_get_document_extension();
+$excluded_extensions       = array_merge( bp_get_document_preview_code_extensions(), bp_get_document_preview_music_extensions() );
 if (
 	$attachment_url &&
-	$bp_document_image_preview &&
-	! in_array( $bp_get_document_extension, bp_get_document_preview_code_extensions(), true ) && // exclude file extension.
-	! in_array( $bp_get_document_extension, bp_get_document_preview_music_extensions(), true ) // exclude audio extension.
-) {
-	?>
-	<div class="document-preview-wrap">
+	true === $bp_document_image_preview &&
+	! in_array( $bp_get_document_extension, (array) $excluded_extensions, true ) // exclude file and audio extension.
+) { ?>
+	<div class="bb-rl-document-preview-wrap">
 		<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
-	</div><!-- .document-preview-wrap -->
+	</div><!-- .bb-rl-document-preview-wrap -->
 	<?php
 }

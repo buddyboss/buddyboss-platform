@@ -1,11 +1,11 @@
 <?php
 /**
- * The template for users messages
+ * ReadyLaunch - The template for users messages.
  *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
+
 ?>
 
 <div class="messages-wrapper">

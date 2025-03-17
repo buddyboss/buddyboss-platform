@@ -2,9 +2,12 @@
 /**
  * BuddyBoss - Video Entry
  *
- * @since BuddyBoss [BBVERSION]
- * 
- * @version 1.0.0
+ * This template can be overridden by copying it to yourtheme/buddypress/video/entry.php.
+ *
+ * @package BuddyBoss\Core
+ *
+ * @since   BuddyBoss 1.7.0
+ * @version 1.7.0
  */
 
 global $video_template;
@@ -44,15 +47,15 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php echo esc_attr( $video_id ); ?>" data-date-created="<?php bp_video_date_created(); ?>">
 	<div class="bb-video-thumb bb-item-thumb <?php echo esc_attr( $has_no_thumbnail ); ?>">
-		<div class="video-action-wrap item-action-wrap">
+		<div class="video-action-wrap item-action-wrap bb_more_options action">
 			<?php
 			$report_btn = bp_video_get_report_link( array( 'id' => $video_id ) );
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
-				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+				<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-dots-three"></i>
 				</a>
-				<div class="video-action_list item-action_list bb_more_dropdown">
+				<div class="video-action_list item-action_list bb_more_dropdown bb_more_options_list">
 					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
@@ -65,7 +68,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>"
 									data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
-									class="ac-video-thumbnail-edit">
+									class="bb-rl-ac-video-thumbnail-edit">
 									<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
 								</a>
 							</li>
@@ -88,7 +91,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-item-activity-id="<?php echo esc_attr( $activity_id ); ?>"
 									data-type="<?php echo esc_attr( $move_type ); ?>"
 									id="<?php echo esc_attr( $move_id ); ?>"
-									class="ac-video-move">
+									class="bb-rl-ac-video-move">
 									<?php esc_html_e( 'Move', 'buddyboss' ); ?>
 								</a>
 							</li>
@@ -107,7 +110,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 							?>
 							<li class="delete_file">
 								<a
-									class="video-file-delete"
+									class="bb-rl-video-file-delete"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
 									data-parent-activity-id="<?php echo esc_attr( $parent_activity_id ); ?>"
 									data-item-activity-id="<?php echo esc_attr( $activity_id ); ?>"
@@ -132,6 +135,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 		<?php } ?>
 
 		<a
+			class="bb-rl-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 			class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 			data-id="<?php echo esc_attr( $video_id ); ?>"
 			data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"

@@ -1,15 +1,20 @@
 <?php
 /**
- * The template for members home
+ * Readylaunch - The template for members home.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since   BuddyBoss [BBVERSION]
  *
  * @version 1.0.0
  */
 
 bp_nouveau_member_hook( 'before', 'home_content' );
 ?>
-<div class="bb-rl-content-wrapper">
+<div id="item-header" role="complementary" data-bp-item-id="<?php echo esc_attr( bp_displayed_user_id() ); ?>" data-bp-item-component="members" class="users-header single-headers">
+	<?php bp_nouveau_member_header_template_part(); ?>
+</div><!-- #item-header -->
+
+<div class="bp-wrap">
+	<div class="bb-rl-content-wrapper">
 	<div class="bb-rl-primary-container">
 		<?php
 		if ( ! bp_is_user_profile_edit() ) {
@@ -44,7 +49,7 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 			<?php
 		}
 		?>
-		
+
 
 		<div class="bp-wrap">
 			<div id="item-body" class="item-body">

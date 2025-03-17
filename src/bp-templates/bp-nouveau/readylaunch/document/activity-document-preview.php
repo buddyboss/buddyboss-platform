@@ -1,9 +1,9 @@
 <?php
 /**
- * The template for activity document preview main
+ * ReadyLaunch - The template for activity document preview main.
  *
- * @since BuddyBoss [BBVERSION]
- *
+ * @since   BuddyBoss [BBVERSION]
+ * @package BuddyBoss\Core
  * @version 1.0.0
  */
 

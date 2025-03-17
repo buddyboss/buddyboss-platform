@@ -2,8 +2,9 @@
 /**
  * The template for media entry
  *
- * @since BuddyBoss [BBVERSION]
+ * This template can be overridden by copying it to yourtheme/buddypress/media/entry.php.
  *
+ * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 
@@ -80,7 +81,7 @@ if ( 'video' === $media_template->media->type ) {
 										data-video-attachments="<?php echo esc_html( wp_json_encode( $attachment_urls ) ); ?>"
 										data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 										data-video-id="<?php echo esc_attr( $bp_media_id ); ?>"
-										class="ac-video-thumbnail-edit"
+										class="bb-rl-ac-video-thumbnail-edit"
 									>
 										<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
 									</a>
@@ -104,7 +105,7 @@ if ( 'video' === $media_template->media->type ) {
 										data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
 										data-type="<?php echo esc_attr( $move_type ); ?>"
 										id="<?php echo esc_attr( $move_id ); ?>"
-										class="ac-video-move"
+										class="bb-rl-ac-video-move"
 									>
 										<?php esc_html_e( 'Move', 'buddyboss' ); ?>
 									</a>
@@ -115,7 +116,7 @@ if ( 'video' === $media_template->media->type ) {
 								?>
 								<li class="delete_file">
 									<a
-										class="video-file-delete"
+										class="bb-rl-video-file-delete"
 										data-video-id="<?php echo esc_attr( $bp_media_id ); ?>"
 										data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
 										data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
@@ -149,7 +150,7 @@ if ( 'video' === $media_template->media->type ) {
 				<p class="bb-video-duration"><?php echo esc_html( $length_formatted['length_formatted'] ); ?></p>
 			<?php } ?>
 			<a
-				class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
+				class="bb-rl-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 				data-id="<?php echo esc_attr( $bp_media_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $poster_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
@@ -226,15 +227,15 @@ if ( 'video' === $media_template->media->type ) {
 	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-photo-li" data-id="<?php echo esc_attr( $bp_media_id ); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
 	<div class="bb-photo-thumb bb-item-thumb">
-		<div class="media-action-wrap">
+		<div class="media-action-wrap bb_more_options action">
 			<?php
 			$report_btn = bp_media_get_report_link( array( 'id' => $bp_media_id ) );
 			if ( $can_move || $report_btn || $can_delete ) {
 				?>
-				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+				<a href="#" class="media-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl-dots-three"></i>
 				</a>
-				<div class="media-action_list bb_more_dropdown">
+				<div class="media-action_list bb_more_dropdown bb_more_options_list">
 					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
@@ -275,7 +276,7 @@ if ( 'video' === $media_template->media->type ) {
 							?>
 							<li class="delete_file">
 								<a
-									class="media-file-delete"
+									class="bb-rl-media-file-delete"
 									data-media-id="<?php echo esc_attr( $bp_media_id ); ?>"
 									data-parent-activity-id="<?php echo esc_attr( $media_parent_activity_id ); ?>"
 									data-item-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
@@ -296,7 +297,7 @@ if ( 'video' === $media_template->media->type ) {
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
 		<a
-			class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
+			class="bb-rl-open-media-theatre bb-rl-entry-img bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 			data-id="<?php echo esc_attr( $bp_media_id ); ?>"
 			data-attachment-full="<?php bb_media_photos_theatre_popup_image(); ?>"
 			data-activity-id="<?php echo esc_attr( $media_activity_id ); ?>"
