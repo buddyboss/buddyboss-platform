@@ -143,7 +143,7 @@ if ( bp_allow_user_to_send_invites() ) {
 	?>
 	<div id="bb-rl-invite-modal" class="bb-rl-invite-modal bb-rl-modal"  style="display: none;">
 		<transition name="modal">
-			<div class="bb-rl-modal-mask">
+			<div class="modal-mask bb-rl-modal-mask">
 				<div class="bb-rl-modal-wrapper">
 					<div class="bb-rl-modal-container">
 						<header class="bb-rl-modal-header">
@@ -236,7 +236,7 @@ if ( bp_allow_user_to_send_invites() ) {
 						</div>
 						<footer class="bb-rl-modal-footer flex items-center">
 							<a class="bb-rl-close-invite bb-rl-modal-close-button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="javascript:void(0);"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-							<input type="submit" name="bb-rl-submit-invite" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="<?php esc_html_e( 'Send Invite', 'buddyboss' ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+							<input type="submit" name="bb-rl-submit-invite" id="bb-rl-submit-invite" form="bb-rl-invite-form" value="<?php esc_html_e( 'Send Invite', 'buddyboss' ); ?>" class="bb-rl-button-submit-invite bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 						</footer>
 					</div>
 				</div>

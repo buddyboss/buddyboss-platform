@@ -31,10 +31,8 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				var $modal= $( '#bb-rl-invite-modal' );
-				var $modalMask = $modal.find( '.bb-rl-modal-mask' );
-
+				
 				if ( $modal.length ) {
-					$modalMask.show();
 					$modal.show();
 				}
 			} );
@@ -42,9 +40,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-rl-modal-close-button', function ( e ) {
 				e.preventDefault();
 				bp.Readylaunch.Members.resetInviteMemberPopupForm.call( this, e );
-
+				
 				var $modal = $( this ).closest( '#bb-rl-invite-modal' );
-
+				
 				if ( $modal.length ) {
 					$modal.hide();
 				}
@@ -53,16 +51,13 @@ window.bp = window.bp || {};
 			$( document ).on( 'submit', '#bb-rl-invite-form', this.submitInviteMemberPopupForm );
 		},
 
-		showToastMessage: function ( message, type, hideModal ) {
-			type = typeof type !== 'undefined' ? type : 'info';
-    		hideModal = typeof hideModal !== 'undefined' ? hideModal : false;
-
+		showToastMessage: function ( message, type = 'info', hideModal = false ) {
 			var $modal = $( '#bb-rl-invite-modal' );
-			var $modalMask = $modal.find( '.bb-rl-modal-mask' );
-
+			var $modalWrapper = $modal.find( '.bb-rl-modal-wrapper' );
+		
 			// Remove any existing toast messages
 			$( '.bb-rl-toast-message' ).remove();
-
+		
 			var toastClass = 'bb-rl-toast-message';
 			var toastIcon = '<span class="bb-rl-spinner"></span>';
 			if ( type === 'error' ) {
@@ -72,26 +67,20 @@ window.bp = window.bp || {};
 				toastClass += ' bb-rl-toast-message--success';
 				toastIcon += '<i class="bb-icons-rl-check-circle"></i>';
 			}
-
+		
 			var toastHTML = '<div class="' + toastClass + '">' + toastIcon + message + '</div>';
-			$modal.append( toastHTML );
-
+			$modalWrapper.append( toastHTML );
+			
 			if ( type !== 'error' ) {
-				if ( hideModal ) {
-					setTimeout( function () {
-						$modalMask.fadeOut( 200 );
-					}, 500 );
-				}
 				setTimeout( function () {
-					$( '.bb-rl-toast-message' ).fadeOut( 300, function () {
+					$( '.bb-rl-toast-message' ).fadeOut( 500, function () {
 						$( this ).remove();
 					} );
-				}, 4000 );
-				if ( hideModal ) {
-					setTimeout( function () {
-						$modal.fadeOut( 500 );
-					}, 4500 );
-				}
+
+					if ( hideModal ) {
+						$modal.fadeOut(200);
+					}
+				}, 5000 );
 			}
 		},
 
@@ -120,9 +109,6 @@ window.bp = window.bp || {};
 			var $nameField = $( '#bb-rl-invite-name' );
 			var $nameWrapper = $nameField.closest( '.bb-rl-form-field-wrapper' );
 			if ( $nameField.val().trim() === '' ) {
-				$nameField.addClass( 'bb-rl-input-field--error' );
-				isValid = false;
-
 				$nameField.addClass( 'bb-rl-input-field--error' );
 				bp.Readylaunch.Members.appendMessage( $nameWrapper, bbReadyLaunchMembersVars.invite_invalid_name_message );
 				isValid = false;
@@ -174,7 +160,7 @@ window.bp = window.bp || {};
 
 		resetInviteMemberPopupForm: function () {
 			var $modal = $( this ).closest( '#bb-rl-invite-modal' );
-			var $form = $modal.find( '#bb-rl-invite-form' );
+			var $form = $modal.find( '#bb-rl-invite-form' )
 
 			// Reset form
 			$form.removeClass( 'bb-rl-form-error' );

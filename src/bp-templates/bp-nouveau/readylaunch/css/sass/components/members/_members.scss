@@ -383,3 +383,13 @@
 		margin-bottom: var(--bb-rl-space-200);
 	}
 }
+
+.bb-readylaunch-template .bb-rl-modal-footer {
+
+	.bb-rl-button-submit-invite,
+	.bb-rl-close-invite {
+
+		@include bb-rl-label-heading-bolder;
+		@include bb-rl-button--small;
+	}
+}

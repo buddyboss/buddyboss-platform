@@ -624,7 +624,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 
 			if ( bp_is_members_directory() ) {
-				wp_enqueue_script( 'bb-rl-members' );
+				wp_register_script(
+					'bb-rl-members',
+					buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members{$min}.js",
+					array('bp-nouveau'),
+					bp_get_version(),
+					true
+				);
+				wp_enqueue_script('bb-rl-members');
+				
 				wp_localize_script(
 					'bb-rl-members',
 					'bbReadyLaunchMembersVars',
@@ -1411,11 +1419,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return array_merge(
 				$scripts,
 				array(
-					'bb-rl-members'             => array(
-						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members%s.js',
-						'dependencies' => array( 'bp-nouveau' ),
-						'footer'       => true,
-					),
 					'bb-rl-groups'              => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-groups%s.js',
 						'dependencies' => array( 'bp-nouveau' ),

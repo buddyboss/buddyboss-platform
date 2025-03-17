@@ -533,3 +533,12 @@
   padding-left: var(--bb-rl-space-300);
   margin-bottom: var(--bb-rl-space-200);
 }
+
+.bb-readylaunch-template .bb-rl-modal-footer .bb-rl-button-submit-invite,
+.bb-readylaunch-template .bb-rl-modal-footer .bb-rl-close-invite {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+}
