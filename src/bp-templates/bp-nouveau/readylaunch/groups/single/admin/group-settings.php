@@ -16,51 +16,21 @@ if ( bp_is_group_create() ) : ?>
 		<?php esc_html_e( 'Select Group Settings', 'buddyboss' ); ?>
 	</h3>
 <?php else : ?>
-	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Group Settings', 'buddyboss' ); ?>
+	<h2 class="bp-screen-title" style="display: block;">
+		<?php esc_html_e( 'Privacy', 'buddyboss' ); ?>
 	</h2>
 <?php endif; ?>
 
-<div class="group-settings-selections">
+<div class="group-settings-selections bb-rl-group-settings bb-rl-styled-select bb-rl-styled-select--default">
 
 	<fieldset class="radio group-status-type">
-		<legend><?php esc_html_e( 'Privacy Options', 'buddyboss' ); ?></legend>
+		<legend><?php esc_html_e( 'Group visibility', 'buddyboss' ); ?></legend>
 
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-status" id="group-status-public" class="bs-styled-radio" value="public"
-				<?php echo ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) ? ' checked="checked"' : ''; ?> aria-describedby="public-group-description" />
-			<label for="group-status-public"><?php esc_html_e( 'This is a public group', 'buddyboss' ); ?></label>
-		</div>
-
-		<ul id="public-group-description">
-			<li><?php esc_html_e( 'Any site member can join this group.', 'buddyboss' ); ?></li>
-			<li><?php esc_html_e( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ); ?></li>
-			<li><?php esc_html_e( 'Group content and activity will be visible to any site member.', 'buddyboss' ); ?></li>
-		</ul>
-
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-status" id="group-status-private" class="bs-styled-radio" value="private"
-				<?php echo( 'private' === $bp_get_new_group_status ? ' checked="checked"' : '' ); ?> aria-describedby="private-group-description" />
-			<label for="group-status-private"><?php esc_html_e( 'This is a private group', 'buddyboss' ); ?></label>
-		</div>
-
-		<ul id="private-group-description">
-			<li><?php esc_html_e( 'Only people who request membership and are accepted can join the group.', 'buddyboss' ); ?></li>
-			<li><?php esc_html_e( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ); ?></li>
-			<li><?php esc_html_e( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ); ?></li>
-		</ul>
-
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-status" id="group-status-hidden" class="bs-styled-radio" value="hidden"
-				<?php echo( 'hidden' === $bp_get_new_group_status ? 'checked="checked"' : '' ); ?> aria-describedby="hidden-group-description" />
-			<label for="group-status-hidden"><?php esc_html_e( 'This is a hidden group', 'buddyboss' ); ?></label>
-		</div>
-
-		<ul id="hidden-group-description">
-			<li><?php esc_html_e( 'Only people who are invited can join the group.', 'buddyboss' ); ?></li>
-			<li><?php esc_html_e( 'This group will not be listed in the groups directory or search results.', 'buddyboss' ); ?></li>
-			<li><?php esc_html_e( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ); ?></li>
-		</ul>
+		<select id="bp-groups-status" name="group-status" autocomplete="off">
+			<option value="public" <?php echo ( 'public' === $bp_get_new_group_status || ! $bp_get_new_group_status ) ? ' selected="selected"' : ''; ?>><?php esc_html_e( 'Public', 'buddyboss' ); ?></option>
+			<option value="private" <?php echo( 'private' === $bp_get_new_group_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Private', 'buddyboss' ); ?></option>
+			<option value="hidden" <?php echo( 'hidden' === $bp_get_new_group_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Hidden', 'buddyboss' ); ?></option>
+		</select>
 
 	</fieldset>
 
@@ -69,20 +39,15 @@ if ( bp_is_group_create() ) : ?>
 
 		<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to invite others?', 'buddyboss' ); ?></p>
 
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-invite-status" id="group-invite-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_invite_status_setting( 'members' ); ?> />
-			<label for="group-invite-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-		</div>
+		<?php
+		$invite_status = bp_group_get_invite_status( bp_get_current_group_id() );
+		?>
 
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-invite-status" id="group-invite-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_invite_status_setting( 'mods' ); ?> />
-			<label for="group-invite-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-		</div>
-
-		<div class="bp-radio-wrap">
-			<input type="radio" name="group-invite-status" id="group-invite-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_invite_status_setting( 'admins' ); ?> />
-			<label for="group-invite-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-		</div>
+		<select id="group-invite-status" name="group-invite-status" autocomplete="off">
+			<option value="members" <?php echo ( 'members' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+			<option value="mods" <?php echo( 'mods' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+			<option value="admins" <?php echo( 'admins' === $invite_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+		</select>
 	</fieldset>
 
 	<?php if ( bp_is_active( 'activity' ) ) : ?>
@@ -92,20 +57,15 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_activity_feed_status_setting( 'members' ); ?> />
-				<label for="group-activity-feed-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
+			<?php
+			$activity_feed_status = bp_group_get_activity_feed_status( bp_get_current_group_id() );
+			?>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_activity_feed_status_setting( 'mods' ); ?> />
-				<label for="group-activity-feed-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_activity_feed_status_setting( 'admins' ); ?> />
-				<label for="group-activity-feed-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
+			<select id="group-activity-feed-status-members" name="group-activity-feed-status" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $activity_feed_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
 		</fieldset>
 		<?php
 	endif;
@@ -117,20 +77,15 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload photos?', 'buddyboss' ); ?></p>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-media-status" id="group-media-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_media_status_setting( 'members' ); ?> />
-				<label for="group-media-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
+			<?php
+			$media_status = bp_group_get_media_status( bp_get_current_group_id() );
+			?>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-media-status" id="group-media-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_media_status_setting( 'mods' ); ?> />
-				<label for="group-media-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-media-status" id="group-media-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_media_status_setting( 'admins' ); ?> />
-				<label for="group-media-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
+			<select id="group-media-status-members" name="group-media-status" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $media_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
 		</fieldset>
 		<?php
 	endif;
@@ -142,20 +97,15 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to create albums?', 'buddyboss' ); ?></p>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-album-status" id="group-albums-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_albums_status_setting( 'members' ); ?> />
-				<label for="group-albums-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
+			<?php
+			$album_status = bp_group_get_album_status( bp_get_current_group_id() );
+			?>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-album-status" id="group-albums-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_albums_status_setting( 'mods' ); ?> />
-				<label for="group-albums-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-album-status" id="group-albums-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_albums_status_setting( 'admins' ); ?> />
-				<label for="group-albums-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
+			<select id="group-albums-status-members" name="group-album-status" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $album_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
 		</fieldset>
 		<?php
 	endif;
@@ -167,20 +117,15 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload documents?', 'buddyboss' ); ?></p>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-document-status" id="group-document-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_document_status_setting( 'members' ); ?> />
-				<label for="group-document-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
+			<?php
+			$document_status = bp_group_get_document_status( bp_get_current_group_id() );
+			?>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-document-status" id="group-document-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_document_status_setting( 'mods' ); ?> />
-				<label for="group-document-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-document-status" id="group-document-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_document_status_setting( 'admins' ); ?> />
-				<label for="group-document-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
+			<select id="group-document-status-members" name="group-document-status" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $document_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
 		</fieldset>
 		<?php
 	endif;
@@ -192,20 +137,15 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to upload videos?', 'buddyboss' ); ?></p>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-video-status" id="group-video-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_video_status_setting( 'members' ); ?> />
-				<label for="group-video-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
+			<?php
+			$video_status = bp_group_get_video_status( bp_get_current_group_id() );
+			?>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-video-status" id="group-video-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_video_status_setting( 'mods' ); ?> />
-				<label for="group-video-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-video-status" id="group-video-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_video_status_setting( 'admins' ); ?> />
-				<label for="group-video-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
+			<select id="group-video-status-members" name="group-video-status" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $video_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
 		</fieldset>
 		<?php
 	endif;
@@ -217,20 +157,15 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to send group messages?', 'buddyboss' ); ?></p>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-message-status" id="group-messages-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_messages_status_setting( 'members' ); ?> />
-				<label for="group-messages-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
+			<?php
+			$message_status = bp_group_get_message_status( bp_get_current_group_id() );
+			?>
 
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-message-status" id="group-messages-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_messages_status_setting( 'mods' ); ?> />
-				<label for="group-messages-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-message-status" id="group-messages-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_messages_status_setting( 'admins' ); ?> />
-				<label for="group-messages-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
+			<select name="group-message-status" id="group-messages-status-members" autocomplete="off">
+				<option value="members" <?php echo ( 'members' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'All group members', 'buddyboss' ); ?></option>
+				<option value="mods" <?php echo( 'mods' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></option>
+				<option value="admins" <?php echo( 'admins' === $message_status ? ' selected="selected"' : '' ); ?>><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></option>
+			</select>
 		</fieldset>
 		<?php
 	endif;

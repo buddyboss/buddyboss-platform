@@ -39,7 +39,5 @@
 
 <?php endif; ?>
 
-<p><?php esc_html_e( 'The Cover Photo will be used to customize the header of your group.', 'buddyboss' ); ?></p>
-
 <?php
 bp_attachments_get_template_part( 'cover-images/index' );

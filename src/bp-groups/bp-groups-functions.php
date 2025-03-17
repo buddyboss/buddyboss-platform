@@ -5708,7 +5708,7 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 				)
 			);
 			?>
-			<span class="bb-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
+			<span class="bb-group-member" data-bp-tooltip-pos="down" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>">
 				<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 					<img src="<?php echo esc_url( $avatar ); ?>"
 						alt="<?php echo esc_attr( bp_core_get_user_displayname( $member->ID ) ); ?>" class="round" />
@@ -5718,19 +5718,26 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 		}
 
 		if ( $total - count( $members ) !== 0 ) {
-			$member_count = $total - count( $members );
-			$other_count = sprintf( wp_kses_post( _nx( '+ %s', '+ %s', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
+			$member_count = (int) ( $total - count( $members ) );
+			$member_label = ( 1 === (int) $member_count ) ? esc_html__( 'Member', 'buddyboss' ) : esc_html__( 'Members', 'buddyboss' );
 			?>
 			<span class="bb-group-member count-wrap">
-				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
-					<?php echo esc_html( $other_count ); ?>
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">+
+					<?php
+					printf(
+						'%s<span class="bb-rl-group-member-count-label"> %s</span>',
+						$member_count,
+						esc_html( $member_label )
+					);
+					?>
 				</a>
 			</span>
 			<?php
 		}
+
+		do_action( 'bb_groups_members_after', $group_id );
 		?>
 		</span>
 		<?php
 	}
-
 }

@@ -1,5 +1,5 @@
-/* jshint browser: true */
-/* global bp, bbReadyLaunchFront */
+
+/* global bp, bbReadyLaunchFront, BP_Nouveau */
 /* @version 1.0.0 */
 
 window.bp = window.bp || {};
@@ -32,7 +32,7 @@ window.bp = window.bp || {};
 				this.addListeners();
 				this.mobileSubMenu();
 				this.gridListFilter();
-				// this.collapsibleContextNav();
+				this.styledSelect();
 
 				this.bbReloadWindow();
 			},
@@ -94,20 +94,59 @@ window.bp = window.bp || {};
 			},
 
 			gridListFilter: function () {
-			$( '.bb-rl-filter select' ).select2( {
-				theme: 'rl',
-				containerCssClass: 'bb-rl-select2-container',
-				dropdownCssClass: 'bb-rl-select2-dropdown'
-			} );
-		},
+				$( '.bb-rl-filter select' ).each( function () {
+					let $this = $( this );
+					let customClass = '';
 
-		/**
-		 * Handles "Load More" click or dropdown open
-		 *
-		 * @param {Object} e Event object
-		 */
-		bbHandleLoadMore: function ( e ) {
-			e.preventDefault();
+					if ( $this.data( 'bb-caret' ) ) {
+						customClass += ' bb-rl-caret-icon ';
+					}
+
+					if ( $this.data( 'bb-icon' ) ) {
+						customClass += ' bb-rl-has-icon ';
+						customClass += ' ' + $this.data('bb-icon') + ' ';
+					}
+
+					if ( $this.data( 'bb-border' ) === 'rounded' ) {
+						customClass += ' bb-rl-rounded-border ';
+					}
+
+					$this.select2( {
+						theme: 'rl',
+						containerCssClass: 'bb-rl-select2-container ' + customClass,
+						dropdownCssClass: 'bb-rl-select2-dropdown',
+						dropdownParent: $this.parent()
+					} );
+				} );
+			},
+
+			styledSelect: function () {
+				$( '.bb-rl-styled-select select' ).each( function () {
+					let $this = $( this );
+					let customClass = '';
+
+					// Check if parent container has specific class
+					let $parent = $this.closest( '.bb-rl-styled-select' );
+					if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
+						customClass += ' bb-rl-select-default';
+					}
+
+					$this.select2( {
+						theme: 'bb-rl-select2',
+						containerCssClass: 'bb-rl-select2-container ' + customClass,
+						dropdownCssClass: 'bb-rl-select2-dropdown',
+						dropdownParent: $this.parent()
+					} );
+				} );
+			},
+
+			/**
+			 * Handles "Load More" click or dropdown open
+			 *
+			 * @param {Object} e Event object
+			 */
+			bbHandleLoadMore: function ( e ) {
+				e.preventDefault();
 
 				// Identify the clicked element.
 				var $target = $( e.target ).closest( '.notification-link, .notification-header-tab-action, .bb-rl-load-more a' );
@@ -302,44 +341,6 @@ window.bp = window.bp || {};
 			},
 
 			/**
-		 * Open context nav.
-		 * @param e
-		 */
-		collapsibleContextNav: function () {
-
-			$( document ).on( 'click', '.bb-rl-container .bb_more_options_action', function ( e ) {
-				e.preventDefault();
-
-				var $button = $( this );
-				var $dropdown = $button.siblings( '.bb_more_dropdown' );
-
-				// Close other dropdowns
-				$( '.bb_more_dropdown' ).not( $dropdown ).hide();
-				$( '.bb_more_options_action' ).not( $button ).removeClass( 'active' );
-
-				if ( $dropdown.is( ':visible' ) ) {
-					$dropdown.hide();
-					$button.removeClass( 'active' );
-				} else {
-					$dropdown.show();
-					$button.addClass( 'active' );
-				}
-			} );
-
-			// Close dropdown clicked outside
-			$( document ).on( 'click', function ( e ) {
-				if ( !$( e.target ).closest( '.bb-rl-context-wrap' ).length ) {
-					$( '.bb_more_dropdown' ).hide();
-					$( '.bb_more_options_action' ).removeClass( 'active' );
-				}
-			} );
-
-			$( document ).on( 'click', '.bb-rl-container .bb_more_dropdown', function ( e ) {
-				e.stopPropagation();
-			} );
-		},
-
-		/**
 			 * Show header notification dropdowns
 			 *
 			 * @param event

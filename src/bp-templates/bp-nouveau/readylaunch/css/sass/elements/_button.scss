@@ -3,7 +3,7 @@
 	@include bb-rl-button;
 
 	&.bb-rl-button--small {
-		padding: 4px var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 		font-size: 0.875rem;
 	}
 

@@ -63,7 +63,7 @@ $balloon-arrow-height: 6px;
 
 @mixin normalized-text() {
 	font-weight: 500;
-	font-size: 13px;
+	font-size: 0.85rem;
 	letter-spacing: -0.24px;
 }
 
@@ -485,5 +485,391 @@ button[data-balloon] {
 
 		@include svg-arrow($balloon-bg);
 		@include base-effects;
+	}
+}
+
+[data-bp-tooltip] {
+	position: relative; // alt. absolute or fixed
+
+	// Fixing iOS Safari event issue. More info at: https://goo.gl/w8JF4W
+	cursor: pointer;
+	display: block;
+
+	&:after {
+
+		@include base-effects();
+		@include normalized-text();
+
+		background: $balloon-bg;
+		border-radius: var(--bb-rl-radius-md);
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+		color: var(--bb-rl-text-white-color);
+		content: attr(data-bp-tooltip);
+		line-height: 1.3;
+		padding: 7px 15px;
+		position: absolute;
+		white-space: nowrap;
+		z-index: 10;
+	}
+
+	&:before {
+
+		@include svg-arrow($balloon-bg);
+		@include base-effects();
+
+		content: "";
+		position: absolute;
+		z-index: 10;
+	}
+
+	&:hover,
+	&[data-bp-tooltip-visible] {
+
+		&:before,
+		&:after {
+
+			@include opacity(1);
+			pointer-events: auto;
+		}
+	}
+
+	&.font-awesome:after {
+		font-family: FontAwesome;
+	}
+
+	&[data-bp-tooltip-break] {
+
+		&:after {
+			white-space: pre;
+		}
+	}
+
+	&[data-bp-tooltip-blunt] {
+
+		&:before,
+		&:after {
+
+			@include no-effects();
+		}
+	}
+
+	&[data-bp-tooltip-pos="up"] {
+
+		&:after {
+			bottom: 100%;
+			left: 50%;
+			margin-bottom: 5px + $balloon-arrow-height;
+
+			@include transform(translate(-50%, 10px));
+			@include transform-origin(top);
+		}
+
+		&:before {
+			bottom: 100%;
+			left: 50%;
+			margin-bottom: 5px;
+
+			@include transform(translate(-50%, 10px));
+			@include transform-origin(top);
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(-50%, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(-50%, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="up-left"] {
+
+		&:after {
+			bottom: 100%;
+			left: 0;
+			margin-bottom: 5px + $balloon-arrow-height;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:before {
+			bottom: 100%;
+			left: 5px;
+			margin-bottom: 5px;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="up-right"] {
+
+		&:after {
+			bottom: 100%;
+			right: 0;
+			margin-bottom: 5px + $balloon-arrow-height;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:before {
+			bottom: 100%;
+			right: 5px;
+			margin-bottom: 5px;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="down"] {
+
+		&:after {
+			left: 50%;
+			margin-top: 5px + $balloon-arrow-height;
+			top: 100%;
+
+			@include transform(translate(-50%, -10px));
+		}
+
+		&:before {
+			left: 50%;
+			margin-top: 5px;
+			top: 100%;
+
+			@include svg-arrow($balloon-bg, "down");
+			@include transform(translate(-50%, -10px));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(-50%, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(-50%, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="down-left"] {
+
+		&:after {
+			left: 0;
+			margin-top: 5px + $balloon-arrow-height;
+			top: 100%;
+
+			@include transform(translate(0, -10px));
+		}
+
+		&:before {
+			left: 5px;
+			margin-top: 5px;
+			top: 100%;
+
+			@include svg-arrow($balloon-bg, "down");
+			@include transform(translate(0, -10px));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="down-right"] {
+
+		&:after {
+			right: 0;
+			margin-top: 5px + $balloon-arrow-height;
+			top: 100%;
+
+			@include transform(translate(0, -10px));
+		}
+
+		&:before {
+			right: 5px;
+			margin-top: 5px;
+			top: 100%;
+
+			@include svg-arrow($balloon-bg, "down");
+			@include transform(translate(0, -10px));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="left"] {
+
+		&:after {
+			margin-right: 5px + $balloon-arrow-height;
+			right: 100%;
+			top: 50%;
+
+			@include transform(translate(10px, -50%));
+		}
+
+		&:before {
+			margin-right: 5px;
+			right: 100%;
+			top: 50%;
+
+			@include svg-arrow($balloon-bg, "left");
+			@include transform(translate(10px, -50%));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, -50%));
+			}
+
+			&:before {
+
+				@include transform(translate(0, -50%));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="right"] {
+
+		&:after {
+			left: 100%;
+			margin-left: 5px + $balloon-arrow-height;
+			top: 50%;
+
+			@include transform(translate(-10px, -50%));
+		}
+
+		&:before {
+			left: 100%;
+			margin-left: 5px;
+			top: 50%;
+
+			@include svg-arrow($balloon-bg, "right");
+			@include transform(translate(-10px, -50%));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, -50%));
+			}
+
+			&:before {
+
+				@include transform(translate(0, -50%));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-length="small"] {
+
+		&:after {
+			white-space: normal;
+			width: 80px;
+		}
+	}
+
+	&[data-bp-tooltip-length="medium"] {
+
+		&:after {
+			white-space: normal;
+			width: 150px;
+		}
+	}
+
+	&[data-bp-tooltip-length="large"] {
+
+		&:after {
+			white-space: normal;
+			width: 260px;
+		}
+	}
+
+	&[data-bp-tooltip-length="xlarge"] {
+
+		&:after {
+			white-space: normal;
+			width: 380px;
+
+			@media screen and (max-width: 768px) {
+				white-space: normal;
+				width: 90vw;
+			}
+		}
+	}
+
+	&[data-bp-tooltip-length="fit"] {
+
+		&:after {
+			white-space: normal;
+			width: 100%;
+		}
 	}
 }

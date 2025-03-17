@@ -67,8 +67,10 @@
   --bb-rl-icon-warning-secondary-color: #e8b931;
   --bb-rl-icon-danger-primary-color: #900b09;
   --bb-rl-icon-danger-secondary-color: #ec221f;
+  --bb-rl-radius-xs: 2px;
   --bb-rl-radius-sm: 4px;
   --bb-rl-radius-md: 6px;
+  --bb-rl-radius-base: 8px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;
@@ -83,6 +85,7 @@
   --bb-rl-z-index-dropdown: 1000;
   --bb-rl-z-index-sticky: 1020;
   --bb-rl-z-index-fixed: 1030;
+  --bb-rl-z-index-adminbar: 1035;
   --bb-rl-z-index-modal-backdrop: 1040;
   --bb-rl-z-index-modal: 1050;
   --bb-rl-z-index-popover: 1060;
@@ -91,6 +94,7 @@
   --bb-rl-font-size-base: 16px;
   --bb-rl-font-size-xs: 11px;
   --bb-rl-font-size-sm: 13px;
+  --bb-rl-base-line-xs: 16px;
   --bb-rl-base-line-small: 20px;
   --bb-rl-base-line: 24px;
 }
@@ -100,7 +104,6 @@
 
 }*/
 /* SCSS Variables */
-/* Common styles */
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
@@ -199,12 +202,12 @@
   border: 1px solid var(--bb-rl-border-brand-secondary-color);
   border-radius: var(--bb-rl-radius-full);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-  font-size: var(--font-size-xs);
+  font-size: var(--bb-rl-font-size-xs);
   font-weight: 500;
 }
 
 .bb-rl-members .item-entry .bb-rl-item-meta-asset {
-  font-size: var(--font-size-sm);
+  font-size: var(--bb-rl-font-size-sm);
   line-height: var(--bb-rl-base-line-small);
   color: var(--bb-rl-text-tertiary-color);
 }
@@ -260,7 +263,7 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  font-size: var(--font-size-sm);
+  font-size: var(--bb-rl-font-size-sm);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   white-space: nowrap;
 }
@@ -282,15 +285,53 @@
   cursor: not-allowed;
 }
 
-.bb-rl-item-actions .bb-rl-primary-actions button.send-message i, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i,
+.bb-rl-item-actions .bb-rl-primary-actions button.following, .bb-rl-item-actions .bb-rl-primary-actions button.is_friend, .bb-rl-item-actions .bb-rl-primary-actions button.pending_friend, .bb-rl-item-actions .bb-rl-primary-actions button.awaiting_response_friend,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.following,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.is_friend,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.pending_friend,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.awaiting_response_friend {
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.following:hover, .bb-rl-item-actions .bb-rl-primary-actions button.is_friend:hover, .bb-rl-item-actions .bb-rl-primary-actions button.pending_friend:hover, .bb-rl-item-actions .bb-rl-primary-actions button.awaiting_response_friend:hover,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.following:hover,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.is_friend:hover,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.pending_friend:hover,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.awaiting_response_friend:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.following:focus, .bb-rl-item-actions .bb-rl-primary-actions button.is_friend:focus, .bb-rl-item-actions .bb-rl-primary-actions button.pending_friend:focus, .bb-rl-item-actions .bb-rl-primary-actions button.awaiting_response_friend:focus,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.following:focus,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.is_friend:focus,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.pending_friend:focus,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.awaiting_response_friend:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.following:disabled, .bb-rl-item-actions .bb-rl-primary-actions button.is_friend:disabled, .bb-rl-item-actions .bb-rl-primary-actions button.pending_friend:disabled, .bb-rl-item-actions .bb-rl-primary-actions button.awaiting_response_friend:disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.following:disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.is_friend:disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.pending_friend:disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.awaiting_response_friend:disabled {
+  border-color: var(--bb-rl-border-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i, .bb-rl-item-actions .bb-rl-primary-actions button.bb-rl-send-message-disabled i, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i {
   margin-left: var(--bb-rl-space-50);
 }
 
-.bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i::before, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i::before,
+.bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before, .bb-rl-item-actions .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before, .bb-rl-item-actions .bb-rl-primary-actions button.follow-button i::before, .bb-rl-item-actions .bb-rl-primary-actions button.friendship-button i::before,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.follow-button i::before,
 .bb-rl-item-actions .bb-rl-primary-actions .generic-button a.friendship-button i::before {
   content: "";
@@ -301,8 +342,22 @@
   font-style: normal;
 }
 
+.bb-rl-item-actions .bb-rl-primary-actions button.bb-rl-send-message-disabled,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled {
+  pointer-events: none;
+  color: var(--bb-rl-text-disabled-color);
+  border-color: var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-item-actions .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before {
+  color: var(--bb-rl-text-disabled-color);
+}
+
 .bb-rl-item-actions .bb-rl-primary-actions button.send-message i::before,
-.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before {
+.bb-rl-item-actions .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.send-message i::before,
+.bb-rl-item-actions .bb-rl-primary-actions .generic-button a.bb-rl-send-message-disabled i::before {
   content: "\e168";
 }
 
@@ -348,6 +403,7 @@
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .send-message,
+.bb-rl-item-actions .bb-rl-secondary-actions .bb-rl-send-message-disabled,
 .bb-rl-item-actions .bb-rl-secondary-actions .friendship-button,
 .bb-rl-item-actions .bb-rl-secondary-actions .follow-button {
   font-size: 0;
@@ -359,6 +415,7 @@
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before,
+.bb-rl-item-actions .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
 .bb-rl-item-actions .bb-rl-secondary-actions .friendship-button i::before,
 .bb-rl-item-actions .bb-rl-secondary-actions .follow-button i::before {
   content: "";
@@ -369,7 +426,16 @@
   font-style: normal;
 }
 
-.bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before {
+.bb-rl-item-actions .bb-rl-secondary-actions .bb-rl-send-message-disabled {
+  pointer-events: none;
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before {
+  color: var(--bb-rl-icon-disabled-color);
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .send-message i::before,
+.bb-rl-item-actions .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before {
   content: "\e16e";
 }
 
@@ -382,6 +448,10 @@
 }
 
 .bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.pending_friend i::before {
+  content: "\edec";
+}
+
+.bb-rl-item-actions .bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before {
   content: "\edec";
 }
 

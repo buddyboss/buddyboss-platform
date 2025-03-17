@@ -63,8 +63,7 @@
   --bb-rl-text-danger-secondary-color: #ec221f;
   --bb-rl-icon-color: #0c0c0d;
   --bb-rl-icon-primary-color: #3d3d3d;
-  --bb-rl-icon-secondary-color: #6d6d6e;
-  --bb-rl-icon-secondary-hover-color: #555556;
+  --bb-rl-icon-secondary-color: #555556;
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #b6b6b6;
   --bb-rl-icon-brand-primary-color: #0300c3;
@@ -75,8 +74,10 @@
   --bb-rl-icon-warning-secondary-color: #e8b931;
   --bb-rl-icon-danger-primary-color: #900b09;
   --bb-rl-icon-danger-secondary-color: #ec221f;
+  --bb-rl-radius-xs: 2px;
   --bb-rl-radius-sm: 4px;
   --bb-rl-radius-md: 6px;
+  --bb-rl-radius-base: 8px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;
@@ -3931,6 +3932,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-full);
   margin-left: var(--bb-rl-space-100);
   animation: spin 3s infinite linear;
+}
+
+.bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-media-move {
+  margin-left: var(--bb-rl-space-100);
 }
 
 .bb-rl-modal-move-file .bb-rl-model-footer .bb-rl-create-album {

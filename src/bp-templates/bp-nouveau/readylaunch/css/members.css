@@ -56,8 +56,7 @@
   --bb-rl-text-danger-secondary-color: #ec221f;
   --bb-rl-icon-color: #0c0c0d;
   --bb-rl-icon-primary-color: #3d3d3d;
-  --bb-rl-icon-secondary-color: #6d6d6e;
-  --bb-rl-icon-secondary-hover-color: #555556;
+  --bb-rl-icon-secondary-color: #555556;
   --bb-rl-icon-tertiary-color: #9e9e9e;
   --bb-rl-icon-disabled-color: #b6b6b6;
   --bb-rl-icon-brand-primary-color: #0300c3;
@@ -68,8 +67,10 @@
   --bb-rl-icon-warning-secondary-color: #e8b931;
   --bb-rl-icon-danger-primary-color: #900b09;
   --bb-rl-icon-danger-secondary-color: #ec221f;
+  --bb-rl-radius-xs: 2px;
   --bb-rl-radius-sm: 4px;
   --bb-rl-radius-md: 6px;
+  --bb-rl-radius-base: 8px;
   --bb-rl-radius-lg: 12px;
   --bb-rl-radius-full: 99px;
   --bb-rl-space-0: 0;
@@ -103,7 +104,6 @@
 
 }*/
 /* SCSS Variables */
-/* Common styles */
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
 }

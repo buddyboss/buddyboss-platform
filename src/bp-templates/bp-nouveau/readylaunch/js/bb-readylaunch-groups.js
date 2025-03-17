@@ -24,47 +24,42 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
-			var self = this;
-			$( document ).on( 'click', '.bb-rl-manage-group-container .bp-navs a', self.loadManageSettings );
+			var $document = $( document );
+
+			$document.on(
+				'click',
+				'.bb-rl-group-extra-info .bb_more_options .generic-button a.item-button',
+				function ( e ) {
+					var modalId = 'model--' + $( this ).attr( 'id' );
+					var $modal  = $( '#' + modalId );
+
+					if ( ! $modal.length ) {
+						return;
+					}
+
+					e.preventDefault();
+					bp.Readylaunch.Groups.openModal( modalId );
+				}
+			);
+
+			$document.on(
+				'click',
+				'.bb-rl-modal-close-button',
+				function (e) {
+					e.preventDefault();
+					$( this ).closest( '.bb-rl-action-popup' ).removeClass( 'open' );
+				}
+			);
 		},
 
-		loadManageSettings: function ( e ) {
-			e.preventDefault();
+		openModal: function ( modalId ) {
+			var $modal = $( '#' + modalId );
 
-			var current = $( this );
-
-			var $submitButton = current.closest( '.bb-rl-model-footer' ).find( '.submit-form' );
-
-			var $url = $( this ).attr( 'href' );
-
-			if ( $url ) {
-
-				$submitButton.prop( 'disabled', true );
-
-				$.ajax(
-					{
-						method: 'GET',
-						url: BP_Nouveau.ajaxurl,
-						data: {
-							action: 'group_manage_content',
-							url: $url,
-							group_id: bbReadyLaunchGroupsVars.group_id,
-						},
-						success: function (response) {
-							if ( response ) {
-								var content = current.closest( '.bb-rl-manage-group-container' ).find( '#group-settings-form' );
-								content.replaceWith( response );
-							}
-						},
-						error: function () {
-						},
-						complete: function () {
-							$submitButton.prop( 'disabled', false );
-						}
-					}
-				);
+			if ( ! $modal.length ) {
+				return;
 			}
 
+			$modal.addClass( 'open' );
 		},
 	};
 

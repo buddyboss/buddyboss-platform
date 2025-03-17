@@ -1,86 +1,56 @@
 .bb-rl-members ul.bp-list,
 .bb-rl-groups ul.bp-list {
-	display: flex;
-	flex-flow: row wrap;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
 	gap: var(--bb-rl-space-200);
 
 	&.grid {
 
-		.bb-rl-has-sidebar & {
+		/* A sidebar-conditioned grid can be used on
+		single profile or group screens. */
 
-			.item-entry {
-				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-				max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
+		.bb-rl-primary-container & {
+			grid-template-columns: repeat(3, 1fr);
+
+			@media screen and (max-width: 1600px) {
+				grid-template-columns: repeat(2, 1fr);
 			}
 
-			@media screen and (max-width: 1400px) {
-
-				.item-entry {
-					flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-					max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-				}
-			}
-
-			@media screen and (max-width: $xl) {
-
-				.item-entry {
-					flex: 0 0 calc(100%);
-					max-width: calc(100%);
-				}
-			}
-
-			@media screen and (max-width: $lg) {
-
-				.item-entry {
-					flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-					max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-				}
+			@media screen and (min-width: 1200px) and (max-width: 1400px) {
+				grid-template-columns: 1fr;
 			}
 
 			@media screen and (max-width: $md) {
-
-				.item-entry {
-					flex: 0 0 calc(100%);
-					max-width: calc(100%);
-				}
+				grid-template-columns: 1fr;
 			}
 		}
 
 		.item-entry {
-			flex: 0 0 calc(25% - (var(--bb-rl-space-200) * 3 / 4));
-			max-width: calc(25% - (var(--bb-rl-space-200) * 3 / 4));
+			width: 100%;
+
+			&.item-entry-header {
+				grid-column: 1 / -1; // Span all columns
+			}
 		}
 
 		@media screen and (max-width: $xl) {
-
-			.item-entry {
-				flex: 0 0 calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-				max-width: calc(33.33% - (var(--bb-rl-space-200) * 2 / 3));
-			}
+			grid-template-columns: repeat(3, 1fr);
 		}
 
 		@media screen and (max-width: $md) {
-
-			.item-entry {
-				flex: 0 0 calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-				max-width: calc(50% - (var(--bb-rl-space-200) * 1 / 2));
-			}
+			grid-template-columns: repeat(2, 1fr);
 		}
 
 		@media screen and (max-width: $sm) {
-
-			.item-entry {
-				flex: 0 0 calc(100%);
-				max-width: calc(100%);
-			}
+			grid-template-columns: 1fr;
 		}
 	}
 
 	&:not(.grid) {
+		grid-template-columns: 1fr;
 
 		.item-entry {
-			flex: 0 0 100%;
-			max-width: 100%;
+			width: 100%;
 		}
 	}
 }

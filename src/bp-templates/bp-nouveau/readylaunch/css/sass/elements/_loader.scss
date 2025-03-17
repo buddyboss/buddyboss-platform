@@ -7,3 +7,8 @@
 	border-radius: var(--bb-rl-radius-full);
 	animation: spin 3s infinite linear;
 }
+
+.bb-readylaunch-template .animate-spin {
+	animation: spin 2s infinite linear;
+	display: inline-block;
+}

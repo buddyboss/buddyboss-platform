@@ -14,7 +14,7 @@
 	padding: 12px var(--bb-rl-space-300) 12px var(--bb-rl-space-200);
 	border-radius: var(--bb-rl-radius-full);
 	opacity: 1;
-	z-index: 9999;
+	z-index: 999993;
 	transition: opacity 0.3s ease-in-out;
 
 	i {
@@ -31,6 +31,17 @@
 
 	i {
 		color: var(--bb-rl-text-danger-secondary-color);
+	}
+}
+
+.bb-rl-toast-message--warning {
+
+	.bb-rl-spinner {
+		display: none;
+	}
+
+	i {
+		color: var(--bb-rl-icon-warning-secondary-color);
 	}
 }
 

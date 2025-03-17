@@ -20,15 +20,6 @@ bp_nouveau_template_notices();
 			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_get_total_group_count() : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
-			<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
-			<div class="bb-rl-action-button">
-				<a href="" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
-			</div>
-		</div>
-	</div>
-
-	<div class="bb-rl-container-inner">
-		<div class="groups-directory-container">
 			<?php
 			/**
 			 * Fires before the display of the groups list filters.
@@ -38,7 +29,18 @@ bp_nouveau_template_notices();
 			do_action( 'bb_before_directory_groups_filters' );
 
 			bp_get_template_part( 'common/search-and-filters-bar' );
-			?>
+
+			if ( bp_user_can_create_groups() ) {
+				?>
+				<div class="bb-rl-action-button">
+					<a href="<?php echo esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
+				</div>
+			<?php } ?>
+		</div>
+	</div>
+
+	<div class="bb-rl-container-inner">
+		<div class="groups-directory-container">
 
 			<div class="screen-content groups-directory-content">
 
@@ -46,7 +48,29 @@ bp_nouveau_template_notices();
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
-						bp_nouveau_user_feedback( 'directory-groups-loading' );
+						?>
+						<div class="bb-rl-skeleton-grid <?php bp_nouveau_loop_classes(); ?>">
+							<?php for ( $i = 0; $i < 8; $i++ ) : ?>
+								<div class="bb-rl-skeleton-grid-block bb-rl-skeleton-grid-block--cover">
+									<div class="bb-rl-skeleton-cover bb-rl-skeleton-loader"></div>
+									<div class="bb-rl-skeleton-avatar bb-rl-skeleton-loader"></div>
+									<div class="bb-rl-skeleton-data">
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+									</div>
+									<div class="bb-rl-skeleton-loop">
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+									</div>
+									<div class="bb-rl-skeleton-footer">
+										<span class="bb-rl-skeleton-data-bit bb-rl-skeleton-loader"></span>
+									</div>
+								</div>
+							<?php endfor; ?>
+						</div>
+						<?php
+						// bp_nouveau_user_feedback( 'directory-groups-loading' );
 						echo '</div>';
 					} else {
 						bp_get_template_part( 'groups/groups-loop' );
