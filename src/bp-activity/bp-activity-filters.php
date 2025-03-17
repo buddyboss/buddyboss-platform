@@ -3820,75 +3820,8 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
  * @return void
  */
 function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
-	$time     = bp_core_current_time();
 	$activity = bb_activity_get_raw_db_object( $activity_id );
-
-	if ( ! empty( $activity ) ) {
-		if ( 'activity_comment' === $activity->type || in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
-
-			// Check if the item_id and secondary_item_id are same.
-			if ( $activity->item_id === $activity->secondary_item_id && ! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) ) {
-	
-				// Update the date_updated of the parent activity item.
-				bb_activity_update_date_updated( $activity->item_id, $time );
-	
-				// Clear the cache for the parent activity item.
-				bp_activity_clear_cache_for_activity( $activity );
-			} else {
-				// Get the parent activity id if the activity is a comment or the sub media, document, video activity.
-				$main_activity_object = bb_activity_get_comment_parent_activity_object( $activity );
-	
-				// Update the date_updated of the parent activity item.
-				bb_activity_update_date_updated( $main_activity_object->id, $time );
-	
-				// Clear the cache for the parent activity item.
-				bp_activity_clear_cache_for_activity( $main_activity_object );
-	
-				// If individual medias activity then also get the most parent activity.
-				if (
-					(
-						(
-							in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
-							'activity_update' === $main_activity_object->type
-						)
-					) && ! empty( $main_activity_object->secondary_item_id )
-				) {
-					// Update the date_updated of the parent activity item.
-					bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $time );
-
-					// Fetch the activity directly from the database.
-					$intermediate_activity = bb_activity_get_raw_db_object( $main_activity_object->secondary_item_id );
-					if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
-	
-						// Clear the cache for the parent activity item.
-						bp_activity_clear_cache_for_activity( $intermediate_activity );
-						unset( $intermediate_activity );
-					}
-				}
-	
-				// Get the parent comment activity object.
-				$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_object->id );
-	
-				// Update the date_updated of the parent comment activity item.
-				bb_activity_update_date_updated( $parent_comment_activity_object->id, $time );
-	
-				// Clear the cache for the parent activity item.
-				bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
-	
-			}
-		}
-	
-		// Update the date_updated of the activity item.
-		bb_activity_update_date_updated( $activity_id, $time );
-	
-		// Clear the cache for the activity item.
-		bp_activity_clear_cache_for_activity( $activity );
-	
-		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-			BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
-		}
-
-	}
+	bb_activity_update_date_updated_and_clear_cache( $activity, true );
 }
 
 /**

@@ -7602,3 +7602,73 @@ function bb_activity_get_raw_db_object( $activity_id ) {
 
 	return $activity;
 }
+
+/**
+* Common function to update activity date updated and clear cache.
+*
+* @since BuddyBoss [BBVERSION]
+*
+* @param object $activity            The activity object.
+* @param bool   $is_reactions_update Whether the update is due to reactions.
+* @param string $date_updated        The date updated to set.
+*
+* @return void
+*/
+function bb_activity_update_date_updated_and_clear_cache( $activity, $is_reactions_update, $date_updated = '' ) {
+	if ( empty( $activity ) || empty( $activity->id ) ) {
+		return;
+	}
+
+	$date_updated     = empty( $date_updated ) ? bp_core_current_time() : $date_updated;
+	$is_media_related = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
+
+	// Process for both reaction and non-reaction updates.
+	if ( 'activity_comment' === $activity->type || $is_media_related ) {
+
+		// Check if the item_id and secondary_item_id are same.
+		if ( $activity->item_id === $activity->secondary_item_id && ! $is_media_related ) {
+			bb_activity_update_date_updated( $activity->item_id, $date_updated );
+
+			$intermediate_activity = bb_activity_get_raw_db_object( $activity->item_id );
+			if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
+				bp_activity_clear_cache_for_activity( $intermediate_activity );
+				unset( $intermediate_activity );
+			}
+
+		} else {
+
+			// Get the parent activity id if the activity is a comment or the sub media, document, video activity.
+			$main_activity_object = bb_activity_get_comment_parent_activity_object( $activity );
+
+			// Update the date_updated of the parent activity item.
+			bb_activity_update_date_updated( $main_activity_object->id, $date_updated );
+			bp_activity_clear_cache_for_activity( $main_activity_object );
+
+			// If individual medias activity then also get the most parent activity.
+			if ( $is_media_related && 'activity_update' === $main_activity_object->type && ! empty( $main_activity_object->secondary_item_id ) ) {
+				bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $date_updated );
+
+				$intermediate_activity = bb_activity_get_raw_db_object( $main_activity_object->secondary_item_id );
+				if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
+					bp_activity_clear_cache_for_activity( $intermediate_activity );
+					unset( $intermediate_activity );
+				}
+			}
+
+			// Get the parent comment activity object.
+			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_object->id );
+			bb_activity_update_date_updated( $parent_comment_activity_object->id, $date_updated );
+			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
+		}
+	}
+
+	// Additional processing for reaction updates.
+	if ( $is_reactions_update ) {
+		bb_activity_update_date_updated( $activity->id, $date_updated );
+		bp_activity_clear_cache_for_activity( $activity );
+
+		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+			BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
+		}
+	}
+}
