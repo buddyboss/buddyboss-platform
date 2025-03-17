@@ -309,8 +309,8 @@ add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
 add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 2 );
 
-add_filter( 'posts_where', 'bbp_modify_topics_where_for_sticky', 10, 2 );
-add_filter( 'posts_orderby', 'bbp_modify_topics_orderby_for_sticky', 10, 2 );
+add_filter( 'posts_where', 'bb_modify_topics_where_for_sticky', 10, 2 );
+add_filter( 'posts_orderby', 'bb_modify_topics_orderby_for_sticky', 10, 2 );
 
 /** Deprecated ****************************************************************/
 
@@ -683,7 +683,7 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
  *
  * @return string Modified WHERE clause.
  */
-function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
+function bb_modify_topics_where_for_sticky( $where, $wp_query ) {
 	global $wpdb;
 
 	// Bail if no post_type in query vars or show_stickies is not enabled.
@@ -694,12 +694,8 @@ function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
 		return $where;
 	}
 
-	// Get post types.
-	$forum_post_type   = bbp_get_forum_post_type();
-	$current_post_type = $wp_query->query_vars['post_type'];
-
 	// Only proceed if we're dealing with forums.
-	if ( $forum_post_type !== $current_post_type ) {
+	if ( bbp_get_forum_post_type() !== $wp_query->query_vars['post_type'] ) {
 		return $where;
 	}
 
@@ -734,7 +730,7 @@ function bbp_modify_topics_where_for_sticky( $where, $wp_query ) {
  *
  * @return string Modified ORDER BY clause.
  */
-function bbp_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
+function bb_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
 	global $wpdb;
 
 	// Bail if no post_type in query vars or show_stickies is not enabled.
@@ -745,12 +741,8 @@ function bbp_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
 		return $orderby;
 	}
 
-	// Get post types.
-	$topic_post_type   = bbp_get_topic_post_type();
-	$current_post_type = $wp_query->query_vars['post_type'];
-
 	// Only proceed if we're dealing with topics.
-	if ( $topic_post_type !== $current_post_type ) {
+	if ( bbp_get_topic_post_type() !== $wp_query->query_vars['post_type'] ) {
 		return $orderby;
 	}
 
