@@ -2911,6 +2911,23 @@ window.bp = window.bp || {};
 									mf_content.find( '.bp-content-type' ).val( contentType );
 									mf_content.find( '.bp-nonce' ).val( nonce );
 								}
+
+								// Add this new code to fix label click issues in activity modal.
+								setTimeout(function() {
+
+									// Unbind any existing click handlers on the labels.
+									$( document ).off( 'click', '.moderation-popup .form-item label' );
+
+									//Bind a new click handler that explicitly handles the radio button.
+									$( document ).on( 'click', '.moderation-popup .form-item label', function(e) {
+
+										// Only handle if the click was on the label or span, not on the radio itself.
+										if ( ! $( e.target ).is( 'input[type="radio"]' ) ) {
+											e.preventDefault();
+											$( this ).find( 'input[type="radio"]' ).trigger( 'click' );
+										}
+									});
+								}, 100); // Small delay to ensure DOM is ready.
 							}
 						}
 					}
