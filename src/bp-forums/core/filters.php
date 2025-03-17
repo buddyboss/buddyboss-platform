@@ -309,7 +309,7 @@ add_filter( 'bbp_get_forum_content', 'make_clickable', 9 );
 
 add_filter( 'post_type_link', 'bb_pretty_link_trash_topics', 10, 2 );
 
-add_filter( 'posts_orderby', 'bb_modify_topics_orderby_for_sticky', 10, 2 );
+add_filter( 'posts_clauses', 'bb_modify_topics_query_for_sticky', 10, 2 );
 
 /** Deprecated ****************************************************************/
 
@@ -673,76 +673,65 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
 }
 
 /**
- * Modify the ORDER BY clause of the topics query to handle sticky topics.
+ * Modify the WHERE and ORDER BY clauses to handle sticky topics.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string   $orderby  The ORDER BY clause of the query.
+ * @param array    $clauses  Query clauses.
  * @param WP_Query $wp_query The WP_Query instance.
  *
- * @return string Modified ORDER BY clause.
+ * @return array Modified query clauses.
  */
-function bb_modify_topics_orderby_for_sticky( $orderby, $wp_query ) {
+function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	global $wpdb;
 
-	// Bail if no post_type in query vars or show_stickies is not enabled.
 	if (
 		! isset( $wp_query->query_vars['post_type'] ) ||
-		empty( $wp_query->query_vars['show_stickies'] )
+		empty( $wp_query->query_vars['show_stickies'] ) ||
+		bbp_get_topic_post_type() !== $wp_query->query_vars['post_type']
 	) {
-		return $orderby;
+		return $clauses;
 	}
 
-	// Only proceed if we're dealing with topics.
-	if ( bbp_get_topic_post_type() !== $wp_query->query_vars['post_type'] ) {
-		return $orderby;
-	}
-
-	// Get sticky topics.
 	$super_stickies = bbp_get_super_stickies();
-	$stickies       = array();
+	$stickies       = ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ? bbp_get_stickies( $wp_query->query_vars['post_parent'] ) : array();
 
-	// If in a forum, get the stickies for this specific forum.
-	if ( ! empty( $wp_query->query_vars['post_parent'] ) && is_numeric( $wp_query->query_vars['post_parent'] ) ) {
-		$stickies = bbp_get_stickies( $wp_query->query_vars['post_parent'] );
+	// Merge and sanitize sticky topic IDs.
+	$sticky_ids = array_unique( array_merge( (array) $super_stickies, (array) $stickies ) );
+	$sticky_ids = array_filter( array_map( 'absint', $sticky_ids ) ); // Ensure all are valid IDs.
+
+	if ( empty( $sticky_ids ) ) {
+		return $clauses; // No sticky topics, return early.
 	}
 
-	// Combine the stickies and ensure they're all integers.
-	$sticky_ids = array_filter( array_unique( array_merge( $super_stickies, $stickies ) ) );
+	$sticky_ids_csv = implode( ',', $sticky_ids );
 
-	// If we have sticky topics, modify the ORDER BY clause to include them first.
-	if ( ! empty( $sticky_ids ) ) {
-		// Create a CASE statement that orders super stickies first, then forum stickies, then regular topics.
-		$case_parts = array();
+	// Modify WHERE clause to include sticky topics even if they are spam.
+	$spam_status = bbp_get_spam_status_id();
+	if ( ! empty( $spam_status ) ) {
+		$clauses['where'] .= " OR ({$wpdb->posts}.ID IN ({$sticky_ids_csv}) AND {$wpdb->posts}.post_status = '{$spam_status}')";
+	}
 
-		// Super stickies come first.
-		if ( ! empty( $super_stickies ) ) {
-			$super_stickies = array_filter( array_map( 'absint', $super_stickies ) );
-			if ( ! empty( $super_stickies ) ) {
-				$super_stickies_csv = implode( ',', $super_stickies );
-				$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($super_stickies_csv) THEN 1";
-			}
-		}
+	// Modify ORDER BY clause to prioritize sticky topics.
+	$case_statements = array();
 
-		// Forum stickies come second.
+	if ( ! empty( $super_stickies ) ) {
+		$super_stickies_csv = implode( ',', array_map( 'intval', $super_stickies ) );
+		$case_statements[]  = "WHEN {$wpdb->posts}.ID IN ($super_stickies_csv) THEN 1";
+	}
+
+	if ( ! empty( $stickies ) ) {
+		$stickies = array_diff( $stickies, $super_stickies ); // Remove duplicates.
 		if ( ! empty( $stickies ) ) {
-			$forum_stickies = array_diff( $stickies, $super_stickies ); // Remove any super stickies from forum stickies.
-			$forum_stickies = array_filter( array_map( 'absint', $forum_stickies ) );
-			if ( ! empty( $forum_stickies ) ) {
-				$forum_stickies_csv = implode( ',', $forum_stickies );
-				$case_parts[]       = "WHEN {$wpdb->posts}.ID IN ($forum_stickies_csv) THEN 2";
-			}
+			$forum_stickies_csv = implode( ',', array_map( 'intval', $stickies ) );
+			$case_statements[]  = "WHEN {$wpdb->posts}.ID IN ($forum_stickies_csv) THEN 2";
 		}
-
-		// Regular topics come last.
-		$case_parts[] = 'ELSE 3';
-
-		// Build the CASE statement.
-		$case_statement = 'CASE ' . implode( ' ', $case_parts ) . ' END';
-
-		// Add the CASE statement to the ORDER BY clause.
-		$orderby = "$case_statement, " . $orderby;
 	}
 
-	return $orderby;
+	$case_statements[] = 'ELSE 3';
+	$case_sql          = 'CASE ' . implode( ' ', $case_statements ) . ' END';
+
+	$clauses['orderby'] = "$case_sql, " . $clauses['orderby'];
+
+	return $clauses;
 }
