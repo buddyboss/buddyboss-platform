@@ -100,7 +100,7 @@ if ( $attachment_id ) {
 }
 
 ?>
-<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php echo esc_attr( $doc_user_id ); ?>"
+<div class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php echo esc_attr( $doc_user_id ); ?>"
 data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php echo esc_attr( $doc_activity_id ); ?>"
 data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
 id="div-listing-<?php echo esc_attr( $document_id ); ?>">
@@ -231,7 +231,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 			}
 			?>
 			<select data-item-type="<?php echo esc_attr( $document_type ); ?>"
-					data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-folder-privacy" class="hide">
+					data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-rl-folder-privacy" class="hide">
 				<?php
 				foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
 					if ( 'grouponly' === $key ) {
@@ -255,12 +255,14 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 		$show = true;
 	}
 	?>
-	<div class="media-folder_actions">
+	<div class="media-folder_actions bb_more_options action">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-v"></i> </a>
-			<div class="media-folder_action__list bb_more_dropdown">
+			<a href="#" class="media-folder_action__anchor bb_more_options_action">
+				<i class="bb-icons-rl-dots-three"></i>
+			</a>
+			<div class="media-folder_action__list bb_more_dropdown bb_more_options_list">
 				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<ul>
 					<?php
@@ -269,7 +271,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 						<li class="download_file">
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
 						</li>
-						<li class="copy_download_file_url">
+						<li class="bb_rl_copy_download_file_url">
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 						</li>
 						<?php
@@ -348,7 +350,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					if ( $can_delete ) {
 						?>
 						<li class="delete_file">
-							<a class="document-file-delete" data-item-from="listing"
+							<a class="bb-rl-document-file-delete" data-item-from="listing"
 							data-item-preview-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 							data-item-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 							data-item-id="<?php echo esc_attr( $document_id ); ?>"

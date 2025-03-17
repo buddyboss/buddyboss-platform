@@ -638,6 +638,7 @@ table.extension-listing {
 	tbody td {
 		padding: 10px;
 
+		[class*="bb-icons-rl-"],
 		[class*=" bb-icon-"] {
 			font-size: 33px;
 			color: #999;
@@ -817,6 +818,7 @@ table.extension-listing {
 			i {
 				font-size: 22px;
 				color: #888;
+				margin-left: 0;
 				margin-right: 10px;
 				vertical-align: middle;
 			}
@@ -874,6 +876,7 @@ table.extension-listing {
 
 			i {
 				font-size: 28px;
+				margin-left: 0;
 				margin-right: 10px;
 				vertical-align: middle;
 				color: #888;

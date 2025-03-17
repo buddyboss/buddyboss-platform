@@ -5579,9 +5579,13 @@ window.bp = window.bp || {};
 				isChildFolder = 'child_folder' === actionType,
 				self          = this,
 				title         = isChildFolder ? $( '#bp-media-create-child-folder #bb-album-child-title' ) : $( '#bb-album-title' ),
+				nonce = BP_Nouveau.nonces.media,
 				privacy;
 			if ( isAlbum ) {
 				privacy = $( '#bb-rl-album-privacy' );
+				if ( 'video' == folderOrAlbum ) {
+					nonce = BP_Nouveau.nonces.video;
+				}
 			} else if ( isFolder ) {
 				privacy = target.parents().find( '.open-popup #bb-rl-folder-privacy option:selected' );
 			}
@@ -5615,7 +5619,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action'   : folderOrAlbum + '_' + actionType + '_save',
-				'_wpnonce' : BP_Nouveau.nonces.media,
+				'_wpnonce' : nonce,
 				'title'    : title.val()
 			};
 			if ( isAlbum ) {
@@ -6546,7 +6550,7 @@ window.bp = window.bp || {};
 				}
 			} );
 		},
-		
+
 		nextDocument: function ( event ) {
 			event.preventDefault();
 

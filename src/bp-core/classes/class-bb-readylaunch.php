@@ -151,7 +151,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_core_register_common_styles', array( $this, 'bb_rl_register_common_styles' ), 999, 1 );
 
 				remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
+				remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
+				remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
 			}
+
+            $admin_enabled = $this->bb_is_readylaunch_admin_enabled();
+            if ( $admin_enabled ) {
+	            add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
+
+                add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' )  );
+            }
 		}
 
 		/**
@@ -251,6 +260,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return false;
 		}
+
+        private function bb_is_readylaunch_admin_enabled() {
+	       if(
+		       (
+			       ! empty( $this->settings['document'] ) &&
+			       is_admin() &&
+			       ! wp_doing_ajax() &&
+			       ! empty( $_GET['page'] ) &&
+			       'bp-settings' == $_GET['page'] &&
+			       ! empty( $_GET['tab'] ) &&
+			       'bp-document' == $_GET['tab']
+		       )
+           ) {
+               return true;
+           }
+
+           return false;
+        }
 
 		/**
 		 * Register the ReadyLaunch menus.
@@ -615,6 +642,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'nonce'    => wp_create_nonce( 'bb-readylaunch' ),
 				)
 			);
+		}
+
+		public function bb_admin_enqueue_scripts() {
+			$min = bp_core_get_minified_asset_suffix();
+			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
 		}
 
 		/**
@@ -1112,7 +1144,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				case 'tar':
 				case 'rar':
 					$svg = array(
-						'font' => 'bb-icon-file-archive',
+						'font' => 'bb-icons-rl-file-archive',
 						'svg'  => '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256"><path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H112V200h8a8,8,0,0,0,0-16h-8V168h8a8,8,0,0,0,0-16h-8V136h8a8,8,0,0,0,0-16h-8v-8a8,8,0,0,0-16,0v8H88a8,8,0,0,0,0,16h8v16H88a8,8,0,0,0,0,16h8v16H88a8,8,0,0,0,0,16h8v16H56V40h88V88a8,8,0,0,0,8,8h48V216Z"></path></svg>',
 					);
 					break;
@@ -1266,6 +1298,66 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $svg['font'];
 		}
+
+        public function bb_readylaunch_document_icon_class( $icon_class ) {
+	        $mapped_icon = array(
+		        'bb-icon-file'             => 'bb-icons-rl-file',
+		        'bb-icon-file-zip'         => 'bb-icons-rl-file-archive',
+		        'bb-icon-file-mp3'         => 'bb-icons-rl-file-audio',
+		        'bb-icon-file-html'        => 'bb-icons-rl-file-html',
+		        'bb-icon-file-psd'         => 'bb-icons-rl-file-dashed',
+		        'bb-icon-file-png'         => 'bb-icons-rl-file-image',
+		        'bb-icon-file-pptx'        => 'bb-icons-rl-file-ppt',
+		        'bb-icon-file-xlsx'        => 'bb-icons-rl-file-xls',
+		        'bb-icon-file-txt'         => 'bb-icons-rl-file-text',
+		        'bb-icon-file-video'       => 'bb-icons-rl-file-video',
+		        'bb-icon-file-abw'         => 'bb-icons-rl-file-text',
+		        'bb-icon-file-ace'         => 'bb-icons-rl-file-archive',
+		        'bb-icon-file-archive'     => 'bb-icons-rl-file-archive',
+		        'bb-icon-file-ai'          => '', // ai
+		        'bb-icon-file-apk'         => '', // apk
+		        'bb-icon-file-css'         => 'bb-icons-rl-file-css',
+		        'bb-icon-file-csv'         => 'bb-icons-rl-file-csv',
+		        'bb-icon-file-doc'         => 'bb-icons-rl-file-doc',
+		        'bb-icon-file-docm'        => 'bb-icons-rl-file-doc',
+		        'bb-icon-file-docx'        => 'bb-icons-rl-file-doc',
+		        'bb-icon-file-dotm'        => 'bb-icons-rl-file-doc',
+		        'bb-icon-file-dotx'        => 'bb-icons-rl-file-doc',
+		        'bb-icon-file-svg'         => 'bb-icons-rl-file-svg',
+		        'bb-icon-file-gif'         => 'bb-icons-rl-file-image',
+		        'bb-icon-file-excel'       => '', // hlam, hlsb, hlsm
+		        'bb-icon-file-code'        => 'bb-icons-rl-file-html',
+		        'bb-icon-file-image'       => 'bb-icons-rl-file-image',
+		        'bb-icon-file-mobile'      => '', // ipa
+		        'bb-icon-file-code'        => 'bb-icons-rl-file-code',
+		        'bb-icon-file-audio'       => 'bb-icons-rl-file-audio',
+		        'bb-icon-file-spreadsheet' => '', // ods, odt
+		        'bb-icon-file-pdf'         => 'bb-icons-rl-file-pdf',
+		        'bb-icon-file-image'       => 'bb-icons-rl-file-image',
+		        'bb-icon-file-vector'      => '', // psd
+		        'bb-icon-file-pptm'        => 'bb-icons-rl-file-ppt',
+		        'bb-icon-file-pptx'        => 'bb-icons-rl-file-ppt',
+		        'bb-icon-file-pps'         => 'bb-icons-rl-file-ppt',
+		        'bb-icon-file-ppsx'        => 'bb-icons-rl-file-ppt',
+		        'bb-icon-file-ppt'         => 'bb-icons-rl-file-ppt',
+		        'bb-icon-file-rar'         => 'bb-icons-rl-file-archive',
+		        'bb-icon-file-rtf'         => 'bb-icons-rl-file-text',
+		        'bb-icon-file-rss'         => '', // rss
+		        'bb-icon-file-sketch'      => '', // sketch
+		        'bb-icon-file-tar'         => 'bb-icons-rl-file-archive',
+		        'bb-icon-file-txt'         => 'bb-icons-rl-file-text',
+		        'bb-icon-file-vcf'         => '', // vcf
+		        'bb-icon-file-wav'         => 'bb-icons-rl-file-audio',
+		        'bb-icon-file-xltm'        => 'bb-icons-rl-file-x',
+		        'bb-icon-file-xltx'        => 'bb-icons-rl-file-x',
+		        'bb-icon-file-xml'         => 'bb-icons-rl-file-x',
+		        'bb-icon-file-yaml'        => 'bb-icons-rl-file-code',
+		        'bb-icon-folder-stacked'   => 'bb-icons-rl-folders',
+		        'bb-icon-download'         => 'bb-icons-rl-download-simple',
+	        );
+
+            return ! empty( $mapped_icon[ $icon_class ] ) ? $mapped_icon[ $icon_class ] : $icon_class;
+        }
 
 		/**
 		 * Filters the label for BuddyPress Nouveau filters.

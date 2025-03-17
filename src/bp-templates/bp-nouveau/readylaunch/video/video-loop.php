@@ -35,7 +35,7 @@ if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 	if ( bp_video_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Show More', 'buddyboss' ); ?><i class="bb-icons-rl-caret-down"></i></a>
 		</li>
 		<?php
 	endif;

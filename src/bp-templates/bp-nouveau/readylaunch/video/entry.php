@@ -68,7 +68,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-video-attachments="<?php echo esc_html( json_encode( $attachment_urls ) ); ?>"
 									data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
-									class="ac-video-thumbnail-edit">
+									class="bb-rl-ac-video-thumbnail-edit">
 									<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
 								</a>
 							</li>
@@ -91,7 +91,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-item-activity-id="<?php echo esc_attr( $activity_id ); ?>"
 									data-type="<?php echo esc_attr( $move_type ); ?>"
 									id="<?php echo esc_attr( $move_id ); ?>"
-									class="ac-video-move">
+									class="bb-rl-ac-video-move">
 									<?php esc_html_e( 'Move', 'buddyboss' ); ?>
 								</a>
 							</li>
@@ -110,7 +110,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 							?>
 							<li class="delete_file">
 								<a
-									class="video-file-delete"
+									class="bb-rl-video-file-delete"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
 									data-parent-activity-id="<?php echo esc_attr( $parent_activity_id ); ?>"
 									data-item-activity-id="<?php echo esc_attr( $activity_id ); ?>"
@@ -135,7 +135,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 		<?php } ?>
 
 		<a
-			class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
+			class="bb-rl-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 			data-id="<?php echo esc_attr( $video_id ); ?>"
 			data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 			data-activity-id="<?php echo esc_attr( $activity_id ); ?>"

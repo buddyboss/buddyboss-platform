@@ -452,6 +452,7 @@
 
 		.bb-uploader-steps-prev,
 		#bp-media-submit,
+		#bp-video-create-album-submit,
 		#bp-media-create-album-submit {
 
 			@include bb-rl-button;
@@ -460,6 +461,7 @@
 		}
 
 		#bp-media-submit,
+		#bp-video-create-album-submit,
 		#bp-media-create-album-submit {
 
 			@include bb-rl-button--brand-fill;
@@ -493,8 +495,17 @@
 
 	#bp-media-create-folder {
 
-		.bb-field-wrap {
+		.bb-field-wrap,
+		.bb-rl-field-wrap {
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+
+			&.bb-rl-privacy-field-wrap-hide-show {
+				padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
+
+				#bb-rl-folder-privacy {
+					width: 100%;
+				}
+			}
 
 			label {
 
@@ -513,11 +524,11 @@
 				@include bb-rl-label-heading-md-thin;
 				color: var(--bb-rl-text-secondary-color);
 				margin: var(--bb-rl-space-100) 0 0;
-				display: block;
 			}
 		}
 	}
 
+	#bp-video-create-album,
 	#bp-media-create-album {
 
 		.bb-field-wrap {
@@ -562,5 +573,18 @@
 		.bb-rl-field-wrap {
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		}
+	}
+
+	.error-box {
+		display: none;
+	}
+
+	input.error {
+		border-color: var(--bb-rl-border-danger-secondary-color);
+		color: var(--bb-rl-text-danger-secondary-color);
+	}
+
+	input.error + .error-box {
+		display: block;
 	}
 }

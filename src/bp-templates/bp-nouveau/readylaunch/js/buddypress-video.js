@@ -128,7 +128,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-ac-video-move', this.openVideoMove.bind( this ) );
 			$document.on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$document.on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
-			$document.on( 'click', '.video-action_list .video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
+			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-custom .bb-rl-close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
 			$( '#buddypress [data-bp-list="video"]' ).on( 'bp_ajax_request', this.bp_ajax_video_request );
 
@@ -1689,7 +1689,7 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function ( event ) {
-			bp.Nouveau.Media.saveItem( event, 'album', 'video', bbRlNonce.video );
+			bp.Nouveau.Media.saveItem( event, 'album', 'video');
 		},
 
 		injectVideos: function ( event ) {

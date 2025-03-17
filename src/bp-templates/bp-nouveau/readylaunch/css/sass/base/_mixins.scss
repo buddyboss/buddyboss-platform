@@ -22,6 +22,12 @@
 	line-height: var(--bb-rl-base-line-small);
 }
 
+@mixin bb-rl-label-heading-md-bold {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 22px;
+}
+
 @mixin bb-rl-label-heading-md {
 	font-size: 14px;
 	font-weight: 500;
@@ -51,6 +57,11 @@
 	padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 	transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
 	text-decoration: none;
+}
+
+@mixin bb-rl-button--small {
+	padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+	font-size: 0.875rem;
 }
 
 @mixin bb-button-secondary-hover {
