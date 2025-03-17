@@ -136,6 +136,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 
 		<a
 			class="bb-rl-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
+			class="bb-open-video-theatre bb-video-cover-wrap bb-item-cover-wrap"
 			data-id="<?php echo esc_attr( $video_id ); ?>"
 			data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 			data-activity-id="<?php echo esc_attr( $activity_id ); ?>"

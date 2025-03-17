@@ -34,6 +34,7 @@ $can_delete             = true === (bool) $document_privacy['can_delete'];
 $extension_lists        = bp_document_extensions_list();
 $attachment_url         = '';
 $mirror_text            = '';
+
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$mirror_text         = bp_document_mirror_text( $attachment_id );

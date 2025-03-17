@@ -220,6 +220,10 @@ input[type="search"]::-webkit-search-results-decoration {
 	margin-top: 71px;
 	padding: 0;
 	min-height: calc(100vh - 71px);
+
+	.profile-edit.bb-readylaunch-template & {
+		margin-left: 0;
+	}
 }
 
 .bb-readylaunch-template {

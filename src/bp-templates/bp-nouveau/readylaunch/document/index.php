@@ -1,15 +1,15 @@
 <?php
-/**
- * The template for document templates
- *
- * This template can be overridden by copying it to yourtheme/buddypress/document/index.php.
- *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
- * @version [BBVERSION]
- */
+	/**
+	 * The template for document templates
+	 *
+	 * This template can be overridden by copying it to yourtheme/buddypress/document/index.php.
+	 *
+	 * @since   BuddyBoss [BBVERSION]
+	 * @package BuddyBoss\Core
+	 * @version [BBVERSION]
+	 */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+	$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <div class="bb-rl-document-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">

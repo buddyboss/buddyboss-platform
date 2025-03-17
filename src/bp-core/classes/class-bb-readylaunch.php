@@ -218,7 +218,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			if (
 				(
-					bp_is_members_directory() &&
+					(
+						bp_is_members_directory() ||
+						bp_is_user()
+					) &&
 					! empty( $this->settings['members'] )
 				) ||
 				(
@@ -634,12 +637,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				);
 			}
 
+			if ( bp_is_user_profile_edit() || bp_is_user_profile() ) {
+				wp_enqueue_script( 'bb-rl-xprofile' );
+			}
+
 			wp_localize_script(
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
 					'nonce'    => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav' => esc_html__( 'More', 'buddyboss' ),
 				)
 			);
 		}
@@ -1427,6 +1435,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/js/jquery.guillotine.min.js',
 						'dependencies' => array( 'jquery' ),
 						'version'      => bp_get_version(),
+						'footer'       => true,
+					),
+					'bb-rl-xprofile'   => array(
+						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-xprofile%s.js',
+						'dependencies' => array( 'bp-nouveau', 'jquery-ui-sortable' ),
 						'footer'       => true,
 					),
 				)

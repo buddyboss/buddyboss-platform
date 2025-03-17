@@ -1,9 +1,9 @@
 <?php
 /**
- * ReadyLaunch - The template for activity document actions
+ * The template for activity document actions
  *
- * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Core
+ * @since BuddyBoss [BBVERSION]
+ *
  * @version 1.0.0
  */
 
@@ -34,38 +34,38 @@ $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 	<div class="bb_rl_more_dropdown">
 		<ul class="bb-rl-conflict-activity-ul-li-comment">
 			<?php
-			if ( $can_download_btn ) {
-				?>
-				<li class="bb_rl_copy_download_file_url bb-rl-document-action-class">
-					<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_attr_e( 'Copy Download Link', 'buddyboss' ); ?></a>
-				</li>
-				<?php
-			}
-			if ( $can_move || bp_loggedin_user_id() === $document_user_id || bp_current_user_can( 'bp_moderate' ) ) {
-				if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-					if ( $is_comment_doc ) {
+				if ( $can_download_btn ) {
+					?>
+					<li class="bb_rl_copy_download_file_url bb-rl-document-action-class">
+						<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_attr_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+					</li>
+					<?php
+				}
+				if ( $can_move || bp_loggedin_user_id() === $document_user_id || bp_current_user_can( 'bp_moderate' ) ) {
+					if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+						if ( $is_comment_doc ) {
+							?>
+							<li class="bb_rl_move_file bb-rl-document-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
+								<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						} elseif ( $can_move ) {
+							?>
+							<li class="bb_rl_move_file bb-rl-document-action-class">
+								<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+							</li>
+							<?php
+						}
+					}
+					if ( $can_delete ) {
+						$item_id = ( bp_is_active( 'activity' ) ) ? ( bp_get_activity_comment_id() ?? bp_get_activity_id() ) : 0;
 						?>
-						<li class="bb_rl_move_file bb-rl-document-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-						</li>
-						<?php
-					} elseif ( $can_move ) {
-						?>
-						<li class="bb_rl_move_file bb-rl-document-action-class">
-							<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+						<li class="bb_rl_delete_file bb-rl-document-action-class">
+							<a class="bb-rl-document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>
 						<?php
 					}
 				}
-				if ( $can_delete ) {
-					$item_id = ( bp_is_active( 'activity' ) ) ? ( bp_get_activity_comment_id() ?? bp_get_activity_id() ) : 0;
-					?>
-					<li class="bb_rl_delete_file bb-rl-document-action-class">
-						<a class="bb-rl-document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
-					</li>
-					<?php
-				}
-			}
 			?>
 		</ul>
 	</div>

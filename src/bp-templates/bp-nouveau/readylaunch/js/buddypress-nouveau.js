@@ -797,32 +797,28 @@ window.bp = window.bp || {};
 
 					var typeType = window.location.hash.substr( 1 );
 					scope        = ( undefined !== typeType && 'following' === typeType ) ? typeType : ( undefined !== objectData.scope ? objectData.scope : '' );
+					filter       = objectData.filter ? objectData.filter : filter;
+					// Prioritize query param.
+					if ( 'members' === object ) {
+						if ( self.querystring ) {
+							scope  = self.querystring['bb-rl-scope'] ? self.querystring['bb-rl-scope'] : scope;
+							filter = self.querystring['bb-rl-order-by'] ? self.querystring['bb-rl-order-by'] : filter;
+						}
+					}
 
 					// Notifications always need to start with Newest ones.
 					extras = ( undefined !== objectData.extras && 'notifications' !== object ) ? objectData.extras : null;
-
-					// Pre select saved sort filter.
-					if ( $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).length ) {
-						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '1' === BP_Nouveau.is_send_ajax_request && undefined !== objectData.filter ) {
-							filter = objectData.filter;
-							$( self.objectNavParent + ' [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
-						} else if ( '-1' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() && '0' !== $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val() ) {
-							filter = $( self.objectNavParent + ' [data-bp-filter="' + object + '"]' ).val();
-						}
-					}
 
 					var bbFilterElem = $( '#buddypress [data-bp-filter="' + object + '"]' );
 
 					// Pre select saved sort filter.
 					if ( bbFilterElem.length ) {
-						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== objectData.filter ) {
-							filter = objectData.filter;
+						if ( ! _.isUndefined( bbRlIsSendAjaxRequest ) && '1' === bbRlIsSendAjaxRequest && undefined !== filter && null !== filter ) {
 							bbFilterElem.find( 'option[value="' + filter + '"]' ).prop( 'selected', true );
 						} else if ( '-1' !== bbFilterElem.val() && '0' !== bbFilterElem.val() ) {
 							filter = bbFilterElem.val();
 						}
 					}
-
 
 					// Pre select saved scope filter.
 					if ( $( self.objectNavParent + ' [data-bp-' + object + '-scope-filter="' + object + '"]' ).length ) {
@@ -831,16 +827,16 @@ window.bp = window.bp || {};
 						}
 					}
 
-					var bbObjectNavParent = $( this.objectNavParent + ' [data-bp-object="' + object + '"]' );
-					if ( bbObjectNavParent.length ) {
-						bbObjectNavParent.each(
-							function () {
-								$( this ).removeClass( 'selected' );
-							}
-						);
+					// var bbObjectNavParent = $( this.objectNavParent + ' [data-bp-object="' + object + '"]' );
+					// if ( bbObjectNavParent.length ) {
+					// 	bbObjectNavParent.each(
+					// 		function () {
+					// 			$( this ).removeClass( 'selected' );
+					// 		}
+					// 	);
 
-						$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
-					}
+					// 	$( this.objectNavParent + ' [data-bp-scope="' + object + '"], #object-nav li.current' ).addClass( 'selected' );
+					// }
 
 					// Check the querystring to eventually include the search terms.
 					if ( null !== self.querystring ) {

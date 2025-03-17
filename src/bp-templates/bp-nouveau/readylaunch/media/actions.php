@@ -2,9 +2,8 @@
 /**
  * The template for media actions
  *
- * This template can be overridden by copying it to yourtheme/buddypress/media/actions.php.
+ * @since BuddyBoss [BBVERSION]
  *
- * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
 

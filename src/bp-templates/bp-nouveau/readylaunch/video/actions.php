@@ -1,15 +1,10 @@
 <?php
 /**
- * BuddyBoss - Video Actions
+ * BuddyBoss - Video Actions, This template is used to render the video actions.
  *
- * This template is used to render the video actions.
+ * @since BuddyBoss [BBVERSION]
  *
- * This template can be overridden by copying it to yourtheme/buddypress/video/actions.php.
- *
- * @package BuddyBoss\Core
- *
- * @since   BuddyBoss 1.7.0
- * @version 1.7.0
+ * @version 1.0.0
  */
 
 $bp_loggedin_user_id     = bp_loggedin_user_id();

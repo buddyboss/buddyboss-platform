@@ -35,6 +35,7 @@ window.bp = window.bp || {};
 				this.styledSelect();
 
 				this.bbReloadWindow();
+				this.initBBNavOverflow();
 			},
 
 			/**
@@ -52,28 +53,28 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
-		},
+			},
 
 			/**
-		 * [scrollHeaderDropDown description]
-		 *
-		 * @param e
-		 */
-		bbScrollHeaderDropDown: function ( e ) {
-			var el = e.target;
-			if ( 'notification-list' === el.id ) {
-				var scrollThreshold = 30; // pixels from bottom
+			 * [scrollHeaderDropDown description]
+			 *
+			 * @param e
+			 */
+			bbScrollHeaderDropDown: function ( e ) {
+				var el = e.target;
+				if ( 'notification-list' === el.id ) {
+					var scrollThreshold = 30; // pixels from bottom
 					var bottomReached = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
 
 					if (bottomReached && ! el.classList.contains( 'loading' ) ) {
-					var load_more = $( el ).find( '.bb-rl-load-more' );
-					if ( load_more.length ) {
-						el.classList.add( 'loading' );
-						load_more.find( 'a' ).trigger( 'click' );
+						var load_more = $( el ).find( '.bb-rl-load-more' );
+						if ( load_more.length ) {
+							el.classList.add( 'loading' );
+							load_more.find( 'a' ).trigger( 'click' );
+						}
 					}
 				}
-			}
-		},
+			},
 
 			// Add Mobile menu toggle button.
 			mobileSubMenu : function () {
@@ -112,9 +113,9 @@ window.bp = window.bp || {};
 					}
 
 					$this.select2( {
-						theme: 'rl',
-						containerCssClass: 'bb-rl-select2-container ' + customClass,
-						dropdownCssClass: 'bb-rl-select2-dropdown',
+					theme: 'rl',
+					containerCssClass: 'bb-rl-select2-container'+ customClass,
+					dropdownCssClass: 'bb-rl-select2-dropdown',
 						dropdownParent: $this.parent()
 					} );
 				} );
@@ -853,6 +854,99 @@ window.bp = window.bp || {};
 				window.onbeforeunload = fetchDataHandler;
 				// This will work only for other browsers.
 				window.unload         = fetchDataHandler;
+			},
+
+			// Initializes navigation overflow handling on page load and resize.
+			initBBNavOverflow: function () {
+				var self = this;
+				$('#object-nav > ul').each(function () {
+					self.bbNavOverflow(this, 90);
+				});
+
+				window.addEventListener('resize', function () {
+					$('#object-nav > ul').each(function () {
+						self.bbNavOverflow(this, 90);
+					});
+				});
+
+				window.addEventListener('load', function () {
+					$('#object-nav > ul').each(function () {
+						self.bbNavOverflow(this, 90);
+					});
+				});
+
+				$( document ).on(
+					'click',
+					'.bb-rl-nav-more',
+					function ( e ) {
+						e.preventDefault();
+						$( this ).toggleClass( 'active open' ).next().toggleClass( 'active open' );
+					}
+				);
+
+				$( document ).on(
+					'click',
+					'.bb-rl-hideshow .bb-rl-sub-menu a',
+					function ( e ) {
+						// e.preventDefault();
+						$( 'body' ).trigger( 'click' );
+
+						// add 'current' and 'selected' class
+						var currentLI = $( this ).parent();
+						currentLI.parent( '.bb-rl-sub-menu' ).find( 'li' ).removeClass( 'current selected' );
+						currentLI.addClass( 'current selected' );
+					}
+				);
+
+				$( document ).click(
+					function ( e ) {
+						var container = $( '.bb-rl-nav-more, .bb-rl-sub-menu' );
+						if ( ! container.is( e.target ) && container.has( e.target ).length === 0 ) {
+							$( '.bb-rl-nav-more' ).removeClass( 'active open' ).next().removeClass( 'active open' );
+						}
+					}
+				);
+			},
+
+			// Handle navigation overflow with a dropdown.
+			bbNavOverflow: function ( elem, reduceWidth ) {
+				var $elem = $( elem );
+
+				function run_alignMenu() {
+					$elem.append( $( $elem.children( 'li.bb-rl-hideshow' ).children( 'ul' ) ).html() );
+					$elem.children( 'li.bb-rl-hideshow' ).remove();
+					alignMenu( elem );
+				}
+
+				function alignMenu( obj ) {
+					var self = $( obj ),
+						w = 0,
+						i = -1,
+						menuhtml = '',
+						mw = self.width() - reduceWidth;
+
+					$.each( self.children( 'li' ), function () {
+						i++;
+						w += $( this ).outerWidth( true );
+						if ( mw < w ) {
+							menuhtml += $( '<div>' ).append( $( this ).clone() ).html();
+							$( this ).remove();
+						}
+					} );
+
+					self.append( '<li class="bb-rl-hideshow menu-item-has-children1" data-no-dynamic-translation>' +
+						'<a class="bb-rl-nav-more" href="#">' + bbReadyLaunchFront.more_nav + '<i class="bb-icons-rl-caret-down"></i></a>' +
+						'<ul class="bb-rl-sub-menu" data-no-dynamic-translation>' + menuhtml + '</ul>' +
+						'</li>' );
+
+					if ( self.find( 'li.bb-rl-hideshow' ).find( 'li' ).length > 0 ) {
+						self.find( 'li.bb-rl-hideshow' ).show();
+					} else {
+						self.find( 'li.bb-rl-hideshow' ).hide();
+					}
+				}
+
+				run_alignMenu();
 			}
 		};
 

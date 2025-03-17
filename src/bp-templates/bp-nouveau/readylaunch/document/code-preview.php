@@ -40,6 +40,7 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 		</div> <!-- .bb-rl-document-text-wrap -->
 		<?php
 		if ( true === $more_text ) {
+
 			printf(
 			/* translators: %s: download string */
 				'<div class="bb_rl_more_text_view">%s</div>',

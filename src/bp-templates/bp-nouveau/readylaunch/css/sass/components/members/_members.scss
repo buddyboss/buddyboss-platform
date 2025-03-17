@@ -105,17 +105,6 @@
 			border-radius: 50%;
 		}
 
-		.bp-member-type {
-			display: inline-flex;
-			color: var(--bb-rl-text-brand-secondary-color);
-			background-color: var(--bb-rl-background-brand-secondary-color);
-			border: 1px solid var(--bb-rl-border-brand-secondary-color);
-			border-radius: var(--bb-rl-radius-full);
-			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-			font-size: var(--bb-rl-font-size-xs);
-			font-weight: 500;
-		}
-
 		.bb-rl-item-meta-asset {
 			font-size: var(--bb-rl-font-size-sm);
 			line-height: var(--bb-rl-base-line-small);
@@ -143,6 +132,22 @@
 	}
 }
 
+.bb-rl-members,
+.bb-rl-profile-container {
+
+	.bp-member-type {
+		display: inline-flex;
+		width: fit-content;
+		color: var(--bb-rl-text-brand-secondary-color);
+		background-color: var(--bb-rl-background-brand-secondary-color);
+		border: 1px solid var(--bb-rl-border-brand-secondary-color);
+		border-radius: var(--bb-rl-radius-full);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+		font-size: var(--bb-rl-font-size-xs);
+		font-weight: 500;
+	}
+}
+
 .bb-rl-members-directory-container {
 	gap: var(--bb-rl-space-200);
 	padding-bottom: var(--bb-rl-space-400);
@@ -161,167 +166,187 @@
 	}
 }
 
-.bb-rl-item-actions {
+.bb-rl-primary-actions,
+.bb-rl-member-header-actions {
 
-	.bb-rl-primary-actions {
-		margin-left: auto;
+	button,
+	.generic-button a {
 
-		button,
-		.generic-button a {
-
-			@include bb-rl-button;
-			@include bb-rl-button-secondary-fill;
-			font-size: var(--bb-rl-font-size-sm);
-			padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
-			white-space: nowrap;
-
-			&.following,
-			&.is_friend,
-			&.pending_friend,
-			&.awaiting_response_friend {
-
-				@include bb-rl-button--secondary-outline;
-			}
-
-			&.send-message,
-			&.bb-rl-send-message-disabled,
-			&.follow-button,
-			&.friendship-button {
-
-				i {
-					margin-right: var(--bb-rl-space-50);
-
-					&::before {
-						content: "";
-						font-weight: 400;
-						font-family: bb-icons-rl;
-						font-size: 16px;
-						color: var(--bb-rl-icon-secondary-color);
-						font-style: normal;
-					}
-				}
-			}
-
-			&.bb-rl-send-message-disabled {
-				pointer-events: none;
-				color: var(--bb-rl-text-disabled-color);
-				border-color: var(--bb-rl-border-tertiary-color);
-
-				i {
-
-					&::before {
-						color: var(--bb-rl-text-disabled-color);
-					}
-				}
-			}
-
-			&.send-message i::before,
-			&.bb-rl-send-message-disabled i::before {
-				content: "\e168";
-			}
-
-			&.follow-button.not_following i::before {
-				content: "\e3d4";
-			}
-
-			&.follow-button.following i::before {
-				content: "\e182";
-			}
-
-			&.friendship-button.not_friends i::before {
-				content: "\e3d4";
-			}
-
-			&.friendship-button.pending_friend i::before {
-				content: "\eafa";
-			}
-
-			&.friendship-button.awaiting_response_friend i::before {
-				content: "\edec";
-			}
-
-			&.friendship-button.is_friend i::before {
-				content: "\e182";
-			}
-		}
-	}
-
-	.bb-rl-secondary-actions {
-		flex: 1;
-
-		.button-wrap {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-			width: 100%;
-		}
-
-		.send-message,
-		.bb-rl-send-message-disabled,
-		.friendship-button,
-		.follow-button {
-			font-size: 0;
-			line-height: 1;
-			display: inline-block;
-			background-color: transparent;
-			border: 0;
-			padding: 0;
+		&.send-message,
+		&.bb-rl-send-message-disabled,
+		&.follow-button,
+		&.friendship-button {
 
 			i {
+				margin-right: var(--bb-rl-space-50);
 
 				&::before {
 					content: "";
 					font-weight: 400;
 					font-family: bb-icons-rl;
-					font-size: 24px;
-					color: var(--bb-rl-icon-secondary-color);
+					font-size: 16px;
 					font-style: normal;
 				}
 			}
 		}
 
-		.bb-rl-send-message-disabled {
-			pointer-events: none;
+		&.send-message i::before,
+		&.bb-rl-send-message-disabled i::before {
+			content: "\e168";
+		}
 
-			i::before {
-				color: var(--bb-rl-icon-disabled-color);
+		&.follow-button.not_following i::before {
+			content: "\e324";
+		}
+
+		&.follow-button.following i::before {
+			content: "\e182";
+		}
+
+		&.friendship-button.not_friends i::before {
+			content: "\e3d4";
+		}
+
+		&.friendship-button.pending_friend i::before {
+			content: "\eafa";
+		}
+
+		&.friendship-button.awaiting_response_friend i::before {
+			content: "\edec";
+		}
+
+		&.friendship-button.is_friend i::before {
+			content: "\e182";
+		}
+	}
+}
+
+.bb-rl-primary-actions {
+	margin-left: auto;
+
+	button,
+	.generic-button a {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+		font-size: var(--bb-rl-font-size-sm);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		white-space: nowrap;
+
+		&.send-message,
+		&.bb-rl-send-message-disabled,
+		&.follow-button,
+		&.friendship-button {
+
+			i {
+
+				&::before {
+					color: var(--bb-rl-icon-secondary-color);
+				}
 			}
 		}
 
-		.send-message i::before,
-		.bb-rl-send-message-disabled i::before {
-			content: "\e16e";
+		&.following,
+		&.is_friend,
+		&.pending_friend,
+		&.awaiting_response_friend {
+
+			@include bb-rl-button--secondary-outline;
 		}
 
-		.friendship-button.not_friends i::before {
-			content: "\e4d0";
-		}
+		&.bb-rl-send-message-disabled {
+			pointer-events: none;
+			color: var(--bb-rl-text-disabled-color);
+			border-color: var(--bb-rl-border-tertiary-color);
 
-		.friendship-button.is_friend i::before {
-			content: "\e4ce";
-		}
+			i {
 
-		.friendship-button.pending_friend i::before {
-			content: "\edec";
-		}
-
-		.friendship-button.awaiting_response_friend i::before {
-			content: "\edec";
-		}
-
-		.follow-button.not_following i::before {
-			content: "\e324";
-		}
-
-		.follow-button.not_following i::before {
-			content: "\e324";
-		}
-
-		.follow-button.following i::before {
-			content: "\e324";
-			font-weight: 500;
+				&::before {
+					color: var(--bb-rl-text-disabled-color);
+				}
+			}
 		}
 	}
+}
+
+.bb-rl-secondary-actions {
+	flex: 1;
+
+	.button-wrap {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		width: 100%;
+	}
+
+	.send-message,
+	.bb-rl-send-message-disabled,
+	.friendship-button,
+	.follow-button {
+		font-size: 0;
+		line-height: 1;
+		display: inline-block;
+		background-color: transparent;
+		border: 0;
+		padding: 0;
+
+		i {
+
+			&::before {
+				content: "";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 24px;
+				color: var(--bb-rl-icon-secondary-color);
+				font-style: normal;
+			}
+		}
+	}
+
+	.bb-rl-send-message-disabled {
+		pointer-events: none;
+
+		i::before {
+			color: var(--bb-rl-icon-disabled-color);
+		}
+	}
+
+	.send-message i::before,
+	.bb-rl-send-message-disabled i::before {
+		content: "\e16e";
+	}
+
+	.friendship-button.not_friends i::before {
+		content: "\e4d0";
+	}
+
+	.friendship-button.is_friend i::before {
+		content: "\e4ce";
+	}
+
+	.friendship-button.pending_friend i::before {
+		content: "\edec";
+	}
+
+	.friendship-button.awaiting_response_friend i::before {
+		content: "\edec";
+	}
+
+	.follow-button.not_following i::before {
+		content: "\e324";
+	}
+
+	.follow-button.not_following i::before {
+		content: "\e324";
+	}
+
+	.follow-button.following i::before {
+		content: "\e324";
+		font-weight: 500;
+	}
+}
+
+.bb-rl-item-actions {
 
 	&.bb-rl-idle-primary {
 

@@ -17,6 +17,11 @@ function my_network_click_handler() {
 			jQuery( this ).addClass( 'loading selected' );
 			jQuery( currentWidget ).find( widgetTabLinks ).removeClass( 'selected' );
 
+			var seeAllLink = jQuery( this ).data( 'see-all-link' );
+			if ( '' !== seeAllLink ) {
+				jQuery( currentWidget ).find( '.bb-rl-see-all' ).attr( 'href', seeAllLink );
+			}
+
 			jQuery.post(
 				ajaxurl,
 				{

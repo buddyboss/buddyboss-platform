@@ -1,14 +1,14 @@
 <?php
-/**
- * The template for medias
- *
- * This template can be overridden by copying it to yourtheme/buddypress/media/index.php.
- *
- * @since   BuddyBoss 1.0.0
- * @version 1.0.0
- */
+	/**
+	 * The template for medias
+	 *
+	 * This template can be overridden by copying it to yourtheme/buddypress/media/index.php.
+	 *
+	 * @since   BuddyBoss 1.0.0
+	 * @version 1.0.0
+	 */
 
-$is_send_ajax_request = bb_is_send_ajax_request();
+	$is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <div class="bb-rl-media-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
@@ -20,28 +20,28 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				bp_get_template_part( 'common/search-and-filters-bar' );
 
 				if (
-                        is_user_logged_in() &&
-                        bp_is_profile_media_support_enabled() &&
-                        bb_user_can_create_media()
-                ) {
+					is_user_logged_in() &&
+					bp_is_profile_media_support_enabled() &&
+					bb_user_can_create_media()
+				) {
 
 					echo '<div class="bb-rl-media-actions bb-rl-actions-buttons flex items-center">';
 
 					$bp_is_profile_albums_support_enabled = bp_is_profile_albums_support_enabled();
 					if ( $bp_is_profile_albums_support_enabled ) {
 						?>
-                        <a href="#" id="bb-create-album" class="action-secondary bb-create-album button small">
-                            <i class="bb-icons-rl-images"></i>
+						<a href="#" id="bb-create-album" class="action-secondary bb-create-album button small">
+							<i class="bb-icons-rl-images"></i>
 							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
-                        </a>
+						</a>
 						<?php
 					}
 
 					?>
-                    <a class="bb-add-photos button small action-primary" id="bp-add-media" href="#">
-                        <i class="bb-icons-rl-plus"></i>
+					<a class="bb-add-photos button small action-primary" id="bp-add-media" href="#">
+						<i class="bb-icons-rl-plus"></i>
 						<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
-                    </a>
+					</a>
 
 					<?php
 
@@ -51,7 +51,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						bp_get_template_part( 'media/create-album' );
 					}
 
-                    echo '</div>';
+					echo '</div>';
 				}
 			?>
 		</div>
@@ -97,7 +97,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 					bp_get_template_part( 'document/theatre' );
 				?>
 
-                <div id="media-stream" class="media dir-list bb-rl-media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div id="media-stream" class="media dir-list bb-rl-media bb-rl-media-stream" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 						if ( $is_send_ajax_request ) {
 							echo '<div id="bp-ajax-loader">';
@@ -107,7 +107,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 							bp_get_template_part( 'media/media-loop' );
 						}
 					?>
-                </div><!-- .media -->
+				</div><!-- .media -->
 
 
 				<?php
