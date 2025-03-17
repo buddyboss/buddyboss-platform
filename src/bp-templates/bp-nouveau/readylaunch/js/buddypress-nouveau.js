@@ -447,7 +447,7 @@ window.bp = window.bp || {};
 					$selector.html( content );
 					break;
 			}
-			$selector.find( 'li.bb-rl-activity-item' ).each( this.hideSingleUrl );
+			$selector.find( 'li.activity-item' ).each( this.hideSingleUrl );
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bb-rl-suggestions' ).bp_mentions( bp.mentions.users );
@@ -544,7 +544,7 @@ window.bp = window.bp || {};
 
 			// prevent activity response to append to media model activity list element.
 			if ( 'activity' === data.object && '#buddypress [data-bp-list] ul.bb-rl-list' === data.target ) {
-				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-media-model-container ul.bb-rl-list)';
+				data.target = '#buddypress [data-bp-list] ul.bb-rl-list:not(#bb-rl-media-model-container ul.bb-rl-list)';
 			}
 
 			// if object is members, activity, media, document and object nav does not exists fallback to scope = all.
@@ -594,7 +594,7 @@ window.bp = window.bp || {};
 				var $body                = $( 'body' ),
 					component_conditions = [
 						data.object === 'group_members' && $body.hasClass( 'group-members' ),
-						data.object === 'activity' && $( 'body.groups' ).hasClass( 'bb-rl-activity' ),
+						data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ),
 						data.object === 'document' && $body.hasClass( 'documents' ),
 						data.object === 'manage_group_members' && $body.hasClass( 'manage-members' ),
 						data.object === 'document' && ( $body.hasClass( 'document' ) || $body.hasClass( 'documents' ) ),
@@ -762,7 +762,7 @@ window.bp = window.bp || {};
 							// Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
-							$( '.bb-rl-activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);
@@ -944,7 +944,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons.
-			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bp-messages-content, .messages-screen' );
+			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bb-rl-messages-content, .messages-screen' );
 			$buttons.on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$buttons.on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 			$buttons.on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
@@ -957,8 +957,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-close-remove-connection', this.removeConnectionClose );
 			$document.on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
 			$document.on( 'click', '.show-action-popup', this.showActionPopup );
-			$document.on( 'click', '#message-threads .block-member', this.threadListBlockPopup );
-			$document.on( 'click', '#message-threads .report-content', this.threadListReportPopup );
+			$document.on( 'click', '#bb-rl-message-threads .block-member', this.threadListBlockPopup );
+			$document.on( 'click', '#bb-rl-message-threads .report-content', this.threadListReportPopup );
 			$document.on( 'click', '.bb-rl-close-action-popup, .action-popup-overlay', this.closeActionPopup );
 			$document.on( 'keyup', '.search-form-has-reset input[type="search"], .search-form-has-reset input#bbp_search', _.throttle( this.directorySearchInput, 900 ) );
 			$document.on( 'click', '.search-form-has-reset .search-form_reset', this.resetDirectorySearch );
@@ -2450,7 +2450,7 @@ window.bp = window.bp || {};
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
-			var blockMember = $( '#message-threads .block-member' );
+			var blockMember = $( '#bb-rl-message-threads .block-member' );
 			if ( blockMember.length > 0 ) {
 				blockMember.magnificPopup(
 					{
@@ -2478,7 +2478,7 @@ window.bp = window.bp || {};
 				mf_content.find( '.bp-content-type' ).val( contentType );
 				mf_content.find( '.bp-nonce' ).val( nonce );
 			}
-			var blockMember = $( '#message-threads .report-content' );
+			var blockMember = $( '#bb-rl-message-threads .report-content' );
 			if ( blockMember.length > 0 ) {
 
 				$( '#bb-report-content .form-item-category' ).show();

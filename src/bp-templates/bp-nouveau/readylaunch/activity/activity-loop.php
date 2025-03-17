@@ -8,13 +8,18 @@
 
 bp_nouveau_before_loop();
 
-if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
+$args = bp_ajax_querystring( 'activity' );
+if ( ! bp_is_single_activity() ) {
+	$args .= '&display_comments=false';
+}
+
+if ( bp_has_activities( $args ) ) :
 
 	$is_first_page = empty( $_POST['page'] ) || 1 === (int) $_POST['page'];
 	if ( $is_first_page ) :
 		?>
 		<ul class="bb-rl-activity-list bb-rl-item-list bb-rl-list">
-	<?php
+		<?php
 	endif;
 
 	while ( bp_activities() ) :
@@ -25,19 +30,19 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 	if ( bp_activity_has_more_items() ) :
 		?>
 		<li class="bb-rl-load-more">
-			<a class="button outline" href="<?php bp_activity_load_more_link(); ?>">
+			<a class="bb-rl-button bb-rl-button--brandFill" href="<?php bp_activity_load_more_link(); ?>">
 				<?php esc_html_e( 'Load More', 'buddyboss' ); ?>
 			</a>
 		</li>
-	<?php
+		<?php
 	endif;
 	?>
 
-	<li class="bb-rl-activity bb_rl_activity_update bb-rl-activity-item bb-rl-activity-popup"></li>
+	<li class="activity activity_update activity-item bb-rl-activity-popup"></li>
 
 	<?php if ( $is_first_page ) : ?>
 		</ul>
-	<?php
+		<?php
 	endif;
 
 else :

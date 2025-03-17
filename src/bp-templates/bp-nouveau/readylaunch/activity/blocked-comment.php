@@ -36,9 +36,9 @@ $media_active = bp_is_active( 'media' );
 	}
 	?>
 
-	<div class="acomment-display">
-		<div class="acomment_inner">
-			<div class="acomment-avatar item-avatar">
+	<div class="bb-rl-acomment-display">
+		<div class="bb-rl-acomment_inner">
+			<div class="bb-rl-acomment-avatar bb-rl-item-avatar">
 				<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>">
 					<?php
 					bp_activity_avatar(
@@ -51,13 +51,13 @@ $media_active = bp_is_active( 'media' );
 				</a>
 			</div>
 
-			<div class="acomment-content_wrap">
-				<div class="acomment-content_block">
-					<div class="acomment-meta">
+			<div class="bb-rl-acomment-content_wrap">
+				<div class="bb-rl-acomment-content_block">
+					<div class="bb-rl-acomment-meta">
 						<?php bp_nouveau_activity_comment_action(); ?>
 					</div>
 
-					<div class="acomment-content">
+					<div class="bb-rl-acomment-content">
 						<?php
 						$activity_comment_content = bp_get_activity_comment_content();
 						$hide_media               = false;
@@ -103,7 +103,7 @@ $media_active = bp_is_active( 'media' );
 
 					</div>
 				</div>
-				<div class="acomment-foot-actions">
+				<div class="bb-rl-acomment-foot-actions">
 					<?php
 					if ( bb_is_group_activity_comment( $activity_comment_id ) && ! $check_hidden_content ) {
 						bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) );

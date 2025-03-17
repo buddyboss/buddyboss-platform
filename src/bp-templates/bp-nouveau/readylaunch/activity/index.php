@@ -28,7 +28,7 @@ bp_nouveau_before_activity_directory_content();
 		bp_nouveau_activity_hook( 'before_directory', 'list' );
 		?>
 
-		<div id="bb-rl-activity-stream" class="bb-rl-activity" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+		<div id="bb-rl-activity-stream" class="activity" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 			<?php
 			if ( $is_send_ajax_request ) {
 				echo '<div id="bb-rl-ajax-loader">';

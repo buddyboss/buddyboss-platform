@@ -211,6 +211,12 @@
 				}
 			}
 		}
+
+		.notification-header-actions {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-200);
+		}
 	}
 
 	.notification-link {
@@ -382,6 +388,8 @@
 			line-height: 1.5;
 
 			img {
+				height: 20px;
+				width: 20px;
 				vertical-align: middle;
 			}
 		}
@@ -413,6 +421,18 @@
 			opacity: 0;
 		}
 	}
+
+	.bb-rl-load-more {
+		margin-top: var(--bb-rl-space-100);
+
+		.button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			padding: 6px 12px;
+			font-size: 0.875rem;
+		}
+	}
 }
 
 .notification-listing {
@@ -424,6 +444,8 @@
 
 			img {
 				max-width: 32px;
+				max-height: 32px;
+				object-fit: cover;
 			}
 
 			[class*="bb-icon"] {
@@ -443,6 +465,8 @@
 					font-family: bb-icons-rl !important;
 					color: var(--bb-rl-text-white-color);
 					font-size: 12px;
+					opacity: 1;
+					margin: 0;
 				}
 
 				&.bb-icon-comment-activity:before {
@@ -465,8 +489,12 @@
 					content: "\e16c";
 				}
 
-				&.bb-icon-poll {
+				&.bb-icon-poll:before {
 					content: "\e150";
+				}
+
+				&.bb-icon-image:before {
+					content: "\e10e";
 				}
 			}
 		}

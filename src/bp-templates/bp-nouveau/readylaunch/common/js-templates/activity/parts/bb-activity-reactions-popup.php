@@ -16,6 +16,10 @@
 			{{ ' (' + data.popup_heading_count + ')' }}
 		<# } #>
 	</h4>
+
+	<a class="bb-rl-state-popup-close-button" href="#">
+		<span class="bb-icons-rl-x"></span>
+	</a>
 </script>
 
 <script type="text/html" id="tmpl-activity-reacted-popup-tab">
@@ -87,18 +91,27 @@
 										</a>
 									<# } #>
 								</div>
-								<div class="activity-state_user__name">
-									<# if ( '' !== user.profile_url ) { #>
-										<a href="{{ user.profile_url }}">{{ user.name }}</a>
-									<# } else { #>
-										{{ user.name }}
-									<# } #>
-								</div>
-								<# if ( '' !== user.profile_url && user.member_type && user.member_type.label ) { #>
-									<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
-										{{ user.member_type.label }}
+								<div class="activity-state_user__info">
+									<div class="activity-state_user__data">
+										<div class="activity-state_user__name">
+											<# if ( '' !== user.profile_url ) { #>
+												<a href="{{ user.profile_url }}">{{ user.name }}</a>
+											<# } else { #>
+												{{ user.name }}
+											<# } #>
+										</div>
+										<# if ( '' !== user.profile_url && user.member_type && user.member_type.label ) { #>
+											<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+												{{ user.member_type.label }}
+											</div>
+										<# } #>
 									</div>
-								<# } #>
+									<div class="activity-state_user__data">
+										<# if ( user.followers_count ) { #>
+											<span class="followers-count">{{ user.followers_count }}</span>
+										<# } #>
+									</div>
+								</div>
 							</li>
 						<#
 						}
@@ -150,18 +163,27 @@
 													</a>
 												<# } #>
 											</div>
-											<div class="activity-state_user__name">
-												<# if ( '' !== user.profile_url ) { #>
-													<a href="{{ user.profile_url }}">{{ user.name }}</a>
-												<# } else { #>
-													{{ user.name }}
-												<# } #>
+											<div class="activity-state_user__info">
+												<div class="activity-state_user__data">
+													<div class="activity-state_user__name">
+														<# if ( '' !== user.profile_url ) { #>
+															<a href="{{ user.profile_url }}">{{ user.name }}</a>
+														<# } else { #>
+															{{ user.name }}
+														<# } #>
+													</div>
+													<# if ( '' !== user.profile_url && user.member_type && user.member_type.label ) { #>
+														<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
+															{{ user.member_type.label }}
+														</div>
+													<# } #>
+												</div>
+												<div class="activity-state_user__data">
+													<# if ( user.followers_count ) { #>
+														<span class="followers-count">{{ user.followers_count }}</span>
+													<# } #>
+												</div>
 											</div>
-											<# if ( '' !== user.profile_url && user.member_type && user.member_type.label ) { #>
-											<div class="activity-state_user__role" style="color:{{user.member_type.color.text}}; background-color:{{user.member_type.color.background}};">
-												{{ user.member_type.label }}
-											</div>
-											<# } #>
 										</li>
 										<#
 									}
@@ -204,19 +226,27 @@
 			</a>
 		<# } #>
 	</div>
-	<div class="activity-state_user__name">
-		<# if ( '' !== data.profile_url ) { #>
-			<a href="{{ data.profile_url }}">{{ data.name }}</a>
-		<# } else { #>
-			{{ data.name }}
-		<# } #>
-	</div>
-
-	<# if ( '' !== data.profile_url && data.member_type && data.member_type.label ) { #>
-		<div class="activity-state_user__role" style="color:{{data.member_type.color.text}}; background-color:{{data.member_type.color.background}};">
-			{{ data.member_type.label }}
+	<div class="activity-state_user__info">
+		<div class="activity-state_user__data">
+			<div class="activity-state_user__name">
+				<# if ( '' !== data.profile_url ) { #>
+					<a href="{{ data.profile_url }}">{{ data.name }}</a>
+				<# } else { #>
+					{{ data.name }}
+				<# } #>
+			</div>
+			<# if ( '' !== data.profile_url && data.member_type && data.member_type.label ) { #>
+				<div class="activity-state_user__role" style="color:{{data.member_type.color.text}}; background-color:{{data.member_type.color.background}};">
+					{{ data.member_type.label }}
+				</div>
+			<# } #>
 		</div>
-	<# } #>
+		<div class="activity-state_user__data">
+			<# if ( data.followers_count ) { #>
+				<span class="followers-count">{{ data.followers_count }}</span>
+			<# } #>
+		</div>
+	</div>
 </script>
 
 <script type="text/html" id="tmpl-activity-reacted-no-data">

@@ -25,14 +25,13 @@ $move_id                = ( 0 < $group_id ) ? $group_id : $document_user_id;
 $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 ?>
 <div class="bb-rl-document-action-wrap">
-	<a href="#" class="bb-rl-document-action_collapse" data-balloon-pos="up" data-tooltip-collapse="<?php esc_attr_e( 'Collapse', 'buddyboss' ); ?>" data-balloon="<?php esc_attr_e( 'Expand', 'buddyboss' ); ?>"><i class="bb-icon-merge bb-icon-l document-icon-collapse"></i></a>
 	<a href="<?php echo esc_url( $download_url ); ?>" class="bb-rl-document-action_download" data-id="<?php echo esc_attr( $document_id ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss' ); ?>">
 		<i class="bb-icons-rl-arrow-circle-down"></i>
 	</a>
 	<a href="#" target="_blank" class="bb-rl-document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 		<i class="bb-icons-rl-dots-three"></i>
 	</a>
-	<div class="bb-rl-document-action_list bb_rl_more_dropdown">
+	<div class="bb_rl_more_dropdown">
 		<ul class="bb-rl-conflict-activity-ul-li-comment">
 			<?php
 			if ( $can_download_btn ) {

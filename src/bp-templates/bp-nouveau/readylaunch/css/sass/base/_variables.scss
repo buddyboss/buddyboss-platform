@@ -102,12 +102,14 @@
 	--bb-rl-z-index-dropdown: 1000;
 	--bb-rl-z-index-sticky: 1020;
 	--bb-rl-z-index-fixed: 1030;
+	--bb-rl-z-index-adminbar: 1035;
 	--bb-rl-z-index-modal-backdrop: 1040;
 	--bb-rl-z-index-modal: 1050;
 	--bb-rl-z-index-popover: 1060;
 	--bb-rl-z-index-tooltip: 1070;
 
-	--bb-rl-font-family-base: inter, serif;
+	// stylelint-disable-next-line
+	--bb-rl-font-family-base: InterText, serif;
 	--bb-rl-font-size-base: 16px;
 	--bb-rl-font-size-xs: 11px;
 	--bb-rl-font-size-sm: 13px;

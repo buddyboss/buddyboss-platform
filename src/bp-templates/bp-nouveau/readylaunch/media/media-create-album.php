@@ -21,7 +21,7 @@
 	endif;
 	?>
 	<div class="db-modal-buttons">
-		<a class="bb-rl-close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-		<a class="button bb-rl-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
+		<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-close-create-popup-album" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+		<a class="bb-rl-button bb-rl-button--brandFill bb-rl-media-create-popup-album-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
 	</div>
 </div>
