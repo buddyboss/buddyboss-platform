@@ -928,6 +928,7 @@ table.extension-listing tbody td {
   padding: 10px;
 }
 
+table.extension-listing tbody td [class*="bb-icons-rl-"],
 table.extension-listing tbody td [class*=" bb-icon-"] {
   font-size: 33px;
   color: #999;
@@ -1087,6 +1088,7 @@ table.extension-listing .icon-select-main .icon-select-button li {
 table.extension-listing .icon-select-main .icon-select-button i {
   font-size: 22px;
   color: #888;
+  margin-right: 0;
   margin-left: 10px;
   vertical-align: middle;
 }
@@ -1144,6 +1146,7 @@ table.extension-listing .icon-select-main .custom-extension-list li span {
 
 table.extension-listing .icon-select-main .custom-extension-list i {
   font-size: 28px;
+  margin-right: 0;
   margin-left: 10px;
   vertical-align: middle;
   color: #888;

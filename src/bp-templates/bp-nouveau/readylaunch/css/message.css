@@ -491,18 +491,18 @@
   gap: var(--bb-rl-space-100);
 }
 
-#bb-rl-messages-thread-list-nav #inbox-personal-li > a {
+#bb-rl-messages-thread-list-nav #bb-rl-inbox-personal-li > a {
   color: var(--bb-rl-text-color);
   font-size: 16px;
   font-weight: 500;
   pointer-events: none;
 }
 
-#bb-rl-messages-thread-list-nav #compose-action-personal-li {
+#bb-rl-messages-thread-list-nav #bb-rl-compose-action-personal-li {
   margin-left: auto;
 }
 
-#bb-rl-messages-thread-list-nav #compose-action-personal-li #compose-action {
+#bb-rl-messages-thread-list-nav #bb-rl-compose-action-personal-li #compose-action {
   font-size: 0;
 }
 

@@ -379,14 +379,14 @@
 		gap: var(--bb-rl-space-100);
 	}
 
-	#inbox-personal-li > a {
+	#bb-rl-inbox-personal-li > a {
 		color: var(--bb-rl-text-color);
 		font-size: 16px;
 		font-weight: 500;
 		pointer-events: none;
 	}
 
-	#compose-action-personal-li {
+	#bb-rl-compose-action-personal-li {
 		margin-left: auto;
 
 		#compose-action {
