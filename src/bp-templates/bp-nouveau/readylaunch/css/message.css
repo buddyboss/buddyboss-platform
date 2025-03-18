@@ -1894,3 +1894,75 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
 }
+
+.bb-rl-messages-right-panel {
+  width: 300px;
+  background-color: var(--bb-rl-background-color);
+  border-left: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--bb-rl-space-300);
+}
+
+.bb-rl-messages-right-panel .avatar {
+  display: inline-block;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-profile-type {
+  display: inline-block;
+  color: var(--bb-rl-text-brand-secondary-color);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.8;
+  border: 1px solid var(--bb-rl-border-brand-secondary-color);
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-radius: 24px;
+  padding: 0 var(--bb-rl-space-100);
+  text-transform: capitalize;
+  max-width: 140px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-profile-name {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-profile-meta {
+  display: flex;
+  justify-content: center;
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-profile-meta .bb-rl-message-profile-meta-item {
+  display: flex;
+  align-items: center;
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: 1.8;
+  color: var(--bb-rl-text-tertiary-color);
+  font-weight: 400;
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-profile-meta .bb-rl-message-profile-meta-item:last-child:not(:first-child):before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background-color: var(--bb-rl-border-secondary-color);
+  border-radius: 50%;
+  margin: 0 6px;
+}

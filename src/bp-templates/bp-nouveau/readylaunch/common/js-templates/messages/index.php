@@ -27,6 +27,28 @@
 		<div class="bb-rl-messages-threads-list bb-rl-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bb-rl-messages-threads-list"></div>
 	</div>
 	<div class="bb-rl-messages-content"></div>
+	<div class="bb-rl-messages-right-panel">
+		<div class="bb-rl-message-profile">
+			<div class="bb-rl-message-profile-avatar">
+				<a href="#">
+					<img class="avatar" src="https://avatar.iran.liara.run/public/boy" alt="" />
+				</a>
+			</div>
+			<div class="bb-rl-message-profile-type">
+				Admin
+			</div>
+			<div class="bb-rl-message-profile-name">
+				<?php echo esc_html( bp_get_displayed_user_fullname() ); ?>
+			</div>
+			<div class="bb-rl-message-profile-meta">
+				<span class="bb-rl-message-profile-meta-item">Joined 23 Nov 2024</span>
+				<span class="bb-rl-message-profile-meta-item">34 followers</span>
+			</div>
+			<div class="bb-rl-message-profile-meta">
+				<span class="bb-rl-message-profile-meta-item">Active now</span>
+			</div>
+		</div>
+	</div>
 
 </div>
 
