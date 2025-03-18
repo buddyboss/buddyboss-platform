@@ -119,6 +119,10 @@
   margin: 0 auto;
 }
 
+body.messages .bb-rl-content-wrapper {
+  padding-top: 0;
+}
+
 .bp-rl-messages-container {
   display: flex;
   border: 1px solid var(--bb-rl-border-secondary-color);
