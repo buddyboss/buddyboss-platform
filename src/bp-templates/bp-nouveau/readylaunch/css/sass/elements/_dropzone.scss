@@ -164,12 +164,6 @@
 				width: 100%;
 				text-align: center;
 			}
-
-			.dz-remove:before {
-				content: "\e4f6";
-				color: var(--bb-rl-icon-tertiary-color);
-				font-weight: 400;
-			}
 		}
 	}
 
@@ -236,12 +230,6 @@
 			.dz-image img,
 			.dz-video-thumbnail img {
 				opacity: 1;
-			}
-
-			.dz-remove:before {
-				content: "\e4f8";
-				color: var(--bb-rl-text-white-color);
-				font-weight: 500;
 			}
 		}
 	}
@@ -323,7 +311,8 @@
 
 	.dz-remove {
 		font-size: 0;
-		border-radius: var(--bb-rl-radius-full);
+		border-radius: 4px;
+		background-color: var(--bb-rl-background-color);
 		color: transparent;
 		display: flex;
 		align-items: center;
@@ -336,11 +325,12 @@
 
 		&:before {
 			content: "\e4f6";
-			color: var(--bb-rl-icon-tertiary-color);
-			font-size: var(--bb-rl-font-size-base);
+			font-size: 12px;
 			font-family: bb-icons-rl;
-			font-weight: 400;
+			color: var(--bb-rl-icon-secondary-color);
+			font-weight: 700;
 			line-height: 1;
+			margin: 2px;
 		}
 	}
 

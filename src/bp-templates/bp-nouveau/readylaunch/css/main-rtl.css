@@ -3771,12 +3771,6 @@ button[data-balloon] {
   text-align: center;
 }
 
-.dropzone.document-dropzone .dz-preview.dz-complete:not(.dz-error) .dz-remove:before {
-  content: "\e4f6";
-  color: var(--bb-rl-icon-tertiary-color);
-  font-weight: 400;
-}
-
 .dropzone .dz-preview {
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
@@ -3839,12 +3833,6 @@ button[data-balloon] {
 .dropzone .dz-preview.dz-complete:not(.dz-error) .dz-image img,
 .dropzone .dz-preview.dz-complete:not(.dz-error) .dz-video-thumbnail img {
   opacity: 1;
-}
-
-.dropzone .dz-preview.dz-complete:not(.dz-error) .dz-remove:before {
-  content: "\e4f8";
-  color: var(--bb-rl-text-white-color);
-  font-weight: 500;
 }
 
 .dropzone .dz-image {
@@ -3924,7 +3912,8 @@ button[data-balloon] {
 
 .dropzone .dz-remove {
   font-size: 0;
-  border-radius: var(--bb-rl-radius-full);
+  border-radius: 4px;
+  background-color: var(--bb-rl-background-color);
   color: transparent;
   display: flex;
   align-items: center;
@@ -3938,11 +3927,12 @@ button[data-balloon] {
 
 .dropzone .dz-remove:before {
   content: "\e4f6";
-  color: var(--bb-rl-icon-tertiary-color);
-  font-size: var(--bb-rl-font-size-base);
+  font-size: 12px;
   font-family: bb-icons-rl;
-  font-weight: 400;
+  color: var(--bb-rl-icon-secondary-color);
+  font-weight: 700;
   line-height: 1;
+  margin: 2px;
 }
 
 .dropzone .dz-error-message {
