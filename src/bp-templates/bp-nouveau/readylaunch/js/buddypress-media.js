@@ -741,14 +741,14 @@ window.bp = window.bp || {};
 									var store = bp.Nouveau.getStorage( 'bp-media' );
 									var scope = store.scope;
 									if ( 'personal' === scope ) {
-										$document.find( 'li#media-personal a' ).trigger( 'click' );
-										$document.find( 'li#media-personal' ).trigger( 'click' );
+										$document.find( '#bb-rl-media-scope-options option[data-bp-scope="personal"]' ).prop('selected', true);
+										$document.find( '#bb-rl-media-scope-options' ).trigger( 'change' );
 									} else if ( 'groups' === scope ) {
-										$document.find( 'li#media-groups a' ).trigger( 'click' );
-										$document.find( 'li#media-groups' ).trigger( 'click' );
+										$document.find( '#bb-rl-media-scope-options option[data-bp-scope="groups"]' ).prop('selected', true);
+										$document.find( '#bb-rl-media-scope-options' ).trigger( 'change' );
 									} else {
-										$document.find( 'li#media-all a' ).trigger( 'click' );
-										$document.find( 'li#media-all' ).trigger( 'click' );
+										$document.find( '#bb-rl-media-scope-options option[data-bp-scope="all"]' ).prop('selected', true);
+										$document.find( '#bb-rl-media-scope-options' ).trigger( 'change' );
 									}
 								} else {
 									if ( response.data.media_personal_count ) {

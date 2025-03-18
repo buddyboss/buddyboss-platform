@@ -1499,17 +1499,17 @@ window.bp = window.bp || {};
 								if ( 'yes' === bbRlVideo.is_video_directory ) {
 									var store     = bp.Nouveau.getStorage( 'bp-video' ),
 										scope     = store.scope,
-										$document = $( document ),
-										scopeSelector;
+										$document = $( document );
 									if ( scope === 'personal' ) {
-										scopeSelector = '#video-personal';
+										$document.find( '#bb-rl-video-scope-options option[data-bp-scope="personal"]' ).prop( 'selected', true );
+										$document.find( '#bb-rl-video-scope-options' ).trigger( 'change' );
 									} else if ( scope === 'groups' ) {
-										scopeSelector = '#video-groups';
+										$document.find( '#bb-rl-video-scope-options option[data-bp-scope="groups"]' ).prop( 'selected', true );
+										$document.find( '#bb-rl-video-scope-options' ).trigger( 'change' );
 									} else {
-										scopeSelector = '#video-all';
+										$document.find( '#bb-rl-video-scope-options option[data-bp-scope="all"]' ).prop( 'selected', true );
+										$document.find( '#bb-rl-video-scope-options' ).trigger( 'change' );
 									}
-									$document.find( 'li' + scopeSelector + ' a' ).trigger( 'click' );
-									$document.find( 'li' + scopeSelector ).trigger( 'click' );
 								} else {
 									if ( response.data.video_personal_count ) {
 										buddyPressSelector.find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
