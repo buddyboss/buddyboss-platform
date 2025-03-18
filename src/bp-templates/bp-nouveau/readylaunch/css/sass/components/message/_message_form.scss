@@ -252,6 +252,21 @@
 	}
 }
 
+.bp-send-message-notices {
+	margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+}
+
+.compose .bb-rl-messages-content {
+	position: relative;
+
+	.compose-feedback {
+		position: absolute;
+		top: 145px;
+		left: var(--bb-rl-space-300);
+		right: var(--bb-rl-space-300);
+	}
+}
+
 #bp-message-content {
 
 	.medium-editor-toolbar {
