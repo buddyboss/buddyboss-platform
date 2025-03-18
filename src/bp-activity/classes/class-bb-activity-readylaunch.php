@@ -174,12 +174,7 @@ class BB_Activity_Readylaunch {
 				}
 				break;
 			case 'groups':
-				if ( 'joined_group' === $activity->type ) {
-					/* translators: %s: user link */
-					$action = sprintf( __( '%s joined the group', 'buddyboss' ), $user_link );
-				} else {
-					$action = $user_link;
-				}
+				$action = $action;
 				break;
 			default:
 				$action = $user_link;
@@ -544,10 +539,10 @@ class BB_Activity_Readylaunch {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $reaction_data The reaction data array
-	 * @param array $args          The arguments passed to bb_activity_get_reacted_users_data
+	 * @param array $reaction_data The reaction data array.
+	 * @param array $args          The arguments passed to bb_activity_get_reacted_users_data.
 	 *
-	 * @return array Modified reaction data
+	 * @return array Modified reaction data.
 	 */
 	public function bb_rl_modify_user_data_to_reactions( $reaction_data, $args ) {
 		if ( empty( $reaction_data['reactions'] ) ) {
@@ -670,15 +665,19 @@ class BB_Activity_Readylaunch {
 
 			/* translators: %1$s: user link, %2$s: friend link */
 			return sprintf( __( '%1$s & %2$s are now connected', 'buddyboss' ), $user_link, $friend_link );
-		} elseif (
-			'groups' === $activity->component &&
-			(
-				'activity_update' === $activity->type ||
-				'group_details_updated' === $activity->type
-			)
-		) {
+		} elseif ( 'groups' === $activity->component ) {
 			$user_link = bp_core_get_userlink( $activity->user_id );
-			return $user_link;
+			if ( 'joined_group' === $activity->type ) {
+				/* translators: %s: user link */
+				return sprintf( __( '%1$s joined the group', 'buddyboss' ), $user_link );
+			} elseif ( 'activity_update' === $activity->type ) {
+				return $user_link;
+			} elseif ( 'group_details_updated' === $activity->type ) {
+				/* translators: %1$s: user link */
+				return sprintf( __( '%1$s changed the name and description of the group', 'buddyboss' ), $user_link );
+			} else {
+				return $action;
+			}
 		}
 
 		return $action;
