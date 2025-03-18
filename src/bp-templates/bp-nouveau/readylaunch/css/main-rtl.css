@@ -13825,6 +13825,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: var(--bb-rl-space-300) 0 0;
 }
 
+.activity.single-user {
+  margin: var(--bb-rl-space-400) 0;
+}
+
 .bb-rl-member-header-actions {
   gap: var(--bb-rl-space-100);
 }
