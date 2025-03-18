@@ -26,8 +26,6 @@ class BB_Activity_Readylaunch {
 	public function __construct() {
 		add_filter( 'bb_get_activity_post_user_reactions_html', array( $this, 'bb_rl_get_activity_post_user_reactions_html' ), 10, 4 );
 		add_filter( 'bp_activity_new_update_action', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
-		add_filter( 'bp_groups_format_activity_action_activity_update', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
-		add_filter( 'bp_groups_format_activity_action_joined_group', array( $this, 'bb_rl_activity_new_update_action' ), 10, 2 );
 		add_filter( 'bp_get_activity_action_pre_meta', array( $this, 'bb_rl_remove_secondary_avatars_for_connected_users' ), 11, 2 );
 		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 3 );
 		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
@@ -667,14 +665,21 @@ class BB_Activity_Readylaunch {
 			return sprintf( __( '%1$s & %2$s are now connected', 'buddyboss' ), $user_link, $friend_link );
 		} elseif ( 'groups' === $activity->component ) {
 			$user_link = bp_core_get_userlink( $activity->user_id );
-			if ( 'joined_group' === $activity->type ) {
-				/* translators: %s: user link */
-				return sprintf( __( '%1$s joined the group', 'buddyboss' ), $user_link );
+			if (
+				'joined_group' === $activity->type ||
+				'group_details_updated' === $activity->type ||
+				'created_group' === $activity->type ||
+				'zoom_meeting_create' === $activity->type ||
+				'zoom_meeting_notify' === $activity->type
+			) {
+				$group            = bp_groups_get_activity_group( $activity->item_id );
+				$group_link       = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+				$secondary_avatar = bp_get_activity_secondary_avatar();
+
+				$action = str_replace( $group_link, '', $action );
+				$action = str_replace( $secondary_avatar, '', $action );
 			} elseif ( 'activity_update' === $activity->type ) {
-				return $user_link;
-			} elseif ( 'group_details_updated' === $activity->type ) {
-				/* translators: %1$s: user link */
-				return sprintf( __( '%1$s changed the name and description of the group', 'buddyboss' ), $user_link );
+				$action = $user_link;
 			} else {
 				return $action;
 			}
