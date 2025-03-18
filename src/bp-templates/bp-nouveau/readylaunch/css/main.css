@@ -7238,6 +7238,39 @@ li.bb-rl-hideshow {
   margin-right: var(--bb-rl-space-50);
 }
 
+.bb-rl-media-container .bb-member-media-header {
+  display: flex;
+  margin: 0 0 var(--bb-rl-space-200);
+  padding: 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-media-container .bb-member-media-header .bb-media-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+  margin-left: auto;
+}
+
+.bb-rl-media-container .bb-media-actions-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions,
+.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions {
+  margin-left: auto;
+}
+
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media i,
+.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-video i,
+.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-media i,
+.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-video i {
+  font-size: 16px;
+  margin-right: var(--bb-rl-space-50);
+}
+
 .bb-rl-media-actions-wrap {
   gap: 12px;
   margin-bottom: var(--bb-rl-space-200);
@@ -14019,39 +14052,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-media-stream {
   margin-top: var(--bb-rl-space-300);
-}
-
-.bb-rl-media-container .bb-member-media-header {
-  display: flex;
-  margin: 0 0 var(--bb-rl-space-200);
-  padding: 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-media-container .bb-member-media-header .bb-media-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--bb-rl-space-200);
-  margin-left: auto;
-}
-
-.bb-rl-media-container .bb-media-actions-wrap {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 0 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions {
-  margin-left: auto;
-}
-
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-video i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-media i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-video i {
-  font-size: 16px;
-  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-profile-edit {
