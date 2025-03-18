@@ -2922,7 +2922,7 @@ function bb_get_enabled_activity_timeline_filter_options( $default = array() ) {
  */
 function bb_get_activity_sorting_options_labels() {
 	$sorting_options = array(
-		'date_recorded' => __( 'Most recent', 'buddyboss' ),
+		'date_recorded' => __( 'New posts', 'buddyboss' ),
 		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
 	);
 	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );

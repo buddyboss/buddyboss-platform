@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.8.10\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-03-06 10:26:04+00:00\n"
+"POT-Creation-Date: 2025-03-18 14:20:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1148,12 +1148,12 @@ msgstr ""
 msgid "Sorry, You cannot view on this activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7570
+#: bp-activity/bp-activity-functions.php:7562
 #: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7572
+#: bp-activity/bp-activity-functions.php:7564
 #: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
 msgstr ""
@@ -1395,7 +1395,7 @@ msgstr ""
 msgid "Follow"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-activity.php:465
+#: bp-activity/classes/class-bp-activity-activity.php:416
 #: bp-activity/classes/class-bp-activity-template.php:162
 #: bp-blogs/classes/class-bp-blogs-blog.php:210
 #: bp-blogs/classes/class-bp-blogs-template.php:107
@@ -9074,7 +9074,7 @@ msgid "Mentioned in"
 msgstr ""
 
 #: bp-core/bp-core-options.php:2925
-msgid "Most recent"
+msgid "New posts"
 msgstr ""
 
 #: bp-core/bp-core-options.php:2926
