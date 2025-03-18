@@ -369,6 +369,11 @@ window.bp = window.bp || {};
 						success: function ( response ) {
 							if ( response.success ) {
 
+								// It's the very first video, let's make sure the container can welcome it!
+								if ( ! $( '#video-stream ul.video-list' ).length ) {
+									location.reload( true );
+								}
+
 								if ( $( '#bp-media-single-album' ).length ) {
 									// Prepend in Single Album.
 									if ( ! $( '#media-stream ul.media-list' ).length ) {
@@ -1417,6 +1422,9 @@ window.bp = window.bp || {};
 
 			if ( video.length === 0 ) {
 				video.push( target.data( 'item-id' ) );
+			}
+
+			if ( video.length == 0 ) {
 				return false;
 			}
 

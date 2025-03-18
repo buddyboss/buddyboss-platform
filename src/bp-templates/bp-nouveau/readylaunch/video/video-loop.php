@@ -47,7 +47,15 @@ if ( bp_has_video( bp_ajax_querystring( 'video' ) ) ) :
 	endif;
 
 else :
-	bp_nouveau_user_feedback( 'video-loop-none' );
+	?>
+	<div class="bb-rl-media-none">
+		<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-video"></i></div>
+		<?php
+		bp_nouveau_user_feedback( 'video-loop-none' );
+		bp_get_template_part( 'video/add-video' );
+		?>
+	</div>
+	<?php
 endif;
 
 bp_nouveau_after_loop();

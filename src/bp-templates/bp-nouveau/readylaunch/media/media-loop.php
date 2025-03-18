@@ -51,7 +51,15 @@ else :
 	if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) {
 		bp_nouveau_user_feedback( 'media-video-loop-none' );
 	} else {
-		bp_nouveau_user_feedback( 'media-loop-none' );
+		?>
+		<div class="bb-rl-media-none">
+			<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-image"></i></div>
+			<?php
+			bp_nouveau_user_feedback( 'media-loop-none' );
+			bp_get_template_part( 'media/add-media' );
+			?>
+		</div>
+		<?php
 	}
 
 endif;

@@ -341,23 +341,6 @@
   margin-right: var(--bb-rl-space-50);
 }
 
-.bb-rl-media-actions-wrap {
-  gap: 12px;
-  margin-bottom: var(--bb-rl-space-200);
-  padding-bottom: var(--bb-rl-space-200);
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-}
-
-.bb-rl-media-actions-wrap .bb-media-actions-wrap {
-  margin-bottom: 0;
-}
-
-.bb-rl-media-actions-wrap .bb-member-media-header {
-  margin: 0;
-  padding: 0;
-  gap: var(--bb-rl-space-100);
-}
-
 .bb-rl-profile-edit {
   max-width: 720px;
   margin: 0 auto;
