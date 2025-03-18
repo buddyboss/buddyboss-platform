@@ -986,38 +986,38 @@ window.bp = window.bp || {};
 			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function () {
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
-				
+
 				// Clear pending hide timeouts
 				if ( hideCardTimeout ) {
 					clearTimeout( hideCardTimeout );
 				}
-				
+
 				// Close open group card
 				if( $( '#group-card' ).hasClass( 'show' ) ) {
 					bp.Nouveau.hidePopupCard();
 					// Reset the loaded flag when switching between different card types
 					popupCardLoaded = false;
 				}
-				
+
 				// Always attempt to load the profile card
 				bp.Nouveau.profilePopupCard.call( this );
 			} );
 			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function () {
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
-				
+
 				// Clear pending hide timeouts
 				if ( hideCardTimeout ) {
 					clearTimeout( hideCardTimeout );
 				}
-				
+
 				// Close open profile card
 				if ( $( '#profile-card' ).hasClass( 'show' ) ) {
 					bp.Nouveau.hidePopupCard();
 					// Reset the loaded flag when switching between different card types
 					popupCardLoaded = false;
 				}
-				
+
 				// Always attempt to load the group card
 				bp.Nouveau.groupPopupCard.call( this );
 			} );
@@ -2270,7 +2270,15 @@ window.bp = window.bp || {};
 			target.addClass( 'pending loading' );
 
 			var current_page = '';
-			if ( ( $( document.body ).hasClass( 'directory' ) && $( document.body ).hasClass( 'members' ) ) || $( document.body ).hasClass( 'group-members' ) || $( document.body ).hasClass( 'activity' ) ) {
+			if (
+				(
+					$( document.body ).hasClass( 'directory' ) &&
+					$( document.body ).hasClass( 'members' )
+				) ||
+				$( document.body ).hasClass( 'group-members' ) ||
+				$( document.body ).hasClass( 'activity' ) ||
+				target.parents( '.bb-popup-card' ).length > 0
+			) {
 				current_page = 'directory';
 			} else if ( $( document.body ).hasClass( 'bp-user' ) ) {
 				current_page = 'single';
