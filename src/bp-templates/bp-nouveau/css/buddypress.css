@@ -12601,6 +12601,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 
 .bb-card-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   margin: 30px 0 0;
