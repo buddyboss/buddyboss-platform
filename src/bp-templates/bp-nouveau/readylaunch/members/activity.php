@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch - The template for users activity.
  *
- * @since   BuddyPress 3.0.0
+ * @since   BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
