@@ -23,13 +23,11 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		// Home/Media.
 		case 'my-document':
 			?>
-			<div class="bp-document-listing">
-				<div class="bp-media-header-wrap">
+			<div id="media-stream" class="media bb-rl-document bb-rl-media-stream" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div class="bp-document-listing">
+				<div class="bp-media-header-wrap bb-rl-documents-header-wrap">
 					<h2 class="bb-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></h2>
-					<?php
-					bp_get_template_part( 'document/add-folder' );
-					bp_get_template_part( 'document/add-document' );
-					?>
+
 					<div id="search-documents-form" class="media-search-form" data-bp-search="document">
 						<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="group-document-search-form" autocomplete="off">
 							<button type="submit" id="group-document-search-submit" class="nouveau-search-submit search-form_submit" name="group_document_search_submit">
@@ -45,12 +43,16 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						</form>
 					</div>
 
+					<?php
+					bp_get_template_part( 'document/add-folder' );
+					bp_get_template_part( 'document/add-document' );
+					?>
 				</div>
 			</div><!-- .bp-document-listing -->
-			<?php bp_nouveau_member_hook( 'before', 'document_content' ); ?>
 
-			<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
+				bp_nouveau_member_hook( 'before', 'document_content' );
+
 				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
 					bp_nouveau_user_feedback( 'member-document-loading' );
