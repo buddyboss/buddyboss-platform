@@ -670,6 +670,15 @@ class BB_Activity_Readylaunch {
 
 			/* translators: %1$s: user link, %2$s: friend link */
 			return sprintf( __( '%1$s & %2$s are now connected', 'buddyboss' ), $user_link, $friend_link );
+		} elseif (
+			'groups' === $activity->component &&
+			(
+				'activity_update' === $activity->type ||
+				'group_details_updated' === $activity->type
+			)
+		) {
+			$user_link = bp_core_get_userlink( $activity->user_id );
+			return $user_link;
 		}
 
 		return $action;
