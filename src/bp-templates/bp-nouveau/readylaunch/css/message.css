@@ -1958,7 +1958,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   font-weight: 400;
 }
 
-.bb-rl-messages-right-panel .bb-rl-message-profile-meta .bb-rl-message-profile-meta-item:last-child:not(:first-child):before {
+.bb-rl-messages-right-panel .bb-rl-message-profile-meta .bb-rl-message-profile-meta-item:not(:first-child):before {
   content: "";
   display: inline-block;
   width: 4px;
@@ -1993,4 +1993,31 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   font-weight: 500;
   line-height: 1.5;
   margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-content {
+  padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-content .bb-rl-message-profile-meta {
+  justify-content: flex-start;
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-avatar {
+  margin: -30px 0 0;
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-avatar img {
+  height: 80px;
+  width: 80px;
+  border-radius: var(--bb-rl-radius-lg);
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-name {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: var(--bb-rl-space-50);
 }

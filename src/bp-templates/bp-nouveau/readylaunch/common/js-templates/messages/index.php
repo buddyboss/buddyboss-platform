@@ -28,6 +28,8 @@
 	</div>
 	<div class="bb-rl-messages-content"></div>
 	<div class="bb-rl-messages-right-panel">
+
+		<!-- Single Thread -->
 		<div class="bb-rl-message-profile">
 			<div class="bb-rl-message-profile-avatar">
 				<a href="#">
@@ -48,6 +50,8 @@
 				<span class="bb-rl-message-profile-meta-item">Active now</span>
 			</div>
 		</div>
+
+		<!-- Multiple Members Thread -->
 		<div class="bb-rl-message-multiple-threads">
 			<div class="bb-rl-message-multiple-threads-avatar">
 				<a href="#">
@@ -61,6 +65,31 @@
 				Mason, Grace, Daniel, + 4
 			</div>
 		</div>
+
+		<!-- Group Thread -->
+		<div class="bb-rl-message-group-thread">
+			
+		<div class="bb-rl-message-group-thread-header">
+			<div class="bb-rl-message-group-thread-cover">
+				<img src="https://picsum.photos/300/100">
+			</div>
+			<div class="bb-rl-message-group-thread-content">
+				<div class="bb-rl-message-group-thread-avatar">
+					<a href="#">
+						<img class="avatar" src="https://placebear.com/80/80">
+					</a>
+				</div>
+				<div class="bb-rl-message-group-thread-name">
+					Sports Freaks
+				</div>
+				<div class="bb-rl-message-profile-meta">
+					<span class="bb-rl-message-profile-meta-item">Public</span>
+					<span class="bb-rl-message-profile-meta-item">Group</span>
+					<span class="bb-rl-message-profile-meta-item">Active 2 hours ago</span>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 </div>
