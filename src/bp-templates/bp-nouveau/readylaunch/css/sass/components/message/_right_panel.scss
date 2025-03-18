@@ -3,7 +3,8 @@
 	background-color: var(--bb-rl-background-color);
 	border-left: 1px solid var(--bb-rl-border-secondary-color);
 
-	.bb-rl-message-profile {
+	.bb-rl-message-profile,
+	.bb-rl-message-multiple-threads {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -66,6 +67,36 @@
 				border-radius: 50%;
 				margin: 0 6px;
 			}
+		}
+	}
+
+	.bb-rl-message-multiple-threads {
+
+		.bb-rl-message-multiple-threads-avatar {
+			height: 80px;
+			width: 80px;
+			position: relative;
+			margin-bottom: var(--bb-rl-space-200);
+
+			.avatar {
+				height: 48px;
+				width: 48px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+
+			a + a img {
+				position: absolute;
+				left: 32px;
+				top: 32px;
+			}
+		}
+
+		.bb-rl-message-multiple-threads-content {
+			font-size: var(--bb-rl-base-line-xs);
+			font-weight: 500;
+			line-height: 1.5;
+			margin-bottom: var(--bb-rl-space-300);
 		}
 	}
 }

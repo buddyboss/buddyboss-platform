@@ -48,6 +48,19 @@
 				<span class="bb-rl-message-profile-meta-item">Active now</span>
 			</div>
 		</div>
+		<div class="bb-rl-message-multiple-threads">
+			<div class="bb-rl-message-multiple-threads-avatar">
+				<a href="#">
+					<img class="avatar" src="https://avatar.iran.liara.run/public/boy?name=Adam">
+				</a>
+				<a href="#">
+					<img class="avatar" src="https://avatar.iran.liara.run/public/girl?name=Eve">
+				</a>
+			</div>
+			<div class="bb-rl-message-multiple-threads-content">
+				Mason, Grace, Daniel, + 4
+			</div>
+		</div>
 	</div>
 
 </div>
