@@ -587,4 +587,21 @@
 	input.error + .error-box {
 		display: block;
 	}
+
+	.bb-model-footer {
+
+		.button.saving,
+		.bb-rl-button.saving {
+
+			&::after {
+				content: "\e66a";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: var(--bb-rl-base-line-xs);
+				font-style: normal;
+				margin-left: var(--bb-rl-space-50);
+				animation: spin 2s infinite linear;
+			}
+		}
+	}
 }

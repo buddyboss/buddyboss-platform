@@ -11,7 +11,7 @@
  */
 ?>
 
-<div class="bb-media-container group-albums">
+<div class="bb-media-container group-albums bb-rl-media-container">
 
 	<?php
 	bp_get_template_part( 'media/theatre' );
@@ -31,12 +31,18 @@
 
 		// Home/Media/Albums.
 		case 'albums':
-			if ( ! bp_is_single_album() ) {
-				bp_get_template_part( 'media/albums' );
-			} else {
-				bp_get_template_part( 'media/single-album' );
-			}
-			break;
+			?>
+			<div class="bb-rl-albums bb-rl-media-stream">
+				<?php
+				if ( ! bp_is_single_album() ) {
+					bp_get_template_part( 'media/albums' );
+				} else {
+					bp_get_template_part( 'media/single-album' );
+				}
+				break;
+				?>
+			</div>
+			<?php
 
 		// Any other.
 		default:
