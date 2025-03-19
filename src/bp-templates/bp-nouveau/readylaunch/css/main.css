@@ -4515,7 +4515,8 @@ button[data-balloon] {
 }
 
 .bb-model-footer,
-.bb-rl-modal-footer {
+.bb-rl-modal-footer,
+.bb-rl-model-footer {
   padding: 12px var(--bb-rl-space-300);
   justify-content: flex-end;
   gap: var(--bb-rl-space-100);
@@ -4523,7 +4524,8 @@ button[data-balloon] {
 }
 
 .bb-model-footer .bb-rl-button,
-.bb-rl-modal-footer .bb-rl-button {
+.bb-rl-modal-footer .bb-rl-button,
+.bb-rl-model-footer .bb-rl-button {
   padding: 4px var(--bb-rl-space-200);
 }
 
@@ -13257,11 +13259,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-video-thumbnail-uploader .bb-rl-model-footer {
   border-top: 1px solid var(--bb-rl-border-secondary-color);
-}
-
-.bb-rl-video-thumbnail-uploader .bb-rl-model-footer .bb-rl-video-thumbnail-submit {
-  font-size: 0.85rem;
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 }
 
 .bb-rl-video-thumbnail-uploader .bb-rl-model-footer .bb-rl-video-thumbnail-submit.is-disabled {

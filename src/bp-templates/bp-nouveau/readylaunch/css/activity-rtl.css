@@ -4488,11 +4488,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-top: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-.bb-rl-video-thumbnail-uploader .bb-rl-model-footer .bb-rl-video-thumbnail-submit {
-  font-size: 0.85rem;
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-}
-
 .bb-rl-video-thumbnail-uploader .bb-rl-model-footer .bb-rl-video-thumbnail-submit.is-disabled {
   opacity: 0.6;
   cursor: default;
