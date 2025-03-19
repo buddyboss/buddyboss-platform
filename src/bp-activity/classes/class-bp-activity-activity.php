@@ -347,7 +347,7 @@ class BP_Activity_Activity {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
-		bb_activity_update_date_updated_and_clear_cache( $this, false, $this->date_updated );
+		bb_activity_update_date_updated_and_clear_cache( $this, $this->date_updated );
 
 		/**
 		 * Fires after an activity item has been saved to the database.

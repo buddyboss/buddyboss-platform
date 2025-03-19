@@ -7608,13 +7608,12 @@ function bb_activity_get_raw_db_object( $activity_id ) {
 *
 * @since BuddyBoss [BBVERSION]
 *
-* @param object $activity            The activity object.
-* @param bool   $is_reactions_update Whether the update is due to reactions.
-* @param string $date_updated        The date updated to set.
+* @param object $activity     The activity object.
+* @param string $date_updated The date updated to set.
 *
 * @return void
 */
-function bb_activity_update_date_updated_and_clear_cache( $activity, $is_reactions_update, $date_updated = '' ) {
+function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updated = '' ) {
 	if ( empty( $activity ) || empty( $activity->id ) ) {
 		return;
 	}
@@ -7659,16 +7658,6 @@ function bb_activity_update_date_updated_and_clear_cache( $activity, $is_reactio
 			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_object->id );
 			bb_activity_update_date_updated( $parent_comment_activity_object->id, $date_updated );
 			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
-		}
-	}
-
-	// Additional processing for reaction updates.
-	if ( $is_reactions_update ) {
-		bb_activity_update_date_updated( $activity->id, $date_updated );
-		bp_activity_clear_cache_for_activity( $activity );
-
-		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-			BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
 		}
 	}
 }

@@ -193,10 +193,6 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
-// Update activity date_update when any reaction.
-add_filter( 'bp_activity_add_user_favorite', 'bb_activity_update_date_updated_on_reactions', 10, 2 );
-add_filter( 'bp_activity_remove_user_favorite', 'bb_activity_update_date_updated_on_reactions', 10, 2 );
-
 // Clear activity parent cache when activity is deleted or saved.	
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
@@ -3821,7 +3817,7 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
  */
 function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
 	$activity = bb_activity_get_raw_db_object( $activity_id );
-	bb_activity_update_date_updated_and_clear_cache( $activity, true );
+	bb_activity_update_date_updated_and_clear_cache( $activity );
 }
 
 /**
