@@ -222,7 +222,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				(
 					(
 						bp_is_members_directory() ||
-						bp_is_user()
+						bp_is_user_profile()
 					) &&
 					! empty( $this->settings['members'] )
 				) ||
@@ -251,7 +251,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				(
 					(
 						bp_is_activity_directory() ||
-						bp_is_single_activity()
+						bp_is_single_activity() ||
+						bp_is_user_activity() ||
+						bp_is_group_activity()
 					) &&
 					! empty( $this->settings['activity'] )
 				) ||
