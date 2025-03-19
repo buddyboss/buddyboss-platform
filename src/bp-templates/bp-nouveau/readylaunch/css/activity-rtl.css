@@ -1964,7 +1964,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding-bottom: 0;
 }
 
-.bb-rl-activity-list li.activity-item.joined_group .bb-rl-activity-head-group {
+.bb-rl-activity-list li.activity-item.bb-rl-empty-content .bb-rl-activity-head-group {
   border-bottom: 0;
   padding-bottom: 0;
 }

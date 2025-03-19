@@ -1718,6 +1718,10 @@
   margin: 0 0 var(--bb-rl-space-200);
 }
 
+.bb-rl-group-invites-container .group-invites-members-listing .last {
+  display: none;
+}
+
 .bb-rl-group-invites-container .bb-rl-members-is-friends {
   margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-300);
   padding: 0 var(--bb-rl-space-50);

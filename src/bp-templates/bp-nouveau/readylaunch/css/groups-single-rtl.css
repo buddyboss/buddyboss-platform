@@ -1718,6 +1718,10 @@
   margin: 0 0 var(--bb-rl-space-200);
 }
 
+.bb-rl-group-invites-container .group-invites-members-listing .last {
+  display: none;
+}
+
 .bb-rl-group-invites-container .bb-rl-members-is-friends {
   margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-300);
   padding: 0 var(--bb-rl-space-50);
@@ -2358,47 +2362,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   width: 100%;
   height: 160px;
   padding: 0;
-}
-
-.bb-rl-media-container .bb-member-media-header {
-  display: flex;
-  margin: 0 0 var(--bb-rl-space-200);
-  padding: 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-media-container .bb-member-media-header .bb-media-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--bb-rl-space-200);
-  margin-right: auto;
-}
-
-.bb-rl-media-container .bb-media-actions-wrap {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 0 0 var(--bb-rl-space-300);
-}
-
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions {
-  margin-right: auto;
-  /* .bb-add-media,
-			.bb-add-video {
-
-				@include bb-rl-button;
-				@include bb-rl-button-secondary-fill;
-				padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
-				font-size: 0.875rem;
-			} */
-}
-
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-video i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-media i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-video i {
-  font-size: 16px;
-  margin-left: var(--bb-rl-space-50);
 }
 
 .bb-rl-create-group {

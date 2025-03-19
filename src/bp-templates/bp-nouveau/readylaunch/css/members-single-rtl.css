@@ -308,37 +308,46 @@
   margin-top: var(--bb-rl-space-300);
 }
 
-.bb-rl-media-container .bb-member-media-header {
+.bb-rl-primary-container .bb-rl-sub-ctrls {
+  margin-top: var(--bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-300);
+  padding: var(--bb-rl-space-200) 0;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-primary-container .bb-rl-sub-ctrls ul.subnav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
-  margin: 0 0 var(--bb-rl-space-200);
-  padding: 0 var(--bb-rl-space-300);
+  flex-wrap: wrap;
 }
 
-.bb-rl-media-container .bb-member-media-header .bb-media-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--bb-rl-space-200);
-  margin-right: auto;
+.bb-rl-primary-container .bb-rl-sub-ctrls ul.subnav li {
+  margin: 0 0 0 var(--bb-rl-space-100);
+  padding: 0;
 }
 
-.bb-rl-media-container .bb-media-actions-wrap {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin: 0 0 var(--bb-rl-space-300);
+.bb-rl-primary-container .bb-rl-sub-ctrls ul.subnav li a {
+  display: block;
+  color: var(--bb-rl-text-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  letter-spacing: var(--bb-rl-letter-spacing-sm);
 }
 
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions {
-  margin-right: auto;
+.bb-rl-primary-container .bb-rl-sub-ctrls ul.subnav li a:hover {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-text-color);
 }
 
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-media i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-media-actions .bb-add-video i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-media i,
-.bb-rl-media-container .bb-media-actions-wrap .bb-video-actions .bb-add-video i {
-  font-size: 16px;
-  margin-left: var(--bb-rl-space-50);
+.bb-rl-primary-container .bb-rl-sub-ctrls ul.subnav li.selected a {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-text-color);
 }
 
 .bb-rl-profile-edit {
