@@ -88,6 +88,30 @@
 			</div>
 		</div>
 
+		<div class="bb-rl-message-info-tabs-wrapper">
+			<div class="bb-rl-message-info-tabs">
+				<div class="bb-rl-message-info-tab active">
+					<button data-tab="participants">Participants</button>
+				</div>
+				<div class="bb-rl-message-info-tab">
+					<button data-tab="media">Media</button>
+				</div>
+				<div class="bb-rl-message-info-tab">
+					<button data-tab="files">Files</button>
+				</div>
+			</div>
+			<div class="bb-rl-messages-info-tab-content">
+				<div class="bb-rl-messages-info-tab-content-item active" data-tab="participants">
+					Participants
+				</div>
+				<div class="bb-rl-messages-info-tab-content-item" data-tab="media">
+					Media
+				</div>
+				<div class="bb-rl-messages-info-tab-content-item" data-tab="files">
+					Files
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>
