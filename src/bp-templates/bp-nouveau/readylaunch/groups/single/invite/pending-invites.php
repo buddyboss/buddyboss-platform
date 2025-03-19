@@ -48,8 +48,8 @@
 				</div>
 			</div>
 
-			<div id="bp-pending-invites-loader" class="bp-pending-invites-loader-hide">
-				<i class="dashicons dashicons-update animate-spin"></i>
+			<div id="bp-pending-invites-loader" class="bp-pending-invites-loader-hide bb-rl-bp-pending-invites-loader">
+				<i class="bb-icons-rl-spinner animate-spin"></i>
 			</div>
 
 			<div class="members bp-invites-content">

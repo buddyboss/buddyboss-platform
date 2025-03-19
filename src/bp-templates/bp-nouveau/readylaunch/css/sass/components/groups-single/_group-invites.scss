@@ -258,6 +258,11 @@
 				padding: 0;
 				background-color: transparent;
 				color: var(--bb-rl-text-tertiary-color);
+				border: 0;
+
+				.bp-icon {
+					display: none;
+				}
 			}
 		}
 	}
@@ -296,6 +301,12 @@
 			@include bb-rl-button-secondary-fill;
 		}
 	}
+}
+
+.bb-rl-bp-pending-invites-loader {
+	display: none;
+	text-align: center;
+	position: relative;
 }
 
 body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-dropdown--below,
@@ -423,14 +434,22 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 
 	.item-list {
 
-		li {
+		> li {
 			display: flex;
 			align-items: center;
 			gap: var(--bb-rl-space-100);
+			padding: var(--bb-rl-space-300);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-lg);
+			margin: 0 0 var(--bb-rl-space-100);
+
+			&:last-of-type {
+				margin-bottom: 0;
+			}
 
 			img.avatar {
 				border-radius: 50%;
-				width: var(--bb-rl-space-400);
+				width: var(--bb-rl-space-600);
 				border: 1px solid rgba(0, 0, 0, 0.08);
 				margin-right: var(--bb-rl-space-100);
 			}
@@ -460,14 +479,39 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 				align-items: center;
 				padding: 0;
 				margin: 0;
+				list-style: none;
 
 				img.avatar {
 					width: 20px;
 					height: 20px;
 					border-radius: 50%;
-					margin-left: var(--bb-rl-space-100);
+					margin-left: var(--bb-rl-space-50);
+					margin-right: 0;
 				}
 
+				+ .status {
+					display: inline-flex;
+					align-items: center;
+
+					&::before {
+						content: "";
+						display: inline-block;
+						width: 4px;
+						height: 4px;
+						background-color: var(--bb-rl-background-tertiary-color);
+						border-radius: 50%;
+						margin-right: var(--bb-rl-space-100);
+					}
+				}
+			}
+
+			.item-meta {
+
+				@include bb-rl-label-heading;
+				color: var(--bb-rl-text-tertiary-color);
+				display: flex;
+				align-items: center;
+				gap: var(--bb-rl-space-100);
 			}
 
 			.group-remove-invite-button {
@@ -493,17 +537,13 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 				}
 
 				&:hover {
-
-					.icons {
-						border: 1px solid var(--bb-rl-border-secondary-color);
-						background-color: var(--bb-rl-background-secondary-hover-color);
-					}
+					background-color: transparent;
 				}
 
 				.icons::before {
 					content: "\e4f6";
 					font-family: bb-icons-rl;
-					font-size: 10px;
+					font-size: var(--bb-rl-base-line-small);
 					font-weight: 400;
 					line-height: 1;
 					color: var(--bb-rl-icon-primary-color);

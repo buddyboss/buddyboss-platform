@@ -129,7 +129,7 @@
 }
 
 .bb-rl-message-info-tabs-wrapper {
-	
+
 	.bb-rl-message-info-tabs {
 		display: flex;
 		align-items: center;
@@ -152,7 +152,7 @@
 			cursor: pointer;
 		}
 
-		&.active  {
+		&.active {
 			color: var(--bb-rl-text-color);
 			background-color: var(--bb-rl-background-secondary-color);
 			font-weight: 600;
@@ -171,5 +171,4 @@
 		}
 	}
 }
-
 
