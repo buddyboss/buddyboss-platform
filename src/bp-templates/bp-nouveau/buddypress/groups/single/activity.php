@@ -36,11 +36,11 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 		arsort( $avail_sorting_options );
 		$default_selected = key( $avail_sorting_options );
-		if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
+		if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
 			$hide_class = '';
 		} else {
 			$hide_class = 'bp-hide';
-			if ( empty ( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, false ) ) {
+			if ( empty ( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, true ) ) {
 				$avail_sorting_options = array( 'date_recorded' => 1 );
 			}
 		}

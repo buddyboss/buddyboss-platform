@@ -1143,9 +1143,12 @@ function bp_is_activity_tabs_active( $default = false ) {
 	$filters = bb_filter_activity_filter_scope_keys( $filters );
 
 	// Get only enabled options.
-	$filters = array_filter( $filters, function ( $value ) {
-		return 1 === (int) $value;
-	} );
+	$filters = array_filter(
+		$filters,
+		function ( $value ) {
+			return 1 === (int) $value;
+		}
+	);
 
 	if ( ! empty( $filters ) && count( $filters ) > 1 ) {
 		$default = true;
@@ -2798,7 +2801,6 @@ function bb_enable_content_counts( $default = false ) {
 	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bp_get_option( 'bb-enable-content-counts', $default ) );
 }
 
-
 /**
  * Get all activity filters option labels.
  *
@@ -2828,26 +2830,26 @@ function bb_get_activity_filter_options_labels() {
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @param array $default Array of default activity filter options.
+ * @param array $args Array of default activity filter options.
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array() ) {
+function bb_get_enabled_activity_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
-	if ( empty( $default ) ) {
-		$default = array(
-			'all'       => 1,
-			'just-me'   => 1,
-			'favorites' => 1,
-			'groups'    => 1,
-			'friends'   => 1,
-			'mentions'  => 1,
-			'following' => 1,
-		);
-	}
+	$default = array(
+		'all'       => 1,
+		'just-me'   => 1,
+		'favorites' => 1,
+		'groups'    => 1,
+		'friends'   => 1,
+		'mentions'  => 1,
+		'following' => 1,
+	);
 
-	$options = bp_get_option( 'bb_activity_filter_options', $default );
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_filter_options', $args );
 
 	// Always ensure 'all' is enabled.
 	if ( empty( $options['all'] ) ) {
@@ -2885,25 +2887,25 @@ function bb_get_activity_timeline_filter_options_labels() {
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @param array $default Array of default activity timeline filter options.
+ * @param array $args Array of default activity timeline filter options.
  *
  * @return array Array of enabled activity timeline filters options.
  */
-function bb_get_enabled_activity_timeline_filter_options( $default = array() ) {
+function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
-	if ( empty( $default ) ) {
-		$default = array(
-			  'just-me'   => 1,
-			  'favorites' => 1,
-			  'groups'    => 1,
-			  'friends'   => 1,
-			  'mentions'  => 1,
-			  'following' => 1,
-		);
-	}
+	$default = array(
+		'just-me'   => 1,
+		'favorites' => 1,
+		'groups'    => 1,
+		'friends'   => 1,
+		'mentions'  => 1,
+		'following' => 1,
+	);
 
-	$options = bp_get_option( 'bb_activity_timeline_filter_options', $default );
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_timeline_filter_options', $args );
 
 	// Always ensure 'just-me' is enabled.
 	if ( empty( $options['just-me'] ) ) {
@@ -2933,21 +2935,22 @@ function bb_get_activity_sorting_options_labels() {
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @param array $default Array of default activity sorting options.
+ * @param array $args Array of default activity sorting options.
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $default = array() ) {
+function bb_get_enabled_activity_sorting_options( $args = array() ) {
 
 	// Set default options if not provided.
-	if ( empty( $default ) ) {
-		$default = array(
-			'date_recorded' => 1,
-			'date_updated'  => 1,
-		);
-	}
+	$default = array(
+		'date_recorded' => 1,
+		'date_updated'  => 1,
+	);
 
-	$options = bp_get_option( 'bb_activity_sorting_options', $default );
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_sorting_options', $args );
+	$options = array_map( 'intval', $options );
 
 	// Always ensure 'date_recorded' is enabled.
 	if ( empty( $options['date_recorded'] ) ) {

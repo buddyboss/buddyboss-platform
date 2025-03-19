@@ -1022,9 +1022,9 @@ function bp_nouveau_ajax_post_update() {
 
 	wp_send_json_success(
 		array(
-			'id'                      => $activity_id,
-			'message'                 => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
-			'activity'                => $activity,
+			'id'               => $activity_id,
+			'message'          => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'activity'         => $activity,
 
 			/**
 			 * Filters whether or not an AJAX post update is private.
@@ -1033,9 +1033,9 @@ function bp_nouveau_ajax_post_update() {
 			 *
 			 * @param bool $is_private Privacy status for the update.
 			 */
-			'is_private'              => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
-			'is_directory'            => bp_is_activity_directory(),
-			'is_user_activity'        => bp_is_user_activity(),
+			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
+			'is_directory'     => bp_is_activity_directory(),
+			'is_user_activity' => bp_is_user_activity(),
 		)
 	);
 }
