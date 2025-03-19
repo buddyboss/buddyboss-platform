@@ -642,8 +642,6 @@ window.bp = window.bp || {};
 
 						if ( 'personal' === data.scope && 'members' === data.object ) {
 							dir_label_type = 'connections';
-						} else if ( 'following' === data.scope ) {
-							dir_label_type = 'followers';
 						} else {
 							dir_label_type = data.object;
 						}
