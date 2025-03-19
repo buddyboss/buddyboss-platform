@@ -245,6 +245,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.message_action__list a.reported-content', this.messageReportedMember );
 			$( document ).on( 'click', '.message_action__list .archived-messages a.archived-page', this.openArchivedPage );
 			$( document ).on( 'click', '#no-messages-archived-link a', this.openArchivedPage );
+			$( document ).on( 'click', '.bb-rl-message-info-tabs-wrapper .bb-rl-message-info-tab button', this.toggleMessageInfoTab );
 
 		},
 
@@ -262,6 +263,18 @@ window.bp = window.bp || {};
 				jQuery( this ).find( '#load_more_rl' ).trigger( 'click' );
 			}
 
+		},
+
+		toggleMessageInfoTab: function ( event ) {
+			event.preventDefault();
+
+			var tab = $( event.currentTarget ).data( 'tab' );
+			
+			$( '.bb-rl-message-info-tab' ).removeClass( 'active' );
+			$( event.currentTarget ).closest( '.bb-rl-message-info-tab' ).addClass( 'active' );
+
+			$( '.bb-rl-messages-info-tab-content-item' ).removeClass( 'active' );
+			$( '.bb-rl-messages-info-tab-content-item[data-tab="' + tab + '"]' ).addClass( 'active' );
 		},
 
 		checkContentScroll: function() {
