@@ -513,8 +513,22 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 else :
 	?>
-	<li class="bs-item-wrap">
-		<div class="notification-content"><?php esc_html_e( 'You have no messages right now.', 'buddyboss' ); ?></div>
+	<li class="bs-item-wrap bb-rl-no-messages-wrap">
+		<div class="notification-content">
+			<div class="bb-rl-no-messages">
+				<i class="bb-icons-rl-chats-circle"></i>
+				<h3><?php esc_html_e( 'No message found', 'buddyboss' ); ?></h3>
+				<div class="bb-rl-no-messages-description">
+					<?php esc_html_e( 'When you have new messages, they will appear here.', 'buddyboss' ); ?>
+				</div>
+				<div class="bb-rl-no-messages-button">
+					<a href="#" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+						<i class="bb-icons-rl-plus"></i>
+						<?php esc_html_e( 'New', 'buddyboss' ); ?>
+					</a>
+				</div>
+			</div>
+		</div>
 	</li>
 <?php
 endif;

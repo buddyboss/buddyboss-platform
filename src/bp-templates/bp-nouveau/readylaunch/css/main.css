@@ -5561,6 +5561,46 @@ body.admin-bar .bb-rl-header {
   cursor: not-allowed;
 }
 
+.notification-list li.bb-rl-no-messages-wrap {
+  background-color: transparent;
+}
+
+.bb-rl-no-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bb-rl-no-messages > [class*="bb-icons-rl"] {
+  font-size: 40px;
+  color: var(--bb-rl-icon-secondary-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-no-messages h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-no-messages .bb-rl-no-messages-description {
+  font-size: 14px;
+  color: var(--bb-rl-text-secondary-color);
+  max-width: 300px;
+  margin: 0 auto var(--bb-rl-space-300);
+  text-align: center;
+}
+
+.bb-rl-no-messages .bb-rl-no-messages-button {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-no-messages .bb-rl-button {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
 .notification-listing .notification-list li .notification-avatar {
   position: relative;
 }

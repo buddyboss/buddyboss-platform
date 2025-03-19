@@ -68,8 +68,6 @@
 
 		<!-- Group Thread -->
 		<div class="bb-rl-message-group-thread">
-			
-		<div class="bb-rl-message-group-thread-header">
 			<div class="bb-rl-message-group-thread-cover">
 				<img src="https://picsum.photos/300/100">
 			</div>
