@@ -2990,6 +2990,11 @@ button[data-balloon] {
   content: "\e184";
 }
 
+.bp-invites-feedback .bp-feedback.success .bp-icon::before {
+  content: "\e184";
+  color: var(--bb-rl-icon-positive-primary-color);
+}
+
 .bp-invites-feedback .bp-feedback.warning {
   background-color: var(--bb-rl-background-warning-secondary-color);
   border-color: var(--bb-rl-border-warning-primary-color);
@@ -3003,6 +3008,11 @@ button[data-balloon] {
   content: "\e4e0";
 }
 
+.bp-invites-feedback .bp-feedback.warning .bp-icon::before {
+  content: "\e4e0";
+  color: var(--bb-rl-icon-warning-primary-color);
+}
+
 .bp-invites-feedback .bp-feedback.error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-primary-color);
@@ -3014,6 +3024,11 @@ button[data-balloon] {
 
 .bp-invites-feedback .bp-feedback.error > [class*="bb-icons"]:before {
   content: "\e4e2";
+}
+
+.bp-invites-feedback .bp-feedback.error .bp-icon::before {
+  content: "\e4e2";
+  color: var(--bb-rl-icon-danger-primary-color);
 }
 
 .bp-invites-feedback .bp-feedback--alt {

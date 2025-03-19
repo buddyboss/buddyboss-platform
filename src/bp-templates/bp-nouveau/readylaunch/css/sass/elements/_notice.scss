@@ -228,6 +228,11 @@
 					content: "\e184";
 				}
 			}
+
+			.bp-icon::before {
+				content: "\e184";
+				color: var(--bb-rl-icon-positive-primary-color);
+			}
 		}
 
 		&.warning {
@@ -241,6 +246,11 @@
 					content: "\e4e0";
 				}
 			}
+
+			.bp-icon::before {
+				content: "\e4e0";
+				color: var(--bb-rl-icon-warning-primary-color);
+			}
 		}
 
 		&.error {
@@ -253,6 +263,11 @@
 				&:before {
 					content: "\e4e2";
 				}
+			}
+
+			.bp-icon::before {
+				content: "\e4e2";
+				color: var(--bb-rl-icon-danger-primary-color);
 			}
 		}
 
