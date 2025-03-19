@@ -222,7 +222,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				(
 					(
 						bp_is_members_directory() ||
-						bp_is_user_profile()
+						(
+							bp_is_user() &&
+							! bp_is_single_activity()
+						)
 					) &&
 					! empty( $this->settings['members'] )
 				) ||
@@ -636,7 +639,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					true
 				);
 				wp_enqueue_script('bb-rl-members');
-				
+
 				wp_localize_script(
 					'bb-rl-members',
 					'bbReadyLaunchMembersVars',
