@@ -52,11 +52,17 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Home/Media/Albums.
 		case 'albums':
-			if ( ! bp_is_single_album() ) {
-				bp_get_template_part( 'media/albums' );
-			} else {
-				bp_get_template_part( 'media/single-album' );
-			}
+			?>
+			<div class="bb-rl-albums bb-rl-media-stream">
+				<?php
+				if ( ! bp_is_single_album() ) {
+					bp_get_template_part( 'media/albums' );
+				} else {
+					bp_get_template_part( 'media/single-album' );
+				}
+				?>
+			</div>
+			<?php
 			break;
 
 		// Any other.

@@ -1,6 +1,6 @@
 /* Checkbox */
 .bb-rl-styled-checkbox,
-.bb-readylaunch-template input[type="checkbox"] {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check) {
 	position: absolute; // take it out of document flow
 	opacity: 0; // hide it
 

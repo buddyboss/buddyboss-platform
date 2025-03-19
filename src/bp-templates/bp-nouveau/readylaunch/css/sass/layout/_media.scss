@@ -115,12 +115,11 @@
 		.bb-action-check-wrap {
 			position: absolute;
 			transition: 0.3s all;
-			top: 21px;
-			left: 15px;
-			color: #fff;
-			width: 20px;
-			height: 20px;
-			font-size: 15px;
+			top: var(--bb-rl-space-200);
+			left: var(--bb-rl-space-200);
+			color: var(--bb-rl-text-white-color);
+			width: 32px;
+			height: 32px;
 			text-align: center;
 			line-height: 1;
 			z-index: 2;
@@ -144,7 +143,8 @@
 
 		&:hover {
 
-			.media-action-wrap {
+			.media-action-wrap,
+			.bb-action-check-wrap {
 				opacity: 1;
 				visibility: visible;
 			}
@@ -158,6 +158,55 @@
 			display: inline-flex;
 			justify-content: center;
 			align-items: center;
+		}
+
+		.bb-custom-check {
+			position: absolute;
+			opacity: 0;
+		}
+
+		.bb-custom-check + label {
+			color: var(--bb-rl-text-white-color);
+			position: relative;
+			cursor: pointer;
+			padding: 0;
+
+			.bb-icons-rl-check-circle {
+				font-size: 32px;
+			}
+		}
+
+		&.selected {
+
+			.bb-action-check-wrap {
+				visibility: visible;
+				opacity: 1;
+			}
+
+			.bb-custom-check + label {
+
+				.bb-icons-rl-check-circle {
+					position: relative;
+				}
+
+				.bb-icons-rl-check-circle::after {
+					content: "";
+					display: inline-block;
+					width: 24px;
+					height: 24px;
+					background-color: var(--bb-rl-background-brand-primary-color);
+					border-radius: 50%;
+					position: absolute;
+					top: 4px;
+					left: 4px;
+					z-index: 1;
+				}
+
+				.bb-icons-rl-check-circle::before {
+					position: relative;
+					z-index: 2;
+				}
+			}
 		}
 	}
 }

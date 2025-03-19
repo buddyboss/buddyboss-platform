@@ -198,7 +198,7 @@ if ( 'video' === $media_template->media->type ) {
 						data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>"
 						for="bb-media-<?php echo esc_attr( $bp_media_id ); ?>"
 					>
-						<span class="bb-icon-rl bb-icon-check"></span>
+						<span class="bb-icons-rl-check-circle"></span>
 					</label>
 				</div>
 			<?php endif; ?>
@@ -338,7 +338,7 @@ if ( 'video' === $media_template->media->type ) {
 					data-bp-tooltip-pos="up"
 					data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>"
 					for="bb-media-<?php echo esc_attr( $bp_media_id ); ?>">
-					<span class="bb-icon-rl bb-icon-check"></span>
+					<span class="bb-icons-rl-check-circle"></span>
 				</label>
 			</div>
 		<?php endif; ?>

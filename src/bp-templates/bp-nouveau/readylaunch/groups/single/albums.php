@@ -39,10 +39,10 @@
 				} else {
 					bp_get_template_part( 'media/single-album' );
 				}
-				break;
 				?>
 			</div>
 			<?php
+			break;	
 
 		// Any other.
 		default:

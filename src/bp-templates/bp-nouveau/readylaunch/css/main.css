@@ -4258,13 +4258,13 @@ button[data-balloon] {
 
 /* Checkbox */
 .bb-rl-styled-checkbox,
-.bb-readylaunch-template input[type="checkbox"] {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check) {
   position: absolute;
   opacity: 0;
 }
 
 .bb-rl-styled-checkbox + label,
-.bb-readylaunch-template input[type="checkbox"] + label {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check) + label {
   cursor: pointer;
   display: inline-block;
   position: relative;
@@ -4273,7 +4273,7 @@ button[data-balloon] {
 }
 
 .bb-rl-styled-checkbox + label:before,
-.bb-readylaunch-template input[type="checkbox"] + label:before {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check) + label:before {
   content: "";
   margin-right: var(--bb-rl-space-100);
   display: inline-block;
@@ -4286,30 +4286,30 @@ button[data-balloon] {
 }
 
 .bb-rl-styled-checkbox:focus + label:before,
-.bb-readylaunch-template input[type="checkbox"]:focus + label:before {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check):focus + label:before {
   border-color: var(--bb-rl-background-brand-primary-color);
 }
 
 .bb-rl-styled-checkbox:checked + label:before,
-.bb-readylaunch-template input[type="checkbox"]:checked + label:before {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check):checked + label:before {
   background: var(--bb-rl-background-brand-primary-color);
   border-color: var(--bb-rl-background-brand-primary-color);
 }
 
 .bb-rl-styled-checkbox:disabled + label,
-.bb-readylaunch-template input[type="checkbox"]:disabled + label {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check):disabled + label {
   color: var(--bb-rl-border-disabled-color);
   cursor: auto;
 }
 
 .bb-rl-styled-checkbox:disabled + label:before,
-.bb-readylaunch-template input[type="checkbox"]:disabled + label:before {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check):disabled + label:before {
   box-shadow: none;
   background: var(--bb-rl-border-disabled-color);
 }
 
 .bb-rl-styled-checkbox:checked + label:after,
-.bb-readylaunch-template input[type="checkbox"]:checked + label:after {
+.bb-readylaunch-template input[type="checkbox"]:not(.bb-custom-check):checked + label:after {
   content: "\e182";
   position: absolute;
   left: 3px;
@@ -7286,12 +7286,11 @@ li.bb-rl-hideshow {
 .bb-rl-media-stream .bb-item-thumb .bb-action-check-wrap {
   position: absolute;
   transition: 0.3s all;
-  top: 21px;
-  left: 15px;
-  color: #fff;
-  width: 20px;
-  height: 20px;
-  font-size: 15px;
+  top: var(--bb-rl-space-200);
+  left: var(--bb-rl-space-200);
+  color: var(--bb-rl-text-white-color);
+  width: 32px;
+  height: 32px;
   text-align: center;
   line-height: 1;
   z-index: 2;
@@ -7310,7 +7309,8 @@ li.bb-rl-hideshow {
   opacity: 1;
 }
 
-.bb-rl-media-stream .bb-item-thumb:hover .media-action-wrap {
+.bb-rl-media-stream .bb-item-thumb:hover .media-action-wrap,
+.bb-rl-media-stream .bb-item-thumb:hover .bb-action-check-wrap {
   opacity: 1;
   visibility: visible;
 }
@@ -7322,6 +7322,49 @@ li.bb-rl-hideshow {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+}
+
+.bb-rl-media-stream .bb-item-thumb .bb-custom-check {
+  position: absolute;
+  opacity: 0;
+}
+
+.bb-rl-media-stream .bb-item-thumb .bb-custom-check + label {
+  color: var(--bb-rl-text-white-color);
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.bb-rl-media-stream .bb-item-thumb .bb-custom-check + label .bb-icons-rl-check-circle {
+  font-size: 32px;
+}
+
+.bb-rl-media-stream .bb-item-thumb.selected .bb-action-check-wrap {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bb-rl-media-stream .bb-item-thumb.selected .bb-custom-check + label .bb-icons-rl-check-circle {
+  position: relative;
+}
+
+.bb-rl-media-stream .bb-item-thumb.selected .bb-custom-check + label .bb-icons-rl-check-circle::after {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 1;
+}
+
+.bb-rl-media-stream .bb-item-thumb.selected .bb-custom-check + label .bb-icons-rl-check-circle::before {
+  position: relative;
+  z-index: 2;
 }
 
 .bb-rl-media-stream.bb-rl-document .media-folder_items {
