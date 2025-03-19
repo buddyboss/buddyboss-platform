@@ -14,11 +14,46 @@ if ( bp_is_my_profile() ) {
 	bp_get_template_part( 'members/single/parts/item-subnav' );
 }
 
+$bp_current_action = bp_current_action();
+if ( bb_enable_content_counts() ) {
+	?>
+	<div class="bb-item-count">
+		<?php
+			if ( ! $is_send_ajax_request ) {
+				$count = false;
+				if ( 'my-groups' === $bp_current_action ) {
+					$count = bp_get_total_group_count_for_user( bp_displayed_user_id() );
+				} elseif ( 'invites' === $bp_current_action ) {
+					$count = groups_get_invite_count_for_user( bp_displayed_user_id() );
+				}
+
+				if ( false !== $count ) {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invite' : 'Group' ),
+								'<span class="bb-count">%d</span> ' . ( 'invites' === $bp_current_action ? 'Invites' : 'Groups' ),
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+				}
+
+				unset( $count );
+			}
+		?>
+	</div>
+	<?php
+}
 if ( ! bp_is_current_action( 'invites' ) ) {
 	bp_get_template_part( 'common/search-and-filters-bar' );
 }
 
-switch ( bp_current_action() ) :
+switch ( $bp_current_action ) :
 
 	// Home/My Groups
 	case 'my-groups':
