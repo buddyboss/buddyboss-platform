@@ -7420,7 +7420,7 @@ function bb_activity_edit_update_document_status( $document_ids ) {
  * @return bool True on success.
  */
 function bb_activity_update_date_updated( $activity_id, $time ) {
-	global $wpdb;
+	global $wpdb, $bp;
 
 	// Check if the time is empty then exit.
 	if ( empty( $time ) ) {
@@ -7436,8 +7436,6 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
 	}
 
 	unset( $date );
-
-	$bp = buddypress();
 
 	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET date_updated = %s WHERE id = %d", $time, $activity_id ); // phpcs:ignore
 
@@ -7458,8 +7456,7 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_activity_object( $activity ) {
-	global $wpdb;
-	$bp       = buddypress();
+	global $wpdb, $bp;
 	$is_media = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
 
 	// Loop until the item_id and secondary_item_id are the same.
@@ -7508,8 +7505,7 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_id ) {
-	global $wpdb;
-	$bp = buddypress();
+	global $wpdb, $bp;
 
 	// Early bail if activity is invalid.
 	if ( empty( $activity ) || empty( $activity->id ) ) {
@@ -7585,8 +7581,7 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
  * @return object|false The raw database object for the activity, or false if not found.
  */
 function bb_activity_get_raw_db_object( $activity_id ) {
-	global $wpdb;
-	$bp = buddypress();
+	global $wpdb, $bp;
 
 	// Fetch the activity directly from the database.
 	$activity = $wpdb->get_row(
@@ -7604,15 +7599,15 @@ function bb_activity_get_raw_db_object( $activity_id ) {
 }
 
 /**
-* Common function to update activity date updated and clear cache.
-*
-* @since BuddyBoss [BBVERSION]
-*
-* @param object $activity     The activity object.
-* @param string $date_updated The date updated to set.
-*
-* @return void
-*/
+ * Common function to update activity date updated and clear cache.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity     The activity object.
+ * @param string $date_updated The date updated to set.
+ *
+ * @return void
+ */
 function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updated = '' ) {
 	if ( empty( $activity ) || empty( $activity->id ) ) {
 		return;

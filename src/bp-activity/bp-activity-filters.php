@@ -3862,6 +3862,7 @@ function bb_clear_activity_parent_cache( $activities ) {
  * @return void
  */
 function bb_clear_activity_comment_parent_cache( $activities ) {
+	global $wpdb, $bp;
 
 	// Early bail if no activities provided.
 	if ( empty( $activities ) ) {
@@ -3878,8 +3879,6 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
 
 	// Clear cache for each activity ID.
 	if ( ! empty( $activity_ids ) ) {
-		global $wpdb;
-		$bp = buddypress();
 		foreach ( $activity_ids as $activity_id ) {
 			$main_activity_id = $wpdb->get_var(
 				$wpdb->prepare(
@@ -3907,6 +3906,7 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
  * @return void
  */
 function bb_clear_activity_all_comment_parent_caches( $activities ) {
+	global $wpdb, $bp;
 
 	// Early bail if no activities provided.
 	if ( empty( $activities ) ) {
@@ -3917,8 +3917,6 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 
 	// Clear cache for each activity ID.
 	if ( ! empty( $activity_ids ) ) {
-		global $wpdb;
-		$bp = buddypress();
 		foreach ( $activity_ids as $activity_id ) {
 			$comment_ids = $wpdb->get_col(
 				$wpdb->prepare(

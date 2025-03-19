@@ -9982,7 +9982,7 @@ function bb_pro_sso_version() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $filters Array of filter options.
- * 
+ *
  * @return array $filters Array of allowed filter options.
  */
 function bb_filter_activity_filter_scope_keys( $filters = array() ) {
