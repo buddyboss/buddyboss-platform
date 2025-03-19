@@ -28,7 +28,7 @@ $activity_id = bp_get_activity_id();
 				<label for="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="bp-screen-reader-text">
 					<?php esc_html_e( 'Comment', 'buddyboss' ); ?>
 				</label>
-				<div contenteditable="true" id="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="ac-input bp-suggestions" name="ac_input_<?php echo esc_attr( $activity_id ); ?>" data-placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>></div>
+				<div contenteditable="true" id="ac-input-<?php echo esc_attr( $activity_id ); ?>" class="ac-input bp-suggestions" name="ac_input_<?php echo esc_attr( $activity_id ); ?>" data-placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . esc_attr( bp_get_current_group_id() ) . '"' : ''; ?>></div>
 
 				<?php
 				if ( 'blogs' !== $activities_template->activity->component ) {
