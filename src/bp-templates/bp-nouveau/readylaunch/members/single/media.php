@@ -9,9 +9,13 @@
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
-<div class="bb-media-container member-media bb-rl-media-container">
+<div class="bb-rl-sub-ctrls flex items-center justify-between">
 	<?php
 	bp_get_template_part( 'members/single/parts/item-subnav' );
+	?>
+</div>
+<div class="bb-media-container member-media bb-rl-media-container">
+	<?php
 	bp_get_template_part( 'media/theatre' );
 	if ( bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );

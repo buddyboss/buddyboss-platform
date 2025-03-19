@@ -8,8 +8,13 @@
  */
 
 $is_send_ajax_request = bb_is_send_ajax_request();
-
-bp_get_template_part( 'members/single/parts/item-subnav' );
+?>
+<div class="bb-rl-sub-ctrls flex items-center justify-between">
+	<?php
+	bp_get_template_part( 'members/single/parts/item-subnav' );
+	?>
+</div>
+<?php
 bp_nouveau_activity_member_post_form();
 bp_get_template_part( 'common/search-and-filters-bar' );
 bp_nouveau_member_hook( 'before', 'activity_content' );
