@@ -29,6 +29,7 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bp_get_activity_action_pre_meta', array( $this, 'bb_rl_remove_secondary_avatars_for_connected_users' ), 11, 2 );
 		add_filter( 'bp_nouveau_get_activity_comment_buttons', array( $this, 'bb_rl_get_activity_comment_buttons' ), 10, 3 );
 		add_filter( 'bb_get_activity_reaction_button_html', array( $this, 'bb_rl_modify_reaction_button_html' ), 10, 2 );
+		add_filter( 'bp_get_activity_css_class', array( $this, 'bb_rl_add_empty_content_class' ), 10, 1 );
 
 		add_action( 'wp_ajax_bb_rl_activity_loadmore_comments', array( $this, 'bb_rl_activity_loadmore_comments' ) );
 		add_action( 'wp_ajax_nopriv_bb_rl_activity_loadmore_comments', array( $this, 'bb_rl_activity_loadmore_comments' ) );
@@ -686,5 +687,25 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $action;
+	}
+
+	/**
+	 * Add a class to activities with empty content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $activity_class The CSS classes for the activity item.
+	 *
+	 * @return string Modified CSS classes.
+	 */
+	public function bb_rl_add_empty_content_class( $activity_class ) {
+		global $activities_template;
+
+		// Add a specific class for activities with empty content.
+		if ( isset( $activities_template->activity ) && empty( $activities_template->activity->content ) ) {
+			$activity_class .= ' bb-rl-empty-content';
+		}
+
+		return $activity_class;
 	}
 }
