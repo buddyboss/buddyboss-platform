@@ -15,7 +15,7 @@ bp_nouveau_before_activity_post_form();
 
 $current_action = bp_current_action();
 
-if ( bp_is_user_activity() && ! bp_is_activity_tabs_active() && ! empty( $current_action ) ) {
+if ( bp_is_user_activity() && ! empty( $current_action ) ) {
 	$current_action = explode( ',', $current_action );
 }
 
