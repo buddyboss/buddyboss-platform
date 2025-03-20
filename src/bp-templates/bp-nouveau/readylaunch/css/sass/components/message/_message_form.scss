@@ -256,6 +256,16 @@
 	margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
 }
 
+.bp-user-messages-feedback {
+	margin: var(--bb-rl-space-300);
+
+	.bb-rl-notice {
+		color: var(--bb-rl-text-secondary-color);
+		padding: var(--bb-rl-space-200);
+		justify-content: center;
+	}
+}
+
 .compose .bb-rl-messages-content {
 	position: relative;
 
