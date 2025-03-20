@@ -5503,10 +5503,12 @@ window.bp = window.bp || {};
 					this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
 				}
 
-				// Add the right panel view.
-				var rightPanel          = new bp.Views.userMessageRightPanel( { model : this.options.thread } );
-				rightPanel.el.className = 'bb-rl-messages-right-panel';
-				$( '#bb-rl-messages-right-panel' ).html( rightPanel.render().el );
+				// Add the right panel view if not exists.
+				if ( ! this.rightPanel || this.rightPanel.model.get( 'id' ) !== this.options.thread.get( 'id' ) ) {
+					this.rightPanel              = new bp.Views.userMessageRightPanel( { model : this.options.thread } );
+					this.rightPanel.el.className = 'bb-rl-messages-right-panel';
+					$( '#bb-rl-messages-right-panel' ).html( this.rightPanel.render().el );
+				}
 
 				$( '#bp-message-thread-list li' ).each(
 					function () {
