@@ -12600,6 +12600,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   white-space: nowrap;
 }
 
+.bb-card-meta .card-meta-type--empty {
+  display: none;
+}
+
 .bb-card-footer {
   display: flex;
   flex-wrap: wrap;
@@ -12609,7 +12613,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 }
 
 .bb-group-card .bb-card-footer .bb-card-action:first-of-type {
-  flex: 1 1 66.66%;
+  flex: 1 1 60.00%;
 }
 
 .bb-card-footer .card-button,

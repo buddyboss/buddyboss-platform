@@ -5063,6 +5063,12 @@ window.bp = window.bp || {};
 			$groupCard.find( '.bb-card-heading' ).text( data.name );
 			$groupCard.find( '.card-meta-status' ).text( data.status );
 			$groupCard.find( '.card-meta-type' ).text( data.group_type_label );
+			// Check if group_type_label is empty
+			if ( data.group_type_label && data.group_type_label.trim() !== '' ) {
+				$groupCard.find( '.card-meta-type' ).text( data.group_type_label ).removeClass( 'card-meta-type--empty' );
+			} else {
+				$groupCard.find( '.card-meta-type' ).text( '' ).addClass( 'card-meta-type--empty' );
+			}
 			$groupCard.find( '.card-meta-last-active' ).text( data.last_activity );
 			$groupCard.find( '.bb-card-footer .card-button-group' ).attr( 'href', data.link );
 
