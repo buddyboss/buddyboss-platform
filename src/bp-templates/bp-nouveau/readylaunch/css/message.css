@@ -1195,6 +1195,21 @@ body.messages .bb-rl-content-wrapper {
   font-weight: 600;
 }
 
+.bb-rl-activity-media-elem.bb-rl-document-activity .document-text {
+  font-size: 14px;
+}
+
+.bb-rl-activity-media-elem.bb-rl-document-activity .more_text_view {
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-activity-media-elem.bb-rl-document-activity .document-expand-anchor .document-icon-plus:before {
+  content: "\eb04";
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  font-style: normal;
+}
+
 .bb-rl-messages-content .send-reply {
   margin: 0;
   width: auto;

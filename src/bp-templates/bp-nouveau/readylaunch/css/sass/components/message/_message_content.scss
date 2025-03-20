@@ -522,3 +522,25 @@
 		font-weight: 600;
 	}
 }
+
+//  Document UI
+
+.bb-rl-activity-media-elem.bb-rl-document-activity {
+
+	.document-text {
+		font-size: 14px;
+	}
+
+	.more_text_view {
+		font-size: var(--bb-rl-font-size-sm);
+	}
+
+	.document-expand-anchor .document-icon-plus:before {
+		content: "\eb04";
+		font-family: bb-icons-rl;
+		font-size: 16px;
+		font-style: normal;
+	}
+}
+
+
