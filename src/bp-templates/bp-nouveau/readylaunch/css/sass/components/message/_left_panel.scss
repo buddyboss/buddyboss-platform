@@ -512,32 +512,27 @@
 	padding: var(--bb-rl-space-500) var(--bb-rl-space-300);
 	text-align: center;
 
-	.bb-icon {
+	[class*="bb-icons-"] {
+		display: inline-block;
 		color: var(--bb-rl-icon-secondary-color);
-		font-size: 50px;
-		font-weight: 500;
-		opacity: 0.6;
-
-		&:before {
-			content: "\e174";
-			font-family: bb-icons-rl;
-		}
+		font-size: 40px;
+		margin-bottom: var(--bb-rl-space-200);
 	}
 
 	.no-message-content {
 		font-size: 14px;
-		color: var(--bb-rl-text-tertiary-color);
+		color: var(--bb-rl-text-secondary-color);
 		letter-spacing: -0.24px;
 		line-height: 1.5;
 		max-width: 310px;
 		margin: 0 auto;
-		padding: 0 40px 20px;
+		padding: 0 28px 20px;
 
 		h3 {
 			color: var(--bb-rl-text-color);
-			font-size: 24px;
+			font-size: 18px;
 			font-weight: 600;
-			margin-bottom: 5px;
+			margin-bottom: var(--bb-rl-space-100);
 		}
 	}
 }

@@ -9,7 +9,7 @@
 
 <script type="text/html" id="tmpl-bp-messages-no-archived-threads">
 	<div class="no-message-wrap">
-		<span class="bb-icon bb-icon-f bb-icon-comments-slash"></span>
+		<span class="bb-icons-rl-chats-circle"></span>
 		<div class="no-message-content">
 			<h3><?php esc_html_e( 'No Messages Found', 'buddyboss' ); ?></h3>
 			<p><?php esc_html_e( 'You haven\'t archived any conversations.', 'buddyboss' ); ?></p>
