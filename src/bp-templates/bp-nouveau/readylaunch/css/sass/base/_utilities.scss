@@ -1182,6 +1182,7 @@ div.vjs-menu {
 		margin-top: var(--bb-rl-space-200);
 	}
 
+	.document-preview-wrap,
 	.bb-rl-document-preview-wrap {
 		display: flex;
 		align-items: center;
@@ -1201,6 +1202,7 @@ div.vjs-menu {
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 	}
 
+	.document-audio-wrap audio,
 	.bb-rl-document-audio-wrap audio {
 
 		&::-webkit-media-controls-enclosure {
@@ -1214,8 +1216,11 @@ div.vjs-menu {
 		}
 	}
 
+	&:has(.document-text-wrap),
 	&:has(.bb-rl-document-text-wrap),
+	&:has(.document-audio-wrap),
 	&:has(.bb-rl-document-audio-wrap),
+	&:has(.document-preview-wrap),
 	&:has(.bb-rl-document-preview-wrap) {
 
 		.bb-rl-document-description-wrap {
@@ -1223,6 +1228,7 @@ div.vjs-menu {
 		}
 	}
 
+	&:has(.document-preview-wrap),
 	&:has(.bb-rl-document-preview-wrap) {
 		display: flex;
 		flex-flow: column;
@@ -1432,6 +1438,7 @@ div.vjs-menu {
 		}
 	}
 
+	.document-audio-wrap,
 	.bb-rl-document-audio-wrap {
 		padding: 0;
 		width: 100%;
@@ -1445,6 +1452,7 @@ div.vjs-menu {
 		}
 	}
 
+	.document-preview-wrap,
 	.bb-rl-document-preview-wrap {
 		background-color: var(--bb-rl-background-color);
 		border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
@@ -1453,7 +1461,9 @@ div.vjs-menu {
 		text-align: center;
 	}
 
+	.document-audio-wrap
 	.bb-rl-document-audio-wrap,
+	.document-preview-wrap,
 	.bb-rl-document-preview-wrap {
 
 		~ .document-action-wrap {
@@ -1463,6 +1473,7 @@ div.vjs-menu {
 
 	}
 
+	.document-text-wrap,
 	.bb-rl-document-text-wrap {
 
 		.CodeMirror {/* stylelint-disable-line */
@@ -1475,6 +1486,7 @@ div.vjs-menu {
 			overflow: hidden;
 			position: relative;
 
+			.document-expand,
 			.bb-rl-document-expand {
 				opacity: 1;
 				visibility: visible;
@@ -1503,6 +1515,7 @@ div.vjs-menu {
 
 	&.code-full-view {
 
+		.document-text-wrap,
 		.bb-rl-document-text-wrap {
 			max-height: inherit;
 			overflow: initial;
@@ -1517,6 +1530,7 @@ div.vjs-menu {
 		}
 	}
 
+	.document-expand,
 	.bb-rl-document-expand {
 		position: absolute;
 		left: 0;
@@ -1527,6 +1541,7 @@ div.vjs-menu {
 		visibility: hidden;
 		opacity: 0;
 
+		.document-expand-anchor,
 		.bb-rl-document-expand-anchor {
 			display: flex;
 			align-items: center;
@@ -1572,6 +1587,7 @@ div.vjs-menu {
 		}
 	}
 
+	.more_text_view,
 	.bb_rl_more_text_view {
 		color: var(--bb-rl-text-tertiary-color);
 		background-color: var(--bb-rl-background-color);
@@ -1582,6 +1598,7 @@ div.vjs-menu {
 
 	&:hover {
 
+		.document-expand .document-expand-anchor,
 		.bb-rl-document-expand .bb-rl-document-expand-anchor {
 			opacity: 1;
 			visibility: visible;

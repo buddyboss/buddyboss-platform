@@ -4421,7 +4421,7 @@ window.bp = window.bp || {};
 		 * Text File Activity Preview
 		 */
 		documentCodeMirror: function () {
-			$( '.bb-rl-document-text:not(.loaded)' ).each(
+			$( '.bb-rl-document-text:not(.loaded), .document-text:not(.loaded)' ).each(
 				function () {
 					var $this          = $( this );
 					var data_extension = $this.attr( 'data-extension' );
@@ -4429,12 +4429,13 @@ window.bp = window.bp || {};
 					if ( data_extension === 'html' || data_extension === 'htm' ) { // HTML file need specific mode.
 						fileMode = 'text/html';
 					}
+					var text_file = $this.find( '.bb-rl-document-text-file-data-hidden' ).length > 0 ? $this.find( '.bb-rl-document-text-file-data-hidden' ).val() : $this.find( '.document-text-file-data-hidden' ).val();
 					if ( data_extension === 'js' ) { // mode not needed for javascript file.
 						/* jshint ignore:start */
 						var myCodeMirror = CodeMirror(
 							$this[ 0 ],
 							{
-								value: $this.find( '.bb-rl-document-text-file-data-hidden' ).val(),
+								value: text_file,
 								lineNumbers: true,
 								theme: 'default',
 								readOnly: true,
@@ -4447,7 +4448,7 @@ window.bp = window.bp || {};
 						var myCodeMirror = CodeMirror(
 							$this[ 0 ],
 							{
-								value: $this.find( '.bb-rl-document-text-file-data-hidden' ).val(),
+								value: text_file,
 								mode: fileMode,
 								lineNumbers: true,
 								theme: 'default',
@@ -4460,7 +4461,7 @@ window.bp = window.bp || {};
 
 					$this.addClass( 'loaded' );
 					if ( $this.parent().height() > 150 ) { // If file is bigger add controls to Expand/Collapse.
-						$this.closest( '.bb-rl-document-text-wrap' ).addClass( 'is_large' );
+						$this.closest( '.bb-rl-document-text-wrap, .document-text-wrap' ).addClass( 'is_large' );
 						$this.closest( '.bb-rl-document-activity' ).addClass( 'is_large' );
 					}
 
