@@ -182,11 +182,18 @@ class BB_Messages_Readylaunch {
 			);
 
 			foreach ( $document_items as $document ) {
+				$file_url = wp_get_attachment_url( $document->attachment_id );
+				$filetype = wp_check_filetype( $file_url );
+				$ext      = $filetype['ext'];
+				if ( empty( $ext ) ) {
+					$path = wp_parse_url( $file_url, PHP_URL_PATH );
+					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+				}
 				$response['files'][] = array(
 					'id'        => $document->id,
 					'title'     => $document->title,
 					'url'       => bp_document_get_preview_url( $document->id, $document->attachment_id ),
-					'extension' => pathinfo( $document->title, PATHINFO_EXTENSION ),
+					'extension' => $ext,
 				);
 			}
 		}

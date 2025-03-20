@@ -197,15 +197,13 @@
 <script type="text/html" id="tmpl-bp-messages-right-panel-files">
     <# _.each( data, function( file ) { #>
         <div class="bb-rl-file-item">
-            <div class="bb-rl-file-icon bb-rl-file-{{file.extension}}">{{file.extension.toUpperCase()}}</div>
+            <div class="bb-rl-file-icon bb-rl-file-{{file.extension}}">
+                {{file.extension.toUpperCase()}}
+            </div>
             <div class="bb-rl-file-info">
                 <h4 class="bb-rl-file-name">
-                <a href="{{file.url}}" target="_blank">{{file.title}}</a>
-            </h4>
-            <div class="bb-rl-file-meta">
-                <span class="bb-rl-file-size">{{file.size}}</span>
-                    <span class="bb-rl-file-date">{{file.date}}</span>
-                </div>
+                    <a href="{{file.url}}" target="_blank">{{file.title}}</a>
+                </h4>
             </div>
         </div>
     <# }); #>
