@@ -794,12 +794,19 @@ body.messages .bb-rl-content-wrapper {
   line-height: 1;
 }
 
+.single-message-thread-header .num-name,
 .single-message-thread-header .participants-name,
 .single-message-thread-header .participants-name a {
   font-size: 16px;
   line-height: 1.5;
   font-weight: 500;
   color: var(--bb-rl-text-color);
+}
+
+.single-message-thread-header .num-name:hover,
+.single-message-thread-header .participants-name:hover,
+.single-message-thread-header .participants-name a:hover {
+  color: var(--bb-rl-primary-color);
 }
 
 .single-message-thread-header .bb-rl-thread-date {

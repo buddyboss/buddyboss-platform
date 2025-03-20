@@ -95,12 +95,17 @@
 		line-height: 1;
 	}
 
+	.num-name,
 	.participants-name,
 	.participants-name a {
 		font-size: 16px;
 		line-height: 1.5;
 		font-weight: 500;
 		color: var(--bb-rl-text-color);
+
+		&:hover {
+			color: var(--bb-rl-primary-color);
+		}
 	}
 
 	.bb-rl-thread-date {
