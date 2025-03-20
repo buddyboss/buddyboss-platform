@@ -1977,6 +1977,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   justify-content: center;
 }
 
+.bb-rl-messages-right-panel .bb-rl-message-profile-meta > span,
 .bb-rl-messages-right-panel .bb-rl-message-profile-meta .bb-rl-message-profile-meta-item {
   display: flex;
   align-items: center;
@@ -1986,6 +1987,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   font-weight: 400;
 }
 
+.bb-rl-messages-right-panel .bb-rl-message-profile-meta > span:not(:first-child):before,
 .bb-rl-messages-right-panel .bb-rl-message-profile-meta .bb-rl-message-profile-meta-item:not(:first-child):before {
   content: "";
   display: inline-block;
