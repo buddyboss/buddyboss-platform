@@ -14463,6 +14463,57 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-color: var(--bb-rl-text-color);
 }
 
+.bb-rl-groups .group-invites-screen {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-groups .bp-list.invites .action {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-groups .bp-list.invites .action .generic-button {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bb-rl-groups .bp-list.invites .action .generic-button .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 6px var(--bb-rl-space-200);
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-groups .bp-list.invites .action .generic-button .button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-groups .bp-list.invites .action .generic-button .button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-groups .bp-list.invites .action .generic-button .button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
 .bb-rl-profile-edit {
   max-width: 720px;
   margin: 0 auto;

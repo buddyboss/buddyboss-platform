@@ -58,6 +58,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
+			
 			$this->settings = bb_get_enabled_readylaunch();
 
 			// Register the ReadyLaunch menu.
