@@ -46,21 +46,32 @@
 				</div>
 			</div>
 			<div class="bb-card-footer">
-				<?php if ( is_user_logged_in() ) : ?>
-					<?php if ( bp_is_active( 'messages' ) ) : ?>
-						<div class="bb-card-action bb-card-action-primary">
+				<?php
+				if ( is_user_logged_in() ) {
+					if ( bp_is_active( 'messages' ) ) {
+						?>
+						<div class="bb-card-action bb-card-action-message bb-card-action-primary">
 							<a href="" class="card-button send-message">
 								<i class="bb-icon-l bb-icon-comment"></i>
 								<?php esc_html_e( 'Message', 'buddyboss' ); ?>
 							</a>
 						</div>
-					<?php else : ?>
-						<?php if ( bp_is_active( 'friends' ) ) : ?>
-							<div class="bb-card-action bb-card-action-connect bb-card-action-primary"></div>
-						<?php endif; ?>
-					<?php endif; ?>
-					<div class="bb-card-action bb-card-action-follow bb-card-action-secondary"></div>
-				<?php endif; ?>
+						<?php
+					}
+
+					if ( bp_is_active( 'friends' ) ) {
+						?>
+						<div class="bb-card-action bb-card-action-connect bb-card-action-primary"></div>
+						<?php
+					}
+
+					if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+						?>
+						<div class="bb-card-action bb-card-action-follow bb-card-action-secondary"></div>
+						<?php
+					}
+				}
+				?>
 				<div class="bb-card-action bb-card-action-outline">
 					<a href="" class="card-button card-button-profile"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
 				</div>
