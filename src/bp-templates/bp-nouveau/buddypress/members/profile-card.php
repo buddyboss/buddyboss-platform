@@ -41,7 +41,13 @@
 					<div class="bb-card-meta">
 						<span class="card-meta-item card-meta-joined"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> <span></span></span>
 						<span class="card-meta-item card-meta-last-active"></span>
-						<span class="card-meta-item card-meta-followers"></span>
+						<?php
+						if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+							?>
+							<span class="card-meta-item card-meta-followers"></span>
+							<?php
+						}
+						?>
 					</div>
 				</div>
 			</div>
