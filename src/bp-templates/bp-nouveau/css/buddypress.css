@@ -12845,6 +12845,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   white-space: nowrap;
 }
 
+.bb-card-meta .card-meta-type--empty {
+  display: none;
+}
+
 .bb-card-footer {
   display: flex;
   flex-wrap: wrap;

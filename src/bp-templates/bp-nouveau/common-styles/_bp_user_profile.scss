@@ -785,6 +785,10 @@ div.profile_completion_wrap {
 		margin: 0 5px 0 0;
 		white-space: nowrap;
 	}
+
+	.card-meta-type--empty {
+		display: none;
+	}
 }
 
 .bb-card-footer {
