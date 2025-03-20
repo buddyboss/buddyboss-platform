@@ -33,17 +33,17 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	</div><!-- .bb-subnav-filters-container -->
 
 	<?php
-		$avail_sorting_options = bb_get_enabled_activity_sorting_options();
-		arsort( $avail_sorting_options );
-		$default_selected = key( $avail_sorting_options );
-		if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
-			$hide_class = '';
-		} else {
-			$hide_class = 'bp-hide';
-			if ( empty ( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, true ) ) {
-				$avail_sorting_options = array( 'date_recorded' => 1 );
-			}
+	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
+	arsort( $avail_sorting_options );
+	$default_selected = key( $avail_sorting_options );
+	if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
+		$hide_class = '';
+	} else {
+		$hide_class = 'bp-hide';
+		if ( empty( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, true ) ) {
+			$avail_sorting_options = array( 'date_recorded' => 1 );
 		}
+	}
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
@@ -58,8 +58,8 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			<div class="subnav-filters-modal" id="bb-subnav-filter-by">
 				<ul role="listbox">
 					<?php
-					if ( ! empty ( $avail_sorting_options ) ) {
-						foreach( $avail_sorting_options as $key => $is_enabled ) {
+					if ( ! empty( $avail_sorting_options ) ) {
+						foreach ( $avail_sorting_options as $key => $is_enabled ) {
 							if ( empty( $is_enabled ) || empty( $sorting_labels[ $key ] ) ) {
 								continue;
 							}
