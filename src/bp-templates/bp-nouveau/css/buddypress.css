@@ -12603,6 +12603,10 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
   display: none;
 }
 
+.bb-card-meta .card-meta-status {
+  text-transform: capitalize;
+}
+
 .bb-card-footer {
   display: flex;
   flex-wrap: wrap;

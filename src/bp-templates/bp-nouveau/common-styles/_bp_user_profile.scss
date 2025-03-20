@@ -789,6 +789,10 @@ div.profile_completion_wrap {
 	.card-meta-type--empty {
 		display: none;
 	}
+
+	.card-meta-status {
+		text-transform: capitalize;
+	}
 }
 
 .bb-card-footer {
