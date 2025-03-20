@@ -676,7 +676,7 @@ window.bp = window.bp || {};
 					}
 
 					// Control the scheduled posts layout view.
-					if( data.status === 'scheduled' ) {
+					if ( data.status === 'scheduled' ) {
 						if( $( response.data.contents ).hasClass( 'bp-feedback' ) ) {
 							$( data.target ).parent().addClass( 'has-no-content' );
 						} else {
@@ -777,6 +777,28 @@ window.bp = window.bp || {};
 								$( self.objectNavParent + ' .bb-item-count' ).html( '<span class="bb-count">' + response.data.scopes[ data.scope ] + '</span> ' + dir_label );
 							}
 						}
+					}
+
+					if ( $( '.bb-subnav-filters-search.loading' ).length ) {
+						if ( 'activity' === data.object ) {
+							bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+						}
+
+						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+
+						if( data.search_terms === '' && window.clear_search_trigger) {
+							$( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
+							window.clear_search_trigger = false;
+						}
+					}
+
+					if ( data.object === 'activity' && $( 'body.groups' ).hasClass( 'activity' ) ) {
+						$( '.groups .group-search.activity-search.loading' ).removeClass( 'loading' );
+						$( 'body.groups .activity-head-bar .bb-subnav-filters-filtering li.loading' ).removeClass( 'loading' );
+					}
+
+					if ( ! _.isUndefined( response.data ) && ! _.isUndefined( response.data.count ) ) {
+						$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text( response.data.count );
 					}
 
 					if ( 'reset' !== data.method ) {
@@ -4607,7 +4629,7 @@ window.bp = window.bp || {};
 
 			if (
 				'' === scope ||
-				false === scope || 
+				false === scope ||
 				(
 					'undefined' !== BP_Nouveau.is_send_ajax_request &&
 					'' === BP_Nouveau.is_send_ajax_request

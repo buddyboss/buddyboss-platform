@@ -138,7 +138,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]:not( #bb-schedule-posts_modal [data-bp-list="activity"] )' ).on( 'click', 'li.load-newest, li.load-more', this.injectActivities.bind( this ) );
 
 			// Highlight new activities & clean up the stream.
-			if ( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) { 
+			if ( BP_Nouveau.is_send_ajax_request !== undefined && BP_Nouveau.is_send_ajax_request === '1' ) {
 				$( '#buddypress' ).on( 'bp_ajax_request', '[data-bp-list="activity"]', this.scopeLoaded.bind( this ) );
 			} else {
 				// For page request 1, call openEditActivityPopup after page is completely loaded.
@@ -310,7 +310,7 @@ window.bp = window.bp || {};
 
 						// Heartbeat check the value from the available.
 						if ( 'undefined' === typeof heartbeatData.scope || heartbeatData.scope !== scope ) {
-							heartbeatData.scope = scope; 
+							heartbeatData.scope = scope;
 
 							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
 
@@ -320,14 +320,14 @@ window.bp = window.bp || {};
 								} else {
 									bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
 								}
-							}	
+							}
 						}
 					}
 
 					// Add `order_by` only if it's not already set.
 					if ( $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).length ) {
 						var order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
-						heartbeatData.order_by = order_by; 
+						heartbeatData.order_by = order_by;
 					}
 
 					return heartbeatData;
@@ -1946,7 +1946,7 @@ window.bp = window.bp || {};
 								if (
 									(
 										'' === scope ||
-										false === scope || 
+										false === scope ||
 										(
 											'undefined' !== BP_Nouveau.is_send_ajax_request &&
 											'' === BP_Nouveau.is_send_ajax_request
@@ -1960,7 +1960,7 @@ window.bp = window.bp || {};
 								var update_pinned_icon = false;
 								var is_group_activity  = false;
 								var activity_group_id  = '';
-								
+
 
 								if ( target.closest( 'li.activity-item' ).hasClass('groups') ) {
 									is_group_activity = true;
@@ -2007,7 +2007,7 @@ window.bp = window.bp || {};
 
 									// Menu sync for other activities in main activity stream.
 									if ( ( isInsideModal || isInsideTheatreModal ) && $mainActivityList.length > 0 ) {
-										
+
 										$mainActivityList.find( update_pin_actions ).each( function() {
 											var action = $( this ).find( '.unpin-activity' );
 											action.removeClass( 'unpin-activity' ).addClass( 'pin-activity' );
@@ -4178,7 +4178,7 @@ window.bp = window.bp || {};
 				activityId = activityID !== undefined ? activityID : activityListItemId,
 				$pageActivityListItem = $( '#activity-stream li.activity-item[data-bp-activity-id=' + activityId + ']' );
 
-			// If pin post udpate then refresh list.	
+			// If pin post udpate then refresh list.
 			if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates && bp.Nouveau.Activity.activityPinHasUpdates ) {
 				if ( $pageActivityListItem.length > 0 ) {
 
@@ -4321,6 +4321,9 @@ window.bp = window.bp || {};
 			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
 			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+
+			// Reset the pagination for the scope.
+			bp.Nouveau.Activity.current_page = 1;
 
 			// Filter activity with below selections
 			var objectNavParent = bp.Nouveau.objectNavParent;

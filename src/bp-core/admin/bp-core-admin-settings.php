@@ -3753,6 +3753,27 @@ function bb_admin_performance_setting_activity_callback() {
 }
 
 /**
+ * Setting for enable content count.
+ *
+ * @since BuddyBoss 2.8.10
+ */
+function bb_admin_setting_callback_content_counts() {
+	?>
+
+	<input id="bb-enable-content-counts" name="bb-enable-content-counts" type="checkbox" value="1" <?php checked( bb_enable_content_counts() ); ?> />
+	<label for="bb-enable-content-counts"><?php esc_html_e( 'Enable content counts across your site', 'buddyboss' ); ?></label>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
  * Enable activity filters with scopes like groups, friends, mentions, following etc.
  *
  * @since BuddyBoss [BBVERSION]
@@ -3804,9 +3825,9 @@ function bb_admin_setting_callback_activity_filters() {
 				/>
 				<input
 					<?php echo esc_attr( $readonly ); ?>
-					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
-					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]" 
-					type="checkbox" 
+					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>"
+					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]"
+					type="checkbox"
 					value="1"
 					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
 				/>
@@ -3873,9 +3894,9 @@ function bb_admin_setting_callback_activity_timeline_filters() {
 				/>
 				<input
 					<?php echo esc_attr( $readonly ); ?>
-					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>" 
-					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]" 
-					type="checkbox" 
+					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>"
+					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]"
+					type="checkbox"
 					value="1"
 					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
 				/>
@@ -3942,10 +3963,10 @@ function bb_admin_setting_callback_activity_sorting() {
 				/>
 				<input
 					<?php echo esc_attr( $readonly ); ?>
-					id="<?php echo esc_attr( $key ); ?>" 
-					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]" 
-					type="checkbox" 
-					value="1" 
+					id="<?php echo esc_attr( $key ); ?>"
+					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]"
+					type="checkbox"
+					value="1"
 					<?php checked( isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) ); ?>
 				/>
 				<label for="<?php echo esc_attr( $key ); ?>">
@@ -3971,23 +3992,3 @@ function bb_admin_setting_callback_enable_activity_search() {
 	<?php
 }
 
-/*
- * Setting for enable content count.
- *
- * @since BuddyBoss 2.8.10
- */
-function bb_admin_setting_callback_content_counts() {
-   ?>
-
-   <input id="bb-enable-content-counts" name="bb-enable-content-counts" type="checkbox" value="1" <?php checked( bb_enable_content_counts() ); ?> />
-   <label for="bb-enable-content-counts"><?php esc_html_e( 'Enable content counts across your site', 'buddyboss' ); ?></label>
-   <p class="description">
-	   <?php
-	   esc_html_e(
-		   'Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance.',
-		   'buddyboss'
-	   );
-	   ?>
-   </p>
-   <?php
-}

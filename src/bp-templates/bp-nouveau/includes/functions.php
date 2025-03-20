@@ -174,10 +174,10 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 			// Default order.
 			$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 			arsort( $avail_sorting_options );
-			if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) ) {
+			if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) ) {
 				$order_by = key( $avail_sorting_options );
 			} else {
-				if ( empty( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, false ) ) {
+				if ( empty( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, true ) ) {
 					$order_by = 'date_recorded';
 				}
 			}

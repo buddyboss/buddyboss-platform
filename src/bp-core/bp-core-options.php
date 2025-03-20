@@ -1138,14 +1138,17 @@ function bp_is_activity_tabs_active( $default = false ) {
 	/* Update for the backward compatibility since setting is removed. */
 	// Retrieve the saved options.
 	$filters = bb_get_enabled_activity_filter_options();
-	
+
 	// Common function to get only allowed ones.
 	$filters = bb_filter_activity_filter_scope_keys( $filters );
 
 	// Get only enabled options.
-	$filters = array_filter( $filters, function ( $value ) {
-		return 1 === (int) $value;
-	} );
+	$filters = array_filter(
+		$filters,
+		function ( $value ) {
+			return 1 === (int) $value;
+		}
+	);
 
 	if ( ! empty( $filters ) && count( $filters ) > 1 ) {
 		$default = true;
@@ -2827,22 +2830,27 @@ function bb_get_activity_filter_options_labels() {
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @param array $default Array of default activity filter options.
+ * @param array $args Array of default activity filter options.
  *
  * @return array Array of enabled activity filters options.
  */
-function bb_get_enabled_activity_filter_options( $default = array(
-	'all'       => 1,
-	'just-me'   => 1,
-	'favorites' => 1,
-	'groups'    => 1,
-	'friends'   => 1,
-	'mentions'  => 1,
-	'following' => 1,
-) ) {
+function bb_get_enabled_activity_filter_options( $args = array() ) {
 
-	$options = bp_get_option( 'bb_activity_filter_options', $default );
-	
+	// Set default options if not provided.
+	$default = array(
+		'all'       => 1,
+		'just-me'   => 1,
+		'favorites' => 1,
+		'groups'    => 1,
+		'friends'   => 1,
+		'mentions'  => 1,
+		'following' => 1,
+	);
+
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_filter_options', $args );
+
 	// Always ensure 'all' is enabled.
 	if ( empty( $options['all'] ) ) {
 		$options['all'] = 1;
@@ -2879,21 +2887,26 @@ function bb_get_activity_timeline_filter_options_labels() {
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @param array $default Array of default activity timeline filter options.
+ * @param array $args Array of default activity timeline filter options.
  *
  * @return array Array of enabled activity timeline filters options.
  */
-function bb_get_enabled_activity_timeline_filter_options( $default = array(
-	'just-me'   => 1,
-	'favorites' => 1,
-	'groups'    => 1,
-	'friends'   => 1,
-	'mentions'  => 1,
-	'following' => 1,
-) ) {
+function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
 
-	$options = bp_get_option( 'bb_activity_timeline_filter_options', $default );
-	
+	// Set default options if not provided.
+	$default = array(
+		'just-me'   => 1,
+		'favorites' => 1,
+		'groups'    => 1,
+		'friends'   => 1,
+		'mentions'  => 1,
+		'following' => 1,
+	);
+
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_timeline_filter_options', $args );
+
 	// Always ensure 'just-me' is enabled.
 	if ( empty( $options['just-me'] ) ) {
 		$options['just-me'] = 1;
@@ -2911,7 +2924,7 @@ function bb_get_enabled_activity_timeline_filter_options( $default = array(
  */
 function bb_get_activity_sorting_options_labels() {
 	$sorting_options = array(
-		'date_recorded' => __( 'Most recent', 'buddyboss' ),
+		'date_recorded' => __( 'New posts', 'buddyboss' ),
 		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
 	);
 	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
@@ -2922,17 +2935,23 @@ function bb_get_activity_sorting_options_labels() {
  *
  * @since BuddyBoss [BBVERSION}
  *
- * @param array $default Array of default activity sorting options.
+ * @param array $args Array of default activity sorting options.
  *
  * @return array Array of enabled activity sorting options.
  */
-function bb_get_enabled_activity_sorting_options( $default = array(
-	'date_recorded' => 1,
-	'date_updated'  => 1,
-) ) {
+function bb_get_enabled_activity_sorting_options( $args = array() ) {
 
-	$options = bp_get_option( 'bb_activity_sorting_options', $default );
-	
+	// Set default options if not provided.
+	$default = array(
+		'date_recorded' => 1,
+		'date_updated'  => 1,
+	);
+
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_sorting_options', $args );
+	$options = array_map( 'intval', $options );
+
 	// Always ensure 'date_recorded' is enabled.
 	if ( empty( $options['date_recorded'] ) ) {
 		$options['date_recorded'] = 1;

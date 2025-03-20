@@ -9984,7 +9984,7 @@ function bb_pro_sso_version() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $filters Array of filter options.
- * 
+ *
  * @return array $filters Array of allowed filter options.
  */
 function bb_filter_activity_filter_scope_keys( $filters = array() ) {
@@ -9997,7 +9997,8 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 				( 'friends' === $key && ! bp_is_active( 'friends' ) ) ||
 				( 'following' === $key && ! bp_is_activity_follow_active() ) ||
 				( 'groups' === $key && ! bp_is_active( 'groups' ) ) ||
-				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) )
+				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) ) ||
+				( 'favorites' === $key && ! bp_is_activity_like_active() )
 			) {
 				unset( $filters[ $key ] );
 			}

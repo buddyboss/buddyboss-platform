@@ -347,56 +347,7 @@ class BP_Activity_Activity {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
-		// Activity comment or if the media, document, video related activity.
-		if ( 'activity_comment' === $this->type || in_array( $this->privacy, array( 'media', 'document', 'video' ), true ) ) {
-
-			// Check if the item_id and secondary_item_id are same.
-			if ( $this->item_id === $this->secondary_item_id && ! in_array( $this->privacy, array( 'media', 'document', 'video' ), true ) ) {
-				// Update the date_updated of the parent activity item.
-				bb_activity_update_date_updated( $this->item_id, $this->date_updated );
-
-				// Clear the cache for the parent activity item.
-				bp_activity_clear_cache_for_activity( $this );
-			} else {
-				// Get the parent activity id if the activity is a comment.
-				$main_activity_object = bb_activity_get_comment_parent_activity_object( $this );
-
-				// Update the date_updated of the parent activity item.
-				bb_activity_update_date_updated( $main_activity_object->id, $this->date_updated );
-
-				// Clear the cache for the parent activity item.
-				bp_activity_clear_cache_for_activity( $main_activity_object );
-
-				// If individual medias activity then also get the most parent activity.
-				if (
-					in_array( $main_activity_object->privacy, array( 'media', 'document', 'video' ), true ) &&
-					'activity_update' === $main_activity_object->type &&
-					! empty( $main_activity_object->secondary_item_id )
-				) {
-
-					// Update the date_updated of the parent activity item.
-					bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $this->date_updated );
-
-					$intermediate_activity = new BP_Activity_Activity( $main_activity_object->secondary_item_id );
-					if ( ! empty( $intermediate_activity->id ) ) {
-
-						// Clear the cache for the parent activity item.
-						bp_activity_clear_cache_for_activity( $intermediate_activity );
-						unset( $intermediate_activity );
-					}
-				}
-
-				// Get the parent comment activity object.
-				$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $this, $main_activity_object->id );
-
-				// Update the date_updated of the parent comment activity item.
-				bb_activity_update_date_updated( $parent_comment_activity_object->id, $this->date_updated );
-
-				// Clear the cache for the parent activity item.
-				bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
-
-			}
-		}
+		bb_activity_update_date_updated_and_clear_cache( $this, $this->date_updated );
 
 		/**
 		 * Fires after an activity item has been saved to the database.

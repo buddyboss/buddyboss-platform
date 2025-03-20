@@ -7420,7 +7420,7 @@ function bb_activity_edit_update_document_status( $document_ids ) {
  * @return bool True on success.
  */
 function bb_activity_update_date_updated( $activity_id, $time ) {
-	global $wpdb;
+	global $wpdb, $bp;
 
 	// Check if the time is empty then exit.
 	if ( empty( $time ) ) {
@@ -7437,8 +7437,6 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
 
 	unset( $date );
 
-	$bp = buddypress();
-
 	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET date_updated = %s WHERE id = %d", $time, $activity_id ); // phpcs:ignore
 
 	if ( false === $wpdb->query( $q ) ) { // phpcs:ignore
@@ -7449,32 +7447,47 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
 }
 
 /**
- * Get parent activity id of the activity item.
+ * Get parent activity object of the activity item.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param object $activity Activity object.
- *
+ * 
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_activity_object( $activity ) {
-
+	global $wpdb, $bp;
 	$is_media = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
 
-	// Loop through find the parent id until the item_id and secondary_item_id are same.
+	// Loop until the item_id and secondary_item_id are the same.
 	while (
 		$activity->item_id !== $activity->secondary_item_id &&
 		(
-			// Get medias individual activity if muliple uploaded.
+			// Get media's individual activity if multiple were uploaded.
 			( $is_media && 'groups' !== $activity->component ) ||
 			( ! $is_media && 'activity_comment' === $activity->type )
 		)
 	) {
-		$temp_activity = new BP_Activity_Activity( $activity->item_id );
-		if ( empty( $temp_activity->id ) ) {
-			unset( $temp_activity );
+		$item_id = (int) $activity->item_id;
+
+		// Try to get from cache first.
+		$cache_key     = 'bb_activity_parent_' . $item_id;
+		$temp_activity = wp_cache_get( $cache_key, 'bb_activity_parents' );
+
+		if ( false === $temp_activity ) {
+			// Fetch from database if not in cache.
+			$temp_activity = bb_activity_get_raw_db_object( $item_id );
+
+			// Cache the result if found.
+			if ( ! empty( $temp_activity ) ) {
+				wp_cache_set( $cache_key, $temp_activity, 'bb_activity_parents' );
+			}
+		}
+
+		if ( empty( $temp_activity ) || empty( $temp_activity->id ) ) {
 			return $activity;
 		}
+
 		$activity = $temp_activity;
 	}
 
@@ -7492,12 +7505,32 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_id ) {
+	global $wpdb, $bp;
+
+	// Early bail if activity is invalid.
+	if ( empty( $activity ) || empty( $activity->id ) ) {
+		return $activity;
+	}
 
 	// Loop through find the id based on the secondary_item_id and having a type is activity_comment and item_id and secondary_item_id equal to $main_activity_id.
 	while ( $activity->secondary_item_id !== $main_activity_id || 'activity_comment' !== $activity->type ) {
-		$temp_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-		if ( empty( $temp_activity->id ) ) {
-			unset( $temp_activity );
+		// Use direct database query instead of creating a BP_Activity_Activity object.
+		$secondary_item_id = (int) $activity->secondary_item_id;
+
+		// Try to get from cache first.
+		$cache_key     = 'bb_activity_comment_parent_' . $secondary_item_id . '_' . $main_activity_id;
+		$temp_activity = wp_cache_get( $cache_key, 'bb_activity_comment_parents' );
+		if ( false === $temp_activity ) {
+			// If not in cache, fetch from database.
+			$temp_activity = bb_activity_get_raw_db_object( $secondary_item_id );
+
+			// Cache the result if found.
+			if ( ! empty( $temp_activity ) ) {
+				wp_cache_set( $cache_key, $temp_activity, 'bb_activity_comment_parents' );
+			}
+		}
+
+		if ( empty( $temp_activity ) || empty( $temp_activity->id ) ) {
 			return $activity;
 		}
 		$activity = $temp_activity;
@@ -7536,4 +7569,90 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	 * @param object $activity Activity data object.
 	 */
 	return apply_filters( 'bb_blogs_format_activity_action_disabled_post_type_feed', $action, $activity );
+}
+
+/**
+ * Get the raw database object for an activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id The ID of the activity.
+ *
+ * @return object|false The raw database object for the activity, or false if not found.
+ */
+function bb_activity_get_raw_db_object( $activity_id ) {
+	global $wpdb, $bp;
+
+	// Fetch the activity directly from the database.
+	$activity = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT * FROM {$bp->activity->table_name} WHERE id = %d",
+			(int) $activity_id
+		)
+	);
+
+	if ( empty( $activity ) || empty( $activity->id ) ) {
+		return false;
+	}
+
+	return $activity;
+}
+
+/**
+ * Common function to update activity date updated and clear cache.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity     The activity object.
+ * @param string $date_updated The date updated to set.
+ *
+ * @return void
+ */
+function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updated = '' ) {
+	if ( empty( $activity ) || empty( $activity->id ) ) {
+		return;
+	}
+
+	$date_updated     = empty( $date_updated ) ? bp_core_current_time() : $date_updated;
+	$is_media_related = in_array( $activity->privacy, array( 'media', 'document', 'video' ), true );
+
+	// Process for both reaction and non-reaction updates.
+	if ( 'activity_comment' === $activity->type || $is_media_related ) {
+
+		// Check if the item_id and secondary_item_id are same.
+		if ( $activity->item_id === $activity->secondary_item_id && ! $is_media_related ) {
+			bb_activity_update_date_updated( $activity->item_id, $date_updated );
+
+			$intermediate_activity = bb_activity_get_raw_db_object( $activity->item_id );
+			if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
+				bp_activity_clear_cache_for_activity( $intermediate_activity );
+				unset( $intermediate_activity );
+			}
+
+		} else {
+
+			// Get the parent activity id if the activity is a comment or the sub media, document, video activity.
+			$main_activity_object = bb_activity_get_comment_parent_activity_object( $activity );
+
+			// Update the date_updated of the parent activity item.
+			bb_activity_update_date_updated( $main_activity_object->id, $date_updated );
+			bp_activity_clear_cache_for_activity( $main_activity_object );
+
+			// If individual medias activity then also get the most parent activity.
+			if ( $is_media_related && 'activity_update' === $main_activity_object->type && ! empty( $main_activity_object->secondary_item_id ) ) {
+				bb_activity_update_date_updated( $main_activity_object->secondary_item_id, $date_updated );
+
+				$intermediate_activity = bb_activity_get_raw_db_object( $main_activity_object->secondary_item_id );
+				if ( ! empty( $intermediate_activity ) && ! empty( $intermediate_activity->id ) ) {
+					bp_activity_clear_cache_for_activity( $intermediate_activity );
+					unset( $intermediate_activity );
+				}
+			}
+
+			// Get the parent comment activity object.
+			$parent_comment_activity_object = bb_activity_get_comment_parent_comment_activity_object( $activity, $main_activity_object->id );
+			bb_activity_update_date_updated( $parent_comment_activity_object->id, $date_updated );
+			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
+		}
+	}
 }

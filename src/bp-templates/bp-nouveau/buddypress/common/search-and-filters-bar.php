@@ -102,31 +102,31 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
-				<span class="selected"><?php echo strtolower( $filters_labels[ $default_selected ] ); ?></span>
+				<span class="selected"><?php echo strtolower( esc_html( $filters_labels[ $default_selected ] ) ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 			<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 				<ul role="listbox">
 					<?php
-						if ( ! empty ( $activity_filters ) ) {
-							foreach( $activity_filters as $key => $is_enabled ) {
+					if ( ! empty( $activity_filters ) ) {
+						foreach ( $activity_filters as $key => $is_enabled ) {
 
-								// Skip filters not enabled or without labels.
-								if (
-									empty( $is_enabled ) ||
-									empty( $filters_labels[ $key ] ) ||
-									( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
-								) {
-									continue;
-								}
-
-								?>
-								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo $filters_labels[ $key ]; ?></a></li>
-								<?php
+							// Skip filters not enabled or without labels.
+							if (
+								empty( $is_enabled ) ||
+								empty( $filters_labels[ $key ] ) ||
+								( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
+							) {
+								continue;
 							}
 
-							unset( $activity_filters );
+							?>
+								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
+								<?php
 						}
+
+						unset( $activity_filters );
+					}
 					?>
 				</ul>
 			</div>
@@ -137,11 +137,11 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 	arsort( $avail_sorting_options );
 	$default_selected = key( $avail_sorting_options );
-	if ( ! empty ( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, false ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
+	if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, true ) && array_count_values( $avail_sorting_options )[1] > 1 ) {
 		$hide_class = '';
 	} else {
 		$hide_class = 'bp-hide';
-		if ( empty ( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, false ) ) {
+		if ( empty( $avail_sorting_options ) || ! in_array( 1, $avail_sorting_options, true ) ) {
 			$avail_sorting_options = array( 'date_recorded' => 1 );
 		}
 	}
@@ -151,20 +151,20 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo strtolower( $sorting_labels[ $default_selected ] ); ?></span>
+				<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 
 			<div class="subnav-filters-modal" id="bb-subnav-filter-by">
 				<ul role="listbox">
 					<?php
-					if ( ! empty ( $avail_sorting_options ) ) {
-						foreach( $avail_sorting_options as $key => $is_enabled ) {
+					if ( ! empty( $avail_sorting_options ) ) {
+						foreach ( $avail_sorting_options as $key => $is_enabled ) {
 							if ( empty( $is_enabled ) || empty( $sorting_labels[ $key ] ) ) {
 								continue;
 							}
 							?>
-							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo $sorting_labels[ $key ]; ?></a></li>
+							<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
 							<?php
 						}
 					}
