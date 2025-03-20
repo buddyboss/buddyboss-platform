@@ -12858,7 +12858,7 @@ html[dir="rtl"] .pc_detailed_progress li span.completed_staus {
 }
 
 .bb-group-card .bb-card-footer .bb-card-action:first-of-type {
-  flex: 1 1 60.00%;
+  flex: 1 1 60%;
 }
 
 .bb-card-footer .card-button,
