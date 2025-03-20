@@ -2819,10 +2819,16 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.dropzone.on(
 					'uploadprogress',
-					function() {
-						if ( bp.Nouveau.dropZoneGlobalProgress ) {
-							bp.Nouveau.dropZoneGlobalProgress( this );
-						}
+					function( element ) {
+						var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ],
+							radius        = circle.r.baseVal.value,
+							circumference = radius * 2 * Math.PI;
+
+						circle.style.strokeDasharray  = circumference + ' ' + circumference;
+						circle.style.strokeDashoffset = circumference - (
+							element.upload.progress.toFixed( 0 ) / 100 * circumference
+						);
+						$( element.previewElement ).find( '.dz-progress [data-dz-progress]' ).text( element.upload.progress.toFixed( 0 ) + '%' );
 						Backbone.trigger( 'triggerMediaInProgress' );
 					}
 				);
