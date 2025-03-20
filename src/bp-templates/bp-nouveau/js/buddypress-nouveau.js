@@ -4835,19 +4835,39 @@ window.bp = window.bp || {};
 				$profileCard.find( '.bb-card-footer' ).addClass( 'bb-card-footer--plain' );
 			}
 
+			var buttonRenderCount = 0;
+
+			var $messageButton = $profileCard.find( '.bb-card-action-message' );
+			if ( $messageButton.length ) {
+				if ( data.can_send_message && buttonRenderCount < 2 ) {
+					$messageButton.find( '.send-message' ).attr( 'href', data.message_url );
+					buttonRenderCount++;
+					$messageButton.removeClass( 'bp-hide' );
+				} else {
+					$messageButton.addClass( 'bp-hide' );
+				}
+			}
+
 			var $followButtonWrapper = $profileCard.find( '.bb-card-action-follow' );
 			if ( $followButtonWrapper.length ) {
-				$followButtonWrapper.html( data.follow_button_html );
+				if ( data.follow_button_html && buttonRenderCount < 2  ) {
+					$followButtonWrapper.html( data.follow_button_html );
+					buttonRenderCount++;
+					$followButtonWrapper.removeClass( 'bp-hide' );
+				} else {
+					$followButtonWrapper.addClass( 'bp-hide' );
+				}
 			}
 
 			var $connectButtonWrapper = $profileCard.find( '.bb-card-action-connect' );
 			if ( $connectButtonWrapper.length ) {
-				$connectButtonWrapper.html( data.friend_button_html );
-			}
-
-			var $messageButton = $profileCard.find( '.send-message' );
-			if ( $messageButton.length && data.can_send_message ) {
-				$messageButton.attr( 'href', data.message_url );
+				if ( data.friend_button_html && buttonRenderCount < 2 ) {
+					$connectButtonWrapper.html( data.friend_button_html );
+					buttonRenderCount++;
+					$connectButtonWrapper.removeClass( 'bp-hide' );
+				} else {
+					$connectButtonWrapper.addClass( 'bp-hide' );
+				}
 			}
 
 			bp.Nouveau.bindPopoverEvents();
@@ -4860,7 +4880,7 @@ window.bp = window.bp || {};
 			$( '#buddypress #profile-card, #bbpress-forums #profile-card, #page #profile-card' ).remove();
 			var profileCardTemplate = bp.template( 'profile-card-popup' );
 			var renderedProfileCard = profileCardTemplate();
-			
+
 			if ( $( '#bbpress-forums' ).length ) {
 				$( '#bbpress-forums' ).append( renderedProfileCard );
 			} else if ( $( '#buddypress' ).length ) {
