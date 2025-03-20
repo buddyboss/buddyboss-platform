@@ -122,7 +122,7 @@
 									var image_style = 'width:' + media_width + '; height:' + media_height;
 								}
 							#>
-							<a class="bb-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
+							<a class="bb-rl-open-media-theatre bb-photo-cover-wrap bb-item-cover-wrap"
 								data-id="{{data.media[i].id}}"
 								data-attachment-id="{{data.media[i].attachment_id}}"
 								data-attachment-full="{{data.media[i].full}}"
