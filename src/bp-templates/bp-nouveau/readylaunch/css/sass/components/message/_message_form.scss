@@ -275,6 +275,7 @@
 		background-color: transparent;
 		visibility: hidden;
 		opacity: 0.6;
+		z-index: 1;
 
 		&.active {
 			visibility: visible;

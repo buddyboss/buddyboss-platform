@@ -1478,6 +1478,7 @@ body.messages .bb-rl-content-wrapper {
   background-color: transparent;
   visibility: hidden;
   opacity: 0.6;
+  z-index: 1;
 }
 
 #bp-message-content .medium-editor-toolbar.active {
