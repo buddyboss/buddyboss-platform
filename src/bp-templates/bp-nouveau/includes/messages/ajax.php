@@ -1950,6 +1950,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$group_joined_date = $joined_date;
 				}
 			}
+
+			$group_status      = bp_get_group_type( $get_group );
+			$group_last_active = bp_get_group_last_active( $get_group );
 		} else {
 
 			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
@@ -1972,6 +1975,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$group_avatar = $avatar;
 				}
 			}
+
+			$group_status      = $wpdb->get_var( "SELECT `status` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" );
+			$group_last_active = sprintf(
+				/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+				esc_attr__( 'Active %s', 'buddyboss' ),
+				wp_kses_post( groups_get_groupmeta( $group_id, 'last_activity' ) )
+			);
 		}
 
 		$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
@@ -2096,6 +2106,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'avatars'                   => bp_messages_get_avatars( $bp_get_the_thread_id, bp_loggedin_user_id() ),
 		'is_thread_archived'        => $is_thread_archived,
 		'group_joined_date'         => $group_joined_date,
+		'group_status'              => $group_status,
+		'group_last_active'         => $group_last_active,
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
@@ -2140,7 +2152,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->thread['recipients']['members'][ $count ]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
 				}
 
-				$count ++;
+				if ( 1 === $recipients_count && $recipient->user_id !== $login_user_id ) {
+					$thread->thread['recipients']['members'][ $count ]['joined_date'] = bb_get_member_joined_date( $recipient->user_id );
+					$thread->thread['recipients']['members'][ $count ]['last_active'] = bp_get_last_activity( $recipient->user_id );
+
+					$follower_ids   = bp_get_follower_ids( array( 'user_id' => $recipient->user_id ) );
+					$follower_array = explode( ',', $follower_ids );
+
+					$thread->thread['recipients']['members'][ $count ]['followers_count'] = count( $follower_array );
+				}
+
+				++$count;
 			}
 		}
 

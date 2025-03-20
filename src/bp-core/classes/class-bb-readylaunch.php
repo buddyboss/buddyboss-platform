@@ -97,6 +97,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					BB_Group_Readylaunch::instance();
 				}
 
+				if ( bp_is_messages_component() ) {
+					BB_Messages_Readylaunch::instance();
+				}
+
 				add_filter(
 					'template_include',
 					array(

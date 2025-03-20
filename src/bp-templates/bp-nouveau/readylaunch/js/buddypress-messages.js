@@ -5503,6 +5503,11 @@ window.bp = window.bp || {};
 					this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
 				}
 
+				// Add the right panel view.
+				var rightPanel          = new bp.Views.userMessageRightPanel( { model : this.options.thread } );
+				rightPanel.el.className = 'bb-rl-messages-right-panel';
+				$( '#bb-rl-messages-right-panel' ).html( rightPanel.render().el );
+
 				$( '#bp-message-thread-list li' ).each(
 					function () {
 						$( this ).removeClass( 'divider' );
@@ -6060,6 +6065,159 @@ window.bp = window.bp || {};
 			},
 		}
 	);
+
+	bp.Views.userMessageRightPanel = bp.Nouveau.Messages.View.extend( {
+		tagName  : 'div',
+		template : bp.template( 'bp-messages-right-panel' ),
+
+		events : {
+			'click .bb-rl-tab-item' : 'changeTab'
+		},
+
+		initialize : function () {
+			this.render              = this.render.bind( this );
+			this.fetchRightPanelData = this.fetchRightPanelData.bind( this );
+			this.render();
+
+			// Once rendered, fetch the data
+			if ( this.model && this.model.get( 'id' ) ) {
+				this.fetchRightPanelData();
+			}
+		},
+
+		render : function () {
+			// Call parent render method
+			bp.Nouveau.Messages.View.prototype.render.apply( this, arguments );
+			return this;
+		},
+
+		changeTab : function ( e ) {
+			var $target = $( e.currentTarget );
+			var tabId   = $target.data( 'tab' );
+
+			// Update active state
+			this.$el.find( '.bb-rl-tab-item' ).removeClass( 'active' );
+			$target.addClass( 'active' );
+
+			// Show the selected tab content
+			this.$el.find( '.bb-rl-tab-content' ).removeClass( 'active' );
+			this.$el.find( '#' + tabId + '-tab' ).addClass( 'active' );
+		},
+
+		fetchRightPanelData : function () {
+			var self     = this;
+			var threadId = this.model.get( 'id' );
+
+			// Show loading state
+			this.$el.find( '.bb-rl-message-right-loading' ).show();
+			this.$el.find( '.bb-rl-no-content' ).hide();
+
+			// AJAX request to get participants, media, and files
+			$.ajax( {
+				type     : 'POST',
+				url      : bbRlAjaxUrl,
+				data     : {
+					action    : 'bb_get_thread_right_panel_data',
+					_wpnonce  : bbRlMessagesNonces.bb_messages_right_panel, // Use the nonce from the hidden input
+					thread_id : threadId
+				},
+				success  : function ( response ) {
+					if ( response.success ) {
+						self.renderMessagesParticipants( response.data.participants );
+						self.renderMessagesMedia( response.data.media );
+						self.renderMessagesFiles( response.data.files );
+					}
+				},
+				complete : function () {
+					// Hide loading indicators
+					self.$el.find( '.bb-rl-message-right-loading' ).hide();
+				}
+			} );
+		},
+
+		renderMessagesParticipants : function ( participants ) {
+			var $container = this.$el.find( '#participants-tab' );
+			$container.empty();
+
+			if ( participants.length === 0 ) {
+				return;
+			}
+
+			var renderParticipants = new bp.Views.RenderParticipants( participants );
+			$container.html( renderParticipants.render().el );
+		},
+
+		renderMessagesMedia : function ( media ) {
+			var $container = this.$el.find( '#media-tab' );
+			$container.empty();
+
+			if ( media.length === 0 ) {
+				this.$el.find( '#media-tab .bb-rl-no-content' ).show();
+				return;
+			}
+
+			var renderMedia = new bp.Views.RenderMessagesMedia( media );
+			$container.html( renderMedia.render().el );
+		},
+
+		renderMessagesFiles : function ( files ) {
+			var $container = this.$el.find( '#files-tab' );
+			$container.empty();
+
+			if ( files.length === 0 ) {
+				this.$el.find( '#files-tab .bb-rl-no-content' ).show();
+				return;
+			}
+
+			var renderFiles = new bp.Views.RenderMessagesFiles( files );
+			$container.html( renderFiles.render().el );
+		}
+	} );
+
+	bp.Views.RenderParticipants = bp.Nouveau.Messages.View.extend( {
+		tagName   : 'div',
+		className : 'bb-rl-participants-list',
+		template  : bp.template( 'bp-messages-right-panel-participants' ),
+
+		initialize : function ( participants ) {
+			this.data = participants;
+		},
+
+		render : function () {
+			this.$el.html( this.template( this.data ) );
+			return this;
+		},
+	} );
+
+	bp.Views.RenderMessagesMedia = bp.Nouveau.Messages.View.extend( {
+		tagName   : 'div',
+		className : 'bb-rl-media-grid',
+		template  : bp.template( 'bp-messages-right-panel-media' ),
+
+		initialize : function ( media ) {
+			this.data = media;
+		},
+
+		render : function () {
+			this.$el.html( this.template( this.data ) );
+			return this;
+		},
+	} );
+
+	bp.Views.RenderMessagesFiles = bp.Nouveau.Messages.View.extend( {
+		tagName   : 'div',
+		className : 'bb-rl-files-list',
+		template  : bp.template( 'bp-messages-right-panel-files' ),
+
+		initialize : function ( files ) {
+			this.data = files;
+		},
+
+		render : function () {
+			this.$el.html( this.template( this.data ) );
+			return this;
+		},
+	} );
 
 	// Launch BP Nouveau Groups.
 	bp.Nouveau.Messages.start();
