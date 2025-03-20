@@ -1895,6 +1895,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_id                  = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
 	$message_from              = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 	$is_group_message_thread   = bb_messages_is_group_thread( $bp_get_the_thread_id );
+	$group_status              = '';
+	$group_last_active         = '';
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );

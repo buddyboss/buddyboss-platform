@@ -185,26 +185,35 @@
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-right-panel-media">
-    <# _.each( data, function( item ) { #>
-        <div class="bb-rl-media-item">
-            <a href="{{item.url}}" class="bb-open-media">
-                <img src="{{item.url}}" alt="{{item.title}}">
-            </a>
-        </div>
-    <# }); #>
+    <# if ( data.length > 0 ) {
+        _.each( data, function( item ) { #>
+            <div class="bb-rl-media-item">
+                <a href="{{item.url}}" class="bb-open-media">
+                    <img src="{{item.url}}" alt="{{item.title}}">
+                </a>
+            </div>
+        <# }); #>
+    <# } else { #>
+        <div class="bb-rl-no-content"><?php esc_html_e( 'No media found in this conversation.', 'buddyboss' ); ?></div>
+    <# } #>
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-right-panel-files">
-    <# _.each( data, function( file ) { #>
-        <div class="bb-rl-file-item">
-            <div class="bb-rl-file-icon bb-rl-file-{{file.extension}}">
-                {{file.extension.toUpperCase()}}
+    <# 
+    if ( data.length > 0 ) {
+        _.each( data, function( file ) { #>
+            <div class="bb-rl-file-item">
+                <div class="bb-rl-file-icon bb-rl-file-{{file.extension}}">
+                    {{file.extension.toUpperCase()}}
+                </div>
+                <div class="bb-rl-file-info">
+                    <h4 class="bb-rl-file-name">
+                        <a href="{{file.url}}" target="_blank">{{file.title}}</a>
+                    </h4>
+                </div>
             </div>
-            <div class="bb-rl-file-info">
-                <h4 class="bb-rl-file-name">
-                    <a href="{{file.url}}" target="_blank">{{file.title}}</a>
-                </h4>
-            </div>
-        </div>
-    <# }); #>
+        <# }); #>
+    <# } else { #>
+        <div class="bb-rl-no-content"><?php esc_html_e( 'No files found in this conversation.', 'buddyboss' ); ?></div>
+    <# } #>
 </script>

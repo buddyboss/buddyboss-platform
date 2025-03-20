@@ -6139,10 +6139,6 @@ window.bp = window.bp || {};
 			var $container = this.$el.find( '#participants-tab' );
 			$container.empty();
 
-			if ( participants.length === 0 ) {
-				return;
-			}
-
 			var renderParticipants = new bp.Views.RenderParticipants( participants );
 			$container.html( renderParticipants.render().el );
 		},
@@ -6151,11 +6147,6 @@ window.bp = window.bp || {};
 			var $container = this.$el.find( '#media-tab' );
 			$container.empty();
 
-			if ( media.length === 0 ) {
-				this.$el.find( '#media-tab .bb-rl-no-content' ).show();
-				return;
-			}
-
 			var renderMedia = new bp.Views.RenderMessagesMedia( media );
 			$container.html( renderMedia.render().el );
 		},
@@ -6163,11 +6154,6 @@ window.bp = window.bp || {};
 		renderMessagesFiles : function ( files ) {
 			var $container = this.$el.find( '#files-tab' );
 			$container.empty();
-
-			if ( files.length === 0 ) {
-				this.$el.find( '#files-tab .bb-rl-no-content' ).show();
-				return;
-			}
 
 			var renderFiles = new bp.Views.RenderMessagesFiles( files );
 			$container.html( renderFiles.render().el );
