@@ -161,14 +161,14 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				// If the Dropdown is going to be closed, then return.
-				if ( $container.hasClass( 'selected' ) ) {
-					return;
-				}
-
 				// Check if there's already a request in progress.
 				if ( $container.data( 'loading' ) ) {
 					return; // Exit if an AJAX request is already in progress.
+				}
+
+				// If it's the notification bell but dropdown is already open (toggle off), don't make AJAX request.
+				if ( $target.hasClass( 'notification-link' ) && $container.hasClass( 'selected' ) ) {
+					return;
 				}
 
 				// Set the 'loading' flag to true.
@@ -246,6 +246,11 @@ window.bp = window.bp || {};
 							mainContainerID.data( 'loading', false );
 							mainContainerID.find( '.notification-list' ).html( '<p>Failed to load data. Please try again.</p>' );
 						},
+						complete : function () {
+							// Always reset the loading state, regardless of success or error.
+							mainContainerID.data( 'loading', false );
+							mainContainerID.find( '.notification-list' ).removeClass( 'loading' );
+						}
 					}
 				);
 			},
@@ -353,7 +358,8 @@ window.bp = window.bp || {};
 				current.toggleClass( 'selected' );
 				if (
 					'header-notifications-dropdown-elem' === current.attr( 'id' ) &&
-					! current.hasClass( 'selected' )
+					! current.hasClass( 'selected' ) &&
+					( bp.Readylaunch.markAsReadNotifications.length > 0 || bp.Readylaunch.deletedNotifications.length > 0 )
 				) {
 					bp.Readylaunch.beforeUnload();
 				}
@@ -439,7 +445,7 @@ window.bp = window.bp || {};
 					0 === bp.Readylaunch.markAsReadNotifications.length &&
 					0 === bp.Readylaunch.deletedNotifications.length
 				) {
-					return false;
+					return false; // Exit early without making AJAX call when no notifications to process.
 				}
 
 				$.ajax(
