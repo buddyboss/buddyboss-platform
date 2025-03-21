@@ -2076,15 +2076,15 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 }
 
 .bb-rl-messages-right-panel .bb-rl-media-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: var(--bb-rl-space-100);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-50);
 }
 
 .bb-rl-messages-right-panel .bb-rl-media-grid .bb-rl-media-item {
   position: relative;
-  width: 100%;
-  padding-bottom: 100%;
+  width: 86px;
+  height: 86px;
   overflow: hidden;
   border-radius: var(--bb-rl-radius-md);
 }

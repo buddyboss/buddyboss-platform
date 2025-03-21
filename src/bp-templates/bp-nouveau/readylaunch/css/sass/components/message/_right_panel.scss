@@ -153,14 +153,14 @@
 	
 	// Media Grid styling to match the screenshot
 	.bb-rl-media-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		grid-gap: var(--bb-rl-space-100);
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-50);
 		
 		.bb-rl-media-item {
 			position: relative;
-			width: 100%;
-			padding-bottom: 100%; // 1:1 aspect ratio
+			width: 86px;
+			height: 86px;
 			overflow: hidden;
 			border-radius: var(--bb-rl-radius-md);
 			
