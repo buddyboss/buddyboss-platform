@@ -5,8 +5,8 @@
 	display: flex;
 	flex-direction: column;
 	height: 80vh;
-    max-height: 80vh;
-    min-height: 670px;
+	max-height: 80vh;
+	min-height: 670px;
 
 	.bb-rl-message-profile,
 	.bb-rl-message-multiple-threads {
@@ -181,11 +181,10 @@
 		}
 	}
 	
-	// Files list styling to match the screenshot
 	.bb-rl-files-list {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		grid-gap: var(--bb-rl-space-100);
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-50);
 		
 		.bb-rl-file-item {
 			display: flex;
@@ -193,89 +192,32 @@
 			align-items: center;
 			padding: var(--bb-rl-space-100);
 			text-align: center;
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			background-color: var(--bb-rl-background-secondary-color);
+			border-radius: var(--bb-rl-radius-base);
+			width: 86px;
 			
 			.bb-rl-file-icon {
-				width: 60px;
-				height: 70px;
-				background-color: #f5f5f5;
-				border-radius: var(--bb-rl-radius-sm);
-				display: flex;
-				align-items: center;
-				justify-content: center;
+				color: var(--bb-rl-icon-secondary-color);
+				font-size: 48px;
+				font-weight: 500;
 				margin-bottom: var(--bb-rl-space-100);
-				color: #777;
-				font-weight: 600;
-				font-size: var(--bb-rl-font-size-sm);
-				position: relative;
-				
-				&:before {
-					content: "";
-					position: absolute;
-					top: 0;
-					right: 0;
-					width: 0;
-					height: 0;
-					border-style: solid;
-					border-width: 0 15px 15px 0;
-					border-color: transparent #ddd transparent transparent;
-				}
-				
-				&.bb-rl-file-pdf {
-					background-color: #f5f5f5;
-					color: #666;
-					
-					&:before {
-						border-color: transparent #ddd transparent transparent;
-					}
-				}
-				
-				&.bb-rl-file-doc, &.bb-rl-file-docx {
-					background-color: #e9f0f5;
-					color: #4a73a7;
-					
-					&:before {
-						border-color: transparent #c9d9e8 transparent transparent;
-					}
-				}
-				
-				&.bb-rl-file-xls, &.bb-rl-file-xlsx {
-					background-color: #effaef;
-					color: #3fa648;
-					
-					&:before {
-						border-color: transparent #cbe8cb transparent transparent;
-					}
-				}
-				
-				&.bb-rl-file-zip, &.bb-rl-file-rar {
-					background-color: #f9f5e8;
-					color: #b8860b;
-					
-					&:before {
-						border-color: transparent #e8dcb9 transparent transparent;
-					}
-				}
 			}
 			
 			.bb-rl-file-info {
 				width: 100%;
 				
 				.bb-rl-file-name {
+					color: var(--bb-rl-text-tertiary-color);
 					font-size: var(--bb-rl-font-size-xs);
-					margin: 0;
-					font-weight: 400;
+					font-weight: 500;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
 					max-width: 100%;
 					
 					a {
-						color: var(--bb-rl-text-color);
-						text-decoration: none;
-						
-						&:hover {
-							color: var(--bb-rl-brand-primary-color);
-						}
+						color: var(--bb-rl-text-tertiary-color);
 					}
 				}
 			}
@@ -289,15 +231,6 @@
 		justify-content: center;
 		align-items: center;
 		padding: var(--bb-rl-space-200);
-	}
-	
-	.bb-rl-loading-more {
-		padding: var(--bb-rl-space-100);
-		
-		.bb-rl-loading-spinner {
-			width: 20px;
-			height: 20px;
-		}
 	}
 	
 	// Empty state

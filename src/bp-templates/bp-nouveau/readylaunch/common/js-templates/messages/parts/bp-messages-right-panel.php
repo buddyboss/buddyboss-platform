@@ -211,9 +211,7 @@
     if ( data.length > 0 ) {
         _.each( data, function( file ) { #>
             <div class="bb-rl-file-item">
-                <div class="bb-rl-file-icon bb-rl-file-{{file.extension}}">
-                    {{file.extension.toUpperCase()}}
-                </div>
+                <i class="bb-rl-file-icon bb-icons-rl-file-{{file.extension}}"></i>
                 <div class="bb-rl-file-info">
                     <h4 class="bb-rl-file-name">
                         <a href="{{file.url}}" target="_blank" title="{{file.full_title}}">{{file.title}}</a>

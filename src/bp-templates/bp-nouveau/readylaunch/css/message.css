@@ -2105,9 +2105,9 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: var(--bb-rl-space-100);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bb-rl-space-50);
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item {
@@ -2116,69 +2116,17 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   align-items: center;
   padding: var(--bb-rl-space-100);
   text-align: center;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  background-color: var(--bb-rl-background-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  width: 86px;
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon {
-  width: 60px;
-  height: 70px;
-  background-color: #f5f5f5;
-  border-radius: var(--bb-rl-radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 48px;
+  font-weight: 500;
   margin-bottom: var(--bb-rl-space-100);
-  color: #777;
-  font-weight: 600;
-  font-size: var(--bb-rl-font-size-sm);
-  position: relative;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 15px 15px 0;
-  border-color: transparent #ddd transparent transparent;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-pdf {
-  background-color: #f5f5f5;
-  color: #666;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-pdf:before {
-  border-color: transparent #ddd transparent transparent;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-doc, .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-docx {
-  background-color: #e9f0f5;
-  color: #4a73a7;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-doc:before, .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-docx:before {
-  border-color: transparent #c9d9e8 transparent transparent;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-xls, .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-xlsx {
-  background-color: #effaef;
-  color: #3fa648;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-xls:before, .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-xlsx:before {
-  border-color: transparent #cbe8cb transparent transparent;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-zip, .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-rar {
-  background-color: #f9f5e8;
-  color: #b8860b;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-zip:before, .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-icon.bb-rl-file-rar:before {
-  border-color: transparent #e8dcb9 transparent transparent;
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-info {
@@ -2186,9 +2134,9 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-info .bb-rl-file-name {
+  color: var(--bb-rl-text-tertiary-color);
   font-size: var(--bb-rl-font-size-xs);
-  margin: 0;
-  font-weight: 400;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2196,12 +2144,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-info .bb-rl-file-name a {
-  color: var(--bb-rl-text-color);
-  text-decoration: none;
-}
-
-.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item .bb-rl-file-info .bb-rl-file-name a:hover {
-  color: var(--bb-rl-brand-primary-color);
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .bb-rl-messages-right-panel .bb-rl-message-right-loading,
@@ -2210,15 +2153,6 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   justify-content: center;
   align-items: center;
   padding: var(--bb-rl-space-200);
-}
-
-.bb-rl-messages-right-panel .bb-rl-loading-more {
-  padding: var(--bb-rl-space-100);
-}
-
-.bb-rl-messages-right-panel .bb-rl-loading-more .bb-rl-loading-spinner {
-  width: 20px;
-  height: 20px;
 }
 
 .bb-rl-messages-right-panel .bb-rl-no-content {
