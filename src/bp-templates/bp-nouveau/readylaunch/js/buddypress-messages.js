@@ -6081,16 +6081,134 @@ window.bp = window.bp || {};
 			this.fetchRightPanelData = this.fetchRightPanelData.bind( this );
 			this.render();
 
-			// Once rendered, fetch the data
+			// Once rendered, fetch the data.
 			if ( this.model && this.model.get( 'id' ) ) {
 				this.fetchRightPanelData();
 			}
+
+			// Initialize pagination variables.
+			this.currentPages = {
+				participants : 1,
+				media        : 1,
+				files        : 1
+			};
+			this.isLoading    = {
+				participants : false,
+				media        : false,
+				files        : false
+			};
+			this.hasMore      = {
+				participants : true,
+				media        : true,
+				files        : true
+			};
 		},
 
 		render : function () {
-			// Call parent render method
+			// Call parent render method.
 			bp.Nouveau.Messages.View.prototype.render.apply( this, arguments );
+
+			// Setup scroll handlers for each tab.
+			var self = this;
+			setTimeout( function () {
+				self.$el.find( '#participants-tab' ).on( 'scroll', function () {
+					self.handleTabScroll( 'participants' );
+				} );
+
+				self.$el.find( '#media-tab' ).on( 'scroll', function () {
+					self.handleTabScroll( 'media' );
+				} );
+
+				self.$el.find( '#files-tab' ).on( 'scroll', function () {
+					self.handleTabScroll( 'files' );
+				} );
+			}, 100 );
+
 			return this;
+		},
+
+		handleTabScroll : function ( tabType ) {
+			var $container = this.$el.find( '#' + tabType + '-tab' );
+
+			// Check if we're already loading or have no more items to load.
+			if ( this.isLoading[ tabType ] || ! this.hasMore[ tabType ] ) {
+				return;
+			}
+
+			// Check if we've scrolled near the bottom.
+			var scrollPos     = $container.scrollTop() + $container.innerHeight();
+			var contentHeight = $container[ 0 ].scrollHeight;
+
+			if ( scrollPos >= contentHeight - 100 ) { // Load more when within 100px of bottom.
+				this.loadMoreItems( tabType );
+			}
+		},
+
+		loadMoreItems : function ( tabType ) {
+			var self                  = this;
+			var threadId              = this.model.get( 'id' );
+			self.isLoading[ tabType ] = true;
+
+			// Add a loading indicator.
+			if ( ! self.$el.find( '#' + tabType + '-tab .bb-rl-loading-more' ).length ) {
+				self.$el.find( '#' + tabType + '-tab' ).append( '<div class="bb-rl-loading-more"><div class="bb-rl-loading-spinner"></div></div>' );
+			}
+
+			// AJAX request to get more items.
+			$.ajax( {
+				type     : 'POST',
+				url      : bbRlAjaxUrl,
+				data     : {
+					action    : 'bb_get_thread_right_panel_data',
+					_wpnonce  : bbRlMessagesNonces.bb_messages_right_panel,
+					thread_id : threadId,
+					page      : self.currentPages[ tabType ] + 1,
+					type      : tabType
+				},
+				success  : function ( response ) {
+					if ( response.success ) {
+						// Remove loading indicator.
+						self.$el.find( '#' + tabType + '-tab .bb-rl-loading-more' ).remove();
+
+						// Update pagination state.
+						self.currentPages[ tabType ] = response.data.page;
+						self.hasMore[ tabType ]      = response.data.has_more;
+
+						// Append new items based on tab type.
+						if ( 'participants' === tabType && response.data.participants.length ) {
+							var participantsList = self.$el.find( '#participants-tab .bb-rl-participants-list' );
+							var participantsView = participantsList.data( 'view' );
+							if ( participantsView && typeof participantsView.appendParticipants === 'function' ) {
+								participantsView.appendParticipants( response.data.participants );
+							} else {
+								var newParticipants = new bp.Views.RenderParticipants( response.data.participants );
+								participantsList.append( newParticipants.render().$el.html() );
+							}
+						} else if ( 'media' === tabType && response.data.media.length ) {
+							var mediaGrid = self.$el.find( '#media-tab .bb-rl-media-grid' );
+							var mediaView = mediaGrid.data( 'view' );
+							if ( mediaView && typeof mediaView.appendMedia === 'function' ) {
+								mediaView.appendMedia( response.data.media );
+							} else {
+								var newMedia = new bp.Views.RenderMessagesMedia( response.data.media );
+								mediaGrid.append( newMedia.render().$el.html() );
+							}
+						} else if ( 'files' === tabType && response.data.files.length ) {
+							var filesList = self.$el.find( '#files-tab .bb-rl-files-list' );
+							var filesView = filesList.data( 'view' );
+							if ( filesView && typeof filesView.appendFiles === 'function' ) {
+								filesView.appendFiles( response.data.files );
+							} else {
+								var newFiles = new bp.Views.RenderMessagesFiles( response.data.files );
+								filesList.append( newFiles.render().$el.html() );
+							}
+						}
+					}
+				},
+				complete : function () {
+					self.isLoading[ tabType ] = false;
+				}
+			} );
 		},
 
 		changeTab : function ( e ) {
@@ -6104,37 +6222,92 @@ window.bp = window.bp || {};
 			// Show the selected tab content
 			this.$el.find( '.bb-rl-tab-content' ).removeClass( 'active' );
 			this.$el.find( '#' + tabId + '-tab' ).addClass( 'active' );
+
+			// Load data for the tab if it hasn't been loaded yet
+			var tabType = tabId; // participants, media, or files
+			if ( this.$el.find( '#' + tabType + '-tab' ).is( ':empty' ) ||
+			     (
+				     this.$el.find( '#' + tabType + '-tab .bb-rl-message-right-loading' ).length &&
+				     ! this.$el.find( '#' + tabType + '-tab .bb-rl-media-grid, #' + tabType + '-tab .bb-rl-files-list, #' + tabType + '-tab .bb-rl-participants-list' ).length
+			     ) ) {
+				this.fetchTabData( tabType );
+			}
 		},
 
-		fetchRightPanelData : function () {
+		fetchTabData : function ( tabType ) {
 			var self     = this;
 			var threadId = this.model.get( 'id' );
 
 			// Show loading state
-			this.$el.find( '.bb-rl-message-right-loading' ).show();
-			this.$el.find( '.bb-rl-no-content' ).hide();
+			var $container = this.$el.find( '#' + tabType + '-tab' );
+			if ( ! $container.find( '.bb-rl-message-right-loading' ).length ) {
+				$container.html( '<div class="bb-rl-message-right-loading"><div class="bb-rl-loading-spinner"></div></div>' );
+			}
 
-			// AJAX request to get participants, media, and files
+			// Reset pagination for this tab
+			self.currentPages[ tabType ] = 1;
+			self.hasMore[ tabType ]      = true;
+			self.isLoading[ tabType ]    = true;
+
+			// AJAX request to get data for specific tab
 			$.ajax( {
 				type     : 'POST',
 				url      : bbRlAjaxUrl,
 				data     : {
 					action    : 'bb_get_thread_right_panel_data',
-					_wpnonce  : bbRlMessagesNonces.bb_messages_right_panel, // Use the nonce from the hidden input
-					thread_id : threadId
+					_wpnonce  : bbRlMessagesNonces.bb_messages_right_panel,
+					thread_id : threadId,
+					page      : 1,
+					type      : tabType
 				},
 				success  : function ( response ) {
 					if ( response.success ) {
-						self.renderMessagesParticipants( response.data.participants );
-						self.renderMessagesMedia( response.data.media );
-						self.renderMessagesFiles( response.data.files );
+						self.hasMore[ tabType ] = response.data.has_more;
+
+						// Render appropriate content based on tab type
+						if ( tabType === 'participants' ) {
+							self.renderMessagesParticipants( response.data.participants );
+						} else if ( tabType === 'media' ) {
+							self.renderMessagesMedia( response.data.media );
+						} else if ( tabType === 'files' ) {
+							self.renderMessagesFiles( response.data.files );
+						}
 					}
 				},
 				complete : function () {
 					// Hide loading indicators
-					self.$el.find( '.bb-rl-message-right-loading' ).hide();
+					$container.find( '.bb-rl-message-right-loading' ).hide();
+					self.isLoading[ tabType ] = false;
 				}
 			} );
+		},
+
+		fetchRightPanelData : function () {
+			var self = this;
+
+			// Reset pagination
+			self.currentPages = {
+				participants : 1,
+				media        : 1,
+				files        : 1
+			};
+			self.hasMore      = {
+				participants : true,
+				media        : true,
+				files        : true
+			};
+			self.isLoading    = {
+				participants : false,
+				media        : false,
+				files        : false
+			};
+
+			// Show loading state
+			this.$el.find( '.bb-rl-message-right-loading' ).show();
+			this.$el.find( '.bb-rl-no-content' ).hide();
+
+			// First load only participants tab data, load other tabs on demand
+			this.fetchTabData( 'participants' );
 		},
 
 		renderMessagesParticipants : function ( participants ) {
@@ -6143,6 +6316,9 @@ window.bp = window.bp || {};
 
 			var renderParticipants = new bp.Views.RenderParticipants( participants );
 			$container.html( renderParticipants.render().el );
+
+			// Store reference to the view for later use
+			$container.find( '.bb-rl-participants-list' ).data( 'view', renderParticipants );
 		},
 
 		renderMessagesMedia : function ( media ) {
@@ -6151,6 +6327,9 @@ window.bp = window.bp || {};
 
 			var renderMedia = new bp.Views.RenderMessagesMedia( media );
 			$container.html( renderMedia.render().el );
+
+			// Store reference to the view for later use
+			$container.find( '.bb-rl-media-grid' ).data( 'view', renderMedia );
 		},
 
 		renderMessagesFiles : function ( files ) {
@@ -6159,6 +6338,9 @@ window.bp = window.bp || {};
 
 			var renderFiles = new bp.Views.RenderMessagesFiles( files );
 			$container.html( renderFiles.render().el );
+
+			// Store reference to the view for later use
+			$container.find( '.bb-rl-files-list' ).data( 'view', renderFiles );
 		}
 	} );
 
@@ -6175,6 +6357,13 @@ window.bp = window.bp || {};
 			this.$el.html( this.template( this.data ) );
 			return this;
 		},
+
+		// Helper method to append new participants without recreating the entire list.
+		appendParticipants : function ( participants ) {
+			var appendTemplate = bp.template( 'bp-messages-right-panel-participants' );
+			this.$el.append( appendTemplate( participants ) );
+			return this;
+		}
 	} );
 
 	bp.Views.RenderMessagesMedia = bp.Nouveau.Messages.View.extend( {
@@ -6190,6 +6379,13 @@ window.bp = window.bp || {};
 			this.$el.html( this.template( this.data ) );
 			return this;
 		},
+
+		// Helper method to append new media without recreating the entire grid.
+		appendMedia : function ( media ) {
+			var appendTemplate = bp.template( 'bp-messages-right-panel-media' );
+			this.$el.append( appendTemplate( media ) );
+			return this;
+		}
 	} );
 
 	bp.Views.RenderMessagesFiles = bp.Nouveau.Messages.View.extend( {
@@ -6205,6 +6401,25 @@ window.bp = window.bp || {};
 			this.$el.html( this.template( this.data ) );
 			return this;
 		},
+
+		// Helper method to append new files without recreating the entire list.
+		appendFiles : function ( files ) {
+			var appendTemplate = bp.template( 'bp-messages-right-panel-files' );
+			
+			// Ensure each file has a title and truncate it if necessary.
+			_.each(files, function(file) {
+				if (typeof file.full_title === 'undefined') {
+					file.full_title = file.title;
+				}
+				
+				if (file.title.length > 15) {
+					file.title = file.title.substr(0, 12) + '...';
+				}
+			});
+			
+			this.$el.append( appendTemplate( files ) );
+			return this;
+		}
 	} );
 
 	// Launch BP Nouveau Groups.

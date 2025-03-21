@@ -95,6 +95,8 @@ class BB_Messages_Readylaunch {
 		}
 
 		$thread_id = isset( $_POST['thread_id'] ) ? intval( $_POST['thread_id'] ) : 0;
+		$page = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
+		$type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'participants';
 
 		// Ensure user has access to this thread.
 		if ( ! bp_is_active( 'messages' ) || ! messages_check_thread_access( $thread_id ) ) {
@@ -109,54 +111,80 @@ class BB_Messages_Readylaunch {
 			'participants' => array(),
 			'media'        => array(),
 			'files'        => array(),
+			'page'         => $page,
+			'has_more'     => false,
 		);
 
 		// Get thread participants.
-		$thread  = new BP_Messages_Thread( false );
-		$results = $thread->get_pagination_recipients( $thread_id );
+		$thread = new BP_Messages_Thread( false );
+		$per_page = bb_messages_recipients_per_page();
 
-		foreach ( $results as $recipient ) {
-			$is_current_user = (int) bp_loggedin_user_id() === (int) $recipient->user_id;
+		if ( 'participants' === $type ) {
+			$results = $thread->get_pagination_recipients( $thread_id, array( 'per_page' => $per_page, 'page' => $page ) );
+			$response['participants_count'] = $thread->total_recipients_count;
+			$response['participants_per_page'] = $per_page;
+			$response['has_more'] = ( $page * $per_page ) < $thread->total_recipients_count;
 
-			$response['participants'][] = array(
-				'id'          => $recipient->user_id,
-				'name'        => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
-				'avatar'      => bp_core_fetch_avatar(
-					array(
-						'item_id' => $recipient->user_id,
-						'type'    => 'thumb',
-						'width'   => 50,
-						'height'  => 50,
-						'html'    => false,
-					)
-				),
-				'profile_url' => bp_core_get_user_domain( $recipient->user_id ),
-				'is_you'      => $is_current_user,
-			);
+			foreach ( $results as $recipient ) {
+				$is_current_user = (int) bp_loggedin_user_id() === (int) $recipient->user_id;
 
-			if ( bp_is_active( 'moderation' ) ) {
-				$response['participants'][]['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
-				$response['participants'][]['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-				$response['participants'][]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
-				$response['participants'][]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
-				$response['participants'][]['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
-				$response['participants'][]['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
-				$response['participants'][]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
+				$participant = array(
+					'id'          => $recipient->user_id,
+					'name'        => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
+					'avatar'      => bp_core_fetch_avatar(
+						array(
+							'item_id' => $recipient->user_id,
+							'type'    => 'thumb',
+							'width'   => 50,
+							'height'  => 50,
+							'html'    => false,
+						)
+					),
+					'profile_url' => bp_core_get_user_domain( $recipient->user_id ),
+					'is_you'      => $is_current_user,
+				);
+
+				if ( bp_is_active( 'moderation' ) ) {
+					$participant['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
+					$participant['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+					$participant['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
+					$participant['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
+					$participant['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
+					$participant['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
+					$participant['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
+				}
+
+				$response['participants'][] = $participant;
 			}
 		}
 
 		// Get media attachments if BuddyBoss Media component is active.
-		if ( bp_is_active( 'media' ) ) {
+		if ( 'media' === $type && bp_is_active( 'media' ) ) {
 			global $wpdb, $bp;
 
-			// Get images.
-			$media_table = $bp->media->table_name;
-			$media_items = $wpdb->get_results(
+			$media_per_page = 20; // Number of media items per page.
+			$offset = ( $page - 1 ) * $media_per_page;
+
+			// Get total count first.
+			$total_count = $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT * FROM {$media_table} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) AND type = 'photo' ORDER BY date_created DESC",
+					"SELECT COUNT(*) FROM {$bp->media->table_name} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) AND type = 'photo'",
 					$thread_id
 				)
 			);
+
+			// Get images with pagination.
+			$media_table = $bp->media->table_name;
+			$media_items = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$media_table} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) AND type = 'photo' ORDER BY date_created DESC LIMIT %d OFFSET %d",
+					$thread_id,
+					$media_per_page,
+					$offset
+				)
+			);
+
+			$response['has_more'] = ( $page * $media_per_page ) < (int) $total_count;
 
 			foreach ( $media_items as $media ) {
 				$response['media'][] = array(
@@ -167,17 +195,32 @@ class BB_Messages_Readylaunch {
 			}
 		}
 
-		// Get document files.
-		if ( bp_is_active( 'document' ) ) {
+		// Get document files with pagination.
+		if ( 'files' === $type && bp_is_active( 'document' ) ) {
 			global $wpdb, $bp;
+
+			$files_per_page = 20; // Number of files per page.
+			$offset = ( $page - 1 ) * $files_per_page;
+
+			// Get total count first.
+			$total_count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$bp->document->table_name} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d)",
+					$thread_id
+				)
+			);
 
 			$document_table = $bp->document->table_name;
 			$document_items = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT * FROM {$document_table} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) ORDER BY date_created DESC",
-					$thread_id
+					"SELECT * FROM {$document_table} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) ORDER BY date_created DESC LIMIT %d OFFSET %d",
+					$thread_id,
+					$files_per_page,
+					$offset
 				)
 			);
+
+			$response['has_more'] = ( $page * $files_per_page ) < (int) $total_count;
 
 			foreach ( $document_items as $document ) {
 				$file_url = wp_get_attachment_url( $document->attachment_id );
@@ -187,11 +230,19 @@ class BB_Messages_Readylaunch {
 					$path = wp_parse_url( $file_url, PHP_URL_PATH );
 					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 				}
+				
+				// Truncate title for display if it's too long.
+				$title = $document->title;
+				if ( strlen( $title ) > 15 ) {
+					$title = substr( $title, 0, 12 ) . '...';
+				}
+				
 				$response['files'][] = array(
-					'id'        => $document->id,
-					'title'     => $document->title,
-					'url'       => bp_document_get_preview_url( $document->id, $document->attachment_id ),
-					'extension' => $ext,
+					'id'         => $document->id,
+					'title'      => $title,
+					'full_title' => $document->title,
+					'url'        => bp_document_get_preview_url( $document->id, $document->attachment_id ),
+					'extension'  => $ext,
 				);
 			}
 		}

@@ -216,7 +216,7 @@
                 </div>
                 <div class="bb-rl-file-info">
                     <h4 class="bb-rl-file-name">
-                        <a href="{{file.url}}" target="_blank">{{file.title}}</a>
+                        <a href="{{file.url}}" target="_blank" title="{{file.full_title}}">{{file.title}}</a>
                     </h4>
                 </div>
             </div>
