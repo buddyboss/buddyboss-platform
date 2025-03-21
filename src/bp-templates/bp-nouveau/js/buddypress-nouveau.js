@@ -4891,6 +4891,12 @@ window.bp = window.bp || {};
 
 			var $avatar = $( this );
 
+			// Disable popup card for specific locations
+			var blockedContainers = '.message-members-list.member-popup, #mass-user-block-list';
+			if ( $avatar.closest( blockedContainers ).length ) {
+				return;
+			}
+
 			if ( ! $avatar.attr( 'data-bb-hp-profile' ) || ! $avatar.attr( 'data-bb-hp-profile' ).length ) {
 				return;
 			}
@@ -4924,7 +4930,8 @@ window.bp = window.bp || {};
 			var position = bp.Nouveau.setPopupPosition( $avatar );
 			$profileCard.css( {
 				top: position.top + 'px',
-				left: position.left + 'px'
+				left: position.left + 'px',
+				right: position.right + 'px'
 			} );
 
 			// Avoid duplicate AJAX requests for same memberId.
@@ -5008,20 +5015,40 @@ window.bp = window.bp || {};
 		setPopupPosition: function ( $element ) {
 			var offset = $element.offset();
 			var popupTop, popupLeft;
+			var rightEdgeDistance = window.innerWidth - ( offset.left + $element.outerWidth() );
+			var useRightPosition = false;
+			
+			// Calculate the vertical position
+			popupTop = offset.top + $element.outerHeight() + 10;
+			
+			// Handle different screen widths and right edge proximity
 			if ( window.innerWidth <= 560 ) {
-				popupTop = offset.top + $element.outerHeight() + 10;
 				popupLeft = 5;
-			} else if ( window.innerWidth <= 800 ) {
-				popupTop = offset.top + $element.outerHeight() + 10;
-				popupLeft = offset.left + $element.outerWidth() - 20;
 			} else {
-				popupTop = offset.top + $element.outerHeight() + 10;
-				popupLeft = offset.left + $element.outerWidth() - 100;
+				popupLeft = offset.left + $element.outerWidth() / 2 - 50;
+				
+				// If element is close to the right edge
+				if ( rightEdgeDistance < 300 ) {
+					useRightPosition = true;
+				}
 			}
-			return {
-				top: popupTop - $( window ).scrollTop(),
-				left: popupLeft - $( window ).scrollLeft(),
-			};
+			
+			// Return positioning info
+			if ( useRightPosition ) {
+				// When close to right edge, use right positioning
+				return {
+					top: popupTop - $( window ).scrollTop(),
+					left: 'auto',
+					right: 10
+				};
+			} else {
+				// Regular left positioning
+				return {
+					top: popupTop - $( window ).scrollTop(),
+					left: popupLeft - $( window ).scrollLeft(),
+					right: 'auto'
+				};
+			}
 		},
 
 		/**
@@ -5138,7 +5165,8 @@ window.bp = window.bp || {};
 			var position = bp.Nouveau.setPopupPosition( $avatar );
 			$groupCard.css( {
 				top: position.top + 'px',
-				left: position.left + 'px'
+				left: position.left + 'px',
+				right: position.right + 'px'
 			} );
 
 			// Avoid duplicate AJAX requests for same groupId.
