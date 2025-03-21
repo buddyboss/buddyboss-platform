@@ -112,38 +112,36 @@ class BB_Messages_Readylaunch {
 		);
 
 		// Get thread participants.
-		$thread = new BP_Messages_Thread( $thread_id );
+		$thread  = new BP_Messages_Thread( false );
+		$results = $thread->get_pagination_recipients( $thread_id );
 
-		foreach ( $thread->recipients as $key => $recipient ) {
+		foreach ( $results as $recipient ) {
 			$is_current_user = (int) bp_loggedin_user_id() === (int) $recipient->user_id;
 
-			$user = get_userdata( $recipient->user_id );
-			if ( $user ) {
-				$response['participants'][] = array(
-					'id'          => $user->ID,
-					'name'        => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : $user->display_name,
-					'avatar'      => bp_core_fetch_avatar(
-						array(
-							'item_id' => $user->ID,
-							'type'    => 'thumb',
-							'width'   => 50,
-							'height'  => 50,
-							'html'    => false,
-						)
-					),
-					'profile_url' => bp_core_get_user_domain( $user->ID ),
-					'is_you'      => $is_current_user,
-				);
+			$response['participants'][] = array(
+				'id'          => $recipient->user_id,
+				'name'        => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
+				'avatar'      => bp_core_fetch_avatar(
+					array(
+						'item_id' => $recipient->user_id,
+						'type'    => 'thumb',
+						'width'   => 50,
+						'height'  => 50,
+						'html'    => false,
+					)
+				),
+				'profile_url' => bp_core_get_user_domain( $recipient->user_id ),
+				'is_you'      => $is_current_user,
+			);
 
-				if ( bp_is_active( 'moderation' ) ) {
-					$response['participants'][]['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
-					$response['participants'][]['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
-					$response['participants'][]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
-					$response['participants'][]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
-					$response['participants'][]['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
-					$response['participants'][]['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
-					$response['participants'][]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
-				}
+			if ( bp_is_active( 'moderation' ) ) {
+				$response['participants'][]['is_user_blocked']    = bp_moderation_is_user_blocked( $recipient->user_id );
+				$response['participants'][]['can_be_blocked']     = ( ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_is_user_suspended( $recipient->user_id ) ) ? true : false;
+				$response['participants'][]['is_user_suspended']  = bp_moderation_is_user_suspended( $recipient->user_id );
+				$response['participants'][]['is_user_blocked_by'] = bb_moderation_is_user_blocked_by( $recipient->user_id );
+				$response['participants'][]['is_user_reported']   = bp_moderation_report_exist( $recipient->user_id, BP_Moderation_Members::$moderation_type_report );
+				$response['participants'][]['can_be_report']      = ! in_array( (int) $recipient->user_id, $admins, true ) && false === bp_moderation_user_can( bp_loggedin_user_id(), BP_Moderation_Members::$moderation_type_report );
+				$response['participants'][]['reported_type']      = bp_moderation_get_report_type( BP_Moderation_Members::$moderation_type_report, $recipient->user_id );
 			}
 		}
 

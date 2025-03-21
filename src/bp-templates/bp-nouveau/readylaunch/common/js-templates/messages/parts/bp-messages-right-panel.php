@@ -158,13 +158,21 @@
     <# _.each( data, function( participant ) { #>
         <div class="bb-rl-participant-item">
             <div class="bb-rl-participant-avatar">
-                <a href="{{participant.profile_url}}">
+                <# if ( participant.profile_url ) { #>
+                    <a href="{{participant.profile_url}}">
+                        <img src="{{participant.avatar}}" alt="{{participant.name}}">
+                    </a>
+                <# } else { #>
                     <img src="{{participant.avatar}}" alt="{{participant.name}}">
-                </a>
+                <# } #>
             </div>
             <div class="bb-rl-participant-info">
                 <h4 class="bb-rl-participant-name">
-                    <a href="{{participant.profile_url}}">{{participant.name}}</a>
+                    <# if ( participant.profile_url ) { #>
+                        <a href="{{participant.profile_url}}">{{participant.name}}</a>
+                    <# } else { #>
+                        {{participant.name}}
+                    <# } #>
                 </h4>
             
                 <# if (participant.role) { #>
