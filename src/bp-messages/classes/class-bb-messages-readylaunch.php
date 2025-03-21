@@ -120,7 +120,13 @@ class BB_Messages_Readylaunch {
 		$per_page = bb_messages_recipients_per_page();
 
 		if ( 'participants' === $type ) {
-			$results = $thread->get_pagination_recipients( $thread_id, array( 'per_page' => $per_page, 'page' => $page ) );
+			$results = $thread->get_pagination_recipients(
+				$thread_id,
+				array(
+					'per_page' => $per_page,
+					'page'     => $page,
+				)
+			);
 			$response['participants_count'] = $thread->total_recipients_count;
 			$response['participants_per_page'] = $per_page;
 			$response['has_more'] = ( $page * $per_page ) < $thread->total_recipients_count;
@@ -230,13 +236,13 @@ class BB_Messages_Readylaunch {
 					$path = wp_parse_url( $file_url, PHP_URL_PATH );
 					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 				}
-				
+
 				// Truncate title for display if it's too long.
 				$title = $document->title;
 				if ( strlen( $title ) > 15 ) {
 					$title = substr( $title, 0, 12 ) . '...';
 				}
-				
+
 				$response['files'][] = array(
 					'id'         => $document->id,
 					'title'      => $title,

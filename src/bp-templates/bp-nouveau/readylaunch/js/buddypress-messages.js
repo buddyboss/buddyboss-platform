@@ -6215,41 +6215,35 @@ window.bp = window.bp || {};
 			var $target = $( e.currentTarget );
 			var tabId   = $target.data( 'tab' );
 
-			// Update active state
+			// Update active state.
 			this.$el.find( '.bb-rl-tab-item' ).removeClass( 'active' );
 			$target.addClass( 'active' );
 
-			// Show the selected tab content
+			// Show the selected tab content.
 			this.$el.find( '.bb-rl-tab-content' ).removeClass( 'active' );
 			this.$el.find( '#' + tabId + '-tab' ).addClass( 'active' );
 
-			// Load data for the tab if it hasn't been loaded yet
-			var tabType = tabId; // participants, media, or files
-			if ( this.$el.find( '#' + tabType + '-tab' ).is( ':empty' ) ||
-			     (
-				     this.$el.find( '#' + tabType + '-tab .bb-rl-message-right-loading' ).length &&
-				     ! this.$el.find( '#' + tabType + '-tab .bb-rl-media-grid, #' + tabType + '-tab .bb-rl-files-list, #' + tabType + '-tab .bb-rl-participants-list' ).length
-			     ) ) {
-				this.fetchTabData( tabType );
-			}
+			// Load data for the tab if it hasn't been loaded yet.
+			var tabType = tabId; // participants, media, or files.
+			this.fetchTabData( tabType );
 		},
 
 		fetchTabData : function ( tabType ) {
 			var self     = this;
 			var threadId = this.model.get( 'id' );
 
-			// Show loading state
+			// Show loading state.
 			var $container = this.$el.find( '#' + tabType + '-tab' );
 			if ( ! $container.find( '.bb-rl-message-right-loading' ).length ) {
 				$container.html( '<div class="bb-rl-message-right-loading"><div class="bb-rl-loading-spinner"></div></div>' );
 			}
 
-			// Reset pagination for this tab
+			// Reset pagination for this tab.
 			self.currentPages[ tabType ] = 1;
 			self.hasMore[ tabType ]      = true;
 			self.isLoading[ tabType ]    = true;
 
-			// AJAX request to get data for specific tab
+			// AJAX request to get data for specific tab.
 			$.ajax( {
 				type     : 'POST',
 				url      : bbRlAjaxUrl,
@@ -6264,7 +6258,7 @@ window.bp = window.bp || {};
 					if ( response.success ) {
 						self.hasMore[ tabType ] = response.data.has_more;
 
-						// Render appropriate content based on tab type
+						// Render appropriate content based on tab type.
 						if ( tabType === 'participants' ) {
 							self.renderMessagesParticipants( response.data.participants );
 						} else if ( tabType === 'media' ) {
@@ -6275,7 +6269,7 @@ window.bp = window.bp || {};
 					}
 				},
 				complete : function () {
-					// Hide loading indicators
+					// Hide loading indicators.
 					$container.find( '.bb-rl-message-right-loading' ).hide();
 					self.isLoading[ tabType ] = false;
 				}
@@ -6285,7 +6279,7 @@ window.bp = window.bp || {};
 		fetchRightPanelData : function () {
 			var self = this;
 
-			// Reset pagination
+			// Reset pagination.
 			self.currentPages = {
 				participants : 1,
 				media        : 1,
@@ -6302,11 +6296,11 @@ window.bp = window.bp || {};
 				files        : false
 			};
 
-			// Show loading state
+			// Show loading state.
 			this.$el.find( '.bb-rl-message-right-loading' ).show();
 			this.$el.find( '.bb-rl-no-content' ).hide();
 
-			// First load only participants tab data, load other tabs on demand
+			// First load only participants tab data, load other tabs on demand.
 			this.fetchTabData( 'participants' );
 		},
 
@@ -6317,7 +6311,7 @@ window.bp = window.bp || {};
 			var renderParticipants = new bp.Views.RenderParticipants( participants );
 			$container.html( renderParticipants.render().el );
 
-			// Store reference to the view for later use
+			// Store reference to the view for later use.
 			$container.find( '.bb-rl-participants-list' ).data( 'view', renderParticipants );
 		},
 
@@ -6328,7 +6322,7 @@ window.bp = window.bp || {};
 			var renderMedia = new bp.Views.RenderMessagesMedia( media );
 			$container.html( renderMedia.render().el );
 
-			// Store reference to the view for later use
+			// Store reference to the view for later use.
 			$container.find( '.bb-rl-media-grid' ).data( 'view', renderMedia );
 		},
 
@@ -6339,7 +6333,7 @@ window.bp = window.bp || {};
 			var renderFiles = new bp.Views.RenderMessagesFiles( files );
 			$container.html( renderFiles.render().el );
 
-			// Store reference to the view for later use
+			// Store reference to the view for later use.
 			$container.find( '.bb-rl-files-list' ).data( 'view', renderFiles );
 		}
 	} );
