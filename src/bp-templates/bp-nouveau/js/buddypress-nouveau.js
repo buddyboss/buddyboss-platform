@@ -4919,6 +4919,7 @@ window.bp = window.bp || {};
 			$profileCard.css( {
 				top: position.top + 'px',
 				left: position.left + 'px',
+				bottom: position.bottom + 'px',
 				right: position.right + 'px'
 			} );
 
@@ -5002,39 +5003,54 @@ window.bp = window.bp || {};
 
 		setPopupPosition: function ( $element ) {
 			var offset = $element.offset();
-			var popupTop, popupLeft;
+			var popupTop, popupLeft, popupBottom;
 			var rightEdgeDistance = window.innerWidth - ( offset.left + $element.outerWidth() );
+			var spaceBelow = window.innerHeight - ( offset.top - window.scrollY + $element.outerHeight() );
+			var spaceAbove = offset.top - window.scrollY;
 			var useRightPosition = false;
-			
-			// Calculate the vertical position
+		
+			// Default top popup position
 			popupTop = offset.top + $element.outerHeight() + 10;
-			
-			// Handle different screen widths and right edge proximity
+		
+			// Handle horizontal position (left or right based on available space)
 			if ( window.innerWidth <= 560 ) {
 				popupLeft = 5;
 			} else {
 				popupLeft = offset.left + $element.outerWidth() / 2 - 50;
-				
-				// If element is close to the right edge
 				if ( rightEdgeDistance < 300 ) {
 					useRightPosition = true;
 				}
 			}
-			
+		
+			// Determine vertical position
+			if ( spaceBelow >= 150 ) {
+				// If there's enough space, position below the element
+				popupBottom = 'auto';
+				popupTop = offset.top + $element.outerHeight() + 10;
+			} else if ( spaceAbove >= 150 ) {
+				// If there's not enough space, position above the element
+				popupTop = 'auto';
+				popupBottom = window.innerHeight - offset.top + window.scrollY + 10; // Adjust for scroll
+			} else {
+				// If no space is available (fallback), position near the bottom
+				popupBottom = 10;
+				popupTop = 'auto';
+			}
+		
 			// Return positioning info
 			if ( useRightPosition ) {
-				// When close to right edge, use right positioning
 				return {
 					top: popupTop - $( window ).scrollTop(),
 					left: 'auto',
-					right: 10
+					right: 10,
+					bottom: popupBottom
 				};
 			} else {
-				// Regular left positioning
 				return {
 					top: popupTop - $( window ).scrollTop(),
 					left: popupLeft - $( window ).scrollLeft(),
-					right: 'auto'
+					right: 'auto',
+					bottom: popupBottom
 				};
 			}
 		},
@@ -5154,6 +5170,7 @@ window.bp = window.bp || {};
 			$groupCard.css( {
 				top: position.top + 'px',
 				left: position.left + 'px',
+				bottom: position.bottom + 'px',
 				right: position.right + 'px'
 			} );
 
