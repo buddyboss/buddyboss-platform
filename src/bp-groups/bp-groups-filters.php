@@ -1725,16 +1725,11 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 		if ( ! empty( $groups['groups'] ) ) {
 			foreach ( $groups['groups'] as $group ) {
 				$group_id                         = $group->id;
-				$thumbnail_url                    = ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar(
-					array(
-						'type' => 'thumb',
-						'id'   => $group_id,
-					)
-				) : '';
+				$thumbnail_url                    = bp_get_group_avatar_url( $group );
 				$group_data['items'][ $group_id ] = array(
 					'title'     => $group->name,
 					'permalink' => bp_get_group_permalink( $group ),
-					'thumbnail' => $thumbnail_url,
+					'thumbnail' => '<img src="' . $thumbnail_url . '" alt="' . $group->name . '" class="avatar group--avatar avatar-200 photo" width="200" height="200"/>',
 				);
 			}
 
