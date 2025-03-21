@@ -79,18 +79,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Close comments.
 		$this->add_field( '_bb_enable_close_activity_comments', __( 'Close comments', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_close_activity_comments' ), 'intval' );
 
-		// Activity filters.
-		$this->add_field( 'bb_activity_filter_options', __( 'Activity filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_filters' );
-
-		// Timeline filters.
-		$this->add_field( 'bb_activity_timeline_filter_options', __( 'Profile Timeline filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_timeline_filters' );
-
-		// Activity sorting.
-		$this->add_field( 'bb_activity_sorting_options', __( 'Activity sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_sorting' );
-
-		// Activity search.
-		$this->add_field( 'bb_enable_activity_search', __( 'Activity search', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_search' );
-
 		// Pin posts.
 		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
 
@@ -118,6 +106,18 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Relevant Activity Feeds.
 		$this->add_field( '_bp_enable_relevant_feed', __( 'Relevant Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
+
+		// Activity search.
+		$this->add_field( 'bb_enable_activity_search', __( 'Activity search', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_search' );
+
+		// Activity filters.
+		$this->add_field( 'bb_activity_filter_options', __( 'Activity filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_filters' );
+
+		// Timeline filters.
+		$this->add_field( 'bb_activity_timeline_filter_options', __( 'Profile Timeline filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_timeline_filters' );
+
+		// Activity sorting.
+		$this->add_field( 'bb_activity_sorting_options', __( 'Activity sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_sorting' );
 
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
