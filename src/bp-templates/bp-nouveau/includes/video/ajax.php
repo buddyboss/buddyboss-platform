@@ -1383,6 +1383,28 @@ function bp_nouveau_ajax_video_get_video_description() {
 			}
 			$video_data = ob_get_clean();
 		}
+
+		$video_description = apply_filters(
+			/**
+			 * Filter the video description HTML.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $video_description The video description HTML.
+			 * @param object $video Video object.
+			 * @param int    $video_id Video ID.
+			 * @param int    $attachment_id Attachment ID.
+			 * @param bool   $can_edit_btn Whether user can edit.
+			 * @param bool   $can_download_btn Whether user can download.
+			 */
+			'bp_nouveau_get_video_description_html',
+			$video_description,
+			$video,
+			$video_id,
+			$attachment_id,
+			$can_edit_btn,
+			$can_download_btn
+		);
 	}
 
 	wp_send_json_success(
