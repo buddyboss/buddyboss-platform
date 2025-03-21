@@ -4743,8 +4743,9 @@ window.bp = window.bp || {};
 
 			var $avatar = $( this );
 
-			// Disable popup card for message members list modals
-			if ( $avatar.closest( '.message-members-list.member-popup' ).length ) {
+			// Disable popup card for specific locations
+			var blockedContainers = '.message-members-list.member-popup, #mass-user-block-list';
+			if ( $avatar.closest( blockedContainers ).length ) {
 				return;
 			}
 
