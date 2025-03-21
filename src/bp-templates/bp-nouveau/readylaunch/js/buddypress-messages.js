@@ -209,6 +209,7 @@ window.bp = window.bp || {};
 					if ( 'compose' === view_id ) {
 						self.router.navigate( 'compose/', { trigger: true } );
 						$( event.target ).parents( '.bb-rl-messages-container' ).removeClass( 'bb-rl-view-message' ).addClass( 'bp-compose-message' );
+						$( event.target ).parents( '.bb-rl-messages-container' ).find( '.bb-rl-messages-right-panel' ).hide();
 						// Other views are classic.
 					} else {
 						if ( self.box !== view_id || ! _.isUndefined( self.views.get( 'compose' ) ) ) {
@@ -216,6 +217,7 @@ window.bp = window.bp || {};
 
 							self.router.navigate( view_id + '/', { trigger: true } );
 						}
+						$( event.target ).parents( '.bb-rl-messages-container' ).find( '.bb-rl-messages-right-panel' ).show();
 					}
 				}
 			);
