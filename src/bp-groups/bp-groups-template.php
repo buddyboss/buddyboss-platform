@@ -1244,9 +1244,10 @@ function bp_get_group_link( $group = null ) {
 	}
 
 	$link = sprintf(
-		'<a href="%s" class="bp-group-home-link %s-home-link">%s</a>',
+		'<a href="%s" class="bp-group-home-link %s-home-link" data-bb-hp-group="%s">%s</a>',
 		esc_url( bp_get_group_permalink( $group ) ),
 		esc_attr( bp_get_group_slug( $group ) ),
+		esc_attr( $group->id ),
 		esc_html( bp_get_group_name( $group ) )
 	);
 

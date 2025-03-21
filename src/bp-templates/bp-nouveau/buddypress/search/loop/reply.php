@@ -41,7 +41,7 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 				$reply_author_display_name = bbp_get_reply_author_display_name( $reply_id );
 				if ( ! empty( $bbp_get_reply_author_url ) ) {
 					?>
-					<a href="<?php echo esc_url( $bbp_get_reply_author_url ); ?>"><?php echo esc_html( $reply_author_display_name ); ?></a>
+					<a href="<?php echo esc_url( $bbp_get_reply_author_url ); ?>" data-bb-hp-profile="<?php echo esc_attr( bbp_get_reply_author_id( $reply_id ) ); ?>"><?php echo esc_html( $reply_author_display_name ); ?></a>
 					<?php
 				} else {
 					?>
