@@ -4871,7 +4871,7 @@ window.bp = window.bp || {};
 			if ( window.innerWidth <= 560 ) {
 				popupLeft = 5;
 			} else {
-				popupLeft = offset.left + $element.outerWidth() - 50;
+				popupLeft = offset.left + $element.outerWidth() / 2 - 50;
 				
 				// If element is close to the right edge
 				if ( rightEdgeDistance < 300 ) {
