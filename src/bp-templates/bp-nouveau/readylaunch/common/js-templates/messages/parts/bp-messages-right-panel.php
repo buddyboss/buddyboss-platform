@@ -133,21 +133,21 @@
             <!-- Participants tab -->
             <div class="bb-rl-tab-content active" id="participants-tab">
                 <div class="bb-rl-message-right-loading">
-                    <div class="bb-rl-loading-spinner"></div>
+                    <div class="bb-rl-loader"></div>
                 </div>
             </div>
             
             <!-- Media tab -->
             <div class="bb-rl-tab-content" id="media-tab">
                 <div class="bb-rl-message-right-loading">
-                    <div class="bb-rl-loading-spinner"></div>
+                    <div class="bb-rl-loader"></div>
                 </div>
             </div>
             
             <!-- Files tab -->
             <div class="bb-rl-tab-content" id="files-tab">
                 <div class="bb-rl-message-right-loading">
-                    <div class="bb-rl-loading-spinner"></div>
+                    <div class="bb-rl-loader"></div>
                 </div>
             </div>
         </div>

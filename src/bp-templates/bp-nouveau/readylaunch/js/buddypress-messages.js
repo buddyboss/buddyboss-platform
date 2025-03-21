@@ -6151,7 +6151,7 @@ window.bp = window.bp || {};
 
 			// Add a loading indicator.
 			if ( ! self.$el.find( '#' + tabType + '-tab .bb-rl-loading-more' ).length ) {
-				self.$el.find( '#' + tabType + '-tab' ).append( '<div class="bb-rl-loading-more"><div class="bb-rl-loading-spinner"></div></div>' );
+				self.$el.find( '#' + tabType + '-tab' ).append( '<div class="bb-rl-loading-more"><div class="bb-rl-loader"></div></div>' );
 			}
 
 			// AJAX request to get more items.
@@ -6235,7 +6235,7 @@ window.bp = window.bp || {};
 			// Show loading state.
 			var $container = this.$el.find( '#' + tabType + '-tab' );
 			if ( ! $container.find( '.bb-rl-message-right-loading' ).length ) {
-				$container.html( '<div class="bb-rl-message-right-loading"><div class="bb-rl-loading-spinner"></div></div>' );
+				$container.html( '<div class="bb-rl-message-right-loading"><div class="bb-rl-loader"></div></div>' );
 			}
 
 			// Reset pagination for this tab.

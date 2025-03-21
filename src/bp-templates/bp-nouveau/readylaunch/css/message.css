@@ -2065,24 +2065,12 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   height: calc(100vh - 400px);
   min-height: 300px;
   overflow-y: auto;
-  padding: 0;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   display: none;
 }
 
 .bb-rl-messages-right-panel .bb-rl-message-right-content .bb-rl-tab-content.active {
   display: block;
-}
-
-.bb-rl-messages-right-panel .bb-rl-message-right-content .bb-rl-tab-content#participants-tab {
-  padding: var(--bb-rl-space-100) 0;
-}
-
-.bb-rl-messages-right-panel .bb-rl-message-right-content .bb-rl-tab-content#media-tab {
-  padding: var(--bb-rl-space-200);
-}
-
-.bb-rl-messages-right-panel .bb-rl-message-right-content .bb-rl-tab-content#files-tab {
-  padding: var(--bb-rl-space-200);
 }
 
 .bb-rl-messages-right-panel .bb-rl-media-grid {
@@ -2222,16 +2210,6 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   padding: var(--bb-rl-space-200);
 }
 
-.bb-rl-messages-right-panel .bb-rl-message-right-loading .bb-rl-loading-spinner,
-.bb-rl-messages-right-panel .bb-rl-loading-more .bb-rl-loading-spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--bb-rl-background-secondary-color);
-  border-top: 2px solid var(--bb-rl-brand-primary-color);
-  border-radius: 50%;
-  animation: bb-rl-spin 1s linear infinite;
-}
-
 .bb-rl-messages-right-panel .bb-rl-loading-more {
   padding: var(--bb-rl-space-100);
 }
@@ -2254,16 +2232,11 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 .bb-rl-messages-right-panel .bb-rl-participant-item {
   display: flex;
   align-items: center;
-  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-  border-bottom: none;
-}
-
-.bb-rl-messages-right-panel .bb-rl-participant-item:last-child {
-  border-bottom: none;
+  padding: var(--bb-rl-space-100) 0;
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-avatar {
-  margin-right: var(--bb-rl-space-200);
+  margin-right: var(--bb-rl-space-100);
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-avatar img {
@@ -2282,10 +2255,9 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-info .bb-rl-participant-name {
-  font-size: var(--bb-rl-font-size-sm);
+  font-size: 15px;
   font-weight: 500;
-  margin: 0 0 2px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-info .bb-rl-participant-name a {
@@ -2301,11 +2273,10 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   display: block;
   font-size: var(--bb-rl-font-size-xs);
   color: var(--bb-rl-text-tertiary-color);
-  margin-bottom: 2px;
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-info .bb-rl-participant-meta {
-  font-size: var(--bb-rl-font-size-xs);
+  font-size: var(--bb-rl-font-size-sm);
   color: var(--bb-rl-text-tertiary-color);
 }
 
