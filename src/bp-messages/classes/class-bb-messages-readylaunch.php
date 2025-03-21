@@ -171,33 +171,33 @@ class BB_Messages_Readylaunch {
 			$media_per_page = 20; // Number of media items per page.
 			$offset = ( $page - 1 ) * $media_per_page;
 
-			// Get total count first.
-			$total_count = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$bp->media->table_name} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) AND type = 'photo'",
-					$thread_id
-				)
-			);
-
 			// Get images with pagination.
-			$media_table = $bp->media->table_name;
-			$media_items = $wpdb->get_results(
+			$media_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
-					"SELECT * FROM {$media_table} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) AND type = 'photo' ORDER BY date_created DESC LIMIT %d OFFSET %d",
+					"SELECT SQL_CALC_FOUND_ROWS m.* 
+					FROM {$bp->media->table_name} m
+					INNER JOIN {$bp->messages->table_name_messages} msg ON m.message_id = msg.id 
+					WHERE msg.thread_id = %d 
+					AND m.type = 'photo'
+					ORDER BY m.date_created DESC 
+					LIMIT %d OFFSET %d",
 					$thread_id,
 					$media_per_page,
 					$offset
 				)
 			);
+			$total_count = $wpdb->get_var( 'SELECT FOUND_ROWS()' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			$response['has_more'] = ( $page * $media_per_page ) < (int) $total_count;
 
-			foreach ( $media_items as $media ) {
-				$response['media'][] = array(
-					'id'    => $media->id,
-					'title' => $media->title,
-					'url'   => bp_media_get_preview_image_url( $media->id, $media->attachment_id ),
-				);
+			if ( ! empty( $media_items ) ) {
+				foreach ( $media_items as $media ) {
+					$response['media'][] = array(
+						'id'    => $media->id,
+						'title' => $media->title,
+						'url'   => bp_media_get_preview_image_url( $media->id, $media->attachment_id ),
+					);
+				}
 			}
 		}
 
@@ -208,48 +208,47 @@ class BB_Messages_Readylaunch {
 			$files_per_page = 20; // Number of files per page.
 			$offset = ( $page - 1 ) * $files_per_page;
 
-			// Get total count first.
-			$total_count = $wpdb->get_var(
+			$document_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$bp->document->table_name} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d)",
-					$thread_id
-				)
-			);
-
-			$document_table = $bp->document->table_name;
-			$document_items = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT * FROM {$document_table} WHERE message_id IN (SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d) ORDER BY date_created DESC LIMIT %d OFFSET %d",
+					"SELECT SQL_CALC_FOUND_ROWS d.* 
+					FROM {$bp->document->table_name} d
+					INNER JOIN {$bp->messages->table_name_messages} msg ON d.message_id = msg.id 
+					WHERE msg.thread_id = %d 
+					ORDER BY d.date_created DESC 
+					LIMIT %d OFFSET %d",
 					$thread_id,
 					$files_per_page,
 					$offset
 				)
 			);
+			$total_count    = $wpdb->get_var( 'SELECT FOUND_ROWS()' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			$response['has_more'] = ( $page * $files_per_page ) < (int) $total_count;
 
-			foreach ( $document_items as $document ) {
-				$file_url = wp_get_attachment_url( $document->attachment_id );
-				$filetype = wp_check_filetype( $file_url );
-				$ext      = $filetype['ext'];
-				if ( empty( $ext ) ) {
-					$path = wp_parse_url( $file_url, PHP_URL_PATH );
-					$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
-				}
+			if ( ! empty( $document_items ) ) {
+				foreach ( $document_items as $document ) {
+					$file_url = wp_get_attachment_url( $document->attachment_id );
+					$filetype = wp_check_filetype( $file_url );
+					$ext      = $filetype['ext'];
+					if ( empty( $ext ) ) {
+						$path = wp_parse_url( $file_url, PHP_URL_PATH );
+						$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
+					}
 
-				// Truncate title for display if it's too long.
-				$title = $document->title;
-				if ( strlen( $title ) > 15 ) {
-					$title = substr( $title, 0, 12 ) . '...';
-				}
+					// Truncate title for display if it's too long.
+					$title = $document->title;
+					if ( strlen( $title ) > 15 ) {
+						$title = substr( $title, 0, 12 ) . '...';
+					}
 
-				$response['files'][] = array(
-					'id'         => $document->id,
-					'title'      => $title,
-					'full_title' => $document->title,
-					'url'        => bp_document_get_preview_url( $document->id, $document->attachment_id ),
-					'extension'  => $ext,
-				);
+					$response['files'][] = array(
+						'id'         => $document->id,
+						'title'      => $title,
+						'full_title' => $document->title,
+						'url'        => bp_document_get_preview_url( $document->id, $document->attachment_id ),
+						'extension'  => $ext,
+					);
+				}
 			}
 		}
 
