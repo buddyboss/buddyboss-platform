@@ -1243,8 +1243,55 @@ window.bp = window.bp || {};
 			// Set Draft activity data.
 			self.checkedActivityDataChanged( bp.old_draft_data, data );
 
+			// old backup of draft activity data before overiding with draft activity data.
+			var bak_draft_activity_data = bp.draft_activity.data;
 			bp.draft_activity.data = data;
-			localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+			// Restore js_preview from backup for matching video IDs.
+			if ( bp.draft_activity.data && bp.draft_activity.data.video && bp.draft_activity.data.video.length && 
+				bak_draft_activity_data && bak_draft_activity_data.video && bak_draft_activity_data.video.length ) {
+				for ( var i = 0; i < bp.draft_activity.data.video.length; i++ ) {
+					for ( var j = 0; j < bak_draft_activity_data.video.length; j++ ) {
+						if ( bp.draft_activity.data.video[i].id && bak_draft_activity_data.video[j].id && 
+							bp.draft_activity.data.video[i].id === bak_draft_activity_data.video[j].id ) {
+							if ( bak_draft_activity_data.video[j].js_preview ) {
+								bp.draft_activity.data.video[i].js_preview = bak_draft_activity_data.video[j].js_preview;
+							}
+							break;
+						}
+					}
+				}
+			}
+
+			// Check size of data before storing it.
+			try {
+				var jsonData     = JSON.stringify(bp.draft_activity);
+				var dataSizeInMB = new Blob( [jsonData] ).size;
+				dataSizeInMB = ( dataSizeInMB / ( 1024 * 1024 ) ).toFixed( 2 );
+				// If draft data is too large (more than 4MB), remove js_preview from video entries
+				if ( dataSizeInMB > 4 && bp.draft_activity.data && bp.draft_activity.data.video && bp.draft_activity.data.video.length ) {
+					console.log('Draft data size: ' + dataSizeInMB + 'MB - removing video previews from localStorage only');
+					
+					// Create a deep copy of the draft activity for localStorage.
+					var storageCopy = JSON.parse( JSON.stringify( bp.draft_activity ) );
+					
+					// Remove js_preview from the copy that will be stored
+					if (storageCopy.data && storageCopy.data.video && storageCopy.data.video.length) {
+						for ( var i = 0; i < storageCopy.data.video.length; i++ ) {
+							if ( storageCopy.data.video[i].js_preview ) {
+								storageCopy.data.video[i].js_preview = null;
+							}
+						}
+					}
+
+					// Store the modified copy to localStorage
+					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( storageCopy ) );
+				} else {
+					// Store the original data if size is acceptable
+					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+				}
+			} catch (e) {
+				console.error('Error checking draft data size', e);
+			}
 		},
 
 		checkedActivityDataChanged: function( old_data, new_data ) {
@@ -2403,7 +2450,7 @@ window.bp = window.bp || {};
 							response.data.saved      = false;
 
 							var thumbnailCheck = setInterval( function () {
-								if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+								if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
 									response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 									response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 									self.video.push( response.data );
