@@ -156,6 +156,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--bb-rl-space-50);
+
+		.bb-rl-no-content:before {
+			content: "\e836";
+		}
 		
 		.bb-rl-media-item {
 			position: relative;
@@ -185,6 +189,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--bb-rl-space-50);
+
+		.bb-rl-no-content:before {
+			content: "\e710";
+		}
 		
 		.bb-rl-file-item {
 			display: flex;
@@ -238,10 +246,21 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		flex-direction: column;
 		padding: var(--bb-rl-space-300);
-		color: var(--bb-rl-text-tertiary-color);
+		color: var(--bb-rl-text-secondary-color);
 		font-size: var(--bb-rl-font-size-sm);
+		margin: var(--bb-rl-space-100) auto 0;
+		max-width: 260px;
 		text-align: center;
+
+		&:before {
+			font-family: bb-icons-rl;
+			color: var(--bb-rl-icon-secondary-color);
+			font-size: 32px;
+			margin-bottom: var(--bb-rl-space-100);
+			display: block;
+		}
 	}
 	
 	// Participant item styling

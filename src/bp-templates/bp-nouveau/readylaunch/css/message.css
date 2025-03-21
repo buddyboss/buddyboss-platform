@@ -2081,6 +2081,10 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   gap: var(--bb-rl-space-50);
 }
 
+.bb-rl-messages-right-panel .bb-rl-media-grid .bb-rl-no-content:before {
+  content: "\e836";
+}
+
 .bb-rl-messages-right-panel .bb-rl-media-grid .bb-rl-media-item {
   position: relative;
   width: 86px;
@@ -2108,6 +2112,10 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   display: flex;
   flex-wrap: wrap;
   gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-no-content:before {
+  content: "\e710";
 }
 
 .bb-rl-messages-right-panel .bb-rl-files-list .bb-rl-file-item {
@@ -2159,10 +2167,21 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   padding: var(--bb-rl-space-300);
-  color: var(--bb-rl-text-tertiary-color);
+  color: var(--bb-rl-text-secondary-color);
   font-size: var(--bb-rl-font-size-sm);
+  margin: var(--bb-rl-space-100) auto 0;
+  max-width: 260px;
   text-align: center;
+}
+
+.bb-rl-messages-right-panel .bb-rl-no-content:before {
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 32px;
+  margin-bottom: var(--bb-rl-space-100);
+  display: block;
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item {
