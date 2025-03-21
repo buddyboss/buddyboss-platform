@@ -1115,7 +1115,7 @@ function bb_notification_avatar() {
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user->ID ) ? 'bp-user-suspended' : '';
 			$moderation_class = isset( $user ) && function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user->ID ) ? $moderation_class . ' bp-user-blocked' : $moderation_class;
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" data-bb-hp-profile="<?php echo esc_attr( $notification->user_id ); ?>">
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" data-bb-hp-profile="<?php echo esc_attr( $notification->secondary_item_id ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
