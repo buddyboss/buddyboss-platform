@@ -114,8 +114,15 @@
 		}
 	}
 
+	.bb-rl-message-group-thread-cover +  .bb-rl-message-group-thread-content {
+
+		.bb-rl-message-group-thread-avatar {
+			margin: -30px 0 0;
+		}
+	}
+
 	.bb-rl-message-group-thread-avatar {
-		margin: -30px 0 0;
+		margin: var(--bb-rl-space-300) 0 0;
 
 		img {
 			height: 80px;

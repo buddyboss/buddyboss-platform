@@ -2039,8 +2039,12 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   justify-content: flex-start;
 }
 
-.bb-rl-messages-right-panel .bb-rl-message-group-thread-avatar {
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-cover + .bb-rl-message-group-thread-content .bb-rl-message-group-thread-avatar {
   margin: -30px 0 0;
+}
+
+.bb-rl-messages-right-panel .bb-rl-message-group-thread-avatar {
+  margin: var(--bb-rl-space-300) 0 0;
 }
 
 .bb-rl-messages-right-panel .bb-rl-message-group-thread-avatar img {
