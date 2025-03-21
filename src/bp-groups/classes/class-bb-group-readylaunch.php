@@ -52,8 +52,6 @@ class BB_Group_Readylaunch {
 
 		// Remove post content.
 		remove_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
-
-		add_filter( 'bb_readylaunch_left_sidebar_middle_content', array( $this, 'bb_readylaunch_middle_content_my_groups' ), 10, 1 );
 	}
 
 	public function bb_rl_update_group_subscription_button( $button, $r ) {
@@ -449,63 +447,5 @@ class BB_Group_Readylaunch {
 		unset( $buttons['promote_mod'], $buttons['promote_admin'] );
 
 		return $buttons;
-	}
-
-	/**
-	 * Retrieves the groups the logged-in user is a member of and adds them to the provided arguments array.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $args Arguments array to which the group data will be added.
-	 *
-	 * @return array Modified arguments array with the user's groups data.
-	 */
-	public function bb_readylaunch_middle_content_my_groups( $args = array() ) {
-		$group_data = array(
-			'integration' => 'groups',
-		);
-
-		if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
-			$group_data['heading']    = __( 'My Groups', 'buddyboss' );
-			$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
-
-			$user_id    = bp_loggedin_user_id();
-			$group_args = array(
-				'user_id'  => $user_id,
-				'per_page' => 6,
-			);
-			if ( ! empty( $user_id ) ) {
-				$count = groups_total_groups_for_user( $user_id );
-			} else {
-				$count = bp_get_total_group_count();
-			}
-
-			$groups = groups_get_groups( $group_args );
-			if ( ! empty( $groups['groups'] ) ) {
-				foreach ( $groups['groups'] as $group ) {
-					$group_id                         = $group->id;
-					$thumbnail_url                    = ! bp_disable_group_avatar_uploads() ? bp_get_group_avatar(
-						array(
-							'type' => 'thumb',
-							'id'   => $group_id,
-						)
-					) : '';
-					$group_data['items'][ $group_id ] = array(
-						'title'     => $group->name,
-						'permalink' => bp_get_group_permalink( $group ),
-						'thumbnail' => $thumbnail_url,
-					);
-				}
-
-				if ( $count > 6 ) {
-					$group_data['has_more_items'] = true;
-					$group_data['show_more_link'] = bp_get_groups_directory_permalink();
-				}
-			}
-		}
-
-		$args['groups'] = $group_data;
-
-		return $args;
 	}
 }
