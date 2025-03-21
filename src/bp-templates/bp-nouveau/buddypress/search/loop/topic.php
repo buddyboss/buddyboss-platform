@@ -15,7 +15,7 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php bbp_topic_permalink( $topic_id ); ?>">
+			<a href="<?php bbp_topic_permalink( $topic_id ); ?>" data-bb-hp-profile="<?php echo esc_attr( bbp_get_topic_author_id( $topic_id ) ); ?>">
 				<?php
 				$args   = array(
 					'type'    => 'avatar',
