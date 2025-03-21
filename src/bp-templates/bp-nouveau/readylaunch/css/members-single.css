@@ -350,10 +350,16 @@
   border-color: var(--bb-rl-text-color);
 }
 
+.bb-rl-members .friendship-requests-screen,
+.bb-rl-members .group-invites-screen,
+.bb-rl-groups .friendship-requests-screen,
 .bb-rl-groups .group-invites-screen {
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-members .bp-list.friends-request-list .action,
+.bb-rl-members .bp-list.invites .action,
+.bb-rl-groups .bp-list.friends-request-list .action,
 .bb-rl-groups .bp-list.invites .action {
   list-style: none;
   margin: 0;
@@ -363,12 +369,18 @@
   gap: var(--bb-rl-space-100);
 }
 
+.bb-rl-members .bp-list.friends-request-list .action .generic-button,
+.bb-rl-members .bp-list.invites .action .generic-button,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button,
 .bb-rl-groups .bp-list.invites .action .generic-button {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+.bb-rl-members .bp-list.friends-request-list .action .generic-button .button,
+.bb-rl-members .bp-list.invites .action .generic-button .button,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button .button,
 .bb-rl-groups .bp-list.invites .action .generic-button .button {
   display: inline-flex;
   align-items: center;
@@ -388,17 +400,33 @@
   line-height: var(--bb-rl-base-line-small);
 }
 
+.bb-rl-members .bp-list.friends-request-list .action .generic-button .button:hover,
+.bb-rl-members .bp-list.invites .action .generic-button .button:hover,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button .button:hover,
 .bb-rl-groups .bp-list.invites .action .generic-button .button:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
+.bb-rl-members .bp-list.friends-request-list .action .generic-button .button:focus-within,
+.bb-rl-members .bp-list.invites .action .generic-button .button:focus-within,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button .button:focus-within,
 .bb-rl-groups .bp-list.invites .action .generic-button .button:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
+.bb-rl-members .bp-list.friends-request-list .action .generic-button .button:disabled,
+.bb-rl-members .bp-list.invites .action .generic-button .button:disabled,
+.bb-rl-groups .bp-list.friends-request-list .action .generic-button .button:disabled,
 .bb-rl-groups .bp-list.invites .action .generic-button .button:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-members .bp-list.friends-request-list .follow-button,
+.bb-rl-members .bp-list.friends-request-list #send-private-message,
+.bb-rl-groups .bp-list.friends-request-list .follow-button,
+.bb-rl-groups .bp-list.friends-request-list #send-private-message {
+  display: none;
 }
 
 .bb-rl-profile-edit {

@@ -202,12 +202,15 @@
 	}
 }
 
+.bb-rl-members,
 .bb-rl-groups {
 
+	.friendship-requests-screen,
 	.group-invites-screen {
 		margin-bottom: var(--bb-rl-space-200);
 	}
 
+	.bp-list.friends-request-list,
 	.bp-list.invites {
 		.action {
 			list-style: none;
@@ -230,6 +233,13 @@
 					line-height: var(--bb-rl-base-line-small);
 				}
 			}
+		}
+	}
+
+	.bp-list.friends-request-list {
+		.follow-button,
+		#send-private-message {
+			display: none;
 		}
 	}
 }
