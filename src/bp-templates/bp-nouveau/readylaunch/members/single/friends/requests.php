@@ -34,13 +34,13 @@
 									</div>
 									<div class="item">
 										<h2 class="item-title list-title member-name"><a href="<?php bp_member_link(); ?>"><?php bp_member_name(); ?></a></h2>
-										<div class="item-meta"><span class="activity"><?php bp_member_last_active(); ?></span></div>
+										<div class="item-meta bb-rl-item-meta-asset"><span class="activity"><?php bp_member_last_active(); ?></span></div>
 										<?php bp_nouveau_friend_hook( 'requests_item' ); ?>
 									</div>
 									<div class="bb-rl-member-buttons-wrap">
 										<?php bp_nouveau_members_loop_buttons(); ?>
 									</div>
-								</div>			
+								</div>
 							</div>
 						</li>
 
