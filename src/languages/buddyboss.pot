@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.8.10\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-03-18 14:20:52+00:00\n"
+"POT-Creation-Date: 2025-03-21 12:32:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -691,16 +691,16 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:700
-#: bp-activity/bp-activity-filters.php:2736
-#: bp-activity/bp-activity-filters.php:2773
+#: bp-activity/bp-activity-filters.php:696
+#: bp-activity/bp-activity-filters.php:2732
+#: bp-activity/bp-activity-filters.php:2769
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:704
-#: bp-activity/bp-activity-filters.php:2710
-#: bp-activity/bp-activity-filters.php:2734
-#: bp-activity/bp-activity-filters.php:2771
+#: bp-activity/bp-activity-filters.php:700
+#: bp-activity/bp-activity-filters.php:2706
+#: bp-activity/bp-activity-filters.php:2730
+#: bp-activity/bp-activity-filters.php:2767
 #: bp-activity/classes/class-bp-activity-notification.php:226
 #: bp-activity/classes/class-bp-activity-notification.php:241
 #: bp-activity/classes/class-bp-activity-notification.php:646
@@ -726,20 +726,20 @@ msgstr ""
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:766 bp-forums/core/filters.php:552
+#: bp-activity/bp-activity-filters.php:762 bp-forums/core/filters.php:552
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:1035
+#: bp-activity/bp-activity-filters.php:1031
 msgid "Load Newest"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3414
+#: bp-activity/bp-activity-filters.php:3410
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:792
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3415 bp-blogs/bp-blogs-template.php:1172
+#: bp-activity/bp-activity-filters.php:3411 bp-blogs/bp-blogs-template.php:1172
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
@@ -772,7 +772,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3416 bp-blogs/bp-blogs-template.php:1180
+#: bp-activity/bp-activity-filters.php:3412 bp-blogs/bp-blogs-template.php:1180
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
@@ -805,14 +805,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3427
+#: bp-activity/bp-activity-filters.php:3423
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:800
 #. translators: %s: users mention name.
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3432
-#: bp-activity/bp-activity-filters.php:3452 bp-forums/core/actions.php:370
+#: bp-activity/bp-activity-filters.php:3428
+#: bp-activity/bp-activity-filters.php:3448 bp-forums/core/actions.php:370
 #: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:417
 #: bp-friends/bp-friends-filters.php:433
 #: bp-groups/bp-groups-notifications.php:1350
@@ -825,8 +825,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3439
-#: bp-activity/bp-activity-filters.php:3459 bp-forums/core/actions.php:376
+#: bp-activity/bp-activity-filters.php:3435
+#: bp-activity/bp-activity-filters.php:3455 bp-forums/core/actions.php:376
 #: bp-forums/core/actions.php:392 bp-friends/bp-friends-filters.php:423
 #: bp-friends/bp-friends-filters.php:439
 #: bp-groups/bp-groups-notifications.php:1356
@@ -839,7 +839,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:3447
+#: bp-activity/bp-activity-filters.php:3443
 #: bp-core/gdpr/class-bp-settings-export.php:157
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:815
 msgid "A member replies to an update or comment you've posted"
@@ -1148,12 +1148,12 @@ msgstr ""
 msgid "Sorry, You cannot view on this activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7562
+#: bp-activity/bp-activity-functions.php:7558
 #: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7564
+#: bp-activity/bp-activity-functions.php:7560
 #: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
 msgstr ""
@@ -1373,7 +1373,7 @@ msgid "Site Wide Activity RSS Feed"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4352
-#: bp-activity/bp-activity-template.php:4361 bp-core/bp-core-options.php:2874
+#: bp-activity/bp-activity-template.php:4361 bp-core/bp-core-options.php:2876
 #: bp-members/bp-members-admin.php:61
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1050
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
@@ -1389,7 +1389,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4376
-#: bp-core/admin/settings/bp-admin-setting-activity.php:114
+#: bp-core/admin/settings/bp-admin-setting-activity.php:102
 #: bp-members/bp-members-admin.php:140
 #: bp-templates/bp-nouveau/includes/customizer.php:327
 msgid "Follow"
@@ -5551,7 +5551,7 @@ msgid "Connections"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:95
-#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2608
+#: bp-core/admin/bp-core-admin-tools.php:142 bp-core/bp-core-options.php:2611
 msgid "Activity posts"
 msgstr ""
 
@@ -6204,42 +6204,42 @@ msgid "Close comments"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:83
-msgid "Activity filters"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:86
-msgid "Profile Timeline filters"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:89
-msgid "Activity sorting"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:92
-msgid "Activity search"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:95
 #: bp-templates/bp-nouveau/buddypress/activity/entry.php:42
 msgid "Pinned Post"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:103
+#: bp-core/admin/settings/bp-admin-setting-activity.php:91
 #: bp-core/admin/templates/upgrade-screen.php:40
 msgid "Polls"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:111
+#: bp-core/admin/settings/bp-admin-setting-activity.php:99
 msgid "Schedule posts"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:117
+#: bp-core/admin/settings/bp-admin-setting-activity.php:105
 #: bp-forums/admin/settings.php:172
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+#: bp-core/admin/settings/bp-admin-setting-activity.php:108
 msgid "Relevant Activity"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:111
+msgid "Activity search"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:114
+msgid "Activity feed filters"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:117
+msgid "Profile timeline filters"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:120
+msgid "Activity sorting"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:134
@@ -9021,63 +9021,63 @@ msgstr ""
 msgid "10 Minutes"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2613
+#: bp-core/bp-core-options.php:2616
 msgid "Activity comments"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2811
+#: bp-core/bp-core-options.php:2813
 msgid "All updates"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2812
+#: bp-core/bp-core-options.php:2814
 msgid "Created by me"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2813
+#: bp-core/bp-core-options.php:2815
 msgid "I've reacted to"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2814
+#: bp-core/bp-core-options.php:2816
 msgid "From my groups"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2815
+#: bp-core/bp-core-options.php:2817
 msgid "From my connections"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2816
+#: bp-core/bp-core-options.php:2818
 msgid "I'm mentioned in"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2817
+#: bp-core/bp-core-options.php:2819
 msgid "I'm following"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2869
+#: bp-core/bp-core-options.php:2871
 msgid "Personal posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2870
+#: bp-core/bp-core-options.php:2872
 msgid "Reacted to"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2871
+#: bp-core/bp-core-options.php:2873
 msgid "From groups"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2872
+#: bp-core/bp-core-options.php:2874
 msgid "From connections"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2873
+#: bp-core/bp-core-options.php:2875
 msgid "Mentioned in"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2925
+#: bp-core/bp-core-options.php:2927
 msgid "New posts"
 msgstr ""
 
-#: bp-core/bp-core-options.php:2926
+#: bp-core/bp-core-options.php:2928
 msgid "Recent activity"
 msgstr ""
 
