@@ -430,11 +430,194 @@
   display: none;
 }
 
-.bb-rl-profile-edit {
-  max-width: 720px;
+.bb-rl-wrap-invites {
+  padding: var(--bb-rl-space-300);
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-wrap-invites .screen-heading {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-invites p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-wrap-invites #send-invite-form table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--bb-rl-radius-lg);
+  overflow: hidden;
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-invites #send-invite-form table td {
+  padding: var(--bb-rl-space-200);
+  border: 0;
+}
+
+.bb-rl-wrap-invites #send-invite-form label {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--bb-rl-text-tertiary-color);
+  margin-bottom: var(--bb-rl-space-100);
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-invites #send-invite-form textarea {
+  width: 100%;
+  height: 100px;
+}
+
+.bb-rl-wrap-invites #send-invite-form select {
+  width: 100%;
+  padding: var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-wrap-invites #send-invite-form #submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 6px var(--bb-rl-space-200);
+  line-height: var(--bb-rl-base-line-small);
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-invites #send-invite-form #submit:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-wrap-invites #send-invite-form #submit:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-wrap-invites #send-invite-form #submit:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-profile-panel {
   margin: 0 auto;
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-color);
+}
+
+.bb-rl-profile-panel.public {
+  padding: var(--bb-rl-space-400);
+  border-color: var(--bb-rl-border-secondary-color);
+  margin: var(--bb-rl-space-300) 0 0;
+}
+
+.bb-rl-profile-panel.edit {
+  max-width: 720px;
+}
+
+.bb-rl-profile-widget .bb-rl-profile-widget-header {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  padding: 0 0 var(--bb-rl-space-100);
+  margin: 0 0 var(--bb-rl-space-200);
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-profile-panel .bb-rl-profile-widget .bb-rl-profile-widget-header .bb-rl-see-all {
+  margin-right: auto;
+}
+
+.bb-rl-profile-panel .bb-rl-profile-widget .bb-rl-profile-widget-header .bb-rl-see-all a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-profile-panel .bb-rl-profile-widget .bb-rl-profile-widget-header .bb-rl-see-all a:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-profile-panel .bb-rl-profile-widget .bb-rl-profile-widget-header .bb-rl-see-all a:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-profile-panel .bb-rl-profile-widget .bb-rl-profile-widget-header .bb-rl-see-all a:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-profile-widget + .bb-rl-profile-widget {
+  margin-top: var(--bb-rl-space-400);
+}
+
+.bb-rl-profile-subnav {
+  margin: var(--bb-rl-space-300) 0 0;
+}
+
+.bb-rl-profile-subnav ul.subnav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-flow: wrap;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-profile-subnav ul.subnav li a {
+  display: block;
+  color: var(--bb-rl-text-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  letter-spacing: var(--bb-rl-letter-spacing-sm);
+}
+
+.bb-rl-profile-subnav ul.subnav li a:hover {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-text-color);
+}
+
+.bb-rl-profile-subnav ul.subnav li.selected a {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-text-color);
 }
 
 .bb-rl-profile-edit-wrapper {

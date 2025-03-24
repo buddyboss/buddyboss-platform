@@ -19,7 +19,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 	return;
 }
 ?>
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?> bb-rl-profile-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 
 		<?php

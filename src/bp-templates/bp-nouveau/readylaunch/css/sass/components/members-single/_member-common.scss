@@ -250,8 +250,8 @@
 
 .bb-rl-wrap-invites {
 	padding: var(--bb-rl-space-300);
-    background-color: var(--bb-rl-background-color);
-    border-radius: var(--bb-rl-radius-lg);
+	background-color: var(--bb-rl-background-color);
+	border-radius: var(--bb-rl-radius-lg);
 
 	.screen-heading {
 		margin-bottom: var(--bb-rl-space-200);
@@ -301,13 +301,105 @@
 		}
 
 		#submit {
+
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
 			font-size: var(--bb-rl-font-size-sm);
 			padding: 6px var(--bb-rl-space-200);
 			line-height: var(--bb-rl-base-line-small);
 			margin-top: var(--bb-rl-space-200);
-		}		
-				
+		}
+	}
+}
+
+.bb-rl-profile-panel {
+	margin: 0 auto;
+	background-color: var(--bb-rl-background-color);
+	border-radius: var(--bb-rl-radius-lg);
+	border: 1px solid var(--bb-rl-border-color);
+
+	&.public {
+		padding: var(--bb-rl-space-400);
+		border-color: var(--bb-rl-border-secondary-color);
+		margin: var(--bb-rl-space-300) 0 0;
+	}
+
+	&.edit {
+		max-width: 720px;
+	}
+}
+
+.bb-rl-profile-widget {
+
+	.bb-rl-profile-widget-header {
+
+		@include bb-rl-base-heading-xl;
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		padding: 0 0 var(--bb-rl-space-100);
+		margin: 0 0 var(--bb-rl-space-200);
+		display: flex;
+		align-items: center;
+
+		.bb-rl-profile-panel & {
+
+			.bb-rl-see-all {
+				margin-left: auto;
+
+				a {
+
+					@include bb-rl-button;
+					@include bb-rl-button-secondary-fill;
+					@include bb-rl-button--small;
+					font-weight: 500;
+					line-height: var(--bb-rl-base-line-small);
+				}
+			}
+		}
+	}
+
+	+ .bb-rl-profile-widget {
+		margin-top: var(--bb-rl-space-400);
+	}
+}
+
+.bb-rl-profile-subnav {
+	margin: var(--bb-rl-space-300) 0 0;
+
+	ul.subnav {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		flex-flow: wrap;
+		gap: var(--bb-rl-space-100);
+
+		li {
+
+			a {
+				display: block;
+				color: var(--bb-rl-text-secondary-color);
+				border-radius: var(--bb-rl-radius-full);
+				padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				font-size: var(--bb-rl-font-size-sm);
+				letter-spacing: var(--bb-rl-letter-spacing-sm);
+
+				&:hover {
+					color: var(--bb-rl-text-color);
+					background-color: var(--bb-rl-background-color);
+					border-color: var(--bb-rl-text-color);
+				}
+			}
+
+			&.selected {
+
+				a {
+					color: var(--bb-rl-text-color);
+					background-color: var(--bb-rl-background-color);
+					border-color: var(--bb-rl-text-color);
+				}
+			}
+		}
 	}
 }
