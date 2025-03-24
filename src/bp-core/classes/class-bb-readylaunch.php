@@ -58,7 +58,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function __construct() {
-			
+
 			$this->settings = bb_get_enabled_readylaunch();
 
 			// Register the ReadyLaunch menu.
@@ -280,23 +280,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return false;
 		}
 
-        private function bb_is_readylaunch_admin_enabled() {
-	       if(
-		       (
-			       ! empty( $this->settings['document'] ) &&
-			       is_admin() &&
-			       ! wp_doing_ajax() &&
-			       ! empty( $_GET['page'] ) &&
-			       'bp-settings' == $_GET['page'] &&
-			       ! empty( $_GET['tab'] ) &&
-			       'bp-document' == $_GET['tab']
-		       )
-           ) {
-               return true;
-           }
+		private function bb_is_readylaunch_admin_enabled() {
+			if (
+				(
+					! empty( $this->settings['document'] ) &&
+					is_admin() &&
+					! wp_doing_ajax() &&
+					! empty( $_GET['page'] ) &&
+					'bp-settings' == $_GET['page'] &&
+					! empty( $_GET['tab'] ) &&
+					'bp-document' == $_GET['tab']
+				)
+			) {
+				return true;
+			}
 
-           return false;
-        }
+			return false;
+		}
 
 		/**
 		 * Register the ReadyLaunch menus.
@@ -596,11 +596,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-nouveau' ), bp_get_version(), true );
 
-			// Enqueue Cropper.js
+			// Enqueue Cropper.js.
 			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
 			wp_enqueue_style( 'bb-readylaunch-cropper-css' );
 
-			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 
 			// Register only if it's Activity component.
@@ -620,8 +620,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Register only if it's Groups component.
 			if ( bp_is_active( 'groups' ) ) {
-				if ( 
-					bp_is_group_single() || 
+				if ( bp_is_group_single() ||
 					bp_is_group_create() ||
 					bp_is_user_groups()
 				) {
@@ -649,11 +648,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_register_script(
 					'bb-rl-members',
 					buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-members{$min}.js",
-					array('bp-nouveau'),
+					array( 'bp-nouveau' ),
 					bp_get_version(),
 					true
 				);
-				wp_enqueue_script('bb-rl-members');
+				wp_enqueue_script( 'bb-rl-members' );
 
 				wp_localize_script(
 					'bb-rl-members',
@@ -682,6 +681,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 		}
 
+		/**
+		 * Enqueue admin styles for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
@@ -1337,65 +1341,61 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $svg['font'];
 		}
 
-        public function bb_readylaunch_document_icon_class( $icon_class ) {
-	        $mapped_icon = array(
-		        'bb-icon-file'             => 'bb-icons-rl-file',
-		        'bb-icon-file-zip'         => 'bb-icons-rl-file-archive',
-		        'bb-icon-file-mp3'         => 'bb-icons-rl-file-audio',
-		        'bb-icon-file-html'        => 'bb-icons-rl-file-html',
-		        'bb-icon-file-psd'         => 'bb-icons-rl-file-dashed',
-		        'bb-icon-file-png'         => 'bb-icons-rl-file-image',
-		        'bb-icon-file-pptx'        => 'bb-icons-rl-file-ppt',
-		        'bb-icon-file-xlsx'        => 'bb-icons-rl-file-xls',
-		        'bb-icon-file-txt'         => 'bb-icons-rl-file-text',
-		        'bb-icon-file-video'       => 'bb-icons-rl-file-video',
-		        'bb-icon-file-abw'         => 'bb-icons-rl-file-text',
-		        'bb-icon-file-ace'         => 'bb-icons-rl-file-archive',
-		        'bb-icon-file-archive'     => 'bb-icons-rl-file-archive',
-		        'bb-icon-file-ai'          => '', // ai
-		        'bb-icon-file-apk'         => '', // apk
-		        'bb-icon-file-css'         => 'bb-icons-rl-file-css',
-		        'bb-icon-file-csv'         => 'bb-icons-rl-file-csv',
-		        'bb-icon-file-doc'         => 'bb-icons-rl-file-doc',
-		        'bb-icon-file-docm'        => 'bb-icons-rl-file-doc',
-		        'bb-icon-file-docx'        => 'bb-icons-rl-file-doc',
-		        'bb-icon-file-dotm'        => 'bb-icons-rl-file-doc',
-		        'bb-icon-file-dotx'        => 'bb-icons-rl-file-doc',
-		        'bb-icon-file-svg'         => 'bb-icons-rl-file-svg',
-		        'bb-icon-file-gif'         => 'bb-icons-rl-file-image',
-		        'bb-icon-file-excel'       => '', // hlam, hlsb, hlsm
-		        'bb-icon-file-code'        => 'bb-icons-rl-file-html',
-		        'bb-icon-file-image'       => 'bb-icons-rl-file-image',
-		        'bb-icon-file-mobile'      => '', // ipa
-		        'bb-icon-file-code'        => 'bb-icons-rl-file-code',
-		        'bb-icon-file-audio'       => 'bb-icons-rl-file-audio',
-		        'bb-icon-file-spreadsheet' => '', // ods, odt
-		        'bb-icon-file-pdf'         => 'bb-icons-rl-file-pdf',
-		        'bb-icon-file-image'       => 'bb-icons-rl-file-image',
-		        'bb-icon-file-vector'      => '', // psd
-		        'bb-icon-file-pptm'        => 'bb-icons-rl-file-ppt',
-		        'bb-icon-file-pptx'        => 'bb-icons-rl-file-ppt',
-		        'bb-icon-file-pps'         => 'bb-icons-rl-file-ppt',
-		        'bb-icon-file-ppsx'        => 'bb-icons-rl-file-ppt',
-		        'bb-icon-file-ppt'         => 'bb-icons-rl-file-ppt',
-		        'bb-icon-file-rar'         => 'bb-icons-rl-file-archive',
-		        'bb-icon-file-rtf'         => 'bb-icons-rl-file-text',
-		        'bb-icon-file-rss'         => '', // rss
-		        'bb-icon-file-sketch'      => '', // sketch
-		        'bb-icon-file-tar'         => 'bb-icons-rl-file-archive',
-		        'bb-icon-file-txt'         => 'bb-icons-rl-file-text',
-		        'bb-icon-file-vcf'         => '', // vcf
-		        'bb-icon-file-wav'         => 'bb-icons-rl-file-audio',
-		        'bb-icon-file-xltm'        => 'bb-icons-rl-file-x',
-		        'bb-icon-file-xltx'        => 'bb-icons-rl-file-x',
-		        'bb-icon-file-xml'         => 'bb-icons-rl-file-x',
-		        'bb-icon-file-yaml'        => 'bb-icons-rl-file-code',
-		        'bb-icon-folder-stacked'   => 'bb-icons-rl-folders',
-		        'bb-icon-download'         => 'bb-icons-rl-download-simple',
-	        );
+		public function bb_readylaunch_document_icon_class( $icon_class ) {
+			$mapped_icon = array(
+				'bb-icon-file'             => 'bb-icons-rl-file',
+				'bb-icon-file-zip'         => 'bb-icons-rl-file-archive',
+				'bb-icon-file-mp3'         => 'bb-icons-rl-file-audio',
+				'bb-icon-file-html'        => 'bb-icons-rl-file-html',
+				'bb-icon-file-psd'         => 'bb-icons-rl-file-dashed',
+				'bb-icon-file-png'         => 'bb-icons-rl-file-image',
+				'bb-icon-file-pptx'        => 'bb-icons-rl-file-ppt',
+				'bb-icon-file-xlsx'        => 'bb-icons-rl-file-xls',
+				'bb-icon-file-txt'         => 'bb-icons-rl-file-text',
+				'bb-icon-file-video'       => 'bb-icons-rl-file-video',
+				'bb-icon-file-abw'         => 'bb-icons-rl-file-text',
+				'bb-icon-file-ace'         => 'bb-icons-rl-file-archive',
+				'bb-icon-file-archive'     => 'bb-icons-rl-file-archive',
+				'bb-icon-file-ai'          => '', // ai.
+				'bb-icon-file-apk'         => '', // apk.
+				'bb-icon-file-css'         => 'bb-icons-rl-file-css',
+				'bb-icon-file-csv'         => 'bb-icons-rl-file-csv',
+				'bb-icon-file-doc'         => 'bb-icons-rl-file-doc',
+				'bb-icon-file-docm'        => 'bb-icons-rl-file-doc',
+				'bb-icon-file-docx'        => 'bb-icons-rl-file-doc',
+				'bb-icon-file-dotm'        => 'bb-icons-rl-file-doc',
+				'bb-icon-file-dotx'        => 'bb-icons-rl-file-doc',
+				'bb-icon-file-svg'         => 'bb-icons-rl-file-svg',
+				'bb-icon-file-gif'         => 'bb-icons-rl-file-image',
+				'bb-icon-file-excel'       => '', // hlam, hlsb, hlsm.
+				'bb-icon-file-code'        => 'bb-icons-rl-file-html',
+				'bb-icon-file-image'       => 'bb-icons-rl-file-image',
+				'bb-icon-file-mobile'      => '', // ipa.
+				'bb-icon-file-audio'       => 'bb-icons-rl-file-audio',
+				'bb-icon-file-spreadsheet' => '', // ods, odt.
+				'bb-icon-file-pdf'         => 'bb-icons-rl-file-pdf',
+				'bb-icon-file-vector'      => '', // psd.
+				'bb-icon-file-pptm'        => 'bb-icons-rl-file-ppt',
+				'bb-icon-file-pps'         => 'bb-icons-rl-file-ppt',
+				'bb-icon-file-ppsx'        => 'bb-icons-rl-file-ppt',
+				'bb-icon-file-ppt'         => 'bb-icons-rl-file-ppt',
+				'bb-icon-file-rar'         => 'bb-icons-rl-file-archive',
+				'bb-icon-file-rtf'         => 'bb-icons-rl-file-text',
+				'bb-icon-file-rss'         => '', // rss.
+				'bb-icon-file-sketch'      => '', // sketch.
+				'bb-icon-file-tar'         => 'bb-icons-rl-file-archive',
+				'bb-icon-file-vcf'         => '', // vcf.
+				'bb-icon-file-wav'         => 'bb-icons-rl-file-audio',
+				'bb-icon-file-xltm'        => 'bb-icons-rl-file-x',
+				'bb-icon-file-xltx'        => 'bb-icons-rl-file-x',
+				'bb-icon-file-xml'         => 'bb-icons-rl-file-x',
+				'bb-icon-file-yaml'        => 'bb-icons-rl-file-code',
+				'bb-icon-folder-stacked'   => 'bb-icons-rl-folders',
+				'bb-icon-download'         => 'bb-icons-rl-download-simple',
+			);
 
-            return ! empty( $mapped_icon[ $icon_class ] ) ? $mapped_icon[ $icon_class ] : $icon_class;
-        }
+			return ! empty( $mapped_icon[ $icon_class ] ) ? $mapped_icon[ $icon_class ] : $icon_class;
+		}
 
 		/**
 		 * Filters the label for BuddyPress Nouveau filters.
@@ -1433,7 +1433,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return array The same array with the specific messages scripts.
 		 */
-		function bb_rl_nouveau_register_scripts( $scripts = array() ) {
+		public function bb_rl_nouveau_register_scripts( $scripts = array() ) {
 			if ( ! isset( $scripts['bp-nouveau'] ) ) {
 				return $scripts;
 			}
@@ -1462,7 +1462,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'version'      => bp_get_version(),
 						'footer'       => true,
 					),
-					'bb-rl-xprofile'   => array(
+					'bb-rl-xprofile'            => array(
 						'file'         => buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-xprofile%s.js',
 						'dependencies' => array( 'bp-nouveau', 'jquery-ui-sortable' ),
 						'footer'       => true,
@@ -1539,7 +1539,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
-		function bb_rl_invite_form_callback() {
+		public function bb_rl_invite_form_callback() {
 			$response = array(
 				'message' => esc_html__( 'Unable to send invite.', 'buddyboss' ),
 				'type'    => 'error',
@@ -1598,7 +1598,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
-			$email_encode = urlencode( $email );
+			$email_encode = rawurlencode( $email );
 			$inviter_url  = bp_loggedin_user_domain();
 
 			$_POST['custom_user_email']  = $email;
@@ -1778,7 +1778,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string|bool $avatar_image_url Default avatar URL, false otherwise.
-		 * @param string      $component        The component to get the settings for ("members" for user or "groups").
+		 * @param array       $params          Parameters for the avatar image.
 		 *
 		 * @return string|bool $avatar_image_url Default avatar URL, false otherwise.
 		 */
@@ -1789,17 +1789,33 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $avatar_image_url;
 		}
 
+		/**
+		 * Check if the current user is a group admin.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True if the user is a group admin, false otherwise.
+		 */
 		public static function bb_is_group_admin() {
 			return bp_is_active( 'groups' ) &&
 					bp_is_group_single() &&
 					bp_get_group_current_admin_tab();
 		}
 
+		/**
+		 * Register common scripts for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $scripts Array of registered scripts.
+		 *
+		 * @return array $scripts Array of registered scripts.
+		 */
 		public function bb_rl_register_common_scripts( $scripts ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
 
-			// Add Cropper.js to the common scripts
+			// Add Cropper.js to the common scripts.
 			$scripts['bb-readylaunch-cropper-js'] = array(
 				'file'         => "{$url}cropper{$min}.js",
 				'dependencies' => array( 'jquery' ),
@@ -1822,6 +1838,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			return $scripts;
 		}
 
+		/**
+		 * Register common styles for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $styles Array of registered styles.
+		 *
+		 * @return array $styles Array of registered styles.
+		 */
 		public function bb_rl_register_common_styles( $styles ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
