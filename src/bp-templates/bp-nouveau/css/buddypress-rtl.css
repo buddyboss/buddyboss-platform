@@ -26421,6 +26421,16 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   }
 }
 
+@media screen and (min-width: 800px) and (max-width: 1220px) {
+  body.activity-sidebar-right .activity-head-bar {
+    flex-wrap: wrap;
+  }
+  body.activity-sidebar-right .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
 .activity-head-bar {
   display: flex;
   align-items: center;
