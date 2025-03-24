@@ -878,13 +878,18 @@ div.video-js {
 			display: none;
 		}
 
+		~ .bb-video-duration,
 		~ .bb-rl-video-duration {
 			display: none;
 		}
 	}
 
-	&.vjs-has-started ~ .bb-rl-video-duration {
-		display: none;
+	&.vjs-has-started {
+
+		~ .bb-rl-video-duration,
+		~ .bb-video-duration {
+			display: none;
+		}
 	}
 
 	&.vjs-error {
@@ -919,6 +924,7 @@ div.video-js {
 			}
 		}
 
+		~ .bb-video-duration,
 		~ .bb-rl-video-duration {
 			display: none;
 		}
@@ -1061,8 +1067,16 @@ div.vjs-menu {
 	}
 }
 
-.bb-rl-single-activity-video.video-js .vjs-fullscreen-control {
-	display: none;
+
+.single-activity-video,
+.bb-rl-single-activity-video {
+
+	&.video-js {
+
+		.vjs-fullscreen-control {
+			display: none;
+		}
+	}
 }
 
 // More options Dropdown

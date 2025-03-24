@@ -1138,6 +1138,17 @@ body.messages .bb-rl-content-wrapper {
   background-color: var(--bb-rl-background-color);
 }
 
+#bp-message-thread-list .bb-rl-activity-video-elem {
+  width: 100%;
+  max-width: 400px;
+}
+
+#bp-message-thread-list .bb-rl-activity-video-elem div.video-js .vjs-poster > img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
 #bp-message-load-more {
   position: absolute;
   top: 60px;

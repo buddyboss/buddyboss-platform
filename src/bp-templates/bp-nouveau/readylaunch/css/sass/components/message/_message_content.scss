@@ -460,6 +460,17 @@
 			}
 		}
 	}
+
+	.bb-rl-activity-video-elem {
+		width: 100%;
+		max-width: 400px;
+
+		div.video-js .vjs-poster > img {
+			object-fit: cover;
+			height: 100%;
+			width: 100%;
+		}
+	}
 }
 
 #bp-message-load-more {

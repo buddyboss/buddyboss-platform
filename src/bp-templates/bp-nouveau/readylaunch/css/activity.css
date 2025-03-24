@@ -2748,6 +2748,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   opacity: 1;
 }
 
+.bb-rl-activity-video-elem .bb-video-duration,
 .bb-rl-activity-video-elem .bb-rl-video-duration {
   font-size: 13px;
   font-weight: 500;
@@ -2765,10 +2766,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: 0 !important;
 }
 
+.bb-rl-activity-video-elem .bb-item-cover-wrap.hide,
 .bb-rl-activity-video-elem .bb-rl-item-cover-wrap.hide {
   display: none;
 }
 
+.bb-rl-activity-video-elem div.video-js + .bb-video-loader,
 .bb-rl-activity-video-elem div.video-js + .bb-rl-video-loader {
   display: none;
 }
@@ -2791,7 +2794,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-activity-video-elem.no_more_option .bb-rl-item-cover-wrap:before,
-.bb-rl-activity-video-elem.no_more_option .bb-rl-video-duration {
+.bb-rl-activity-video-elem.no_more_option .bb-rl-video-duration,
+.bb-rl-activity-video-elem.no_more_option .bb-video-duration {
   display: none;
 }
 

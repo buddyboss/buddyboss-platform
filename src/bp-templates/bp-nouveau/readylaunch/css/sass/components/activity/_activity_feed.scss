@@ -910,6 +910,7 @@
 		}
 	}
 
+	.bb-video-duration,
 	.bb-rl-video-duration {
 		font-size: 13px;
 		font-weight: 500;
@@ -927,10 +928,13 @@
 		margin-bottom: 0 !important;
 	}
 
+
+	.bb-item-cover-wrap.hide,
 	.bb-rl-item-cover-wrap.hide {
 		display: none;
 	}
 
+	div.video-js + .bb-video-loader,
 	div.video-js + .bb-rl-video-loader {
 		display: none;
 	}
@@ -955,7 +959,8 @@
 		}
 
 		.bb-rl-item-cover-wrap:before,
-		.bb-rl-video-duration {
+		.bb-rl-video-duration,
+		.bb-video-duration {
 			display: none;
 		}
 
