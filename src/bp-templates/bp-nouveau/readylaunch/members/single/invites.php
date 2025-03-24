@@ -8,22 +8,24 @@
  */
 
 if ( bp_is_my_profile() ) {
+	echo '<div class="bb-rl-sub-ctrls flex items-center justify-between">';
 	bp_get_template_part( 'members/single/parts/item-subnav' );
+	echo '</div>';
 }
 
 switch ( bp_current_action() ) :
 
-	// Home/My Groups
+	// Home/My Groups.
 	case 'send-invites':
 		bp_get_template_part( 'members/single/invites/send-invites' );
 		break;
 
-	// Group Invitations
+	// Group Invitations.
 	case 'sent-invites':
 		bp_get_template_part( 'members/single/invites/sent-invites' );
 		break;
 
-	// Any other
+	// Any other.
 	default:
 		bp_get_template_part( 'members/single/plugins' );
 		break;
