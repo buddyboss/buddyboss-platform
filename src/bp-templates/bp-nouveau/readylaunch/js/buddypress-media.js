@@ -292,6 +292,7 @@ window.bp = window.bp || {};
 			$activityElements.on( 'click', '.bb-rl-ac-media-close-button', this.closeMediaMove.bind( this ) );
 			var mediaStream = $( '#bb-rl-media-model-container .bb-rl-activity-list, #media-stream' );
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
+			mediaStream.on( 'click', '.ac-document-edit', this.editDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
 			mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
@@ -3018,6 +3019,18 @@ window.bp = window.bp || {};
 			current_name.hide().siblings( '.media-folder_name_edit_wrap' ).show().children( '.media-folder_name_edit' ).val( current_name_text ).focus().select();
 
 			event.preventDefault();
+		},
+
+		/**
+		 * [editDocument description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		editDocument: function ( event ) {
+			event.preventDefault();
+			var eventTarget = $( event.currentTarget );
+			console.log( eventTarget );
 		},
 
 		/**

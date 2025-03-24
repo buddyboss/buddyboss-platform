@@ -100,6 +100,10 @@
 	}
 }
 
+.bb-rl-modal-body {
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
 // Modal
 .mfp-hide {
 	display: none !important;
@@ -563,6 +567,32 @@
 		.bb-rl-no-album-exists {
 			display: block;
 			margin: var(--bb-rl-space-200) 0 0;
+		}
+	}
+}
+
+.bb-rl-modal-edit-file {
+
+	.bb-field-wrap {
+		margin-bottom: var(--bb-rl-space-200);
+
+		label {
+
+			@include bb-rl-label-heading-md;
+			display: block;
+			margin-bottom: var(--bb-rl-space-100);
+			color: var(--bb-rl-text-color);
+		}
+
+		input {
+			width: 100%;
+		}
+	}
+
+	.bb-rl-modal-body {
+
+		.bb-field-wrap:last-of-type {
+			margin-bottom: 0;
 		}
 	}
 }

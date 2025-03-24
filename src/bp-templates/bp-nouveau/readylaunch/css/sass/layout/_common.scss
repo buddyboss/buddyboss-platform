@@ -247,6 +247,10 @@
 				content: "\e34c";
 			}
 
+			&.ac-document-edit::before {
+				content: "\e3b4";
+			}
+
 			&.ac-document-privacy::before {
 				content: "\e2fa";
 			}
