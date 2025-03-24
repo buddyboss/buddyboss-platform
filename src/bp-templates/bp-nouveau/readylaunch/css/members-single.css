@@ -151,6 +151,7 @@
 .bb-rl-main-nav-list li a .count {
   padding: 0 var(--bb-rl-space-50);
   margin-left: var(--bb-rl-space-100);
+  display: none;
 }
 
 .bb-rl-main-nav-list li.selected a, .bb-rl-main-nav-list li.current a {
