@@ -5098,7 +5098,7 @@ window.bp = window.bp || {};
 		updateGroupCard: function ( data ) {
 			var $groupCard             = $( '#group-card' );
 			var groupMembers           = data.group_members || [];
-			var $groupMembersContainer = $( '.bs-group-members' );
+			var $groupMembersContainer = $groupCard.find( '.bs-group-members' );
 			var membersLabel           = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
 
 			$groupCard.addClass( 'show' ).attr( 'data-bp-item-id', data.id );
