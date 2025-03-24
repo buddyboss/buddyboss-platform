@@ -5462,6 +5462,7 @@ body.buddyboss-theme {
 
 	body.activity-sidebar-right .activity-head-bar {
 		flex-wrap: wrap;
+		justify-content: flex-end;
 
 		.bb-subnav-filters-container.bb-subnav-filters-search {
 			width: 100%;
@@ -5538,7 +5539,7 @@ body.buddyboss-theme {
 	}
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 680px) {
 
 	.activity-head-bar {
 		justify-content: center;
