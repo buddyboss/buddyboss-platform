@@ -26385,6 +26385,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 @media screen and (min-width: 800px) and (max-width: 1220px) {
   body.activity-sidebar-right .activity-head-bar {
     flex-wrap: wrap;
+    justify-content: flex-end;
   }
   body.activity-sidebar-right .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-search {
     width: 100%;
@@ -26451,7 +26452,7 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   display: none;
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 680px) {
   .activity-head-bar {
     justify-content: center;
     flex-wrap: wrap;
