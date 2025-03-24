@@ -449,6 +449,10 @@
 			margin-right: var(--bb-rl-space-50);
 			font-size: 16px;
 		}
+
+		.bb-create-album {
+			margin-top: var(--bb-rl-space-300);
+		}
 	}
 }
 
@@ -551,3 +555,16 @@
 		}
 	}
 }
+
+/* .bb-rl-albums {
+
+	#bp-media-single-album {
+
+		.bb-album-actions {
+
+			.bb-delete {
+				margin-right: auto;
+			}
+		}
+	}
+} */

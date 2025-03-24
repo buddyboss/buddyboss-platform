@@ -7821,6 +7821,10 @@ li.bb-rl-hideshow {
   font-size: 16px;
 }
 
+.bb-rl-media-none .bb-rl-media-none-actions .bb-create-album {
+  margin-top: var(--bb-rl-space-300);
+}
+
 .bb-rl-media-stream .bb-albums-list {
   list-style: none;
   padding: 0;
@@ -7918,6 +7922,18 @@ li.bb-rl-hideshow {
   border-radius: 50%;
 }
 
+/* .bb-rl-albums {
+
+	#bp-media-single-album {
+
+		.bb-album-actions {
+
+			.bb-delete {
+				margin-right: auto;
+			}
+		}
+	}
+} */
 .bb-rl-admin-subnav {
   margin: var(--bb-rl-space-100) 0 0;
 }
