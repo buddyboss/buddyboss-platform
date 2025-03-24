@@ -13,6 +13,7 @@ if ( bp_is_my_profile() ) {
 	echo '</div>';
 }
 
+echo '<div class="bb-rl-wrap-invites">';
 switch ( bp_current_action() ) :
 
 	// Home/My Groups.
@@ -30,3 +31,4 @@ switch ( bp_current_action() ) :
 		bp_get_template_part( 'members/single/plugins' );
 		break;
 endswitch;
+echo '</div>';
