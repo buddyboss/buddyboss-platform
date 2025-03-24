@@ -1476,14 +1476,14 @@ window.bp = window.bp || {};
 		restoreVideoJsPreview: function( draft_data, backup_data ) {
 			if ( draft_data && draft_data.video && draft_data.video.length &&
 				backup_data && backup_data.video && backup_data.video.length ) {
-				for ( var i = 0; i < draft_data.video.length; i++ ) {
-					for ( var j = 0; j < backup_data.video.length; j++ ) {
-						if ( draft_data.video[i].id && backup_data.video[j].id &&
-							draft_data.video[i].id === backup_data.video[j].id ) {
-							if ( backup_data.video[j].js_preview ) {
-								draft_data.video[i].js_preview = backup_data.video[j].js_preview;
-							}
-							break;
+				var backupMap = new Map( backup_data.video.map( v => [ v.id, v.js_preview ] ) );
+
+				for ( var video of draft_data.video ) {
+					if ( video.id && backupMap.has( video.id ) ) {
+						var backup_js_preview = backupMap.get( video.id );
+
+						if ( ! video.js_preview || video.js_preview !== backup_js_preview ) {
+							video.js_preview = backup_js_preview ? backup_js_preview : null;
 						}
 					}
 				}
@@ -1494,25 +1494,35 @@ window.bp = window.bp || {};
 		checkAndStoreDraftToLocalStorage: function( draft_activity ) {
 			try {
 				var json_data     = JSON.stringify( draft_activity );
-				var data_size_mb  = new Blob( [ json_data ] ).size / ( 1024 * 1024 );
+				var encoder       = new TextEncoder();
+				var data_size_mb  = encoder.encode( json_data ).length / ( 1024 * 1024 );
 				data_size_mb      = data_size_mb.toFixed( 2 );
-		
+
 				if ( data_size_mb > 4 && draft_activity.data && draft_activity.data.video && draft_activity.data.video.length ) {
-					console.log( 'Draft data size: ' + data_size_mb + 'MB - removing video previews from localStorage only' );
 		
-					var storage_copy = JSON.parse( JSON.stringify( draft_activity ) );
-		
-					if ( storage_copy.data && storage_copy.data.video && storage_copy.data.video.length ) {
+					var storage_copy = JSON.parse( json_data );
+					if ( storage_copy.data && storage_copy.data.video ) {
 						for ( var i = 0; i < storage_copy.data.video.length; i++ ) {
 							if ( storage_copy.data.video[i].js_preview ) {
+								// Remove one js_preview.
 								storage_copy.data.video[i].js_preview = null;
+
+								// Recalculate size.
+								json_data    = JSON.stringify( storage_copy );
+								data_size_mb = encoder.encode( json_data ).length / ( 1024 * 1024 );
+								data_size_mb = data_size_mb.toFixed( 2 );
+
+								// Stop removing if size is acceptable.
+								if ( data_size_mb <= 4 ) {
+									break;
+								}
 							}
 						}
 					}
-		
-					localStorage.setItem( draft_activity.data_key, JSON.stringify( storage_copy ) );
+
+					localStorage.setItem( draft_activity.data_key, json_data );
 				} else {
-					localStorage.setItem( draft_activity.data_key, JSON.stringify( draft_activity ) );
+					localStorage.setItem( draft_activity.data_key, json_data );
 				}
 			} catch ( e ) {
 				console.error( 'Error checking draft data size', e );
