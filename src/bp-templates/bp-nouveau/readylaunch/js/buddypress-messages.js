@@ -4698,7 +4698,7 @@ window.bp = window.bp || {};
 				// Add thread id into the li class.
 				this.el.className += ' ' + this.model.get( 'id' );
 
-				if ( $( '#thread-id' ).val() === this.model.get( 'id' ) ) {
+				if ( parseInt( $( '#thread-id' ).val() ) === this.model.get( 'id' ) ) {
 					this.el.className += ' current';
 				}
 
