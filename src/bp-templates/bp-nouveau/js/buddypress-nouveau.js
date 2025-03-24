@@ -5163,6 +5163,12 @@ window.bp = window.bp || {};
 
 			var $avatar = $( this );
 
+			// Disable popup card for specific locations
+			var blockedContainers = '.list-title.groups-title';
+			if ( $avatar.closest( blockedContainers ).length ) {
+				return;
+			}
+
 			var groupId = $avatar.attr( 'data-bb-hp-group' );
 			if ( ! groupId ) {
 				return;
