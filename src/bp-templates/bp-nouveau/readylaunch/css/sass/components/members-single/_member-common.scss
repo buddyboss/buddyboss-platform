@@ -168,9 +168,10 @@
 			list-style: none;
 			display: flex;
 			flex-wrap: wrap;
+			gap: var(--bb-rl-space-100);
 
 			li {
-				margin: 0 var(--bb-rl-space-100) 0 0;
+				margin: 0;
 				padding: 0;
 
 				a {
@@ -362,8 +363,11 @@
 	}
 }
 
-.bb-rl-profile-subnav {
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav {
 	margin: var(--bb-rl-space-300) 0 0;
+}
+
+.bb-rl-profile-subnav {
 
 	ul.subnav {
 		list-style: none;

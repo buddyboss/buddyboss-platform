@@ -322,10 +322,11 @@
   list-style: none;
   display: flex;
   flex-wrap: wrap;
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-primary-container .bb-rl-sub-ctrls ul.subnav li {
-  margin: 0 0 0 var(--bb-rl-space-100);
+  margin: 0;
   padding: 0;
 }
 
@@ -584,7 +585,7 @@
   margin-top: var(--bb-rl-space-400);
 }
 
-.bb-rl-profile-subnav {
+.bb-rl-profile-header + .bp-wrap .item-body > .bb-rl-profile-subnav {
   margin: var(--bb-rl-space-300) 0 0;
 }
 
