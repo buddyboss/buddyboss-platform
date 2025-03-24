@@ -47,7 +47,7 @@ window.bp = window.bp || {};
 	    bbRlHowtoBulk                = bbRlMessages.howtoBulk,
 	    bbRlMessageUrl               = bbRlMessages.message_url,
 	    bbRlMessageArchivedUrl       = bbRlMessages.message_archived_url,
-	    bbRlDoingAction              = bbRlMessages.doing_action,
+	    bbRlDoingAction              = bbRlMessages.doingAction,
 	    bbRlToOthers                 = bbRlMessages.toOthers,
 	    bbRlRootUrl                  = bbRlMessages.rootUrl;
 
