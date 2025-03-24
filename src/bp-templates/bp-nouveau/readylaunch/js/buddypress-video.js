@@ -2685,8 +2685,18 @@ window.bp = window.bp || {};
 								function () {
 									$( '.video-js' ).each(
 										function () {
-											if ( videoIndex !== $( this ).attr( 'id' ) ) {
-												this.player.pause();
+											var $playerEl = $( this );
+											var playerId = $playerEl.attr( 'id' );
+
+											// Skip current video and error-state players
+											if ( playerId === videoIndex || $playerEl.hasClass( 'vjs-error' ) ) {
+												return;
+											}
+
+											// Safely access player instance
+											var otherPlayer = videojs.getPlayer( playerId );
+											if ( otherPlayer ) {
+												otherPlayer.pause();
 											}
 										}
 									);
