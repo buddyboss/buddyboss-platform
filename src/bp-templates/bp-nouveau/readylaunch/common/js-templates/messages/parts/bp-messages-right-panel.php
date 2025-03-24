@@ -11,9 +11,9 @@
     if (data.is_group_thread && data.group_name && data.group_name.length > 1) { #>
         <!-- Group Thread -->
         <div class="bb-rl-message-group-thread">
-            <# if (data.group_cover) { #>
+            <# if (data.group_cover_image) { #>
             <div class="bb-rl-message-group-thread-cover">
-                <img decoding="async" src="{{data.group_cover}}">
+                <img decoding="async" src="{{data.group_cover_image}}">
             </div>
             <# } #>
             <div class="bb-rl-message-group-thread-content">

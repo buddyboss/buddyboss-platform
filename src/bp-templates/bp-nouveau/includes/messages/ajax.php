@@ -1897,6 +1897,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$is_group_message_thread   = bb_messages_is_group_thread( $bp_get_the_thread_id );
 	$group_status              = '';
 	$group_last_active         = '';
+	$group_cover_image         = esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' );
 
 	if ( ! $is_group_message_thread ) {
 		$thread = bb_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
@@ -1914,6 +1915,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$group_message_thread_type = bp_messages_get_meta( $last_message_id, 'group_message_thread_type', true );
 		$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
 		$message_from              = bp_messages_get_meta( $last_message_id, 'message_from', true );
+		$group_cover_image         = bp_attachments_get_attachment(
+			'url',
+			array(
+				'object_dir' => 'groups',
+				'item_id'    => $group_id,
+			)
+		);
 
 		if ( bp_is_active( 'groups' ) ) {
 			$get_group  = groups_get_group( $group_id );
@@ -2110,6 +2118,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'group_joined_date'         => $group_joined_date,
 		'group_status'              => $group_status,
 		'group_last_active'         => $group_last_active,
+		'group_cover_image'         => $group_cover_image,
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
