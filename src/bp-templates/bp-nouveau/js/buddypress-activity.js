@@ -149,7 +149,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'activityModalOpened', function( event, data ) {
 				var activityId = data.activityId;
 		
-				$( document ).on( 'click', function( event ) {
+				$( document ).on( 'click', '.bb-activity-model-wrapper.activity-theatre', function( event ) {
 					if (
 						$( '#activity-modal:visible' ).length > 0 &&
 						0 === $( '#bp-nouveau-activity-form-placeholder:visible' ).length &&
