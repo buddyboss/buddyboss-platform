@@ -227,13 +227,7 @@ class BB_Messages_Readylaunch {
 
 			if ( ! empty( $document_items ) ) {
 				foreach ( $document_items as $document ) {
-					$file_url = wp_get_attachment_url( $document->attachment_id );
-					$filetype = wp_check_filetype( $file_url );
-					$ext      = $filetype['ext'];
-					if ( empty( $ext ) ) {
-						$path = wp_parse_url( $file_url, PHP_URL_PATH );
-						$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
-					}
+					$ext = bp_document_extension( $document->attachment_id );
 
 					// Truncate title for display if it's too long.
 					$title = $document->title;
@@ -247,6 +241,7 @@ class BB_Messages_Readylaunch {
 						'full_title' => $document->title,
 						'url'        => bp_document_get_preview_url( $document->id, $document->attachment_id ),
 						'extension'  => $ext,
+						'font_icon'  => class_exists( 'BB_Readylaunch' ) ? BB_Readylaunch::instance()->bb_rl_document_svg_icon( '', $ext ) : '',
 					);
 				}
 			}
