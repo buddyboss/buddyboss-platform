@@ -384,7 +384,11 @@
 		left: 0;
 		-webkit-transform: translateY(-50%);
 		transform: translateY(-50%);
-		display: block;
+		display: none;
+
+		@media screen and (min-width: 1320px) {
+			display: block;
+		}
 	}
 
 	&.has-position .header-cover-img {
@@ -411,6 +415,16 @@
 
 		> i {
 			font-size: 24px;
+		}
+	}
+}
+
+#buddypress .bb-rl-group-cover {
+
+	@media screen and (min-width: 1320px) {
+
+		#header-cover-image.has-cover-image {
+			background-image: none !important;
 		}
 	}
 }

@@ -213,6 +213,7 @@
 
 	.bp-list.friends-request-list,
 	.bp-list.invites {
+
 		.action {
 			list-style: none;
 			margin: 0;
@@ -227,6 +228,7 @@
 				padding: 0;
 
 				.button {
+
 					@include bb-rl-button;
 					@include bb-rl-button--brand-fill;
 					font-size: var(--bb-rl-font-size-sm);
@@ -238,6 +240,7 @@
 	}
 
 	.bp-list.friends-request-list {
+
 		.follow-button,
 		#send-private-message {
 			display: none;

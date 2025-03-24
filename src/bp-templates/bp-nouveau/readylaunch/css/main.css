@@ -2192,10 +2192,10 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 }
 
 #bp-media-single-album .bb-single-album-header .bb-rl-album-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
   color: var(--bb-rl-text-color);
-  font-size: var(--bb-rl-base-line);
-  font-weight: 500;
-  line-height: 1.4;
 }
 
 #bp-media-single-album .bb-single-album-header .button {
@@ -2212,10 +2212,9 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
-  font-size: var(--bb-rl-font-size-sm);
-  padding: 6px var(--bb-rl-space-200);
-  margin-left: 10px;
-  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  margin-left: var(--bb-rl-space-100);
 }
 
 #bp-media-single-album .bb-single-album-header .button:hover {
@@ -2253,10 +2252,9 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
-  font-size: var(--bb-rl-font-size-sm);
-  padding: 6px var(--bb-rl-space-200);
-  margin-right: 10px;
-  line-height: var(--bb-rl-base-line-small);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  margin-right: var(--bb-rl-space-100);
 }
 
 #bp-media-single-album .bb-album-actions .button:hover {
@@ -6578,6 +6576,17 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e272";
 }
 
+.bb-rl-context-wrap .bb-rl-context-dropdown a.leave-group,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.leave-group,
+.bb-rl-context-wrap .bb_more_dropdown a.leave-group,
+.bb-rl-context-wrap .bb_more_dropdown button.leave-group,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.leave-group,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.leave-group,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.leave-group,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.leave-group {
+  color: var(--bb-rl-text-danger-secondary-color);
+}
+
 .bb-rl-context-wrap .bb-rl-context-dropdown a.leave-group::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.leave-group::before,
 .bb-rl-context-wrap .bb_more_dropdown a.leave-group::before,
@@ -6586,7 +6595,51 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.leave-group::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.leave-group::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.leave-group::before {
+  color: var(--bb-rl-text-danger-secondary-color);
   content: "\e42a";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.leave-group:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.leave-group:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.leave-group:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.leave-group:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.leave-group:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.leave-group:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.leave-group:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.leave-group:hover {
+  color: var(--bb-rl-text-danger-secondary-color);
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown a.delete-group,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown button.delete-group,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete {
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
@@ -6618,7 +6671,40 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete::before {
+  color: var(--bb-rl-text-danger-secondary-color);
   content: "\e4a6";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.delete-group:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.delete-group:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete:hover {
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-media-move:before, .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-document-move:before, .bb-rl-context-wrap .bb-rl-context-dropdown a.ac-folder-move:before,
@@ -7619,6 +7705,10 @@ li.bb-rl-hideshow {
 .bb-rl-documents-header-wrap .bb-media-actions .bb-rl-button i {
   font-size: 16px;
   margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-media-container .album-single-view .bb-member-media-header {
+  padding: 0;
 }
 
 .bb-rl-media-container .bb-member-media-header {

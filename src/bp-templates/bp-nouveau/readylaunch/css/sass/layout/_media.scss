@@ -335,6 +335,13 @@
 
 .bb-rl-media-container {
 
+	.album-single-view {
+
+		.bb-member-media-header {
+			padding: 0;
+		}
+	}
+
 	.bb-member-media-header {
 		display: flex;
 		margin: 0 0 var(--bb-rl-space-200);

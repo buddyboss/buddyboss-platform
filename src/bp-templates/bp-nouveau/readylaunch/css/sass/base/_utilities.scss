@@ -1730,7 +1730,8 @@ div.vjs-menu {
 /**
  * Single album
  */
- #bp-media-single-album {
+#bp-media-single-album {
+
 	.bb-single-album-header {
 		display: flex;
 		flex-wrap: wrap;
@@ -1739,13 +1740,13 @@ div.vjs-menu {
 		padding: 0 0 var(--bb-rl-space-200);
 		margin: 0 0 var(--bb-rl-space-200);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-	
+
 		p {
 			flex-basis: 100%;
 			width: 100%;
 			font-size: var(--bb-rl-font-size-sm);
 			margin-top: var(--bb-rl-space-100);
-	
+
 			.bb-sep {
 				margin: 0 var(--bb-rl-space-100);
 				color: var(--bb-rl-text-secondary-color);
@@ -1753,47 +1754,45 @@ div.vjs-menu {
 				font-size: var(--bb-rl-font-size-sm);
 			}
 		}
-	
+
 		.bb-rl-album-title {
+
+			@include bb-rl-base-heading-xl;
 			color: var(--bb-rl-text-color);
-			font-size: var(--bb-rl-base-line);
-			font-weight: 500;
-			line-height: 1.4;
 		}
-	
+
 		.button {
+
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
-			font-size: var(--bb-rl-font-size-sm);
-			padding: 6px var(--bb-rl-space-200);
-			margin-left: 10px;
-			line-height: var(--bb-rl-base-line-small);
+			@include bb-rl-button--small;
+			margin-left: var(--bb-rl-space-100);
 		}
 	}
-	
+
 	.bb-album-actions {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-start;
 		align-items: flex-start;
 		margin-bottom: var(--bb-rl-space-100);
-	
+
 		.button {
+
 			@include bb-rl-button;
 			@include bb-rl-button-secondary-fill;
-			font-size: var(--bb-rl-font-size-sm);
-			padding: 6px var(--bb-rl-space-200);
-			margin-right: 10px;
-			line-height: var(--bb-rl-base-line-small);
-	
+			@include bb-rl-button--small;
+			margin-right: var(--bb-rl-space-100);
+
 			&.bb-delete {
+
 				@include bb-rl-button--secondary-outline;
 			}
 		}
-	
+
 		#bb-album-privacy {
 			margin-left: auto;
 			margin-right: 0;
 		}
 	}
- }
+}

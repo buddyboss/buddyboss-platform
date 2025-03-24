@@ -201,9 +201,15 @@
 			}
 
 			&.leave-group {
+				color: var(--bb-rl-text-danger-secondary-color);
 
 				&::before {
+					color: var(--bb-rl-text-danger-secondary-color);
 					content: "\e42a";
+				}
+
+				&:hover {
+					color: var(--bb-rl-text-danger-secondary-color);
 				}
 			}
 
@@ -211,9 +217,15 @@
 			&.bb-rl-video-file-delete,
 			&.delete-group,
 			&.bb-rl-document-file-delete {
+				color: var(--bb-rl-text-danger-secondary-color);
 
 				&::before {
+					color: var(--bb-rl-text-danger-secondary-color);
 					content: "\e4a6";
+				}
+
+				&:hover {
+					color: var(--bb-rl-text-danger-secondary-color);
 				}
 			}
 

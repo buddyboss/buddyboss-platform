@@ -516,7 +516,13 @@
   left: 0;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
-  display: block;
+  display: none;
+}
+
+@media screen and (min-width: 1320px) {
+  .bb-rl-header-cover .header-cover-img {
+    display: block;
+  }
 }
 
 .bb-rl-header-cover.has-position .header-cover-img {
@@ -544,6 +550,12 @@
 
 .bb-rl-header-cover .bb-rl-group-cover-ctrl > i {
   font-size: 24px;
+}
+
+@media screen and (min-width: 1320px) {
+  #buddypress .bb-rl-group-cover #header-cover-image.has-cover-image {
+    background-image: none !important;
+  }
 }
 
 .header-cover-reposition-wrap {

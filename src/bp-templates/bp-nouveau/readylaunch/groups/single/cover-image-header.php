@@ -41,7 +41,7 @@ $has_default_cover        = bb_attachment_get_cover_image_class( bp_get_group_id
 	}
 	?>
 
-	<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $group_cover_height . ' width-' . $group_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?> bb-rl-header-cover">
+	<div id="header-cover-image" class="<?php echo esc_attr( 'cover-' . $group_cover_height . ' width-' . $group_cover_width . $has_cover_image_position . $has_cover_image . $has_default_cover ); ?> bb-rl-header-cover" style="background-image: url('<?php echo esc_url( $group_cover_image ); ?>'); background-position: center;">
 		<?php
 		if ( bp_group_use_cover_image_header() ) {
 
