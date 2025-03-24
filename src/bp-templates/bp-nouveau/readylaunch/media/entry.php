@@ -60,15 +60,15 @@ if ( 'video' === $media_template->media->type ) {
 	?>
 	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb-video-li" data-id="<?php echo esc_attr( $bp_media_id ); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 		<div class="bb-video-thumb bb-item-thumb">
-			<div class="video-action-wrap item-action-wrap">
+			<div class="video-action-wrap item-action-wrap bb_more_options action">
 				<?php
 				$report_btn = bp_video_get_report_link( array( 'id' => $bp_media_id ) );
 				if ( $can_edit || $report_btn ) {
 					?>
-					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
+					<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+						<i class="bb-icons-rl-dots-three"></i>
 					</a>
-					<div class="video-action_list item-action_list bb_more_dropdown">
+					<div class="video-action_list item-action_list bb_more_dropdown bb_more_options_list">
 						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<?php
