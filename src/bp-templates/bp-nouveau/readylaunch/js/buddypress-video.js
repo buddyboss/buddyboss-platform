@@ -1925,7 +1925,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			var $document = $( document );
-			$document.on( 'click', '.bb-rl-open-video-theatre', this.openTheatre.bind( this ) );
+			$document.on( 'click', '.bb-rl-open-video-theatre, .bb-open-video-theatre', this.openTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-close-media-theatre', this.closeTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-prev-media', this.previous.bind( this ) );
 			$document.on( 'click', '.bb-rl-next-media', this.next.bind( this ) );
@@ -2695,7 +2695,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( player[ player_id ] !== undefined && ( $( this ).find( '.skip-back' ).length === 0 && $( this ).find( '.skip-forward' ).length === 0 ) ) {
+					if ( player[ player_id ] !== undefined && ( $( this ).find( '.skip-back' ).length === 0 && $( this ).find( '.skip-forward' ).length === 0 ) && ! $( 'body' ).hasClass( 'messages' ) ) {
 						player[ player_id ].seekButtons(
 							{
 								forward: 5,
@@ -2721,7 +2721,7 @@ window.bp = window.bp || {};
 						bp.Nouveau.Video.Player.playerID   = '';
 					}
 
-					if ( $( self ).hasClass( 'bb-rl-single-activity-video' ) ) {
+					if ( $( self ).hasClass( 'bb-rl-single-activity-video' ) || $( self ).hasClass( 'single-activity-video' ) ) {
 						var ele_id     = $( this ).attr( 'id' );
 						var cus_button = player[ $( this ).attr( 'id' ) ].controlBar.addChild( 'button' );
 						cus_button.addClass( 'vjs-icon-square' );
@@ -2740,7 +2740,11 @@ window.bp = window.bp || {};
 									bp.Nouveau.Video.Player.playerID   = $( '#' + ele_id ).parent().find( '.video-js video' ).attr( 'id' );
 								}
 								player[ele_id].pause();
-								$( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).trigger( 'click' );
+								if ( $( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).length ) {
+									$( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).trigger( 'click' );
+								} else if ( $( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).length ) {
+									$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
+								}
 							}
 						);
 
