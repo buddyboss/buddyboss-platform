@@ -5432,6 +5432,18 @@ body.buddyboss-theme {
 
 }
 
+@media screen and (min-width: 800px) and (max-width: 1220px) {
+
+	body.activity-sidebar-right .activity-head-bar {
+		flex-wrap: wrap;
+
+		.bb-subnav-filters-container.bb-subnav-filters-search {
+			width: 100%;
+			margin-bottom: 20px;
+		}
+	}
+}
+
 .activity-head-bar {
 	display: flex;
 	align-items: center;
