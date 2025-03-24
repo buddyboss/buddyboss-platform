@@ -158,7 +158,7 @@ echo esc_attr( $has_no_thumbnail );
 			<p class="bb-rl-video-duration"><?php echo esc_html( $video_length ); ?></p>
 		<?php } ?>
 		<a
-				class="bb-rl-open-video-theatre bb-rl-video-cover-wrap bb-rl-item-cover-wrap hide"
+				class="bb-open-video-theatre bb-rl-video-cover-wrap bb-rl-item-cover-wrap hide"
 				data-id="<?php echo esc_attr( $video_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"
@@ -183,7 +183,7 @@ echo esc_attr( $has_no_thumbnail );
 		</a>
 	<?php } else { ?>
 		<a
-				class="bb-rl-open-video-theatre bb-rl-video-cover-wrap bb-rl-item-cover-wrap"
+				class="bb-open-video-theatre bb-rl-video-cover-wrap bb-rl-item-cover-wrap"
 				data-id="<?php echo esc_attr( $video_id ); ?>"
 				data-attachment-full="<?php echo esc_url( $attachment_full ); ?>"
 				data-activity-id="<?php echo esc_attr( $video_activity_id ); ?>"

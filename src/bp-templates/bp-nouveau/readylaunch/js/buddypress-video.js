@@ -1804,7 +1804,7 @@ window.bp = window.bp || {};
 					$this.closest( '.bb-rl-location-album-list-wrap' ).find( '.breadcrumb .item' ).append( '<span class="is-disabled" data-id="' + $this.attr( 'id' ) + '">' + $this.text() + '</span>' );
 
 					$this.addClass( 'selected' ).parent().addClass( 'is_active' ).siblings().removeClass( 'is_active' ).children( 'span' ).removeClass( 'selected' );
-					var parentsOpen        = $document.find( 'a.bb-rl-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id' ),
+					var parentsOpen        = $document.find( 'a.bb-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id' ),
 						$videoMoveFileElem = $eventTarget.closest( '.bb-rl-video-move-file' ),
 						$videoMoveElem     = $videoMoveFileElem.find( '.bb-rl-model-footer .bb-rl-video-move' );
 					if ( Number( parentsOpen ) === Number( $eventTarget.data( 'id' ) ) ) {
@@ -1925,7 +1925,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			var $document = $( document );
-			$document.on( 'click', '.bb-rl-open-video-theatre, .bb-open-video-theatre', this.openTheatre.bind( this ) );
+			$document.on( 'click', '.bb-open-video-theatre', this.openTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-close-media-theatre', this.closeTheatre.bind( this ) );
 			$document.on( 'click', '.bb-rl-prev-media', this.previous.bind( this ) );
 			$document.on( 'click', '.bb-rl-next-media', this.next.bind( this ) );
@@ -2053,10 +2053,10 @@ window.bp = window.bp || {};
 		},
 
 		setVideos: function ( target ) {
-			var video_elements = $( '.bb-rl-open-video-theatre' ), i = 0, self = this;
+			var video_elements = $( '.bb-open-video-theatre' ), i = 0, self = this;
 			// check if on activity page, load only activity video in theatre.
 			if ( $( 'body' ).hasClass( 'activity' ) ) {
-				video_elements = $( target ).closest( '.bb-activity-video-wrap' ).find( '.bb-rl-open-video-theatre' );
+				video_elements = $( target ).closest( '.bb-activity-video-wrap' ).find( '.bb-open-video-theatre' );
 			}
 
 			if ( typeof video_elements !== 'undefined' ) {
@@ -2560,7 +2560,7 @@ window.bp = window.bp || {};
 			var self = this, i = 0, $document = $( document );
 			if ( self.is_open_video && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_video.activity_id === data.id ) {
 
-				var $deleted_item             = $document.find( '[data-bp-list="video"] .bb-rl-open-video-theatre[data-id="' + self.current_video.id + '"]' );
+				var $deleted_item             = $document.find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' );
 				var $deleted_item_parent_list = $deleted_item.parents( 'ul' );
 
 				$deleted_item.closest( 'li' ).remove();
@@ -2578,7 +2578,7 @@ window.bp = window.bp || {};
 					}
 				}
 
-				$document.find( '[data-bp-list="activity"] .bb-rl-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
+				$document.find( '[data-bp-list="activity"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
 
 				var videosLength = self.videos.length;
 				for ( i = 0; i < videosLength; i++ ) {
@@ -2750,8 +2750,8 @@ window.bp = window.bp || {};
 									bp.Nouveau.Video.Player.playerID   = $( '#' + ele_id ).parent().find( '.video-js video' ).attr( 'id' );
 								}
 								player[ele_id].pause();
-								if ( $( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).length ) {
-									$( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).trigger( 'click' );
+								if ( $( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).length ) {
+									$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 								} else if ( $( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).length ) {
 									$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 								}
@@ -2761,7 +2761,7 @@ window.bp = window.bp || {};
 						error_block.on(
 							'click',
 							function () {
-								$( '#' + ele_id ).parent().find( '.bb-rl-open-video-theatre' ).trigger( 'click' );
+								$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 							}
 						);
 
