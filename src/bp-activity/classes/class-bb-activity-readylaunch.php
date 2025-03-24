@@ -40,9 +40,6 @@ class BB_Activity_Readylaunch {
 		add_filter( 'bb_media_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_video_get_activity_max_thumb_length', array( $this, 'bb_rl_modify_activity_max_thumb_length' ) );
 		add_filter( 'bb_activity_get_reacted_users_data', array( $this, 'bb_rl_modify_user_data_to_reactions' ), 10, 2 );
-		add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-		add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
-		add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 		add_filter( 'bb_get_activity_comment_threading_depth', array( $this, 'bb_rl_modify_activity_comment_threading_depth' ), 10 );
 		add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_submit_button' ), 10 );
 		add_filter( 'bp_get_activity_content_body', array( $this, 'bb_rl_activity_content_with_changed_avatar' ), 9999, 2 );
@@ -567,32 +564,6 @@ class BB_Activity_Readylaunch {
 		}
 
 		return $reaction_data;
-	}
-
-	/**
-	 * Modify document description HTML for ReadyLaunch.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $html The original HTML content.
-	 */
-	public function bb_rl_modify_document_description_html( $html ) {
-		// Add ReadyLaunch specific classes to existing HTML structure.
-		$html = str_replace(
-			array(
-				'class="bp-activity-head"',
-				'class="activity-avatar item-avatar"',
-				'class="activity-header"',
-			),
-			array(
-				'class="bb-rl-activity-head"',
-				'class="bb-rl-activity-avatar bb-rl-item-avatar"',
-				'class="bb-rl-activity-header"',
-			),
-			$html
-		);
-
-		return $html;
 	}
 
 	/**

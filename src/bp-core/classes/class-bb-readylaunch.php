@@ -160,14 +160,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				remove_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
 				remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
 				remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
+
+				add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+				add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 			}
 
-            $admin_enabled = $this->bb_is_readylaunch_admin_enabled();
-            if ( $admin_enabled ) {
-	            add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
+			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
+			if ( $admin_enabled ) {
+				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
 
-                add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' )  );
-            }
+				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
+			}
 		}
 
 		/**
@@ -1829,6 +1833,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			return $styles;
+		}
+
+		/**
+		 * Modify document description HTML for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $html The original HTML content.
+		 */
+		public function bb_rl_modify_document_description_html( $html ) {
+			// Add ReadyLaunch specific classes to existing HTML structure.
+			$html = str_replace(
+				array(
+					'class="bp-activity-head"',
+					'class="activity-avatar item-avatar"',
+					'class="activity-header"',
+				),
+				array(
+					'class="bb-rl-activity-head"',
+					'class="bb-rl-activity-avatar bb-rl-item-avatar"',
+					'class="bb-rl-activity-header"',
+				),
+				$html
+			);
+
+			return $html;
 		}
 	}
 }
