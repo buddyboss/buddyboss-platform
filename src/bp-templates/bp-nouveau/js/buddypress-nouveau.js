@@ -4874,7 +4874,7 @@ window.bp = window.bp || {};
 			var useRightPosition = false;
 		
 			// Default top popup position
-			popupTop = offset.top + $element.outerHeight() + 10;
+			popupTop = offset.top + $element.outerHeight() + 5;
 		
 			// Handle horizontal position (left or right based on available space)
 			if ( window.innerWidth <= 560 ) {
@@ -4890,7 +4890,7 @@ window.bp = window.bp || {};
 			if ( spaceBelow >= 150 ) {
 				// If there's enough space, position below the element
 				popupBottom = 'auto';
-				popupTop = offset.top + $element.outerHeight() + 10;
+				popupTop = offset.top + $element.outerHeight() + 5;
 			} else if ( spaceAbove >= 150 ) {
 				// If there's not enough space, position above the element
 				popupTop = 'auto';
