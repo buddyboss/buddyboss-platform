@@ -28,7 +28,6 @@
 					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<div class="document-preview"></div>
-				-
 				<div class="bb-rl-dropdown-wrap bb-rl-media-only-privacy">
 					<div class="bb-document-privacy-wrap" style="display: none;">
 						<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="">

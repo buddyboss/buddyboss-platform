@@ -129,6 +129,7 @@
 		right: var(--bb-rl-space-300);
 		z-index: var(--bb-rl-z-index-dropdown);
 
+		&.bb-rl-prev-document,
 		&.bb-rl-prev-media {
 			left: var(--bb-rl-space-300);
 			right: initial;

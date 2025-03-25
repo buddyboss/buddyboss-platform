@@ -23,7 +23,7 @@
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section">
 				<a class="bb-rl-theater-command bb-rl-prev-media" href="#previous">
-					<i class="bb-icons-rl-caret-right"></i>
+					<i class="bb-icons-rl-caret-left"></i>
 				</a>
 				<a class="bb-rl-theater-command bb-rl-next-media" href="#next">
 					<i class="bb-icons-rl-caret-right"></i>

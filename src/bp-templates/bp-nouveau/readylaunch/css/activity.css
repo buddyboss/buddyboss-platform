@@ -3609,7 +3609,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   z-index: var(--bb-rl-z-index-dropdown);
 }
 
-.bb-rl-media-model-container .bb-rl-theater-command.bb-rl-prev-media {
+.bb-rl-media-model-container .bb-rl-theater-command.bb-rl-prev-document, .bb-rl-media-model-container .bb-rl-theater-command.bb-rl-prev-media {
   left: var(--bb-rl-space-300);
   right: initial;
 }
