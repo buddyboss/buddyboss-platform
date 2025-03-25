@@ -1155,6 +1155,53 @@ body.messages .bb-rl-content-wrapper {
   width: 100%;
 }
 
+#bp-message-thread-list li.error {
+  padding-bottom: 32px;
+  position: relative;
+}
+
+#bp-message-thread-list li.error .message_send_error {
+  color: var(--bb-rl-border-secondary-color);
+  font-size: 13px;
+  position: absolute;
+  bottom: 3px;
+}
+
+#bp-message-thread-list li.error .message_send_error a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  opacity: 0.4;
+  margin-right: 3px;
+}
+
+#bp-message-thread-list li.error .message_send_error a:hover {
+  opacity: 1;
+}
+
+#bp-message-thread-list li.error .message_send_error a ~ a {
+  margin-left: 3px;
+}
+
+#bp-message-thread-list li.error .message_send_error .info-text-error-message {
+  font-size: 13px;
+  color: var(--bb-rl-text-danger-secondary-color);
+  margin-right: 5px;
+}
+
+#bp-message-thread-list li.error .message_send_error .info-text-error-message:before {
+  content: "\e2ce";
+  font-family: bb-icons-rl;
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 5px;
+}
+
+#bp-message-thread-list li.error .message_send_error .info-text-error-message:before {
+  font-weight: 700;
+}
+
 #bp-message-load-more {
   position: absolute;
   top: 60px;

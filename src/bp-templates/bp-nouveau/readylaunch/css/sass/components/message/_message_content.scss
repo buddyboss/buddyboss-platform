@@ -471,6 +471,53 @@
 			width: 100%;
 		}
 	}
+
+	li.error {
+		padding-bottom: 32px;
+		position: relative;
+
+		.message_send_error {
+			color: var(--bb-rl-border-secondary-color);
+			font-size: 13px;
+			position: absolute;
+			bottom: 3px;
+
+			a {
+				font-size: 13px;
+				font-weight: 500;
+				color: var(--bb-rl-text-color);
+				opacity: 0.4;
+				margin-right: 3px;
+
+				&:hover {
+					opacity: 1;
+				}
+
+				& ~ a {
+					margin-left: 3px;
+				}
+			}
+
+			.info-text-error-message {
+				font-size: 13px;
+				color: var(--bb-rl-text-danger-secondary-color);
+				margin-right: 5px;
+			}
+
+			.info-text-error-message:before {
+				content: "\e2ce";
+				font-family: bb-icons-rl;
+				font-size: 14px;
+				display: inline-block;
+				vertical-align: top;
+				margin-right: 5px;
+			}
+
+			.info-text-error-message:before {
+				font-weight: 700;
+			}
+		}
+	}
 }
 
 #bp-message-load-more {
