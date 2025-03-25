@@ -83,7 +83,7 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 				}
 				?>
 				<td class="field-actions">
-					<span class="field-actions-remove"><i class="bb-icon-l bb-icon-times"></i></span>
+					<span class="field-actions-remove"><i class="bb-icons-rl-x-circle"></i></span>
 				</td>
 			</tr>
 
@@ -92,7 +92,7 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 				<td class="field-name" colspan="<?php if ( true === $send_invite_member_type_allow ) { echo 3; } else { echo 2; }?>">
 				</td>
 				<td class="field-actions-last" colspan="">
-					<span class="field-actions-add"><i class="bb-icon-l bb-icon-plus"></i></span>
+					<span class="field-actions-add"><i class="bb-icons-rl-plus-circle"></i></span>
 				</td>
 			</tr>
 

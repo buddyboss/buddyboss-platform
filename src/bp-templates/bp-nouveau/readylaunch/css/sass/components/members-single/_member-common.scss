@@ -273,10 +273,38 @@
 			border-radius: var(--bb-rl-radius-lg);
 			overflow: hidden;
 			margin-top: var(--bb-rl-space-200);
+			text-align: left;
+
+			th {
+				font-weight: 400;
+			}
 
 			td {
-				padding: var(--bb-rl-space-200);
+				padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) 0;
 				border: 0;
+
+				&.field-actions-last,
+				&.field-actions {
+					width: 40px;
+					text-align: center;
+					padding: var(--bb-rl-space-200) var(--bb-rl-space-100);
+
+					.field-actions-remove,
+					.field-actions-add {
+						cursor: pointer;
+					}
+
+					[class*="bb-icons-rl-"] {
+						font-size: var(--bb-rl-base-line);
+						vertical-align: middle;
+
+					}
+				}
+
+				&.field-email,
+				&[colspan="2"] {
+					padding-right: var(--bb-rl-space-100);
+				}
 			}
 		}
 
@@ -288,6 +316,11 @@
 			color: var(--bb-rl-text-tertiary-color);
 			margin-bottom: var(--bb-rl-space-100);
 			margin-top: var(--bb-rl-space-200);
+		}
+
+		.invites-input {
+			width: 100%;
+			padding: var(--bb-rl-space-100);
 		}
 
 		textarea {

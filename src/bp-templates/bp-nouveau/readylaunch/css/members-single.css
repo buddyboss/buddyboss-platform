@@ -454,11 +454,37 @@
   border-radius: var(--bb-rl-radius-lg);
   overflow: hidden;
   margin-top: var(--bb-rl-space-200);
+  text-align: left;
+}
+
+.bb-rl-wrap-invites #send-invite-form table th {
+  font-weight: 400;
 }
 
 .bb-rl-wrap-invites #send-invite-form table td {
-  padding: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) 0;
   border: 0;
+}
+
+.bb-rl-wrap-invites #send-invite-form table td.field-actions-last, .bb-rl-wrap-invites #send-invite-form table td.field-actions {
+  width: 40px;
+  text-align: center;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-100);
+}
+
+.bb-rl-wrap-invites #send-invite-form table td.field-actions-last .field-actions-remove,
+.bb-rl-wrap-invites #send-invite-form table td.field-actions-last .field-actions-add, .bb-rl-wrap-invites #send-invite-form table td.field-actions .field-actions-remove,
+.bb-rl-wrap-invites #send-invite-form table td.field-actions .field-actions-add {
+  cursor: pointer;
+}
+
+.bb-rl-wrap-invites #send-invite-form table td.field-actions-last [class*="bb-icons-rl-"], .bb-rl-wrap-invites #send-invite-form table td.field-actions [class*="bb-icons-rl-"] {
+  font-size: var(--bb-rl-base-line);
+  vertical-align: middle;
+}
+
+.bb-rl-wrap-invites #send-invite-form table td.field-email, .bb-rl-wrap-invites #send-invite-form table td[colspan="2"] {
+  padding-right: var(--bb-rl-space-100);
 }
 
 .bb-rl-wrap-invites #send-invite-form label {
@@ -469,6 +495,11 @@
   color: var(--bb-rl-text-tertiary-color);
   margin-bottom: var(--bb-rl-space-100);
   margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-invites #send-invite-form .invites-input {
+  width: 100%;
+  padding: var(--bb-rl-space-100);
 }
 
 .bb-rl-wrap-invites #send-invite-form textarea {
