@@ -1476,14 +1476,14 @@ window.bp = window.bp || {};
 		restoreVideoJsPreview: function( draft_data, backup_data ) {
 			if ( draft_data && draft_data.video && draft_data.video.length &&
 				backup_data && backup_data.video && backup_data.video.length ) {
-				var backupMap = new Map( backup_data.video.map( v => [ v.id, v.js_preview ] ) );
-
-				for ( var video of draft_data.video ) {
-					if ( video.id && backupMap.has( video.id ) ) {
-						var backup_js_preview = backupMap.get( video.id );
-
-						if ( ! video.js_preview || video.js_preview !== backup_js_preview ) {
-							video.js_preview = backup_js_preview ? backup_js_preview : null;
+				for ( var i = 0; i < draft_data.video.length; i++ ) {
+					for ( var j = 0; j < backup_data.video.length; j++ ) {
+						if ( draft_data.video[i].id && backup_data.video[j].id &&
+							draft_data.video[i].id === backup_data.video[j].id ) {
+							if ( backup_data.video[j].js_preview ) {
+								draft_data.video[i].js_preview = backup_data.video[j].js_preview;
+							}
+							break;
 						}
 					}
 				}
