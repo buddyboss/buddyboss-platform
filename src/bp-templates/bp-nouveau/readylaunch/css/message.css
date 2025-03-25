@@ -1818,6 +1818,10 @@ body.messages .bb-rl-content-wrapper {
   color: var(--bb-rl-icon-tertiary-color);
 }
 
+.bp-no-messages .bp-messages-form-header .bp-close-compose-form {
+  display: none;
+}
+
 .bp-messages-recipient {
   display: flex;
   align-items: center;

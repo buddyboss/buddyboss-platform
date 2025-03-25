@@ -26,6 +26,10 @@
 			font-weight: 700;
 			color: var(--bb-rl-icon-tertiary-color);
 		}
+
+		.bp-no-messages & {
+			display: none;
+		}
 	}
 }
 
