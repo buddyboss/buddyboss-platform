@@ -5453,6 +5453,19 @@ body.buddyboss-theme {
 
 }
 
+@media screen and (min-width: 800px) and (max-width: 1220px) {
+
+	body.activity-sidebar-right .activity-head-bar {
+		flex-wrap: wrap;
+		justify-content: flex-end;
+
+		.bb-subnav-filters-container.bb-subnav-filters-search {
+			width: 100%;
+			margin-bottom: 20px;
+		}
+	}
+}
+
 .activity-head-bar {
 	display: flex;
 	align-items: center;
@@ -5521,7 +5534,7 @@ body.buddyboss-theme {
 	}
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 680px) {
 
 	.activity-head-bar {
 		justify-content: center;

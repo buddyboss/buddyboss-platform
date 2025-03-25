@@ -862,6 +862,23 @@ window.bp = window.bp || {};
 							);
 						}
 
+						// Update the edited text.
+						if (
+							'undefined' !== typeof response &&
+							'undefined' !== typeof response.data &&
+							'undefined' !== typeof response.data.edited_text &&
+							'' !== response.data.edited_text
+						) {
+
+							if ( activity_item.find( '.activity-date span.bb-activity-edited-text' ).length ) {
+								// Completely remove and replace the edited text with new content.
+								activity_item.find( '.activity-date span.bb-activity-edited-text' ).replaceWith( response.data.edited_text );
+							} else {
+								// Append the edited text to the activity date.
+								activity_item.find( '.activity-date' ).append( response.data.edited_text );
+							}
+						}
+
 						bp.Nouveau.Activity.activityHasUpdates = true;
 						bp.Nouveau.Activity.currentActivityId = activity_id;
 					}
