@@ -158,7 +158,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 					}
 					$alert_message = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
-					$icon          = ( '1' === $bp_invitee_status ) ? 'dashicons-yes' : 'dashicons-dismiss';
+					$icon          = ( '1' === $bp_invitee_status ) ? 'check' : 'x-circle';
 
 					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
 						?>
@@ -172,14 +172,14 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						if ( 'registered' === $class ) {
 							?>
 							<span class="bp-invitee-status">
-								<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+								<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
 							</span>
 							<?php
 						} else {
 							?>
 							<span class="bp-invitee-status">
 								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( $post_id ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
-									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+									<span class="bb-icons-rl-<?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
 								</a>
 							</span>
 							<?php
@@ -203,17 +203,29 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 
 	$total_pages = $the_query->max_num_pages;
 	if ( $total_pages > 1 ) {
-		$current_page = max( 1, get_query_var( 'paged' ) );
-		echo paginate_links(
-			array(
-				'base'      => get_pagenum_link( 1 ) . '%_%',
-				'format'    => '?paged=%#%',
-				'current'   => $current_page,
-				'total'     => $total_pages,
-				'prev_text' => __( '« Prev', 'buddyboss' ),
-				'next_text' => __( 'Next »', 'buddyboss' ),
-			)
-		);
+		?>
+        <tr>
+            <td colspan="4" class="field-name bp-pagination">
+                <div class="bp-pagination-links bottom">
+                    <p class="pag-data">
+						<?php
+							$current_page = max( 1, get_query_var( 'paged' ) );
+							echo paginate_links(
+								array(
+									'base'      => get_pagenum_link( 1 ) . '%_%',
+									'format'    => '?paged=%#%',
+									'current'   => $current_page,
+									'total'     => $total_pages,
+									'prev_text' => __( '« Prev', 'buddyboss' ),
+									'next_text' => __( 'Next »', 'buddyboss' ),
+								)
+							);
+						?>
+                    </p>
+                </div>
+            </td>
+        </tr>
+		<?php
 	}
 
 	wp_reset_postdata();

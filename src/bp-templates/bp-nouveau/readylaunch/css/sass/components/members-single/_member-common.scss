@@ -249,6 +249,9 @@
 	}
 }
 
+/**
+ * Member Invites
+ */
 .bb-rl-wrap-invites {
 	padding: var(--bb-rl-space-300);
 	background-color: var(--bb-rl-background-color);
@@ -265,48 +268,70 @@
 		color: var(--bb-rl-text-tertiary-color);
 	}
 
-	#send-invite-form {
+	table#member-invites-table {
+		width: 100%;
+		border-collapse: collapse;
+		border-radius: var(--bb-rl-radius-lg);
+		overflow: hidden;
+		margin-top: var(--bb-rl-space-200);
+		text-align: left;
 
-		table {
-			width: 100%;
-			border-collapse: collapse;
-			border-radius: var(--bb-rl-radius-lg);
-			overflow: hidden;
-			margin-top: var(--bb-rl-space-200);
-			text-align: left;
+		th {
+			font-weight: 500;
+		}
 
-			th {
-				font-weight: 400;
-			}
+		td {
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) 0;
+			border: 0;
 
-			td {
-				padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) 0;
-				border: 0;
+			&.field-actions-last,
+			&.field-actions {
+				width: 40px;
+				text-align: center;
+				padding: var(--bb-rl-space-200) var(--bb-rl-space-100);
 
-				&.field-actions-last,
-				&.field-actions {
-					width: 40px;
-					text-align: center;
-					padding: var(--bb-rl-space-200) var(--bb-rl-space-100);
-
-					.field-actions-remove,
-					.field-actions-add {
-						cursor: pointer;
-					}
-
-					[class*="bb-icons-rl-"] {
-						font-size: var(--bb-rl-base-line);
-						vertical-align: middle;
-
-					}
+				.field-actions-remove,
+				.field-actions-add {
+					cursor: pointer;
 				}
 
-				&.field-email,
-				&[colspan="2"] {
-					padding-right: var(--bb-rl-space-100);
+				[class*="bb-icons-rl-"] {
+					font-size: var(--bb-rl-base-line);
+					vertical-align: middle;
+
+				}
+			}
+
+			&.field-email,
+			&[colspan="2"] {
+				padding-right: var(--bb-rl-space-100);
+			}
+
+			&.bp-pagination {
+				display: table-cell;
+
+				.bp-pagination-links {
+					display: flex;
+					justify-content: flex-end;
 				}
 			}
 		}
+
+		.bp-invitee-status {
+			font-size: var(--bb-rl-font-size-base);
+			font-weight: 400;
+			line-height: var(--bb-rl-base-line);
+
+			[class*="bb-icons-rl-"] {
+				font-size: var(--bb-rl-base-line);
+				vertical-align: middle;
+				margin-right: var(--bb-rl-space-100);
+				display: inline-block;
+			}
+		}
+	}
+
+	#send-invite-form {
 
 		label {
 			display: block;
