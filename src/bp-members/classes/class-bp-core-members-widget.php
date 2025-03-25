@@ -152,7 +152,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>">
+							<a href="<?php bp_member_permalink(); ?>" class="<?php echo esc_attr( $moderation_class ); ?>" data-bb-hp-profile="<?php echo esc_attr( $members_template->member->id ); ?>">
 								<?php bp_member_avatar(); ?>
 								<?php bb_user_presence_html( $members_template->member->id ); ?>
 							</a>
@@ -160,7 +160,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 						<div class="item">
 							<div class="item-title fn"><a
-										href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
+										href="<?php bp_member_permalink(); ?>" data-bb-hp-profile="<?php echo esc_attr( $members_template->member->id ); ?>"><?php bp_member_name(); ?></a></div>
 							<div class="item-meta">
 								<?php if ( 'newest' == $settings['member_default'] ) : ?>
 									<span class="activity"
