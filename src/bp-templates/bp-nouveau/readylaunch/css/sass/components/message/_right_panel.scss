@@ -114,6 +114,11 @@
 		}
 	}
 
+	.bb-rl-message-group-thread-cover img {
+		height: 105px;
+		object-fit: cover;
+	}
+
 	.bb-rl-message-group-thread-cover +  .bb-rl-message-group-thread-content {
 
 		.bb-rl-message-group-thread-avatar {
