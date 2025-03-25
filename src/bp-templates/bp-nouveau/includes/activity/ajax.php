@@ -1242,11 +1242,26 @@ function bp_nouveau_ajax_activity_update_privacy() {
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-		$activity->privacy = $_POST['privacy'];
+		$activity->privacy       = esc_html( $_POST['privacy'] );
+		$activity->date_recorded = bp_core_current_time();
 		$activity->save();
+
+		if ( function_exists( 'bp_activity_update_meta' ) ) {	
+			// Add meta to ensure that this activity has been edited.
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+		}
+
+		$data_response = array();
+		if ( function_exists( 'bp_nouveau_activity_is_edited' ) ) {
+			$edited_text = bp_nouveau_activity_is_edited( $activity->id, false );
+			if ( $edited_text ) {
+				$data_response = array( 'edited_text' => $edited_text );
+			}
+		}
+
 		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
-		$response = apply_filters( 'bb_ajax_activity_update_privacy', array(), $_POST );
+		$response = apply_filters( 'bb_ajax_activity_update_privacy', $data_response, $_POST );
 
 		wp_send_json_success( $response );
 	} else {
