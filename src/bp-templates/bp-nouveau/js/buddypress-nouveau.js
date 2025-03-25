@@ -5023,11 +5023,11 @@ window.bp = window.bp || {};
 			}
 		
 			// Determine vertical position
-			if ( spaceBelow >= 150 ) {
+			if ( spaceBelow >= 250 ) {
 				// If there's enough space, position below the element
 				popupBottom = 'auto';
 				popupTop = offset.top + $element.outerHeight() + 5;
-			} else if ( spaceAbove >= 150 ) {
+			} else if ( spaceAbove >= 250 ) {
 				// If there's not enough space, position above the element
 				popupTop = 'auto';
 				popupBottom = window.innerHeight - offset.top + window.scrollY + 10; // Adjust for scroll
