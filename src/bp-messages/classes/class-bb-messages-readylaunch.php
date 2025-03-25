@@ -34,6 +34,8 @@ class BB_Messages_Readylaunch {
 		add_filter( 'bp_messages_js_template_parts', array( $this, 'bb_messages_js_template_parts' ) );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_messages_localize_scripts' ), 11, 1 );
 		add_action( 'wp_ajax_bb_get_thread_right_panel_data', array( $this, 'bb_get_thread_right_panel_data' ) );
+		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'bb_rl_filter_message_threads_by_type' ), 10, 2 );
+		add_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_messages_ajax_querystring' ), 10, 2 );
 	}
 
 	/**
@@ -64,6 +66,7 @@ class BB_Messages_Readylaunch {
 	 */
 	public function bb_messages_js_template_parts( $template_parts ) {
 		$template_parts[] = 'parts/bp-messages-right-panel';
+		$template_parts[] = 'parts/bp-messages-no-unread-threads';
 
 		return $template_parts;
 	}
@@ -95,8 +98,8 @@ class BB_Messages_Readylaunch {
 		}
 
 		$thread_id = isset( $_POST['thread_id'] ) ? intval( $_POST['thread_id'] ) : 0;
-		$page = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
-		$type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'participants';
+		$page      = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
+		$type      = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : 'participants';
 
 		// Ensure user has access to this thread.
 		if ( ! bp_is_active( 'messages' ) || ! messages_check_thread_access( $thread_id ) ) {
@@ -116,20 +119,20 @@ class BB_Messages_Readylaunch {
 		);
 
 		// Get thread participants.
-		$thread = new BP_Messages_Thread( false );
+		$thread   = new BP_Messages_Thread( false );
 		$per_page = bb_messages_recipients_per_page();
 
 		if ( 'participants' === $type ) {
-			$results = $thread->get_pagination_recipients(
+			$results                           = $thread->get_pagination_recipients(
 				$thread_id,
 				array(
 					'per_page' => $per_page,
 					'page'     => $page,
 				)
 			);
-			$response['participants_count'] = $thread->total_recipients_count;
+			$response['participants_count']    = $thread->total_recipients_count;
 			$response['participants_per_page'] = $per_page;
-			$response['has_more'] = ( $page * $per_page ) < $thread->total_recipients_count;
+			$response['has_more']              = ( $page * $per_page ) < $thread->total_recipients_count;
 
 			foreach ( $results as $recipient ) {
 				$is_current_user = (int) bp_loggedin_user_id() === (int) $recipient->user_id;
@@ -169,7 +172,7 @@ class BB_Messages_Readylaunch {
 			global $wpdb, $bp;
 
 			$media_per_page = 20; // Number of media items per page.
-			$offset = ( $page - 1 ) * $media_per_page;
+			$offset         = ( $page - 1 ) * $media_per_page;
 
 			// Get images with pagination.
 			$media_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -206,7 +209,7 @@ class BB_Messages_Readylaunch {
 			global $wpdb, $bp;
 
 			$files_per_page = 20; // Number of files per page.
-			$offset = ( $page - 1 ) * $files_per_page;
+			$offset         = ( $page - 1 ) * $files_per_page;
 
 			$document_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
@@ -248,5 +251,48 @@ class BB_Messages_Readylaunch {
 		}
 
 		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Filter the message threads by type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $where_conditions The where conditions.
+	 * @param array $r The request parameters.
+	 * @return array The where conditions.
+	 */
+	public function bb_rl_filter_message_threads_by_type( $where_conditions, $r ) {
+		if ( ! empty( $r['thread_type'] ) ) {
+			$thread_type = sanitize_text_field( wp_unslash( $r['thread_type'] ) );
+
+			if ( 'unread' === $thread_type ) {
+				// Only unread messages.
+				$where_conditions .= ' AND ( r.unread_count > 0 AND r.is_deleted = 0 AND r.user_id = ' . bp_loggedin_user_id() . ' )';
+			}
+		}
+
+		return $where_conditions;
+	}
+
+	/**
+	 * Filter the querystring.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $querystring        The querystring.
+	 * @param string $querystring_object The querystring object.
+	 *
+	 * @return string The querystring.
+	 */
+	public function bb_rl_messages_ajax_querystring( $querystring, $querystring_object ) {
+		if ( 'messages' === $querystring_object && isset( $_POST['thread_type'] ) ) {
+			$thread_type = sanitize_text_field( wp_unslash( $_POST['thread_type'] ) );
+
+			if ( 'unread' === $thread_type ) {
+				$querystring .= '&type=unread';
+			}
+		}
+		return $querystring;
 	}
 }

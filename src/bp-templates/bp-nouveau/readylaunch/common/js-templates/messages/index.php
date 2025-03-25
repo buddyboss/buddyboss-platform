@@ -24,6 +24,21 @@
 		<div id="bb-rl-messages-thread-list-nav"></div>
 		<div class="subnav-filters filters user-subnav bb-rl-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
 		<div class="bb-rl-messages-search-feedback"></div>
+		<!-- Message Tabs -->
+		<div class="bb-rl-messages-tabs">
+			<ul class="bb-rl-messages-tabs-list">
+				<li class="bb-rl-messages-tab-item active">
+					<a href="#" class="bb-rl-messages-tab-link" data-tab="all"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+				</li>
+				<li class="bb-rl-messages-tab-item">
+					<a href="#" class="bb-rl-messages-tab-link" data-tab="unread"><?php esc_html_e( 'Unread', 'buddyboss' ); ?></a>
+				</li>
+				<li class="bb-rl-messages-tab-item">
+					<a href="#" class="bb-rl-messages-tab-link" data-tab="archived"><?php esc_html_e( 'Archive', 'buddyboss' ); ?></a>
+				</li>
+			</ul>
+		</div>
+		<!-- End Message Tabs -->
 		<div class="bb-rl-messages-threads-list bb-rl-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bb-rl-messages-threads-list"></div>
 	</div>
 	<div class="bb-rl-messages-content"></div>
