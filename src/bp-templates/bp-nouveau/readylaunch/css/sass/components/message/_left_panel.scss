@@ -549,6 +549,29 @@
 	padding: var(--bb-rl-space-200) 0 0;
 }
 
+.bb-rl-messages-tabs-list {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+	list-style: none;
+
+	.bb-rl-messages-tab-link {
+		display: inline-block;
+		padding: 6px var(--bb-rl-space-200);
+		border-radius: var(--bb-rl-radius-full);
+		color: var(--bb-rl-text-secondary-color);
+		font-size: var(--bb-rl-font-size-sm);
+		font-weight: 500;
+	}
+
+	.bb-rl-messages-tab-item.active a {
+		background-color: var(--bb-rl-background-secondary-color);
+		color: var(--bb-rl-text-color);
+		font-weight: 600;
+	}
+}
+
 /* Loading Threads */
 .bp-user-messages-loading.loading {
 	border: 0;
