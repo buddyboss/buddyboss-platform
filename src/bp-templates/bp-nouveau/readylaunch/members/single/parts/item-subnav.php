@@ -19,7 +19,12 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 	return;
 }
 ?>
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?> bb-rl-profile-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
+<nav class="
+	<?php
+	bp_nouveau_single_item_subnav_classes();
+	echo esc_attr( bp_is_user_settings() ? ' bb-rl-profile-edit-subnav' : ' bb-rl-profile-subnav' );
+	?>
+	" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Sub Menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 
 		<?php
@@ -32,17 +37,18 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 			}
 
 			// Change the nav_item -> name "New Message" to "New"
-			if ( 'New Message' === $nav_item->name  ) {
+			if ( 'New Message' === $nav_item->name ) {
 				$nav_item->name = 'New';
 			}
 			?>
 
-			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
+			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?> bb-rl-profile-subnav-item" <?php bp_nouveau_nav_scope(); ?>>
 				<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>" class="<?php bp_nouveau_nav_link_class(); ?>">
 					<?php
 					bp_nouveau_nav_link_text();
 
-					if ( bp_nouveau_nav_has_count() ) : ?>
+					if ( bp_nouveau_nav_has_count() ) :
+						?>
 						<span class="count"><?php bp_nouveau_nav_count(); ?></span>
 					<?php endif; ?>
 				</a>

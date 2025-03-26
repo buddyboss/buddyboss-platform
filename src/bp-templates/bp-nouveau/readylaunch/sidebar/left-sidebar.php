@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
 	<?php
 	if ( BB_Readylaunch::bb_is_group_admin() ) {
 		bp_get_template_part( 'groups/single/parts/admin-subnav' );
+	} if ( bp_is_user_settings() && bp_core_can_edit_settings() ) {
+		bp_get_template_part( 'members/single/parts/item-subnav' );
 	} else {
 		?>
 
@@ -51,18 +53,18 @@ defined( 'ABSPATH' ) || exit;
 		}
 		?>
 		<div class="bb-rl-left-panel-widget">
-		<?php
-		wp_nav_menu(
-			array(
-				'theme_location' => 'bb-bottom-readylaunchpanel',
-				'menu_id'        => '',
-				'container'      => false,
-				'fallback_cb'    => false,
-				'menu_class'     => 'bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu',
-			)
-		);
-		?>
-	</div>
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'bb-bottom-readylaunchpanel',
+					'menu_id'        => '',
+					'container'      => false,
+					'fallback_cb'    => false,
+					'menu_class'     => 'bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu',
+				)
+			);
+			?>
+		</div>
 		<?php
 	}
 	?>
