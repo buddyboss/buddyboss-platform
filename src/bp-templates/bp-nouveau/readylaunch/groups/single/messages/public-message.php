@@ -171,19 +171,12 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 						}
 						?>
 						">
-						<?php if ( $is_media_active ) : ?>
-							<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
-								<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
-									<span class="bb-icon-l bb-icon-font"></span>
-								</a>
-							</div>
-							<?php
-						endif;
+						<?php
 						if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item post-media media-support group-message-media-support">
 								<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
-									<span class="bb-icon-l bb-icon-camera"></span>
+									<span class="bb-icons-rl-camera"></span>
 								</a>
 							</div>
 							<?php
@@ -194,7 +187,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							?>
 							<div class="post-elements-buttons-item post-video video-support">
 								<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
-									<i class="bb-icon-l bb-icon-video"></i>
+									<i class="bb-icons-rl-video-camera"></i>
 								</a>
 							</div>
 							<?php
@@ -204,7 +197,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							?>
 							<div class="post-elements-buttons-item post-media document-support group-message-document-support">
 								<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
-									<span class="bb-icon-l bb-icon-attach"></span>
+									<span class="bb-icons-rl-paperclip-horizontal"></span>
 								</a>
 							</div>
 							<?php
@@ -215,9 +208,9 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<div class="post-elements-buttons-item post-gif">
 								<div class="gif-media-search">
 									<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
-										<span class="bb-icon-l bb-icon-gif"></span>
+										<span class="bb-icons-rl-gif"></span>
 									</a>
-									<div class="gif-media-search-dropdown">
+									<div class="bb-rl-gif-media-search-dropdown">
 										<div class="bp-group-messages-attached-gif-container">
 											<div class="gif-search-content">
 												<div class="gif-search-query">
@@ -246,7 +239,15 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 						endif;
 
 						if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0 ) ) : ?>
+							<div class="bb-rl-separator"></div>
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
+						<?php endif; ?>
+						<?php if ( $is_media_active ) : ?>
+							<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
+								<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+									<span class="bb-icons-rl-text-aa"></span>
+								</a>
+							</div>
 						<?php endif; ?>
 						<div id="group-messages-new-submit" class="submit">
 							<?php

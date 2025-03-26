@@ -2698,14 +2698,16 @@ body.groups.messages span.select2-dropdown.select2-dropdown--above {
 }
 
 div#bp-group-message-content {
-  padding: var(--bb-rl-space-300);
   height: 100%;
   display: flex;
   flex-flow: column;
 }
 
-.group-messages.public-message .bb-groups-messages-right div#bp-group-message-content {
+.group-messages.public-message .bb-groups-messages-right #send_group_message_form {
   min-height: 50vh;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
 }
 
 .group-messages.public-message .bb-groups-messages-right .medium-editor-element {
@@ -2713,13 +2715,117 @@ div#bp-group-message-content {
 }
 
 .group-messages.public-message .bb-groups-messages-right .medium-editor-element:not(.emojionearea) {
-  max-height: 50vh;
+  font-size: 14px;
+  max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
-  margin-bottom: 15px;
-  min-height: 60px;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .group-messages.public-message .bb-groups-messages-right .medium-editor-element:after {
   color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-groups-messages-right-bottom {
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  margin: var(--bb-rl-space-200) var(--bb-rl-space-100);
+  margin-top: auto;
+}
+
+.bb-groups-messages-right-bottom #whats-new-toolbar {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
+  position: relative;
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item {
+  display: flex;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .toolbar-button {
+  display: flex;
+  border: 0.5px solid transparent;
+  padding: var(--bb-rl-space-50);
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .toolbar-button.active {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .toolbar-button.active [class*="bb-icons-"] {
+  color: var(--bb-rl-icon-color);
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item [class*="bb-icons-"] {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 24px;
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .emojionearea .emojionearea-button {
+  border: 0.5px solid transparent;
+  padding: var(--bb-rl-space-50);
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .emojionearea .emojionearea-button:before {
+  content: "\e436";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 24px;
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .emojionearea .emojionearea-button.active {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-groups-messages-right-bottom .post-elements-buttons-item .emojionearea .emojionearea-button.active:before {
+  color: var(--bb-rl-icon-color);
+}
+
+.bb-groups-messages-right-bottom .bb-rl-separator {
+  display: inline-flex;
+  align-self: center;
+  width: 1px;
+  height: 16px;
+  background-color: var(--bb-rl-border-tertiary-color);
+  margin: 0 8px 2px 0;
+}
+
+.bb-groups-messages-right-bottom #group-messages-new-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+  position: relative;
+  margin-left: auto;
+}
+
+.bb-groups-messages-right-bottom #group-messages-new-submit:before {
+  display: block;
+  content: "\e396";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.bb-groups-messages-right-bottom #group-messages-new-submit #send_group_message_button {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: auto;
+  min-width: auto;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
