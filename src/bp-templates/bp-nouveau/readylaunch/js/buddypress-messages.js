@@ -4664,7 +4664,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				target.addClass( 'current' );
+				target.closest( '.bb-rl-thread-item' ).addClass( 'current' );
 				target.parents( '.bb-rl-messages-container' ).removeClass( 'bp-compose-message' ).addClass( 'bb-rl-view-message' );
 			},
 
