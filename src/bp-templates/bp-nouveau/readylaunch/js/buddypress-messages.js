@@ -3776,8 +3776,9 @@ window.bp = window.bp || {};
 				this.$el.html( this.template() );
 				
 				// Hide the right panel when there are no unread threads.
-				if ( $( '#bb-rl-messages-right-panel' ).length ) {
-					$( '#bb-rl-messages-right-panel' ).hide();
+				var rightPanel = $( '#bb-rl-messages-right-panel' );
+				if ( rightPanel.length ) {
+					rightPanel.hide();
 				}
 				return this;
 			},
@@ -6397,8 +6398,9 @@ window.bp = window.bp || {};
 				this.$el.html( this.template() );
 				
 				// Hide the right panel when there are no unread threads.
-				if ( $( '#bb-rl-messages-right-panel' ).length ) {
-					$( '#bb-rl-messages-right-panel' ).hide();
+				var rightPanel = $( '#bb-rl-messages-right-panel' );
+				if ( rightPanel.length ) {
+					rightPanel.hide();
 				}
            
 				return this;
