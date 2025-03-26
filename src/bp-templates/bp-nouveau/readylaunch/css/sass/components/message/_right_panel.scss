@@ -340,6 +340,25 @@
 	}
 }
 
+#bb-rl-messages-right-panel:empty {
+	width: 300px;
+    background-color: var(--bb-rl-background-color);
+    border-left: 1px solid var(--bb-rl-border-secondary-color);
+    padding-top: 50px;
+	text-align: center;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		height: 22px;
+		width: 22px;
+		border: 2px solid var(--bb-rl-border-quaternary-color);
+		border-top-color: var(--bb-rl-border-tertiary-color);
+		border-radius: var(--bb-rl-radius-full);
+		animation: spin 3s infinite linear;
+	}
+}
+
 .bb-rl-message-right-tabs {
 	display: flex;
 	align-items: center;

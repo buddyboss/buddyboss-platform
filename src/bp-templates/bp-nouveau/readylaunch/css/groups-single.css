@@ -2631,8 +2631,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 #group-messages-container .bb-groups-messages-right-top {
-  margin-left: calc(var(--bb-rl-space-200)* -1);
-  margin-right: calc(var(--bb-rl-space-200)* -1);
+  margin-left: calc(var(--bb-rl-space-200) * -1);
+  margin-right: calc(var(--bb-rl-space-200) * -1);
   padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
@@ -2689,7 +2689,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   display: none;
 }
 
-.messages .select2-dropdown .select2-results__option[aria-selected=true] {
+.messages .select2-dropdown .select2-results__option[aria-selected="true"] {
   display: none;
 }
 

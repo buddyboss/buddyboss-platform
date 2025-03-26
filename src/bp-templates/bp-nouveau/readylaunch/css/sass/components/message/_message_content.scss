@@ -52,7 +52,7 @@
 	position: relative;
 }
 
-.message-thread-header {
+.message-thread-header:not(:empty) {
 	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
@@ -251,6 +251,23 @@
 }
 
 #bp-message-thread-list {
+
+	&:empty {
+		align-items: center;
+		margin-top: 55px;
+		border-top: 1px solid var(--bb-rl-border-secondary-color);
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 22px;
+			width: 22px;
+			border: 2px solid var(--bb-rl-border-quaternary-color);
+			border-top-color: var(--bb-rl-border-tertiary-color);
+			border-radius: var(--bb-rl-radius-full);
+			animation: spin 3s infinite linear;
+		}
+	}
 
 	.divider-date {
 		padding: var(--bb-rl-space-100) var(--bb-rl-space-300);

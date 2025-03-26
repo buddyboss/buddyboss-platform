@@ -5450,6 +5450,8 @@ window.bp = window.bp || {};
 				this.loadingFeedback = new bp.Views.MessagesLoading();
 				this.views.add( '#bp-message-content',this.loadingFeedback );
 
+				$( '#bb-rl-messages-right-panel' ).html( '' );
+
 				if ( _.isUndefined( this.options.thread.attributes ) ) {
 					data.id = this.options.thread.id;
 
