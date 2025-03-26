@@ -38,6 +38,7 @@ class BB_Messages_Readylaunch {
 		add_action( 'wp_ajax_bb_get_thread_right_panel_data', array( $this, 'bb_rl_get_thread_right_panel_data' ) );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'bb_rl_filter_message_threads_by_type' ), 10, 2 );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_messages_ajax_querystring' ), 10, 2 );
+		remove_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );
 	}
 
 	/**
