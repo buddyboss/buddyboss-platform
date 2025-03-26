@@ -1563,8 +1563,10 @@ window.bp = window.bp || {};
 
 			if ( 'archived' === tab ) {
 				bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
-			} {
+			} else if ( 'unread' === tab ) {
 				bp.Nouveau.Messages.router.navigate( '/', { trigger: true } );
+			} else {
+				window.Backbone.trigger( 'relistelements' );
 			}
 		},
 	};
@@ -6457,35 +6459,14 @@ window.bp = window.bp || {};
 			template  : bp.template( 'bp-messages-no-unread-threads' ),
 			initialize: function() {
 				this.$el.html( this.template() );
+				
+				// Hide the right panel when there are no unread threads.
+				if ( $('#bb-rl-messages-right-panel').length ) {
+					$('#bb-rl-messages-right-panel').hide();
+				}
+           
 				return this;
 			},
-		}
-	);
-
-	bp.Views.userUnreadNoThreads = bp.Nouveau.Messages.View.extend(
-		{
-			tagName  : 'div',
-			className  : 'bp-messages-content-wrapper archived-empty',
-			template : bp.template( 'bp-messages-single' ),
-
-			initialize: function() {
-				var self = this;
-				setTimeout(
-					function () {
-						// Add the empty message view.
-						self.views.add( '#bp-message-thread-list', new bp.Views.userUnreadNoMessages() );
-					},
-					1000
-				);
-			}
-		}
-	);
-
-	bp.Views.userUnreadNoMessages = bp.Nouveau.Messages.View.extend(
-		{
-			tagName  : 'li',
-			className  : 'bp-empty-messages-li',
-			template : bp.template( 'bp-messages-empty-single-list' ),
 		}
 	);
 
