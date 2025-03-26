@@ -66,6 +66,7 @@
 		}
 
 		.group-messages-helper-text {
+			font-size: 16px;
 			font-weight: 500;
 			min-width: 70px;
 			color: var(--bb-rl-text-secondary-color);
@@ -80,10 +81,12 @@
 			}
 
 			.select2-selection__rendered .select2-selection__choice {
-				background-color: var(--bb-rl-background-tertiary-color);
-				border: 0;
+				font-size: var(--bb-rl-font-size-sm);
+				font-weight: 500;
+				background-color: var(--bb-rl-background-color);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-full);
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-				font-size: 14px;
 			}
 
 			.select2-selection__choice__remove {
