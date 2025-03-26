@@ -284,7 +284,7 @@ window.bp = window.bp || {};
 		};
 
 		this.getTopicReplyDraftData = function() {
-			if ( ! this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key) {
+			if ( ! this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key ) {
 				var draft_data = localStorage.getItem( this.topic_reply_draft.data_key );
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
 					// Parse data with JSON.
@@ -1131,9 +1131,42 @@ window.bp = window.bp || {};
 
 				if ( draft_videos.length ) {
 					$form.find( 'a#forums-video-button' ).trigger( 'click' );
+					$form.addClass( 'media-uploading' );
 
 					var v_mock_file        = false,
 						v_dropzone_obj_key = dropzone_video_container.data( 'key' );
+
+					// Object to track processed video count.
+					var processed_videos_counter = { count: 0 };
+
+					/**
+					 * Internal function to check and update video thumbnails.
+					 *
+					 * @param {object} mock_file The mock file object.
+					 * @param {object} video     The video data object.
+					 * @param {object} form      The jQuery form object.
+					 * @param {Array}  videos    Array of all draft videos.
+					 * @param {object} counter   Object tracking processed videos count.
+					 */
+					var checkAndSaveVideoThumbnail = function( mock_file, video, form, videos, counter ) {
+						var thumbnail_check = setInterval( function() {
+							var $preview_element = $( mock_file.previewElement ).closest( '.dz-preview' );
+
+							if ( $preview_element.hasClass( 'dz-has-no-thumbnail' ) || $preview_element.hasClass( 'dz-has-thumbnail' ) ) {
+								video.js_preview = $preview_element.find( '.dz-video-thumbnail img' ).attr( 'src' );
+								clearInterval( thumbnail_check );
+
+								counter.count++;
+
+								// Only update the form field when all videos are processed.
+								if ( counter.count >= videos.length ) {
+									form.find( '#bbp_video' ).val( JSON.stringify( videos ) );
+									$form.removeClass( 'media-uploading' );
+								}
+							}
+						}, 100 );
+					};
+
 					for ( var v = 0; v < draft_videos.length; v++ ) {
 						v_mock_file = false;
 						self.dropzone_media[ v_dropzone_obj_key ].push(
@@ -1170,6 +1203,10 @@ window.bp = window.bp || {};
 
 						self.dropzone_obj[ v_dropzone_obj_key ].files.push( v_mock_file );
 						self.dropzone_obj[ v_dropzone_obj_key ].emit( 'addedfile', v_mock_file );
+
+						// Call function to check for thumbnail generation and save it.
+						checkAndSaveVideoThumbnail( v_mock_file, draft_videos[ v ], $form, draft_videos, processed_videos_counter );
+
 						self.dropzone_obj[ v_dropzone_obj_key ].emit( 'dz-success', v_mock_file );
 						self.dropzone_obj[ v_dropzone_obj_key ].emit( 'complete', v_mock_file );
 					}

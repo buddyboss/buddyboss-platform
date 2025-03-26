@@ -3542,7 +3542,7 @@ window.bp = window.bp || {};
 								response.data.group_id = self.group_id;
 
 								var thumbnailCheck = setInterval( function () {
-									if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+									if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
 										response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 										response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 										response.data.saved      = false;
@@ -3621,7 +3621,9 @@ window.bp = window.bp || {};
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
-								formElement.removeClass( 'media-uploading' );
+								if ( ! formElement.hasClass( 'has-draft' ) ) {
+									formElement.removeClass( 'media-uploading' );
+								}
 							}
 						}
 					);
