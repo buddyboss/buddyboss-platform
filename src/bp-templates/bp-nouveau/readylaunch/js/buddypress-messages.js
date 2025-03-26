@@ -4463,9 +4463,20 @@ window.bp = window.bp || {};
 						}
 
 						if ( 'archived' === bp.Nouveau.Messages.threadType ) {
-							bp.Nouveau.Messages.router.navigate( 'archived/view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'archived/view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger : true } );
+						} else if ( 'unread' === bp.Nouveau.Messages.threadType ) {
+							this.setActiveThread( bp.Nouveau.Messages.threads.at( 0 ).id );
+							var selected = this.collection.findWhere( { active : true } );
+							if ( ! _.isUndefined( selected.get( 'unread' ) ) && selected.get( 'unread' ) ) {
+								selected.updateReadState().done(
+									function () {
+										selected.set( 'unread', false );
+										bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger : true } );
+									}
+								);
+							}
 						} else {
-							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger : true } );
 						}
 
 					}
