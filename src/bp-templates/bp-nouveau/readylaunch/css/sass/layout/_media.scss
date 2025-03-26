@@ -20,6 +20,10 @@
 		@media screen and (max-width: $sm) {
 			grid-template-columns: 1fr;
 		}
+
+		> .open-popup {
+			position: absolute;
+		}
 	}
 
 	&.bb-rl-document {

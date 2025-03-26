@@ -431,6 +431,9 @@
   display: none;
 }
 
+/**
+ * Member Invites
+ */
 .bb-rl-wrap-invites {
   padding: var(--bb-rl-space-300);
   background-color: var(--bb-rl-background-color);
@@ -448,17 +451,65 @@
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.bb-rl-wrap-invites #send-invite-form table {
+.bb-rl-wrap-invites table#member-invites-table {
   width: 100%;
   border-collapse: collapse;
   border-radius: var(--bb-rl-radius-lg);
   overflow: hidden;
   margin-top: var(--bb-rl-space-200);
+  text-align: right;
 }
 
-.bb-rl-wrap-invites #send-invite-form table td {
-  padding: var(--bb-rl-space-200);
+.bb-rl-wrap-invites table#member-invites-table th {
+  font-weight: 500;
+}
+
+.bb-rl-wrap-invites table#member-invites-table td {
+  padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-100) var(--bb-rl-space-200);
   border: 0;
+}
+
+.bb-rl-wrap-invites table#member-invites-table td.field-actions-last, .bb-rl-wrap-invites table#member-invites-table td.field-actions {
+  width: 40px;
+  text-align: center;
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-100);
+}
+
+.bb-rl-wrap-invites table#member-invites-table td.field-actions-last .field-actions-remove,
+.bb-rl-wrap-invites table#member-invites-table td.field-actions-last .field-actions-add, .bb-rl-wrap-invites table#member-invites-table td.field-actions .field-actions-remove,
+.bb-rl-wrap-invites table#member-invites-table td.field-actions .field-actions-add {
+  cursor: pointer;
+}
+
+.bb-rl-wrap-invites table#member-invites-table td.field-actions-last [class*="bb-icons-rl-"], .bb-rl-wrap-invites table#member-invites-table td.field-actions [class*="bb-icons-rl-"] {
+  font-size: var(--bb-rl-base-line);
+  vertical-align: middle;
+}
+
+.bb-rl-wrap-invites table#member-invites-table td.field-email, .bb-rl-wrap-invites table#member-invites-table td[colspan="2"] {
+  padding-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-wrap-invites table#member-invites-table td.bp-pagination {
+  display: table-cell;
+}
+
+.bb-rl-wrap-invites table#member-invites-table td.bp-pagination .bp-pagination-links {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bb-rl-wrap-invites table#member-invites-table .bp-invitee-status {
+  font-size: var(--bb-rl-font-size-base);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line);
+}
+
+.bb-rl-wrap-invites table#member-invites-table .bp-invitee-status [class*="bb-icons-rl-"] {
+  font-size: var(--bb-rl-base-line);
+  vertical-align: middle;
+  margin-left: var(--bb-rl-space-100);
+  display: inline-block;
 }
 
 .bb-rl-wrap-invites #send-invite-form label {
@@ -469,6 +520,11 @@
   color: var(--bb-rl-text-tertiary-color);
   margin-bottom: var(--bb-rl-space-100);
   margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-wrap-invites #send-invite-form .invites-input {
+  width: 100%;
+  padding: var(--bb-rl-space-100);
 }
 
 .bb-rl-wrap-invites #send-invite-form textarea {

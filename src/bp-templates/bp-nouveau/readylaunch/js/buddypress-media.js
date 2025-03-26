@@ -293,9 +293,11 @@ window.bp = window.bp || {};
 			var mediaStream = $( '#bb-rl-media-model-container .bb-rl-activity-list, #media-stream' );
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-edit', this.editDocument.bind( this ) );
+			mediaStream.on( 'click', '.bb-rl-media-edit-document-close', this.closeEditDocumentModal.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
 			mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
+			mediaStream.on( 'click', '#bp-media-edit-document-submit', this.editDocumentSubmit.bind( this ) );
 
 			// document delete.
 			$document.on( 'click', '.bb-rl-document-file-delete', this.deleteDocument.bind( this ) );
@@ -3029,8 +3031,39 @@ window.bp = window.bp || {};
 		 */
 		editDocument: function ( event ) {
 			event.preventDefault();
-			var eventTarget = $( event.currentTarget );
-			console.log( eventTarget );
+
+			var $document = $( document ),
+				$editFileModal = $( '#bb-rl-media-edit-file' ),
+				media_item = $( event.currentTarget ).closest( '.media-folder_items' )
+				current_name = media_item.find( '.media-folder_name' ),
+				current_name_text = current_name.children( 'span' ).text(),
+				activity_id = media_item.data( 'activity-id' ),
+				document_id = media_item.data( 'id' ),
+				document_attachment_id = media_item.find( '.media-folder_name' ).data( 'attachment-id' );
+
+			$editFileModal.show();
+			$editFileModal.addClass( 'open-popup' );
+
+			$editFileModal.find( '#bb-document-title' ).val( current_name_text ).focus().select();
+			$editFileModal.attr( 'data-activity-id', activity_id );
+			$editFileModal.attr( 'data-id', document_id );
+			$editFileModal.attr( 'data-attachment-id', document_attachment_id );
+
+			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
+			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+		},
+
+		closeEditDocumentModal: function ( event ) {
+			event.preventDefault();
+
+			var $modal = $( event.target ).closest( '#bb-rl-media-edit-file' );
+
+			// Reset modal data.
+			$modal.find( '#bb-document-title' ).val( '' );
+			$modal.attr('data-activity-id', '');
+    		$modal.attr('data-id', '');
+			$modal.attr('data-attachment-id', '');
+			$modal.removeClass( 'open-popup' ).hide();
 		},
 
 		/**
@@ -3055,23 +3088,26 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [renameDocumentSubmit description]
+		 * [editDocumentSubmit description]
 		 *
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		renameDocumentSubmit: function ( event ) {
+		editDocumentSubmit: function ( event ) {
 			var eventTarget               = $( event.currentTarget ),
-				document_edit             = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name_edit' ),
-				document_name             = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > span' ),
-				document_name_update_data = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name' ),
-				document_id               = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-id' ).attr( 'data-item-id' ),
-				attachment_document_id    = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
-				documentType              = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
+				$modal 					  = eventTarget.closest( '#bb-rl-media-edit-file' ),
+				$documentDataId 		  = $modal.attr( 'data-id' ),
+				$mediaItem                = $( '.media-folder_items[data-id="' + $documentDataId + '"]' ),
+				document_edit             = $modal.find( '#bb-document-title' ),
+				document_name             = $mediaItem.find( '.media-folder_name > span' ),
+				document_name_update_data = $mediaItem.find( '.media-folder_name' ),
+				document_id               = $mediaItem.find( '.media-folder_name > i.media-document-id' ).attr( 'data-item-id' ),
+				attachment_document_id    = $mediaItem.find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
+				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
 				pattern                   = '';
 
-			if ( eventTarget.closest( '.ac-document-list' ).length ) {
+			if ( $mediaItem.length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
 			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
 				pattern = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
@@ -3086,7 +3122,7 @@ window.bp = window.bp || {};
 				document_edit.addClass( 'error' );
 			}
 
-			if ( eventTarget.closest( '.ac-document-list' ).length ) {
+			if ( $mediaItem.length ) {
 				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
 					document_edit.addClass( 'error' );
 				} else {
@@ -3094,54 +3130,48 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if ( eventTarget.hasClass( 'name_edit_cancel' ) || event.keyCode === 27 ) {
-				document_edit.removeClass( 'error' );
-				document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+			if ( matchStatus ) {
+				return; // prevent user to add not supported characters.
 			}
 
-			if ( eventTarget.hasClass( 'name_edit_save' ) || event.keyCode === 13 ) {
-				if ( matchStatus ) {
-					return; // prevent user to add not supported characters.
-				}
-				document_edit.parent().addClass( 'submitting' ).append( '<i class="animate-spin bb-icon-l bb-icon-spinner"></i>' );
+			eventTarget.addClass( 'saving' );
 
-				// Make ajax call to save new file name here.
-				// use variable 'document_name_val' as a new name while making an ajax call.
-				$.ajax(
-					{
-						url: bbRlAjaxUrl,
-						type: 'post',
-						data: {
-							action: 'document_update_file_name',
-							document_id: document_id,
-							attachment_document_id: attachment_document_id,
-							document_type: documentType,
-							name: document_name_val,
-							_wpnonce: bbRlNonce.media
-						},
-						success: function ( response ) {
-							if ( response.success ) {
-								if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
-									eventTarget.closest( '.media-folder_items' ).html( $( response.data.document ).html() );
-								} else {
-									document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
-									document_name.html( response.data.response.title );
-									document_edit.removeClass( 'submitting' );
-									document_edit.parent().find( '.animate-spin' ).remove();
-									document_edit.parent().hide().siblings( '.media-folder_name' ).show();
-								}
+			// Make ajax call to save new file name here.
+			// use variable 'document_name_val' as a new name while making an ajax call.
+			$.ajax(
+				{
+					url: bbRlAjaxUrl,
+					type: 'post',
+					data: {
+						action: 'document_update_file_name',
+						document_id: document_id,
+						attachment_document_id: attachment_document_id,
+						document_type: documentType,
+						name: document_name_val,
+						_wpnonce: bbRlNonce.media
+					},
+					success: function ( response ) {
+						if ( response.success ) {
+							if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
+								$mediaItem.html( $( response.data.document ).html() );
+								eventTarget.removeClass( 'saving' );
 							} else {
-								document_edit.removeClass( 'submitting' );
-								document_edit.parent().find( '.animate-spin' ).remove();
-								document_edit.parent().hide().siblings( '.media-folder_name' ).show();
-								/* jshint ignore:start */
-								alert( response.data.feedback.replace( '&#039;', '\'' ) );
-								/* jshint ignore:end */
+								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
+								document_name.html( response.data.response.title );
+								eventTarget.removeClass( 'saving' );
 							}
-						},
-					}
-				);
-			}
+						} else {
+							eventTarget.removeClass( 'saving' );
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace( '&#039;', '\'' ) );
+							/* jshint ignore:end */
+						}
+
+						// Trigger the close modal function
+						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
+					},
+				}
+			);
 			event.preventDefault();
 		},
 

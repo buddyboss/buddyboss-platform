@@ -5227,6 +5227,14 @@ button[data-balloon] {
   margin-bottom: 0;
 }
 
+.bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap {
+  margin-right: var(--bb-rl-space-200);
+}
+
+.bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap label {
+  display: none;
+}
+
 .bb-rl-modal-wrapper .bb-rl-has-warning .bb-rl-field-wrap {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
@@ -7425,6 +7433,14 @@ li.bb-rl-hideshow {
   .bb-rl-media-stream #media-folder-document-data-table {
     grid-template-columns: 1fr;
   }
+}
+
+.bb-rl-media-stream .media-list > .open-popup,
+.bb-rl-media-stream .video-list > .open-popup,
+.bb-rl-media-stream .document-list > .open-popup,
+.bb-rl-media-stream .bb-albums-list > .open-popup,
+.bb-rl-media-stream #media-folder-document-data-table > .open-popup {
+  position: absolute;
 }
 
 .bb-rl-media-stream.bb-rl-document .document-data-table-head {

@@ -128,9 +128,11 @@
 }
 
 .bb-rl-profile-edit-subnav {
+
 	.bb-rl-profile-subnav-item {
 
 		a {
+
 			&::before {
 				content: "";
 				font-weight: 400;
