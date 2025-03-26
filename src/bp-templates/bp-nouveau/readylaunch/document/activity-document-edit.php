@@ -9,7 +9,7 @@
 
 $document_id = bp_get_document_id();
 ?>
-<div class="bb-rl-media-edit-file bb-rl-modal-edit-file" style="display: none;" id="bb-rl-media-edit-file" data-activity-id="" data-id="" data-attachment-id="">
+<div class="bb-rl-media-edit-file bb-rl-modal-edit-file" style="display: none;" id="bb-rl-media-edit-file" data-activity-id="" data-id="" data-attachment-id="" data-privacy="">
 	<transition name="modal">
 		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="bb-rl-modal-wrapper">

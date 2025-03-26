@@ -295,8 +295,8 @@ window.bp = window.bp || {};
 			mediaStream.on( 'click', '.ac-document-edit', this.editDocument.bind( this ) );
 			mediaStream.on( 'click', '.bb-rl-media-edit-document-close', this.closeEditDocumentModal.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
-			mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
-			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
+			/* mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
+			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) ); */
 			mediaStream.on( 'click', '#bp-media-edit-document-submit', this.editDocumentSubmit.bind( this ) );
 
 			// document delete.
@@ -3040,6 +3040,7 @@ window.bp = window.bp || {};
 				activity_id = media_item.data( 'activity-id' ),
 				document_id = media_item.data( 'id' ),
 				document_attachment_id = media_item.find( '.media-folder_name' ).data( 'attachment-id' );
+				document_privacy = media_item.find( '.media-folder_name' ).data( 'privacy' );
 
 			$editFileModal.show();
 			$editFileModal.addClass( 'open-popup' );
@@ -3048,6 +3049,8 @@ window.bp = window.bp || {};
 			$editFileModal.attr( 'data-activity-id', activity_id );
 			$editFileModal.attr( 'data-id', document_id );
 			$editFileModal.attr( 'data-attachment-id', document_attachment_id );
+			$editFileModal.attr( 'data-privacy', document_privacy );
+			$editFileModal.find( '#bb-rl-folder-privacy' ).val( document_privacy );
 
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
@@ -3154,6 +3157,7 @@ window.bp = window.bp || {};
 			$modal.attr('data-activity-id', '');
     		$modal.attr('data-id', '');
 			$modal.attr('data-attachment-id', '');
+			$modal.attr('data-privacy', '');
 			$modal.removeClass( 'open-popup' ).hide();
 		},
 
@@ -3185,12 +3189,11 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		editDocumentSubmit: function ( event ) {
-			console.log('---');
-			
 			var eventTarget               = $( event.currentTarget ),
 				$modal 					  = eventTarget.closest( '#bb-rl-media-edit-file' ),
 				$documentDataId 		  = $modal.attr( 'data-id' ),
 				$mediaItem                = $( '.media-folder_items[data-id="' + $documentDataId + '"]' ),
+				document_privacy          = $modal.attr( 'data-privacy' ),
 				document_edit             = $modal.find( '#bb-document-title' ),
 				document_name             = $mediaItem.find( '.media-folder_name > span' ),
 				document_name_update_data = $mediaItem.find( '.media-folder_name' ),
@@ -3199,6 +3202,14 @@ window.bp = window.bp || {};
 				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
 				pattern                   = '';
+
+			/* var current_privacy = $mediaItem.find( '.media-folder_visibility' );
+			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
+			current_privacy.find( '.media-folder_details__bottom span' ).siblings( 'select' ).val( document_privacy );
+			current_privacy.find( '.media-folder_details__bottom #bb-rl-folder-privacy' ).attr( 'data-privacy', document_privacy );
+
+			this.privacySelectorSelect = current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' );
+			this.privacySelectorSpan   = current_privacy.find( '.media-folder_details__bottom span' ); */
 
 			if ( $mediaItem.length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
@@ -3245,6 +3256,9 @@ window.bp = window.bp || {};
 					},
 					success: function ( response ) {
 						if ( response.success ) {
+							console.log('---11---');
+							console.log(response.data.document);
+							
 							if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
 								$mediaItem.html( $( response.data.document ).html() );
 								eventTarget.removeClass( 'saving' );
