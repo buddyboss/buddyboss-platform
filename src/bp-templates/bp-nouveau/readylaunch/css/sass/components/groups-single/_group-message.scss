@@ -11,7 +11,7 @@
 			padding: 0;
 			margin: 0;
 
-			a  {
+			a {
 				font-size: var(--bb-rl-font-size-sm);
 				font-weight: 500;
 				line-height: var(--bb-rl-base-line-small);
@@ -35,13 +35,13 @@
 
 #group-messages-container {
 	background: var(--bb-rl-background-color);
-    border-radius: var(--bb-rl-radius-lg);
-    margin: 0 auto;
+	border-radius: var(--bb-rl-radius-lg);
+	margin: 0 auto;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
 
 	.bb-groups-messages-right-top {
-		margin-left: calc(var(--bb-rl-space-200)* -1);
-		margin-right: calc(var(--bb-rl-space-200)* -1);
+		margin-left: calc(var(--bb-rl-space-200) * -1);
+		margin-right: calc(var(--bb-rl-space-200) * -1);
 		padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	}
@@ -100,8 +100,8 @@
 	display: none;
 }
 
-.messages .select2-dropdown .select2-results__option[aria-selected=true] {
-    display: none;
+.messages .select2-dropdown .select2-results__option[aria-selected="true"] {
+	display: none;
 }
 
 body.groups.messages span.select2-dropdown.select2-dropdown--above {
@@ -109,9 +109,9 @@ body.groups.messages span.select2-dropdown.select2-dropdown--above {
 }
 
 div#bp-group-message-content {
-    height: 100%;
-    display: flex;
-    flex-flow: column;
+	height: 100%;
+	display: flex;
+	flex-flow: column;
 }
 
 .group-messages.public-message {
@@ -122,7 +122,7 @@ div#bp-group-message-content {
 			min-height: 50vh;
 			height: 500px;
 			display: flex;
-			flex-direction: column;	
+			flex-direction: column;
 		}
 
 		.medium-editor-element {

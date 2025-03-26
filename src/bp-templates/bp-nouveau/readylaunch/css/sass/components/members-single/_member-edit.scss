@@ -160,6 +160,7 @@
 	}
 
 	form {
+
 		input[type="text"],
 		input[type="email"],
 		input[type="password"],
@@ -180,6 +181,7 @@
 	}
 
 	input#submit {
+
 		@include bb-rl-button;
 		@include bb-rl-button--brand-fill;
 		padding: 6px var(--bb-rl-space-200);
