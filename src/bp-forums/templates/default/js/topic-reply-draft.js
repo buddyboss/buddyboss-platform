@@ -1161,7 +1161,7 @@ window.bp = window.bp || {};
 								// Only update the form field when all videos are processed.
 								if ( counter.count >= videos.length ) {
 									form.find( '#bbp_video' ).val( JSON.stringify( videos ) );
-									$form.removeClass( 'media-uploading' );
+									form.removeClass( 'media-uploading' );
 								}
 							}
 						}, 100 );
@@ -1210,7 +1210,6 @@ window.bp = window.bp || {};
 						self.dropzone_obj[ v_dropzone_obj_key ].emit( 'dz-success', v_mock_file );
 						self.dropzone_obj[ v_dropzone_obj_key ].emit( 'complete', v_mock_file );
 					}
-					self.addVideoIdsToForumsForm( dropzone_video_container );
 
 					// Disable other buttons( media/gif ).
 					if ( ! _.isNull( self.dropzone_obj[ v_dropzone_obj_key ].files ) && self.dropzone_obj[ v_dropzone_obj_key ].files.length !== 0 ) {
