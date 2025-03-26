@@ -91,11 +91,11 @@
                         <img decoding="async" class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}">
                     </a>
                 </div>
-                <# if (recipient.role) { #>
-                <div class="bb-rl-message-profile-type">
-                    {{recipient.role}}
-                </div>
-                <# } #>
+                <# if ( recipient.member_type && recipient.member_type.label ) { #>
+					<div class="bb-rl-message-profile-type" style="color:{{recipient.member_type.color.text}}; background-color:{{recipient.member_type.color.background}};">
+						{{ recipient.member_type.label }}
+					</div>
+				<# } #>
                 <div class="bb-rl-message-profile-name">
                     <# if (recipient.is_you) { #>
                     You

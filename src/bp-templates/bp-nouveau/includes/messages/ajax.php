@@ -2164,6 +2164,27 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$follower_array = explode( ',', $follower_ids );
 
 					$thread->thread['recipients']['members'][ $count ]['followers_count'] = count( $follower_array );
+
+					// Get the member type of the user.
+					$type        = function_exists( 'bp_get_member_type_object' ) ? bp_get_member_type( $recipient->user_id ) : '';
+					$type_obj    = function_exists( 'bp_get_member_type_object' ) && ! empty( $type ) ? bp_get_member_type_object( $type ) : '';
+					$color_data  = function_exists( 'bb_get_member_type_label_colors' ) && ! empty( $type ) ? bb_get_member_type_label_colors( $type ) : '';
+					$member_type = '';
+					if (
+						! empty( $type_obj ) &&
+						function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
+						function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
+						! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $recipient->user_id ), true )
+					) {
+						$member_type = $type_obj->labels['singular_name'];
+					}
+					$thread->thread['recipients']['members'][ $count ]['member_type'] = array(
+						'label' => $member_type ?? $type,
+						'color' => array(
+							'background' => ! empty( $color_data['background-color'] ) ? $color_data['background-color'] : '',
+							'text'       => ! empty( $color_data['color'] ) ? $color_data['color'] : '',
+						),
+					);
 				}
 
 				++$count;
