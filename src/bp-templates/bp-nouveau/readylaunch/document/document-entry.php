@@ -311,9 +311,6 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 							<?php
 						}
 						?>
-						<li class="rename_file">
-							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
-						</li>
 						<li class="bb-rl-edit-file">
 							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
 						</li>

@@ -3194,6 +3194,7 @@ window.bp = window.bp || {};
 				$documentDataId 		  = $modal.attr( 'data-id' ),
 				$mediaItem                = $( '.media-folder_items[data-id="' + $documentDataId + '"]' ),
 				document_privacy          = $modal.attr( 'data-privacy' ),
+				document_privacy_val      = $modal.find( '#bb-rl-folder-privacy' ).val(),
 				document_edit             = $modal.find( '#bb-document-title' ),
 				document_name             = $mediaItem.find( '.media-folder_name > span' ),
 				document_name_update_data = $mediaItem.find( '.media-folder_name' ),
@@ -3204,12 +3205,7 @@ window.bp = window.bp || {};
 				pattern                   = '';
 
 			/* var current_privacy = $mediaItem.find( '.media-folder_visibility' );
-			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
-			current_privacy.find( '.media-folder_details__bottom span' ).siblings( 'select' ).val( document_privacy );
-			current_privacy.find( '.media-folder_details__bottom #bb-rl-folder-privacy' ).attr( 'data-privacy', document_privacy );
-
-			this.privacySelectorSelect = current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' );
-			this.privacySelectorSpan   = current_privacy.find( '.media-folder_details__bottom span' ); */
+			current_privacy.find( '.media-folder_details__bottom span' ).text( document_privacy_val ); */
 
 			if ( $mediaItem.length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
@@ -3256,9 +3252,6 @@ window.bp = window.bp || {};
 					},
 					success: function ( response ) {
 						if ( response.success ) {
-							console.log('---11---');
-							console.log(response.data.document);
-							
 							if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
 								$mediaItem.html( $( response.data.document ).html() );
 								eventTarget.removeClass( 'saving' );
