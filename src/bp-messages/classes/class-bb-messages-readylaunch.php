@@ -35,7 +35,7 @@ class BB_Messages_Readylaunch {
 	public function __construct() {
 		add_filter( 'bp_messages_js_template_parts', array( $this, 'bb_messages_js_template_parts' ) );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_messages_localize_scripts' ), 11, 1 );
-		add_action( 'wp_ajax_bb_get_thread_right_panel_data', array( $this, 'bb_rl_get_thread_right_panel_data' ) );
+		add_action( 'wp_ajax_bb_rl_get_thread_right_panel_data', array( $this, 'bb_rl_get_thread_right_panel_data' ) );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'bb_rl_filter_message_threads_by_type' ), 10, 2 );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_rl_messages_ajax_querystring' ), 10, 2 );
 		remove_action( 'bb_nouveau_after_nav_link_compose-action', 'bb_messages_compose_action_sub_nav' );
@@ -141,9 +141,9 @@ class BB_Messages_Readylaunch {
 				$is_current_user = (int) bp_loggedin_user_id() === (int) $recipient->user_id;
 
 				$participant = array(
-					'id'          => $recipient->user_id,
-					'name'        => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
-					'avatar'      => bp_core_fetch_avatar(
+					'id'            => $recipient->user_id,
+					'name'          => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
+					'avatar'        => bp_core_fetch_avatar(
 						array(
 							'item_id' => $recipient->user_id,
 							'type'    => 'thumb',
@@ -152,8 +152,9 @@ class BB_Messages_Readylaunch {
 							'html'    => false,
 						)
 					),
-					'profile_url' => bp_core_get_user_domain( $recipient->user_id ),
-					'is_you'      => $is_current_user,
+					'profile_url'   => bp_core_get_user_domain( $recipient->user_id ),
+					'is_you'        => $is_current_user,
+					'user_presence' => ! $is_current_user ? bb_get_user_presence_html( $recipient->user_id ) : '',
 				);
 
 				if ( bp_is_active( 'moderation' ) ) {

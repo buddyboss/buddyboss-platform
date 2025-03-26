@@ -6182,7 +6182,7 @@ window.bp = window.bp || {};
 				type : 'POST',
 				url  : bbRlAjaxUrl,
 				data : {
-					action    : 'bb_get_thread_right_panel_data',
+					action    : 'bb_rl_get_thread_right_panel_data',
 					_wpnonce  : bbRlMessagesNonces.bb_messages_right_panel,
 					thread_id : this.model.get( 'id' ),
 					page      : page,

@@ -961,7 +961,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						'user_name'     => bp_core_get_user_displayname( $recipient->user_id ),
 						'is_deleted'    => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
 						'is_you'        => bp_loggedin_user_id() === $recipient->user_id,
-						'user_presence' => 1 === count( (array) $check_recipients ) ? bb_get_user_presence_html( $recipient->user_id ) : '',
+						'user_presence' => 2 === count( (array) $check_recipients ) && bp_loggedin_user_id() !== $recipient->user_id ? bb_get_user_presence_html( $recipient->user_id ) : '',
 					);
 
 					if ( bp_is_active( 'moderation' ) ) {
