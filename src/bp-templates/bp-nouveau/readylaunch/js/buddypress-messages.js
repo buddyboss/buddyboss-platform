@@ -5537,6 +5537,7 @@ window.bp = window.bp || {};
 				}
 
 				// Add the right panel view if not exists.
+				console.log( 'messagesFetched' );
 				if ( ! this.rightPanel || this.rightPanel.model.get( 'id' ) !== this.options.thread.get( 'id' ) ) {
 					this.rightPanel              = new bp.Views.userMessageRightPanel( { model : this.options.thread } );
 					this.rightPanel.el.className = 'bb-rl-messages-right-panel';

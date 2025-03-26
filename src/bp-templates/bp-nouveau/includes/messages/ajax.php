@@ -1915,13 +1915,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$group_message_thread_type = bp_messages_get_meta( $last_message_id, 'group_message_thread_type', true );
 		$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
 		$message_from              = bp_messages_get_meta( $last_message_id, 'message_from', true );
-		$group_cover_image         = bp_attachments_get_attachment(
-			'url',
-			array(
-				'object_dir' => 'groups',
-				'item_id'    => $group_id,
-			)
-		);
 
 		if ( bp_is_active( 'groups' ) ) {
 			$get_group  = groups_get_group( $group_id );
@@ -1963,6 +1956,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			$group_status      = bp_get_group_type( $get_group );
 			$group_last_active = bp_get_group_last_active( $get_group );
+			$group_cover_image = bp_attachments_get_attachment(
+				'url',
+				array(
+					'object_dir' => 'groups',
+					'item_id'    => $group_id,
+				)
+			);
 		} else {
 
 			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
@@ -1985,13 +1985,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$group_avatar = $avatar;
 				}
 			}
-
-			$group_status      = $wpdb->get_var( "SELECT `status` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" );
-			$group_last_active = sprintf(
-				/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-				esc_attr__( 'Active %s', 'buddyboss' ),
-				wp_kses_post( groups_get_groupmeta( $group_id, 'last_activity' ) )
-			);
 		}
 
 		$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
