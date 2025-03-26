@@ -42,24 +42,16 @@ if ( $is_web_enabled && $is_app_enabled ) {
 		<div class="notification_info">
 
 			<div class="notification_type email_notification">
-				<span class="notification_type_icon">
-					<i class="bb-icon bb-icon-mail"></i>
-				</span>
-
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
+					<h3><i class="bb-icons-rl-envelope-simple"></i><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
 					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 
 			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
-				<span class="notification_type_icon">
-					<i class="bb-icon bb-icon-monitor"></i>
-				</span>
-
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
+					<h3><i class="bb-icons-rl-desktop"></i><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
 					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
@@ -67,12 +59,8 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
-				<span class="notification_type_icon">
-					<i class="bb-icon bb-icon-smartphone"></i>
-				</span>
-
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
+					<h3><i class="bb-icons-rl-device-mobile"></i><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
 					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
