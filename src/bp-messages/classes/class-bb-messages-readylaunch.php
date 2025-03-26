@@ -289,7 +289,7 @@ class BB_Messages_Readylaunch {
 	 */
 	public function bb_rl_messages_ajax_querystring( $querystring, $querystring_object ) {
 		if ( 'messages' === $querystring_object && isset( $_POST['thread_type'] ) ) {
-			if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'bp_nouveau_messages' ) ) {
+			if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 				wp_send_json_error(
 					array(
 						'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
