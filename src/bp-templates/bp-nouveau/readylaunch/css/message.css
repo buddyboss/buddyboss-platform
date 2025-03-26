@@ -216,9 +216,9 @@ body.messages .bb-rl-content-wrapper {
 }
 
 .bb-rl-messages-user-threads {
-  min-height: 550px;
-  max-height: calc(80vh - 118px);
-  height: calc(80vh - 118px);
+  min-height: 510px;
+  max-height: calc(80vh - 158px);
+  height: calc(80vh - 158px);
   overflow: auto;
 }
 
