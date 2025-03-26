@@ -3053,6 +3053,97 @@ window.bp = window.bp || {};
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
 		},
 
+		/**
+		 * [renameDocumentSubmit description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocumentSubmit: function ( event ) {
+			var eventTarget               = $( event.currentTarget ),
+				document_edit             = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name_edit' ),
+				document_name             = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > span' ),
+				document_name_update_data = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name' ),
+				document_id               = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-id' ).attr( 'data-item-id' ),
+				attachment_document_id    = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
+				documentType              = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
+				document_name_val         = document_edit.val().trim(),
+				pattern                   = '';
+
+			if ( eventTarget.closest( '.ac-document-list' ).length ) {
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
+			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
+				pattern = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			}
+
+			var matches     = pattern.exec( document_name_val ),
+				matchStatus = Boolean( matches );
+
+			if ( ! matchStatus ) { // If any not supported character found add error class.
+				document_edit.removeClass( 'error' );
+			} else {
+				document_edit.addClass( 'error' );
+			}
+
+			if ( eventTarget.closest( '.ac-document-list' ).length ) {
+				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
+					document_edit.addClass( 'error' );
+				} else {
+					document_edit.removeClass( 'error' );
+				}
+			}
+
+			if ( eventTarget.hasClass( 'name_edit_cancel' ) || event.keyCode === 27 ) {
+				document_edit.removeClass( 'error' );
+				document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+			}
+
+			if ( eventTarget.hasClass( 'name_edit_save' ) || event.keyCode === 13 ) {
+				if ( matchStatus ) {
+					return; // prevent user to add not supported characters.
+				}
+				document_edit.parent().addClass( 'submitting' ).append( '<i class="animate-spin bb-icon-l bb-icon-spinner"></i>' );
+
+				// Make ajax call to save new file name here.
+				// use variable 'document_name_val' as a new name while making an ajax call.
+				$.ajax(
+					{
+						url: bbRlAjaxUrl,
+						type: 'post',
+						data: {
+							action: 'document_update_file_name',
+							document_id: document_id,
+							attachment_document_id: attachment_document_id,
+							document_type: documentType,
+							name: document_name_val,
+							_wpnonce: bbRlNonce.media
+						},
+						success: function ( response ) {
+							if ( response.success ) {
+								if ( 'undefined' !== typeof response.data.document && 0 < $( response.data.document ).length ) {
+									eventTarget.closest( '.media-folder_items' ).html( $( response.data.document ).html() );
+								} else {
+									document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
+									document_name.html( response.data.response.title );
+									document_edit.removeClass( 'submitting' );
+									document_edit.parent().find( '.animate-spin' ).remove();
+									document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								}
+							} else {
+								document_edit.removeClass( 'submitting' );
+								document_edit.parent().find( '.animate-spin' ).remove();
+								document_edit.parent().hide().siblings( '.media-folder_name' ).show();
+								/* jshint ignore:start */
+								alert( response.data.feedback.replace( '&#039;', '\'' ) );
+								/* jshint ignore:end */
+							}
+						},
+					}
+				);
+			}
+			event.preventDefault();
+		},
+
 		closeEditDocumentModal: function ( event ) {
 			event.preventDefault();
 
@@ -3094,6 +3185,8 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		editDocumentSubmit: function ( event ) {
+			console.log('---');
+			
 			var eventTarget               = $( event.currentTarget ),
 				$modal 					  = eventTarget.closest( '#bb-rl-media-edit-file' ),
 				$documentDataId 		  = $modal.attr( 'data-id' ),
