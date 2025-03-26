@@ -23,7 +23,6 @@
 		</div>
 		<div id="bb-rl-messages-thread-list-nav"></div>
 		<div class="subnav-filters filters user-subnav bb-rl-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
-		<div class="bb-rl-messages-search-feedback"></div>
 		<!-- Message Tabs -->
 		<div class="bb-rl-messages-tabs">
 			<ul class="bb-rl-messages-tabs-list">
@@ -39,6 +38,7 @@
 			</ul>
 		</div>
 		<!-- End Message Tabs -->
+		<div class="bb-rl-messages-search-feedback"></div>
 		<div class="bb-rl-messages-threads-list bb-rl-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bb-rl-messages-threads-list"></div>
 	</div>
 	<div class="bb-rl-messages-content"></div>
