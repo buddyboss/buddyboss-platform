@@ -6466,8 +6466,8 @@ window.bp = window.bp || {};
 				this.$el.html( this.template() );
 				
 				// Hide the right panel when there are no unread threads.
-				if ( $('#bb-rl-messages-right-panel').length ) {
-					$('#bb-rl-messages-right-panel').hide();
+				if ( $( '#bb-rl-messages-right-panel' ).length ) {
+					$( '#bb-rl-messages-right-panel' ).hide();
 				}
            
 				return this;
