@@ -227,30 +227,30 @@ window.bp = window.bp || {};
 		 * [addListeners description]
 		 */
 		addListeners: function () {
+			var $document = $( document );
 
-			$( document ).on( 'click', '.closeModalErrorPopup', this.closeModalPopup.bind( this ) );
+			$document.on( 'click', '.closeModalErrorPopup', this.closeModalPopup.bind( this ) );
 			/**
 			 * Pagination for message block list
 			 */
 
-			$( document ).on( 'click', '#view_more_members, .view_other_members', this.messageMemberModel.bind( this ) );
+			$document.on( 'click', '#view_more_members, .view_other_members', this.messageMemberModel.bind( this ) );
 
-			$( document ).on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageBlockMemberPopup );
-			$( document ).on( 'click', '#bp-message-thread-header .mass-report-member, .bb_more_options_list .mass-report-member', this.messageReportMemberPopup );
-			$( document ).on( 'click', '.message-members-list .bbm-model-wrap, .moderation-popup .bbm-model-wrap', this.hideMessageReportMemberPopup );
-			$( document ).on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
-			$( document ).on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
-			$( document ).on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
-			$( document ).on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
-			$( document ).on( 'click', '.bb-rl-messages-nav-panel #back-to-thread', this.backToThreadList );
-			$( document ).on( 'click', '#mass-user-block-list a.report-content', this.messageReportMember );
-			$( document ).on( 'click', '.message_action__list a.reported-content', this.messageReportedMember );
-			$( document ).on( 'click', '.message_action__list .archived-messages a.archived-page', this.openArchivedPage );
-			$( document ).on( 'click', '#no-messages-archived-link a', this.openArchivedPage );
-			$( document ).on( 'click', '.bb-rl-message-info-tabs-wrapper .bb-rl-message-info-tab button', this.toggleMessageInfoTab );
+			$document.on( 'click', '#bp-message-thread-header .mass-block-member, .bb_more_options_list .mass-block-member', this.messageBlockMemberPopup );
+			$document.on( 'click', '#bp-message-thread-header .mass-report-member, .bb_more_options_list .mass-report-member', this.messageReportMemberPopup );
+			$document.on( 'click', '.message-members-list .bbm-model-wrap, .moderation-popup .bbm-model-wrap', this.hideMessageReportMemberPopup );
+			$document.on( 'click', '#mass-user-block-list a.block-member', this.messageBlockMember );
+			$document.on( 'click', '#mass-user-block-list .mfp-close', this.clearModeratedMessageList );
+			$document.on( 'click', '.page-data a.load_more_rl', this.messageBlockListPagination );
+			$document.on( 'click', '#compose-action-personal-li .bb_more_options_action', this.toggleMessageCompose );
+			$document.on( 'click', '.bb-rl-messages-nav-panel #back-to-thread', this.backToThreadList );
+			$document.on( 'click', '#mass-user-block-list a.report-content', this.messageReportMember );
+			$document.on( 'click', '.message_action__list a.reported-content', this.messageReportedMember );
+			$document.on( 'click', '.message_action__list .archived-messages a.archived-page', this.openArchivedPage );
+			$document.on( 'click', '#no-messages-archived-link a', this.openArchivedPage );
+			$document.on( 'click', '.bb-rl-message-info-tabs-wrapper .bb-rl-message-info-tab button', this.toggleMessageInfoTab );
 			// Tab click event handler for All, Unread, Archive.
-			$( document ).on( 'click', '.bb-rl-messages-tab-link', this.handleTabChange.bind( this ) );
-
+			$document.on( 'click', '.bb-rl-messages-tab-link', this.handleTabChange.bind( this ) );
 		},
 
 		triggerLoadMore: function () {
