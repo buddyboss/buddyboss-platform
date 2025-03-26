@@ -1002,3 +1002,77 @@
 .bb-rl-account-settings-section .notification_info .notification_learn_more {
   display: none;
 }
+
+.bb-rl-account-settings-section .main-notification-settings {
+  width: 100%;
+  margin: 0 0 var(--bb-rl-space-500);
+}
+
+.bb-rl-account-settings-section .main-notification-settings thead {
+  display: block;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  background-color: var(--bb-rl-background-secondary-color);
+  padding: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-account-settings-section .main-notification-settings thead .title {
+  width: 100%;
+}
+
+.bb-rl-account-settings-section .main-notification-settings tbody {
+  display: block;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: 0 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-account-settings-section .main-notification-settings tbody td:first-child {
+  width: 100%;
+}
+
+.bb-rl-account-settings-section .main-notification-settings tbody tr:not(.notification_heading) + tr td {
+  padding-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-account-settings-section .main-notification-settings .app,
+.bb-rl-account-settings-section .main-notification-settings .email,
+.bb-rl-account-settings-section .main-notification-settings .web {
+  min-width: 95px;
+}
+
+.bb-rl-account-settings-section .main-notification-settings th,
+.bb-rl-account-settings-section .main-notification-settings td {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  line-height: 1;
+  text-align: left;
+  padding: 0 var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-account-settings-section .main-notification-settings th label,
+.bb-rl-account-settings-section .main-notification-settings td label {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .main-notification-settings .notification_heading {
+  position: relative;
+  bottom: 30px;
+}
+
+.bb-rl-account-settings-section .main-notification-settings .notification_heading .title {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  font-weight: 600;
+  color: var(--bb-rl-text-tertiary-color);
+  padding: 2px var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+@media screen and (min-width: 800px) {
+  .bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
+    display: none;
+  }
+}

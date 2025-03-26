@@ -969,7 +969,7 @@ body.messages .bb-rl-content-wrapper {
 }
 
 #bp-message-thread-list:empty:before {
-  content: '';
+  content: "";
   display: inline-block;
   height: 22px;
   width: 22px;
@@ -2374,7 +2374,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 }
 
 #bb-rl-messages-right-panel:empty:before {
-  content: '';
+  content: "";
   display: inline-block;
   height: 22px;
   width: 22px;

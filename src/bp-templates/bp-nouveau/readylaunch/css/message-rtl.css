@@ -777,7 +777,7 @@ body.messages .bb-rl-content-wrapper {
   position: relative;
 }
 
-.message-thread-header {
+.message-thread-header:not(:empty) {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
@@ -960,6 +960,23 @@ body.messages .bb-rl-content-wrapper {
 .single-message-thread-header .bb_more_dropdown li.delete_thread a:before,
 .single-message-thread-header .bb_more_dropdown li.delete_messages a:before {
   content: "\e4a6";
+}
+
+#bp-message-thread-list:empty {
+  align-items: center;
+  margin-top: 55px;
+  border-top: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+#bp-message-thread-list:empty:before {
+  content: "";
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
 }
 
 #bp-message-thread-list .divider-date {
@@ -2346,6 +2363,25 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
   flex-direction: column;
   height: 100%;
   overflow: auto;
+}
+
+#bb-rl-messages-right-panel:empty {
+  width: 300px;
+  background-color: var(--bb-rl-background-color);
+  border-right: 1px solid var(--bb-rl-border-secondary-color);
+  padding-top: 50px;
+  text-align: center;
+}
+
+#bb-rl-messages-right-panel:empty:before {
+  content: "";
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
 }
 
 .bb-rl-message-right-tabs {

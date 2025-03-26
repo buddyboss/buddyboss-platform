@@ -342,13 +342,13 @@
 
 #bb-rl-messages-right-panel:empty {
 	width: 300px;
-    background-color: var(--bb-rl-background-color);
-    border-left: 1px solid var(--bb-rl-border-secondary-color);
-    padding-top: 50px;
+	background-color: var(--bb-rl-background-color);
+	border-left: 1px solid var(--bb-rl-border-secondary-color);
+	padding-top: 50px;
 	text-align: center;
 
 	&:before {
-		content: '';
+		content: "";
 		display: inline-block;
 		height: 22px;
 		width: 22px;

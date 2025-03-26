@@ -1,0 +1,77 @@
+.bb-rl-account-settings-section {
+
+	.main-notification-settings {
+		width: 100%;
+		margin: 0 0 var(--bb-rl-space-500);
+
+		thead {
+			display: block;
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-base);
+			background-color: var(--bb-rl-background-secondary-color);
+			padding: var(--bb-rl-space-200) 0;
+
+			.title {
+				width: 100%;
+			}
+		}
+
+		tbody {
+			display: block;
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-base);
+			padding: 0 0 var(--bb-rl-space-300);
+
+			td:first-child {
+				width: 100%;
+			}
+
+			tr:not(.notification_heading) + tr {
+
+				td {
+					padding-top: var(--bb-rl-space-300);
+				}
+			}
+		}
+
+		.app,
+		.email,
+		.web {
+			min-width: 95px;
+		}
+
+		th,
+		td {
+
+			@include bb-rl-label-heading-md;
+			line-height: 1;
+			text-align: left;
+			padding: 0 var(--bb-rl-space-200) 0;
+
+			label {
+				margin-bottom: 0;
+			}
+		}
+
+		.notification_heading {
+			position: relative;
+			bottom: 30px;
+
+			.title {
+
+				@include bb-rl-label-heading-bolder;
+				font-weight: 600;
+				color: var(--bb-rl-text-tertiary-color);
+				padding: 2px var(--bb-rl-space-100);
+				margin-bottom: var(--bb-rl-space-100);
+			}
+		}
+	}
+
+	@media screen and (min-width: $md) {
+
+		.main-notification-settings .bb-mobile-setting {
+			display: none;
+		}
+	}
+}
