@@ -1,0 +1,117 @@
+.group-messages {
+
+	.group-subnav {
+		margin-bottom: var(--bb-rl-space-200);
+
+		.subnav {
+			display: flex;
+			align-items: center;
+			list-style: none;
+			padding: 0;
+			margin: 0;
+
+			a  {
+				font-size: var(--bb-rl-font-size-sm);
+				font-weight: 500;
+				line-height: var(--bb-rl-base-line-small);
+				border-radius: var(--bb-rl-radius-full);
+				padding: 6px var(--bb-rl-space-200);
+				color: var(--bb-rl-text-secondary-color);
+			}
+
+			li.selected {
+
+				a {
+					background-color: var(--bb-rl-background-secondary-color);
+					color: var(--bb-rl-text-color);
+				}
+			}
+		}
+	}
+}
+
+#group-messages-container {
+	background: var(--bb-rl-background-color);
+    border-radius: var(--bb-rl-radius-lg);
+    margin: 0 auto;
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
+
+	.bb-groups-messages-right-top {
+		margin-left: calc(var(--bb-rl-space-200)* -1);
+		margin-right: calc(var(--bb-rl-space-200)* -1);
+		padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+	}
+
+
+	.bb-title,
+	.group-messages-compose {
+		display: none;
+	}
+
+	.bp-messages-feedback-hide {
+		display: none;
+	}
+
+	.bp-select-members-wrap {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+
+		.bp-messages-feedback {
+			width: 100%;
+		}
+
+		.group-messages-helper-text {
+			font-weight: 500;
+			min-width: 70px;
+			color: var(--bb-rl-text-secondary-color);
+		}
+
+		.select2.select2-container {
+			flex: 1;
+
+			.select2-selection--multiple {
+				background-color: transparent;
+				border: 0;
+			}
+
+			.select2-selection__rendered .select2-selection__choice {
+				background-color: var(--bb-rl-background-tertiary-color);
+				border: 0;
+				padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+				font-size: 14px;
+			}
+
+			.select2-selection__choice__remove {
+				display: none;
+			}
+		}
+	}
+}
+
+#send_group_message_form .select2-search__field {
+	display: none;
+}
+
+.messages .select2-dropdown .select2-results__option[aria-selected=true] {
+    display: none;
+}
+
+body.groups.messages span.select2-dropdown.select2-dropdown--above {
+	display: none;
+}
+
+div#bp-group-message-content {
+    padding: var(--bb-rl-space-300);
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+.group-messages.public-message {
+
+	.bb-groups-messages-right div#bp-group-message-content {
+		min-height: 50vh;
+	}
+}
