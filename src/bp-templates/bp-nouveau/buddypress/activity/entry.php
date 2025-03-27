@@ -75,7 +75,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		<div class="bp-activity-head-group">
 			<div class="activity-group-avatar">
 				<div class="group-avatar">
-					<a class="group-avatar-wrap mobile-center" href="<?php echo $group_permalink; ?>">
+					<a class="group-avatar-wrap mobile-center" href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
@@ -85,18 +85,19 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 								'object' => 'group',
 								'width' => 100,
 								'height' => 100,
+								'class' => 'avatar bb-hp-group-avatar'
 							)
 						);
 						?>
 					</a>
 				</div>
 				<div class="author-avatar">
-					<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
+					<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php bp_activity_avatar( array( 'type' => 'thumb', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
 				</div>
 			</div>
 
 			<div class="activity-header activity-header--group">
-				<div class="activity-group-heading"><a href="<?php echo $group_permalink; ?>"><?php echo $group_name; ?></a></div>
+				<div class="activity-group-heading"><a href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>"><?php echo $group_name; ?></a></div>
 				<div class="activity-group-post-meta">
 					<span class="activity-post-author">
 						<?php bp_activity_action(); ?>
@@ -126,7 +127,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
-			<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
+			<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php bp_activity_avatar( array( 'type' => 'full', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
 		</div>
 
 		<div class="activity-header">

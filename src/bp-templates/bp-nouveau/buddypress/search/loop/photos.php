@@ -54,7 +54,7 @@ $media_visibility = bp_get_media_visibility();
 						if ( ! bp_is_user() ) {
 							?>
 							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $media_link ); ?>"><?php bp_media_author(); ?></a></span>
+							<a href="<?php echo esc_url( $media_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_media_user_id() ); ?>"><?php bp_media_author(); ?></a></span>
 							<?php
 						}
 						?>

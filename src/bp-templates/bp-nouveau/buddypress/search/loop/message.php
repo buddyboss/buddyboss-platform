@@ -35,7 +35,7 @@ global $current_message; ?>
 
 	<div class="conversation">
 		<div class="item-avatar">
-			<a href="<?php echo esc_url( bp_core_get_userlink( $current_message->sender_id, true, true ) ); ?>">
+			<a href="<?php echo esc_url( bp_core_get_userlink( $current_message->sender_id, true, true ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $current_message->sender_id ); ?>">
 				<?php
 				echo bp_core_fetch_avatar(
 					array(
