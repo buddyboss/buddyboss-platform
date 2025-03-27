@@ -874,7 +874,7 @@ window.bp = window.bp || {};
 						},
 						toolbar: {
 							buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-							relativeContainer: document.getElementById( 'whats-new-toolbar' ),
+							relativeContainer: document.getElementById( 'bb-rl-editor-toolbar' ),
 							static: true,
 							updateOnEmptySelection: true
 						},

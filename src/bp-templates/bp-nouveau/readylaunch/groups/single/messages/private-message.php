@@ -329,6 +329,7 @@ if ( 0 === $total_count ) {
 								?>
 								<button <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" id="send_group_message_button" class="small"><?php esc_html_e( 'Send Message', 'buddyboss' ); ?></button>
 							</div>
+							<div id="bb-rl-editor-toolbar"></div>
 						</div>
 					</div>
 				</div>
