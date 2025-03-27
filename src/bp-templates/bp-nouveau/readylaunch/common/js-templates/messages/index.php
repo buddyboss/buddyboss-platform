@@ -42,7 +42,7 @@
 		<div class="bb-rl-messages-threads-list bb-rl-messages-threads-list-user-<?php echo esc_attr( bp_loggedin_user_id() ); ?>" id="bb-rl-messages-threads-list"></div>
 	</div>
 	<div class="bb-rl-messages-content"></div>
-	<div id="bb-rl-messages-right-panel"></div>
+	<div id="bb-rl-messages-right-panel" class="<?php echo bp_is_current_action( 'compose' ) ? 'bp-hide' : ''; ?>"></div>
 </div>
 
 <?php
