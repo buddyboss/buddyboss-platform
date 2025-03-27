@@ -193,7 +193,7 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
-// Clear activity parent cache when activity is deleted or saved.	
+// Clear activity parent cache when activity is deleted or saved.
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
@@ -492,7 +492,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 
 	// Linkify the mentions with the username.
 	foreach ( (array) $usernames as $user_id => $username ) {
-		$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+		$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 		if ( false === strpos( $content, $replacement ) ) {
 			// Pattern for cases with existing <a>@mention</a> or @mention.
 			$pattern = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
@@ -539,7 +539,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	if ( ! empty( $usernames ) ) {
 		// Replace @mention text with userlinks.
 		foreach ( (array) $usernames as $user_id => $username ) {
-			$replacement = "<a class='bp-suggestions-mention' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
+			$replacement = "<a class='bp-suggestions-mention' data-bb-hp-profile='" . esc_attr( $user_id ) . "' href='{{mention_user_id_" . $user_id . "}}' rel='nofollow'>@$username</a>";
 			if ( false === strpos( $activity->content, $replacement ) ) {
 				// Pattern for cases with existing <a>@mention</a> or @mention.
 				$pattern           = '/(?<=[^A-Za-z0-9\_\/\.\-\*\+\=\%\$\#\?]|^)@' . preg_quote( $username, '/' ) . '(?!\/)|<a[^>]*>@' . preg_quote( $username, '/' ) . '<\/a>/';
@@ -3806,19 +3806,37 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 }
 
 /**
- * Update date_updated on reactions.
+ * Filter the members loop on a followers page.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $activity_id ID of the activity item being favorited.
- * @param int $user_id     ID of the user doing the favoriting.
+ * @param array|string $qs The querystring for the BP loop.
+ * @param str          $object The current object for the querystring.
  *
- * @return void
+ * @return array|string Modified querystring
  */
-function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
-	$activity = bb_activity_get_raw_db_object( $activity_id );
-	bb_activity_update_date_updated_and_clear_cache( $activity );
+function bb_add_member_followers_scope_filter( $qs, $object ) {
+	// not on the members object? stop now!
+	if ( 'members' !== $object ) {
+		return $qs;
+	}
+
+	// members directory
+	if ( ! bp_is_user() && bp_is_members_directory() ) {
+		$qs_args = bp_parse_args( $qs );
+		// check if members scope is followers before manipulating.
+		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
+			$qs .= '&include=' . bp_get_follower_ids(
+				array(
+					'user_id' => bp_loggedin_user_id(),
+				)
+			);
+		}
+	}
+
+	return $qs;
 }
+add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
 
 /**
  * Clear activity parent cache for one or more activities.
@@ -3854,7 +3872,7 @@ function bb_clear_activity_parent_cache( $activities ) {
 
 /**
  * Clear activity comment parent cache.
- * 
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
@@ -3887,9 +3905,9 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
 				)
 			);
 			if ( $main_activity_id ) {
-				wp_cache_delete( 
-					'bb_activity_comment_parent_' . $activity_id . '_' . $main_activity_id, 
-					'bb_activity_comment_parents' 
+				wp_cache_delete(
+					'bb_activity_comment_parent_' . $activity_id . '_' . $main_activity_id,
+					'bb_activity_comment_parents'
 				);
 			}
 		}
@@ -3920,7 +3938,7 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 		foreach ( $activity_ids as $activity_id ) {
 			$comment_ids = $wpdb->get_col(
 				$wpdb->prepare(
-					"SELECT id FROM {$bp->activity->table_name} 
+					"SELECT id FROM {$bp->activity->table_name}
 					WHERE item_id = %d AND type = 'activity_comment'",
 					$activity_id
 				)
@@ -3930,9 +3948,9 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 
 				// Clear cache for each comment.
 				foreach ( $comment_ids as $comment_id ) {
-					wp_cache_delete( 
-						'bb_activity_comment_parent_' . $comment_id . '_' . $activity_id, 
-						'bb_activity_comment_parents' 
+					wp_cache_delete(
+						'bb_activity_comment_parent_' . $comment_id . '_' . $activity_id,
+						'bb_activity_comment_parents'
 					);
 				}
 			}

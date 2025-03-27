@@ -1233,6 +1233,8 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 	);
 	extract( $r, EXTR_SKIP );
 
+	$attribute = '';
+
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
 		case 'groups':
@@ -1251,6 +1253,8 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$link  = bp_get_group_permalink( $group );
 				$name  = $group->name;
 			}
+
+			$attribute = 'data-bb-hp-group="' . esc_attr( $group->id ) . '"';
 
 			if ( empty( $alt ) ) {
 				$alt = __( 'Group logo', 'buddyboss' );
@@ -1280,12 +1284,16 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
+			$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
+
 			break;
 		default:
 			$object  = 'user';
 			$item_id = $activities_template->activity->user_id;
 			$email   = $activities_template->activity->user_email;
 			$link    = bp_core_get_userlink( $item_id, false, true );
+
+			$attribute = 'data-bb-hp-profile="' . esc_attr( $item_id ) . '"';
 
 			if ( empty( $alt ) ) {
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
@@ -1357,9 +1365,10 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 		$avatar = apply_filters( 'bp_get_activity_secondary_avatar', $avatar );
 
 		return sprintf(
-			'<a href="%s" class="%s">%s</a>',
+			'<a href="%s" class="%s" %s>%s</a>',
 			$link,
 			$link_class,
+			$attribute,
 			$avatar
 		);
 	}
