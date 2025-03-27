@@ -603,3 +603,276 @@ div.profile_completion_wrap {
 	}
 
 }
+
+.bb-popup-card {
+	position: fixed;
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	padding: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	min-width: 200px;
+	z-index: 9999991;
+	opacity: 0;
+	transition-behavior: allow-discrete;/* stylelint-disable-line */
+	transition: opacity 0.3s ease;
+	transform: translate(9999px);
+
+	&.show {
+		opacity: 1;
+		transform: translate(0);
+	}
+
+	.acomments-modal-open & {
+		z-index: 999985;
+	}
+
+	.skeleton-card {
+		display: none;
+	}
+
+	&.loading {
+
+		.bb-card-content {
+			display: none;
+		}
+	}
+}
+
+.bb-popup-card.loading {
+
+	.skeleton-card {
+		display: block;
+	}
+
+	.skeleton-card-entity {
+		flex: 1;
+
+		> div {
+			border-radius: 6px;
+		}
+	}
+
+	.skeleton-card-body {
+		display: flex;
+		align-items: flex-start;
+		gap: 24px;
+	}
+
+	.skeleton-card-avatar {
+		width: 88px;
+		height: 88px;
+		border-radius: 50%;
+	}
+
+	&.bb-group-card {
+
+		.skeleton-card-avatar {
+			border-radius: 8px;
+		}
+	}
+
+	.skeleton-card-type {
+		max-width: 61px;
+		height: 21px;
+		margin-bottom: 6px;
+	}
+
+	.skeleton-card-heading {
+		max-width: 100px;
+		height: 21px;
+		margin-bottom: 10px;
+	}
+
+	.skeleton-card-meta {
+		max-width: 150px;
+		height: 15px;
+	}
+
+	&.bb-group-card {
+
+		.skeleton-card-footer:not(.bb-card-footer--plain) {
+
+			.skeleton-card-button:first-of-type {
+				width: 66.66%;
+			}
+		}
+	}
+
+	.skeleton-card-footer {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		margin: 30px 0 0;
+
+		.skeleton-card-button {
+			display: inline-block;
+			width: 33.33%;
+			height: 30px;
+			border-radius: 6px;
+		}
+
+		&.bb-card-footer--plain,
+		&.skeleton-footer-plain {
+
+			.skeleton-card-button {
+				display: none;
+				width: 100%;
+
+				&:first-of-type {
+					display: inline-block;
+				}
+			}
+		}
+	}
+}
+
+.bb-card-body {
+	display: flex;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+.bb-card-avatar {
+	position: relative;
+
+	img {
+		width: 88px;
+		height: auto;
+		min-width: 88px;
+	}
+
+	.card-profile-status {
+		position: absolute;
+		display: none;
+		width: 13px;
+		height: 13px;
+		background-color: #14b550;
+		border: 2px solid #fff;
+		border-radius: 50%;
+		right: 7px;
+		top: 5px;
+
+		&.active {
+			display: inline-block;
+		}
+	}
+}
+
+.bb-card-heading {
+	margin: 0 0 10px;
+}
+
+.bb-card-profile-type {
+	display: none;
+	background-color: #fafafa;
+	padding: 4px 8px;
+	font-size: 11px;
+
+	&.hasMemberType {
+		display: inline;
+	}
+}
+
+.bb-card-meta {
+
+	span {
+		font-size: 14px;
+		line-height: 21px;
+	}
+
+	> span {
+		margin: 0 5px 0 0;
+		white-space: nowrap;
+	}
+
+	.card-meta-type--empty {
+		display: none;
+	}
+
+	.card-meta-status {
+		text-transform: capitalize;
+	}
+}
+
+.bb-card-footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	margin: 30px 0 0;
+
+	.bb-group-card & {
+
+		.bb-card-action:first-of-type {
+			flex: 1 1 60%;
+		}
+	}
+
+	.card-button,
+	button.follow-button {
+		display: inline-block;
+		text-align: center;
+		white-space: nowrap;
+		font-size: 14px;
+		font-weight: 500;
+		padding: 0 15px;
+		height: 30px;
+		line-height: 28px;
+		width: 100%;
+	}
+
+	.buddypress .buddypress-wrap & {
+
+		button {
+			width: 100%;
+			white-space: nowrap;
+		}
+
+		button.small,
+		a.card-button,
+		a.friendship-button,
+		a.follow-button,
+		button.friendship-button {
+			min-height: 30px;
+			line-height: 28px;
+
+			@media screen and (max-width: 560px) {
+				width: 100%;
+				display: inline-block;
+				padding: 0;
+			}
+		}
+	}
+
+	.bb-card-action {
+		flex: 1;
+		white-space: nowrap;
+	}
+
+	&.bb-card-footer--plain {
+
+		.bb-card-action-primary,
+		.bb-card-action-secondary {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 560px) {
+		flex-direction: column;
+
+		.bb-card-action {
+			width: 100%;
+		}
+	}
+}
+
+.bb-group-card {
+
+	.card-group-members {
+
+		.bs-group-members {
+			margin: 5px 0 0 -4px;
+		}
+	}
+}

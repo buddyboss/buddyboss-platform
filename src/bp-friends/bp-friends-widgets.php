@@ -91,14 +91,14 @@ function bp_core_ajax_widget_friends() {
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="bb-item-avatar-connection-widget-<?php echo esc_attr( bp_get_member_user_id() ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_member_user_id() ); ?>">
 						<?php bp_member_avatar(); ?>
 						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 					</a>
 				</div>
 
 				<div class="item">
-					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
+					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_member_user_id() ); ?>"><?php bp_member_name(); ?></a></div>
 					<?php if ( 'active' === $type ) : ?>
 						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span></div>
 					<?php elseif ( 'newest' === $type ) : ?>
