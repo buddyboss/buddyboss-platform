@@ -26347,10 +26347,6 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   text-decoration: none;
 }
 
-.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:first-letter {
-  text-transform: uppercase;
-}
-
 .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-modal li a:hover {
   background-color: #f2f4f5;
 }
