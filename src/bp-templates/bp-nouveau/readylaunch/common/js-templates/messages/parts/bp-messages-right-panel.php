@@ -89,6 +89,9 @@
                 <div class="bb-rl-message-profile-avatar">
                     <a href="{{recipient.user_link}}">
                         <img decoding="async" class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}">
+                        <# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
+                            {{{recipient.user_presence}}}
+                        <# } #>
                     </a>
                 </div>
                 <# if ( recipient.member_type && recipient.member_type.label ) { #>
@@ -161,6 +164,9 @@
                 <# if ( participant.profile_url ) { #>
                     <a href="{{participant.profile_url}}">
                         <img src="{{participant.avatar}}" alt="{{participant.name}}">
+                        <# if ( typeof( participant.user_presence ) != "undefined" && participant.user_presence !== null && participant.user_presence.length > 1 ) { #>
+                            {{{participant.user_presence}}}
+                        <# } #>
                     </a>
                 <# } else { #>
                     <img src="{{participant.avatar}}" alt="{{participant.name}}">
