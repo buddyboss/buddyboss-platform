@@ -6312,6 +6312,11 @@ body.admin-bar .bb-rl-header {
   min-width: 240px;
 }
 
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item i {
+  color: var(--bb-rl-icon-primary-color);
+  font-size: var(--bb-rl-font-size-2xl);
+}
+
 .bb-rl-profile-dropdown .bb-rl-profile-lists li {
   position: relative;
 }
@@ -6335,6 +6340,16 @@ body.admin-bar .bb-rl-header {
 .bb-rl-profile-dropdown .bb-rl-profile-lists li:hover > .bb-profile-submenu-lists {
   opacity: 1;
   visibility: visible;
+}
+
+.bb-rl-profile-dropdown .bb-rl-profile-lists .bb-rl-profile-list-item:has(.bb-profile-submenu-lists) > a::after {
+  content: "\e13a";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-icon-secondary-color);
+  font-style: normal;
+  margin-left: auto;
 }
 
 .bb-rl-left-panel {

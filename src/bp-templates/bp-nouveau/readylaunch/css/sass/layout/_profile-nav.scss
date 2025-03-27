@@ -28,6 +28,14 @@
 		padding: var(--bb-rl-space-100) 0;
 		min-width: 240px;
 
+		.bb-rl-profile-list-item {
+
+			i {
+				color: var(--bb-rl-icon-primary-color);
+				font-size: var(--bb-rl-font-size-2xl);
+			}
+		}
+
 		li {
 			position: relative;
 
@@ -53,6 +61,19 @@
 					opacity: 1;
 					visibility: visible;
 				}
+			}
+		}
+
+		.bb-rl-profile-list-item:has(.bb-profile-submenu-lists) {
+
+			> a::after {
+				content: "\e13a";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: var(--bb-rl-font-size-base);
+				color: var(--bb-rl-icon-secondary-color);
+				font-style: normal;
+				margin-left: auto;
 			}
 		}
 	}
