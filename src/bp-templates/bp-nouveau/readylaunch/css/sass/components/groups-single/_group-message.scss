@@ -245,4 +245,43 @@ div#bp-group-message-content {
 			-webkit-tap-highlight-color: transparent;
 		}
 	}
+
+	[class*="attached-gif-container"] {
+		margin-bottom: 0;
+		background: none !important;
+		height: auto !important;
+		width: auto !important;
+		min-height: auto !important;
+		display: table;
+		position: relative;
+
+		&.closed {
+			display: none;
+		}
+
+		.gif-image-container img {
+			background-color: var(--bb-rl-background-secondary-color);
+			height: 100px;
+			width: 100px;
+			object-fit: cover;
+			border-radius: var(--bb-rl-radius-md);
+			margin: 0 0 var(--bb-rl-space-200) var(--bb-rl-space-200);
+		}
+
+		.gif-image-remove {
+			box-shadow: none;
+			right: -8px;
+			top: -8px;
+			position: absolute;
+			background-color: var(--bb-rl-background-color);
+			border-radius: var(--bb-rl-radius-full);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1;
+			font-size: 14px;
+			padding: 2px;
+			cursor: pointer;
+		}
+	}
 }

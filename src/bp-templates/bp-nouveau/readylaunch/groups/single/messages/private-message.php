@@ -225,7 +225,7 @@ if ( 0 === $total_count ) {
 										<img src="" alt="">
 									</div>
 									<div class="gif-image-remove gif-image-overlay">
-										<span class="bb-icon-l bb-icon-times"></span>
+										<span class="bb-icons-rl-x"></span>
 									</div>
 								</div>
 								<input name="bp_group_messages_gif" id="bp_group_messages_gif" type="hidden" value=""/>
