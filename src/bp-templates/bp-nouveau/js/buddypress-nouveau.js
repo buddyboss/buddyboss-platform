@@ -2290,6 +2290,23 @@ window.bp = window.bp || {};
 							item.find( '.followers-wrap' ).replaceWith( response.data.count );
 						}
 
+						// Update the following count.
+						if ( $( self.objectNavParent + ' [data-bp-scope="following"]' ).length ) {
+							var following_count = Number( $( self.objectNavParent + ' [data-bp-scope="following"] span' ).html() ) || 0;
+
+							if ( -1 !== $.inArray( action, [ 'unfollow' ] ) ) {
+								following_count -= 1;
+							} else if ( -1 !== $.inArray( action, [ 'follow' ] ) ) {
+								following_count += 1;
+							}
+
+							if ( following_count < 0 ) {
+								following_count = 0;
+							}
+
+							$( self.objectNavParent + ' [data-bp-scope="following"] span' ).html( following_count );
+						}
+
 						target.parent().replaceWith( response.data.contents );
 					}
 				}
