@@ -111,6 +111,10 @@ class BB_Messages_Readylaunch {
 			return;
 		}
 
+		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
+
 		$admins = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
 
 		$response = array(
@@ -172,20 +176,57 @@ class BB_Messages_Readylaunch {
 		}
 
 		// Get media attachments if BuddyBoss Media component is active.
-		if ( 'media' === $type && bp_is_active( 'media' ) ) {
+		$media_component = bp_is_active( 'media' ) &&
+		(
+			(
+				$group_id &&
+				'group' === $message_from &&
+				bp_is_group_media_support_enabled()
+			) ||
+			(
+				'group' !== $message_from &&
+				bp_is_messages_media_support_enabled()
+			)
+		);
+		$video_component = bp_is_active( 'video' ) &&
+		(
+			(
+				$group_id &&
+				'group' === $message_from &&
+				bp_is_group_video_support_enabled()
+			) ||
+			(
+				'group' !== $message_from &&
+				bp_is_messages_video_support_enabled()
+			)
+		);
+		if ( 'media' === $type && ( $media_component || $video_component ) ) {
 			global $wpdb, $bp;
 
 			$media_per_page = 20; // Number of media items per page.
 			$offset         = ( $page - 1 ) * $media_per_page;
 
-			// Get images with pagination.
+			// Build media type condition based on active components.
+			$media_types = array();
+			if ( $media_component ) {
+				$media_types[] = 'photo';
+			}
+			if ( $video_component ) {
+				$media_types[] = 'video';
+			}
+
+			$media_type_condition = '';
+			if ( ! empty( $media_types ) ) {
+				$media_type_condition = "AND ( m.type IN ('" . implode( "','", $media_types ) . "') )";
+			}
+
 			$media_items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
 					"SELECT SQL_CALC_FOUND_ROWS m.* 
 					FROM {$bp->media->table_name} m
 					INNER JOIN {$bp->messages->table_name_messages} msg ON m.message_id = msg.id 
 					WHERE msg.thread_id = %d 
-					AND m.type = 'photo'
+					{$media_type_condition}
 					ORDER BY m.date_created DESC 
 					LIMIT %d OFFSET %d",
 					$thread_id,
@@ -199,17 +240,39 @@ class BB_Messages_Readylaunch {
 
 			if ( ! empty( $media_items ) ) {
 				foreach ( $media_items as $media ) {
-					$response['media'][] = array(
+					$args = array(
 						'id'    => $media->id,
 						'title' => $media->title,
-						'url'   => bp_media_get_preview_image_url( $media->id, $media->attachment_id ),
 					);
+					if ( $video_component && 'video' === $media->type ) {
+						$poster_id     = bb_get_video_thumb_id( $media->attachment_id );
+						$thumbnail_url = bb_get_video_default_placeholder_image();
+						if ( $poster_id ) {
+							$thumbnail_url = bb_video_get_thumb_url( $media->id, $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+						}
+						$args['url'] = $thumbnail_url;
+					} elseif ( $media_component && 'photo' === $media->type ) {
+						$args['url'] = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
+					}
+					$response['media'][] = $args;
 				}
 			}
 		}
 
+		$document_component = bp_is_active( 'media' ) &&
+		(
+			(
+				$group_id &&
+				'group' === $message_from &&
+				bp_is_group_document_support_enabled()
+			) ||
+			(
+				'group' !== $message_from &&
+				bp_is_messages_document_support_enabled()
+			)
+		);
 		// Get document files with pagination.
-		if ( 'files' === $type && bp_is_active( 'document' ) ) {
+		if ( 'files' === $type && $document_component ) {
 			global $wpdb, $bp;
 
 			$files_per_page = 20; // Number of files per page.
