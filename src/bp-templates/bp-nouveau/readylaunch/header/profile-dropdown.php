@@ -124,7 +124,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 
 		<li class="bb-rl-profile-list-item">
 			<a href="<?php echo esc_url( $settings_link ); ?>" class="bb-rl-profile-list-link">
-				<i class="bb-icons-user-gear"></i>
+				<i class="bb-icons-rl-user-gear"></i>
 				<?php esc_html_e( 'Account settings', 'buddyboss' ); ?>
 			</a>
 
