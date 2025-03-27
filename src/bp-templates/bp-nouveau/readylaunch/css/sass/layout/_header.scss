@@ -264,6 +264,13 @@
 		.bb-rl-profile-dropdown {
 			display: none;
 		}
+
+		&.active {
+
+			.bb-rl-profile-dropdown {
+				display: block;
+			}
+		}
 	}
 
 	.bb-rl-header-search {

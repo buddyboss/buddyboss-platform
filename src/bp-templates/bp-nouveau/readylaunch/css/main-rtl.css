@@ -5817,6 +5817,10 @@ body.admin-bar .bb-rl-header {
   display: none;
 }
 
+.header-aside .user-wrap.active .bb-rl-profile-dropdown {
+  display: block;
+}
+
 .header-aside .bb-rl-header-search {
   font-size: 0.85rem;
   margin-left: var(--bb-rl-space-300);
@@ -6316,12 +6320,12 @@ body.admin-bar .bb-rl-header {
   position: absolute;
   top: 0;
   left: 100%;
-  min-width: 240px;
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-base);
   border: 1px solid var(--bb-rl-border-secondary-color);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   padding: var(--bb-rl-space-100) 0;
+  min-width: 192px;
   list-style: none;
   opacity: 0;
   visibility: hidden;

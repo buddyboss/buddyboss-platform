@@ -35,12 +35,12 @@
 				position: absolute;
 				top: 0;
 				right: 100%;
-				min-width: 240px;
 				background-color: var(--bb-rl-background-color);
 				border-radius: var(--bb-rl-radius-base);
 				border: 1px solid var(--bb-rl-border-secondary-color);
 				box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 				padding: var(--bb-rl-space-100) 0;
+				min-width: 192px;
 				list-style: none;
 				opacity: 0;
 				visibility: hidden;

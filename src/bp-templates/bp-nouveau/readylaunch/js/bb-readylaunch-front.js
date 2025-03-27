@@ -53,6 +53,13 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
+				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
+			},
+
+			profileNav: function ( e ) {
+				e.preventDefault();
+
+				$( e.currentTarget ).closest( '.user-wrap' ).toggleClass( 'active' );
 			},
 
 			/**
