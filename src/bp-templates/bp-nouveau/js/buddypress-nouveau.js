@@ -642,8 +642,6 @@ window.bp = window.bp || {};
 
 						if ( 'personal' === data.scope && 'members' === data.object ) {
 							dir_label_type = 'connections';
-						} else if ( 'following' === data.scope ) {
-							dir_label_type = 'followers';
 						} else {
 							dir_label_type = data.object;
 						}
@@ -788,7 +786,7 @@ window.bp = window.bp || {};
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
-					if ( undefined !== typeType && typeType == 'following' ) {
+					if ( undefined !== typeType && ( 'following' === typeType || 'followers' === typeType ) ) {
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;
@@ -960,7 +958,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.setTitle();
 
 			// Following widget more button click.
-			$( document ).on( 'click', '.more-following .count-more', this.bbWidgetMoreFollowing );
+			$( document ).on( 'click', '.more-following .count-more, .more-followers .count-more', this.bbWidgetMoreFollowingFollowers );
 
 			// Accordion open/close event
 			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
@@ -3431,16 +3429,16 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 *  Click event on more button of following widget.
+		 *  Click event on more button of following or followers widget.
 		 */
-		bbWidgetMoreFollowing: function ( event ) {
+		bbWidgetMoreFollowingFollowers: function ( event ) {
 			var target = $( event.currentTarget ),
 				link   = target.attr( 'href' );
 			var parts  = link.split( '#' );
 			if ( parts.length > 1 ) {
 				var hash_text = parts.pop();
-				if ( hash_text && $( '[data-bp-scope="' + hash_text + '"]' ).length > 0 ) {
-					$( '[data-bp-scope="' + hash_text + '"] a' ).trigger( 'click' );
+				if ( hash_text && $( '[data-bp-scope="' + hash_text + '"][data-bp-object="members"]' ).length > 0 ) {
+					$( '[data-bp-scope="' + hash_text + '"][data-bp-object="members"] a' ).trigger( 'click' );
 					return false;
 				}
 			}
