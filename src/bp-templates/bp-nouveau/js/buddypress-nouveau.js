@@ -594,7 +594,13 @@ window.bp = window.bp || {};
 
 			var selected_scope = $( this.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope="' + data.scope + '"].selected' );
 			if( selected_scope.length ) {
-				$( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' ).text( selected_scope.text() );
+				var option_label = $( '.bb-subnav-filters-container .subnav-filters-opener[aria-controls="bb-subnav-filter-show"] .selected' );
+				// Check if options starts with "I've" and "I'm" then leave it as is, otherwise lowercase the first letter
+				if( selected_scope.text().startsWith( 'I\'ve' ) || selected_scope.text().startsWith( 'I\'m' ) ) {
+					option_label.text( selected_scope.text() );
+				} else {
+					option_label.text( selected_scope.text().toLowerCase() );
+				}
 			}
 
 			var selected_order = $( this.objectNavParent + ' #bb-subnav-filter-by [data-bp-order="' + data.order_by + '"].selected' );

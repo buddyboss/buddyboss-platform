@@ -26336,6 +26336,9 @@ body.buddyboss-theme.directory.video .site-main .video-options {
 .activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener span {
   font-size: 14px;
   font-weight: 500;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering .subnav-filters-opener[aria-controls="bb-subnav-filter-by"] span {
   text-transform: lowercase;
 }
 
