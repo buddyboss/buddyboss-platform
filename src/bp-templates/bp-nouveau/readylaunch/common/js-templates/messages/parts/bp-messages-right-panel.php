@@ -126,9 +126,61 @@
     <div class="bb-rl-message-right-panel-inner">
         <!-- Tab navigation -->
         <div class="bb-rl-message-right-tabs">
-            <button class="bb-rl-tab-item active" data-tab="participants">Participants</button>
-            <button class="bb-rl-tab-item" data-tab="media">Media</button>
-            <button class="bb-rl-tab-item" data-tab="files">Files</button>
+            <button class="bb-rl-tab-item active" data-tab="participants">
+                <?php esc_html_e( 'Participants', 'buddyboss' ); ?>
+            </button>
+            <#
+            var mediaComponentActive = <?php echo bp_is_active( 'media' ) ? 'true' : 'false'; ?>;
+            var videoComponentActive = <?php echo bp_is_active( 'video' ) ? 'true' : 'false'; ?>;
+            var messagesMediaEnabled = <?php echo bp_is_messages_media_support_enabled() ? 'true' : 'false'; ?>;
+            var groupMediaEnabled    = <?php echo bp_is_group_media_support_enabled() ? 'true' : 'false'; ?>;
+            var messagesVideoEnabled = <?php echo bp_is_messages_video_support_enabled() ? 'true' : 'false'; ?>;
+            var groupVideoEnabled    = <?php echo bp_is_group_video_support_enabled() ? 'true' : 'false'; ?>;
+
+            var mediaActive         = mediaComponentActive && ( messagesMediaEnabled || groupMediaEnabled );
+            var videoActive         = videoComponentActive && ( messagesVideoEnabled || groupVideoEnabled );
+            var groupMediaActive    = mediaComponentActive && groupMediaEnabled;
+            var messagesMediaActive = mediaComponentActive && messagesMediaEnabled;
+            var groupVideoActive    = videoComponentActive && groupVideoEnabled;
+            var messagesVideoActive = videoComponentActive && messagesVideoEnabled;
+            #>
+             <# if (
+                (mediaActive || videoActive) &&
+                (
+                    (
+                        ( groupMediaActive || groupVideoActive ) &&
+                        data.group_id &&
+                        'group' === data.message_from
+                    ) ||
+                    (
+                        ( messagesMediaActive || messagesVideoActive ) &&
+                        'group' !== data.message_from
+                    )
+                )
+            ) { #>
+                <button class="bb-rl-tab-item" data-tab="media">
+                 <?php esc_html_e( 'Media', 'buddyboss' ); ?>
+                </button>
+            <# }
+            var filesActive = <?php echo ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) ? 'true' : 'false'; ?>;
+            var groupDocumentActive = <?php echo ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) ? 'true' : 'false'; ?>;
+            var messagesDocumentActive = <?php echo ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) ? 'true' : 'false'; ?>;
+            if ( 
+                filesActive &&
+                (
+                    groupDocumentActive &&
+                    data.group_id &&
+                    'group' === data.message_from 
+                ) || 
+                (
+                    messagesDocumentActive &&
+                    'group' !== data.message_from
+                )
+            ) { #>
+                <button class="bb-rl-tab-item" data-tab="files">
+                    <?php esc_html_e( 'Files', 'buddyboss' ); ?>
+                </button>
+            <# } #>
         </div>
         
         <!-- Tab content -->

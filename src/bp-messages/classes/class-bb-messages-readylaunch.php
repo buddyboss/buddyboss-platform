@@ -111,10 +111,6 @@ class BB_Messages_Readylaunch {
 			return;
 		}
 
-		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
-		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
-		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
-
 		$admins = function_exists( 'bb_get_all_admin_users' ) ? bb_get_all_admin_users() : '';
 
 		$response = array(
@@ -174,6 +170,10 @@ class BB_Messages_Readylaunch {
 				$response['participants'][] = $participant;
 			}
 		}
+
+		$first_message = BP_Messages_Thread::get_first_message( $thread_id );
+		$group_id      = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_from  = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group.
 
 		// Get media attachments if BuddyBoss Media component is active.
 		$media_component = bp_is_active( 'media' ) &&
