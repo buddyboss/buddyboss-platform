@@ -4336,7 +4336,7 @@ window.bp = window.bp || {};
 			var $parent = $this.closest( '.bb-subnav-filters-container' );
 			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
-			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text().charAt(0).toUpperCase() + $this.text().slice(1) );
+			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
 
 			// Reset the pagination for the scope.
 			bp.Nouveau.Activity.current_page = 1;
