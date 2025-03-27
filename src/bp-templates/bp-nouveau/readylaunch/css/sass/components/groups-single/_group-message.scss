@@ -131,6 +131,7 @@ div#bp-group-message-content {
 			&:not(.emojionearea) {
 				font-size: 14px;
 				max-height: 300px;
+				min-height: 55px;
 				overflow-y: auto;
 				overflow-x: hidden;
 				padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
