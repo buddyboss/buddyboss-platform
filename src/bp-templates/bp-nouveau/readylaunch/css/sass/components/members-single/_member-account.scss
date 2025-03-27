@@ -75,3 +75,126 @@
 		}
 	}
 }
+
+.bb-rl-account-settings-section {
+
+	.subscription-views {
+
+		.bb-accordion_head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--bb-rl-space-100);
+			margin-bottom: var(--bb-rl-space-100);
+
+			.bb-accordion_trigger {
+				background-color: transparent;
+				border: none;
+				line-height: 1;
+				cursor: pointer;
+			}
+		}
+
+		.bb-accordion {
+			margin-bottom: var(--bb-rl-space-200);
+
+			&:last-of-type {
+				margin-bottom: 0;
+			}
+		}
+
+		.bb-accordion.is_closed {
+
+			.bb-accordion_head .bb-accordion_trigger {
+
+				i::before {
+					content: "\e13c";
+				}
+			}
+		}
+
+		.subscription-pagination {
+			display: flex;
+			justify-content: flex-end;
+			margin: var(--bb-rl-space-300) 0 0;
+		}
+	}
+
+	.subscription-items-main {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-base);
+		padding: var(--bb-rl-space-200);
+	}
+
+	.subscription-items {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		.bb-subscription-item {
+			display: flex;
+			align-items: center;
+			padding: var(--bb-rl-space-50) 0;
+			margin-bottom: var(--bb-rl-space-200);
+
+			&:last-of-type {
+				margin-bottom: 0;
+			}
+
+			.subscription-item_remove {
+				margin-left: auto;
+
+				i::before {
+					display: inline-block;
+					content: attr(data-bp-tooltip);
+					font-size: 12px;
+					font-weight: 400;
+					color: var(--bb-rl-text-secondary-color);
+					text-transform: uppercase;
+					padding: 2px var(--bb-rl-space-100);
+				}
+			}
+		}
+
+		.subscription-item_image {
+
+			img {
+				max-width: 32px;
+				height: auto;
+				border-radius: var(--bb-rl-radius-md);
+			}
+		}
+
+		.subscription-item_anchor {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+		}
+
+		.subscription-item_detail {
+			display: inline-flex;
+			flex-direction: column;
+		}
+
+		.subscription-item_title {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-color);
+		}
+
+		.subscription-item_meta {
+
+			@include bb-rl-label-heading;
+			color: var(--bb-rl-text-tertiary-color);
+
+			strong {
+				font-weight: 400;
+			}
+		}
+
+		> p {
+			margin-bottom: 0;
+			color: var(--bb-rl-text-tertiary-color);
+		}
+	}
+}

@@ -5396,6 +5396,101 @@ button[data-balloon] {
   color: var(--bb-rl-text-disabled-color);
 }
 
+.bb-rl-content-wrapper .bbp-pagination-links {
+  display: flex;
+  align-items: center;
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links span,
+.bb-rl-content-wrapper .bbp-pagination-links a {
+  line-height: var(--bb-rl-space-400);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .prev,
+.bb-rl-content-wrapper .bbp-pagination-links .next {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  padding: 0 var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .prev::before,
+.bb-rl-content-wrapper .bbp-pagination-links .next::before {
+  font-size: var(--bb-rl-font-size-sm);
+  content: attr(data-bb-rl-label);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .prev::after,
+.bb-rl-content-wrapper .bbp-pagination-links .next::after {
+  font-size: var(--bb-rl-font-size-base);
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-style: normal;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .prev {
+  flex-direction: row-reverse;
+  margin-right: var(--bb-rl-space-500);
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-content-wrapper .bbp-pagination-links .prev {
+    margin-right: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .prev::after {
+  content: "\e138";
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .next {
+  margin-left: var(--bb-rl-space-500);
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-content-wrapper .bbp-pagination-links .next {
+    margin-left: var(--bb-rl-space-200);
+  }
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .next::after {
+  content: "\e13a";
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .page-numbers:not(.prev):not(.next) {
+  display: inline-flex;
+  min-width: var(--bb-rl-space-400);
+  height: var(--bb-rl-space-400);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  justify-content: center;
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: var(--bb-rl-font-size-sm);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links .page-numbers:not(.prev):not(.next).current {
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links a.prev,
+.bb-rl-content-wrapper .bbp-pagination-links a.next {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-content-wrapper .bbp-pagination-links span.prev,
+.bb-rl-content-wrapper .bbp-pagination-links span.next {
+  color: var(--bb-rl-text-disabled-color);
+}
+
 .bb-rl-toast-message {
   display: flex;
   align-items: center;
@@ -15512,4 +15607,114 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   .bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
     display: none;
   }
+}
+
+.bb-rl-account-settings-section .subscription-views .bb-accordion_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .subscription-views .bb-accordion_head .bb-accordion_trigger {
+  background-color: transparent;
+  border: none;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bb-rl-account-settings-section .subscription-views .bb-accordion {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .subscription-views .bb-accordion:last-of-type {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .subscription-views .bb-accordion.is_closed .bb-accordion_head .bb-accordion_trigger i::before {
+  content: "\e13c";
+}
+
+.bb-rl-account-settings-section .subscription-views .subscription-pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin: var(--bb-rl-space-300) 0 0;
+}
+
+.bb-rl-account-settings-section .subscription-items-main {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .subscription-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bb-rl-account-settings-section .subscription-items .bb-subscription-item {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-50) 0;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .subscription-items .bb-subscription-item:last-of-type {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .subscription-items .bb-subscription-item .subscription-item_remove {
+  margin-left: auto;
+}
+
+.bb-rl-account-settings-section .subscription-items .bb-subscription-item .subscription-item_remove i::before {
+  display: inline-block;
+  content: attr(data-bp-tooltip);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--bb-rl-text-secondary-color);
+  text-transform: uppercase;
+  padding: 2px var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .subscription-items .subscription-item_image img {
+  max-width: 32px;
+  height: auto;
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bb-rl-account-settings-section .subscription-items .subscription-item_anchor {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .subscription-items .subscription-item_detail {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.bb-rl-account-settings-section .subscription-items .subscription-item_title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .subscription-items .subscription-item_meta {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .subscription-items .subscription-item_meta strong {
+  font-weight: 400;
+}
+
+.bb-rl-account-settings-section .subscription-items > p {
+  margin-bottom: 0;
+  color: var(--bb-rl-text-tertiary-color);
 }

@@ -28,7 +28,7 @@ $data = bb_core_notification_preferences_data();
 							<?php echo esc_html( $label ); ?>
 						</h3>
 						<button type="button" aria-expanded="true" class="bb-accordion_trigger" aria-controls="bb-accordion-section-<?php echo esc_attr( $sub_type ); ?>">
-							<i class="bb-icon-lined bb-icon-angle-up"></i>
+							<i class="bb-icons-rl-caret-down"></i>
 						</button>
 					</div>
 
