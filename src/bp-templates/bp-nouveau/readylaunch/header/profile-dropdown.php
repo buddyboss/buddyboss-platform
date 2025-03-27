@@ -53,7 +53,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 					}
 
 					?>
-					<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-my-account-view-<?php echo esc_attr( $nav_item->slug ); ?>">
+					<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-view-<?php echo esc_attr( $nav_item->slug ); ?>">
 						<a href="<?php echo esc_url( $nav_item->link ); ?>">
 							<?php echo esc_html( $nav_item->name ); ?>
 						</a>
@@ -75,7 +75,21 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 			</a>
 
 			<ul class="bb-profile-submenu-lists">
+				<?php
+				// Profile link.
+				$profile_link = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() );
 
+				$is_enable_profile_avatar = true;
+				if ( function_exists( 'bp_disable_group_avatar_uploads' ) && bp_disable_avatar_uploads() ) {
+					$is_enable_profile_avatar = false;
+				}
+
+				if ( $is_enable_profile_avatar && buddypress()->avatar->show_avatars ) { ?>
+					<li class="bb-rl-profile-sublist-link" id="bb-rl-xprofile-change-avatar">
+						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-theme' ); ?></a>
+					</li>
+				<?php } ?>
+				
 			</ul>
 		</li>
 
