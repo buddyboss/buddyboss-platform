@@ -1424,9 +1424,8 @@ window.bp = window.bp || {};
 			bp.draft_activity.data = false;
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
-			bp.draft_activity.post_action        = 'update';
-			bp.draft_activity.allow_delete_media = false;
-			bp.draft_activity.display_post       = '';
+			bp.draft_activity.post_action  = 'update';
+			bp.draft_activity.display_post = '';
 
 			// Check if user can schedule in feed after discard draft.
 			if (
@@ -1975,7 +1974,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( true === bp.draft_activity.allow_delete_media ) {
+						if ( 'undefined' !== typeof file.id && true === bp.draft_activity.allow_delete_media ) {
 							if ( self.media.length ) {
 								for ( var i in self.media ) {
 									if ( file.id === self.media[i].id ) {
@@ -2239,7 +2238,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( true === bp.draft_activity.allow_delete_media ) {
+						if ( 'undefined' !== typeof file.id && true === bp.draft_activity.allow_delete_media ) {
 							if ( self.document.length ) {
 								for ( var i in self.document ) {
 									if ( file.id === self.document[i].id ) {
@@ -2528,7 +2527,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( true === bp.draft_activity.allow_delete_media ) {
+						if ( 'undefined' !== typeof file.id && true === bp.draft_activity.allow_delete_media ) {
 							if ( self.video.length ) {
 								for ( var i in self.video ) {
 									if ( file.id === self.video[i].id ) {
@@ -4915,7 +4914,13 @@ window.bp = window.bp || {};
 			},
 			onClose: function () {
 				if ( bp.draft_activity.data ) {
-					bp.draft_activity.allow_delete_media = false;
+
+					if (
+						'undefined' === typeof bp.draft_activity.is_discard_draft_activity ||
+						 false === bp.draft_activity.is_discard_draft_activity
+					) {
+						bp.draft_activity.allow_delete_media = false;
+					}
 					bp.draft_activity.display_post = '';
 				}
 				if ( ! _.isNull( this.activityLinkPreview ) ) {
@@ -4933,6 +4938,8 @@ window.bp = window.bp || {};
 				if ( ! _.isNull( this.activityVideo ) ) {
 					this.activityVideo.destroyVideo();
 				}
+				// Reset is_discard_draft_activity flag to false.
+				bp.draft_activity.is_discard_draft_activity = false;
 			}
 		}
 	);
@@ -6216,6 +6223,9 @@ window.bp = window.bp || {};
 			},
 
 			discardDraftActivity: function() {
+
+				// Set is_discard_draft_activity flag to true.
+				bp.draft_activity.is_discard_draft_activity = true;
 
 				// Reset view data.
 				_.each(

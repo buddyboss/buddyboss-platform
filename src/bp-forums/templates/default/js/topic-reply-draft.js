@@ -379,9 +379,8 @@ window.bp = window.bp || {};
 		};
 
 		this.resetLocalTopicReplyDraft = function() {
-			bp.Nouveau.Media.reply_topic_allow_delete_media = false;
-			bp.Nouveau.Media.reply_topic_display_post       = '';
-			this.is_topic_reply_form_submit                 = true;
+			bp.Nouveau.Media.reply_topic_display_post = '';
+			this.is_topic_reply_form_submit           = true;
 
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				delete this.all_draft_data[this.topic_reply_draft.data_key];
