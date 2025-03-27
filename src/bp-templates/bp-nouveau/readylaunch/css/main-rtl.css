@@ -2940,6 +2940,7 @@ button[data-balloon] {
 .bb-rl-notice > [class*="bb-icons"] {
   margin-left: var(--bb-rl-space-100);
   font-size: 20px;
+  font-family: bb-icons-rl;
 }
 
 .bb-rl-notice__title {
@@ -5811,6 +5812,10 @@ body.admin-bar .bb-rl-header {
   border-radius: var(--bb-rl-radius-full);
 }
 
+.header-aside .user-wrap .bb-rl-profile-dropdown {
+  display: none;
+}
+
 .header-aside .bb-rl-header-search {
   font-size: 0.85rem;
   margin-left: var(--bb-rl-space-300);
@@ -5940,7 +5945,7 @@ body.admin-bar .bb-rl-header {
 
 .notification-list .unread:before {
   content: "";
-  background-color: var(--bb-primary-color);
+  background-color: var(--bb-rl-primary-color);
   border-radius: 50%;
   height: 6px;
   width: 6px;
@@ -15713,4 +15718,54 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-account-settings-section .subscription-items > p {
   margin-bottom: 0;
   color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .moderation_notice.is_hidden {
+  display: none;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user {
+  width: 100%;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user thead {
+  display: none;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody td {
+  padding: 10px 0;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-block-member {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-block-member .description {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-block-member img {
+  max-width: 32px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-item-last-updated {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-item-actions {
+  text-align: left;
 }

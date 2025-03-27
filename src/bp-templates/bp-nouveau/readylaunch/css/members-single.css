@@ -1186,3 +1186,53 @@
   margin-bottom: 0;
   color: var(--bb-rl-text-tertiary-color);
 }
+
+.bb-rl-account-settings-section .moderation_notice.is_hidden {
+  display: none;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user {
+  width: 100%;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user thead {
+  display: none;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody td {
+  padding: 10px 0;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-block-member {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-block-member .description {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-block-member img {
+  max-width: 32px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-item-last-updated {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-item-actions {
+  text-align: right;
+}

@@ -198,3 +198,59 @@
 		}
 	}
 }
+
+.bb-rl-account-settings-section {
+
+	.moderation_notice.is_hidden {
+		display: none;
+	}
+
+	.moderation {
+
+		.bp-tables-user {
+			width: 100%;
+
+			thead {
+				display: none;
+			}
+
+			tbody {
+
+				td {
+					padding: 10px 0;
+				}
+
+				.moderation-block-member {
+
+					@include bb-rl-label-heading-md;
+					color: var(--bb-rl-text-color);
+					display: inline-flex;
+					align-items: center;
+					gap: var(--bb-rl-space-100);
+
+					.description {
+
+						@include bb-rl-label-heading;
+						color: var(--bb-rl-text-tertiary-color);
+					}
+
+					img {
+						max-width: 32px;
+						height: auto;
+						border-radius: 50%;
+					}
+				}
+
+				.moderation-item-last-updated {
+
+					@include bb-rl-label-heading;
+					color: var(--bb-rl-text-tertiary-color);
+				}
+
+				.moderation-item-actions {
+					text-align: right;
+				}
+			}
+		}
+	}
+}

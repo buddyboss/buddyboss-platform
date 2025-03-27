@@ -791,12 +791,25 @@ body.messages .bb-rl-content-wrapper {
 
 .single-message-thread-header .bb-rl-thread-avatar {
   margin-left: var(--bb-rl-space-100);
+  position: relative;
 }
 
 .single-message-thread-header .bb-rl-thread-avatar img {
   height: 40px;
   width: 40px;
   border-radius: var(--bb-rl-radius-full);
+}
+
+.single-message-thread-header .bb-rl-thread-avatar .member-status.online {
+  position: absolute;
+  left: 1px;
+  top: inherit;
+  bottom: 1px;
+  width: 9px;
+  height: 9px;
+  background-color: var(--bb-rl-background-positive-primary-color);
+  border-radius: var(--bb-rl-radius-full);
+  border: 1px solid var(--bb-rl-background-color);
 }
 
 .single-message-thread-header .thread-multiple-avatar {
