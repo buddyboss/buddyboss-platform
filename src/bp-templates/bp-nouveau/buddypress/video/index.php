@@ -30,6 +30,32 @@ bp_nouveau_template_notices();
 	if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 		bp_get_template_part( 'common/nav/directory-nav' );
 	}
+
+	if ( bb_enable_content_counts() ) {
+		?>
+		<div class="bb-item-count">
+			<?php
+			if ( ! $is_send_ajax_request ) {
+				$count = bp_get_total_video_count();
+				printf(
+					wp_kses(
+						/* translators: %d is the video count */
+						_n(
+							'<span class="bb-count">%d</span> Video',
+							'<span class="bb-count">%d</span> Videos',
+							$count,
+							'buddyboss'
+						), array( 'span' => array( 'class' => true ) )
+					),
+					(int) $count
+				);
+
+				unset( $count );
+			}
+			?>
+		</div>
+		<?php
+	}
 	?>
 
 	<div class="video-options">

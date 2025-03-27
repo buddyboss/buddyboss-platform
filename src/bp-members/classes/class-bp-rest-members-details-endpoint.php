@@ -692,7 +692,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
 				$tabs[ $key ]['slug']     = $item['slug'];
-				$tabs[ $key ]['count']    = bp_core_number_format( $item['count'] );
+				$tabs[ $key ]['count']    = ! empty( $item['count'] ) ? bp_core_number_format( $item['count'] ) : '';
 			}
 		}
 
@@ -719,18 +719,27 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return int The count attribute for the nav item.
 	 */
 	protected function bp_rest_get_nav_count( $nav ) {
-		$count = 0;
+		$count = '';
 
-		if ( ! empty( $nav['primary'] ) ) {
-			$span = strpos( $nav['name'], '<span' );
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		if ( $enable_count ) {
+			if ( ! empty( $nav['primary'] ) ) {
+				$span = strpos( $nav['name'], '<span' );
 
-			// Grab count out of the <span> element.
-			if ( false !== $span ) {
-				$count_start = strpos( $nav['name'], '>', $span ) + 1;
-				$count_end   = strpos( $nav['name'], '<', $count_start );
-				$count       = (int) substr( $nav['name'], $count_start, $count_end - $count_start );
+				// Grab count out of the <span> element.
+				if ( false !== $span ) {
+					$count_start = strpos( $nav['name'], '>', $span ) + 1;
+					$count_end   = strpos( $nav['name'], '<', $count_start );
+					$count       = (int) substr( $nav['name'], $count_start, $count_end - $count_start );
+				}
+			}
+
+			if ( '' !== $count ) {
+				$count = bp_core_number_format( $count );
 			}
 		}
+
+		unset( $enable_count );
 
 		/**
 		 * Filter to edit the count attribute for the nav item.
@@ -738,7 +747,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 * @param int   $count    The count attribute for the nav item.
 		 * @param array $nav_item The current nav item array.
 		 */
-		return (int) apply_filters( 'bp_rest_nouveau_get_nav_count', bp_core_number_format( $count ), $nav );
+		return (int) apply_filters( 'bp_rest_nouveau_get_nav_count', $count, $nav );
 	}
 
 	/**
@@ -752,9 +761,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function bp_rest_nav_has_count( $nav ) {
 		$count = false;
 
-		if ( ! empty( $nav['primary'] ) ) {
-			$count = (bool) strpos( $nav['name'], '="count"' );
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		if ( $enable_count ) {
+			if ( ! empty( $nav['primary'] ) ) {
+				$count = (bool) strpos( $nav['name'], '="count"' );
+			}
 		}
+
+		unset( $enable_count );
 
 		/**
 		 * Filter to edit whether the nav has a count attribute.
@@ -771,23 +785,31 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return mixed|void
 	 */
 	public function bp_rest_legacy_get_members_directory_nav_items() {
-		$nav_items = array();
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$nav_items    = array();
 
 		$nav_items['all'] = array(
 			'text'     => __( 'All Members', 'buddyboss' ),
 			'position' => 5,
-			'count'    => bp_core_number_format( bp_get_total_member_count() ),
 		);
+		if ( $enable_count ) {
+			$nav_items['all']['count'] = bp_core_number_format( bp_get_total_member_count() );
+		}
 
-		if ( is_user_logged_in() ) {
-			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+		if ( is_user_logged_in() && bp_is_active( 'friends' ) ) {
+			$total_friend_count = bp_get_total_friend_count( bp_loggedin_user_id() );
+			if ( $total_friend_count ) {
 				$nav_items['friends'] = array(
 					'text'     => __( 'My Friends', 'buddyboss' ),
 					'position' => 15,
-					'count'    => bp_core_number_format( bp_get_total_friend_count( bp_loggedin_user_id() ) ),
 				);
+				if ( $enable_count ) {
+					$nav_items['friends']['count'] = bp_core_number_format( $total_friend_count );
+				}
 			}
 		}
+
+		unset( $enable_count );
 
 		return apply_filters( 'bp_rest_legacy_get_members_directory_nav_items', $nav_items );
 	}
@@ -852,7 +874,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return object
 	 */
 	protected function bp_rest_default_menu() {
-		$items = array();
+		$items        = array();
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
 
 		if ( bp_is_active( 'xprofile' ) ) {
 			$profile_link  = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() );
@@ -1038,18 +1061,18 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$notifications_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 
 			// Pending notification requests.
-			$count             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+			$count             = $enable_count ? bp_notifications_get_unread_notification_count( bp_loggedin_user_id() ) : '';
 			$item_notification = array(
 				'ID'       => 'notifications',
 				'title'    => __( 'Notifications', 'buddyboss' ),
 				'url'      => esc_url( $notifications_link ),
-				'count'    => bp_core_number_format( $count ),
+				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'unread',
 						'title' => __( 'Unread', 'buddyboss' ),
 						'url'   => esc_url( $notifications_link ),
-						'count' => bp_core_number_format( $count ),
+						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
 					array(
 						'ID'    => 'read',
@@ -1068,19 +1091,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$messages_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
 
 			// Unread message count.
-			$count = messages_get_unread_count( bp_loggedin_user_id() );
+			$count = $enable_count ? messages_get_unread_count( bp_loggedin_user_id() ) : '';
 
 			$item_messages = array(
 				'ID'       => 'messages',
 				'title'    => __( 'Messages', 'buddyboss' ),
 				'url'      => esc_url( $messages_link ),
-				'count'    => bp_core_number_format( $count ),
+				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'inbox',
 						'title' => __( 'Messages', 'buddyboss' ),
 						'url'   => esc_url( $messages_link ),
-						'count' => bp_core_number_format( $count ),
+						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
 					array(
 						'ID'    => 'compose',
@@ -1099,13 +1122,13 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$friends_link = trailingslashit( bp_loggedin_user_domain() . bp_get_friends_slug() );
 
 			// Pending friend requests.
-			$count = count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) );
+			$count = $enable_count ? count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) ) : '';
 
 			$item_friends = array(
 				'ID'       => 'friends',
 				'title'    => __( 'Connections', 'buddyboss' ),
 				'url'      => esc_url( $friends_link ),
-				'count'    => bp_core_number_format( $count ),
+				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'my-friends',
@@ -1117,7 +1140,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						'ID'    => 'requests',
 						'title' => ( ! empty( $count ) ? __( 'Pending Requests', 'buddyboss' ) : __( 'No Pending Requests', 'buddyboss' ) ),
 						'url'   => esc_url( trailingslashit( $friends_link . 'requests' ) ),
-						'count' => bp_core_number_format( $count ),
+						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
 				),
 			);
@@ -1130,13 +1153,13 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
 
 			// Pending group invites.
-			$count = groups_get_invite_count_for_user();
+			$count = $enable_count ? groups_get_invite_count_for_user() : '';
 
 			$item_groups = array(
 				'ID'       => 'groups',
 				'title'    => __( 'Groups', 'buddyboss' ),
 				'url'      => esc_url( $groups_link ),
-				'count'    => bp_core_number_format( $count ),
+				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : 0,
 				'children' => array(
 					array(
 						'ID'    => 'my-groups',
@@ -1148,7 +1171,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						'ID'    => 'invites',
 						'title' => ( ! empty( $count ) ? __( 'Pending Invites', 'buddyboss' ) : __( 'No Pending Invites', 'buddyboss' ) ),
 						'url'   => esc_url( trailingslashit( $groups_link . 'invites' ) ),
-						'count' => bp_core_number_format( $count ),
+						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
 				),
 			);
@@ -1357,6 +1380,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'url'   => esc_url( wp_logout_url() ),
 			'count' => '',
 		);
+
+		unset( $enable_count );
 
 	     // phpcs:ignore
 	     $items = json_decode( wp_json_encode( $items ), false );

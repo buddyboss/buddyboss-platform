@@ -843,6 +843,31 @@ function bp_media_get_total_media_count() {
 }
 
 /**
+ * Get the album count of a user.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @return int album count of the user.
+ */
+function bb_media_get_total_album_count() {
+
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+	bp_has_albums( bp_ajax_querystring( 'albums' ) );
+	global $media_album_template;
+	$count = $media_album_template->total_album_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+
+	/**
+	 * Filters the total media album count for a given user.
+	 *
+	 * @since BuddyBoss 2.8.10
+	 *
+	 * @param int $count Total media album count for a given user.
+	 */
+	return apply_filters( 'bb_media_get_total_album_count', (int) $count );
+}
+
+/**
  * Get the groups media count of a given user.
  *
  * @return int media count of the user.

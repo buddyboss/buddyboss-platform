@@ -503,8 +503,12 @@ function bp_version_updater() {
 			bb_update_to_2_6_70();
 		}
 
+		if ( $raw_db_version < 23221 ) {
+			bb_update_to_2_6_80();
+		}
+
 		if ( $raw_db_version < 23321 ) {
-			bb_on_update_moderation_friends_count_update();
+			bb_update_to_2_8_20();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -3819,21 +3823,31 @@ function bb_update_to_2_6_70() {
 }
 
 /**
+ * Enable the member and group directory count option for existing installations.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @return void
+ */
+function bb_update_to_2_6_80() {
+	bp_update_option( 'bb-enable-content-counts', 1 );
+}
+
+/**
  * Fixed count for my connection.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_on_update_moderation_friends_count_update() {
-	if ( ! bp_is_active( 'moderation' ) ) {
-		return;
-	}
-	$is_already_run = get_transient( 'bb_on_update_moderation_friends_count_update' );
+function bb_update_to_2_8_20() {
+	$is_already_run = get_transient( 'bb_update_to_2_8_20' );
 	if ( $is_already_run ) {
 		return;
 	}
 
 	// Set a transient to avoid running the update multiple times within an hour.
-	set_transient( 'bb_on_update_moderation_friends_count_update', 'yes', HOUR_IN_SECONDS );
+	set_transient( 'bb_update_to_2_8_20', 'yes', HOUR_IN_SECONDS );
 
-	bb_create_background_member_friends_count();
+	if ( bp_is_active( 'moderation' ) ) {
+		bb_create_background_member_friends_count();
+	}
 }
