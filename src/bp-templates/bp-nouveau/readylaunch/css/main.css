@@ -5849,7 +5849,7 @@ body.admin-bar .bb-rl-header {
 
 .notification-list .unread:before {
   content: "";
-  background-color: var(--bb-primary-color);
+  background-color: var(--bb-rl-primary-color);
   border-radius: 50%;
   height: 6px;
   width: 6px;
