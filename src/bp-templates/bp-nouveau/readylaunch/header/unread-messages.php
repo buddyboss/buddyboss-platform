@@ -522,7 +522,7 @@ else :
 					<?php esc_html_e( 'When you have new messages, they will appear here.', 'buddyboss' ); ?>
 				</div>
 				<div class="bb-rl-no-messages-button">
-					<a href="#" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+					<a href="<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 						<i class="bb-icons-rl-plus"></i>
 						<?php esc_html_e( 'New', 'buddyboss' ); ?>
 					</a>

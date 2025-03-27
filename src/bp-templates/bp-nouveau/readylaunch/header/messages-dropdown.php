@@ -15,12 +15,12 @@ $unread_message_count = messages_get_unread_count();
 ?>
 <div id="header-messages-dropdown-elem" class="dropdown-passive dropdown-right notification-wrap messages-wrap bb-message-dropdown-notification menu-item-has-children">
 	<a href="javascript:void(0);" ref="notification_bell" class="notification-link" aria-label="<?php esc_html_e( 'Messages', 'buddyboss' ); ?>">
-        <span data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Messages', 'buddyboss' ); ?>" class="bb-member-unread-count-span-<?php echo esc_attr( bp_loggedin_user_id() ); ?>">
-            <i class="bb-icons-rl-chat-teardrop-text"></i>
-            <?php if ( $unread_message_count > 0 ) : ?>
-	            <span class="count"><?php echo esc_html( $unread_message_count ); ?></span>
-            <?php endif; ?>
-        </span>
+		<span data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Messages', 'buddyboss' ); ?>" class="bb-member-unread-count-span-<?php echo esc_attr( bp_loggedin_user_id() ); ?>">
+			<i class="bb-icons-rl-chat-teardrop-text"></i>
+			<?php if ( $unread_message_count > 0 ) : ?>
+				<span class="count"><?php echo esc_html( $unread_message_count ); ?></span>
+			<?php endif; ?>
+		</span>
 	</a>
 	<section class="notification-dropdown">
 		<header class="notification-header flex items-center justify-between">
@@ -28,10 +28,6 @@ $unread_message_count = messages_get_unread_count();
 			<div class="notification-header-actions">
 				<a href="<?php echo esc_url( $menu_link ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bdelete-all delete-all">
 					<?php esc_html_e( 'View All', 'buddyboss' ); ?>
-				</a>
-				<a href="#" class="notification-header-action" data-balloon-pos="left" data-balloon="<?php esc_html_e( 'New Thread', 'buddyboss' ); ?>">
-					<i class="bb-icons-rl-bold bb-icons-rl-plus"></i>
-					<span class="screen-reader-text"><?php esc_html_e( 'New Thread', 'buddyboss' ); ?></span>
 				</a>
 			</div>
 		</header>
