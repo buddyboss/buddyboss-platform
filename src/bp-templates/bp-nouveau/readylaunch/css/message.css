@@ -2323,6 +2323,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-avatar {
   margin-right: var(--bb-rl-space-100);
+  position: relative;
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-avatar img {
@@ -2334,6 +2335,18 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-avatar a {
   display: block;
+}
+
+.bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-avatar .member-status.online {
+  position: absolute;
+  right: 1px;
+  top: inherit;
+  bottom: 1px;
+  width: 9px;
+  height: 9px;
+  background-color: var(--bb-rl-background-positive-primary-color);
+  border-radius: var(--bb-rl-radius-full);
+  border: 1px solid var(--bb-rl-background-color);
 }
 
 .bb-rl-messages-right-panel .bb-rl-participant-item .bb-rl-participant-info {
