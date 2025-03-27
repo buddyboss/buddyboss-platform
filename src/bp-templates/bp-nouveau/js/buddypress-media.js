@@ -3615,13 +3615,13 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all videos are uploaded
+					// Enable submit button when all videos are uploaded.
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
-								if ( ! formElement.hasClass( 'has-draft' ) ) {
+								if ( ! formElement.hasClass( 'draft-video-uploading' ) ) {
 									formElement.removeClass( 'media-uploading' );
 								}
 							}

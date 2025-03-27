@@ -1130,7 +1130,7 @@ window.bp = window.bp || {};
 
 				if ( draft_videos.length ) {
 					$form.find( 'a#forums-video-button' ).trigger( 'click' );
-					$form.addClass( 'media-uploading' );
+					$form.addClass( 'media-uploading draft-video-uploading' );
 
 					var v_mock_file        = false,
 						v_dropzone_obj_key = dropzone_video_container.data( 'key' );
@@ -1157,10 +1157,50 @@ window.bp = window.bp || {};
 
 								counter.count++;
 
-								// Only update the form field when all videos are processed.
+								// Only update the form field and dropzone media when all videos are processed.
 								if ( counter.count >= videos.length ) {
 									form.find( '#bbp_video' ).val( JSON.stringify( videos ) );
-									form.removeClass( 'media-uploading' );
+									form.removeClass( 'media-uploading draft-video-uploading' );
+
+									// Update the videos in self.dropzone_media.
+									var video_dropzone_container = form.find( '#forums-post-video-uploader' );
+
+									// Ensure the container exists before proceeding.
+									if ( 0 < video_dropzone_container.length ) {
+										var video_dropzone_obj_key = video_dropzone_container.data( 'key' );
+
+										// Validate that the key exists and self.dropzone_media contains the key.
+										if (
+											video_dropzone_obj_key && 
+											self.dropzone_media && 
+											typeof self.dropzone_media === 'object' && 
+											Object.prototype.hasOwnProperty.call( self.dropzone_media, video_dropzone_obj_key )
+										) {
+											var dropzone_videos = self.dropzone_media[ video_dropzone_obj_key ];
+
+											// Ensure dropzone_videos and videos are arrays before iterating.
+											if ( Array.isArray( dropzone_videos ) && Array.isArray( videos ) ) {
+												for ( var i = 0; i < dropzone_videos.length; i++ ) {
+													if ( ! dropzone_videos[i] || ! dropzone_videos[i].id ) {
+														continue;
+													}
+
+													for ( var j = 0; j < videos.length; j++ ) {
+														if ( ! videos[j] || ! videos[j].id ) {
+															continue;
+														}
+
+														if ( dropzone_videos[i].id === videos[j].id ) {
+															if ( 'undefined' !== typeof videos[j].js_preview && videos[j].js_preview ) {
+																dropzone_videos[i].js_preview = videos[j].js_preview;
+															}
+															break;
+														}
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 						}, 100 );

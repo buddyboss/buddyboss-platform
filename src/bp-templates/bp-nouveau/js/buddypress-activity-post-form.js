@@ -1974,7 +1974,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( 'undefined' !== typeof file.id && true === bp.draft_activity.allow_delete_media ) {
+						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.media.length ) {
 								for ( var i in self.media ) {
 									if ( file.id === self.media[i].id ) {
@@ -1987,9 +1987,11 @@ window.bp = window.bp || {};
 										if ( 'edit' !== bp.draft_activity.display_post && file.media_edit_data ) {
 											var attachment_id = file.media_edit_data.id;
 											if ( attachment_id === self.media[i].id ) {
+												if ( ! _.isUndefined( self.media[i].saved ) && ! self.media[i].saved ) {
+													bp.Nouveau.Media.removeAttachment( attachment_id );
+												}
 												self.media.splice( i, 1 );
 												self.model.set( 'media', self.media );
-												bp.Nouveau.Media.removeAttachment( attachment_id );
 											}
 										}
 									}
@@ -2238,7 +2240,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( 'undefined' !== typeof file.id && true === bp.draft_activity.allow_delete_media ) {
+						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.document.length ) {
 								for ( var i in self.document ) {
 									if ( file.id === self.document[i].id ) {
@@ -2251,9 +2253,11 @@ window.bp = window.bp || {};
 										if ( 'edit' !== bp.draft_activity.display_post && file.document_edit_data ) {
 											var attachment_id = file.document_edit_data.id;
 											if ( attachment_id === self.document[i].id ) {
+												if ( !_.isUndefined( self.document[i].saved ) && !self.document[i].saved ) {
+													bp.Nouveau.Media.removeAttachment( attachment_id );
+												}
 												self.document.splice( i, 1 );
 												self.model.set( 'document', self.document );
-												bp.Nouveau.Media.removeAttachment( attachment_id );
 											}
 										}
 									}
@@ -2527,7 +2531,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function ( file ) {
-						if ( 'undefined' !== typeof file.id && true === bp.draft_activity.allow_delete_media ) {
+						if ( true === bp.draft_activity.allow_delete_media ) {
 							if ( self.video.length ) {
 								for ( var i in self.video ) {
 									if ( file.id === self.video[i].id ) {
@@ -2540,9 +2544,11 @@ window.bp = window.bp || {};
 										if ( 'edit' !== bp.draft_activity.display_post && file.video_edit_data ) {
 											var attachment_id = file.video_edit_data.id;
 											if ( attachment_id === self.video[i].id ) {
+												if ( !_.isUndefined( self.video[i].saved ) && !self.video[i].saved ) {
+													bp.Nouveau.Media.removeAttachment( attachment_id );
+												}
 												self.video.splice( i, 1 );
 												self.model.set( 'video', self.video );
-												bp.Nouveau.Media.removeAttachment( attachment_id );
 											}
 										}
 									}
