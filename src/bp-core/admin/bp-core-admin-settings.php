@@ -3776,7 +3776,7 @@ function bb_admin_setting_callback_content_counts() {
 /**
  * Enable activity filters with scopes like groups, friends, mentions, following etc.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_admin_setting_callback_activity_filters() {
 	?>
@@ -3845,7 +3845,7 @@ function bb_admin_setting_callback_activity_filters() {
 /**
  * Enable profile timeline filters with scopes like groups, friends, mentions, following etc.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_admin_setting_callback_activity_timeline_filters() {
 	?>
@@ -3914,7 +3914,7 @@ function bb_admin_setting_callback_activity_timeline_filters() {
 /**
  * Enable activity sorting options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_admin_setting_callback_activity_sorting() {
 	?>
@@ -3983,7 +3983,7 @@ function bb_admin_setting_callback_activity_sorting() {
 /**
  * Enable activity search.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_admin_setting_callback_enable_activity_search() {
 	?>

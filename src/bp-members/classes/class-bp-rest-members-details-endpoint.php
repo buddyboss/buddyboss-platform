@@ -1437,7 +1437,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since [BBVERSION]
+	 * @since 2.8.20
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/members/:id/info Members Information
 	 * @apiName        GetBBMembersInfo
@@ -1552,7 +1552,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.20
 		 */
 		do_action( 'bb_rest_members_get_member_information', $response, $request );
 

@@ -3808,7 +3808,7 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 /**
  * Filter the members loop on a followers page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array|string $qs The querystring for the BP loop.
  * @param str          $object The current object for the querystring.
@@ -3841,7 +3841,7 @@ add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2
 /**
  * Clear activity parent cache for one or more activities.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
  *
@@ -3873,7 +3873,7 @@ function bb_clear_activity_parent_cache( $activities ) {
 /**
  * Clear activity comment parent cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
  *
@@ -3917,7 +3917,7 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
 /**
  * Clear all activity comment parent caches for a main activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array $activities Array of activities.
  *

@@ -357,7 +357,7 @@ function bp_nouveau_ajax_save_cover_position() {
 /**
  * Object template results members followers scope.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param string $querystring The querystring for the BP loop.	
  * @param string $object The current object for the querystring.

@@ -7412,7 +7412,7 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 /**
  * Update the date_updated of an activity item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param int    $activity_id Activity ID.
  * @param string $time        Time to update.
@@ -7449,7 +7449,7 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
 /**
  * Get parent activity object of the activity item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param object $activity Activity object.
  * 
@@ -7497,7 +7497,7 @@ function bb_activity_get_comment_parent_activity_object( $activity ) {
 /**
  * Get top level parent comment id of the activity item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param object $activity         Activity object.
  * @param int    $main_activity_id Main activity ID.
@@ -7574,7 +7574,7 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 /**
  * Get the raw database object for an activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param int $activity_id The ID of the activity.
  *
@@ -7601,7 +7601,7 @@ function bb_activity_get_raw_db_object( $activity_id ) {
 /**
  * Common function to update activity date updated and clear cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param object $activity     The activity object.
  * @param string $date_updated The date updated to set.

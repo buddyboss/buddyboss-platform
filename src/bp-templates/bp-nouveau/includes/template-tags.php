@@ -2110,7 +2110,7 @@ function bp_nouveau_search_form() {
 		/**
 		 * Fires before the display of the activity syndication options.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.8.20
 		 */
 		do_action( 'bp_activity_syndication_options' );
 	}

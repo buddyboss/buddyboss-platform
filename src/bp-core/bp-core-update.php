@@ -3837,7 +3837,7 @@ function bb_update_to_2_6_80() {
  * Fixed count for my connection.
  * Add updated_time column in activity table.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_update_to_2_8_20() {
 	$is_already_run = get_transient( 'bb_update_to_2_8_20' );

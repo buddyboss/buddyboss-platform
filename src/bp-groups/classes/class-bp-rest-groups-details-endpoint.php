@@ -712,7 +712,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	/**
 	 * Retrieve group information.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.20
 	 *
 	 * @param WP_REST_Request $request The REST API request.
 	 *
@@ -792,7 +792,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a group information is fetched via the REST API.
 		 *
-		 * @since [BBVERSION]
+		 * @since 2.8.20
 		 *
 		 * @param BP_Groups_Group  $group    Fetched group.
 		 * @param WP_REST_Response $response The response data.
@@ -806,7 +806,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	/**
 	 * Fetch group members.
 	 *
-	 * @since [BBVERSION]
+	 * @since 2.8.20
 	 *
 	 * @param int $group_id The ID of the group.
 	 * @param int $limit    The maximum number of items to be returned in the result set. Default is 3.

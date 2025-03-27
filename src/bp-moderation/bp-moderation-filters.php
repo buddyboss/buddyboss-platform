@@ -1057,7 +1057,7 @@ add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch
 /**
  * Function to exclude suspended users from the friendship query.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array $where Array of where conditions.
  *
@@ -1099,7 +1099,7 @@ add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_frien
 /**
  * Function to modify JOIN clauses to filter friendships based on suspension and moderation criteria.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param string $join    The JOIN SQL part of the query.
  * @param int    $user_id The ID of the user for whom friendships are being queried.

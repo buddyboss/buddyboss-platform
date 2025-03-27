@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/members/profile-card.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 2.8.20
  * @version 1.0.0
  */
 

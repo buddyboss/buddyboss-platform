@@ -388,7 +388,7 @@ class BP_Friends_Friendship {
 			/**
 			 * Filters the SELECT clause for retrieving friendship IDs.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param string $select  The SELECT clause of the SQL query.
 			 * @param int    $user_id The user ID for whom friendship IDs are being fetched.
@@ -398,7 +398,7 @@ class BP_Friends_Friendship {
 			/**
 			 * Filters the JOIN clause for retrieving friendship IDs.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param string $join    The JOIN clause of the SQL query.
 			 * @param int    $user_id The user ID for whom friendship IDs are being fetched.
@@ -411,7 +411,7 @@ class BP_Friends_Friendship {
 			/**
 			 * Filters the WHERE clause for retrieving friendship IDs.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param array $where   Array of WHERE clause conditions.
 			 * @param int   $user_id The user ID for whom friendship IDs are being fetched.
