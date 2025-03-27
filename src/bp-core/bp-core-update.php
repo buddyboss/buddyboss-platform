@@ -507,6 +507,10 @@ function bp_version_updater() {
 			bb_update_to_2_6_80();
 		}
 
+		if ( $raw_db_version < 23321 ) {
+			bb_update_to_2_8_20();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3827,4 +3831,23 @@ function bb_update_to_2_6_70() {
  */
 function bb_update_to_2_6_80() {
 	bp_update_option( 'bb-enable-content-counts', 1 );
+}
+
+/**
+ * Fixed count for my connection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_2_8_20() {
+	$is_already_run = get_transient( 'bb_update_to_2_8_20' );
+	if ( $is_already_run ) {
+		return;
+	}
+
+	// Set a transient to avoid running the update multiple times within an hour.
+	set_transient( 'bb_update_to_2_8_20', 'yes', HOUR_IN_SECONDS );
+
+	if ( bp_is_active( 'moderation' ) ) {
+		bb_create_background_member_friends_count();
+	}
 }

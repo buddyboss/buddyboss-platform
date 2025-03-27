@@ -413,7 +413,8 @@ function bp_has_groups( $args = '' ) {
 		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
 		! bp_is_user_groups() && ! bp_is_group_subgroups() &&
 		empty( $group_type ) &&
-		( ! is_admin() || wp_doing_ajax() )
+		( ! is_admin() || wp_doing_ajax() ) &&
+		! bb_is_elementor_maintenance_mode_enabled()
 	) {
 		// get all excluded group types.
 		$bp_group_type_ids = bp_groups_get_excluded_group_types();
