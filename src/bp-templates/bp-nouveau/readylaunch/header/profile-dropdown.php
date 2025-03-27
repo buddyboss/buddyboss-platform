@@ -86,10 +86,31 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 
 				if ( $is_enable_profile_avatar && buddypress()->avatar->show_avatars ) { ?>
 					<li class="bb-rl-profile-sublist-link" id="bb-rl-xprofile-change-avatar">
-						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-theme' ); ?></a>
+						<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-theme' ); ?></a>
 					</li>
-				<?php } ?>
-				
+				<?php
+				}
+
+				$edit_profile_link = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() . '/edit/group/' );
+				$args              = array(
+					'user_id'                => bp_loggedin_user_id(),
+					'fetch_fields'           => false,
+					'fetch_field_data'       => false,
+					'fetch_visibility_level' => false,
+				);
+
+				if ( bp_has_profile( $args ) ) {
+
+					while ( bp_profile_groups() ) {
+						bp_the_profile_group();
+						?>
+						<li class="bb-rl-profile-sublist-link" id="bb-rl-xprofile-edit-<?php echo esc_attr( bp_get_the_profile_group_id() ); ?>">
+							<a href="<?php echo esc_url( $edit_profile_link . bp_get_the_profile_group_id() ); ?>"><?php bp_the_profile_group_name(); ?></a>
+						</li>
+						<?php
+					}
+				}
+				?>
 			</ul>
 		</li>
 
