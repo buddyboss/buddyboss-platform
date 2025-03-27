@@ -254,8 +254,13 @@
     <# if ( data.length > 0 ) {
         _.each( data, function( item ) { #>
             <div class="bb-rl-media-item">
-                <a href="{{item.url}}" class="bb-open-media">
-                    <img src="{{item.url}}" alt="{{item.title}}">
+                <a class="bb-rl-open-message-media-theatre bb-{{item.type}}-cover-wrap bb-item-cover-wrap bb-open-{{item.type}}"
+                    data-id="{{item.id}}"
+                    data-attachment-id="{{item.attachment_id}}"
+                    data-attachment-full="{{item.full}}"
+                    data-privacy="{{item.privacy}}"
+                    href="#">
+                        <img src="{{item.thumbnail}}" alt="{{item.title}}">
                 </a>
             </div>
         <# }); #>
@@ -269,14 +274,33 @@
     if ( data.length > 0 ) {
         _.each( data, function( file ) { #>
             <div class="bb-rl-file-item">
-                <# if ( file.font_icon ) { #>
-                    <i class="bb-rl-file-icon {{file.font_icon}}"></i>
+                <# if ( file.svg_icon ) { #>
+                    <i class="bb-rl-file-icon {{file.svg_icon}}"></i>
                 <# } else { #>
                     <i class="bb-rl-file-icon bb-icons-rl-file-{{file.extension}}"></i>
                 <# } #>
                 <div class="bb-rl-file-info">
                     <h4 class="bb-rl-file-name">
-                        <a href="{{file.url}}" target="_blank" title="{{file.full_title}}">{{file.title}}</a>
+                        <a class="bb-rl-document-detail-wrap bb-rl-open-document-theatre"
+                            href="{{file.url}}" 
+                            title="{{file.full_title}}"
+                            data-id="{{file.id}}"
+                            data-activity-id=""
+                            data-icon-class="{{file.svg_icon}}"
+                            data-attachment-id="{{file.attachment_id}}"
+                            data-attachment-full=""
+                            data-privacy="{{file.privacy}}"
+                            data-extension="{{file.extension}}"
+                            data-author="{{file.author}}"
+                            data-preview="{{file.preview}}"
+                            data-full-preview="{{file.full_preview}}"
+                            data-text-preview="{{file.text_preview}}"
+                            data-mp3-preview="{{file.mp3_preview}}"
+                            data-document-title="{{file.document_title}}"
+                            data-video-preview="{{file.video}}"
+                            data-mirror-text="{{file.mirror_text}}">
+                                {{file.title}}
+                        </a>
                     </h4>
                 </div>
             </div>

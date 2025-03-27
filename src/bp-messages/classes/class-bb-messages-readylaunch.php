@@ -241,8 +241,11 @@ class BB_Messages_Readylaunch {
 			if ( ! empty( $media_items ) ) {
 				foreach ( $media_items as $media ) {
 					$args = array(
-						'id'    => $media->id,
-						'title' => $media->title,
+						'type'          => $media->type,
+						'id'            => $media->id,
+						'title'         => $media->title,
+						'attachment_id' => $media->attachment_id,
+						'privacy'       => $media->privacy,
 					);
 					if ( $video_component && 'video' === $media->type ) {
 						$poster_id     = bb_get_video_thumb_id( $media->attachment_id );
@@ -250,9 +253,11 @@ class BB_Messages_Readylaunch {
 						if ( $poster_id ) {
 							$thumbnail_url = bb_video_get_thumb_url( $media->id, $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
 						}
-						$args['url'] = $thumbnail_url;
+						$args['thumbnail'] = $thumbnail_url;
+						$args['full']      = $poster_id ? bb_video_get_thumb_url( $media->id, $poster_id, 'bb-video-poster-popup-image' ) : '';
 					} elseif ( $media_component && 'photo' === $media->type ) {
-						$args['url'] = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
+						$args['thumbnail'] = bp_media_get_preview_image_url( $media->id, $media->attachment_id );
+						$args['full']      = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' );
 					}
 					$response['media'][] = $args;
 				}
@@ -297,21 +302,37 @@ class BB_Messages_Readylaunch {
 
 			if ( ! empty( $document_items ) ) {
 				foreach ( $document_items as $document ) {
-					$ext = bp_document_extension( $document->attachment_id );
-
+					$attachment_id = $document->attachment_id;
+					$extension     = bp_document_extension( $attachment_id );
 					// Truncate title for display if it's too long.
 					$title = $document->title;
 					if ( strlen( $title ) > 15 ) {
 						$title = substr( $title, 0, 12 ) . '...';
 					}
 
+					$attached_file       = get_attached_file( $attachment_id );
+					$filename            = basename( $attached_file );
+					$text_attachment_url = wp_get_attachment_url( $attachment_id );
+					$audio_url           = in_array( $extension, bp_get_document_preview_music_extensions(), true ) ? bp_document_get_preview_url( bp_get_document_id(), $attachment_id ) : '';
+					$video_url           = in_array( $extension, bp_get_document_preview_video_extensions(), true ) ? bb_document_video_get_symlink( bp_get_document_id(), true ) : '';
+
 					$response['files'][] = array(
-						'id'         => $document->id,
-						'title'      => $title,
-						'full_title' => $document->title,
-						'url'        => bp_document_get_preview_url( $document->id, $document->attachment_id ),
-						'extension'  => $ext,
-						'font_icon'  => class_exists( 'BB_Readylaunch' ) ? BB_Readylaunch::instance()->bb_rl_document_svg_icon( '', $ext ) : '',
+						'url'            => bp_document_get_preview_url( $document->id, $attachment_id ),
+						'full_title'     => $document->title,
+						'id'             => $document->id,
+						'svg_icon'       => class_exists( 'BB_Readylaunch' ) ? BB_Readylaunch::instance()->bb_rl_document_svg_icon( '', $extension ) : '',
+						'attachment_id'  => $attachment_id,
+						'privacy'        => $document->privacy,
+						'extension'      => $extension,
+						'author'         => $document->user_id,
+						'preview'        => bp_document_get_preview_url( $document->id, $attachment_id ),
+						'full_preview'   => bp_document_get_preview_url( $document->id, $attachment_id ),
+						'text_preview'   => ! empty( $text_attachment_url ) ? esc_url( $text_attachment_url ) : '',
+						'mp3_preview'    => $audio_url ? $audio_url : '',
+						'document_title' => $filename,
+						'mirror_text'    => bp_document_mirror_text( $attachment_id ),
+						'video'          => $video_url ? $video_url : '',
+						'title'          => $title,
 					);
 				}
 			}
