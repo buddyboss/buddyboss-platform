@@ -351,6 +351,12 @@ window.bp = window.bp || {};
 				if ( ! container.is( e.target ) ) {
 					$( '.header-aside div.menu-item-has-children' ).removeClass( 'selected' );
 				}
+
+				// Close profile dropdown when clicking outside
+				if ( !$( e.target ).closest('.user-wrap' ).length && 
+					!$( e.target ).closest( '.bb-rl-profile-dropdown' ).length ) {
+					$( '.user-wrap' ).removeClass( 'active' );
+				}
 			},
 
 			/**
