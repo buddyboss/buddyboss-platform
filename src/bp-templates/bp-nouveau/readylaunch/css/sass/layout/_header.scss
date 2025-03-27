@@ -259,6 +259,10 @@
 			object-fit: contain;
 			border-radius: var(--bb-rl-radius-full);
 		}
+
+		.bb-rl-profile-dropdown {
+			display: none;
+		}
 	}
 
 	.bb-rl-header-search {

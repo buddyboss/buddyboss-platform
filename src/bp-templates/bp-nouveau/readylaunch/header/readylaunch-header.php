@@ -69,6 +69,11 @@ if ( ! bp_is_user_profile_edit() ) {
 							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">
 								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 							</a>
+							<?php if ( is_user_logged_in() ) { ?>
+								<div class="bb-rl-profile-dropdown">
+									<?php bp_get_template_part( 'header/profile-dropdown' ); ?>
+								</div>
+							<?php } ?>
 						</div>
 					<?php } ?>
 				</div>

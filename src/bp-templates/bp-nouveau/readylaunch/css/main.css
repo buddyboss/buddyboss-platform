@@ -5716,6 +5716,10 @@ body.admin-bar .bb-rl-header {
   border-radius: var(--bb-rl-radius-full);
 }
 
+.header-aside .user-wrap .bb-rl-profile-dropdown {
+  display: none;
+}
+
 .header-aside .bb-rl-header-search {
   font-size: 0.85rem;
   margin-right: var(--bb-rl-space-300);
