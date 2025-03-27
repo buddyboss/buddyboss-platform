@@ -73,7 +73,7 @@ window.bp = window.bp || {};
 			this.has_history            = [];
 			this.previous               = '';
 			this.last                   = '';
-			this.threadType             = 'all';
+			this.threadType             = 'unarchived';
 			this.xhr                    = '';
 			this.is_thread_list_loading = false;
 
@@ -1387,7 +1387,7 @@ window.bp = window.bp || {};
 			// Setup global variables.
 			BP_Nouveau.messages.hasThreads             = true;
 			bp.Nouveau.Messages.is_thread_list_loading = true;
-			bp.Nouveau.Messages.threadType             = 'all';
+			bp.Nouveau.Messages.threadType             = 'unarchived';
 
 			// Show loader.
 			$( '.bb-rl-messages-container' ).find( '.bb-rl-messages-nav-panel' ).addClass( 'loading' );
@@ -1559,7 +1559,11 @@ window.bp = window.bp || {};
 			$this.parent().addClass( 'active' );
 
 			// Set thread type to be used in AJAX request.
-			bp.Nouveau.Messages.threadType = tab;
+			if ( 'all' === tab ) {
+				bp.Nouveau.Messages.threadType = 'unarchived';
+			} else {
+				bp.Nouveau.Messages.threadType = tab;
+			}
 
 			if ( 'archived' === tab ) {
 				bp.Nouveau.Messages.router.navigate( 'archived/', { trigger: true } );
@@ -4905,7 +4909,7 @@ window.bp = window.bp || {};
 				var no_result_view;
 				if ( 'archived' === bp.Nouveau.Messages.threadType ) {
 					no_result_view = new bp.Views.MessagesNoArchivedThreads();
-				} else if ( 'all' === bp.Nouveau.Messages.threadType ) {
+				} else if ( 'unarchived' === bp.Nouveau.Messages.threadType ) {
 					no_result_view = new bp.Views.MessagesSearchNoThreads();
 				} else if ( 'unread' === bp.Nouveau.Messages.threadType ) {
 					no_result_view = new bp.Views.MessagesNoUnreadThreads();
@@ -5552,6 +5556,7 @@ window.bp = window.bp || {};
 					this.rightPanel              = new bp.Views.userMessageRightPanel( { model : this.options.thread } );
 					this.rightPanel.el.className = 'bb-rl-messages-right-panel';
 					$( '#bb-rl-messages-right-panel' ).html( this.rightPanel.render().el );
+					$( '#bb-rl-messages-right-panel' ).show();
 				}
 
 				$( '#bp-message-thread-list li' ).each(

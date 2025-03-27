@@ -304,6 +304,8 @@ class BB_Messages_Readylaunch {
 
 			if ( 'unread' === $thread_type ) {
 				$querystring .= '&type=unread';
+			} else if ( 'all' === $thread_type ) {
+				$querystring .= '&thread_type=unarchived';
 			}
 		}
 		return $querystring;
