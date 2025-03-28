@@ -3839,39 +3839,6 @@ function bb_add_member_followers_scope_filter( $qs, $object ) {
 add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
 
 /**
- * Filter the members loop on a followers page.
- *
- * @since BuddyBoss 2.8.20
- *
- * @param array|string $qs The querystring for the BP loop.
- * @param str          $object The current object for the querystring.
- *
- * @return array|string Modified querystring
- */
-function bb_add_member_followers_scope_filter( $qs, $object ) {
-	// not on the members object? stop now!
-	if ( 'members' !== $object ) {
-		return $qs;
-	}
-
-	// members directory
-	if ( ! bp_is_user() && bp_is_members_directory() ) {
-		$qs_args = bp_parse_args( $qs );
-		// check if members scope is followers before manipulating.
-		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
-			$qs .= '&include=' . bp_get_follower_ids(
-				array(
-					'user_id' => bp_loggedin_user_id(),
-				)
-			);
-		}
-	}
-
-	return $qs;
-}
-add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
-
-/**
  * Clear activity parent cache for one or more activities.
  *
  * @since BuddyBoss 2.8.20
