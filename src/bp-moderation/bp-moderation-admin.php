@@ -27,7 +27,9 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
  * @param string $hook page name.
  */
 function bp_moderation_admin_scripts( $hook ) {
-	if ( 'buddyboss_page_bp-moderation' === $hook ) {
+	$parent_name = sanitize_key( __( 'BuddyBoss', 'buddyboss' ) );
+
+	if ( $parent_name . '_page_bp-moderation' === $hook ) {
 		wp_enqueue_script(
 			'bp-moderation',
 			buddypress()->plugin_url . 'bp-core/admin/js/moderation-page.js',
