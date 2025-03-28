@@ -23,6 +23,11 @@
 				if ( ! is_admin() && is_array( $hidden_tabs ) && ! empty( $hidden_tabs ) && in_array( $nav_item->slug, $hidden_tabs, true ) ) {
 					continue;
 				}
+
+
+				if ( in_array( $nav_item->slug, array( bp_get_notifications_slug(), bp_get_messages_slug(), bp_get_settings_slug() ), true ) ) {
+					continue;
+				}
 				?>
 
 				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>">

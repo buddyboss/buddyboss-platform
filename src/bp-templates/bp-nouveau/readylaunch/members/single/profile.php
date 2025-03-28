@@ -7,10 +7,6 @@
  * @version 1.0.0
  */
 
-if ( ! bp_is_user_profile_edit() ) {
-	bp_get_template_part( 'members/single/parts/item-subnav' );
-}
-
 bp_nouveau_member_hook( 'before', 'profile_content' );
 ?>
 

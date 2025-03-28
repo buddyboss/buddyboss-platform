@@ -26,19 +26,11 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 				?>
 			</h2>
 		</div>
-		
+
 		<div class="bb-rl-profile-edit-wrapper">
 			<form action="<?php bp_the_profile_group_edit_form_action(); ?>" method="post" id="profile-edit-form" class="standard-form profile-edit <?php bp_the_profile_group_slug(); ?>">
 				<?php
 				bp_nouveau_xprofile_hook( 'before', 'field_content' );
-
-				if ( bp_profile_has_multiple_groups() ) {
-					?>
-					<ul class="button-tabs button-nav bb-rl-main-nav-list bb-rl-main-nav-profile-edit">
-						<?php bp_profile_group_tabs(); ?>
-					</ul>
-					<?php
-				}
 
 				while ( bp_profile_fields() ) :
 					bp_the_profile_field();

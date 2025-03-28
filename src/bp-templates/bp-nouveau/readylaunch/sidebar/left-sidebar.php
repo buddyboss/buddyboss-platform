@@ -17,6 +17,8 @@ defined( 'ABSPATH' ) || exit;
 		bp_get_template_part( 'groups/single/parts/admin-subnav' );
 	} if ( bp_is_user_settings() && bp_core_can_edit_settings() ) {
 		bp_get_template_part( 'members/single/parts/item-subnav' );
+	} if ( bp_is_user_change_avatar() || bp_is_user_profile_edit() ) {
+		bp_get_template_part( 'members/single/parts/edit-subnav' );
 	} else {
 		?>
 
