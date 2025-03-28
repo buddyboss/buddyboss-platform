@@ -40,6 +40,10 @@
 	margin: 0 auto;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
 
+	.bp-messages-feedback {
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
 	.bp-messages-feedback-hide {
 		display: none;
 	}
@@ -49,7 +53,7 @@
 		align-items: center;
 		flex-wrap: wrap;
 
-		.bp-messages-feedback {
+		.bp-invites-feedback {
 			width: 100%;
 		}
 
@@ -184,6 +188,10 @@ div#bp-group-message-content {
 				padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 			}
 
+			p:last-child {
+				margin-bottom: 0;
+			}
+
 			&:after {
 				color: var(--bb-rl-text-tertiary-color);
 				pointer-events: none;
@@ -290,6 +298,21 @@ div#bp-group-message-content {
 			font-family: bb-icons-rl;
 			font-size: 24px;
 			line-height: 1;
+		}
+
+		&:has(.loading) {
+			pointer-events: none;
+
+			&:before {
+				content: "";
+				display: inline-block;
+				height: 22px;
+				width: 22px;
+				border: 2px solid var(--bb-rl-border-quaternary-color);
+				border-top-color: var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-full);
+				animation: spin 3s infinite linear;
+			}
 		}
 
 		#send_group_message_button {

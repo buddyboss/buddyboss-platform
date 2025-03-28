@@ -2631,6 +2631,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
 }
 
+#group-messages-container .bp-messages-feedback {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
 #group-messages-container .bp-messages-feedback-hide {
   display: none;
 }
@@ -2641,7 +2645,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   flex-wrap: wrap;
 }
 
-#group-messages-container .bp-select-members-wrap .bp-messages-feedback {
+#group-messages-container .bp-select-members-wrap .bp-invites-feedback {
   width: 100%;
 }
 
@@ -2771,6 +2775,10 @@ div#bp-group-message-content {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
+.group-messages .bb-groups-messages-right .medium-editor-element p:last-child {
+  margin-bottom: 0;
+}
+
 .group-messages .bb-groups-messages-right .medium-editor-element:after {
   color: var(--bb-rl-text-tertiary-color);
   pointer-events: none;
@@ -2876,6 +2884,21 @@ div#bp-group-message-content {
   font-family: bb-icons-rl;
   font-size: 24px;
   line-height: 1;
+}
+
+.bb-groups-messages-right-bottom #group-messages-new-submit:has(.loading) {
+  pointer-events: none;
+}
+
+.bb-groups-messages-right-bottom #group-messages-new-submit:has(.loading):before {
+  content: "";
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
 }
 
 .bb-groups-messages-right-bottom #group-messages-new-submit #send_group_message_button {

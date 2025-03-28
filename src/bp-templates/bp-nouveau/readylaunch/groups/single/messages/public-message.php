@@ -33,10 +33,12 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 				<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></a>
 			</div>
 			<div class="bp-select-members-wrap">
-				<div class="bp-messages-feedback bp-messages-feedback-hide">
-					<div class="bp-feedback">
-						<span class="bp-icon" aria-hidden="true"></span>
-						<p></p>
+				<div class="bp-invites-feedback">
+					<div class="bp-messages-feedback bp-messages-feedback-hide">
+						<div class="bp-feedback">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p></p>
+						</div>
 					</div>
 				</div>
 				<?php
