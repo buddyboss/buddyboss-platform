@@ -53,7 +53,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 			while ( bp_profile_groups() ) {
 				bp_the_profile_group();
 
-				$class = bp_get_the_profile_group_name() === $group_name ? 'selected' : '';
+				$class = bp_is_user_profile_edit() && bp_get_the_profile_group_name() === $group_name ? 'selected' : '';
 				?>
 				<li class="bb-rl-profile-subnav-item <?php echo esc_attr( $class ); ?>" id="bb-rl-xprofile-edit-<?php echo esc_attr( bp_get_the_profile_group_id() ); ?>">
 					<a href="<?php echo esc_url( $edit_profile_link . bp_get_the_profile_group_id() ); ?>"><?php bp_the_profile_group_name(); ?></a>
