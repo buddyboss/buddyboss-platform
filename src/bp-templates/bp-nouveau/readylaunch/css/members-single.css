@@ -1236,3 +1236,56 @@
 .bb-rl-account-settings-section .moderation .bp-tables-user tbody .moderation-item-actions {
   text-align: right;
 }
+
+.bb-rl-account-settings-section > .bp-feedback.info {
+  display: block;
+  border-width: 0;
+  border-left-width: 2px;
+  border-radius: 0;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-color: var(--bb-rl-border-brand-secondary-color);
+}
+
+.bb-rl-account-settings-section #account-group-invites-form .submit {
+  margin-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-account-settings-section #account-data-export-form .submit {
+  margin-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-account-settings-section #account-data-export-form #submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+}
+
+.bb-rl-account-settings-section #account-data-export-form #submit:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-account-settings-section #account-data-export-form #submit:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-account-settings-section #account-data-export-form #submit:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}

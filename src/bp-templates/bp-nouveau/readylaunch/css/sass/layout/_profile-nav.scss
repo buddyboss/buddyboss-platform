@@ -1,6 +1,6 @@
 .bb-rl-profile-dropdown {
 	position: absolute;
-	top: 100%;
+	top: calc(100% + 8px);
 	right: 0;
 	z-index: 100;
 
@@ -33,6 +33,12 @@
 			i {
 				color: var(--bb-rl-icon-primary-color);
 				font-size: var(--bb-rl-font-size-2xl);
+			}
+
+			&:last-of-type {
+				border-top: 1px solid var(--bb-rl-border-secondary-color);
+				margin-top: var(--bb-rl-space-100);
+				padding-top: var(--bb-rl-space-100);
 			}
 		}
 

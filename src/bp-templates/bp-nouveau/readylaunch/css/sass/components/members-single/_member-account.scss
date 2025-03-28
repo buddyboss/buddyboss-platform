@@ -254,3 +254,33 @@
 		}
 	}
 }
+
+.bb-rl-account-settings-section {
+
+	> .bp-feedback.info {
+
+		@include bb-rl-notice--plain;
+		@include bb-rl-notice--plain-info;
+	}
+
+	#account-group-invites-form {
+
+		.submit {
+			margin-top: var(--bb-rl-space-300);
+		}
+	}
+
+	#account-data-export-form {
+
+		.submit {
+			margin-top: var(--bb-rl-space-300);
+		}
+
+		#submit {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+		}
+	}
+}
