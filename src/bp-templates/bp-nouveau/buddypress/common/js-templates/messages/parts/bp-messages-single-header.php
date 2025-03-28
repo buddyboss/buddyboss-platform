@@ -51,15 +51,15 @@
 			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
 				<# } #>
-				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) ) ) { #> href="{{{data.avatars[0].link}}}"<# } #>><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
+				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) ) ) { #> href="{{{data.avatars[0].link}}}" data-bb-hp-profile="{{{data.avatars[0].id}}}"<# } #>><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
 				<# if ( data.avatars[1] ) { #>
-				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[1].is_user_suspended || data.avatars[1].is_user_blocked ) ) ) { #> href="{{{data.avatars[1].link}}}"<# } #>><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
+				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[1].is_user_suspended || data.avatars[1].is_user_blocked ) ) ) { #> href="{{{data.avatars[1].link}}}" data-bb-hp-profile="{{{data.avatars[1].id}}}"<# } #>><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
 				<# }
 				if ( data.avatars.length == 2 ) { #>
 			</div>
 			<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
-			<a href="{{data.group_link}}"><img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" /></a>
+			<a href="{{data.group_link}}" data-bb-hp-group="{{data.group_id}}"><img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" /></a>
 			<# } else { #>
 			<# if ( other_recipients.length > 1 ) { #>
 			<span class="recipients-count">{{other_recipients.length}}</span>
@@ -67,7 +67,7 @@
 			<# } else { #>
 			<# var recipient = _.first(other_recipients) ? _.first(other_recipients) : current_user; #>
 			<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-			<a <# if ( ! ( recipient.is_user_suspended || recipient.is_user_blocked ) ) { #>href="{{{recipient.user_link}}}"<# } #>>
+			<a <# if ( ! ( recipient.is_user_suspended || recipient.is_user_blocked ) ) { #>href="{{{recipient.user_link}}}" data-bb-hp-profile="{{recipient.id}}"<# } #>>
 				<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 				<# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
 					{{{recipient.user_presence}}}
@@ -91,7 +91,7 @@
 						<# if ( data.is_deleted ) { #>
 							{{data.group_name}}
 						<# } else { #>
-							<a href="{{data.group_link}}">{{data.group_name}}</a>
+							<a href="{{data.group_link}}" data-bb-hp-group="{{data.group_id}}">{{data.group_name}}</a>
 						<# } #>
 					</span>
 				<# } else { #>
@@ -109,7 +109,7 @@
 					<# for ( i in first_four ) { #>
 						<span class="participants-name">
 							<# if ( other_recipients[i].is_deleted ) { #>{{other_recipients[i].user_name}}<#
-							} else if ( other_recipients[i].user_link && ( ! data.toOthers || data.toOthers == '' ) ) { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><#
+							} else if ( other_recipients[i].user_link && ( ! data.toOthers || data.toOthers == '' ) ) { #><a href="{{other_recipients[i].user_link}}" data-bb-hp-profile="{{other_recipients[i].id}}">{{other_recipients[i].user_name}}</a><#
 							} else { #>{{ other_recipients[i].user_name }}<# }
 							if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #>
 						</span>
