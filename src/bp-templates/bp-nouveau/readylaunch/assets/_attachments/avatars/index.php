@@ -59,17 +59,17 @@ if ( bp_is_group() ) {
 $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-rl-avatar-container--no-avatar';
 ?>
 <div class="bb-rl-image-headline">
-	<h3><?php esc_html_e( "Profile photo", 'buddyboss' ); ?></h3>
+	<h3><?php esc_html_e( $avatar_label . " photo", 'buddyboss' ); ?></h3>
 </div>
 <div class="bb-rl-image-caption">
 	<?php esc_html_e( "For best results, upload an image that is 300px by 300px or larger.", 'buddyboss' ); ?>
 </div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-avatar-photo">
-		<a class="bb-rl-remove-avatar-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?>">
+		<a class="bb-rl-remove-avatar-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete ' . $avatar_label . ' Photo', 'buddyboss' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</a>
-		<img src="<?php echo esc_url( $avatar_url ); ?>" class="group-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="<?php echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) ); ?>" />
+		<img src="<?php echo esc_url( $avatar_url ); ?>" class="<?php echo bp_is_group() ? 'group' : 'user'; ?>-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="<?php echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) ); ?>" />
 	</div>
 	<div class="bp-avatar"></div>
 </div>
