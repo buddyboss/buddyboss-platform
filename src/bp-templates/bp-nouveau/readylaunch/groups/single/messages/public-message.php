@@ -29,7 +29,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
 		<div class="bb-groups-messages-right-top">
 			<div class="bb-title-wrap">
-				<h2 class="bb-title"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></h2>
+				<h2 class="bb-title"><?php esc_html_e( 'Message', 'buddyboss' ); ?></h2>
 				<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Group Message', 'buddyboss' ); ?></a>
 			</div>
 			<div class="bp-select-members-wrap">
@@ -44,7 +44,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 				<?php
 				if ( 0 !== $group_members['count'] ) {
 					?>
-					<span class="group-messages-helper-text"><?php esc_html_e( 'Send to', 'buddyboss' ); ?></span>
+					<span class="group-messages-helper-text"><?php esc_html_e( 'To:', 'buddyboss' ); ?></span>
 					<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
 						<option value="all" selected="selected"><?php esc_html_e( 'All Group Members', 'buddyboss' ); ?></option>
 					</select>
