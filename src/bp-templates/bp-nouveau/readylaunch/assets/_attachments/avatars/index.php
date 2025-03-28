@@ -43,15 +43,13 @@ if ( bp_is_group() ) {
     $user_id = bp_displayed_user_id();
 	$avatar_id = $user_id;
 	$avatar_label = __("Profile", 'buddyboss');
-    if ( bp_get_user_has_avatar( $user_id ) ) {
-		$has_avatar = true;
-        $avatar_url = bp_core_fetch_avatar( array(
-            'item_id' => $user_id,
-            'object'  => 'user',
-            'type'    => 'full',
-            'html'    => false,
-        ) );
-    }
+	$has_avatar = bp_get_user_has_avatar( $user_id );
+    $avatar_url = bp_core_fetch_avatar( array(
+        'item_id' => $user_id,
+        'object'  => 'user',
+        'type'    => 'full',
+        'html'    => false,
+    ) );
 	$container_class .= ' bb-rl-avatar-container--user';
 }
 
