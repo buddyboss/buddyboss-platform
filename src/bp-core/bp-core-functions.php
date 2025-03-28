@@ -7704,7 +7704,7 @@ function bb_core_get_encoded_image( $attachment_id, $size = 'full' ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param $id Id of the section.
+ * @param string $id Id of the section.
  *
  * @return string Return icon name.
  */
@@ -10006,4 +10006,15 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 	}
 
 	return $filters;
+}
+
+/**
+ * Function to return enabled components for ReadyLaunch.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array
+ */
+function bb_get_enabled_readylaunch() {
+	return bp_get_option( 'bb_readylaunch', array() );
 }

@@ -1376,6 +1376,30 @@ function bp_nouveau_ajax_media_get_media_description() {
 			<?php
 			$media_description = ob_get_contents();
 			ob_end_clean();
+
+			$media_description = apply_filters(
+				/**
+				 * Filter the media description HTML.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $media_description The media description HTML.
+				 * @param object $media Media object.
+				 * @param int    $media_id Media ID.
+				 * @param int    $attachment_id Attachment ID.
+				 * @param bool   $can_edit_btn Whether user can edit.
+				 * @param bool   $can_download_btn Whether user can download.
+				 *
+				 * @return string The modified document description HTML.
+				 */
+				'bp_nouveau_get_media_description_html',
+				$media_description,
+				$media,
+				$media_id,
+				$attachment_id,
+				$can_edit_btn,
+				$can_download_btn
+			);
 		}
 	}
 
