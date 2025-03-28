@@ -68,6 +68,24 @@ if ( 0 === $total_count ) {
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
 						<h4 class="total-members-text"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h4>
+
+						<div class="group-messages-search subnav-search clearfix" role="search">
+							<div class="bp-search">
+								<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form search-form-has-reset" data-bp-search="group-messages">
+									<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
+									<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
+									<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit search-form_submit">
+										<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
+										<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
+									</button>
+									<button type="reset" class="search-form_reset">
+										<span class="bb-icons-rl bb-icons-rl-x" aria-hidden="true"></span>
+										<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+									</button>
+								</form>
+							</div>
+						</div>
+
 						<div class="bp-group-message-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You are not allowed to Create New Thread with all group members.', 'buddyboss' ); ?>">
 							<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
 							<label for="bp-group-message-switch-checkbox" class="bp-group-message-label">
@@ -79,23 +97,6 @@ if ( 0 === $total_count ) {
 						<div>
 							<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 						</div>
-					</div>
-				</div>
-
-				<div class="group-messages-search subnav-search clearfix" role="search">
-					<div class="bp-search">
-						<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form search-form-has-reset" data-bp-search="group-messages">
-							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
-							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
-							<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit search-form_submit">
-								<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
-							</button>
-							<button type="reset" class="search-form_reset">
-								<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
-								<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
-							</button>
-						</form>
 					</div>
 				</div>
 
@@ -126,7 +127,7 @@ if ( 0 === $total_count ) {
 			<input type="hidden" class="count-all-members-text" value="<?php echo esc_attr( $all_text ); ?>">
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
-					<h2 class="bb-title"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></h2>
+					<h2 class="bb-title"><?php esc_html_e( 'Message', 'buddyboss' ); ?></h2>
 					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></a>
 					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-rl bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
@@ -138,7 +139,7 @@ if ( 0 === $total_count ) {
 						</div>
 					</div>
 					<?php if ( 0 !== $group_members['count'] ) { ?>
-						<span class="group-messages-helper-text"><?php esc_html_e( 'Send to', 'buddyboss' ); ?></span>
+						<span class="group-messages-helper-text"><?php esc_html_e( 'To:', 'buddyboss' ); ?></span>
 						<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true"></select>
 					<?php } ?>
 				</div>
@@ -316,11 +317,11 @@ if ( 0 === $total_count ) {
 								<?php
 							endif; ?>
 
+							<select name="group-messages-type" class="group-messages-type">
+								<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
+								<option value="open"><?php esc_html_e( 'Create New Thread', 'buddyboss' ); ?></option>
+							</select>
 							<div id="group-messages-new-submit" class="submit">
-								<select name="group-messages-type" class="group-messages-type">
-									<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
-									<option value="open"><?php esc_html_e( 'Create New Thread', 'buddyboss' ); ?></option>
-								</select>
 								<?php
 								$disabled = '';
 								if ( empty( $group_members['members'] ) ) {

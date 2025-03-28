@@ -1289,7 +1289,7 @@ div.video-js .vjs-control-bar button.vjs-seek-button .vjs-icon-placeholder:befor
 }
 
 div.video-js .vjs-control-bar button.vjs-seek-button.skip-back .vjs-icon-placeholder:before {
-  transform: rotateY(-180deg);
+  transform: rotateY(180deg);
 }
 
 div.video-js .vjs-control-bar button.vjs-mute-control .vjs-icon-placeholder:before {

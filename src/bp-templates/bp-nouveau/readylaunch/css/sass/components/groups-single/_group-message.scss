@@ -109,7 +109,7 @@ div#bp-group-message-content {
 .group-messages {
 
 	.bb-groups-messages-left {
-		flex: 0 0 360px;
+		flex: 0 0 300px;
 		min-width: 0;
 	}
 
@@ -122,8 +122,8 @@ div#bp-group-message-content {
 		}
 
 		.bb-groups-messages-right-top {
-			margin-left: calc(var(--bb-rl-space-200)* -1);
-			margin-right: calc(var(--bb-rl-space-200)* -1);
+			margin-left: calc(var(--bb-rl-space-200) * -1);
+			margin-right: calc(var(--bb-rl-space-200) * -1);
 			padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
 			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		}
@@ -201,6 +201,76 @@ div#bp-group-message-content {
 			img.emojioneemoji {
 				vertical-align: middle;
 			}
+		}
+	}
+
+	&.private-message {
+
+		#group-messages-container {
+			padding: 0 var(--bb-rl-space-200) 0;
+			border: 1px solid var(--bb-rl-border-secondary-color);
+		}
+
+		.bb-groups-messages-right {
+
+			#send_group_message_form {
+				min-height: auto;
+				height: 100%;
+			}
+
+			.bb-groups-messages-right-bottom {
+				margin: auto var(--bb-rl-space-300) var(--bb-rl-space-400);
+			}
+
+			.group-messages-type {
+				margin-left: auto;
+				background-color: var(--bb-rl-background-secondary-color);
+				border-color: var(--bb-rl-border-secondary-color);
+				padding: 4px var(--bb-rl-space-200) 4px var(--bb-rl-space-100);
+				background-position: right 10px center;
+			}
+
+			#group-messages-new-submit {
+				margin-left: var(--bb-rl-space-300);
+			}
+
+			.bb-groups-messages-right-top {
+				margin: 0;
+			}
+
+			.bb-title {
+				display: block;
+				color: var(--bb-rl-text-color);
+				font-size: var(--bb-rl-font-size-base);
+				font-weight: 500;
+				padding: var(--bb-rl-space-200);
+				border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+				margin: 0 calc(var(--bb-rl-space-400) * -1) 0 calc(var(--bb-rl-space-200) * -1);
+			}
+
+			.add-more-members {
+				display: none;
+			}
+
+			.bp-select-members-wrap {
+				padding: var(--bb-rl-space-100) 0 0;
+				min-height: 50px;
+			}
+
+			.bp-group-message-wrap {
+				color: var(--bb-rl-text-color);
+				font-size: var(--bb-rl-font-size-base);
+				font-weight: 500;
+			}
+		}
+
+		span.select2-dropdown.select2-dropdown--below {
+			display: none;
+		}
+
+		#group-messages-container .group-messages-helper-text {
+			margin-right: var(--bb-rl-space-50);
+			min-width: auto;
 		}
 	}
 }
@@ -380,9 +450,175 @@ div#bp-group-message-content {
 	}
 }
 
+.bb-groups-messages-left {
+
+	.total-members-text {
+		font-size: var(--bb-rl-font-size-base);
+		font-weight: 500;
+		color: var(--bb-rl-text-color);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		margin: 0 0 var(--bb-rl-space-100) calc(var(--bb-rl-space-200) * -1);
+		padding: var(--bb-rl-space-200);
+	}
+
+	.bp-messages-search-form {
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		border-radius: var(--bb-rl-radius-full);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+		margin: 0 var(--bb-rl-space-200) var(--bb-rl-space-100) 0;
+		position: relative;
+
+		&:before {
+			content: "\e30c";
+			color: var(--bb-rl-icon-secondary-color);
+			font-family: bb-icons-rl;
+			font-size: 16px;
+			line-height: 1;
+			position: absolute;
+			left: 9px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		#group_messages_search {
+			color: var(--bb-rl-text-tertiary-color);
+			font-size: var(--bb-rl-font-size-sm);
+			line-height: 1.2;
+			border: 0;
+			padding: 0 0 0 25px;
+			outline: none;
+		}
+
+		button[type="submit"] {
+			position: absolute;
+			opacity: 0;
+			left: 7px;
+			top: 7px;
+			height: 20px;
+			width: 20px;
+			cursor: pointer;
+		}
+
+		.search-form_reset {
+			font-size: 15px;
+			line-height: 1;
+			color: var(--bb-rl-icon-secondary-color);
+			background-color: transparent;
+			border: 0;
+			padding: 0;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 12px;
+			cursor: pointer;
+			display: none;
+		}
+	}
+
+	.bp-group-message-wrap {
+		margin: var(--bb-rl-space-200) 0 var(--bb-rl-space-200);
+
+		.bp-group-message-label {
+			display: flex;
+			align-items: center;
+			color: var(--bb-rl-text-color);
+			font-size: 14px;
+			font-weight: 500;
+		}
+	}
+
+	.all-members {
+		max-height: 550px;
+		overflow-y: auto;
+		overflow-x: hidden;
+
+		li {
+			display: flex;
+			align-items: center;
+			margin-bottom: var(--bb-rl-space-100);
+			padding: var(--bb-rl-space-50) 0;
+			position: relative;
+			padding-left: 30px;
+
+			> .action {
+				position: absolute;
+				left: 0;
+				top: 50%;
+				transform: translateY(-50%);
+
+				button {
+					border: 0;
+					background-color: transparent;
+					padding: 0;
+					cursor: pointer;
+
+					span.icons:before {
+						content: "";
+						margin-right: var(--bb-rl-space-100);
+						display: inline-block;
+						vertical-align: text-top;
+						width: 16px;
+						height: 16px;
+						background: var(--bb-rl-background-color);
+						border-radius: var(--bb-rl-radius-sm);
+						border: 1px solid var(--bb-rl-border-tertiary-color);
+					}
+				}
+			}
+
+			&.selected {
+
+				> .action {
+
+					button {
+
+						span.icons {
+
+							&:before {
+								background: var(--bb-rl-background-brand-primary-color);
+								border-color: var(--bb-rl-background-brand-primary-color);
+							}
+
+							&:after {
+								content: "\e182";
+								position: absolute;
+								left: 3px;
+								top: 3px;
+								font-family: bb-icons-rl;
+								font-weight: 400;
+								color: var(--bb-rl-text-white-color);
+								font-size: 10px;
+								display: block;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.item-avatar img {
+			height: 32px;
+			width: 32px;
+			border-radius: var(--bb-rl-radius-full);
+			object-fit: cover;
+			margin-right: var(--bb-rl-space-100);
+		}
+
+		.member-name a {
+			color: var(--bb-rl-text-color);
+			font-size: 14px;
+			font-weight: 500;
+		}
+	}
+
+	.bb-panel-footer {
+		display: none;
+	}
+}
+
 @media screen and (min-width: 1081px) {
 
 	.bb-groups-messages-left {
-        border-right: 1px solid var(--bb-rl-border-secondary-color);
-    }
+		border-right: 1px solid var(--bb-rl-border-secondary-color);
+	}
 }
