@@ -218,8 +218,8 @@ if ( 0 === $total_count ) {
 												</g>
 											</svg>
 										</div>
-										<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></span></div>
-										<div class="dz-video-thumbnail"></span></div>
+										<div class="dz-progress-count"><span><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></span></div>
+										<div class="dz-video-thumbnail"></div>
 									</div>
 								</div>
 								<?php
