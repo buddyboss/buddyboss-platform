@@ -58,7 +58,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			</div>
 			<div class="data-head data-head-origin <?php echo esc_attr( $active_group_class ); ?>" data-target="group">
 				<?php
-				if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $scope ) && 'personal' !== $scope ) {
+				if ( bp_is_document_directory() && bp_is_active( 'groups' ) && ( ( isset( $scope ) && 'personal' !== $scope ) || bp_is_document_directory() ) ) {
 					?>
 					<span>
 					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
