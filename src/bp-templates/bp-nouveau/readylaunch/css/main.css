@@ -8293,6 +8293,14 @@ li.bb-rl-hideshow {
   content: "\eaf0";
 }
 
+.bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-xprofile-change-avatar a::before {
+  content: "\e4d2";
+}
+
+.bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item[id*="bb-rl-xprofile-edit-"] a::before {
+  content: "\e4ca";
+}
+
 .bb-rl-widget-sidebar .widget {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
@@ -14774,12 +14782,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   display: inline-flex;
   align-items: center;
-}
-
-.bb-rl-main-nav-list #bb-rl-notifications-personal-li,
-.bb-rl-main-nav-list #bb-rl-messages-personal-li,
-.bb-rl-main-nav-list #bb-rl-settings-personal-li {
-  display: none;
 }
 
 .bb-rl-profile-avatar {

@@ -185,5 +185,17 @@
 				content: "\eaf0";
 			}
 		}
+
+		&#bb-rl-xprofile-change-avatar {
+			a::before {
+				content: "\e4d2";
+			}
+		}
+
+		&[id*="bb-rl-xprofile-edit-"] {
+			a::before {
+				content: "\e4ca";
+			}
+		}
 	}
 }

@@ -165,12 +165,6 @@
   align-items: center;
 }
 
-.bb-rl-main-nav-list #bb-rl-notifications-personal-li,
-.bb-rl-main-nav-list #bb-rl-messages-personal-li,
-.bb-rl-main-nav-list #bb-rl-settings-personal-li {
-  display: none;
-}
-
 .bb-rl-profile-avatar {
   width: 144px;
   height: 144px;
