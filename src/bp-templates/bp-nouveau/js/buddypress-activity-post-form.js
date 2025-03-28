@@ -728,6 +728,8 @@ window.bp = window.bp || {};
 					self.activityToolbar.toggleVideoSelector( bpActivityEvent );
 				}
 
+				self.postForm.$el.addClass( 'media-uploading draft-video-uploading' );
+
 				// Make tool box button disable.
 				if ( tool_box.find( '#activity-media-button' ) ) {
 					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
@@ -1486,6 +1488,7 @@ window.bp = window.bp || {};
 						}
 					}
 				}
+				$( 'form.draft-video-uploading.media-uploading' ).removeClass( 'draft-video-uploading media-uploading' );
 			}
 
 			return draft_data;
@@ -2584,7 +2587,11 @@ window.bp = window.bp || {};
 					'complete',
 					function() {
 						if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
-							self.$el.closest( '#whats-new-form').removeClass( 'media-uploading' );
+							// if form do not have draft-video-uploading class then remove media-uploading class.
+							var $form = self.$el.closest( '#whats-new-form' );
+							if ( 'undefined' !== typeof $form && ! $form.hasClass( 'draft-video-uploading' ) ) {
+								$form.removeClass( 'media-uploading' );
+							}
 						}
 					}
 				);
