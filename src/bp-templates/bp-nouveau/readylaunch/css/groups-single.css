@@ -2624,22 +2624,11 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 #group-messages-container {
+  display: flex;
   background: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-lg);
   margin: 0 auto;
   padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
-}
-
-#group-messages-container .bb-groups-messages-right-top {
-  margin-left: calc(var(--bb-rl-space-200) * -1);
-  margin-right: calc(var(--bb-rl-space-200) * -1);
-  padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-}
-
-#group-messages-container .bb-title,
-#group-messages-container .group-messages-compose {
-  display: none;
 }
 
 #group-messages-container .bp-messages-feedback-hide {
@@ -2703,18 +2692,77 @@ div#bp-group-message-content {
   flex-flow: column;
 }
 
-.group-messages.public-message .bb-groups-messages-right #send_group_message_form {
+.group-messages .bb-groups-messages-left {
+  flex: 0 0 360px;
+  min-width: 0;
+}
+
+.group-messages .bb-groups-messages-right {
+  flex: 1;
+}
+
+.group-messages .bb-groups-messages-right .bb-title,
+.group-messages .bb-groups-messages-right .group-messages-compose {
+  display: none;
+}
+
+.group-messages .bb-groups-messages-right .bb-groups-messages-right-top {
+  margin-left: calc(var(--bb-rl-space-200)* -1);
+  margin-right: calc(var(--bb-rl-space-200)* -1);
+  padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.group-messages .bb-groups-messages-right.full_width .bb-groups-messages-right-top {
+  padding-bottom: var(--bb-rl-space-200);
+}
+
+.group-messages .bb-groups-messages-right.full_width .bb-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--bb-rl-space-100);
+  margin-top: -5px;
+}
+
+.group-messages .bb-groups-messages-right.full_width .group-messages-compose {
+  font-size: 0;
+}
+
+.group-messages .bb-groups-messages-right.full_width .group-messages-compose:before {
+  content: "\e34c";
+  color: var(--bb-rl-icon-color);
+  font-size: 24px;
+  font-family: bb-icons-rl;
+}
+
+.group-messages .bb-groups-messages-right.full_width #send_group_message_form {
+  min-height: auto;
+  height: auto;
+}
+
+.group-messages .bb-groups-messages-right.full_width #send_group_message_form .group-messages-helper-text {
+  display: none;
+}
+
+.group-messages .bb-groups-messages-right.full_width .bb-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.group-messages .bb-groups-messages-right #send_group_message_form {
   min-height: 50vh;
   height: 500px;
   display: flex;
   flex-direction: column;
 }
 
-.group-messages.public-message .bb-groups-messages-right .medium-editor-element {
+.group-messages .bb-groups-messages-right .medium-editor-element {
   outline: none;
 }
 
-.group-messages.public-message .bb-groups-messages-right .medium-editor-element:not(.emojionearea) {
+.group-messages .bb-groups-messages-right .medium-editor-element:not(.emojionearea) {
   font-size: 14px;
   max-height: 300px;
   min-height: 55px;
@@ -2723,8 +2771,14 @@ div#bp-group-message-content {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
-.group-messages.public-message .bb-groups-messages-right .medium-editor-element:after {
+.group-messages .bb-groups-messages-right .medium-editor-element:after {
   color: var(--bb-rl-text-tertiary-color);
+  pointer-events: none;
+}
+
+.group-messages .bb-groups-messages-right .medium-editor-element img.emoji,
+.group-messages .bb-groups-messages-right .medium-editor-element img.emojioneemoji {
+  vertical-align: middle;
 }
 
 .bb-groups-messages-right-bottom {
@@ -2788,6 +2842,11 @@ div#bp-group-message-content {
 
 .bb-groups-messages-right-bottom .post-elements-buttons-item .emojionearea .emojionearea-button.active:before {
   color: var(--bb-rl-icon-color);
+}
+
+.bb-groups-messages-right-bottom .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+  top: auto;
+  bottom: 40px;
 }
 
 .bb-groups-messages-right-bottom .bb-rl-separator {
@@ -2872,10 +2931,18 @@ div#bp-group-message-content {
 
 .bb-groups-messages-right-bottom #whats-new-toolbar:has(.medium-editor-toolbar.active) {
   margin-top: 45px;
+  visibility: visible;
 }
 
 .bb-groups-messages-right-bottom #bb-rl-editor-toolbar {
   position: absolute;
   left: 0;
   bottom: 45px;
+  visibility: hidden;
+}
+
+@media screen and (min-width: 1081px) {
+  .bb-groups-messages-left {
+    border-right: 1px solid var(--bb-rl-border-secondary-color);
+  }
 }

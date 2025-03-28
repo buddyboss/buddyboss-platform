@@ -34,23 +34,11 @@
 }
 
 #group-messages-container {
+	display: flex;
 	background: var(--bb-rl-background-color);
 	border-radius: var(--bb-rl-radius-lg);
 	margin: 0 auto;
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
-
-	.bb-groups-messages-right-top {
-		margin-left: calc(var(--bb-rl-space-200) * -1);
-		margin-right: calc(var(--bb-rl-space-200) * -1);
-		padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
-		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-	}
-
-
-	.bb-title,
-	.group-messages-compose {
-		display: none;
-	}
 
 	.bp-messages-feedback-hide {
 		display: none;
@@ -114,9 +102,68 @@ div#bp-group-message-content {
 	flex-flow: column;
 }
 
-.group-messages.public-message {
+.group-messages {
+
+	.bb-groups-messages-left {
+		flex: 0 0 360px;
+		min-width: 0;
+	}
 
 	.bb-groups-messages-right {
+		flex: 1;
+
+		.bb-title,
+		.group-messages-compose {
+			display: none;
+		}
+
+		.bb-groups-messages-right-top {
+			margin-left: calc(var(--bb-rl-space-200)* -1);
+			margin-right: calc(var(--bb-rl-space-200)* -1);
+			padding: 0 var(--bb-rl-space-200) var(--bb-rl-space-100);
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		}
+
+		&.full_width {
+
+			.bb-groups-messages-right-top {
+				padding-bottom: var(--bb-rl-space-200);
+			}
+
+			.bb-title-wrap {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding-bottom: var(--bb-rl-space-100);
+				margin-top: -5px;
+			}
+
+			.group-messages-compose {
+				font-size: 0;
+
+				&:before {
+					content: "\e34c";
+					color: var(--bb-rl-icon-color);
+					font-size: 24px;
+					font-family: bb-icons-rl;
+				}
+			}
+
+			#send_group_message_form {
+				min-height: auto;
+				height: auto;
+
+				.group-messages-helper-text {
+					display: none;
+				}
+			}
+
+			.bb-title {
+				display: block;
+				font-size: 16px;
+				font-weight: 500;
+			}
+		}
 
 		#send_group_message_form {
 			min-height: 50vh;
@@ -139,6 +186,12 @@ div#bp-group-message-content {
 
 			&:after {
 				color: var(--bb-rl-text-tertiary-color);
+				pointer-events: none;
+			}
+
+			img.emoji,
+			img.emojioneemoji {
+				vertical-align: middle;
 			}
 		}
 	}
@@ -204,6 +257,11 @@ div#bp-group-message-content {
 				}
 			}
 		}
+	}
+
+	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+		top: auto;
+		bottom: 40px;
 	}
 
 	.bb-rl-separator {
@@ -288,11 +346,20 @@ div#bp-group-message-content {
 
 	#whats-new-toolbar:has(.medium-editor-toolbar.active) {
 		margin-top: 45px;
+		visibility: visible;
 	}
 
 	#bb-rl-editor-toolbar {
 		position: absolute;
 		left: 0;
 		bottom: 45px;
+		visibility: hidden;
 	}
+}
+
+@media screen and (min-width: 1081px) {
+
+	.bb-groups-messages-left {
+        border-right: 1px solid var(--bb-rl-border-secondary-color);
+    }
 }
