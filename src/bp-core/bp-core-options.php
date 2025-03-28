@@ -2963,7 +2963,7 @@ function bb_get_enabled_activity_sorting_options( $args = array() ) {
 /**
  * Check whether activity search is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param bool $default Default: true.
  *
@@ -2974,7 +2974,7 @@ function bb_is_activity_search_enabled( $default = true ) {
 	/**
 	 * Filters whether activity search is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.20
 	 *
 	 * @param bool $value Is activity search enabled.
 	 */

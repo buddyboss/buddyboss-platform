@@ -102,7 +102,16 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
-				<span class="selected"><?php echo strtolower( esc_html( $filters_labels[ $default_selected ] ) ); ?></span>
+				<span class="selected">
+					<?php
+						$default_filter_label = $filters_labels[ $default_selected ];
+						if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
+							$default_filter_label = strtolower( $default_filter_label );
+						}
+						echo esc_html( $default_filter_label );
+						unset( $default_filter_label );
+					?>
+				</span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 			<div id="bb-subnav-filter-show" class="subnav-filters-modal">

@@ -193,7 +193,7 @@ add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_temp
 
 add_filter( 'bp_ajax_querystring', 'bb_activity_directory_set_pagination', 20, 2 );
 
-// Clear activity parent cache when activity is deleted or saved.	
+// Clear activity parent cache when activity is deleted or saved.
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
@@ -3808,7 +3808,7 @@ function bb_activity_directory_set_pagination( $querystring, $object ) {
 /**
  * Filter the members loop on a followers page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array|string $qs The querystring for the BP loop.
  * @param str          $object The current object for the querystring.
@@ -3839,35 +3839,9 @@ function bb_add_member_followers_scope_filter( $qs, $object ) {
 add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
 
 /**
- * Load the class to schedule the activity post.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_activity_init_activity_schedule() {
-	BB_Activity_Schedule::instance();
-}
-
-add_action( 'bp_init', 'bb_activity_init_activity_schedule' );
-
-/**
- * Update date_updated on reactions.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $activity_id ID of the activity item being favorited.
- * @param int $user_id     ID of the user doing the favoriting.
- *
- * @return void
- */
-function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
-	$activity = bb_activity_get_raw_db_object( $activity_id );
-	bb_activity_update_date_updated_and_clear_cache( $activity );
-}
-
-/**
  * Clear activity parent cache for one or more activities.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
  *
@@ -3898,8 +3872,8 @@ function bb_clear_activity_parent_cache( $activities ) {
 
 /**
  * Clear activity comment parent cache.
- * 
- * @since BuddyBoss [BBVERSION]
+ *
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
  *
@@ -3931,9 +3905,9 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
 				)
 			);
 			if ( $main_activity_id ) {
-				wp_cache_delete( 
-					'bb_activity_comment_parent_' . $activity_id . '_' . $main_activity_id, 
-					'bb_activity_comment_parents' 
+				wp_cache_delete(
+					'bb_activity_comment_parent_' . $activity_id . '_' . $main_activity_id,
+					'bb_activity_comment_parents'
 				);
 			}
 		}
@@ -3943,7 +3917,7 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
 /**
  * Clear all activity comment parent caches for a main activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array $activities Array of activities.
  *
@@ -3964,7 +3938,7 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 		foreach ( $activity_ids as $activity_id ) {
 			$comment_ids = $wpdb->get_col(
 				$wpdb->prepare(
-					"SELECT id FROM {$bp->activity->table_name} 
+					"SELECT id FROM {$bp->activity->table_name}
 					WHERE item_id = %d AND type = 'activity_comment'",
 					$activity_id
 				)
@@ -3974,9 +3948,9 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 
 				// Clear cache for each comment.
 				foreach ( $comment_ids as $comment_id ) {
-					wp_cache_delete( 
-						'bb_activity_comment_parent_' . $comment_id . '_' . $activity_id, 
-						'bb_activity_comment_parents' 
+					wp_cache_delete(
+						'bb_activity_comment_parent_' . $comment_id . '_' . $activity_id,
+						'bb_activity_comment_parents'
 					);
 				}
 			}

@@ -237,7 +237,7 @@ function bp_nouveau_activity_timestamp() {
 /**
  * Output the Activity updated timestamp into the bp-updated-timestamp attribute.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_nouveau_activity_updated_timestamp() {
 	echo esc_attr( bb_nouveau_get_activity_updated_timestamp() );
@@ -264,7 +264,7 @@ function bp_nouveau_get_activity_timestamp() {
 /**
  * Get the Activity updated timestamp.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @return integer The Activity updated timestamp.
  */
@@ -272,7 +272,7 @@ function bb_nouveau_get_activity_updated_timestamp() {
 	/**
 	 * Filter here to edit the activity updated timestamp.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.20
 	 *
 	 * @param integer $value The Activity updated timestamp.
 	 */

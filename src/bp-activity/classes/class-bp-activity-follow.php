@@ -247,7 +247,7 @@ class BP_Activity_Follow {
 			/**
 			 * Retrieves the count of users following a specific user.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param int $user_id The user ID for whom the follower count is being retrieved.
 			 *
@@ -258,7 +258,7 @@ class BP_Activity_Follow {
 			/**
 			 * Filters the SELECT clause for retrieving the follower count.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param string $select The SELECT clause of the SQL query.
 			 * @param string $type   The type of data being queried, e.g., 'follower_id'.
@@ -270,7 +270,7 @@ class BP_Activity_Follow {
 			/**
 			 * Filters the WHERE clause for retrieving the follower count.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param array  $where Array of WHERE clause conditions.
 			 * @param string $type  The type of data being queried, e.g., 'follower_id'.
@@ -292,7 +292,7 @@ class BP_Activity_Follow {
 			/**
 			 * Retrieves the count of users being followed by a specific user.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param int $user_id The user ID for whom the follow count is being retrieved.
 			 *
@@ -303,7 +303,7 @@ class BP_Activity_Follow {
 			/**
 			 * Filters the SELECT clause for retrieving the follow count.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param string $select The SELECT clause of the SQL query.
 			 * @param string $type   The type of data being queried, e.g., 'leader_id'.
@@ -315,7 +315,7 @@ class BP_Activity_Follow {
 			/**
 			 * Filters the WHERE clause for retrieving the follow count.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.8.20
 			 *
 			 * @param array  $where Array of WHERE clause conditions.
 			 * @param string $type  The type of data being queried, e.g., 'leader_id'.
