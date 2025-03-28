@@ -2231,8 +2231,16 @@ function bbp_get_topic_types( $topic_id = 0 ) {
  * @return array IDs of sticky topics of a forum or super stickies
  */
 function bbp_get_stickies( $forum_id = 0 ) {
-	$stickies = empty( $forum_id ) ? bbp_get_super_stickies() : get_post_meta( $forum_id, '_bbp_sticky_topics', true );
-	$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+	$cache_key = 'bb_stickies_forum_' . $forum_id;
+	$stickies  = wp_cache_get( $cache_key, 'bbpress' );
+
+	if ( false === $stickies ) {
+		$stickies = empty( $forum_id ) ? bbp_get_super_stickies() : get_post_meta( $forum_id, '_bbp_sticky_topics', true );
+		$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+		wp_cache_set( $cache_key, $stickies, 'bbpress_posts' );
+	}
 
 	return apply_filters( 'bbp_get_stickies', $stickies, (int) $forum_id );
 }
@@ -2247,8 +2255,18 @@ function bbp_get_stickies( $forum_id = 0 ) {
  * @return array IDs of super sticky topics
  */
 function bbp_get_super_stickies() {
-	$stickies = get_option( '_bbp_super_sticky_topics', array() );
-	$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+	// Try to get super stickies from cache first.
+	$cache_key = 'bb_super_sticky_topics';
+	$stickies  = wp_cache_get( $cache_key, 'bbpress_posts' );
+
+	// If not in cache, get from database and cache it.
+	if ( false === $stickies ) {
+		$stickies = get_option( '_bbp_super_sticky_topics', array() );
+		$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+		wp_cache_set( $cache_key, $stickies, 'bbpress_posts' );
+	}
 
 	return apply_filters( 'bbp_get_super_stickies', $stickies );
 }
@@ -3320,6 +3338,14 @@ function bbp_stick_topic( $topic_id = 0, $super = false ) {
 	$stickies = array_values( $stickies );
 	$success  = ! empty( $super ) ? update_option( '_bbp_super_sticky_topics', $stickies ) : update_post_meta( $forum_id, '_bbp_sticky_topics', $stickies );
 
+	if ( $success ) {
+		if ( $super ) {
+			wp_cache_delete( 'bb_super_sticky_topics', 'bbpress_posts' );
+		} else {
+			wp_cache_delete( 'bb_stickies_forum_' . $forum_id, 'bbpress_posts' );
+		}
+	}
+
 	do_action( 'bbp_sticked_topic', $topic_id, $super, $success );
 
 	return (bool) $success;
@@ -3364,6 +3390,14 @@ function bbp_unstick_topic( $topic_id = 0 ) {
 			$success = ! empty( $super ) ? delete_option( '_bbp_super_sticky_topics' ) : delete_post_meta( $forum_id, '_bbp_sticky_topics' );
 		} else {
 			$success = ! empty( $super ) ? update_option( '_bbp_super_sticky_topics', $stickies ) : update_post_meta( $forum_id, '_bbp_sticky_topics', $stickies );
+		}
+	}
+
+	if ( $success ) {
+		if ( $super ) {
+			wp_cache_delete( 'bb_super_sticky_topics', 'bbpress_posts' );
+		} else {
+			wp_cache_delete( 'bb_stickies_forum_' . $forum_id, 'bbpress_posts' );
 		}
 	}
 
