@@ -86,7 +86,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 
 				if ( $is_enable_profile_avatar && buddypress()->avatar->show_avatars ) { ?>
 					<li class="bb-rl-profile-sublist-link" id="bb-rl-xprofile-change-avatar">
-						<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-theme' ); ?></a>
+						<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss' ); ?></a>
 					</li>
 				<?php
 				}

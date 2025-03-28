@@ -2717,6 +2717,7 @@ div#bp-group-message-content {
 .group-messages.public-message .bb-groups-messages-right .medium-editor-element:not(.emojionearea) {
   font-size: 14px;
   max-height: 300px;
+  min-height: 55px;
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);

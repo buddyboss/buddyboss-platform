@@ -32,7 +32,7 @@ if ( bp_has_profile( $args ) ) {
 					if ( bp_is_my_profile() ) {
 						?>
 						<div class="bb-rl-see-all">
-							<a href="<?php echo esc_url( $edit_profile_link . bp_get_the_profile_group_id() ); ?>"><?php esc_attr_e( 'Edit', 'buddyboss-theme' ); ?></a>
+							<a href="<?php echo esc_url( $edit_profile_link . bp_get_the_profile_group_id() ); ?>"><?php esc_attr_e( 'Edit', 'buddyboss' ); ?></a>
 						</div>
 						<?php
 					}
