@@ -1281,6 +1281,9 @@ function bp_nouveau_nav_has_count() {
 					} elseif ( 'following' === $nav_item->slug ) {
 						$counts = bp_total_follow_counts();
 						$count  = $counts['following'];
+					} elseif ( 'followers' === $nav_item->slug ) {
+						$counts = bp_total_follow_counts();
+						$count  = $counts['followers'];
 					}
 				} elseif ( bp_is_groups_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
@@ -1368,6 +1371,9 @@ function bp_nouveau_get_nav_count() {
 						// Following count.
 						$counts = bp_total_follow_counts();
 						$count  = $counts['following'];
+					} elseif ( 'followers' === $nav_item->slug ) {
+						$counts = bp_total_follow_counts();
+						$count  = $counts['followers'];
 					}
 				} elseif ( bp_is_groups_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
@@ -2007,7 +2013,6 @@ function bp_nouveau_search_form() {
 
 	$objects = bp_nouveau_get_search_objects();
 	if ( empty( $objects['primary'] ) || empty( $objects['secondary'] ) ) {
-		echo $search_form_html;
 		return;
 	}
 
@@ -2098,6 +2103,16 @@ function bp_nouveau_search_form() {
 			 */
 			do_action( 'bp_group_activity_syndication_options' );
 		}
+	} elseif ( 'member' === $objects['primary'] && 'activity' === $objects['secondary'] ) {
+
+		echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
+
+		/**
+		 * Fires before the display of the activity syndication options.
+		 *
+		 * @since BuddyBoss 2.8.20
+		 */
+		do_action( 'bp_activity_syndication_options' );
 	}
 }
 

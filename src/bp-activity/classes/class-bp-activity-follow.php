@@ -235,6 +235,7 @@ class BP_Activity_Follow {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID to fetch counts for.
+	 *
 	 * @return array
 	 */
 	public static function get_counts( $user_id ) {
@@ -243,14 +244,88 @@ class BP_Activity_Follow {
 		$followers = wp_cache_get( 'bp_total_follower_for_user_' . $user_id, 'bp' );
 
 		if ( false === $followers ) {
-			$followers = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id ) );
+			/**
+			 * Retrieves the count of users following a specific user.
+			 *
+			 * @since BuddyBoss 2.8.20
+			 *
+			 * @param int $user_id The user ID for whom the follower count is being retrieved.
+			 *
+			 * @return int The count of followers for the specified user.
+			 */
+			$sql['select'] = "SELECT COUNT(u.id) FROM {$bp->activity->table_name_follow} u";
+
+			/**
+			 * Filters the SELECT clause for retrieving the follower count.
+			 *
+			 * @since BuddyBoss 2.8.20
+			 *
+			 * @param string $select The SELECT clause of the SQL query.
+			 * @param string $type   The type of data being queried, e.g., 'follower_id'.
+			 */
+			$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'follower_id' );
+
+			$sql['where'][] = $wpdb->prepare( "u.leader_id = %d", $user_id );
+
+			/**
+			 * Filters the WHERE clause for retrieving the follower count.
+			 *
+			 * @since BuddyBoss 2.8.20
+			 *
+			 * @param array  $where Array of WHERE clause conditions.
+			 * @param string $type  The type of data being queried, e.g., 'follower_id'.
+			 */
+			$sql['where'] = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'follower_id' );
+
+			$where_sql = 'WHERE ' . join( ' AND ', $sql['where'] );
+
+			$sql       = "{$sql['select']} {$where_sql}";
+			$followers = $wpdb->get_var( $sql );
 			wp_cache_set( 'bp_total_follower_for_user_' . $user_id, $followers, 'bp' );
 		}
 
 		$following = wp_cache_get( 'bp_total_following_for_user_' . $user_id, 'bp' );
 
 		if ( false === $following ) {
-			$following = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id ) );
+			$sql = array();
+
+			/**
+			 * Retrieves the count of users being followed by a specific user.
+			 *
+			 * @since BuddyBoss 2.8.20
+			 *
+			 * @param int $user_id The user ID for whom the follow count is being retrieved.
+			 *
+			 * @return int The count of users the specified user is following.
+			 */
+			$sql['select'] = "SELECT COUNT(u.id) FROM {$bp->activity->table_name_follow} u";
+
+			/**
+			 * Filters the SELECT clause for retrieving the follow count.
+			 *
+			 * @since BuddyBoss 2.8.20
+			 *
+			 * @param string $select The SELECT clause of the SQL query.
+			 * @param string $type   The type of data being queried, e.g., 'leader_id'.
+			 */
+			$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'leader_id' );
+
+			$sql['where'][] = $wpdb->prepare( "u.follower_id = %d", $user_id );
+
+			/**
+			 * Filters the WHERE clause for retrieving the follow count.
+			 *
+			 * @since BuddyBoss 2.8.20
+			 *
+			 * @param array  $where Array of WHERE clause conditions.
+			 * @param string $type  The type of data being queried, e.g., 'leader_id'.
+			 */
+			$sql['where'] = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'leader_id' );
+
+			$where_sql = 'WHERE ' . join( ' AND ', $sql['where'] );
+
+			$sql       = "{$sql['select']} {$where_sql}";
+			$following = $wpdb->get_var( $sql );
 			wp_cache_set( 'bp_total_following_for_user_' . $user_id, $following, 'bp' );
 		}
 

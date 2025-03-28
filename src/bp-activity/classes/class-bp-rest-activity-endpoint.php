@@ -3071,7 +3071,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
 			'default'           => '',
 			'type'              => 'string',
-			'enum'              => array( 'id', 'include' ),
+			'enum'              => array( 'id', 'include', 'date_recorded', 'date_updated' ),
 			'sanitize_callback' => 'sanitize_key',
 		);
 
@@ -3272,9 +3272,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if (
 			bp_loggedin_user_id()
 			&& (
-				'all' === $scope
-				|| empty( $scope )
-				|| 'just-me' === $scope
+				'all' === $scope ||
+				empty( $scope ) ||
+				(
+					'just-me' === $scope &&
+					empty( $user_id )
+				)
 			)
 		) {
 			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {
@@ -3284,10 +3287,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 				if (
 					empty( $user_id ) ||
-					(
-						bp_loggedin_user_id() === $user_id &&
-						( ! function_exists( 'bp_is_activity_tabs_active' ) || ! bp_is_activity_tabs_active() )
-					)
+					bp_loggedin_user_id() === $user_id
 				) {
 					if ( empty( $user_id ) ) {
 						$new_scope[] = 'public';
