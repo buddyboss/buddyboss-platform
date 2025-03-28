@@ -1695,7 +1695,7 @@ function bb_add_subgroups_args_single_home( $args ) {
 /**
  * Add group hover card template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_group_card_template() {
 	bp_get_template_part( 'groups/group-card' );

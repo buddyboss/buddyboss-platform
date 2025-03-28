@@ -1802,7 +1802,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool
 	 */
-	protected function bp_rest_user_can_join( $item ) {
+	public function bp_rest_user_can_join( $item ) {
 		$user_id = get_current_user_id();
 		if ( empty( $user_id ) ) {
 			return false;

@@ -192,10 +192,7 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 			$counts = bp_total_follow_counts();
 			if ( ! empty( $counts['following'] ) ) {
-				add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
-				bp_has_members( bp_ajax_querystring( 'members' ) );
-				$results['scopes']['following'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-				remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
+				$results['scopes']['following'] = bp_core_number_format( $counts['following'] );
 			}
 
 			// Followers.
@@ -360,7 +357,7 @@ function bp_nouveau_ajax_save_cover_position() {
 /**
  * Object template results members followers scope.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param string $querystring The querystring for the BP loop.	
  * @param string $object The current object for the querystring.

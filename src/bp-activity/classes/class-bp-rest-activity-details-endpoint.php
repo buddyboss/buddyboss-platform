@@ -178,14 +178,47 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_activities_tabs() {
-		$nav_items = function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ? bp_nouveau_get_activity_directory_nav_items() : $this->bp_rest_legacy_get_activity_directory_nav_items();
-		$nav       = array();
+		$nav = array();
 
-		if ( ! empty( $nav_items ) ) {
-			foreach ( $nav_items as $key => $item ) {
-				$nav[ $key ]['title']    = $item['text'];
-				$nav[ $key ]['position'] = $item['position'];
-				$nav[ $key ]['slug']     = ! empty( $item['slug'] ) ? $item['slug'] : $key;
+		if ( function_exists( 'bb_get_enabled_activity_filter_options' ) ) {
+			$activity_filters = bb_get_enabled_activity_filter_options();
+			$filters_labels   = bb_get_activity_filter_options_labels();
+
+			// Allow valid options only.
+			$activity_filters = bb_filter_activity_filter_scope_keys( $activity_filters );
+			arsort( $activity_filters );
+			if ( ! empty( $activity_filters ) ) {
+				$i = 1;
+				foreach ( $activity_filters as $key => $is_enabled ) {
+					if (
+						empty( $is_enabled ) ||
+						empty( $filters_labels[ $key ] ) ||
+						(
+							'all' !== $key &&
+							! is_user_logged_in()
+						)
+					) {
+						continue;
+					}
+
+					$nav[ $key ] = array(
+						'title'    => $filters_labels[ $key ],
+						'position' => $i,
+						'slug'     => $key,
+					);
+					++$i;
+				}
+			}
+			unset( $activity_filters, $filters_labels, $i );
+		} else {
+
+			$nav_items = function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ? bp_nouveau_get_activity_directory_nav_items() : $this->bp_rest_legacy_get_activity_directory_nav_items();
+			if ( ! empty( $nav_items ) ) {
+				foreach ( $nav_items as $key => $item ) {
+					$nav[ $key ]['title']    = $item['text'];
+					$nav[ $key ]['position'] = $item['position'];
+					$nav[ $key ]['slug']     = ! empty( $item['slug'] ) ? $item['slug'] : $key;
+				}
 			}
 		}
 

@@ -104,7 +104,7 @@ class BP_Activity_Activity {
 	/**
 	 * The date the activity item was recorded, in 'Y-m-d h:i:s' format.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.20
 	 * @var string
 	 */
 	var $date_updated;

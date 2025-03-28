@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.7.2
 Requires PHP: 8.0
-Stable tag: 2.8.10
+Stable tag: 2.8.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,17 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.20 =
+* Enhancement: Activity - Added hover pop-ups for improved interaction—hovering over a user's avatar now displays a user pop-up, and hovering over a group link in the feed shows a group pop-up
+* Enhancement: Activity - Enhanced the user experience with improved activity sorting and filtering functionality
+* Enhancement: Members - Introduced a new Followers page, allowing users to view a list of people following them
+* Bug: Core - Fixed an issue where display names showed as nicknames in wp-admin and caused inconsistencies between the member directory on mobile and web
+* Bug: Core - Fixed an issue where moderation component texts appeared during browser print of a LearnDash lesson with non-BuddyBoss themes
+* Bug: Elementor - Resolved an issue where the BuddyBoss Platform was restricting the display of Elementor maintenance mode content
+* Bug: Email - Resolved an issue with the recipient name token in the Activation Email Template
+* Bug: Forums - Resolved an issue where incomplete HTML tags in forum replies were breaking the page layout
+* Bug: Moderation - Resolved incorrect counts for "My Connections" and "Following" when a member is suspended
 
 = 2.8.10 =
 * Enhancement: Added new settings to allow admins to enable or disable member and group counts on the Members and Groups directory pages

@@ -263,7 +263,7 @@ add_action( 'bp_activity_after_delete', 'bb_activity_comment_reset_count' );
 /**
  * Reset cache incrementor for the activity when privacy is changed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity $activity Activity object.
  */

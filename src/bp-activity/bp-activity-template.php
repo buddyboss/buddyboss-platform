@@ -801,7 +801,7 @@ function bp_activity_date_recorded() {
 /**
  * Output the date the activity was updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_activity_date_updated() {
 	echo bb_get_activity_date_updated();
@@ -832,7 +832,7 @@ function bp_get_activity_date_recorded() {
 /**
  * Return the date the activity was updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @global object $activities_template {@link BP_Activity_Template}
  *
@@ -844,7 +844,7 @@ function bb_get_activity_date_updated() {
 	/**
 	 * Filters the date the activity was updated.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.8.20
 	 *
 	 * @param int $date_updated The activity's date.
 	 */
