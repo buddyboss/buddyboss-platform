@@ -3034,12 +3034,12 @@ window.bp = window.bp || {};
 
 			var $document = $( document ),
 				$editFileModal = $( '#bb-rl-media-edit-file' ),
-				media_item = $( event.currentTarget ).closest( '.media-folder_items' )
+				media_item = $( event.currentTarget ).closest( '.media-folder_items' ),
 				current_name = media_item.find( '.media-folder_name' ),
 				current_name_text = current_name.children( 'span' ).text(),
 				activity_id = media_item.data( 'activity-id' ),
 				document_id = media_item.data( 'id' ),
-				document_attachment_id = media_item.find( '.media-folder_name' ).data( 'attachment-id' );
+				document_attachment_id = media_item.find( '.media-folder_name' ).data( 'attachment-id' ),
 				document_privacy = media_item.find( '.media-folder_name' ).data( 'privacy' );
 
 			$editFileModal.show();
@@ -3193,8 +3193,6 @@ window.bp = window.bp || {};
 				$modal 					  = eventTarget.closest( '#bb-rl-media-edit-file' ),
 				$documentDataId 		  = $modal.attr( 'data-id' ),
 				$mediaItem                = $( '.media-folder_items[data-id="' + $documentDataId + '"]' ),
-				document_privacy          = $modal.attr( 'data-privacy' ),
-				document_privacy_val      = $modal.find( '#bb-rl-folder-privacy' ).val(),
 				document_edit             = $modal.find( '#bb-document-title' ),
 				document_name             = $mediaItem.find( '.media-folder_name > span' ),
 				document_name_update_data = $mediaItem.find( '.media-folder_name' ),
@@ -4572,13 +4570,12 @@ window.bp = window.bp || {};
 					if ( data_extension === 'html' || data_extension === 'htm' ) { // HTML file need specific mode.
 						fileMode = 'text/html';
 					}
-					var text_file = $this.find( '.bb-rl-document-text-file-data-hidden' ).length > 0 ? $this.find( '.bb-rl-document-text-file-data-hidden' ).val() : $this.find( '.document-text-file-data-hidden' ).val();
 					if ( data_extension === 'js' ) { // mode not needed for javascript file.
 						/* jshint ignore:start */
 						var myCodeMirror = CodeMirror(
 							$this[ 0 ],
 							{
-								value: text_file,
+								value: $this.find( '.bb-rl-document-text-file-data-hidden' ).length > 0 ? $this.find( '.bb-rl-document-text-file-data-hidden' ).val() : $this.find( '.document-text-file-data-hidden' ).val(),
 								lineNumbers: true,
 								theme: 'default',
 								readOnly: true,
@@ -4591,7 +4588,7 @@ window.bp = window.bp || {};
 						var myCodeMirror = CodeMirror(
 							$this[ 0 ],
 							{
-								value: text_file,
+								value: $this.find( '.bb-rl-document-text-file-data-hidden' ).length > 0 ? $this.find( '.bb-rl-document-text-file-data-hidden' ).val() : $this.find( '.document-text-file-data-hidden' ).val(),
 								mode: fileMode,
 								lineNumbers: true,
 								theme: 'default',

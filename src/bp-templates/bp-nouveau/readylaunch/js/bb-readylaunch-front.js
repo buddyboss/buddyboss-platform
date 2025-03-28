@@ -103,8 +103,8 @@ window.bp = window.bp || {};
 
 			gridListFilter: function () {
 				$( '.bb-rl-filter select' ).each( function () {
-					let $this = $( this );
-					let customClass = '';
+					var $this       = $( this ),
+					    customClass = '';
 
 					if ( $this.data( 'bb-caret' ) ) {
 						customClass += ' bb-rl-caret-icon ';
@@ -130,11 +130,11 @@ window.bp = window.bp || {};
 
 			styledSelect: function () {
 				$( '.bb-rl-styled-select select' ).each( function () {
-					let $this = $( this );
-					let customClass = '';
+					var $this       = $( this ),
+					    customClass = '';
 
 					// Check if parent container has specific class
-					let $parent = $this.closest( '.bb-rl-styled-select' );
+					var $parent = $this.closest( '.bb-rl-styled-select' );
 					if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
 						customClass += ' bb-rl-select-default';
 					}
@@ -906,7 +906,7 @@ window.bp = window.bp || {};
 				$( document ).on(
 					'click',
 					'.bb-rl-hideshow .bb-rl-sub-menu a',
-					function ( e ) {
+					function () {
 						// e.preventDefault();
 						$( 'body' ).trigger( 'click' );
 

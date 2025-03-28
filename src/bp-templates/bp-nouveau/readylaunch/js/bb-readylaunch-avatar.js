@@ -1,4 +1,4 @@
-/* global bp, BP_Uploader, _, Backbone */
+/* global bp, BP_Uploader, _, Backbone, Cropper */
 
 window.bp = window.bp || {};
 
@@ -656,7 +656,7 @@ window.bp = window.bp || {};
 
 						// Function to update slider background
 						function updateSliderBackground( slider ) {
-							if ( !slider ) return;
+							if ( !slider ) { return; }
 							
 							var min = slider.min || 100;
 							var max = slider.max || 200;
