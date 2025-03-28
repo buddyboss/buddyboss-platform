@@ -9981,7 +9981,7 @@ function bb_pro_sso_version() {
 /**
  * Common function to filter activity filter options or labels based on related components and settings active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array $filters Array of filter options.
  *

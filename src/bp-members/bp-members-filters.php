@@ -1018,7 +1018,7 @@ function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
 /**
  * Add profile hover card template.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  */
 function bb_profile_card_template() {
 	bp_get_template_part( 'members/profile-card' );

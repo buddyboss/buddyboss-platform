@@ -3839,24 +3839,42 @@ function bb_add_member_followers_scope_filter( $qs, $object ) {
 add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
 
 /**
- * Update date_updated on reactions.
+ * Filter the members loop on a followers page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
- * @param int $activity_id ID of the activity item being favorited.
- * @param int $user_id     ID of the user doing the favoriting.
+ * @param array|string $qs The querystring for the BP loop.
+ * @param str          $object The current object for the querystring.
  *
- * @return void
+ * @return array|string Modified querystring
  */
-function bb_activity_update_date_updated_on_reactions( $activity_id, $user_id ) {
-	$activity = bb_activity_get_raw_db_object( $activity_id );
-	bb_activity_update_date_updated_and_clear_cache( $activity );
+function bb_add_member_followers_scope_filter( $qs, $object ) {
+	// not on the members object? stop now!
+	if ( 'members' !== $object ) {
+		return $qs;
+	}
+
+	// members directory
+	if ( ! bp_is_user() && bp_is_members_directory() ) {
+		$qs_args = bp_parse_args( $qs );
+		// check if members scope is followers before manipulating.
+		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
+			$qs .= '&include=' . bp_get_follower_ids(
+				array(
+					'user_id' => bp_loggedin_user_id(),
+				)
+			);
+		}
+	}
+
+	return $qs;
 }
+add_filter( 'bp_ajax_querystring', 'bb_add_member_followers_scope_filter', 20, 2 );
 
 /**
  * Clear activity parent cache for one or more activities.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
  *
@@ -3888,7 +3906,7 @@ function bb_clear_activity_parent_cache( $activities ) {
 /**
  * Clear activity comment parent cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param BP_Activity_Activity|array $activities Activity object or array of objects.
  *
@@ -3932,7 +3950,7 @@ function bb_clear_activity_comment_parent_cache( $activities ) {
 /**
  * Clear all activity comment parent caches for a main activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.20
  *
  * @param array $activities Array of activities.
  *
