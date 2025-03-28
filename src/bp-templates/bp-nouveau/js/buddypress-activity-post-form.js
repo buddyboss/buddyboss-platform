@@ -802,7 +802,9 @@ window.bp = window.bp || {};
 					self.activityToolbar.toggleVideoSelector( bpActivityEvent );
 				}
 
-				self.postForm.$el.addClass( 'media-uploading draft-video-uploading' );
+				if ( self.postForm.$el.hasClass( 'has-draft' ) ) {
+					self.postForm.$el.addClass( 'media-uploading draft-video-uploading' );
+				}
 
 				// Make tool box button disable.
 				if ( tool_box.find( '#activity-media-button' ) ) {
