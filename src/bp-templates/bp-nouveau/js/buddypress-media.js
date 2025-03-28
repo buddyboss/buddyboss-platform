@@ -3536,15 +3536,22 @@ window.bp = window.bp || {};
 							}
 
 							if ( response.data.id ) {
-								file.id = response.id;
-								response.data.uuid = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								file.id                = response.id;
+								response.data.uuid     = file.upload.uuid;
 								response.data.album_id = self.album_id;
 								response.data.group_id = self.group_id;
-								response.data.js_preview  = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
-								response.data.saved = false;
-								self.dropzone_media[ dropzone_obj_key ].push( response.data );
-								self.addVideoIdsToForumsForm( dropzone_container );
+
+								var thumbnailCheck = setInterval( function () {
+									if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+										response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+										response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+										response.data.saved      = false;
+										self.dropzone_media[ dropzone_obj_key ].push( response.data );
+										self.addVideoIdsToForumsForm( dropzone_container );
+										clearInterval( thumbnailCheck );
+									}
+								});
+								
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -3608,13 +3615,15 @@ window.bp = window.bp || {};
 						}
 					);
 
-					// Enable submit button when all videos are uploaded
+					// Enable submit button when all videos are uploaded.
 					self.dropzone_obj[ dropzone_obj_key ].on(
 						'complete',
 						function() {
 							if ( this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0 && this.files.length > 0 ) {
 								var formElement = target.closest( 'form' );
-								formElement.removeClass( 'media-uploading' );
+								if ( ! formElement.hasClass( 'draft-video-uploading' ) ) {
+									formElement.removeClass( 'media-uploading' );
+								}
 							}
 						}
 					);
