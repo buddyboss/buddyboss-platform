@@ -108,12 +108,6 @@
 			}
 		}
 	}
-
-	#drag-drop-area {
-		border: 1px dashed var(--bb-rl-border-tertiary-color);
-		border-radius: var(--bb-rl-radius-lg);
-		background-color: var(--bb-rl-background-secondary-color);
-	}
 }
 
 .bb-rl-delete-cover,
@@ -124,43 +118,6 @@
 	@include bb-rl-button--danger-fill;
 	padding: 6px var(--bb-rl-space-200);
 	font-size: 0.875rem;
-}
-
-.bb-rl-group-manage-form,
-#buddypress .bb-rl-group-manage-form {
-
-	.bp-cover-image-status,
-	.bp-avatar-status,
-	.bp-cover-image {
-
-		p.success,
-		p.error,
-		p.warning {
-			display: flex;
-			align-items: center;
-			padding: var(--bb-rl-space-100);
-			border: 1px solid transparent;
-			border-radius: var(--bb-rl-radius-md);
-			font-size: var(--bb-rl-font-size-sm);
-			font-weight: 500;
-			background-color: var(--bb-rl-background-secondary-color);
-		}
-
-		p.success {
-			background-color: var(--bb-rl-background-positive-secondary-color);
-			border-color: var(--bb-rl-border-positive-secondary-color);
-		}
-
-		p.error {
-			background-color: var(--bb-rl-background-danger-secondary-color);
-			border-color: var(--bb-rl-border-danger-secondary-color);
-		}
-
-		p.warning {
-			background-color: var(--bb-rl-background-warning-secondary-color);
-			border-color: var(--bb-rl-border-warning-secondary-color);
-		}
-	}
 }
 
 .bb-rl-group-manage-form {
@@ -226,30 +183,6 @@
 		padding-left: 36px;
 	}
 
-	#avatar-crop-actions {
-		display: flex;
-		align-items: center;
-		flex-direction: row-reverse;
-		gap: var(--bb-rl-space-100);
-		margin-top: var(--bb-rl-space-200);
-
-		.avatar-crop-submit {
-
-			@include bb-rl-button;
-			@include bb-rl-button--brand-fill;
-			padding: 6px var(--bb-rl-space-200);
-			font-size: 0.875rem;
-		}
-
-		.avatar-crop-cancel {
-
-			@include bb-rl-button;
-			@include bb-rl-button-secondary-fill;
-			padding: 6px var(--bb-rl-space-200);
-			font-size: 0.875rem;
-		}
-	}
-
 	.bp-avatar-nav {
 
 		ul {
@@ -282,21 +215,6 @@
 				color: var(--bb-rl-text-color);
 				background-color: var(--bb-rl-background-secondary-color);
 			}
-		}
-	}
-
-	div.bp-avatar-status,
-	div.bp-cover-image-status {
-
-		.bp-progress {
-			border: 0;
-			height: var(--bb-rl-space-100);
-		}
-
-		.bp-bar {
-			background-color: var(--bb-rl-primary-color);
-			border-radius: var(--bb-rl-radius-full);
-			height: var(--bb-rl-space-100);
 		}
 	}
 

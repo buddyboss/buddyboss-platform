@@ -338,8 +338,10 @@
 	display: block;
 	border-width: 0;
 	border-left-width: 2px;
+	border-style: solid;
 	border-radius: 0;
 	padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+	color: var(--bb-rl-text-primary-color);
 
 	@include bb-rl-label-heading-bolder;
 }

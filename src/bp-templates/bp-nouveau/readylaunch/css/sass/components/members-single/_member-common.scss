@@ -383,7 +383,8 @@
 		margin: var(--bb-rl-space-300) 0 0;
 	}
 
-	&.edit {
+	&.edit,
+	&.change-avatar {
 		max-width: 720px;
 	}
 }

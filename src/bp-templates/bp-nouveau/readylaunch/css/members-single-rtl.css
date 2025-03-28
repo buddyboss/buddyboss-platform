@@ -584,7 +584,7 @@
   margin: var(--bb-rl-space-300) 0 0;
 }
 
-.bb-rl-profile-panel.edit {
+.bb-rl-profile-panel.edit, .bb-rl-profile-panel.change-avatar {
   max-width: 720px;
 }
 
@@ -1241,8 +1241,10 @@
   display: block;
   border-width: 0;
   border-right-width: 2px;
+  border-style: solid;
   border-radius: 0;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  color: var(--bb-rl-text-primary-color);
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);

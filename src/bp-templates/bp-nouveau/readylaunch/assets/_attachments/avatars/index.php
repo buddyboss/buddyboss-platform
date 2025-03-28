@@ -59,7 +59,7 @@ if ( bp_is_group() ) {
 $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-rl-avatar-container--no-avatar';
 ?>
 <div class="bb-rl-image-headline">
-	<h3><?php esc_html_e( "Profile", 'buddyboss' ); ?></h3>
+	<h3><?php esc_html_e( "Profile photo", 'buddyboss' ); ?></h3>
 </div>
 <div class="bb-rl-image-caption">
 	<?php esc_html_e( "For best results, upload an image that is 300px by 300px or larger.", 'buddyboss' ); ?>
