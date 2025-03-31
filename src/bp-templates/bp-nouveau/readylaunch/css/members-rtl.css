@@ -284,6 +284,13 @@
   font-style: normal;
 }
 
+.bb-rl-primary-actions button.edit-profile i,
+.bb-rl-primary-actions .generic-button a.edit-profile i,
+.bb-rl-member-header-actions button.edit-profile i,
+.bb-rl-member-header-actions .generic-button a.edit-profile i {
+  margin-left: var(--bb-rl-space-50);
+}
+
 .bb-rl-primary-actions button.send-message i::before,
 .bb-rl-primary-actions button.bb-rl-send-message-disabled i::before,
 .bb-rl-primary-actions .generic-button a.send-message i::before,

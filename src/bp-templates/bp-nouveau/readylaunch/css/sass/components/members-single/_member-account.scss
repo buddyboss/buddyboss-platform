@@ -284,3 +284,97 @@
 		}
 	}
 }
+
+.bb-rl-profile-edit-wrapper {
+
+	.field-visibility-settings-header {
+		display: flex;
+		align-items: center;
+		color: var(--bb-rl-text-secondary-color);
+
+		.field-visibility-label {
+
+			@include bb-rl-label-heading;
+			display: inline-flex;
+			align-items: center;
+			margin-right: var(--bb-rl-space-100);
+		}
+
+		.current-visibility-level {
+
+			@include bb-rl-label-heading-bolder;
+			cursor: pointer;
+		}
+
+		i {
+			color: var(--bb-rl-icon-primary-color);
+			font-weight: 500;
+			font-size: 12px;
+			padding-left: var(--bb-rl-space-50);
+			cursor: pointer;
+			position: relative;
+			top: 1px;
+		}
+	}
+}
+
+.bb-rl-field-visibility-block {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	margin-top: var(--bb-rl-space-100);
+
+	.field-visibility-toggle-action {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.field-visibility-settings {
+		display: none;
+		position: absolute;
+		top: calc(100% + var(--bb-rl-space-100));
+		left: 50px;
+		min-width: 240px;
+		background-color: var(--bb-rl-background-color);
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+		border-radius: var(--bb-rl-radius-base);
+		padding: var(--bb-rl-space-100) 0;
+
+		fieldset {
+			margin: 0;
+		}
+
+		.bp-radio-wrap {
+			padding: 10px var(--bb-rl-space-200);
+
+			input[type="radio"] {
+				opacity: 0;
+
+				&:checked + label .field-visibility-text {
+					color: var(--bb-rl-text-color);
+				}
+			}
+
+			label {
+				width: 100%;
+
+				&::before,
+				&::after {
+					opacity: 0;
+				}
+
+
+			}
+		}
+
+		.field-visibility-text {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-secondary-color);
+			position: relative;
+			left: -24px;
+			width: 100%;
+		}
+	}
+}

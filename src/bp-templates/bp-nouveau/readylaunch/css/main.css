@@ -16467,3 +16467,94 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
+
+.bb-rl-profile-edit-wrapper .field-visibility-settings-header {
+  display: flex;
+  align-items: center;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-profile-edit-wrapper .field-visibility-settings-header .field-visibility-label {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-profile-edit-wrapper .field-visibility-settings-header .current-visibility-level {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  cursor: pointer;
+}
+
+.bb-rl-profile-edit-wrapper .field-visibility-settings-header i {
+  color: var(--bb-rl-icon-primary-color);
+  font-weight: 500;
+  font-size: 12px;
+  padding-left: var(--bb-rl-space-50);
+  cursor: pointer;
+  position: relative;
+  top: 1px;
+}
+
+.bb-rl-field-visibility-block {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-field-visibility-block .field-visibility-toggle-action {
+  display: inline-flex;
+  align-items: center;
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings {
+  display: none;
+  position: absolute;
+  top: calc(100% + var(--bb-rl-space-100));
+  left: 50px;
+  min-width: 240px;
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  border-radius: var(--bb-rl-radius-base);
+  padding: var(--bb-rl-space-100) 0;
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings fieldset {
+  margin: 0;
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap {
+  padding: 10px var(--bb-rl-space-200);
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap input[type="radio"] {
+  opacity: 0;
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap input[type="radio"]:checked + label .field-visibility-text {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap label {
+  width: 100%;
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap label::before, .bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap label::after {
+  opacity: 0;
+}
+
+.bb-rl-field-visibility-block .field-visibility-settings .field-visibility-text {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  position: relative;
+  left: -24px;
+  width: 100%;
+}
