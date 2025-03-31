@@ -5588,6 +5588,8 @@ body.admin-bar .bb-rl-header {
   list-style: none;
   margin: 0;
   padding: 0;
+  flex: 1;
+  justify-content: center;
 }
 
 .bb-readylaunch-menu > li:not(:last-child) {
@@ -5607,6 +5609,7 @@ body.admin-bar .bb-rl-header {
   background-color: transparent;
   color: var(--bb-rl-text-color);
   border: none;
+  white-space: nowrap;
 }
 
 .bb-readylaunch-menu > li > a:focus {
@@ -5832,6 +5835,10 @@ body.admin-bar .bb-rl-header {
   color: var(--bb-rl-icon-color);
   font-size: 16px;
   margin-left: var(--bb-rl-space-100);
+}
+
+.header-aside .bb-rl-header-search .bb-rl-header-search__label {
+  white-space: nowrap;
 }
 
 .notification-dropdown .notification-header-tabs {
@@ -7522,7 +7529,8 @@ body.guillotine-dragging * {
   z-index: 11;
 }
 
-#object-nav .bb-rl-sub-menu {
+#object-nav .bb-rl-sub-menu,
+#menu-readylaunch .bb-rl-sub-menu {
   background-color: var(--bb-rl-background-color);
   border-radius: var(--bb-rl-radius-md);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
@@ -7541,17 +7549,20 @@ body.guillotine-dragging * {
   align-items: flex-start;
 }
 
-#object-nav .bb-rl-sub-menu.active {
+#object-nav .bb-rl-sub-menu.active,
+#menu-readylaunch .bb-rl-sub-menu.active {
   opacity: 1;
   visibility: visible;
 }
 
-#object-nav .bb-rl-sub-menu li {
+#object-nav .bb-rl-sub-menu li,
+#menu-readylaunch .bb-rl-sub-menu li {
   display: block;
   width: 100%;
 }
 
-#object-nav .bb-rl-sub-menu li a {
+#object-nav .bb-rl-sub-menu li a,
+#menu-readylaunch .bb-rl-sub-menu li a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-small);
@@ -7566,7 +7577,8 @@ body.guillotine-dragging * {
   background-color: transparent;
 }
 
-#object-nav .bb-rl-sub-menu li a:hover {
+#object-nav .bb-rl-sub-menu li a:hover,
+#menu-readylaunch .bb-rl-sub-menu li a:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
   color: var(--bb-rl-text-primary-color);
 }
@@ -9316,6 +9328,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-member-header-actions button.edit-profile i,
 .bb-rl-member-header-actions .generic-button a.edit-profile i {
   margin-left: var(--bb-rl-space-50);
+  font-size: 16px;
 }
 
 .bb-rl-primary-actions button.send-message i::before,

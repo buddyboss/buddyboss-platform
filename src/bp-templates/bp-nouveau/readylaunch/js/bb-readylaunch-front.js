@@ -878,21 +878,29 @@ window.bp = window.bp || {};
 			// Initializes navigation overflow handling on page load and resize.
 			initBBNavOverflow: function () {
 				var self = this;
-				$('#object-nav > ul').each(function () {
-					self.bbNavOverflow(this, 90);
-				});
 
-				window.addEventListener('resize', function () {
-					$('#object-nav > ul').each(function () {
-						self.bbNavOverflow(this, 90);
-					});
-				});
+				// Initialize overflow navigation for a specific selector
+				function initSelector( selector, reduceWidth ) {
+					$( selector ).each( function () {
+						self.bbNavOverflow( this, reduceWidth );
+					} );
+					
+					// Add resize and load event listeners
+					window.addEventListener( 'resize', function () {
+						$( selector ).each( function () {
+							self.bbNavOverflow( this, reduceWidth );
+						} );
+					} );
+					
+					window.addEventListener( 'load', function () {
+						$( selector ).each( function () {
+							self.bbNavOverflow( this, reduceWidth );
+						} );
+					} );
+				}
 
-				window.addEventListener('load', function () {
-					$('#object-nav > ul').each(function () {
-						self.bbNavOverflow(this, 90);
-					});
-				});
+				initSelector( '#object-nav > ul', 100 );
+				initSelector( '#menu-readylaunch', 200 );
 
 				$( document ).on(
 					'click',

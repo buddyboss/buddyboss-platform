@@ -24,6 +24,8 @@
 	list-style: none;
 	margin: 0;
 	padding: 0;
+	flex: 1;
+	justify-content: center;
 
 	> li {
 
@@ -44,6 +46,7 @@
 			background-color: transparent;
 			color: var(--bb-rl-text-color);
 			border: none;
+			white-space: nowrap;
 
 			&:focus {
 				outline: 2px solid var(--bb-rl-border-quinery-color);
@@ -281,6 +284,10 @@
 			color: var(--bb-rl-icon-color);
 			font-size: 16px;
 			margin-right: var(--bb-rl-space-100);
+		}
+
+		.bb-rl-header-search__label {
+			white-space: nowrap;
 		}
 	}
 }
