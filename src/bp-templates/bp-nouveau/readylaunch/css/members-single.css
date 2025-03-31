@@ -705,6 +705,15 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-profile-edit-wrapper fieldset legend + .description {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+  margin-top: calc(var(--bb-rl-space-50) * -1);
+  margin-bottom: var(--bb-rl-space-50);
+}
+
 .bb-rl-profile-edit-wrapper #profile-group-edit-submit {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
@@ -712,6 +721,13 @@
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
   border: 1px solid transparent;
+  /* stylelint-disable function-url-quotes */
+  background-image: url('data:image/svg+xml,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.7076 9.70757L12.7076 25.7076C12.6147 25.8005 12.5044 25.8743 12.383 25.9246C12.2616 25.975 12.1315 26.0009 12.0001 26.0009C11.8687 26.0009 11.7385 25.975 11.6171 25.9246C11.4957 25.8743 11.3854 25.8005 11.2926 25.7076L4.29257 18.7076C4.10493 18.5199 3.99951 18.2654 3.99951 18.0001C3.99951 17.7347 4.10493 17.4802 4.29257 17.2926C4.48021 17.1049 4.7347 16.9995 5.00007 16.9995C5.26543 16.9995 5.51993 17.1049 5.70757 17.2926L12.0001 23.5863L27.2926 8.29257C27.4802 8.10493 27.7347 7.99951 28.0001 7.99951C28.2654 7.99951 28.5199 8.10493 28.7076 8.29257C28.8952 8.48021 29.0006 8.7347 29.0006 9.00007C29.0006 9.26543 28.8952 9.51993 28.7076 9.70757Z" fill="white" fill-opacity="0.6"/></svg>');
+  /* stylelint-enable */
+  background-repeat: no-repeat;
+  background-position: 12px 50%;
+  background-size: 16px;
+  padding-left: 36px;
 }
 
 .bb-rl-profile-edit-wrapper #profile-group-edit-submit:hover {
@@ -1040,10 +1056,20 @@
   padding-top: var(--bb-rl-space-300);
 }
 
-.bb-rl-account-settings-section .main-notification-settings .app,
-.bb-rl-account-settings-section .main-notification-settings .email,
-.bb-rl-account-settings-section .main-notification-settings .web {
+.bb-rl-account-settings-section .main-notification-settings th.app, .bb-rl-account-settings-section .main-notification-settings th.email, .bb-rl-account-settings-section .main-notification-settings th.web,
+.bb-rl-account-settings-section .main-notification-settings td.app,
+.bb-rl-account-settings-section .main-notification-settings td.email,
+.bb-rl-account-settings-section .main-notification-settings td.web {
   min-width: 95px;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-account-settings-section .main-notification-settings th.app, .bb-rl-account-settings-section .main-notification-settings th.email, .bb-rl-account-settings-section .main-notification-settings th.web,
+  .bb-rl-account-settings-section .main-notification-settings td.app,
+  .bb-rl-account-settings-section .main-notification-settings td.email,
+  .bb-rl-account-settings-section .main-notification-settings td.web {
+    display: none;
+  }
 }
 
 .bb-rl-account-settings-section .main-notification-settings th,
@@ -1079,6 +1105,53 @@
 @media screen and (min-width: 800px) {
   .bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
     display: none;
+  }
+}
+
+.bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting {
+  position: relative;
+}
+
+.bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting ul {
+  list-style: none;
+  padding: var(--bb-rl-space-100) 0;
+  margin: 0;
+  position: absolute;
+  top: var(--bb-rl-space-400);
+  right: 0;
+  z-index: 10;
+  display: none;
+  width: 150px;
+  background-color: var(--bb-rl-background-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  border-radius: var(--bb-rl-radius-base);
+}
+
+.bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting ul li {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting.active ul {
+  display: block;
+}
+
+.bb-rl-account-settings-section .main-notification-settings .bb-mobile-setting .bb-mobile-setting-anchor {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
+  cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-account-settings-section .main-notification-settings tr {
+    display: block;
+  }
+  .bb-rl-account-settings-section .main-notification-settings thead th.title,
+  .bb-rl-account-settings-section .main-notification-settings tbody td:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 
@@ -1303,6 +1376,10 @@
   color: var(--bb-rl-text-secondary-color);
 }
 
+.bb-rl-profile-edit-wrapper .field-visibility-settings-header.field-visibility-settings-notoggle {
+  margin-top: var(--bb-rl-space-100);
+}
+
 .bb-rl-profile-edit-wrapper .field-visibility-settings-header .field-visibility-label {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
@@ -1329,9 +1406,42 @@
   top: 1px;
 }
 
+.bb-rl-profile-edit-wrapper .clear-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  margin-top: var(--bb-rl-space-50);
+}
+
+.bb-rl-profile-edit-wrapper .clear-value:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-rl-profile-edit-wrapper .clear-value:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-profile-edit-wrapper .clear-value:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
 .bb-rl-field-visibility-block {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   margin-top: var(--bb-rl-space-100);
 }
@@ -1352,6 +1462,7 @@
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   border-radius: var(--bb-rl-radius-base);
   padding: var(--bb-rl-space-100) 0;
+  z-index: 10;
 }
 
 .bb-rl-field-visibility-block .field-visibility-settings fieldset {

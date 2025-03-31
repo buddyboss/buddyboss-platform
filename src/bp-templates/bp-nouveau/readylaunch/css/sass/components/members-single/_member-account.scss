@@ -34,10 +34,18 @@
 			}
 		}
 
-		.app,
-		.email,
-		.web {
-			min-width: 95px;
+		th,
+		td {
+
+			&.app,
+			&.email,
+			&.web {
+				min-width: 95px;
+
+				@media screen and (max-width: $md) {
+					display: none;
+				}
+			}
 		}
 
 		th,
@@ -72,6 +80,60 @@
 
 		.main-notification-settings .bb-mobile-setting {
 			display: none;
+		}
+	}
+
+	.main-notification-settings {
+
+		.bb-mobile-setting {
+			position: relative;
+
+			ul {
+				list-style: none;
+				padding: var(--bb-rl-space-100) 0;
+				margin: 0;
+				position: absolute;
+				top: var(--bb-rl-space-400);
+				right: 0;
+				z-index: 10;
+				display: none;
+				width: 150px;
+				background-color: var(--bb-rl-background-color);
+				box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+				border-radius: var(--bb-rl-radius-base);
+
+				li {
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+				}
+			}
+
+			&.active {
+
+				ul {
+					display: block;
+				}
+			}
+
+			.bb-mobile-setting-anchor {
+
+				@include bb-rl-label-heading-bolder;
+				color: var(--bb-rl-text-secondary-color);
+				cursor: pointer;
+			}
+		}
+
+		@media screen and (max-width: $md) {
+
+			tr {
+				display: block;
+			}
+
+			thead th.title,
+			tbody td:first-child {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
 		}
 	}
 }
@@ -292,6 +354,10 @@
 		align-items: center;
 		color: var(--bb-rl-text-secondary-color);
 
+		&.field-visibility-settings-notoggle {
+			margin-top: var(--bb-rl-space-100);
+		}
+
 		.field-visibility-label {
 
 			@include bb-rl-label-heading;
@@ -316,11 +382,19 @@
 			top: 1px;
 		}
 	}
+
+	.clear-value {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+		@include bb-rl-button--small;
+		margin-top: var(--bb-rl-space-50);
+	}
 }
 
 .bb-rl-field-visibility-block {
 	position: relative;
-	display: inline-flex;
+	display: flex;
 	align-items: center;
 	margin-top: var(--bb-rl-space-100);
 
@@ -340,6 +414,7 @@
 		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 		border-radius: var(--bb-rl-radius-base);
 		padding: var(--bb-rl-space-100) 0;
+		z-index: 10;
 
 		fieldset {
 			margin: 0;

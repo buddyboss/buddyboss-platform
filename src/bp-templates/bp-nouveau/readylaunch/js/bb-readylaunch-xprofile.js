@@ -209,6 +209,13 @@ window.bp = window.bp || {};
         $visibilitySettings.show();
 	} );
 
+    $( document ).on( 'click', function( event ) {
+        if ( !$( event.target ).closest( '.bb-rl-field-visibility-block' ).length &&
+            $( '.field-visibility-settings:visible' ).length) {
+            $( '.field-visibility-settings:visible' ).hide();
+        }
+    } );
+
     $( '.field-visibility-settings input[type="radio"]' ).on( 'change', function() {
         var $radio = $( this );
         var settings_div = $radio.closest( '.field-visibility-settings' );
