@@ -65,6 +65,18 @@ class BB_Activity_Readylaunch {
 		return self::$instance;
 	}
 
+	/**
+	 * Get activity post user reactions HTML.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $output       The output.
+	 * @param int    $activity_id  The activity ID.
+	 * @param string $item_type    The item type.
+	 * @param bool   $is_popup     Whether the popup is enabled.
+	 *
+	 * @return string The activity post user reactions HTML.
+	 */
 	public function bb_rl_get_activity_post_user_reactions_html( $output, $activity_id, $item_type, $is_popup ) {
 		$output = '';
 
@@ -241,7 +253,7 @@ class BB_Activity_Readylaunch {
 
 		$prepared_icon = bb_activity_get_reaction_button( $args['reaction_id'], $args['has_reacted'] );
 
-		// Return your custom HTML structure
+		// Return your custom HTML structure.
 		return sprintf(
 			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" aria-pressed="false" data-reacted-id="%6$s">
 				<span class="bp-screen-reader-text">%2$s</span>

@@ -48,7 +48,29 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 
 			if ( ! empty( $profile_nav ) ) {
 				foreach ( $profile_nav as $nav_item ) {
-					if ( in_array( $nav_item->slug, array( bp_get_notifications_slug(), bp_get_messages_slug(), bp_get_settings_slug(), bp_get_profile_slug() ), true ) ) {
+					$excluded_slugs = array();
+
+					// Check for notifications function.
+					if ( function_exists( 'bp_get_notifications_slug' ) ) {
+						$excluded_slugs[] = bp_get_notifications_slug();
+					}
+
+					// Check for messages function.
+					if ( function_exists( 'bp_get_messages_slug' ) ) {
+						$excluded_slugs[] = bp_get_messages_slug();
+					}
+
+					// Check for settings function.
+					if ( function_exists( 'bp_get_settings_slug' ) ) {
+						$excluded_slugs[] = bp_get_settings_slug();
+					}
+
+					// Check for profile function.
+					if ( function_exists( 'bp_get_profile_slug' ) ) {
+						$excluded_slugs[] = bp_get_profile_slug();
+					}
+
+					if ( in_array( $nav_item->slug, $excluded_slugs, true ) ) {
 						continue;
 					}
 
