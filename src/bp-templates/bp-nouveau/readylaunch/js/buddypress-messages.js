@@ -251,6 +251,8 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-message-info-tabs-wrapper .bb-rl-message-info-tab button', this.toggleMessageInfoTab );
 			// Tab click event handler for All, Unread, Archive.
 			$document.on( 'click', '.bb-rl-messages-tab-link', this.handleTabChange.bind( this ) );
+			// Media + Video theatre.
+			$document.on( 'click', '.bb-rl-open-media-video-theatre', this.openMessageMediaTheater.bind( this ) );
 		},
 
 		triggerLoadMore: function () {
@@ -1573,6 +1575,28 @@ window.bp = window.bp || {};
 				window.Backbone.trigger( 'relistelements' );
 			}
 		},
+
+		openMessageMediaTheater: function ( event ) {
+			event.preventDefault();
+			var target                 = $( event.currentTarget ), id, self = this;
+			var mediaType              = target.closest( '.bb-rl-media-item' ).data( 'type' );
+			// Store activity data to use for media thumbnail.
+			this.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
+
+			if ( target.closest( '#bp-existing-media-content' ).length ) {
+				return false;
+			}
+
+			bp.Nouveau.Media.Theatre.handleOpenTheatre(
+				{
+					target       : target,
+					event        : event,
+					modalWrapper : '.bb-rl-media-video-model-wrapper',
+					mediaType    : mediaType,
+					action       : 'media-video'
+				}
+			);
+		},
 	};
 
 	bp.Models.Message = Backbone.Model.extend(
@@ -2621,9 +2645,6 @@ window.bp = window.bp || {};
 								bp.Nouveau.Messages.removeFeedback();
 							}
 						} else {
-							// if ( ! jQuery( '.message-media-error-popup' ).length) {
-							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
-							// }
 							bp.Nouveau.Messages.displaySendMessageFeedback( bbRlMedia.invalid_media_type + '</br>' + response.data.feedback, 'error' );
 							this.removeFile( file );
 							if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
@@ -2644,9 +2665,6 @@ window.bp = window.bp || {};
 								errorText = bbRlMedia.connection_lost_error;
 							}
 						} else {
-							// if ( ! jQuery( '.message-media-error-popup' ).length) {
-							// 	$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup message-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							// }
 							errorText = bbRlMedia.invalid_media_type + '</br>' + response;
 						}
 						bp.Nouveau.Messages.displaySendMessageFeedback( errorText, 'error' );

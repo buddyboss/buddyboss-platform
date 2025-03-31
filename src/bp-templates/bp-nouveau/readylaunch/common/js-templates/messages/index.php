@@ -56,3 +56,9 @@ if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
 if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
 	bp_get_template_part( 'document/theatre' );
 }
+if (
+	( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) ||
+	( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() )
+) {
+	bp_get_template_part( 'common/js-templates/messages/theatre' );
+}

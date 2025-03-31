@@ -2166,6 +2166,11 @@ window.bp = window.bp || {};
 		},
 		next: function ( event ) {
 			event.preventDefault();
+			// If the target is a media-video, return false. It's for media and video for a message right panel.
+			if ( $( event.currentTarget ).closest( '.bb-rl-internal-model' ).hasClass( 'media-video' ) ) {
+				return false;
+			}
+
 			var self = this, activity_id;
 			if ( self.current_activity_data && self.videos[ self.current_index + 1 ] ) {
 				self.updateVideoState(
@@ -2191,6 +2196,10 @@ window.bp = window.bp || {};
 
 		previous: function ( event ) {
 			event.preventDefault();
+			// If the target is a media-video, return false. It's for media and video for a message right panel.
+			if ( $( event.currentTarget ).closest( '.bb-rl-internal-model' ).hasClass( 'media-video' ) ) {
+				return false;
+			}
 			var self = this, activity_id;
 			if ( self.current_activity_data && self.videos[ self.current_index - 1 ] ) {
 				self.updateVideoState(

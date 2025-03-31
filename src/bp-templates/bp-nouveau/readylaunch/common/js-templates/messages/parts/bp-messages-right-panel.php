@@ -253,12 +253,13 @@
 <script type="text/html" id="tmpl-bp-messages-right-panel-media">
     <# if ( data.length > 0 ) {
         _.each( data, function( item ) { #>
-            <div class="bb-rl-media-item">
-                <a class="bb-rl-open-message-media-theatre bb-{{item.type}}-cover-wrap bb-item-cover-wrap bb-open-{{item.type}}"
+            <div class="bb-rl-media-item" data-type="{{item.type}}">
+                <a class="bb-rl-open-media-video-theatre bb-{{item.type}}-cover-wrap bb-item-cover-wrap bb-open-{{item.type}}"
                     data-id="{{item.id}}"
                     data-attachment-id="{{item.attachment_id}}"
                     data-attachment-full="{{item.full}}"
                     data-privacy="{{item.privacy}}"
+                    data-type="{{item.type}}"
                     href="#">
                         <img src="{{item.thumbnail}}" alt="{{item.title}}">
                 </a>

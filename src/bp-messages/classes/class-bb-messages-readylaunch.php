@@ -241,7 +241,7 @@ class BB_Messages_Readylaunch {
 			if ( ! empty( $media_items ) ) {
 				foreach ( $media_items as $media ) {
 					$args = array(
-						'type'          => $media->type,
+						'type'          => 'photo' === $media->type ? 'media' : 'video',
 						'id'            => $media->id,
 						'title'         => $media->title,
 						'attachment_id' => $media->attachment_id,
