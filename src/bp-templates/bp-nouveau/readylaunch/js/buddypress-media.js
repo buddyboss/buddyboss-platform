@@ -3772,7 +3772,6 @@ window.bp = window.bp || {};
 				var targetPopup   = $( event.currentTarget ).closest( '.open-popup' );
 				var selectedAlbum = targetPopup.find( '.bb-rl-album-selected-id' ).val();
 				if ( selectedAlbum.length && parseInt( selectedAlbum ) > 0 ) {
-					selectedAlbum            = selectedAlbum;
 					var $dropZoneMediaLength = self.dropzone_media.length;
 					for ( var i = 0; i < $dropZoneMediaLength; i++ ) {
 						self.dropzone_media[ i ].album_id = selectedAlbum;
@@ -3959,7 +3958,6 @@ window.bp = window.bp || {};
 						hasNotAlbum = false;
 					}
 
-					selectedAlbum            = selectedAlbum;
 					var $dropZoneMediaLength = self.dropzone_media.length;
 					for ( var i = 0; i < $dropZoneMediaLength; i++ ) {
 						self.dropzone_media[ i ].folder_id = selectedAlbum;
@@ -5636,7 +5634,7 @@ window.bp = window.bp || {};
 				};
 
 				if ( 'document' === action ) {
-					var sort = '', order_by = '';
+					var sort, order_by;
 					if ( this.order_by && this.sort_by ) {
 						sort     = this.sort_by;
 						order_by = this.order_by;
@@ -5724,7 +5722,7 @@ window.bp = window.bp || {};
 				privacy;
 			if ( isAlbum ) {
 				privacy = $( '#bb-rl-album-privacy' );
-				if ( 'video' == folderOrAlbum ) {
+				if ( 'video' === folderOrAlbum ) {
 					nonce = BP_Nouveau.nonces.video;
 				}
 			} else if ( isFolder ) {
@@ -5988,7 +5986,6 @@ window.bp = window.bp || {};
 
 		handleOpenTheatre: function ( data ) {
 			var target            = data.target,
-			    event             = data.event,
 			    self              = data.self || this,
 			    modalWrapperClass = data.modalWrapper,
 			    mediaType         = data.mediaType,
@@ -6051,7 +6048,7 @@ window.bp = window.bp || {};
 
 		openTheatre: function ( event ) {
 			event.preventDefault();
-			var target                 = $( event.currentTarget ), id, self = this;
+			var target                 = $( event.currentTarget ), self = this;
 			// Store activity data to use for media thumbnail.
 			this.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
 
@@ -6599,7 +6596,7 @@ window.bp = window.bp || {};
 			self.navigationDocumentCommands();
 		},
 
-		generateAndDisplayMediaThumbnails: function (data) {
+		generateAndDisplayMediaThumbnails: function ( data ) {
 			var target = data.target,
 				action = data.action;
 
@@ -6991,7 +6988,7 @@ window.bp = window.bp || {};
 
 		activityDeleted: function ( event, data ) {
 			var self = this, i = 0;
-			if ( self.is_open_media && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_media.activity_id == data.id ) {
+			if ( self.is_open_media && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_media.activity_id === data.id ) {
 
 				var $deleted_item             = $( document ).find( '[data-bp-list="media"] .bb-rl-open-media-theatre[data-id="' + self.current_media.id + '"]' );
 				var $deleted_item_parent_list = $deleted_item.parents( 'ul' );
@@ -7014,19 +7011,19 @@ window.bp = window.bp || {};
 
 				var mediasLength = self.medias.length;
 				for ( i = 0; i < mediasLength; i++ ) {
-					if ( self.medias[ i ].activity_id == data.id ) {
+					if ( self.medias[ i ].activity_id === data.id ) {
 						self.medias.splice( i, 1 );
 						break;
 					}
 				}
 
-				if ( self.current_index == 0 && self.current_index != ( self.medias.length ) ) {
+				if ( 0 === self.current_index && self.current_index !== ( self.medias.length ) ) {
 					self.current_index = -1;
 					self.next( event );
-				} else if ( self.current_index == 0 && self.current_index == ( self.medias.length ) ) {
+				} else if ( 0 === self.current_index && self.current_index === ( self.medias.length ) ) {
 					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_media.activity_id + '"]' ).remove();
 					self.closeTheatre( event );
-				} else if ( self.current_index == ( self.medias.length ) ) {
+				} else if ( self.current_index === ( self.medias.length ) ) {
 					self.previous( event );
 				} else {
 					self.current_index = -1;
@@ -7040,19 +7037,19 @@ window.bp = window.bp || {};
 
 				var documentsLength = self.documents.length;
 				for ( i = 0; i < documentsLength; i++ ) {
-					if ( self.documents[ i ].activity_id == data.id ) {
+					if ( self.documents[ i ].activity_id === data.id ) {
 						self.documents.splice( i, 1 );
 						break;
 					}
 				}
 
-				if ( self.current_document_index == 0 && self.current_document_index != ( self.documents.length ) ) {
+				if ( 0 === self.current_document_index && self.current_document_index !== ( self.documents.length ) ) {
 					self.current_document_index = -1;
 					self.nextDocument( event );
-				} else if ( self.current_document_index == 0 && self.current_document_index == ( self.documents.length ) ) {
+				} else if ( 0 === self.current_document_index && self.current_document_index === ( self.documents.length ) ) {
 					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_document.activity_id + '"]' ).remove();
 					self.closeDocumentTheatre( event );
-				} else if ( self.current_document_index == ( self.documents.length ) ) {
+				} else if ( self.current_document_index === ( self.documents.length ) ) {
 					self.previousDocument( event );
 				} else {
 					self.current_document_index = -1;

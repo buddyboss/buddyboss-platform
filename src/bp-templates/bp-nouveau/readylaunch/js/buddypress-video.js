@@ -370,7 +370,8 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 
 								// It's the very first video, let's make sure the container can welcome it!
-								if ( ! $( '#video-stream ul.video-list' ).length ) {
+								var $videoStream = $( '#video-stream ul.video-list' );
+								if ( ! $videoStream.length ) {
 									location.reload( true );
 								}
 
@@ -391,7 +392,7 @@ window.bp = window.bp || {};
 									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.video, 'prepend' );
 								} else {
 									// It's the very first media, let's make sure the container can welcome it!
-									if ( ! $( '#video-stream ul.video-list' ).length ) {
+									if ( ! $videoStream.length ) {
 										$( '#video-stream .bp-feedback' ).remove();
 										$( '#video-stream' ).append( '<ul class="video-list item-list bp-list bb-video-list grid"></ul>' );
 										$( '.bb-videos-actions' ).show();
@@ -1424,7 +1425,7 @@ window.bp = window.bp || {};
 				video.push( target.data( 'item-id' ) );
 			}
 
-			if ( video.length == 0 ) {
+			if ( 0 === video.length ) {
 				return false;
 			}
 
@@ -2773,6 +2774,7 @@ window.bp = window.bp || {};
 						fullscreen_btn.attr( 'data-balloon', bbRlVideo.i18n_strings.video_enlarge_text );
 						var error_block      = $( this ).find( '.vjs-error-display.vjs-modal-dialog' );
 						var video_block_main = $( this );
+						var eleIdElement     = $( '#' + ele_id );
 
 						fullscreen_btn.on(
 							'click touchstart',
@@ -2780,13 +2782,12 @@ window.bp = window.bp || {};
 								// Set current time of video and id.
 								if ( player[ele_id].currentTime() > 0 ) {
 									bp.Nouveau.Video.Player.playerTime = player[ele_id].currentTime();
-									bp.Nouveau.Video.Player.playerID   = $( '#' + ele_id ).parent().find( '.video-js video' ).attr( 'id' );
+									bp.Nouveau.Video.Player.playerID   = eleIdElement.parent().find( '.video-js video' ).attr( 'id' );
 								}
 								player[ele_id].pause();
-								if ( $( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).length ) {
-									$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
-								} else if ( $( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).length ) {
-									$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
+								var $videoTheatre = eleIdElement.parent().find( '.bb-open-video-theatre' );
+								if ( $videoTheatre.length ) {
+									$videoTheatre.trigger( 'click' );
 								}
 							}
 						);
@@ -2794,7 +2795,7 @@ window.bp = window.bp || {};
 						error_block.on(
 							'click',
 							function () {
-								$( '#' + ele_id ).parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
+								eleIdElement.parent().find( '.bb-open-video-theatre' ).trigger( 'click' );
 							}
 						);
 

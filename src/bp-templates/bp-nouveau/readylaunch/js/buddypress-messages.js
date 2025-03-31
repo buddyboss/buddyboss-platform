@@ -1578,7 +1578,7 @@ window.bp = window.bp || {};
 
 		openMessageMediaTheater: function ( event ) {
 			event.preventDefault();
-			var target                 = $( event.currentTarget ), id, self = this;
+			var target                 = $( event.currentTarget );
 			var mediaType              = target.closest( '.bb-rl-media-item' ).data( 'type' );
 			// Store activity data to use for media thumbnail.
 			this.current_activity_data = target.closest( '.activity-item' ).data( 'bp-activity' );
