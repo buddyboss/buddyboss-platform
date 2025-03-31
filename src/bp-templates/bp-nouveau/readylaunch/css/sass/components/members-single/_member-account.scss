@@ -133,6 +133,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				gap: var(--bb-rl-space-100);
 			}
 		}
 	}
@@ -196,15 +197,16 @@
 		.bb-subscription-item {
 			display: flex;
 			align-items: center;
+			justify-content: space-between;
 			padding: var(--bb-rl-space-50) 0;
 			margin-bottom: var(--bb-rl-space-200);
+			gap: var(--bb-rl-space-100);
 
 			&:last-of-type {
 				margin-bottom: 0;
 			}
 
 			.subscription-item_remove {
-				margin-left: auto;
 
 				i::before {
 					display: inline-block;
@@ -215,6 +217,11 @@
 					text-transform: uppercase;
 					padding: 2px var(--bb-rl-space-100);
 				}
+			}
+
+			@media screen and (max-width: $sm) {
+				flex-direction: column;
+				align-items: flex-start;
 			}
 		}
 

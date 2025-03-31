@@ -16323,6 +16323,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--bb-rl-space-100);
   }
 }
 
@@ -16374,16 +16375,14 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-account-settings-section .subscription-items .bb-subscription-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: var(--bb-rl-space-50) 0;
   margin-bottom: var(--bb-rl-space-200);
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-account-settings-section .subscription-items .bb-subscription-item:last-of-type {
   margin-bottom: 0;
-}
-
-.bb-rl-account-settings-section .subscription-items .bb-subscription-item .subscription-item_remove {
-  margin-right: auto;
 }
 
 .bb-rl-account-settings-section .subscription-items .bb-subscription-item .subscription-item_remove i::before {
@@ -16394,6 +16393,13 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-secondary-color);
   text-transform: uppercase;
   padding: 2px var(--bb-rl-space-100);
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-account-settings-section .subscription-items .bb-subscription-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .bb-rl-account-settings-section .subscription-items .subscription-item_image img {
