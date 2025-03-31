@@ -620,13 +620,33 @@ window.bp = window.bp || {};
 
 			// Check if the media, videos or documents still available in older draft so we need to be update the draft again.
 			if ( ! media_valid && 'undefined' !== typeof this.topic_reply_draft.data && false !== this.topic_reply_draft.data ) {
-				if ( 'undefined' !== typeof this.topic_reply_draft.data.bbp_media && ( '' !== this.topic_reply_draft.data.bbp_media && '[]' !== this.topic_reply_draft.data.bbp_media ) ) {
+				if (
+					'undefined' !== typeof this.topic_reply_draft.data.bbp_media &&
+					(
+						'' !== this.topic_reply_draft.data.bbp_media &&
+						'[]' !== this.topic_reply_draft.data.bbp_media
+					)
+				) {
 					media_valid = true;
 				}
-				if ( 'undefined' !== typeof this.topic_reply_draft.data.bbp_video && ( '' !== this.topic_reply_draft.data.bbp_video && '[]' !== this.topic_reply_draft.data.bbp_video ) ) {
+
+				if (
+					'undefined' !== typeof this.topic_reply_draft.data.bbp_video &&
+					(
+						'' !== this.topic_reply_draft.data.bbp_video &&
+						'[]' !== this.topic_reply_draft.data.bbp_video
+					)
+				) {
 					media_valid = true;
 				}
-				if ( 'undefined' !== typeof this.topic_reply_draft.data.bbp_document && ( '' !== this.topic_reply_draft.data.bbp_document && '[]' !== this.topic_reply_draft.data.bbp_document ) ) {
+
+				if (
+					'undefined' !== typeof this.topic_reply_draft.data.bbp_document &&
+					(
+						'' !== this.topic_reply_draft.data.bbp_document &&
+						'[]' !== this.topic_reply_draft.data.bbp_document
+					)
+				) {
 					media_valid = true;
 				}
 			}
