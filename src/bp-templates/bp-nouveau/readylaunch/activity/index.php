@@ -18,13 +18,12 @@ bp_nouveau_before_activity_directory_content();
 
 	bp_nouveau_template_notices();
 
-	if ( ! bp_nouveau_is_object_nav_in_sidebar() ) :
-		bp_get_template_part( 'common/nav/directory-nav' );
-	endif;
 	?>
 	<div class="bb-rl-screen-content">
 		<?php
-		bp_get_template_part( 'common/search-and-filters-bar' );
+		if ( ! bp_nouveau_is_object_nav_in_sidebar() ) :
+			bp_get_template_part( 'common/search-and-filters-bar' );
+		endif;
 		bp_nouveau_activity_hook( 'before_directory', 'list' );
 		?>
 
