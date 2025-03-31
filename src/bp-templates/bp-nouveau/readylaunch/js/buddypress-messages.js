@@ -5394,12 +5394,8 @@ window.bp = window.bp || {};
 				}
 
 				if ( model ) {
-					if ( parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
-						messagePusherData.message.sender_is_you = true;
-					} else {
-						messagePusherData.message.sender_is_you = false;
-					}
-					messagePusherData.message.date = new Date( messagePusherData.message.date );
+					messagePusherData.message.sender_is_you = parseInt( messagePusherData.message.sender_id ) === parseInt( BP_Nouveau.current.message_user_id );
+					messagePusherData.message.date          = new Date( messagePusherData.message.date );
 					model.set( messagePusherData.message );
 
 					if ( $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).length && $( document.body ).find( '#bp-message-thread-list li.' + messagePusherData.hash ).hasClass( 'has-medias' ) ) {
@@ -5423,12 +5419,8 @@ window.bp = window.bp || {};
 				messagePusherData = messagePusherData[0];
 				var model = this.collection.get( messagePusherData.hash );
 				if ( model ) {
-					if ( parseInt( messagePusherData.sender_id ) === parseInt( BP_Nouveau.current.message_user_id ) ) {
-						messagePusherData.sender_is_you = true;
-					} else {
-						messagePusherData.sender_is_you = false;
-					}
-					messagePusherData.date = new Date( messagePusherData.date );
+					messagePusherData.sender_is_you = parseInt( messagePusherData.sender_id ) === parseInt( BP_Nouveau.current.message_user_id );
+					messagePusherData.date          = new Date( messagePusherData.date );
 
 					if ( 'undefined' !== typeof messagePusherData.video && messagePusherData.video.length > 0 ) {
 						var videos = messagePusherData.video;
