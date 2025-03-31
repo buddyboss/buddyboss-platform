@@ -2043,6 +2043,14 @@ window.bp = window.bp || {};
 							$mediaSection.find( 'video' ).attr( 'autoplay', true );
 							$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
+
+							self.updateTheaterHeaderTitle(
+								{
+									wrapper : $mediaWrapper,
+									action  : 'video'
+								}
+							);
+
 							$( window ).scroll();
 						} else {
 							$( '.bb-media-info-section.media' ).hide();
@@ -2608,6 +2616,22 @@ window.bp = window.bp || {};
 				} else {
 					self.current_index = -1;
 					self.next( event );
+				}
+			}
+		},
+
+		updateTheaterHeaderTitle : function ( data ) {
+			var wrapper = data.wrapper,
+			    action  = data.action;
+
+			var activityHeaderElem = wrapper.find( '.activity-item' ),
+			    modalTitle         = '';
+			if ( activityHeaderElem.find( '.bb-rl-activity-header' ).length ) {
+				// Extract username from the first link in the activity header.
+				var usernameLink = activityHeaderElem.find( '.bb-rl-activity-header a' ).first();
+				if ( usernameLink.length ) {
+					modalTitle = usernameLink.text() + bbRlMedia.i18n_strings.theater_title;
+					$( '.bb-rl-' + action + '-model-wrapper' + ' .bb-rl-media-model-header h2' ).text( modalTitle );
 				}
 			}
 		},

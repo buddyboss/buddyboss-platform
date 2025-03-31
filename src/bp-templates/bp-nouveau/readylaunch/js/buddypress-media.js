@@ -6830,15 +6830,22 @@ window.bp = window.bp || {};
 				},
 				success    : function ( response ) {
 					if ( response.success ) {
-						var $infoSection = $container.find( '.bb-media-info-section:visible' );
+						var $infoSection  = $container.find( '.bb-media-info-section:visible' ),
+						    $mediaWrapper = $( '.bb-rl-' + action + '-model-wrapper' );
 						if ( 'media-video' === action && 'video' === mediaType ) {
-							$mediaWrapper = $( '.bb-rl-' + action + '-model-wrapper' ),
-								$mediaSection = $mediaWrapper.find( '.bb-rl-media-section figure' );
+							var $mediaSection = $mediaWrapper.find( '.bb-rl-media-section figure' );
 							$mediaSection.html( response.data.video_data );
 							$mediaSection.find( 'video' ).attr( 'autoplay', true );
 						}
 						$infoSection.find( '.bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
 						$infoSection.show();
+
+						self.updateTheaterHeaderTitle(
+							{
+								wrapper : $mediaWrapper,
+								action  : action
+							}
+						);
 
 						// Batch UI updates in a single animation frame.
 						requestAnimationFrame( function () {
@@ -6950,6 +6957,13 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
+
+							self.updateTheaterHeaderTitle(
+								{
+									wrapper : $( '.bb-rl-media-model-wrapper' ),
+									action  : 'media'
+								}
+							);
 							$( window ).scroll();
 							setTimeout(
 								function () {
@@ -7266,6 +7280,20 @@ window.bp = window.bp || {};
 			}
 
 		},
+
+		updateTheaterHeaderTitle : function ( data ) {
+			var wrapper = data.wrapper, action = data.action;
+
+			var activityHeaderElem = wrapper.find( '.activity-item' ), modalTitle = '';
+			if ( activityHeaderElem.find( '.bb-rl-activity-header' ).length ) {
+				// Extract username from the first link in the activity header.
+				var usernameLink = activityHeaderElem.find( '.bb-rl-activity-header a' ).first();
+				if ( usernameLink.length ) {
+					modalTitle = usernameLink.text() + bbRlMedia.i18n_strings.theater_title;
+					$( '.bb-rl-' + action + '-model-wrapper' + ' .bb-rl-media-model-header h2' ).text( modalTitle );
+				}
+			}
+		}
 	};
 
 	// Launch BP Nouveau Media.

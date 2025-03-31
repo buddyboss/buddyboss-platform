@@ -164,6 +164,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
+				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
 			}
 
 			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
@@ -1919,6 +1920,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $buttons;
+		}
+
+		/**
+		 * Modify the js strings.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $strings The js strings.
+		 *
+		 * @return array $strings The modified js strings.
+		 */
+		public function bb_rl_modify_js_strings( $strings ) {
+			$translated_string = __( '\'s Post', 'buddyboss' );
+
+			$strings['media']['i18n_strings']['theater_title'] = $translated_string;
+
+			return $strings;
 		}
 	}
 }

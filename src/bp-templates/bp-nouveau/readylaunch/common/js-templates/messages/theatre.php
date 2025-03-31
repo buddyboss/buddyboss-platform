@@ -10,7 +10,7 @@
 <div class="bb-rl-media-video-model-wrapper bb-rl-internal-model media-video bb-rl-media-video-theatre" style="display: none;" id="buddypress">
 	<div id="bb-rl-media-video-model-container" class="bb-rl-media-model-container">
 		<div class="bb-rl-media-model-header">
-			<h2>John Muller's Post</h2>
+			<h2></h2>
 			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
 				<i class="bb-icons-rl-sidebar-simple"></i>
 			</a>
