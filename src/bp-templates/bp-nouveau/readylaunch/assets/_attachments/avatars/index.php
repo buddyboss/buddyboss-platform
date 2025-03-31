@@ -39,6 +39,7 @@ if ( bp_is_group() ) {
         ) );
     }
 	$container_class .= ' bb-rl-avatar-container--group';
+	$avatar_icon_class = 'bb-icons-rl-x';
 } elseif ( bp_is_user() ) {
     $user_id = bp_displayed_user_id();
 	$avatar_id = $user_id;
@@ -51,6 +52,7 @@ if ( bp_is_group() ) {
         'html'    => false,
     ) );
 	$container_class .= ' bb-rl-avatar-container--user';
+	$avatar_icon_class = 'bb-icons-rl-pencil-simple';
 }
 
 // Add has-avatar or no-avatar class based on whether an avatar exists
@@ -64,8 +66,8 @@ $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-r
 </div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-avatar-photo">
-		<a class="bb-rl-remove-avatar-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete ' . $avatar_label . ' Photo', 'buddyboss' ); ?>">
-			<i class="bb-icons-rl-x"></i>
+		<a class="bb-rl-remove-avatar-button <?php echo bp_is_group() ? '' : 'bb-rl-edit-avatar'; ?>" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete ' . $avatar_label . ' Photo', 'buddyboss' ); ?>">
+			<i class="<?php echo esc_attr( $avatar_icon_class ); ?>"></i>
 		</a>
 		<img src="<?php echo esc_url( $avatar_url ); ?>" class="<?php echo bp_is_group() ? 'group' : 'user'; ?>-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="<?php echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) ); ?>" />
 	</div>
