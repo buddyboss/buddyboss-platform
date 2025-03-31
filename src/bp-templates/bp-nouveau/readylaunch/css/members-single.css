@@ -1359,7 +1359,7 @@
 }
 
 .bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap {
-  padding: 10px var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 }
 
 .bb-rl-field-visibility-block .field-visibility-settings .bp-radio-wrap input[type="radio"] {
