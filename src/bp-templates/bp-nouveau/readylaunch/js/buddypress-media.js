@@ -6519,8 +6519,16 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-rl-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="bb-rl-document-text"><textarea class="bb-rl-document-text-file-data-hidden"></textarea></div>' );
 				document_elements.find( '.bb-rl-document-section .document-preview .bb-rl-document-text' ).attr( 'data-extension', extension );
-				document_elements.find( '.bb-rl-document-section .document-preview .bb-rl-document-text textarea' ).html( mirror_text_display );
 
+				var $textarea = document_elements.find( '.bb-rl-document-section .document-preview .bb-rl-document-text textarea' );
+
+				// Special handling for HTML files
+				if ( 'html' === extension || 'htm' === extension ) {
+					$textarea.val( mirror_text_display );
+				} else {
+					// Default behavior for other file types.
+					$textarea.html( mirror_text_display );
+				}
 				setTimeout(
 					function () {
 						bp.Nouveau.Media.documentCodeMirror();
