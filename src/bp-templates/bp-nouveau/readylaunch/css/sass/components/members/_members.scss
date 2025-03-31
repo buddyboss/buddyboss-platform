@@ -190,6 +190,12 @@
 			}
 		}
 
+		&.edit-profile {
+			i {
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
+
 		&.send-message i::before,
 		&.bb-rl-send-message-disabled i::before {
 			content: "\e168";

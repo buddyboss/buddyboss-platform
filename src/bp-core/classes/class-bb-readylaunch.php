@@ -1885,5 +1885,40 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			return $html;
 		}
+
+		/**
+		 * Filters the member profile buttons.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $buttons The member profile buttons.
+		 * @param int    $user_id The user ID.
+		 * @param string $type    The type of buttons (primary, secondary, etc.).
+		 */
+		public static function bb_rl_member_profile_buttons( $buttons, $user_id, $type ) {
+			if (
+				bp_loggedin_user_id() &&
+				bp_displayed_user_id() === bp_loggedin_user_id() &&
+				bp_loggedin_user_id() === $user_id
+			) {
+				$buttons['edit_profile'] = array(
+					'id'                => 'edit_profile',
+					'position'          => 5,
+					'component'         => 'xprofile',
+					'must_be_logged_in' => true,
+					'button_element'    => 'a',
+					'button_attr'       => array(
+						'class' => 'button edit-profile',
+						'href'  => bp_loggedin_user_domain() . 'profile/edit/',
+					),
+					'link_text'         => esc_html__( 'Edit Profile', 'buddyboss' ),
+					'link_url'          => bp_loggedin_user_domain() . 'profile/edit/',
+					'link_class'        => 'bb-rl-edit-profile',
+					'prefix_link_text'  => '<i class="bb-icons-rl-pencil-simple-line"></i>',
+				);
+			}
+
+			return $buttons;
+		}
 	}
 }

@@ -141,8 +141,11 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							'type'              => 'profile',
 						);
 
+						add_filter( 'bp_nouveau_get_members_buttons', 'BB_ReadyLaunch::bb_rl_member_profile_buttons', 10, 3 );
 						$members_buttons = bp_nouveau_get_members_buttons( $args );
-						$allowed_keys    = array( 'member_friendship', 'member_follow', 'private_message' );
+						remove_filter( 'bp_nouveau_get_members_buttons', 'BB_ReadyLaunch::bb_rl_member_profile_buttons', 10, 3 );
+
+						$allowed_keys    = array( 'member_friendship', 'member_follow', 'private_message', 'edit_profile' );
 						$members_buttons = array_intersect_key( $members_buttons, array_flip( $allowed_keys ) );
 						$output          = join( ' ', $members_buttons );
 
