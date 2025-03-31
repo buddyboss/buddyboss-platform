@@ -10,6 +10,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+if (
+	bp_is_active( 'groups' ) &&
+	bp_is_group_create()
+) {
+	return;
+}
 ?>
 
 <div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">

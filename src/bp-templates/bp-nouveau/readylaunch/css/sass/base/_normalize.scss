@@ -216,10 +216,16 @@ input[type="search"]::-webkit-search-results-decoration {
 // Layout
 .site.bb-readylaunch {
 	background-color: var(--bb-rl-background-secondary-color);
-	margin-left: 300px;
+	margin-left: 0;
 	margin-top: 71px;
 	padding: 0;
 	min-height: calc(100vh - 71px);
+}
+
+.bb-rl-left-panel {
+		~ .site.bb-readylaunch {
+		margin-left: 300px;
+	}
 }
 
 .bb-readylaunch-template {
