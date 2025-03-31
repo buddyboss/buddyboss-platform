@@ -67,14 +67,6 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 					bb_user_presence_html( $bp_displayed_user_id );
 				}
 
-				if ( $bp_is_my_profile && ! bp_disable_avatar_uploads() ) {
-					?>
-					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
-						<i class="bb-icon-rf bb-icon-camera"></i>
-					</a>
-					<span class="link-change-overlay"></span>
-					<?php
-				}
 				bp_displayed_user_avatar( 'type=full' );
 				?>
 			</div><!-- #item-header-avatar -->
