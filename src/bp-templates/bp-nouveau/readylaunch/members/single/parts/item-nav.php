@@ -24,8 +24,24 @@
 					continue;
 				}
 
+				$excluded_slugs = array();
 
-				if ( in_array( $nav_item->slug, array( bp_get_notifications_slug(), bp_get_messages_slug(), bp_get_settings_slug() ), true ) ) {
+				// Check for notifications function.
+				if ( function_exists( 'bp_get_notifications_slug' ) ) {
+					$excluded_slugs[] = bp_get_notifications_slug();
+				}
+
+				// Check for messages function.
+				if ( function_exists( 'bp_get_messages_slug' ) ) {
+					$excluded_slugs[] = bp_get_messages_slug();
+				}
+
+				// Check for settings function.
+				if ( function_exists( 'bp_get_settings_slug' ) ) {
+					$excluded_slugs[] = bp_get_settings_slug();
+				}
+
+				if ( in_array( $nav_item->slug, $excluded_slugs, true ) ) {
 					continue;
 				}
 				?>
