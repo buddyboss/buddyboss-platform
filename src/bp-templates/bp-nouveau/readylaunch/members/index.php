@@ -24,14 +24,14 @@ do_action( 'bp_before_directory_members_page' );
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
-				bp_get_template_part( 'common/search-and-filters-bar' );
-				if ( bp_allow_user_to_send_invites() ) {
-					?>
+			bp_get_template_part( 'common/search-and-filters-bar' );
+			if ( bp_allow_user_to_send_invites() ) {
+				?>
 					<div class="bb-rl-action-button">
 						<a href="" id="bb-rl-invite-button" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Invite', 'buddyboss' ); ?></a>
 					</div>
 					<?php
-				}
+			}
 			?>
 		</div>
 	</div>
@@ -90,7 +90,7 @@ do_action( 'bp_before_directory_members_page' );
 							<?php endfor; ?>
 						</div>
 						<?php
-						//bp_nouveau_user_feedback( 'directory-members-loading' );
+						// bp_nouveau_user_feedback( 'directory-members-loading' );
 						echo '</div>';
 					} else {
 						bp_get_template_part( 'members/members-loop' );
@@ -196,7 +196,7 @@ if ( bp_allow_user_to_send_invites() ) {
 									?>
 									<div class="bb-rl-form-field-wrapper">
 										<label for="bb-rl-invite-custom-subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
-										<textarea name="bp_member_invites_custom_subject" id="bb-rl-invite-custom-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
+										<textarea name="bp_member_invites_custom_subject" id="bb-rl-invite-custom-subject" class="bb-rl-textarea-field" rows="5" cols="10"><?php echo esc_textarea( bp_get_member_invitation_subject() ); ?></textarea>
 									</div>
 									<?php
 								}
@@ -207,24 +207,24 @@ if ( bp_allow_user_to_send_invites() ) {
 										<label for="bb-rl-invite-custom-content"><?php esc_html_e( 'Invitation message', 'buddyboss' ); ?></label>
 										<?php
 											add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
-											add_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
+											add_filter( 'tiny_mce_before_init', 'bp_nouveau_send_invite_content_css' );
 											wp_editor(
 												bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
 												'bb-rl-invite-custom-content',
 												array(
 													'textarea_name' => 'bp_member_invites_custom_content',
-													'teeny'         => false,
+													'teeny' => false,
 													'media_buttons' => false,
-													'dfw'           => false,
-													'tinymce'       => true,
-													'quicktags'     => false,
-													'tabindex'      => '3',
+													'dfw' => false,
+													'tinymce' => true,
+													'quicktags' => false,
+													'tabindex' => '3',
 													'textarea_rows' => 5,
 												)
 											);
 											// Remove the temporary filter on editor buttons.
 											remove_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
-											remove_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
+											remove_filter( 'tiny_mce_before_init', 'bp_nouveau_send_invite_content_css' );
 										?>
 									</div>
 									<?php
@@ -243,7 +243,7 @@ if ( bp_allow_user_to_send_invites() ) {
 			</div>
 		</transition>
 	</div> <!-- .bb-invite-connection -->
-<?php
+	<?php
 }
 /**
  * Fires at the bottom of the member directory template file.

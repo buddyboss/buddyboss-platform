@@ -1407,7 +1407,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_nouveau_get_filter_label_hook( $label, $component ) {
 			if ( 'members' === $component['object'] || 'groups' === $component['object'] ) {
-				$label = __( 'Order', 'buddyboss' );
+				$label = __( 'Sort by', 'buddyboss' );
 			}
 
 			return $label;
