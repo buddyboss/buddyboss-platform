@@ -777,6 +777,7 @@ span.atwho-inserted {
   border-radius: var(--bb-rl-radius-md);
 }
 
+.medium-editor-element ol,
 .medium-editor-element ul {
   padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200) 0;
 }

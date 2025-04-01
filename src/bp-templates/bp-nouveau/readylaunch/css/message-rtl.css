@@ -111,7 +111,7 @@
   display: none;
 }
 
-.site.bb-readylaunch {
+.bb-rl-left-panel ~ .site.bb-readylaunch {
   margin-right: 0;
 }
 
@@ -1095,10 +1095,11 @@ body.messages .bb-rl-content-wrapper {
   list-style: disc;
   list-style-position: inside;
   padding: 0;
+  margin-bottom: var(--bb-rl-space-100);
 }
 
 #bp-message-thread-list > li .bp-message-content-wrap ol {
-  list-style: decimal;
+  list-style: decimal  inside;
 }
 
 #bp-message-thread-list > li .bp-message-content-wrap blockquote {
@@ -2163,6 +2164,7 @@ body .select2-container .select2-dropdown.bb-compose-input .select2-results__opt
 
 .bb-rl-messages-right-panel .bb-rl-message-group-thread-cover img {
   height: 105px;
+  width: 100%;
   object-fit: cover;
 }
 
