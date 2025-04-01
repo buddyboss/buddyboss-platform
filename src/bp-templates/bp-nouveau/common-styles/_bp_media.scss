@@ -5432,6 +5432,17 @@ body.buddyboss-theme {
 				}
 			}
 		}
+
+		&.bb-subnav-filters-labels-only {
+
+			> .subnav-filters-opener {
+				pointer-events: none;
+
+				i.bb-icon-angle-down {
+					display: none;
+				}
+			}
+		}
 	}
 }
 

@@ -20077,7 +20077,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:2362 bp-groups/bp-groups-admin.php:2373
 #: bp-members/bp-members-functions.php:3722
 #: bp-members/bp-members-functions.php:3733
-#: bp-templates/bp-nouveau/buddypress/common/search-and-filters-bar.php:101
+#: bp-templates/bp-nouveau/buddypress/common/search-and-filters-bar.php:132
 msgid "Show"
 msgstr ""
 
@@ -30514,7 +30514,7 @@ msgstr ""
 msgid "Please add fields to search members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search-and-filters-bar.php:159
+#: bp-templates/bp-nouveau/buddypress/common/search-and-filters-bar.php:173
 msgid "by"
 msgstr ""
 
