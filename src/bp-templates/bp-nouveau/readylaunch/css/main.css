@@ -7870,8 +7870,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-avatar-container .bb-rl-avatar-photo .bb-rl-remove-avatar-button {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: var(--bb-rl-space-100);
+  right: var(--bb-rl-space-100);
   z-index: 11;
   color: var(--bb-rl-text-white-color);
   display: inline-flex;
@@ -7879,13 +7879,14 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 3px solid var(--bb-rl-text-white-color);
-  border-radius: 50%;
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-sm);
 }
 
 .bb-rl-avatar-container .bb-rl-avatar-photo .bb-rl-remove-avatar-button i {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--bb-rl-icon-secondary-color);
 }
 
 .bb-rl-avatar-container .bp-uploader-window {

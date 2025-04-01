@@ -1996,8 +1996,8 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 
 .bb-rl-cover-container .bb-rl-cover-preview .bb-rl-remove-cover-button {
   position: absolute;
-  top: 5px;
-  left: 5px;
+  top: var(--bb-rl-space-100);
+  left: var(--bb-rl-space-100);
   z-index: 11;
   color: var(--bb-rl-text-white-color);
   display: inline-flex;
@@ -2005,13 +2005,14 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 3px solid var(--bb-rl-text-white-color);
-  border-radius: 50%;
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-sm);
 }
 
 .bb-rl-cover-container .bb-rl-cover-preview .bb-rl-remove-cover-button i {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--bb-rl-icon-secondary-color);
 }
 
 .bb-rl-cover-container .bp-cover-image {
@@ -2257,6 +2258,26 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content input#group-creation-previous {
+  /* stylelint-disable function-url-quotes */
+  background-image: url('data:image/svg+xml,<svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.9998 10.0006C23.9998 10.2658 23.8945 10.5201 23.7069 10.7077C23.5194 10.8952 23.265 11.0006 22.9998 11.0006H3.41356L10.7073 18.2931C10.8002 18.386 10.8739 18.4963 10.9242 18.6177C10.9745 18.7391 11.0004 18.8692 11.0004 19.0006C11.0004 19.132 10.9745 19.2621 10.9242 19.3835C10.8739 19.5048 10.8002 19.6151 10.7073 19.7081C10.6144 19.801 10.5041 19.8747 10.3827 19.9249C10.2613 19.9752 10.1312 20.0011 9.99981 20.0011C9.86842 20.0011 9.73831 19.9752 9.61691 19.9249C9.49552 19.8747 9.38522 19.801 9.29231 19.7081L0.29231 10.7081C0.199334 10.6152 0.125575 10.5049 0.0752504 10.3835C0.0249261 10.2621 -0.000976562 10.132 -0.000976562 10.0006C-0.000976562 9.86914 0.0249261 9.73901 0.0752504 9.61762C0.125575 9.49622 0.199334 9.38593 0.29231 9.29306L9.29231 0.293056C9.47995 0.105415 9.73445 -1.97712e-09 9.99981 0C10.2652 1.97712e-09 10.5197 0.105415 10.7073 0.293056C10.895 0.480697 11.0004 0.735192 11.0004 1.00056C11.0004 1.26592 10.895 1.52042 10.7073 1.70806L3.41356 9.00056H22.9998C23.265 9.00056 23.5194 9.10591 23.7069 9.29345C23.8945 9.48099 23.9998 9.73534 23.9998 10.0006Z" fill="%23CECECF"/></svg>');
+  /* stylelint-enable */
+  background-repeat: no-repeat;
+  background-position: 12px 50%;
+  background-size: 12px 10px;
+  padding-right: 32px;
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content input#group-creation-next {
+  /* stylelint-disable function-url-quotes */
+  background-image: url('data:image/svg+xml,<svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.7075 10.7081L14.7075 19.7081C14.5199 19.8957 14.2654 20.0011 14 20.0011C13.7346 20.0011 13.4801 19.8957 13.2925 19.7081C13.1049 19.5204 12.9994 19.2659 12.9994 19.0006C12.9994 18.7352 13.1049 18.4807 13.2925 18.2931L20.5863 11.0006H1C0.734784 11.0006 0.48043 10.8952 0.292893 10.7077C0.105357 10.5201 0 10.2658 0 10.0006C0 9.73534 0.105357 9.48099 0.292893 9.29345C0.48043 9.10591 0.734784 9.00056 1 9.00056H20.5863L13.2925 1.70806C13.1049 1.52042 12.9994 1.26592 12.9994 1.00056C12.9994 0.735192 13.1049 0.480697 13.2925 0.293056C13.4801 0.105415 13.7346 0 14 0C14.2654 0 14.5199 0.105415 14.7075 0.293056L23.7075 9.29306C23.8005 9.38593 23.8742 9.49622 23.9246 9.61762C23.9749 9.73901 24.0008 9.86914 24.0008 10.0006C24.0008 10.132 23.9749 10.2621 23.9246 10.3835C23.8742 10.5049 23.8005 10.6152 23.7075 10.7081Z" fill="white"/></svg>');
+  /* stylelint-enable */
+  background-repeat: no-repeat;
+  background-position: calc(100% - (100% - 12px)) 50%;
+  background-size: 12px 10px;
+  padding-left: 32px;
 }
 
 .bb-rl-create-group .bb-rl-create-screen-content ul:not(.select2-results__options),
