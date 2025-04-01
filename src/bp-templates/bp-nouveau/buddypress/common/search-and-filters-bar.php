@@ -95,21 +95,52 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 
 	arsort( $activity_filters );
 	$default_selected = key( $activity_filters );
+
+	$activity_filters_list_html = '';
+	$activity_filters_count     = 0;
+	ob_start();
+
+	// List items for the filters.
+	if ( ! empty( $activity_filters ) ) {
+		foreach ( $activity_filters as $key => $is_enabled ) {
+
+			// Skip filters not enabled or without labels.
+			if (
+				empty( $is_enabled ) ||
+				empty( $filters_labels[ $key ] ) ||
+				( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
+			) {
+				continue;
+			}
+
+			?>
+				<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
+			<?php
+			$activity_filters_count++;
+		}
+
+		unset( $activity_filters );
+	}
+	$activity_filters_list_html = ob_get_clean();
+	$labels_only_class          = '';
+	if ( 1 === $activity_filters_count ) {
+		$labels_only_class = 'bb-subnav-filters-labels-only';
+	}
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class="bb-subnav-filters-container-main">
 		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
-		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
+		<div class="bb-subnav-filters-container bb-subnav-filters-filtering <?php echo esc_attr( $labels_only_class ); ?>">
 
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
 				<span class="selected">
 					<?php
-						$default_filter_label = $filters_labels[ $default_selected ];
-						if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
-							$default_filter_label = strtolower( $default_filter_label );
-						}
-						echo esc_html( $default_filter_label );
-						unset( $default_filter_label );
+					$default_filter_label = $filters_labels[ $default_selected ];
+					if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
+						$default_filter_label = strtolower( $default_filter_label );
+					}
+					echo esc_html( $default_filter_label );
+					unset( $default_filter_label );
 					?>
 				</span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
@@ -117,25 +148,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			<div id="bb-subnav-filter-show" class="subnav-filters-modal">
 				<ul role="listbox">
 					<?php
-					if ( ! empty( $activity_filters ) ) {
-						foreach ( $activity_filters as $key => $is_enabled ) {
-
-							// Skip filters not enabled or without labels.
-							if (
-								empty( $is_enabled ) ||
-								empty( $filters_labels[ $key ] ) ||
-								( bp_is_activity_directory() && 'all' !== $key && ! is_user_logged_in() )
-							) {
-								continue;
-							}
-
-							?>
-								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
-								<?php
-						}
-
-						unset( $activity_filters );
-					}
+						echo $activity_filters_list_html; // phpcs:ignore
 					?>
 				</ul>
 			</div>
@@ -143,6 +156,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	</div>
 
 	<?php
+	unset( $activity_filters_list_html, $activity_filters_count, $labels_only_class );
 	$avail_sorting_options = bb_get_enabled_activity_sorting_options();
 	arsort( $avail_sorting_options );
 	$default_selected = key( $avail_sorting_options );
@@ -160,7 +174,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-				<span class="selected"><?php echo strtolower( esc_html( $sorting_labels[ $default_selected ] ) ); ?></span>
+				<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
 				<i class="bb-icon-l bb-icon-angle-down"></i>
 			</button>
 
