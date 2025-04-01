@@ -14,7 +14,7 @@
 		}
 	}
 
-	input,
+	input:not([type="submit"]):not([type="button"]),
 	textarea {
 
 		@include bb-rl-label-heading-md-thin;

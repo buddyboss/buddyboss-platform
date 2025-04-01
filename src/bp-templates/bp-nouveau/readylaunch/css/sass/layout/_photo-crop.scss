@@ -300,7 +300,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-manage-group-container,
-.bb-rl-profile-edit-wrapper {
+.bb-rl-profile-edit-wrapper,
+.bb-rl-create-group {
 
 	#drag-drop-area {
 		border: 1px dashed var(--bb-rl-border-tertiary-color);
@@ -333,7 +334,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-group-manage-form,
 #buddypress .bb-rl-group-manage-form,
-.bb-rl-profile-edit-wrapper {
+.bb-rl-profile-edit-wrapper,
+.bb-rl-create-group {
 
 	.bp-cover-image-status,
 	.bp-avatar-status,

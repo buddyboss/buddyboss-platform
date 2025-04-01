@@ -3606,7 +3606,7 @@ button[data-balloon] {
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-readylaunch-template input,
+.bb-readylaunch-template input:not([type="submit"]):not([type="button"]),
 .bb-readylaunch-template textarea {
   font-size: 14px;
   font-weight: 400;
@@ -3622,7 +3622,7 @@ button[data-balloon] {
   color: var(--bb-rl-text-color);
 }
 
-.bb-readylaunch-template input[type="submit"],
+.bb-readylaunch-template input:not([type="submit"]):not([type="button"])[type="submit"],
 .bb-readylaunch-template textarea[type="submit"] {
   display: inline-flex;
   align-items: center;
@@ -7937,7 +7937,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-manage-group-container #drag-drop-area,
-.bb-rl-profile-edit-wrapper #drag-drop-area {
+.bb-rl-profile-edit-wrapper #drag-drop-area,
+.bb-rl-create-group #drag-drop-area {
   border: 1px dashed var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-lg);
   background-color: var(--bb-rl-background-secondary-color);
@@ -7946,7 +7947,9 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-manage-group-container div.bp-avatar-status .bp-progress,
 .bb-rl-manage-group-container div.bp-cover-image-status .bp-progress,
 .bb-rl-profile-edit-wrapper div.bp-avatar-status .bp-progress,
-.bb-rl-profile-edit-wrapper div.bp-cover-image-status .bp-progress {
+.bb-rl-profile-edit-wrapper div.bp-cover-image-status .bp-progress,
+.bb-rl-create-group div.bp-avatar-status .bp-progress,
+.bb-rl-create-group div.bp-cover-image-status .bp-progress {
   border: 0;
   height: var(--bb-rl-space-100);
 }
@@ -7954,7 +7957,9 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-manage-group-container div.bp-avatar-status .bp-bar,
 .bb-rl-manage-group-container div.bp-cover-image-status .bp-bar,
 .bb-rl-profile-edit-wrapper div.bp-avatar-status .bp-bar,
-.bb-rl-profile-edit-wrapper div.bp-cover-image-status .bp-bar {
+.bb-rl-profile-edit-wrapper div.bp-cover-image-status .bp-bar,
+.bb-rl-create-group div.bp-avatar-status .bp-bar,
+.bb-rl-create-group div.bp-cover-image-status .bp-bar {
   background-color: var(--bb-rl-primary-color);
   border-radius: var(--bb-rl-radius-full);
   height: var(--bb-rl-space-100);
@@ -7994,7 +7999,16 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-profile-edit-wrapper .bp-avatar-status p.warning,
 .bb-rl-profile-edit-wrapper .bp-cover-image p.success,
 .bb-rl-profile-edit-wrapper .bp-cover-image p.error,
-.bb-rl-profile-edit-wrapper .bp-cover-image p.warning {
+.bb-rl-profile-edit-wrapper .bp-cover-image p.warning,
+.bb-rl-create-group .bp-cover-image-status p.success,
+.bb-rl-create-group .bp-cover-image-status p.error,
+.bb-rl-create-group .bp-cover-image-status p.warning,
+.bb-rl-create-group .bp-avatar-status p.success,
+.bb-rl-create-group .bp-avatar-status p.error,
+.bb-rl-create-group .bp-avatar-status p.warning,
+.bb-rl-create-group .bp-cover-image p.success,
+.bb-rl-create-group .bp-cover-image p.error,
+.bb-rl-create-group .bp-cover-image p.warning {
   display: block;
   border-width: 0;
   border-left-width: 2px;
@@ -8015,7 +8029,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 #buddypress .bb-rl-group-manage-form .bp-cover-image p.success,
 .bb-rl-profile-edit-wrapper .bp-cover-image-status p.success,
 .bb-rl-profile-edit-wrapper .bp-avatar-status p.success,
-.bb-rl-profile-edit-wrapper .bp-cover-image p.success {
+.bb-rl-profile-edit-wrapper .bp-cover-image p.success,
+.bb-rl-create-group .bp-cover-image-status p.success,
+.bb-rl-create-group .bp-avatar-status p.success,
+.bb-rl-create-group .bp-cover-image p.success {
   background-color: var(--bb-rl-background-positive-secondary-color);
   border-color: var(--bb-rl-border-positive-secondary-color);
 }
@@ -8028,7 +8045,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 #buddypress .bb-rl-group-manage-form .bp-cover-image p.error,
 .bb-rl-profile-edit-wrapper .bp-cover-image-status p.error,
 .bb-rl-profile-edit-wrapper .bp-avatar-status p.error,
-.bb-rl-profile-edit-wrapper .bp-cover-image p.error {
+.bb-rl-profile-edit-wrapper .bp-cover-image p.error,
+.bb-rl-create-group .bp-cover-image-status p.error,
+.bb-rl-create-group .bp-avatar-status p.error,
+.bb-rl-create-group .bp-cover-image p.error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-secondary-color);
 }
@@ -8041,7 +8061,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 #buddypress .bb-rl-group-manage-form .bp-cover-image p.warning,
 .bb-rl-profile-edit-wrapper .bp-cover-image-status p.warning,
 .bb-rl-profile-edit-wrapper .bp-avatar-status p.warning,
-.bb-rl-profile-edit-wrapper .bp-cover-image p.warning {
+.bb-rl-profile-edit-wrapper .bp-cover-image p.warning,
+.bb-rl-create-group .bp-cover-image-status p.warning,
+.bb-rl-create-group .bp-avatar-status p.warning,
+.bb-rl-create-group .bp-cover-image p.warning {
   background-color: var(--bb-rl-background-warning-secondary-color);
   border-color: var(--bb-rl-border-warning-secondary-color);
 }

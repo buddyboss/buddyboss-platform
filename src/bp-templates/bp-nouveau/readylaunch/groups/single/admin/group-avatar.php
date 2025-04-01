@@ -13,7 +13,7 @@ $group_has_avatar     = bp_get_group_has_avatar();
 $bp_avatar_admin_step = bp_get_avatar_admin_step();
 
 if ( $bp_is_group_create ) : ?>
-	<h3 class="bp-screen-title creation-step-name">
+	<h3 class="bp-screen-title creation-step-name bb-rl-group-avatar-headline">
 		<?php esc_html_e( 'Upload Group Avatar', 'buddyboss' ); ?>
 	</h3>
 <?php else : ?>
@@ -37,44 +37,51 @@ endif;
 
 <?php
 if ( 'upload-image' === $bp_avatar_admin_step ) :
+	?>
+	<div class="bb-rl-upload-image-wrap">
+	<?php
 
-	if ( $bp_is_group_create ) :
-		?>
-		<div class="left-menu">
-			<?php bp_new_group_avatar(); ?>
-		</div><!-- .left-menu -->
-		<div class="main-column">
-	<?php endif; ?>
+		if ( $bp_is_group_create ) :
+			?>
+			<div class="left-menu">
+				<?php bp_new_group_avatar(); ?>
+			</div><!-- .left-menu -->
+			<div class="main-column">
+		<?php endif; ?>
 
-			<p class="bp-help-text"><?php esc_html_e( 'Upload a photo that represents this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
-			<p>
-				<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select a photo', 'buddyboss' ); ?></label>
-				<input type="file" name="file" id="file" />
-				<input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Photo', 'buddyboss' ); ?>" />
-				<input type="hidden" name="action" id="action" value="bp_avatar_upload" />
-			</p>
+		<p class="bp-help-text"><?php esc_html_e( 'Upload a photo that represents this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
+		<p>
+			<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select a photo', 'buddyboss' ); ?></label>
+			<input type="file" name="file" id="file" />
+			<input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Photo', 'buddyboss' ); ?>" />
+			<input type="hidden" name="action" id="action" value="bp_avatar_upload" />
+		</p>
 
-	<?php if ( $bp_is_group_create ) : ?>
-			<p class="bp-help-text"><?php esc_html_e( 'To skip the group photo upload process select "Next Step".', 'buddyboss' ); ?></p>
-		</div><!-- .main-column -->
+		<?php if ( $bp_is_group_create ) : ?>
+				<p class="bp-help-text"><?php esc_html_e( 'To skip the group photo upload process select "Next Step".', 'buddyboss' ); ?></p>
+			</div><!-- .main-column -->
 
-	<?php elseif ( $group_has_avatar ) : ?>
+		<?php elseif ( $group_has_avatar ) : ?>
 
-		<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
-		<?php
-		bp_button(
-			array(
-				'id'         => 'delete_group_avatar',
-				'component'  => 'groups',
-				'wrapper_id' => 'delete-group-avatar-button',
-				'link_class' => 'edit',
-				'link_href'  => bp_get_group_avatar_delete_link(),
-				'link_title' => __( 'Delete Group Photo', 'buddyboss' ),
-				'link_text'  => __( 'Delete Group Photo', 'buddyboss' ),
-			)
-		);
+			<p><?php esc_html_e( "To remove the existing group photo, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
+			<?php
+			bp_button(
+				array(
+					'id'         => 'delete_group_avatar',
+					'component'  => 'groups',
+					'wrapper_id' => 'delete-group-avatar-button',
+					'link_class' => 'edit',
+					'link_href'  => bp_get_group_avatar_delete_link(),
+					'link_title' => __( 'Delete Group Photo', 'buddyboss' ),
+					'link_text'  => __( 'Delete Group Photo', 'buddyboss' ),
+				)
+			);
 
-	endif;
+		endif;
+
+	?>
+	</div>
+	<?php
 
 	/**
 	 * Load the Avatar UI templates
@@ -87,6 +94,7 @@ if ( 'upload-image' === $bp_avatar_admin_step ) :
 		wp_nonce_field( 'bp_avatar_upload' );
 	}
 
+	
 endif;
 
 if ( 'crop-image' === $bp_avatar_admin_step ) {
