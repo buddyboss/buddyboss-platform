@@ -148,7 +148,7 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'activityModalOpened', function( event, data ) {
 				var activityId = data.activityId;
-		
+
 				$( document ).on( 'click', '.bb-activity-model-wrapper.activity-theatre', function( event ) {
 					if (
 						$( '#activity-modal:visible' ).length > 0 &&
