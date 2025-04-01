@@ -26383,6 +26383,14 @@ body.buddyboss-theme.directory.video .site-main .video-options {
   transform: translateY(-50%);
 }
 
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering.bb-subnav-filters-labels-only > .subnav-filters-opener {
+  pointer-events: none;
+}
+
+.activity-head-bar .bb-subnav-filters-container.bb-subnav-filters-filtering.bb-subnav-filters-labels-only > .subnav-filters-opener i.bb-icon-angle-down {
+  display: none;
+}
+
 .activity-head-bar .activity-type-navs + .bb-subnav-filters-search {
   margin-right: 20px;
 }
