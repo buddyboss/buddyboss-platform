@@ -395,8 +395,10 @@ h6 {
 }
 
 @media screen and (max-width: 992px) {
-  .site.bb-readylaunch {
+  .bb-rl-left-panel ~ .site.bb-readylaunch {
     margin-right: 0;
+  }
+  .site.bb-readylaunch {
     margin-top: 66px;
   }
 }
