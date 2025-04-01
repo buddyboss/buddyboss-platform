@@ -1916,6 +1916,87 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border-radius: var(--bb-rl-radius-full);
 }
 
+.activity-head-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-200) 0;
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-subnav-filters-container-main {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-subnav-filters-container-main .bb-subnav-filters-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bb-subnav-filters-container-main .bb-subnav-filters-container {
+  position: relative;
+  z-index: 1;
+}
+
+.bb-subnav-filters-container-main .bb-subnav-filters-container.active .subnav-filters-modal {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-opener {
+  display: flex;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  color: var(--bb-rl-text-secondary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: 1;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-opener [class*="bb-icon"] {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 16px;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-modal {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  background: var(--bb-rl-background-color);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+  padding: var(--bb-rl-space-100) 0;
+  width: 200px;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-modal ul {
+  list-style: none;
+  padding: 0;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-modal li a {
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  display: block;
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-modal li a:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
 /* Activity Item */
 .bb-rl-activity-list {
   list-style: none;

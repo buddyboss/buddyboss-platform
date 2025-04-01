@@ -201,6 +201,10 @@ window.bp = window.bp || {};
 				$( window ).scroll( this.loadMoreActivities );
 			}
 
+			// Activity filter.
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-opener', this.openActivityFilter.bind( this ) );
+			$( document ).on( 'click', this.closeActivityFilter.bind( this ) );
+
 			$( '.bb-rl-activity-model-wrapper, .bb-rl-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$document.on(
 				'click',
@@ -250,6 +254,31 @@ window.bp = window.bp || {};
 				);
 			} else {
 				setTimeout( initializeForms, 1000 );
+			}
+		},
+
+		openActivityFilter: function ( e ) {
+			e.preventDefault();
+			$( '.bb-subnav-filters-container:not(.bb-subnav-filters-search)' ).removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			var $parent = $( e.currentTarget ).parent( '.bb-subnav-filters-container' );
+			$parent.addClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'true' );
+
+			if ( $parent.find( 'input[type="search"]' ).length ){
+				$parent.find( 'input[type="search"]' ).focus();
+			}
+		},
+
+		closeActivityFilter: function ( e ) {
+			if ( ! $( e.target ).closest( '.bb-subnav-filters-container' ).length ) {
+				$.each( $( '.bb-subnav-filters-container' ), function() {
+					if ( $( this ).hasClass( 'bb-subnav-filters-search' ) ) {
+						if( $( this ).find( 'input[name="activity_search"]' ).val() === '' ) {
+							$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
+						}
+					} else {
+						$( this ) .removeClass( 'active' ) .find( '.subnav-filters-opener' ) .attr( 'aria-expanded', 'false' );
+					}
+				});
 			}
 		},
 

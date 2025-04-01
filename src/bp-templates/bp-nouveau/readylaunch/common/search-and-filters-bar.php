@@ -84,6 +84,7 @@
 	}
 	?>
 </div><!-- search & filters -->
+<div class="activity-head-bar">
 <?php
 if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 
@@ -191,3 +192,4 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	<?php
 }
 ?>
+</div>
