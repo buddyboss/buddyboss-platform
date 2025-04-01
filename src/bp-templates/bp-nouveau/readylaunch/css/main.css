@@ -8260,10 +8260,19 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-cover-container .bp-cover-image-status-progress .bp-uploader-progress .filename {
   word-break: break-word;
   text-align: center;
-  padding: 0 var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: var(--bb-rl-font-size-xs);
   line-height: var(--bb-rl-base-line-xs);
   color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress .file-progress,
+.bb-rl-avatar-container .bp-cover-image-status-progress .bp-uploader-progress .file-progress,
+.bb-rl-cover-container .bp-avatar-status-progress .bp-uploader-progress .file-progress,
+.bb-rl-cover-container .bp-cover-image-status-progress .bp-uploader-progress .file-progress {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
 }
 
 .bb-rl-media-stream .media-list,

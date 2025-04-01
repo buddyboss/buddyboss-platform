@@ -528,6 +528,8 @@ window.bp = window.bp || {};
 					var newStyle = "width: " + percent + "%; --progress: " + percent + ";";
 
 					$element.attr( 'style', currentStyle + newStyle );
+
+					$( '#' + model.get( 'id' ) + ' .file-progress .percent-value' ).text( percent );
 				}
 			},
 

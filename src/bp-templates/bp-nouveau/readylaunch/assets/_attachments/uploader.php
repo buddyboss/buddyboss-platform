@@ -42,6 +42,7 @@
 		<div class="bp-progress">
 			<div class="bp-bar"></div>
 		</div>
+		<div class="file-progress"><span class="percent-value">0</span><?php esc_html_e( '% complete', 'buddyboss' ); ?></div>
 		<div class="filename">{{data.filename}}</div>
 	</div>
 </script>
