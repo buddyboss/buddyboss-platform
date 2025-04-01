@@ -32,7 +32,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 		$total_media = $document_folder_template->folder->document['total'];
 		?>
-		<div id="bp-media-single-folder">
+		<div id="bp-media-single-folder" class="bb-rl-media-stream">
 			<div class="album-single-view" <?php echo 0 === $total_media ? esc_attr( 'no-photos' ) : ''; ?>>
 				<div class="bp-media-header-wrap">
 					<div class="bp-media-header-wrap-inner">
