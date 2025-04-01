@@ -2294,7 +2294,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   display: none;
 }
 
-body.groups.messages span.select2-dropdown.select2-dropdown--above {
+body.groups.messages span.select2-dropdown {
   display: none;
 }
 
