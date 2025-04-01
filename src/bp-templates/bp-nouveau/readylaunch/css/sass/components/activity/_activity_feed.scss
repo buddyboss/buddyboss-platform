@@ -72,18 +72,13 @@
 			}
 		}
 
-		&.friendship_created,
-		&.updated_profile {
+		&.bb-rl-empty-content {
 
-			.bb-rl-activity-head {
+			.bb-rl-activity-head,
+			.bb-rl-activity-head-group {
 				border-bottom: 0;
 				padding-bottom: 0;
 			}
-		}
-
-		&.bb-rl-empty-content .bb-rl-activity-head-group {
-			border-bottom: 0;
-			padding-bottom: 0;
 		}
 	}
 

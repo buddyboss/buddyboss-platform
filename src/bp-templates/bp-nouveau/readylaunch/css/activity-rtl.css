@@ -1959,11 +1959,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   display: none;
 }
 
-.bb-rl-activity-list li.activity-item.friendship_created .bb-rl-activity-head, .bb-rl-activity-list li.activity-item.updated_profile .bb-rl-activity-head {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
+.bb-rl-activity-list li.activity-item.bb-rl-empty-content .bb-rl-activity-head,
 .bb-rl-activity-list li.activity-item.bb-rl-empty-content .bb-rl-activity-head-group {
   border-bottom: 0;
   padding-bottom: 0;
