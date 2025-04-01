@@ -300,8 +300,11 @@ h6 {
 
 @media screen and (max-width: $lg) {
 
-	.site.bb-readylaunch {
+	.bb-rl-left-panel ~ .site.bb-readylaunch {
 		margin-left: 0;
+	}
+
+	.site.bb-readylaunch {
 		margin-top: 66px;
 	}
 }

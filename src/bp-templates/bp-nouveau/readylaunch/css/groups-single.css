@@ -2237,6 +2237,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   border-radius: var(--bb-rl-radius-lg);
   margin: 0 auto;
   padding: var(--bb-rl-space-200) var(--bb-rl-space-200) 0;
+  border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 #group-messages-container .bp-messages-feedback {
@@ -2423,7 +2424,6 @@ div#bp-group-message-content {
 
 .group-messages.private-message #group-messages-container {
   padding: 0 var(--bb-rl-space-200) 0;
-  border: 1px solid var(--bb-rl-border-secondary-color);
 }
 
 .group-messages.private-message .bb-groups-messages-right #send_group_message_form {
@@ -2653,6 +2653,20 @@ div#bp-group-message-content {
   left: 0;
   bottom: 45px;
   visibility: hidden;
+}
+
+@media screen and (max-width: 440px) {
+  .bb-groups-messages-right-bottom #whats-new-toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bb-groups-messages-right-bottom .bb-rl-separator {
+    width: 100%;
+    height: 0;
+  }
+  .bb-groups-messages-right-bottom #group-messages-new-submit {
+    margin-left: 0;
+  }
 }
 
 .bb-groups-messages-left .total-members-text {
