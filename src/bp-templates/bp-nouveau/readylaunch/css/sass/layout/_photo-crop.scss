@@ -474,9 +474,11 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 	}
 }
 
-.bb-rl-avatar-container {
+.bb-rl-avatar-container,
+.bb-rl-cover-container {
 
-	.bp-avatar-status-progress {
+	.bp-avatar-status-progress,
+	.bp-cover-image-status-progress {
 		position: absolute;
 		top: 0;
 		left: 0;

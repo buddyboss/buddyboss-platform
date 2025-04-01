@@ -72,7 +72,7 @@ window.bp = window.bp || {};
 			}
 
 			// Display it
-			coverImageUploadProgress.inject( '.bp-cover-image-status' );
+			coverImageUploadProgress.inject( '.bp-cover-image-status-progress' );
 		},
 
 		deleteCoverImage: function( model ) {
@@ -155,6 +155,7 @@ window.bp = window.bp || {};
 						$( '.bb-rl-cover-container' )
 							.removeClass( 'bb-rl-cover-container--has-cover' )
 							.addClass( 'bb-rl-cover-container--no-cover' );
+						$( '.bp-cover-image-status-progress' ).empty();
 
 				}
 			).fail(
@@ -207,15 +208,13 @@ window.bp = window.bp || {};
 					message = BP_Uploader.strings.feedback_messages[1];
 					type    = 'success';
 
-					this.views.set(
-						'.bp-uploader-progress',
-						new bp.Views.CoverImageStatus(
-							{
-								value : message,
-								type  : type
-								}
-						)
-					);
+					var statusView = new bp.Views.CoverImageStatus( {
+						value: message,
+						type: type
+					} );
+
+					// Inject into the other container
+					statusView.inject( '.bp-cover-image-status' );
 
 					// Update the header of the page and reset the position
 					if ( $( '#header-cover-image .header-cover-img' ).length ) {

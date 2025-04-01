@@ -1974,7 +1974,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
   background: var(--bb-rl-background-color);
-  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   padding: var(--bb-rl-space-100) 0;
   width: 200px;
 }

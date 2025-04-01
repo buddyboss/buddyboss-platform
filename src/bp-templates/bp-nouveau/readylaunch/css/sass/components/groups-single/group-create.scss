@@ -156,14 +156,16 @@
 
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
-			@include bb-rl-button--small;
+			padding: 6px var(--bb-rl-space-200);
+			font-size: var(--bb-rl-font-size-sm);
 		}
 
 		input[type="button"] {
 
 			@include bb-rl-button;
 			@include bb-rl-button--secondary-outline;
-			@include bb-rl-button--small;
+			padding: 6px var(--bb-rl-space-200);
+			font-size: var(--bb-rl-font-size-sm);
 		}
 
 		input#group-creation-previous {

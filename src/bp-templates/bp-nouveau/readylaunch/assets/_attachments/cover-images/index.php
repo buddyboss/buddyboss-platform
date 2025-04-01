@@ -72,6 +72,7 @@ $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' b
 		<img src="<?php echo esc_url( $cover_image_url ); ?>" class="group-cover-image" alt="<?php echo esc_attr( sprintf( __( '%s cover image', 'buddyboss' ), $cover_label ) ); ?>" />
 	</div>
 	<div class="bp-cover-image"></div>
+    <div class="bp-cover-image-status-progress"></div>
 </div>
 <div class="bp-cover-image-status"></div>
 <div class="bp-cover-image-manage"></div>
