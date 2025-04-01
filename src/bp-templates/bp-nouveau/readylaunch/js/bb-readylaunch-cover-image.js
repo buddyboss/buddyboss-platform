@@ -260,6 +260,7 @@ window.bp = window.bp || {};
 					$( '.bb-rl-cover-container' )
 						.removeClass( 'bb-rl-cover-container--no-cover' )
 						.addClass( 'bb-rl-cover-container--has-cover' );
+					$( '.bp-cover-image-status-progress' ).empty();
 				}
 			}
 		}

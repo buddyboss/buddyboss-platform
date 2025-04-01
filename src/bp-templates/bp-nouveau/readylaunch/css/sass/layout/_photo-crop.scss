@@ -531,7 +531,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 					height: 100%;
 					border-radius: 50%;
 					background: /* stylelint-disable-line */
-						radial-gradient(closest-side, #fff 94%, transparent 96% 100%), /* stylelint-disable-line */
+						radial-gradient(closest-side, var(--bb-rl-background-secondary-color) 94%, transparent 96% 100%), /* stylelint-disable-line */
 						conic-gradient(var(--bb-rl-border-brand-secondary-color) calc(var(--progress) * 1%), var(--bb-rl-border-secondary-color) 0); /* stylelint-disable-line */
 					box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); /* Subtle blur for smooth edges */
 
