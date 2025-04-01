@@ -520,7 +520,14 @@ window.bp = window.bp || {};
 
 			progress:function( model ) {
 				if ( ! _.isUndefined( model.get( 'percent' ) ) ) {
-					$( '#' + model.get( 'id' ) + ' .bp-progress .bp-bar' ).css( 'width', model.get( 'percent' ) + '%' );
+					var selector = '#' + model.get( 'id' ) + ' .bp-progress .bp-bar';
+        			var percent = model.get( 'percent' );
+
+					var $element = $( selector );
+					var currentStyle = $element.attr('style') || '';
+					var newStyle = "width: " + percent + "%; --progress: " + percent + ";";
+
+					$element.attr( 'style', currentStyle + newStyle );
 				}
 			},
 

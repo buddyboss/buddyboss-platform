@@ -7940,7 +7940,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-manage-group-container #drag-drop-area,
 .bb-rl-profile-edit-wrapper #drag-drop-area,
 .bb-rl-create-group #drag-drop-area {
-  border: 1px dashed var(--bb-rl-border-tertiary-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-lg);
   background-color: var(--bb-rl-background-secondary-color);
 }
@@ -8155,6 +8155,88 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bb-rl-avatar-photo {
   opacity: 1;
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0;
+  visibility: hidden;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress:has(.files) {
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .files {
+  width: 100%;
+  height: 100%;
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress .bp-progress {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress .bp-progress .bp-bar {
+  width: 100% !important;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff 94%, transparent 96% 100%), conic-gradient(var(--bb-rl-border-brand-secondary-color) calc(var(--progress) * 1%), var(--bb-rl-border-secondary-color) 0);
+  /* stylelint-disable-line */
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  /* Subtle blur for smooth edges */
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress .bp-progress .bp-bar::after {
+  content: "\e10e";
+  color: var(--bb-rl-icon-primary-color);
+  font-size: 24px;
+  font-family: bb-icons-rl;
+  font-weight: 500;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+}
+
+.bb-rl-avatar-container .bp-avatar-status-progress .bp-uploader-progress .filename {
+  word-break: break-word;
+  text-align: center;
+  padding: 0 var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-xs);
+  line-height: var(--bb-rl-base-line-xs);
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .bb-rl-media-stream .media-list,

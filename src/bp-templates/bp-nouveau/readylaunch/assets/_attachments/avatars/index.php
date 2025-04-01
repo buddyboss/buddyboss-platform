@@ -72,6 +72,7 @@ $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-r
 		<img src="<?php echo esc_url( $avatar_url ); ?>" class="<?php echo bp_is_group() ? 'group' : 'user'; ?>-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="<?php echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) ); ?>" />
 	</div>
 	<div class="bp-avatar"></div>
+	<div class="bp-avatar-status-progress"></div>
 </div>
 <div class="bp-avatar-status"></div>
 

@@ -200,7 +200,7 @@ window.bp = window.bp || {};
 			}
 
 			// Display it
-			avatarStatus.inject( '.bp-avatar-status' );
+			avatarStatus.inject( '.bp-avatar-status-progress' );
 		},
 
 		cropView: function() {
