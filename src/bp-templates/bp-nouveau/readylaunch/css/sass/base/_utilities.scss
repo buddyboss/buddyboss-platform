@@ -1736,30 +1736,23 @@ div.vjs-menu {
 	.bb-single-album-header {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: flex-start;
-		align-items: flex-start;
+		justify-content: space-between;
+		align-items: center;
 		padding: 0 0 var(--bb-rl-space-200);
 		margin: 0 0 var(--bb-rl-space-200);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-
-		p {
-			flex-basis: 100%;
-			width: 100%;
-			font-size: var(--bb-rl-font-size-sm);
-			margin-top: var(--bb-rl-space-100);
-
-			.bb-sep {
-				margin: 0 var(--bb-rl-space-100);
-				color: var(--bb-rl-text-secondary-color);
-				font-weight: 400;
-				font-size: var(--bb-rl-font-size-sm);
-			}
-		}
-
+		
 		.bb-rl-album-title {
-
 			@include bb-rl-base-heading-xl;
 			color: var(--bb-rl-text-color);
+
+			.bb-rl-album-back {
+				display: inline-flex;
+				align-items: center;
+				color: var(--bb-rl-text-color);
+				margin-right: var(--bb-rl-space-100);
+				vertical-align: middle;
+			}
 		}
 
 		.button {
@@ -1768,6 +1761,58 @@ div.vjs-menu {
 			@include bb-rl-button--brand-fill;
 			@include bb-rl-button--small;
 			margin-left: var(--bb-rl-space-100);
+		}
+
+		.album-actions {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+
+			.bb-member-media-header {
+				margin-right: var(--bb-rl-space-200);
+				margin-bottom: 0;
+				font-size: var(--bb-rl-font-size-2xl);
+				list-style: 1;
+
+				a {
+					color: var(--bb-rl-text-color);
+
+					&:hover {
+						color: var(--bb-rl-primary-color);
+					}
+				}
+
+				#bb-select-deselect-all-media {
+					order: -1;
+				}
+			}
+		}
+	}
+
+	.bb-rl-album-meta {
+		margin-bottom: var(--bb-rl-space-200);
+
+		p {
+			flex-basis: 100%;
+			width: 100%;
+			font-size: var(--bb-rl-font-size-sm);
+			margin-top: var(--bb-rl-space-100);
+
+			[class*="bb-icons-rl-"] {
+				margin-right: var(--bb-rl-space-100);
+			}
+
+			.bb-sep {
+				margin: 0 var(--bb-rl-space-100);
+				width: 4px;
+				height: 4px;
+				background-color: var(--bb-rl-background-black-color);
+				border-radius: var(--bb-rl-radius-full);
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+				top: -2px;
+			}
 		}
 	}
 

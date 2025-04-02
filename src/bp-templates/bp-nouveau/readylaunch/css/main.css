@@ -2173,25 +2173,11 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 #bp-media-single-album .bb-single-album-header {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 0 var(--bb-rl-space-200);
   margin: 0 0 var(--bb-rl-space-200);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-}
-
-#bp-media-single-album .bb-single-album-header p {
-  flex-basis: 100%;
-  width: 100%;
-  font-size: var(--bb-rl-font-size-sm);
-  margin-top: var(--bb-rl-space-100);
-}
-
-#bp-media-single-album .bb-single-album-header p .bb-sep {
-  margin: 0 var(--bb-rl-space-100);
-  color: var(--bb-rl-text-secondary-color);
-  font-weight: 400;
-  font-size: var(--bb-rl-font-size-sm);
 }
 
 #bp-media-single-album .bb-single-album-header .bb-rl-album-title {
@@ -2199,6 +2185,14 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   font-weight: 600;
   line-height: 28px;
   color: var(--bb-rl-text-color);
+}
+
+#bp-media-single-album .bb-single-album-header .bb-rl-album-title .bb-rl-album-back {
+  display: inline-flex;
+  align-items: center;
+  color: var(--bb-rl-text-color);
+  margin-right: var(--bb-rl-space-100);
+  vertical-align: middle;
 }
 
 #bp-media-single-album .bb-single-album-header .button {
@@ -2231,6 +2225,58 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 #bp-media-single-album .bb-single-album-header .button:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+#bp-media-single-album .bb-single-album-header .album-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#bp-media-single-album .bb-single-album-header .album-actions .bb-member-media-header {
+  margin-right: var(--bb-rl-space-200);
+  margin-bottom: 0;
+  font-size: var(--bb-rl-font-size-2xl);
+  list-style: 1;
+}
+
+#bp-media-single-album .bb-single-album-header .album-actions .bb-member-media-header a {
+  color: var(--bb-rl-text-color);
+}
+
+#bp-media-single-album .bb-single-album-header .album-actions .bb-member-media-header a:hover {
+  color: var(--bb-rl-primary-color);
+}
+
+#bp-media-single-album .bb-single-album-header .album-actions .bb-member-media-header #bb-select-deselect-all-media {
+  order: -1;
+}
+
+#bp-media-single-album .bb-rl-album-meta {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+#bp-media-single-album .bb-rl-album-meta p {
+  flex-basis: 100%;
+  width: 100%;
+  font-size: var(--bb-rl-font-size-sm);
+  margin-top: var(--bb-rl-space-100);
+}
+
+#bp-media-single-album .bb-rl-album-meta p [class*="bb-icons-rl-"] {
+  margin-right: var(--bb-rl-space-100);
+}
+
+#bp-media-single-album .bb-rl-album-meta p .bb-sep {
+  margin: 0 var(--bb-rl-space-100);
+  width: 4px;
+  height: 4px;
+  background-color: var(--bb-rl-background-black-color);
+  border-radius: var(--bb-rl-radius-full);
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
 }
 
 #bp-media-single-album .bb-album-actions {
@@ -7014,6 +7060,50 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-privacy::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.ac-document-privacy::before {
   content: "\e2fa";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-add-photos::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-add-photos::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-add-photos::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-add-photos::before {
+  content: "\e836";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-add-videos::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-add-videos::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-add-videos::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-add-videos::before {
+  content: "\e740";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete::before {
+  content: "\e4a6";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-edit-album::before {
+  content: "\e3b4";
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown li.download_file a::before,

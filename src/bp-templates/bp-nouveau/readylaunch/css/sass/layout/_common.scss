@@ -254,6 +254,22 @@
 			&.ac-document-privacy::before {
 				content: "\e2fa";
 			}
+
+			&.bb-album-add-photos::before {
+				content: "\e836";
+			}
+
+			&.bb-album-add-videos::before {
+				content: "\e740";
+			}
+
+			&.bb-album-delete::before {
+				content: "\e4a6";
+			}
+
+			&.bb-edit-album::before {
+				content: "\e3b4";
+			}
 		}
 
 		li.download_file {
