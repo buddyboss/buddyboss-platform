@@ -498,7 +498,9 @@
 		}
 	}
 
-	#bp-media-create-folder {
+	#bp-media-create-folder,
+	#bp-media-create-child-folder,
+	#bp-media-edit-child-folder {
 
 		.bb-field-wrap,
 		.bb-rl-field-wrap {
@@ -634,7 +636,8 @@
 	.bb-model-footer {
 
 		.button.saving,
-		.bb-rl-button.saving {
+		.bb-rl-button.saving,
+		.bb-rl-button.loading {
 
 			&::after {
 				content: "\e66a";

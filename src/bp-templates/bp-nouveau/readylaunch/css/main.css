@@ -5222,22 +5222,38 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template #bp-media-create-folder .bb-field-wrap,
-.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap {
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-field-wrap,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-rl-field-wrap,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-field-wrap,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-rl-field-wrap {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .bb-readylaunch-template #bp-media-create-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show,
-.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show {
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show {
   padding: 0 var(--bb-rl-space-300) var(--bb-rl-space-200);
 }
 
 .bb-readylaunch-template #bp-media-create-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy,
-.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy {
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-rl-field-wrap.bb-rl-privacy-field-wrap-hide-show #bb-rl-folder-privacy {
   width: 100%;
 }
 
 .bb-readylaunch-template #bp-media-create-folder .bb-field-wrap label,
-.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap label {
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap label,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-field-wrap label,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-rl-field-wrap label,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-field-wrap label,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-rl-field-wrap label {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -5247,12 +5263,20 @@ button[data-balloon] {
 }
 
 .bb-readylaunch-template #bp-media-create-folder .bb-field-wrap input,
-.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap input {
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap input,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-field-wrap input,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-rl-field-wrap input,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-field-wrap input,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-rl-field-wrap input {
   width: 100%;
 }
 
 .bb-readylaunch-template #bp-media-create-folder .bb-field-wrap .error-box,
-.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap .error-box {
+.bb-readylaunch-template #bp-media-create-folder .bb-rl-field-wrap .error-box,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-field-wrap .error-box,
+.bb-readylaunch-template #bp-media-create-child-folder .bb-rl-field-wrap .error-box,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-field-wrap .error-box,
+.bb-readylaunch-template #bp-media-edit-child-folder .bb-rl-field-wrap .error-box {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
@@ -5352,7 +5376,8 @@ button[data-balloon] {
 }
 
 .bb-rl-modal-wrapper .bb-model-footer .button.saving::after,
-.bb-rl-modal-wrapper .bb-model-footer .bb-rl-button.saving::after {
+.bb-rl-modal-wrapper .bb-model-footer .bb-rl-button.saving::after,
+.bb-rl-modal-wrapper .bb-model-footer .bb-rl-button.loading::after {
   content: "\e66a";
   font-weight: 400;
   font-family: bb-icons-rl;

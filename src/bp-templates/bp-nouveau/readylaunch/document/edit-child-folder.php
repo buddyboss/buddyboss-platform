@@ -19,7 +19,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 <div id="bp-media-edit-child-folder" style="display: none;">
 	<transition name="modal">
 		<div class="modal-mask bb-white bbm-model-wrap">
-			<div class="modal-wrapper">
+			<div class="modal-wrapper bb-rl-modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?> '<?php bp_folder_title(); ?>'</h4>
@@ -40,7 +40,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 						?>
 					<footer class="bb-model-footer">
 						<input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $folder_id ); ?>">
-						<a class="button pull-right" id="bp-media-edit-child-folder-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-edit-child-folder-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>
