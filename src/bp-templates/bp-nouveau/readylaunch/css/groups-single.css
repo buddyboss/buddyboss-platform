@@ -2392,6 +2392,29 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   display: none;
 }
 
+body.private-message #group-messages-container .bp-select-members-wrap .select2.select2-container .select2-selection__choice__remove {
+  display: block;
+  font-size: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 5px;
+  cursor: pointer;
+}
+
+body.private-message #group-messages-container .bp-select-members-wrap .select2.select2-container .select2-selection__choice__remove:before {
+  content: "\e4f6";
+  color: var(--bb-rl-icon-secondary-color);
+  font-family: bb-icons-rl;
+  font-size: 16px;
+  line-height: 1;
+}
+
+body.private-message #group-messages-container .bp-select-members-wrap .select2.select2-container .select2-selection__rendered .select2-selection__choice {
+  position: relative;
+  padding-right: 30px;
+}
+
 #send_group_message_form .select2-search__field {
   display: none;
 }

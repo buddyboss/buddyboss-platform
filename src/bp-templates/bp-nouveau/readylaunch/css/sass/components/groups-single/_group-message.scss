@@ -87,6 +87,32 @@
 			.select2-selection__choice__remove {
 				display: none;
 			}
+
+			body.private-message & {
+
+				.select2-selection__choice__remove {
+					display: block;
+					font-size: 0;
+					position: absolute;
+					top: 50%;
+					transform: translateY(-50%);
+					right: 5px;
+					cursor: pointer;
+
+					&:before {
+						content: "\e4f6";
+						color: var(--bb-rl-icon-secondary-color);
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						line-height: 1;
+					}
+				}
+
+				.select2-selection__rendered .select2-selection__choice {
+					position: relative;
+					padding-right: 30px;
+				}
+			}
 		}
 	}
 }
