@@ -3671,7 +3671,18 @@ button[data-balloon] {
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-readylaunch-template input:not([type="submit"]):not([type="button"]),
+.bb-readylaunch-template input[type="text"],
+.bb-readylaunch-template input[type="email"],
+.bb-readylaunch-template input[type="password"],
+.bb-readylaunch-template input[type="tel"],
+.bb-readylaunch-template input[type="url"],
+.bb-readylaunch-template input[type="search"],
+.bb-readylaunch-template input[type="number"],
+.bb-readylaunch-template input[type="date"],
+.bb-readylaunch-template input[type="datetime-local"],
+.bb-readylaunch-template input[type="month"],
+.bb-readylaunch-template input[type="week"],
+.bb-readylaunch-template input[type="time"],
 .bb-readylaunch-template textarea {
   font-size: 14px;
   font-weight: 400;
@@ -3687,7 +3698,18 @@ button[data-balloon] {
   color: var(--bb-rl-text-color);
 }
 
-.bb-readylaunch-template input:not([type="submit"]):not([type="button"])[type="submit"],
+.bb-readylaunch-template input[type="text"][type="submit"],
+.bb-readylaunch-template input[type="email"][type="submit"],
+.bb-readylaunch-template input[type="password"][type="submit"],
+.bb-readylaunch-template input[type="tel"][type="submit"],
+.bb-readylaunch-template input[type="url"][type="submit"],
+.bb-readylaunch-template input[type="search"][type="submit"],
+.bb-readylaunch-template input[type="number"][type="submit"],
+.bb-readylaunch-template input[type="date"][type="submit"],
+.bb-readylaunch-template input[type="datetime-local"][type="submit"],
+.bb-readylaunch-template input[type="month"][type="submit"],
+.bb-readylaunch-template input[type="week"][type="submit"],
+.bb-readylaunch-template input[type="time"][type="submit"],
 .bb-readylaunch-template textarea[type="submit"] {
   display: inline-flex;
   align-items: center;
