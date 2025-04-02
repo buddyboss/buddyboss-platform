@@ -173,7 +173,7 @@ body.messages .bb-rl-content-wrapper {
   pointer-events: none;
 }
 
-.messages-search input[type="search"] {
+.bb-readylaunch-template .messages-search input[type="search"] {
   color: var(--bb-rl-text-color);
   font-size: var(--bb-rl-font-size-sm);
   line-height: 1.2;
@@ -494,6 +494,7 @@ body.messages .bb-rl-content-wrapper {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 }
 
 #bb-rl-messages-thread-list-nav .subnav li a {
@@ -502,7 +503,8 @@ body.messages .bb-rl-content-wrapper {
   border-radius: 0;
 }
 
-#bb-rl-messages-thread-list-nav #bb-rl-inbox-personal-li > a {
+#bb-rl-messages-thread-list-nav #bb-rl-inbox-personal-li > a,
+#bb-rl-messages-thread-list-nav #back-to-thread-li {
   color: var(--bb-rl-text-color);
   font-size: 16px;
   font-weight: 500;

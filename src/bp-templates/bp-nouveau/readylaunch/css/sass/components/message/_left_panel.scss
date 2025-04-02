@@ -32,13 +32,16 @@
 	}
 
 	input[type="search"] {
-		color: var(--bb-rl-text-color);
-		font-size: var(--bb-rl-font-size-sm);
-		line-height: 1.2;
-		border-radius: var(--bb-rl-radius-full);
-		border: 1px solid var(--bb-rl-border-tertiary-color);
-		padding: var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-100) 35px;
-		width: 100%;
+
+		.bb-readylaunch-template & {
+			color: var(--bb-rl-text-color);
+			font-size: var(--bb-rl-font-size-sm);
+			line-height: 1.2;
+			border-radius: var(--bb-rl-radius-full);
+			border: 1px solid var(--bb-rl-border-tertiary-color);
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-100) var(--bb-rl-space-100) 35px;
+			width: 100%;
+		}
 	}
 
 	#user_messages_search_submit {
@@ -377,6 +380,7 @@
 		display: flex;
 		align-items: center;
 		gap: var(--bb-rl-space-100);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 
 		li a {
 			border: 0;
@@ -385,7 +389,8 @@
 		}
 	}
 
-	#bb-rl-inbox-personal-li > a {
+	#bb-rl-inbox-personal-li > a,
+	#back-to-thread-li {
 		color: var(--bb-rl-text-color);
 		font-size: 16px;
 		font-weight: 500;
