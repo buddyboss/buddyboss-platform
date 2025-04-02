@@ -10,11 +10,12 @@
 
 $is_send_ajax_request = bb_is_send_ajax_request();
 
-bp_get_template_part( 'members/single/parts/item-subnav' );
 bp_nouveau_activity_member_post_form();
-bp_get_template_part( 'common/search-and-filters-bar' );
-bp_nouveau_member_hook( 'before', 'activity_content' );
 ?>
+<div class="activity-head-bar">
+	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+</div>
+<?php  bp_nouveau_member_hook( 'before', 'activity_content' ); ?>
 
 	<div id="activity-stream" class="activity single-user" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 		<?php

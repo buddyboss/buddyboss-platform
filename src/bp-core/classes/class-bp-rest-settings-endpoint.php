@@ -272,6 +272,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-profile-search'                 => ! bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'bp-profile-layout-default-format'         => bp_profile_layout_default_format(),
+			'bb-enable-content-counts'                 => function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true,
 			'bb-web-notification-enabled'              => function_exists( 'bb_web_notification_enabled' ) && bb_web_notification_enabled(),
 			'bb-app-notification-enabled'              => function_exists( 'bb_app_notification_enabled' ) && bb_app_notification_enabled(),
 			'bb_enabled_legacy_email_preference'       => function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference(),
@@ -445,6 +446,60 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			}
 
 			$results['bb_load_activity_per_request'] = bb_get_load_activity_per_request();
+
+			$results['bb_is_activity_search_enabled'] = ! function_exists( 'bb_is_activity_search_enabled' ) || bb_is_activity_search_enabled();
+
+			if ( function_exists( 'bb_get_enabled_activity_filter_options' ) ) {
+				$filter_labels = bb_get_activity_filter_options_labels();
+
+				// Retrieve the saved options.
+				$activity_filters = bb_get_enabled_activity_filter_options();
+
+				$sorted_filter_labels = $this->bb_get_sorted_filter_labels( $activity_filters, $filter_labels );
+
+				$results['bb_activity_filter_options'] = $sorted_filter_labels;
+			}
+
+			// Timeline filter.
+			if ( function_exists( 'bb_get_enabled_activity_timeline_filter_options' ) ) {
+				$filter_labels = bb_get_activity_timeline_filter_options_labels();
+
+				// Retrieve the saved options.
+				$activity_filters = bb_get_enabled_activity_timeline_filter_options();
+
+				$sorted_filter_labels = $this->bb_get_sorted_filter_labels( $activity_filters, $filter_labels );
+
+				$results['bb_activity_timeline_filter_options'] = $sorted_filter_labels;
+			}
+
+			if ( function_exists( 'bb_get_activity_sorting_options_labels' ) ) {
+				$sorting_options_labels = bb_get_activity_sorting_options_labels();
+
+				// Retrieve the saved options.
+				$sorting_options = bb_get_enabled_activity_sorting_options();
+				if ( ! empty( $sorting_options ) ) {
+					// Sort filter labels based on the order of $sorting_options.
+					$sorted_labels = array();
+					foreach ( $sorting_options as $key => $value ) {
+						if ( isset( $sorting_options_labels[ $key ] ) ) {
+							$sorted_labels[ $key ] = $sorting_options_labels[ $key ];
+						}
+					}
+
+					// Add the remaining labels that were not part of $sorting_options.
+					if ( count( $sorting_options_labels ) > count( $sorted_labels ) ) {
+						foreach ( $sorting_options_labels as $key => $label ) {
+							if ( ! isset( $sorted_labels[ $key ] ) ) {
+								$sorted_labels[ $key ] = $label;
+							}
+						}
+					}
+				} else {
+					$sorted_labels = $sorting_options_labels;
+				}
+
+				$results['bb_activity_sorting_options'] = $sorted_labels;
+			}
 		}
 
 		// Media settings.
@@ -811,5 +866,38 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		return $content_types;
+	}
+
+	/**
+	 * Get the list of sorted filter labels.
+	 *
+	 * @param array $activity_filters Activity filters.
+	 * @param array $filter_labels    Filter labels.
+	 *
+	 * @return array
+	 */
+	protected function bb_get_sorted_filter_labels( $activity_filters, $filter_labels ) {
+		if ( ! empty( $activity_filters ) && ! empty( $filter_labels ) ) {
+			// Sort filter labels based on the order of $activity_filters.
+			$sorted_filter_labels = array();
+			foreach ( $activity_filters as $key => $value ) {
+				if ( isset( $filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $activity_filters.
+			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
+				foreach ( $filter_labels as $key => $label ) {
+					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
+						$sorted_filter_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_filter_labels = $filter_labels;
+		}
+
+		return $sorted_filter_labels;
 	}
 }

@@ -2873,22 +2873,6 @@ function bp_nav_menu_get_loggedin_pages() {
 			);
 		}
 
-		if ( 'activity' === $bp_item['slug'] ) {
-			$page_args['activity-posts'] = (object) array(
-				'ID'             => hexdec( uniqid() ),
-				'post_title'     => __( 'Posts', 'buddyboss' ),
-				'object_id'      => hexdec( uniqid() ),
-				'post_author'    => 0,
-				'post_date'      => 0,
-				'post_excerpt'   => 'activity-posts',
-				'post_type'      => 'page',
-				'post_status'    => 'publish',
-				'comment_status' => 'closed',
-				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() ),
-				'post_parent'    => $nav_counter,
-			);
-		}
-
 		if ( ! empty( $nav_sub ) ) {
 			foreach ( $nav_sub as $s_nav ) {
 
@@ -4188,11 +4172,13 @@ function bp_get_allowedtags() {
 		$allowedtags,
 		array(
 			'a'       => array(
-				'aria-label'      => array(),
-				'class'           => array(),
-				'data-bp-tooltip' => array(),
-				'id'              => array(),
-				'rel'             => array(),
+				'aria-label'         => array(),
+				'class'              => array(),
+				'data-bp-tooltip'    => array(),
+				'data-bb-hp-profile' => array(), // used to show the profie hover popup.
+				'data-bb-hp-group'   => array(), // used to show the group hover popup.
+				'id'                 => array(),
+				'rel'                => array(),
 			),
 			'img'     => array(
 				'src'    => array(),
@@ -6075,6 +6061,24 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 		return $response;
 	}
 
+	// Allow endpoints for terms and privacy policy pages.
+	if ( '/wp/v2/pages' === $current_endpoint ) {
+		$query_params = $request->get_query_params();
+		if ( ! empty( $query_params['include'] ) ) {
+			$page_ids = bp_core_get_directory_page_ids();
+			// Get terms and privacy policy page IDs.
+			$terms       = isset( $page_ids['terms'] ) ? (int) $page_ids['terms'] : false;
+			$privacy     = isset( $page_ids['privacy'] ) ? (int) $page_ids['privacy'] : (int) get_option( 'wp_page_for_privacy_policy' );
+			$valid_pages = array( $terms, $privacy );
+			if ( ! empty( $valid_pages ) ) {
+				$matches = array_intersect( $query_params['include'], $valid_pages );
+				if ( count( $matches ) === count( $query_params['include'] ) ) {
+					return $response;
+				}
+			}
+		}
+	}
+
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
 		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
@@ -6115,7 +6119,7 @@ function bb_is_allowed_endpoint( $current_endpoint ) {
 						$endpoints                = str_replace( '//', '/', $endpoints );
 						$endpoints                = str_replace( '///', '/', $endpoints );
 						$endpoints                = '/' . ltrim( $endpoints, '/' );
-						$current_endpoint_allowed = preg_match( '@' . $endpoints . '$@i', end( $exploded_endpoint ), $matches );
+						$current_endpoint_allowed = preg_match( '@' . preg_quote( $endpoints, '@' ) . '$@i', end( $exploded_endpoint ) );
 						if ( $current_endpoint_allowed ) {
 							return true;
 						}
@@ -9956,4 +9960,34 @@ function bb_get_all_headers() {
  */
 function bb_pro_sso_version() {
 	return '2.6.30';
+}
+
+/**
+ * Common function to filter activity filter options or labels based on related components and settings active.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param array $filters Array of filter options.
+ *
+ * @return array $filters Array of allowed filter options.
+ */
+function bb_filter_activity_filter_scope_keys( $filters = array() ) {
+
+	if ( ! empty( $filters ) && is_array( $filters ) ) {
+
+		// Remove filters based on component availability and respecting settings.
+		foreach ( array_keys( $filters ) as $key ) {
+			if (
+				( 'friends' === $key && ! bp_is_active( 'friends' ) ) ||
+				( 'following' === $key && ! bp_is_activity_follow_active() ) ||
+				( 'groups' === $key && ! bp_is_active( 'groups' ) ) ||
+				( 'mentions' === $key && ( ! function_exists( 'bp_activity_do_mentions' ) || ! bp_activity_do_mentions() ) ) ||
+				( 'favorites' === $key && ! bp_is_activity_like_active() )
+			) {
+				unset( $filters[ $key ] );
+			}
+		}
+	}
+
+	return $filters;
 }

@@ -71,6 +71,25 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/info',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_group_information' ),
+					'permission_callback' => '__return_true',
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -282,10 +301,12 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				$name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $name );
 				$name = trim( $name );
 
+				$get_nav_count = $this->bp_rest_get_nav_count( $group, $nav );
+
 				$tab = array(
 					'id'              => $id,
 					'title'           => $name,
-					'count'           => $this->bp_rest_get_nav_count( $group, $nav ),
+					'count'           => ( $get_nav_count ? $get_nav_count : '' ),
 					'position'        => $nav['position'],
 					'default'         => false,
 					'user_has_access' => $nav['user_has_access'],
@@ -524,7 +545,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				$tabs[ $key ]['title']    = $item['text'];
 				$tabs[ $key ]['position'] = $item['position'];
 				$tabs[ $key ]['slug']     = $item['slug'];
-				$tabs[ $key ]['count']    = $this->get_group_tab_count( $item['slug'], $type );
+				$tabs[ $key ]['count']    = ! empty( $item['count'] ) ? $this->get_group_tab_count( $item['slug'], $type ) : '';
 			}
 		}
 
@@ -537,14 +558,17 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @return mixed|void
 	 */
 	public function bp_rest_legacy_get_groups_directory_nav_items() {
-		$nav_items = array();
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		$nav_items    = array();
 
 		$nav_items['all'] = array(
 			'text'     => __( 'All Groups', 'buddyboss' ),
 			'slug'     => 'all',
-			'count'    => bp_get_total_group_count(),
 			'position' => 5,
 		);
+		if ( $enable_count ) {
+			$nav_items['all']['count'] = bp_get_total_group_count();
+		}
 
 		if ( is_user_logged_in() ) {
 
@@ -555,9 +579,12 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				$nav_items['personal'] = array(
 					'text'     => __( 'My Groups', 'buddyboss' ),
 					'slug'     => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
-					'count'    => $my_groups_count,
 					'position' => 15,
 				);
+
+				if ( $enable_count ) {
+					$nav_items['personal']['count'] = $my_groups_count;
+				}
 			}
 
 			// If the user can create groups, add the create nav.
@@ -570,6 +597,8 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				);
 			}
 		}
+
+		unset( $enable_count );
 
 		return apply_filters( 'bp_rest_legacy_get_groups_directory_nav_items', $nav_items );
 	}
@@ -622,23 +651,27 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @return int The count attribute for the nav item.
 	 */
 	protected function bp_rest_get_nav_count( $group, $nav ) {
-		$nav_item = $nav['slug'];
-
-		if ( 'members' === $nav_item || 'all-members' === $nav_item ) {
-			$count = $group->total_member_count;
-		} elseif ( 'subgroups' === $nav_item ) {
-			$count = count( bp_get_descendent_groups( $group->id, bp_loggedin_user_id() ) );
-		} elseif ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item && function_exists( 'bp_is_group_media_support_enabled' ) ) {
-			$count = bp_media_get_total_group_media_count( $group->id );
-		} elseif ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item && function_exists( 'bp_is_group_albums_support_enabled' ) ) {
-			$count = bp_media_get_total_group_album_count( $group->id );
-		} elseif ( 'leaders' === $nav_item ) {
-			$admins = groups_get_group_admins( $group->id );
-			$mods   = groups_get_group_mods( $group->id );
-			$count  = count( $admins ) + count( $mods );
-		} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
-			$count = bp_video_get_total_group_video_count( $group->id );
+		$enable_count = function_exists( 'bb_enable_content_counts' ) ? bb_enable_content_counts() : true;
+		if ( $enable_count ) {
+			$nav_item = $nav['slug'];
+			if ( 'members' === $nav_item || 'all-members' === $nav_item ) {
+				$count = $group->total_member_count;
+			} elseif ( 'subgroups' === $nav_item ) {
+				$count = count( bp_get_descendent_groups( $group->id, bp_loggedin_user_id() ) );
+			} elseif ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item && function_exists( 'bp_is_group_media_support_enabled' ) ) {
+				$count = bp_media_get_total_group_media_count( $group->id );
+			} elseif ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item && function_exists( 'bp_is_group_albums_support_enabled' ) ) {
+				$count = bp_media_get_total_group_album_count( $group->id );
+			} elseif ( 'leaders' === $nav_item ) {
+				$admins = groups_get_group_admins( $group->id );
+				$mods   = groups_get_group_mods( $group->id );
+				$count  = count( $admins ) + count( $mods );
+			} elseif ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item ) {
+				$count = bp_video_get_total_group_video_count( $group->id );
+			}
 		}
+
+		unset( $enable_count );
 
 		if ( ! isset( $count ) ) {
 			return false;
@@ -675,5 +708,158 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	public function bp_rest_get_displayed_user( $user_id ) {
 		return get_current_user_id();
 	}
-}
 
+	/**
+	 * Retrieve group information.
+	 *
+	 * @since 2.8.20
+	 *
+	 * @param WP_REST_Request $request The REST API request.
+	 *
+	 * @return WP_REST_Response|WP_Error Response containing group data or an error object.
+	 */
+	public function get_group_information( WP_REST_Request $request ) {
+		$group_id = (int) $request->get_param( 'id' );
+
+		if ( empty( $group_id ) ) {
+			return new WP_Error(
+				'bp_rest_group_id_required',
+				__( 'Group ID is required', 'buddyboss' ),
+				array( 'status' => 404 )
+			);
+		}
+
+		$group = groups_get_group( $group_id );
+
+		if ( empty( $group ) || empty( $group->id ) ) {
+			return new WP_Error(
+				'bp_rest_group_invalid_id',
+				__( 'Invalid Group ID.', 'buddyboss' ),
+				array( 'status' => 404 )
+			);
+		}
+
+		$group_type_label = '';
+		if (
+			function_exists( 'bp_disable_group_type_creation' ) &&
+			function_exists( 'bp_groups_get_group_type' ) &&
+			function_exists( 'bp_groups_get_group_type_object' ) &&
+			true === bp_disable_group_type_creation()
+		) {
+			$group_type = bp_groups_get_group_type( $group->id );
+			$group_type = bp_groups_get_group_type_object( $group_type );
+
+			$group_type_label = isset( $group_type->labels['singular_name'] )
+				? wp_specialchars_decode( $group_type->labels['singular_name'] )
+				: __( 'Group', 'buddyboss' );
+		}
+
+		$data = array(
+			'id'                => $group->id,
+			'link'              => bp_get_group_permalink( $group ),
+			'name'              => bp_get_group_name( $group ),
+			'status'            => bp_get_group_status( $group ),
+			'group_type_label'  => $group_type_label,
+			'last_activity'     => sprintf( esc_html__( 'Active %s', 'buddyboss' ), wp_kses_post( bp_get_group_last_active( $group ) ) ),
+			'members_count'     => groups_get_total_member_count( $group->id ),
+			'avatar_urls'       => array(
+				'thumb'      => bp_core_fetch_avatar(
+					array(
+						'html'    => false,
+						'object'  => 'group',
+						'item_id' => $group->id,
+						'type'    => 'thumb',
+					)
+				),
+				'full'       => bp_core_fetch_avatar(
+					array(
+						'html'    => false,
+						'object'  => 'group',
+						'item_id' => $group->id,
+						'type'    => 'full',
+					)
+				),
+				'is_default' => ! bp_get_group_has_avatar( $group->id ),
+			),
+			'group_members'     => $this->prepare_group_members( $group->id ),
+			'can_join'          => $this->groups_endpoint->bp_rest_user_can_join( $group ),
+			'join_button'       => function_exists( 'bp_get_group_join_button' ) ? bp_get_group_join_button( $group ) : '',
+			'group_members_url' => esc_url( bp_get_group_permalink( $group ) . 'members' ),
+		);
+
+		$response = rest_ensure_response( $data );
+
+		/**
+		 * Fires after a group information is fetched via the REST API.
+		 *
+		 * @since 2.8.20
+		 *
+		 * @param BP_Groups_Group  $group    Fetched group.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( 'bb_rest_groups_get_group_information', $group, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Fetch group members.
+	 *
+	 * @since 2.8.20
+	 *
+	 * @param int $group_id The ID of the group.
+	 * @param int $limit    The maximum number of items to be returned in the result set. Default is 3.
+	 *
+	 * @return array|null An array of group member data, or null if no members are found.
+	 */
+	protected function prepare_group_members( $group_id, $limit = 3 ) {
+
+		if ( empty( $group_id ) ) {
+			return null;
+		}
+
+		$members = groups_get_group_members(
+			array(
+				'group_id' => $group_id,
+				'per_page' => $limit,
+				'page'     => 1,
+				'type'     => 'active',
+			)
+		);
+
+		if ( empty( $members['members'] ) ) {
+			return null;
+		}
+
+		$member_data = array();
+
+		foreach ( $members['members'] as $member ) {
+			$member_data[] = array(
+				'id'          => $member->user_id,
+				'link'        => bp_core_get_user_domain( $member->user_id ),
+				'name'        => bp_core_get_user_displayname( $member->user_id ),
+				'avatar_urls' => array(
+					'full'       => bp_core_fetch_avatar(
+						array(
+							'item_id' => $member->user_id,
+							'html'    => false,
+							'type'    => 'full',
+						)
+					),
+					'thumb'      => bp_core_fetch_avatar(
+						array(
+							'item_id' => $member->user_id,
+							'html'    => false,
+							'type'    => 'thumb',
+						)
+					),
+					'is_default' => ! bp_get_user_has_avatar( $member->user_id ),
+				),
+			);
+		}
+
+		return $member_data;
+	}
+
+}
