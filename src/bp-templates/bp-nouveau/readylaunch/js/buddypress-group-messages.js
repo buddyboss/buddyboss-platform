@@ -73,11 +73,13 @@ window.bp = window.bp || {};
 			var isGroupThreadPageSelector = $( '.groups.group-messages.public-message' );
 			if ( isGroupThreadPageSelector.length ) {
 				$( '.groups.group-messages.public-message .subnav #public-message-groups-li' ).addClass( 'current selected' );
+				$( '.groups.group-messages.public-message .subnav #bb-rl-public-message-groups-li' ).addClass( 'current selected' );
 			}
 
 			var isGroupPrivateThreadPageSelector = $( '.groups.group-messages.private-message' );
 			if ( isGroupPrivateThreadPageSelector.length ) {
 				$( '.groups.group-messages.private-message .subnav #private-message-groups-li' ).addClass( 'current selected' );
+				$( '.groups.group-messages.private-message .subnav #bb-rl-private-message-groups-li' ).addClass( 'current selected' );
 			}
 
 			$( document ).on(
