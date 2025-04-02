@@ -2291,7 +2291,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 
 #bp-media-single-album .bb-rl-album-meta .privacy {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 #bp-media-single-album .bb-rl-album-meta .privacy::before {
