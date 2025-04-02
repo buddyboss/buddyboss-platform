@@ -1333,6 +1333,22 @@ body.messages .bb-rl-content-wrapper {
   font-style: normal;
 }
 
+.bb-rl-media-video-model-wrapper .bb-rl-media-section figure .video-js {
+  padding: 0;
+  height: 100% !important;
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-media-video-model-wrapper .bb-rl-media-section figure .video-js .vjs-poster {
+  object-fit: cover;
+}
+
+.bb-rl-media-video-model-wrapper .bb-rl-media-section figure .video-js .vjs-poster img {
+  object-fit: cover;
+  inset: 0;
+  width: 100%;
+}
+
 .bb-rl-messages-content .send-reply {
   margin: 0;
   width: auto;
