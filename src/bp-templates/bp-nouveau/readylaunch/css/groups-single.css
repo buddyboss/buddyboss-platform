@@ -2388,6 +2388,18 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 }
 
+#group-messages-container .bp-select-members-wrap .select2.select2-container .bb-rl-select2-selection-user {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+#group-messages-container .bp-select-members-wrap .select2.select2-container .bb-rl-select2-selection-user .select2-user-avatar {
+  height: 24px;
+  width: 24px;
+  border-radius: var(--bb-rl-radius-full);
+}
+
 #group-messages-container .bp-select-members-wrap .select2.select2-container .select2-selection__choice__remove {
   display: none;
 }

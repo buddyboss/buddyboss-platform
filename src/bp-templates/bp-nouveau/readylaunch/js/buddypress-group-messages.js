@@ -72,13 +72,11 @@ window.bp = window.bp || {};
 
 			var isGroupThreadPageSelector = $( '.groups.group-messages.public-message' );
 			if ( isGroupThreadPageSelector.length ) {
-				$( '.groups.group-messages.public-message .subnav #public-message-groups-li' ).addClass( 'current selected' );
 				$( '.groups.group-messages.public-message .subnav #bb-rl-public-message-groups-li' ).addClass( 'current selected' );
 			}
 
 			var isGroupPrivateThreadPageSelector = $( '.groups.group-messages.private-message' );
 			if ( isGroupPrivateThreadPageSelector.length ) {
-				$( '.groups.group-messages.private-message .subnav #private-message-groups-li' ).addClass( 'current selected' );
 				$( '.groups.group-messages.private-message .subnav #bb-rl-private-message-groups-li' ).addClass( 'current selected' );
 			}
 
@@ -254,10 +252,12 @@ window.bp = window.bp || {};
 					if ( canAdd ) {
 						var userId   = $( this ).attr( 'data-bp-user-id' );
 						var userName = $( this ).attr( 'data-bp-user-name' );
+						var userAvatar = $( this ).closest( 'li' ).find( '.item-avatar img' ).attr( 'src' );
 
 						var data = {
 							id: userId,
-							text: userName
+							text: userName,
+							avatar: userAvatar
 						};
 
 						if ( $( this ).closest( 'li' ).hasClass( 'selected' ) ) {
@@ -292,6 +292,7 @@ window.bp = window.bp || {};
 							$( this ).closest( 'li' ).addClass( 'selected' );
 							if ( ! $group_messages_select.find( "option[value='" + data.id + "']" ).length ) { // jshint ignore:line
 								var newOption = new Option( data.text, data.id, true, true );
+								$( newOption ).attr( 'data-avatar', data.avatar );
 								$group_messages_select.append( newOption ).trigger( 'change' );
 							}
 							$( this ).attr( 'data-bp-tooltip', bpGroupMessages.remove_recipient );
@@ -1012,7 +1013,26 @@ window.bp = window.bp || {};
 		addSelect2: function( $input ) {
 
 			var ArrayData = [];
-			$input.select2();
+			if( $( 'body' ).hasClass( 'public-message' ) ) {
+				$input.find( 'option[selected]' ).data( 'avatar', $( 'body' ).find( '.bb-rl-group-info img.avatar' ).attr( 'src' ) );
+			}
+
+			$input.select2({
+				templateSelection: function( data ) {
+					if ( !data.id ) {
+						return data.text;
+					}
+
+					var $selection = $(
+						'<div class="bb-rl-select2-selection-user">' +
+							'<img class="select2-user-avatar" src="' + $( data.element ).data( 'avatar' ) + '"/>' +
+							'<span class="select2-selection-user__name">' + data.text + '</span>' +
+						'</div>'
+					);
+
+					return $selection;
+				}
+			});
 
 			// Add element into the Arrdata array.
 			$input.on(

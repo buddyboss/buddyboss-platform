@@ -83,6 +83,18 @@
 				border-radius: var(--bb-rl-radius-full);
 				padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
 			}
+			
+			.bb-rl-select2-selection-user {
+				display: flex;
+				align-items: center;
+				gap: var(--bb-rl-space-50);
+
+				.select2-user-avatar {
+					height: 24px;
+					width: 24px;
+					border-radius: var(--bb-rl-radius-full);
+				}
+			}
 
 			.select2-selection__choice__remove {
 				display: none;
