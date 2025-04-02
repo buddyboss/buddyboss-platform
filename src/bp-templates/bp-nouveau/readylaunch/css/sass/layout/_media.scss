@@ -337,6 +337,68 @@
 	}
 }
 
+.bb-rl-media-header-wrap {
+
+	.bp-media-header-wrap-inner {
+		display: flex;
+		align-items: center;
+		padding-bottom: var(--bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-200);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		gap: var(--bb-rl-space-100);
+		justify-content: space-between;
+
+		.bb-media-actions {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+
+			.media-folder_items {
+				line-height: 1;
+			}
+
+			.bb-rl-button i {
+				margin-right: var(--bb-rl-space-50);
+			}
+		}
+	}
+
+	.document-breadcrumb {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		align-items: center;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
+
+			&::after {
+				display: inline-block;
+				width: 4px;
+				height: 4px;
+				content: "";
+				background-color: var(--bb-rl-background-tertiary-color);
+				border-radius: 50%;
+				margin: 0 var(--bb-rl-space-100) 0 var(--bb-rl-space-50);
+			}
+
+			&:last-child::after {
+				display: none;
+			}
+
+			a {
+
+				@include bb-rl-label-heading-bolder;
+				color: var(--bb-rl-text-color);
+				text-decoration: none;
+			}
+		}
+	}
+}
+
 .bb-rl-media-container {
 
 	.album-single-view {
