@@ -494,7 +494,7 @@ body.messages .bb-rl-content-wrapper {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
-  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-50) 0;
 }
 
 #bb-rl-messages-thread-list-nav .subnav li a {
@@ -509,6 +509,7 @@ body.messages .bb-rl-content-wrapper {
   font-size: 16px;
   font-weight: 500;
   pointer-events: none;
+  padding: 0;
 }
 
 #bb-rl-messages-thread-list-nav #bb-rl-compose-action-personal-li {

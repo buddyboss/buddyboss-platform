@@ -380,7 +380,7 @@
 		display: flex;
 		align-items: center;
 		gap: var(--bb-rl-space-100);
-		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		padding: var(--bb-rl-space-50) 0;
 
 		li a {
 			border: 0;
@@ -395,6 +395,7 @@
 		font-size: 16px;
 		font-weight: 500;
 		pointer-events: none;
+		padding: 0;
 	}
 
 	#bb-rl-compose-action-personal-li {
