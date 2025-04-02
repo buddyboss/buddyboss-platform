@@ -6674,18 +6674,21 @@ body.admin-bar .bb-rl-left-panel {
   white-space: nowrap;
 }
 
-.bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button {
+.bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button,
+.bb-rl-sub-ctrls .activity-head-bar + .bb-rl-action-button {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
 }
 
-.bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button .bb-rl-button {
+.bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button .bb-rl-button,
+.bb-rl-sub-ctrls .activity-head-bar + .bb-rl-action-button .bb-rl-button {
   padding: 4px var(--bb-rl-space-200);
 }
 
 @media screen and (min-width: 782px) {
-  .bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button::before {
+  .bb-rl-sub-ctrls .subnav-filters + .bb-rl-action-button::before,
+  .bb-rl-sub-ctrls .activity-head-bar + .bb-rl-action-button::before {
     content: "|";
     color: var(--bb-rl-background-tertiary-hover-color);
     padding: 0 var(--bb-rl-space-200);

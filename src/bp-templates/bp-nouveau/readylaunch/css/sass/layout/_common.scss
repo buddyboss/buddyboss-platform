@@ -41,7 +41,8 @@
 		white-space: nowrap;
 	}
 
-	.subnav-filters + .bb-rl-action-button {
+	.subnav-filters + .bb-rl-action-button,
+	.activity-head-bar + .bb-rl-action-button {
 		display: inline-flex;
 		align-items: center;
 		white-space: nowrap;
