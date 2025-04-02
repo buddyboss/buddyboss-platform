@@ -9,7 +9,7 @@
 
 $document_id = bp_get_document_id();
 ?>
-<div class="bb-rl-media-edit-file bb-rl-modal-edit-file" style="display: none;" id="bb-rl-media-edit-file" data-activity-id="" data-id="" data-attachment-id="" data-privacy="">
+<div class="bb-rl-media-edit-file bb-rl-modal-edit-file" style="display: none;" id="bb-rl-media-edit-file" data-id="" data-attachment-id="" data-privacy="">
 	<transition name="modal">
 		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
 			<div class="bb-rl-modal-wrapper">
@@ -28,7 +28,27 @@ $document_id = bp_get_document_id();
 					<footer class="bb-model-footer">
 						<?php
 						if ( ! bp_is_group() ) :
-							bp_get_template_part( 'document/document-privacy' );
+							?>
+							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
+								<label for="bb-rl-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
+								<div class="bb-rl-dropdown-wrap">
+									<select id="bb-rl-folder-privacy-select" class="bb-rl-dropdown bb-rl-folder-privacy-select">
+										<?php
+										foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
+											if ( 'grouponly' === $key ) {
+												continue;
+											}
+											?>
+											<option value="<?php echo esc_attr( $key ); ?>">
+												<?php echo esc_html( $privacy ); ?>
+											</option>
+											<?php
+											endforeach;
+										?>
+									</select>
+								</div>
+							</div>
+							<?php
 						endif;
 						?>
 						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-edit-document-close" id="bp-media-edit-document-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>

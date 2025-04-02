@@ -1049,6 +1049,7 @@ function bp_nouveau_ajax_document_update_file_name() {
 	$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
 	$title                  = bb_filter_input_string( INPUT_POST, 'name' );
 	$type                   = bb_filter_input_string( INPUT_POST, 'document_type' );
+	$privacy                = bb_filter_input_string( INPUT_POST, 'document_privacy' );
 
 	if ( 'document' === $type ) {
 		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
@@ -1066,6 +1067,15 @@ function bp_nouveau_ajax_document_update_file_name() {
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
+			if (
+				! empty( $privacy ) &&
+				'grouponly' !== $privacy &&
+				array_key_exists( $privacy, bp_document_get_visibility_levels() )
+			) {
+				$document_object          = new BP_Document( (int) $document['document_id'] );
+				$document_object->privacy = $privacy;
+				$document_object->save();
+			}
 
 			// Generate the document HTML to update the preview links.
 			ob_start();

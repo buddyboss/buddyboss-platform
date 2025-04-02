@@ -312,7 +312,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 						}
 						?>
 						<li class="bb-rl-edit-file">
-							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
+							<a href="#" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
 						</li>
 						<?php
 						if ( $can_move ) {

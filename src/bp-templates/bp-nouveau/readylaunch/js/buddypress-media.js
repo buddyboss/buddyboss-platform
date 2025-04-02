@@ -3042,11 +3042,18 @@ window.bp = window.bp || {};
 				document_attachment_id = media_item.find( '.media-folder_name' ).data( 'attachment-id' ),
 				document_privacy = media_item.find( '.media-folder_name' ).data( 'privacy' );
 
+			if (
+				$( event.currentTarget ).attr( 'data-privacy' ) &&
+				$editFileModal.find('#bb-rl-folder-privacy-select').length > 0
+			) {
+				var current_privacy = $( event.currentTarget ).attr( 'data-privacy' );
+				$editFileModal.find('#bb-rl-folder-privacy-select').val( current_privacy ).change();
+			}
+
 			$editFileModal.show();
 			$editFileModal.addClass( 'open-popup' );
 
 			$editFileModal.find( '#bb-document-title' ).val( current_name_text ).focus().select();
-			$editFileModal.attr( 'data-activity-id', activity_id );
 			$editFileModal.attr( 'data-id', document_id );
 			$editFileModal.attr( 'data-attachment-id', document_attachment_id );
 			$editFileModal.attr( 'data-privacy', document_privacy );
@@ -3200,10 +3207,8 @@ window.bp = window.bp || {};
 				attachment_document_id    = $mediaItem.find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' ),
 				documentType              = $mediaItem.find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' ),
 				document_name_val         = document_edit.val().trim(),
+				document_privacy = ( $modal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) ? $modal.find( '#bb-rl-folder-privacy-select' ).val() : '',
 				pattern                   = '';
-
-			/* var current_privacy = $mediaItem.find( '.media-folder_visibility' );
-			current_privacy.find( '.media-folder_details__bottom span' ).text( document_privacy_val ); */
 
 			if ( $mediaItem.length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
@@ -3245,6 +3250,7 @@ window.bp = window.bp || {};
 						document_id: document_id,
 						attachment_document_id: attachment_document_id,
 						document_type: documentType,
+						document_privacy: document_privacy,
 						name: document_name_val,
 						_wpnonce: bbRlNonce.media
 					},

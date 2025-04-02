@@ -48,7 +48,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		<?php
 		bp_get_template_part( 'document/activity-document-move' );
 		bp_get_template_part( 'document/activity-document-folder-move' );
-		bp_get_template_part( 'document/activity-document-edit' );
+		bp_get_template_part( 'document/document-edit' );
 	endif;
 
 	while ( bp_document() ) :
