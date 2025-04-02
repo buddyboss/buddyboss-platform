@@ -57,6 +57,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.30 =
+* Bug: Activity - Fixed an issue where the checkbox in Report options was not selectable when the feed opened in a popup
+* Bug: Activity - Improved the Activity Filter by hiding the dropdown when only one option is available, displaying it as a label instead
+* Bug: Core - Updated “Select2” and “jQuery Validation” libraries in the latest BuddyBoss Plugin/Theme to ensure compatibility and improved functionality
+* Bug: Media - Fixed an issue where the “Group” column on the “All Documents” tab table did not load after refreshing the page in the Documents directory.
+
 = 2.8.20 =
 * Enhancement: Activity - Added hover pop-ups for improved interaction—hovering over a user's avatar now displays a user pop-up, and hovering over a group link in the feed shows a group pop-up
 * Enhancement: Activity - Enhanced the user experience with improved activity sorting and filtering functionality
