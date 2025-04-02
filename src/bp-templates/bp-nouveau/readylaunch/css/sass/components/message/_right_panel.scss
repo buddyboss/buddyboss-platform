@@ -1,5 +1,5 @@
 .bb-rl-messages-right-panel {
-	width: 300px;
+	width: 310px;
 	background-color: var(--bb-rl-background-color);
 	border-left: 1px solid var(--bb-rl-border-secondary-color);
 	display: flex;
@@ -176,8 +176,8 @@
 
 		.bb-rl-media-item {
 			position: relative;
-			width: 86px;
-			height: 86px;
+			width: 84px;
+			height: 84px;
 			overflow: hidden;
 			border-radius: var(--bb-rl-radius-md);
 
@@ -194,6 +194,20 @@
 					width: 100%;
 					height: 100%;
 				}
+			}
+
+			.bb-video-cover-wrap:before {
+				content: "\e4da";
+				font-weight: 500;
+				font-family: bb-icons-rl;
+				color: var(--bb-rl-text-white-color);
+				background-color: transparent;
+				font-size: 24px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				padding: 0;
 			}
 		}
 	}
