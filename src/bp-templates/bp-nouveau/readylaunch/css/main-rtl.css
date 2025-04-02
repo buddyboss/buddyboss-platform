@@ -2170,38 +2170,32 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 /**
  * Single album
  */
-#bp-media-single-album .bb-single-album-header {
+.bb-rl-media-single-album .bb-single-album-header {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 0 var(--bb-rl-space-200);
   margin: 0 0 var(--bb-rl-space-200);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
-#bp-media-single-album .bb-single-album-header p {
-  flex-basis: 100%;
-  width: 100%;
-  font-size: var(--bb-rl-font-size-sm);
-  margin-top: var(--bb-rl-space-100);
-}
-
-#bp-media-single-album .bb-single-album-header p .bb-sep {
-  margin: 0 var(--bb-rl-space-100);
-  color: var(--bb-rl-text-secondary-color);
-  font-weight: 400;
-  font-size: var(--bb-rl-font-size-sm);
-}
-
-#bp-media-single-album .bb-single-album-header .bb-rl-album-title {
+.bb-rl-media-single-album .bb-single-album-header .bb-rl-album-title {
   font-size: 18px;
   font-weight: 600;
   line-height: 28px;
   color: var(--bb-rl-text-color);
 }
 
-#bp-media-single-album .bb-single-album-header .button {
+.bb-rl-media-single-album .bb-single-album-header .bb-rl-album-title .bb-rl-album-back {
+  display: inline-flex;
+  align-items: center;
+  color: var(--bb-rl-text-color);
+  margin-left: var(--bb-rl-space-100);
+  vertical-align: middle;
+}
+
+.bb-rl-media-single-album .bb-single-album-header .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2220,20 +2214,91 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   margin-right: var(--bb-rl-space-100);
 }
 
-#bp-media-single-album .bb-single-album-header .button:hover {
+.bb-rl-media-single-album .bb-single-album-header .button:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
-#bp-media-single-album .bb-single-album-header .button:focus-within {
+.bb-rl-media-single-album .bb-single-album-header .button:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
-#bp-media-single-album .bb-single-album-header .button:disabled {
+.bb-rl-media-single-album .bb-single-album-header .button:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
 
-#bp-media-single-album .bb-album-actions {
+.bb-rl-media-single-album .bb-single-album-header .album-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.bb-rl-media-single-album .bb-single-album-header .album-actions .bb-member-media-header {
+  margin-left: var(--bb-rl-space-200);
+  margin-bottom: 0;
+  font-size: var(--bb-rl-font-size-2xl);
+  list-style: 1;
+}
+
+.bb-rl-media-single-album .bb-single-album-header .album-actions .bb-member-media-header a {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-media-single-album .bb-single-album-header .album-actions .bb-member-media-header a:hover {
+  color: var(--bb-rl-primary-color);
+}
+
+.bb-rl-media-single-album .bb-single-album-header .album-actions .bb-member-media-header #bb-select-deselect-all-media {
+  order: -1;
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta p {
+  flex-basis: 100%;
+  width: 100%;
+  font-size: var(--bb-rl-font-size-sm);
+  margin-top: var(--bb-rl-space-100);
+  line-height: var(--bb-rl-base-line-xs);
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta p [class*="bb-icons-rl-"] {
+  margin-left: var(--bb-rl-space-100);
+  font-size: var(--bb-rl-font-size-base);
+  vertical-align: top;
+  color: var(--bb-rl-icon-primary-color);
+  display: inline-block;
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta p .bb-sep {
+  margin: 0 var(--bb-rl-space-100);
+  width: 4px;
+  height: 4px;
+  background-color: var(--bb-rl-background-black-color);
+  border-radius: var(--bb-rl-radius-full);
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+  opacity: 0.5;
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta .bb-media-privacy-wrap::before {
+  display: none;
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta .privacy {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.bb-rl-media-single-album .bb-rl-album-meta .privacy::before {
+  color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-rl-media-single-album .bb-album-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -2241,7 +2306,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   margin-bottom: var(--bb-rl-space-100);
 }
 
-#bp-media-single-album .bb-album-actions .button {
+.bb-rl-media-single-album .bb-album-actions .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2260,41 +2325,41 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   margin-left: var(--bb-rl-space-100);
 }
 
-#bp-media-single-album .bb-album-actions .button:hover {
+.bb-rl-media-single-album .bb-album-actions .button:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
-#bp-media-single-album .bb-album-actions .button:focus {
+.bb-rl-media-single-album .bb-album-actions .button:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-#bp-media-single-album .bb-album-actions .button:disabled {
+.bb-rl-media-single-album .bb-album-actions .button:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
-#bp-media-single-album .bb-album-actions .button.bb-delete {
+.bb-rl-media-single-album .bb-album-actions .button.bb-delete {
   background-color: transparent;
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
 }
 
-#bp-media-single-album .bb-album-actions .button.bb-delete:hover {
+.bb-rl-media-single-album .bb-album-actions .button.bb-delete:hover {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-#bp-media-single-album .bb-album-actions .button.bb-delete:focus {
+.bb-rl-media-single-album .bb-album-actions .button.bb-delete:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-#bp-media-single-album .bb-album-actions .button.bb-delete:disabled {
+.bb-rl-media-single-album .bb-album-actions .button.bb-delete:disabled {
   border-color: var(--bb-rl-border-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
-#bp-media-single-album .bb-album-actions #bb-album-privacy {
+.bb-rl-media-single-album .bb-album-actions #bb-album-privacy {
   margin-right: auto;
   margin-left: 0;
 }
@@ -5212,11 +5277,13 @@ button[data-balloon] {
   margin: var(--bb-rl-space-200) 0 0;
 }
 
-.bb-rl-modal-edit-file .bb-field-wrap {
+.bb-rl-modal-edit-file .bb-field-wrap,
+.bb-rl-modal-edit-album .bb-field-wrap {
   margin-bottom: var(--bb-rl-space-200);
 }
 
-.bb-rl-modal-edit-file .bb-field-wrap label {
+.bb-rl-modal-edit-file .bb-field-wrap label,
+.bb-rl-modal-edit-album .bb-field-wrap label {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -5225,19 +5292,23 @@ button[data-balloon] {
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-modal-edit-file .bb-field-wrap input {
+.bb-rl-modal-edit-file .bb-field-wrap input,
+.bb-rl-modal-edit-album .bb-field-wrap input {
   width: 100%;
 }
 
-.bb-rl-modal-edit-file .bb-rl-modal-body .bb-field-wrap:last-of-type {
+.bb-rl-modal-edit-file .bb-rl-modal-body .bb-field-wrap:last-of-type,
+.bb-rl-modal-edit-album .bb-rl-modal-body .bb-field-wrap:last-of-type {
   margin-bottom: 0;
 }
 
-.bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap {
+.bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap,
+.bb-rl-modal-edit-album .bb-model-footer .bb-rl-field-wrap {
   margin-left: var(--bb-rl-space-200);
 }
 
-.bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap label {
+.bb-rl-modal-edit-file .bb-model-footer .bb-rl-field-wrap label,
+.bb-rl-modal-edit-album .bb-model-footer .bb-rl-field-wrap label {
   display: none;
 }
 
@@ -7014,6 +7085,50 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-container .bb_more_options .bb_more_dropdown a.ac-document-privacy::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.ac-document-privacy::before {
   content: "\e2fa";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-add-photos::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-add-photos::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-add-photos::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-add-photos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-add-photos::before {
+  content: "\e836";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-add-videos::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-add-videos::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-add-videos::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-add-videos::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-add-videos::before {
+  content: "\e740";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete::before {
+  content: "\e4a6";
+}
+
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-edit-album::before {
+  content: "\e3b4";
 }
 
 .bb-rl-context-wrap .bb-rl-context-dropdown li.download_file a::before,
@@ -8854,18 +8969,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border-radius: 50%;
 }
 
-/* .bb-rl-albums {
-
-	#bp-media-single-album {
-
-		.bb-album-actions {
-
-			.bb-delete {
-				margin-right: auto;
-			}
-		}
-	}
-} */
 .bb-rl-profile-edit-subnav,
 .bb-rl-admin-subnav {
   margin: var(--bb-rl-space-100) 0 0;

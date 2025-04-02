@@ -44,7 +44,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 		$total_media = $media_album_template->album->media['total'];
 		?>
-		<div id="bp-media-single-album">
+		<div id="bp-media-single-album" class="bb-rl-media-single-album">
 			<div class="album-single-view" <?php echo 0 === $total_media ? 'no-photos' : ''; ?>>
 
 				<div class="bb-single-album-header text-center">
@@ -117,7 +117,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												) {
 												?>
 													<li class="album-edit">
-														<a href="#" class="bb-edit-album" id="bp-edit-album-title">
+														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title">
 														<?php
 															esc_html_e( 'Edit Album', 'buddyboss' );
 														?>
@@ -196,6 +196,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) :
 					bp_get_template_part( 'media/uploader' );
 					bp_get_template_part( 'video/uploader' );
+					bp_get_template_part( 'media/edit-album' );
 				endif;
 				?>
 

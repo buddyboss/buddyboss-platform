@@ -236,7 +236,6 @@ window.bp = window.bp || {};
 			mediaWrap.on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.toggleSubmitMediaButton.bind( this ) );
 
 			// single album.
-			bpNouveau.on( 'click', '#bp-edit-album-title', this.editAlbumTitle.bind( this ) );
 			$document.on( 'click', '#bp-edit-folder-title', this.editFolderTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
@@ -245,6 +244,9 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'change', '#media-stream select#bb-rl-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			$document.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
+			$document.on( 'click', '.bb-rl-edit-album', this.editAlbum.bind( this ) );
+			$document.on( 'click', '.bb-rl-media-edit-album-close', this.closeEditAlbumModal.bind( this ) );
+			//$document.on( 'click', '#bp-save-album-title', this.editAlbumSubmit.bind( this ) );
 
 			$document.on( 'click', 'ul.document-nav li', this.resetPageDocumentDirectory.bind( this ) );
 			$document.on( 'click', 'ul.document-nav li a', this.resetPageDocumentDirectory.bind( this ) );
@@ -410,6 +412,35 @@ window.bp = window.bp || {};
 		submitCreateAlbumInPopup: function ( event ) {
 			event.preventDefault();
 			this.submitCreateFolderAlbumInPopup( event, 'media', 'album' );
+		},
+
+		/**
+		 * [editDocument description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		editAlbum: function ( event ) {
+			event.preventDefault();
+
+			var $document = $( document ),
+				$editAlbumModal = $( '#bb-rl-media-edit-album' ),
+				album_item = $( event.currentTarget ).closest( '#bp-media-single-album' ),
+				current_name = album_item.find( '#bp-single-album-title' ),
+				current_name_text = current_name.children( 'span' ).text();
+
+			$editAlbumModal.show();
+			$editAlbumModal.addClass( 'open-popup' );
+
+			$editAlbumModal.find( '#bb-album-title' ).val( current_name_text ).focus().select();
+		},
+
+		closeEditAlbumModal: function ( event ) {
+			event.preventDefault();
+			var $editAlbumModal = $( '#bb-rl-media-edit-album' );
+
+			$editAlbumModal.hide();
+			$editAlbumModal.removeClass( 'open-popup' );
 		},
 
 		closeCreateFolderInPopup: function ( event ) {
@@ -879,11 +910,6 @@ window.bp = window.bp || {};
 			$target.toggleClass( 'selected', isSelecting ).data( 'bp-tooltip', isSelecting ? BP_Nouveau.media.i18n_strings.unselectall : BP_Nouveau.media.i18n_strings.selectall );
 		},
 
-		editAlbumTitle: function ( event ) {
-			event.preventDefault();
-			this.editAlbumFolderTitle( event, 'media' );
-		},
-
 		editFolderTitle: function ( event ) {
 			event.preventDefault();
 			this.editAlbumFolderTitle( event, 'document' );
@@ -892,8 +918,8 @@ window.bp = window.bp || {};
 		cancelEditAlbumTitle: function ( event ) {
 			event.preventDefault();
 
-			$( '#bb-album-title' ).removeClass( 'error' ).hide();
-			$( '#bp-save-album-title,#bp-save-folder-title' ).hide();
+			$( '#bb-album-title' ).removeClass( 'error' );
+			$( '#bp-save-folder-title' ).hide();
 			$( '#bp-cancel-edit-album-title' ).hide();
 			$( '#bp-edit-album-title,#bp-edit-folder-title' ).show();
 			$( '#bp-media-single-album #bp-single-album-title' ).show();
@@ -5722,6 +5748,7 @@ window.bp = window.bp || {};
 				isAlbum       = 'album' === actionType,
 				isFolder      = 'folder' === actionType,
 				isChildFolder = 'child_folder' === actionType,
+				$modal 		  = target.closest( '#bb-rl-media-edit-album' ),
 				self          = this,
 				title         = isChildFolder ? $( '#bp-media-create-child-folder #bb-album-child-title' ) : $( '#bb-album-title' ),
 				nonce = BP_Nouveau.nonces.media,
@@ -5810,9 +5837,10 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							if ( isAlbum ) {
 								if ( self.album_id ) {
-									$( '#bp-single-album-title' ).text( title.val() );
+									$( '#bp-single-album-title .title-wrap' ).text( title.val() );
 									$( '#bb-rl-album-privacy' ).val( privacy.val() );
 									self.cancelEditAlbumTitle( event );
+									$modal.find( '#bp-media-edit-album-close' ).trigger( 'click' );
 								} else {
 									$( '#buddypress .bb-albums-list' ).prepend( response.data.album );
 									window.location.href = response.data.redirect_url;

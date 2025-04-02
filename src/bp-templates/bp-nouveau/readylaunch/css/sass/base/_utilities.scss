@@ -1731,7 +1731,7 @@ div.vjs-menu {
 /**
  * Single album
  */
-#bp-media-single-album {
+.bb-rl-media-single-album {
 
 	.bb-single-album-header {
 		display: flex;
@@ -1741,8 +1741,9 @@ div.vjs-menu {
 		padding: 0 0 var(--bb-rl-space-200);
 		margin: 0 0 var(--bb-rl-space-200);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-		
+
 		.bb-rl-album-title {
+
 			@include bb-rl-base-heading-xl;
 			color: var(--bb-rl-text-color);
 
@@ -1827,8 +1828,8 @@ div.vjs-menu {
 
 		.privacy {
 			display: inline-block;
-			vertical-align: top;	
-			
+			vertical-align: top;
+
 			&::before {
 				color: var(--bb-rl-icon-primary-color);
 			}
