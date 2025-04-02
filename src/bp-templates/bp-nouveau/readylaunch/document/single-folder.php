@@ -141,7 +141,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 					}
 					?>
 				</div> <!-- .bp-media-header-wrap -->
-				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<div id="media-stream" class="media bb-rl-document bb-rl-media-stream" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 					<?php
 					if ( $is_send_ajax_request ) {
 						echo '<div id="bp-ajax-loader">';
