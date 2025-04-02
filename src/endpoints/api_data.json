@@ -6922,6 +6922,35 @@
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/members/:id/info",
+    "title": "Members Information",
+    "name": "GetBBMembersInfo",
+    "group": "Members",
+    "description": "<p>Retrieve Member information.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "None"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the member.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-members/classes/class-bp-rest-members-details-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/members/profile-dropdown",
     "title": "Profile Dropdown",
     "name": "GetBBMembersProfileDropdown",

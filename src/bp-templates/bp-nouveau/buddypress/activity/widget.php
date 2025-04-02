@@ -18,7 +18,7 @@ if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
 
 				<div class="update-item">
 					<cite>
-						<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_activity_member_display_name() ); ?>">
+						<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_activity_member_display_name() ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
 							<?php
 							bp_activity_avatar(
 								array(

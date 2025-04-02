@@ -92,7 +92,7 @@ function bp_xprofile_format_activity_action_updated_profile( $action, $activity 
 	// your language doesn't have this restriction, feel free to use a more
 	// natural translation.
 	$profile_link = trailingslashit( bp_core_get_user_domain( $activity->user_id ) . bp_get_profile_slug() );
-	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), '<a href="' . $profile_link . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>', bp_get_user_gender_pronoun_type( $activity->user_id ) );
+	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), '<a href="' . $profile_link . '" data-bb-hp-profile="' . esc_attr( $activity->user_id ) . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>', bp_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted 'updated_profile' activity feed action.
