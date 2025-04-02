@@ -280,6 +280,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 				height: 32px;
 				border: 1px solid var(--bb-rl-border-secondary-color);
 				background-color: var(--bb-rl-background-secondary-color);
+				border-radius: 50%;
 
 				i {
 					color: var(--bb-rl-icon-primary-color);
@@ -295,6 +296,14 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 			.bb-rl-drag-drop-wrapper {
 				width: 104px;
 				height: 104px;
+			}
+		}
+
+		.bp-uploader-progress {
+
+			.filename,
+			.file-progress {
+				display: none;
 			}
 		}
 	}

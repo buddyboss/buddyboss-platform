@@ -8085,6 +8085,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   height: 32px;
   border: 1px solid var(--bb-rl-border-secondary-color);
   background-color: var(--bb-rl-background-secondary-color);
+  border-radius: 50%;
 }
 
 .bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bb-rl-avatar-photo .bb-rl-remove-avatar-button i {
@@ -8100,6 +8101,11 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-window .bb-rl-drag-drop-wrapper {
   width: 104px;
   height: 104px;
+}
+
+.bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-progress .filename,
+.bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-progress .file-progress {
+  display: none;
 }
 
 .bb-rl-manage-group-container #drag-drop-area,
