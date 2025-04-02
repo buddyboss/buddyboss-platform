@@ -2261,10 +2261,15 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   width: 100%;
   font-size: var(--bb-rl-font-size-sm);
   margin-top: var(--bb-rl-space-100);
+  line-height: var(--bb-rl-base-line-xs);
 }
 
 #bp-media-single-album .bb-rl-album-meta p [class*="bb-icons-rl-"] {
   margin-right: var(--bb-rl-space-100);
+  font-size: var(--bb-rl-font-size-base);
+  vertical-align: top;
+  color: var(--bb-rl-icon-primary-color);
+  display: inline-block;
 }
 
 #bp-media-single-album .bb-rl-album-meta p .bb-sep {
@@ -2277,6 +2282,20 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   vertical-align: middle;
   position: relative;
   top: -2px;
+  opacity: 0.5;
+}
+
+#bp-media-single-album .bb-rl-album-meta .bb-media-privacy-wrap::before {
+  display: none;
+}
+
+#bp-media-single-album .bb-rl-album-meta .privacy {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#bp-media-single-album .bb-rl-album-meta .privacy::before {
+  color: var(--bb-rl-icon-primary-color);
 }
 
 #bp-media-single-album .bb-album-actions {
