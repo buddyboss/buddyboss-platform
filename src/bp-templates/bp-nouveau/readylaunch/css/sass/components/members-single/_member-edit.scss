@@ -29,6 +29,7 @@
 
 	#profile-group-edit-submit {
 
+		@include bb-rl-button;
 		@include bb-rl-button--brand-fill;
 		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
 		font-size: 0.875rem;
