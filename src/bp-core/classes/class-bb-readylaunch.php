@@ -227,54 +227,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		private function bb_is_readylaunch_enabled() {
-
-			if (
-				(
-					(
-						bp_is_members_directory() ||
-						(
-							bp_is_user() &&
-							! bp_is_single_activity()
-						)
-					) &&
-					! empty( $this->settings['members'] )
-				) ||
-				(
-					bp_is_video_directory() &&
-					! empty( $this->settings['video'] ) &&
-					bp_is_current_component( 'video' )
-				) ||
-				(
-					bp_is_media_directory() &&
-					! empty( $this->settings['media'] ) &&
-					bp_is_current_component( 'media' )
-				) ||
-				(
-					bp_is_document_directory() &&
-					! empty( $this->settings['document'] )
-				) ||
-				(
-					(
-						bp_is_groups_directory() ||
-						bp_is_group_single() ||
-						bp_is_group_create()
-					) &&
-					! empty( $this->settings['groups'] )
-				) ||
-				(
-					(
-						bp_is_activity_directory() ||
-						bp_is_single_activity() ||
-						bp_is_user_activity() ||
-						bp_is_group_activity()
-					) &&
-					! empty( $this->settings['activity'] )
-				) ||
-				(
-					bp_is_messages_component()
-				)
-			) {
-
+			if ( ! empty( $this->settings['enabled'] ) ) {
 				return true;
 			}
 
@@ -284,7 +237,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		private function bb_is_readylaunch_admin_enabled() {
 			if (
 				(
-					! empty( $this->settings['document'] ) &&
+					$this->bb_is_readylaunch_enabled() &&
 					is_admin() &&
 					! wp_doing_ajax() &&
 					! empty( $_GET['page'] ) &&
@@ -355,6 +308,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			);
 
 			add_settings_field(
+				'bb_readylaunch_enabled',
+				__( 'Enable Readylaunch', 'buddyboss' ),
+				array(
+					$this,
+					'bb_readylaunch_enable_setting_callback',
+				),
+				'bb-readylaunch',
+				'bb_readylaunch',
+			);
+
+			add_settings_field(
 				'bb_readylaunch',
 				__( 'Global Design Settings', 'buddyboss' ),
 				array( $this, 'bb_readylaunch_global_design_settings' ),
@@ -362,47 +326,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb_readylaunch'
 			);
 
-			// Get the directory pages.
-			$directory_pages = bp_core_admin_get_directory_pages();
-
 			// Add an icon to the settings section if the function exists.
 			if ( function_exists( 'bb_admin_icons' ) ) {
 				$wp_settings_sections['bb-readylaunch']['bb_readylaunch']['icon'] = bb_admin_icons( 'bb_readylaunch' );
-			}
-
-			// Get the enabled ReadyLaunch pages and BuddyPress directory page IDs.
-			$enabled_pages = $this->settings;
-			$bp_pages      = bp_core_get_directory_page_ids( 'all' );
-			$description   = '';
-
-			// Loop through each directory page and add a settings field if applicable.
-			foreach ( $directory_pages as $name => $label ) {
-				if (
-					! empty( $bp_pages[ $name ] ) ||
-					(
-						'new_forums_page' === $name &&
-						! empty( bp_get_forum_page_id() )
-					)
-				) {
-					add_settings_field(
-						$name,
-						$label,
-						array(
-							$this,
-							'bb_enable_setting_callback_page_directory',
-						),
-						'bb-readylaunch',
-						'bb_readylaunch',
-						compact( 'enabled_pages', 'name', 'label', 'description' )
-					);
-					register_setting(
-						'bb-readylaunch',
-						$name,
-						array(
-							'default' => array(),
-						)
-					);
-				}
 			}
 		}
 
@@ -463,41 +389,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * }
 		 * @return void
 		 */
-		public function bb_enable_setting_callback_page_directory( $args ) {
-			// Bail if args is not an array.
-			if ( ! is_array( $args ) ) {
-				return;
-			}
-
-			// Bail if required fields are missing.
-			if ( empty( $args['name'] ) || empty( $args['label'] ) ) {
-				return;
-			}
-
-			$name  = sanitize_key( $args['name'] );
-			$label = $args['label'];
-
+		public function bb_readylaunch_enable_setting_callback( $args ) {
 			// Maybe switch to root blog.
 			$switched = false;
 			if ( ! bp_is_root_blog() ) {
 				$switched = switch_to_blog( bp_get_root_blog_id() );
 			}
 
-			$checked = ! empty( $this->settings ) && isset( $this->settings[ $name ] );
+            $name = 'enabled';
 
-			if ( 'button' === $name && is_array( $label ) ) {
-				printf(
-					'<p><a href="%1$s" class="button">%2$s</a></p>',
-					esc_url( $label['link'] ),
-					esc_html( $label['label'] )
-				);
-			} else {
-				printf(
-					'<input type="checkbox" value="1" name="bb-readylaunch[%1$s]" id="bb-readylaunch-%1$s" %2$s />',
-					esc_attr( $name ),
-					checked( $checked, true, false )
-				);
-			}
+			$value   = bb_get_enabled_readylaunch();
+			$checked = $value[ $name ] ?? false;
+
+			printf(
+				'<input type="checkbox" value="1" name="bb-readylaunch[%1$s]" id="bb-readylaunch-%1$s" %2$s /> <label for="bb-readylaunch-%1$s">' . __( 'Yes', 'buddyboss' ) . '</label>',
+				esc_attr( $name ),
+				checked( $checked, true, false )
+			);
 
 			// Maybe restore current blog.
 			if ( $switched ) {
