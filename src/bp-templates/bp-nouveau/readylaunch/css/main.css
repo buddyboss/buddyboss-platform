@@ -882,12 +882,12 @@ span.atwho-inserted {
   min-width: 100%;
 }
 
-.gif-search-query {
+.bb-readylaunch-template .gif-search-query {
   padding: var(--bb-rl-space-200);
   position: relative;
 }
 
-.gif-search-query .search-query-input {
+.bb-readylaunch-template .gif-search-query .search-query-input {
   font-size: 13px;
   color: var(--bb-rl-text-tertiary-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
@@ -897,7 +897,7 @@ span.atwho-inserted {
   width: 100%;
 }
 
-.gif-search-query:before {
+.bb-readylaunch-template .gif-search-query:before {
   content: "\e30c";
   color: var(--bb-rl-icon-secondary-color);
   font-family: bb-icons-rl;
