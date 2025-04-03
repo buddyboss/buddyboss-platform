@@ -152,7 +152,7 @@ body.messages .bb-rl-content-wrapper {
   margin: 0;
 }
 
-.bb-rl-messages-nav-panel.threads-scrolled .bb-rl-messages-filters {
+.bb-rl-messages-nav-panel.threads-scrolled .bb-rl-messages-tabs {
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
 }
 
