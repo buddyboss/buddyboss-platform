@@ -44,7 +44,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 		$total_media = $media_album_template->album->media['total'];
 		?>
-		<div id="bp-media-single-album" class="bb-rl-media-single-album">
+		<div id="bp-media-single-album" class="bb-rl-media-single-album" data-id="<?php bp_album_id(); ?>" data-group="<?php bp_album_group_id(); ?>">
 			<div class="album-single-view" <?php echo 0 === $total_media ? 'no-photos' : ''; ?>>
 
 				<div class="bb-single-album-header text-center">
@@ -115,9 +115,11 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 													bp_current_user_can( 'bp_moderate' ) ||
 													( $bp_is_group && $can_edit )
 												) {
+
+												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bp_get_album_privacy() ) . '"' : '' ;
 												?>
 													<li class="album-edit">
-														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title">
+														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; ?>>
 														<?php
 															esc_html_e( 'Edit Album', 'buddyboss' );
 														?>
@@ -176,7 +178,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<p>
 						<span><?php esc_html_e( 'Created: ', 'buddyboss' ); ?><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
 
-						<?php 
+						<?php
 							if ( $bp_is_my_profile ) {
 								?>
 								<span class="bb-media-privacy-wrap">

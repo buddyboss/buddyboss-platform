@@ -51,7 +51,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 							</div>
 						<?php endif; ?>
 						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-edit-album-close" id="bp-media-edit-album-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-save-album-title" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-edit-album-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

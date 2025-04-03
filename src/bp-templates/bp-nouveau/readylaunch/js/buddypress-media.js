@@ -300,6 +300,7 @@ window.bp = window.bp || {};
 			/* mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) ); */
 			mediaStream.on( 'click', '#bp-media-edit-document-submit', this.editDocumentSubmit.bind( this ) );
+			$document.on( 'click', '#bp-media-edit-album-submit', this.editAlbumSubmit.bind( this ) );
 
 			// document delete.
 			$document.on( 'click', '.bb-rl-document-file-delete', this.deleteDocument.bind( this ) );
@@ -425,13 +426,27 @@ window.bp = window.bp || {};
 
 			var $editAlbumModal = $( '#bb-rl-media-edit-album' ),
 				album_item = $( event.currentTarget ).closest( '#bp-media-single-album' ),
-				current_name = album_item.find( '#bp-single-album-title' ),
-				current_name_text = current_name.children( 'span' ).text();
+				current_name = album_item.find( '#bp-single-album-title .title-wrap' ).text();
+
+			if (
+				$( event.currentTarget ).attr( 'data-privacy' ) &&
+				$editAlbumModal.find( '#bb-album-privacy' ).length > 0
+			) {
+				var current_privacy = $( event.currentTarget ).attr( 'data-privacy' );
+				if ( current_privacy === 'grouponly' ) {
+					$editAlbumModal.find( '#bb-album-privacy' ).addClass( 'bp-hide' );
+				} else {
+					$editAlbumModal.find( '#bb-album-privacy' ).val( current_privacy ).change().removeClass( 'bp-hide' );
+				}
+			} else if ( $editAlbumModal.find( '#bb-album-privacy' ).length > 0 ) {
+				$editAlbumModal.find( '#bb-album-privacy' ).addClass( 'bp-hide' );
+			}
 
 			$editAlbumModal.show();
 			$editAlbumModal.addClass( 'open-popup' );
 
-			$editAlbumModal.find( '#bb-album-title' ).val( current_name_text ).focus().select();
+			$editAlbumModal.find( '#bb-album-title' ).val( current_name ).focus().select();
+			$editAlbumModal.attr( 'data-id', album_item.attr('data-id') );
 		},
 
 		closeEditAlbumModal: function ( event ) {
@@ -3319,6 +3334,69 @@ window.bp = window.bp || {};
 
 						// Trigger the close modal function
 						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
+					},
+				}
+			);
+			event.preventDefault();
+		},
+
+		/**
+		 * [editAlbumSubmit description]
+		 *
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		editAlbumSubmit: function ( event ) {
+			var eventTarget = $( event.currentTarget ),
+				$modal = eventTarget.closest( '#bb-rl-media-edit-album' ),
+				$album_id = $modal.attr( 'data-id' ),
+				$album = $( '.bb-rl-media-single-album[data-id="' + $album_id + '"]' ),
+				$group_id = $album.attr( 'data-group' ) || 0,
+				album_name = $modal.find( '#bb-album-title' ).val().trim(),
+				album_privacy = ( $modal.find( '#bb-album-privacy' ).length > 0 ) ? $modal.find( '#bb-album-privacy' ).val() : '',
+				album_privacy_label = album_privacy ? $modal.find( '#bb-album-privacy option[value="'  + album_privacy + '"]' ).text() : '';
+
+			eventTarget.addClass( 'saving' );
+
+			// Make ajax call to save new file name here.
+			$.ajax(
+				{
+					url: bbRlAjaxUrl,
+					type: 'post',
+					data: {
+						action: 'media_album_save',
+						'_wpnonce': bbRlNonce.media,
+						album_id: $album_id,
+						group_id: $group_id,
+						title: album_name,
+						privacy: album_privacy
+					},
+					success: function ( response ) {
+						if ( response.success ) {
+
+							if ( album_name ) {
+								$album.find( '#bp-single-album-title .title-wrap' ).html( album_name );
+							}
+
+							if ( album_privacy ) {
+								$album.find( '.bb-media-privacy-wrap .bb-media-privacy-icon' ).attr( 'class', 'bb-media-privacy-icon privacy' ).addClass( album_privacy );
+								$album.find( '.bb-rl-edit-album' ).attr( 'data-privacy', album_privacy );
+							}
+
+							if ( album_privacy_label ) {
+								$album.find( '.bb-media-privacy-wrap .bb-media-privacy-text' ).html( album_privacy_label );
+							}
+
+							eventTarget.removeClass( 'saving' );
+						} else {
+							eventTarget.removeClass( 'saving' );
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace( '&#039;', '\'' ) );
+							/* jshint ignore:end */
+						}
+
+						// Trigger the close modal function
+						$modal.find( '#bp-media-edit-album-close' ).trigger( 'click' );
 					},
 				}
 			);
