@@ -5077,6 +5077,7 @@ window.bp = window.bp || {};
 							return event;
 						} else {
 							$( '.message_actions.open' ).removeClass( 'open' );
+							$( '.message_action__list.open' ).removeClass( 'open' );
 							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 					}
