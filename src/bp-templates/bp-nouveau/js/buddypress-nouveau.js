@@ -4767,6 +4767,15 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Detects if the current device is a touch device.
+		 */
+		isTouchDevice: function() {
+			return ( 'ontouchstart' in window ) || 
+				   ( navigator.maxTouchPoints > 0 ) || 
+				   ( navigator.msMaxTouchPoints > 0 );
+		},
+
+		/**
 		 * Function to cancel ongoing AJAX request.
 		 */
 		abortOngoingRequest: function () {
@@ -4881,6 +4890,11 @@ window.bp = window.bp || {};
 		 * Profile popup card for avatars.
 		 */
 		profilePopupCard: function () {
+			// Skip popup card functionality for touch devices to improve user experience.
+			if ( bp.Nouveau.isTouchDevice() ) {
+				return;
+			}
+
 			$( '#buddypress #profile-card, #bbpress-forums #profile-card, #page #profile-card' ).remove();
 			var profileCardTemplate = bp.template( 'profile-card-popup' );
 			var renderedProfileCard = profileCardTemplate();
@@ -5153,6 +5167,11 @@ window.bp = window.bp || {};
 		 * Group popup card for avatars.
 		 */
 		groupPopupCard: function () {
+ 			// Skip popup card functionality for touch devices to improve user experience.
+			if ( bp.Nouveau.isTouchDevice() ) {
+				return;
+			}
+
 			$( '#buddypress #group-card, #bbpress-forums #group-card, #page #group-card' ).remove();
 			var groupCardTemplate = bp.template( 'group-card-popup' );
 			var renderedGroupCard = groupCardTemplate();
