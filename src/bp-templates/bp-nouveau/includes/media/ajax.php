@@ -685,7 +685,7 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = bb_filter_input_string( INPUT_POST, 'title' );
+	$title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
