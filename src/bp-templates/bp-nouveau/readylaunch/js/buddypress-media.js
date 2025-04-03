@@ -3068,14 +3068,16 @@ window.bp = window.bp || {};
 
 			if (
 				$( event.currentTarget ).attr( 'data-privacy' ) &&
-				$editFileModal.find('#bb-rl-folder-privacy-select').length > 0
+				$editFileModal.find( '#bb-rl-folder-privacy-select' ).length > 0
 			) {
 				var current_privacy = $( event.currentTarget ).attr( 'data-privacy' );
-				if( current_privacy === 'grouponly' ) {
-					$editFileModal.find('#bb-rl-folder-privacy-select').addClass('bp-hide');
+				if ( current_privacy === 'grouponly' ) {
+					$editFileModal.find( '#bb-rl-folder-privacy-select' ).addClass( 'bp-hide' );
 				} else {
 					$editFileModal.find( '#bb-rl-folder-privacy-select' ).val( current_privacy ).change().removeClass( 'bp-hide' );
 				}
+			} else if ( $editFileModal.find( '#bb-rl-folder-privacy-select' ).length > 0 ) {
+				$editFileModal.find( '#bb-rl-folder-privacy-select' ).addClass( 'bp-hide' );
 			}
 
 			$editFileModal.show();

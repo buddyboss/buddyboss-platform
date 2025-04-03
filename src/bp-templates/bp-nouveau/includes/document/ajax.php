@@ -1069,12 +1069,15 @@ function bp_nouveau_ajax_document_update_file_name() {
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
+			$document_object = new BP_Document( (int) $document['document_id'] );
 			if (
 				! empty( $privacy ) &&
 				'grouponly' !== $privacy &&
-				array_key_exists( $privacy, $document_visibilies )
+				array_key_exists( $privacy, $document_visibilies ) &&
+				! empty( $document_object->id ) &&
+				$document_object->group_id === 0 &&
+				$document_object->folder_id === 0
 			) {
-				$document_object          = new BP_Document( (int) $document['document_id'] );
 				$document_object->privacy = $privacy;
 				$document_object->save();
 			}
@@ -1142,12 +1145,15 @@ function bp_nouveau_ajax_document_update_file_name() {
 		);
 
 		if ( $folder > 0 ) {
+			$folder_object = new BP_Document_Folder( (int) $document_id );
 			if (
 				! empty( $folder ) &&
 				'grouponly' !== $privacy &&
-				array_key_exists( $privacy, $document_visibilies )
+				array_key_exists( $privacy, $document_visibilies ) &&
+				! empty( $folder_object->id ) &&
+				$folder_object->group_id === 0 &&
+				$folder_object->parent === 0
 			) {
-				$folder_object          = new BP_Document_Folder( (int) $folder );
 				$folder_object->privacy = $privacy;
 				$folder_object->save();
 				$response['privacy']       = $privacy;
