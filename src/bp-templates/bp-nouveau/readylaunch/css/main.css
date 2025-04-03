@@ -6658,10 +6658,15 @@ body.admin-bar .bb-rl-left-panel {
 .bb-rl-sub-ctrls .subnav-filters {
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .bb-rl-sub-ctrls .subnav-filters .subnav-search {
   margin: 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-sub-ctrls .subnav-filters .subnav-search:empty {
+  margin: 0;
 }
 
 @media screen and (max-width: 544px) {
@@ -6669,6 +6674,12 @@ body.admin-bar .bb-rl-left-panel {
     flex-flow: wrap;
     gap: var(--bb-rl-space-100);
     justify-content: center;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .bb-rl-sub-ctrls .subnav-filters {
+    margin-left: 0;
   }
 }
 

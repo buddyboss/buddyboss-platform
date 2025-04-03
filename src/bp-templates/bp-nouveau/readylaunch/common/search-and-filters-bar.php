@@ -22,9 +22,7 @@
 		! bp_is_directory()
 	) {
 		?>
-		<div class="subnav-search clearfix">
-			<?php bp_nouveau_search_form(); ?>
-		</div>
+		<div class="subnav-search clearfix"><?php bp_nouveau_search_form(); ?></div>
 		<?php
 	}
 

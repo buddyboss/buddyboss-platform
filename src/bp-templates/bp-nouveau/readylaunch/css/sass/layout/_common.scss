@@ -3,15 +3,24 @@
 	.subnav-filters {
 		display: flex;
 		align-items: center;
+		margin-left: auto;
 
 		.subnav-search {
 			margin: 0 var(--bb-rl-space-200);
+
+			&:empty {
+				margin: 0;
+			}
 		}
 
 		@media screen and (max-width: $sm) {
 			flex-flow: wrap;
 			gap: var(--bb-rl-space-100);
 			justify-content: center;
+		}
+
+		@media screen and (max-width: 900px) {
+			margin-left: 0;
 		}
 	}
 
