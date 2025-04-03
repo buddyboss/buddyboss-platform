@@ -1504,7 +1504,7 @@ function bp_get_album_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_title() {
-	echo bp_get_album_title();
+	echo esc_html( bp_get_album_title() );
 }
 
 /**

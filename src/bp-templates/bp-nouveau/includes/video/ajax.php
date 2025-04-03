@@ -764,7 +764,7 @@ function bp_nouveau_ajax_video_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = bb_filter_input_string( INPUT_POST, 'title' );
+	$title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
@@ -1144,7 +1144,7 @@ function bp_nouveau_ajax_video_description_save() {
 	}
 
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
-	$description   = bb_filter_input_string( INPUT_POST, 'description' );
+	$description   = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
 
 	// check description empty.
 	if ( empty( $description ) ) {
