@@ -1802,6 +1802,19 @@ ul.bb-albums-list {
 	}
 }
 
+.bb-media-actions-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.groups.single-item & {
+
+		.bb-media-actions-wrap {
+			margin-bottom: 0;
+		}
+	}
+}
+
 .bb-media-actions-wrap {
 	display: -webkit-box;
 	display: -ms-flexbox;
