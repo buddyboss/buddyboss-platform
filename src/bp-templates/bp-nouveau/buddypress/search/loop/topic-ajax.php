@@ -13,24 +13,24 @@ $topic_id = get_the_ID();
 $total    = bbp_get_topic_reply_count( $topic_id );
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_topic">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink( $topic_id ) ) ); ?>">
-		<div class="item-avatar">
-			<?php
-			$args   = array(
-				'type'    => 'avatar',
-				'post_id' => $topic_id,
-			);
-			$avatar = bbp_get_topic_author_link( $args );
+	<div class="item-avatar">
+		<?php
+		$args   = array(
+			'type'    => 'avatar',
+			'post_id' => $topic_id,
+		);
+		$avatar = bbp_get_topic_author_link( $args );
 
-			if ( $avatar ) {
-				echo wp_kses_post( $avatar );
-			} else {
-				?>
-				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
-				<?php
-			}
+		if ( $avatar ) {
+			echo wp_kses_post( $avatar );
+		} else {
 			?>
-		</div>
+			<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
+			<?php
+		}
+		?>
+	</div>
+	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink( $topic_id ) ) ); ?>">
 		<div class="item">
 			<div class="item-title">
 				<?php echo wp_kses_post( stripslashes( wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ) ) ); ?>
