@@ -1806,6 +1806,13 @@ ul.bb-albums-list {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	.groups.single-item & {
+
+		.bb-media-actions-wrap {
+			margin-bottom: 0;
+		}
+	}
 }
 
 .bb-media-actions-wrap {

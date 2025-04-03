@@ -23025,6 +23025,10 @@ ul.bb-albums-list .load-more {
   align-items: center;
 }
 
+.groups.single-item .bb-media-actions-header .bb-media-actions-wrap {
+  margin-bottom: 0;
+}
+
 .bb-media-actions-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
