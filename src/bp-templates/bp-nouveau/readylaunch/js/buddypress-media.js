@@ -423,8 +423,7 @@ window.bp = window.bp || {};
 		editAlbum: function ( event ) {
 			event.preventDefault();
 
-			var $document = $( document ),
-				$editAlbumModal = $( '#bb-rl-media-edit-album' ),
+			var $editAlbumModal = $( '#bb-rl-media-edit-album' ),
 				album_item = $( event.currentTarget ).closest( '#bp-media-single-album' ),
 				current_name = album_item.find( '#bp-single-album-title' ),
 				current_name_text = current_name.children( 'span' ).text();
@@ -3063,7 +3062,6 @@ window.bp = window.bp || {};
 				media_item = $( event.currentTarget ).closest( '.media-folder_items' ),
 				current_name = media_item.find( '.media-folder_name' ),
 				current_name_text = current_name.children( 'span' ).text(),
-				activity_id = media_item.data( 'activity-id' ),
 				document_id = media_item.data( 'id' ),
 				document_attachment_id = media_item.find( '.media-folder_name' ).data( 'attachment-id' ),
 				document_privacy = media_item.find( '.media-folder_name' ).data( 'privacy' );

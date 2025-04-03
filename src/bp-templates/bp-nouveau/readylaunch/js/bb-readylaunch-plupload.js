@@ -524,8 +524,8 @@ window.bp = window.bp || {};
         			var percent = model.get( 'percent' );
 
 					var $element = $( selector );
-					var currentStyle = $element.attr('style') || '';
-					var newStyle = "width: " + percent + "%; --progress: " + percent + ";";
+					var currentStyle = $element.attr( 'style' ) || '';
+					var newStyle = 'width: ' + percent + '%; --progress: ' + percent + ';';
 
 					$element.attr( 'style', currentStyle + newStyle );
 
