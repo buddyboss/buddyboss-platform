@@ -221,28 +221,15 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					<?php
 				} else {
 					?>
-					<span id="privacy-<?php echo esc_attr( $document_id ); ?>"><?php bp_document_privacy(); ?></span>
+					<span class="bb-rl-privacy-label" id="privacy-<?php echo esc_attr( $document_id ); ?>"><?php bp_document_privacy(); ?></span>
 					<?php
 				}
 			} else {
 				?>
-				<span><?php bp_document_privacy(); ?></span>
+				<span class="bb-rl-privacy-label"><?php bp_document_privacy(); ?></span>
 				<?php
 			}
 			?>
-			<select data-item-type="<?php echo esc_attr( $document_type ); ?>"
-					data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-rl-folder-privacy" class="hide">
-				<?php
-				foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
-					if ( 'grouponly' === $key ) {
-						continue;
-					}
-					?>
-					<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $privacy ); ?></option>
-					<?php
-				endforeach;
-				?>
-			</select>
 		</div>
 	</div>
 	<?php

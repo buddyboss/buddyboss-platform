@@ -296,7 +296,7 @@ window.bp = window.bp || {};
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-edit', this.editDocument.bind( this ) );
 			mediaStream.on( 'click', '.bb-rl-media-edit-document-close', this.closeEditDocumentModal.bind( this ) );
-			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
+			// mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
 			/* mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) ); */
 			mediaStream.on( 'click', '#bp-media-edit-document-submit', this.editDocumentSubmit.bind( this ) );
@@ -3071,7 +3071,11 @@ window.bp = window.bp || {};
 				$editFileModal.find('#bb-rl-folder-privacy-select').length > 0
 			) {
 				var current_privacy = $( event.currentTarget ).attr( 'data-privacy' );
-				$editFileModal.find('#bb-rl-folder-privacy-select').val( current_privacy ).change();
+				if( current_privacy === 'grouponly' ) {
+					$editFileModal.find('#bb-rl-folder-privacy-select').addClass('bp-hide');
+				} else {
+					$editFileModal.find( '#bb-rl-folder-privacy-select' ).val( current_privacy ).change().removeClass( 'bp-hide' );
+				}
 			}
 
 			$editFileModal.show();
@@ -3286,6 +3290,22 @@ window.bp = window.bp || {};
 							} else {
 								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
 								document_name.html( response.data.response.title );
+
+								if (
+									'undefined' !== typeof response.data.response.privacy_label &&
+									$mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' ).length > 0
+								) {
+									$mediaItem.find( '.media-folder_details__bottom .bb-rl-privacy-label' ).html( response.data.response.privacy_label );
+								}
+
+								if (
+									'undefined' !== typeof response.data.response.privacy &&
+									$mediaItem.find( '.bb_more_options .ac-document-edit' ).length > 0
+								) {
+									console.log('updated');
+									$mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy', response.data.response.privacy );
+								}
+
 								eventTarget.removeClass( 'saving' );
 							}
 						} else {

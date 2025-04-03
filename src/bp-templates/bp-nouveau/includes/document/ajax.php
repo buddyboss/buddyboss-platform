@@ -1045,6 +1045,8 @@ function bp_nouveau_ajax_document_update_file_name() {
 		wp_send_json_error( $response );
 	}
 
+	$document_visibilies = bp_document_get_visibility_levels();
+
 	$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
 	$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
 	$title                  = bb_filter_input_string( INPUT_POST, 'name' );
@@ -1070,7 +1072,7 @@ function bp_nouveau_ajax_document_update_file_name() {
 			if (
 				! empty( $privacy ) &&
 				'grouponly' !== $privacy &&
-				array_key_exists( $privacy, bp_document_get_visibility_levels() )
+				array_key_exists( $privacy, $document_visibilies )
 			) {
 				$document_object          = new BP_Document( (int) $document['document_id'] );
 				$document_object->privacy = $privacy;
@@ -1133,11 +1135,25 @@ function bp_nouveau_ajax_document_update_file_name() {
 		$folder = bp_document_rename_folder( $document_id, $title );
 
 		$response = array(
-			'document_id' => $document_id,
-			'title'       => $title,
+			'document_id'   => $document_id,
+			'title'         => $title,
+			'privacy'       => '',
+			'privacy_label' => '',
 		);
 
 		if ( $folder > 0 ) {
+			if (
+				! empty( $folder ) &&
+				'grouponly' !== $privacy &&
+				array_key_exists( $privacy, $document_visibilies )
+			) {
+				$folder_object          = new BP_Document_Folder( (int) $folder );
+				$folder_object->privacy = $privacy;
+				$folder_object->save();
+				$response['privacy']       = $privacy;
+				$response['privacy_label'] = isset( $document_visibilies[ $privacy ] ) ? $document_visibilies[ $privacy ] : '';
+			}
+
 			wp_send_json_success(
 				array(
 					'message'  => 'success',
