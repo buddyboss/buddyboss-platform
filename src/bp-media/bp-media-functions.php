@@ -612,7 +612,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 							'blog_id'       => $bp_media->blog_id,
 							'attachment_id' => $bp_media->attachment_id,
 							'user_id'       => $bp_media->user_id,
-							'title'         => $bp_media->title,
+							'title'         => sanitize_text_field( wp_unslash( $bp_media->title ) ),
 							'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 							'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
 							'activity_id'   => $bp_media->activity_id,
@@ -634,7 +634,7 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 				$media_id = bp_media_add(
 					array(
 						'attachment_id' => $media['id'],
-						'title'         => $media['name'],
+						'title'         => sanitize_text_field( wp_unslash( $media['name'] ) ),
 						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
 						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
 						'message_id'    => ! empty( $media['message_id'] ) ? $media['message_id'] : 0,
