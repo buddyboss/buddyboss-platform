@@ -22536,8 +22536,13 @@ ul.bb-albums-list .load-more {
   margin-bottom: 20px;
 }
 
-#buddypress .bb-media-container.member-media .bp-navs ~ .bb-media-actions-wrap {
+#buddypress .bb-media-container.member-media .bp-navs ~ .bb-media-actions-wrap,
+#buddypress .bb-media-container.member-media .bb-media-actions-header .bb-media-actions-wrap {
   margin-bottom: 0;
+}
+
+#buddypress .bb-media-container.member-media .bb-media-actions-header .bb-member-media-header {
+  margin-top: 0;
 }
 
 @media (min-width: 1025px) {
@@ -22782,6 +22787,7 @@ ul.bb-albums-list .load-more {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .groups.single-item .bb-media-actions-header .bb-media-actions-wrap {
