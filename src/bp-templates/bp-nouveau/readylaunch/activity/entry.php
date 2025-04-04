@@ -62,7 +62,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			<div class="bb-rl-activity-head-group">
 				<div class="bb-rl-activity-group-avatar">
 					<div class="bb-rl-group-avatar">
-						<a class="bb-rl-group-avatar-wrap bb-rl-mobile-center" href="<?php echo $group_permalink; ?>">
+						<a class="bb-rl-group-avatar-wrap bb-rl-mobile-center" href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>">
 							<?php
 							echo bp_core_fetch_avatar(
 								array(
@@ -78,13 +78,13 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 						</a>
 					</div>
 					<div class="bb-rl-author-avatar">
-						<a href="<?php echo $user_link; ?>"><?php bp_activity_avatar( array( 'type' => 'thumb' ) ); ?></a>
+						<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php bp_activity_avatar( array( 'type' => 'thumb', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
 					</div>
 				</div>
 
 				<div class="bb-rl-activity-header bb-rl-activity-header--group">
 					<div class="bb-rl-activity-group-heading">
-						<a href="<?php echo $group_permalink; ?>"><?php echo $group_name; ?></a>
+						<a href="<?php echo $group_permalink; ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>"><?php echo $group_name; ?></a>
 					</div>
 					<div class="bb-rl-activity-group-post-meta">
 						<span class="bb-rl-activity-post-author">
@@ -119,9 +119,9 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 			}
 			?>
 			<div class="bb-rl-activity-head">
-				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>">
+				<div class="bb-rl-activity-avatar bb-rl-item-avatar <?php echo $friendship_created ? esc_attr( 'bb-rl-multiple-avatars' ) : ''; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
 					<a href="<?php echo $user_link; ?>">
-						<?php bp_activity_avatar( array( 'type' => 'full' ) ); ?>
+						<?php bp_activity_avatar( array( 'type' => 'full', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?>
 					</a>
 					<?php
 					if ( $friendship_created ) {
