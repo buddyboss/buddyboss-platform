@@ -22778,6 +22778,22 @@ ul.bb-albums-list .load-more {
   margin: 0;
 }
 
+.bb-media-actions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.groups.single-item .bb-media-actions-header .bb-media-actions-wrap {
+  margin-bottom: 0;
+}
+
+@media (max-width: 540px) {
+  .bb-media-actions-header .bb-photos-actions {
+    flex: 1;
+  }
+}
+
 .bb-media-actions-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
