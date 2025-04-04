@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.7.2
 Requires PHP: 5.6.20
-Stable tag: 2.8.20
+Stable tag: 2.8.30
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.30 =
+* Bug: Activity - Fixed an issue where the checkbox in Report options was not selectable when the feed opened in a popup
+* Bug: Activity - Improved the Activity Filter by hiding the dropdown when only one option is available, displaying it as a label instead
+* Bug: Core - Updated “Select2” and “jQuery Validation” libraries in the latest BuddyBoss Plugin/Theme to ensure compatibility and improved functionality
+* Bug: Media - Fixed an issue where the “Group” column on the “All Documents” tab table did not load after refreshing the page in the Documents directory.
 
 = 2.8.20 =
 * Enhancement: Activity - Added hover pop-ups for improved interaction—hovering over a user's avatar now displays a user pop-up, and hovering over a group link in the feed shows a group pop-up
