@@ -1479,8 +1479,13 @@ ul.bb-albums-list {
 			margin-bottom: 20px;
 		}
 
-		.bp-navs ~ .bb-media-actions-wrap {
+		.bp-navs ~ .bb-media-actions-wrap,
+		.bb-media-actions-header .bb-media-actions-wrap {
 			margin-bottom: 0;
+		}
+
+		.bb-media-actions-header .bb-member-media-header {
+			margin-top: 0;
 		}
 
 	}
@@ -1806,6 +1811,7 @@ ul.bb-albums-list {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin-bottom: 20px;
 
 	.groups.single-item & {
 
