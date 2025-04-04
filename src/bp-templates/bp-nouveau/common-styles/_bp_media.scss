@@ -1813,6 +1813,13 @@ ul.bb-albums-list {
 			margin-bottom: 0;
 		}
 	}
+
+	@media (max-width: 540px) {
+
+		.bb-photos-actions {
+			flex: 1;
+		}
+	}
 }
 
 .bb-media-actions-wrap {

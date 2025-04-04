@@ -22788,6 +22788,12 @@ ul.bb-albums-list .load-more {
   margin-bottom: 0;
 }
 
+@media (max-width: 540px) {
+  .bb-media-actions-header .bb-photos-actions {
+    flex: 1;
+  }
+}
+
 .bb-media-actions-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
