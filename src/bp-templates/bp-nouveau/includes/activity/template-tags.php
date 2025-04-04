@@ -126,14 +126,11 @@ function bp_nouveau_before_activity_post_form() {
 }
 
 /**
- * Load JS Templates for the Activity Post Form
+ * Fires actions after the Activity Post Form
  *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_activity_post_form() {
-	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
-		bp_get_template_part( 'common/js-templates/activity/form' );
-	}
 
 	/**
 	 * Fires after the activity post form.
