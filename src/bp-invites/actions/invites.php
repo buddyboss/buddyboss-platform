@@ -101,7 +101,7 @@ function bp_member_invite_submit() {
 	foreach ( $invite_correct_array as $key => $value ) {
 
 		if ( true === bp_disable_invite_member_email_subject() ) {
-			$subject = stripslashes( strip_tags( $_POST['bp_member_invites_custom_subject'] ) );
+			$subject = sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) );
 		} else {
 			$subject = stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
 		}
