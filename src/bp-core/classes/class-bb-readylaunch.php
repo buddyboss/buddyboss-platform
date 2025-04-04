@@ -529,12 +529,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Register only if it's Groups component.
 			if ( bp_is_active( 'groups' ) ) {
-				if ( bp_is_group_single() ||
+				if (
+                    bp_is_group_single() ||
 					bp_is_group_create() ||
 					bp_is_user_groups()
 				) {
-
-					error_log( bp_is_user_groups() );
 					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
 					wp_enqueue_script( 'bb-rl-groups' );
 					wp_localize_script(
@@ -545,7 +544,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						)
 					);
 
-					if ( bp_is_group_invites() ) {
+					if ( bp_is_group_invites() || bp_is_group_creation_step( 'group-invites' ) ) {
 						wp_enqueue_script( 'bb-rl-group-invites' );
 					}
 				}
