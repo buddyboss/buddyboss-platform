@@ -11,6 +11,9 @@
 $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
 $count                = false;
+
+bp_get_template_part( 'members/single/parts/item-subnav' );
+
 if ( bp_is_user() && bb_enable_content_counts() ) {
 	?>
 	<div class="bb-item-count">
@@ -47,7 +50,6 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 ?>
 <div class="bb-media-container member-media">
 	<?php
-	bp_get_template_part( 'members/single/parts/item-subnav' );
 	bp_get_template_part( 'media/theatre' );
 	if ( bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
@@ -59,10 +61,14 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 
 		// Home/Media.
 		case 'my-media':
-			bp_get_template_part( 'media/add-media' );
 			bp_nouveau_member_hook( 'before', 'media_content' );
-			bp_get_template_part( 'media/actions' );
 			?>
+			<div class="bb-media-actions-header">
+				<?php
+				bp_get_template_part( 'media/add-media' );
+				bp_get_template_part( 'media/actions' );
+				?>
+			</div>
 			<div id="media-stream" class="media" data-bp-list="media" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
 				if ( $is_send_ajax_request ) {
