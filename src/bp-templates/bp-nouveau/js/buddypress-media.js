@@ -7174,8 +7174,16 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
 				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
-				document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( mirror_text_display );
 
+				var $textarea = document_elements.find( '.bb-document-section .document-preview .document-text textarea' );
+    
+				// Special handling for HTML files.
+				if ( 'html' === extension || 'htm' === extension ) {
+					$textarea.val(mirror_text_display);
+				} else {
+					// Default behavior for other file types.
+					$textarea.html(mirror_text_display);
+				}
 				setTimeout( function () {
 					bp.Nouveau.Media.documentCodeMirror();
 				}, 1000 );
