@@ -1,17 +1,30 @@
 
 .bb-rl-popup-card {
 	position: fixed;
-	background-color: #fff;
+	background-color: var(--bb-rl-background-color);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 5px;
-	padding: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	min-width: 200px;
+	border-radius: var(--bb-rl-radius-md);
+	padding: var(--bb-rl-space-300);
+	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+	min-width: 370px;
+	max-width: 505px;
 	z-index: 9999991;
 	opacity: 0;
 	transition-behavior: allow-discrete;/* stylelint-disable-line */
 	transition: opacity 0.3s ease;
 	transform: translate(9999px);
+
+	@media screen and (max-width: 560px) {
+		max-width: 380px;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+
+	@media screen and (max-width: 400px) {
+		max-width: 100%;
+		min-width: 360px;
+		margin-left: 0;
+	}
 
 	&.show {
 		opacity: 1;
@@ -97,7 +110,7 @@
 	.skeleton-card-footer {
 		display: flex;
 		align-items: flex-start;
-		gap: 10px;
+		gap: var(--bb-rl-space-100);
 		margin: 30px 0 0;
 
 		.skeleton-card-button {
@@ -135,6 +148,14 @@
 		width: 88px;
 		height: auto;
 		min-width: 88px;
+		border-radius: 50%;
+	}
+
+	.bb-rl-group-card & {
+
+		img {
+			border-radius: var(--bb-rl-radius-md);
+		}
 	}
 
 	.card-profile-status {
@@ -142,8 +163,8 @@
 		display: none;
 		width: 13px;
 		height: 13px;
-		background-color: #14b550;
-		border: 2px solid #fff;
+		background-color: var(--bb-rl-border-positive-primary-color);
+		border: 2px solid var(--bb-rl-text-white-color);
 		border-radius: 50%;
 		right: 7px;
 		top: 5px;
@@ -155,14 +176,18 @@
 }
 
 .bb-rl-card-heading {
+	font-weight: 500;
 	margin: 0 0 10px;
 }
 
 .bb-card-profile-type {
 	display: none;
-	background-color: #fafafa;
+	background-color: var(--bb-rl-background-secondary-color);
 	padding: 4px 8px;
 	font-size: 11px;
+	border-radius: var(--bb-rl-radius-sm);
+	color: var(--bb-rl-text-secondary-color);
+	font-weight: 700;
 
 	&.hasMemberType {
 		display: inline;
@@ -172,6 +197,7 @@
 .bb-rl-card-meta {
 
 	span {
+		color: var(--bb-rl-text-secondary-color);
 		font-size: 14px;
 		line-height: 21px;
 	}
@@ -187,6 +213,24 @@
 
 	.card-meta-status {
 		text-transform: capitalize;
+	}
+
+	.card-meta-item {
+
+		&::after {
+			content: "\2022";
+			color: var(--bb-rl-background-tertiary-color);
+			font-size: var(--bb-rl-font-size-sm);
+			display: inline-block;
+			margin-left: var(--bb-rl-space-100);
+		}
+
+		&:last-of-type {
+
+			&::after {
+				display: none;
+			}
+		}
 	}
 }
 
@@ -215,6 +259,17 @@
 		height: 30px;
 		line-height: 28px;
 		width: 100%;
+		border-radius: var(--bb-rl-radius-sm);
+
+		i {
+			font-size: var(--bb-rl-font-size-base);
+			margin-right: var(--bb-rl-space-50);
+			line-height: 1;
+
+			&:before {
+				margin: 0;
+			}
+		}
 	}
 
 	.buddypress .buddypress-wrap & {
@@ -268,6 +323,152 @@
 
 		.bs-group-members {
 			margin: 5px 0 0 -4px;
+		}
+	}
+}
+
+.bb-rl-card-footer {
+
+	.send-message {
+
+		i {
+			position: relative;
+			top: 1px;
+		}
+
+		&:hover {
+
+			i {
+
+				&::before {
+					font-weight: 300;
+				}
+			}
+		}
+	}
+}
+
+.buddypress .buddypress-wrap {
+
+	button.card-button {
+		padding: 0;
+		width: 100%;
+	}
+}
+
+.bb-rl-card-action-primary,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary,
+#buddypress .friendship-button,
+#buddypress .bb-rl-card-action-primary {
+
+	.card-button,
+	a.friendship-button,
+	.join-group,
+	.generic-button a.group-button.join-group,
+	.group-button.request-membership {
+
+		@include bb-rl-button--brand-fill;
+
+		width: 100%;
+	}
+}
+
+.bb-card-action-secondary,
+.buddypress .buddypress-wrap .bb-card-action-secondary,
+#buddypress .follow-button {
+
+	.card-button,
+	.follow-button,
+	.follow-button.outline.not_following {
+
+		@include bb-rl-button;
+		@include bb-rl-button-secondary-fill;
+
+		text-align: center;
+	}
+}
+
+.bb-rl-card-action-outline {
+
+	.card-button {
+
+		@include bb-rl-button--brand-outline;
+
+		&.card-button-group {
+			color: var(--bb-rl-text-color);
+			border: 1px solid var(--bb-rl-border-tertiary-color);
+		}
+	}
+}
+
+.bb-rl-card-footer .bb-rl-card-action,
+#buddypress .bb-rl-card-footer .bb-rl-card-action {
+
+	.generic-button {
+
+		a,
+		button,
+		a.group-button.join-group {
+			min-width: 125px;
+			min-height: 30px;
+			line-height: 30px;
+			padding-top: 0;
+			padding-bottom: 0;
+			white-space: nowrap;
+			width: 100%;
+
+			&.friendship-button.is_friend,
+			&.group-button.request-membership {
+				min-width: 200px;
+			}
+
+			&.friendship-button.pending_friend {
+				min-width: 170px;
+			}
+		}
+	}
+}
+
+.bb-rl-group-card {
+
+	.bs-group-members {
+		display: flex;
+		margin-bottom: 15px;
+		padding-right: 10px;
+		margin-right: 5px;
+	}
+
+	.bs-group-member {
+		display: block;
+		max-width: 24px;
+		float: left;
+		margin-right: -4px;
+		position: relative;
+		z-index: 1;
+
+		a {
+			text-decoration: none;
+		}
+
+		img {
+			border-radius: 50%;
+			float: left;
+			max-width: 100%;
+			image-rendering: -webkit-optimize-contrast;
+			display: block;
+		}
+
+		[class*=" bb-icon-"] {
+			height: 24px;
+			width: 24px;
+			font-size: 16px;
+			color: #c3c4c8;
+			line-height: 24px;
+			border-radius: 50%;
+			background-color: var(--bb-rl-background-secondary-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 }

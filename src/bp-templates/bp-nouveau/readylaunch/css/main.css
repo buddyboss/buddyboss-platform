@@ -17157,18 +17157,35 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-popup-card {
   position: fixed;
-  background-color: #fff;
+  background-color: var(--bb-rl-background-color);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-300);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  min-width: 370px;
+  max-width: 505px;
   z-index: 9999991;
   opacity: 0;
   transition-behavior: allow-discrete;
   /* stylelint-disable-line */
   transition: opacity 0.3s ease;
   transform: translate(9999px);
+}
+
+@media screen and (max-width: 560px) {
+  .bb-rl-popup-card {
+    max-width: 380px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .bb-rl-popup-card {
+    max-width: 100%;
+    min-width: 360px;
+    margin-left: 0;
+  }
 }
 
 .bb-rl-popup-card.show {
@@ -17240,7 +17257,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-popup-card.loading .skeleton-card-footer {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--bb-rl-space-100);
   margin: 30px 0 0;
 }
 
@@ -17274,6 +17291,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   width: 88px;
   height: auto;
   min-width: 88px;
+  border-radius: 50%;
+}
+
+.bb-rl-group-card .bb-rl-card-avatar img {
+  border-radius: var(--bb-rl-radius-md);
 }
 
 .bb-rl-card-avatar .card-profile-status {
@@ -17281,8 +17303,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   display: none;
   width: 13px;
   height: 13px;
-  background-color: #14b550;
-  border: 2px solid #fff;
+  background-color: var(--bb-rl-border-positive-primary-color);
+  border: 2px solid var(--bb-rl-text-white-color);
   border-radius: 50%;
   right: 7px;
   top: 5px;
@@ -17293,14 +17315,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-card-heading {
+  font-weight: 500;
   margin: 0 0 10px;
 }
 
 .bb-card-profile-type {
   display: none;
-  background-color: #fafafa;
+  background-color: var(--bb-rl-background-secondary-color);
   padding: 4px 8px;
   font-size: 11px;
+  border-radius: var(--bb-rl-radius-sm);
+  color: var(--bb-rl-text-secondary-color);
+  font-weight: 700;
 }
 
 .bb-card-profile-type.hasMemberType {
@@ -17308,6 +17334,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-card-meta span {
+  color: var(--bb-rl-text-secondary-color);
   font-size: 14px;
   line-height: 21px;
 }
@@ -17323,6 +17350,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-card-meta .card-meta-status {
   text-transform: capitalize;
+}
+
+.bb-rl-card-meta .card-meta-item::after {
+  content: "\2022";
+  color: var(--bb-rl-background-tertiary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  display: inline-block;
+  margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-card-meta .card-meta-item:last-of-type::after {
+  display: none;
 }
 
 .bb-rl-card-footer {
@@ -17348,6 +17387,19 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   height: 30px;
   line-height: 28px;
   width: 100%;
+  border-radius: var(--bb-rl-radius-sm);
+}
+
+.bb-rl-card-footer .card-button i,
+.bb-rl-card-footer button.follow-button i {
+  font-size: var(--bb-rl-font-size-base);
+  margin-right: var(--bb-rl-space-50);
+  line-height: 1;
+}
+
+.bb-rl-card-footer .card-button i:before,
+.bb-rl-card-footer button.follow-button i:before {
+  margin: 0;
 }
 
 .buddypress .buddypress-wrap .bb-rl-card-footer button {
@@ -17397,4 +17449,281 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-group-card .card-group-members .bs-group-members {
   margin: 5px 0 0 -4px;
+}
+
+.bb-rl-card-footer .send-message i {
+  position: relative;
+  top: 1px;
+}
+
+.bb-rl-card-footer .send-message:hover i::before {
+  font-weight: 300;
+}
+
+.buddypress .buddypress-wrap button.card-button {
+  padding: 0;
+  width: 100%;
+}
+
+.bb-rl-card-action-primary .card-button,
+.bb-rl-card-action-primary a.friendship-button,
+.bb-rl-card-action-primary .join-group,
+.bb-rl-card-action-primary .generic-button a.group-button.join-group,
+.bb-rl-card-action-primary .group-button.request-membership,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .card-button,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary a.friendship-button,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership,
+#buddypress .friendship-button .card-button,
+#buddypress .friendship-button a.friendship-button,
+#buddypress .friendship-button .join-group,
+#buddypress .friendship-button .generic-button a.group-button.join-group,
+#buddypress .friendship-button .group-button.request-membership,
+#buddypress .bb-rl-card-action-primary .card-button,
+#buddypress .bb-rl-card-action-primary a.friendship-button,
+#buddypress .bb-rl-card-action-primary .join-group,
+#buddypress .bb-rl-card-action-primary .generic-button a.group-button.join-group,
+#buddypress .bb-rl-card-action-primary .group-button.request-membership {
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  width: 100%;
+}
+
+.bb-rl-card-action-primary .card-button:hover,
+.bb-rl-card-action-primary a.friendship-button:hover,
+.bb-rl-card-action-primary .join-group:hover,
+.bb-rl-card-action-primary .generic-button a.group-button.join-group:hover,
+.bb-rl-card-action-primary .group-button.request-membership:hover,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .card-button:hover,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary a.friendship-button:hover,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group:hover,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group:hover,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership:hover,
+#buddypress .friendship-button .card-button:hover,
+#buddypress .friendship-button a.friendship-button:hover,
+#buddypress .friendship-button .join-group:hover,
+#buddypress .friendship-button .generic-button a.group-button.join-group:hover,
+#buddypress .friendship-button .group-button.request-membership:hover,
+#buddypress .bb-rl-card-action-primary .card-button:hover,
+#buddypress .bb-rl-card-action-primary a.friendship-button:hover,
+#buddypress .bb-rl-card-action-primary .join-group:hover,
+#buddypress .bb-rl-card-action-primary .generic-button a.group-button.join-group:hover,
+#buddypress .bb-rl-card-action-primary .group-button.request-membership:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-card-action-primary .card-button:focus-within,
+.bb-rl-card-action-primary a.friendship-button:focus-within,
+.bb-rl-card-action-primary .join-group:focus-within,
+.bb-rl-card-action-primary .generic-button a.group-button.join-group:focus-within,
+.bb-rl-card-action-primary .group-button.request-membership:focus-within,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .card-button:focus-within,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary a.friendship-button:focus-within,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group:focus-within,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group:focus-within,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership:focus-within,
+#buddypress .friendship-button .card-button:focus-within,
+#buddypress .friendship-button a.friendship-button:focus-within,
+#buddypress .friendship-button .join-group:focus-within,
+#buddypress .friendship-button .generic-button a.group-button.join-group:focus-within,
+#buddypress .friendship-button .group-button.request-membership:focus-within,
+#buddypress .bb-rl-card-action-primary .card-button:focus-within,
+#buddypress .bb-rl-card-action-primary a.friendship-button:focus-within,
+#buddypress .bb-rl-card-action-primary .join-group:focus-within,
+#buddypress .bb-rl-card-action-primary .generic-button a.group-button.join-group:focus-within,
+#buddypress .bb-rl-card-action-primary .group-button.request-membership:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-card-action-primary .card-button:disabled,
+.bb-rl-card-action-primary a.friendship-button:disabled,
+.bb-rl-card-action-primary .join-group:disabled,
+.bb-rl-card-action-primary .generic-button a.group-button.join-group:disabled,
+.bb-rl-card-action-primary .group-button.request-membership:disabled,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .card-button:disabled,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary a.friendship-button:disabled,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group:disabled,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group:disabled,
+.buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership:disabled,
+#buddypress .friendship-button .card-button:disabled,
+#buddypress .friendship-button a.friendship-button:disabled,
+#buddypress .friendship-button .join-group:disabled,
+#buddypress .friendship-button .generic-button a.group-button.join-group:disabled,
+#buddypress .friendship-button .group-button.request-membership:disabled,
+#buddypress .bb-rl-card-action-primary .card-button:disabled,
+#buddypress .bb-rl-card-action-primary a.friendship-button:disabled,
+#buddypress .bb-rl-card-action-primary .join-group:disabled,
+#buddypress .bb-rl-card-action-primary .generic-button a.group-button.join-group:disabled,
+#buddypress .bb-rl-card-action-primary .group-button.request-membership:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-card-action-secondary .card-button,
+.bb-card-action-secondary .follow-button,
+.bb-card-action-secondary .follow-button.outline.not_following,
+.buddypress .buddypress-wrap .bb-card-action-secondary .card-button,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following,
+#buddypress .follow-button .card-button,
+#buddypress .follow-button .follow-button,
+#buddypress .follow-button .follow-button.outline.not_following {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid transparent;
+  text-align: center;
+}
+
+.bb-card-action-secondary .card-button:hover,
+.bb-card-action-secondary .follow-button:hover,
+.bb-card-action-secondary .follow-button.outline.not_following:hover,
+.buddypress .buddypress-wrap .bb-card-action-secondary .card-button:hover,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button:hover,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following:hover,
+#buddypress .follow-button .card-button:hover,
+#buddypress .follow-button .follow-button:hover,
+#buddypress .follow-button .follow-button.outline.not_following:hover {
+  background-color: var(--bb-rl-background-tertiary-hover-color);
+}
+
+.bb-card-action-secondary .card-button:focus,
+.bb-card-action-secondary .follow-button:focus,
+.bb-card-action-secondary .follow-button.outline.not_following:focus,
+.buddypress .buddypress-wrap .bb-card-action-secondary .card-button:focus,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button:focus,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following:focus,
+#buddypress .follow-button .card-button:focus,
+#buddypress .follow-button .follow-button:focus,
+#buddypress .follow-button .follow-button.outline.not_following:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-card-action-secondary .card-button:disabled,
+.bb-card-action-secondary .follow-button:disabled,
+.bb-card-action-secondary .follow-button.outline.not_following:disabled,
+.buddypress .buddypress-wrap .bb-card-action-secondary .card-button:disabled,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button:disabled,
+.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following:disabled,
+#buddypress .follow-button .card-button:disabled,
+#buddypress .follow-button .follow-button:disabled,
+#buddypress .follow-button .follow-button.outline.not_following:disabled {
+  background-color: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-card-action-outline .card-button {
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: 1px solid var(--bb-rl-text-brand-primary-color);
+}
+
+.bb-rl-card-action-outline .card-button:hover {
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-card-action-outline .card-button:focus {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-card-action-outline .card-button:disabled {
+  border-color: var(--bb-rl-background-brand-disabled-color);
+  color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-card-action-outline .card-button.card-button-group {
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-card-footer .bb-rl-card-action .generic-button a,
+.bb-rl-card-footer .bb-rl-card-action .generic-button button,
+.bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button button,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group {
+  min-width: 125px;
+  min-height: 30px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.bb-rl-card-footer .bb-rl-card-action .generic-button a.friendship-button.is_friend, .bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.request-membership,
+.bb-rl-card-footer .bb-rl-card-action .generic-button button.friendship-button.is_friend,
+.bb-rl-card-footer .bb-rl-card-action .generic-button button.group-button.request-membership,
+.bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group.friendship-button.is_friend,
+.bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group.group-button.request-membership,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.friendship-button.is_friend,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.request-membership,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button button.friendship-button.is_friend,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button button.group-button.request-membership,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group.friendship-button.is_friend,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group.group-button.request-membership {
+  min-width: 200px;
+}
+
+.bb-rl-card-footer .bb-rl-card-action .generic-button a.friendship-button.pending_friend,
+.bb-rl-card-footer .bb-rl-card-action .generic-button button.friendship-button.pending_friend,
+.bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group.friendship-button.pending_friend,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.friendship-button.pending_friend,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button button.friendship-button.pending_friend,
+#buddypress .bb-rl-card-footer .bb-rl-card-action .generic-button a.group-button.join-group.friendship-button.pending_friend {
+  min-width: 170px;
+}
+
+.bb-rl-group-card .bs-group-members {
+  display: flex;
+  margin-bottom: 15px;
+  padding-right: 10px;
+  margin-right: 5px;
+}
+
+.bb-rl-group-card .bs-group-member {
+  display: block;
+  max-width: 24px;
+  float: left;
+  margin-right: -4px;
+  position: relative;
+  z-index: 1;
+}
+
+.bb-rl-group-card .bs-group-member a {
+  text-decoration: none;
+}
+
+.bb-rl-group-card .bs-group-member img {
+  border-radius: 50%;
+  float: left;
+  max-width: 100%;
+  image-rendering: -webkit-optimize-contrast;
+  display: block;
+}
+
+.bb-rl-group-card .bs-group-member [class*=" bb-icon-"] {
+  height: 24px;
+  width: 24px;
+  font-size: 16px;
+  color: #c3c4c8;
+  line-height: 24px;
+  border-radius: 50%;
+  background-color: var(--bb-rl-background-secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -13,16 +13,16 @@
 
 		<div class="skeleton-card">
 			<div class="skeleton-card-body">
-				<div class="skeleton-card-avatar bb-loading-bg"></div>
+				<div class="skeleton-card-avatar bb-rl-loading-bg"></div>
 				<div class="skeleton-card-entity">
-					<div class="skeleton-card-heading bb-loading-bg"></div>
-					<div class="skeleton-card-meta bb-loading-bg"></div>
+					<div class="skeleton-card-heading bb-rl-loading-bg"></div>
+					<div class="skeleton-card-meta bb-rl-loading-bg"></div>
 				</div>
 			</div>
 			<?php $plain_class = ! is_user_logged_in() ? 'skeleton-footer-plain' : ''; ?>
 			<div class="skeleton-card-footer <?php echo esc_attr( $plain_class ); ?>">
-				<div class="skeleton-card-button bb-loading-bg"></div>
-				<div class="skeleton-card-button bb-loading-bg"></div>
+				<div class="skeleton-card-button bb-rl-loading-bg"></div>
+				<div class="skeleton-card-button bb-rl-loading-bg"></div>
 			</div>
 		</div>
 
