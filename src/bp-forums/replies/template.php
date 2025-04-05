@@ -1609,6 +1609,7 @@ function bbp_get_reply_topic_id( $reply_id = 0 ) {
 	// Check that reply_id is valid
 	if ( $reply_id = bbp_get_reply_id( $reply_id ) ) {
 
+		remove_filter( 'query', 'bp_filter_metaid_column_name' );
 		// Get topic_id from reply
 		if ( $topic_id = get_post_meta( $reply_id, '_bbp_topic_id', true ) ) {
 
