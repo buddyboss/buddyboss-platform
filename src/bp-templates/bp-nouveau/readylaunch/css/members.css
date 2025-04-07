@@ -675,6 +675,8 @@
   z-index: 100;
   border-radius: var(--bb-rl-radius-lg);
   border: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  display: none;
 }
 
 .bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-headline {
@@ -684,6 +686,10 @@
 
 .bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-body {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+.bb-rl-advance-profile-search.active #bp-profile-search-form-outer {
+  display: block;
 }
 
 .bb-rl-profile-filter-headline .bps-form-title {
@@ -765,6 +771,24 @@
 .bb-rl-advance-profile-search .bp-field-wrap input[type="email"],
 .bb-rl-advance-profile-search .bp-field-wrap input[type="tel"],
 .bb-rl-advance-profile-search .bp-field-wrap input[type="url"],
-.bb-rl-advance-profile-search .bp-field-wrap input[type="search"] {
+.bb-rl-advance-profile-search .bp-field-wrap input[type="search"],
+.bb-rl-advance-profile-search .bp-field-wrap select {
   width: 100%;
+}
+
+.bb-rl-advance-profile-search .bp-field-wrap input[type="search"] + .bps-description {
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-advance-profile-search .bp-heading-field-wrap > strong {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.bb-rl-advance-profile-search .bps-description {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-secondary-color);
 }

@@ -947,6 +947,9 @@ window.bp = window.bp || {};
 			$document.on( 'change', '#buddypress [data-bp-group-type-filter]', this, this.typeGroupFilterQuery );
 			$document.on( 'change', '#buddypress [data-bp-member-type-filter]', this, this.typeMemberFilterQuery );
 
+			// Profile Search toggle.
+			$document.on( 'click', '.bb-rl-advance-profile-search-toggle', this, this.toggleProfileSearch );
+
 			// Searching.
 			var $searchForm = $buddypress.find( '[data-bp-search]' );
 			$searchForm.on( 'submit', 'form', this, this.searchQuery );
@@ -5054,6 +5057,23 @@ window.bp = window.bp || {};
 			bp.Nouveau.resetGroupCard();
 			hideCardTimeout = null;
 			popupCardLoaded = false;
+		},
+
+		/**
+		 * Toggle Profile Search form visibility
+		 *
+		 * @param  {Object} event The click event
+		 * @return {void}
+		 */
+		toggleProfileSearch: function( event ) {
+			event.preventDefault();
+			var $toggle = $( event.currentTarget );
+			var $searchFormWrapper = $toggle.closest( '.bb-rl-advance-profile-search' );
+			var $searchForm = $searchFormWrapper.find( '#bp-profile-search-form-outer' );
+			
+			if ( $searchForm.length ) {
+				$searchFormWrapper.toggleClass( 'active' );
+			}
 		},
 	};
 

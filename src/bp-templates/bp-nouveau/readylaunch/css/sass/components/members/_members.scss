@@ -444,7 +444,6 @@
 			margin-left: var(--bb-rl-space-100);
 			font-weight: 400;
 		}
-
 	}
 
 	#bp-profile-search-form-outer {
@@ -456,6 +455,8 @@
 		z-index: 100;
 		border-radius: var(--bb-rl-radius-lg);
 		border: 1px solid var(--bb-rl-border-secondary-color);
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+		display: none;
 
 		.bb-rl-profile-filter-headline {
 			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
@@ -465,6 +466,10 @@
 		.bb-rl-profile-filter-body {
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		}
+	}
+
+	&.active #bp-profile-search-form-outer {
+		display: block;
 	}
 }
 
@@ -530,8 +535,27 @@
 		input[type="email"],
 		input[type="tel"],
 		input[type="url"],
-		input[type="search"] {
+		input[type="search"],
+		select {
 			width: 100%;
 		}
+
+		input[type="search"] + .bps-description {
+			margin-top: var(--bb-rl-space-100);
+		}
+	}
+
+	.bp-heading-field-wrap {
+
+		> strong {
+
+			@include bb-rl-label-heading-md;
+		}
+	}
+
+	.bps-description {
+
+		@include bb-rl-label-heading;
+		color: var(--bb-rl-text-secondary-color);
 	}
 }
