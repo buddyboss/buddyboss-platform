@@ -25,7 +25,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 			<h2 class="bps-form-title widget-title"><?php echo $F->title; ?></h2>
 			<p class="clear-from-wrap">
 				<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
-					<?php _e( 'Reset', 'buddyboss' ); ?>
+					<i class="bb-icons-rl-arrow-counter-clockwise"></i><?php _e( 'Reset', 'buddyboss' ); ?>
 				</a>
 			</p>
 		</div>

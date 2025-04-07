@@ -458,13 +458,80 @@
 		border: 1px solid var(--bb-rl-border-secondary-color);
 
 		.bb-rl-profile-filter-headline {
-			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-300);
 			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		}
 
 		.bb-rl-profile-filter-body {
 			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 		}
+	}
+}
 
+.bb-rl-profile-filter-headline {
+
+	.bps-form-title {
+
+		@include bb-rl-label-heading-md;
+		padding: var(--bb-rl-space-50) 0;
+	}
+
+	.clear-from-wrap {
+
+		a {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-color);
+			display: inline-flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
+
+			i {
+				font-size: var(--bb-rl-font-size-base);
+			}
+		}
+	}
+}
+
+.bb-rl-advance-profile-search {
+
+	.bps-form {
+
+		.submit-wrapper {
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: var(--bb-rl-space-100);
+			border-top: 1px solid var(--bb-rl-border-secondary-color);
+
+			input.submit {
+
+				@include bb-rl-button;
+				@include bb-rl-button--brand-fill;
+				@include bb-rl-button--small;
+			}
+		}
+	}
+
+	.bp-field-wrap {
+		margin-bottom: var(--bb-rl-space-200);
+
+		label {
+
+			@include bb-rl-label-heading-bolder;
+			color: var(--bb-rl-text-secondary-color);
+			margin-bottom: var(--bb-rl-space-100);
+			display: block;
+		}
+
+		input[type="text"],
+		input[type="number"],
+		input[type="email"],
+		input[type="tel"],
+		input[type="url"],
+		input[type="search"] {
+			width: 100%;
+		}
 	}
 }
