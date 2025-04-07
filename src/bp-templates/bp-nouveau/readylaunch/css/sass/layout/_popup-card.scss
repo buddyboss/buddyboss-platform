@@ -3,11 +3,11 @@
 	position: fixed;
 	background-color: var(--bb-rl-background-color);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: var(--bb-rl-radius-md);
+	border-radius: var(--bb-rl-radius-lg);
 	padding: var(--bb-rl-space-300);
 	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
 	min-width: 370px;
-	max-width: 505px;
+	max-width: 535px;
 	z-index: 9999991;
 	opacity: 0;
 	transition-behavior: allow-discrete;/* stylelint-disable-line */
@@ -176,8 +176,13 @@
 }
 
 .bb-rl-card-heading {
-	font-weight: 500;
+	font-size: 18px;
+	font-weight: 600;
 	margin: 0 0 10px;
+}
+
+.bb-card-profile-type + .bb-rl-card-heading {
+	margin-top: 5px;
 }
 
 .bb-card-profile-type {
@@ -384,6 +389,8 @@
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
 
+		font-size: 14px;
+		font-weight: 500;
 		text-align: center;
 	}
 }
@@ -394,9 +401,17 @@
 
 		@include bb-rl-button--brand-outline;
 
+		&:hover {
+			@include bb-rl-button--brand-fill;
+		}
+
 		&.card-button-group {
 			color: var(--bb-rl-text-color);
 			border: 1px solid var(--bb-rl-border-tertiary-color);
+
+			&:hover {
+				@include bb-rl-button--brand-fill;
+			}
 		}
 	}
 }
