@@ -4353,13 +4353,17 @@ window.bp = window.bp || {};
 			}
 
 			if ( isToggleActionButton ) {
-				target.find( 'span' ).html( title );
-				target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
-				target.attr( 'data-balloon-pos', 'up' );
-
 				if ( isHoverIn ) {
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
+					}
+					target.html( title );
 					target.removeClass( 'bp-toggle-action-button' ).addClass( 'bp-toggle-action-button-hover' );
 				} else {
+					if ( ! target.hasClass( 'following' ) ) {
+						target.attr( 'data-balloon', titleDisplayed.replace( /<(.|\n)*?>/g, '' ) );
+					}
+					target.html( titleDisplayed );
 					target.removeClass( 'bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button' );
 				}
 				return false;
