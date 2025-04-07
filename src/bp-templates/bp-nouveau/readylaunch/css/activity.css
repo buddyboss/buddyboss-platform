@@ -2027,6 +2027,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   padding: 6px 8px;
   border-radius: var(--bb-rl-radius-full);
   cursor: pointer;
+  text-transform: capitalize;
 }
 
 .bb-subnav-filters-container-main .subnav-filters-opener:before {
