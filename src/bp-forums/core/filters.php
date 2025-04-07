@@ -734,9 +734,6 @@ function bb_modify_topics_query_for_sticky( $clauses, $wp_query ) {
 	$case_statements[] = 'ELSE 3'; // Normal posts after stickies.
 	$case_sql          = 'CASE ' . implode( ' ', $case_statements ) . ' END';
 
-	// Keep the existing order of spam posts by **preserving their default sorting**.
-	$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC, " . $clauses['orderby'];
-
 	$clauses['orderby'] = "$case_sql, {$wpdb->posts}.post_date DESC";
 
 	// If meta ordering needs to be preserved, append it consistently.
