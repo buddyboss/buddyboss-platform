@@ -9229,6 +9229,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\eaf0";
 }
 
+.bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-delete-account-personal-li a::before {
+  content: "\e4a6";
+}
+
 .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-xprofile-change-avatar a::before {
   content: "\e4d2";
 }

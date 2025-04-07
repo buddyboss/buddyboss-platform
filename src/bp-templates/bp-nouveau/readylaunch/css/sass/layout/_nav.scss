@@ -186,6 +186,13 @@
 			}
 		}
 
+		&#bb-rl-delete-account-personal-li {
+
+			a::before {
+				content: "\e4a6";
+			}
+		}
+
 		&#bb-rl-xprofile-change-avatar {
 
 			a::before {
