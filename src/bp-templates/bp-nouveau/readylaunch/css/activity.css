@@ -2000,6 +2000,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-subnav-filters-container-main .bb-subnav-filters-label {
   font-size: 14px;
   font-weight: 500;
+  display: none;
 }
 
 .bb-subnav-filters-container-main .bb-subnav-filters-container {
@@ -2022,12 +2023,28 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   font-size: var(--bb-rl-font-size-sm);
   line-height: 1;
   font-weight: 500;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  padding: 6px 8px;
+  border-radius: var(--bb-rl-radius-full);
   cursor: pointer;
 }
 
+.bb-subnav-filters-container-main .subnav-filters-opener:before {
+  content: "\e268";
+  color: var(--bb-rl-icon-color);
+  font-family: bb-icons-rl;
+  font-size: 20px;
+  font-weight: 400;
+  margin-right: var(--bb-rl-space-50);
+}
+
 .bb-subnav-filters-container-main .subnav-filters-opener [class*="bb-icon"] {
-  color: var(--bb-rl-icon-secondary-color);
+  color: var(--bb-rl-icon-color);
   font-size: 16px;
+}
+
+.bb-subnav-filters-container-main .subnav-filters-opener [class*="bb-icon"]:before {
+  margin: 0;
 }
 
 .bb-subnav-filters-container-main .subnav-filters-modal {
