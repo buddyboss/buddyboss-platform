@@ -16,7 +16,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 <?php bp_nouveau_groups_activity_post_form(); ?>
 
-<div class="subnav-filters filters clearfix">
+<div class="subnav-filters filters clearfix bb-rl-subnav-filters-group-activity">
 	<ul>
 		<li class="group-act-search"><?php bp_nouveau_search_form(); ?></li>
 	</ul>

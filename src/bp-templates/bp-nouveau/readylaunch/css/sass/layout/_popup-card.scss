@@ -406,6 +406,7 @@
 			border: 1px solid var(--bb-rl-border-tertiary-color);
 
 			&:hover {
+
 				@include bb-rl-button--brand-fill;
 			}
 		}

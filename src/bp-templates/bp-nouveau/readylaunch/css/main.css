@@ -107,13 +107,13 @@
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
-  --bb-rl-background-secondary-hover-color: #3d3d3D;
-  --bb-rl-background-tertiary-color: #6d6D6e;
+  --bb-rl-background-secondary-hover-color: #3d3d3d;
+  --bb-rl-background-tertiary-color: #6d6d6e;
   --bb-rl-background-tertiary-hover-color: #555556;
   --bb-rl-background-black-color: #fff;
-  --bb-rl-background-disabled-color:#dbdbdb;
+  --bb-rl-background-disabled-color: #dbdbdb;
   --bb-rl-background-brand-primary-color: #4946fe;
-  --bb-rl-background-brand-primary-hover-color: #4937F4;
+  --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
   --bb-rl-background-brand-disabled-color: #767eff;
@@ -10500,13 +10500,13 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
-  --bb-rl-background-secondary-hover-color: #3d3d3D;
-  --bb-rl-background-tertiary-color: #6d6D6e;
+  --bb-rl-background-secondary-hover-color: #3d3d3d;
+  --bb-rl-background-tertiary-color: #6d6d6e;
   --bb-rl-background-tertiary-hover-color: #555556;
   --bb-rl-background-black-color: #fff;
-  --bb-rl-background-disabled-color:#dbdbdb;
+  --bb-rl-background-disabled-color: #dbdbdb;
   --bb-rl-background-brand-primary-color: #4946fe;
-  --bb-rl-background-brand-primary-hover-color: #4937F4;
+  --bb-rl-background-brand-primary-hover-color: #4937f4;
   --bb-rl-background-brand-secondary-color: #3325ae;
   --bb-rl-background-brand-secondary-hover-color: #2e2689;
   --bb-rl-background-brand-disabled-color: #767eff;
@@ -12403,8 +12403,6 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 .bb-subnav-filters-container-main .subnav-filters-opener {
   display: flex;
   align-items: center;
-  border: 0;
-  padding: 0;
   background-color: transparent;
   color: var(--bb-rl-text-secondary-color);
   font-size: var(--bb-rl-font-size-sm);
