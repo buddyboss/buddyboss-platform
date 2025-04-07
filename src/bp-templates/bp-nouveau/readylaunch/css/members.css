@@ -636,3 +636,35 @@
   padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
   font-size: 0.875rem;
 }
+
+.bb-rl-advance-profile-search {
+  margin-left: var(--bb-rl-space-200);
+}
+
+.bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle {
+  display: inline-block;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  color: var(--bb-rl-text-primary-color);
+}
+
+.bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:after {
+  content: "\e136";
+  font-family: bb-icons-rl;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: var(--bb-rl-space-100);
+  font-weight: 400;
+}
+
+.bb-rl-advance-profile-search #bp-profile-search-form-outer {
+  display: none;
+}

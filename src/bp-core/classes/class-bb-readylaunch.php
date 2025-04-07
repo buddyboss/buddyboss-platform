@@ -161,6 +161,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				remove_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
 				remove_action( 'bp_before_directory_document', 'bb_document_directory_page_content' );
 
+				// Remove profile search form on members directory.
+				remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
+
 				add_filter( 'bp_nouveau_get_document_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );

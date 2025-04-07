@@ -19,8 +19,18 @@ do_action( 'bp_before_directory_members_page' );
 
 <div class="bb-rl-members-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
-		<div class="bb-rl-entry-heading">
+		<div class="bb-rl-entry-heading flex">
 			<h2><?php esc_html_e( 'Members', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? bp_core_get_all_member_count() : ''; ?></span></h2>
+			<?php
+				if ( ! bp_disable_advanced_profile_search() ) {
+					?>
+					<div class="bb-rl-advance-profile-search">
+						<a href="javascript::" class="bb-rl-advance-profile-search-toggle"><?php esc_html_e( 'Profile Search', 'buddyboss' ); ?></a>
+						<?php bp_profile_search_show_form(); ?>
+					</div>
+					<?php
+				}
+			?>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php

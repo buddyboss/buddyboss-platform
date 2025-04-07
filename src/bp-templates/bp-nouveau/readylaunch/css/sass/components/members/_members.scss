@@ -417,3 +417,36 @@
 		@include bb-rl-button--small;
 	}
 }
+
+.bb-rl-advance-profile-search {
+	margin-left: var(--bb-rl-space-200);
+
+	.bb-rl-advance-profile-search-toggle {
+		display: inline-block;
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-full);
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+		font-size: var(--bb-rl-font-size-sm);
+		font-weight: 500;
+		color: var(--bb-rl-text-secondary-color);
+
+		&:hover {
+			background-color: var(--bb-rl-background-secondary-hover-color);
+			color: var(--bb-rl-text-primary-color);
+		}
+
+		&:after {
+			content: "\e136";
+			font-family: bb-icons-rl;
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: var(--bb-rl-space-100);
+			font-weight: 400;
+		}
+
+	}
+
+	#bp-profile-search-form-outer {
+		display: none;
+	}
+}

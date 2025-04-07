@@ -37,7 +37,7 @@ function bb_rl_register_widgets () {
 					if ( is_admin() ) {
 						unregister_widget( 'BB_Core_Follow_My_Network_Widget' );
 					}
-				}, 11 ); 
+				}, 11 );
 			}
 		}
 	}
@@ -62,7 +62,7 @@ function bb_rl_modify_existing_widget_output( $instance, $widget, $args ) {
 		$updated_widget_urls = array(
 			'BP_Core_Recently_Active_Widget' => esc_url( bp_get_members_directory_permalink() . '?bb-rl-order-by=active&bb-rl-scope=all' ),
 		);
-	
+
 		$widget_class = get_class( $widget );
 		$more_block   = $matches[1];
 
@@ -138,7 +138,7 @@ add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_grou
  * Add social networks button to the member header area.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @return string
  */
 function bb_rl_get_user_social_networks_urls( $user_id = null ) {
@@ -179,7 +179,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
 	if ( $html !== '' ) {
 		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
 		if ( 'friends' === $level && is_user_logged_in() ) {
-			
+
 			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
 			if ( 'is_friend' === $member_friend_status ) {
 				$html = '<div class="social-networks-wrap">' . $html . '</div>';
@@ -198,7 +198,7 @@ function bb_rl_get_user_social_networks_urls( $user_id = null ) {
  * Get social network field id.
  *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @return int Social network xprofile field id.
  */
 function bb_rl_get_user_social_networks_field_id() {
