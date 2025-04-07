@@ -15,7 +15,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <?php bp_nouveau_user_feedback( 'member-delete-account' ); ?>
 
-<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/delete-account' ); ?>" name="account-delete-form" id="#account-delete-form" class="standard-form" method="post">
+<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/delete-account' ); ?>" name="account-delete-form" id="account-delete-form" class="standard-form" method="post">
 
 	<div class="bp-checkbox-wrap">
 		<input id="delete-account-understand" class="disabled bs-styled-checkbox" type="checkbox" name="delete-account-understand" value="1" data-bp-disable-input="#delete-account-button" />

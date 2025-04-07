@@ -196,6 +196,7 @@
 		}
 	}
 
+	#delete-account-button,
 	input#submit {
 
 		@include bb-rl-button;
@@ -211,6 +212,11 @@
 		background-size: 16px;
 		padding-left: 36px;
 	}
+
+	#delete-account-button {
+		margin-top: var(--bb-rl-space-200);
+	}
+
 
 	.subnav_tab {
 		margin-bottom: var(--bb-rl-space-200);
