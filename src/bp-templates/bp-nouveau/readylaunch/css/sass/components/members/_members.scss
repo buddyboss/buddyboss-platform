@@ -301,11 +301,27 @@
 		i {
 
 			&::before {
+				font-size: 24px;
+				color: var(--bb-rl-icon-secondary-color);
+			}
+		}
+	}
+}
+
+.bb-rl-secondary-actions,
+.bb-rl-card-action {
+
+	.send-message,
+	.bb-rl-send-message-disabled,
+	.friendship-button,
+	.follow-button {
+
+		i {
+
+			&::before {
 				content: "";
 				font-weight: 400;
 				font-family: bb-icons-rl;
-				font-size: 24px;
-				color: var(--bb-rl-icon-secondary-color);
 				font-style: normal;
 			}
 		}

@@ -469,52 +469,73 @@
 .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
 .bb-rl-secondary-actions .friendship-button i::before,
 .bb-rl-secondary-actions .follow-button i::before {
+  font-size: 24px;
+  color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-secondary-actions .send-message i::before,
+.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
+.bb-rl-secondary-actions .friendship-button i::before,
+.bb-rl-secondary-actions .follow-button i::before,
+.bb-rl-card-action .send-message i::before,
+.bb-rl-card-action .bb-rl-send-message-disabled i::before,
+.bb-rl-card-action .friendship-button i::before,
+.bb-rl-card-action .follow-button i::before {
   content: "";
   font-weight: 400;
   font-family: bb-icons-rl;
-  font-size: 24px;
-  color: var(--bb-rl-icon-secondary-color);
   font-style: normal;
 }
 
-.bb-rl-secondary-actions .bb-rl-send-message-disabled {
+.bb-rl-secondary-actions .bb-rl-send-message-disabled,
+.bb-rl-card-action .bb-rl-send-message-disabled {
   pointer-events: none;
 }
 
-.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before {
+.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
+.bb-rl-card-action .bb-rl-send-message-disabled i::before {
   color: var(--bb-rl-icon-disabled-color);
 }
 
 .bb-rl-secondary-actions .send-message i::before,
-.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before {
+.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
+.bb-rl-card-action .send-message i::before,
+.bb-rl-card-action .bb-rl-send-message-disabled i::before {
   content: "\e16e";
 }
 
-.bb-rl-secondary-actions .friendship-button.not_friends i::before {
+.bb-rl-secondary-actions .friendship-button.not_friends i::before,
+.bb-rl-card-action .friendship-button.not_friends i::before {
   content: "\e4d0";
 }
 
-.bb-rl-secondary-actions .friendship-button.is_friend i::before {
+.bb-rl-secondary-actions .friendship-button.is_friend i::before,
+.bb-rl-card-action .friendship-button.is_friend i::before {
   content: "\e4ce";
 }
 
-.bb-rl-secondary-actions .friendship-button.pending_friend i::before {
+.bb-rl-secondary-actions .friendship-button.pending_friend i::before,
+.bb-rl-card-action .friendship-button.pending_friend i::before {
   content: "\edec";
 }
 
-.bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before {
+.bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
+.bb-rl-card-action .friendship-button.awaiting_response_friend i::before {
   content: "\edec";
 }
 
-.bb-rl-secondary-actions .follow-button.not_following i::before {
+.bb-rl-secondary-actions .follow-button.not_following i::before,
+.bb-rl-card-action .follow-button.not_following i::before {
   content: "\e324";
 }
 
-.bb-rl-secondary-actions .follow-button.not_following i::before {
+.bb-rl-secondary-actions .follow-button.not_following i::before,
+.bb-rl-card-action .follow-button.not_following i::before {
   content: "\e324";
 }
 
-.bb-rl-secondary-actions .follow-button.following i::before {
+.bb-rl-secondary-actions .follow-button.following i::before,
+.bb-rl-card-action .follow-button.following i::before {
   content: "\e324";
   font-weight: 500;
 }

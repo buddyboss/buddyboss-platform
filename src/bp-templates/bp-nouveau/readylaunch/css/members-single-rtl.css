@@ -920,6 +920,7 @@
   margin: 0;
 }
 
+.bb-rl-account-settings-section #delete-account-button,
 .bb-rl-account-settings-section input#submit {
   display: inline-flex;
   align-items: center;
@@ -945,17 +946,24 @@
   padding-right: 36px;
 }
 
+.bb-rl-account-settings-section #delete-account-button:hover,
 .bb-rl-account-settings-section input#submit:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
+.bb-rl-account-settings-section #delete-account-button:focus-within,
 .bb-rl-account-settings-section input#submit:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
+.bb-rl-account-settings-section #delete-account-button:disabled,
 .bb-rl-account-settings-section input#submit:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-account-settings-section #delete-account-button {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-account-settings-section .subnav_tab {

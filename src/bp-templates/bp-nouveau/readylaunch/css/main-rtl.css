@@ -9229,6 +9229,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\eaf0";
 }
 
+.bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-delete-account-personal-li a::before {
+  content: "\e4a6";
+}
+
 .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item#bb-rl-xprofile-change-avatar a::before {
   content: "\e4d2";
 }
@@ -9887,52 +9891,73 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
 .bb-rl-secondary-actions .friendship-button i::before,
 .bb-rl-secondary-actions .follow-button i::before {
+  font-size: 24px;
+  color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-secondary-actions .send-message i::before,
+.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
+.bb-rl-secondary-actions .friendship-button i::before,
+.bb-rl-secondary-actions .follow-button i::before,
+.bb-rl-card-action .send-message i::before,
+.bb-rl-card-action .bb-rl-send-message-disabled i::before,
+.bb-rl-card-action .friendship-button i::before,
+.bb-rl-card-action .follow-button i::before {
   content: "";
   font-weight: 400;
   font-family: bb-icons-rl;
-  font-size: 24px;
-  color: var(--bb-rl-icon-secondary-color);
   font-style: normal;
 }
 
-.bb-rl-secondary-actions .bb-rl-send-message-disabled {
+.bb-rl-secondary-actions .bb-rl-send-message-disabled,
+.bb-rl-card-action .bb-rl-send-message-disabled {
   pointer-events: none;
 }
 
-.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before {
+.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
+.bb-rl-card-action .bb-rl-send-message-disabled i::before {
   color: var(--bb-rl-icon-disabled-color);
 }
 
 .bb-rl-secondary-actions .send-message i::before,
-.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before {
+.bb-rl-secondary-actions .bb-rl-send-message-disabled i::before,
+.bb-rl-card-action .send-message i::before,
+.bb-rl-card-action .bb-rl-send-message-disabled i::before {
   content: "\e16e";
 }
 
-.bb-rl-secondary-actions .friendship-button.not_friends i::before {
+.bb-rl-secondary-actions .friendship-button.not_friends i::before,
+.bb-rl-card-action .friendship-button.not_friends i::before {
   content: "\e4d0";
 }
 
-.bb-rl-secondary-actions .friendship-button.is_friend i::before {
+.bb-rl-secondary-actions .friendship-button.is_friend i::before,
+.bb-rl-card-action .friendship-button.is_friend i::before {
   content: "\e4ce";
 }
 
-.bb-rl-secondary-actions .friendship-button.pending_friend i::before {
+.bb-rl-secondary-actions .friendship-button.pending_friend i::before,
+.bb-rl-card-action .friendship-button.pending_friend i::before {
   content: "\edec";
 }
 
-.bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before {
+.bb-rl-secondary-actions .friendship-button.awaiting_response_friend i::before,
+.bb-rl-card-action .friendship-button.awaiting_response_friend i::before {
   content: "\edec";
 }
 
-.bb-rl-secondary-actions .follow-button.not_following i::before {
+.bb-rl-secondary-actions .follow-button.not_following i::before,
+.bb-rl-card-action .follow-button.not_following i::before {
   content: "\e324";
 }
 
-.bb-rl-secondary-actions .follow-button.not_following i::before {
+.bb-rl-secondary-actions .follow-button.not_following i::before,
+.bb-rl-card-action .follow-button.not_following i::before {
   content: "\e324";
 }
 
-.bb-rl-secondary-actions .follow-button.following i::before {
+.bb-rl-secondary-actions .follow-button.following i::before,
+.bb-rl-card-action .follow-button.following i::before {
   content: "\e324";
   font-weight: 500;
 }
@@ -16560,6 +16585,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: 0;
 }
 
+.bb-rl-account-settings-section #delete-account-button,
 .bb-rl-account-settings-section input#submit {
   display: inline-flex;
   align-items: center;
@@ -16585,17 +16611,24 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding-right: 36px;
 }
 
+.bb-rl-account-settings-section #delete-account-button:hover,
 .bb-rl-account-settings-section input#submit:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
+.bb-rl-account-settings-section #delete-account-button:focus-within,
 .bb-rl-account-settings-section input#submit:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
+.bb-rl-account-settings-section #delete-account-button:disabled,
 .bb-rl-account-settings-section input#submit:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-account-settings-section #delete-account-button {
+  margin-top: var(--bb-rl-space-200);
 }
 
 .bb-rl-account-settings-section .subnav_tab {
@@ -17159,11 +17192,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   position: fixed;
   background-color: var(--bb-rl-background-color);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-300);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
   min-width: 370px;
-  max-width: 505px;
+  max-width: 535px;
   z-index: 9999991;
   opacity: 0;
   transition-behavior: allow-discrete;
@@ -17315,8 +17348,13 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-card-heading {
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   margin: 0 0 10px;
+}
+
+.bb-card-profile-type + .bb-rl-card-heading {
+  margin-top: 5px;
 }
 
 .bb-card-profile-type {
@@ -17475,11 +17513,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership,
-#buddypress .friendship-button .card-button,
-#buddypress .friendship-button a.friendship-button,
-#buddypress .friendship-button .join-group,
-#buddypress .friendship-button .generic-button a.group-button.join-group,
-#buddypress .friendship-button .group-button.request-membership,
 #buddypress .bb-rl-card-action-primary .card-button,
 #buddypress .bb-rl-card-action-primary a.friendship-button,
 #buddypress .bb-rl-card-action-primary .join-group,
@@ -17501,11 +17534,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group:hover,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group:hover,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership:hover,
-#buddypress .friendship-button .card-button:hover,
-#buddypress .friendship-button a.friendship-button:hover,
-#buddypress .friendship-button .join-group:hover,
-#buddypress .friendship-button .generic-button a.group-button.join-group:hover,
-#buddypress .friendship-button .group-button.request-membership:hover,
 #buddypress .bb-rl-card-action-primary .card-button:hover,
 #buddypress .bb-rl-card-action-primary a.friendship-button:hover,
 #buddypress .bb-rl-card-action-primary .join-group:hover,
@@ -17524,11 +17552,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group:focus-within,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group:focus-within,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership:focus-within,
-#buddypress .friendship-button .card-button:focus-within,
-#buddypress .friendship-button a.friendship-button:focus-within,
-#buddypress .friendship-button .join-group:focus-within,
-#buddypress .friendship-button .generic-button a.group-button.join-group:focus-within,
-#buddypress .friendship-button .group-button.request-membership:focus-within,
 #buddypress .bb-rl-card-action-primary .card-button:focus-within,
 #buddypress .bb-rl-card-action-primary a.friendship-button:focus-within,
 #buddypress .bb-rl-card-action-primary .join-group:focus-within,
@@ -17547,11 +17570,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .join-group:disabled,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .generic-button a.group-button.join-group:disabled,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary .group-button.request-membership:disabled,
-#buddypress .friendship-button .card-button:disabled,
-#buddypress .friendship-button a.friendship-button:disabled,
-#buddypress .friendship-button .join-group:disabled,
-#buddypress .friendship-button .generic-button a.group-button.join-group:disabled,
-#buddypress .friendship-button .group-button.request-membership:disabled,
 #buddypress .bb-rl-card-action-primary .card-button:disabled,
 #buddypress .bb-rl-card-action-primary a.friendship-button:disabled,
 #buddypress .bb-rl-card-action-primary .join-group:disabled,
@@ -17561,15 +17579,16 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: not-allowed;
 }
 
-.bb-card-action-secondary .card-button,
-.bb-card-action-secondary .follow-button,
-.bb-card-action-secondary .follow-button.outline.not_following,
+.bb-rl-card-action-secondary .card-button,
+.bb-rl-card-action-secondary a.follow-button,
+.bb-rl-card-action-secondary button.follow-button,
+.bb-rl-card-action-secondary a.follow-button.outline.not_following,
+.bb-rl-card-action-secondary button.follow-button.outline.not_following,
 .buddypress .buddypress-wrap .bb-card-action-secondary .card-button,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following,
-#buddypress .follow-button .card-button,
-#buddypress .follow-button .follow-button,
-#buddypress .follow-button .follow-button.outline.not_following {
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button,
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button.outline.not_following,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button.outline.not_following {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -17583,42 +17602,47 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-color);
   border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
   text-align: center;
 }
 
-.bb-card-action-secondary .card-button:hover,
-.bb-card-action-secondary .follow-button:hover,
-.bb-card-action-secondary .follow-button.outline.not_following:hover,
+.bb-rl-card-action-secondary .card-button:hover,
+.bb-rl-card-action-secondary a.follow-button:hover,
+.bb-rl-card-action-secondary button.follow-button:hover,
+.bb-rl-card-action-secondary a.follow-button.outline.not_following:hover,
+.bb-rl-card-action-secondary button.follow-button.outline.not_following:hover,
 .buddypress .buddypress-wrap .bb-card-action-secondary .card-button:hover,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button:hover,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following:hover,
-#buddypress .follow-button .card-button:hover,
-#buddypress .follow-button .follow-button:hover,
-#buddypress .follow-button .follow-button.outline.not_following:hover {
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button:hover,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button:hover,
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button.outline.not_following:hover,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button.outline.not_following:hover {
   background-color: var(--bb-rl-background-tertiary-hover-color);
 }
 
-.bb-card-action-secondary .card-button:focus,
-.bb-card-action-secondary .follow-button:focus,
-.bb-card-action-secondary .follow-button.outline.not_following:focus,
+.bb-rl-card-action-secondary .card-button:focus,
+.bb-rl-card-action-secondary a.follow-button:focus,
+.bb-rl-card-action-secondary button.follow-button:focus,
+.bb-rl-card-action-secondary a.follow-button.outline.not_following:focus,
+.bb-rl-card-action-secondary button.follow-button.outline.not_following:focus,
 .buddypress .buddypress-wrap .bb-card-action-secondary .card-button:focus,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button:focus,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following:focus,
-#buddypress .follow-button .card-button:focus,
-#buddypress .follow-button .follow-button:focus,
-#buddypress .follow-button .follow-button.outline.not_following:focus {
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button:focus,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button:focus,
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button.outline.not_following:focus,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button.outline.not_following:focus {
   outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
-.bb-card-action-secondary .card-button:disabled,
-.bb-card-action-secondary .follow-button:disabled,
-.bb-card-action-secondary .follow-button.outline.not_following:disabled,
+.bb-rl-card-action-secondary .card-button:disabled,
+.bb-rl-card-action-secondary a.follow-button:disabled,
+.bb-rl-card-action-secondary button.follow-button:disabled,
+.bb-rl-card-action-secondary a.follow-button.outline.not_following:disabled,
+.bb-rl-card-action-secondary button.follow-button.outline.not_following:disabled,
 .buddypress .buddypress-wrap .bb-card-action-secondary .card-button:disabled,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button:disabled,
-.buddypress .buddypress-wrap .bb-card-action-secondary .follow-button.outline.not_following:disabled,
-#buddypress .follow-button .card-button:disabled,
-#buddypress .follow-button .follow-button:disabled,
-#buddypress .follow-button .follow-button.outline.not_following:disabled {
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button:disabled,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button:disabled,
+.buddypress .buddypress-wrap .bb-card-action-secondary a.follow-button.outline.not_following:disabled,
+.buddypress .buddypress-wrap .bb-card-action-secondary button.follow-button.outline.not_following:disabled {
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
@@ -17626,27 +17650,46 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-card-action-outline .card-button {
   background-color: transparent;
-  color: var(--bb-rl-text-brand-primary-color);
-  border: 1px solid var(--bb-rl-text-brand-primary-color);
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
 }
 
 .bb-rl-card-action-outline .card-button:hover {
-  border-color: var(--bb-rl-background-brand-primary-color);
+  background-color: var(--bb-rl-background-secondary-color);
 }
 
 .bb-rl-card-action-outline .card-button:focus {
-  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+  outline: 2px solid var(--bb-rl-border-quinery-color);
 }
 
 .bb-rl-card-action-outline .card-button:disabled {
-  border-color: var(--bb-rl-background-brand-disabled-color);
-  color: var(--bb-rl-background-brand-disabled-color);
+  border-color: var(--bb-rl-border-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
 }
 
 .bb-rl-card-action-outline .card-button.card-button-group {
   color: var(--bb-rl-text-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-card-action-outline .card-button.card-button-group:hover {
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-card-action-outline .card-button.card-button-group:hover:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-card-action-outline .card-button.card-button-group:hover:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-card-action-outline .card-button.card-button-group:hover:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
 }
 
 .bb-rl-card-footer .bb-rl-card-action .generic-button a,

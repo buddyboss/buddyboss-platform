@@ -363,7 +363,6 @@
 
 .bb-rl-card-action-primary,
 .buddypress .buddypress-wrap .bb-rl-card-action-primary,
-#buddypress .friendship-button,
 #buddypress .bb-rl-card-action-primary {
 
 	.card-button,
@@ -378,13 +377,14 @@
 	}
 }
 
-.bb-card-action-secondary,
-.buddypress .buddypress-wrap .bb-card-action-secondary,
-#buddypress .follow-button {
+.bb-rl-card-action-secondary,
+.buddypress .buddypress-wrap .bb-card-action-secondary {
 
 	.card-button,
-	.follow-button,
-	.follow-button.outline.not_following {
+	a.follow-button,
+	button.follow-button,
+	a.follow-button.outline.not_following,
+	button.follow-button.outline.not_following {
 
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
@@ -399,11 +399,7 @@
 
 	.card-button {
 
-		@include bb-rl-button--brand-outline;
-
-		&:hover {
-			@include bb-rl-button--brand-fill;
-		}
+		@include bb-rl-button--secondary-outline;
 
 		&.card-button-group {
 			color: var(--bb-rl-text-color);
