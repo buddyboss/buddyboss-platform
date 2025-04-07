@@ -441,6 +441,48 @@
 	}
 }
 
+.bb-rl-card-footer .generic-button {
+
+	i {
+		content: "";
+		font-weight: 400;
+		font-family: bb-icons-rl;
+		font-style: normal;
+		margin-right: var(--bb-rl-space-50);
+	}
+
+	&.send-message i::before,
+	&.bb-rl-send-message-disabled i::before {
+		content: "\e168";
+	}
+
+	&.follow-button.not_following i::before {
+		content: "\e324";
+		font-weight: 400;
+	}
+
+	&.follow-button.following i::before {
+		content: "\e182";
+		font-weight: 400;
+	}
+
+	&.friendship-button.not_friends i::before {
+		content: "\e3d4";
+	}
+
+	&.friendship-button.pending_friend i::before {
+		content: "\eafa";
+	}
+
+	&.friendship-button.awaiting_response_friend i::before {
+		content: "\edec";
+	}
+
+	&.friendship-button.is_friend i::before {
+		content: "\e182";
+	}
+}
+
 .bb-rl-group-card {
 
 	.bs-group-members {

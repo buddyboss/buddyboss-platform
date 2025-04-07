@@ -17926,6 +17926,45 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   min-width: 170px;
 }
 
+.bb-rl-card-footer .generic-button i {
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-style: normal;
+  margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-card-footer .generic-button.send-message i::before,
+.bb-rl-card-footer .generic-button.bb-rl-send-message-disabled i::before {
+  content: "\e168";
+}
+
+.bb-rl-card-footer .generic-button.follow-button.not_following i::before {
+  content: "\e324";
+  font-weight: 400;
+}
+
+.bb-rl-card-footer .generic-button.follow-button.following i::before {
+  content: "\e182";
+  font-weight: 400;
+}
+
+.bb-rl-card-footer .generic-button.friendship-button.not_friends i::before {
+  content: "\e3d4";
+}
+
+.bb-rl-card-footer .generic-button.friendship-button.pending_friend i::before {
+  content: "\eafa";
+}
+
+.bb-rl-card-footer .generic-button.friendship-button.awaiting_response_friend i::before {
+  content: "\edec";
+}
+
+.bb-rl-card-footer .generic-button.friendship-button.is_friend i::before {
+  content: "\e182";
+}
+
 .bb-rl-group-card .bs-group-members {
   display: flex;
   margin-bottom: 15px;
