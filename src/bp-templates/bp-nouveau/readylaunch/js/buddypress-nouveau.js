@@ -949,6 +949,15 @@ window.bp = window.bp || {};
 
 			// Profile Search toggle.
 			$document.on( 'click', '.bb-rl-advance-profile-search-toggle', this, this.toggleProfileSearch );
+			// Close profile search
+			$document.on( 'click', this.closeProfileSearch.bind( this ) );
+			$document.on( 'click', '.bb-rl-profile-search-cancel', this.closeProfileSearch.bind( this ) );
+			// Close profile search when pressing Escape key
+			$document.on( 'keyup', function( event ) {
+				if ( event.key === 'Escape' || event.keyCode === 27 ) {
+					bp.Nouveau.closeProfileSearch();
+				}
+			} );
 
 			// Searching.
 			var $searchForm = $buddypress.find( '[data-bp-search]' );
@@ -5074,6 +5083,40 @@ window.bp = window.bp || {};
 			if ( $searchForm.length ) {
 				$searchFormWrapper.toggleClass( 'active' );
 			}
+		},
+
+		/**
+		 * Close profile search forms
+		 * 
+		 * @param {Object} event The event object (optional)
+		 * @return {void}
+		 */
+		closeProfileSearch: function( event ) {
+			// If event is provided, check if we should proceed with closing
+			if ( event ) {
+				var $target = $( event.target );
+
+				// Close if clicking on the cancel button
+				if ( $target.hasClass( 'bb-rl-profile-search-cancel' ) || 
+					$target.closest( '.bb-rl-profile-search-cancel' ).length ) {
+					// Close open profile search form
+					$( '.bb-rl-advance-profile-search.active' ).removeClass( 'active' );
+					return;
+				}
+				
+				// If this is a click event inside the form or the toggle button, don't close
+				if ( event.type === 'click' && (
+					$target.closest( '#bp-profile-search-form-outer' ).length || 
+					$target.hasClass( 'bb-rl-advance-profile-search-toggle' ) || 
+					$target.closest( '.bb-rl-advance-profile-search-toggle' ).length
+				) ) {
+					// Don't close if clicked on the form or toggle button
+					return;
+				}
+			}
+			
+			// Close open profile search form
+			$( '.bb-rl-advance-profile-search.active' ).removeClass( 'active' );
 		},
 	};
 

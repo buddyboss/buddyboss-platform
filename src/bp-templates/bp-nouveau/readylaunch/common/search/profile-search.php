@@ -394,7 +394,8 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 			if ( isset( $F->fields ) && ! empty( $F->fields ) && count( $F->fields ) > 1 ) {
 			?>
 			<div class="submit-wrapper">
-				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
+				<a href="#" class="bb-rl-profile-search-cancel bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
+				<input type="submit" class="submit" value="<?php _e( 'Apply Filters', 'buddyboss' ); ?>"/>
 			</div>
 		<?php } ?>
 
