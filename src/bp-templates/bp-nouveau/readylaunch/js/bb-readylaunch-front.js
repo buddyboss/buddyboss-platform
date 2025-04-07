@@ -120,10 +120,16 @@ window.bp = window.bp || {};
 					}
 
 					$this.select2( {
-					theme: 'rl',
-					containerCssClass: 'bb-rl-select2-container'+ customClass,
-					dropdownCssClass: 'bb-rl-select2-dropdown',
+						theme: 'rl',
 						dropdownParent: $this.parent()
+					} );
+
+					// Apply CSS classes after initialization
+					$this.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container'+ customClass );
+
+					// Add class to dropdown when it opens
+					$this.on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
 					} );
 				} );
 			},

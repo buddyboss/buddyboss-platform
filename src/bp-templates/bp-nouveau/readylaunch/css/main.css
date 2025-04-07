@@ -3875,6 +3875,7 @@ button[data-balloon] {
 .bb-rl-filter .bb-rl-select2-dropdown, .bb-rl-filter
 .select2-dropdown.bb-rl-select2-dropdown {
   width: auto !important;
+  min-width: 140px;
 }
 
 .bb-rl-select2-dropdown .select2-search,
