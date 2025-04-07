@@ -583,6 +583,7 @@ h6 {
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: 12px var(--bb-rl-space-300);
   margin-bottom: var(--bb-rl-space-400);
+  gap: var(--bb-rl-space-100);
 }
 
 @media screen and (max-width: 900px) {
@@ -700,6 +701,10 @@ h6 {
 
 .bb-rl-secondary-header .bb-rl-actions-buttons .button ~ .button {
   margin-left: var(--bb-rl-space-100);
+}
+
+.bb-rl-secondary-header .bb-rl-entry-heading {
+  align-items: center;
 }
 
 .bb-rl-entry-heading h2 {
@@ -8575,6 +8580,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   display: none;
 }
 
+.bb-rl-media-directory-container {
+  padding-bottom: var(--bb-rl-space-300);
+}
+
 .bb-rl-media-stream {
   padding: var(--bb-rl-space-300);
   background-color: var(--bb-rl-background-color);
@@ -10073,6 +10082,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   color: var(--bb-rl-text-secondary-color);
+  white-space: nowrap;
 }
 
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle:hover {
@@ -10109,6 +10119,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-body {
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
+@media screen and (max-width: 800px) {
+  .bb-rl-advance-profile-search #bp-profile-search-form-outer {
+    left: -100%;
+  }
 }
 
 .bb-rl-advance-profile-search.active #bp-profile-search-form-outer {
@@ -16156,6 +16172,28 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   right: 0;
 }
 
+@media screen and (max-width: 660px) {
+  .bb-rl-profile-item-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  .bb-rl-profile-item-header .bb-rl-profile-header-content {
+    text-align: center;
+  }
+  .bb-rl-profile-item-header .bb-rl-profile-header-content .member-title-wrap {
+    align-items: center;
+  }
+  .bb-rl-profile-item-header .bb-rl-profile-header-content .bb-rl-member-header-actions {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-profile-item-header .bb-rl-member-header-actions {
+    flex-wrap: wrap;
+  }
+}
+
 .bb-rl-profile-header-content {
   flex: 1;
 }
@@ -16209,6 +16247,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   text-decoration: none;
   padding: 4px var(--bb-rl-space-200);
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .bb-rl-member-header-actions button.friendship-button {

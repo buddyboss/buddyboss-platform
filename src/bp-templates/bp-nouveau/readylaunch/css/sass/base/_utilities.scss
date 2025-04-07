@@ -17,6 +17,7 @@
 	border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	padding: 12px var(--bb-rl-space-300);
 	margin-bottom: var(--bb-rl-space-400);
+	gap: var(--bb-rl-space-100);
 
 	@media screen and (max-width: 900px) {
 		flex-flow: wrap;
@@ -84,6 +85,10 @@
 				margin-left: var(--bb-rl-space-100);
 			}
 		}
+	}
+
+	.bb-rl-entry-heading {
+		align-items: center;
 	}
 }
 

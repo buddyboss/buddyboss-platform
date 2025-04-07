@@ -253,6 +253,28 @@
   left: 0;
 }
 
+@media screen and (max-width: 660px) {
+  .bb-rl-profile-item-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  .bb-rl-profile-item-header .bb-rl-profile-header-content {
+    text-align: center;
+  }
+  .bb-rl-profile-item-header .bb-rl-profile-header-content .member-title-wrap {
+    align-items: center;
+  }
+  .bb-rl-profile-item-header .bb-rl-profile-header-content .bb-rl-member-header-actions {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-profile-item-header .bb-rl-member-header-actions {
+    flex-wrap: wrap;
+  }
+}
+
 .bb-rl-profile-header-content {
   flex: 1;
 }
@@ -306,6 +328,7 @@
   text-decoration: none;
   padding: 4px var(--bb-rl-space-200);
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .bb-rl-member-header-actions button.friendship-button {

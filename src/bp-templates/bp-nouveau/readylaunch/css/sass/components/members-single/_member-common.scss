@@ -87,6 +87,30 @@
 		top: -8px;
 		right: 0;
 	}
+
+	@media screen and (max-width: 660px) {
+		flex-direction: column;
+		align-items: center;
+
+		.bb-rl-profile-header-content {
+			text-align: center;
+
+			.member-title-wrap {
+				align-items: center;
+			}
+
+			.bb-rl-member-header-actions {
+				justify-content: center;
+			}
+		}
+	}
+
+	@media screen and (max-width: $sm) {
+
+		.bb-rl-member-header-actions {
+			flex-wrap: wrap;
+		}
+	}
 }
 
 .bb-rl-profile-header-content {
@@ -132,6 +156,7 @@
 		@include bb-rl-button;
 		padding: 4px var(--bb-rl-space-200);
 		font-size: 0.875rem;
+		white-space: nowrap;
 	}
 
 	button.friendship-button {
