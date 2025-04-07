@@ -21,7 +21,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 
 	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form standard-form">
-		<div class="bb-rl-profile-filter-headline flex">
+		<div class="bb-rl-profile-filter-headline flex justify-between">
 			<h2 class="bps-form-title widget-title"><?php echo $F->title; ?></h2>
 			<p class="clear-from-wrap">
 				<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
@@ -29,6 +29,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 				</a>
 			</p>
 		</div>
+		<div class="bb-rl-profile-filter-body">
 
 		<?php
 		if ( isset( $F->fields ) && ! empty( $F->fields ) && count( $F->fields ) > 1 ) {
@@ -381,21 +382,21 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 				</div>
 				<?php
 			}
-			?>
-
-			<div class="submit-wrapper">
-				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
-			</div>
-
-			<?php
 		} else {
 			?>
-			<div class="submit-wrapper">
-				<span class="no-field"><?php _e( 'Please add fields to search members.', 'buddyboss' ); ?></span>
-			</div>
+			<p class="no-field"><?php _e( 'Please add fields to search members.', 'buddyboss' ); ?></p>
 			<?php
 		}
 		?>
+		</div>
+
+		<?php
+			if ( isset( $F->fields ) && ! empty( $F->fields ) && count( $F->fields ) > 1 ) {
+			?>
+			<div class="submit-wrapper">
+				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
+			</div>
+		<?php } ?>
 
 	</form>
 

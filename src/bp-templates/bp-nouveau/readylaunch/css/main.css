@@ -10061,6 +10061,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-advance-profile-search {
   margin-left: var(--bb-rl-space-200);
+  position: relative;
 }
 
 .bb-rl-advance-profile-search .bb-rl-advance-profile-search-toggle {
@@ -10088,7 +10089,23 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-advance-profile-search #bp-profile-search-form-outer {
-  display: none;
+  position: absolute;
+  top: 120%;
+  left: 0;
+  width: 328px;
+  background-color: var(--bb-rl-background-color);
+  z-index: 100;
+  border-radius: var(--bb-rl-radius-lg);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-headline {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-advance-profile-search #bp-profile-search-form-outer .bb-rl-profile-filter-body {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 }
 
 .bb-rl-groups .bp-list.grid .item-entry .list-wrap {
