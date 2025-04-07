@@ -2333,6 +2333,13 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 		}
 	}
 
+	$is_moderation_disabled = in_array( 'moderation', $db_component, true ) && ! in_array( 'moderation', $active_components, true );
+	$is_moderation_enabled  = ! in_array( 'moderation', $db_component, true ) && in_array( 'moderation', $active_components, true );
+
+	if ( $is_moderation_disabled || $is_moderation_enabled ) {
+		bb_create_background_member_friends_count();
+	}
+
 }
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
 

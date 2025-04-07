@@ -486,7 +486,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 	 * @param string $value   Link text based on passed parameters.
 	 * @param int    $user_id ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_userlink', '<a href="' . $url . '">' . $display_name . '</a>', $user_id );
+	return apply_filters( 'bp_core_get_userlink', '<a href="' . $url . '" data-bb-hp-profile="' . esc_attr( $user_id ) . '">' . $display_name . '</a>', $user_id );
 }
 
 /**
@@ -706,9 +706,20 @@ function bp_member_object_template_results_members_all_scope( $querystring, $obj
 
 	$querystring = bp_parse_args( $querystring );
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() && isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
+	if (
+		bp_is_active( 'activity' ) &&
+		bp_is_activity_follow_active() &&
+		isset( $querystring['scope'] ) &&
+		(
+			'following' === $querystring['scope'] ||
+			'followers' === $querystring['scope']
+		)
+		
+	) {
 		$counts = bp_total_follow_counts();
-		if ( ! empty( $counts['following'] ) ) {
+		if ( 'following' === $querystring['scope'] && ! empty( $counts['following'] ) ) {
+			unset( $querystring['include'] );
+		} elseif ( 'followers' === $querystring['scope'] && ! empty( $counts['followers'] ) ) {
 			unset( $querystring['include'] );
 		}
 	}
