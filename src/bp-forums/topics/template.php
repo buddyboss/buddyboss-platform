@@ -312,13 +312,6 @@ function bbp_has_topics( $args = '' ) {
 		$bbp->topic_query->max_num_pages = $r['max_num_pages'];
 	}
 
-	/** Stickies */
-
-	// Put sticky posts at the top of the posts array.
-	if ( ! empty( $r['show_stickies'] ) && $r['paged'] <= 1 ) {
-		bbp_add_sticky_topics( $bbp->topic_query, $r );
-	}
-
 	// If no limit to posts per page, set it to the current post_count.
 	if ( -1 === $r['posts_per_page'] ) {
 		$r['posts_per_page'] = $bbp->topic_query->post_count;
