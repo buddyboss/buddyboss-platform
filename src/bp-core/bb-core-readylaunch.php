@@ -130,8 +130,8 @@ function bb_rl_view_profile_repeaters_print_group_html_end() {
 		$repeater_set_being_displayed = false;
 	}
 }
-remove_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
-add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_group_html_end' );
+//remove_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
+//add_filter( 'bp_ps_field_before_query', 'bb_rl_view_profile_repeaters_print_group_html_end' );
 
 
 /**
