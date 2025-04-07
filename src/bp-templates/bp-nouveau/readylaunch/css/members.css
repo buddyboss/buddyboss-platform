@@ -102,9 +102,74 @@
 }
 
 /* Dark Mode Variables */
-/*.dark-mode {
+.dark-mode {
+  --bb-rl-background-color: #242425;
+  --bb-rl-background-hover-color: #555556;
+  --bb-rl-background-secondary-color: #2f2f2f;
+  --bb-rl-background-secondary-hover-color: #3d3d3D;
+  --bb-rl-background-tertiary-color: #6d6D6e;
+  --bb-rl-background-tertiary-hover-color: #555556;
+  --bb-rl-background-black-color: #fff;
+  --bb-rl-background-disabled-color:#dbdbdb;
+  --bb-rl-background-brand-primary-color: #4946fe;
+  --bb-rl-background-brand-primary-hover-color: #4937F4;
+  --bb-rl-background-brand-secondary-color: #3325ae;
+  --bb-rl-background-brand-secondary-hover-color: #2e2689;
+  --bb-rl-background-brand-disabled-color: #767eff;
+  --bb-rl-background-positive-primary-color: #008043;
+  --bb-rl-background-positive-primary-hover-color: #02542d;
+  --bb-rl-background-positive-secondary-color: #02542d;
+  --bb-rl-background-positive-secondary-hover-color: #024023;
+  --bb-rl-background-warning-primary-color: #975102;
+  --bb-rl-background-warning-primary-hover-color: #682d03;
+  --bb-rl-background-warning-secondary-color: #682d03;
+  --bb-rl-background-warning-secondary-hover-color: #522504;
+  --bb-rl-background-danger-primary-color: #900b09;
+  --bb-rl-background-danger-primary-hover-color: #690807;
+  --bb-rl-background-danger-secondary-color: #690807;
+  --bb-rl-background-danger-secondary-hover-color: #4d0b0a;
+  --bb-rl-border-color: #f3f3f3;
+  --bb-rl-border-secondary-color: #e7e7e7;
+  --bb-rl-border-tertiary-color: #dbdbdb;
+  --bb-rl-border-disabled-color: #f3f3f3;
+  --bb-rl-border-quinery-color: #6d6d6e;
+  --bb-rl-border-quaternary-color: #9e9e9e;
+  --bb-rl-border-brand-primary-color: #0300c3;
+  --bb-rl-border-brand-secondary-color: #4946fe;
+  --bb-rl-border-positive-primary-color: #02542d;
+  --bb-rl-border-positive-secondary-color: #14ae5c;
+  --bb-rl-border-warning-primary-color: #522504;
+  --bb-rl-border-warning-secondary-color: #e8b931;
+  --bb-rl-border-danger-primary-color: #900b09;
+  --bb-rl-border-danger-secondary-color: #ec221f;
+  --bb-rl-text-color: #fff;
+  --bb-rl-text-white-color: #000;
+  --bb-rl-text-secondary-color: #cececf;
+  --bb-rl-text-tertiary-color: #b6b6b6;
+  --bb-rl-text-disabled-color: #b6b6b6;
+  --bb-rl-text-brand-primary-color: #c2cdff;
+  --bb-rl-text-brand-secondary-color: #4946fe;
+  --bb-rl-text-positive-primary-color: #cff7d3;
+  --bb-rl-text-positive-secondary-color: #14ae5c;
+  --bb-rl-text-warning-primary-color: #fff1c2;
+  --bb-rl-text-warning-secondary-color: #e5a000;
+  --bb-rl-text-danger-primary-color: #fdd3d0;
+  --bb-rl-text-danger-secondary-color: #ec221f;
+  --bb-rl-icon-color: #0c0c0d;
+  --bb-rl-icon-primary-color: #3d3d3d;
+  --bb-rl-icon-secondary-color: #555556;
+  --bb-rl-icon-tertiary-color: #9e9e9e;
+  --bb-rl-icon-disabled-color: #b6b6b6;
+  --bb-rl-icon-brand-primary-color: #0300c3;
+  --bb-rl-icon-brand-secondary-color: #4946fe;
+  --bb-rl-icon-positive-primary-color: #02542d;
+  --bb-rl-icon-positive-secondary-color: #14ae5c;
+  --bb-rl-icon-warning-primary-color: #522504;
+  --bb-rl-icon-warning-secondary-color: #e8b931;
+  --bb-rl-icon-danger-primary-color: #900b09;
+  --bb-rl-icon-danger-secondary-color: #ec221f;
+}
 
-}*/
 /* SCSS Variables */
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
   padding: var(--bb-rl-space-300) var(--bb-rl-space-200);
