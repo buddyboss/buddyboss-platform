@@ -1,0 +1,18 @@
+<div class="bb-rl-media-none">
+    <div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-image"></i></div>
+    <aside class="bp-feedback bp-messages info">
+        <span class="bp-icon" aria-hidden="true"></span>
+        <p><?php ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? esc_html_e( 'Sorry, no photos or videos were found.', 'buddyboss' ) : esc_html_e( 'Sorry, no photos were found.', 'buddyboss' ); ?></p>
+    </aside>
+    <div class="bb-media-actions-wrap">
+        <h2 class="bb-title"><?php esc_html_e('Photos', 'buddyboss'); ?></h2>
+        <div class="bb-media-actions">
+            <a href="#" id="bp-add-media" class="bb-add-media button bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
+                <i class="bb-icons-rl-plus"></i><?php esc_html_e('Add Photos', 'buddyboss'); ?>
+            </a>
+        </div>
+    </div>
+</div>
+<?php
+	bp_get_template_part( 'media/uploader' );
+?>
