@@ -1718,7 +1718,7 @@
   display: none;
 }
 
-.bb-rl-group-invites-container .bb-groups-invites-right-top .bp-invites-feedback .bp-feedback {
+.bb-rl-group-invites-container .bb-groups-invites-right-top .bp-invites-feedback .bp-feedback.info {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 400;
   line-height: var(--bb-rl-base-line-small);
@@ -1728,8 +1728,18 @@
   border: 0;
 }
 
-.bb-rl-group-invites-container .bb-groups-invites-right-top .bp-invites-feedback .bp-feedback .bp-icon {
+.bb-rl-group-invites-container .bb-groups-invites-right-top .bp-invites-feedback .bp-feedback.info .bp-icon {
   display: none;
+}
+
+.bb-rl-group-invites-container .bb-groups-invites-right-top .bp-invites-feedback .bp-feedback.success {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  border-color: var(--bb-rl-border-positive-secondary-color);
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-group-invites-container .bb-groups-invites-right-top .bp-invites-feedback .bp-feedback.success > [class*="bb-icons"] {
+  color: var(--bb-rl-border-positive-secondary-color);
 }
 
 .bb-rl-group-invites-container #send_group_invite_form {
@@ -1817,6 +1827,11 @@
   background-color: var(--bb-rl-background-tertiary-color);
   color: var(--bb-rl-text-disabled-color);
   cursor: not-allowed;
+}
+
+.bb-rl-group-invites-container .bp-invites-submit-loader-hide {
+  display: none;
+  line-height: 1;
 }
 
 .bb-rl-bp-pending-invites-loader {

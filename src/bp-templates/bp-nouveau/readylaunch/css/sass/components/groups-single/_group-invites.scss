@@ -252,7 +252,7 @@
 
 		.bp-invites-feedback {
 
-			.bp-feedback {
+			.bp-feedback.info {
 
 				@include bb-rl-label-heading;
 				padding: 0;
@@ -263,6 +263,12 @@
 				.bp-icon {
 					display: none;
 				}
+			}
+
+			.bp-feedback.success {
+
+				@include bb-rl-notice--alt-success;
+				margin-top: var(--bb-rl-space-100);
 			}
 		}
 	}
@@ -303,6 +309,11 @@
 			@include bb-rl-button-secondary-fill;
 			@include bb-rl-button--small;
 		}
+	}
+
+	.bp-invites-submit-loader-hide {
+		display: none;
+		line-height: 1;
 	}
 }
 

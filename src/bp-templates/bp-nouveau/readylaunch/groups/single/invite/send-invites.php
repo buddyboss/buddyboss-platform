@@ -87,7 +87,7 @@
 						<div id="whats-new-toolbar">
 							<div id="group-invites-new-submit" class="submit">
 								<div id="bp-invites-submit-loader" class="bp-invites-submit-loader-hide">
-									<i class="bb-icon-l bb-icon-spinner animate-spin"></i>
+									<i class="bb-icons-rl-spinner animate-spin"></i>
 								</div>
 								<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send Invite', 'buddyboss' ); ?>" id="send_group_invite_button" class="small">
 								<input type="submit" name="bp_invites_reset" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>" id="bp_invites_reset" class="small">
