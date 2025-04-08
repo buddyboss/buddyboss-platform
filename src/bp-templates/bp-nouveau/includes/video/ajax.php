@@ -557,12 +557,7 @@ function bp_nouveau_ajax_video_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'Sorry, no videos were found', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'video/no-video' );
 		}
 
 		$video_html_content = ob_get_clean();
