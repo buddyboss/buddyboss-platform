@@ -969,10 +969,6 @@ window.bp = window.bp || {};
 			var $buttons = $buddypress.find( '[data-bp-list], #item-header, .bp-shortcode-wrap .dir-list, .bb-rl-messages-content, .messages-screen, .bb_more_options, .bb-rl-group-extra-info' );
 			$buttons.on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$buttons.on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
-			$buttons.on( 'mouseover', '[data-bp-btn-action]', this, this.buttonHover );
-			$buttons.on( 'mouseout', '[data-bp-btn-action]', this, this.buttonHoverout );
-			$buttons.on( 'mouseover', '.awaiting_response_friend', this, this.awaitingButtonHover );
-			$buttons.on( 'mouseout', '.awaiting_response_friend', this, this.awaitingButtonHoverout );
 			$document.on( 'click', '#buddypress .bb-leave-group-popup .bb-confirm-leave-group', this.leaveGroupAction );
 			$document.on( 'click', '#buddypress .bb-leave-group-popup .bb-close-leave-group', this.leaveGroupClose );
 			$document.on( 'click', '#buddypress .bb-remove-connection .bb-confirm-remove-connection', this.removeConnectionAction );
@@ -1126,10 +1122,6 @@ window.bp = window.bp || {};
 		bindPopoverEvents: function() {
 			$( document ).on( 'click', '#profile-card [data-bp-btn-action]', this, this.buttonAction );
 			$( document ).on( 'blur', '#profile-card [data-bp-btn-action]', this, this.buttonRevert );
-			$( document ).on( 'mouseover', '#profile-card [data-bp-btn-action]', this, this.buttonHover );
-			$( document ).on( 'mouseout', '#profile-card [data-bp-btn-action]', this, this.buttonHoverout );
-			$( document ).on( 'mouseover', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHover );
-			$( document ).on( 'mouseout', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHoverout );
 		},
 
 		/**
@@ -2191,86 +2183,6 @@ window.bp = window.bp || {};
 
 				target.removeClass( 'bp-toggle-action-button-clicked' ).addClass( 'bp-toggle-action-button' ); // add class to detect event to confirm.
 			}
-		},
-
-		/**
-		 * [buttonHover description]
-		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		buttonHover: function ( event ) {
-			var target               = $( event.currentTarget ),
-				isToggleActionButton = target.hasClass( 'bp-toggle-action-button' );
-			bp.Nouveau.handleButtonHover(
-				{
-					event                : event,
-					target               : target,
-					context              : this,
-					isHoverIn            : true,
-					isToggleActionButton : isToggleActionButton
-				}
-			);
-		},
-
-		/**
-		 * [buttonHoverout description]
-		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		buttonHoverout: function ( event ) {
-			var target               = $( event.currentTarget ),
-				isToggleActionButton = target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' );
-			bp.Nouveau.handleButtonHover(
-				{
-					event                : event,
-					target               : target,
-					context              : this,
-					isHoverIn            : false,
-					isToggleActionButton : isToggleActionButton,
-				}
-			);
-		},
-
-		/**
-		 * [awaitingButtonHover description]
-		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		awaitingButtonHover: function ( event ) {
-			var target               = $( event.currentTarget ),
-				isToggleActionButton = target.hasClass( 'bp-toggle-action-button' );
-			bp.Nouveau.handleButtonHover(
-				{
-					event                : event,
-					target               : target,
-					context              : this,
-					isHoverIn            : true,
-					isToggleActionButton : isToggleActionButton,
-				}
-			);
-		},
-
-		/**
-		 * [buttonHoverout description]
-		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		awaitingButtonHoverout: function ( event ) {
-			var target               = $( event.currentTarget ),
-				isToggleActionButton = target.hasClass( 'bp-toggle-action-button-hover' ) && ! target.hasClass( 'loading' );
-			bp.Nouveau.handleButtonHover(
-				{
-					event                : event,
-					target               : target,
-					context              : this,
-					isHoverIn            : false,
-					isToggleActionButton : isToggleActionButton,
-				}
-			);
 		},
 
 		/**
@@ -4339,46 +4251,6 @@ window.bp = window.bp || {};
 			} else {
 				options.removeClass( 'is_visible open' );
 				body.removeClass( 'more_option_open' );
-			}
-		},
-
-		handleButtonHover : function ( args ) {
-			var event                = args.event,
-				target               = args.target,
-				isHoverIn            = args.isHoverIn,
-				isToggleActionButton = args.isToggleActionButton;
-
-			event.preventDefault();
-
-			var title          = target.data( 'title' );
-			var titleDisplayed = target.data( 'title-displayed' );
-
-			if (
-				target.hasClass( 'group-subscription' ) &&
-				'undefined' !== typeof title &&
-				'undefined' !== typeof titleDisplayed &&
-				0 === title.replace( /<(.|\n)*?>/g, '' ).length &&
-				0 === titleDisplayed.replace( /<(.|\n)*?>/g, '' ).length
-			) {
-				target.removeClass( 'bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button' );
-				return false;
-			}
-
-			if ( isToggleActionButton ) {
-				if ( isHoverIn ) {
-					if ( ! target.hasClass( 'following' ) ) {
-						target.attr( 'data-balloon', title.replace( /<(.|\n)*?>/g, '' ) );
-					}
-					target.html( title );
-					target.removeClass( 'bp-toggle-action-button' ).addClass( 'bp-toggle-action-button-hover' );
-				} else {
-					if ( ! target.hasClass( 'following' ) ) {
-						target.attr( 'data-balloon', titleDisplayed.replace( /<(.|\n)*?>/g, '' ) );
-					}
-					target.html( titleDisplayed );
-					target.removeClass( 'bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button' );
-				}
-				return false;
 			}
 		},
 
