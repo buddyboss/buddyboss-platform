@@ -97,7 +97,7 @@
 		visibility: hidden;
 		position: absolute;
 		top: 40px;
-		left: 0;
+		right: 0;
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		border-radius: var(--bb-rl-radius-base);
 		background: var(--bb-rl-background-color);
@@ -1733,8 +1733,22 @@
 			width: 100%;
 		}
 
-		.bb-activity-more-options-wrap + .bb-rl-pin-action {
-			right: 55px;
+		.bb-activity-more-options-wrap {
+
+			+ .bb-rl-pin-action {
+				right: 55px;
+			}
+
+			.bb-activity-more-options-action {
+
+				&[data-balloon][data-balloon-pos="up"]:after {
+					left: -10px;
+				}
+			}
+		}
+
+		.bb-muted .bb-rl-mute-action_button[data-balloon][data-balloon-pos="up"]:after {
+			left: -10px;
 		}
 
 		.bb-rl-pin-action [class*="bb-icon"] {

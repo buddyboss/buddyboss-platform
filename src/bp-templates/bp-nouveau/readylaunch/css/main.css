@@ -12523,7 +12523,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   visibility: hidden;
   position: absolute;
   top: 40px;
-  left: 0;
+  right: 0;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
   background: var(--bb-rl-background-color);
@@ -14054,6 +14054,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .bb-rl-activity-list .bb-activity-more-options-wrap + .bb-rl-pin-action {
     right: 55px;
+  }
+  .bb-rl-activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
+    left: -10px;
+  }
+  .bb-rl-activity-list .bb-muted .bb-rl-mute-action_button[data-balloon][data-balloon-pos="up"]:after {
+    left: -10px;
   }
   .bb-rl-activity-list .bb-rl-pin-action [class*="bb-icon"] {
     font-size: 18px;
