@@ -235,6 +235,15 @@ function bp_nouveau_activity_timestamp() {
 }
 
 /**
+ * Output the Activity updated timestamp into the bp-updated-timestamp attribute.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_nouveau_activity_updated_timestamp() {
+	echo esc_attr( bb_nouveau_get_activity_updated_timestamp() );
+}
+
+/**
  * Get the Activity timestamp.
  *
  * @since BuddyPress 3.0.0
@@ -250,6 +259,24 @@ function bp_nouveau_get_activity_timestamp() {
 	 * @param integer $value The Activity timestamp.
 	 */
 	return apply_filters( 'bp_nouveau_get_activity_timestamp', strtotime( bp_get_activity_date_recorded() ) );
+}
+
+/**
+ * Get the Activity updated timestamp.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @return integer The Activity updated timestamp.
+ */
+function bb_nouveau_get_activity_updated_timestamp() {
+	/**
+	 * Filter here to edit the activity updated timestamp.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 *
+	 * @param integer $value The Activity updated timestamp.
+	 */
+	return apply_filters( 'bb_nouveau_get_activity_updated_timestamp', strtotime( bb_get_activity_date_updated() ) );
 }
 
 /**
@@ -823,10 +850,11 @@ function bp_nouveau_get_activity_comment_action() {
 		'bp_nouveau_get_activity_comment_action',
 		sprintf(
 			/* translators: 1: User profile link, 2: Username, 3: Edited text */
-			__( '<a class="author-name" href="%1$s">%2$s</a>%3$s', 'buddyboss' ),
+			__( '<a class="author-name" href="%1$s" %4$s>%2$s</a>%3$s', 'buddyboss' ),
 			esc_url( bp_get_activity_comment_user_link() ),
 			esc_html( bp_get_activity_comment_name() ),
-			bb_nouveau_activity_comment_is_edited()
+			bb_nouveau_activity_comment_is_edited(),
+			'data-bb-hp-profile="' . esc_attr( bp_get_activity_comment_user_id() ) . '"',
 		)
 	);
 }
@@ -2463,7 +2491,6 @@ function bb_nouveau_edit_activity_comment_data() {
 function bb_nouveau_get_edit_activity_comment_data() {
 	return htmlentities( wp_json_encode( bb_activity_comment_get_edit_data( bp_get_activity_comment_id() ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 }
-
 
 /**
  * Get edited activity comment log.
