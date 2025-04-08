@@ -346,11 +346,23 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( in_array( $activity_object->type, $disabled_actions ) ) {
 				$link = $activity_object->primary_link;
 				if ( empty( $link ) ) {
+
+					// Check if 'query' is already hooked to 'bp_filter_metaid_column_name' and then remove it.
+					$is_metaid_column_name_hooked = has_filter( 'query', 'bp_filter_metaid_column_name' );
+					if ( $is_metaid_column_name_hooked ) {
+						remove_filter( 'query', 'bp_filter_metaid_column_name' );
+					}
+
 					$item_id = ( 'groups' === $activity_object->component ? $activity_object->secondary_item_id : $activity_object->item_id );
 					if ( 'bbp_reply_create' == $activity_object->type ) {
 						$link = bbp_get_reply_url( $item_id );
 					} elseif ( 'bbp_topic_create' == $activity_object->type ) {
 						$link = bbp_get_topic_permalink( $item_id );
+					}
+
+					// Add 'query' hook to 'bp_filter_metaid_column_name' if it was previously removed.
+					if ( $is_metaid_column_name_hooked ) {
+						add_filter( 'query', 'bp_filter_metaid_column_name' );
 					}
 				}
 			}
