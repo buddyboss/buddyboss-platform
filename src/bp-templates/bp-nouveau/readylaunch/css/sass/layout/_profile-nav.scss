@@ -84,3 +84,40 @@
 		}
 	}
 }
+
+body {
+
+	&:not(.bb-rl-dark-mode) {
+
+		#bb-rl-profile-theme-light a {
+			padding-right: 30px;
+	
+			&::after {
+				content: "\e182";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: var(--bb-rl-font-size-base);
+				color: var(--bb-rl-icon-secondary-color);
+				position: absolute;
+				right: 12px;
+			}
+		}
+	}
+
+	&.bb-rl-dark-mode {
+
+		#bb-rl-profile-theme-dark a {
+			padding-right: 30px;
+
+			&::after {
+				content: "\e182";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: var(--bb-rl-font-size-base);
+				color: var(--bb-rl-icon-secondary-color);
+				position: absolute;
+				right: 12px;
+			}
+		}
+	}
+}

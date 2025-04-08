@@ -49,6 +49,7 @@ window.bp = window.bp || {};
 				$document.on( 'heartbeat-tick', this.bbHeartbeatTick.bind( this ) );
 				$document.on( 'click', '.bb-rl-option-wrap__action', this.openMoreOption.bind( this ) );
 				$document.on( 'click', this.closeMoreOption.bind( this ) );
+				$document.on( 'click', '#bb-rl-profile-theme-light, #bb-rl-profile-theme-dark', this.ToggleDarkMode.bind( this ) );
 				$document.on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
@@ -363,6 +364,17 @@ window.bp = window.bp || {};
 					!$( e.target ).closest( '.bb-rl-profile-dropdown' ).length ) {
 					$( '.user-wrap' ).removeClass( 'active' );
 				}
+			},
+
+			/**
+			 * [ToggleDarkMode Toggle dark mode]
+			 *
+			 * @param event
+			 */
+			ToggleDarkMode : function ( e ) {
+				e.preventDefault();
+
+				$( 'body' ).toggleClass( 'bb-rl-dark-mode' );
 			},
 
 			/**
