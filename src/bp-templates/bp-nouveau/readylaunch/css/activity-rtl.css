@@ -109,7 +109,7 @@
 }
 
 /* Dark Mode Variables */
-.dark-mode {
+.bb-rl-dark-mode {
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -162,10 +162,10 @@
   --bb-rl-text-warning-secondary-color: #e5a000;
   --bb-rl-text-danger-primary-color: #fdd3d0;
   --bb-rl-text-danger-secondary-color: #ec221f;
-  --bb-rl-icon-color: #0c0c0d;
-  --bb-rl-icon-primary-color: #3d3d3d;
-  --bb-rl-icon-secondary-color: #555556;
-  --bb-rl-icon-tertiary-color: #9e9e9e;
+  --bb-rl-icon-color: #fff;
+  --bb-rl-icon-primary-color: #fff;
+  --bb-rl-icon-secondary-color: #e7e7e7;
+  --bb-rl-icon-tertiary-color: #dbdbdb;
   --bb-rl-icon-disabled-color: #b6b6b6;
   --bb-rl-icon-brand-primary-color: #0300c3;
   --bb-rl-icon-brand-secondary-color: #4946fe;
@@ -2051,7 +2051,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   visibility: hidden;
   position: absolute;
   top: 40px;
-  right: 0;
+  left: 0;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
   background: var(--bb-rl-background-color);
@@ -3582,6 +3582,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .bb-rl-activity-list .bb-activity-more-options-wrap + .bb-rl-pin-action {
     left: 55px;
+  }
+  .bb-rl-activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
+    right: -10px;
+  }
+  .bb-rl-activity-list .bb-muted .bb-rl-mute-action_button[data-balloon][data-balloon-pos="up"]:after {
+    right: -10px;
   }
   .bb-rl-activity-list .bb-rl-pin-action [class*="bb-icon"] {
     font-size: 18px;

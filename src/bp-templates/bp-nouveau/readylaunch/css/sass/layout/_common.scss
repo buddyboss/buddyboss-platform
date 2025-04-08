@@ -226,7 +226,9 @@
 			&.bb-rl-media-file-delete,
 			&.bb-rl-video-file-delete,
 			&.delete-group,
-			&.bb-rl-document-file-delete {
+			&.bb-rl-document-file-delete,
+			&.bb-album-delete,
+			&#bb-delete-folder {
 				color: var(--bb-rl-text-danger-secondary-color);
 
 				&::before {
@@ -277,7 +279,8 @@
 				content: "\e4a6";
 			}
 
-			&.bb-edit-album::before {
+			&.bb-edit-album::before,
+			&#bp-edit-folder-open::before {
 				content: "\e3b4";
 			}
 		}

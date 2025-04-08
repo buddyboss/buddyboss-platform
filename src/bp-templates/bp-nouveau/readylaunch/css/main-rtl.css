@@ -103,7 +103,7 @@
 }
 
 /* Dark Mode Variables */
-.dark-mode {
+.bb-rl-dark-mode {
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -156,10 +156,10 @@
   --bb-rl-text-warning-secondary-color: #e5a000;
   --bb-rl-text-danger-primary-color: #fdd3d0;
   --bb-rl-text-danger-secondary-color: #ec221f;
-  --bb-rl-icon-color: #0c0c0d;
-  --bb-rl-icon-primary-color: #3d3d3d;
-  --bb-rl-icon-secondary-color: #555556;
-  --bb-rl-icon-tertiary-color: #9e9e9e;
+  --bb-rl-icon-color: #fff;
+  --bb-rl-icon-primary-color: #fff;
+  --bb-rl-icon-secondary-color: #e7e7e7;
+  --bb-rl-icon-tertiary-color: #dbdbdb;
   --bb-rl-icon-disabled-color: #b6b6b6;
   --bb-rl-icon-brand-primary-color: #0300c3;
   --bb-rl-icon-brand-secondary-color: #4946fe;
@@ -6521,6 +6521,34 @@ body.admin-bar .bb-rl-header {
   margin-right: auto;
 }
 
+body:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a {
+  padding-left: 30px;
+}
+
+body:not(.bb-rl-dark-mode) #bb-rl-profile-theme-light a::after {
+  content: "\e182";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-icon-secondary-color);
+  position: absolute;
+  left: 12px;
+}
+
+body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
+  padding-left: 30px;
+}
+
+body.bb-rl-dark-mode #bb-rl-profile-theme-dark a::after {
+  content: "\e182";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-icon-secondary-color);
+  position: absolute;
+  left: 12px;
+}
+
 .bb-rl-left-panel {
   position: fixed;
   right: 0;
@@ -7004,100 +7032,142 @@ body.admin-bar .bb-rl-left-panel {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a#bb-delete-folder,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bb-delete-folder,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete,
+.bb-rl-context-wrap .bb_more_dropdown a#bb-delete-folder,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown button.delete-group,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete,
+.bb-rl-context-wrap .bb_more_dropdown button#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete {
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bb-delete-folder {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a#bb-delete-folder::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bb-delete-folder::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a#bb-delete-folder::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown button.delete-group::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown button#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group::before,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete::before {
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bb-delete-folder::before {
   color: var(--bb-rl-text-danger-secondary-color);
   content: "\e4a6";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a#bb-delete-folder:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bb-delete-folder:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a#bb-delete-folder:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.delete-group:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group:hover,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete:hover {
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bb-delete-folder:hover {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
@@ -7214,14 +7284,21 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e4a6";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-edit-album::before, .bb-rl-context-wrap .bb-rl-context-dropdown a#bp-edit-folder-open::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bp-edit-folder-open::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown a#bp-edit-folder-open::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown button#bp-edit-folder-open::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bp-edit-folder-open::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bp-edit-folder-open::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-edit-album::before,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-edit-album::before {
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bp-edit-folder-open::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bp-edit-folder-open::before {
   content: "\e3b4";
 }
 
@@ -10581,7 +10658,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 /* Dark Mode Variables */
-.dark-mode {
+.bb-rl-dark-mode {
   --bb-rl-background-color: #242425;
   --bb-rl-background-hover-color: #555556;
   --bb-rl-background-secondary-color: #2f2f2f;
@@ -10634,10 +10711,10 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   --bb-rl-text-warning-secondary-color: #e5a000;
   --bb-rl-text-danger-primary-color: #fdd3d0;
   --bb-rl-text-danger-secondary-color: #ec221f;
-  --bb-rl-icon-color: #0c0c0d;
-  --bb-rl-icon-primary-color: #3d3d3d;
-  --bb-rl-icon-secondary-color: #555556;
-  --bb-rl-icon-tertiary-color: #9e9e9e;
+  --bb-rl-icon-color: #fff;
+  --bb-rl-icon-primary-color: #fff;
+  --bb-rl-icon-secondary-color: #e7e7e7;
+  --bb-rl-icon-tertiary-color: #dbdbdb;
   --bb-rl-icon-disabled-color: #b6b6b6;
   --bb-rl-icon-brand-primary-color: #0300c3;
   --bb-rl-icon-brand-secondary-color: #4946fe;
@@ -12523,7 +12600,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   visibility: hidden;
   position: absolute;
   top: 40px;
-  right: 0;
+  left: 0;
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
   background: var(--bb-rl-background-color);
@@ -14054,6 +14131,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   }
   .bb-rl-activity-list .bb-activity-more-options-wrap + .bb-rl-pin-action {
     left: 55px;
+  }
+  .bb-rl-activity-list .bb-activity-more-options-wrap .bb-activity-more-options-action[data-balloon][data-balloon-pos="up"]:after {
+    right: -10px;
+  }
+  .bb-rl-activity-list .bb-muted .bb-rl-mute-action_button[data-balloon][data-balloon-pos="up"]:after {
+    right: -10px;
   }
   .bb-rl-activity-list .bb-rl-pin-action [class*="bb-icon"] {
     font-size: 18px;

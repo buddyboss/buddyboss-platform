@@ -156,8 +156,8 @@
   --bb-rl-text-warning-secondary-color: #e5a000;
   --bb-rl-text-danger-primary-color: #fdd3d0;
   --bb-rl-text-danger-secondary-color: #ec221f;
-  --bb-rl-icon-color: #ffffff;
-  --bb-rl-icon-primary-color: #ffffff;
+  --bb-rl-icon-color: #fff;
+  --bb-rl-icon-primary-color: #fff;
   --bb-rl-icon-secondary-color: #e7e7e7;
   --bb-rl-icon-tertiary-color: #dbdbdb;
   --bb-rl-icon-disabled-color: #b6b6b6;
@@ -7032,100 +7032,142 @@ body.admin-bar .bb-rl-left-panel {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete, .bb-rl-context-wrap .bb-rl-context-dropdown a#bb-delete-folder,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bb-delete-folder,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete,
+.bb-rl-context-wrap .bb_more_dropdown a#bb-delete-folder,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete,
 .bb-rl-context-wrap .bb_more_dropdown button.delete-group,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete,
+.bb-rl-context-wrap .bb_more_dropdown button#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bb-delete-folder,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete {
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bb-delete-folder {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete::before, .bb-rl-context-wrap .bb-rl-context-dropdown a#bb-delete-folder::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bb-delete-folder::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown a#bb-delete-folder::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-context-wrap .bb_more_dropdown button.delete-group::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete::before,
+.bb-rl-context-wrap .bb_more_dropdown button#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bb-delete-folder::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group::before,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete::before {
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bb-delete-folder::before {
   color: var(--bb-rl-text-danger-secondary-color);
   content: "\e4a6";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.delete-group:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a.bb-album-delete:hover, .bb-rl-context-wrap .bb-rl-context-dropdown a#bb-delete-folder:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.delete-group:hover,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button.bb-album-delete:hover,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bb-delete-folder:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-media-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-video-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.delete-group:hover,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a.bb-album-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown a#bb-delete-folder:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.delete-group:hover,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button.bb-album-delete:hover,
+.bb-rl-context-wrap .bb_more_dropdown button#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.delete-group:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.delete-group:hover,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.delete-group:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bb-delete-folder:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-media-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-video-file-delete:hover,
 .bb-rl-container .bb_more_options .bb_more_dropdown button.delete-group:hover,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete:hover {
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-rl-document-file-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-album-delete:hover,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bb-delete-folder:hover {
   color: var(--bb-rl-text-danger-secondary-color);
 }
 
@@ -7242,14 +7284,21 @@ body.admin-bar .bb-rl-left-panel {
   content: "\e4a6";
 }
 
-.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown a.bb-edit-album::before, .bb-rl-context-wrap .bb-rl-context-dropdown a#bp-edit-folder-open::before,
 .bb-rl-context-wrap .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-context-wrap .bb-rl-context-dropdown button#bp-edit-folder-open::before,
 .bb-rl-context-wrap .bb_more_dropdown a.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown a#bp-edit-folder-open::before,
 .bb-rl-context-wrap .bb_more_dropdown button.bb-edit-album::before,
+.bb-rl-context-wrap .bb_more_dropdown button#bp-edit-folder-open::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown a.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown a#bp-edit-folder-open::before,
 .bb-rl-container .bb_more_options .bb-rl-context-dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb-rl-context-dropdown button#bp-edit-folder-open::before,
 .bb-rl-container .bb_more_options .bb_more_dropdown a.bb-edit-album::before,
-.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-edit-album::before {
+.bb-rl-container .bb_more_options .bb_more_dropdown a#bp-edit-folder-open::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button.bb-edit-album::before,
+.bb-rl-container .bb_more_options .bb_more_dropdown button#bp-edit-folder-open::before {
   content: "\e3b4";
 }
 
@@ -10662,8 +10711,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   --bb-rl-text-warning-secondary-color: #e5a000;
   --bb-rl-text-danger-primary-color: #fdd3d0;
   --bb-rl-text-danger-secondary-color: #ec221f;
-  --bb-rl-icon-color: #ffffff;
-  --bb-rl-icon-primary-color: #ffffff;
+  --bb-rl-icon-color: #fff;
+  --bb-rl-icon-primary-color: #fff;
   --bb-rl-icon-secondary-color: #e7e7e7;
   --bb-rl-icon-tertiary-color: #dbdbdb;
   --bb-rl-icon-disabled-color: #b6b6b6;
