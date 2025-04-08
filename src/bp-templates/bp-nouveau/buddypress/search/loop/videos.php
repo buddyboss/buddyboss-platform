@@ -54,7 +54,7 @@ $video_visibility = bp_get_video_visibility();
 						if ( ! bp_is_user() ) {
 							?>
 							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $video_link ); ?>"><?php bp_video_author(); ?></a></span>
+							<a href="<?php echo esc_url( $video_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_video_user_id() ); ?>"><?php bp_video_author(); ?></a></span>
 							<?php
 						}
 						?>

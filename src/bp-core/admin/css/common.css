@@ -43,6 +43,8 @@ TABLE OF CONTENTS:
 17.0 Domain restriction
 18.0 Redirection Settings
 19.0 Reactions Settings
+20.0 Upgrade
+21.0 Activity Filter & Sorting
 ------------------------------------------------------------------------------*/
 :root {
   --bb-plt-color-black: #000;
@@ -5385,4 +5387,21 @@ h1.bb-advance-heading {
 
 #customize-theme-controls .accordion-section-title button.accordion-trigger {
   height: auto;
+}
+
+/*------------------------------------------------------------------------------
+ * 21.0 Activity Filter & Sorting
+ *----------------------------------------------------------------------------*/
+.bb-activity-sorting-list.ui-sortable .bb-activity-sorting-item {
+  margin-bottom: 10px;
+}
+
+.bb-activity-sorting-list.ui-sortable .bb-activity-sorting-item:before {
+  content: "\edb2";
+  color: #000;
+  font-family: bb-icons;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: move;
+  margin-right: 8px;
 }

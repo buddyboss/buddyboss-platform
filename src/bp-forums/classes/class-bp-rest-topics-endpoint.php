@@ -205,7 +205,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			&& ! empty( $args['orderby'] )
 			&& 'include' === $args['orderby']
 		) {
-			$bbp_t['orderby'] = 'post__in';
+			$args['orderby'] = 'post__in';
 		}
 
 		/**

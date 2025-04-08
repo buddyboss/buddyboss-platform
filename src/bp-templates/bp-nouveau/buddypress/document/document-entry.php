@@ -167,7 +167,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					<?php
 					if ( ! empty( $user_domain ) ) {
 						?>
-						<a href="<?php echo esc_url( trailingslashit( $user_domain ) ); ?>">
+						<a href="<?php echo esc_url( trailingslashit( $user_domain ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_user_id() ); ?>">
 							<?php bp_document_author(); ?>
 						</a>
 						<?php
