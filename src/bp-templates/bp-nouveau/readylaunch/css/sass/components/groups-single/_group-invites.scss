@@ -230,8 +230,8 @@
 			border-color: var(--bb-rl-background-brand-primary-color);
 		}
 
-		input[type="checkbox"]:checked + label::after {
-			line-height: 14px;
+		#bp-invites-dropdown-options-loader {
+			line-height: 1;
 		}
 	}
 
@@ -272,6 +272,10 @@
 		display: flex;
 		flex-direction: column;
 
+		.bb-groups-invites-right-top {
+			margin-bottom: var(--bb-rl-space-200);
+		}
+
 		.bb-groups-invites-right-bottom {
 			margin-top: auto;
 		}
@@ -286,19 +290,18 @@
 		position: relative;
 		top: 43px;
 
-		input[type="submit"] {
-			padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-			font-size: 0.875rem;
-		}
-
 		#send_group_invite_button {
 
+			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
 		}
 
 		#bp_invites_reset {
 
+			@include bb-rl-button;
 			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
 		}
 	}
 }
