@@ -130,7 +130,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 											</g>
 										</svg>
 									</div>
-									<div class="dz-progress-count"><span><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></span></div>
+									<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></div>
 									<div class="dz-video-thumbnail"></div>
 								</div>
 							</div>
