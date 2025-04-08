@@ -14,6 +14,7 @@
 		.bb-rl-group-info-wrap {
 			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 			padding: 12px var(--bb-rl-space-300);
+			gap: var(--bb-rl-space-200);
 
 			&.bb-rl-no-border {
 				border-bottom: 0;
@@ -40,6 +41,10 @@
 				.bb-rl-group-title {
 					font-size: var(--bb-rl-font-size-base);
 				}
+			}
+
+			@media screen and (max-width: $md) {
+				flex-flow: wrap;
 			}
 		}
 
@@ -141,6 +146,11 @@
 					}
 				}
 			}
+
+			@media screen and (max-width: $sm) {
+				flex-flow: wrap;
+				gap: var(--bb-rl-space-200);
+			}
 		}
 
 		.group-actions-absolute {
@@ -154,6 +164,10 @@
 				background: var(--bb-rl-border-secondary-color);
 				display: block;
 				margin: 0 20px;
+
+				@media screen and (max-width: $sm) {
+					display: none;
+				}
 			}
 
 			button.group-button {

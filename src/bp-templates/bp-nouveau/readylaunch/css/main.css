@@ -2164,6 +2164,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   padding: 0;
   display: flex;
   align-items: center;
+  flex-flow: wrap;
 }
 
 .bb-rl-secondary-header #object-nav ul li {
@@ -2196,45 +2197,6 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 /* At who list */
 .atwho-container .atwho-view {
   z-index: var(--bb-rl-z-index-modal);
-}
-
-/* Group and Member single navigations */
-.bb-rl-secondary-header #object-nav {
-  padding: 12px var(--bb-rl-space-300);
-}
-
-.bb-rl-secondary-header #object-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-.bb-rl-secondary-header #object-nav ul li {
-  list-style: none;
-  margin: 0 var(--bb-rl-space-50) 0 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-.bb-rl-secondary-header #object-nav ul li a {
-  color: var(--bb-rl-text-secondary-color);
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  padding: 7px var(--bb-rl-space-200);
-  border-radius: var(--bb-rl-radius-full);
-}
-
-.bb-rl-secondary-header #object-nav ul li a .count {
-  display: none;
-}
-
-.bb-rl-secondary-header #object-nav ul li.selected a,
-.bb-rl-secondary-header #object-nav ul li a:hover {
-  color: var(--bb-rl-text-color);
-  background-color: var(--bb-rl-background-secondary-color);
 }
 
 /**
