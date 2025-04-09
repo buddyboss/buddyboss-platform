@@ -170,6 +170,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
 			}
 
+			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
+
 			$admin_enabled = $this->bb_is_readylaunch_admin_enabled();
 			if ( $admin_enabled ) {
 				add_action( 'admin_enqueue_scripts', array( $this, 'bb_admin_enqueue_scripts' ), 1 );
@@ -621,6 +623,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+		}
+
+		/**
+		 * Enqueue admin styles for ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_admin_enqueue_scripts() {
+			$min = bp_core_get_minified_asset_suffix();
+
+			// BB icon version.
+			$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
+			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
+			
+			// Enqueue BB icons for admin pages
+			wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
 		}
 
 		/**
