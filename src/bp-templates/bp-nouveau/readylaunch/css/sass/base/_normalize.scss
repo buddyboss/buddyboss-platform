@@ -298,6 +298,27 @@ h6 {
 	z-index: var(--bb-rl-z-index-adminbar);
 }
 
+// mce editor
+.bb-readylaunch-template {
+
+	div.mce-panel {
+		background-color: var(--bb-rl-background-color);
+	}
+
+	.wp-editor-container {
+		border-color: var(--bb-rl-border-secondary-color);
+	}
+
+	div.mce-toolbar-grp {
+		border-bottom-color: var(--bb-rl-border-secondary-color);
+		background: var(--bb-rl-background-color);
+	}
+	
+	.mce-toolbar .mce-ico {
+		color: var(--bb-rl-icon-secondary-color);
+	}
+}
+
 @media screen and (max-width: $lg) {
 
 	.bb-rl-left-panel ~ .site.bb-readylaunch {

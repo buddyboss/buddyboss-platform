@@ -460,6 +460,23 @@ h6 {
   z-index: var(--bb-rl-z-index-adminbar);
 }
 
+.bb-readylaunch-template div.mce-panel {
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-readylaunch-template .wp-editor-container {
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-readylaunch-template div.mce-toolbar-grp {
+  border-bottom-color: var(--bb-rl-border-secondary-color);
+  background: var(--bb-rl-background-color);
+}
+
+.bb-readylaunch-template .mce-toolbar .mce-ico {
+  color: var(--bb-rl-icon-secondary-color);
+}
+
 @media screen and (max-width: 992px) {
   .bb-rl-left-panel ~ .site.bb-readylaunch {
     margin-left: 0;
@@ -960,6 +977,7 @@ span.atwho-inserted {
 
 .bb-readylaunch-template .gif-search-query .search-query-input {
   font-size: 13px;
+  background-color: var(--bb-rl-background-color);
   color: var(--bb-rl-text-tertiary-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
@@ -3720,6 +3738,7 @@ button[data-balloon] {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
+  background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
   display: inline-block;
   font-family: inherit;
@@ -3764,6 +3783,7 @@ button[data-balloon] {
   /* stylelint-enable */
   background-repeat: no-repeat;
   background-position: right 0.8rem center;
+  background-color: var(--bb-rl-background-color);
   padding: 6px var(--bb-rl-space-400) 6px var(--bb-rl-space-100);
   border: 1px solid var(--bb-rl-border-secondary-color);
   display: inline-block;
@@ -11772,6 +11792,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-rl-activity-form.bb-rl-focus-in--group #bb-rl-whats-new-post-in-box .activity-autocomplete-wrapper input {
+  background-color: var(--bb-rl-background-color);
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
   padding: var(--bb-rl-space-100) var(--bb-rl-space-400) var(--bb-rl-space-100);
@@ -15326,8 +15347,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   list-style: none;
   margin: 0;
   padding: 0;
-  background-color: #fff;
-  border: 1px solid #e7e9ec;
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
   border-radius: 4px;
 }
 
@@ -15338,6 +15359,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .location-folder-list li span {
+  color: var(--bb-rl-text-secondary-color);
   padding: 8px 15px;
   border-bottom: 1px solid #e7e9ec;
   display: block;

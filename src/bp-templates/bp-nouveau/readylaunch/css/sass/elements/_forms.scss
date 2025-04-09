@@ -29,6 +29,7 @@
 	textarea {
 
 		@include bb-rl-label-heading-md-thin;
+		background-color: var(--bb-rl-background-color);
 		border: 1px solid var(--bb-rl-border-tertiary-color);
 		display: inline-block;
 		font-family: inherit;
@@ -54,6 +55,7 @@
 		/* stylelint-enable */
 		background-repeat: no-repeat;
 		background-position: right 0.8rem center;
+		background-color: var(--bb-rl-background-color);
 		padding: 6px var(--bb-rl-space-400) 6px var(--bb-rl-space-100);
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		display: inline-block;
