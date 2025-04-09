@@ -178,7 +178,7 @@
 			border-radius: 6px;
 
 			.bb-rl-privacy-point-icon:before {
-				color: rgba(0, 0, 0, 0.6);
+				color: var(--bb-rl-icon-secondary-color);
 				font-size: 20px;
 				font-family: bb-icons-rl;
 				line-height: 1;
@@ -644,7 +644,7 @@
 			content: "\e13a";
 			color: var(--bb-rl-icon-secondary-color);
 			font-family: bb-icons-rl;
-			font-size: var(--bb-rl-base-line);
+			font-size: var(--bb-rl-font-size-base);
 			position: absolute;
 			top: var(--bb-rl-space-100);
 			right: var(--bb-rl-space-200);
