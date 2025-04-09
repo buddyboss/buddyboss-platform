@@ -622,30 +622,24 @@ window.bp = window.bp || {};
 			if ( ! media_valid && 'undefined' !== typeof this.topic_reply_draft.data && false !== this.topic_reply_draft.data ) {
 				if (
 					'undefined' !== typeof this.topic_reply_draft.data.bbp_media &&
-					(
-						'' !== this.topic_reply_draft.data.bbp_media &&
-						'[]' !== this.topic_reply_draft.data.bbp_media
-					)
+					'' !== this.topic_reply_draft.data.bbp_media &&
+					'[]' !== this.topic_reply_draft.data.bbp_media
 				) {
 					media_valid = true;
 				}
 
 				if (
 					'undefined' !== typeof this.topic_reply_draft.data.bbp_video &&
-					(
-						'' !== this.topic_reply_draft.data.bbp_video &&
-						'[]' !== this.topic_reply_draft.data.bbp_video
-					)
+					'' !== this.topic_reply_draft.data.bbp_video &&
+					'[]' !== this.topic_reply_draft.data.bbp_video
 				) {
 					media_valid = true;
 				}
 
 				if (
 					'undefined' !== typeof this.topic_reply_draft.data.bbp_document &&
-					(
-						'' !== this.topic_reply_draft.data.bbp_document &&
-						'[]' !== this.topic_reply_draft.data.bbp_document
-					)
+					'' !== this.topic_reply_draft.data.bbp_document &&
+					'[]' !== this.topic_reply_draft.data.bbp_document
 				) {
 					media_valid = true;
 				}
@@ -843,21 +837,19 @@ window.bp = window.bp || {};
 					'' === activity_data.bbp_topic_title &&
 					'' === activity_data.bbp_topic_content &&
 					(
-						(
-							'undefined' === typeof activity_data.bbp_media ||
-							'' === activity_data.bbp_media ||
-							'[]' === activity_data.bbp_media
-						) &&
-						(
-							'undefined' === typeof activity_data.bbp_document ||
-							'' === activity_data.bbp_document ||
-							'[]' === activity_data.bbp_document
-						) &&
-						(
-							'undefined' === typeof activity_data.bbp_video ||
-							'' === activity_data.bbp_video ||
-							'[]' === activity_data.bbp_video
-						)
+						'undefined' === typeof activity_data.bbp_media ||
+						'' === activity_data.bbp_media ||
+						'[]' === activity_data.bbp_media
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_document ||
+						'' === activity_data.bbp_document ||
+						'[]' === activity_data.bbp_document
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_video ||
+						'' === activity_data.bbp_video ||
+						'[]' === activity_data.bbp_video
 					)
 				)
 			) {
@@ -971,25 +963,24 @@ window.bp = window.bp || {};
 				) ||
 				(
 					'' === activity_data.bbp_reply_content &&
-					( 
+					(
 						'undefined' === typeof activity_data.bb_link_url ||
 						 '' === activity_data.bb_link_url
-					) && (
-						(
-							'undefined' === typeof activity_data.bbp_media ||
-							'' === activity_data.bbp_media ||
-							'[]' === activity_data.bbp_media
-						) &&
-						(
-							'undefined' === typeof activity_data.bbp_document ||
-							'' === activity_data.bbp_document ||
-							'[]' === activity_data.bbp_document
-						) &&
-						(
-							'undefined' === typeof activity_data.bbp_video ||
-							'' === activity_data.bbp_video ||
-							'[]' === activity_data.bbp_video
-						)
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_media ||
+						'' === activity_data.bbp_media ||
+						'[]' === activity_data.bbp_media
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_document ||
+						'' === activity_data.bbp_document ||
+						'[]' === activity_data.bbp_document
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_video ||
+						'' === activity_data.bbp_video ||
+						'[]' === activity_data.bbp_video
 					)
 				)
 			) {
