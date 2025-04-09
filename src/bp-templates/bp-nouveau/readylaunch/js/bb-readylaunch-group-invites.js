@@ -26,6 +26,11 @@ window.bp = window.bp || {};
 		}
 	);
 
+	var bpNouveau        = BP_Nouveau,
+	    bbRlAjaxUrl      = bpNouveau.ajaxurl,
+	    bbRlNonces       = bpNouveau.nonces,
+	    bbRlGroupInvites = bpNouveau.group_invites;
+	
 	/**
 	 * [Nouveau description]
 	 *
@@ -71,7 +76,7 @@ window.bp = window.bp || {};
 			// Set Feedback for all members.
 			self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackSelectorLeftClass.addClass( 'loading' );
-			self.selectors.feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+			self.selectors.feedbackParagraphTagSelectorLeft.html( bbRlGroupInvites.loading );
 
 			$( '#group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 
@@ -85,7 +90,7 @@ window.bp = window.bp || {};
 						}
 					);
 					$( '#group-invites-container .bb-groups-invites-left #members-list li.' + data.id ).removeClass( 'selected' );
-					$( '#group-invites-container .bb-groups-invites-left #members-list li.' + data.id + ' .action button' ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.add_recipient );
+					$( '#group-invites-container .bb-groups-invites-left #members-list li.' + data.id + ' .action button' ).attr( 'data-bp-tooltip', bbRlGroupInvites.add_recipient );
 				}
 			);
 
@@ -122,8 +127,8 @@ window.bp = window.bp || {};
 				$( '.groups.group-invites.pending-invites .subnav #pending-invites-groups-li' ).addClass( 'current selected' );
 				var data = {
 					'action'   : 'groups_get_group_potential_invites',
-					'nonce'    : BP_Nouveau.nonces.groups,
-					'group_id' : BP_Nouveau.group_invites.group_id,
+					'nonce'    : bbRlNonces.groups,
+					'group_id' : bbRlGroupInvites.group_id,
 					'scope'    : 'invited',
 					'page'     : self.selectors.page
 				};
@@ -131,7 +136,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						type    : 'POST',
-						url     : BP_Nouveau.ajaxurl,
+						url     : bbRlAjaxUrl,
 						async   : false,
 						data    : data,
 						success : function ( response ) {
@@ -161,8 +166,8 @@ window.bp = window.bp || {};
 
 				var param = {
 					'action'   : 'groups_get_group_potential_invites',
-					'nonce'    : BP_Nouveau.nonces.groups,
-					'group_id' : BP_Nouveau.group_invites.group_id,
+					'nonce'    : bbRlNonces.groups,
+					'group_id' : bbRlGroupInvites.group_id,
 					'scope'    : 'members',
 					'page'     : self.selectors.page
 				};
@@ -170,7 +175,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						type    : 'POST',
-						url     : BP_Nouveau.ajaxurl,
+						url     : bbRlAjaxUrl,
 						async   : false,
 						data    : param,
 						success : function ( response ) {
@@ -323,8 +328,8 @@ window.bp = window.bp || {};
 				self.selectors.page = 1;
 				var param           = {
 					'action'   : 'groups_get_group_potential_invites',
-					'nonce'    : BP_Nouveau.nonces.groups,
-					'group_id' : BP_Nouveau.group_invites.group_id,
+					'nonce'    : bbRlNonces.groups,
+					'group_id' : bbRlGroupInvites.group_id,
 					'scope'    : self.selectors.scope,
 					'page'     : self.selectors.page
 				};
@@ -332,12 +337,12 @@ window.bp = window.bp || {};
 				self.selectors.feedbackSelectorLeftClass.show().parent().show();
 				self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 				self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
-				self.selectors.feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+				self.selectors.feedbackParagraphTagSelectorLeft.html( bbRlGroupInvites.loading );
 
 				$.ajax(
 					{
 						type    : 'POST',
-						url     : BP_Nouveau.ajaxurl,
+						url     : bbRlAjaxUrl,
 						async   : false,
 						data    : param,
 						success : function ( response ) {
@@ -379,8 +384,8 @@ window.bp = window.bp || {};
 				var page  = 1;
 				var param = {
 					'action'   : 'groups_get_group_potential_invites',
-					'nonce'    : BP_Nouveau.nonces.groups,
-					'group_id' : BP_Nouveau.group_invites.group_id,
+					'nonce'    : bbRlNonces.groups,
+					'group_id' : bbRlGroupInvites.group_id,
 					'scope'    : scope,
 					'page'     : page
 				};
@@ -388,7 +393,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						type    : 'POST',
-						url     : BP_Nouveau.ajaxurl,
+						url     : bbRlAjaxUrl,
 						async   : false,
 						data    : param,
 						success : function ( response ) {
@@ -429,8 +434,8 @@ window.bp = window.bp || {};
 				var page = 1;
 				var data = {
 					'action'   : 'groups_get_group_potential_invites',
-					'nonce'    : BP_Nouveau.nonces.groups,
-					'group_id' : BP_Nouveau.group_invites.group_id,
+					'nonce'    : bbRlNonces.groups,
+					'group_id' : bbRlGroupInvites.group_id,
 					'scope'    : valueSelected,
 					'page'     : page
 				};
@@ -438,7 +443,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						type    : 'POST',
-						url     : BP_Nouveau.ajaxurl,
+						url     : bbRlAjaxUrl,
 						data    : data,
 						success : function ( response ) {
 							if ( response.success ) {
@@ -458,7 +463,7 @@ window.bp = window.bp || {};
 										function ( index, value ) {
 											if ( value ) {
 												$( '#members-list li.' + value ).addClass( 'selected' );
-												$( '#members-list li.' + value + ' .action button' ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.cancel_invite_tooltip );
+												$( '#members-list li.' + value + ' .action button' ).attr( 'data-bp-tooltip', bbRlGroupInvites.cancel_invite_tooltip );
 											}
 										}
 									);
@@ -515,7 +520,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				$button.attr( 'data-bp-tooltip', BP_Nouveau.group_invites.add_invite_tooltip );
+				$button.attr( 'data-bp-tooltip', bbRlGroupInvites.add_invite_tooltip );
 
 			} else {
 				$button.closest( 'li' ).addClass( 'selected' );
@@ -524,7 +529,7 @@ window.bp = window.bp || {};
 					$( newOption ).attr( 'data-avatar', data.avatar );
 					self.selectors.groupInvitesSelect.append( newOption ).trigger( 'change' );
 				}
-				$button.attr( 'data-bp-tooltip', BP_Nouveau.group_invites.cancel_invite_tooltip );
+				$button.attr( 'data-bp-tooltip', bbRlGroupInvites.cancel_invite_tooltip );
 			}
 		},
 
@@ -540,8 +545,8 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action'       : 'groups_get_group_potential_invites',
-				'nonce'        : BP_Nouveau.nonces.groups,
-				'group_id'     : BP_Nouveau.group_invites.group_id,
+				'nonce'        : bbRlNonces.groups,
+				'group_id'     : bbRlGroupInvites.group_id,
 				'scope'        : self.selectors.scope,
 				'page'         : self.selectors.page,
 				'search_terms' : $( '#group-invites-container .bb-groups-invites-left #group_invites_search' ).val()
@@ -550,7 +555,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -603,9 +608,9 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action'   : 'groups_send_group_invites',
-				'nonce'    : BP_Nouveau.nonces.groups,
-				'_wpnonce' : BP_Nouveau.group_invites.nonces.send_invites,
-				'group_id' : BP_Nouveau.group_invites.group_id,
+				'nonce'    : bbRlNonces.groups,
+				'_wpnonce' : bbRlGroupInvites.nonces.send_invites,
+				'group_id' : bbRlGroupInvites.group_id,
 				'message'  : $( 'textarea#send-invites-control' ).val(),
 				'users'    : users_list
 			};
@@ -615,7 +620,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -629,7 +634,7 @@ window.bp = window.bp || {};
 									self.selectors.feedbackParagraphTagClass.removeClass( response.data.type );
 									self.selectors.feedbackParagraphTagClass.addClass( 'info' );
 									self.selectors.feedbackParagraphTagSelector.html( '' );
-									self.selectors.feedbackParagraphTagSelector.html( BP_Nouveau.group_invites.member_invite_info_text );
+									self.selectors.feedbackParagraphTagSelector.html( bbRlGroupInvites.member_invite_info_text );
 									$( '#group-invites-container .bb-groups-invites-right .bp-invites-submit-loader-hide' ).hide();
 								},
 								4000
@@ -646,8 +651,8 @@ window.bp = window.bp || {};
 							self.selectors.page = 1;
 							var data            = {
 								'action'   : 'groups_get_group_potential_invites',
-								'nonce'    : BP_Nouveau.nonces.groups,
-								'group_id' : BP_Nouveau.group_invites.group_id,
+								'nonce'    : bbRlNonces.groups,
+								'group_id' : bbRlGroupInvites.group_id,
 								'scope'    : self.selectors.scope,
 								'page'     : self.selectors.page
 							};
@@ -655,7 +660,7 @@ window.bp = window.bp || {};
 							$.ajax(
 								{
 									type    : 'POST',
-									url     : BP_Nouveau.ajaxurl,
+									url     : bbRlAjaxUrl,
 									async   : false,
 									data    : data,
 									success : function ( response ) {
@@ -690,7 +695,7 @@ window.bp = window.bp || {};
 									self.selectors.feedbackParagraphTagClass.removeClass( response.data.type );
 									self.selectors.feedbackParagraphTagClass.addClass( 'info' );
 									self.selectors.feedbackParagraphTagSelector.html( '' );
-									self.selectors.feedbackParagraphTagSelector.html( BP_Nouveau.group_invites.member_invite_info_text );
+									self.selectors.feedbackParagraphTagSelector.html( bbRlGroupInvites.member_invite_info_text );
 									$( '#group-invites-container .bb-groups-invites-right .bp-invites-submit-loader-hide' ).hide();
 								},
 								4000
@@ -719,8 +724,8 @@ window.bp = window.bp || {};
 			}
 			var data = {
 				'action'   : 'groups_get_group_potential_invites',
-				'nonce'    : BP_Nouveau.nonces.groups,
-				'group_id' : BP_Nouveau.group_invites.group_id,
+				'nonce'    : bbRlNonces.groups,
+				'group_id' : bbRlGroupInvites.group_id,
 				'scope'    : self.selectors.scope,
 				'page'     : self.selectors.page
 			};
@@ -728,7 +733,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					async   : false,
 					data    : data,
 					success : function ( response ) {
@@ -781,8 +786,8 @@ window.bp = window.bp || {};
 			}
 			var data = {
 				'action'       : 'groups_get_group_potential_invites',
-				'nonce'        : BP_Nouveau.nonces.groups,
-				'group_id'     : BP_Nouveau.group_invites.group_id,
+				'nonce'        : bbRlNonces.groups,
+				'group_id'     : bbRlGroupInvites.group_id,
 				'scope'        : self.selectors.scope,
 				'page'         : self.selectors.page,
 				'search_terms' : searchText
@@ -791,7 +796,7 @@ window.bp = window.bp || {};
 			self.selectors.feedbackSelectorLeftClass.show().parent().show();
 			self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
-			self.selectors.feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+			self.selectors.feedbackParagraphTagSelectorLeft.html( bbRlGroupInvites.loading );
 			var form = $( event.currentTarget ).closest( 'form' );
 			form.addClass( 'is-loading' );
 			$( 'button.search-form_reset' ).hide();
@@ -799,7 +804,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -846,8 +851,8 @@ window.bp = window.bp || {};
 			}
 			var data = {
 				'action'       : 'groups_get_group_potential_invites',
-				'nonce'        : BP_Nouveau.nonces.groups,
-				'group_id'     : BP_Nouveau.group_invites.group_id,
+				'nonce'        : bbRlNonces.groups,
+				'group_id'     : bbRlGroupInvites.group_id,
 				'scope'        : self.selectors.scope,
 				'page'         : self.selectors.page,
 				'search_terms' : searchText
@@ -859,7 +864,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -894,12 +899,12 @@ window.bp = window.bp || {};
 			var self = this;
 			self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackSelectorLeftClass.addClass( 'loading' );
-			self.selectors.feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+			self.selectors.feedbackParagraphTagSelectorLeft.html( bbRlGroupInvites.loading );
 
 			var data = {
 				'action'       : 'groups_get_group_potential_invites',
-				'nonce'        : BP_Nouveau.nonces.groups,
-				'group_id'     : BP_Nouveau.group_invites.group_id,
+				'nonce'        : bbRlNonces.groups,
+				'group_id'     : bbRlGroupInvites.group_id,
 				'scope'        : 'invited',
 				'page'         : self.selectors.page,
 				'search_terms' : $( '#group-invites-container .group-invites-column #group_invites_search' ).val()
@@ -908,7 +913,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -935,13 +940,13 @@ window.bp = window.bp || {};
 			var self = this;
 			$( '#group-invites-container .bp-invites-feedback' ).show();
 			$( '#group-invites-container .bp-invites-feedback .bp-feedback' ).addClass( 'info' );
-			self.selectors.feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
+			self.selectors.feedbackInvitePTag.html( bbRlGroupInvites.loading );
 			self.selectors.page = self.selectors.page - 1;
 
 			var data = {
 				'action'       : 'groups_get_group_potential_invites',
-				'nonce'        : BP_Nouveau.nonces.groups,
-				'group_id'     : BP_Nouveau.group_invites.group_id,
+				'nonce'        : bbRlNonces.groups,
+				'group_id'     : bbRlGroupInvites.group_id,
 				'scope'        : 'invited',
 				'page'         : self.selectors.page,
 				'search_terms' : $( '#group-invites-container .group-invites-column #group_invites_search' ).val()
@@ -950,7 +955,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -979,8 +984,8 @@ window.bp = window.bp || {};
 				self.selectors.page = 1;
 				var data            = {
 					'action'   : 'groups_get_group_potential_invites',
-					'nonce'    : BP_Nouveau.nonces.groups,
-					'group_id' : BP_Nouveau.group_invites.group_id,
+					'nonce'    : bbRlNonces.groups,
+					'group_id' : bbRlGroupInvites.group_id,
 					'scope'    : 'invited',
 					'page'     : self.selectors.page
 				};
@@ -988,12 +993,12 @@ window.bp = window.bp || {};
 				self.selectors.feedbackInviteColumn.show().parents( '.bp-invites-feedback' ).show();
 				self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 				self.selectors.feedbackInviteColumn.addClass( 'info' );
-				self.selectors.feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
+				self.selectors.feedbackInvitePTag.html( bbRlGroupInvites.loading );
 
 				$.ajax(
 					{
 						type    : 'POST',
-						url     : BP_Nouveau.ajaxurl,
+						url     : bbRlAjaxUrl,
 						async   : false,
 						data    : data,
 						success : function ( response ) {
@@ -1031,8 +1036,8 @@ window.bp = window.bp || {};
 			self.selectors.page = 1;
 			var data            = {
 				'action'       : 'groups_get_group_potential_invites',
-				'nonce'        : BP_Nouveau.nonces.groups,
-				'group_id'     : BP_Nouveau.group_invites.group_id,
+				'nonce'        : bbRlNonces.groups,
+				'group_id'     : bbRlGroupInvites.group_id,
 				'scope'        : 'invited',
 				'page'         : self.selectors.page,
 				'search_terms' : searchText
@@ -1041,12 +1046,12 @@ window.bp = window.bp || {};
 			self.selectors.feedbackInviteColumn.show().parents( '.bp-invites-feedback' ).show();
 			self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackInviteColumn.addClass( 'info' );
-			self.selectors.feedbackInvitePTag.html( BP_Nouveau.group_invites.loading );
+			self.selectors.feedbackInvitePTag.html( bbRlGroupInvites.loading );
 
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -1079,22 +1084,22 @@ window.bp = window.bp || {};
 			self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackInviteColumn.addClass( 'loading' );
 			self.selectors.feedbackInvitePTag.html( '' );
-			self.selectors.feedbackInvitePTag.html( BP_Nouveau.group_invites.removing );
+			self.selectors.feedbackInvitePTag.html( bbRlGroupInvites.removing );
 
 			var li = $( event.currentTarget ).closest( 'li' );
 
 			var data = {
 				'action'   : 'groups_delete_group_invite',
-				'nonce'    : BP_Nouveau.nonces.groups,
-				'_wpnonce' : BP_Nouveau.group_invites.nonces.uninvite,
-				'group_id' : BP_Nouveau.group_invites.group_id,
+				'nonce'    : bbRlNonces.groups,
+				'_wpnonce' : bbRlGroupInvites.nonces.uninvite,
+				'group_id' : bbRlGroupInvites.group_id,
 				'user'     : $( event.currentTarget ).attr( 'data-bp-user-id' )
 			};
 
 			$.ajax(
 				{
 					type    : 'POST',
-					url     : BP_Nouveau.ajaxurl,
+					url     : bbRlAjaxUrl,
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
@@ -1109,8 +1114,8 @@ window.bp = window.bp || {};
 							self.selectors.page = 1;
 							var data            = {
 								'action'   : 'groups_get_group_potential_invites',
-								'nonce'    : BP_Nouveau.nonces.groups,
-								'group_id' : BP_Nouveau.group_invites.group_id,
+								'nonce'    : bbRlNonces.groups,
+								'group_id' : bbRlGroupInvites.group_id,
 								'scope'    : 'invited',
 								'page'     : self.selectors.page
 							};
@@ -1118,7 +1123,7 @@ window.bp = window.bp || {};
 							$.ajax(
 								{
 									type    : 'POST',
-									url     : BP_Nouveau.ajaxurl,
+									url     : bbRlAjaxUrl,
 									async   : false,
 									data    : data,
 									success : function ( response ) {
@@ -1199,9 +1204,9 @@ window.bp = window.bp || {};
 								{},
 								params,
 								{
-									nonce  : BP_Nouveau.group_invites.nonces.retrieve_group_members,
+									nonce  : bbRlGroupInvites.nonces.retrieve_group_members,
 									action : 'groups_get_group_potential_user_send_invites',
-									group  : BP_Nouveau.group_invites.group_id
+									group  : bbRlGroupInvites.group_id
 								}
 							);
 						},
