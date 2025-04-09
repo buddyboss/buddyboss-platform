@@ -732,7 +732,7 @@ window.bp = window.bp || {};
 				}
 
 				// Check if emoji is enabled for the current context.
-				if ( ! _.isUndefined( bbRlMedia.emoji[ contextKey ] ) && false === bbRlMedia.emoji[ contextKey ] ) {
+				if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) && ! _.isUndefined( bbRlMedia.emoji[ contextKey ] ) && false === bbRlMedia.emoji[ contextKey ] ) {
 					emojiElement.remove();
 					$postEmoji.addClass( 'bb-rl-post-emoji-hide' );
 				} else {
@@ -835,8 +835,10 @@ window.bp = window.bp || {};
 				types               = ['media', 'document', 'video'],
 				typesLength         = types.length;
 			for ( var i = 0; i < typesLength; i++ ) {
-				// Sync profile/group media/document/video.
-				$this.syncMediaDocVideo( activity_data, types[ i ], is_profile_activity );
+				if ( !_.isUndefined( BP_Nouveau[ types[ i ] ] ) ) {
+					// Sync profile/group media/document/video.
+					$this.syncMediaDocVideo( activity_data, types[ i ], is_profile_activity );
+				}
 			}
 
 			setTimeout(
@@ -4984,7 +4986,7 @@ window.bp = window.bp || {};
 
 				var medias      = self.model.get( 'media' ),
 					modelObject = self.model.get( 'object' ),
-					mediaLength = medias.length;
+					mediaLength = medias && medias.length;
 				if ( 'group' === modelObject && ! _.isUndefined( medias ) && mediaLength ) {
 					for ( var k = 0; k < mediaLength; k++ ) {
 						medias[ k ].group_id = self.model.get( 'item_id' );
@@ -4993,7 +4995,7 @@ window.bp = window.bp || {};
 				}
 
 				var document       = self.model.get( 'document' ),
-					documentLength = document.length;
+					documentLength = document && document.length;
 				if ( 'group' === modelObject && ! _.isUndefined( document ) && documentLength ) {
 					for ( var d = 0; d < documentLength; d++ ) {
 						document[ d ].group_id = self.model.get( 'item_id' );
@@ -5002,7 +5004,7 @@ window.bp = window.bp || {};
 				}
 
 				var video       = self.model.get( 'video' ),
-					videoLength = video.length;
+					videoLength = video && video.length;
 				if ( 'group' === modelObject && ! _.isUndefined( video ) && videoLength ) {
 					for ( var v = 0; v < videoLength; v++ ) {
 						video[ v ].group_id = self.model.get( 'item_id' );
@@ -5164,7 +5166,7 @@ window.bp = window.bp || {};
 						}
 
 						var medias       = self.model.get( 'media' ),
-							mediasLength = medias.length;
+							mediasLength = medias && medias.length;
 						if ( ! _.isUndefined( medias ) && mediasLength ) {
 							for ( var k = 0; k < mediasLength; k++ ) {
 								medias[ k ].saved = true;
@@ -5178,7 +5180,7 @@ window.bp = window.bp || {};
 						}
 
 						var documents       = self.model.get( 'document' ),
-							documentsLength = documents.length;
+							documentsLength = documents && documents.length;
 						if ( ! _.isUndefined( documents ) && documentsLength ) {
 							for ( var d = 0; d < documentsLength; d++ ) {
 								documents[ d ].saved = true;
@@ -5187,7 +5189,7 @@ window.bp = window.bp || {};
 						}
 
 						var videos       = self.model.get( 'video' ),
-							videosLength = videos.length;
+							videosLength = videos && videos.length;
 						if ( ! _.isUndefined( videos ) && videosLength ) {
 							for ( var v = 0; v < videosLength; v++ ) {
 								videos[ v ].saved = true;
@@ -5546,7 +5548,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				// check gif is enable in profile or not.
 				var $postGif = $( '#bb-rl-whats-new-toolbar .bb-rl-post-gif' );
-				if ( ( ! _.isUndefined( bbRlMedia.gif.profile ) && bbRlMedia.gif.profile === false ) || bbRlMedia.gif_api_key === '' ) {
+				if ( _.isUndefined( bbRlMedia ) || _.isUndefined( bbRlMedia.gif ) || ( !_.isUndefined( bbRlMedia.gif.profile ) && bbRlMedia.gif.profile === false ) || _.isUndefined( bbRlMedia.gif_api_key ) || bbRlMedia.gif_api_key === '' ) {
 					$postGif.removeClass( 'active' ).addClass( 'bb-rl-post-gif-hide' );
 				} else {
 					$postGif.removeClass( 'bb-rl-post-gif-hide' );
@@ -5560,7 +5562,7 @@ window.bp = window.bp || {};
 			initialize: function () {
 				// check gif is enable in groups or not.
 				var $postGif = $( '#bb-rl-whats-new-toolbar .bb-rl-post-gif' );
-				if ( ( ! _.isUndefined( bbRlMedia.gif.groups ) && bbRlMedia.gif.groups === false ) || bbRlMedia.gif_api_key === '' ) {
+				if ( _.isUndefined( bbRlMedia ) || _.isUndefined( bbRlMedia.gif ) || ( !_.isUndefined( bbRlMedia.gif.groups ) && bbRlMedia.gif.groups === false ) || _.isUndefined( bbRlMedia.gif_api_key ) || bbRlMedia.gif_api_key === '' ) {
 					$postGif.removeClass( 'active' ).addClass( 'bb-rl-post-gif-hide' );
 				} else {
 					$postGif.removeClass( 'bb-rl-post-gif-hide' );
@@ -5624,7 +5626,7 @@ window.bp = window.bp || {};
 		}
 
 		// Check if emoji is enabled for the current context.
-		if ( ! _.isUndefined( bbRlMedia.emoji[ contextKey ] ) && false === bbRlMedia.emoji[ contextKey ] ) {
+		if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.emoji ) && ! _.isUndefined( bbRlMedia.emoji[ contextKey ] ) && false === bbRlMedia.emoji[ contextKey ] ) {
 			emojiElement.remove();
 			$postEmoji.addClass( 'bb-rl-post-emoji-hide' );
 		} else {
