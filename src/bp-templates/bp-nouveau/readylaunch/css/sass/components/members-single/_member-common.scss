@@ -356,6 +356,44 @@
 				display: inline-block;
 			}
 		}
+
+		.sent-invites & {
+
+			th.title {
+
+				@include bb-rl-label-heading-md;
+				color: var(--bb-rl-text-tertiary-color);
+
+				&:last-of-type {
+					text-align: right;
+					display: none;
+				}
+			}
+
+			td:not(.bp-pagination) {
+
+				span {
+
+					@include bb-rl-label-heading-md;
+				}
+
+				.revoked-access {
+
+					@include bb-rl-button;
+					@include bb-rl-button--secondary-outline;
+					@include bb-rl-button--small;
+
+					span {
+						font-weight: 400;
+						font-size: 20px;
+					}
+				}
+
+				&:last-of-type {
+					text-align: right;
+				}
+			}
+		}
 	}
 
 	#send-invite-form {
