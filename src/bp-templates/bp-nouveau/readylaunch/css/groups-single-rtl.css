@@ -1438,6 +1438,43 @@
   margin-bottom: var(--bb-rl-space-100);
 }
 
+.bb-rl-group-manage-form .bb-group-zoom-settings-container .bb-section-title-wrap .bb-wizard-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  margin-left: 0;
+}
+
+.bb-rl-group-manage-form .bb-group-zoom-settings-container .bb-section-title-wrap .bb-wizard-button:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-group-manage-form .bb-group-zoom-settings-container .bb-section-title-wrap .bb-wizard-button:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-group-manage-form .bb-group-zoom-settings-container .bb-section-title-wrap .bb-wizard-button:disabled {
+  border-color: var(--bb-rl-border-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+#buddypress .bb-rl-manage-group-container .bb-group-zoom-settings-container .bb-field-wrap .is-disabled {
+  background-color: var(--bb-rl-background-color);
+}
+
 .bb-rl-group-settings select {
   width: 245px;
 }
@@ -1907,18 +1944,18 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   border-radius: 50%;
 }
 
-#group_invites_search_form {
+.bb-rl-group-invites-container #group_invites_search_form {
   position: relative;
 }
 
-#group_invites_search_form #group_invites_search {
+.bb-rl-group-invites-container #group_invites_search_form #group_invites_search {
   border-radius: var(--bb-rl-radius-full);
   padding-right: var(--bb-rl-space-400);
   padding-left: var(--bb-rl-space-400);
   width: 100%;
 }
 
-#group_invites_search_form button[type="submit"] {
+.bb-rl-group-invites-container #group_invites_search_form button[type="submit"] {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -1929,7 +1966,11 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   line-height: 1;
 }
 
-#group_invites_search_form .search-form_reset {
+.bb-rl-group-invites-container #group_invites_search_form button[type="submit"] span {
+  color: var(--bb-rl-icon-secondary-color);
+}
+
+.bb-rl-group-invites-container #group_invites_search_form .search-form_reset {
   display: none;
   background-color: transparent;
   border: 0;

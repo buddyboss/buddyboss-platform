@@ -4,8 +4,8 @@
 	.bp-pagination {
 		display: flex;
 		align-items: center;
-		margin-top: var(--bb-rl-space-400);
-		margin-bottom: var(--bb-rl-space-400);
+		padding-top: var(--bb-rl-space-400);
+		padding-bottom: var(--bb-rl-space-400);
 
 		> .pag-count {
 			display: none;

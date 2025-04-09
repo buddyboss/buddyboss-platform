@@ -581,6 +581,21 @@
 			margin-bottom: var(--bb-rl-space-100);
 		}
 	}
+
+	.bb-group-zoom-settings-container .bb-section-title-wrap .bb-wizard-button {
+
+		@include bb-rl-button;
+		@include bb-rl-button--secondary-outline;
+		@include bb-rl-button--small;
+		margin-right: 0;
+	}
+}
+
+#buddypress .bb-rl-manage-group-container {
+
+	.bb-group-zoom-settings-container .bb-field-wrap .is-disabled {
+		background-color: var(--bb-rl-background-color);
+	}
 }
 
 .bb-rl-group-settings {

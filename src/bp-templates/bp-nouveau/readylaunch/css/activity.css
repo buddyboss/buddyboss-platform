@@ -4188,7 +4188,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 /* Image Move Modal */
-.location-album-list {
+.bb-readylaunch-template .location-album-list {
   list-style: none;
   overflow: auto;
   max-height: 230px;
@@ -4199,11 +4199,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-md);
 }
 
-.location-album-list li {
+.bb-readylaunch-template .location-album-list li {
   position: relative;
 }
 
-.location-album-list li span {
+.bb-readylaunch-template .location-album-list li span {
   display: flex;
   align-items: center;
   font-size: var(--bb-rl-font-size-sm);
@@ -4216,11 +4216,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
 }
 
-.location-album-list li span.selected {
+.bb-readylaunch-template .location-album-list li span.selected {
   background-color: var(--bb-rl-background-secondary-color);
 }
 
-.location-album-list li span:before {
+.bb-readylaunch-template .location-album-list li span:before {
   content: "\e834";
   color: var(--bb-rl-icon-secondary-color);
   font-family: bb-icons-rl;
@@ -4228,11 +4228,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-right: 12px;
 }
 
-.location-album-list li:last-child span {
+.bb-readylaunch-template .location-album-list li:last-child span {
   border-bottom: 0;
 }
 
-.location-album-list.is-loading {
+.bb-readylaunch-template .location-album-list.is-loading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4241,7 +4241,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   min-height: 230px;
 }
 
-.location-album-list.is-loading .bb-icon-spinner:before {
+.bb-readylaunch-template .location-album-list.is-loading .bb-icon-spinner {
+  height: 22px;
+}
+
+.bb-readylaunch-template .location-album-list.is-loading .bb-icon-spinner:before {
   content: "";
   display: inline-block;
   height: 22px;

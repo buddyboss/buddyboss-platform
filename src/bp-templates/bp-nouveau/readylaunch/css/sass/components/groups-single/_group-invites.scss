@@ -391,7 +391,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 	}
 }
 
-#group_invites_search_form {
+.bb-rl-group-invites-container #group_invites_search_form {
 	position: relative;
 
 	#group_invites_search {
@@ -410,6 +410,10 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 		background-color: transparent;
 		padding: 0;
 		line-height: 1;
+
+		span {
+			color: var(--bb-rl-icon-secondary-color);
+		}
 	}
 
 	.search-form_reset {

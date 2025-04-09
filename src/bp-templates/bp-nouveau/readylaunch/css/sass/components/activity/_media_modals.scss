@@ -144,7 +144,7 @@
 }
 
 /* Image Move Modal */
-.location-album-list {
+.bb-readylaunch-template .location-album-list {
 	list-style: none;
 	overflow: auto;
 	max-height: 230px;
@@ -194,6 +194,10 @@
 		overflow: auto;
 		max-height: 230px;
 		min-height: 230px;
+
+		.bb-icon-spinner {
+			height: 22px;
+		}
 
 		.bb-icon-spinner:before {
 			content: "";
