@@ -1613,7 +1613,8 @@ window.bp = window.bp || {};
 
 									if (
 										'undefined' !== typeof response.data &&
-										'undefined' !== typeof response.data.video_personal_count
+										'undefined' !== typeof response.data.video_personal_count &&
+										$( '#buddypress .bp-wrap .users-nav' ).length > 0
 									) {
 
 										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
@@ -1629,8 +1630,22 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( response.data.video_group_count ) {
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+									if (
+										'undefined' !== typeof response.data &&
+										'undefined' !== typeof response.data.video_group_count &&
+										$( '#buddypress .bp-wrap .groups-nav' ).length > 0
+									) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === parseInt( response.data.video_group_count ) ?
+												BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+										}
 									}
 
 									if ( 0 !== response.data.video_html_content.length ) {
@@ -1675,7 +1690,8 @@ window.bp = window.bp || {};
 							if ( response.success ) {
 								if (
 									'undefined' !== typeof response.data &&
-									'undefined' !== typeof response.data.video_personal_count
+									'undefined' !== typeof response.data.video_personal_count &&
+									$( '#buddypress .bp-wrap .users-nav' ).length > 0
 								) {
 
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
@@ -1693,7 +1709,8 @@ window.bp = window.bp || {};
 
 								if (
 									'undefined' !== typeof response.data &&
-									'undefined' !== typeof response.data.video_group_count
+									'undefined' !== typeof response.data.video_group_count &&
+									$( '#buddypress .bp-wrap .groups-nav' ).length > 0
 								) {
 									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
 										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
