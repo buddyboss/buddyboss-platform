@@ -4487,6 +4487,16 @@ window.bp = window.bp || {};
 
 				this.listenTo( Backbone, 'triggerToastMessage', this.triggerToastMessage );
 
+				// Listen for poll changes and update form state.
+				this.model.on( 'change:poll', function ( model ) {
+					if ( model.get( 'poll' ) ) {
+						var $form = $( '#bb-rl-whats-new-form' );
+						if ( $form.hasClass( 'bb-rl-focus-in--empty' ) ) {
+							$form.removeClass( 'bb-rl-focus-in--empty' );
+						}
+					}
+				} );
+
 				if ( 'user' === bbRlActivity.params.object ) {
 					if ( ! bbRlActivity.params.access_control_settings.can_create_activity ) {
 						this.$el.addClass( 'bp-hide' );
