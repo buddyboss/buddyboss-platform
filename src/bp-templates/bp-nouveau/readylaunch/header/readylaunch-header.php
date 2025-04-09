@@ -19,7 +19,17 @@ defined( 'ABSPATH' ) || exit;
 	<?php wp_head(); ?>
 </head>
 
-<body <?php body_class( 'bb-readylaunch-template' ); ?>>
+<?php
+	// Read cookie dark mode and add class to body
+	$dark_mode = isset( $_COOKIE['bb-rl-dark-mode'] ) ? $_COOKIE['bb-rl-dark-mode'] : 'false';
+	if ( $dark_mode === 'true' ) {
+		$dark_mode_class = 'bb-rl-dark-mode';
+	} else {
+		$dark_mode_class = '';
+	}
+?>
+
+<body <?php body_class( 'bb-readylaunch-template ' . $dark_mode_class ); ?>>
 <?php
 wp_body_open();
 bp_get_template_part( 'sidebar/left-sidebar' );

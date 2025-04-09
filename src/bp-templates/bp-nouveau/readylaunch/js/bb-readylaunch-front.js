@@ -375,6 +375,12 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( 'body' ).toggleClass( 'bb-rl-dark-mode' );
+
+				if( $( 'body' ).hasClass( 'bb-rl-dark-mode' ) ) {
+					$.cookie( 'bb-rl-dark-mode', 'true', { expires: 365 } );
+				} else {
+					$.cookie( 'bb-rl-dark-mode', 'false', { expires: 365 } );
+				}
 			},
 
 			/**
