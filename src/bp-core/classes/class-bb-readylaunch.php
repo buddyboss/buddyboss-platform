@@ -230,7 +230,28 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		private function bb_is_readylaunch_enabled() {
-			if ( ! empty( $this->settings['enabled'] ) ) {
+			if (
+				! empty( $this->settings['enabled'] ) &&
+				(
+					bp_is_members_directory() ||
+					bp_is_video_directory() ||
+					bp_is_media_directory() ||
+					bp_is_document_directory() ||
+					bp_is_activity_directory() ||
+					bp_is_groups_directory() ||
+					bp_is_group_single() ||
+					bp_is_group_activity() ||
+					bp_is_group_create() ||
+					bp_is_user() ||
+					bp_is_single_activity() ||
+					bp_is_user_activity() ||
+					bp_is_messages_component() ||
+					bp_is_current_component( 'video' ) ||
+					bp_is_current_component( 'media' ) ||
+					is_admin() ||
+					wp_doing_ajax()
+				)
+			) {
 				return true;
 			}
 
