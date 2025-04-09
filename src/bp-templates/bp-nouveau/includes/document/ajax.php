@@ -1003,7 +1003,7 @@ function bp_nouveau_ajax_document_move() {
 				<?php
 			}
 		} else {
-			bp_nouveau_user_feedback( 'media-loop-document-none' );
+			bp_get_template_part( 'document/no-document' );
 		}
 
 		$content .= ob_get_clean();
@@ -1383,7 +1383,7 @@ function bp_nouveau_ajax_document_delete() {
 
 	else :
 
-		bp_nouveau_user_feedback( 'media-loop-document-none' );
+		bp_get_template_part( 'document/no-document' );
 
 	endif;
 

@@ -393,7 +393,7 @@ window.bp = window.bp || {};
 								} else {
 									// It's the very first media, let's make sure the container can welcome it!
 									if ( ! $videoStream.length ) {
-										$( '#video-stream .bp-feedback' ).remove();
+										$( '#video-stream .bb-rl-media-none' ).remove();
 										$( '#video-stream' ).append( '<ul class="video-list item-list bp-list bb-video-list grid"></ul>' );
 										$( '.bb-videos-actions' ).show();
 									}
