@@ -31,7 +31,7 @@ function bp_profile_search_show_form() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_profile_search_escaped_form_data( $form = false, $is_rest = false ) {
+function bp_profile_search_escaped_form_data( $form = false ) {
 	if ( empty( $form ) ) {
 		$form = bp_profile_search_main_form();
 	}
@@ -181,14 +181,14 @@ function bp_profile_search_escaped_form_data( $form = false, $is_rest = false ) 
 
 	foreach ( $F->fields as $f ) {
 		if ( ! is_array( $f->value ) ) {
-			$f->value = $is_rest ? stripslashes( $f->value ) : esc_attr( stripslashes( $f->value ) );
+			$f->value = bb_is_rest() ? stripslashes( $f->value ) : esc_attr( stripslashes( $f->value ) );
 		}
 		if ( $f->display == 'hidden' ) {
 			continue;
 		}
 
-		$f->label       = $is_rest ? stripslashes( $f->label ) : esc_attr( $f->label );
-		$f->description = $is_rest ? stripslashes( $f->description ) : esc_attr( $f->description );
+		$f->label       = bb_is_rest() ? stripslashes( $f->label ) : esc_attr( $f->label );
+		$f->description = bb_is_rest() ? stripslashes( $f->description ) : esc_attr( $f->description );
 
 		foreach ( $f->values as $k => $value ) {
 			if ( is_array( $value ) ) {
@@ -196,7 +196,7 @@ function bp_profile_search_escaped_form_data( $form = false, $is_rest = false ) 
 					$f->values[ $k ][ $sub_k ] = esc_attr( stripslashes( $sub_value ) );
 				}
 			} else {
-				$f->values[ $k ] = $is_rest ? stripslashes( $value ) : esc_attr( stripslashes( $value ) );
+				$f->values[ $k ] = bb_is_rest() ? stripslashes( $value ) : esc_attr( stripslashes( $value ) );
 			}
 		}
 

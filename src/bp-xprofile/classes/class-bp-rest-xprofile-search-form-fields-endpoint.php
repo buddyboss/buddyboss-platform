@@ -81,7 +81,7 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 		$args = apply_filters( 'bp_rest_xprofile_search_form_fields_get_items_query_args', $args, $request );
 
 		// Actually, query it.
-		$f = bp_profile_search_escaped_form_data( $args['form_id'], true );
+		$f = bp_profile_search_escaped_form_data( $args['form_id'] );
 
 		if ( ! empty( $f->fields ) ) {
 			foreach ( $f->fields as $k => $field ) {
