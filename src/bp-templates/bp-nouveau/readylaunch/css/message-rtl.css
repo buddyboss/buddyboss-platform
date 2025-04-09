@@ -2020,6 +2020,7 @@ body.messages .bb-rl-content-wrapper {
 
 #send_message_form .select2-container--default .select2-selection--multiple {
   border: 0;
+  background-color: transparent;
 }
 
 #send_message_form .select2-container--default.select2-container--focus .select2-selection--multiple {

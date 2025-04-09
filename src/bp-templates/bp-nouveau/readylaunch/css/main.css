@@ -477,6 +477,19 @@ h6 {
   color: var(--bb-rl-icon-secondary-color);
 }
 
+.bb-readylaunch-template .atwho-view {
+  background-color: var(--bb-rl-background-color);
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-readylaunch-template .atwho-view small {
+  color: var(--bb-rl-text-color);
+}
+
+.bb-readylaunch-template .atwho-view ul li .username {
+  color: var(--bb-rl-text-secondary-color);
+}
+
 @media screen and (max-width: 992px) {
   .bb-rl-left-panel ~ .site.bb-readylaunch {
     margin-left: 0;

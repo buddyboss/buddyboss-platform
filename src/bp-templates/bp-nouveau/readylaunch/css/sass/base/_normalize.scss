@@ -298,9 +298,9 @@ h6 {
 	z-index: var(--bb-rl-z-index-adminbar);
 }
 
-// mce editor
 .bb-readylaunch-template {
 
+	// mce editor
 	div.mce-panel {
 		background-color: var(--bb-rl-background-color);
 	}
@@ -313,9 +313,23 @@ h6 {
 		border-bottom-color: var(--bb-rl-border-secondary-color);
 		background: var(--bb-rl-background-color);
 	}
-	
+
 	.mce-toolbar .mce-ico {
 		color: var(--bb-rl-icon-secondary-color);
+	}
+
+	// Mention
+	.atwho-view {
+		background-color: var(--bb-rl-background-color);
+		border-color: var(--bb-rl-border-secondary-color);
+
+		small {
+			color: var(--bb-rl-text-color);
+		}
+
+		ul li .username {
+			color: var(--bb-rl-text-secondary-color);
+		}
 	}
 }
 
