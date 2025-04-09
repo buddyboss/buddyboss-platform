@@ -503,12 +503,7 @@ function bp_nouveau_ajax_media_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? esc_html_e( 'Sorry, no photos & videos were found.', 'buddyboss' ) : esc_html_e( 'Sorry, no photos were found.', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'media/no-media' );
 		}
 
 		$group_media_html_content = ob_get_clean();
