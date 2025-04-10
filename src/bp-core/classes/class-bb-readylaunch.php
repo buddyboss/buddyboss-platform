@@ -251,8 +251,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_current_component( 'video' ) ||
 					bp_is_current_component( 'media' ) ||
 					is_admin() ||
-					wp_doing_ajax()
+					wp_doing_ajax() ||
+					self::bb_is_network_search()
 				)
+			) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public static function bb_is_network_search() {
+			if (
+				bp_is_active( 'search' ) &&
+				! empty( $_REQUEST['bp_search'] )
 			) {
 				return true;
 			}
@@ -636,7 +648,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// BB icon version.
 			$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
 			$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
-			
+
 			// Enqueue BB icons for admin pages
 			wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
 		}

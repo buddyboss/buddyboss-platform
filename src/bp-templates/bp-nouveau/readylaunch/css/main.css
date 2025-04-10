@@ -9255,11 +9255,16 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-profile-edit-subnav,
+.bb-rl-network-search-subnav,
 .bb-rl-admin-subnav {
   margin: var(--bb-rl-space-100) 0 0;
 }
 
+.bb-rl-profile-edit-subnav .component-navigation,
 .bb-rl-profile-edit-subnav ul.subnav,
+.bb-rl-network-search-subnav .component-navigation,
+.bb-rl-network-search-subnav ul.subnav,
+.bb-rl-admin-subnav .component-navigation,
 .bb-rl-admin-subnav ul.subnav {
   margin: 0;
   padding: 0;
@@ -9267,8 +9272,13 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item a,
+.bb-rl-profile-edit-subnav .component-navigation > li a,
 .bb-rl-profile-edit-subnav .bb-rl-admin-subnav-item a,
+.bb-rl-network-search-subnav .bb-rl-profile-subnav-item a,
+.bb-rl-network-search-subnav .component-navigation > li a,
+.bb-rl-network-search-subnav .bb-rl-admin-subnav-item a,
 .bb-rl-admin-subnav .bb-rl-profile-subnav-item a,
+.bb-rl-admin-subnav .component-navigation > li a,
 .bb-rl-admin-subnav .bb-rl-admin-subnav-item a {
   font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
@@ -9283,20 +9293,50 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item a:hover,
+.bb-rl-profile-edit-subnav .component-navigation > li a:hover,
 .bb-rl-profile-edit-subnav .bb-rl-admin-subnav-item a:hover,
+.bb-rl-network-search-subnav .bb-rl-profile-subnav-item a:hover,
+.bb-rl-network-search-subnav .component-navigation > li a:hover,
+.bb-rl-network-search-subnav .bb-rl-admin-subnav-item a:hover,
 .bb-rl-admin-subnav .bb-rl-profile-subnav-item a:hover,
+.bb-rl-admin-subnav .component-navigation > li a:hover,
 .bb-rl-admin-subnav .bb-rl-admin-subnav-item a:hover {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
 .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item.current a, .bb-rl-profile-edit-subnav .bb-rl-profile-subnav-item.selected a,
+.bb-rl-profile-edit-subnav .component-navigation > li.current a,
+.bb-rl-profile-edit-subnav .component-navigation > li.selected a,
 .bb-rl-profile-edit-subnav .bb-rl-admin-subnav-item.current a,
 .bb-rl-profile-edit-subnav .bb-rl-admin-subnav-item.selected a,
+.bb-rl-network-search-subnav .bb-rl-profile-subnav-item.current a,
+.bb-rl-network-search-subnav .bb-rl-profile-subnav-item.selected a,
+.bb-rl-network-search-subnav .component-navigation > li.current a,
+.bb-rl-network-search-subnav .component-navigation > li.selected a,
+.bb-rl-network-search-subnav .bb-rl-admin-subnav-item.current a,
+.bb-rl-network-search-subnav .bb-rl-admin-subnav-item.selected a,
 .bb-rl-admin-subnav .bb-rl-profile-subnav-item.current a,
 .bb-rl-admin-subnav .bb-rl-profile-subnav-item.selected a,
+.bb-rl-admin-subnav .component-navigation > li.current a,
+.bb-rl-admin-subnav .component-navigation > li.selected a,
 .bb-rl-admin-subnav .bb-rl-admin-subnav-item.current a,
 .bb-rl-admin-subnav .bb-rl-admin-subnav-item.selected a {
   background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-rl-profile-edit-subnav .component-navigation .count,
+.bb-rl-network-search-subnav .component-navigation .count,
+.bb-rl-admin-subnav .component-navigation .count {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 0;
+  background: var(--bb-rl-background-tertiary-color);
+  color: var(--bb-rl-text-color);
+  padding: 0 var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-md);
+  font-size: 12px;
+  min-width: 28px;
+  text-align: center;
 }
 
 .bb-rl-group-admin-subnav .bb-rl-admin-subnav-item a::before {

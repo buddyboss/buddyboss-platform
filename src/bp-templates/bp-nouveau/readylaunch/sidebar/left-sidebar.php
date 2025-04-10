@@ -16,6 +16,8 @@ if (
 ) {
 	return;
 }
+
+global $bb_rl_search_nav;
 ?>
 
 <div id="secondary" class="bb-rl-left-panel widget-area" role="complementary">
@@ -26,6 +28,8 @@ if (
 		bp_get_template_part( 'members/single/parts/item-subnav' );
 	} elseif ( bp_is_user_change_avatar() || bp_is_user_profile_edit() ) {
 		bp_get_template_part( 'members/single/parts/edit-subnav' );
+	} elseif ( BB_Readylaunch::bb_is_network_search() ) {
+		bp_search_buffer_template_part( 'search-nav' );
 	} else {
 		?>
 
