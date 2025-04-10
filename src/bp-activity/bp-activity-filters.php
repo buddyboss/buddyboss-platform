@@ -123,7 +123,6 @@ add_action( 'bp_activity_after_delete', 'bb_activity_delete_link_review_attachme
 
 // At-name filter.
 add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
-add_filter( 'bp_activity_at_name_do_notifications', 'bb_remove_post_author_from_mentions_notifications', 10, 4 );
 
 // Activity feed moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
@@ -586,11 +585,24 @@ function bp_activity_at_name_send_emails( $activity ) {
 	// Grab our temporary variable from bp_activity_at_name_filter_updates().
 	$usernames = buddypress()->activity->mentioned_users;
 
+	if ( 'activity_comment' === $activity->type ) {
+		$parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+		$parent_user_id = $parent_activity->user_id;
+	} else {
+		$parent_activity = $activity;
+		$parent_user_id = $activity->user_id;
+	}
+
 	// Get rid of temporary variable.
 	unset( buddypress()->activity->mentioned_users );
 
 	// Send @mentions and setup BP notifications.
 	foreach ( (array) $usernames as $user_id => $username ) {
+
+		// Bail out the mention if it's for the parent user id, because he will recieve a "replied to your" notification.
+		if ( $parent_user_id === $user_id ) {
+			continue;
+		}
 
 		/**
 		 * Filters BuddyPress' ability to send email notifications for @mentions.
@@ -3637,30 +3649,6 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
 	$activity = new BP_Activity_Activity( $comment_id );
 	bp_activity_at_name_send_emails( $activity );
-}
-
-/**
- * Function will remove mention notifications from the post author if comments or replies.
- *
- * @since BuddyBoss x.x.x
- *
- * @param bool                 $send      Whether or not BuddyBoss should send a notification to the mentioned users.
- * @param array                $usernames Array of users potentially notified.
- * @param int                  $user_id   ID of the current user being notified.
- * @param BP_Activity_Activity $activity  Activity object.
- *
- * @return bool
- */
-function bb_remove_post_author_from_mentions_notifications( $send, $usernames, $user_id, $activity ) {
-	$activity = new BP_Activity_Activity( $activity->secondary_item_id );
-	$parent_user_id = $activity->user_id;
-
-	// Bail out the mention if it's for the parent user id, because he will recieve a "replied to your" notification.
-	if ( $parent_user_id === $user_id ) {
-		return false;
-	} else {
-		return true;
-	}
 }
 
 /**
