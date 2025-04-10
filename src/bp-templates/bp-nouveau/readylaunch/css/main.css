@@ -1149,6 +1149,7 @@ div.xdsoft_datetimepicker .xdsoft_month {
 }
 
 div.xdsoft_datetimepicker .xdsoft_label {
+  background-color: var(--bb-rl-background-color);
   text-decoration: none;
   width: auto;
   padding: 8px 3px;
@@ -1281,6 +1282,10 @@ div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time {
 div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time.xdsoft_current, div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time:hover {
   color: var(--bb-rl-text-color) !important;
   background-color: var(--bb-rl-background-secondary-hover-color) !important;
+}
+
+.bb-readylaunch-template .bb-schedule-post_dropdown_section .bb-time-meridian {
+  background-color: var(--bb-rl-background-color);
 }
 
 div.video-js {

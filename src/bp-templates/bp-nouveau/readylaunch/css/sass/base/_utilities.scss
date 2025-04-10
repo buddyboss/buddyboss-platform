@@ -538,6 +538,7 @@ div.xdsoft_datetimepicker {
 	}
 
 	.xdsoft_label {
+		background-color: var(--bb-rl-background-color);
 		text-decoration: none;
 		width: auto;
 		padding: 8px 3px;
@@ -676,6 +677,14 @@ div.xdsoft_datetimepicker {
 				}
 			}
 		}
+	}
+}
+
+// Schedule post form
+.bb-readylaunch-template {
+
+	.bb-schedule-post_dropdown_section .bb-time-meridian {
+		background-color: var(--bb-rl-background-color);
 	}
 }
 
