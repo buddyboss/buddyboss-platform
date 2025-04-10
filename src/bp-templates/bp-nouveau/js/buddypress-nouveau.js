@@ -1145,6 +1145,7 @@ window.bp = window.bp || {};
 				}
 			} );
 			$( document ).on( 'mouseenter', '#profile-card', function () {
+				hoverAvatar = false;
 				hoverCardPopup = true;
 				hoverProfileCardPopup = true;
 				if ( hideCardTimeout ) {
@@ -1152,6 +1153,7 @@ window.bp = window.bp || {};
 				}
 			} );
 			$( document ).on( 'mouseenter', '#group-card', function () {
+				hoverAvatar = false;
 				hoverCardPopup = true;
 				hoverGroupCardPopup = true;
 				if ( hideCardTimeout ) {
