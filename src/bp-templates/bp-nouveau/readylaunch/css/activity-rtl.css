@@ -1994,6 +1994,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-bottom: var(--bb-rl-space-300);
 }
 
+.activity-head-bar .bb-rl-loader {
+  display: none;
+}
+
+.activity-head-bar:has(li.loading) .bb-rl-loader {
+  display: inline-block;
+  margin: 0 auto 0 15px;
+}
+
 .bb-subnav-filters-container-main {
   display: flex;
   align-items: center;
@@ -2078,6 +2087,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-subnav-filters-container-main .subnav-filters-modal li a:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-subnav-filters-container-main .subnav-filters-modal li.selected a {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
@@ -2731,6 +2744,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   z-index: 1;
 }
 
+.bb-rl-activity-group-avatar .bb-rl-group-avatar > a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
 .bb-rl-activity-group-avatar .bb-rl-group-avatar img {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--bb-rl-radius-md);
@@ -2745,6 +2764,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   bottom: 0;
   z-index: 5;
   overflow: hidden;
+}
+
+.bb-rl-activity-group-avatar .bb-rl-author-avatar > a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
 }
 
 /* Activity Modal */

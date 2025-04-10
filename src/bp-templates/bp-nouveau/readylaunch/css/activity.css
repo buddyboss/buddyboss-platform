@@ -2744,6 +2744,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   z-index: 1;
 }
 
+.bb-rl-activity-group-avatar .bb-rl-group-avatar > a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
 .bb-rl-activity-group-avatar .bb-rl-group-avatar img {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--bb-rl-radius-md);
@@ -2758,6 +2764,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   bottom: 0;
   z-index: 5;
   overflow: hidden;
+}
+
+.bb-rl-activity-group-avatar .bb-rl-author-avatar > a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
 }
 
 /* Activity Modal */

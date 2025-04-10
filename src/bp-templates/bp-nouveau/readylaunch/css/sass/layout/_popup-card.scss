@@ -371,8 +371,10 @@
 	.generic-button a.group-button.join-group,
 	.group-button.request-membership {
 
+		@include bb-rl-button;
 		@include bb-rl-button--brand-fill;
-
+		font-size: 14px;
+		font-weight: 500;
 		width: 100%;
 	}
 }
@@ -388,7 +390,6 @@
 
 		@include bb-rl-button;
 		@include bb-rl-button-secondary-fill;
-
 		font-size: 14px;
 		font-weight: 500;
 		text-align: center;
@@ -443,7 +444,8 @@
 
 .bb-rl-card-footer .generic-button {
 
-	i {
+	i,
+	a.join-group::before {
 		content: "";
 		font-weight: 400;
 		font-family: bb-icons-rl;
@@ -480,6 +482,10 @@
 
 	&.friendship-button.is_friend i::before {
 		content: "\e182";
+	}
+
+	a.join-group::before {
+		content: "\e3d4";
 	}
 }
 
