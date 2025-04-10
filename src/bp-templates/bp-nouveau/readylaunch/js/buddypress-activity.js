@@ -204,6 +204,7 @@ window.bp = window.bp || {};
 			// Activity filter.
 			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-opener', this.openActivityFilter.bind( this ) );
 			$( document ).on( 'click', this.closeActivityFilter.bind( this ) );
+			$( document ).on( 'click', '.bb-subnav-filters-container .subnav-filters-modal a', this.filterActivity.bind( this ) );
 
 			$( '.bb-rl-activity-model-wrapper, .bb-rl-media-model-wrapper' ).on( 'click', '.acomments-view-more', this.viewMoreComments.bind( this ) );
 			$document.on(
@@ -282,6 +283,77 @@ window.bp = window.bp || {};
 			}
 		},
 
+		filterActivity: function ( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $parent = $this.closest( '.bb-subnav-filters-container' );
+			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
+			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
+			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+
+			// Reset the pagination for the scope.
+			bp.Nouveau.Activity.current_page = 1;
+
+			// Filter activity with below selections
+			var objectNavParent = bp.Nouveau.objectNavParent;
+			var object          = 'activity';
+			var filter          = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
+			var scope           = '';
+			var search_terms    = '';
+			var order           = '';
+			var extras          = '';
+			var save_scope	    = false;
+			var user_timeline   = false;
+
+			if ( $( objectNavParent + ' [data-bp-object].selected' ).length ) {
+				scope = $( objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
+
+				if( $this.closest( '#bb-subnav-filter-show' ).length ) {
+					save_scope = true;
+
+					if( $( 'body' ).hasClass( 'my-activity') ) {
+						save_scope = false;
+						user_timeline = true;
+					}
+				}
+			}
+
+			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
+				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			}
+
+			if ( $( objectNavParent + ' [data-bp-order]' ).length ) {
+				order = $( objectNavParent + ' [data-bp-order="' + object + '"].selected' ).data( 'bp-orderby' );
+			}
+
+			var objectData = bp.Nouveau.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones.
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
+			// On filter update reset last_recorded.
+			bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+
+			var queryData = {
+				object: object,
+				scope: scope,
+				filter: filter,
+				search_terms: search_terms,
+				extras: extras,
+				order_by: order,
+				save_scope: save_scope,
+				event_element: $this,
+			};
+
+			if( user_timeline ) {
+				queryData.user_timeline = true;
+			}
+
+			bp.Nouveau.objectRequest( queryData );
+		},
+
 		/**
 		 * [heartbeatSend description]
 		 *
@@ -297,6 +369,32 @@ window.bp = window.bp || {};
 			var $firstUnpinned                 = $unPinnedActivities.first();
 			this.heartbeat_data.first_recorded = $firstUnpinned.data( 'bp-timestamp' ) || 0;
 
+			if ( $( bp.Nouveau.objectNavParent + ' [data-bp-orderby=date_updated].selected' ).length ) {
+				var first_unpinned_activity = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first();
+				if ( 'undefined' !== typeof first_unpinned_activity.data( 'bb-updated-timestamp' ) ) {
+					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bb-updated-timestamp' );
+				} else if (
+					first_unpinned_activity.length &&
+					'undefined' !== typeof first_unpinned_activity.data( 'bp-activity' ).date_updated &&
+					'' !== first_unpinned_activity.data( 'bp-activity' ).date_updated
+				) {
+					// convert to timestamp.
+					var dateString = first_unpinned_activity.data( 'bp-activity' ).date_updated ;
+
+					// Convert directly to a Date object in UTC by appending 'Z' (UTC designator).
+					var utcDate = new Date( dateString.replace( ' ', 'T') + 'Z' );
+
+					// Get the Unix timestamp in seconds.
+					var activity_timestamp = utcDate.getTime() / 1000;
+
+					this.heartbeat_data.first_recorded = activity_timestamp;
+				} else {
+					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bp-timestamp' ) || 0;
+				}
+			} else {
+				this.heartbeat_data.first_recorded = $( '#buddypress [data-bp-list] [data-bp-activity-id]:not(.bb-pinned)' ).first().data( 'bp-timestamp' ) || 0;
+			}
+
 			// Handle the first item is already latest and pinned.
 			var firstActivityTimestamp = $allActivities.first().data( 'bp-timestamp' ) || 0;
 			if ( firstActivityTimestamp > this.heartbeat_data.first_recorded ) {
@@ -309,12 +407,57 @@ window.bp = window.bp || {};
 
 			data.bp_activity_last_recorded = this.heartbeat_data.last_recorded;
 
-			var $searchInput = $( '#buddypress .dir-search input[type=search]' );
+			var $searchInput = $( '#buddypress .activity-head-bar .activity-search input[type=search]' );
 			if ( $searchInput.length ) {
 				data.bp_activity_last_recorded_search_terms = $searchInput.val();
 			}
 
-			$.extend( data, { bp_heartbeat: bp.Nouveau.getStorage( 'bp-activity' ) } );
+			$.extend(data, {
+				bp_heartbeat: (function() {
+					var heartbeatData = { scope: 'all' };
+
+					// Check if the page is a user activity page.
+					if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || { scope: 'just-me' };
+					} else {
+
+						// Otherwise, retrieve the activity data.
+						heartbeatData = bp.Nouveau.getStorage( 'bp-activity' ) || { scope: 'all' };
+
+						// If the page is a single group activity page, set the scope to 'all'.
+						if ( $( 'body.activity.buddypress.groups.single-item' ).length ) {
+							heartbeatData.scope = 'all';
+						}
+					}
+
+					if ( $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length ) {
+						var scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+
+						// Heartbeat check the value from the available.
+						if ( 'undefined' === typeof heartbeatData.scope || heartbeatData.scope !== scope ) {
+							heartbeatData.scope = scope;
+
+							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
+
+								// Add to the storage if page request 2.
+								if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+									bp.Nouveau.setStorage( 'bp-user-activity', 'scope', scope );
+								} else {
+									bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
+								}
+							}
+						}
+					}
+
+					// Add `order_by` only if it's not already set.
+					if ( $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).length ) {
+						var order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
+						heartbeatData.order_by = order_by;
+					}
+
+					return heartbeatData;
+				})()
+			});
 		},
 
 		/**
@@ -453,7 +596,7 @@ window.bp = window.bp || {};
 		 * @param event
 		 */
 		injectActivities: function ( event ) {
-			var store = bp.Nouveau.getStorage( 'bp-activity' ),
+			var store = $( 'body.my-activity:not(.activity-singular)' ).length ? bp.Nouveau.getStorage( 'bp-user-activity' ) : bp.Nouveau.getStorage( 'bp-activity' ),
 				scope = store.scope || null, filter = store.filter || null;
 
 			// Load the newest activities.
@@ -553,7 +696,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				var $searchElem = $( '#buddypress .dir-search input[type=search]' );
+				var $searchElem = $( '#buddypress .activity-search.bp-search input[type=search]' );
 				if ( $searchElem.length ) {
 					searchTerms = $searchElem.val();
 				}
@@ -872,6 +1015,23 @@ window.bp = window.bp || {};
 										src : response.data.video_symlink
 									}
 								);
+							}
+						}
+
+						// Update the edited text.
+						if (
+							'undefined' !== typeof response &&
+							'undefined' !== typeof response.data &&
+							'undefined' !== typeof response.data.edited_text &&
+							'' !== response.data.edited_text
+						) {
+
+							if ( activity_item.find( '.activity-date span.bb-activity-edited-text' ).length ) {
+								// Completely remove and replace the edited text with new content.
+								activity_item.find( '.activity-date span.bb-activity-edited-text' ).replaceWith( response.data.edited_text );
+							} else {
+								// Append the edited text to the activity date.
+								activity_item.find( '.activity-date' ).append( response.data.edited_text );
 							}
 						}
 
@@ -2205,9 +2365,8 @@ window.bp = window.bp || {};
 							jQuery( window ).scroll();
 
 							// Refresh activities after updating pin/unpin `post` status.
-							if ( bp.Nouveau.Activity.activityPinHasUpdates ) {
-								bp.Nouveau.refreshActivities();
-							}
+							bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
+							bp.Nouveau.refreshActivities();
 						}
 					}
 				).fail(
@@ -3383,7 +3542,21 @@ window.bp = window.bp || {};
 						var activityStream = isInsideModal ? target.closest( '.bb-rl-wrap' ).find( '#bb-rl-activity-stream' ) : target.closest( '#bb-rl-activity-stream' );
 
 						if ( response.success ) {
-							var scope              = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
+							var scope = bp.Nouveau.getStorage( 'bp-activity', 'scope' );
+							if (
+								(
+									'' === scope ||
+									false === scope ||
+									(
+										'undefined' !== BP_Nouveau.is_send_ajax_request &&
+										'' === BP_Nouveau.is_send_ajax_request
+									)
+								) &&
+								$( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).length
+							) {
+								// Get the filter selected.
+								scope = $( bp.Nouveau.objectNavParent + ' #bb-subnav-filter-show [data-bp-scope].selected' ).data( 'bp-scope' );
+							}
 							var update_pinned_icon = false;
 							var is_group_activity  = activityItem.hasClass( 'groups' );
 							var activity_group_id  = '';
@@ -3441,7 +3614,7 @@ window.bp = window.bp || {};
 								target.find( 'span' ).html( pinText );
 							}
 
-							if ( 'all' === scope && update_pinned_icon ) {
+							if ( update_pinned_icon ) {
 								bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 								bp.Nouveau.refreshActivities();
 							}
@@ -3457,6 +3630,15 @@ window.bp = window.bp || {};
 								true
 							]
 						);
+
+						if ( isInsideModal ) {
+							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityHasUpdates ) {
+								bp.Nouveau.Activity.activityHasUpdates = true;
+							}
+							if ( 'undefined' !== typeof bp.Nouveau.Activity.activityPinHasUpdates ) {
+								bp.Nouveau.Activity.activityPinHasUpdates = true;
+							}
+						}
 					}
 				}
 			).fail(
