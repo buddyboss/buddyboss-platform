@@ -1046,7 +1046,7 @@ function bp_get_media_parent_activity_id() {
 	 *
 	 * @param int $id The media parent activity id.
 	 */
-	return apply_filters( 'bp_get_media_privacy', get_post_meta( $media_template->media->attachment_id, 'bp_media_parent_activity_id', true ) );
+	return apply_filters( 'bp_get_media_parent_activity_id', get_post_meta( $media_template->media->attachment_id, 'bp_media_parent_activity_id', true ) );
 }
 
 /**
