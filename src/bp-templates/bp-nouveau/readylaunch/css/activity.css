@@ -176,6 +176,7 @@
   --bb-rl-icon-danger-primary-color: #fdd3d0;
   --bb-rl-icon-danger-secondary-color: #ec221f;
   scrollbar-color: #666 transparent;
+  color-scheme: dark;
 }
 
 /* SCSS Variables */
@@ -385,55 +386,55 @@
 }
 
 .cm-s-default .cm-comment {
-  color: #a50;
+  color: var(--bb-rl-text-positive-secondary-color);
 }
 
 .cm-s-default .cm-string {
-  color: #a11;
+  color: var(--bb-rl-text-positive-primary-color);
 }
 
 .cm-s-default .cm-string-2 {
-  color: #f50;
+  color: var(--bb-rl-text-positive-primary-color);
 }
 
 .cm-s-default .cm-meta {
-  color: #555;
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .cm-s-default .cm-qualifier {
-  color: #555;
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .cm-s-default .cm-builtin {
-  color: #30a;
+  color: var(--bb-rl-text-brand-secondary-color);
 }
 
 .cm-s-default .cm-bracket {
-  color: #997;
+  color: var(--bb-rl-text-positive-secondary-color);
 }
 
 .cm-s-default .cm-tag {
-  color: #170;
+  color: var(--bb-rl-text-warning-secondary-color);
 }
 
 .cm-s-default .cm-attribute {
-  color: #00c;
+  color: var(--bb-rl-text-brand-primary-color);
 }
 
 .cm-s-default .cm-hr {
-  color: #999;
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .cm-s-default .cm-link {
-  color: #00c;
+  color: var(--bb-rl-text-brand-primary-color);
 }
 
 .cm-s-default .cm-error {
-  color: #f00;
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .cm-invalidchar {
-  color: #f00;
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .CodeMirror-composing {
@@ -590,7 +591,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   white-space: pre;
   word-wrap: normal;
   line-height: inherit;
-  color: inherit;
+  color: var(--bb-rl-text-secondary-color);
   z-index: 2;
   position: relative;
   overflow: visible;
