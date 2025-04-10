@@ -150,10 +150,9 @@
 
 		@include bb-rl-label-heading-bolder;
 
-		&.select2-results__option--highlighted,
-		&[aria-selected="true"] {
-			background-color: transparent;
+		&:hover {
 			color: var(--bb-rl-text-color);
+			background-color: var(--bb-rl-background-secondary-hover-color);
 		}
 	}
 

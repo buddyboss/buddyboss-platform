@@ -640,13 +640,24 @@
 		.bb-rl-button.loading {
 
 			&::after {
-				content: "\e66a";
-				font-weight: 400;
-				font-family: bb-icons-rl;
-				font-size: var(--bb-rl-base-line-xs);
-				font-style: normal;
+
+				@include bb-rl-spinner;
+				@include bb-rl-spinner--sm;
 				margin-left: var(--bb-rl-space-50);
-				animation: spin 2s infinite linear;
+			}
+		}
+	}
+
+	.bb-rl-create-popup-album-wrap,
+	.bb-rl-create-popup-folder-wrap {
+
+		.bb-rl-button.loading {
+
+			&::after {
+
+				@include bb-rl-spinner;
+				@include bb-rl-spinner--sm;
+				margin-left: var(--bb-rl-space-50);
 			}
 		}
 	}

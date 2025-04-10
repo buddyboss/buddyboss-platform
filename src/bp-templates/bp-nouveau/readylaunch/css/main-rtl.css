@@ -170,6 +170,7 @@
   --bb-rl-icon-danger-primary-color: #fdd3d0;
   --bb-rl-icon-danger-secondary-color: #ec221f;
   scrollbar-color: #666 transparent;
+  color-scheme: dark;
 }
 
 /* SCSS Variables */
@@ -1149,6 +1150,7 @@ div.xdsoft_datetimepicker .xdsoft_month {
 }
 
 div.xdsoft_datetimepicker .xdsoft_label {
+  background-color: var(--bb-rl-background-color);
   text-decoration: none;
   width: auto;
   padding: 8px 3px;
@@ -1281,6 +1283,10 @@ div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time {
 div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time.xdsoft_current, div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time:hover {
   color: var(--bb-rl-text-color) !important;
   background-color: var(--bb-rl-background-secondary-hover-color) !important;
+}
+
+.bb-readylaunch-template .bb-schedule-post_dropdown_section .bb-time-meridian {
+  background-color: var(--bb-rl-background-color);
 }
 
 div.video-js {
@@ -2166,7 +2172,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 
 .bb-rl-activity-media-elem.bb-rl-document-activity:hover .CodeMirror-gutters,
 .bb-rl-activity-media-elem.bb-rl-document-activity:hover .CodeMirror {
-  background-color: var(--bb-rl-background-hover-color);
+  background-color: var(--bb-rl-background-secondary-color);
 }
 
 /* List items headings */
@@ -3899,11 +3905,10 @@ button[data-balloon] {
   line-height: var(--bb-rl-base-line-small);
 }
 
-.bb-rl-select2-dropdown .select2-results__option.select2-results__option--highlighted, .bb-rl-select2-dropdown .select2-results__option[aria-selected="true"],
-.select2-dropdown.bb-rl-select2-dropdown .select2-results__option.select2-results__option--highlighted,
-.select2-dropdown.bb-rl-select2-dropdown .select2-results__option[aria-selected="true"] {
-  background-color: transparent;
+.bb-rl-select2-dropdown .select2-results__option:hover,
+.select2-dropdown.bb-rl-select2-dropdown .select2-results__option:hover {
   color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
 .bb-rl-select2-dropdown.select2-dropdown--below,
@@ -5445,13 +5450,34 @@ button[data-balloon] {
 .bb-rl-modal-wrapper .bb-model-footer .button.saving::after,
 .bb-rl-modal-wrapper .bb-model-footer .bb-rl-button.saving::after,
 .bb-rl-modal-wrapper .bb-model-footer .bb-rl-button.loading::after {
-  content: "\e66a";
-  font-weight: 400;
-  font-family: bb-icons-rl;
-  font-size: var(--bb-rl-base-line-xs);
-  font-style: normal;
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  height: 16px;
+  width: 16px;
+  border-width: 2px;
   margin-right: var(--bb-rl-space-50);
-  animation: spin 2s infinite linear;
+}
+
+.bb-rl-modal-wrapper .bb-rl-create-popup-album-wrap .bb-rl-button.loading::after,
+.bb-rl-modal-wrapper .bb-rl-create-popup-folder-wrap .bb-rl-button.loading::after {
+  content: "";
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  animation: spin 3s infinite linear;
+  height: 16px;
+  width: 16px;
+  border-width: 2px;
+  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-container-inner .bp-pagination,
@@ -10759,6 +10785,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   --bb-rl-icon-danger-primary-color: #fdd3d0;
   --bb-rl-icon-danger-secondary-color: #ec221f;
   scrollbar-color: #666 transparent;
+  color-scheme: dark;
 }
 
 /* SCSS Variables */
@@ -10968,55 +10995,55 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .cm-s-default .cm-comment {
-  color: #a50;
+  color: var(--bb-rl-text-positive-secondary-color);
 }
 
 .cm-s-default .cm-string {
-  color: #a11;
+  color: var(--bb-rl-text-positive-primary-color);
 }
 
 .cm-s-default .cm-string-2 {
-  color: #f50;
+  color: var(--bb-rl-text-positive-primary-color);
 }
 
 .cm-s-default .cm-meta {
-  color: #555;
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .cm-s-default .cm-qualifier {
-  color: #555;
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .cm-s-default .cm-builtin {
-  color: #30a;
+  color: var(--bb-rl-text-brand-secondary-color);
 }
 
 .cm-s-default .cm-bracket {
-  color: #997;
+  color: var(--bb-rl-text-positive-secondary-color);
 }
 
 .cm-s-default .cm-tag {
-  color: #170;
+  color: var(--bb-rl-text-warning-secondary-color);
 }
 
 .cm-s-default .cm-attribute {
-  color: #00c;
+  color: var(--bb-rl-text-brand-primary-color);
 }
 
 .cm-s-default .cm-hr {
-  color: #999;
+  color: var(--bb-rl-text-secondary-color);
 }
 
 .cm-s-default .cm-link {
-  color: #00c;
+  color: var(--bb-rl-text-brand-primary-color);
 }
 
 .cm-s-default .cm-error {
-  color: #f00;
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .cm-invalidchar {
-  color: #f00;
+  color: var(--bb-rl-text-danger-secondary-color);
 }
 
 .CodeMirror-composing {
@@ -11173,7 +11200,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   white-space: pre;
   word-wrap: normal;
   line-height: inherit;
-  color: inherit;
+  color: var(--bb-rl-text-secondary-color);
   z-index: 2;
   position: relative;
   overflow: visible;
@@ -14741,18 +14768,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding-left: var(--bb-rl-space-300);
 }
 
-.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap:after,
-.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-dropdown-wrap:after {
-  content: "\e136";
-  color: var(--bb-rl-icon-secondary-color);
-  font-size: 14px;
-  font-family: bb-icons-rl;
-  position: absolute;
-  top: 50%;
-  left: var(--bb-rl-space-100);
-  transform: translateY(-50%);
-}
-
 .bb-rl-location-album-list-wrap .bb-rl-breadcrumbs-append-ul-li .item {
   padding: var(--bb-rl-space-100) 0;
   display: flex;
@@ -14825,18 +14840,21 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-readylaunch-template .location-album-list.is-loading .bb-icon-spinner {
-  height: 22px;
+  height: 24px;
 }
 
 .bb-readylaunch-template .location-album-list.is-loading .bb-icon-spinner:before {
   content: "";
   display: inline-block;
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  width: 20px;
   border: 2px solid var(--bb-rl-border-quaternary-color);
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+  height: 24px;
+  width: 24px;
+  border-width: 3px;
 }
 
 /* Video Thumbnail Modal */
@@ -15161,22 +15179,19 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: 0;
 }
 
-.bb-rl-video-thumbnail-uploader .button.bb-rl-video-thumbnail-submit {
-  margin-top: 25px;
-}
-
-.bb-rl-video-thumbnail-uploader .button.bb-rl-video-thumbnail-submit.saving:after {
-  content: "\ef30";
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1;
-  margin-right: 10px;
-  text-align: center;
+.bb-rl-video-thumbnail-uploader .bb-rl-button.bb-rl-video-thumbnail-submit.saving:after {
+  content: "";
   display: inline-block;
-  -webkit-animation: spin 3s infinite linear;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+  height: 16px;
+  width: 16px;
+  border-width: 2px;
+  margin-right: var(--bb-rl-space-50);
 }
 
 .bb-rl-video-thumbnail-uploader.generating_thumb .thumbnail_notice {
@@ -15419,6 +15434,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-icon-secondary-color);
   font-size: 18px;
   line-height: 1;
+  font-style: normal;
   cursor: pointer;
   transform: translateY(-50%);
   display: inline-block;
@@ -15444,12 +15460,15 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .location-folder-list.is-loading .bb-icon-spinner:before {
   content: "";
   display: inline-block;
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  width: 20px;
   border: 2px solid var(--bb-rl-border-quaternary-color);
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+  height: 24px;
+  width: 24px;
+  border-width: 3px;
 }
 
 .bb-rl-activity-list .activity-state-popup {

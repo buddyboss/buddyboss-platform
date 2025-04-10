@@ -389,3 +389,26 @@
 		}
 	}
 }
+
+@mixin bb-rl-spinner {
+	content: "";
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+	border: 2px solid var(--bb-rl-border-quaternary-color);
+	border-top-color: var(--bb-rl-border-tertiary-color);
+	border-radius: var(--bb-rl-radius-full);
+	animation: spin 3s infinite linear;
+}
+
+@mixin bb-rl-spinner--lg {
+	height: 24px;
+	width: 24px;
+	border-width: 3px;
+}
+
+@mixin bb-rl-spinner--sm {
+	height: 16px;
+	width: 16px;
+	border-width: 2px;
+}

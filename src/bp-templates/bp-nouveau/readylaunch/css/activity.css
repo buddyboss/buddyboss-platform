@@ -4172,18 +4172,6 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding-right: var(--bb-rl-space-300);
 }
 
-.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap:after,
-.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-dropdown-wrap:after {
-  content: "\e136";
-  color: var(--bb-rl-icon-secondary-color);
-  font-size: 14px;
-  font-family: bb-icons-rl;
-  position: absolute;
-  top: 50%;
-  right: var(--bb-rl-space-100);
-  transform: translateY(-50%);
-}
-
 .bb-rl-location-album-list-wrap .bb-rl-breadcrumbs-append-ul-li .item {
   padding: var(--bb-rl-space-100) 0;
   display: flex;
@@ -4256,18 +4244,21 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-readylaunch-template .location-album-list.is-loading .bb-icon-spinner {
-  height: 22px;
+  height: 24px;
 }
 
 .bb-readylaunch-template .location-album-list.is-loading .bb-icon-spinner:before {
   content: "";
   display: inline-block;
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  width: 20px;
   border: 2px solid var(--bb-rl-border-quaternary-color);
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+  height: 24px;
+  width: 24px;
+  border-width: 3px;
 }
 
 /* Video Thumbnail Modal */
@@ -4592,22 +4583,19 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: 0;
 }
 
-.bb-rl-video-thumbnail-uploader .button.bb-rl-video-thumbnail-submit {
-  margin-top: 25px;
-}
-
-.bb-rl-video-thumbnail-uploader .button.bb-rl-video-thumbnail-submit.saving:after {
-  content: "\ef30";
-  font-family: "bb-icons";
-  /* stylelint-disable-line */
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1;
-  margin-left: 10px;
-  text-align: center;
+.bb-rl-video-thumbnail-uploader .bb-rl-button.bb-rl-video-thumbnail-submit.saving:after {
+  content: "";
   display: inline-block;
-  -webkit-animation: spin 3s infinite linear;
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+  height: 16px;
+  width: 16px;
+  border-width: 2px;
+  margin-left: var(--bb-rl-space-50);
 }
 
 .bb-rl-video-thumbnail-uploader.generating_thumb .thumbnail_notice {
@@ -4850,6 +4838,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-icon-secondary-color);
   font-size: 18px;
   line-height: 1;
+  font-style: normal;
   cursor: pointer;
   transform: translateY(-50%);
   display: inline-block;
@@ -4875,12 +4864,15 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .location-folder-list.is-loading .bb-icon-spinner:before {
   content: "";
   display: inline-block;
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  width: 20px;
   border: 2px solid var(--bb-rl-border-quaternary-color);
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+  height: 24px;
+  width: 24px;
+  border-width: 3px;
 }
 
 .bb-rl-activity-list .activity-state-popup {
