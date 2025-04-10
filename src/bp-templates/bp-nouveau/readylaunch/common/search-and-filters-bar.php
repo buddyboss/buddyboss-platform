@@ -104,7 +104,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		arsort( $activity_filters );
 		$default_selected = key( $activity_filters );
 		?>
-		<i class="bb-icon-f bb-icon-loader animate-spin"></i>
+		<i class="bb-rl-loader"></i>
 		<div class="bb-subnav-filters-container-main">
 			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">

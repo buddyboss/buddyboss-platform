@@ -12623,6 +12623,15 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   margin-bottom: var(--bb-rl-space-300);
 }
 
+.activity-head-bar .bb-rl-loader {
+  display: none;
+}
+
+.activity-head-bar:has(li.loading) .bb-rl-loader {
+  display: inline-block;
+  margin: 0 15px 0 auto;
+}
+
 .bb-subnav-filters-container-main {
   display: flex;
   align-items: center;
@@ -12707,6 +12716,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 }
 
 .bb-subnav-filters-container-main .subnav-filters-modal li a:hover {
+  background-color: var(--bb-rl-background-secondary-hover-color);
+}
+
+.bb-subnav-filters-container-main .subnav-filters-modal li.selected a {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
