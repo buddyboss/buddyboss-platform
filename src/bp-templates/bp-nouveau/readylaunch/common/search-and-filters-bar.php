@@ -19,7 +19,8 @@
 			'members' !== $bp_current_component ||
 			bp_disable_advanced_profile_search()
 		) &&
-		! bp_is_directory()
+		! bp_is_directory() &&
+		! bp_is_user_activity()
 	) {
 		?>
 		<div class="subnav-search clearfix"><?php bp_nouveau_search_form(); ?></div>
