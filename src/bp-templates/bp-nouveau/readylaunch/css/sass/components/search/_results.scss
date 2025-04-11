@@ -1,0 +1,131 @@
+.bb-rl-search-results-container {
+	margin: 0 auto;
+	max-width: 760px;
+	padding: 0 0 var(--bb-rl-space-400);
+
+	> .entry-header {
+		padding: var(--bb-rl-space-400) 0 var(--bb-rl-space-300);
+	}
+
+	h1.entry-title {
+
+		@include bb-rl-label-heading-md-thin;
+
+		.bb-rl-result-label {
+
+			@include bb-rl-label-heading-md-bold;
+		}
+	}
+
+	.results-group {
+		background-color: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-lg);
+		margin-bottom: var(--bb-rl-space-300);
+
+		.results-group-header {
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--bb-rl-space-200);
+		}
+
+		.bp-search-results-list {
+			padding: var(--bb-rl-space-200) 0;
+
+			.bp-search-item {
+				padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+			}
+		}
+
+		.results-group-footer {
+			padding: var(--bb-rl-space-200) var(--bb-rl-space-300) var(--bb-rl-space-300);
+		}
+	}
+
+	.results-group-header {
+
+		.results-group-title {
+
+			@include bb-rl-base-heading-bolder;
+		}
+
+		.total-results {
+
+			@include bb-rl-label-heading-md;
+		}
+	}
+
+	.results-group-footer {
+
+		.view-all-link {
+
+			@include bb-rl-button;
+			@include bb-rl-button-secondary-fill;
+			@include bb-rl-button--small;
+		}
+	}
+
+	li.bp-search-item {
+
+		.list-wrap {
+			display: flex;
+			gap: var(--bb-rl-space-300);
+		}
+
+		.item-avatar {
+			display: inline-block;
+			width: 48px;
+			height: 48px;
+		}
+
+		img.avatar {
+			width: 100%;
+			height: auto;
+			object-fit: cover;
+			border-radius: 50%;
+		}
+
+		.item-title {
+
+			@include bb-rl-base-heading-bolder;
+			margin-bottom: var(--bb-rl-space-100);
+
+			a {
+				color: var(--bb-rl-text-color);
+			}
+		}
+
+		.entry-content,
+		.activity-content {
+
+			@include bb-rl-label-heading-md-thin;
+		}
+
+		.entry-meta {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-tertiary-color);
+			margin-top: var(--bb-rl-space-100);
+		}
+
+		.activity-content .item-meta {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-tertiary-color);
+			margin-top: var(--bb-rl-space-100);
+
+			a {
+				color: var(--bb-rl-text-tertiary-color);
+			}
+		}
+
+		&.bp-search-item_group {
+
+			img.avatar {
+				border-radius: var(--bb-rl-radius-base);
+			}
+		}
+	}
+}
