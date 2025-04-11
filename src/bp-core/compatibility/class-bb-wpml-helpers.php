@@ -428,6 +428,11 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				return;
 			}
 
+			// Store POST data early.
+			if ( ! empty( $_POST['data']['icl_post_language'] ) && ! empty( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ) { //phpcs:ignore
+				set_transient( 'bb_wpml_posted_icl_post_language_' . intval( wp_unslash( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ), sanitize_text_field( wp_unslash( $_POST['data']['icl_post_language'] ) ), 100 ); //phpcs:ignore
+			}
+
 			// Get all post types.
 			$post_types = get_post_types( array( 'public' => true ), 'names' );
 			if ( ! empty( $post_types ) ) {
@@ -490,6 +495,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 					if ( $post && 'publish' === $post->post_status ) {
 						// Before sending the response, explicitly check if this is a translation and prevent activity.
 						if ( function_exists( 'bp_activity_post_type_publish' ) ) {
+							delete_transient( 'bb_wpml_posted_icl_post_language_' . intval( $post_id ) );
 
 							// Now call the function directly to process this post.
 							bp_activity_post_type_publish( $post_id, $post );
@@ -517,6 +523,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 */
 		public function bb_check_if_wpml_translation( $return, $blog_id, $post_id, $user_id ) {
 			global $wpdb, $sitepress;
+			$post_id = (int) $post_id;
 
 			// Continue only if WPML is active and we have the necessary components.
 			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! $sitepress || empty( $post_id ) ) {
@@ -530,6 +537,13 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Get current language - if it's not the default language, we don't want to create an activity.
 			$current_language = apply_filters( 'wpml_current_language', null );
+
+			// Get the language from the transient if it exists for admin screens.
+			if ( get_transient( 'bb_wpml_posted_icl_post_language_' . $post_id ) ) {
+				$current_language = get_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+			}
+
 			if ( ! empty( $current_language ) && $current_language !== $default_lang ) {
 				return false;
 			}
