@@ -33,7 +33,7 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 			</transition>
 		</div>
 
-		<div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal">
+		<div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal" style="display: none;">
 			<transition name="modal">
 				<div class="modal-mask bb-rl-modal-mask">
 					<div class="bb-rl-modal-wrapper">
