@@ -37,6 +37,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 	}
 
 	$location = 'directory';
+	$is_rest  = bb_is_rest();
 
 	$meta   = bp_ps_meta( $form );
 	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
@@ -181,14 +182,14 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 
 	foreach ( $F->fields as $f ) {
 		if ( ! is_array( $f->value ) ) {
-			$f->value = esc_attr( stripslashes( $f->value ) );
+			$f->value = $is_rest ? stripslashes( $f->value ) : esc_attr( stripslashes( $f->value ) );
 		}
 		if ( $f->display == 'hidden' ) {
 			continue;
 		}
 
-		$f->label       = esc_attr( $f->label );
-		$f->description = esc_attr( $f->description );
+		$f->label       = $is_rest ? stripslashes( $f->label ) : esc_attr( $f->label );
+		$f->description = $is_rest ? stripslashes( $f->description ) : esc_attr( $f->description );
 
 		foreach ( $f->values as $k => $value ) {
 			if ( is_array( $value ) ) {
@@ -196,7 +197,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 					$f->values[ $k ][ $sub_k ] = esc_attr( stripslashes( $sub_value ) );
 				}
 			} else {
-				$f->values[ $k ] = esc_attr( stripslashes( $value ) );
+				$f->values[ $k ] = $is_rest ? stripslashes( $value ) : esc_attr( stripslashes( $value ) );
 			}
 		}
 
