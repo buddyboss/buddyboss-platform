@@ -1845,6 +1845,7 @@ window.bp = window.bp || {};
 					self       : self,
 					type       : 'group',
 					fetchScope : true,
+					template   : null
 				}
 			);
 		},
@@ -4449,7 +4450,8 @@ window.bp = window.bp || {};
 				extras       = null,
 				queryData,
 				type         = data.type,
-				order        = data.order_by;
+				order        = data.order_by,
+				template     = data.template || null;
 
 			// Filter type.
 			if ( 'friends' === object ) {
