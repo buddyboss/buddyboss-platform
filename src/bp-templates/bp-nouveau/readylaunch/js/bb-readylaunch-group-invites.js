@@ -142,9 +142,7 @@ window.bp = window.bp || {};
 						data    : data,
 						success : function ( response ) {
 							if ( response.success ) {
-								self.selectors.memberInvitedList.html( '' );
 								self.selectors.memberInvitedList.html( response.data.html );
-								self.selectors.subNavFilterLast.html( '' );
 								self.selectors.subNavFilterLast.html( response.data.pagination );
 								self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 								self.selectors.feedbackInviteColumn.addClass( 'info' );
@@ -182,9 +180,7 @@ window.bp = window.bp || {};
 						success : function ( response ) {
 							var self = bp.Nouveau.GroupInvites;
 							if ( response.success ) {
-								self.selectors.listSelector.html( '' );
 								self.selectors.listSelector.html( response.data.html );
-								self.selectors.lastSelector.html( '' );
 								self.selectors.lastSelector.html( response.data.pagination );
 								$( '#group-invites-container .bb-groups-invites-right' ).show();
 								$( '.bb-groups-invites-right .bp-invites-feedback' ).show();
@@ -348,9 +344,7 @@ window.bp = window.bp || {};
 						data    : param,
 						success : function ( response ) {
 							if ( response.success ) {
-								self.selectors.listSelector.html( '' );
 								self.selectors.listSelector.html( response.data.html );
-								self.selectors.lastSelector.html( '' );
 								self.selectors.lastSelector.html( response.data.pagination );
 								self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 								self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -399,9 +393,7 @@ window.bp = window.bp || {};
 						data    : param,
 						success : function ( response ) {
 							if ( response.success ) {
-								self.selectors.listSelector.html( '' );
 								self.selectors.listSelector.html( response.data.html );
-								self.selectors.lastSelector.html( '' );
 								self.selectors.lastSelector.html( response.data.pagination );
 								self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 								self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -449,9 +441,7 @@ window.bp = window.bp || {};
 						success : function ( response ) {
 							if ( response.success ) {
 								$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).hide();
-								self.selectors.listSelector.html( '' );
 								self.selectors.listSelector.html( response.data.html );
-								self.selectors.lastSelector.html( '' );
 								self.selectors.lastSelector.html( response.data.pagination );
 								self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 								self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -641,7 +631,6 @@ window.bp = window.bp || {};
 								function () {
 									self.selectors.feedbackParagraphTagClass.removeClass( response.data.type );
 									self.selectors.feedbackParagraphTagClass.addClass( 'info' );
-									self.selectors.feedbackParagraphTagSelector.html( '' );
 									self.selectors.feedbackParagraphTagSelector.html( bbRlGroupInvites.member_invite_info_text );
 									$( '#group-invites-container .bb-groups-invites-right .bp-invites-submit-loader-hide' ).hide();
 								},
@@ -673,9 +662,7 @@ window.bp = window.bp || {};
 									data    : data,
 									success : function ( response ) {
 										if ( response.success ) {
-											self.selectors.listSelector.html( '' );
 											self.selectors.listSelector.html( response.data.html );
-											self.selectors.lastSelector.html( '' );
 											self.selectors.lastSelector.html( response.data.pagination );
 											self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 											self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -702,7 +689,6 @@ window.bp = window.bp || {};
 								function () {
 									self.selectors.feedbackParagraphTagClass.removeClass( response.data.type );
 									self.selectors.feedbackParagraphTagClass.addClass( 'info' );
-									self.selectors.feedbackParagraphTagSelector.html( '' );
 									self.selectors.feedbackParagraphTagSelector.html( bbRlGroupInvites.member_invite_info_text );
 									$( '#group-invites-container .bb-groups-invites-right .bp-invites-submit-loader-hide' ).hide();
 								},
@@ -746,9 +732,7 @@ window.bp = window.bp || {};
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
-							self.selectors.listSelector.html( '' );
 							self.selectors.listSelector.html( response.data.html );
-							self.selectors.lastSelector.html( '' );
 							self.selectors.lastSelector.html( response.data.pagination );
 							self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 							self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -816,9 +800,7 @@ window.bp = window.bp || {};
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
-							self.selectors.listSelector.html( '' );
 							self.selectors.listSelector.html( response.data.html );
-							self.selectors.lastSelector.html( '' );
 							self.selectors.lastSelector.html( response.data.pagination );
 							self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 							self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -876,9 +858,7 @@ window.bp = window.bp || {};
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
-							self.selectors.listSelector.html( '' );
 							self.selectors.listSelector.html( response.data.html );
-							self.selectors.lastSelector.html( '' );
 							self.selectors.lastSelector.html( response.data.pagination );
 							self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 							self.selectors.feedbackSelectorLeftClass.addClass( 'info' );
@@ -1018,9 +998,7 @@ window.bp = window.bp || {};
 						data    : data,
 						success : function ( response ) {
 							if ( response.success ) {
-								self.selectors.memberInvitedList.html( '' );
 								self.selectors.memberInvitedList.html( response.data.html );
-								self.selectors.subNavFilterLast.html( '' );
 								self.selectors.subNavFilterLast.html( response.data.pagination );
 								self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 								self.selectors.feedbackInviteColumn.addClass( 'info' );
@@ -1070,9 +1048,7 @@ window.bp = window.bp || {};
 					data    : data,
 					success : function ( response ) {
 						if ( response.success ) {
-							self.selectors.memberInvitedList.html( '' );
 							self.selectors.memberInvitedList.html( response.data.html );
-							self.selectors.subNavFilterLast.html( '' );
 							self.selectors.subNavFilterLast.html( response.data.pagination );
 							self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 							self.selectors.feedbackInviteColumn.addClass( 'info' );
@@ -1098,7 +1074,6 @@ window.bp = window.bp || {};
 
 			self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackInviteColumn.addClass( 'loading' );
-			self.selectors.feedbackInvitePTag.html( '' );
 			self.selectors.feedbackInvitePTag.html( bbRlGroupInvites.removing );
 
 			var li = $( event.currentTarget ).closest( 'li' );
@@ -1143,9 +1118,7 @@ window.bp = window.bp || {};
 									data    : data,
 									success : function ( response ) {
 										if ( response.success ) {
-											self.selectors.memberInvitedList.html( '' );
 											self.selectors.memberInvitedList.html( response.data.html );
-											self.selectors.subNavFilterLast.html( '' );
 											self.selectors.subNavFilterLast.html( response.data.pagination );
 											self.selectors.feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 											self.selectors.feedbackInviteColumn.addClass( 'info' );
