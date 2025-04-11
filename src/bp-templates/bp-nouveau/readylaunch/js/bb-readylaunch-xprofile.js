@@ -10,12 +10,13 @@ window.bp = window.bp || {};
 	}
 
     // Collapse repeater sets on page load, if there are more than one sets
-    var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
+    var repeaterGroupOuter = $( '#profile-edit-form .repeater_group_outer' );
+    var repeater_set_count = repeaterGroupOuter.length;
     window.deleteFieldEvent = false;
 
     if ( repeater_set_count > 0 ) {
         var repeater_set_sequence = [];
-        $( '#profile-edit-form .repeater_group_outer' ).each( function(){
+        repeaterGroupOuter.each( function(){
             var $set = $(this);
             repeater_set_sequence.push( $set.data('set_no') );
 
@@ -73,8 +74,8 @@ window.bp = window.bp || {};
 
 
     if (window.location.href.indexOf('#bpxpro') > -1) {
-        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
-        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
+        repeaterGroupOuter.last().find('.repeater_group_inner').slideToggle();
+        repeaterGroupOuter.last().toggleClass('active');
     }
 
 	var deleted_field_ids = [];
@@ -106,14 +107,16 @@ window.bp = window.bp || {};
             $delete_button.closest( '.repeater_group_outer' ).remove();
 
             // Update sorting order
-            var repeater_set_sequence = [];
-            $( '#profile-edit-form .repeater_group_outer' ).each( function(){
+            var repeater_set_sequence = [],
+                repeaterGroupOuter = $( '#profile-edit-form .repeater_group_outer' );
+            repeaterGroupOuter.each( function(){
                 repeater_set_sequence.push( $(this).data('set_no') );
             });
             $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
 
-            // Remove the deleted field ids, so that it doesn't generate validation errors
-            var all_field_ids = $( '#profile-edit-form [name="field_ids"]' ).val().split( ',' );
+            // Remove the deleted field ids, so that it doesn't generate validation errors.
+            var $fieldIds = $( '#profile-edit-form [name="field_ids"]' );
+            var all_field_ids = $fieldIds.val().split( ',' );
             var remaining_field_ids = [];
             for ( var i =0; i < all_field_ids.length; i++ ) {
                 var is_deleted = false;
@@ -131,16 +134,17 @@ window.bp = window.bp || {};
 
             remaining_field_ids = remaining_field_ids.join( ',' );
 
-            $( '#profile-edit-form [name="field_ids"]' ).val( remaining_field_ids );
+            $fieldIds.val( remaining_field_ids );
 
-            //keep a record of deleted fields
-            if ( ! $( '#profile-edit-form [name="deleted_field_ids"]' ).length ) {
-                $( '#profile-edit-form' ).append( '<input type="hidden" name="deleted_field_ids" >' );
+            //keep a record of deleted fields.
+            var $deletedFieldIds = $( '#profile-edit-form [name="deleted_field_ids"]' );
+            if ( ! $deletedFieldIds.length ) {
+                $form.append( '<input type="hidden" name="deleted_field_ids" >' );
             }
-            $( '#profile-edit-form [name="deleted_field_ids"]' ).val( deleted_field_ids.join( ',' ) );
+            $deletedFieldIds.val( deleted_field_ids.join( ',' ) );
 
             // Disable the delete button if it's the only set remaining
-            if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
+            if ( repeaterGroupOuter.length === 1 ) {
                 //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
             }
 
@@ -157,8 +161,9 @@ window.bp = window.bp || {};
     // Remove attr from button after page successfully load.
     if ( window.location.href.indexOf('#bpxpro') > 0 ) {
         document.addEventListener('DOMContentLoaded', function () {
-            $( '#profile-edit-form #btn_add_repeater_set' ).removeAttr('disabled');
-            $( '#profile-edit-form #btn_add_repeater_set' ).css('pointer-events', 'auto');
+            var $addRepeaterSetButton = $( '#profile-edit-form #btn_add_repeater_set' );
+            $addRepeaterSetButton.removeAttr('disabled');
+            $addRepeaterSetButton.css('pointer-events', 'auto');
         });
     }
 
@@ -210,9 +215,12 @@ window.bp = window.bp || {};
 	} );
 
     $( document ).on( 'click', function( event ) {
-        if ( !$( event.target ).closest( '.bb-rl-field-visibility-block' ).length &&
-            $( '.field-visibility-settings:visible' ).length) {
-            $( '.field-visibility-settings:visible' ).hide();
+        var $visibilityCheck = $( '.field-visibility-settings:visible' );
+        if (
+            ! $(event.target).closest('.bb-rl-field-visibility-block').length &&
+            $visibilityCheck.length
+        ) {
+            $visibilityCheck.hide();
         }
     } );
 
@@ -254,12 +262,14 @@ window.bp = window.bp || {};
 
 		container = container.replace( '[', '\\[' ).replace( ']', '\\]' );
 
-		if ( $( '#' + container + ' option' ).length ) {
-			$.each( $( '#' + container + ' option' ), function( c, option ) {
+		var $containerOptions = $( '#' + container + ' option' ),
+		    $containerRadios  = $( '#' + container + ' [type=radio]' );
+		if ( $containerOptions.length ) {
+			$.each( $containerOptions, function ( c, option ) {
 				$( option ).prop( 'selected', false );
 			} );
-		} else if ( $( '#' + container + ' [type=radio]' ).length ) {
-			$.each( $( '#' + container + ' [type=radio]' ), function( c, checkbox ) {
+		} else if ( $containerRadios.length ) {
+			$.each( $containerRadios, function ( c, checkbox ) {
 				$( checkbox ).prop( 'checked', false );
 			} );
 		}
