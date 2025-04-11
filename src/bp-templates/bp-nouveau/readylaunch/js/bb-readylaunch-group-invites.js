@@ -43,8 +43,9 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start : function () {
-			var self   = this;
-			this.views = new Backbone.Collection();
+			var self       = this;
+			this.views     = new Backbone.Collection();
+			this.isLoading = false;
 
 			var $body                 = $( 'body' );
 			var $group_invites_select = $body.find( '#group-invites-send-to-input' );
@@ -113,7 +114,7 @@ window.bp = window.bp || {};
 								)
 							);
 							if ( show || $( window ).scrollTop() + $( window ).height() >= $( document ).height() ) {
-								if ( 0 === isWorking ) {
+								if ( 0 === isWorking && ! self.isLoading ) {
 									$( '#group-invites-container .last #bp-group-invites-next-page' ).trigger( 'click' );
 									isWorking = 1;
 								}
@@ -534,7 +535,13 @@ window.bp = window.bp || {};
 		},
 
 		groupInvitesNextPage : function () {
-			var self            = this;
+			var self = this;
+
+			if ( self.isLoading ) {
+				return;
+			}
+
+			self.isLoading      = true;
 			self.selectors.page = self.selectors.page + 1;
 
 			if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
@@ -571,6 +578,7 @@ window.bp = window.bp || {};
 							self.selectors.feedbackSelectorLeftClass.addClass( response.data.type );
 							self.selectors.feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 						}
+						self.isLoading = false;
 					}
 				}
 			);
@@ -897,6 +905,12 @@ window.bp = window.bp || {};
 
 		groupInvitesContainerNextPage : function () {
 			var self = this;
+			
+			if (self.isLoading) {
+				return;
+			}
+			
+			self.isLoading = true;
 			self.selectors.feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 			self.selectors.feedbackSelectorLeftClass.addClass( 'loading' );
 			self.selectors.feedbackParagraphTagSelectorLeft.html( bbRlGroupInvites.loading );
@@ -931,6 +945,7 @@ window.bp = window.bp || {};
 							self.selectors.feedbackInviteColumn.addClass( response.data.type );
 							self.selectors.feedbackInvitePTag.html( response.data.feedback );
 						}
+						self.isLoading = false;
 					}
 				}
 			);
@@ -1289,6 +1304,7 @@ window.bp = window.bp || {};
 		},
 
 		loadMoreInvitesMembers : function ( event ) {
+			var self   = bp.Nouveau.GroupInvites;
 			var target = $( event.currentTarget );
 			if (
 				(
@@ -1296,7 +1312,7 @@ window.bp = window.bp || {};
 				) <= 30
 			) {
 				var element = $( '#group-invites-container .group-invites-members-listing #members-list li.load-more' );
-				if ( element.length ) {
+				if ( element.length && ! self.isLoading ) {
 					$( '#group-invites-container .group-invites-members-listing .last #bp-group-invites-next-page' ).trigger( 'click' );
 				}
 			}
