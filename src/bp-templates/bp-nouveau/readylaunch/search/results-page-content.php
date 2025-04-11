@@ -20,14 +20,6 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
 
 	<div class="bp-search-results-wrapper dir-form <?php echo $no_results_class; ?>">
-
-        <?php
-            ob_start();
-         bp_search_buffer_template_part( 'search-nav' );
-	        $bb_rl_search_nav = ob_get_clean();
-
-        ?>
-
 		<div class="bp-search-form-wrapper dir-search no-ajax">
 			<?php bp_search_buffer_template_part('search-form');?>
 		</div>
