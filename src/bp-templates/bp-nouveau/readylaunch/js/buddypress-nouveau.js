@@ -4442,16 +4442,16 @@ window.bp = window.bp || {};
 
 		commonQueryFilter: function ( data ) {
 			var self         = data.self,
-				object       = data.object,
-				target       = data.target,
-				scope        = data.scope,
-				filter,
-				search_terms = ! _.isUndefined( data.search_terms ) ? data.search_terms : '',
-				extras       = null,
-				queryData,
-				type         = data.type,
-				order        = data.order_by,
-				template     = data.template || null;
+			    object       = data.object,
+			    target       = data.target,
+			    scope        = data.scope,
+			    filter,
+			    search_terms = ! _.isUndefined( data.search_terms ) ? data.search_terms : '',
+			    extras       = null,
+			    queryData,
+			    type         = data.type,
+			    order        = data.order_by,
+			    template     = data.template || null;
 
 			// Filter type.
 			if ( 'friends' === object ) {
