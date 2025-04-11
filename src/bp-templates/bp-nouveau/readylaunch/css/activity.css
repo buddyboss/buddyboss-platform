@@ -1879,7 +1879,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-rl-activity-placeholder .bb-rl-activity-placeholder_head {
   display: flex;
-  margin-bottom: var(bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-activity-placeholder .bb-rl-activity-placeholder_details {
@@ -1909,7 +1909,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   flex-flow: column;
   flex: 1;
   gap: 8px;
-  margin-bottom: var(bb-rl-space-200);
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-activity-placeholder .bb-rl-activity-placeholder_content .bb-rl-activity-placeholder_title {

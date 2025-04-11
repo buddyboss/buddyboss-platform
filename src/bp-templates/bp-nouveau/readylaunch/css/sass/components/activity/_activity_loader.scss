@@ -16,7 +16,7 @@
 
 	.bb-rl-activity-placeholder_head {
 		display: flex;
-		margin-bottom: var(bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-200);
 	}
 
 	.bb-rl-activity-placeholder_details {
@@ -46,7 +46,7 @@
 		flex-flow: column;
 		flex: 1;
 		gap: 8px;
-		margin-bottom: var(bb-rl-space-200);
+		margin-bottom: var(--bb-rl-space-200);
 
 		.bb-rl-activity-placeholder_title {
 			height: 18px;
