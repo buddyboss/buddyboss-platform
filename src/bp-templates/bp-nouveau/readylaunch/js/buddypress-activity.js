@@ -318,8 +318,9 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
-				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			var searchElement = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' );
+			if ( searchElement.length ) {
+				search_terms = searchElement.val();
 			}
 
 			if ( $( objectNavParent + ' [data-bp-order]' ).length ) {
@@ -385,9 +386,7 @@ window.bp = window.bp || {};
 					var utcDate = new Date( dateString.replace( ' ', 'T') + 'Z' );
 
 					// Get the Unix timestamp in seconds.
-					var activity_timestamp = utcDate.getTime() / 1000;
-
-					this.heartbeat_data.first_recorded = activity_timestamp;
+					this.heartbeat_data.first_recorded = utcDate.getTime() / 1000;
 				} else {
 					this.heartbeat_data.first_recorded = first_unpinned_activity.data( 'bp-timestamp' ) || 0;
 				}
@@ -414,10 +413,11 @@ window.bp = window.bp || {};
 
 			$.extend(data, {
 				bp_heartbeat: (function() {
-					var heartbeatData = { scope: 'all' };
+					var heartbeatData;
 
 					// Check if the page is a user activity page.
-					if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+					var $bodyElem = $( 'body.my-activity:not(.activity-singular)' );
+					if ( $bodyElem.length ) {
 						heartbeatData = bp.Nouveau.getStorage( 'bp-user-activity' ) || { scope: 'just-me' };
 					} else {
 
@@ -440,7 +440,7 @@ window.bp = window.bp || {};
 							if ( 'undefined' !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
 
 								// Add to the storage if page request 2.
-								if ( $( 'body.my-activity:not(.activity-singular)' ).length ) {
+								if ( $bodyElem.length ) {
 									bp.Nouveau.setStorage( 'bp-user-activity', 'scope', scope );
 								} else {
 									bp.Nouveau.setStorage( 'bp-activity', 'scope', scope );
@@ -451,8 +451,7 @@ window.bp = window.bp || {};
 
 					// Add `order_by` only if it's not already set.
 					if ( $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).length ) {
-						var order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
-						heartbeatData.order_by = order_by;
+						heartbeatData.order_by = $( bp.Nouveau.objectNavParent + ' [data-bp-order].selected' ).data( 'bp-orderby' );
 					}
 
 					return heartbeatData;
@@ -1026,12 +1025,12 @@ window.bp = window.bp || {};
 							'' !== response.data.edited_text
 						) {
 
-							if ( activity_item.find( '.activity-date span.bb-activity-edited-text' ).length ) {
+							if ( activityItem.find( '.activity-date span.bb-activity-edited-text' ).length ) {
 								// Completely remove and replace the edited text with new content.
-								activity_item.find( '.activity-date span.bb-activity-edited-text' ).replaceWith( response.data.edited_text );
+								activityItem.find( '.activity-date span.bb-activity-edited-text' ).replaceWith( response.data.edited_text );
 							} else {
 								// Append the edited text to the activity date.
-								activity_item.find( '.activity-date' ).append( response.data.edited_text );
+								activityItem.find( '.activity-date' ).append( response.data.edited_text );
 							}
 						}
 

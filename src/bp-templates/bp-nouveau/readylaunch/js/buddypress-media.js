@@ -418,8 +418,8 @@ window.bp = window.bp || {};
 		/**
 		 * [editDocument description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		editAlbum: function ( event ) {
 			event.preventDefault();
@@ -663,17 +663,14 @@ window.bp = window.bp || {};
 		},
 
 		moveDocumentIntoFolder: function ( event ) {
-			console.log( 'moveDocumentIntoFolder' );
 			this.moveAttachments( event, 'document', 'folder' );
 		},
 
 		moveMediaIntoAlbum: function ( event ) {
-			console.log( 'moveMediaIntoAlbum' );
 			this.moveAttachments( event, 'media', 'album' );
 		},
 
 		folderMove: function ( event ) {
-			console.log( 'folderMove' );
 			this.moveAttachments( event, 'document_folder', 'folder' );
 		},
 
@@ -2762,8 +2759,8 @@ window.bp = window.bp || {};
 		/**
 		 * [openMediaMove description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		openMediaMove: function ( event ) {
 			event.preventDefault();
@@ -2916,8 +2913,8 @@ window.bp = window.bp || {};
 		/**
 		 * [openDocumentMove description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		openDocumentMove: function ( event ) {
 			event.preventDefault();
@@ -3014,8 +3011,8 @@ window.bp = window.bp || {};
 		/**
 		 * [closeDocumentMove description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		closeMediaMove: function ( event ) {
 			event.preventDefault();
@@ -3030,8 +3027,8 @@ window.bp = window.bp || {};
 		/**
 		 * [closeDocumentMove description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		closeDocumentMove: function ( event ) {
 			event.preventDefault();
@@ -3051,8 +3048,8 @@ window.bp = window.bp || {};
 		/**
 		 * [renameDocument description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		renameDocument: function ( event ) {
 			var current_name      = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name' ),
@@ -3066,8 +3063,8 @@ window.bp = window.bp || {};
 		/**
 		 * [editDocument description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		editDocument: function ( event ) {
 			event.preventDefault();
@@ -3111,8 +3108,8 @@ window.bp = window.bp || {};
 		/**
 		 * [renameDocumentSubmit description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		renameDocumentSubmit: function ( event ) {
 			var eventTarget               = $( event.currentTarget ),
@@ -3128,7 +3125,7 @@ window.bp = window.bp || {};
 			if ( eventTarget.closest( '.ac-document-list' ).length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
 			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
-				pattern = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val ),
@@ -3216,8 +3213,8 @@ window.bp = window.bp || {};
 		/**
 		 * [editPrivacyDocument description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		editPrivacyDocument: function ( event ) {
 			event.preventDefault();
@@ -3237,8 +3234,8 @@ window.bp = window.bp || {};
 		/**
 		 * [editDocumentSubmit description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		editDocumentSubmit: function ( event ) {
 			var eventTarget               = $( event.currentTarget ),
@@ -3258,7 +3255,7 @@ window.bp = window.bp || {};
 			if ( $mediaItem.length ) {
 				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
 			} else if ( eventTarget.closest( '.ac-folder-list' ).length ) {
-				pattern = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val ),
@@ -3319,7 +3316,6 @@ window.bp = window.bp || {};
 									'undefined' !== typeof response.data.response.privacy &&
 									$mediaItem.find( '.bb_more_options .ac-document-edit' ).length > 0
 								) {
-									console.log('updated');
 									$mediaItem.find( '.bb_more_options .ac-document-edit' ).attr( 'data-privacy', response.data.response.privacy );
 								}
 
@@ -3343,8 +3339,8 @@ window.bp = window.bp || {};
 		/**
 		 * [editAlbumSubmit description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		editAlbumSubmit: function ( event ) {
 			var eventTarget = $( event.currentTarget ),
@@ -4193,7 +4189,7 @@ window.bp = window.bp || {};
 				privacy = $( '#bp-media-edit-child-folder #bb-rl-folder-privacy' ),
 				id      = this.currentTargetParent;
 
-			var pattern     = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var pattern     = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			var matches     = pattern.exec( title.val() ),
 				matchStatus = Boolean( matches );
 
@@ -4259,8 +4255,8 @@ window.bp = window.bp || {};
 		/**
 		 * [injectQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		injectMedias: function ( event ) {
 			this.injectAttachments( event, 'media' );
@@ -4416,15 +4412,15 @@ window.bp = window.bp || {};
 		/**
 		 * [appendQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		appendMedia: function ( event ) {
 			var store       = bp.Nouveau.getStorage( 'bp-media' ),
 				scope       = store.scope || null, filter = store.filter || null;
 			var eventTarget = $( event.currentTarget );
 			if ( eventTarget.hasClass( 'load-more' ) ) {
-				var next_page = ( Number( this.current_page_existing_media ) * 1 ) + 1, self = this, search_terms = '';
+				var next_page = Number( this.current_page_existing_media ) + 1, self = this, search_terms = '';
 
 				// Stop event propagation.
 				event.preventDefault();
@@ -4466,11 +4462,11 @@ window.bp = window.bp || {};
 		/**
 		 * [appendQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		appendAlbums: function ( event ) {
-			var next_page = ( Number( this.current_page_albums ) * 1 ) + 1, self = this;
+			var next_page = Number( this.current_page_albums ) + 1, self = this;
 
 			// Stop event propagation.
 			event.preventDefault();
@@ -5517,7 +5513,6 @@ window.bp = window.bp || {};
 
 		submitCreateFolderAlbumInPopup : function ( event, actionType, folderOrAlbum ) {
 			event.preventDefault();
-			console.log( 'submitCreateFolderAlbumInPopup' );
 			var self               = this,
 				eventCurrentTarget = $( event.currentTarget ),
 				targetPopup        = eventCurrentTarget.closest( '.open-popup' ),
@@ -5526,7 +5521,7 @@ window.bp = window.bp || {};
 				titleSelector      = eventCurrentTarget.closest( '.bb-rl-modal-container' ).find( '.bb-rl-popup-on-fly-create-' + folderOrAlbum + '-title' ),
 				title              = $.trim( titleSelector.val() );
 			if ( 'document' === actionType ) {
-				var pattern     = / [\\ / ? % * : | "<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+				var pattern     = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 				var matches     = pattern.exec( title );
 				var matchStatus = Boolean( matches );
 				if ( title === '' || matchStatus ) {
@@ -5740,7 +5735,7 @@ window.bp = window.bp || {};
 				filter      = store.filter || null,
 				eventTarget = $( event.currentTarget );
 			if ( eventTarget.hasClass( 'load-more' ) ) {
-				var next_page    = ( Number( this.current_page ) * 1 ) + 1,
+				var next_page    = Number( this.current_page ) + 1,
 					self         = this,
 					search_terms = '';
 
@@ -6479,11 +6474,7 @@ window.bp = window.bp || {};
 							m.is_forum = true;
 						}
 
-						if ( typeof m.privacy !== 'undefined' && m.privacy === 'message' ) {
-							m.is_message = true;
-						} else {
-							m.is_message = false;
-						}
+						m.is_message = typeof m.privacy !== 'undefined' && m.privacy === 'message';
 
 						self.medias.push( m );
 					}
@@ -6535,11 +6526,7 @@ window.bp = window.bp || {};
 							a.is_forum = true;
 						}
 
-						if ( typeof a.privacy !== 'undefined' && a.privacy === 'message' ) {
-							a.is_message = true;
-						} else {
-							a.is_message = false;
-						}
+						a.is_message = typeof a.privacy !== 'undefined' && a.privacy === 'message';
 
 						self.documents.push( a );
 					}
@@ -6675,9 +6662,9 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-rl-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-rl-document-section .document-preview' ).html( '' );
 				if ( 'mov' === self.current_document.extension || 'm4v' === self.current_document.extension ) {
-					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<video playsinline id="video-' + self.current_document.id + '" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/mp4" ></source></video><span class="video-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></span>' );
+					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<video playsinline id="video-' + self.current_document.id + '" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/mp4" ></video><span class="video-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></span>' );
 				} else {
-					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<video playsinline id="video-' + self.current_document.id + '" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></source></video><span class="video-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></span>' );
+					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<video playsinline id="video-' + self.current_document.id + '" class="video-js video-loading" controls  data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\' ><source src="' + self.current_document.video + '" type="video/' + self.current_document.extension + '" ></video><span class="video-loader"><i class="bb-icon-l bb-icon-spinner animate-spin"></i></span>' );
 				}
 
 				// fake scroll event to call video bp.Nouveau.Video.Player.openPlayer();.
@@ -6687,7 +6674,7 @@ window.bp = window.bp || {};
 				if ( self.current_document.full_preview ) {
 					document_elements.find( '.bb-rl-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.full_preview + '" /></div></div>' );
+					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.full_preview + '" alt=""/></div></div>' );
 				} else {
 					document_elements.find( '.bb-rl-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-rl-document-section .document-preview' ).html( '' );
@@ -7193,8 +7180,8 @@ window.bp = window.bp || {};
 		/**
 		 * [togglePopupDropdown description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		togglePopupDropdown: function ( event ) {
 			var element;
