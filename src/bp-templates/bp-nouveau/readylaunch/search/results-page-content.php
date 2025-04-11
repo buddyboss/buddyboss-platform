@@ -20,12 +20,63 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
 
 	<div class="bp-search-results-wrapper dir-form <?php echo $no_results_class; ?>">
+
 		<div id="bb-rl-search-modal" class="bb-rl-search-modal" style="display: none;">
 			<transition name="modal">
 				<div class="modal-mask bb-rl-modal-mask">
 					<div class="bb-rl-modal-wrapper">
 						<div class="bp-search-form-wrapper dir-search no-ajax">
 							<?php bp_search_buffer_template_part('search-form');?>
+						</div>
+					</div>
+				</div>
+			</transition>
+		</div>
+
+		<div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal">
+			<transition name="modal">
+				<div class="modal-mask bb-rl-modal-mask">
+					<div class="bb-rl-modal-wrapper">
+						<div class="bp-search-form-wrapper dir-search no-ajax has-results">
+
+							<form action="" method="get" class="bp-dir-search-form" id="search-form">
+								<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+								<div class="bb-rl-network-search-bar">
+									<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community', 'buddyboss' ); ?>">
+									<button type="submit" id="search-submit" class="nouveau-search-submit">
+										<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
+										<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+									</button>
+									<a href="" class="bb-rl-network-search-clear"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+									<div class="bb-rl-network-search-filter">
+										<div class="bb-rl-filter-tag">
+											<span class="search-filter-label"><?php esc_html_e( 'All', 'buddyboss' ); ?></span>
+											<i class="bb-icons-rl-caret-down"></i>
+										</div>
+									</div>
+								</div>
+							</form>
+							<div class="bb-rl-ac-results">
+								<ul class="ac-results-list">
+									<li class="bb-rl-search-post">
+										<div class="item-avatar">
+											<a href="#" title="" class="bb-rl-avatar-link">
+												<img alt="" src="http://localhost/bb-buddyboss-theme-demo/wp-content/uploads/avatars/1/67f6a78532bc0-bpthumb.jpg" class="avatar" height="80" width="80">
+											</a>
+										</div>
+										<div class="item-content">
+											<div class="item-title">
+												<a href="#" title="" class="bb-rl-author-link">John Travolta</a>
+											</div>
+											<div class="entry-content">The most versatile, and feature-rich engagement platform. Browse beautifully designed templates, effortlessly customize it to meet your specific requirements.</div>
+											<div class="entry-meta">
+												<span class="bb-rl-search-post-date">12 minutes ago</span>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+
 						</div>
 					</div>
 				</div>
