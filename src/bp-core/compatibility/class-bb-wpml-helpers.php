@@ -77,6 +77,9 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_wpml_groups_dir_search_where_conditions' ), 10, 2 );
 			add_filter( 'Bp_Search_Groups_sql', array( $this, 'bb_wpml_groups_search_global_sql' ), 10, 2 );
+
+			// Prevent activity creation for WPML translated posts.
+			add_filter( 'bp_init', array( $this, 'bb_prevent_translated_post_activities' ) );
 		}
 
 		/**
@@ -413,6 +416,126 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $sql_query;
+		}
+
+		/**
+		 * Prevents activity creation for WPML translated posts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_prevent_translated_post_activities() {
+			if ( ! bp_is_active( 'activity' ) ) {
+				return;
+			}
+
+			// Get all post types.
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+			if ( ! empty( $post_types ) ) {
+				foreach ( $post_types as $post_type ) {
+					add_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
+				}
+			}
+
+			// For WPML translation approvals via AJAX.
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				$this->bb_hook_wp_send_json();
+			}
+		}
+
+		/**
+		 * Override WordPress's wp_send_json_success function to intercept WPML translation approvals.
+		 * This is a hacky but effective approach since WPML doesn't provide a hook before sending the response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		private function bb_hook_wp_send_json() {
+
+			if ( empty( $_POST['nonce'] ) || empty( $_POST['endpoint'] ) || empty( $_POST['action'] ) ) {
+				return;
+			}
+
+			$nonce    = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+			$endpoint = sanitize_text_field( wp_unslash( $_POST['endpoint'] ) );
+			$action   = sanitize_text_field( wp_unslash( $_POST['action'] ) );
+
+			if (
+				! wp_verify_nonce( $nonce, $endpoint ) ||
+				'WPML\TM\ATE\Review\AcceptTranslation' !== $endpoint ||
+				'wpml_action' !== $action
+			) {
+				return;
+			}
+
+			// Extract the post ID from the request.
+			$post_id = null;
+			if ( isset( $_POST['data'] ) ) {
+				$data = json_decode( sanitize_text_field( wp_unslash( $_POST['data'] ) ), true );
+				if ( isset( $data['postId'] ) ) {
+					$post_id = intval( $data['postId'] );
+				}
+			}
+
+			// If we don't have a post ID, there's nothing to do.
+			if ( ! $post_id ) {
+				return;
+			}
+
+			// Define a function that will run before wp_send_json_success is called.
+			// The function will be removed immediately after it runs once.
+			add_filter(
+				'wp_die_ajax_handler',
+				function( $function ) use ( $post_id ) {
+					// Get the post to pass to bp_activity_post_type_publish.
+					$post = get_post( $post_id );
+					if ( $post && 'publish' === $post->post_status ) {
+						// Before sending the response, explicitly check if this is a translation and prevent activity.
+						if ( function_exists( 'bp_activity_post_type_publish' ) ) {
+
+							// Now call the function directly to process this post.
+							bp_activity_post_type_publish( $post_id, $post );
+						}
+					}
+
+					// Return the original function to ensure normal execution.
+					return $function;
+				},
+				1
+			);
+		}
+
+		/**
+		 * Check if the post is a WPML translation and prevent activity creation if it is.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool $return  Whether the post should be published to activity.
+		 * @param int  $blog_id ID of the current site.
+		 * @param int  $post_id ID of the current post being published.
+		 * @param int  $user_id ID of the current user or post author.
+		 *
+		 * @return bool False if it's a translation, otherwise the original value.
+		 */
+		public function bb_check_if_wpml_translation( $return, $blog_id, $post_id, $user_id ) {
+			global $wpdb, $sitepress;
+
+			// Continue only if WPML is active and we have the necessary components.
+			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! $sitepress || empty( $post_id ) ) {
+				return $return;
+			}
+
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			if ( empty( $default_lang ) ) {
+				return $return;
+			}
+
+			// Get current language - if it's not the default language, we don't want to create an activity.
+			$current_language = apply_filters( 'wpml_current_language', null );
+			if ( ! empty( $current_language ) && $current_language !== $default_lang ) {
+				return false;
+			}
+
+			// Not identified as a translation.
+			return $return;
 		}
 	}
 
