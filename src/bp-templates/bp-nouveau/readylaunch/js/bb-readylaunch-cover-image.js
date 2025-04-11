@@ -105,9 +105,10 @@ window.bp = window.bp || {};
 
 						coverImageStatus.inject( '.bp-cover-image-status' );
 
-						// Reset the header of the page
+					// Reset the header of the page.
+					var $headerCoverImage = $( '#header-cover-image' );
 					if ( '' === response.reset_url ) {
-						$( '#header-cover-image' ).css(
+						$headerCoverImage.css(
 							{
 								'background-image': 'none'
 							}
@@ -120,16 +121,16 @@ window.bp = window.bp || {};
 						);
 
 					} else {
-						$( '#header-cover-image' ).css(
+						$headerCoverImage.css(
 							{
 								'background-image': 'url( ' + response.reset_url + ' )'
 							}
 						);
 					}
 
-					$( '#header-cover-image' ).removeClass( 'has-default' ).addClass( BP_Uploader.settings.defaults.multipart_params.bp_params.has_default_class );
-					$( '#header-cover-image .header-cover-img' ).remove();
-					$( '#header-cover-image  .position-change-cover-image' ).remove();
+					$headerCoverImage.removeClass( 'has-default' ).addClass( BP_Uploader.settings.defaults.multipart_params.bp_params.has_default_class );
+					$headerCoverImage.find( '.header-cover-img' ).remove();
+					$headerCoverImage.find( '.position-change-cover-image' ).remove();
 
 						// Reset the has_cover_image bp_param
 						BP_Uploader.settings.defaults.multipart_params.bp_params.has_cover_image = false;
@@ -216,21 +217,22 @@ window.bp = window.bp || {};
 					// Inject into the other container
 					statusView.inject( '.bp-cover-image-status' );
 
-					// Update the header of the page and reset the position
-					if ( $( '#header-cover-image .header-cover-img' ).length ) {
-						$( '#header-cover-image .header-cover-img' ).prop( 'src', model.get( 'url' ) );
+					// Update the header of the page and reset the position.
+					var $headerCoverImage = $( '#header-cover-image' );
+					if ( $headerCoverImage.find( '.header-cover-img' ).length ) {
+						$headerCoverImage.find( '.header-cover-img' ).prop( 'src', model.get( 'url' ) );
 					} else {
-						$( '#header-cover-image' ).prepend( '<img src="' + model.get( 'url' ) + '" class="header-cover-img" />' );
+						$headerCoverImage.prepend( '<img src="' + model.get( 'url' ) + '" class="header-cover-img" alt=""/>' );
 					}
 
-					if ( $( '#header-cover-image .header-cover-reposition-wrap .guillotine-window img' ).length ) {
-						var reposition_img = $( '#header-cover-image .header-cover-reposition-wrap .guillotine-window img' );
-						$( '#header-cover-image .header-cover-reposition-wrap .guillotine-window' ).remove();
-						$( '#header-cover-image .header-cover-reposition-wrap' ).append( reposition_img );
+					if ( $headerCoverImage.find( '.header-cover-reposition-wrap .guillotine-window img' ).length ) {
+						var reposition_img = $headerCoverImage.find( '.header-cover-reposition-wrap .guillotine-window img' );
+						$headerCoverImage.find( '.header-cover-reposition-wrap .guillotine-window' ).remove();
+						$headerCoverImage.find( '.header-cover-reposition-wrap' ).append( reposition_img );
 					}
 
-					$( '#header-cover-image .header-cover-reposition-wrap img' ).prop( 'src', model.get( 'url' ) );
-					$( '#header-cover-image' ).removeClass( 'has-position' ).find( '.header-cover-img' ).removeAttr( 'data-top' ).removeAttr( 'style' );
+					$headerCoverImage.find( '.header-cover-reposition-wrap img' ).prop( 'src', model.get( 'url' ) );
+					$headerCoverImage.removeClass( 'has-position' ).find( '.header-cover-img' ).removeAttr( 'data-top' ).removeAttr( 'style' );
 
 					$( '.group-create #header-cover-image' ).css(
 						{

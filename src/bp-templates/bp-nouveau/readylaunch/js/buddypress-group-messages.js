@@ -1012,9 +1012,9 @@ window.bp = window.bp || {};
 
 		addSelect2: function( $input ) {
 
-			var ArrayData = [];
-			if( $( 'body' ).hasClass( 'public-message' ) ) {
-				$input.find( 'option[selected]' ).data( 'avatar', $( 'body' ).find( '.bb-rl-group-info img.avatar' ).attr( 'src' ) );
+			var ArrayData = [], bodyElem = $( 'body' );
+			if( bodyElem.hasClass( 'public-message' ) ) {
+				$input.find( 'option[selected]' ).data( 'avatar', bodyElem.find( '.bb-rl-group-info img.avatar' ).attr( 'src' ) );
 			}
 
 			$input.select2({
@@ -1023,14 +1023,12 @@ window.bp = window.bp || {};
 						return data.text;
 					}
 
-					var $selection = $(
+					return $(
 						'<div class="bb-rl-select2-selection-user">' +
-							'<img class="select2-user-avatar" src="' + $( data.element ).data( 'avatar' ) + '"/>' +
+							'<img class="select2-user-avatar" src="' + $( data.element ).data( 'avatar' ) + '" alt=""/>' +
 							'<span class="select2-selection-user__name">' + data.text + '</span>' +
 						'</div>'
 					);
-
-					return $selection;
 				}
 			});
 

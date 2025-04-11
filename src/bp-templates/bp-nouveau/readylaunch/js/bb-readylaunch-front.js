@@ -336,7 +336,7 @@ window.bp = window.bp || {};
 			/**
 			 * [openMoreOption Open more options dropdown]
 			 *
-			 * @param event
+			 * @param e
 			 */
 			openMoreOption : function ( e ) {
 				e.preventDefault();
@@ -347,7 +347,7 @@ window.bp = window.bp || {};
 			/**
 			 * [closeMoreOption close more options dropdown]
 			 *
-			 * @param event
+			 * @param e
 			 */
 			closeMoreOption : function ( e ) {
 				if ( ! $( e.target ).closest( '.bb-rl-option-wrap' ).length ) {
@@ -369,14 +369,15 @@ window.bp = window.bp || {};
 			/**
 			 * [ToggleDarkMode Toggle dark mode]
 			 *
-			 * @param event
+			 * @param e
 			 */
 			ToggleDarkMode : function ( e ) {
 				e.preventDefault();
 
-				$( 'body' ).toggleClass( 'bb-rl-dark-mode' );
+				var $body = $( 'body' );
+				$body.toggleClass( 'bb-rl-dark-mode' );
 
-				if( $( 'body' ).hasClass( 'bb-rl-dark-mode' ) ) {
+				if( $body.hasClass( 'bb-rl-dark-mode' ) ) {
 					$.cookie( 'bb-rl-dark-mode', 'true', { expires: 365, path: '/' } );
 				} else {
 					$.cookie( 'bb-rl-dark-mode', 'false', { expires: 365, path: '/' } );
@@ -386,7 +387,7 @@ window.bp = window.bp || {};
 			/**
 			 * Show header notification dropdowns
 			 *
-			 * @param event
+			 * @param e
 			 */
 			showHeaderNotifications : function ( e ) {
 				e.preventDefault();

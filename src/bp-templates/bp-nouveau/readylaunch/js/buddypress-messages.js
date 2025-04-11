@@ -5313,7 +5313,7 @@ window.bp = window.bp || {};
 						videos,
 						function ( index, video ) {
 							if ( 'undefined' !== typeof video.vid_ids_fake ) {
-								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + bbRlVideoDefaultUrl + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></source></video>';
+								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + bbRlVideoDefaultUrl + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.vid_ids_fake + '" type="video/' + video.ext + '"></video>';
 								videos[ index ] = video;
 							}
 						}
@@ -5435,7 +5435,7 @@ window.bp = window.bp || {};
 						$.each(
 							videos,
 							function ( index, video ) {
-								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + bbRlVideoDefaultUrl + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.full + '" type="video/' + video.ext + '"></source></video>';
+								video.video_html = '<video playsinline id="theatre-video-" class="video-js" controls poster="' + bbRlVideoDefaultUrl + '" data-setup=\'{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2] }\'><source src="' + video.full + '" type="video/' + video.ext + '"></video>';
 								videos[ index ] = video;
 							}
 						);
