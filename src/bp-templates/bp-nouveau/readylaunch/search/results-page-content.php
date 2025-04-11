@@ -20,8 +20,16 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
 
 	<div class="bp-search-results-wrapper dir-form <?php echo $no_results_class; ?>">
-		<div class="bp-search-form-wrapper dir-search no-ajax">
-			<?php bp_search_buffer_template_part('search-form');?>
+		<div id="bb-rl-search-modal" class="bb-rl-search-modal" style="display: none;">
+			<transition name="modal">
+				<div class="modal-mask bb-rl-modal-mask">
+					<div class="bb-rl-modal-wrapper">
+						<div class="bp-search-form-wrapper dir-search no-ajax">
+							<?php bp_search_buffer_template_part('search-form');?>
+						</div>
+					</div>
+				</div>
+			</transition>
 		</div>
 
 		<div class="search_results">

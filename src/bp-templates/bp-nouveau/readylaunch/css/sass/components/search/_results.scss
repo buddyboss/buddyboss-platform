@@ -82,8 +82,10 @@
 
 		img.avatar {
 			width: 100%;
-			height: auto;
+			height: 100%;
 			object-fit: cover;
+			display: block;
+			object-position: center;
 			border-radius: 50%;
 		}
 
@@ -98,7 +100,8 @@
 		}
 
 		.entry-content,
-		.activity-content {
+		.activity-content,
+		.entry-summary {
 
 			@include bb-rl-label-heading-md-thin;
 		}
@@ -125,6 +128,21 @@
 
 			img.avatar {
 				border-radius: var(--bb-rl-radius-base);
+			}
+		}
+
+		&.bp-search-item_sfwd-lessons,
+		&.bp-search-item_sfwd-courses,
+		&.bp-search-item_post,
+		&.bp-search-item_product {
+
+			img.attachment-post-thumbnail {
+				border-radius: var(--bb-rl-radius-base);
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+				object-position: center;
 			}
 		}
 	}
