@@ -18397,3 +18397,23 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   align-items: center;
   justify-content: center;
 }
+
+.notifications-header {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.notifications-header .entry-title {
+  color: var(--bb-rl-text-color);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  flex: 1;
+}
+
+.notifications-header .component-filters {
+  margin-left: var(--bb-rl-space-200);
+}
+
+.notifications-header .component-filters .bb-rl-filter {
+  background-color: var(--bb-rl-background-color);
+}

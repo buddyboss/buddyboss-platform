@@ -1,0 +1,19 @@
+.notifications-header {
+    margin-bottom: var(--bb-rl-space-200);
+
+    .entry-title {
+        color: var(--bb-rl-text-color);
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1.2;
+        flex: 1;
+    }
+
+    .component-filters {
+        margin-left: var(--bb-rl-space-200);
+
+        .bb-rl-filter {
+            background-color: var(--bb-rl-background-color);
+        }
+    }
+}
