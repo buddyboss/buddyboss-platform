@@ -294,9 +294,9 @@ window.bp = window.bp || {};
 		/**
 		 * [getStorage description]
 		 *
-		 * @param  {[type]} type     [description]
-		 * @param  {[type]} property [description]
-		 * @return {[type]}          [description]
+		 * @return {[type]} [description]
+		 * @param type
+		 * @param property
 		 */
 		getStorage: function ( type, property ) {
 
@@ -318,9 +318,9 @@ window.bp = window.bp || {};
 		/**
 		 * [setStorage description]
 		 *
-		 * @param {[type]} type     [description]
-		 * @param {[type]} property [description]
-		 * @param {[type]} value    [description]
+		 * @param type
+		 * @param property
+		 * @param value
 		 */
 		setStorage: function ( type, property, value ) {
 
@@ -341,9 +341,9 @@ window.bp = window.bp || {};
 		/**
 		 * [getLinkParams description]
 		 *
-		 * @param  {[type]} url   [description]
-		 * @param  {[type]} param [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param url
+		 * @param param
 		 */
 		getLinkParams: function ( url, param ) {
 
@@ -399,10 +399,10 @@ window.bp = window.bp || {};
 		/**
 		 * [ajax description]
 		 *
-		 * @param  {[type]} post_data [description]
-		 * @param  {[type]} object    [description]
-		 * @param  {[type]} button    [description]
-		 * @return {[type]}           [description]
+		 * @return {[type]} [description]
+		 * @param post_data
+		 * @param object
+		 * @param button
 		 */
 		ajax: function ( post_data, object, button ) {
 
@@ -484,10 +484,7 @@ window.bp = window.bp || {};
 		/**
 		 * [hideSingleUrl description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @param  {[type]} request [description]
-		 * @param  {[type]} settings [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
 		 */
 		hideSingleUrl: function () {
 			var _findtext  = $( this ).find( '.bb-rl-activity-inner > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text(),
@@ -527,8 +524,8 @@ window.bp = window.bp || {};
 		/**
 		 * [objectRequest description]
 		 *
-		 * @param  {[type]} data [description]
-		 * @return {[type]}      [description]
+		 * @return {[type]} [description]
+		 * @param data
 		 */
 		objectRequest: function ( data ) {
 
@@ -782,12 +779,13 @@ window.bp = window.bp || {};
 						}
 					}
 
-					if ( $( '.bb-subnav-filters-search.loading' ).length ) {
+					var subnavFiltersSearch = $( '.bb-subnav-filters-search.loading' );
+					if ( subnavFiltersSearch.length ) {
 						if ( 'activity' === data.object ) {
 							bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 						}
 
-						$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+						subnavFiltersSearch.removeClass( 'loading' );
 
 						if( data.search_terms === '' && window.clear_search_trigger) {
 							$( '.bb-subnav-filters-search.active' ).removeClass( 'active' );
@@ -893,7 +891,8 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					if( 'activity' === object && $( 'body' ).hasClass( 'my-activity' ) ) {
+					var bodyElem = $( 'body' );
+					if( 'activity' === object && bodyElem.hasClass( 'my-activity' ) ) {
 						objectData = self.getStorage( 'bp-user-activity' );
 					} else {
 						objectData = self.getStorage( 'bp-' + object );
@@ -914,7 +913,7 @@ window.bp = window.bp || {};
 					}
 
 					// Single activity page.
-					if ( 'activity' === object && $( 'body' ).hasClass( 'activity-singular' ) ) {
+					if ( 'activity' === object && bodyElem.hasClass( 'activity-singular' ) ) {
 						scope      = 'all';
 						save_scope = false;
 					}
@@ -1237,9 +1236,9 @@ window.bp = window.bp || {};
 		/**
 		 * [heartbeatSend description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @param  {[type]} data  [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
+		 * @param data
 		 */
 		bbHeartbeatSend: function ( event, data ) {
 			data.onScreenNotifications = true;
@@ -1251,9 +1250,9 @@ window.bp = window.bp || {};
 		/**
 		 * [heartbeatTick description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @param  {[type]} data  [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
+		 * @param data
 		 */
 		bbHeartbeatTick: function (  event, data ) {
 			// Inject on-screen notification.
@@ -1730,9 +1729,7 @@ window.bp = window.bp || {};
 		/**
 		 * [enableDisabledInput description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @param  {[type]} data  [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
 		 */
 		toggleDisabledInput: function () {
 
@@ -1757,8 +1754,8 @@ window.bp = window.bp || {};
 		/**
 		 * [keyUp description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		keyUp: function ( event ) {
 			var self = event.data;
@@ -1770,8 +1767,8 @@ window.bp = window.bp || {};
 		/**
 		 * [queryScope description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		scopeQuery: function ( event ) {
 			var self   = event.data,
@@ -1806,8 +1803,8 @@ window.bp = window.bp || {};
 		/**
 		 * [filterQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		filterQuery: function ( event ) {
 			var self   = event.data,
@@ -1830,8 +1827,8 @@ window.bp = window.bp || {};
 		/**
 		 * [typeGroupFilterQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		typeGroupFilterQuery: function ( event ) {
 			var self   = event.data,
@@ -1855,8 +1852,8 @@ window.bp = window.bp || {};
 		/**
 		 * [typeMemberFilterQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		typeMemberFilterQuery: function ( event ) {
 			var self   = event.data,
@@ -1880,8 +1877,8 @@ window.bp = window.bp || {};
 		/**
 		 * [searchQuery description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		searchQuery: function ( event ) {
 			var self         = event.data,
@@ -1927,8 +1924,8 @@ window.bp = window.bp || {};
 		/**
 		 * [resetSearch description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		resetSearch: function ( event ) {
 			var $delegateTarget = $( event.delegateTarget );
@@ -1942,8 +1939,8 @@ window.bp = window.bp || {};
 		/**
 		 * [buttonAction description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		buttonAction: function ( event ) {
 			var self       = event.data,
@@ -2288,8 +2285,8 @@ window.bp = window.bp || {};
 		/**
 		 * [buttonRevert description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		buttonRevert: function ( event ) {
 			var target = $( event.currentTarget );
@@ -2394,8 +2391,8 @@ window.bp = window.bp || {};
 		/**
 		 * [addRemoveInvite description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		addRemoveInvite: function ( event ) {
 
@@ -2439,8 +2436,8 @@ window.bp = window.bp || {};
 		/**
 		 * [closeNotice description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		closeNotice: function ( event ) {
 			var closeBtn  = $( event.currentTarget ),
@@ -2933,7 +2930,7 @@ window.bp = window.bp || {};
 		/**
 		 * Lazy Load Images and iframes
 		 *
-		 * @param event
+		 * @param lazyTarget
 		 */
 		lazyLoad: function ( lazyTarget ) {
 			var lazy = $( lazyTarget );
@@ -3182,7 +3179,7 @@ window.bp = window.bp || {};
 				xhr.open( 'GET', file.dataURL, true );
 				xhr.responseType = 'blob';
 				xhr.onload       = function () {
-					if (this.status == 200) {
+					if ( 200 === this.status ) {
 						var myBlob = this.response;
 						fileReader.readAsArrayBuffer( myBlob );
 					}
@@ -3231,7 +3228,7 @@ window.bp = window.bp || {};
 		/**
 		 *  Make Medium Editor buttons wrap.
 		 *
-		 *  @param  {JQuery node} editorWrap The jQuery node.
+		 *  @param editorWrap The jQuery node.
 		 */
 		mediumEditorButtonsWarp: function ( editorWrap ) {
 			// Pass jQuery $(node).
@@ -3376,10 +3373,10 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 *  Reset search results
+		 * Reset search results
 		 *
-		 *  @param  {object} event The event object.
-		 *  @return {function}
+		 * @return {function}
+		 * @param e
 		 */
 		resetDirectorySearch: function ( e ) {
 			e.preventDefault();
@@ -3588,7 +3585,7 @@ window.bp = window.bp || {};
 			var $dropzoneElement = $( dropzone.element ),
 				$globalProgress  = $dropzoneElement.find( '.dz-global-progress' );
 
-			if ( $globalProgress.length == 0 ) {
+			if ( 0 === $globalProgress.length ) {
 				$dropzoneElement.append( '<div class="dz-global-progress"><div class="dz-progress-bar-full"><span class="dz-progress"></span></div><p></p><span class="bb-icon-f bb-icon-times dz-remove-all"></span></div>' );
 				$dropzoneElement.addClass( 'dz-progress-view' );
 				$dropzoneElement.find( '.dz-remove-all' ).click(
@@ -3603,13 +3600,11 @@ window.bp = window.bp || {};
 				);
 			}
 
-			var message       = '',
-				progress      = 0,
-				totalProgress = 0;
+			var message, progress, totalProgress;
 			if ( dropzone.files.length === 1 ) {
 				$dropzoneElement.addClass( 'dz-single-view' );
-				message  = bbRLMedia.i18n_strings.uploading + ' <strong>' + dropzone.files[0].name + '</strong>';
-				progress = dropzone.files[0].upload.progress;
+				message  = bbRLMedia.i18n_strings.uploading + ' <strong>' + dropzone.files[ 0 ].name + '</strong>';
+				progress = dropzone.files[ 0 ].upload.progress;
 			} else {
 				$dropzoneElement.removeClass( 'dz-single-view' );
 				totalProgress = 0;
@@ -3928,8 +3923,7 @@ window.bp = window.bp || {};
 					'#bb-link-preview-select-image',
 					function ( e ) {
 						e.preventDefault();
-						var imageIndex                      = self.options.link_image_index;
-						self.options.link_image_index_save  = imageIndex;
+						self.options.link_image_index_save  = self.options.link_image_index;
 						self.options.link_swap_image_button = 0;
 						$( '.bb-url-scrapper-container #icon-exchange' ).show();
 						$( '.bb-url-scrapper-container #activity-link-preview-remove-image' ).show();
@@ -3963,7 +3957,7 @@ window.bp = window.bp || {};
 
 				if ( targetPreviewParent ) {
 
-					if ( targetPreviewParent.children( '.bb-url-scrapper-container' ).length == 0 ) {
+					if ( 0 === targetPreviewParent.children( '.bb-url-scrapper-container' ).length ) {
 						targetPreviewParent.prepend( '<div class="bb-url-scrapper-container"><div>' );
 					}
 					self.currentPreviewParent = targetPreviewParent.find( '.bb-url-scrapper-container' );
@@ -4091,7 +4085,7 @@ window.bp = window.bp || {};
 						$.each(
 							self.loadedURLs,
 							function ( index, urlObj ) {
-								if ( urlObj.url == url ) {
+								if ( urlObj.url === url ) {
 									urlResponse = urlObj.response;
 									return false;
 								}
@@ -4189,18 +4183,19 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( $( '#bb-rl-whats-new-attachments' ).hasClass( 'bb-video-preview' ) ) {
-						$( '#bb-rl-whats-new-attachments' ).removeClass( 'bb-video-preview' );
+					var whatsNewAttachments = $( '#bb-rl-whats-new-attachments' );
+					if ( whatsNewAttachments.hasClass( 'bb-video-preview' ) ) {
+						whatsNewAttachments.removeClass( 'bb-video-preview' );
 					}
 
-					if ( $( '#bb-rl-whats-new-attachments' ).hasClass( 'bb-link-preview' ) ) {
-						$( '#bb-rl-whats-new-attachments' ).removeClass( 'bb-link-preview' );
+					if ( whatsNewAttachments.hasClass( 'bb-link-preview' ) ) {
+						whatsNewAttachments.removeClass( 'bb-link-preview' );
 					}
 
 					if ( ( 'undefined' !== typeof response.description && response.description.indexOf( 'iframe' ) > -1 ) || ( ! _.isUndefined( response.wp_embed ) && response.wp_embed ) ) {
-						$( '#bb-rl-whats-new-attachments' ).addClass( 'bb-video-preview' );
+						whatsNewAttachments.addClass( 'bb-video-preview' );
 					} else {
-						$( '#bb-rl-whats-new-attachments' ).addClass( 'bb-link-preview' );
+						whatsNewAttachments.addClass( 'bb-link-preview' );
 					}
 
 					self.loadedURLs.push( { 'url': url, 'response': response } );
@@ -4227,7 +4222,7 @@ window.bp = window.bp || {};
 		refreshActivities: function () {
 
 			var self   = this, object = 'activity', scope = 'all',
-				filter = null, objectData = {}, extras = null, search_terms = '';
+				filter = null, objectData, extras = null, search_terms;
 
 			objectData = self.getStorage( 'bp-' + object );
 
@@ -4449,10 +4444,10 @@ window.bp = window.bp || {};
 				object       = data.object,
 				target       = data.target,
 				scope        = data.scope,
-				filter       = null,
+				filter,
 				search_terms = ! _.isUndefined( data.search_terms ) ? data.search_terms : '',
 				extras       = null,
-				queryData    = {},
+				queryData,
 				type         = data.type,
 				order        = data.order_by;
 
@@ -4695,10 +4690,12 @@ window.bp = window.bp || {};
 			var profileCardTemplate = bp.template( 'profile-card-popup' );
 			var renderedProfileCard = profileCardTemplate();
 
-			if ( $( '#bbpress-forums' ).length ) {
-				$( '#bbpress-forums' ).append( renderedProfileCard );
-			} else if ( $( '#buddypress' ).length ) {
-				$( '#buddypress' ).append( renderedProfileCard );
+			var bbpressForums = $( '#bbpress-forums' ),
+			    buddypress    = $( '#buddypress' );
+			if ( bbpressForums.length ) {
+				bbpressForums.append( renderedProfileCard );
+			} else if ( buddypress.length ) {
+				buddypress.append( renderedProfileCard );
 			} else {
 				$( '#page' ).append( renderedProfileCard );
 			}
@@ -4835,9 +4832,6 @@ window.bp = window.bp || {};
 			var spaceAbove = offset.top - window.scrollY;
 			var useRightPosition = false;
 		
-			// Default top popup position
-			popupTop = offset.top + $element.outerHeight() + 5;
-		
 			// Handle horizontal position (left or right based on available space)
 			if ( window.innerWidth <= 560 ) {
 				popupLeft = 5;
@@ -4972,10 +4966,12 @@ window.bp = window.bp || {};
 			var groupCardTemplate = bp.template( 'group-card-popup' );
 			var renderedGroupCard = groupCardTemplate();
 
-			if ( $( '#bbpress-forums' ).length ) {
-				$( '#bbpress-forums' ).append( renderedGroupCard );
-			} else if ( $( '#buddypress' ).length ) {
-				$( '#buddypress' ).append( renderedGroupCard );
+			var bbpressForums = $('#bbpress-forums'),
+				buddypress = $('#buddypress');
+			if ( bbpressForums.length ) {
+				bbpressForums.append( renderedGroupCard );
+			} else if ( buddypress.length ) {
+				buddypress.append( renderedGroupCard );
 			} else {
 				$( '#page.site' ).append( renderedGroupCard );
 			}
@@ -5136,29 +5132,30 @@ window.bp = window.bp || {};
 		closeProfileSearch: function( event ) {
 			// If event is provided, check if we should proceed with closing
 			if ( event ) {
-				var $target = $( event.target );
+				var $target            = $( event.target );
+				var $searchFormWrapper = $( '.bb-rl-advance-profile-search.active' );
 
 				// Close if clicking on the cancel button
-				if ( $target.hasClass( 'bb-rl-profile-search-cancel' ) || 
-					$target.closest( '.bb-rl-profile-search-cancel' ).length ) {
+				if ( $target.hasClass( 'bb-rl-profile-search-cancel' ) ||
+				     $target.closest( '.bb-rl-profile-search-cancel' ).length ) {
 					// Close open profile search form
-					$( '.bb-rl-advance-profile-search.active' ).removeClass( 'active' );
+					$searchFormWrapper.removeClass( 'active' );
 					return;
 				}
-				
+
 				// If this is a click event inside the form or the toggle button, don't close
 				if ( event.type === 'click' && (
-					$target.closest( '#bp-profile-search-form-outer' ).length || 
-					$target.hasClass( 'bb-rl-advance-profile-search-toggle' ) || 
+					$target.closest( '#bp-profile-search-form-outer' ).length ||
+					$target.hasClass( 'bb-rl-advance-profile-search-toggle' ) ||
 					$target.closest( '.bb-rl-advance-profile-search-toggle' ).length
 				) ) {
 					// Don't close if clicked on the form or toggle button
 					return;
 				}
 			}
-			
-			// Close open profile search form
-			$( '.bb-rl-advance-profile-search.active' ).removeClass( 'active' );
+
+			// Close open profile search form.
+			$searchFormWrapper.removeClass( 'active' );
 		},
 	};
 

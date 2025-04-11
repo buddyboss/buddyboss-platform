@@ -1708,8 +1708,8 @@ window.bp = window.bp || {};
 		/**
 		 * [openVideoMove description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		openVideoMove : function ( event ) {
 			event.preventDefault();
@@ -1857,8 +1857,8 @@ window.bp = window.bp || {};
 		/**
 		 * [closeVideoMove description]
 		 *
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
+		 * @return {[type]} [description]
+		 * @param event
 		 */
 		closeVideoMove: function ( event ) {
 			event.preventDefault();

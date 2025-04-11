@@ -40,13 +40,16 @@ window.bp = window.bp || {};
 			this.Attachment = new Backbone.Model();
 
 			// Wait till the queue is reset
-			bp.Uploader.filesQueue.on( 'reset', this.cropView, this );
+			bp.Uploader.filesQueue.on('reset', this.cropView, this);
+
+			var bodyWpAdmin = $( 'body.wp-admin' ),
+			    $document   = $( document );
 
 			/**
 			 * In Administration screens we're using Thickbox
 			 * We need to make sure to reset the views if it's closed or opened
 			 */
-			$( 'body.wp-admin' ).on(
+			bodyWpAdmin.on(
 				'tb_unload',
 				'#TB_window',
 				function() {
@@ -54,7 +57,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( 'body.wp-admin' ).on(
+			bodyWpAdmin.on(
 				'click',
 				'.bp-xprofile-avatar-user-edit',
 				function() {
@@ -62,7 +65,7 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( document ).on(
+			$document.on(
 				'click',
 				'.avatar-crop-cancel',
 				function( e ) {
@@ -72,7 +75,7 @@ window.bp = window.bp || {};
 			);
 
 			// Add click handler for the remove avatar button
-			$( document ).on(
+			$document.on(
 				'click',
 				'.bb-rl-remove-avatar-button',
 				function( e ) {
@@ -110,8 +113,9 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if ( $( '#delete-group-avatar-button' ).length ) {
-					$( '#delete-group-avatar-button' ).remove();
+				var avatarDeleteButton = $( '#delete-group-avatar-button' );
+				if ( avatarDeleteButton.length ) {
+					avatarDeleteButton.remove();
 				}
 
 				// Group Create
@@ -124,9 +128,10 @@ window.bp = window.bp || {};
 				$( '#bp_xprofile_user_admin_avatar a.bp-xprofile-avatar-user-admin' ).remove();
 			}
 
-			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-				$( '.bb-custom-profile-group-avatar-feedback' ).hide();
-				$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).html( '' );
+			var avatarFeedback = $( '.bb-custom-profile-group-avatar-feedback' );
+			if ( avatarFeedback.find( 'p' ).length ) {
+				avatarFeedback.hide();
+				avatarFeedback.find( 'p' ).removeClass( 'success error' ).html( '' );
 			}
 
 		},
@@ -256,8 +261,11 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-				$( '.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton' ).trigger( 'click' );
-				$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'uploading' ) );
+				$('.buddyboss_page_bp-settings #TB_window #TB_closeWindowButton').trigger('click');
+				var avatarUserEdit = $( '.bp-xprofile-avatar-user-edit' );
+				if ( avatarUserEdit.length ) {
+					avatarUserEdit.html( avatarUserEdit.data( 'uploading' ) );
+				}
 			}
 
 			// Set the avatar !
@@ -280,7 +288,10 @@ window.bp = window.bp || {};
 				function( response ) {
 
 					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
+						var avatarUserEdit = $('.bp-xprofile-avatar-user-edit');
+						if ( avatarUserEdit.length ) {
+							avatarUserEdit.html( avatarUserEdit.data( 'upload' ) );
+						}
 					}
 
 					var avatarStatus = new bp.Views.AvatarStatus(
@@ -306,9 +317,10 @@ window.bp = window.bp || {};
 						}
 					);
 
-					if ( $( '.header-aside-inner .user-link .avatar' ).length  && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
-						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					var avatarHeaderAside = $( '.header-aside-inner .user-link .avatar' );
+					if ( avatarHeaderAside.length && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
+						avatarHeaderAside.prop( 'src', response.avatar );
+						avatarHeaderAside.prop( 'srcset', response.avatar );
 					}
 
 					/**
@@ -331,8 +343,9 @@ window.bp = window.bp || {};
 					$( '.bb-rl-avatar-container' ).removeClass( 'bb-rl-avatar-container--no-avatar' ).addClass( 'bb-rl-avatar-container--has-avatar' );
 
 					// Show 'Remove' button when upload a new avatar.
-					if ( $( '.custom-profile-group-avatar a.bb-img-remove-button' ).length ) {
-						$( '.custom-profile-group-avatar a.bb-img-remove-button' ).removeClass( 'bp-hide' );
+					var avatarRemoveButton = $( '.custom-profile-group-avatar a.bb-img-remove-button' );
+					if ( avatarRemoveButton.length ) {
+						avatarRemoveButton.removeClass( 'bp-hide' );
 					}
 
 					// Show image preview when avatar deleted.
@@ -345,9 +358,12 @@ window.bp = window.bp || {};
 				}
 			).fail(
 				function( response ) {
-
-					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.bp-xprofile-avatar-user-edit' ).html( $( '.bp-xprofile-avatar-user-edit' ).data( 'upload' ) );
+					var avatarFeedback = $( '.bb-custom-profile-group-avatar-feedback' );
+					if ( avatarFeedback.find( 'p' ).length ) {
+						var avatarUserEdit = $( '.bp-xprofile-avatar-user-edit' );
+						if ( avatarUserEdit.length ) {
+							avatarUserEdit.html( avatarUserEdit.data( 'upload' ) );
+						}
 					}
 
 					var feedback = BP_Uploader.strings.default_error;
@@ -355,9 +371,9 @@ window.bp = window.bp || {};
 						feedback = BP_Uploader.strings.feedback_messages[ response.feedback_code ];
 					}
 
-					if ( $( '.bb-custom-profile-group-avatar-feedback p' ).length ) {
-						$( '.bb-custom-profile-group-avatar-feedback p' ).removeClass( 'success error' ).addClass( 'error' ).html( feedback );
-						$( '.bb-custom-profile-group-avatar-feedback' ).show();
+					if ( avatarFeedback.find( 'p' ).length ) {
+						avatarFeedback.find( 'p' ).removeClass( 'success error' ).addClass( 'error' ).html( feedback );
+						avatarFeedback.show();
 					}
 
 					var avatarStatus = new bp.Views.AvatarStatus(
@@ -470,9 +486,10 @@ window.bp = window.bp || {};
 						// Update container class to reflect no avatar state
 						$( '.bb-rl-avatar-container' ).removeClass( 'bb-rl-avatar-container--has-avatar' ).addClass( 'bb-rl-avatar-container--no-avatar' );
 
-					if ( $( '.header-aside-inner .user-link .avatar' ).length  && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
-						$( '.header-aside-inner .user-link .avatar' ).prop( 'src', response.avatar );
-						$( '.header-aside-inner .user-link .avatar' ).prop( 'srcset', response.avatar );
+					var avatarHeaderAside = $( '.header-aside-inner .user-link .avatar' );
+					if ( avatarHeaderAside.length && ! $( 'body' ).hasClass( 'group-avatar' ) ) {
+						avatarHeaderAside.prop( 'src', response.avatar );
+						avatarHeaderAside.prop( 'srcset', response.avatar );
 					}
 				}
 			).fail(
