@@ -83,6 +83,9 @@ function xprofile_screen_edit_profile() {
 				$enabled = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_enable_profile_field', true );
 
 				if ( '' === $enabled || '0' === $enabled  ) {
+					$errors                  = true;
+					$bp_error_message_string = __( 'Invalid option selected. Please try again', 'buddyboss' );
+					$validations[]           = $bp_error_message_string;
 					continue;
 				}
 
