@@ -41,6 +41,7 @@ jQuery( document ).ready(
 							$( $search_field ).autocomplete(
 								{
 									source: function ( request, response ) {
+										$form.find( '.bb-rl-network-search-clear' ).removeClass( 'bp-hide' );
 
 										var term = request.term;
 										if ( term in BP_SEARCH.cache ) {
