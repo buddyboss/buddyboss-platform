@@ -620,9 +620,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'nonce'    => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav' => esc_html__( 'More', 'buddyboss' ),
+					'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
+					'nonce'    	=> wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav' 	=> esc_html__( 'More', 'buddyboss' ),
+					'filter_all'=> esc_html__( 'All', 'buddyboss' ),
 				)
 			);
 		}

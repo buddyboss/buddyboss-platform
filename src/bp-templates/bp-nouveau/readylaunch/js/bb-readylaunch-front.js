@@ -1,4 +1,3 @@
-
 /* global bp, bbReadyLaunchFront, BP_Nouveau */
 /* @version 1.0.0 */
 
@@ -56,6 +55,8 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
+				$document.on( 'click', '.bb-rl-search-filter-option a', this.updateSearchFilter.bind( this ) );
+				$document.on( 'click', '.bb-rl-network-search-clear', this.clearSearchInput.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -1012,7 +1013,46 @@ window.bp = window.bp || {};
 				}
 
 				run_alignMenu();
-			}
+			},
+
+			/**
+			 * Update search filter label when a filter option is selected
+			 * 
+			 * @param {Object} e Event object
+			 */
+			updateSearchFilter: function( e ) {
+				e.preventDefault();
+				var $this = $( e.currentTarget );
+				var selectedText = $this.text();
+				var $filterSearch = $this.closest( '.bb-rl-network-search-filter' );
+				
+				// Update the filter label
+				$filterSearch.find( '.search-filter-label' ).text( selectedText );
+			},
+
+			/**
+			 * Clear search input and reset the search form
+			 * 
+			 * @param {Object} e Event object
+			 */
+			clearSearchInput: function( e ) {
+				e.preventDefault();
+				var $this = $( e.currentTarget );
+				var $searchForm = $this.closest( '#search-form' );
+				var $searchInput = $searchForm.find( '#search' );
+				
+				// Clear the search input
+				$searchInput.val( '' );
+				
+				// Reset the filter to 'All'
+				var $filterLabel = $searchForm.find( '.search-filter-label' );
+				if ( $filterLabel.length ) {
+					$filterLabel.text( bbReadyLaunchFront.filter_all );
+				}
+				
+				// Focus back on the search input
+				$searchInput.focus();
+			},
 		};
 
 		// Launch BP ReadyLaunch.
