@@ -12,7 +12,7 @@
 	<i class="bb-icons-rl-magnifying-glass"></i>
 	<span class="bb-rl-header-search__label"><?php esc_html_e( 'Search community', 'buddyboss' ); ?></span>
 </button>
-<div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal" style="display: none;">
+<div id="bb-rl-network-search-modal" class="bb-rl-network-search-modal bb-rl-search-modal bp-hide">
 	<transition name="modal">
 		<div class="modal-mask bb-rl-modal-mask">
 			<div class="bb-rl-modal-wrapper">

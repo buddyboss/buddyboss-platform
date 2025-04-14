@@ -55,12 +55,19 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
+				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
 				e.preventDefault();
 
 				$( e.currentTarget ).closest( '.user-wrap' ).toggleClass( 'active' );
+			},
+
+			searchModelToggle: function ( e ) {
+				e.preventDefault();
+
+				$( '#bb-rl-network-search-modal' ).removeClass( 'bp-hide' );
 			},
 
 			/**
@@ -360,9 +367,15 @@ window.bp = window.bp || {};
 				}
 
 				// Close profile dropdown when clicking outside
-				if ( !$( e.target ).closest('.user-wrap' ).length && 
+				if ( !$( e.target ).closest('.user-wrap' ).length &&
 					!$( e.target ).closest( '.bb-rl-profile-dropdown' ).length ) {
 					$( '.user-wrap' ).removeClass( 'active' );
+				}
+
+				// Close search modal when clicking outside.
+				var search_element = $( '#bb-rl-network-search-modal .bb-rl-modal-wrapper *, .bb-rl-header-search, .bb-rl-header-search *' );
+				if ( ! search_element.is( e.target ) ) {
+					$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
 				}
 			},
 
@@ -909,14 +922,14 @@ window.bp = window.bp || {};
 					$( selector ).each( function () {
 						self.bbNavOverflow( this, reduceWidth );
 					} );
-					
+
 					// Add resize and load event listeners
 					window.addEventListener( 'resize', function () {
 						$( selector ).each( function () {
 							self.bbNavOverflow( this, reduceWidth );
 						} );
 					} );
-					
+
 					window.addEventListener( 'load', function () {
 						$( selector ).each( function () {
 							self.bbNavOverflow( this, reduceWidth );
