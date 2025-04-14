@@ -10,7 +10,7 @@
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <header class="entry-header notifications-header flex">
-	<h1 class="entry-title flex-1"><?php esc_html_e( 'Notifications', 'buddyboss-theme' ); ?></h1>
+	<h1 class="entry-title flex-1"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></h1>
 	<?php 
 		bp_get_template_part( 'members/single/parts/item-subnav' );
 		bp_get_template_part( 'common/search-and-filters-bar' );

@@ -19001,7 +19001,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: var(--bb-rl-background-color);
 }
 
-.notification-list.bb-nouveau-list {
+.notifications.dir-list .notification-list {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-lg);
@@ -19010,7 +19010,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   max-height: inherit;
 }
 
-.notification-list.bb-nouveau-list .bs-item-wrap {
+.notifications.dir-list .notification-list .bs-item-wrap {
   display: flex;
   align-items: center;
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
@@ -19018,20 +19018,20 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: 0;
 }
 
-.notification-list.bb-nouveau-list .bs-item-wrap:hover {
+.notifications.dir-list .notification-list .bs-item-wrap:hover {
   background-color: var(--bb-rl-background-hover-color);
 }
 
-.notification-list.bb-nouveau-list .bs-item-wrap:last-child {
+.notifications.dir-list .notification-list .bs-item-wrap:last-child {
   border-bottom: 0;
   border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 }
 
-.notification-list.bb-nouveau-list .bs-header-item {
+.notifications.dir-list .notification-list .bs-header-item {
   border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
 }
 
-.notification-list.bb-nouveau-list #notification-bulk-manage {
+.notifications.dir-list .notification-list #notification-bulk-manage {
   background-color: var(--bb-rl-background-brand-primary-color);
   color: var(--bb-rl-text-white-color);
   border: 1px solid var(--bb-rl-background-brand-primary-color);
@@ -19043,34 +19043,34 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   cursor: pointer;
 }
 
-.notification-list.bb-nouveau-list #notification-bulk-manage:hover {
+.notifications.dir-list .notification-list #notification-bulk-manage:hover {
   background-color: var(--bb-rl-background-brand-primary-hover-color);
 }
 
-.notification-list.bb-nouveau-list #notification-bulk-manage:focus-within {
+.notifications.dir-list .notification-list #notification-bulk-manage:focus-within {
   outline: 2px solid var(--bb-rl-border-brand-primary-color);
 }
 
-.notification-list.bb-nouveau-list #notification-bulk-manage:disabled {
+.notifications.dir-list .notification-list #notification-bulk-manage:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
 }
 
-.notification-list.bb-nouveau-list #notification-bulk-manage[disabled] {
+.notifications.dir-list .notification-list #notification-bulk-manage[disabled] {
   display: none;
 }
 
-.notification-list.bb-nouveau-list .notifications-options-nav {
+.notifications.dir-list .notification-list .notifications-options-nav {
   display: flex;
   align-items: center;
 }
 
-.notification-list.bb-nouveau-list .bulk-select-check,
-.notification-list.bb-nouveau-list .bulk-select-all {
+.notifications.dir-list .notification-list .bulk-select-check,
+.notifications.dir-list .notification-list .bulk-select-all {
   min-width: 40px;
 }
 
-.notification-list.bb-nouveau-list .bb-sort-by-date {
+.notifications.dir-list .notification-list .bb-sort-by-date {
   display: flex;
   align-items: center;
   gap: var(--bb-rl-space-100);
@@ -19079,29 +19079,29 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   line-height: 1;
 }
 
-.notification-list.bb-nouveau-list .notifications-order-actions span[class*="bb-icon"] {
+.notifications.dir-list .notification-list .notifications-order-actions span[class*="bb-icon"] {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 15px;
   font-family: bb-icons-rl;
 }
 
-.notification-list.bb-nouveau-list .notifications-order-actions span[class*="bb-icon"].bb-icon-angle-down:before {
+.notifications.dir-list .notification-list .notifications-order-actions span[class*="bb-icon"].bb-icon-angle-down:before {
   content: "\e136";
 }
 
-.notification-list.bb-nouveau-list .notifications-order-actions span[class*="bb-icon"].bb-icon-angle-up:before {
+.notifications.dir-list .notification-list .notifications-order-actions span[class*="bb-icon"].bb-icon-angle-up:before {
   content: "\e13c";
 }
 
-.notification-list.bb-nouveau-list .notification-avatar {
+.notifications.dir-list .notification-list .notification-avatar {
   margin-right: var(--bb-rl-space-200);
 }
 
-.notification-list.bb-nouveau-list .notification-avatar img {
+.notifications.dir-list .notification-list .notification-avatar img {
   max-width: 48px;
 }
 
-.notification-list.bb-nouveau-list .notification-content {
+.notifications.dir-list .notification-list .notification-content {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 0.875rem;
   flex: 1;
@@ -19110,11 +19110,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   position: relative;
 }
 
-.notification-list.bb-nouveau-list .notification-content a {
+.notifications.dir-list .notification-list .notification-content a {
   color: var(--bb-rl-text-color);
 }
 
-.notification-list.bb-nouveau-list .notification-content .posted {
+.notifications.dir-list .notification-list .notification-content .posted {
   display: block;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -19122,32 +19122,32 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   line-height: 19px;
 }
 
-.notification-list.bb-nouveau-list .actions {
+.notifications.dir-list .notification-list .actions {
   display: flex;
   align-items: center;
   min-width: 40px;
   font-size: 0;
 }
 
-.notification-list.bb-nouveau-list .actions a {
+.notifications.dir-list .notification-list .actions a {
   color: var(--bb-rl-icon-secondary-color);
   font-weight: 500;
   padding-left: var(--bb-rl-space-100);
 }
 
-.notification-list.bb-nouveau-list .actions a:hover {
+.notifications.dir-list .notification-list .actions a:hover {
   color: var(--bb-rl-icon-color);
 }
 
-.notification-list.bb-nouveau-list .actions a .dashicons {
+.notifications.dir-list .notification-list .actions a .dashicons {
   font-size: var(--bb-rl-font-size-base);
   font-family: bb-icons-rl;
 }
 
-.notification-list.bb-nouveau-list .actions a .dashicons.dashicons-visibility:before {
+.notifications.dir-list .notification-list .actions a .dashicons.dashicons-visibility:before {
   content: "\e224";
 }
 
-.notification-list.bb-nouveau-list .actions a .dashicons.dashicons-trash:before {
+.notifications.dir-list .notification-list .actions a .dashicons.dashicons-trash:before {
   content: "\e4a6";
 }
