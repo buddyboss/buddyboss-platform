@@ -3317,7 +3317,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-media-privacy-wrap .activity-privacy .selected {
-  background: #f5f5f5;
+  background: var(--bb-rl-background-secondary-color);
 }
 
 .bb-media-privacy-wrap .activity-privacy.bb-open {
