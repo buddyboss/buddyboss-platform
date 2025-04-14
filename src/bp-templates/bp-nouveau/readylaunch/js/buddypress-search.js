@@ -64,8 +64,11 @@ jQuery( document ).ready(
 												dataType: 'json',
 												data: data,
 												success: function ( data ) {
+													console.log('---1---');
+													
 													BP_SEARCH.cache[ term ] = data;
 													response( data );
+													debugger;
 												},
 											}
 										);
