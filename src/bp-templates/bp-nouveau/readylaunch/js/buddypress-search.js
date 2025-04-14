@@ -35,6 +35,9 @@ jQuery( document ).ready(
 
 							autoCompleteObjects.push( $search_field );
 
+							// Create a container for the autocomplete results
+							var $resultsContainer = $search_field.parents('form').find('.bb-rl-search-results-container');
+
 							$( $search_field ).autocomplete(
 								{
 									source: function ( request, response ) {
@@ -50,6 +53,7 @@ jQuery( document ).ready(
 											'nonce': BP_SEARCH.nonce,
 											'search_term': request.term,
 											'per_page': BP_SEARCH.per_page,
+											'subset': $form.find('select[name="subset"]').val() || '',
 										};
 
 										response( { value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span>' + BP_SEARCH.loading_msg + '</div>' } );
@@ -84,7 +88,13 @@ jQuery( document ).ready(
 									open: function () {
 										$( '.bp-search-ac' ).outerWidth( $( this ).outerWidth() );
 									},
-									position: ac_position_prop,
+									appendTo: $resultsContainer, // Append results to our custom container
+									position: {
+										my: "left top",
+										at: "left bottom",
+										of: $search_field,
+										collision: "flip"
+									},
 								}
 							).data( 'ui-autocomplete' )._renderItem = function ( ul, item ) {
 										ul.addClass( 'bp-search-ac' );
@@ -100,21 +110,8 @@ jQuery( document ).ready(
 								} else {
 									return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( '<a class="x">' + item.value + '</a>' ).appendTo( ul );
 								}
-
-										/*
-										currentCategory = "";
-										var li;
-										if ( item.type != currentType ) {
-										ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
-										currentType = item.type;
-										}
-										//li = this._renderItemData( ul, item );
-										if ( item.type ) {
-										li.attr( "aria-label", item.type + " : " + item.label );
-										}
-											*/
-
 							};
+
 						}
 					}
 				);
@@ -250,6 +247,19 @@ jQuery( document ).ready(
 						}
 					).appendTo( $form );
 				}
+				
+				// Add event listener for subset select box changes
+				$form.find('select[name="subset"]').on('change', function() {
+					var $searchField = $form.find('input[name="s"], input[type=search]');
+					if ($searchField.length > 0 && $searchField.val().length >= 2) {
+						// Clear the cache for the current search term to force a new search
+						var currentTerm = $searchField.val();
+						delete BP_SEARCH.cache[currentTerm];
+						
+						// Trigger the autocomplete search
+						$searchField.autocomplete("search", currentTerm);
+					}
+				});
 			}
 		);
 		/* ajax load */

@@ -639,6 +639,7 @@
 	border-radius: var(--bb-rl-radius-full);
 	display: inline-flex;
 	align-items: center;
+	flex-wrap: wrap;
 
 	&::before {
 		content: "\e30c";
@@ -677,6 +678,20 @@
 		right: var(--bb-rl-space-100);
 		opacity: 0.4;
 	}
+
+	.bb-rl-search-results-container {
+		position: relative;
+		width: 100%;
+		padding: 0;
+
+		.ui-autocomplete {
+			position: static !important;
+			width: 100% !important;
+			max-height: 70vh !important;
+			overflow-y: auto !important;
+			overflow-x: hidden !important;
+		}
+	}	
 }
 
 .bb-rl-entry-title {
