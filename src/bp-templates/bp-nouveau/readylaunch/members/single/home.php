@@ -21,7 +21,8 @@ bp_nouveau_member_hook( 'before', 'home_content' );
 				! bp_is_user_profile_edit() &&
 				! bp_is_user_messages() &&
 				! bp_is_user_settings() &&
-				! bp_is_user_change_avatar()
+				! bp_is_user_change_avatar() &&
+				! bp_is_user_notifications()
 			) {
 				?>
 				<div id="item-header" role="complementary" data-bp-item-id="<?php echo esc_attr( bp_displayed_user_id() ); ?>" data-bp-item-component="members" class="users-header single-headers bb-rl-profile-header">
