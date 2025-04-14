@@ -55,7 +55,6 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
-				$document.on( 'click', '.bb-rl-search-filter-option a', this.updateSearchFilter.bind( this ) );
 				$document.on( 'click', '.bb-rl-network-search-clear', this.clearSearchInput.bind( this ) );
 			},
 
@@ -1013,21 +1012,6 @@ window.bp = window.bp || {};
 				}
 
 				run_alignMenu();
-			},
-
-			/**
-			 * Update search filter label when a filter option is selected
-			 * 
-			 * @param {Object} e Event object
-			 */
-			updateSearchFilter: function( e ) {
-				e.preventDefault();
-				var $this = $( e.currentTarget );
-				var selectedText = $this.text();
-				var $filterSearch = $this.closest( '.bb-rl-network-search-filter' );
-				
-				// Update the filter label
-				$filterSearch.find( '.search-filter-label' ).text( selectedText );
 			},
 
 			/**
