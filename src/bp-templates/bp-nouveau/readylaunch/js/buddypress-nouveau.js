@@ -5132,10 +5132,11 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		closeProfileSearch: function( event ) {
+			var $target, $searchFormWrapper = $( '.bb-rl-advance-profile-search.active' );
+			
 			// If event is provided, check if we should proceed with closing
 			if ( event ) {
-				var $target            = $( event.target );
-				var $searchFormWrapper = $( '.bb-rl-advance-profile-search.active' );
+				$target = $( event.target );
 
 				// Close if clicking on the cancel button
 				if ( $target.hasClass( 'bb-rl-profile-search-cancel' ) ||
