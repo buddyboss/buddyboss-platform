@@ -52,13 +52,11 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 			?>
 			<div id="header-aside" class="header-aside">
 				<div class="header-aside-inner flex items-center">
-					<button class="bb-rl-button bb-rl-button--secondaryOutline bb-rl-header-search">
-						<i class="bb-icons-rl-magnifying-glass"></i>
-						<span class="bb-rl-header-search__label">
-							<?php echo esc_html( 'Search community', 'buddyboss' ); ?>
-						</span>
-					</button>
 					<?php
+					if ( bp_is_active( 'search' ) ) {
+						bp_get_template_part( 'common/search/search-model' );
+					}
+
 					if ( is_user_logged_in() ) {
 						if ( bp_is_active( 'messages' ) ) {
 							bp_get_template_part( 'header/messages-dropdown' );
