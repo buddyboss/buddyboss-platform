@@ -27,7 +27,7 @@
 								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 							</button>
 							<a href="" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
-							<div class="bb-rl-network-search-filter bb_more_options bb-rl-filter bb-rl-filter-rounded">
+							<div class="bb-rl-network-search-filter bb-rl-filter bb-rl-filter-rounded">
 								<?php
 								$searchable_items = BP_Search::instance()->get_available_search();
 								if ( ! empty( $searchable_items ) ) {

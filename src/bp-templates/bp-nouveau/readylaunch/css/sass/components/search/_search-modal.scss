@@ -9,6 +9,8 @@
 		border-radius: var(--bb-rl-radius-lg);
 		border: 1px solid var(--bb-rl-border-secondary-color);
 		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+		position: relative;
+		z-index: 999995;
 	}
 
 	.bp-dir-search-form {

@@ -130,6 +130,10 @@
 	padding: var(--bb-rl-space-100) 0;
 	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 
+	.bb-rl-network-search-filter & {
+		top: unset;
+	}
+
 	.bb-rl-filter & {
 		width: auto !important;
 		min-width: 140px;

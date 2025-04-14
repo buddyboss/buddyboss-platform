@@ -3941,6 +3941,11 @@ button[data-balloon] {
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 }
 
+.bb-rl-network-search-filter .bb-rl-select2-dropdown, .bb-rl-network-search-filter
+.select2-dropdown.bb-rl-select2-dropdown {
+  top: unset;
+}
+
 .bb-rl-filter .bb-rl-select2-dropdown, .bb-rl-filter
 .select2-dropdown.bb-rl-select2-dropdown {
   width: auto !important;
@@ -18207,6 +18212,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-lg);
   border: 1px solid var(--bb-rl-border-secondary-color);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 999995;
 }
 
 .bb-rl-search-modal .bp-dir-search-form {

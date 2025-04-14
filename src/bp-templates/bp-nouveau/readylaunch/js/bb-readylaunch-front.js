@@ -373,7 +373,7 @@ window.bp = window.bp || {};
 				}
 
 				// Close search modal when clicking outside.
-				var search_element = $( '#bb-rl-network-search-modal .bb-rl-modal-wrapper *, .bb-rl-header-search, .bb-rl-header-search *' );
+				var search_element = $( '#bb-rl-network-search-modal .bp-search-form-wrapper *, .bb-rl-header-search, .bb-rl-header-search *, .select2-container, .bb-rl-network-search-clear' );
 				if ( ! search_element.is( e.target ) ) {
 					$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
 				}
