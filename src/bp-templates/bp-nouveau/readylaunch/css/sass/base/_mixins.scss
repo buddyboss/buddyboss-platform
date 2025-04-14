@@ -34,6 +34,12 @@
 	line-height: 22px;
 }
 
+@mixin bb-rl-label-heading-xs {
+	font-size: var(--bb-rl-font-size-xs);
+	font-weight: 500;
+	line-height: var(--bb-rl-base-line-xs);
+}
+
 @mixin bb-rl-label-heading-md-thin {
 	font-size: 14px;
 	font-weight: 400;

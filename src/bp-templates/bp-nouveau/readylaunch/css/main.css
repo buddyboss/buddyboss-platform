@@ -9933,8 +9933,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   display: none;
 }
 
+.bb-rl-member-type,
 .bb-rl-members .bp-member-type,
 .bb-rl-profile-container .bp-member-type {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
   display: inline-flex;
   width: fit-content;
   color: var(--bb-rl-text-brand-secondary-color);
@@ -9942,8 +9946,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   border: 1px solid var(--bb-rl-border-brand-secondary-color);
   border-radius: var(--bb-rl-radius-full);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-  font-size: var(--bb-rl-font-size-xs);
-  font-weight: 500;
 }
 
 .bb-rl-members-directory-container {
@@ -18323,6 +18325,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
+.bb-rl-ac-results {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  margin: 6px 0;
+}
+
 .bb-rl-ac-results .ac-results-list {
   padding: 0;
   margin: 0;
@@ -18366,6 +18374,9 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   font-weight: 600;
   line-height: var(--bb-rl-base-line);
   margin-bottom: var(--bb-rl-space-100);
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-ac-results .ac-results-list .bb-rl-search-post .item-title a {
@@ -18412,6 +18423,20 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-ac-results .ac-results-list .bb-rl-search-post.bb-rl-search-post--group .item-avatar i {
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-ac-results .ac-results-list .bb-rl-search-post.bb-rl-search-post--group-activity .bb-rl-group-avatar {
+  max-width: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.bb-rl-ac-results .ac-results-list .bb-rl-search-post.bb-rl-search-post--group-activity .bb-rl-group-avatar img.avatar {
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-ac-results .ac-results-list .bb-rl-search-post.bb-rl-search-post--group-activity .bb-rl-group-avatar i {
   border-radius: var(--bb-rl-radius-lg);
 }
 

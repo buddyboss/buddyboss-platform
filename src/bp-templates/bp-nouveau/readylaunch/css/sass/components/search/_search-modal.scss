@@ -125,6 +125,9 @@
 }
 
 .bb-rl-ac-results {
+	max-height: calc(100vh - 220px);
+    overflow: auto;
+	margin: 6px 0;
 
 	.ac-results-list {
 		padding: 0;
@@ -166,6 +169,9 @@
 
 				@include bb-rl-base-heading-bolder;
 				margin-bottom: var(--bb-rl-space-100);
+				display: flex;
+				align-items: center;
+				gap: var(--bb-rl-space-100);
 
 				a {
 					color: var(--bb-rl-text-color);
@@ -208,6 +214,23 @@
 			&.bb-rl-search-post--group {
 
 				.item-avatar {
+
+					img.avatar {
+						border-radius: var(--bb-rl-radius-lg);
+					}
+
+					i {
+						border-radius: var(--bb-rl-radius-lg);
+					}
+				}
+			}
+
+			&.bb-rl-search-post--group-activity {
+
+				.bb-rl-group-avatar {
+					max-width: 32px;
+					width: 32px;
+					height: 32px;
 
 					img.avatar {
 						border-radius: var(--bb-rl-radius-lg);

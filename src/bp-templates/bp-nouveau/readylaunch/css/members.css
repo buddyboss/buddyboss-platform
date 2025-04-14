@@ -283,8 +283,12 @@
   display: none;
 }
 
+.bb-rl-member-type,
 .bb-rl-members .bp-member-type,
 .bb-rl-profile-container .bp-member-type {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
   display: inline-flex;
   width: fit-content;
   color: var(--bb-rl-text-brand-secondary-color);
@@ -292,8 +296,6 @@
   border: 1px solid var(--bb-rl-border-brand-secondary-color);
   border-radius: var(--bb-rl-radius-full);
   padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
-  font-size: var(--bb-rl-font-size-xs);
-  font-weight: 500;
 }
 
 .bb-rl-members-directory-container {
