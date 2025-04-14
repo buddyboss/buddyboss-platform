@@ -207,3 +207,19 @@ function bb_rl_get_user_social_networks_field_id() {
 	$social_networks_field = $wpdb->get_row( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
 	return ! empty( $social_networks_field->id ) ? $social_networks_field->id : 0;
 }
+
+/**
+ * Add bb-rl-suggestions to mentions selectors
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $options Mentions options.
+ * @return array Modified mentions options.
+ */
+function bb_rl_add_mentions_selectors( $options ) {
+    if ( ! empty( $options['selectors'] ) && is_array( $options['selectors'] ) ) {
+        $options['selectors'][] = '.bb-rl-suggestions';
+    }
+    return $options;
+}
+add_filter( 'bp_at_mention_js_options', 'bb_rl_add_mentions_selectors' );
