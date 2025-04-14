@@ -335,6 +335,41 @@ h6 {
 			color: var(--bb-rl-text-secondary-color);
 		}
 	}
+
+	// Emoji picker
+	.emojionearea .emojionearea-picker {
+		background-color: var(--bb-rl-background-color);
+
+		.emojionearea-filters {
+			background-color: var(--bb-rl-background-color);
+
+			.emojionearea-filter {
+				opacity: 1;
+
+				&.active {
+					background-color: var(--bb-rl-background-hover-color);
+				}
+			}
+		}
+
+		.emojionearea-scroll-area .emojionearea-category-title {
+			color: var(--bb-rl-text-secondary-color);
+			background-color: transparent;
+		}
+	}
+
+	&.bb-rl-dark-mode {
+
+		.emojionearea .emojionearea-picker {
+
+			.emojionearea-filters .emojionearea-filter {
+
+				img {
+					filter: invert(1);
+				}
+			}
+		}
+	}
 }
 
 @media screen and (max-width: $lg) {
