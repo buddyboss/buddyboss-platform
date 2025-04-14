@@ -2664,6 +2664,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-activity-head-group .bb-rl-activity-group-post-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .bb-rl-activity-head-group .bb-rl-activity-group-post-meta .bb-rl-activity-post-author,

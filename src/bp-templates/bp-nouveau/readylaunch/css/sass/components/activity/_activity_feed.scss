@@ -753,6 +753,7 @@
 	.bb-rl-activity-group-post-meta {
 		display: flex;
 		align-items: center;
+		flex-wrap: wrap;
 
 		.bb-rl-activity-post-author,
 		> a {
