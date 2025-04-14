@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH, AbortController */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
