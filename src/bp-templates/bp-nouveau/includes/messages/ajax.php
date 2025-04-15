@@ -3082,6 +3082,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 		$args['exclude'] = ! empty( $banned_member['members'] ) ? array_column( $banned_member['members'], 'ID' ) : array();
 
 		add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+	} else {
+
+		// As on deleting the users, users are not deleted from the receipients so we need to check with users table to get the non deleted users.
+		add_filter( 'bp_recipients_recipient_get_where_conditions', 'bb_recipients_recipient_get_where_sql_where_users_exists', 10, 2 );
 	}
 
 	$thread  = new BP_Messages_Thread( false );
@@ -3233,6 +3237,8 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 
 	if ( $is_group_message_thread && $group_id && bp_is_active( 'groups' ) ) {
 		remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+	} else {
+		remove_filter( 'bp_recipients_recipient_get_where_conditions', 'bb_recipients_recipient_get_where_sql_where_users_exists', 10, 2 );
 	}
 
 	wp_send_json_success(

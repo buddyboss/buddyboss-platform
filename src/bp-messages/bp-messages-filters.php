@@ -1264,3 +1264,27 @@ function bb_bypass_name_privacy_for_admin( $hidden_levels, $displayed_user_id, $
 
 	return $hidden_levels;
 }
+
+/**
+ * Get the receipients which exists in users table.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param $where_conditions array Where conditions SQL statement.
+ * @param $r                array Array of parsed arguments.
+ *
+ * @return array
+ */
+function bb_recipients_recipient_get_where_sql_where_users_exists( $where_conditions, $r ) {
+	global $wpdb;
+
+	if ( empty( $r['user_id'] ) ) {
+		$where_conditions['where_users_exists'] = 'EXISTS (
+			SELECT 1 FROM ' . $wpdb->base_prefix . 'users u WHERE u.ID = r.user_id
+		)';
+	} else {
+		//error_log(print_r( debug_backtrace(false), true));
+	}
+
+	return $where_conditions;
+}
