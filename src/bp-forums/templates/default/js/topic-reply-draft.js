@@ -618,11 +618,59 @@ window.bp = window.bp || {};
 				meta.bb_link_url                   = JSON.stringify( preview_data );
 			}
 
+			// Check if the media, videos or documents still available in older draft so we need to be update the draft again.
+			if ( ! media_valid && 'undefined' !== typeof this.topic_reply_draft.data && false !== this.topic_reply_draft.data ) {
+				if (
+					'undefined' !== typeof this.topic_reply_draft.data.bbp_media &&
+					'' !== this.topic_reply_draft.data.bbp_media &&
+					'[]' !== this.topic_reply_draft.data.bbp_media
+				) {
+					media_valid = true;
+				}
+
+				if (
+					'undefined' !== typeof this.topic_reply_draft.data.bbp_video &&
+					'' !== this.topic_reply_draft.data.bbp_video &&
+					'[]' !== this.topic_reply_draft.data.bbp_video
+				) {
+					media_valid = true;
+				}
+
+				if (
+					'undefined' !== typeof this.topic_reply_draft.data.bbp_document &&
+					'' !== this.topic_reply_draft.data.bbp_document &&
+					'[]' !== this.topic_reply_draft.data.bbp_document
+				) {
+					media_valid = true;
+				}
+			}
+
 			var content_valid = true;
 			if ( 'topic' === this.topic_reply_draft.object && 'undefined' !== typeof meta.bbp_topic_content && '' === $( $.parseHTML( meta.bbp_topic_content ) ).text().trim() && ! media_valid ) {
 				content_valid = false;
 			} else if ( 'reply' === this.topic_reply_draft.object && 'undefined' !== typeof meta.bbp_reply_content && '' === $( $.parseHTML( meta.bbp_reply_content ) ).text().trim() && ! media_valid ) {
 				content_valid = false;
+			}
+
+			// Check if the content still available in older draft so we need to be update the draft again.
+			if ( ! content_valid && 'undefined' !== typeof this.topic_reply_draft.data && false !== this.topic_reply_draft.data ) {
+				
+				if ( 'topic' === this.topic_reply_draft.object ) {
+
+					// Check if the topic title still available in older draft so we need to be update the draft again.
+					if ( 'undefined' !== typeof this.topic_reply_draft.data.bbp_topic_title && '' !== this.topic_reply_draft.data.bbp_topic_title.trim() ) {
+						content_valid = true;
+					}
+
+					// Check if the topic content still available in older draft so we need to be update the draft again.
+					if ( 'undefined' !== typeof this.topic_reply_draft.data.bbp_topic_content && '' !== this.topic_reply_draft.data.bbp_topic_content.trim() ) {
+						content_valid = true;
+					}
+				}
+
+				if ( 'reply' === this.topic_reply_draft.object && 'undefined' !== typeof this.topic_reply_draft.data.bbp_reply_content && '' !== this.topic_reply_draft.data.bbp_reply_content.trim() ) {
+					content_valid = true;
+				}
 			}
 
 			if ( content_valid ) {
@@ -787,7 +835,22 @@ window.bp = window.bp || {};
 				) ||
 				(
 					'' === activity_data.bbp_topic_title &&
-					'' === activity_data.bbp_topic_content
+					'' === activity_data.bbp_topic_content &&
+					(
+						'undefined' === typeof activity_data.bbp_media ||
+						'' === activity_data.bbp_media ||
+						'[]' === activity_data.bbp_media
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_document ||
+						'' === activity_data.bbp_document ||
+						'[]' === activity_data.bbp_document
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_video ||
+						'' === activity_data.bbp_video ||
+						'[]' === activity_data.bbp_video
+					)
 				)
 			) {
 				return;
@@ -900,7 +963,25 @@ window.bp = window.bp || {};
 				) ||
 				(
 					'' === activity_data.bbp_reply_content &&
-					'' === activity_data.bb_link_url
+					(
+						'undefined' === typeof activity_data.bb_link_url ||
+						 '' === activity_data.bb_link_url
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_media ||
+						'' === activity_data.bbp_media ||
+						'[]' === activity_data.bbp_media
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_document ||
+						'' === activity_data.bbp_document ||
+						'[]' === activity_data.bbp_document
+					) &&
+					(
+						'undefined' === typeof activity_data.bbp_video ||
+						'' === activity_data.bbp_video ||
+						'[]' === activity_data.bbp_video
+					)
 				)
 			) {
 				return;

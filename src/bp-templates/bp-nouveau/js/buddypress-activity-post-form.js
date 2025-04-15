@@ -1569,6 +1569,7 @@ window.bp = window.bp || {};
 
 			return draft_data;
 		},
+
 		checkAndStoreDraftToLocalStorage: function( draft_activity ) {
 			try {
 				var json_data     = JSON.stringify( draft_activity );
@@ -1577,7 +1578,7 @@ window.bp = window.bp || {};
 				data_size_mb      = data_size_mb.toFixed( 2 );
 
 				if ( data_size_mb > 4 && draft_activity.data && draft_activity.data.video && draft_activity.data.video.length ) {
-		
+
 					var storage_copy = JSON.parse( json_data );
 					if ( storage_copy.data && storage_copy.data.video ) {
 						for ( var i = 0; i < storage_copy.data.video.length; i++ ) {
@@ -3382,7 +3383,7 @@ window.bp = window.bp || {};
 				 // Create a DOM parser
 				 var parser = new DOMParser();
 				 var doc = parser.parseFromString( urlText, 'text/html' );
-				 
+
 				 // Exclude the mention links from the urlText
 				 var anchorElements = doc.querySelectorAll( 'a.bp-suggestions-mention' );
 				 anchorElements.forEach( function( anchor ) { anchor.remove(); } );
