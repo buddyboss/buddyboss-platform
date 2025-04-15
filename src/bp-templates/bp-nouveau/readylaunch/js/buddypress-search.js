@@ -3,9 +3,9 @@
 jQuery( document ).ready(
 	function ( $ ) {
 		BP_SEARCH.cache = [];
+		var autoCompleteObjects = [];
 
 		function initAutoComplete() {
-				var autoCompleteObjects = [];
 			if ( BP_SEARCH.enable_ajax_search == '1' ) {
 				var document_height = $( document ).height(),
 				bb_is_rtl           = $( 'body' ).hasClass( 'rtl' );
@@ -96,6 +96,7 @@ jQuery( document ).ready(
 										of: $search_field,
 										collision: "flip"
 									},
+									close: function () { $( '.ui-autocomplete' ).show() }, // Prevent autocomplete from closing automatically
 								}
 							).data( 'ui-autocomplete' )._renderItem = function ( ul, item ) {
 										ul.addClass( 'bp-search-ac' );
@@ -264,6 +265,32 @@ jQuery( document ).ready(
 			}
 		);
 		/* ajax load */
+
+		// Close autocomplete suggestions when clear button is clicked
+		$( document ).on( 'click', '.bb-rl-network-search-clear', function( e ) {
+			e.preventDefault();
+			var $this = $( e.currentTarget );
+			var $searchForm = $this.closest( '#search-form' );
+			var $searchInput = $searchForm.find( '#search' );
+			
+			// Clear the search input
+			$searchInput.val( '' );
+			
+			// Reset the filter to 'All'
+			var $filterLabel = $searchForm.find( '.search-filter-label' );
+			if ( $filterLabel.length ) {
+				$filterLabel.text( bbReadyLaunchFront.filter_all );
+			}
+			
+			// Focus back on the search input
+			$searchInput.focus();
+			
+			// Close all autocomplete dropdowns
+			$( '.ui-autocomplete' ).fadeOut();
+
+			// Hide the clear button
+			$this.addClass( 'bp-hide' );
+		});
 
 		$( document ).on(
 			'click',

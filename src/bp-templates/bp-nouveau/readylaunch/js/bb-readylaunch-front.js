@@ -55,7 +55,6 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
-				$document.on( 'click', '.bb-rl-network-search-clear', this.clearSearchInput.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -373,7 +372,7 @@ window.bp = window.bp || {};
 				}
 
 				// Close search modal when clicking outside.
-				var search_element = $( '#bb-rl-network-search-modal .bp-search-form-wrapper *, .bb-rl-header-search, .bb-rl-header-search *, .select2-container, .bb-rl-network-search-clear' );
+				var search_element = $( '#bb-rl-network-search-modal .bp-search-form-wrapper *, .bb-rl-header-search, .bb-rl-header-search *' );
 				if ( ! search_element.is( e.target ) ) {
 					$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
 				}
@@ -1012,30 +1011,6 @@ window.bp = window.bp || {};
 				}
 
 				run_alignMenu();
-			},
-
-			/**
-			 * Clear search input and reset the search form
-			 * 
-			 * @param {Object} e Event object
-			 */
-			clearSearchInput: function( e ) {
-				e.preventDefault();
-				var $this = $( e.currentTarget );
-				var $searchForm = $this.closest( '#search-form' );
-				var $searchInput = $searchForm.find( '#search' );
-				
-				// Clear the search input
-				$searchInput.val( '' );
-				
-				// Reset the filter to 'All'
-				var $filterLabel = $searchForm.find( '.search-filter-label' );
-				if ( $filterLabel.length ) {
-					$filterLabel.text( bbReadyLaunchFront.filter_all );
-				}
-				
-				// Focus back on the search input
-				$searchInput.focus();
 			},
 		};
 
