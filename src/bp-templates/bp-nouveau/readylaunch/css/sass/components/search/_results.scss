@@ -99,6 +99,10 @@
 			}
 		}
 
+		.item {
+			flex: 1;
+		}
+
 		.item-title {
 
 			@include bb-rl-base-heading-bolder;
@@ -111,16 +115,26 @@
 
 		.entry-content,
 		.activity-content,
-		.entry-summary {
+		.entry-summary,
+		.woocommerce-product-details__short-description {
 
 			@include bb-rl-label-heading-md-thin;
 		}
 
-		.entry-meta {
+		.entry-meta,
+		.item-extra {
 
 			@include bb-rl-label-heading-md;
 			color: var(--bb-rl-text-tertiary-color);
 			margin-top: var(--bb-rl-space-100);
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
+
+			a {
+				color: var(--bb-rl-text-secondary-color);
+				font-weight: 600;
+			}
 		}
 
 		.activity-content .item-meta {
@@ -159,6 +173,46 @@
 			.item-avatar i {
 				border-radius: var(--bb-rl-radius-base);
 			}
+		}
+
+		.activity-header {
+			margin-bottom: var(--bb-rl-space-50);
+
+			img.avatar {
+				display: inline-flex;
+				align-items: center;
+				border-radius: var(--bb-rl-radius-sm);
+				margin: 0 var(--bb-rl-space-50);
+				vertical-align: text-bottom;
+			}
+
+			> p {
+
+				@include bb-rl-label-heading-bolder;
+				color: var(--bb-rl-text-tertiary-color);
+
+				a {
+					color: var(--bb-rl-text-secondary-color);
+					font-weight: 600;
+				}
+			}
+
+			> a {
+
+				@include bb-rl-label-heading-bolder;
+				color: var(--bb-rl-text-secondary-color);
+				font-weight: 600;
+			}
+		}
+
+		span.middot {
+			display: inline-block;
+			width: 4px;
+			height: 4px;
+			background-color: var(--bb-rl-background-tertiary-color);
+			border-radius: 50%;
+			margin: 0 var(--bb-rl-space-50);
+			font-size: 0;
 		}
 	}
 }
@@ -216,6 +270,46 @@
 				text-align: center;
 				color: var(--bb-rl-text-tertiary-color);
 				padding: var(--bb-rl-space-100) 0;
+			}
+		}
+	}
+}
+
+.bb-rl-search-results-container {
+
+	.pagination.navigation {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.search_results .pag-count {
+		display: none;
+	}
+
+	.pagination-links {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+
+		.page-numbers {
+			display: inline-flex;
+			min-width: var(--bb-rl-space-400);
+			height: var(--bb-rl-space-400);
+			align-items: center;
+			justify-content: center;
+			border-radius: var(--bb-rl-radius-md);
+			border: 1px solid transparent;
+		}
+
+		a.page-numbers {
+			color: var(--bb-rl-text-tertiary-color);
+		}
+
+		span.page-numbers {
+			color: var(--bb-rl-text-color);
+
+			&.current {
+				border-color: var(--bb-rl-border-quaternary-color);
 			}
 		}
 	}
