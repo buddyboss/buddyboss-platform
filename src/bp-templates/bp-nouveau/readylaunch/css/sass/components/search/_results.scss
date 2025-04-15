@@ -162,3 +162,61 @@
 		}
 	}
 }
+
+.bb-rl-no-search-results {
+	padding-top: var(--bb-rl-space-400);
+
+	.bb-rl-search-results-container {
+		background-color: var(--bb-rl-background-color);
+		border-radius: var(--bb-rl-radius-lg);
+		padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+
+		.entry-header {
+			padding: 0;
+		}
+
+		h1.entry-title {
+
+			&::before {
+				display: block;
+				content: "\e30c";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 40px;
+				font-style: normal;
+				margin-bottom: var(--bb-rl-space-200);
+				line-height: 1;
+				color: var(--bb-rl-icon-primary-color);
+			}
+		}
+
+		h1.entry-title,
+		h1.entry-title .bb-rl-result-label {
+
+			@include bb-rl-base-heading-xl;
+			color: var(--bb-rl-text-color);
+			text-align: center;
+		}
+	}
+
+	.bp-search-no-results {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.bp-search-results.bp-feedback {
+			background-color: transparent;
+			padding: 0;
+			justify-content: center;
+
+			p {
+
+				@include bb-rl-label-heading-md-thin;
+				width: 100%;
+				text-align: center;
+				color: var(--bb-rl-text-tertiary-color);
+				padding: var(--bb-rl-space-100) 0;
+			}
+		}
+	}
+}

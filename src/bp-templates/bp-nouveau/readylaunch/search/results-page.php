@@ -17,13 +17,15 @@ $post_title = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 	$post_title = __( 'No results found', "buddyboss" );
+	$no_results = ' bb-rl-no-search-results';
 } elseif ( BP_Search::instance()->has_search_results() ) {
 	$post_title = sprintf( __( 'Showing results for <span class="bb-rl-result-label">\'%s\'</span>', "buddyboss" ), esc_html( $_GET['s'] ) );
 } else {
 	$post_title = sprintf( __( 'No results for <span class="bb-rl-result-label">\'%s\'</span>', "buddyboss" ), esc_html( $_GET['s'] ) );
+	$no_results = ' bb-rl-no-search-results';
 }
 ?>
-<div class="bb-rl-container">
+<div class="bb-rl-container<?php echo $no_results; ?>">
 	<div class="bb-rl-search-results-container">
 
 		<header class="entry-header">

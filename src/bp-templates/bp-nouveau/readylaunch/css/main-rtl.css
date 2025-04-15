@@ -8034,6 +8034,17 @@ li.bb-rl-hideshow {
   vertical-align: middle;
 }
 
+.bb-readylaunch-template .ui-helper-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
 .bb-rl-crop-container {
   position: fixed;
   z-index: 999991;
@@ -18206,6 +18217,63 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-search-results-container li.bp-search-item.bp-search-item_sfwd-lessons .item-avatar i, .bb-rl-search-results-container li.bp-search-item.bp-search-item_sfwd-courses .item-avatar i, .bb-rl-search-results-container li.bp-search-item.bp-search-item_post .item-avatar i, .bb-rl-search-results-container li.bp-search-item.bp-search-item_product .item-avatar i, .bb-rl-search-results-container li.bp-search-item.bp-search-item_sfwd-topic .item-avatar i {
   border-radius: var(--bb-rl-radius-base);
+}
+
+.bb-rl-no-search-results {
+  padding-top: var(--bb-rl-space-400);
+}
+
+.bb-rl-no-search-results .bb-rl-search-results-container {
+  background-color: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+}
+
+.bb-rl-no-search-results .bb-rl-search-results-container .entry-header {
+  padding: 0;
+}
+
+.bb-rl-no-search-results .bb-rl-search-results-container h1.entry-title::before {
+  display: block;
+  content: "\e30c";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-size: 40px;
+  font-style: normal;
+  margin-bottom: var(--bb-rl-space-200);
+  line-height: 1;
+  color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-rl-no-search-results .bb-rl-search-results-container h1.entry-title,
+.bb-rl-no-search-results .bb-rl-search-results-container h1.entry-title .bb-rl-result-label {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--bb-rl-text-color);
+  text-align: center;
+}
+
+.bb-rl-no-search-results .bp-search-no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bb-rl-no-search-results .bp-search-no-results .bp-search-results.bp-feedback {
+  background-color: transparent;
+  padding: 0;
+  justify-content: center;
+}
+
+.bb-rl-no-search-results .bp-search-no-results .bp-search-results.bp-feedback p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  width: 100%;
+  text-align: center;
+  color: var(--bb-rl-text-tertiary-color);
+  padding: var(--bb-rl-space-100) 0;
 }
 
 .bb-rl-search-modal .bb-rl-modal-wrapper {
