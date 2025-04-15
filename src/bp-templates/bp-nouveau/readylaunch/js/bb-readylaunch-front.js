@@ -7,10 +7,10 @@ window.bp = window.bp || {};
 	function ( exports, $ ) {
 
 		var bpNouveauLocal    = BP_Nouveau,
-		    bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
-		    bbRlMedia         = bpNouveauLocal.media,
-		    bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
-		    bbRlNonce         = bpNouveauLocal.nonces;
+			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+			bbRlMedia         = bpNouveauLocal.media,
+			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
+			bbRlNonce         = bpNouveauLocal.nonces;
 
 		/**
 		 * [ReadLaunch description]
@@ -78,7 +78,7 @@ window.bp = window.bp || {};
 				var el = e.target;
 				if ( 'notification-list' === el.id ) {
 					var scrollThreshold = 30; // pixels from bottom
-					var bottomReached = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
+					var bottomReached   = (el.scrollTop + el.offsetHeight + scrollThreshold) >= el.scrollHeight;
 
 					if (bottomReached && ! el.classList.contains( 'loading' ) ) {
 						var load_more = $( el ).find( '.bb-rl-load-more' );
@@ -109,56 +109,67 @@ window.bp = window.bp || {};
 			},
 
 			gridListFilter: function () {
-				$( '.bb-rl-filter select' ).each( function () {
-					var $this       = $( this ),
-					    customClass = '';
+				$( '.bb-rl-filter select' ).each(
+					function () {
+						var $this   = $( this ),
+						customClass = '';
 
-					if ( $this.data( 'bb-caret' ) ) {
-						customClass += ' bb-rl-caret-icon ';
+						if ( $this.data( 'bb-caret' ) ) {
+								customClass += ' bb-rl-caret-icon ';
+						}
+
+						if ( $this.data( 'bb-icon' ) ) {
+							customClass += ' bb-rl-has-icon ';
+							customClass += ' ' + $this.data( 'bb-icon' ) + ' ';
+						}
+
+						if ( $this.data( 'bb-border' ) === 'rounded' ) {
+							customClass += ' bb-rl-rounded-border ';
+						}
+
+						$this.select2(
+							{
+								theme: 'rl',
+								dropdownParent: $this.parent()
+							}
+						);
+
+						// Apply CSS classes after initialization
+						$this.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' + customClass );
+
+						// Add class to dropdown when it opens
+						$this.on(
+							'select2:open',
+							function () {
+								$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+							}
+						);
 					}
-
-					if ( $this.data( 'bb-icon' ) ) {
-						customClass += ' bb-rl-has-icon ';
-						customClass += ' ' + $this.data('bb-icon') + ' ';
-					}
-
-					if ( $this.data( 'bb-border' ) === 'rounded' ) {
-						customClass += ' bb-rl-rounded-border ';
-					}
-
-					$this.select2( {
-						theme: 'rl',
-						dropdownParent: $this.parent()
-					} );
-
-					// Apply CSS classes after initialization
-					$this.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container'+ customClass );
-
-					// Add class to dropdown when it opens
-					$this.on( 'select2:open', function() {
-						$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
-					} );
-				} );
+				);
 			},
 
 			styledSelect: function () {
-				$( '.bb-rl-styled-select select' ).each( function () {
-					var $this       = $( this ),
-					    customClass = '';
+				$( '.bb-rl-styled-select select' ).each(
+					function () {
+						var $this   = $( this ),
+						customClass = '';
 
-					// Check if parent container has specific class
-					var $parent = $this.closest( '.bb-rl-styled-select' );
-					if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
-						customClass += ' bb-rl-select-default';
+						// Check if parent container has specific class
+						var $parent = $this.closest( '.bb-rl-styled-select' );
+						if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
+								customClass += ' bb-rl-select-default';
+						}
+
+						$this.select2(
+							{
+								theme: 'bb-rl-select2',
+								containerCssClass: 'bb-rl-select2-container ' + customClass,
+								dropdownCssClass: 'bb-rl-select2-dropdown',
+								dropdownParent: $this.parent()
+							}
+						);
 					}
-
-					$this.select2( {
-						theme: 'bb-rl-select2',
-						containerCssClass: 'bb-rl-select2-container ' + customClass,
-						dropdownCssClass: 'bb-rl-select2-dropdown',
-						dropdownParent: $this.parent()
-					} );
-				} );
+				);
 			},
 
 			/**
@@ -227,7 +238,7 @@ window.bp = window.bp || {};
 					containerId : '',
 				};
 				var settings        = $.extend( defaults, options ),
-				    mainContainerID = $( '#' + settings.containerId ); // Show a loading indicator.
+					mainContainerID = $( '#' + settings.containerId ); // Show a loading indicator.
 				if ( settings.page > 1 ) {
 					mainContainerID.find( '.bb-rl-load-more' ).before( '<i class="bb-rl-loader"></i>' );
 				} else {
@@ -365,14 +376,23 @@ window.bp = window.bp || {};
 					$( '.header-aside div.menu-item-has-children' ).removeClass( 'selected' );
 				}
 
-				// Close profile dropdown when clicking outside
-				if ( !$( e.target ).closest('.user-wrap' ).length &&
-					!$( e.target ).closest( '.bb-rl-profile-dropdown' ).length ) {
+				// Close profile dropdown when clicking outside.
+				if ( ! $( e.target ).closest( '.user-wrap' ).length &&
+					! $( e.target ).closest( '.bb-rl-profile-dropdown' ).length ) {
 					$( '.user-wrap' ).removeClass( 'active' );
 				}
 
 				// Close search modal when clicking outside.
-				var search_element = $( '#bb-rl-network-search-modal .bp-search-form-wrapper *, .bb-rl-header-search, .bb-rl-header-search *' );
+				var search_element = $(
+					'#bb-rl-network-search-modal .bp-search-form-wrapper *, ' +
+					'.bb-rl-header-search, ' +
+					'.bb-rl-header-search *, ' +
+					'.select2-container, ' +
+					'.select2-container *, ' +
+					'#bb-rl-network-search-modal .bp-search-form-wrapper, ' +
+					'#bb-rl-network-search-modal .bp-search-form-wrapper *, ' +
+					'.bb-rl-network-search-clear'
+				);
 				if ( ! search_element.is( e.target ) ) {
 					$( '#bb-rl-network-search-modal' ).addClass( 'bp-hide' );
 				}
@@ -389,7 +409,7 @@ window.bp = window.bp || {};
 				var $body = $( 'body' );
 				$body.toggleClass( 'bb-rl-dark-mode' );
 
-				if( $body.hasClass( 'bb-rl-dark-mode' ) ) {
+				if ( $body.hasClass( 'bb-rl-dark-mode' ) ) {
 					$.cookie( 'bb-rl-dark-mode', 'true', { expires: 365, path: '/' } );
 				} else {
 					$.cookie( 'bb-rl-dark-mode', 'false', { expires: 365, path: '/' } );
@@ -430,8 +450,8 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				var $this                  = $( e.currentTarget ),
-				    notificationId         = $this.data( 'notification-id' ),
-				    notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+					notificationId         = $this.data( 'notification-id' ),
+					notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 				if ( 'all' !== notificationId ) {
 					$this.closest( '.read-item' ).fadeOut();
 					notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
@@ -476,8 +496,8 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				var $this                  = $( e.currentTarget ),
-				    notificationId         = $this.data( 'notification-id' ),
-				    notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
+					notificationId         = $this.data( 'notification-id' ),
+					notificationsIconCount = bp.Readylaunch.notificationIconSelector.parent().children( '.count' );
 				if ( 'all' !== notificationId ) {
 					$this.closest( '.read-item' ).fadeOut();
 					notificationsIconCount.html( parseInt( notificationsIconCount.html() ) - 1 );
@@ -548,15 +568,15 @@ window.bp = window.bp || {};
 					};
 
 					var configExtended           = _.extend( defaultConfig, config ),
-					    modelKey                 = configExtended.modelKey,
-					    uploaderSelector         = configExtended.uploaderSelector,
-					    actionName               = configExtended.actionName,
-					    nonceName                = configExtended.nonceName,
-					    mediaType                = configExtended.mediaType,
-					    otherButtonSelectors     = configExtended.otherButtonSelectors,
-					    parentSelector           = configExtended.parentSelector,
-					    parentAttachmentSelector = configExtended.parentAttachmentSelector,
-					    ActiveComponent          = configExtended.ActiveComponent;
+						modelKey                 = configExtended.modelKey,
+						uploaderSelector         = configExtended.uploaderSelector,
+						actionName               = configExtended.actionName,
+						nonceName                = configExtended.nonceName,
+						mediaType                = configExtended.mediaType,
+						otherButtonSelectors     = configExtended.otherButtonSelectors,
+						parentSelector           = configExtended.parentSelector,
+						parentAttachmentSelector = configExtended.parentAttachmentSelector,
+						ActiveComponent          = configExtended.ActiveComponent;
 
 					// Common event handlers.
 					dropzone.on(
@@ -588,8 +608,8 @@ window.bp = window.bp || {};
 							view.$el.closest( parentSelector ).addClass( 'media-uploading' );
 
 							var circle        = $( element.previewElement ).find( '.dz-progress-ring circle' )[ 0 ],
-							    radius        = circle.r.baseVal.value,
-							    circumference = radius * 2 * Math.PI;
+								radius        = circle.r.baseVal.value,
+								circumference = radius * 2 * Math.PI;
 
 							circle.style.strokeDasharray  = circumference + ' ' + circumference;
 							circle.style.strokeDashoffset = circumference - (
@@ -634,13 +654,15 @@ window.bp = window.bp || {};
 								response.data.saved      = false;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 
-								if( 'video' === mediaType ) {
-									var thumbnailCheck = setInterval( function () {
-										if( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
-											response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
-											clearInterval( thumbnailCheck );
+								if ( 'video' === mediaType ) {
+									var thumbnailCheck = setInterval(
+										function () {
+											if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+													response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+													clearInterval( thumbnailCheck );
+											}
 										}
-									});
+									);
 								}
 
 								view[ modelKey ].push( response.data );
@@ -649,15 +671,15 @@ window.bp = window.bp || {};
 
 							if ( 'document' === mediaType ) {
 								var filename      = file.upload.filename,
-								    fileExtension = filename.substr(
-									    (
-										    filename.lastIndexOf( '.' ) + 1
-									    )
-								    ),
-								    file_icon     = (
-									    ! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : ''
-								    ),
-								    icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
+									fileExtension = filename.substr(
+										(
+											filename.lastIndexOf( '.' ) + 1
+										)
+									),
+									file_icon     = (
+										! _.isUndefined( response.data.svg_icon ) ? response.data.svg_icon : ''
+									),
+									icon_class    = ! _.isEmpty( file_icon ) ? file_icon : 'bb-icon-file-' + fileExtension;
 								if ( $( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).length ) {
 									$( file.previewElement ).find( '.dz-details .dz-icon .bb-icons-rl-file' ).removeClass( 'bb-icons-rl-file' ).addClass( icon_class );
 								}
@@ -679,8 +701,8 @@ window.bp = window.bp || {};
 								Backbone.trigger(
 									'onError',
 									'<div>' + bbRlMedia.invalid_media_type + '. ' + (
-										        response || ''
-									        ) + '<div>'
+												response || ''
+											) + '<div>'
 								);
 								dropzone.removeFile( file );
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
@@ -718,9 +740,9 @@ window.bp = window.bp || {};
 									view[ modelKey ] = view[ modelKey ].filter(
 										function ( mediaItem ) {
 											return file.id !== mediaItem.id &&
-											       (
-												       ! file[ mediaType + '_edit_data' ] || file[ mediaType + '_edit_data' ].id !== mediaItem.id
-											       );
+													(
+														! file[ mediaType + '_edit_data' ] || file[ mediaType + '_edit_data' ].id !== mediaItem.id
+													);
 										}
 									);
 									view.model.set( modelKey, view[ modelKey ] );
@@ -740,8 +762,8 @@ window.bp = window.bp || {};
 						'complete',
 						function () {
 							if ( 0 === dropzone.getUploadingFiles().length &&
-							     0 === dropzone.getQueuedFiles().length &&
-							     dropzone.files.length > 0 ) {
+								0 === dropzone.getQueuedFiles().length &&
+								dropzone.files.length > 0 ) {
 								view.$el.closest( parentSelector ).removeClass( 'media-uploading' );
 							}
 						}
@@ -754,11 +776,11 @@ window.bp = window.bp || {};
 
 				injectFiles: function ( data ) {
 					var commonData   = data.commonData,
-					    id           = data.id,
-					    fileType     = data.fileType, // 'media', 'document', or 'video'
-					    dropzoneObj  = data.dropzoneObj,
-					    draftData    = data.draftData || false,
-					    dropzoneData = data.dropzoneData || null;
+						id           = data.id,
+						fileType     = data.fileType, // 'media', 'document', or 'video'
+						dropzoneObj  = data.dropzoneObj,
+						draftData    = data.draftData || false,
+						dropzoneData = data.dropzoneData || null;
 
 					// Iterate through the files and inject them.
 					commonData.forEach(
@@ -871,8 +893,8 @@ window.bp = window.bp || {};
 
 				createThumbnailFromUrl : function ( mock_file, dropzoneObj, dropzone_container ) {
 					var self             = this,
-					    dropzone_obj_key = dropzone_container && dropzone_container.data ? dropzone_container.data( 'key' ) : '',
-					    dropzoneObjData  = dropzoneObj || self.dropzone_obj;
+						dropzone_obj_key = dropzone_container && dropzone_container.data ? dropzone_container.data( 'key' ) : '',
+						dropzoneObjData  = dropzoneObj || self.dropzone_obj;
 
 					if ( dropzone_obj_key && dropzoneObjData[ dropzone_obj_key ] ) {
 						dropzoneObjData = dropzoneObjData[ dropzone_obj_key ];
@@ -909,7 +931,7 @@ window.bp = window.bp || {};
 				// This will work only for Chrome.
 				window.onbeforeunload = fetchDataHandler;
 				// This will work only for other browsers.
-				window.unload         = fetchDataHandler;
+				window.unload = fetchDataHandler;
 			},
 
 			// Initializes navigation overflow handling on page load and resize.
@@ -918,22 +940,34 @@ window.bp = window.bp || {};
 
 				// Initialize overflow navigation for a specific selector
 				function initSelector( selector, reduceWidth ) {
-					$( selector ).each( function () {
-						self.bbNavOverflow( this, reduceWidth );
-					} );
+					$( selector ).each(
+						function () {
+							self.bbNavOverflow( this, reduceWidth );
+						}
+					);
 
 					// Add resize and load event listeners
-					window.addEventListener( 'resize', function () {
-						$( selector ).each( function () {
-							self.bbNavOverflow( this, reduceWidth );
-						} );
-					} );
+					window.addEventListener(
+						'resize',
+						function () {
+							$( selector ).each(
+								function () {
+									self.bbNavOverflow( this, reduceWidth );
+								}
+							);
+						}
+					);
 
-					window.addEventListener( 'load', function () {
-						$( selector ).each( function () {
-							self.bbNavOverflow( this, reduceWidth );
-						} );
-					} );
+					window.addEventListener(
+						'load',
+						function () {
+							$( selector ).each(
+								function () {
+									self.bbNavOverflow( this, reduceWidth );
+								}
+							);
+						}
+					);
 				}
 
 				initSelector( '#object-nav > ul', 100 );
@@ -983,25 +1017,30 @@ window.bp = window.bp || {};
 				}
 
 				function alignMenu( obj ) {
-					var self = $( obj ),
-						w = 0,
-						i = -1,
+					var self     = $( obj ),
+						w        = 0,
+						i        = -1,
 						menuhtml = '',
-						mw = self.width() - reduceWidth;
+						mw       = self.width() - reduceWidth;
 
-					$.each( self.children( 'li' ), function () {
-						i++;
-						w += $( this ).outerWidth( true );
-						if ( mw < w ) {
-							menuhtml += $( '<div>' ).append( $( this ).clone() ).html();
-							$( this ).remove();
+					$.each(
+						self.children( 'li' ),
+						function () {
+							i++;
+							w += $( this ).outerWidth( true );
+							if ( mw < w ) {
+								menuhtml += $( '<div>' ).append( $( this ).clone() ).html();
+								$( this ).remove();
+							}
 						}
-					} );
+					);
 
-					self.append( '<li class="bb-rl-hideshow menu-item-has-children1" data-no-dynamic-translation>' +
+					self.append(
+						'<li class="bb-rl-hideshow menu-item-has-children1" data-no-dynamic-translation>' +
 						'<a class="bb-rl-nav-more" href="#">' + bbReadyLaunchFront.more_nav + '<i class="bb-icons-rl-caret-down"></i></a>' +
 						'<ul class="bb-rl-sub-menu" data-no-dynamic-translation>' + menuhtml + '</ul>' +
-						'</li>' );
+						'</li>'
+					);
 
 					if ( self.find( 'li.bb-rl-hideshow' ).find( 'li' ).length > 0 ) {
 						self.find( 'li.bb-rl-hideshow' ).show();
@@ -1019,4 +1058,3 @@ window.bp = window.bp || {};
 
 	}
 )( bp, jQuery );
-

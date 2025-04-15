@@ -7825,6 +7825,11 @@ body.admin-bar .bb-rl-left-panel {
   max-height: 70vh !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
+  display: block !important;
+}
+
+.bp-dir-search-form .bb-rl-search-results-container .ui-autocomplete.bp-hide {
+  display: none !important;
 }
 
 .bb-rl-entry-title {
