@@ -25,6 +25,7 @@ module.exports = function (grunt) {
 			// '!bp-forums/**/*.js',
 			'!**/vendor/**/*.js',
 			'!**/endpoints/**/*.js',
+			'!bp-templates/bp-nouveau/readylaunch/js/cropper.js'
 		],
 
 		BP_EXCLUDED_MISC = [],
@@ -119,6 +120,15 @@ module.exports = function (grunt) {
 					flatten: true,
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
+				},
+				ready_launch: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/readylaunch//css/sass/*.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/readylaunch/css'
 				},
 				admin: {
 					cwd: SOURCE_DIR,
@@ -388,7 +398,8 @@ module.exports = function (grunt) {
 						'!**/emojionearea-edited.css',
 						'!**/pusher/**/*.css',
 						'!**/recaptcha/**/*.css',
-						'!**/endpoints/**/*.css'
+						'!**/endpoints/**/*.css',
+						'!**/readylaunch/**/*.css'
 						]
 					)
 				},
