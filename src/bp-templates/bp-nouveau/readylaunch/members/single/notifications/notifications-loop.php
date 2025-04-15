@@ -26,7 +26,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				<?php wp_nonce_field( 'notifications_bulk_nonce', 'notifications_bulk_nonce' ); ?>
 
 				<div class="push-right bb-sort-by-date">
-					<?php esc_html_e( 'Sort by date', 'buddyboss-theme' ); ?>
+					<?php esc_html_e( 'Sort by date', 'buddyboss' ); ?>
 					<?php bp_nouveau_notifications_sort_order_links(); ?>
 				</div>
 			</li>
