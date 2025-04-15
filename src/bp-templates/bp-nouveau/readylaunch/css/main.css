@@ -11581,6 +11581,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   cursor: default;
 }
 
+.bb-rl-activity-form-placeholder- {
+  display: none;
+}
+
 .bb-rl-activity-update-form.modal-popup {
   position: fixed;
   left: 0;
