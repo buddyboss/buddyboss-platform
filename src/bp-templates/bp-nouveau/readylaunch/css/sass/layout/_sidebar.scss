@@ -143,6 +143,14 @@
 				}
 			}
 
+			.bb-rl-placeholder-avatar-image {
+				display: block;
+				height: 24px;
+				width: 24px;
+				border-radius: var(--bb-rl-radius-full);
+				background-color: var(--bb-rl-background-brand-secondary-color);
+			}
+
 			.item-title {
 				flex: 1;
 

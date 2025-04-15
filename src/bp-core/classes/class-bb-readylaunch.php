@@ -946,6 +946,14 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 										</a>
 									</div>
 									<?php
+								} else {
+									?>
+									<div class="item-avatar">
+										<a href="<?php echo esc_url( $item['permalink'] ); ?>" title="<?php echo esc_attr( $item['title'] ); ?>" class="bb-rl-placeholder-avatar">
+											<span class="bb-rl-placeholder-avatar-image"></span>
+										</a>
+									</div>
+									<?php
 								}
 								?>
 								<div class="item-title">
