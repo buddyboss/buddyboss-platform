@@ -687,10 +687,10 @@
 		.ui-autocomplete {
 			position: static !important;
 			width: 100% !important;
-			max-height: 70vh !important;
 			overflow-y: auto !important;
 			overflow-x: hidden !important;
 			display: block !important;
+			max-height: calc(100vh - 250px);
 
 			&.bp-hide {
 				display: none !important;

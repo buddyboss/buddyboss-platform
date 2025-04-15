@@ -7822,14 +7822,9 @@ body.admin-bar .bb-rl-left-panel {
 .bp-dir-search-form .bb-rl-search-results-container .ui-autocomplete {
   position: static !important;
   width: 100% !important;
-  max-height: 70vh !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  display: block !important;
-}
-
-.bp-dir-search-form .bb-rl-search-results-container .ui-autocomplete.bp-hide {
-  display: none !important;
+  max-height: calc(100vh - 250px);
 }
 
 .bb-rl-entry-title {
@@ -18258,6 +18253,17 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-search-modal .bb-rl-search-results-container {
   max-width: 100%;
+}
+
+.bb-rl-network-search-modal .bb-rl-modal-mask {
+  align-items: flex-start;
+}
+
+.bb-rl-network-search-modal .bb-rl-modal-mask .bb-rl-modal-wrapper {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .bb-rl-network-search-bar {

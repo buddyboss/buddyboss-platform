@@ -52,6 +52,20 @@
 	}
 }
 
+.bb-rl-network-search-modal {
+
+	.bb-rl-modal-mask {
+		align-items: flex-start;
+
+		.bb-rl-modal-wrapper {
+			position: absolute;
+			top: 6%;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
+}
+
 .bb-rl-network-search-bar {
 	position: relative;
 	display: flex;
