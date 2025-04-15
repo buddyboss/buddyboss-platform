@@ -558,6 +558,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
 				$bb_icon_version = ! empty( $bb_icon_version ) ? $bb_icon_version : bp_get_version();
 				wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+				wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 			}
 
 			// Register only if it's Message component.
@@ -652,6 +653,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Enqueue BB icons for admin pages
 			wp_enqueue_style( 'bb-readylaunch-bb-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/bb-icons{$min}.css", array(), $bb_icon_version );
+			wp_enqueue_style( 'bb-readylaunch-bb-icons-map', buddypress()->plugin_url . "bp-templates/bp-nouveau/icons/css/icons-map{$min}.css", array(), $bb_icon_version );
 		}
 
 		/**
