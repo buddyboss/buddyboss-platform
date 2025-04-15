@@ -712,6 +712,40 @@
 	#bb-rl-whats-new-attachments .bb-rl-activity-attached-gif-container {
 		margin: 0 var(--bb-rl-space-300);
 	}
+
+	#bb-rl-whats-new-toolbar {
+
+		.bb-rl-post-emoji {
+			padding: 0;
+			border: 0;
+		}
+
+		.emojionearea-picker.emojionearea-picker-position-top {
+			top: inherit;
+			bottom: 40px;
+		}
+
+		.emojionearea-button {
+			border: 0.5px solid transparent;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: var(--bb-rl-space-50);
+
+			&:before {
+				content: "\e436";
+				font-size: var(--bb-rl-base-line);
+				font-family: bb-icons-rl;
+			}
+
+			&.active {
+				color: var(--bb-rl-icon-color);
+				background-color: var(--bb-rl-background-secondary-hover-color);
+				border-color: var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-md);
+			}
+		}
+	}
 }
 
 // Medium Editor

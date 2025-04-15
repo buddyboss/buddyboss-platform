@@ -4729,13 +4729,24 @@ window.bp = window.bp || {};
 							)
 						) {
 							var $whatsNew = $( '#bb-rl-whats-new' );
+							if( $whatsNew.data('emojioneArea') ) {
+								// Clean up the existing instance
+								var emojiContainer = $whatsNew.closest('form').find('.bb-rl-post-emoji');
+
+								// Remove the emojioneArea instance
+								delete $whatsNew[0].emojioneArea;
+
+								// Clean up the container
+								emojiContainer.empty();
+							}
+
 							$whatsNew.emojioneArea(
 								{
 									standalone: true,
 									hideSource: false,
 									container: '#bb-rl-whats-new-toolbar .bb-rl-post-emoji',
 									autocomplete: false,
-									pickerPosition: 'bottom',
+									pickerPosition: 'top',
 									hidePickerOnBlur: true,
 									useInternalCDN: false,
 									events: {

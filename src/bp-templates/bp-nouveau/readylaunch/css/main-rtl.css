@@ -353,6 +353,7 @@ img.emoji,
 img.emotions,
 img.emojioneemoji {
   display: inline-block;
+  vertical-align: middle;
   margin: 3px;
   width: 24px;
   height: 24px;
@@ -6812,6 +6813,14 @@ body.admin-bar .bb-rl-left-panel {
   border-radius: var(--bb-rl-radius-full);
 }
 
+.bb-rl-left-panel .bb-rl-list .bb-rl-item-list .bb-rl-placeholder-avatar-image {
+  display: block;
+  height: 24px;
+  width: 24px;
+  border-radius: var(--bb-rl-radius-full);
+  background-color: var(--bb-rl-background-brand-secondary-color);
+}
+
 .bb-rl-left-panel .bb-rl-list .bb-rl-item-list .item-title {
   flex: 1;
 }
@@ -11573,6 +11582,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   cursor: default;
 }
 
+.bb-rl-activity-form-placeholder- {
+  display: none;
+}
+
 .bb-rl-activity-update-form.modal-popup {
   position: fixed;
   right: 0;
@@ -12190,6 +12203,37 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 
 .bb-rl-activity-form #bb-rl-whats-new-attachments .bb-rl-activity-attached-gif-container {
   margin: 0 var(--bb-rl-space-300);
+}
+
+.bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji {
+  padding: 0;
+  border: 0;
+}
+
+.bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
+  top: inherit;
+  bottom: 40px;
+}
+
+.bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-button {
+  border: 0.5px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--bb-rl-space-50);
+}
+
+.bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-button:before {
+  content: "\e436";
+  font-size: var(--bb-rl-base-line);
+  font-family: bb-icons-rl;
+}
+
+.bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-button.active {
+  color: var(--bb-rl-icon-color);
+  background-color: var(--bb-rl-background-secondary-hover-color);
+  border-color: var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-md);
 }
 
 #bb-rl-editor-toolbar {
