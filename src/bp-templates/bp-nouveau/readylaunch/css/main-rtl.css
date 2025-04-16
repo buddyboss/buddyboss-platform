@@ -18429,10 +18429,17 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   gap: var(--bb-rl-space-100);
 }
 
-.bb-rl-search-albums-list .media-album_details__bottom {
+.bb-rl-search-post-item .media-album_details__bottom,
+.bb-rl-search-post-item .media-folder_details__bottom {
   display: inline-flex;
   align-items: center;
   gap: var(--bb-rl-space-50);
+}
+
+.bb-rl-search-post-item .media-album_visibility,
+.bb-rl-search-post-item .media-folder_visibility {
+  display: inline-flex;
+  align-items: center;
 }
 
 .bb-rl-search-results-container .item-avatar i::before {
@@ -18475,6 +18482,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-search-results-container .item-avatar i.bb-icon-image-video::before {
   content: "\ea24";
+}
+
+.bb-rl-search-results-container .item-avatar i.bb-icons-rl-file-zip::before {
+  content: "\e958";
 }
 
 .bb-rl-network-search-subnav .search-nav > li a::before {

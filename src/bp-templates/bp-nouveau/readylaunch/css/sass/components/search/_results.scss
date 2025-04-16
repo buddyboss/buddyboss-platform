@@ -328,12 +328,19 @@
 	}
 }
 
-.bb-rl-search-albums-list {
+.bb-rl-search-post-item {
 
-	.media-album_details__bottom {
+	.media-album_details__bottom,
+	.media-folder_details__bottom {
 		display: inline-flex;
 		align-items: center;
 		gap: var(--bb-rl-space-50);
+	}
+
+	.media-album_visibility,
+	.media-folder_visibility {
+		display: inline-flex;
+		align-items: center;
 	}
 }
 
@@ -381,6 +388,10 @@
 
 		&.bb-icon-image-video::before {
 			content: "\ea24";
+		}
+
+		&.bb-icons-rl-file-zip::before {
+			content: "\e958";
 		}
 	}
 }

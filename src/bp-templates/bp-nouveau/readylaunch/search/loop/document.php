@@ -44,68 +44,72 @@ if ( $attachment_id && $bp_doc_activity_id ) {
 }
 ?>
 
-<li data-bp-item-id="<?php echo esc_attr( $document_id ); ?>" data-bp-item-component="document" class="search-document-list">
+<li data-bp-item-id="<?php echo esc_attr( $document_id ); ?>" data-bp-item-component="document" class="bp-search-item search-document-list bb-rl-search-post-item">
 	<div class="list-wrap">
+		<div class="item-avatar">
+			<a href="<?php echo esc_url( $link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
+		</div>
 		<div class="item">
 			<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php echo esc_attr( $document_id ); ?>">
-				<div class="media-folder_icon">
-					<a href="<?php echo esc_url( $link ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
-				</div>
 				<div class="media-folder_details">
-					<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-attachment-full="" data-privacy="<?php bp_db_document_privacy(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-full-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>" data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-document-title="<?php echo esc_html( $filename ); ?>" data-mirror-text="<?php echo esc_html( $mirror_text ); ?>" data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
-						<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
-						<i class="media-document-id" data-item-id="<?php echo esc_attr( $document_id ); ?>" style="display: none;"></i>
-						<i class="media-document-attachment-id" data-item-id="<?php echo esc_attr( $attachment_id ); ?>" style="display: none;"></i>
-						<i class="media-document-type" data-item-id="<?php echo esc_attr( $document_type ); ?>" style="display: none;"></i>
-					</a>
+					<h2 class="item-title document-title">
+						<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-attachment-full="" data-privacy="<?php bp_db_document_privacy(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>" data-activity-id="<?php echo esc_attr( $bp_doc_activity_id ); ?>" data-full-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>" data-album-id="<?php bp_document_folder_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-document-title="<?php echo esc_html( $filename ); ?>" data-mirror-text="<?php echo esc_html( $mirror_text ); ?>" data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
+							<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
+							<i class="media-document-id" data-item-id="<?php echo esc_attr( $document_id ); ?>" style="display: none;"></i>
+							<i class="media-document-attachment-id" data-item-id="<?php echo esc_attr( $attachment_id ); ?>" style="display: none;"></i>
+							<i class="media-document-type" data-item-id="<?php echo esc_attr( $document_type ); ?>" style="display: none;"></i>
+						</a>
+					</h2>
 				</div>
-				<div class="media-folder_modified">
-					<div class="media-folder_details__bottom">
-						<?php
-						if ( ! bp_is_user() ) {
-							?>
-							<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
-								<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_user_id() ); ?>">
-									<?php bp_document_author(); ?>
-								</a>
-							</span>
+				<div class="entry-meta">
+					<div class="media-folder_modified">
+						<div class="media-folder_details__bottom">
 							<?php
-						}
-						?>
-						<span class="middot">&middot;</span>
-						<span class="media-folder_date"><?php bp_document_date(); ?></span>
-					</div>
-				</div>
-
-				<div class="media-folder_visibility">
-					<div class="media-folder_details__bottom">
-						<?php
-						if ( bp_is_active( 'groups' ) ) {
-							$group_id = bp_get_document_group_id();
-							if ( $group_id > 0 ) {
+							if ( ! bp_is_user() ) {
 								?>
-								<span class="middot">&middot;</span>
-								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php echo esc_html( $bp_document_privacy ); ?>
+								<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
+									<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_user_id() ); ?>">
+										<?php bp_document_author(); ?>
+									</a>
 								</span>
 								<?php
+							}
+							?>
+							<span class="middot">&middot;</span>
+							<span class="media-folder_date"><?php bp_document_date(); ?></span>
+						</div>
+					</div>
+
+					<div class="media-folder_visibility">
+						<div class="media-folder_details__bottom">
+							<?php
+							if ( bp_is_active( 'groups' ) ) {
+								$group_id = bp_get_document_group_id();
+								if ( $group_id > 0 ) {
+									?>
+									<span class="middot">&middot;</span>
+									<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+										<?php echo esc_html( $bp_document_privacy ); ?>
+									</span>
+									<?php
+								} else {
+									?>
+									<span class="middot">&middot;</span>
+									<span id="privacy-<?php echo esc_attr( $document_id ); ?>">
+										<?php echo esc_html( $bp_document_privacy ); ?>
+									</span>
+									<?php
+								}
 							} else {
 								?>
 								<span class="middot">&middot;</span>
-								<span id="privacy-<?php echo esc_attr( $document_id ); ?>">
+								<span>
 									<?php echo esc_html( $bp_document_privacy ); ?>
 								</span>
 								<?php
 							}
-						} else {
 							?>
-							<span class="middot">&middot;</span>
-							<span>
-								<?php echo esc_html( $bp_document_privacy ); ?>
-							</span>
-							<?php
-						}
-						?>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -11,7 +11,7 @@
 global $media_album_template;
 $albums_link = bp_get_album_link();
 ?>
-<li data-bp-item-id="<?php bp_album_id(); ?>" data-bp-item-component="media" class="search-media-list bp-search-item bb-rl-search-albums-list">
+<li data-bp-item-id="<?php bp_album_id(); ?>" data-bp-item-component="media" class="search-media-list bp-search-item bb-rl-search-post-item">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<div class="media-album_thumb">
@@ -32,9 +32,11 @@ $albums_link = bp_get_album_link();
 
 			<div class="media-album_items ac-album-list">
 				<div class="media-album_details">
-					<a class="media-album_name " href="<?php echo esc_url( $albums_link ); ?>">
-						<span><?php echo wp_kses_post( bp_get_album_title() ); ?></span>
-					</a>
+					<h2 class="item-title album-title">
+						<a class="media-album_name " href="<?php echo esc_url( $albums_link ); ?>">
+							<span><?php echo wp_kses_post( bp_get_album_title() ); ?></span>
+						</a>
+					</h2>
 				</div>
 
 				<div class="entry-meta">

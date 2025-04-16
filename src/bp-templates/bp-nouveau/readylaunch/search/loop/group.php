@@ -22,11 +22,11 @@
 				<?php bp_group_description(); ?>
 			</div><!-- //.group_description -->
 			<span class="entry-meta">
-				<span class="item-meta">
+				<span class="item-meta-type">
 					<?php bp_group_type(); ?>
 				</span>
 				<span class="middot">&middot;</span>
-				<span class="item-meta group-details">
+				<span class="item-meta-details group-details">
 					<?php
 					esc_html_e( 'Last active ', 'buddyboss' );
 					bp_group_last_active();

@@ -37,18 +37,19 @@ $product_thumb = get_the_post_thumbnail_url();
 			</h3>
 			<?php wc_get_template( 'single-product/short-description.php' ); ?>
 			<span class="entry-meta">
-				<?php
-				$category = wc_get_product_category_list( $product_id );
-				if ( $category ) {
-					echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
-				}
-				?>
-
+				<span class="item-meta-category">
+					<?php
+					$category = wc_get_product_category_list( $product_id );
+					if ( $category ) {
+						echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
+					}
+					?>
+				</span>
+				<span class="middot">&middot;</span>
+				<div class="item-meta-amount">
+					<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
+				</div>
 			</span>
-			<span class="middot">&middot;</span>
-			<div class="item-extra">
-				<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
-			</div>
 		</div>
 	</div>
 </li>

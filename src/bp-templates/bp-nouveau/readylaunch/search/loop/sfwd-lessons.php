@@ -36,27 +36,29 @@ $post_thumbnail_url = get_the_post_thumbnail_url();
 				<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 
-			<?php
-			if ( get_the_excerpt( $lessons_id ) ) {
-				echo bp_create_excerpt(
-					get_the_excerpt( $lessons_id ),
-					100,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				);
-			} elseif ( get_the_content( $lessons_id ) ) {
-				echo bp_create_excerpt(
-					wp_strip_all_tags( get_the_content( $lessons_id ) ),
-					100,
-					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
-					)
-				);
-			}
-			?>
+			<div class="entry-content">
+				<?php
+				if ( get_the_excerpt( $lessons_id ) ) {
+					echo bp_create_excerpt(
+						get_the_excerpt( $lessons_id ),
+						100,
+						array(
+							'ending' => __( '&hellip;', 'buddyboss' ),
+						)
+					);
+				} elseif ( get_the_content( $lessons_id ) ) {
+					echo bp_create_excerpt(
+						wp_strip_all_tags( get_the_content( $lessons_id ) ),
+						100,
+						array(
+							'ending' => __( '&hellip;', 'buddyboss' ),
+						)
+					);
+				}
+				?>
+			</div>
 
-			<div class="entry-content entry-summary">
+			<div class="entry-meta">
 				<?php printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?>
 			</div>
 		</div>
