@@ -94,7 +94,8 @@
 				justify-content: center;
 				width: 100%;
 				height: 100%;
-				background-color: var(--bb-rl-background-tertiary-color);
+				background-color: var(--bb-rl-background-secondary-color);
+				border: 1px solid var(--bb-rl-border-secondary-color);
 				border-radius: 50%;
 			}
 		}
@@ -310,6 +311,134 @@
 
 			&.current {
 				border-color: var(--bb-rl-border-quaternary-color);
+			}
+		}
+	}
+}
+
+.bb-rl-search-results-container {
+
+	.item-avatar i {
+
+		&::before {
+			content: "";
+			font-weight: 400;
+			font-family: bb-icons-rl;
+			font-size: 28px;
+			font-style: normal;
+			line-height: 1;
+			color: var(--bb-rl-icon-primary-color);
+		}
+
+		&.bb-icon-article::before {
+			content: "\e5e2";
+		}
+
+		&.bb-icon-file-doc::before {
+			content: "\e230";
+		}
+	}
+}
+
+.bb-rl-network-search-subnav {
+
+	.search-nav {
+
+		> li {
+
+			a::before {
+				content: "\e230";
+				font-weight: 400;
+				font-family: bb-icons-rl;
+				font-size: 20px;
+				font-style: normal;
+				line-height: 1;
+				color: var(--bb-rl-icon-primary-color);
+				margin-right: var(--bb-rl-space-100);
+			}
+
+			&:first-of-type {
+
+				a::before {
+					content: "\e0e6";
+				}
+			}
+
+			&.posts a::before {
+				content: "\e5e2";
+			}
+
+			&.pages a::before {
+				content: "\e23a";
+			}
+
+			&.groups a::before,
+			&.cpt-groups a::before {
+				content: "\e4d6";
+			}
+
+			&.cpt-attachment a::before {
+				content: "\e2ca";
+			}
+
+			&.cpt-sfwd-courses a::before {
+				content: "\e62c";
+			}
+
+			&.activity a::before {
+				content: "\e000";
+			}
+
+			&.activity_comment a::before {
+				content: "\e17e";
+			}
+
+			&.activity a::before {
+				content: "\e000";
+			}
+
+			&.forum a::before {
+				content: "\e17c";
+			}
+
+			&.topic a::before {
+				content: "\e172";
+			}
+
+			&.reply a::before {
+				content: "\e16c";
+			}
+
+			&.cpt-sfwd-quiz a::before {
+				content: "\e3e8";
+			}
+
+			&.cpt-sfwd-lessons a::before {
+				content: "\e0e6";
+			}
+
+			&.cpt-sfwd-topic a::before {
+				content: "\e8f2";
+			}
+
+			&.cpt-sfwd-certificates a::before {
+				content: "\e766";
+			}
+
+			&.cpt-sfwd-assignment a::before {
+				content: "\e34c";
+			}
+
+			&.cpt-tribe_venue a::before {
+				content: "\e316";
+			}
+
+			&.cpt-tribe_events a::before {
+				content: "\e108";
+			}
+
+			&.cpt-product a::before {
+				content: "\e1da";
 			}
 		}
 	}
