@@ -2078,7 +2078,7 @@ window.bp = window.bp || {};
 					function ( selector ) {
 						var button = toolBox.find( selector );
 						if ( button.length ) {
-								button.parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable no-click active' );
+								button.parents( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable no-click' );
 								button.removeClass( 'open' );
 						}
 					}

@@ -1502,13 +1502,10 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if ( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
-				$( event.currentTarget ).toggleClass( 'active' );
-			} else {
-				if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
-					dropzone_container.trigger( 'click' );
-					return;
-				}
+			if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+				dropzone_container.trigger( 'click' );
+				dropzone_container.removeClass( 'open' ).addClass( 'closed' );
+				return;
 			}
 
 			var acCommentDocumentTemplate = document.getElementsByClassName( 'bb-rl-ac-reply-post-document-template' ).length ? document.getElementsByClassName( 'bb-rl-ac-reply-post-document-template' )[0].innerHTML : ''; // Check to avoid error if the Node is missing.
@@ -1580,13 +1577,10 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			if ( ! $( event.currentTarget ).closest( '.ac-form' ).hasClass( 'acomment-edit' ) ) {
-				$( event.currentTarget ).toggleClass( 'active' );
-			} else {
-				if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
-					dropzone_container.trigger( 'click' );
-					return;
-				}
+			if ( dropzone_container.hasClass( 'open' ) && ! event.isCustomEvent ) {
+				dropzone_container.trigger( 'click' );
+				dropzone_container.removeClass( 'open' ).addClass( 'closed' );
+				return;
 			}
 
 			var acCommentVideoTemplate = document.getElementsByClassName( 'bb-rl-ac-reply-post-video-template' ).length ? document.getElementsByClassName( 'bb-rl-ac-reply-post-video-template' )[0].innerHTML : ''; // Check to avoid error if the Node is missing.
@@ -1982,7 +1976,7 @@ window.bp = window.bp || {};
 
 			formAcomment.find( '#bb-rl-acomment-display-' + formItemId ).removeClass( 'bp-hide' );
 			form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
-			
+
 			form.find( '.bb-rl-post-elements-buttons-item' ).removeClass( 'disable' );
 			form.find( '.bb-rl-post-elements-buttons-item .bb-rl-toolbar-button' ).removeClass( 'active' );
 
@@ -2008,7 +2002,7 @@ window.bp = window.bp || {};
 				formAcomment.find( '#bb-rl-acomment-display-' + formItemId ).removeClass( 'bp-hide' );
 				form.removeClass( 'acomment-edit' ).removeAttr( 'data-item-id' );
 			}
-			
+
 			form.find( '#ac-input-' + formActivityId ).html( '' );
 			form.removeClass( 'has-content has-gif has-media' );
 			$( '.bb-rl-modal-activity-footer' ).addClass( 'active' ).append( form );
@@ -2257,7 +2251,7 @@ window.bp = window.bp || {};
 					// Add a small buffer (1px) to account for potential floating point differences
 					var scrollBuffer = 1;
 					var scrolledToBottom = Math.ceil($this.scrollTop() + $this.innerHeight() + scrollBuffer) >= $this.prop('scrollHeight');
-					
+
 					if (scrolledToBottom) {
 						modal.addClass('bb-rl-modal-activity-body-scrolled-to-bottom');
 					} else {
