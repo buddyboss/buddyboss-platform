@@ -9389,7 +9389,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-profile-edit-subnav,
 .bb-rl-network-search-subnav,
 .bb-rl-admin-subnav {
-  margin: var(--bb-rl-space-100) 0 0;
+  margin: var(--bb-rl-space-100) 0;
 }
 
 .bb-rl-profile-edit-subnav .component-navigation,
@@ -9966,7 +9966,8 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 
 .bb-rl-member-type,
 .bb-rl-members .bp-member-type,
-.bb-rl-profile-container .bp-member-type {
+.bb-rl-profile-container .bp-member-type,
+.bb-rl-search-member-header .bp-member-type {
   font-size: var(--bb-rl-font-size-xs);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-xs);
@@ -18233,7 +18234,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-search-results-container li.bp-search-item .entry-meta,
-.bb-rl-search-results-container li.bp-search-item .item-extra {
+.bb-rl-search-results-container li.bp-search-item .item-extra,
+.bb-rl-search-results-container li.bp-search-item .item-meta {
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
@@ -18245,7 +18247,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-search-results-container li.bp-search-item .entry-meta a,
-.bb-rl-search-results-container li.bp-search-item .item-extra a {
+.bb-rl-search-results-container li.bp-search-item .item-extra a,
+.bb-rl-search-results-container li.bp-search-item .item-meta a {
   color: var(--bb-rl-text-secondary-color);
   font-weight: 600;
 }
@@ -18413,6 +18416,23 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .bb-rl-search-results-container .pagination-links span.page-numbers.current {
   border-color: var(--bb-rl-border-quaternary-color);
+}
+
+.bb-rl-search-member-header {
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-search-member-header .item-title {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-search-albums-list .media-album_details__bottom {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
 }
 
 .bb-rl-search-results-container .item-avatar i::before {
@@ -18776,7 +18796,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-color);
 }
 
-.bb-rl-ac-results .bp-search-ac > li .item-content {
+.bb-rl-ac-results .bp-search-ac > li .item-content,
+.bb-rl-ac-results .bp-search-ac > li .item {
   flex: 1;
 }
 

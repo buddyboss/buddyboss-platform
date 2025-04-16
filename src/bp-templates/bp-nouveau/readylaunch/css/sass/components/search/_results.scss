@@ -123,7 +123,8 @@
 		}
 
 		.entry-meta,
-		.item-extra {
+		.item-extra,
+		.item-meta {
 
 			@include bb-rl-label-heading-md;
 			color: var(--bb-rl-text-tertiary-color);
@@ -313,6 +314,26 @@
 				border-color: var(--bb-rl-border-quaternary-color);
 			}
 		}
+	}
+}
+
+.bb-rl-search-member-header {
+	align-items: center;
+	gap: var(--bb-rl-space-100);
+
+	.item-title {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-100);
+	}
+}
+
+.bb-rl-search-albums-list {
+
+	.media-album_details__bottom {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--bb-rl-space-50);
 	}
 }
 

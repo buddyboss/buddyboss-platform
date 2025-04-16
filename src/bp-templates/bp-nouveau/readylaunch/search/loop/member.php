@@ -19,15 +19,18 @@ $member_user_link = bp_get_member_permalink();
 		</div>
 
 		<div class="item">
-			<h2 class="item-title member-name">
-				<a href="<?php echo esc_url( $member_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_user_id ); ?>"><?php bp_member_name(); ?></a>
-			</h2>
+			<div class="flex bb-rl-search-member-header">
+				<h2 class="item-title member-name">
+					<a href="<?php echo esc_url( $member_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_user_id ); ?>"><?php bp_member_name(); ?></a>
+					<?php
+					echo bp_get_user_member_type( $member_user_id );
+					?>
+				</h2>
+			</div>
 			<?php
-			echo bp_get_user_member_type( $member_user_id );
 			if ( bp_nouveau_member_has_meta() ) :
 				?>
 				<p class="item-meta last-activity">
-					<span class="middot">&middot;</span>
 					<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
 				</p>
 			<?php endif; ?>

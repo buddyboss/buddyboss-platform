@@ -134,7 +134,8 @@
 
 .bb-rl-member-type,
 .bb-rl-members .bp-member-type,
-.bb-rl-profile-container .bp-member-type {
+.bb-rl-profile-container .bp-member-type,
+.bb-rl-search-member-header .bp-member-type {
 
 	@include bb-rl-label-heading-xs;
 	display: inline-flex;

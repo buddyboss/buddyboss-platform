@@ -285,7 +285,8 @@
 
 .bb-rl-member-type,
 .bb-rl-members .bp-member-type,
-.bb-rl-profile-container .bp-member-type {
+.bb-rl-profile-container .bp-member-type,
+.bb-rl-search-member-header .bp-member-type {
   font-size: var(--bb-rl-font-size-xs);
   font-weight: 500;
   line-height: var(--bb-rl-base-line-xs);
