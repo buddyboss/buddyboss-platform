@@ -850,6 +850,8 @@ window.bp = window.bp || {};
 			modal.find( 'ul.bb-rl-activity-list' ).empty();
 			footer.removeClass( 'active' );
 			footer.find( 'form.ac-form' ).remove();
+
+			$( 'li#bb-rl-activity-' + activityId ).removeClass( 'has-comments' );
 		},
 
 		/**
