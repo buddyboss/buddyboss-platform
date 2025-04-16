@@ -115,7 +115,7 @@ jQuery( document ).ready(
 									}
 								}
 							).data( 'ui-autocomplete' )._renderItem = function ( ul, item ) {
-										ul.addClass( 'bp-search-ac' );
+								ul.addClass( 'bp-search-ac' );
 
 								// Add .bp-search-ac-header if search is made from header area of the site.
 								if ( $form.parents( 'header' ).length != 0 ) {
@@ -126,7 +126,8 @@ jQuery( document ).ready(
 									$( ul ).data( 'current_cat', item.type );
 									return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-category' ).append( '<div>' + item.value + '</div>' ).appendTo( ul );
 								} else {
-									return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( '<a class="x">' + item.value + '</a>' ).appendTo( ul );
+									//return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( '<a class="x">' + item.value + '</a>' ).appendTo( ul );
+									return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( item.value ).appendTo( ul );
 								}
 							};
 

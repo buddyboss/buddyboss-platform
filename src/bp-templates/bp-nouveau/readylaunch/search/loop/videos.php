@@ -32,29 +32,32 @@ $video_created    = bp_get_video_date_created();
 $video_visibility = bp_get_video_visibility();
 ?>
 
-<li data-bp-item-id="<?php echo esc_attr( $video_id ); ?>" data-bp-item-component="video" class="search-video-list">
-	<div class="list-wrap">
-		<div class="item">
-			<div class="media-album_items ac-album-list">
-				<div class="media-album_thumb">
-					<a href="<?php echo esc_url( $video_link ); ?>">
-						<img src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php echo esc_html( $video_title ); ?>" />
-					</a>
-				</div>
+<li data-bp-item-id="<?php echo esc_attr( $video_id ); ?>" data-bp-item-component="video" class="bp-search-item search-video-list bb-rl-search-post-item">
+	<div class="media-album_items ac-album-list list-wrap">
+		<div class="item-avatar">
+			<a href="<?php echo esc_url( $video_link ); ?>">
+				<img src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php echo esc_html( $video_title ); ?>" class="avatar" />
+			</a>
+		</div>
 
-				<div class="media-album_details">
-					<a class="media-album_name " href="<?php echo esc_url( $video_link ); ?>">
+		<div class="item">
+			<div class="media-album_details">
+				<h2 class="item-title">
+					<a class="media-album_name" href="<?php echo esc_url( $video_link ); ?>">
 						<span><?php echo esc_html( $video_title ); ?></span>
 					</a>
-				</div>
+				</h2>
+			</div>
 
+			<div class="entry-meta">
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
 							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
-							<a href="<?php echo esc_url( $video_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_video_user_id() ); ?>"><?php bp_video_author(); ?></a></span>
+								<a href="<?php echo esc_url( $video_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_video_user_id() ); ?>"><?php bp_video_author(); ?></a>
+							</span>
 							<?php
 						}
 						?>
