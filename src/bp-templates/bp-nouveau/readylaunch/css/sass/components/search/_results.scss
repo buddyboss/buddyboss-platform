@@ -337,6 +337,30 @@
 		&.bb-icon-file-doc::before {
 			content: "\e230";
 		}
+
+		&.bb-icon-book::before {
+			content: "\e0e6";
+		}
+
+		&.bb-icon-quiz::before {
+			content: "\e3e8";
+		}
+
+		&.bb-icon-course::before {
+			content: "\e62c";
+		}
+
+		&.bb-icon-comments-square::before {
+			content: "\e17c";
+		}
+
+		&.bb-icon-file-bookmark::before {
+			content: "\e0e8";
+		}
+
+		&.bb-icon-image-video::before {
+			content: "\ea24";
+		}
 	}
 }
 
@@ -374,7 +398,7 @@
 
 			&.groups a::before,
 			&.cpt-groups a::before {
-				content: "\e4d6";
+				content: "\e68e";
 			}
 
 			&.cpt-attachment a::before {
@@ -439,6 +463,18 @@
 
 			&.cpt-product a::before {
 				content: "\e1da";
+			}
+
+			&.videos a::before {
+				content: "\e4da";
+			}
+
+			&.members a::before {
+				content: "\e4d6";
+			}
+
+			&.albums a::before {
+				content: "\e24a";
 			}
 		}
 	}
