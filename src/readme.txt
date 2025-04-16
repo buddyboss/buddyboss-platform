@@ -57,6 +57,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.40 =
+* Bug: Activity - Resolved a UI issue with the "Read More" link
+* Bug: Core - Disabled hover popups on mobile and touch devices to improve user experience and prevent unintended interactions
+* Bug: Core - Fixed an issue in the admin where the timestamp in a user's extended profile did not correctly reflect the selected timezone
+* Bug: Core - Fixed invalid HTML tags in templates
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Core - Resolved an issue where duplicated activity form templates were being loaded.
+* Bug: Forum - Resolved an issue where the pagination for sticky and super sticky forum discussions did not work correctly based on the settings
+* Bug: Media - Corrected the filter name for the function {{bp_get_media_parent_activity_id}}
+* Bug: Media - Fixed a UI issue related to Directory Count on the Profile > Photos page
+* Bug: Media - Fixed an issue where photos were partially uploaded
+* Bug: Messages - Resolved console errors on the message screen.
+* Bug: Notifications - Improved message handling by showing messages only to logged-in users and enhancing security
+
 = 2.8.30 =
 * Bug: Activity - Fixed an issue where the checkbox in Report options was not selectable when the feed opened in a popup
 * Bug: Activity - Improved the Activity Filter by hiding the dropdown when only one option is available, displaying it as a label instead
