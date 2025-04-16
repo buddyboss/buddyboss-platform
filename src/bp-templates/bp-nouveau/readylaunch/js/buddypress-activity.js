@@ -1668,7 +1668,7 @@ window.bp = window.bp || {};
 				this.models[ activityID ] = model;
 			}
 
-			var gif_box = $( currentTarget ).parents( '.ac-textarea ' ).find( '.bb-rl-ac-reply-attachments .bb-rl-activity-attached-gif-container' );
+			var gif_box = $( currentTarget ).parents( 'form' ).find( '.bb-rl-ac-reply-attachments .bb-rl-activity-attached-gif-container' );
 			if ( $( currentTarget ).hasClass( 'active' ) && gif_box.length && $.trim( gif_box.html() ) === '' ) {
 				$( currentTarget ).removeClass( 'active' );
 			} else {
