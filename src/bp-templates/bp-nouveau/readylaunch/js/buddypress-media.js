@@ -1635,10 +1635,10 @@ window.bp = window.bp || {};
 					}
 				);
 
-				target.find( '.bb-rl-activity-comments form' ).each(
+				target.find( '.bb-rl-activity-modal form' ).each(
 					function () {
 						var $this           = jQuery( this );
-						var gif_box_comment = $this.find( '.ac-textarea' ).find( '.bb-rl-ac-reply-attachments .activity-attached-gif-container' );
+						var gif_box_comment = $this.find( '.bb-rl-ac-reply-attachments .bb-rl-activity-attached-gif-container' );
 						if ( gif_box_comment.length && $.trim( gif_box_comment.html() ) !== '' ) {
 								$this.find( '.bb-rl-ac-reply-gif-button' ).addClass( 'active' );
 						} else {

@@ -4062,12 +4062,11 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) &&
 					! $targetEl.closest( '.bb-rl-post-gif' ).length ) {
 
-					var gif_box = $targetEl.parents( '#bb-rl-whats-new-form' ).find( '#bb-rl-whats-new-attachments .bb-rl-activity-attached-gif-container' );
+					var gif_box = $targetEl.parents( 'form' ).find( '#bb-rl-whats-new-attachments .bb-rl-activity-attached-gif-container' );
 					if ( gif_box.length && $.trim( gif_box.html() ) !== '' ) {
 						this.$self.addClass( 'open' );
 					} else {
-						this.$self.removeClass( 'open' );
-						$targetEl.find( '.bb-rl-post-gif' ).removeClass( 'active' );
+						$( '.bb-rl-post-gif' ).removeClass( 'active' );
 					}
 
 					this.$gifPickerEl.removeClass( 'open' );
