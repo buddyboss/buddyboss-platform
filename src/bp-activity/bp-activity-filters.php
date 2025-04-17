@@ -700,7 +700,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
-	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
+	$excerpt = '<p>' . bp_create_excerpt( $text, $excerpt_length, $args ) . '</p>';
 
 	/*
 	 * If the text returned by bp_create_excerpt() is different from the original text (ie it's
