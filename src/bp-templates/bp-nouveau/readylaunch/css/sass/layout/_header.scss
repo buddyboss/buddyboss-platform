@@ -281,7 +281,7 @@
 		margin-right: var(--bb-rl-space-300);
 
 		[class*="bb-icons-rl"] {
-			color: var(--bb-rl-icon-color);
+			color: var(--bb-rl-icon-secondary-color);
 			font-size: 16px;
 			margin-right: var(--bb-rl-space-100);
 		}
@@ -627,6 +627,7 @@
 		.bb-rl-left-panel-mobile {
 			display: flex;
 			align-items: center;
+			color: var(--bb-rl-icon-secondary-color);
 			font-size: 24px;
 			margin-right: var(--bb-rl-space-200);
 		}
@@ -710,7 +711,7 @@
 			outline: none !important;
 
 			[class*="bb-icons-rl"] {
-				font-size: 19px;
+				font-size: 22px;
 			}
 		}
 	}
