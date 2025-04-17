@@ -10,12 +10,16 @@
  */
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_group">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_group_permalink() ) ); ?>">
+	<a href="<?php echo esc_url( bp_get_group_permalink() ); ?>">
 		<div class="item-avatar">
 			<?php bp_group_avatar( 'type=thumb&width=50&height=50' ); ?>
 		</div>
-		<div class="item">
-			<div class="item-title"><?php bp_group_link(); ?></div>
+	</a>
+	<div class="item">
+		<div class="item-title">
+			<?php bp_group_link(); ?>
+		</div>
+		<div class="entry-meta">
 			<div class="item-meta group-details">
 				<?php
 				echo bp_create_excerpt(
@@ -40,5 +44,5 @@
 				?>
 			</p>
 		</div>
-	</a>
+	</div>
 </div>
