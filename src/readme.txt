@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.41 =
+* Bug: Notifications - Fixed an issue where unwanted paragraph tags appeared in notifications
+
 = 2.8.40 =
 * Bug: Activity - Resolved a UI issue with the "Read More" link
 * Bug: Core - Disabled hover popups on mobile and touch devices to improve user experience and prevent unintended interactions
