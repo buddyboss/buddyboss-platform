@@ -253,6 +253,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-messages-tab-link', this.handleTabChange.bind( this ) );
 			// Media + Video theatre.
 			$document.on( 'click', '.bb-rl-open-media-video-theatre', this.openMessageMediaTheater.bind( this ) );
+			$document.on( 'click', '.message_action__info, .message_action__close_info', this.toggleMessageInfo.bind( this ) );
 		},
 
 		triggerLoadMore: function () {
@@ -1596,6 +1597,11 @@ window.bp = window.bp || {};
 					action       : 'media-video'
 				}
 			);
+		},
+
+		toggleMessageInfo: function ( event ) {
+			event.preventDefault();
+			$( '.bb-rl-messages-container' ).toggleClass( 'right-panel-active' );
 		},
 	};
 

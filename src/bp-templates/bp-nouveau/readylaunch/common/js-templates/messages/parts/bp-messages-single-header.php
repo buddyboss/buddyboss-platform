@@ -44,6 +44,7 @@
 	#>
 
 	<header class="single-message-thread-header">
+		<a href="#" class="bp-back-to-thread-list"><span class="bb-icons-rl-caret-left"></span></a>
 		<div class="bb-rl-thread-avatar {{ threadAvatarClass }}">
 			<# if ( data.avatars && data.avatars.length > 1  ) {
 			if ( data.avatars.length == 2 ) { #>
@@ -81,7 +82,7 @@
 			<# } #>
 			<# } #>
 		</div>
-		<a href="#" class="bp-back-to-thread-list"><span class="bb-icon-f bb-icon-arrow-left"></span></a> <# if ( undefined !== other_recipients ) { #>
+		<# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
 				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
@@ -314,6 +315,11 @@
 				<?php
 			}
 			?>
+			<div class="bb-rl-messages-info">
+				<a href="#" class="message_action__info">
+					<i class="bb-icons-rl-info"></i>
+				</a>
+			</div>
 		</div>
 		<?php if ( bp_is_active( 'moderation' ) && ( bp_is_moderation_member_blocking_enable() || bb_is_moderation_member_reporting_enable() ) ) { ?>
 			<div id="mass-user-block-list" class="mass-user-block-list moderation-popup mfp-hide">

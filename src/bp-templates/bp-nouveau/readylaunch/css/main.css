@@ -5847,7 +5847,7 @@ button[data-balloon] {
 
 .bb-rl-header {
   background-color: var(--bb-rl-background-color);
-  border-bottom: 1px solid var(--bb-rl-border-tertiary-color);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-400);
   position: fixed;
   top: 0;

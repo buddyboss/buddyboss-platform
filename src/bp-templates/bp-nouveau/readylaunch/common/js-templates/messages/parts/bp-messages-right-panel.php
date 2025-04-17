@@ -7,6 +7,14 @@
  */
 ?>
 <script type="text/html" id="tmpl-bp-messages-right-panel">
+    <div class="bb-rl-right-panel_message_header">
+        <h3 class="bb-rl-right-panel_title">
+            <?php esc_html_e( 'About', 'buddyboss' ); ?>
+        </h3>
+        <a href="#" class="message_action__close_info">
+            <i class="bb-icons-rl-x"></i>
+        </a>
+    </div>
     <#
     if (data.is_group_thread && data.group_name && data.group_name.length > 1) { #>
         <!-- Group Thread -->

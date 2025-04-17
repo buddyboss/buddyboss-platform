@@ -15,6 +15,11 @@
 		align-items: center;
 		justify-content: center;
 		padding: var(--bb-rl-space-300);
+		position: relative;
+	}
+
+	.bb-rl-right-panel_message_header {
+		display: none;
 	}
 
 	.avatar {
@@ -421,5 +426,58 @@
 
 	&.active {
 		display: block;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+
+	#bb-rl-messages-right-panel,
+	.bb-rl-messages-right-panel {
+		display: none;
+	}
+
+	.bb-rl-messages-container.right-panel-active {
+
+		#bb-rl-messages-right-panel,
+		.bb-rl-messages-right-panel {
+			display: flex;
+			width: 100%;
+			border-left: 0;
+		}
+
+		.bb-rl-right-panel_message_header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: var(--bb-rl-space-200);
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+		}
+
+		.bb-rl-right-panel_title {
+			font-size: var(--bb-rl-base-line-xs);
+			font-weight: 500;
+			line-height: 1.5;
+			color: var(--bb-rl-text-color);
+		}
+
+		.message_action__close_info {
+			display: block;
+			font-size: 24px;
+			color: var(--bb-rl-icon-tertiary-color);
+		}
+	}
+
+	.bb-rl-message-group-thread {
+		padding: var(--bb-rl-space-100);
+
+		.bb-rl-message-group-thread-cover img {
+			height: 140px;
+			border-radius: var(--bb-rl-radius-md);
+		}
+	}
+
+	#bb-rl-messages-right-panel:empty {
+		display: none;
+		width: 0;
 	}
 }
