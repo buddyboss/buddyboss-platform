@@ -32,7 +32,7 @@ $video_created    = bp_get_video_date_created();
 $video_visibility = bp_get_video_visibility();
 ?>
 
-<li data-bp-item-id="<?php echo esc_attr( $video_id ); ?>" data-bp-item-component="video" class="bp-search-item search-video-list bb-rl-search-post-item">
+<li data-bp-item-id="<?php echo esc_attr( $video_id ); ?>" data-bp-item-component="video" class="bp-search-item bp-search-item_video search-video-list bb-rl-search-post-item">
 	<div class="media-album_items ac-album-list list-wrap">
 		<div class="item-avatar">
 			<a href="<?php echo esc_url( $video_link ); ?>">

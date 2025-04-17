@@ -203,7 +203,9 @@
 				}
 			}
 
-			&.bbls-groups-type {
+			&.bbls-groups-type,
+			&.bbls-photos-type,
+			&.bbls-videos-type {
 
 				.item-avatar {
 
@@ -326,6 +328,28 @@
 				@include bb-rl-spinner;
 			}
 		}
+	}
 
+	.bp-search-ajax-item_activity {
+
+		.item-title > p {
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+			line-height: var(--bb-rl-base-line-small);
+			color: var(--bb-rl-text-tertiary-color);
+
+			a {
+				color: var(--bb-rl-text-secondary-color);
+				font-weight: 600;
+			}
+
+			img.avatar {
+				display: inline-flex;
+				align-items: center;
+				border-radius: var(--bb-rl-radius-sm);
+				margin: 0 var(--bb-rl-space-50);
+				vertical-align: text-bottom;
+			}
+		}
 	}
 }

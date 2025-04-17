@@ -150,7 +150,8 @@
 			}
 		}
 
-		&.bp-search-item_group {
+		&.bp-search-item_group,
+		&.bp-search-item_video {
 
 			img.avatar {
 				border-radius: var(--bb-rl-radius-base);
@@ -401,6 +402,10 @@
 		&.bb-icons-rl-file-zip::before {
 			content: "\e958";
 		}
+
+		&.bb-icons-rl-folder::before {
+			content: "\e24a";
+		}
 	}
 }
 
@@ -513,7 +518,8 @@
 				content: "\e4d6";
 			}
 
-			&.albums a::before {
+			&.albums a::before,
+			&.folders a::before {
 				content: "\e24a";
 			}
 		}

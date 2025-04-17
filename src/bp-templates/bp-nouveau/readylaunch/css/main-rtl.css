@@ -5913,22 +5913,19 @@ body.admin-bar .bb-rl-header {
 
 .bb-readylaunch-menu .menu-item > .sub-menu {
   background: var(--bb-rl-background-color);
-  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   border-radius: var(--bb-rl-radius-md);
   list-style: none;
   padding: var(--bb-rl-space-100) 0;
   position: absolute;
-  left: 0;
+  right: 0;
   top: 100%;
   margin: 0;
   min-width: 168px;
   opacity: 0;
   visibility: hidden;
   z-index: 100;
-}
-
-.bb-readylaunch-menu .menu-item > .sub-menu .menu-item {
-  margin: 0 var(--bb-rl-space-100);
 }
 
 .bb-readylaunch-menu .menu-item > .sub-menu .menu-item a {
@@ -5945,14 +5942,35 @@ body.admin-bar .bb-rl-header {
   width: 100%;
 }
 
-.bb-readylaunch-menu .menu-item > .sub-menu .menu-item a:hover {
+.bb-readylaunch-menu .menu-item > .sub-menu .menu-item:hover > a {
   background-color: var(--bb-rl-background-secondary-hover-color);
 }
 
-.bb-readylaunch-menu .menu-item > .sub-menu .menu-item:hover .sub-menu {
+.bb-readylaunch-menu .menu-item > .sub-menu .menu-item:hover > .sub-menu {
   top: 0;
+  right: -2px;
   left: inherit;
-  transform: translateX(100%);
+  transform: translateX(-100%);
+}
+
+.bb-readylaunch-menu .menu-item > .sub-menu .menu-item.menu-item-has-children {
+  position: relative;
+}
+
+.bb-readylaunch-menu .menu-item > .sub-menu .menu-item.menu-item-has-children > a {
+  padding-left: var(--bb-rl-space-300);
+}
+
+.bb-readylaunch-menu .menu-item > .sub-menu .menu-item.menu-item-has-children:after {
+  content: "\e13a";
+  display: block;
+  position: absolute;
+  left: var(--bb-rl-space-200);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: bb-icons-rl;
+  font-size: var(--bb-rl-font-size-base);
+  color: var(--bb-rl-icon-secondary-color);
 }
 
 .bb-readylaunch-menu .menu-item:hover > .sub-menu {
@@ -18266,7 +18284,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   color: var(--bb-rl-text-tertiary-color);
 }
 
-.bb-rl-search-results-container li.bp-search-item.bp-search-item_group img.avatar {
+.bb-rl-search-results-container li.bp-search-item.bp-search-item_group img.avatar, .bb-rl-search-results-container li.bp-search-item.bp-search-item_video img.avatar {
   border-radius: var(--bb-rl-radius-base);
 }
 
@@ -18492,6 +18510,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   content: "\e958";
 }
 
+.bb-rl-search-results-container .item-avatar i.bb-icons-rl-folder::before {
+  content: "\e24a";
+}
+
 .bb-rl-network-search-subnav .search-nav > li a::before {
   content: "\e230";
   font-weight: 400;
@@ -18592,7 +18614,8 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   content: "\e4d6";
 }
 
-.bb-rl-network-search-subnav .search-nav > li.albums a::before {
+.bb-rl-network-search-subnav .search-nav > li.albums a::before,
+.bb-rl-network-search-subnav .search-nav > li.folders a::before {
   content: "\e24a";
 }
 
@@ -18797,7 +18820,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-ac-results .bp-search-ac > li.bbls-groups-type .item-avatar img.avatar {
+.bb-rl-ac-results .bp-search-ac > li.bbls-groups-type .item-avatar img.avatar, .bb-rl-ac-results .bp-search-ac > li.bbls-photos-type .item-avatar img.avatar, .bb-rl-ac-results .bp-search-ac > li.bbls-videos-type .item-avatar img.avatar {
   border-radius: var(--bb-rl-radius-base);
 }
 
@@ -18943,6 +18966,26 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   border-top-color: var(--bb-rl-border-tertiary-color);
   border-radius: var(--bb-rl-radius-full);
   animation: spin 3s infinite linear;
+}
+
+.bb-rl-ac-results .bp-search-ajax-item_activity .item-title > p {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-ac-results .bp-search-ajax-item_activity .item-title > p a {
+  color: var(--bb-rl-text-secondary-color);
+  font-weight: 600;
+}
+
+.bb-rl-ac-results .bp-search-ajax-item_activity .item-title > p img.avatar {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--bb-rl-radius-sm);
+  margin: 0 var(--bb-rl-space-50);
+  vertical-align: text-bottom;
 }
 
 .bb-rl-popup-card {
