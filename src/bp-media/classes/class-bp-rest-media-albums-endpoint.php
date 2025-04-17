@@ -1250,7 +1250,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	public function bp_rest_create_media_album( $args ) {
 		$upload_ids = ( ! empty( $args['upload_ids'] ) ? $args['upload_ids'] : '' );
 		$privacy    = $args['privacy'];
-		$title      = $args['title'];
+		$title      = sanitize_text_field( wp_unslash( $args['title'] ) );
 		$user_id    = ( ! empty( $args['user_id'] ) ? (int) $args['user_id'] : get_current_user_id() );
 		$group_id   = ( ! empty( $args['group_id'] ) ? (int) $args['group_id'] : false );
 		$id         = ( ! empty( $args['id'] ) ? (int) $args['id'] : false );

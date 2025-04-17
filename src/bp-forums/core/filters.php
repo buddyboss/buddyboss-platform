@@ -675,7 +675,7 @@ function bb_pretty_link_trash_topics( $permalink, $post ) {
 /**
  * Modify the WHERE and ORDER BY clauses to handle sticky topics.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.8.40
  *
  * @param array    $clauses  Query clauses.
  * @param WP_Query $wp_query The WP_Query instance.
