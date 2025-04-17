@@ -2004,7 +2004,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
-				'description'   => wp_filter_nohtml_kses( $content ),
+				'description'   => sanitize_textarea_field( wp_unslash( $content ) ),
 				'activity_id'   => $document_activity_id,
 				'message_id'    => $message_id,
 				'folder_id'     => ( ! empty( $args['folder_id'] ) ? $args['folder_id'] : false ),
