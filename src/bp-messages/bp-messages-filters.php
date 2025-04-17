@@ -111,6 +111,9 @@ add_action( 'bp_notification_settings', 'messages_screen_notification_settings',
 // Hide archived thread notifications.
 add_filter( 'bp_notifications_get_where_conditions', 'bb_messages_hide_archived_notifications', 10, 2 );
 
+// Enqueue the core WordPress embed script.
+add_action( 'bp_enqueue_scripts', 'bb_messages_enqueue_embed_script' );
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -1263,4 +1266,19 @@ function bb_bypass_name_privacy_for_admin( $hidden_levels, $displayed_user_id, $
 	}
 
 	return $hidden_levels;
+}
+
+/**
+ * Enqueue the core WordPress embed script.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_enqueue_embed_script() {
+	if ( bp_is_messages_component() ) {
+
+		// Enqueue the core WordPress embed script.
+		wp_enqueue_script( 'wp-embed' );
+	}
 }
