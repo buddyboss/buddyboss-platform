@@ -19,10 +19,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function bb_readylaunch_settings_page_html() {
-	printf(
-		'<div class="wrap" id="bb-readylaunch-settings">%s</div>',
-		esc_html__( 'Loading…', 'buddyboss' )
-	);
+	?>
+	<div class="wrap" id="bb-readylaunch-settings">
+		<div class="bb-rl-tab-header">
+			Header
+		</div>
+		<div class="bb-rl-field-wrap" id="bb-rl-field-wrap">
+			<?php
+				printf(
+					'<div class="bb-readylaunch-settings__loading">%s</div>',
+					esc_html__( 'Loading…', 'buddyboss' )
+				);
+			?>
+		</div>
+	</div>
+	<?php
+
 }
 
 

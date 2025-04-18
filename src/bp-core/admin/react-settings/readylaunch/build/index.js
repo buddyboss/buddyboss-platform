@@ -153,7 +153,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Initialize the React app
-const app = document.getElementById('bb-readylaunch-settings');
+const app = document.getElementById('bb-rl-field-wrap');
 if (app) {
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ReadyLaunchSettings__WEBPACK_IMPORTED_MODULE_2__.ReadyLaunchSettings, null), app);
 }
