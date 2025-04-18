@@ -943,16 +943,13 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 		$text    = preg_replace( $pattern, '', $text );
 	}
 
-	// First remove any wrapper p or span tags if they exist
-	$text = preg_replace('/^<(p|span)[^>]*>(.*)<\/\1>$/s', '$2', trim($text));
-
 	// When $html is true, the excerpt should be created without including HTML tags in the
 	// excerpt length.
 	if ( ! empty( $r['html'] ) ) {
 
 		// The text is short enough. No need to truncate.
 		if ( mb_strlen( preg_replace( '/<.*?>/', '', $text ) ) <= $length ) {
-			return '<p>' . $text . '</p>';
+			return $text;
 		}
 
 		$totalLength = mb_strlen( strip_tags( $ending ) );
@@ -1024,7 +1021,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			 * @param int    $length        Length of returned string, including ellipsis.
 			 * @param array  $options       Array of HTML attributes and options.
 			 */
-			return '<p>' . apply_filters( 'bp_create_excerpt', $text, $original_text, $length, $options ) . '</p>';
+			return apply_filters( 'bp_create_excerpt', $text, $original_text, $length, $options );
 		} else {
 			$truncate = mb_substr( $text, 0, $length - mb_strlen( $ending ) );
 		}
@@ -1128,9 +1125,6 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			$truncate .= '</' . $tag . '>';
 		}
 	}
-
-	// Always wrap the final output in p tags
-	$truncate = '<p>' . $truncate . '</p>';
 
 	/** This filter is documented in /bp-core/bp-core-template.php */
 	return apply_filters( 'bp_create_excerpt', $truncate, $original_text, $length, $options );

@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.8.40\n"
+"Project-Id-Version: BuddyBoss Platform 2.8.41\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-04-17 04:38:38+00:00\n"
+"POT-Creation-Date: 2025-04-18 04:51:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3168,7 +3168,7 @@ msgstr ""
 #: bp-blogs/bp-blogs-template.php:1343 bp-blogs/bp-blogs-template.php:1442
 #: bp-blogs/classes/class-bp-blogs-component.php:300
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:185
-#: bp-core/bp-core-template.php:3625
+#: bp-core/bp-core-template.php:3619
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:53
 msgid "Create a Site"
 msgstr ""
@@ -9118,25 +9118,25 @@ msgstr ""
 msgid " [&hellip;]"
 msgstr ""
 
-#: bp-core/bp-core-template.php:1283
+#: bp-core/bp-core-template.php:1277
 msgid "Community"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3605
+#: bp-core/bp-core-template.php:3599
 msgid "Directory"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3613
+#: bp-core/bp-core-template.php:3607
 #: bp-members/classes/class-bp-registration-theme-compat.php:103
 msgid "Create an Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3617
+#: bp-core/bp-core-template.php:3611
 #: bp-members/classes/class-bp-registration-theme-compat.php:112
 msgid "Activate Your Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3621 bp-groups/bp-groups-template.php:4518
+#: bp-core/bp-core-template.php:3615 bp-groups/bp-groups-template.php:4518
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:593
 #: bp-templates/bp-nouveau/includes/groups/functions.php:661
 msgid "Create a Group"
