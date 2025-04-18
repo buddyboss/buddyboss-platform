@@ -559,7 +559,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
  *
  * @param BP_Activity_Activity $activity The BP_Activity_Activity object.
  */
-function bp_activity_at_name_send_emails( $activity, $parent_activity = array() ) {
+function bp_activity_at_name_send_emails( $activity ) {
 	// Are mentions disabled?
 	if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
 		return;
@@ -583,18 +583,6 @@ function bp_activity_at_name_send_emails( $activity, $parent_activity = array() 
 
 	// Send @mentions and setup BP notifications.
 	foreach ( (array) $usernames as $user_id => $username ) {
-
-		// Skip users who do not have access to the activity.
-		if ( is_array( $parent_activity ) ) {
-			// If not checking for comment, check for the activity that is passed.
-			$activity_to_check = $activity;
-		} else {
-			$activity_to_check = $parent_activity;
-		}
-
-		if ( ! bp_activity_user_can_read( $activity_to_check, $user_id ) ) {
-			continue;
-		}
 
 		/**
 		 * Filters BuddyPress' ability to send email notifications for @mentions.
@@ -3639,8 +3627,8 @@ function bb_group_activity_at_name_send_emails( $content, $user_id, $group_id, $
  * @param BP_Activity_Activity $activity   Activity item being commented on.
  */
 function bb_activity_comment_at_name_send_emails( $comment_id, $r, $activity ) {
-	$comment_activity = new BP_Activity_Activity( $comment_id );
-	bp_activity_at_name_send_emails( $comment_activity, $activity );
+	$activity = new BP_Activity_Activity( $comment_id );
+	bp_activity_at_name_send_emails( $activity );
 }
 
 /**

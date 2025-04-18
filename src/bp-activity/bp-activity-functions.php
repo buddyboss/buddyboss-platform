@@ -3683,7 +3683,7 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 	}
 
 	// Site moderators can view anything.
-	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		$retval = true;
 	}
 
