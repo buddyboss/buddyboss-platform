@@ -10,4 +10,10 @@ module.exports = {
         path: path.resolve(__dirname, 'readylaunch/build'),
         filename: '[name].js',
     },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...defaultConfig.module.rules,
+        ],
+    },
 }; 

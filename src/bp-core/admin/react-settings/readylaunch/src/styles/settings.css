@@ -1,0 +1,230 @@
+/* Main container */
+.bb-readylaunch-settings-container {
+    display: flex;
+    background-color: #f0f0f1;
+    min-height: 90vh;
+    margin: 0 -20px; /* Adjust based on WordPress admin padding */
+}
+
+/* Sidebar */
+.bb-readylaunch-sidebar {
+    width: 250px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.bb-readylaunch-sidebar ul {
+    margin: 0;
+    padding: 0;
+}
+
+.bb-readylaunch-sidebar li {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    color: #50575e;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.bb-readylaunch-sidebar li:hover {
+    background-color: #f6f7f7;
+}
+
+.bb-readylaunch-sidebar li.active {
+    color: #2271b1;
+    font-weight: 500;
+    background-color: #f0f0f1;
+}
+
+.bb-readylaunch-sidebar .dashicons {
+    margin-right: 12px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+/* Main content */
+.bb-readylaunch-settings-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.settings-content {
+    max-width: 900px;
+}
+
+/* Settings cards */
+.settings-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+/* Toggle settings */
+.settings-toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toggle-content {
+    flex: 1;
+}
+
+.toggle-content h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.toggle-content p {
+    margin: 0;
+    color: #757575;
+    font-size: 13px;
+}
+
+/* Settings header */
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.settings-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #555;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Form fields */
+.settings-form-field {
+    display: flex;
+    margin-top: 15px;
+}
+
+.field-label {
+    width: 30%;
+    padding-right: 20px;
+}
+
+.field-label label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.field-label p {
+    margin: 0;
+    color: #757575;
+    font-size: 13px;
+}
+
+.field-input {
+    width: 70%;
+}
+
+.field-input input {
+    width: 100%;
+    max-width: 300px;
+}
+
+.field-description {
+    margin-top: 5px;
+    color: #757575;
+    font-size: 13px;
+}
+
+/* Separator */
+hr {
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Action buttons */
+.settings-actions {
+    margin-top: 30px;
+    padding-top: 15px;
+}
+
+/* Loading state */
+.settings-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
+.settings-loading p {
+    margin-top: 15px;
+    color: #757575;
+}
+
+/* Saving indicator */
+.settings-saving-indicator {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border-left: 4px solid #007cba;
+}
+
+.settings-saving-indicator .components-spinner {
+    margin-right: 10px;
+}
+
+.settings-saving-indicator span {
+    color: #555;
+    font-size: 13px;
+}
+
+/* Notifications */
+.settings-notice {
+    margin-bottom: 20px;
+}
+
+/* WordPress component overrides */
+.components-toggle-control .components-base-control__field {
+    margin-bottom: 0 !important;
+}
+
+/* WP toggle button adjustments */
+.components-form-toggle {
+    background-color: #dcdcde;
+    border-radius: 10px;
+}
+
+.components-form-toggle.is-checked {
+    background-color: #e05d56;
+}
+
+.components-form-toggle .components-form-toggle__track {
+    border: none;
+}
+
+.components-form-toggle .components-form-toggle__thumb {
+    background-color: white;
+    border: none;
+} 

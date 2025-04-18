@@ -7,7 +7,9 @@
 		"@wordpress/element": "^5.0.0",
 		"@wordpress/i18n": "^4.0.0",
 		"@wordpress/components": "^25.0.0",
-		"@wordpress/data": "^9.0.0"
+		"@wordpress/data": "^9.0.0",
+		"@wordpress/icons": "^9.0.0",
+		"@wordpress/api-fetch": "^6.0.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
