@@ -1438,7 +1438,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $url;
 			}
 
-			return trailingslashit( $new ) . bbpress()->edit_id . '/';
+			return trailingslashit( $new ) . bbp_get_edit_slug() . '/';
 		}
 
 		/**
