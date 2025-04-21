@@ -22315,6 +22315,7 @@ ul.bb-albums-list .load-more {
 }
 
 #buddypress .activity-list li.load-more > a,
+#buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a {
   max-width: 33%;
   pointer-events: auto;
