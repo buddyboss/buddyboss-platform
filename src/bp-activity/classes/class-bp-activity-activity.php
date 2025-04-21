@@ -333,10 +333,8 @@ class BP_Activity_Activity {
 			bb_get_activity_published_status() === $this->status
 		) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
-		} else {
-			if ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
-				add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
-			}
+		} elseif ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
 		/**
