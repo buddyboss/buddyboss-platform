@@ -66,7 +66,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 }
 ?>
 
-<div class="bb-activity-video-elem 
+<div class="bb-activity-video-elem
 <?php
 echo esc_attr( $video_id ) . ' ';
 echo $video_template->current_video > ( $max_length - 1 ) ? esc_attr( 'hide ' ) : '';
@@ -173,7 +173,7 @@ echo esc_attr( $has_no_thumbnail );
 			controls
 			poster="<?php echo esc_url( $poster_full ); ?>"
 			data-setup='{"aspectRatio": "16:9", "fluid": true,"playbackRates": [0.5, 1, 1.5, 2], "fullscreenToggle" : false }'>
-			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>"></source>
+			<source src="<?php bp_video_link(); ?>" type="<?php bp_video_type(); ?>">
 		</video>
 		<p class="bb-video-loader"></p>
 		<?php if ( ! empty( $video_length ) ) { ?>
