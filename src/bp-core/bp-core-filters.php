@@ -1035,6 +1035,10 @@ function bp_filter_metaid_column_name( $q ) {
 	$q = preg_replace( $quoted_regex, '__QUOTE__', $q );
 
 	if ( strpos( $q, 'umeta_id' ) === false ) {
+		global $wpdb;
+		if ( false !== strpos( $q, $wpdb->postmeta ) ) {
+			return $q;
+		}
 		$q = str_replace( 'meta_id', 'id', $q );
 	}
 
