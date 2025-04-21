@@ -334,7 +334,9 @@ class BP_Activity_Activity {
 		) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
 		} else {
-			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+			if ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
+				add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
+			}
 		}
 
 		/**
