@@ -6482,28 +6482,35 @@ function bb_activity_pin_unpin_post( $args = array() ) {
 
 		// Check if group activity or normal activity.
 		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
+			$has_permission = false;
 
-			// Check the user is moderator or organizer and part of the group.
-			if ( ! groups_is_user_member( $r['user_id'], $activity->item_id ) ) {
-				$retval = 'not_member';
+			// First check if user is a site administrator.
+			if ( bp_current_user_can( 'administrator' ) ) {
+				$has_permission = true;
 			} else {
+				// Check group organizer or moderator permissions if not a site admin.
 				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
 				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
 
-				if ( $is_admin || $is_mod || bp_current_user_can( 'administrator' ) ) {
-					$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-					groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
-				} else {
-					$retval = 'not_allowed';
+				if (
+					( $is_admin || $is_mod ) &&
+					bb_is_active_activity_pinned_posts()
+				) {
+					$has_permission = true;
 				}
 			}
-		} else {
-			if ( bp_current_user_can( 'administrator' ) ) {
-				$old_value = bp_get_option( 'bb_pinned_post' );
-				bp_update_option( 'bb_pinned_post', $updated_value );
+
+			if ( $has_permission ) {
+				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
 			} else {
 				$retval = 'not_allowed';
 			}
+		} elseif ( bp_current_user_can( 'administrator' ) ) {
+			$old_value = bp_get_option( 'bb_pinned_post' );
+			bp_update_option( 'bb_pinned_post', $updated_value );
+		} else {
+			$retval = 'not_allowed';
 		}
 
 		// Check if already exists and updating new value.
@@ -7452,7 +7459,7 @@ function bb_activity_update_date_updated( $activity_id, $time ) {
  * @since BuddyBoss 2.8.20
  *
  * @param object $activity Activity object.
- * 
+ *
  * @return object Activity object.
  */
 function bb_activity_get_comment_parent_activity_object( $activity ) {
