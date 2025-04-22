@@ -80,6 +80,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Prevent activity creation for WPML translated posts.
 			add_filter( 'bp_init', array( $this, 'bb_prevent_translated_post_activities' ) );
+			add_action( 'pre_post_update', array( $this, 'bb_capture_original_language' ), 10, 2 );
+			add_action( 'post_updated', array( $this, 'bb_handle_wpml_language_change' ), 10, 3 );
 		}
 
 		/**
@@ -430,7 +432,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Store POST data early.
 			if ( ! empty( $_POST['data']['icl_post_language'] ) && ! empty( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ) { //phpcs:ignore
-				set_transient( 'bb_wpml_posted_icl_post_language_' . intval( wp_unslash( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ), sanitize_text_field( wp_unslash( $_POST['data']['icl_post_language'] ) ), 100 ); //phpcs:ignore
+				set_transient( 'bb_wpml_posted_icl_post_language_' . intval( wp_unslash( $_POST['data']['wp-refresh-post-lock']['post_id'] ) ), sanitize_text_field( wp_unslash( $_POST['data']['icl_post_language'] ) ), 10 ); //phpcs:ignore
 			}
 
 			// Get all post types.
@@ -550,6 +552,88 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Not identified as a translation.
 			return $return;
+		}
+
+		/**
+		 * Capture the original old language of a post before update.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $post_id Post ID.
+		 * @param array $data    Array of unslashed post data.
+		 */
+		public function bb_capture_original_language( $post_id, $data ) {
+			if (
+				empty( $_POST['icl_post_language'] ) || // phpcs:ignore
+				( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
+				wp_is_post_revision( $post_id ) ||
+				! defined( 'ICL_SITEPRESS_VERSION' )
+			) {
+				return;
+			}
+
+			// Get original language.
+			$language_info = apply_filters( 'wpml_post_language_details', null, $post_id );
+			if ( ! empty( $language_info['language_code'] ) ) {
+				// Store the original language temporarily for later comparison.
+				set_transient( 'bb_wpml_original_old_db_language_' . $post_id, $language_info['language_code'], 5 * MINUTE_IN_SECONDS );
+			}
+		}
+
+		/**
+		 * Process WPML language change after post has been updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int     $post_id      Post ID.
+		 * @param WP_Post $post_after   Post object following the update.
+		 * @param WP_Post $post_before  Post object before the update.
+		 */
+		public function bb_handle_wpml_language_change( $post_id, $post_after, $post_before ) {
+			if (
+				empty( $_POST['icl_post_language'] ) || // phpcs:ignore.
+				( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
+				wp_is_post_revision( $post_id ) ||
+				! defined( 'ICL_SITEPRESS_VERSION' )
+			) {
+				return;
+			}
+
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			if ( empty( $default_lang ) ) {
+				return;
+			}
+
+			// Get original old db language from our transient.
+			$old_language = get_transient( 'bb_wpml_original_old_db_language_' . $post_id );
+			if ( ! empty( $_POST['icl_post_language'] ) ) { //phpcs:ignore
+				$current_language = sanitize_text_field( wp_unslash( $_POST['icl_post_language'] ) ); //phpcs:ignore
+			}
+
+			// Delete activities only when changing from default language to non-default language.
+			if (
+				! empty( $old_language ) &&
+				! empty( $current_language ) &&
+				$old_language === $default_lang &&
+				$current_language !== $default_lang
+			) {
+				global $wpdb;
+				// Delete any BuddyBoss activity entries created for this post ID and post type.
+				$activity_type = 'new_blog_' . $post_after->post_type;
+				$wpdb->delete( //phpcs:ignore
+					$wpdb->prefix . 'bp_activity',
+					array(
+						'secondary_item_id' => $post_id,
+						'type'              => $activity_type,
+						'component'         => 'blogs',
+					),
+					array( '%d', '%s', '%s' )
+				);
+			}
+
+			// Clean up transients.
+			delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
+			delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 		}
 	}
 
