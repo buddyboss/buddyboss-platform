@@ -19627,6 +19627,11 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   justify-content: center;
 }
 
+body.notifications .bb-rl-content-wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 .notifications-header {
   margin-bottom: var(--bb-rl-space-200);
   flex-direction: column;
