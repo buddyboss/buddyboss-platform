@@ -328,6 +328,32 @@ AJAX SEARCH
 	text-align: center;
 }
 
+.bp-search-ac {
+
+	.entry-meta {
+
+		> span {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.media-album_details__bottom {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
+
+	.bbls-albums-type,
+	.bbls-documents-type {
+
+		.bp-search-ajax-item {
+			display: flex;
+		}
+	}
+}
+
 @media screen and (max-width: 720px) {
 
 	.bp-search-ac.ui-autocomplete {

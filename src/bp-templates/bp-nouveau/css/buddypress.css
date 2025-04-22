@@ -20533,6 +20533,23 @@ AJAX SEARCH
   text-align: center;
 }
 
+.bp-search-ac .entry-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bp-search-ac .entry-meta .media-album_details__bottom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bp-search-ac .bbls-albums-type .bp-search-ajax-item,
+.bp-search-ac .bbls-documents-type .bp-search-ajax-item {
+  display: flex;
+}
+
 @media screen and (max-width: 720px) {
   .bp-search-ac.ui-autocomplete {
     overflow-y: scroll;
@@ -24340,7 +24357,9 @@ div.dropzone .dz-preview .dz-filename {
 
 .search-document-list .media-folder_items .media-folder_details__bottom,
 #media-folder-document-data-table .media-folder_items .media-folder_details__bottom {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 14px;
   line-height: 1.3;
   color: #4d5c6d;
@@ -24765,8 +24784,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 
 .search-video-list .media-album_details,
 .search-media-list .media-album_details {
-  width: calc(100% - 63px);
-  float: right;
   line-height: 1;
   margin-top: 5px;
 }
@@ -24890,8 +24907,6 @@ li:hover .search-document-list .media-folder_items .media-folder_icon > a i {
 
 .search-document-list .media-folder_items .media-folder_details {
   display: inline-block;
-  float: right;
-  width: calc(100% - 64px);
 }
 
 .search-document-list .media-folder_items .media-folder_group {
@@ -24917,8 +24932,15 @@ body.search-results .search_results .search-media-list .media-album_thumb img {
 
 body.search-results .search_results .search-video-list .media-album_details,
 body.search-results .search_results .search-media-list .media-album_details {
-  margin-top: 22px;
+  padding-top: 22px;
   width: calc(100% - 106px);
+}
+
+body.search-results .search_results .search-video-list .media-album_details__bottom,
+body.search-results .search_results .search-media-list .media-album_details__bottom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 body.search-results .search_results .search-document-list .media-folder_items .media-folder_icon > a i {
