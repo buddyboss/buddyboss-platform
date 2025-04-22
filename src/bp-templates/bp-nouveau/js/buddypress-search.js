@@ -58,6 +58,7 @@ jQuery(document).ready(function($) {
 								success: function(data) {
 									BP_SEARCH.cache[ term ] = data;
 									response(data);
+									debugger;
 								}
 							});
 						},

@@ -20545,9 +20545,20 @@ AJAX SEARCH
   gap: 4px;
 }
 
-.bp-search-ac .bbls-albums-type .bp-search-ajax-item,
-.bp-search-ac .bbls-documents-type .bp-search-ajax-item {
+.bp-search-ac li > .bp-search-ajax-item {
   display: flex;
+}
+
+.bp-search-ac .item > .middot {
+  vertical-align: middle;
+}
+
+.bp-search-ac .bbls-cpt-product-type ins {
+  text-decoration: none;
+}
+
+.bp-search-ac > li:not(.bbls-view_all_type-type) .item p {
+  margin-bottom: 0;
 }
 
 @media screen and (max-width: 720px) {

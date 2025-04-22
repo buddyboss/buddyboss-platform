@@ -345,12 +345,32 @@ AJAX SEARCH
 		}
 	}
 
-	.bbls-albums-type,
-	.bbls-documents-type {
+	li {
 
-		.bp-search-ajax-item {
+		> .bp-search-ajax-item {
 			display: flex;
 		}
+	}
+
+	.item {
+
+		> .middot {
+			vertical-align: middle;
+		}
+	}
+
+	.bbls-cpt-product-type {
+
+		ins {
+			text-decoration: none;
+		}
+	}
+}
+
+.bp-search-ac > li:not(.bbls-view_all_type-type) {
+
+	.item p {
+		margin-bottom: 0;
 	}
 }
 
