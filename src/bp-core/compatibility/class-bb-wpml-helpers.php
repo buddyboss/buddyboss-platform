@@ -80,8 +80,13 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Prevent activity creation for WPML translated posts.
 			add_filter( 'bp_init', array( $this, 'bb_prevent_translated_post_activities' ) );
+
+			// Handle WPML language change for block editor.
 			add_action( 'pre_post_update', array( $this, 'bb_capture_original_language' ), 10, 2 );
 			add_action( 'post_updated', array( $this, 'bb_handle_wpml_language_change' ), 10, 3 );
+
+			// Handle WPML language switch action from wpml(eg classic editor meta box).
+			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
 		}
 
 		/**
@@ -617,23 +622,90 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				$old_language === $default_lang &&
 				$current_language !== $default_lang
 			) {
-				global $wpdb;
 				// Delete any BuddyBoss activity entries created for this post ID and post type.
-				$activity_type = 'new_blog_' . $post_after->post_type;
-				$wpdb->delete( //phpcs:ignore
-					$wpdb->prefix . 'bp_activity',
+				bp_activity_delete(
 					array(
-						'secondary_item_id' => $post_id,
-						'type'              => $activity_type,
 						'component'         => 'blogs',
-					),
-					array( '%d', '%s', '%s' )
+						'type'              => 'new_blog_' . $post_after->post_type,
+						'item_id'           => get_current_blog_id(),
+						'secondary_item_id' => $post_id,
+					)
 				);
 			}
 
 			// Clean up transients.
 			delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
 			delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+		}
+
+
+		/**
+		 * Ajax handler for switching the language of a post in WPML
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_handle_wpml_switch_post_language() {
+			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! class_exists( 'WPML_Post_Edit_Ajax' ) ) {
+				return;
+			}
+
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			if ( empty( $default_lang ) ) {
+				return;
+			}
+
+			if (
+				empty( $_POST['nonce'] ) ||
+				empty( $_POST['wpml_from'] ) ||
+				empty( $_POST['wpml_to'] ) ||
+				empty( $_POST['wpml_post_id'] )
+			) {
+				return;
+			}
+
+			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
+			if ( ! wp_verify_nonce( $nonce, WPML_Post_Edit_Ajax::AJAX_ACTION_SWITCH_POST_LANGUAGE ) ) {
+				wp_send_json_error();
+			}
+
+			$from_lang = sanitize_text_field( wp_unslash( $_POST['wpml_from'] ) );
+			$to_lang   = sanitize_text_field( wp_unslash( $_POST['wpml_to'] ) );
+			$post_id   = intval( $_POST['wpml_post_id'] );
+
+			if ( ! empty( $post_id ) ) {
+				if ( ! empty( $to_lang ) && ! empty( $from_lang ) ) {
+					$post_type = get_post_type( $post_id );
+					if ( $from_lang === $default_lang && $to_lang !== $default_lang ) {
+						// Delete any BuddyBoss activity entries created for this post ID and post type.
+						bp_activity_delete(
+							array(
+								'component'         => 'blogs',
+								'type'              => 'new_blog_' . $post_type,
+								'item_id'           => get_current_blog_id(),
+								'secondary_item_id' => $post_id,
+							)
+						);
+					} elseif ( $default_lang === $to_lang ) {
+						$post = get_post( $post_id );
+						if ( $post && 'publish' === $post->post_status ) {
+							if ( has_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ) ) ) {
+								$flag_has_filter = true;
+								remove_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
+							}
+
+							bp_activity_post_type_publish( $post_id, $post );
+
+							if ( ! empty( $flag_has_filter ) ) {
+								add_filter( "bp_activity_{$post_type}_pre_publish", array( $this, 'bb_check_if_wpml_translation' ), 10, 4 );
+							}
+						}
+					}
+				}
+
+				// Clean up transients.
+				delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
+				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
+			}
 		}
 	}
 
