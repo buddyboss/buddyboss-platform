@@ -1929,7 +1929,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
 				'title'         => $title,
-				'description'   => wp_filter_nohtml_kses( $content ),
+				'description'   => sanitize_textarea_field( wp_unslash( $content ) ),
 				'activity_id'   => $media_activity_id,
 				'message_id'    => $message_id,
 				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
