@@ -101,7 +101,8 @@
 		display: flex;
 		align-items: flex-start;
 		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-		border-radius: var(--bb-rl-radius-lg); 
+		border-radius: var(--bb-rl-radius-lg);
+
 		&:hover,
 		&:has(.bb-rl-more_dropdown-wrap.active) {
 			background-color: var(--bb-rl-background-hover-color);
@@ -215,7 +216,7 @@
 }
 
 @media (max-width: 480px) {
-	
+
 	.notifications-header .notifications-header-actions {
 		flex-wrap: wrap;
 		gap: var(--bb-rl-space-100);
