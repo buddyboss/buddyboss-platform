@@ -44,22 +44,22 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function() {
 			// Change the Order actions visibility once the ajax request is done.
-			$( '#buddypress [data-bp-list="notifications"]' ).on( 'bp_ajax_request', this.prepareDocument );
+			$( 'body.notifications' ).on( 'bp_ajax_request', this.prepareDocument );
 
 			// Trigger Notifications order request.
-			$( '#buddypress [data-bp-list="notifications"]' ).on( 'click', '[data-bp-notifications-order]', bp.Nouveau, this.sortNotifications );
-
-			// Enable the Apply Button once the bulk action is selected
-			$( '#buddypress [data-bp-list="notifications"]' ).on( 'change', '#notification-select', this.enableBulkSubmit );
-
-			// Select all displayed notifications
-			$( '#buddypress [data-bp-list="notifications"]' ).on( 'click', '#select-all-notifications', this.selectAll );
-
-			// Check all checkbox checked or not
-			$( '#buddypress [data-bp-list="notifications"]' ).on( 'click', '.notification-check', this.checkSelectAllOrNot );
+			$( 'body.notifications' ).on( 'click', '.bb-sort-by-date', bp.Nouveau, this.sortNotifications );
 
 			// Reset The filter before unload
 			$( window ).on( 'unload', this.resetFilter );
+
+			// More Options Dropdown
+			$( 'body.notifications' ).on( 'click', '.bb_rl_more_dropdown__action', this.toggleMoreOptionsDropdown );
+
+			$( document ).on( 'click', function( event ) {
+				if ( ! $( event.target ).closest( '.bb-rl-more_dropdown-wrap' ).length ) {
+					$( '.bb-rl-more_dropdown-wrap' ).removeClass( 'active' );
+				}
+			} );
 		},
 
 		/**
@@ -93,7 +93,7 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 
-			sort = $( event.currentTarget ).data( 'bp-notifications-order' );
+			sort = $( event.currentTarget ).find( 'a:visible' ).data( 'bp-notifications-order' );
 			bp.Nouveau.setStorage( 'bp-notifications', 'extras', sort );
 
 			if ( $( '#buddypress [data-bp-search="notifications"] input[type=search]' ).length ) {
@@ -111,76 +111,24 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [enableBulkSubmit description]
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		enableBulkSubmit: function( event ) {
-			$( '#notification-bulk-manage' ).prop( 'disabled', $( event.currentTarget ).val().length <= 0 );
-			
-			if ( true === $( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked' ) ) {
-				$.each( $( '.notification-check' ), function ( cb, checkbox ) {
-					if ( 'unread' === $( event.currentTarget ).val() || '' === $( event.currentTarget ).val() ) {
-						if ( '' === $( checkbox ).attr( 'data-readonly' ) ) {
-							$( checkbox ).prop( 'checked', true );
-						} else {
-							$( checkbox ).prop( 'checked', false );
-						}
-					} else {
-						$( checkbox ).prop( 'checked', true );
-					}
-				} );
-			}
-		},
-
-		/**
-		 * [selectAll description]
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		selectAll: function( event ) {
-			var selectedNotificationValue = $( '#notification-select' ).val();
-			$.each( $( '.notification-check' ), function ( cb, checkbox ) {
-				if ( 'unread' === selectedNotificationValue || '' === selectedNotificationValue ) {
-					if ( '' === $( checkbox ).attr( 'data-readonly' ) ) {
-						$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
-					}
-				} else {
-					$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
-				}
-			} );
-		},
-
-		/**
-		 * [checkSelectAllOrNot description]
-		 * @param  {[type]} event [description]
-		 * @return {[type]}       [description]
-		 */
-		checkSelectAllOrNot: function( e ) {
-			var unChecked 	= 0;
-			if ( '1' === $( this ).attr( 'data-readonly' ) ) {
-				$( this ).blur();
-				e.preventDefault();
-			}
-			$.each( $( '.notification-check' ), function ( cb, checkbox ) {
-				if ( $( checkbox ).prop( 'checked' ) == false ) {
-					unChecked = parseInt( unChecked ) + 1;
-				}
-			} );
-
-			if ( unChecked == 0 ) {
-				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked',true );
-			}else{
-				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked',false );
-			}
-		},
-
-		/**
 		 * [resetFilter description]
 		 * @return {[type]} [description]
 		 */
 		resetFilter: function() {
 			bp.Nouveau.setStorage( 'bp-notifications', 'filter', 0 );
+		},
+
+		/**
+		 * [toggleMoreOptionsDropdown description]
+		 * @return {[type]} [description]
+		 */
+		toggleMoreOptionsDropdown: function() {
+			if( $( this ).closest( '.bb-rl-more_dropdown-wrap' ).hasClass( 'active' ) ) {
+				$( '.bb-rl-more_dropdown-wrap' ).removeClass( 'active' );
+			} else {
+				$( '.bb-rl-more_dropdown-wrap' ).removeClass( 'active' );
+				$( this ).closest( '.bb-rl-more_dropdown-wrap' ).addClass( 'active' );
+			}
 		}
 	};
 

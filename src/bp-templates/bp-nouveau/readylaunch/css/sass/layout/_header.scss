@@ -525,56 +525,6 @@
 				max-height: 32px;
 				object-fit: cover;
 			}
-
-			[class*="bb-icon"] {
-				height: 20px;
-				width: 20px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border-radius: var(--bb-rl-radius-full);
-				font-style: normal;
-				position: absolute;
-				right: 0;
-				bottom: -6px;
-				background-color: var(--bb-rl-background-positive-primary-color);
-
-				&:before {
-					font-family: bb-icons-rl !important;
-					color: var(--bb-rl-text-white-color);
-					font-size: 12px;
-					opacity: 1;
-					margin: 0;
-				}
-
-				&.bb-icon-comment-activity:before {
-					content: "\e172";
-				}
-
-				&.bb-icon-activity:before {
-					content: "\e17a";
-				}
-
-				&.bb-icon-reply:before {
-					content: "\ed52";
-				}
-
-				&.bb-icon-comment-square-dots:before {
-					content: "\e172";
-				}
-
-				&.bb-icon-comment-square:before {
-					content: "\e16c";
-				}
-
-				&.bb-icon-poll:before {
-					content: "\e150";
-				}
-
-				&.bb-icon-image:before {
-					content: "\e10e";
-				}
-			}
 		}
 
 		.notification-content {
@@ -635,7 +585,56 @@
 			visibility: visible;
 		}
 	}
+}
 
+.notification-list li .notification-avatar [class*="bb-icon"] {
+	height: 20px;
+	width: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--bb-rl-radius-full);
+	font-style: normal;
+	position: absolute;
+	right: 0;
+	bottom: -6px;
+	background-color: var(--bb-rl-background-positive-primary-color);
+
+	&:before {
+		font-family: bb-icons-rl !important;
+		color: var(--bb-rl-text-white-color);
+		font-size: 12px;
+		opacity: 1;
+		margin: 0;
+	}
+
+	&.bb-icon-comment-activity:before {
+		content: "\e172";
+	}
+
+	&.bb-icon-activity:before {
+		content: "\e17a";
+	}
+
+	&.bb-icon-reply:before {
+		content: "\ed52";
+	}
+
+	&.bb-icon-comment-square-dots:before {
+		content: "\e172";
+	}
+
+	&.bb-icon-comment-square:before {
+		content: "\e16c";
+	}
+
+	&.bb-icon-poll:before {
+		content: "\e150";
+	}
+
+	&.bb-icon-image:before {
+		content: "\e10e";
+	}
 }
 
 

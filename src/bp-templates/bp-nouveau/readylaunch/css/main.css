@@ -6335,56 +6335,6 @@ body.admin-bar .bb-rl-header {
   object-fit: cover;
 }
 
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"] {
-  height: 20px;
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--bb-rl-radius-full);
-  font-style: normal;
-  position: absolute;
-  right: 0;
-  bottom: -6px;
-  background-color: var(--bb-rl-background-positive-primary-color);
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"]:before {
-  font-family: bb-icons-rl !important;
-  color: var(--bb-rl-text-white-color);
-  font-size: 12px;
-  opacity: 1;
-  margin: 0;
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-activity:before {
-  content: "\e172";
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-activity:before {
-  content: "\e17a";
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-reply:before {
-  content: "\ed52";
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-square-dots:before {
-  content: "\e172";
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-square:before {
-  content: "\e16c";
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-poll:before {
-  content: "\e150";
-}
-
-.notification-listing .notification-list li .notification-avatar [class*="bb-icon"].bb-icon-image:before {
-  content: "\e10e";
-}
-
 .notification-listing .notification-list li .notification-content {
   color: var(--bb-rl-text-color);
   font-size: 0.9rem;
@@ -6441,6 +6391,56 @@ body.admin-bar .bb-rl-header {
 .notification-listing .notification-list li:hover .bb-rl-option-wrap {
   opacity: 1;
   visibility: visible;
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"] {
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--bb-rl-radius-full);
+  font-style: normal;
+  position: absolute;
+  right: 0;
+  bottom: -6px;
+  background-color: var(--bb-rl-background-positive-primary-color);
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"]:before {
+  font-family: bb-icons-rl !important;
+  color: var(--bb-rl-text-white-color);
+  font-size: 12px;
+  opacity: 1;
+  margin: 0;
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-activity:before {
+  content: "\e172";
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-activity:before {
+  content: "\e17a";
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-reply:before {
+  content: "\ed52";
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-square-dots:before {
+  content: "\e172";
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-comment-square:before {
+  content: "\e16c";
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-poll:before {
+  content: "\e150";
+}
+
+.notification-list li .notification-avatar [class*="bb-icon"].bb-icon-image:before {
+  content: "\e10e";
 }
 
 @media screen and (max-width: 992px) {
@@ -19629,14 +19629,16 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .notifications-header {
   margin-bottom: var(--bb-rl-space-200);
+  flex-direction: column;
 }
 
 .notifications-header .entry-title {
   color: var(--bb-rl-text-color);
-  font-size: 1.6rem;
+  font-size: var(--bb-rl-font-size-2xl);
   font-weight: 600;
   line-height: 1.2;
   flex: 1;
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .notifications-header .component-filters {
@@ -19647,109 +19649,127 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   background-color: var(--bb-rl-background-color);
 }
 
+.notifications-header .notifications-header-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.notifications-header .notifications-header-actions .bb-rl-profile-subnav {
+  margin-right: auto;
+}
+
+.notifications-header .notifications-header-actions .bb-sort-by-date {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-100);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  margin-left: var(--bb-rl-space-100);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: 6px var(--bb-rl-space-200);
+  cursor: pointer;
+}
+
+.notifications-header .notifications-header-actions .bb-sort-by-date a {
+  color: var(--bb-rl-text-secondary-color);
+  line-height: 1;
+}
+
+.notifications-header .notifications-header-actions .bb-sort-by-date span[class*="bb-icon"] {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: 16px;
+  font-family: bb-icons-rl;
+  font-weight: 400;
+}
+
+.notifications-header .notifications-header-actions .bb-sort-by-date span[class*="bb-icon"].bb-icon-angle-down:before {
+  content: "\e136";
+}
+
+.notifications-header .notifications-header-actions .bb-sort-by-date span[class*="bb-icon"].bb-icon-angle-up:before {
+  content: "\e13c";
+}
+
+.notifications-header .notifications-header-actions .bb-rl-filter {
+  background-color: transparent;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+  padding: 6px var(--bb-rl-space-100);
+}
+
+.notifications-header .notifications-header-actions .bb-rl-filter .bb-rl-filter-label {
+  display: none;
+}
+
+.notifications-header .notifications-header-actions .bb-rl-filter .select2-container--rl .select2-selection__arrow b:before {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.notifications-header .notifications-header-actions .bb-rl-filter .select2-container .select2-selection--single .select2-selection__rendered {
+  padding-right: 10px;
+}
+
 .notifications.dir-list .notification-list {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-lg);
-  padding: 0;
+  padding: var(--bb-rl-space-100);
   overflow: visible;
   max-height: inherit;
 }
 
 .notifications.dir-list .notification-list .bs-item-wrap {
   display: flex;
-  align-items: center;
-  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
-  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
-  border-radius: 0;
+  align-items: flex-start;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-lg);
 }
 
-.notifications.dir-list .notification-list .bs-item-wrap:hover {
+.notifications.dir-list .notification-list .bs-item-wrap:hover, .notifications.dir-list .notification-list .bs-item-wrap:has(.bb-rl-more_dropdown-wrap.active) {
   background-color: var(--bb-rl-background-hover-color);
 }
 
-.notifications.dir-list .notification-list .bs-item-wrap:last-child {
-  border-bottom: 0;
-  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+.notifications.dir-list .notification-list .bs-item-wrap:hover .bb-rl-more_dropdown-wrap, .notifications.dir-list .notification-list .bs-item-wrap:has(.bb-rl-more_dropdown-wrap.active) .bb-rl-more_dropdown-wrap {
+  opacity: 1;
+  visibility: visible;
+}
+
+.notifications.dir-list .notification-list .bs-item-wrap:has(.bb-rl-more_dropdown-wrap.active) {
+  z-index: 9999;
 }
 
 .notifications.dir-list .notification-list .bs-header-item {
   border-radius: var(--bb-rl-radius-lg) var(--bb-rl-radius-lg) 0 0;
 }
 
-.notifications.dir-list .notification-list #notification-bulk-manage {
-  background-color: var(--bb-rl-background-brand-primary-color);
-  color: var(--bb-rl-text-white-color);
-  border: 1px solid var(--bb-rl-background-brand-primary-color);
-  border-radius: var(--bb-rl-radius-sm);
-  margin: 1px 0 0 var(--bb-rl-space-100);
-  padding: 0 var(--bb-rl-space-200);
-  min-height: 34px;
-  height: 34px;
-  cursor: pointer;
-}
-
-.notifications.dir-list .notification-list #notification-bulk-manage:hover {
-  background-color: var(--bb-rl-background-brand-primary-hover-color);
-}
-
-.notifications.dir-list .notification-list #notification-bulk-manage:focus-within {
-  outline: 2px solid var(--bb-rl-border-brand-primary-color);
-}
-
-.notifications.dir-list .notification-list #notification-bulk-manage:disabled {
-  background-color: var(--bb-rl-background-brand-disabled-color);
-  cursor: not-allowed;
-}
-
-.notifications.dir-list .notification-list #notification-bulk-manage[disabled] {
-  display: none;
-}
-
-.notifications.dir-list .notification-list .notifications-options-nav {
-  display: flex;
-  align-items: center;
-}
-
-.notifications.dir-list .notification-list .bulk-select-check,
-.notifications.dir-list .notification-list .bulk-select-all {
-  min-width: 40px;
-}
-
-.notifications.dir-list .notification-list .bb-sort-by-date {
-  display: flex;
-  align-items: center;
-  gap: var(--bb-rl-space-100);
-  color: var(--bb-rl-text-tertiary-color);
-  font-size: 14px;
-  line-height: 1;
-}
-
-.notifications.dir-list .notification-list .notifications-order-actions span[class*="bb-icon"] {
-  color: var(--bb-rl-text-tertiary-color);
-  font-size: 15px;
-  font-family: bb-icons-rl;
-}
-
-.notifications.dir-list .notification-list .notifications-order-actions span[class*="bb-icon"].bb-icon-angle-down:before {
-  content: "\e136";
-}
-
-.notifications.dir-list .notification-list .notifications-order-actions span[class*="bb-icon"].bb-icon-angle-up:before {
-  content: "\e13c";
-}
-
 .notifications.dir-list .notification-list .notification-avatar {
   margin-right: var(--bb-rl-space-200);
+  flex: 0 0 32px;
+  position: relative;
 }
 
 .notifications.dir-list .notification-list .notification-avatar img {
-  max-width: 48px;
+  max-width: 32px;
+}
+
+.notifications.dir-list .notification-list .notification-avatar [class*="bb-icon"] {
+  right: -8px;
+  bottom: -8px;
+}
+
+.notifications.dir-list .notification-list .bulk-select-check {
+  display: none;
 }
 
 .notifications.dir-list .notification-list .notification-content {
   color: var(--bb-rl-text-tertiary-color);
-  font-size: 0.875rem;
+  font-size: 15px;
   flex: 1;
   letter-spacing: -0.24px;
   line-height: 1.3;
@@ -19758,21 +19778,40 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .notifications.dir-list .notification-list .notification-content a {
   color: var(--bb-rl-text-color);
+  display: inline-block;
+  line-height: 1.6;
 }
 
 .notifications.dir-list .notification-list .notification-content .posted {
   display: block;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  margin-top: 3px;
-  line-height: 19px;
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  line-height: 1.8;
 }
 
 .notifications.dir-list .notification-list .actions {
   display: flex;
   align-items: center;
   min-width: 40px;
+}
+
+.notifications.dir-list .notification-list .actions .bb_rl_more_dropdown__action {
+  color: var(--bb-rl-icon-tertiary-color);
+  background-color: transparent;
+  padding: 0;
+}
+
+.notifications.dir-list .notification-list .actions .bb_rl_more_dropdown {
   font-size: 0;
+}
+
+.notifications.dir-list .notification-list .actions .bb-rl-more_dropdown-wrap.active a {
+  color: var(--bb-rl-icon-color);
+}
+
+.notifications.dir-list .notification-list .actions .bb-rl-more_dropdown-wrap.active .bb_rl_more_dropdown {
+  opacity: 1;
+  visibility: visible;
 }
 
 .notifications.dir-list .notification-list .actions a {
@@ -19796,4 +19835,17 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 
 .notifications.dir-list .notification-list .actions a .dashicons.dashicons-trash:before {
   content: "\e4a6";
+}
+
+@media (max-width: 480px) {
+  .notifications-header .notifications-header-actions {
+    flex-wrap: wrap;
+    gap: var(--bb-rl-space-100);
+  }
+  .notifications-header .notifications-header-actions .component-filters {
+    margin-left: 0;
+  }
+  .notifications-header .notifications-header-actions .bb-rl-profile-subnav {
+    width: 100%;
+  }
 }
