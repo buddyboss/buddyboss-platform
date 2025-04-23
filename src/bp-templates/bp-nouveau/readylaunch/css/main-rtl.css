@@ -6486,8 +6486,11 @@ body.admin-bar .bb-rl-header {
     display: flex;
     align-items: center;
     color: var(--bb-rl-icon-secondary-color);
-    font-size: 24px;
+    font-size: 28px;
     margin-left: var(--bb-rl-space-200);
+  }
+  .bb-mobile-menu-open .bb-rl-left-panel-mobile [class*="bb-icons-rl"]:before {
+    content: "\e4f6";
   }
   .bb-rl-left-panel,
   .bb-readylaunch-menu,
@@ -6496,28 +6499,24 @@ body.admin-bar .bb-rl-header {
   }
   .bb-rl-site-branding {
     margin-left: auto;
+    margin-right: auto;
   }
   .bb-readylaunch-mobile-menu__wrap {
     background-color: var(--bb-rl-background-color);
     display: block;
     position: fixed;
     right: -100%;
-    top: 0;
+    top: 66px;
     bottom: 0;
     width: 100%;
     overflow: auto;
     transition: all 0.35s ease-in-out;
   }
   body.admin-bar .bb-readylaunch-mobile-menu__wrap {
-    top: 32px;
+    top: 98px;
   }
   body.bb-mobile-menu-open .bb-readylaunch-mobile-menu__wrap {
     right: 0;
-  }
-  .bb-rl-mobile-panel-header {
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-    padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
-    margin-bottom: var(--bb-rl-space-200);
   }
   .bb-rl-mobile-user-name {
     color: var(--bb-rl-text-color);
@@ -6528,22 +6527,6 @@ body.admin-bar .bb-rl-header {
     color: var(--bb-rl-text-tertiary-color);
     font-size: 0.85rem;
     font-weight: 500;
-  }
-  .bb-rl-close-panel-mobile {
-    color: var(--bb-rl-text-tertiary-color);
-    font-size: 20px;
-  }
-  .bb-rl-mobile-user-link {
-    margin-left: var(--bb-rl-space-200);
-  }
-  .bb-rl-mobile-user-link img {
-    max-width: 50px;
-    height: auto;
-    object-fit: contain;
-    border-radius: var(--bb-rl-radius-full);
-  }
-  .header-aside .user-wrap {
-    display: none;
   }
   .header-aside .bb-rl-header-search {
     background-color: transparent !important;
@@ -6557,11 +6540,14 @@ body.admin-bar .bb-rl-header {
   }
   .bb-readylaunch-mobile-menu {
     list-style: none;
-    padding: 0 var(--bb-rl-space-200);
+    padding: var(--bb-rl-space-200) 0;
+    margin: 0 var(--bb-rl-space-200);
+    border-bottom: 1px solid var(--bb-rl-border-secondary-color);
   }
   .bb-readylaunch-mobile-menu li a {
     color: var(--bb-rl-text-color);
-    font-size: 0.95rem;
+    font-size: var(--bb-rl-font-size-base);
+    font-weight: 600;
     display: block;
     padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
     border-radius: var(--bb-rl-radius-sm);
@@ -6606,7 +6592,7 @@ body.admin-bar .bb-rl-header {
     top: 46px;
   }
   body.admin-bar .bb-readylaunch-mobile-menu__wrap {
-    top: 46px;
+    top: 112px;
   }
 }
 
