@@ -585,24 +585,11 @@ function bp_activity_at_name_send_emails( $activity ) {
 	// Grab our temporary variable from bp_activity_at_name_filter_updates().
 	$usernames = buddypress()->activity->mentioned_users;
 
-	if ( 'activity_comment' === $activity->type ) {
-		$parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
-		$parent_user_id = $parent_activity->user_id;
-	} else {
-		$parent_activity = $activity;
-		$parent_user_id = $activity->user_id;
-	}
-
 	// Get rid of temporary variable.
 	unset( buddypress()->activity->mentioned_users );
 
 	// Send @mentions and setup BP notifications.
 	foreach ( (array) $usernames as $user_id => $username ) {
-
-		// Bail out the mention if it's for the parent user id, because he will recieve a "replied to your" notification.
-		if ( $parent_user_id === $user_id ) {
-			continue;
-		}
 
 		/**
 		 * Filters BuddyPress' ability to send email notifications for @mentions.

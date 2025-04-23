@@ -246,6 +246,19 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		}
 	}
 
+	if ( 'activity_comment' === $activity->type ) {
+		// Try to find mentions.
+		$comment_activity = new BP_Activity_Activity( $comment_id );
+		$usernames = bp_activity_find_mentions( $comment_activity->content );
+
+		// Bail out the replied notification because he will recieve a "mentioned you" notification.
+		if ( ! empty( $usernames ) ) {
+			if ( isset( $usernames[ $activity->user_id ] ) ) {
+				return;
+			}
+		}
+	}
+
 	if (
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 		bb_moderation_allowed_specific_notification(
