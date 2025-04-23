@@ -22,7 +22,9 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 		$avatar = bbp_get_topic_author_link( $args );
 
 		if ( $avatar ) {
-			echo wp_kses_post( $avatar );
+			?>
+			<a href="<?php echo esc_url( bbp_get_topic_permalink( $topic_id ) ); ?>"><?php echo wp_kses_post( strip_tags( $avatar, '<img>' ) ); ?></a>
+			<?php
 		} else {
 			?>
 			<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
