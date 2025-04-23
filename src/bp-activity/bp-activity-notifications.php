@@ -246,16 +246,15 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		}
 	}
 
-	if ( 'activity_comment' === $activity->type ) {
-		// Try to find mentions.
-		$comment_activity = new BP_Activity_Activity( $comment_id );
-		$usernames = bp_activity_find_mentions( $comment_activity->content );
+	// Try to find mentions.
+	$comment_activity = new BP_Activity_Activity( $comment_id );
+	$usernames = bp_activity_find_mentions( $comment_activity->content );
 
-		// Bail out the replied notification because he will recieve a "mentioned you" notification.
-		if ( ! empty( $usernames ) ) {
-			if ( isset( $usernames[ $activity->user_id ] ) ) {
-				return;
-			}
+	error_log( print_r( $usernames, true ) );
+	// Bail out the replied notification because he will recieve a "mentioned you" notification.
+	if ( ! empty( $usernames ) ) {
+		if ( isset( $usernames[ $activity->user_id ] ) ) {
+			return;
 		}
 	}
 
@@ -314,6 +313,17 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity_comment->user_id !== $commenter_id ) {
 		if ( bb_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
+			return;
+		}
+	}
+
+	// Try to find mentions.
+	$reply_activity = new BP_Activity_Activity( $comment_id );
+	$usernames = bp_activity_find_mentions( $reply_activity->content );
+
+	// Bail out the replied notification because he will recieve a "mentioned you" notification.
+	if ( ! empty( $usernames ) ) {
+		if ( isset( $usernames[ $activity_comment->user_id ] ) ) {
 			return;
 		}
 	}
