@@ -111,8 +111,12 @@ class BP_Groups_Widget extends WP_Widget {
 			'user_id'  => $user_id,
 			'type'     => $instance['group_default'],
 			'per_page' => $max_groups,
-			'max'      => $max_groups,
+			'max'      => false,
 		);
+
+		if ( empty( $group_args['max'] ) && false !== $group_args['max'] ) {
+			$group_args['max'] = 5;
+		}
 
 		// Back up the global.
 		$old_groups_template = $groups_template;
@@ -148,7 +152,7 @@ class BP_Groups_Widget extends WP_Widget {
 					<li <?php bp_group_class(); ?>>
 					<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 						<div class="item-avatar">
-							<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar_thumb(); ?></a>
+							<a href="<?php bp_group_permalink(); ?>" data-bb-hp-group="<?php echo esc_attr( bp_get_group_id() ); ?>"><?php bp_group_avatar_thumb(); ?></a>
 						</div>
 					<?php endif; ?>
 
@@ -174,8 +178,8 @@ class BP_Groups_Widget extends WP_Widget {
 			</ul>
 			<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
 			<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $max_groups ); ?>" />
-			
-			<div class="more-block"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+
+			<div class="more-block <?php echo ( $groups_template->total_group_count > $max_groups ) ? '' : 'bp-hide'; ?>"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 		<?php else : ?>
 

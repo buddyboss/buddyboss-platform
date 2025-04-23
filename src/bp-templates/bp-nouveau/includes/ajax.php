@@ -141,13 +141,25 @@ function bp_nouveau_ajax_object_template_loader() {
 	$result['contents'] = ob_get_contents();
 	ob_end_clean();
 
+	// Unset variables we no longer need.
+	unset( $template_path, $template_part );
+
 	if ( 'members' === $object && ! empty( $GLOBALS['members_template'] ) ) {
-		$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		if ( bb_enable_content_counts() ) {
+			$result['count'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		}
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
-		$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
+		if ( bb_enable_content_counts() ) {
+			$result['count'] = bp_core_number_format( $GLOBALS['groups_template']->group_count );
+		}
+	} elseif ( 'members' === $object && bp_is_notifications_component() && bp_is_current_action( 'unread' ) ) {
+		$result['count'] = buddypress()->notifications->query_loop->total_notification_count;
 	}
 
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
+
+	// Unset variables we no longer need.
+	unset( $object );
 
 	// Locate the object template.
 	wp_send_json_success( $result );
@@ -166,23 +178,30 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 
 	$results['scopes'] = array();
 
-	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
-	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+	if ( bb_enable_content_counts() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+		bp_has_members( bp_ajax_querystring( 'members' ) );
+		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
 
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
-	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
+		add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
+		bp_has_members( bp_ajax_querystring( 'members' ) );
+		$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20, 2 );
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-		$counts = bp_total_follow_counts();
-		if ( ! empty( $counts['following'] ) ) {
-			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
-			bp_has_members( bp_ajax_querystring( 'members' ) );
-			$results['scopes']['following'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
-			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+			$counts = bp_total_follow_counts();
+			if ( ! empty( $counts['following'] ) ) {
+				$results['scopes']['following'] = bp_core_number_format( $counts['following'] );
+			}
+
+			// Followers.
+			if ( ! empty( $counts['followers'] ) ) {
+				add_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );
+				bp_has_members( bp_ajax_querystring( 'members' ) );
+				$results['scopes']['followers'] = bp_core_number_format( $GLOBALS['members_template']->total_member_count );
+				remove_filter( 'bp_ajax_querystring', 'bb_nouveau_object_template_results_members_followers_scope', 20, 2 );	
+			}
 		}
 	}
 
@@ -204,15 +223,17 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 
 	$results['scopes'] = array();
 
-	add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
-	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['all'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
-	remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
+	if ( bb_enable_content_counts() ) {
+		add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
+		bp_has_groups( bp_ajax_querystring( 'groups' ) );
+		$results['scopes']['all'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
-	bp_has_groups( bp_ajax_querystring( 'groups' ) );
-	$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
+		add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
+		bp_has_groups( bp_ajax_querystring( 'groups' ) );
+		$results['scopes']['personal'] = bp_core_number_format( $GLOBALS['groups_template']->total_group_count );
+		remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20, 2 );
+	}
 
 	$results['layout'] = bb_get_directory_layout_preference( 'groups' );
 
@@ -235,6 +256,12 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
 		$counts = bp_total_follow_counts();
 		if ( ! empty( $counts['following'] ) ) {
 			if ( isset( $querystring['scope'] ) && 'following' === $querystring['scope'] ) {
+				unset( $querystring['include'] );
+			}
+		}
+
+		if ( ! empty( $counts['followers'] ) ) {
+			if ( isset( $querystring['scope'] ) && 'followers' === $querystring['scope'] ) {
 				unset( $querystring['include'] );
 			}
 		}
@@ -325,4 +352,36 @@ function bp_nouveau_ajax_save_cover_position() {
 	$result['content'] = $position;
 
 	wp_send_json_success( $result );
+}
+
+/**
+ * Object template results members followers scope.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param string $querystring The querystring for the BP loop.	
+ * @param string $object The current object for the querystring.
+ *
+ * @return string Modified querystring
+ */
+function bb_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
+	if ( 'members' !== $object ) {
+		return $querystring;
+	}
+
+	$querystring = bp_parse_args( $querystring );
+
+	$args = array(
+		'user_id' => bp_loggedin_user_id(),
+	);
+	$followers_comma_separated_string = bp_get_follower_ids( $args );
+	$querystring['include']           = $followers_comma_separated_string;
+	$querystring['scope']             = 'followers';
+	$querystring['page']              = 1;
+	$querystring['per_page']          = '1';
+	if ( isset( $querystring['user_id'] ) && ! empty( $querystring['user_id'] ) ) {
+		unset( $querystring['user_id'] );
+	}
+
+	return http_build_query( $querystring );
 }

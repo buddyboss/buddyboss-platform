@@ -31,19 +31,19 @@ function bp_get_default_options() {
 		/* XProfile **********************************************************/
 
 		// Default profile groups name.
-		'bp-xprofile-base-group-name'                => __( 'Details', 'buddyboss' ),
+		'bp-xprofile-base-group-name'                => 'Details',
 
 		// Default fullname field name.
-		'bp-xprofile-firstname-field-name'           => __( 'First Name', 'buddyboss' ),
+		'bp-xprofile-firstname-field-name'           => 'First Name',
 
 		// Default fullname field name.
-		'bp-xprofile-lastname-field-name'            => __( 'Last Name', 'buddyboss' ),
+		'bp-xprofile-lastname-field-name'            => 'Last Name',
 
 		// Default fullname field name.
-		'bp-xprofile-nickname-field-name'            => __( 'Nickname', 'buddyboss' ),
+		'bp-xprofile-nickname-field-name'            => 'Nickname',
 
 		// Default fullname field name. (for backward compat).
-		'bp-xprofile-fullname-field-name'            => __( 'Name', 'buddyboss' ),
+		'bp-xprofile-fullname-field-name'            => 'Name',
 
 		'bp-display-name-format'                     => 'first_name',
 
@@ -175,14 +175,14 @@ function bp_get_default_options() {
 		// Enabled reactions and their mode.
 		'bb_all_reactions'                           => array(
 			'activity'         => true,
-			'activity_comment' => true
+			'activity_comment' => true,
 		),
 		'bb_reaction_mode'                           => 'likes',
 		'bb_reaction_button'                         => array(
 			array(
 				'text' => '',
 				'icon' => 'thumbs-up',
-			)
+			),
 		),
 
 		// Performance Settings.
@@ -190,6 +190,7 @@ function bp_get_default_options() {
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
 
+		'bb-enable-content-counts'                   => 0,
 		'bb-enable-sso'                              => false,
 	);
 
@@ -1134,14 +1135,35 @@ function bp_get_activity_edit_time( $default = false ) {
  */
 function bp_is_activity_tabs_active( $default = false ) {
 
+	/* Update for the backward compatibility since setting is removed. */
+	// Retrieve the saved options.
+	$filters = bb_get_enabled_activity_filter_options();
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
+	// Get only enabled options.
+	$filters = array_filter(
+		$filters,
+		function ( $value ) {
+			return 1 === (int) $value;
+		}
+	);
+
+	if ( ! empty( $filters ) && count( $filters ) > 1 ) {
+		$default = true;
+	} else {
+		$default = false;
+	}
+
 	/**
 	 * Filters whether or not Activity Tabs are enabled.
 	 *
 	 * @since BuddyBoss 1.1.6
 	 *
-	 * @param bool $value Whether or not Activity Tabs are enabled.
+	 * @param bool $default Whether or not Activity Tabs are enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_tabs_active', (bool) bp_get_option( '_bp_enable_activity_tabs', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_tabs_active', $default );
 }
 
 /**
@@ -2634,7 +2656,7 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
-	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions('activity') );
+	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
 /**
@@ -2717,7 +2739,6 @@ function bb_active_reactions() {
 		$all_emotions = bb_load_reaction()->bb_get_reactions();
 	}
 
-
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
 }
 
@@ -2756,4 +2777,206 @@ function bb_get_load_activity_per_request( $default = 10 ) {
  */
 function bb_is_send_ajax_request() {
 	return (bool) ( 2 === bb_get_ajax_request_page_load() );
+}
+
+/**
+ * Determines whether to show counts at the pages like Memebers, Groups etc.
+ *
+ * @since BuddyBoss 2.8.10
+ *
+ * @param bool $default Optional. Default value to use if the option is not set. Default true.
+ *
+ * @return bool true if counts should be displayed, false otherwise.
+ */
+function bb_enable_content_counts( $default = false ) {
+
+	/**
+	 * Filter to modify the behavior of the group counts feature.
+	 *
+	 * @since BuddyBoss 2.8.10
+	 *
+	 * @param bool $show_counts Whether to show group counts. Default is the value retrieved from the settings.
+	 * @param int  $default     The default value if the setting is not configured. Default false.
+	 */
+	return (bool) apply_filters( 'bb_enable_content_counts', (bool) bp_get_option( 'bb-enable-content-counts', $default ) );
+}
+
+/**
+ * Get all activity filters option labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity filters option labels.
+ */
+function bb_get_activity_filter_options_labels() {
+	$filters = array(
+		'all'       => __( 'All updates', 'buddyboss' ),
+		'just-me'   => __( 'Created by me', 'buddyboss' ),
+		'favorites' => __( "I've reacted to", 'buddyboss' ),
+		'groups'    => __( 'From my groups', 'buddyboss' ),
+		'friends'   => __( 'From my connections', 'buddyboss' ),
+		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
+		'following' => __( "I'm following", 'buddyboss' ),
+	);
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
+	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
+}
+
+/**
+ * Get enabled activity filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $args Array of default activity filter options.
+ *
+ * @return array Array of enabled activity filters options.
+ */
+function bb_get_enabled_activity_filter_options( $args = array() ) {
+
+	// Set default options if not provided.
+	$default = array(
+		'all'       => 1,
+		'just-me'   => 1,
+		'favorites' => 1,
+		'groups'    => 1,
+		'friends'   => 1,
+		'mentions'  => 1,
+		'following' => 1,
+	);
+
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_filter_options', $args );
+
+	// Always ensure 'all' is enabled.
+	if ( empty( $options['all'] ) ) {
+		$options['all'] = 1;
+	}
+
+	return (array) apply_filters( 'bb_get_enabled_activity_filter_options', $options );
+}
+
+/**
+ * Get all activity timeline filters option labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity timeline filters option labels.
+ */
+function bb_get_activity_timeline_filter_options_labels() {
+	$filters = array(
+		'just-me'   => __( 'Personal posts', 'buddyboss' ),
+		'favorites' => __( 'Reacted to', 'buddyboss' ),
+		'groups'    => __( 'From groups', 'buddyboss' ),
+		'friends'   => __( 'From connections', 'buddyboss' ),
+		'mentions'  => __( 'Mentioned in', 'buddyboss' ),
+		'following' => __( 'Following', 'buddyboss' ),
+	);
+
+	// Common function to get only allowed ones.
+	$filters = bb_filter_activity_filter_scope_keys( $filters );
+
+	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $filters );
+}
+
+/**
+ * Get enabled activity timeline filters options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $args Array of default activity timeline filter options.
+ *
+ * @return array Array of enabled activity timeline filters options.
+ */
+function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
+
+	// Set default options if not provided.
+	$default = array(
+		'just-me'   => 1,
+		'favorites' => 1,
+		'groups'    => 1,
+		'friends'   => 1,
+		'mentions'  => 1,
+		'following' => 1,
+	);
+
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_timeline_filter_options', $args );
+
+	// Always ensure 'just-me' is enabled.
+	if ( empty( $options['just-me'] ) ) {
+		$options['just-me'] = 1;
+	}
+
+	return (array) apply_filters( 'bb_get_enabled_activity_timeline_filter_options', $options );
+}
+
+/**
+ * Get all activity sorting options labels.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @return array Array of all activity sorting options labels.
+ */
+function bb_get_activity_sorting_options_labels() {
+	$sorting_options = array(
+		'date_recorded' => __( 'New posts', 'buddyboss' ),
+		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
+	);
+	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
+}
+
+/**
+ * Get enabled activity sorting options.
+ *
+ * @since BuddyBoss [BBVERSION}
+ *
+ * @param array $args Array of default activity sorting options.
+ *
+ * @return array Array of enabled activity sorting options.
+ */
+function bb_get_enabled_activity_sorting_options( $args = array() ) {
+
+	// Set default options if not provided.
+	$default = array(
+		'date_recorded' => 1,
+		'date_updated'  => 1,
+	);
+
+	$args    = array_intersect_key( $args, $default );
+	$args    = wp_parse_args( $args, $default );
+	$options = bp_get_option( 'bb_activity_sorting_options', $args );
+	$options = array_map( 'intval', $options );
+
+	// Always ensure 'date_recorded' is enabled.
+	if ( empty( $options['date_recorded'] ) ) {
+		$options['date_recorded'] = 1;
+	}
+
+	return (array) apply_filters( 'bb_get_enabled_activity_sorting_options', $options );
+}
+
+/**
+ * Check whether activity search is enabled.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param bool $default Default: true.
+ *
+ * @return bool True if activity search enabled.
+ */
+function bb_is_activity_search_enabled( $default = true ) {
+
+	/**
+	 * Filters whether activity search is enabled.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 *
+	 * @param bool $value Is activity search enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
 }

@@ -733,7 +733,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'blog_id'       => $bp_video->blog_id,
 							'attachment_id' => $bp_video->attachment_id,
 							'user_id'       => $bp_video->user_id,
-							'title'         => $bp_video->title,
+							'title'         => sanitize_text_field( wp_unslash( $bp_video->title ) ),
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
@@ -755,7 +755,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 				$video_id = bp_video_add(
 					array(
 						'attachment_id' => $video['id'],
-						'title'         => $video['name'],
+						'title'         => sanitize_text_field( wp_unslash( $video['name'] ) ),
 						'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 						'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,
@@ -2342,13 +2342,21 @@ function bp_video_download_url_file() {
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'album' !== $video_type ) {
+
+			// Remove action to remove meta query for forums while download check.
+			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 			$video_privacy    = bb_media_user_can_access( $video_file, 'video', $attachment_id ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = true === (bool) $video_privacy['can_download'];
+
+			// Add pre_get_posts action hook back.
+			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
 		if ( $can_download_btn ) {
 			bp_video_download_file( $attachment_id, $video_type ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
+			exit();
 		}
 	}
 }
@@ -4074,7 +4082,13 @@ function bb_video_delete_older_symlinks() {
 	return $list;
 
 }
-bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks', 'bb_schedule_15days' );
+
+add_action(
+	'bp_init',
+	function () {
+		bp_core_schedule_cron( 'bb_video_deleter_older_symlink', 'bb_video_delete_older_symlinks', 'bb_schedule_15days' );
+	}
+);
 
 /**
  * Function to get video attachments symlinks.

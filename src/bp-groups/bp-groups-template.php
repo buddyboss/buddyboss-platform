@@ -412,7 +412,9 @@ function bp_has_groups( $args = '' ) {
 	if (
 		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
 		! bp_is_user_groups() && ! bp_is_group_subgroups() &&
-		( wp_doing_ajax() && empty( $group_type ) )
+		empty( $group_type ) &&
+		( ! is_admin() || wp_doing_ajax() ) &&
+		! bb_is_elementor_maintenance_mode_enabled()
 	) {
 		// get all excluded group types.
 		$bp_group_type_ids = bp_groups_get_excluded_group_types();
@@ -1242,9 +1244,10 @@ function bp_get_group_link( $group = null ) {
 	}
 
 	$link = sprintf(
-		'<a href="%s" class="bp-group-home-link %s-home-link">%s</a>',
+		'<a href="%s" class="bp-group-home-link %s-home-link" data-bb-hp-group="%s">%s</a>',
 		esc_url( bp_get_group_permalink( $group ) ),
 		esc_attr( bp_get_group_slug( $group ) ),
+		esc_attr( $group->id ),
 		esc_html( bp_get_group_name( $group ) )
 	);
 

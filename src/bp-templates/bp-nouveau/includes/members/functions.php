@@ -25,8 +25,8 @@ function bp_nouveau_get_members_directory_nav_items() {
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_members_directory_permalink(),
 		'text'      => __( 'All Members', 'buddyboss' ),
-		'count'     => bp_core_get_all_member_count(),
 		'position'  => 5,
+		'count'     => false,
 	);
 
 	if ( is_user_logged_in() ) {
@@ -38,8 +38,8 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
 				'text'      => __( 'My Connections', 'buddyboss' ),
-				'count'     => bp_get_total_friend_count( bp_loggedin_user_id() ),
 				'position'  => 15,
+				'count'     => false,
 			);
 		}
 
@@ -54,7 +54,20 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'li_class'  => array(),
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
 					'text'      => __( 'Following', 'buddyboss' ),
-					'count'     => $counts['following'],
+					'position'  => 16,
+					'count'     => false,
+				);
+			}
+
+			// Get followers.
+			if ( ! empty( $counts['followers'] ) ) {
+				$nav_items['followers'] = array(
+					'component' => 'members',
+					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array(),
+					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-followers/',
+					'text'      => __( 'Followers', 'buddyboss' ),
+					'count'     => false,
 					'position'  => 16,
 				);
 			}

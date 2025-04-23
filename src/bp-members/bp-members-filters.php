@@ -737,7 +737,7 @@ function bb_members_allow_html_tags( $bbp_allow_tags = array() ) {
 }
 
 // Load Account Settings Notifications.
-add_action( 'bp_members_includes', 'bb_load_members_account_settings_notifications' );
+add_action( 'bp_loaded', 'bb_load_members_account_settings_notifications' );
 
 /**
  * Register the Account Settings notifications.
@@ -783,6 +783,9 @@ function bb_load_member_type_label_custom_css() {
 		}
 		wp_add_inline_style( 'bp-nouveau', $member_type_custom_css );
 	}
+
+	// load the member card template.
+	bb_profile_card_template();
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_member_type_label_custom_css', 12 );
 
@@ -1010,4 +1013,13 @@ function bb_member_remove_default_png_avatar_on_update_display_name( $old_value,
 function bb_member_remove_default_png_avatar_on_deleted_user( $id ) {
 	// Delete default PNG for users.
 	bb_delete_default_user_png_avatar( array( $id ) );
+}
+
+/**
+ * Add profile hover card template.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_profile_card_template() {
+	bp_get_template_part( 'members/profile-card' );
 }

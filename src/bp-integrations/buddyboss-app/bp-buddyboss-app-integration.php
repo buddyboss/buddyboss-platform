@@ -19,7 +19,7 @@ class BP_App_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'buddyboss-app',
-			__( 'BuddyBoss App', 'buddyboss' ),
+			'BuddyBoss App',
 			'buddyboss-app',
 			array(
 				'required_plugin' => 'buddyboss-app/buddyboss-app.php',

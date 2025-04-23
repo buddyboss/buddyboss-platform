@@ -339,6 +339,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				),
 				'group'                        => array(
 					'restrict_invites_confirm_message' => esc_html__( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
+				),
+				'forum_validation'             => array(
+					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
+					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
 				)
 			);
 
@@ -446,7 +450,14 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							true
 						)
 					) {
-						$value = isset( $_POST[ $setting_name ] ) ? wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						$value = '';
+						if ( isset( $_POST[ $setting_name ] ) ) {
+							if ( 'bp-enable-private-network-public-content' === $setting_name ) {
+								$value = wp_kses_post( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							} else {
+								$value = sanitize_textarea_field( wp_unslash( $_POST[ $setting_name ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+							}
+						}
 					} elseif (
 						in_array(
 							$setting_name,

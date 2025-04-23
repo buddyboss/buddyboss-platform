@@ -1848,6 +1848,10 @@
 				pointer-events: none;
 			}
 		}
+
+		.acomment-content .activity-read-more a {
+			pointer-events: none;
+		}
 	}
 
 	.activity-item.active {
@@ -1864,6 +1868,10 @@
 			a.button {
 				pointer-events: none;
 			}
+		}
+
+		.activity-content .activity-read-more a {
+			pointer-events: none;
 		}
 	}
 }
@@ -2110,6 +2118,12 @@ ul.medium-editor-toolbar-actions {
 	width: 40px;
 	height: 40px;
 	margin-right: 10px;
+
+	a {
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+	}
 
 	img {
 		position: absolute;

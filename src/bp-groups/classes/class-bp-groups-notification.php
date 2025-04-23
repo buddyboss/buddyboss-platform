@@ -47,7 +47,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function __construct() {
 		// Initialize.
-		$this->start();
+		add_action( 'bp_init', array( $this, 'start' ), 5 );
 	}
 
 	/**
@@ -1189,6 +1189,17 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				$send_notification = false;
 				$send_mail         = false;
 			}
+
+			$filter_args       = array(
+				'type'              => $type_key,
+				'component_type'    => buddypress()->groups->id,
+				'group_id'          => $r['item_id'],
+				'data_id'           => $data_id,
+				'recipient_user_id' => $user_id,
+				'author_id'         => $author_id,
+			);
+			$send_mail         = (bool) apply_filters( 'bb_send_subscribed_group_email_notifications', $send_mail, $filter_args );
+			$send_notification = (bool) apply_filters( 'bb_send_subscribed_group_notifications', $send_notification, $filter_args );
 
 			if ( true === $send_mail ) {
 				$unsubscribe_args = array(

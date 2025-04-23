@@ -1774,7 +1774,13 @@ function bp_core_cron_schedules( $schedules = array() ) {
 
 	return $schedules;
 }
-add_filter( 'cron_schedules', 'bp_core_cron_schedules', 99, 1 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+
+add_action(
+	'bp_init',
+	function () {
+		add_filter( 'cron_schedules', 'bp_core_cron_schedules', 99, 1 ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
+	}
+);
 
 /**
  * Filter to update the Avatar URL for the rest api.
@@ -2325,6 +2331,13 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 		if ( ! wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
 			wp_schedule_event( time(), $schedule_key, 'bb_digest_email_notifications_hook' );
 		}
+	}
+
+	$is_moderation_disabled = in_array( 'moderation', $db_component, true ) && ! in_array( 'moderation', $active_components, true );
+	$is_moderation_enabled  = ! in_array( 'moderation', $db_component, true ) && in_array( 'moderation', $active_components, true );
+
+	if ( $is_moderation_disabled || $is_moderation_enabled ) {
+		bb_create_background_member_friends_count();
 	}
 
 }
