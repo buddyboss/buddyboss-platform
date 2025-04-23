@@ -21,7 +21,9 @@ $reply_id = get_the_ID();
 		$avatar = bbp_get_reply_author_link( $args );
 
 		if ( $avatar ) {
-			echo wp_kses_post( $avatar );
+			?>
+			<a href="<?php bbp_reply_url( $reply_id ); ?>"><?php echo wp_kses_post( strip_tags( $avatar, '<img>' ) ); ?></a>
+			<?php
 		} else {
 			?>
 			<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
