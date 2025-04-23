@@ -1,6 +1,13 @@
-body.notifications .bb-rl-content-wrapper {
-	max-width: 760px;
-	margin: 0 auto;
+@media (min-width: 768px) {
+
+	body.notifications {
+		.single-headers,
+		.bb-rl-content-wrapper {
+			max-width: 760px;
+			margin: 0 auto;
+			padding: var(--bb-rl-space-300);
+		}
+	}
 }
 
 .notifications-header {
