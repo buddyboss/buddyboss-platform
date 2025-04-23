@@ -532,8 +532,8 @@ h6 {
 
 @media screen and (max-width: 782px) {
   body.admin-bar .site.bb-readylaunch {
-    margin-top: 66px;
-    min-height: calc(100vh - 66px);
+    margin-top: 65px;
+    min-height: calc(100vh - 65px);
   }
   .site.bb-readylaunch {
     padding: 0 15px;
@@ -6517,6 +6517,12 @@ body.admin-bar .bb-rl-header {
   }
   body.bb-mobile-menu-open .bb-readylaunch-mobile-menu__wrap {
     left: 0;
+  }
+  .bb-readylaunch-mobile-menu__wrap .bb-rl-left-panel {
+    position: static;
+    height: auto !important;
+    width: auto;
+    display: block;
   }
   .bb-rl-mobile-user-name {
     color: var(--bb-rl-text-color);

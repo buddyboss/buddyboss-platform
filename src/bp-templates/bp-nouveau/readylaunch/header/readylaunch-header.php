@@ -96,6 +96,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							'menu_class'     => 'bb-readylaunch-mobile-menu',
 						)
 					);
+					bp_get_template_part( 'sidebar/left-sidebar' );
 				?>
 			</div>
 		</div>

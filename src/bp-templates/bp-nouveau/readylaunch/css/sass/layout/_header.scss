@@ -689,6 +689,13 @@
 		body.bb-mobile-menu-open & {
 			left: 0;
 		}
+
+		.bb-rl-left-panel {
+			position: static;
+			height: auto !important;
+			width: auto;
+			display: block;
+		}
 	}
 
 
