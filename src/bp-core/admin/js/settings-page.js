@@ -3015,100 +3015,107 @@ window.bp = window.bp || {};
 		});
 	}
 
-	// Handle Activity topic field visibility.
-	$( document ).on( 'change', '#bb_enable_activity_topics', function() {
-		var checkbox = $( this );
-		if ( checkbox.is( ':checked' ) ) {
-			$( '.bb_enable_activity_topics_required' ).removeClass( 'bp-hide' );
-		} else {
-			$( '.bb_enable_activity_topics_required' ).addClass( 'bp-hide' );
-		}
-	});
+	activityTopicHandle();
 
-	$( document ).on( 'click', '.bb-add-topic', function() {
-		if ( $( document ).find( '#bp-hello-backdrop' ).length ) {
-		} else {
-			var finder = $( document ).find( '.bp-hello-activity-topic' );
-			$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
-		}
-		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal    = document.getElementById( 'bp-hello-container' );
+	function activityTopicHandle () {
+		var $document = $( document );
 
-		if ( null === backdrop ) {
-			return;
-		}
-		document.body.classList.add( 'bp-disable-scroll' );
-
-		// Show modal and overlay.
-		backdrop.style.display = '';
-		modal.style.display    = '';
-	});
-
-	$( document ).on( 'click', '#activity_topic_submit', function() {
-		var topicName  = $( '#activity_topic_name' ).val();
-		var whoCanPost = $('input[name="activity_topic_who_can_post"]:checked').val();
-		// Retrieve the nonce from the notice element.
-		var nonce = $( '#activity_topic_nonce' ).val();
-		if ( 'undefined' === typeof nonce ) {
-			return;
-		}
-				
-		if ( ! topicName || ! whoCanPost ) {
-			return;
-		}
-
-		var data = {
-			action: 'bb_add_activity_topic',
-			nonce: nonce,
-			name: topicName,
-			global_permission_type: whoCanPost
-		};
-
-		$.ajax({
-			type: 'POST',
-			url: BP_ADMIN.ajax_url,
-			data: data,
-			success: function(response) {
-				if (response.success) {
-					// Close modal
-					var backdrop = document.getElementById('bp-hello-backdrop'),
-						modal = document.getElementById('bp-hello-container');
-					
-					document.body.classList.remove('bp-disable-scroll');
-					backdrop.style.display = 'none';
-					modal.style.display = 'none';
-
-					// Refresh the page to show new topic
-					window.location.reload();
-				} else {
-					alert(response.data.message || 'Error adding topic');
-				}
-			},
-			error: function() {
-				alert('Error adding topic');
+		// Handle Activity topic field visibility.
+		$document.on( 'change', '#bb_enable_activity_topics', function () {
+			var checkbox = $( this );
+			if ( checkbox.is( ':checked' ) ) {
+				$( '.bb_enable_activity_topics_required' ).removeClass( 'bp-hide' );
+			} else {
+				$( '.bb_enable_activity_topics_required' ).addClass( 'bp-hide' );
 			}
-		});
-	} );
-
-	$( document ).on( 'click', '.close-modal, #activity_topic_cancel', function() {
-		var closestPanel = $(this).closest('.bb-hello-activity-topic');
-		
-		if ( closestPanel.length ) {
-			var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal    = document.getElementById( 'bp-hello-container' );	
-			document.body.classList.remove( 'bp-disable-scroll' );
-			backdrop.style.display = 'none';
-			modal.style.display    = 'none';
-		}
-	});
-
-	// Handle Activity filter and sortring drag-drop.
-	handleDragDrop( '.bb-activity-topics-list', handleUpdateActivityTopic );
-	function handleUpdateActivityTopic( event ) {
-		var activityTopic = [];
-		$( event.target ).find( '.bb-activity-topic-item' ).each( function () {
-			activityTopic.push( $( this ).find( 'input' ).val() );
 		} );
+
+		$document.on( 'click', '.bb-add-topic', function () {
+			if ( $document.find( '#bp-hello-backdrop' ).length ) {
+			} else {
+				var finder = $document.find( '.bp-hello-activity-topic' );
+				$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
+			}
+			var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+			    modal    = document.getElementById( 'bp-hello-container' );
+
+			if ( null === backdrop ) {
+				return;
+			}
+			document.body.classList.add( 'bp-disable-scroll' );
+
+			// Show modal and overlay.
+			backdrop.style.display = '';
+			modal.style.display    = '';
+		} );
+
+		$document.on( 'click', '#activity_topic_submit', function () {
+			var topicName  = $document.find( '#activity_topic_name' ).val();
+			var whoCanPost = $document.find( 'input[name="activity_topic_who_can_post"]:checked' ).val();
+			// Retrieve the nonce from the notice element.
+			var nonce      = $document.find( '#activity_topic_nonce' ).val();
+			if ( 'undefined' === typeof nonce ) {
+				return;
+			}
+
+			if ( ! topicName || ! whoCanPost ) {
+				return;
+			}
+
+			var data = {
+				action          : 'bb_add_activity_topic',
+				nonce           : nonce,
+				name            : topicName,
+				permission_type : whoCanPost
+			};
+
+			$.ajax( {
+				type    : 'POST',
+				url     : BP_ADMIN.ajax_url,
+				data    : data,
+				success : function ( response ) {
+					if ( response.success ) {
+						// Close modal
+						var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+						    modal    = document.getElementById( 'bp-hello-container' );
+
+						document.body.classList.remove( 'bp-disable-scroll' );
+						backdrop.style.display = 'none';
+						modal.style.display    = 'none';
+
+						// Refresh the page to show new topic
+						window.location.reload();
+					} else {
+						alert( response.data.message || 'Error adding topic' );
+					}
+				},
+				error   : function () {
+					alert( 'Error adding topic' );
+				}
+			} );
+		} );
+
+		$document.on( 'click', '.close-modal, #activity_topic_cancel', function () {
+			var closestPanel = $( this ).closest( '.bb-hello-activity-topic' );
+
+			if ( closestPanel.length ) {
+				var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+				    modal    = document.getElementById( 'bp-hello-container' );
+				document.body.classList.remove( 'bp-disable-scroll' );
+				backdrop.style.display = 'none';
+				modal.style.display    = 'none';
+			}
+		} );
+
+		// Handle Activity filter and sortring drag-drop.
+		handleDragDrop( '.bb-activity-topics-list', handleUpdateActivityTopic );
+
+		function handleUpdateActivityTopic ( event ) {
+			var activityTopic = [];
+			$( event.target ).find( '.bb-activity-topic-item' ).each( function () {
+				activityTopic.push( $( this ).find( 'input' ).val() );
+			} );
+		}
 	}
 	
 }());
