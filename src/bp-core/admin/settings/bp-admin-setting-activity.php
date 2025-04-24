@@ -482,37 +482,52 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				<div class="bb-activity-topics-list">
 					<div class="bb-activity-topic-item">
 						<div class="bb-topic-left">
-							<i class="bb-icon-drag-move"></i>
-							<i class="bb-icon-grid-small"></i>
+							<span class="bb-topic-drag">
+								<i class="bb-icon-grip-v"></i>
+							</span>
 							<span class="bb-topic-title">UX Design</span>
 						</div>
 						<div class="bb-topic-right">
 							<span class="bb-topic-access">Anyone</span>
-							<span class="bb-topic-actions">•••</span>
+							<span class="bb-topic-actions">
+								<a href="#" class="bb-topic-actions_button">
+									<i class="bb-icon-ellipsis-h"></i>
+								</a>
+							</span>
 						</div>
 					</div>
 
 					<div class="bb-activity-topic-item">
 						<div class="bb-topic-left">
-							<i class="bb-icon-drag-move"></i>
-							<i class="bb-icon-grid-small"></i>
+							<span class="bb-topic-drag">
+								<i class="bb-icon-grip-v"></i>
+							</span>
 							<span class="bb-topic-title">UX Design</span>
 						</div>
 						<div class="bb-topic-right">
 							<span class="bb-topic-access">Admin</span>
-							<span class="bb-topic-actions">•••</span>
+							<span class="bb-topic-actions">
+								<a href="#" class="bb-topic-actions_button">
+									<i class="bb-icon-ellipsis-h"></i>
+								</a>
+							</span>
 						</div>
 					</div>
 
 					<div class="bb-activity-topic-item">
 						<div class="bb-topic-left">
-							<i class="bb-icon-drag-move"></i>
-							<i class="bb-icon-grid-small"></i>
+							<span class="bb-topic-drag">
+								<i class="bb-icon-grip-v"></i>
+							</span>
 							<span class="bb-topic-title">UX Design</span>
 						</div>
 						<div class="bb-topic-right">
 							<span class="bb-topic-access">Student, Teacher</span>
-							<span class="bb-topic-actions">•••</span>
+							<span class="bb-topic-actions">
+								<a href="#" class="bb-topic-actions_button">
+									<i class="bb-icon-ellipsis-h"></i>
+								</a>
+							</span>
 						</div>
 					</div>
 				</div>

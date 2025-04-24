@@ -5405,3 +5405,107 @@ h1.bb-advance-heading {
   cursor: move;
   margin-left: 8px;
 }
+
+.bb-activity-topics-wrapper {
+  margin-top: 15px;
+}
+
+.bb-activity-topics-wrapper .activity-topic-label {
+  margin: 0 0 15px;
+  font-size: 14px;
+  color: #1d2327;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content {
+  background: #f0f0f1;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list {
+  margin-bottom: 18px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border: 1px solid #e1e3e5;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item:hover {
+  border-color: #2271b1;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-left .bb-topic-drag {
+  font-size: 16px;
+  color: #9b9f9b;
+  font-weight: 300;
+  cursor: move;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-left .bb-topic-drag i:before {
+  margin: 0;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-left .bb-topic-title {
+  color: #101517;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-right .bb-topic-access {
+  color: #a7aaad;
+  font-size: 13px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item .bb-topic-right .bb-topic-actions_button {
+  display: inline-block;
+  color: #1e2132;
+  font-size: 16px;
+  font-weight: 300;
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0.4;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-add-topic {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-add-topic .bb-icon-plus {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-add-topic .bb-icon-plus:before {
+  margin: 0;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .description {
+  color: #646970;
+  font-size: 12px;
+  margin: 10px 0 0;
+}

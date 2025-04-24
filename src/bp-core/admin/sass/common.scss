@@ -5447,167 +5447,106 @@ h1.bb-advance-heading {
 
 // Activity Topics Settings Styles.
 .bb-activity-topics-wrapper {
-    margin-top: 15px;
+	margin-top: 15px;
 
-    .activity-topic-label {
-        margin: 0 0 15px;
-        font-size: 14px;
-        color: #1d2327;
-    }
+	.activity-topic-label {
+		margin: 0 0 15px;
+		font-size: 14px;
+		color: #1d2327;
+	}
 
-    .bb-activity-topics-content {
-        background: #f6f7f7;
-        border: 1px solid #dcdcde;
-        border-radius: 4px;
-        padding: 20px;
-        margin-bottom: 10px;
+	.bb-activity-topics-content {
+		background: #f0f0f1;
+		border-radius: 6px;
+		padding: 16px;
+		margin-bottom: 10px;
 
-        .bb-activity-topics-list {
-            margin-bottom: 20px;
+		.bb-activity-topics-list {
+			margin-bottom: 18px;
 
-            .bb-activity-topic-item {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 12px;
-                border: 1px solid #dcdcde;
-                border-radius: 4px;
-                margin-bottom: 10px;
-                background: #fff;
+			.bb-activity-topic-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 8px 10px;
+				border: 1px solid #e1e3e5;
+				border-radius: 6px;
+				margin-bottom: 8px;
+				background: #fff;
 
-                &:hover {
-                    border-color: #2271b1;
-                }
+				&:hover {
+					border-color: #2271b1;
+				}
 
-                .bb-topic-left {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
+				.bb-topic-left {
+					display: flex;
+					align-items: center;
+					gap: 8px;
 
-                    .bb-icon-drag-move {
-                        color: #50575e;
-                        font-size: 16px;
-                        cursor: move;
-                    }
+					.bb-topic-drag {
+						font-size: 16px;
+						color: #9b9f9b;
+						font-weight: 300;
+						cursor: move;
 
-                    .bb-icon-grid-small {
-                        color: #50575e;
-                        font-size: 16px;
-                        border: 1px solid #dcdcde;
-                        padding: 2px;
-                        border-radius: 2px;
-                    }
+						i:before {
+							margin: 0;
+						}
+					}
 
-                    .bb-topic-title {
-                        color: #1d2327;
-                        font-size: 14px;
-                        margin-left: 5px;
-                    }
-                }
+					.bb-topic-title {
+						color: #101517;
+						font-size: 15px;
+						font-weight: 500;
+					}
+				}
 
-                .bb-topic-right {
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
+				.bb-topic-right {
+					display: flex;
+					align-items: center;
+					gap: 15px;
 
-                    .bb-topic-access {
-                        color: #646970;
-                        font-size: 13px;
-                    }
+					.bb-topic-access {
+						color: #a7aaad;
+						font-size: 13px;
+					}
 
-                    .bb-topic-actions {
-                        color: #646970;
-                        font-size: 16px;
-                        cursor: pointer;
-                        letter-spacing: 1px;
-                    }
-                }
-            }
-        }
+					.bb-topic-actions_button {
+						display: inline-block;
+						color: #1e2132;
+						font-size: 16px;
+						font-weight: 300;
+						padding: 4px;
+						border-radius: 4px;
+						opacity: 0.4;
+					}
+				}
+			}
+		}
 
-        .bb-add-topic {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 12px;
+		.bb-add-topic {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			padding: 4px 12px;
+			font-size: 14px;
+			border-radius: 6px;
 
-            .bb-icon-plus {
-                font-size: 20px;
-                line-height: 1;
-            }
-        }
+			.bb-icon-plus {
+				font-size: 16px;
+				line-height: 1;
 
-        .description {
-            color: #646970;
-            font-size: 12px;
-            margin: 10px 0 0;
-        }
-    }
+				&:before {
+					margin: 0;
+				}
+			}
+		}
+
+		.description {
+			color: #646970;
+			font-size: 12px;
+			margin: 10px 0 0;
+		}
+	}
 }
 
-// Dark mode support
-body.dark-mode {
-    .bb-activity-topics-wrapper {
-        .activity-topic-label {
-            color: #fff;
-        }
-
-        .bb-activity-topics-content {
-            background: #2c3338;
-        }
-
-        .bb-activity-topics-list {
-            background: #1d2327;
-            border-color: #2c3338;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-        }
-
-        .bb-activity-topic-item {
-            border-bottom-color: #2c3338;
-
-            &.selected {
-                background: #2271b1;
-
-                .bb-topic-left {
-                    i, .bb-topic-title {
-                        color: #fff;
-                    }
-                }
-
-                .bb-topic-right {
-                    .bb-topic-access, .bb-topic-actions {
-                        color: #fff;
-                    }
-                }
-            }
-
-            .bb-topic-left {
-                i {
-                    color: #8c8f94;
-                }
-
-                .bb-topic-title {
-                    color: #fff;
-                }
-            }
-
-            .bb-topic-right {
-                .bb-topic-access {
-                    color: #8c8f94;
-                }
-
-                .bb-topic-actions {
-                    color: #fff;
-
-                    &:hover {
-                        background: #2c3338;
-                    }
-                }
-            }
-        }
-
-        .description {
-            color: #8c8f94;
-        }
-    }
-}
