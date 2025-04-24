@@ -97,6 +97,7 @@ class BB_Activity_Topics_Manager {
 	private function setup_hooks() {
 		add_action( 'wp_ajax_bb_add_activity_topic', array( $this, 'bb_add_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_edit_activity_topic', array( $this, 'bb_edit_activity_topic_ajax' ) );
+		add_action( 'wp_ajax_bb_delete_activity_topic', array( $this, 'bb_delete_activity_topic_ajax' ) );
 	}
 
 	/**
@@ -530,6 +531,71 @@ class BB_Activity_Topics_Manager {
 		 * @param array $args     The arguments used to update the topic.
 		 */
 		do_action( 'bb_activity_topic_updated', $topic_id, $args );
+
+		return true;
+	}
+
+	/**
+	 * Delete an existing topic via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_delete_activity_topic_ajax() {
+		check_ajax_referer( 'bb_delete_activity_topic', 'nonce' );
+
+		$topic_id = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+
+		$deleted = $this->bb_delete_activity_topic( $topic_id );
+
+		if ( is_wp_error( $deleted ) ) {
+			wp_send_json_error( array( 'error' => $deleted->get_error_message() ) );
+		}
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Delete a topic and its associated relationships.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $topic_id The ID of the topic to delete.
+	 *
+	 * @return bool|WP_Error True on success, WP_Error on failure.
+	 */
+	public function bb_delete_activity_topic( $topic_id ) {
+		$topic_id = absint( $topic_id );
+		if ( ! $this->bb_get_activity_topic( 'id', $topic_id ) ) {
+			return new WP_Error( 'bb_activity_invalid_topic_id', __( 'Invalid topic ID.', 'buddyboss' ) );
+		}
+
+		/**
+		 * Fires before a topic is deleted.
+		 *
+		 * @param int $topic_id The ID of the topic being deleted.
+		 */
+		do_action( 'bb_activity_topic_relationship_before_delete', $topic_id );
+
+		// 1. Delete activity relationships.
+		$deleted_rels = $this->wpdb->delete( $this->activity_rel_table, array( 'topic_id' => $topic_id ), array( '%d' ) );
+		if ( false === $deleted_rels ) {
+			return new WP_Error( 'bb_activity_db_delete_error', __( 'Could not delete topic relationships.', 'buddyboss' ), $this->wpdb->last_error );
+		}
+
+		do_action( 'bb_activity_topic_relationship_after_deleted', $topic_id );
+
+		// 3. Delete the topic itself.
+		$deleted_topic = $this->wpdb->delete( $this->topics_table, array( 'id' => $topic_id ), array( '%d' ) );
+		if ( ! $deleted_topic ) { // delete returns number of rows deleted, 0 is possible but false is error.
+			return new WP_Error( 'bb_activity_db_delete_error', __( 'Could not delete topic.', 'buddyboss' ), $this->wpdb->last_error );
+		}
+
+		/**
+		 * Fires after a topic has been deleted.
+		 *
+		 * @param int $topic_id The ID of the topic that was deleted.
+		 */
+		do_action( 'bb_activity_topic_deleted', $topic_id );
 
 		return true;
 	}

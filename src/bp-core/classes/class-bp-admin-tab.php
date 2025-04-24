@@ -358,6 +358,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				}
 			}
 
+			if ( bb_is_enabled_activity_topics() ) {
+				$localize_arg['delete_topic_confirm'] = esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' );
+			}
+
 			wp_localize_script(
 				'bp-admin',
 				'BP_ADMIN',

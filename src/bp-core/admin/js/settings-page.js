@@ -3021,7 +3021,8 @@ window.bp = window.bp || {};
 		var $document = $( document );
 
 		// Handle Activity topic field visibility.
-		$document.on( 'change', '#bb_enable_activity_topics', function () {
+		$document.on( 'change', '#bb_enable_activity_topics', function ( e ) {
+			e.preventDefault();
 			var checkbox = $( this );
 			if ( checkbox.is( ':checked' ) ) {
 				$( '.bb_enable_activity_topics_required' ).removeClass( 'bp-hide' );
@@ -3030,7 +3031,8 @@ window.bp = window.bp || {};
 			}
 		} );
 
-		$document.on( 'click', '.bb-add-topic', function () {
+		$document.on( 'click', '.bb-add-topic', function ( e ) {
+			e.preventDefault();
 			if ( $document.find( '.bb-hello-backdrop-activity-topic' ).length ) {
 			} else {
 				var finder = $document.find( '.bp-hello-activity-topic' );
@@ -3049,7 +3051,8 @@ window.bp = window.bp || {};
 			modal.show();
 		} );
 
-		$document.on( 'click', '#activity_topic_submit', function () {
+		$document.on( 'click', '#activity_topic_submit', function ( e ) {
+			e.preventDefault();
 			var topicName  = $document.find( '#activity_topic_name' ).val();
 			var whoCanPost = $document.find( 'input[name="activity_topic_who_can_post"]:checked' ).val();
 			// Retrieve the nonce from the notice element.
@@ -3098,7 +3101,8 @@ window.bp = window.bp || {};
 			} );
 		} );
 
-		$document.on( 'click', '.close-modal, #activity_topic_cancel', function () {
+		$document.on( 'click', '.close-modal, #activity_topic_cancel', function ( e ) {
+			e.preventDefault();
 			var closestPanel = $( this ).closest( '.bb-hello-activity-topic' );
 
 			if ( closestPanel.length ) {
@@ -3120,7 +3124,8 @@ window.bp = window.bp || {};
 			} );
 		}
 
-		$document.on( 'click', '.edit-activity-topic', function () {
+		$document.on( 'click', '.edit-activity-topic', function ( e ) {
+			e.preventDefault();
 			var $this    = $( this ),
 			    $topicId = $this.data( 'topic-id' ),
 			    nonce    = $this.data( 'nonce' ),
@@ -3166,8 +3171,32 @@ window.bp = window.bp || {};
 			} );
 		} );
 
-		$document.on( 'click', '.delete-activity-topic', function () {
-			console.log( 'delete-activity-topic' );
+		$document.on( 'click', '.delete-activity-topic', function ( e ) {
+			e.preventDefault();
+			var $this    = $( this ),
+			    $topicId = $this.data( 'topic-id' ),
+			    nonce    = $this.data( 'nonce' );
+
+			if ( confirm( BP_ADMIN.delete_topic_confirm ) ) {
+				var data = {
+					action   : 'bb_delete_activity_topic',
+					topic_id : $topicId,
+					nonce    : nonce
+				};
+
+				$.ajax( {
+					type    : 'POST',
+					url     : BP_ADMIN.ajax_url,
+					data    : data,
+					success : function ( response ) {
+						if ( response.success ) {
+							$this.closest( '.bb-activity-topic-item' ).remove();
+						} else {
+							alert( response.data.message || 'Error deleting topic' );
+						}
+					},
+				} );
+			}
 		} );
 	}
 	
