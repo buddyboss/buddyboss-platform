@@ -175,7 +175,6 @@ class BB_Activity_Topics_Manager {
 
 		$name            = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$user_id         = isset( $_POST['user_id'] ) ? absint( wp_unslash( $_POST['user_id'] ) ) : get_current_user_id();
 		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
 		$topic_id        = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
 
@@ -184,7 +183,6 @@ class BB_Activity_Topics_Manager {
 				array(
 					'name'            => $name,
 					'slug'            => $slug,
-					'user_id'         => $user_id,
 					'permission_type' => $permission_type,
 				)
 			);
@@ -194,7 +192,6 @@ class BB_Activity_Topics_Manager {
 				array(
 					'name'            => $name,
 					'slug'            => $slug,
-					'user_id'         => $user_id,
 					'permission_type' => $permission_type,
 				)
 			);
