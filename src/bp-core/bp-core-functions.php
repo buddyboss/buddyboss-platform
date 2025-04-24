@@ -4711,9 +4711,10 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
 					}
 				}
 			}
+
+			// Close the avatar directory.
+			closedir( $av_dir );
 		}
-		// Close the avatar directory.
-		closedir( $av_dir );
 	}
 
 	return $group_avatar;
@@ -5360,7 +5361,11 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
  */
 function bp_core_is_empty_directory( $dir ) {
 	$handle = opendir( $dir );
-	while ( ( $entry  = readdir( $handle ) ) !== $entry ) {
+	if ( false === $handle ) {
+		return true;
+	}
+
+	while ( ( $entry = readdir( $handle ) ) !== $entry ) {
 		if ( '.' !== $entry && '..' !== $entry ) {
 			closedir( $handle );
 
@@ -6404,10 +6409,10 @@ function bb_get_default_custom_avatar( $object = 'user', $size = 'thumb' ) {
 					}
 				}
 			}
-		}
 
-		// Close the avatar directory.
-		closedir( $av_dir );
+			// Close the avatar directory.
+			closedir( $av_dir );
+		}
 
 		// If we found a locally uploaded avatar.
 		if ( isset( $avatar_url ) && ! empty( $avatar_url ) ) {
