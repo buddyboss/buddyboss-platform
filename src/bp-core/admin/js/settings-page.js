@@ -3054,6 +3054,7 @@ window.bp = window.bp || {};
 			var whoCanPost = $document.find( 'input[name="activity_topic_who_can_post"]:checked' ).val();
 			// Retrieve the nonce from the notice element.
 			var nonce      = $document.find( '#activity_topic_nonce' ).val();
+			var topicId    = $document.find( '#activity_topic_id' ).val();
 			if ( 'undefined' === typeof nonce ) {
 				return;
 			}
@@ -3068,6 +3069,9 @@ window.bp = window.bp || {};
 				name            : topicName,
 				permission_type : whoCanPost
 			};
+			if ( topicId ) {
+				data.topic_id = topicId;
+			}
 
 			$.ajax( {
 				type    : 'POST',
@@ -3156,6 +3160,7 @@ window.bp = window.bp || {};
 								$( this ).prop( 'checked', true );
 							}
 						} );
+						modal.find( '#activity_topic_id' ).val( topicData.id );
 					}
 				},
 			} );

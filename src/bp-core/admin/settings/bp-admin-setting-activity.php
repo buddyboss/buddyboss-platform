@@ -571,6 +571,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<button id="activity_topic_cancel" class="button">
 						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
 					</button>
+					<input type="hidden" id="activity_topic_id" name="activity_topic_id" value="">
 					<input type="hidden" id="activity_topic_nonce" name="activity_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_add_activity_topic' ) ); ?>">
 					<button type="button" id="activity_topic_submit" class="button button-primary">
 						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>

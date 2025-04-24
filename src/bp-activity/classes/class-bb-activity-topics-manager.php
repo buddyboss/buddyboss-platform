@@ -176,15 +176,28 @@ class BB_Activity_Topics_Manager {
 		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
 		$user_id         = isset( $_POST['user_id'] ) ? absint( wp_unslash( $_POST['user_id'] ) ) : get_current_user_id();
 		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
+		$topic_id        = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
 
-		$topic_id = $this->bb_add_activity_topic(
-			array(
-				'name'            => $name,
-				'slug'            => $slug,
-				'user_id'         => $user_id,
-				'permission_type' => $permission_type,
-			)
-		);
+		if ( empty( $topic_id ) ) {
+			$topic_id = $this->bb_add_activity_topic(
+				array(
+					'name'            => $name,
+					'slug'            => $slug,
+					'user_id'         => $user_id,
+					'permission_type' => $permission_type,
+				)
+			);
+		} else {
+			$topic_id = $this->bb_update_activity_topic(
+				$topic_id,
+				array(
+					'name'            => $name,
+					'slug'            => $slug,
+					'user_id'         => $user_id,
+					'permission_type' => $permission_type,
+				)
+			);
+		}
 
 		if ( is_wp_error( $topic_id ) ) {
 			wp_send_json_error( array( 'error' => $topic_id->get_error_message() ) );
@@ -422,5 +435,102 @@ class BB_Activity_Topics_Manager {
 		}
 
 		wp_send_json_success( array( 'topic' => $topic ) );
+	}
+
+	/**
+	 * Update an existing topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $topic_id The ID of the topic to update.
+	 * @param array $args     Array of arguments to update (same keys as add_topic, omitting creator_id and
+	 *                        topic_scope).
+	 *
+	 * @return bool|WP_Error True on success, WP_Error on failure.
+	 */
+	public function bb_update_activity_topic( $topic_id, $args ) {
+		$topic_id = absint( $topic_id );
+		$topic    = $this->bb_get_activity_topic( 'id', $topic_id );
+
+		if ( ! $topic ) {
+			return new WP_Error( 'bb_activity_invalid_topic_id', __( 'Invalid topic ID.', 'buddyboss' ) );
+		}
+
+		// Prepare data for update.
+		$data   = array();
+		$format = array();
+
+		if ( isset( $args['name'] ) ) {
+			if ( empty( $args['name'] ) ) {
+				return new WP_Error( 'bb_activity_topic_name_required', __( 'Topic name cannot be empty.', 'buddyboss' ) );
+			}
+			$data['name'] = sanitize_text_field( $args['name'] );
+			$format[]     = '%s';
+		}
+
+		if ( isset( $args['slug'] ) ) {
+			$slug = sanitize_title( $args['slug'] );
+			if ( empty( $slug ) ) {
+				if ( isset( $data['name'] ) ) {
+					$slug = sanitize_title( $data['name'] );
+				} else {
+					return new WP_Error( 'bb_activity_invalid_slug', __( 'Invalid topic slug.', 'buddyboss' ) );
+				}
+			}
+			// Check if new slug conflicts with another topic.
+			$existing = $this->bb_get_activity_topic( 'slug', $slug );
+			if ( $existing && $existing->id !== $topic_id ) {
+				return new WP_Error( 'bb_activity_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+			}
+			$data['slug'] = $slug;
+			$format[]     = '%s';
+		}
+
+		if ( isset( $args['scope'] ) ) {
+			$data['scope'] = sanitize_key( $args['scope'] );
+			$format[]      = '%s';
+		}
+
+		if ( isset( $args['permission_type'] ) ) {
+			$data['permission_type'] = sanitize_key( $args['permission_type'] );
+			$format[]                = '%s';
+		}
+
+		if ( isset( $args['permission_data'] ) ) { // Use isset to allow setting to null.
+			$data['permission_data'] = is_null( $args['permission_data'] ) ? null : wp_json_encode( $args['permission_data'] );
+			$format[]                = '%s';
+		}
+
+		if ( isset( $args['menu_order'] ) ) {
+			$data['menu_order'] = absint( $args['menu_order'] );
+			$format[]           = '%d';
+		}
+
+		if ( empty( $data ) ) {
+			return new WP_Error( 'bb_activity_no_data', __( 'No data provided to update.', 'buddyboss' ) );
+		}
+
+		// Use the updated table name property.
+		$updated = $this->wpdb->update(
+			$this->topics_table,
+			$data,
+			array( 'id' => $topic_id ),
+			$format,
+			array( '%d' )
+		);
+
+		if ( false === $updated ) {
+			return new WP_Error( 'bb_activity_db_update_error', __( 'Could not update topic in the database.', 'buddyboss' ), $this->wpdb->last_error );
+		}
+
+		/**
+		 * Fires after a topic has been updated.
+		 *
+		 * @param int   $topic_id The ID of the topic updated.
+		 * @param array $args     The arguments used to update the topic.
+		 */
+		do_action( 'bb_activity_topic_updated', $topic_id, $args );
+
+		return true;
 	}
 }
