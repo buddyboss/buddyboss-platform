@@ -3023,5 +3023,41 @@ window.bp = window.bp || {};
 		} else {
 			$( '.bb_enable_activity_topics_required' ).addClass( 'bp-hide' );
 		}
-	} );
+	});
+
+	$( document ).on( 'click', '.bb-add-topic', function() {
+		if ( $( document ).find( '#bp-hello-backdrop' ).length ) {
+		} else {
+			var finder = $( document ).find( '.bp-hello-activity-topic' );
+			$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
+		}
+		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+			modal    = document.getElementById( 'bp-hello-container' );
+
+		if ( null === backdrop ) {
+			return;
+		}
+		document.body.classList.add( 'bp-disable-scroll' );
+
+		// Show modal and overlay.
+		backdrop.style.display = '';
+		modal.style.display    = '';
+	});
+
+	$( document ).on( 'click', '#activity_topic_submit', function() {
+		
+	});
+
+	$( document ).on( 'click', '.close-modal, #activity_topic_cancel', function() {
+		var closestPanel = $(this).closest('.bb-hello-activity-topic');
+		
+		if ( closestPanel.length ) {
+			var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+			modal    = document.getElementById( 'bp-hello-container' );	
+			document.body.classList.remove( 'bp-disable-scroll' );
+			backdrop.style.display = 'none';
+			modal.style.display    = 'none';
+		}
+	});
+	
 }());

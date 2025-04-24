@@ -525,6 +525,52 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 			<p class="description"><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
 		</div>
+		<div id="bp-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
+		<div id="bp-hello-container" class="bp-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bp-hello-activity-topic" style="display: none;">
+			<div class="bp-hello-header">
+				<div class="bp-hello-title">
+					<h2 id="bp-hello-title" tabindex="-1">
+						<?php esc_html_e( 'Create topic', 'buddyboss' ); ?>
+					</h2>
+				</div>
+				<div class="bb-hello-close">
+					<button type="button" class="close-modal button">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="bp-hello-content">
+				<div class="form-fields">
+					<div class="form-field">
+						<div class="field-label">
+							<label for="activity_topic_name"><?php esc_html_e( 'Topic name', 'buddyboss' ); ?></label>
+						</div>
+						<div class="field-input">
+							<input type="text" id="activity_topic_name" name="activity_topic_name" placeholder="<?php esc_html_e( 'Enter topic name', 'buddyboss' ); ?>" />
+						</div>
+					</div>
+					<div class="form-field">
+						<div class="field-label">
+							<label for="activity_topic_who_can_post"><?php esc_html_e( 'Who can post?', 'buddyboss' ); ?></label>
+						</div>
+						<div class="field-input">
+							<input type="radio" id="activity_topic_who_can_post_anyone" name="activity_topic_who_can_post" value="anyone" />
+							<label for="activity_topic_who_can_post_anyone"><?php esc_html_e( 'Anyone', 'buddyboss' ); ?></label>
+							<input type="radio" id="activity_topic_who_can_post_admin_and_moderator_only" name="activity_topic_who_can_post" value="admin_and_moderator_only" />
+							<label for="activity_topic_who_can_post_admin_and_moderator_only"><?php esc_html_e( 'Admin & Moderator Only', 'buddyboss' ); ?></label>
+						</div>
+					</div>
+				</div>
+				<div class="bb-popup-buttons">
+					<button id="activity_topic_cancel" class="button">
+						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
+					</button>
+					<button type="button" id="activity_topic_submit" class="button button-primary" disabled="disabled">
+						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 }
