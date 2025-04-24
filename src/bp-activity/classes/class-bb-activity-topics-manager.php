@@ -235,6 +235,11 @@ class BB_Activity_Topics_Manager {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		// Check if we've reached the maximum number of topics (20).
+		if ( $this->bb_activity_topics_limit_reached() ) {
+			return new WP_Error( 'bb_activity_topic_limit_reached', __( 'Maximum number of topics (20) has been reached.', 'buddyboss' ) );
+		}
+
 		// Validation.
 		if ( empty( $args['name'] ) ) {
 			return new WP_Error( 'bb_activity_topic_name_required', __( 'Topic name is required.', 'buddyboss' ) );
@@ -595,6 +600,18 @@ class BB_Activity_Topics_Manager {
 		do_action( 'bb_activity_topic_deleted', $topic_id );
 
 		return true;
+	}
+
+	/**
+	 * Check if the maximum number of topics has been reached.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True if the maximum number of topics has been reached, false otherwise.
+	 */
+	public function bb_activity_topics_limit_reached() {
+		$topics_count = $this->wpdb->get_var( "SELECT COUNT(*) FROM {$this->topics_table}" );
+		return $topics_count >= 20;
 	}
 
 	/**

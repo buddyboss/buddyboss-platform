@@ -360,6 +360,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			if ( function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics() ) {
 				$localize_arg['delete_topic_confirm'] = esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' );
+				$localize_arg['topics_limit']         = bb_activity_topics_manager_instance()->bb_activity_topics_limit_reached();
 			}
 
 			wp_localize_script(

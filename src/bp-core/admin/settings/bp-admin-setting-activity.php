@@ -476,7 +476,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_activity_topics() {
-		$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics();
+		$topics               = bb_activity_topics_manager_instance()->bb_get_activity_topics();
+		$topics_limit_reached = bb_activity_topics_manager_instance()->bb_activity_topics_limit_reached();
 		?>
 		<div class="bb-activity-topics-wrapper">
 			<div class="bb-activity-topics-content">
@@ -527,7 +528,10 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					}
 					?>
 				</div>
-				<button type="button" class="button button-primary bb-add-topic">
+				<?php
+				$button_class = $topics_limit_reached ? 'bp-hide' : '';
+				?>
+				<button type="button" class="button button-primary bb-add-topic <?php echo esc_attr( $button_class ); ?>">
 					<i class="bb-icon-plus"></i>
 					<?php esc_html_e( 'Add new topic', 'buddyboss' ); ?>
 				</button>
