@@ -572,10 +572,14 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 							<label for="activity_topic_who_can_post"><?php esc_html_e( 'Who can post?', 'buddyboss' ); ?></label>
 						</div>
 						<div class="field-input">
-							<input type="radio" id="activity_topic_who_can_post_anyone" name="activity_topic_who_can_post" value="anyone" />
-							<label for="activity_topic_who_can_post_anyone"><?php esc_html_e( 'Anyone', 'buddyboss' ); ?></label>
-							<input type="radio" id="activity_topic_who_can_post_admin_and_moderator_only" name="activity_topic_who_can_post" value="admin_and_moderator_only" />
-							<label for="activity_topic_who_can_post_admin_and_moderator_only"><?php esc_html_e( 'Admin & Moderator Only', 'buddyboss' ); ?></label>
+							<div class="bb-topic-who-can-post-option">
+								<input type="radio" id="activity_topic_who_can_post_anyone" name="activity_topic_who_can_post" value="anyone" />
+								<label for="activity_topic_who_can_post_anyone"><?php esc_html_e( 'Anyone', 'buddyboss' ); ?></label>
+							</div>
+							<div class="bb-topic-who-can-post-option">
+								<input type="radio" id="activity_topic_who_can_post_admin_and_moderator_only" name="activity_topic_who_can_post" value="admin_and_moderator_only" />
+								<label for="activity_topic_who_can_post_admin_and_moderator_only"><?php esc_html_e( 'Admin & Moderator Only', 'buddyboss' ); ?></label>
+							</div>
 						</div>
 					</div>
 				</div>
