@@ -26,16 +26,27 @@ export const fetchSettings = async() => {
  * @returns {Promise} Promise that resolves to updated settings object.
  */
 export const saveSettings = async( settings ) => {
+	if (!settings) {
+		console.error('No settings provided to save');
+		return null;
+	}
+
 	try {
-		return await apiFetch(
-			{
-				path: '/buddyboss/v1/readylaunch/settings',
-				method: 'POST',
-				data: settings,
-			}
-		);
+		// Ensure we're sending a clean object (without any internal state properties)
+		const cleanSettings = { ...settings };
+		
+		// Remove any unnecessary temp properties (if any exist)
+		if (cleanSettings.hasOwnProperty('_tempIds')) {
+			delete cleanSettings._tempIds;
+		}
+		
+		return await apiFetch({
+			path: '/buddyboss/v1/readylaunch/settings',
+			method: 'POST',
+			data: cleanSettings,
+		});
 	} catch (error) {
-		console.error( 'Error saving ReadyLaunch settings:', error );
+		console.error('Error saving ReadyLaunch settings:', error);
 		return null;
 	}
 };

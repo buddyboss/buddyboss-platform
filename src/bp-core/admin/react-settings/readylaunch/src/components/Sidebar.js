@@ -5,7 +5,7 @@ export const Sidebar = ( { activeTab, setActiveTab } ) => {
 		{
 			id: 'activation',
 			label: __( 'Activation Settings', 'buddyboss' ),
-			icon: 'dashicons-toggle-on',
+			icon: 'dashicons-button',
 		},
 		{
 			id: 'styles',

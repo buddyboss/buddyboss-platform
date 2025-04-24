@@ -50,6 +50,9 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 
 	$asset = include $asset_file;
 
+	// Enqueue WordPress media scripts and styles
+	wp_enqueue_media();
+
 	wp_enqueue_script(
 		'bb-readylaunch-admin-script',
 		plugins_url( 'build/index.js', __FILE__ ),
