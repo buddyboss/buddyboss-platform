@@ -261,6 +261,16 @@ hr {
     border: none !important; /* Remove border as it's handled by toggle-item */
     cursor: grab;
     position: relative; /* Add positioning context for the grip indicator */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.side-menu-item-draggable:hover {
+    transform: translateY(-1px);
+}
+
+.side-menu-item-draggable.is-dragging {
+    transform: scale(1.02);
+    z-index: 999;
 }
 
 /* Style for field toggles */
@@ -281,12 +291,14 @@ hr {
 
 /* Add extra padding for side menu items with drag handle */
 .side-menu-item-draggable .toggle-item {
-    padding-left: 24px; /* Add space for the grip indicator */
+    padding-left: 28px; /* Add space for the grip indicator */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.toggle-item:hover {
+.side-menu-item-draggable .toggle-item:hover {
     background-color: #f9f9f9;
-    border-color: #d0d0d0;
+    border-color: #c0c0c0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .field-toggles .components-toggle-control .components-base-control__field {
@@ -684,20 +696,29 @@ hr {
 .link-item.is-dragging {
     background-color: #eef4ff !important; /* Light blue background */
     border-color: #c8d7f7 !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* Side menu drag handle with grip indicator */
 .side-menu-item-draggable .toggle-item::before {
-    content: "⁞";
+    content: "⋮⋮";
     color: #aaa;
     position: absolute;
     left: 8px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1;
     cursor: grab;
+    letter-spacing: -2px;
+}
+
+.side-menu-item-draggable .toggle-item:hover::before {
+    color: #666;
+}
+
+.side-menu-item-draggable.is-dragging .toggle-item::before {
+    color: #3E34FF;
 }
 
 .toggle-item {
@@ -705,7 +726,17 @@ hr {
 }
 
 .side-menu-item-draggable .toggle-item {
-    padding-left: 24px; /* Add space for the grip indicator */
+    padding-left: 28px; /* Add space for the grip indicator */
+}
+
+/* Visual feedback when dragging */
+.field-toggles {
+    transition: background-color 0.2s ease;
+}
+
+.field-toggles.is-dragging-over {
+    background-color: #f5f8ff;
+    border-radius: 4px;
 }
 
 /* Image Selector Styles */
@@ -758,4 +789,98 @@ hr {
     margin-top: 5px;
     color: #757575;
     font-size: 13px;
+}
+
+/* Color Picker Button Styles */
+.color-picker-button-component {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.color-picker-button-wrapper {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.color-picker-button {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 12px !important;
+    background-color: #f9f9f9 !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+}
+
+.color-picker-button:hover {
+    background-color: #f0f0f0 !important;
+    border-color: #999 !important;
+}
+
+.color-indicator-wrapper {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.color-indicator-wrapper .component-color-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.components-color-indicator {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    margin: 0 !important;
+    display: block !important;
+    border: 1px solid rgba(0,0,0,0.2) !important;
+}
+
+.color-picker-value {
+    font-size: 13px;
+    color: #444;
+}
+
+.color-picker-label {
+    font-size: 13px;
+    color: #757575;
+    margin-top: 4px;
+}
+
+.color-picker-popover {
+    margin-top: 8px !important;
+}
+
+.color-picker-popover-content {
+    padding: 16px;
+    width: 260px;
+}
+
+.color-picker-popover-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 12px;
+}
+
+.color-picker-popover .components-base-control {
+    margin-bottom: 0 !important;
+}
+
+.color-picker-popover .components-color-picker {
+    width: 100% !important;
+}
+
+.color-picker-popover .components-color-picker__inputs-toggle {
+    margin-left: 4px !important;
 } 

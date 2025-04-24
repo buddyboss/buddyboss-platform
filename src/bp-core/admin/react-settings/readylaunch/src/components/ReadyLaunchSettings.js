@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl } from '@wordpress/components';
+import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Sidebar } from './Sidebar';
 import { fetchSettings, saveSettings, debounce } from '../utils/api';
@@ -70,6 +70,8 @@ export const ReadyLaunchSettings = () => {
 			messages: false,
 			notifications: false
 		},
+		// Add sideMenuOrder to save the order of menu items
+		sideMenuOrder: ['activityFeed', 'members', 'groups', 'courses', 'messages', 'notifications'],
 		// customLinks remains an array, suitable for sorting
 		customLinks: [
 			{
@@ -118,8 +120,8 @@ export const ReadyLaunchSettings = () => {
 				acc[item.id] = item.enabled;
 				return acc;
 			}, {}),
-			// Potentially save side menu order here if backend supports it
-			// sideMenuOrder: sideMenuItems.map(item => item.id) 
+			// Save the side menu order
+			sideMenuOrder: sideMenuItems.map(item => item.id)
 		};
 		// Remove the array version if not needed in saved data
 		delete settingsToSave.sideMenuItems; 
@@ -139,6 +141,7 @@ export const ReadyLaunchSettings = () => {
 				status: 'error',
 				message: __('Error saving settings.', 'buddyboss'),
 			});
+			setHasUserMadeChanges(false);
 		}
 		// Auto-dismiss notification
 		setTimeout(() => setNotification(null), 3000);
@@ -167,19 +170,52 @@ export const ReadyLaunchSettings = () => {
 			// Merge fetched settings with defaults to avoid missing keys
 			setSettings(prevSettings => ({ ...prevSettings, ...data }));
 
-			// Initialize sideMenuItems based on fetched data and potentially saved order
-			// For now, just update the 'enabled' status based on fetched sideMenu object
-			// A more robust solution would involve fetching/saving the order itself.
+			// Initialize sideMenuItems based on fetched data and saved order
 			setSideMenuItems(prevItems => {
-				// If data.sideMenu exists, update enabled status
-				if (data.sideMenu) {
-					return prevItems.map(item => ({
+				// Create a new array to hold the ordered and updated items
+				let orderedItems = [...prevItems];
+				
+				// If we have a saved order, use it to sort the items
+				if (data.sideMenuOrder && Array.isArray(data.sideMenuOrder)) {
+					// Create a map of items by ID for quick lookup
+					const itemsMap = orderedItems.reduce((map, item) => {
+						map[item.id] = item;
+						return map;
+					}, {});
+					
+					// Create a new array based on the saved order
+					orderedItems = data.sideMenuOrder
+						.filter(id => itemsMap[id]) // Ensure the ID exists in our items
+						.map(id => ({
+							...itemsMap[id],
+							// Update enabled status if available in data.sideMenu
+							enabled: data.sideMenu && data.sideMenu[id] !== undefined 
+								? data.sideMenu[id] 
+								: itemsMap[id].enabled
+						}));
+					
+					// Add any items that weren't in the saved order at the end
+					const orderedIds = new Set(data.sideMenuOrder);
+					const remainingItems = prevItems
+						.filter(item => !orderedIds.has(item.id))
+						.map(item => ({
+							...item,
+							enabled: data.sideMenu && data.sideMenu[item.id] !== undefined 
+								? data.sideMenu[item.id] 
+								: item.enabled
+						}));
+					
+					orderedItems = [...orderedItems, ...remainingItems];
+				} 
+				// If no saved order but we have sideMenu data, just update enabled status
+				else if (data.sideMenu) {
+					orderedItems = prevItems.map(item => ({
 						...item,
 						enabled: data.sideMenu[item.id] !== undefined ? data.sideMenu[item.id] : item.enabled
 					}));
 				}
-				// If a saved order exists (e.g., data.sideMenuOrder), sort prevItems accordingly here
-				return prevItems; 
+				
+				return orderedItems;
 			});
 		}
 		setIsLoading( false );
@@ -372,6 +408,62 @@ export const ReadyLaunchSettings = () => {
 		);
 	};
 
+	// Component for color picker with popover
+	const ColorPickerButton = ({ label, color, onChange }) => {
+		const [isPickerOpen, setIsPickerOpen] = useState(false);
+		const togglePicker = () => setIsPickerOpen(!isPickerOpen);
+		const closePicker = () => setIsPickerOpen(false);
+		
+		// Ensure we have a valid color value
+		const colorValue = color || '#3E34FF'; // Default to blue if no color is set
+
+		return (
+			<div className="color-picker-button-component">
+				<div className="color-picker-button-wrapper">
+					<Button
+						className="color-picker-button"
+						onClick={togglePicker}
+						aria-expanded={isPickerOpen}
+						aria-label={__('Select color', 'buddyboss')}
+					>
+						<div className="color-indicator-wrapper">
+							<ColorIndicator colorValue={colorValue} />
+						</div>
+						<span className="color-picker-value">{colorValue}</span>
+					</Button>
+					{isPickerOpen && (
+						<Popover
+							className="color-picker-popover"
+							onClose={closePicker}
+							position="bottom center"
+						>
+							<div className="color-picker-popover-content">
+								<ColorPicker
+									color={colorValue}
+									onChange={(newColor) => {
+										onChange(newColor);
+										// Don't close the popover so the user can continue adjusting
+									}}
+									enableAlpha={false}
+									copyFormat="hex"
+								/>
+								<div className="color-picker-popover-footer">
+									<Button
+										variant="primary"
+										onClick={closePicker}
+									>
+										{__('Apply', 'buddyboss')}
+									</Button>
+								</div>
+							</div>
+						</Popover>
+					)}
+				</div>
+				{label && <span className="color-picker-label">{label}</span>}
+			</div>
+		);
+	};
+
 	// Drag and Drop Handler
 	const onDragEnd = (result) => {
 		const { source, destination, draggableId, type } = result;
@@ -396,7 +488,16 @@ export const ReadyLaunchSettings = () => {
 			const items = Array.from(sideMenuItems);
 			const [reorderedItem] = items.splice(source.index, 1);
 			items.splice(destination.index, 0, reorderedItem);
+			
+			// Update the sideMenuItems state with the new order
 			setSideMenuItems(items);
+			
+			// Also update the sideMenuOrder in settings to keep everything in sync
+			const newOrder = items.map(item => item.id);
+			setSettings(prevSettings => ({
+				...prevSettings,
+				sideMenuOrder: newOrder
+			}));
 		}
 
 		// Reorder Custom Links
@@ -545,20 +646,18 @@ export const ReadyLaunchSettings = () => {
 								<div className="field-input color-palettes">
 									<div>
 										<label>{__('Primary Color (Light Mode)', 'buddyboss')}</label>
-										<ColorPicker
+										<ColorPickerButton
+											label={__('Primary Color (Light Mode)', 'buddyboss')}
 											color={settings.primaryColorLight}
-											onChange={(color) => handleSettingChange('primaryColorLight')(color)}
-											enableAlpha={false}
-											copyformat='hex'
+											onChange={handleSettingChange('primaryColorLight')}
 										/>
 									</div>
 									<div>
 										<label>{__('Primary Color (Dark Mode)', 'buddyboss')}</label>
-										<ColorPicker
+										<ColorPickerButton
+											label={__('Primary Color (Dark Mode)', 'buddyboss')}
 											color={settings.primaryColorDark}
-											onChange={(color) => handleSettingChange('primaryColorDark')(color)}
-											enableAlpha={false}
-											copyformat='hex'
+											onChange={handleSettingChange('primaryColorDark')}
 										/>
 									</div>
 								</div>
@@ -828,9 +927,9 @@ export const ReadyLaunchSettings = () => {
 											<p>{__('Description text goes here. Drag to reorder.', 'buddyboss')}</p> {/* Added note */}
 										</div>
 										<Droppable droppableId="sideMenuItems">
-											{(provided) => (
+											{(provided, snapshot) => (
 												<div 
-													className="field-toggles" 
+													className={`field-toggles ${snapshot.isDraggingOver ? 'is-dragging-over' : ''}`} 
 													{...provided.droppableProps} 
 													ref={provided.innerRef}
 												>
@@ -841,14 +940,16 @@ export const ReadyLaunchSettings = () => {
 																	ref={providedDraggable.innerRef}
 																	{...providedDraggable.draggableProps}
 																	{...providedDraggable.dragHandleProps}
-																	className={`side-menu-item-draggable toggle-item ${snapshot.isDragging ? 'is-dragging' : ''}`}
+																	className={`side-menu-item-draggable ${snapshot.isDragging ? 'is-dragging' : ''}`}
 																>
-																	<ToggleControl
-																		checked={item.enabled}
-																		// Use the updated handler, passing the item ID
-																		onChange={(value) => handleNestedSettingChange('sideMenu', item.id)(value)} 
-																		label={<><span className={`menu-icon ${item.icon}`}></span> {item.label}</>}
-																	/>
+																	<div className={`toggle-item ${snapshot.isDragging ? 'is-dragging' : ''}`}>
+																		<ToggleControl
+																			checked={item.enabled}
+																			// Use the updated handler, passing the item ID
+																			onChange={(value) => handleNestedSettingChange('sideMenu', item.id)(value)} 
+																			label={<><span className={`menu-icon ${item.icon}`}></span> {item.label}</>}
+																		/>
+																	</div>
 																</div>
 															)}
 														</Draggable>
