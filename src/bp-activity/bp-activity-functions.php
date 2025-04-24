@@ -7656,3 +7656,45 @@ function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updat
 		}
 	}
 }
+
+/**
+ * Check if the activity topics are enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topics are enabled.
+ */
+function bb_is_enabled_activity_topics( $retval = false ) {
+
+	/**
+	 * Filters the activity topics status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $enable_activity_topics Whether the activity topics are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_enabled_activity_topics', bp_get_option( 'bb_enable_activity_topics', $retval ) );
+}
+
+/**
+ * Check if the activity topic is required.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topic is required.
+ */
+function bb_is_activity_topic_required( $retval = false ) {
+
+	/**
+	 * Filters the activity topic required status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $enable_activity_topic_required Whether the activity topic is required.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_topic_required', bp_get_option( 'bb_activity_topic_required', $retval ) );
+}

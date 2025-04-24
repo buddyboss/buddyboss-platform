@@ -215,6 +215,31 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			}
 		}
 
+		// Activity Topics.
+		$this->add_section( 'bb_activity_topics', __( 'Activity Topics', 'buddyboss' ) );
+
+		$this->add_field( 'bb_enable_activity_topics', __( 'Enable Topics', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_topics' ), 'intval' );
+
+		$this->add_field(
+			'bb_activity_topic_required',
+			__( 'Topic Required', 'buddyboss' ),
+			array( $this, 'bb_admin_setting_callback_activity_topic_required' ),
+			'intval',
+			array(
+				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
+			)
+		);
+
+		$this->add_field(
+			'bb_activity_topics',
+			__( 'Activity Topic', 'buddyboss' ),
+			array( $this, 'bb_admin_setting_callback_activity_topics' ),
+			'intval',
+			array(
+				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
+			)
+		);
+
 		/**
 		 * Fires to register Activity tab settings fields and section.
 		 *
@@ -408,6 +433,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Allow activity poll.
 	 *
+	 * @param array $args Arguments.
+	 *
 	 * @since BuddyBoss 2.6.90
 	 */
 	public function bb_admin_setting_callback_enable_activity_post_polls( $args ) {
@@ -416,6 +443,88 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		?>
 		<input id="bb_enable_activity_post_polls" name="<?php echo empty( $notice ) ? '_bb_enable_activity_post_polls' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
 		<label for="bb_enable_activity_post_polls"><?php esc_html_e( 'Allow group owners and moderators to post polls', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_activity_topics() {
+		?>
+		<input id="bb_enable_activity_topics" name="bb_enable_activity_topics" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_topics() ); ?> />
+		<label for="bb_enable_activity_topics"><?php esc_html_e( 'Enable topics in activity feed', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable activity topic required.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_activity_topic_required() {
+		?>
+		<input id="bb_activity_topic_required" name="bb_activity_topic_required" type="checkbox" value="1" <?php checked( bb_is_activity_topic_required() ); ?> />
+		<label for="bb_activity_topic_required"><?php esc_html_e( 'Require users to select a topic before posting in activity feed.', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_activity_topics() {
+		?>
+		<div class="bb-activity-topics-wrapper">
+			<div class="bb-activity-topics-content">
+				<div class="bb-activity-topics-list">
+					<div class="bb-activity-topic-item">
+						<div class="bb-topic-left">
+							<i class="bb-icon-drag-move"></i>
+							<i class="bb-icon-grid-small"></i>
+							<span class="bb-topic-title">UX Design</span>
+						</div>
+						<div class="bb-topic-right">
+							<span class="bb-topic-access">Anyone</span>
+							<span class="bb-topic-actions">•••</span>
+						</div>
+					</div>
+
+					<div class="bb-activity-topic-item">
+						<div class="bb-topic-left">
+							<i class="bb-icon-drag-move"></i>
+							<i class="bb-icon-grid-small"></i>
+							<span class="bb-topic-title">UX Design</span>
+						</div>
+						<div class="bb-topic-right">
+							<span class="bb-topic-access">Admin</span>
+							<span class="bb-topic-actions">•••</span>
+						</div>
+					</div>
+
+					<div class="bb-activity-topic-item">
+						<div class="bb-topic-left">
+							<i class="bb-icon-drag-move"></i>
+							<i class="bb-icon-grid-small"></i>
+							<span class="bb-topic-title">UX Design</span>
+						</div>
+						<div class="bb-topic-right">
+							<span class="bb-topic-access">Student, Teacher</span>
+							<span class="bb-topic-actions">•••</span>
+						</div>
+					</div>
+				</div>
+
+				<button type="button" class="button button-primary bb-add-topic">
+					<i class="bb-icon-plus"></i>
+					<?php esc_html_e( 'Add new topic', 'buddyboss' ); ?>
+				</button>
+			</div>
+
+			<p class="description"><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
+		</div>
 		<?php
 	}
 }

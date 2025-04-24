@@ -3015,4 +3015,13 @@ window.bp = window.bp || {};
 		});
 	}
 
+	// Handle Activity topic field visibility.
+	$( document ).on( 'change', '#bb_enable_activity_topics', function() {
+		var checkbox = $( this );
+		if ( checkbox.is( ':checked' ) ) {
+			$( '.bb_enable_activity_topics_required' ).removeClass( 'bp-hide' );
+		} else {
+			$( '.bb_enable_activity_topics_required' ).addClass( 'bp-hide' );
+		}
+	} );
 }());
