@@ -3045,8 +3045,50 @@ window.bp = window.bp || {};
 	});
 
 	$( document ).on( 'click', '#activity_topic_submit', function() {
-		
-	});
+		var topicName  = $( '#activity_topic_name' ).val();
+		var whoCanPost = $('input[name="activity_topic_who_can_post"]:checked').val();
+		// Retrieve the nonce from the notice element.
+		var nonce = $( '#activity_topic_nonce' ).val();
+		if ( 'undefined' === typeof nonce ) {
+			return;
+		}
+				
+		if ( ! topicName || ! whoCanPost ) {
+			return;
+		}
+
+		var data = {
+			action: 'bb_add_activity_topic',
+			nonce: nonce,
+			name: topicName,
+			global_permission_type: whoCanPost
+		};
+
+		$.ajax({
+			type: 'POST',
+			url: BP_ADMIN.ajax_url,
+			data: data,
+			success: function(response) {
+				if (response.success) {
+					// Close modal
+					var backdrop = document.getElementById('bp-hello-backdrop'),
+						modal = document.getElementById('bp-hello-container');
+					
+					document.body.classList.remove('bp-disable-scroll');
+					backdrop.style.display = 'none';
+					modal.style.display = 'none';
+
+					// Refresh the page to show new topic
+					window.location.reload();
+				} else {
+					alert(response.data.message || 'Error adding topic');
+				}
+			},
+			error: function() {
+				alert('Error adding topic');
+			}
+		});
+	} );
 
 	$( document ).on( 'click', '.close-modal, #activity_topic_cancel', function() {
 		var closestPanel = $(this).closest('.bb-hello-activity-topic');
