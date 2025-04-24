@@ -3082,6 +3082,8 @@ window.bp = window.bp || {};
 						$( 'body' ).removeClass( 'bp-disable-scroll' );
 						backdrop.hide();
 						modal.hide();
+
+						window.location.reload();
 					} else {
 						alert( response.data.message || 'Error adding topic' );
 					}
