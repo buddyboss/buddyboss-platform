@@ -495,6 +495,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								</a>
 							</span>
 						</div>
+						<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[ux_design]" type="hidden" value="bb_activity_topic_options[ux_design]">
 					</div>
 
 					<div class="bb-activity-topic-item">
@@ -502,7 +503,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 							<span class="bb-topic-drag">
 								<i class="bb-icon-grip-v"></i>
 							</span>
-							<span class="bb-topic-title">UX Design</span>
+							<span class="bb-topic-title">UI Design</span>
 						</div>
 						<div class="bb-topic-right">
 							<span class="bb-topic-access">Admin</span>
@@ -512,6 +513,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								</a>
 							</span>
 						</div>
+						<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[ui_design]" type="hidden" value="bb_activity_topic_options[ui_design]">
 					</div>
 
 					<div class="bb-activity-topic-item">
@@ -519,7 +521,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 							<span class="bb-topic-drag">
 								<i class="bb-icon-grip-v"></i>
 							</span>
-							<span class="bb-topic-title">UX Design</span>
+							<span class="bb-topic-title">Web Development</span>
 						</div>
 						<div class="bb-topic-right">
 							<span class="bb-topic-access">Student, Teacher</span>
@@ -529,6 +531,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								</a>
 							</span>
 						</div>
+						<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[web_development]" type="hidden" value="bb_activity_topic_options[web_development]">
 					</div>
 				</div>
 

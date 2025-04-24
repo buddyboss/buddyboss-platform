@@ -3059,5 +3059,14 @@ window.bp = window.bp || {};
 			modal.style.display    = 'none';
 		}
 	});
+
+	// Handle Activity filter and sortring drag-drop.
+	handleDragDrop( '.bb-activity-topics-list', handleUpdateActivityTopic );
+	function handleUpdateActivityTopic( event ) {
+		var activityTopic = [];
+		$( event.target ).find( '.bb-activity-topic-item' ).each( function () {
+			activityTopic.push( $( this ).find( 'input' ).val() );
+		} );
+	}
 	
 }());
