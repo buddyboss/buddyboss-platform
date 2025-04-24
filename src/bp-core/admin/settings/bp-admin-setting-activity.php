@@ -152,6 +152,31 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'class' => 'hidden',
 		) );
 
+		// Activity Topics.
+		$this->add_section( 'bb_activity_topics', __( 'Activity Topics', 'buddyboss' ) );
+
+		$this->add_field( 'bb_enable_activity_topics', __( 'Enable Topics', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_topics' ), 'intval' );
+
+		$this->add_field(
+			'bb_activity_topic_required',
+			__( 'Topic Required', 'buddyboss' ),
+			array( $this, 'bb_admin_setting_callback_activity_topic_required' ),
+			'intval',
+			array(
+				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
+			)
+		);
+
+		$this->add_field(
+			'bb_activity_topics',
+			__( 'Activity Topic', 'buddyboss' ),
+			array( $this, 'bb_admin_setting_callback_activity_topics' ),
+			'intval',
+			array(
+				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
+			)
+		);
+
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
 		// create field for default Platform activity feed.
@@ -214,31 +239,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				$count ++;
 			}
 		}
-
-		// Activity Topics.
-		$this->add_section( 'bb_activity_topics', __( 'Activity Topics', 'buddyboss' ) );
-
-		$this->add_field( 'bb_enable_activity_topics', __( 'Enable Topics', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_topics' ), 'intval' );
-
-		$this->add_field(
-			'bb_activity_topic_required',
-			__( 'Topic Required', 'buddyboss' ),
-			array( $this, 'bb_admin_setting_callback_activity_topic_required' ),
-			'intval',
-			array(
-				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
-			)
-		);
-
-		$this->add_field(
-			'bb_activity_topics',
-			__( 'Activity Topic', 'buddyboss' ),
-			array( $this, 'bb_admin_setting_callback_activity_topics' ),
-			'intval',
-			array(
-				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
-			)
-		);
 
 		/**
 		 * Fires to register Activity tab settings fields and section.
