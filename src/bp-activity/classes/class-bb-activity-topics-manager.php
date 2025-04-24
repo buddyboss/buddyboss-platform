@@ -171,17 +171,17 @@ class BB_Activity_Topics_Manager {
 	public function bb_add_activity_topic_ajax() {
 		check_ajax_referer( 'bb_add_activity_topic', 'nonce' );
 
-		$name                   = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$slug                   = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$creator_id             = isset( $_POST['creator_id'] ) ? absint( wp_unslash( $_POST['creator_id'] ) ) : get_current_user_id();
-		$global_permission_type = isset( $_POST['global_permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['global_permission_type'] ) ) : 'anyone';
+		$name            = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
+		$user_id         = isset( $_POST['user_id'] ) ? absint( wp_unslash( $_POST['user_id'] ) ) : get_current_user_id();
+		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
 
 		$topic_id = $this->bb_add_activity_topic(
 			array(
-				'name'                   => $name,
-				'slug'                   => $slug,
-				'creator_id'             => $creator_id,
-				'global_permission_type' => $global_permission_type,
+				'name'            => $name,
+				'slug'            => $slug,
+				'user_id'         => $user_id,
+				'permission_type' => $permission_type,
 			)
 		);
 
@@ -212,19 +212,20 @@ class BB_Activity_Topics_Manager {
 	 */
 	public function bb_add_activity_topic( $args ) {
 		$defaults = array(
-			'name'                   => '',
-			'slug'                   => '',
-			'creator_id'             => get_current_user_id(),
-			'global_permission_type' => 'anyone',
-			'global_permission_data' => null,
-			'topic_scope'            => 'global',
+			'name'            => '',
+			'slug'            => '',
+			'user_id'         => bp_loggedin_user_id(),
+			'permission_type' => 'anyone',
+			'permission_data' => null,
+			'scope'           => 'global',
+			'menu_order'      => 0,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
 		// Validation.
 		if ( empty( $args['name'] ) ) {
-			return new WP_Error( 'missing_name', __( 'Topic name is required.', 'buddyboss' ) );
+			return new WP_Error( 'bb_activity_topic_name_required', __( 'Topic name is required.', 'buddyboss' ) );
 		}
 
 		if ( empty( $args['slug'] ) ) {
@@ -235,25 +236,33 @@ class BB_Activity_Topics_Manager {
 
 		// Check if slug already exists.
 		if ( $this->bb_get_activity_topic( 'slug', $args['slug'] ) ) {
-			return new WP_Error( 'duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+			return new WP_Error( 'bb_activity_topic_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+		}
+
+		if ( 0 === $args['menu_order'] ) {
+			$highest_order      = $this->wpdb->get_var( "SELECT MAX(menu_order) FROM {$this->topics_table}" );
+			$args['menu_order'] = (int) $highest_order + 1;
 		}
 
 		// Prepare data for insertion.
 		$data   = array(
-			'name'                   => sanitize_text_field( $args['name'] ),
-			'slug'                   => $args['slug'],
-			'creator_id'             => absint( $args['creator_id'] ),
-			'global_permission_type' => sanitize_key( $args['global_permission_type'] ),
-			'global_permission_data' => is_null( $args['global_permission_data'] ) ? null : wp_json_encode( $args['global_permission_data'] ),
-			'topic_scope'            => sanitize_key( $args['topic_scope'] ),
+			'name'            => sanitize_text_field( $args['name'] ),
+			'slug'            => $args['slug'],
+			'user_id'         => absint( $args['user_id'] ),
+			'permission_type' => sanitize_key( $args['permission_type'] ),
+			'permission_data' => is_null( $args['permission_data'] ) ? null : wp_json_encode( $args['permission_data'] ),
+			'scope'           => sanitize_key( $args['scope'] ),
+			'menu_order'      => absint( $args['menu_order'] ),
+			'date_created'    => current_time( 'mysql' ),
+			'date_updated'    => current_time( 'mysql' ),
 		);
-		$format = array( '%s', '%s', '%d', '%s', '%s', '%s' );
+		$format = array( '%s', '%s', '%d', '%s', '%s', '%s', '%d', '%s', '%s' );
 
 		// Use the updated table name property.
 		$inserted = $this->wpdb->insert( $this->topics_table, $data, $format );
 
 		if ( ! $inserted ) {
-			return new WP_Error( 'db_insert_error', __( 'Could not insert topic into the database.', 'buddyboss' ), $this->wpdb->last_error );
+			return new WP_Error( 'bb_activity_topic_db_insert_error', __( 'Could not insert topic into the database.', 'buddyboss' ), $this->wpdb->last_error );
 		}
 
 		$topic_id = $this->wpdb->insert_id;
@@ -300,8 +309,8 @@ class BB_Activity_Topics_Manager {
 		$topic = $this->wpdb->get_row( $sql );
 
 		// Decode JSON permission data.
-		if ( $topic && ! empty( $topic->global_permission_data ) ) {
-			$topic->global_permission_data = json_decode( $topic->global_permission_data, true );
+		if ( $topic && ! empty( $topic->permission_data ) ) {
+			$topic->permission_data = json_decode( $topic->permission_data, true );
 		}
 
 		return $topic;
