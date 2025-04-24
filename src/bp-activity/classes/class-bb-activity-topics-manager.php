@@ -103,51 +103,63 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	public static function create_tables() {
-		global $wpdb;
+	public function create_tables() {
+		$sql             = array();
+		$wpdb            = $GLOBALS['wpdb'];
+		$charset_collate = $wpdb->get_charset_collate();
 
-		$bp_prefix              = bp_core_get_table_prefix();
-		$topics_table           = $bp_prefix . 'bb_activity_topics';
-		$has_topics_table       = $wpdb->query( $wpdb->prepare( 'show tables like %s', $topics_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$activity_rel_table     = $bp_prefix . 'bb_activity_topic_relationship';
-		$has_activity_rel_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $activity_rel_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$charset_collate        = $wpdb->get_charset_collate();
+		$topics_table       = $this->topics_table;
+		$activity_rel_table = $this->activity_rel_table;
 
+		$has_topics_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $topics_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $has_topics_table ) ) {
 
-			$sql_topics = "CREATE TABLE {$topics_table} (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			name VARCHAR(255) NOT NULL,
-			slug VARCHAR(255) NOT NULL,
-			creator_id BIGINT UNSIGNED NOT NULL,
-			global_permission_type VARCHAR(20) NOT NULL DEFAULT 'anyone',
-			global_permission_data TEXT NULL,
-			topic_scope VARCHAR(10) NOT NULL DEFAULT 'global',
-			date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			date_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			INDEX idx_creator_id (creator_id),
-			INDEX idx_perm_type (global_permission_type),
-			INDEX idx_scope (topic_scope),
-			UNIQUE KEY idx_slug (slug)
-		) $charset_collate;";
-
-			dbDelta( $sql_topics );
+			$sql[] = "CREATE TABLE {$topics_table} (
+				id BIGINT UNSIGNED AUTO_INCREMENT,
+				name VARCHAR(255) NOT NULL,
+				slug VARCHAR(255) NOT NULL,
+				user_id BIGINT UNSIGNED NOT NULL,
+				scope VARCHAR(10) NOT NULL DEFAULT 'global',
+				permission_type VARCHAR(20) NOT NULL DEFAULT 'anyone',
+				permission_data TEXT NULL,
+				menu_order INT NOT NULL DEFAULT 0,
+				date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				date_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY (id),
+				KEY name (name),
+				KEY slug (slug),
+				KEY user_id (user_id),
+				KEY scope (scope),
+				KEY permission_type (permission_type),
+				KEY date_created (date_created),
+				KEY date_updated (date_updated)
+			) $charset_collate;";
 		}
 
+		$has_activity_rel_table = $wpdb->query( $wpdb->prepare( 'show tables like %s', $activity_rel_table ) ); //phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $has_activity_rel_table ) ) {
 
-			$sql_activity_rel = "CREATE TABLE {$activity_rel_table} (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			activity_id BIGINT UNSIGNED NOT NULL,
-			topic_id BIGINT UNSIGNED NOT NULL,
-			date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			date_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			INDEX idx_activity_id (activity_id),
-			INDEX idx_topic_id (topic_id),
-			UNIQUE KEY idx_activity_topic (activity_id, topic_id)
-		) $charset_collate;";
+			$sql[] = "CREATE TABLE {$activity_rel_table} (
+				id BIGINT UNSIGNED AUTO_INCREMENT,
+				activity_id BIGINT UNSIGNED NOT NULL,
+				topic_id BIGINT UNSIGNED NOT NULL,
+				date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				date_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				PRIMARY KEY (id),
+				KEY activity_id (activity_id),
+				KEY topic_id (topic_id),
+				KEY date_created (date_created),
+				KEY date_updated (date_updated)
+			) $charset_collate;";
+		}
 
-			dbDelta( $sql_activity_rel );
+		if ( ! empty( $sql ) ) {
+			// Ensure that dbDelta() is defined.
+			if ( ! function_exists( 'dbDelta' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
+
+			dbDelta( $sql );
 		}
 	}
 
