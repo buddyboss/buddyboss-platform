@@ -7698,3 +7698,20 @@ function bb_is_activity_topic_required( $retval = false ) {
 	 */
 	return (bool) apply_filters( 'bb_is_activity_topic_required', bp_get_option( 'bb_activity_topic_required', $retval ) );
 }
+
+/**
+ * Get the singleton instance of BB_Activity_Topics_Manager.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
+ */
+function bb_activity_topics_manager_instance() {
+	static $instance = null;
+
+	if ( null === $instance && class_exists( 'BB_Activity_Topics_Manager' ) ) {
+		$instance = BB_Activity_Topics_Manager::instance();
+	}
+
+	return $instance;
+}

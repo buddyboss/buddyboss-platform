@@ -199,6 +199,7 @@ add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
+add_action( 'bp_init', 'bb_load_activity_topics_manager' );
 
 /** Functions *****************************************************************/
 
@@ -3956,4 +3957,19 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 			}
 		}
 	}
+}
+
+/**
+ * Initialize the Activity Topics Manager if activity component is active.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_load_activity_topics_manager() {
+	// Only load if activity topics are enabled.
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
+	bb_activity_topics_manager_instance();
 }
