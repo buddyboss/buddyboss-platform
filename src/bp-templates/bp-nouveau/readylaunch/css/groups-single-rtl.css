@@ -2221,7 +2221,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
 }
 
 .bb-rl-create-group .group-create-links {
-  padding-bottom: var(--bb-rl-space-200);
+  padding-bottom: var(--bb-rl-space-100);
   border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 }
 
@@ -2233,6 +2233,7 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   margin: 0;
   padding: 0;
   display: flex;
+  flex-flow: wrap;
   justify-content: stretch;
 }
 
@@ -2240,9 +2241,19 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   text-align: center;
   color: var(--bb-rl-icon-tertiary-color);
   font-size: var(--bb-rl-font-size-sm);
-  flex: 1 0 auto;
+  flex: 1;
   position: relative;
   z-index: 2;
+  padding: 0 var(--bb-rl-space-50);
+  white-space: nowrap;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-create-group .group-create-links .button-tabs li > span {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .bb-rl-create-group .group-create-links .button-tabs li a {
@@ -2285,6 +2296,12 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   top: 10px;
   right: 0;
   z-index: -1;
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-create-group .group-create-links .button-tabs li::before {
+    display: none;
+  }
 }
 
 .bb-rl-create-group .group-create-links .button-tabs li:first-child:before {

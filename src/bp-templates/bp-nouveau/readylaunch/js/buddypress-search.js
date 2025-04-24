@@ -126,7 +126,6 @@ jQuery( document ).ready(
 									$( ul ).data( 'current_cat', item.type );
 									return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-category' ).append( '<div>' + item.value + '</div>' ).appendTo( ul );
 								} else {
-									//return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( '<a class="x">' + item.value + '</a>' ).appendTo( ul );
 									return $( '<li>' ).attr( 'class', 'bbls-' + item.type + '-type bbls-sub-item' ).append( item.value ).appendTo( ul );
 								}
 							};
