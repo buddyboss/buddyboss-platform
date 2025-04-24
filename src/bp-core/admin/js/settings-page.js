@@ -3020,8 +3020,8 @@ window.bp = window.bp || {};
 	function activityTopicHandle () {
 		var $document                 = $( document );
 		var $activityTopicList        = $( '.bb-activity-topics-list' );
-		var $activityTopicModal       = $( '#bp-hello-container' );
-		var $activityTopicBackdrop    = $( '#bp-hello-backdrop' );
+		var $activityTopicModal       = $( '#bb-hello-container' );
+		var $activityTopicBackdrop    = $( '#bb-hello-backdrop' );
 		var $activityTopicName        = $( '#activity_topic_name' );
 		var $activityTopicWhoCanPost  = $( 'input[name="activity_topic_who_can_post"]' );
 		var $activityTopicId          = $( '#activity_topic_id' );
@@ -3074,6 +3074,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			var helloErrorElm = $activityTopicModal.find( '.bb-hello-content .bb-hello-error' );
+			if ( helloErrorElm.length > 0 ) {
+				helloErrorElm.remove();
+			}
+
 			var data = {
 				action          : 'bb_add_activity_topic',
 				name            : topicName,
@@ -3084,9 +3089,9 @@ window.bp = window.bp || {};
 
 			$.post( ajaxurl, data, function ( response ) {
 				if ( response.success ) {
-					location.reload();
+					window.location.reload();
 				} else {
-					alert( response.data.error );
+					$( '.bb-hello-content' ).prepend( '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>' + response.data.error + '</div>' );
 				}
 			} );
 		} );
@@ -3102,6 +3107,11 @@ window.bp = window.bp || {};
 			$activityTopicModal.show();
 			$activityTopicBackdrop.show();
 
+			var helloErrorElm = $activityTopicModal.find( '.bb-hello-content .bb-hello-error' );
+			if ( helloErrorElm.length > 0 ) {
+				helloErrorElm.remove();
+			}
+
 			var data = {
 				action   : 'bb_edit_activity_topic',
 				topic_id : topicId,
@@ -3116,7 +3126,7 @@ window.bp = window.bp || {};
 					$( 'input[name="activity_topic_who_can_post"][value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					$activityTopicId.val( topic.id );
 				} else {
-					alert( response.data.error );
+					$( '.bb-hello-content' ).prepend( '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>' + response.data.error + '</div>' );
 				}
 			} );
 		} );

@@ -182,12 +182,22 @@ class BB_Activity_Topics_Manager {
 	public function bb_add_activity_topic_ajax() {
 		check_ajax_referer( 'bb_add_activity_topic', 'nonce' );
 
-		$name            = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
-		$topic_id        = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$name              = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
+		$permission_type   = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
+		$existing_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
 
-		if ( empty( $topic_id ) ) {
+		if ( empty( $slug ) ) {
+			$slug = sanitize_title( $name );
+		} else {
+			$slug = sanitize_title( $slug );
+		}
+
+		if ( $this->bb_get_activity_topic( 'slug', $slug ) ) {
+			wp_send_json_error( array( 'error' => __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ) ) );
+		}
+
+		if ( empty( $existing_topic_id ) ) {
 			$topic_id = $this->bb_add_activity_topic(
 				array(
 					'name'            => $name,
@@ -197,7 +207,7 @@ class BB_Activity_Topics_Manager {
 			);
 		} else {
 			$topic_id = $this->bb_update_activity_topic(
-				$topic_id,
+				$existing_topic_id,
 				array(
 					'name'            => $name,
 					'slug'            => $slug,
@@ -206,8 +216,8 @@ class BB_Activity_Topics_Manager {
 			);
 		}
 
-		if ( is_wp_error( $topic_id ) ) {
-			wp_send_json_error( array( 'error' => $topic_id->get_error_message() ) );
+		if ( ! $topic_id ) {
+			wp_send_json_error( array( 'error' => __( 'Failed to add topic.', 'buddyboss' ) ) );
 		}
 
 		wp_send_json_success( array( 'topic_id' => $topic_id ) );
@@ -269,7 +279,7 @@ class BB_Activity_Topics_Manager {
 			if ( 'wp_error' === $r['error_type'] ) {
 				unset( $r );
 
-				return new WP_Error( 'bb_activity_topic_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+				return new WP_Error( 'bb_activity_topic_duplicate_slug', __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ) );
 			}
 
 			unset( $r );
@@ -297,13 +307,13 @@ class BB_Activity_Topics_Manager {
 
 		// Prepare data for insertion.
 		$data   = array(
-			'name'            => sanitize_text_field( $args['name'] ),
-			'slug'            => $args['slug'],
-			'user_id'         => absint( $args['user_id'] ),
-			'permission_type' => sanitize_key( $args['permission_type'] ),
-			'permission_data' => is_null( $args['permission_data'] ) ? null : wp_json_encode( $args['permission_data'] ),
-			'scope'           => sanitize_key( $args['scope'] ),
-			'menu_order'      => absint( $args['menu_order'] ),
+			'name'            => sanitize_text_field( $r['name'] ),
+			'slug'            => $r['slug'],
+			'user_id'         => absint( $r['user_id'] ),
+			'permission_type' => sanitize_key( $r['permission_type'] ),
+			'permission_data' => is_null( $r['permission_data'] ) ? null : wp_json_encode( $r['permission_data'] ),
+			'scope'           => sanitize_key( $r['scope'] ),
+			'menu_order'      => absint( $r['menu_order'] ),
 			'date_created'    => current_time( 'mysql' ),
 			'date_updated'    => current_time( 'mysql' ),
 		);
@@ -684,7 +694,7 @@ class BB_Activity_Topics_Manager {
 				if ( 'wp_error' === $r['error_type'] ) {
 					unset( $r );
 
-					return new WP_Error( 'bb_activity_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+					return new WP_Error( 'bb_activity_duplicate_slug', __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ) );
 				}
 
 				unset( $r );

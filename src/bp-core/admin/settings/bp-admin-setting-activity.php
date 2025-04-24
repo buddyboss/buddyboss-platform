@@ -540,11 +540,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 			<p class="description"><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
 		</div>
-		<div id="bp-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
-		<div id="bp-hello-container" class="bb-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bp-hello-activity-topic" style="display: none;">
-			<div class="bp-hello-header">
-				<div class="bp-hello-title">
-					<h2 id="bp-hello-title" tabindex="-1">
+		<div id="bb-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
+		<div id="bb-hello-container" class="bb-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bb-hello-activity-topic" style="display: none;">
+			<div class="bb-hello-header">
+				<div class="bb-hello-title">
+					<h2 id="bb-hello-title" tabindex="-1">
 						<?php esc_html_e( 'Create topic', 'buddyboss' ); ?>
 					</h2>
 				</div>
@@ -554,7 +554,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					</button>
 				</div>
 			</div>
-			<div class="bp-hello-content">
+			<div class="bb-hello-content">
 				<div class="form-fields">
 					<div class="form-field">
 						<div class="field-label">
