@@ -696,6 +696,54 @@
 			width: auto;
 			display: block;
 		}
+
+		.bb-readylaunch-mobile-menu_items {
+			padding: var(--bb-rl-space-200) 0;
+			margin: 0 var(--bb-rl-space-200);
+			border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+
+				li > a {
+					color: var(--bb-rl-text-color);
+					display: flex;
+					align-items: center;
+					gap: var(--bb-rl-space-100);
+					padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+					border-radius: var(--bb-rl-radius-md);
+
+					&:hover {
+						background-color: var(--bb-rl-background-secondary-hover-color);
+					}
+
+					> i {
+						color: var(--bb-rl-icon-color);
+						font-size: 20px;
+					}
+
+					.notification-label {
+						font-size: var(--bb-rl-font-size-sm);
+						font-weight: 500;
+						line-height: 1.4;
+					}
+
+					.count {
+						display: inline-flex;
+						margin-left: auto;
+						border-radius: var(--bb-rl-radius-sm);
+						padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+						background-color: var(--bb-rl-background-tertiary-color);
+						font-size: var(--bb-rl-font-size-xs);
+						color: var(--bb-rl-text-color);
+						font-weight: 500;
+						line-height: 1.4;
+					}
+				}
+			}
+		}
 	}
 
 
@@ -723,6 +771,11 @@
 			[class*="bb-icons-rl"] {
 				font-size: 22px;
 			}
+		}
+
+		.notification-wrap,
+		.bb-message-dropdown-notification {
+			display: none;
 		}
 	}
 

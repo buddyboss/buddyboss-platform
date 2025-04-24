@@ -96,6 +96,43 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							'menu_class'     => 'bb-readylaunch-mobile-menu',
 						)
 					);
+					if ( is_user_logged_in() && (bp_is_active( 'messages' ) || bp_is_active( 'notifications' ))) {
+				?>
+				<div class="bb-readylaunch-mobile-menu_items">
+					<ul>
+						<?php if ( bp_is_active( 'messages' ) ) { ?>
+							<li>
+								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+									<i class="bb-icons-rl-chat-teardrop-text"></i>
+									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
+									<?php
+										$unread_message_count = messages_get_unread_count();
+										if ( $unread_message_count > 0 ) :
+									?>
+										<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
+									<?php endif; ?>
+								</a>
+							</li>
+						<?php } ?>
+						<?php if ( bp_is_active( 'notifications' ) ) { ?>
+							<li>
+								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+									<i class="bb-icons-rl-bell-simple"></i>
+									<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
+									<?php
+										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
+										if ( $unread_notification_count > 0 ) :
+									?>
+										<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
+									<?php endif; ?>
+								</a>
+							</li>
+						<?php } ?>
+					</ul>
+				</div>
+				<?php
+					}
 					bp_get_template_part( 'sidebar/left-sidebar' );
 				?>
 			</div>
