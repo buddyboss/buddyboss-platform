@@ -315,4 +315,92 @@ class BB_Activity_Topics_Manager {
 
 		return $topic;
 	}
+
+	/**
+	 * Get multiple topics based on arguments.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args    {
+	 *                       Array of query arguments.
+	 *
+	 * @type int    $number  Number of topics to retrieve. Default -1 (all).
+	 * @type int    $offset  Number of topics to skip. Default 0.
+	 * @type string $orderby Field to order by ('id', 'name', 'slug', 'menu_order', 'date_created'). Default 'name'.
+	 * @type string $order   Order direction ('ASC', 'DESC'). Default 'ASC'.
+	 * @type string $search  Search term to match against name or slug.
+	 * @type string $scope   Filter by topic_scope ('global').
+	 * @type array  $include Array of topic IDs to include.
+	 * @type array  $exclude Array of topic IDs to exclude.
+	 *                       }
+	 * @return array Array of topic objects.
+	 */
+	public function bb_get_activity_topics( $args = array() ) {
+		$defaults = array(
+			'number'  => -1, // Retrieve all by default.
+			'offset'  => 0,
+			'orderby' => 'name',
+			'order'   => 'ASC',
+			'search'  => '',
+			'scope'   => '', // e.g., 'global'.
+			'include' => array(),
+			'exclude' => array(),
+		);
+		$args     = wp_parse_args( $args, $defaults );
+
+		// Use updated table name property.
+		$sql       = "SELECT * FROM {$this->topics_table}";
+		$where     = array();
+		$limits    = '';
+		$order_sql = '';
+
+		// WHERE clauses.
+		if ( ! empty( $args['scope'] ) ) {
+			$where[] = $this->wpdb->prepare( 'scope = %s', sanitize_key( $args['scope'] ) );
+		}
+		if ( ! empty( $args['search'] ) ) {
+			$search_term = '%' . $this->wpdb->esc_like( $args['search'] ) . '%';
+			$where[]     = $this->wpdb->prepare( '(name LIKE %s OR slug LIKE %s)', $search_term, $search_term );
+		}
+		if ( ! empty( $args['include'] ) ) {
+			$include_ids = implode( ',', array_map( 'absint', $args['include'] ) );
+			$where[]     = "id IN ({$include_ids})";
+		}
+		if ( ! empty( $args['exclude'] ) ) {
+			$exclude_ids = implode( ',', array_map( 'absint', $args['exclude'] ) );
+			$where[]     = "id NOT IN ({$exclude_ids})";
+		}
+
+		if ( ! empty( $where ) ) {
+			$sql .= ' WHERE ' . implode( ' AND ', $where );
+		}
+
+		$allowed_orderby = array( 'id', 'name', 'slug', 'menu_order', 'date_created' );
+		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'name';
+		$order           = ( 'DESC' === strtoupper( $args['order'] ) ) ? 'DESC' : 'ASC';
+		$order_sql       = " ORDER BY {$orderby} {$order}";
+
+		if ( $args['number'] > 0 ) {
+			if ( $args['offset'] > 0 ) {
+				$limits = $this->wpdb->prepare( ' LIMIT %d, %d', $args['offset'], $args['number'] );
+			} else {
+				$limits = $this->wpdb->prepare( ' LIMIT %d', $args['number'] );
+			}
+		}
+
+		$sql .= $order_sql . $limits;
+
+		$results = $this->wpdb->get_results( $sql );
+
+		// Decode JSON permission data.
+		if ( $results ) {
+			foreach ( $results as $topic ) {
+				if ( ! empty( $topic->permission_data ) ) {
+					$topic->permission_data = json_decode( $topic->permission_data, true );
+				}
+			}
+		}
+
+		return $results ? $results : array();
+	}
 }
