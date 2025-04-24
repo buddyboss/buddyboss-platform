@@ -3031,22 +3031,22 @@ window.bp = window.bp || {};
 		} );
 
 		$document.on( 'click', '.bb-add-topic', function () {
-			if ( $document.find( '#bp-hello-backdrop' ).length ) {
+			if ( $document.find( '.bb-hello-backdrop-activity-topic' ).length ) {
 			} else {
 				var finder = $document.find( '.bp-hello-activity-topic' );
-				$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
+				$( '<div class="bb-hello-backdrop-activity-topic" style="display: none;"></div>' ).insertBefore( finder );
 			}
-			var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			    modal    = document.getElementById( 'bp-hello-container' );
+			var backdrop = $( '.bb-hello-backdrop-activity-topic' ),
+			    modal    = $( '.bb-hello-activity-topic' );
 
 			if ( null === backdrop ) {
 				return;
 			}
-			document.body.classList.add( 'bp-disable-scroll' );
+			$( 'body' ).addClass( 'bp-disable-scroll' );
 
 			// Show modal and overlay.
-			backdrop.style.display = '';
-			modal.style.display    = '';
+			backdrop.show();
+			modal.show();
 		} );
 
 		$document.on( 'click', '#activity_topic_submit', function () {
@@ -3076,15 +3076,12 @@ window.bp = window.bp || {};
 				success : function ( response ) {
 					if ( response.success ) {
 						// Close modal
-						var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-						    modal    = document.getElementById( 'bp-hello-container' );
+						var backdrop = $( '.bb-hello-backdrop-activity-topic' ),
+						    modal    = $( '.bb-hello-activity-topic' );
 
-						document.body.classList.remove( 'bp-disable-scroll' );
-						backdrop.style.display = 'none';
-						modal.style.display    = 'none';
-
-						// Refresh the page to show new topic
-						window.location.reload();
+						$( 'body' ).removeClass( 'bp-disable-scroll' );
+						backdrop.hide();
+						modal.hide();
 					} else {
 						alert( response.data.message || 'Error adding topic' );
 					}
@@ -3099,11 +3096,11 @@ window.bp = window.bp || {};
 			var closestPanel = $( this ).closest( '.bb-hello-activity-topic' );
 
 			if ( closestPanel.length ) {
-				var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-				    modal    = document.getElementById( 'bp-hello-container' );
-				document.body.classList.remove( 'bp-disable-scroll' );
-				backdrop.style.display = 'none';
-				modal.style.display    = 'none';
+				var backdrop = $( '.bb-hello-backdrop-activity-topic' ),
+				    modal    = $( '.bb-hello-activity-topic' );
+				$( 'body' ).removeClass( 'bp-disable-scroll' );
+				backdrop.hide();
+				modal.hide();
 			}
 		} );
 
@@ -3116,6 +3113,55 @@ window.bp = window.bp || {};
 				activityTopic.push( $( this ).find( 'input' ).val() );
 			} );
 		}
+
+		$document.on( 'click', '.edit-activity-topic', function () {
+			var $this    = $( this ),
+			    $topicId = $this.data( 'topic-id' ),
+			    nonce    = $this.data( 'nonce' ),
+			    finder;
+
+			if ( $document.find( '.bb-hello-backdrop-activity-topic' ).length ) {
+			} else {
+				finder = $document.find( '.bp-hello-activity-topic' );
+				$( '<div class="bb-hello-backdrop-activity-topic" style="display: none;"></div>' ).insertBefore( finder );
+			}
+			var backdrop = $( '.bb-hello-backdrop-activity-topic' ),
+			    modal    = $( '.bb-hello-activity-topic' );
+			if ( null === backdrop ) {
+				return;
+			}
+			$( 'body' ).addClass( 'bp-disable-scroll' );
+
+			backdrop.show();
+			modal.show();
+
+			var data = {
+				action   : 'bb_edit_activity_topic',
+				topic_id : $topicId,
+				nonce    : nonce
+			};
+
+			$.ajax( {
+				type    : 'POST',
+				url     : BP_ADMIN.ajax_url,
+				data    : data,
+				success : function ( response ) {
+					if ( response.success && response.data && response.data.topic ) {
+						var topicData = response.data.topic;
+						modal.find( '#activity_topic_name' ).val( topicData.name );
+						modal.find( 'input[name="activity_topic_who_can_post"]' ).each( function () {
+							if ( $( this ).val() === topicData.permission_type.toLowerCase() ) {
+								$( this ).prop( 'checked', true );
+							}
+						} );
+					}
+				},
+			} );
+		} );
+
+		$document.on( 'click', '.delete-activity-topic', function () {
+			console.log( 'delete-activity-topic' );
+		} );
 	}
 	
 }());

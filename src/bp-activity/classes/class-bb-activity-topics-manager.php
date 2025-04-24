@@ -96,6 +96,7 @@ class BB_Activity_Topics_Manager {
 	 */
 	private function setup_hooks() {
 		add_action( 'wp_ajax_bb_add_activity_topic', array( $this, 'bb_add_activity_topic_ajax' ) );
+		add_action( 'wp_ajax_bb_edit_activity_topic', array( $this, 'bb_edit_activity_topic_ajax' ) );
 	}
 
 	/**
@@ -262,7 +263,7 @@ class BB_Activity_Topics_Manager {
 		$inserted = $this->wpdb->insert( $this->topics_table, $data, $format );
 
 		if ( ! $inserted ) {
-			return new WP_Error( 'bb_activity_topic_db_insert_error', __( 'Could not insert topic into the database.', 'buddyboss' ), $this->wpdb->last_error );
+			return new WP_Error( 'bb_activity_topic_db_insert_error', $this->wpdb->last_error );
 		}
 
 		$topic_id = $this->wpdb->insert_id;
@@ -402,5 +403,24 @@ class BB_Activity_Topics_Manager {
 		}
 
 		return $results ? $results : array();
+	}
+
+	/**
+	 * Edit an existing topic via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_edit_activity_topic_ajax() {
+		check_ajax_referer( 'bb_edit_activity_topic', 'nonce' );
+
+		$topic_id = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+
+		$topic = $this->bb_get_activity_topic( 'id', $topic_id );
+
+		if ( ! $topic ) {
+			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );
+		}
+
+		wp_send_json_success( array( 'topic' => $topic ) );
 	}
 }

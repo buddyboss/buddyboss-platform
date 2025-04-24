@@ -499,6 +499,18 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 											<i class="bb-icon-ellipsis-h"></i>
 										</a>
 									</span>
+									<div class="bb-activity-more-options bb_more_dropdown">
+										<div class="generic-button">
+											<a href="#" class="button edit edit-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_edit_activity_topic' ) ); ?>">
+												<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+												<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+											</a>
+											<a href="#" class="button delete delete-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_delete_activity_topic' ) ); ?>">
+												<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+												<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+											</a>
+										</div>
+									</div>
 								</div>
 								<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[<?php echo esc_attr( $topic->slug ); ?>]" type="hidden" value="bb_activity_topic_options[<?php echo esc_attr( $topic->slug ); ?>]">
 							</div>
@@ -516,7 +528,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			<p class="description"><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
 		</div>
 		<div id="bp-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
-		<div id="bp-hello-container" class="bp-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bp-hello-activity-topic" style="display: none;">
+		<div id="bp-hello-container" class="bb-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bp-hello-activity-topic" style="display: none;">
 			<div class="bp-hello-header">
 				<div class="bp-hello-title">
 					<h2 id="bp-hello-title" tabindex="-1">
@@ -549,7 +561,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								<label for="activity_topic_who_can_post_anyone"><?php esc_html_e( 'Anyone', 'buddyboss' ); ?></label>
 							</div>
 							<div class="bb-topic-who-can-post-option">
-								<input type="radio" id="activity_topic_who_can_post_admin_and_moderator_only" name="activity_topic_who_can_post" value="admin_and_moderator_only" />
+								<input type="radio" id="activity_topic_who_can_post_admin_and_moderator_only" name="activity_topic_who_can_post" value="mods_admins" />
 								<label for="activity_topic_who_can_post_admin_and_moderator_only"><?php esc_html_e( 'Admin & Moderator Only', 'buddyboss' ); ?></label>
 							</div>
 						</div>
