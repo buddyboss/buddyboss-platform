@@ -445,6 +445,12 @@ class BB_Activity_Topics_Manager {
 			$sort = 'DESC';
 		}
 
+		// Validate orderby parameter.
+		$allowed_orderby = array( 'id', 'name', 'date_created', 'menu_order', 'date_updated' );
+		if ( ! in_array( $r['orderby'], $allowed_orderby, true ) ) {
+			$r['orderby'] = 'menu_order';
+		}
+
 		$order_by = 't.' . $r['orderby'];
 
 		// id.
