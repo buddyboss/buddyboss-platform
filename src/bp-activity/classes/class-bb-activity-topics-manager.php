@@ -50,6 +50,15 @@ class BB_Activity_Topics_Manager {
 	public $activity_rel_table;
 
 	/**
+	 * Cache group for activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	public static $topic_cache_group = 'bb_activity_topics';
+
+	/**
 	 * WordPress Database instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -223,42 +232,67 @@ class BB_Activity_Topics_Manager {
 	 * @return int|WP_Error Topic ID on success, WP_Error on failure.
 	 */
 	public function bb_add_activity_topic( $args ) {
-		$defaults = array(
-			'name'            => '',
-			'slug'            => '',
-			'user_id'         => bp_loggedin_user_id(),
-			'permission_type' => 'anyone',
-			'permission_data' => null,
-			'scope'           => 'global',
-			'menu_order'      => 0,
+		$r = bp_parse_args(
+			$args,
+			array(
+				'name'            => '',
+				'slug'            => '',
+				'user_id'         => bp_loggedin_user_id(),
+				'permission_type' => 'anyone',
+				'permission_data' => null,
+				'scope'           => 'global',
+				'menu_order'      => 0,
+				'error_type'      => 'bool',
+			)
 		);
 
-		$args = wp_parse_args( $args, $defaults );
+		if ( empty( $r['name'] ) ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
 
-		// Check if we've reached the maximum number of topics (20).
-		if ( $this->bb_activity_topics_limit_reached() ) {
-			return new WP_Error( 'bb_activity_topic_limit_reached', __( 'Maximum number of topics (20) has been reached.', 'buddyboss' ) );
+				return new WP_Error( 'bb_activity_topic_name_required', __( 'Topic name is required.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
 		}
 
-		// Validation.
-		if ( empty( $args['name'] ) ) {
-			return new WP_Error( 'bb_activity_topic_name_required', __( 'Topic name is required.', 'buddyboss' ) );
-		}
-
-		if ( empty( $args['slug'] ) ) {
-			$args['slug'] = sanitize_title( $args['name'] );
+		if ( empty( $r['slug'] ) ) {
+			$r['slug'] = sanitize_title( $r['name'] );
 		} else {
-			$args['slug'] = sanitize_title( $args['slug'] );
+			$r['slug'] = sanitize_title( $r['slug'] );
 		}
 
 		// Check if slug already exists.
-		if ( $this->bb_get_activity_topic( 'slug', $args['slug'] ) ) {
-			return new WP_Error( 'bb_activity_topic_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+		if ( $this->bb_get_activity_topic( 'slug', $r['slug'] ) ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_topic_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
 		}
 
-		if ( 0 === $args['menu_order'] ) {
-			$highest_order      = $this->wpdb->get_var( "SELECT MAX(menu_order) FROM {$this->topics_table}" );
-			$args['menu_order'] = (int) $highest_order + 1;
+		// Check if we've reached the maximum number of topics (20).
+		if ( $this->bb_activity_topics_limit_reached() ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_topic_limit_reached', __( 'Maximum number of topics (20) has been reached.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
+		}
+
+		if ( 0 === $r['menu_order'] ) {
+			$highest_order   = $this->wpdb->get_var( "SELECT MAX(menu_order) FROM {$this->topics_table}" );
+			$r['menu_order'] = (int) $highest_order + 1;
 		}
 
 		// Prepare data for insertion.
@@ -290,7 +324,9 @@ class BB_Activity_Topics_Manager {
 		 * @param int   $topic_id The ID of the topic added.
 		 * @param array $args     The arguments used to add the topic.
 		 */
-		do_action( 'bb_activity_topic_added', $topic_id, $args );
+		do_action( 'bb_activity_topic_added', $topic_id, $r );
+
+		unset( $r, $data, $format, $inserted );
 
 		return $topic_id;
 	}
@@ -306,28 +342,43 @@ class BB_Activity_Topics_Manager {
 	 * @return object|null Topic object on success, null on failure.
 	 */
 	public function bb_get_activity_topic( $field, $value ) {
-		// Use updated table name property in queries.
+
+		if ( ! in_array( $field, array( 'id', 'slug' ), true ) ) {
+			return null;
+		}
+
 		if ( 'id' === $field ) {
 			$value = absint( $value );
 			if ( ! $value ) {
 				return null;
 			}
-			$sql = $this->wpdb->prepare( "SELECT * FROM {$this->topics_table} WHERE id = %d", $value );
-		} elseif ( 'slug' === $field ) {
+			$cache_key = 'bb_activity_topic_id_' . $value;
+		} else {
 			$value = sanitize_title( $value );
 			if ( empty( $value ) ) {
 				return null;
 			}
-			$sql = $this->wpdb->prepare( "SELECT * FROM {$this->topics_table} WHERE slug = %s", $value );
-		} else {
-			return null; // Invalid field.
+			$cache_key = 'bb_activity_topic_slug_' . $value;
 		}
 
-		$topic = $this->wpdb->get_row( $sql );
+		$topic = wp_cache_get( $cache_key, self::$topic_cache_group );
+		if ( false !== $topic ) {
+			return $topic;
+		}
 
-		// Decode JSON permission data.
+		$sql = $this->wpdb->prepare(
+			"SELECT * FROM {$this->topics_table} WHERE {$field} = %s",
+			$value
+		);
+
+		$topic = $this->wpdb->get_row( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
 		if ( $topic && ! empty( $topic->permission_data ) ) {
 			$topic->permission_data = json_decode( $topic->permission_data, true );
+		}
+
+		if ( $topic ) {
+			wp_cache_set( $cache_key, $topic, self::$topic_cache_group );
 		}
 
 		return $topic;
@@ -343,7 +394,7 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @type int    $number  Number of topics to retrieve. Default -1 (all).
 	 * @type int    $offset  Number of topics to skip. Default 0.
-	 * @type string $orderby Field to order by ('id', 'name', 'slug', 'menu_order', 'date_created'). Default 'name'.
+	 * @type string $orderby Field to order by ('id', 'name', 'slug', 'menu_order', 'date_created'). Default 'menu_order'.
 	 * @type string $order   Order direction ('ASC', 'DESC'). Default 'ASC'.
 	 * @type string $search  Search term to match against name or slug.
 	 * @type string $scope   Filter by topic_scope ('global').
@@ -353,72 +404,185 @@ class BB_Activity_Topics_Manager {
 	 * @return array Array of topic objects.
 	 */
 	public function bb_get_activity_topics( $args = array() ) {
-		$defaults = array(
-			'number'  => -1, // Retrieve all by default.
-			'offset'  => 0,
-			'orderby' => 'name',
-			'order'   => 'ASC',
-			'search'  => '',
-			'scope'   => '', // e.g., 'global'.
-			'include' => array(),
-			'exclude' => array(),
+		$r = bp_parse_args(
+			$args,
+			array(
+				'per_page'    => -1, // Retrieve all by default.
+				'paged'       => 1,
+				'orderby'     => 'menu_order',
+				'order'       => 'ASC',
+				'search'      => '',
+				'scope'       => '',
+				'include'     => array(),
+				'exclude'     => array(),
+				'count_total' => false,
+				'fields'      => 'all', // Fields to include.
+				'error_type'  => 'bool',
+			)
 		);
-		$args     = wp_parse_args( $args, $defaults );
 
-		// Use updated table name property.
-		$sql       = "SELECT * FROM {$this->topics_table}";
-		$where     = array();
-		$limits    = '';
-		$order_sql = '';
+		// Select conditions.
+		$select_sql = 'SELECT t.id';
 
-		// WHERE clauses.
-		if ( ! empty( $args['scope'] ) ) {
-			$where[] = $this->wpdb->prepare( 'scope = %s', sanitize_key( $args['scope'] ) );
-		}
-		if ( ! empty( $args['search'] ) ) {
-			$search_term = '%' . $this->wpdb->esc_like( $args['search'] ) . '%';
-			$where[]     = $this->wpdb->prepare( '(name LIKE %s OR slug LIKE %s)', $search_term, $search_term );
-		}
-		if ( ! empty( $args['include'] ) ) {
-			$include_ids = implode( ',', array_map( 'absint', $args['include'] ) );
-			$where[]     = "id IN ({$include_ids})";
-		}
-		if ( ! empty( $args['exclude'] ) ) {
-			$exclude_ids = implode( ',', array_map( 'absint', $args['exclude'] ) );
-			$where[]     = "id NOT IN ({$exclude_ids})";
+		$from_sql = ' FROM ' . $this->topics_table . ' t';
+
+		// Where conditions.
+		$where_conditions = array();
+
+		// Sorting.
+		$sort = bp_esc_sql_order( $r['order'] );
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
+			$sort = 'DESC';
 		}
 
-		if ( ! empty( $where ) ) {
-			$sql .= ' WHERE ' . implode( ' AND ', $where );
+		$order_by = 't.' . $r['orderby'];
+
+		// id.
+		if ( ! empty( $r['id'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 't.id = %d', $r['id'] );
 		}
 
-		$allowed_orderby = array( 'id', 'name', 'slug', 'menu_order', 'date_created' );
-		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'name';
-		$order           = ( 'DESC' === strtoupper( $args['order'] ) ) ? 'DESC' : 'ASC';
-		$order_sql       = " ORDER BY {$orderby} {$order}";
+		// user_id.
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 't.user_id = %d', $r['user_id'] );
+		}
 
-		if ( $args['number'] > 0 ) {
-			if ( $args['offset'] > 0 ) {
-				$limits = $this->wpdb->prepare( ' LIMIT %d, %d', $args['offset'], $args['number'] );
-			} else {
-				$limits = $this->wpdb->prepare( ' LIMIT %d', $args['number'] );
+		// scope.
+		if ( ! empty( $r['scope'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 't.scope = %s', $r['scope'] );
+		}
+
+		// search.
+		if ( ! empty( $r['search'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 't.name LIKE %s', '%' . $this->wpdb->esc_like( $r['search'] ) . '%' );
+		}
+
+		// include.
+		if ( ! empty( $r['include'] ) ) {
+			$include_ids        = implode( ',', array_map( 'absint', $r['include'] ) );
+			$where_conditions[] = $this->wpdb->prepare( 't.id IN ( %s )', $include_ids );
+		}
+
+		// exclude.
+		if ( ! empty( $r['exclude'] ) ) {
+			$exclude_ids        = implode( ',', array_map( 'absint', $r['exclude'] ) );
+			$where_conditions[] = $this->wpdb->prepare( 't.id NOT IN ( %s )', $exclude_ids );
+		}
+
+		/**
+		 * Filters the MySQL WHERE conditions for the activity topics get sql method.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+		 * @param array  $r                Parsed arguments passed into method.
+		 * @param string $select_sql       Current SELECT MySQL statement at the point of execution.
+		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
+		 */
+		$where_conditions = apply_filters( 'bb_get_activity_topics_where_conditions', $where_conditions, $r, $select_sql, $from_sql );
+
+		// Join the where conditions together.
+		$where_sql = '';
+		if ( ! empty( $where_conditions ) ) {
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+		}
+
+		// Sanitize page and per_page parameters.
+		$page       = absint( $r['paged'] );
+		$per_page   = $r['per_page'];
+		$pagination = '';
+		if ( ! empty( $per_page ) && ! empty( $page ) && - 1 !== $per_page ) {
+			$start_val = intval( ( $page - 1 ) * $per_page );
+			if ( ! empty( $where_conditions['before'] ) ) {
+				$start_val = 0;
+				unset( $where_conditions['before'] );
 			}
+			$pagination = $this->wpdb->prepare( 'LIMIT %d, %d', $start_val, intval( $per_page ) );
 		}
 
-		$sql .= $order_sql . $limits;
+		// Query first for poll vote IDs.
+		$topic_sql = "{$select_sql} {$from_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
 
-		$results = $this->wpdb->get_results( $sql );
+		$retval = array(
+			'topics' => null,
+			'total'  => null,
+		);
 
-		// Decode JSON permission data.
-		if ( $results ) {
-			foreach ( $results as $topic ) {
-				if ( ! empty( $topic->permission_data ) ) {
-					$topic->permission_data = json_decode( $topic->permission_data, true );
+		/**
+		 * Filters the poll votes data MySQL statement.
+		 *
+		 * @since 2.6.00
+		 *
+		 * @param string $poll_votes_sql MySQL's statement used to query for poll votes.
+		 * @param array  $r              Array of arguments passed into method.
+		 */
+		$topic_sql = apply_filters( 'bb_get_activity_topics_sql', $topic_sql, $r );
+
+		$cached = bp_core_get_incremented_cache( $topic_sql, self::$topic_cache_group );
+		if ( false === $cached ) {
+			$topic_ids = $this->wpdb->get_col( $topic_sql ); // phpcs:ignore
+			bp_core_set_incremented_cache( $topic_sql, self::$topic_cache_group, $topic_ids );
+		} else {
+			$topic_ids = $cached;
+		}
+
+		if ( 'id' === $r['fields'] ) {
+			// We only want the IDs.
+			$topic_data = array_map( 'intval', $topic_ids );
+		} else {
+			$uncached_ids = bp_get_non_cached_ids( $topic_ids, self::$topic_cache_group );
+			if ( ! empty( $uncached_ids ) ) {
+				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
+
+				// phpcs:ignore
+				$queried_data = $this->wpdb->get_results( 'SELECT * FROM ' . $this->topics_table . " WHERE id IN ({$uncached_ids_sql})", ARRAY_A );
+
+				foreach ( (array) $queried_data as $topic_data ) {
+					wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
 				}
 			}
+
+			$topic_data = array();
+			foreach ( $topic_ids as $id ) {
+				$topic = wp_cache_get( $id, self::$topic_cache_group );
+				if ( ! empty( $topic ) ) {
+					$topic_data[] = (object) $topic;
+				}
+			}
+
+			if ( 'all' !== $r['fields'] ) {
+				$topic_data = array_unique( array_column( $topic_data, $r['fields'] ) );
+			}
 		}
 
-		return $results ? $results : array();
+		$retval['topics'] = $topic_data;
+
+		if ( ! empty( $r['count_total'] ) ) {
+
+			/**
+			 * Filters the total activity topics MySQL statement.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $value     MySQL's statement used to query for total activity topics.
+			 * @param string $where_sql MySQL WHERE statement portion.
+			 */
+			$total_activity_topic_sql = apply_filters( 'bb_total_activity_topic_sql', 'SELECT count(DISTINCT t.id) FROM ' . $this->topics_table . ' t ' . $where_sql, $where_sql );
+			$cached                   = bp_core_get_incremented_cache( $total_activity_topic_sql, self::$topic_cache_group );
+			if ( false === $cached ) {
+				// phpcs:ignore
+				$total_activity_topics = $this->wpdb->get_var( $total_activity_topic_sql );
+				bp_core_set_incremented_cache( $total_activity_topic_sql, self::$topic_cache_group, $total_activity_topics );
+			} else {
+				$total_activity_topics = $cached;
+			}
+
+			$retval['total'] = $total_activity_topics;
+		}
+
+		unset( $r, $select_sql, $from_sql, $where_conditions, $where_sql, $pagination, $topic_sql, $cached, $topic_ids, $uncached_ids, $uncached_ids_sql, $queried_data, $topic_data );
+
+		return $retval;
 	}
 
 	/**
@@ -452,65 +616,115 @@ class BB_Activity_Topics_Manager {
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public function bb_update_activity_topic( $topic_id, $args ) {
+
+		$r = bp_parse_args(
+			$args,
+			array(
+				'id'              => 0,
+				'name'            => '',
+				'slug'            => '',
+				'scope'           => '',
+				'permission_type' => '',
+				'permission_data' => null,
+				'menu_order'      => 0,
+				'error_type'      => 'bool',
+			)
+		);
+
+		if ( empty( $r['id'] ) ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_topic_id_required', __( 'The topic ID is required to update topic.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
+		}
+
+		if ( empty( $r['name'] ) ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_topic_name_required', __( 'The topic name is required to update topic.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
+		}
+
 		$topic_id = absint( $topic_id );
 		$topic    = $this->bb_get_activity_topic( 'id', $topic_id );
 
 		if ( ! $topic ) {
-			return new WP_Error( 'bb_activity_invalid_topic_id', __( 'Invalid topic ID.', 'buddyboss' ) );
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_invalid_topic_id', __( 'Invalid topic ID.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
 		}
 
 		// Prepare data for update.
 		$data   = array();
 		$format = array();
 
-		if ( isset( $args['name'] ) ) {
-			if ( empty( $args['name'] ) ) {
-				return new WP_Error( 'bb_activity_topic_name_required', __( 'Topic name cannot be empty.', 'buddyboss' ) );
-			}
-			$data['name'] = sanitize_text_field( $args['name'] );
-			$format[]     = '%s';
-		}
+		if ( isset( $r['name'] ) ) {
+			$data['name'] = sanitize_text_field( $r['name'] );
+			$data['slug'] = sanitize_title( $r['name'] );
 
-		if ( isset( $args['slug'] ) ) {
-			$slug = sanitize_title( $args['slug'] );
-			if ( empty( $slug ) ) {
-				if ( isset( $data['name'] ) ) {
-					$slug = sanitize_title( $data['name'] );
-				} else {
-					return new WP_Error( 'bb_activity_invalid_slug', __( 'Invalid topic slug.', 'buddyboss' ) );
-				}
-			}
 			// Check if new slug conflicts with another topic.
-			$existing = $this->bb_get_activity_topic( 'slug', $slug );
+			$existing = $this->bb_get_activity_topic( 'slug', $data['slug'] );
 			if ( $existing && $existing->id !== $topic_id ) {
-				return new WP_Error( 'bb_activity_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+				if ( 'wp_error' === $r['error_type'] ) {
+					unset( $r );
+
+					return new WP_Error( 'bb_activity_duplicate_slug', __( 'A topic with this slug already exists.', 'buddyboss' ) );
+				}
+
+				unset( $r );
+
+				return false;
 			}
-			$data['slug'] = $slug;
-			$format[]     = '%s';
+			$format[] = '%s';
+			$format[] = '%s';
 		}
 
-		if ( isset( $args['scope'] ) ) {
-			$data['scope'] = sanitize_key( $args['scope'] );
+		if ( isset( $r['scope'] ) ) {
+			$data['scope'] = sanitize_key( $r['scope'] );
 			$format[]      = '%s';
 		}
 
-		if ( isset( $args['permission_type'] ) ) {
-			$data['permission_type'] = sanitize_key( $args['permission_type'] );
+		if ( isset( $r['permission_type'] ) ) {
+			$data['permission_type'] = sanitize_key( $r['permission_type'] );
 			$format[]                = '%s';
 		}
 
-		if ( isset( $args['permission_data'] ) ) { // Use isset to allow setting to null.
-			$data['permission_data'] = is_null( $args['permission_data'] ) ? null : wp_json_encode( $args['permission_data'] );
+		if ( isset( $r['permission_data'] ) ) { // Use isset to allow setting to null.
+			$data['permission_data'] = is_null( $r['permission_data'] ) ? null : wp_json_encode( $r['permission_data'] );
 			$format[]                = '%s';
 		}
 
-		if ( isset( $args['menu_order'] ) ) {
-			$data['menu_order'] = absint( $args['menu_order'] );
+		if ( isset( $r['menu_order'] ) ) {
+			$data['menu_order'] = absint( $r['menu_order'] );
 			$format[]           = '%d';
 		}
 
 		if ( empty( $data ) ) {
-			return new WP_Error( 'bb_activity_no_data', __( 'No data provided to update.', 'buddyboss' ) );
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_no_data', __( 'No data provided to update.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
 		}
 
 		// Use the updated table name property.
@@ -523,16 +737,26 @@ class BB_Activity_Topics_Manager {
 		);
 
 		if ( false === $updated ) {
-			return new WP_Error( 'bb_activity_db_update_error', __( 'Could not update topic in the database.', 'buddyboss' ), $this->wpdb->last_error );
+			if ( 'wp_error' === $r['error_type'] ) {
+				unset( $r );
+
+				return new WP_Error( 'bb_activity_db_update_error', __( 'There is an error while updating the topic.', 'buddyboss' ) );
+			}
+
+			unset( $r );
+
+			return false;
 		}
 
 		/**
 		 * Fires after a topic has been updated.
 		 *
 		 * @param int   $topic_id The ID of the topic updated.
-		 * @param array $args     The arguments used to update the topic.
+		 * @param array $r        The arguments used to update the topic.
 		 */
-		do_action( 'bb_activity_topic_updated', $topic_id, $args );
+		do_action( 'bb_activity_topic_updated', $topic_id, $r );
+
+		unset( $r, $data, $format, $updated, $topic_id, $topic );
 
 		return true;
 	}
@@ -566,9 +790,14 @@ class BB_Activity_Topics_Manager {
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public function bb_delete_activity_topic( $topic_id ) {
+
+		if ( empty( $topic_id ) ) {
+			return false;
+		}
+
 		$topic_id = absint( $topic_id );
 		if ( ! $this->bb_get_activity_topic( 'id', $topic_id ) ) {
-			return new WP_Error( 'bb_activity_invalid_topic_id', __( 'Invalid topic ID.', 'buddyboss' ) );
+			return false;
 		}
 
 		/**
@@ -581,7 +810,7 @@ class BB_Activity_Topics_Manager {
 		// 1. Delete activity relationships.
 		$deleted_rels = $this->wpdb->delete( $this->activity_rel_table, array( 'topic_id' => $topic_id ), array( '%d' ) );
 		if ( false === $deleted_rels ) {
-			return new WP_Error( 'bb_activity_db_delete_error', __( 'Could not delete topic relationships.', 'buddyboss' ), $this->wpdb->last_error );
+			return false;
 		}
 
 		do_action( 'bb_activity_topic_relationship_after_deleted', $topic_id );
@@ -589,7 +818,7 @@ class BB_Activity_Topics_Manager {
 		// 3. Delete the topic itself.
 		$deleted_topic = $this->wpdb->delete( $this->topics_table, array( 'id' => $topic_id ), array( '%d' ) );
 		if ( ! $deleted_topic ) { // delete returns number of rows deleted, 0 is possible but false is error.
-			return new WP_Error( 'bb_activity_db_delete_error', __( 'Could not delete topic.', 'buddyboss' ), $this->wpdb->last_error );
+			return false;
 		}
 
 		/**
@@ -598,6 +827,8 @@ class BB_Activity_Topics_Manager {
 		 * @param int $topic_id The ID of the topic that was deleted.
 		 */
 		do_action( 'bb_activity_topic_deleted', $topic_id );
+
+		unset( $topic_id, $deleted_rels, $deleted_topic );
 
 		return true;
 	}
@@ -610,8 +841,13 @@ class BB_Activity_Topics_Manager {
 	 * @return bool True if the maximum number of topics has been reached, false otherwise.
 	 */
 	public function bb_activity_topics_limit_reached() {
-		$topics_count = $this->wpdb->get_var( "SELECT COUNT(*) FROM {$this->topics_table}" );
-		return $topics_count >= 20;
+		$topics_count = $this->bb_get_activity_topics(
+			array(
+				'per_page'    => 1,
+				'count_total' => true,
+			)
+		);
+		return is_array( $topics_count ) && isset( $topics_count['total'] ) ? $topics_count['total'] >= $this->bb_activity_topics_limit() : false;
 	}
 
 	/**
@@ -636,5 +872,16 @@ class BB_Activity_Topics_Manager {
 
 		// Otherwise return all permission types.
 		return $permission_types;
+	}
+
+	/**
+	 * Limit the number of topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int The maximum number of topics.
+	 */
+	public function bb_activity_topics_limit() {
+		return 20;
 	}
 }

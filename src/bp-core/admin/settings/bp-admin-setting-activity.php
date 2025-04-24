@@ -483,6 +483,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			<div class="bb-activity-topics-content">
 				<div class="bb-activity-topics-list">
 					<?php
+					$topics = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
 					if ( ! empty( $topics ) ) {
 						foreach ( $topics as $topic ) {
 							?>

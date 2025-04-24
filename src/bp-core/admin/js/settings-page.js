@@ -3135,7 +3135,7 @@ window.bp = window.bp || {};
 			} );
 		} );
 
-		// Make topics sortable
+		// Make topics sortable.
 		if ( $activityTopicList.length ) {
 			$activityTopicList.sortable( {
 				handle : '.bb-topic-drag',
