@@ -476,65 +476,37 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_activity_topics() {
+		$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics();
 		?>
 		<div class="bb-activity-topics-wrapper">
 			<div class="bb-activity-topics-content">
 				<div class="bb-activity-topics-list">
-					<div class="bb-activity-topic-item">
-						<div class="bb-topic-left">
-							<span class="bb-topic-drag">
-								<i class="bb-icon-grip-v"></i>
-							</span>
-							<span class="bb-topic-title">UX Design</span>
-						</div>
-						<div class="bb-topic-right">
-							<span class="bb-topic-access">Anyone</span>
-							<span class="bb-topic-actions">
-								<a href="#" class="bb-topic-actions_button">
-									<i class="bb-icon-ellipsis-h"></i>
-								</a>
-							</span>
-						</div>
-						<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[ux_design]" type="hidden" value="bb_activity_topic_options[ux_design]">
-					</div>
-
-					<div class="bb-activity-topic-item">
-						<div class="bb-topic-left">
-							<span class="bb-topic-drag">
-								<i class="bb-icon-grip-v"></i>
-							</span>
-							<span class="bb-topic-title">UI Design</span>
-						</div>
-						<div class="bb-topic-right">
-							<span class="bb-topic-access">Admin</span>
-							<span class="bb-topic-actions">
-								<a href="#" class="bb-topic-actions_button">
-									<i class="bb-icon-ellipsis-h"></i>
-								</a>
-							</span>
-						</div>
-						<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[ui_design]" type="hidden" value="bb_activity_topic_options[ui_design]">
-					</div>
-
-					<div class="bb-activity-topic-item">
-						<div class="bb-topic-left">
-							<span class="bb-topic-drag">
-								<i class="bb-icon-grip-v"></i>
-							</span>
-							<span class="bb-topic-title">Web Development</span>
-						</div>
-						<div class="bb-topic-right">
-							<span class="bb-topic-access">Student, Teacher</span>
-							<span class="bb-topic-actions">
-								<a href="#" class="bb-topic-actions_button">
-									<i class="bb-icon-ellipsis-h"></i>
-								</a>
-							</span>
-						</div>
-						<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[web_development]" type="hidden" value="bb_activity_topic_options[web_development]">
-					</div>
+					<?php
+					if ( ! empty( $topics ) ) {
+						foreach ( $topics as $topic ) {
+							?>
+							<div class="bb-activity-topic-item">
+								<div class="bb-topic-left">
+									<span class="bb-topic-drag">
+										<i class="bb-icon-grip-v"></i>
+									</span>
+									<span class="bb-topic-title"><?php echo esc_html( $topic->name ); ?></span>
+								</div>
+								<div class="bb-topic-right">
+									<span class="bb-topic-access"><?php echo esc_html( ucfirst( $topic->permission_type ) ); ?></span>
+									<span class="bb-topic-actions">
+										<a href="#" class="bb-topic-actions_button">
+											<i class="bb-icon-ellipsis-h"></i>
+										</a>
+									</span>
+								</div>
+								<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[<?php echo esc_attr( $topic->slug ); ?>]" type="hidden" value="bb_activity_topic_options[<?php echo esc_attr( $topic->slug ); ?>]">
+							</div>
+							<?php
+						}
+					}
+					?>
 				</div>
-
 				<button type="button" class="button button-primary bb-add-topic">
 					<i class="bb-icon-plus"></i>
 					<?php esc_html_e( 'Add new topic', 'buddyboss' ); ?>
