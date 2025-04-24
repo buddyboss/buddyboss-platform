@@ -81,6 +81,13 @@ function xprofile_screen_edit_profile() {
 			$field = new BP_XProfile_Field( $field_id );
 			if ( 'membertypes' === $field->type ) {
 
+				$enabled = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_enable_profile_field', true );
+				if ( '' === $enabled || '0' === $enabled ) {
+					$errors        = true;
+					$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
+					continue;
+				}
+
 				$member_type_name = bp_get_member_type_key( $_POST[ 'field_' . $field_id ] );
 
 				// Get selected profile type role.
