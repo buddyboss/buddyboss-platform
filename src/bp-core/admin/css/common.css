@@ -5486,6 +5486,11 @@ h1.bb-advance-heading {
   opacity: 0.4;
 }
 
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list .bb-activity-topic-item.ui-sortable-placeholder {
+  border: 1px dashed #e1e3e5;
+  visibility: visible !important;
+}
+
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-add-topic {
   display: inline-flex;
   align-items: center;
@@ -5508,4 +5513,77 @@ h1.bb-advance-heading {
   color: #646970;
   font-size: 12px;
   margin: 10px 0 0;
+}
+
+.bb-activity-topics-wrapper p.description {
+  color: #8c8f94;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.bb-modal-panel--activity-topic .bp-hello-header {
+  position: relative;
+  padding: 15px;
+  background-color: #f6f7f7;
+  border-color: #dcdcde;
+}
+
+.bb-modal-panel--activity-topic #bp-hello-title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: 500;
+}
+
+.bb-modal-panel--activity-topic .bb-hello-close {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bb-modal-panel--activity-topic .bb-hello-close button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  line-height: 1;
+  font-size: 28px;
+  color: #a7aaad;
+  min-height: auto;
+}
+
+.bb-modal-panel--activity-topic .bb-hello-close button i:before {
+  margin: 0;
+}
+
+.bb-modal-panel--activity-topic .bp-hello-content {
+  padding: 15px 20px;
+}
+
+.bb-modal-panel--activity-topic .form-fields .form-field {
+  margin-bottom: 15px;
+}
+
+.bb-modal-panel--activity-topic .form-fields .field-label {
+  margin-bottom: 12px;
+}
+
+.bb-modal-panel--activity-topic .form-fields .field-label label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d2327;
+  margin-bottom: 10px;
+}
+
+.bb-modal-panel--activity-topic .form-fields .bb-topic-who-can-post-option {
+  margin-bottom: 10px;
+}
+
+.bb-modal-panel--activity-topic .bb-popup-buttons {
+  background-color: #f6f7f7;
+  border-color: #dcdcde;
+  margin: 0 -20px;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  box-sizing: border-box;
 }

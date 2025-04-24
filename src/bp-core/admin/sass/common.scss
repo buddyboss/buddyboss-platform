@@ -5521,6 +5521,11 @@ h1.bb-advance-heading {
 						opacity: 0.4;
 					}
 				}
+
+				&.ui-sortable-placeholder {
+					border: 1px dashed #e1e3e5;
+					visibility: visible !important;
+				}
 			}
 		}
 
@@ -5548,5 +5553,84 @@ h1.bb-advance-heading {
 			margin: 10px 0 0;
 		}
 	}
+
+	p.description {
+		color: #8c8f94;
+		font-size: 14px;
+		font-weight: 400;
+	}
 }
 
+// Add topic modal
+.bb-modal-panel--activity-topic {
+
+	.bp-hello-header {
+		position: relative;
+		padding: 15px;
+		background-color: #f6f7f7;
+		border-color: #dcdcde;
+	}
+
+	#bp-hello-title {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		font-weight: 500;
+	}
+
+	.bb-hello-close {
+		top: 50%;
+		transform: translateY(-50%);
+
+		button {
+			border: 0;
+			padding: 0;
+			background: transparent;
+			line-height: 1;
+			font-size: 28px;
+			color: #a7aaad;
+			min-height: auto;
+
+			i:before {
+				margin: 0;
+			}
+		}
+	}
+
+	.bp-hello-content {
+		padding: 15px 20px;
+	}
+
+	.form-fields {
+
+		.form-field {
+			margin-bottom: 15px;
+		}
+
+		.field-label {
+			margin-bottom: 12px;
+
+			label {
+				font-size: 14px;
+				font-weight: 500;
+				color: #1d2327;
+				margin-bottom: 10px;
+			}
+		}
+
+		.bb-topic-who-can-post-option {
+			margin-bottom: 10px;
+		}
+	}
+
+	.bb-popup-buttons {
+		background-color: #f6f7f7;
+		border-color: #dcdcde;
+		margin: 0 -20px;
+		padding: 12px 15px;
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+		box-sizing: border-box;
+	}
+}
