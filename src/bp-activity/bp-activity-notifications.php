@@ -238,7 +238,7 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * @param int                  $comment_id   ID for the newly received comment.
  * @param int                  $commenter_id ID of the user who made the comment.
  */
-function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
+function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
 	// Stop sending notification to user who has muted notifications.
 	if ( $activity->user_id !== $commenter_id ) {
 		if ( bb_user_has_mute_notification( $activity->id, $activity->user_id ) ) {
@@ -247,13 +247,11 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	}
 
 	// Try to find mentions.
-	$comment_activity = new BP_Activity_Activity( $comment_id );
-	$usernames = bp_activity_find_mentions( $comment_activity->content );
+	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
-	error_log( print_r( $usernames, true ) );
 	// Bail out the replied notification because he will recieve a "mentioned you" notification.
-	if ( ! empty( $usernames ) ) {
-		if ( isset( $usernames[ $activity->user_id ] ) ) {
+	if ( ! empty( $usernames ) && array_key_exists( $activity->user_id, $usernames ) ) {
+		if ( true === bb_is_notification_enabled( $activity->user_id, 'bb_new_mention' ) ) {
 			return;
 		}
 	}
@@ -296,7 +294,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
-add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 3 );
+add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 4 );
 
 /**
  * Notify a member one of their activity comment received a reply.
@@ -307,7 +305,7 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
  * @param int                  $comment_id       ID for the newly received comment.
  * @param int                  $commenter_id     ID of the user who made the comment.
  */
-function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
+function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
 	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
 
 	// Stop sending notification to user who has muted notifications.
@@ -318,12 +316,11 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	}
 
 	// Try to find mentions.
-	$reply_activity = new BP_Activity_Activity( $comment_id );
-	$usernames = bp_activity_find_mentions( $reply_activity->content );
+	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
 
 	// Bail out the replied notification because he will recieve a "mentioned you" notification.
-	if ( ! empty( $usernames ) ) {
-		if ( isset( $usernames[ $activity_comment->user_id ] ) ) {
+	if ( ! empty( $usernames ) && array_key_exists( $activity_comment->user_id, $usernames ) ) {
+		if ( true === bb_is_notification_enabled( $activity_comment->user_id, 'bb_new_mention' ) ) {
 			return;
 		}
 	}
@@ -365,7 +362,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
-add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
+add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 4 );
 
 /**
  * Mark at-mention notifications as read when users visit their Mentions page.
