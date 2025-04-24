@@ -3046,8 +3046,21 @@ window.bp = window.bp || {};
 
 		// Close modal button click
 		$( '.close-modal, #activity_topic_cancel' ).on( 'click', function () {
+			$( 'body' ).removeClass( 'bp-disable-scroll' );
 			$activityTopicModal.hide();
 			$activityTopicBackdrop.hide();
+		} );
+		
+
+		$document.on( 'click', '.bb-add-topic', function () {
+			if ( checkTopicsLimit() ) {
+				return;
+			}
+
+			$( 'body' ).addClass( 'bp-disable-scroll' );
+
+			$activityTopicModal.show();
+			$activityTopicBackdrop.show();
 		} );
 
 		// Submit button click
@@ -3083,6 +3096,11 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			var topicId = $( this ).data( 'topic-id' );
 			var nonce   = $( this ).data( 'nonce' );
+			
+			$( 'body' ).addClass( 'bp-disable-scroll' );
+			
+			$activityTopicModal.show();
+			$activityTopicBackdrop.show();
 
 			var data = {
 				action   : 'bb_edit_activity_topic',
@@ -3097,8 +3115,6 @@ window.bp = window.bp || {};
 					$activityTopicWhoCanPost.prop( 'checked', false );
 					$( 'input[name="activity_topic_who_can_post"][value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					$activityTopicId.val( topic.id );
-					$activityTopicModal.show();
-					$activityTopicBackdrop.show();
 				} else {
 					alert( response.data.error );
 				}
