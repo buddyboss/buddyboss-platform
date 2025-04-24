@@ -596,4 +596,28 @@ class BB_Activity_Topics_Manager {
 
 		return true;
 	}
+
+	/**
+	 * Get the permission type for the activity topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $existing_permission_type The existing permission type.
+	 *
+	 * @return array Array of permission types.
+	 */
+	public function bb_activity_topic_permission_type( $existing_permission_type = '' ) {
+		$permission_types = array(
+			'anyone'      => __( 'Anyone', 'buddyboss' ),
+			'mods_admins' => __( 'Admin', 'buddyboss' ),
+		);
+
+		// If an existing permission type is provided, return only that type.
+		if ( ! empty( $existing_permission_type ) && isset( $permission_types[ $existing_permission_type ] ) ) {
+			return array( $existing_permission_type => $permission_types[ $existing_permission_type ] );
+		}
+
+		// Otherwise return all permission types.
+		return $permission_types;
+	}
 }

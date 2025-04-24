@@ -493,7 +493,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 									<span class="bb-topic-title"><?php echo esc_html( $topic->name ); ?></span>
 								</div>
 								<div class="bb-topic-right">
-									<span class="bb-topic-access"><?php echo esc_html( ucfirst( $topic->permission_type ) ); ?></span>
+									<span class="bb-topic-access">
+										<?php
+										$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $topic->permission_type );
+										if ( ! empty( $permission_type ) ) {
+											$permission_type_value = current( $permission_type );
+											echo esc_html( $permission_type_value );
+										}
+										?>
+									</span>
 									<span class="bb-topic-actions">
 										<a href="#" class="bb-topic-actions_button">
 											<i class="bb-icon-ellipsis-h"></i>
@@ -556,14 +564,19 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 							<label for="activity_topic_who_can_post"><?php esc_html_e( 'Who can post?', 'buddyboss' ); ?></label>
 						</div>
 						<div class="field-input">
-							<div class="bb-topic-who-can-post-option">
-								<input type="radio" id="activity_topic_who_can_post_anyone" name="activity_topic_who_can_post" value="anyone" />
-								<label for="activity_topic_who_can_post_anyone"><?php esc_html_e( 'Anyone', 'buddyboss' ); ?></label>
-							</div>
-							<div class="bb-topic-who-can-post-option">
-								<input type="radio" id="activity_topic_who_can_post_admin_and_moderator_only" name="activity_topic_who_can_post" value="mods_admins" />
-								<label for="activity_topic_who_can_post_admin_and_moderator_only"><?php esc_html_e( 'Admin & Moderator Only', 'buddyboss' ); ?></label>
-							</div>
+							<?php
+							$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type();
+							if ( ! empty( $permission_type ) ) {
+								foreach ( $permission_type as $key => $value ) {
+									?>
+									<div class="bb-topic-who-can-post-option">
+										<input type="radio" id="activity_topic_who_can_post_<?php echo esc_attr( $key ); ?>" name="activity_topic_who_can_post" value="<?php echo esc_attr( $key ); ?>" />
+										<label for="activity_topic_who_can_post_<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></label>
+									</div>
+									<?php
+								}
+							}
+							?>
 						</div>
 					</div>
 				</div>
