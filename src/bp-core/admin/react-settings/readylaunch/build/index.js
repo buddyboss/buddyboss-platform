@@ -14338,17 +14338,17 @@ __webpack_require__.r(__webpack_exports__);
 const fetchSettings = async () => {
   try {
     return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-      path: '/buddyboss/v1/readylaunch/settings',
+      path: '/buddyboss/v1/settings',
       method: 'GET'
     });
   } catch (error) {
-    console.error('Error fetching ReadyLaunch settings:', error);
+    console.error('Error fetching settings:', error);
     return null;
   }
 };
 
 /**
- * Save ReadyLaunch settings to the WordPress REST API.
+ * Save settings to the WordPress REST API.
  *
  * @param {Object} settings - The settings object to save.
  * @returns {Promise} Promise that resolves to updated settings object.
@@ -14369,12 +14369,12 @@ const saveSettings = async settings => {
       delete cleanSettings._tempIds;
     }
     return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
-      path: '/buddyboss/v1/readylaunch/settings',
+      path: '/buddyboss/v1/settings',
       method: 'POST',
       data: cleanSettings
     });
   } catch (error) {
-    console.error('Error saving ReadyLaunch settings:', error);
+    console.error('Error saving settings:', error);
     return null;
   }
 };

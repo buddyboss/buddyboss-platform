@@ -9,18 +9,18 @@ export const fetchSettings = async() => {
 	try {
 		return await apiFetch(
 			{
-				path: '/buddyboss/v1/readylaunch/settings',
+				path: '/buddyboss/v1/settings',
 				method: 'GET',
 			}
 		);
 	} catch (error) {
-		console.error( 'Error fetching ReadyLaunch settings:', error );
+		console.error( 'Error fetching settings:', error );
 		return null;
 	}
 };
 
 /**
- * Save ReadyLaunch settings to the WordPress REST API.
+ * Save settings to the WordPress REST API.
  *
  * @param {Object} settings - The settings object to save.
  * @returns {Promise} Promise that resolves to updated settings object.
@@ -41,12 +41,12 @@ export const saveSettings = async( settings ) => {
 		}
 		
 		return await apiFetch({
-			path: '/buddyboss/v1/readylaunch/settings',
+			path: '/buddyboss/v1/settings',
 			method: 'POST',
 			data: cleanSettings,
 		});
 	} catch (error) {
-		console.error('Error saving ReadyLaunch settings:', error);
+		console.error('Error saving settings:', error);
 		return null;
 	}
 };
