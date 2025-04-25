@@ -198,7 +198,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		if ( empty( $existing_topic_id ) ) {
-			$topic_id = $this->bb_add_activity_topic(
+			$topic_data = $this->bb_add_activity_topic(
 				array(
 					'name'            => $name,
 					'slug'            => $slug,
@@ -206,7 +206,7 @@ class BB_Activity_Topics_Manager {
 				)
 			);
 		} else {
-			$topic_id = $this->bb_update_activity_topic(
+			$topic_data = $this->bb_update_activity_topic(
 				$existing_topic_id,
 				array(
 					'name'            => $name,
@@ -216,11 +216,11 @@ class BB_Activity_Topics_Manager {
 			);
 		}
 
-		if ( ! $topic_id ) {
+		if ( ! $topic_data ) {
 			wp_send_json_error( array( 'error' => __( 'Failed to add topic.', 'buddyboss' ) ) );
 		}
 
-		wp_send_json_success( array( 'topic_id' => $topic_id ) );
+		wp_send_json_success( array( 'topic_id' => $topic_data->id ) );
 	}
 
 	/**
@@ -338,7 +338,7 @@ class BB_Activity_Topics_Manager {
 
 		unset( $r, $data, $format, $inserted );
 
-		return $topic_id;
+		return $this->bb_get_activity_topic( 'id', $topic_id );
 	}
 
 	/**
@@ -772,9 +772,9 @@ class BB_Activity_Topics_Manager {
 		 */
 		do_action( 'bb_activity_topic_updated', $topic_id, $r );
 
-		unset( $r, $data, $format, $updated, $topic_id, $topic );
+		unset( $r, $data, $format, $updated, $topic );
 
-		return true;
+		return $this->bb_get_activity_topic( 'id', $topic_id );
 	}
 
 	/**
