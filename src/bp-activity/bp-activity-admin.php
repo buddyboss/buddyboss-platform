@@ -265,7 +265,6 @@ function bp_activity_admin_load() {
 
 		// Register metaboxes for the edit screen.
 		add_meta_box( 'submitdiv', __( 'Status', 'buddyboss' ), 'bp_activity_admin_edit_metabox_status', get_current_screen()->id, 'side', 'core' );
-		add_meta_box( 'bp_activity_topic', __( 'Topic', 'buddyboss' ), 'bb_activity_admin_edit_metabox_topic', get_current_screen()->id, 'normal', 'core' );
 		add_meta_box( 'bp_activity_itemids', __( 'Primary Item/Secondary Item', 'buddyboss' ), 'bp_activity_admin_edit_metabox_itemids', get_current_screen()->id, 'normal', 'core' );
 		add_meta_box( 'bp_activity_link', __( 'Link', 'buddyboss' ), 'bp_activity_admin_edit_metabox_link', get_current_screen()->id, 'normal', 'core' );
 		add_meta_box( 'bp_activity_type', __( 'Type', 'buddyboss' ), 'bp_activity_admin_edit_metabox_type', get_current_screen()->id, 'normal', 'core' );
@@ -1170,37 +1169,5 @@ function bp_activity_admin_index() {
 		</table>
 	</div>
 
-	<?php
-}
-
-/**
- * Activity topic metabox for the Activity admin edit screen.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param object $item Activity item.
- */
-function bb_activity_admin_edit_metabox_topic( $item ) {
-	// Get all activity topics.
-	$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics();
-
-	$current_topic_id = '';
-	?>
-	<div class="bb-activity-topic-container">
-		<select name="activity_topic" id="activity_topic">
-			<option value=""><?php esc_html_e( '-- Select Topic --', 'buddyboss' ); ?></option>
-			<?php
-			if ( ! empty( $topics['topics'] ) ) {
-				foreach ( $topics['topics'] as $topic ) {
-					?>
-					<option value="<?php echo esc_attr( $topic->id ); ?>" <?php selected( $current_topic_id, $topic->id ); ?>>
-						<?php echo esc_html( $topic->name ); ?>
-					</option>
-					<?php
-				}
-			}
-			?>
-		</select>
-	</div>
 	<?php
 }

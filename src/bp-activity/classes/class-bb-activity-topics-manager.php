@@ -107,6 +107,7 @@ class BB_Activity_Topics_Manager {
 		add_action( 'wp_ajax_bb_add_activity_topic', array( $this, 'bb_add_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_edit_activity_topic', array( $this, 'bb_edit_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_delete_activity_topic', array( $this, 'bb_delete_activity_topic_ajax' ) );
+		add_action( 'load-buddyboss_page_bp-activity', array( $this, 'bb_activity_admin_edit_metabox_topic' ) );
 
 		// Add custom column to activity admin list table.
 		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
@@ -903,6 +904,47 @@ class BB_Activity_Topics_Manager {
 	 */
 	public function bb_activity_topics_limit() {
 		return 20;
+	}
+
+	/**
+	 * Load the activity topics metabox in activity admin page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_activity_admin_edit_metabox_topic() {
+		add_meta_box( 'bp_activity_topic', __( 'Topic', 'buddyboss' ), array( $this, 'bb_activity_admin_edit_metabox_topic_content' ), 'buddyboss_page_bp-activity', 'normal', 'core' );
+	}
+
+	/**
+	 * Display the activity topics metabox in activity admin page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $item Activity item.
+	 */
+	public function bb_activity_admin_edit_metabox_topic_content( $item ) {
+		// Get all activity topics.
+		$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics();
+
+		$current_topic_id = '';
+		?>
+		<div class="bb-activity-topic-container">
+			<select name="activity_topic" id="activity_topic">
+				<option value=""><?php esc_html_e( '-- Select Topic --', 'buddyboss' ); ?></option>
+				<?php
+				if ( ! empty( $topics['topics'] ) ) {
+					foreach ( $topics['topics'] as $topic ) {
+						?>
+						<option value="<?php echo esc_attr( $topic->id ); ?>" <?php selected( $current_topic_id, $topic->id ); ?>>
+							<?php echo esc_html( $topic->name ); ?>
+						</option>
+						<?php
+					}
+				}
+				?>
+			</select>
+		</div>
+		<?php
 	}
 
 	/**
