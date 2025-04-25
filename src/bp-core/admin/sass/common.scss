@@ -5563,15 +5563,17 @@ h1.bb-advance-heading {
 
 // Add topic modal
 .bb-modal-panel--activity-topic {
+	width: 100%;
+	max-width: 700px;
 
-	.bp-hello-header {
+	.bb-hello-header {
 		position: relative;
 		padding: 15px;
 		background-color: #f6f7f7;
 		border-color: #dcdcde;
 	}
 
-	#bp-hello-title {
+	#bb-hello-title {
 		margin: 0;
 		padding: 0;
 		border: 0;
@@ -5597,8 +5599,12 @@ h1.bb-advance-heading {
 		}
 	}
 
-	.bp-hello-content {
+	.bb-hello-content {
 		padding: 15px 20px;
+
+		.form-fields {
+			margin: 0;
+		}
 	}
 
 	.form-fields {

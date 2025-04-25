@@ -5521,14 +5521,19 @@ h1.bb-advance-heading {
   font-weight: 400;
 }
 
-.bb-modal-panel--activity-topic .bp-hello-header {
+.bb-modal-panel--activity-topic {
+  width: 100%;
+  max-width: 700px;
+}
+
+.bb-modal-panel--activity-topic .bb-hello-header {
   position: relative;
   padding: 15px;
   background-color: #f6f7f7;
   border-color: #dcdcde;
 }
 
-.bb-modal-panel--activity-topic #bp-hello-title {
+.bb-modal-panel--activity-topic #bb-hello-title {
   margin: 0;
   padding: 0;
   border: 0;
@@ -5554,8 +5559,12 @@ h1.bb-advance-heading {
   margin: 0;
 }
 
-.bb-modal-panel--activity-topic .bp-hello-content {
+.bb-modal-panel--activity-topic .bb-hello-content {
   padding: 15px 20px;
+}
+
+.bb-modal-panel--activity-topic .bb-hello-content .form-fields {
+  margin: 0;
 }
 
 .bb-modal-panel--activity-topic .form-fields .form-field {
