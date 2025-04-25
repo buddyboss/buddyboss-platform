@@ -9995,3 +9995,14 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 
 	return $filters;
 }
+
+/**
+ * Function to return the minimum pro version to show notice for group activity topics.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_pro_group_activity_topics_version() {
+	return '2.7.01';
+}

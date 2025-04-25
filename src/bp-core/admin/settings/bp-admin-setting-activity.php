@@ -177,6 +177,23 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			)
 		);
 
+		// Group Activity Topics.
+		$group_activity_topics_pro_class      = bb_get_pro_fields_class( 'group_activity_topics' );
+		$group_activity_topics_notice         = bb_get_pro_label_notice( 'group_activity_topics' );
+		$group_activity_topics_args           = array();
+		$group_activity_topics_args['class']  = esc_attr( $group_activity_topics_pro_class );
+		$group_activity_topics_args['notice'] = $group_activity_topics_notice;
+		$this->add_field(
+			'bb-enable-group-activity-topics',
+			__( 'Group Topics', 'buddyboss' ) . $group_activity_topics_notice,
+			array(
+				$this,
+				'bb_admin_setting_callback_enable_group_activity_topics',
+			),
+			'intval',
+			$group_activity_topics_args
+		);
+
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
 		// create field for default Platform activity feed.
@@ -597,6 +614,21 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				</div>
 			</div>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Enable group activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_group_activity_topics() {
+		$val    = function_exists( 'bb_enable_group_activity_topics' ) && bb_enable_group_activity_topics();
+		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
+		?>
+		<input id="bb_enable_group_activity_topics" name="<?php echo empty( $notice ) ? 'bb-enable-group-activity-topics' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+		<label for="bb_enable_group_activity_topics"><?php esc_html_e( 'Enable topics for groups.', 'buddyboss' ); ?></label>
+		<p class="description"><?php esc_html_e( 'Allow group organizers to set categories for members to use in group posts.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }
