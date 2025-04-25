@@ -5521,6 +5521,60 @@ h1.bb-advance-heading {
   font-weight: 400;
 }
 
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper {
+  position: relative;
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #e1e3e5;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  min-width: 150px;
+  z-index: 100;
+  display: none;
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a {
+  display: block;
+  border: 0;
+  background: transparent;
+  color: #3c434a;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a:before {
+  font-family: bb-icons;
+  font-size: 16px;
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a.edit-activity-topic:before {
+  content: "\eeec";
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a.delete-activity-topic:before {
+  content: "\ef48";
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a:hover {
+  background-color: #f0f0f1;
+}
+
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper.active .bb-topic-more-dropdown {
+  display: block;
+}
+
 .bb-modal-panel--activity-topic {
   width: 100%;
   max-width: 700px;

@@ -504,13 +504,13 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 										}
 										?>
 									</span>
-									<span class="bb-topic-actions">
-										<a href="#" class="bb-topic-actions_button">
-											<i class="bb-icon-ellipsis-h"></i>
-										</a>
-									</span>
-									<div class="bb-activity-more-options bb_more_dropdown">
-										<div class="generic-button">
+									<div class="bb-topic-actions-wrapper">
+										<span class="bb-topic-actions">
+											<a href="#" class="bb-topic-actions_button">
+												<i class="bb-icon-ellipsis-h"></i>
+											</a>
+										</span>
+										<div class="bb-topic-more-dropdown">
 											<a href="#" class="button edit edit-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_edit_activity_topic' ) ); ?>">
 												<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 												<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
