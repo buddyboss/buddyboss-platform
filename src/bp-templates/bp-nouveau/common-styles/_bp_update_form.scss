@@ -1934,6 +1934,74 @@ input.search-query-input {
 
 }
 
+// Topic selector styles
+.whats-new-topic-selector {
+	position: relative;
+	margin-right: 8px;
+
+	.bb-topic-selector-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		cursor: pointer;
+		padding: 6px 12px;
+		border-radius: $block-radius-inner;
+		background-color: $white;
+		border: 1px solid $bp-border-color;
+		font-size: 14px;
+		color: $black;
+
+		&:after {
+			content: "\e826";
+			font-family: 'bb-icons';/* stylelint-disable-line */
+			font-size: 20px;
+			line-height: 1;
+		}
+	}
+
+	.bb-topic-selector-list {
+		position: absolute;
+		top: 45px;
+		left: 0;
+		width: 200px;
+		display: none;
+
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 8px;
+			background-color: $white;
+			border-radius: $block-radius;
+			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+
+			a {
+				display: block;
+				padding: 5px 15px;
+				border-radius: $block-radius-inner;
+				color: $black;
+				font-size: 13px;
+				font-weight: 400;
+				text-decoration: none;
+
+				&:hover {
+					background-color: $light-grey;
+				}
+			}
+		}
+	}
+
+	#whats-new-topic-selector {
+		display: none;
+	}
+
+	&.is-active {
+
+		.bb-topic-selector-list {
+			display: block;
+		}
+	}
+}
+
 @media screen and (max-width: 768px) {
 
 	.bbp-topic-form #whats-new-toolbar {

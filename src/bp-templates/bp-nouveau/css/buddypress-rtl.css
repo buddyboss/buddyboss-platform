@@ -3441,6 +3441,71 @@ input.search-query-input {
   color: inherit;
 }
 
+.whats-new-topic-selector {
+  position: relative;
+  margin-left: 8px;
+}
+
+.whats-new-topic-selector .bb-topic-selector-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+}
+
+.whats-new-topic-selector .bb-topic-selector-button:after {
+  content: "\e826";
+  font-family: 'bb-icons';
+  /* stylelint-disable-line */
+  font-size: 20px;
+  line-height: 1;
+}
+
+.whats-new-topic-selector .bb-topic-selector-list {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 200px;
+  display: none;
+}
+
+.whats-new-topic-selector .bb-topic-selector-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+}
+
+.whats-new-topic-selector .bb-topic-selector-list ul a {
+  display: block;
+  padding: 5px 15px;
+  border-radius: 6px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.whats-new-topic-selector .bb-topic-selector-list ul a:hover {
+  background-color: #eaeaea;
+}
+
+.whats-new-topic-selector #whats-new-topic-selector {
+  display: none;
+}
+
+.whats-new-topic-selector.is-active .bb-topic-selector-list {
+  display: block;
+}
+
 @media screen and (max-width: 768px) {
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0 10px 5px;

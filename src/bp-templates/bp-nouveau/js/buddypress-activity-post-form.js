@@ -5063,6 +5063,55 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.TopicSelector = bp.View.extend(
+		{
+			tagName: 'div',
+			className: 'whats-new-topic-selector',
+			template: bp.template( 'activity-post-form-topic-selector' ),
+			events: {
+				'click .bb-topic-selector-button': 'toggleTopicSelectorDropdown',
+				'click .bb-topic-selector-list a': 'selectTopic'
+			},
+
+			initialize: function () {
+				this.model.on( 'change', this.render, this ); // TODO: Add specific event to update topic selector
+
+				// Add document-level click handler
+				$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
+			},
+
+			render: function () {
+				this.$el.html( this.template( this.model.attributes ) );
+			},
+
+			toggleTopicSelectorDropdown: function () {
+				this.$el.toggleClass( 'is-active' );
+			},
+
+			selectTopic: function ( event ) {
+				event.preventDefault();
+				
+				var topicId = $( event.currentTarget ).data( 'topic-id' );
+				var topicName = $( event.currentTarget ).text().trim();
+
+				this.model.set( 'topic_id', topicId );
+				this.model.set( 'topic_name', topicName );
+
+				this.$el.find( '.bb-topic-selector-button' ).text( topicName );
+				this.$el.removeClass( 'is-active' );
+			},
+
+			closeTopicSelectorDropdown: function ( event ) {
+				// Don't close if clicking inside the topic selector
+				if ( $( event.target ).closest( '.whats-new-topic-selector' ).length ) {
+					return;
+				}
+				
+				this.$el.removeClass( 'is-active' );
+			}
+		}
+	);
+
 	bp.Views.EditActivityPostIn = bp.View.extend(
 		{
 			template: bp.template( 'activity-edit-postin' ),
@@ -5101,6 +5150,9 @@ window.bp = window.bp || {};
 						value: BP_Nouveau.activity.strings.discardButton
 					}
 				) );
+
+				// TODO: Check if Topic is enabled
+				this.views.add( new bp.Views.TopicSelector( { model: this.model } ) );
 
 				if( bp.Views.activitySchedulePost !== undefined ) {
 					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
