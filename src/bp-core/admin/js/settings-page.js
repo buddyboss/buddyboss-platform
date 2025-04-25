@@ -3046,9 +3046,12 @@ window.bp = window.bp || {};
 
 		// Close modal button click
 		$( '.close-modal, #activity_topic_cancel' ).on( 'click', function () {
-			$( 'body' ).removeClass( 'bp-disable-scroll' );
-			$activityTopicModal.hide();
-			$activityTopicBackdrop.hide();
+			var closestPanel = $(this).closest('.bb-hello-activity-topic:visible');
+			if ( closestPanel.length ) {
+				$( 'body' ).removeClass( 'bp-disable-scroll' );
+				$activityTopicModal.hide();
+				$activityTopicBackdrop.hide();
+			}
 		} );
 		
 
