@@ -3,10 +3,10 @@ import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Sidebar } from './Sidebar';
-import { fetchSettings, saveSettings, debounce } from '../utils/api';
-import { Accordion } from '../../../components/Accordion'; // Fixed import path
-import { LinkItem } from '../../../components/LinkItem'; // Fixed import path
-import { LinkModal } from '../../../components/LinkModal'; // Fixed import path
+import { fetchSettings, saveSettings, debounce } from '../../../utils/api';
+import { Accordion } from '../../../components/Accordion';
+import { LinkItem } from '../../../components/LinkItem';
+import { LinkModal } from '../../../components/LinkModal';
 
 // Initial structure for side menu items
 const initialSideMenuItems = [
