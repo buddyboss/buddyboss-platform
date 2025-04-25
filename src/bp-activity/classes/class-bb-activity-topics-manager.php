@@ -107,6 +107,10 @@ class BB_Activity_Topics_Manager {
 		add_action( 'wp_ajax_bb_add_activity_topic', array( $this, 'bb_add_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_edit_activity_topic', array( $this, 'bb_edit_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_delete_activity_topic', array( $this, 'bb_delete_activity_topic_ajax' ) );
+
+		// Add custom column to activity admin list table.
+		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
+		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
 	}
 
 	/**
@@ -899,5 +903,45 @@ class BB_Activity_Topics_Manager {
 	 */
 	public function bb_activity_topics_limit() {
 		return 20;
+	}
+
+	/**
+	 * Add topic column to activity admin list table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $columns Array of column names and labels.
+	 *
+	 * @return array Modified array of column names and labels.
+	 */
+	public function bb_add_activity_admin_topic_column( $columns ) {
+		$new_columns = array();
+		foreach ( $columns as $key => $value ) {
+			$new_columns[ $key ] = $value;
+			if ( 'comment' === $key ) {
+				$new_columns['activity_topic'] = __( 'Topic', 'buddyboss' );
+			}
+		}
+		return $new_columns;
+	}
+
+	/**
+	 * Display topic column content in activity admin list table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $content     The column content.
+	 * @param string $column_name Column name.
+	 * @param array  $item       Activity item data.
+	 *
+	 * @return string
+	 */
+	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
+
+		if ( 'activity_topic' === $column_name ) {
+			return 'Topic Name';
+		}
+
+		return $content;
 	}
 }
