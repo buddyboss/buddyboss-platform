@@ -5360,6 +5360,9 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
  * @since BuddyBoss 1.7.0
  */
 function bp_core_is_empty_directory( $dir ) {
+	if ( ! file_exists( $dir ) ) {
+		return true;
+	}
 	$handle = opendir( $dir );
 	if ( false === $handle ) {
 		return true;
