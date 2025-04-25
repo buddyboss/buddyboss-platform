@@ -264,16 +264,6 @@ hr {
     border: none !important; /* Remove border as it's handled by toggle-item */
     cursor: grab;
     position: relative; /* Add positioning context for the grip indicator */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.side-menu-item-draggable:hover {
-    transform: translateY(-1px);
-}
-
-.side-menu-item-draggable.is-dragging {
-    transform: scale(1.02);
-    z-index: 999;
 }
 
 /* Style for field toggles */
@@ -294,14 +284,12 @@ hr {
 
 /* Add extra padding for side menu items with drag handle */
 .side-menu-item-draggable .toggle-item {
-    padding-right: 28px; /* Add space for the grip indicator */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding-right: 24px; /* Add space for the grip indicator */
 }
 
-.side-menu-item-draggable .toggle-item:hover {
+.toggle-item:hover {
     background-color: #f9f9f9;
-    border-color: #c0c0c0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    border-color: #d0d0d0;
 }
 
 .field-toggles .components-toggle-control .components-base-control__field {
@@ -699,29 +687,20 @@ hr {
 .link-item.is-dragging {
     background-color: #eef4ff !important; /* Light blue background */
     border-color: #c8d7f7 !important;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Side menu drag handle with grip indicator */
 .side-menu-item-draggable .toggle-item::before {
-    content: "⋮⋮";
+    content: "⁞";
     color: #aaa;
     position: absolute;
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1;
     cursor: grab;
-    letter-spacing: -2px;
-}
-
-.side-menu-item-draggable .toggle-item:hover::before {
-    color: #666;
-}
-
-.side-menu-item-draggable.is-dragging .toggle-item::before {
-    color: #3E34FF;
 }
 
 .toggle-item {
@@ -729,17 +708,7 @@ hr {
 }
 
 .side-menu-item-draggable .toggle-item {
-    padding-right: 28px; /* Add space for the grip indicator */
-}
-
-/* Visual feedback when dragging */
-.field-toggles {
-    transition: background-color 0.2s ease;
-}
-
-.field-toggles.is-dragging-over {
-    background-color: #f5f8ff;
-    border-radius: 4px;
+    padding-right: 24px; /* Add space for the grip indicator */
 }
 
 /* Image Selector Styles */

@@ -1,6 +1,256 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./components/Accordion.js":
+/*!*********************************!*\
+  !*** ./components/Accordion.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Accordion: () => (/* binding */ Accordion)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+/**
+ * Accordion component for collapsible sections.
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.title - Title of the accordion section
+ * @param {boolean} props.isExpanded - Whether the accordion is expanded
+ * @param {Function} props.onToggle - Function to call when accordion is toggled
+ * @param {React.ReactNode} props.children - Content to display when expanded
+ * @returns {JSX.Element} Accordion component
+ */
+const Accordion = ({
+  title,
+  isExpanded,
+  onToggle,
+  children
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: `settings-accordion ${isExpanded ? 'expanded' : 'collapsed'}`
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "accordion-header",
+    onClick: onToggle
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: `dashicons ${isExpanded ? 'dashicons-arrow-up-alt2' : 'dashicons-arrow-down-alt2'}`
+  })), isExpanded && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "accordion-content"
+  }, children));
+};
+
+/***/ }),
+
+/***/ "./components/LinkItem.js":
+/*!********************************!*\
+  !*** ./components/LinkItem.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LinkItem: () => (/* binding */ LinkItem)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+/**
+ * LinkItem component for displaying and editing custom menu links.
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.link - Link object with id, title, url, and isEditing properties
+ * @param {Function} props.onEdit - Function to call when editing is requested
+ * @param {Function} props.onDelete - Function to call when deleting the link
+ * @param {React.Ref} props.innerRef - Ref for the draggable element
+ * @param {Object} props.draggableProps - Props for the draggable element
+ * @param {Object} props.dragHandleProps - Props for the drag handle
+ * @param {boolean} props.isDragging - Whether the item is currently being dragged
+ * @returns {JSX.Element} LinkItem component
+ */
+const LinkItem = ({
+  link,
+  onEdit,
+  onDelete,
+  innerRef,
+  draggableProps,
+  dragHandleProps,
+  isDragging
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: `link-item ${isDragging ? 'is-dragging' : ''}`,
+    ref: innerRef,
+    ...draggableProps,
+    ...dragHandleProps
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "link-item-content"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "link-details"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "link-title"
+  }, link.title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "link-url"
+  }, link.url)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "link-actions"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    className: "edit-link-button",
+    icon: "edit",
+    onClick: onEdit,
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Edit', 'buddyboss'),
+    isSmall: true
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    className: "delete-link-button",
+    icon: "trash",
+    onClick: onDelete,
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Delete', 'buddyboss'),
+    isSmall: true
+  }))));
+};
+
+/***/ }),
+
+/***/ "./components/LinkModal.js":
+/*!*********************************!*\
+  !*** ./components/LinkModal.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LinkModal: () => (/* binding */ LinkModal)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+/**
+ * Modal component for adding/editing links
+ * 
+ * @param {Object} props Component properties
+ * @param {boolean} props.isOpen Whether the modal is open
+ * @param {Function} props.onClose Function to call when closing the modal
+ * @param {Object} props.linkData Link data (id, title, url) for editing, or empty for adding
+ * @param {Function} props.onSave Function to call when saving the link
+ * @returns {JSX.Element} LinkModal component
+ */
+const LinkModal = ({
+  isOpen,
+  onClose,
+  linkData = {},
+  onSave
+}) => {
+  const [title, setTitle] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
+  const [url, setUrl] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
+  const [errors, setErrors] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({});
+
+  // Reset form when linkData changes
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (isOpen) {
+      setTitle(linkData.title || '');
+      setUrl(linkData.url || '');
+      setErrors({});
+    }
+  }, [isOpen, linkData]);
+  const handleSave = () => {
+    // Validate form
+    const newErrors = {};
+    if (!title.trim()) {
+      newErrors.title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Title is required', 'buddyboss');
+    }
+    if (!url.trim()) {
+      newErrors.url = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('URL is required', 'buddyboss');
+    } else if (!isValidUrl(url)) {
+      newErrors.url = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Please enter a valid URL', 'buddyboss');
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Save link
+    onSave({
+      id: linkData.id,
+      title: title.trim(),
+      url: url.trim()
+    });
+
+    // Close modal
+    onClose();
+  };
+
+  // Simple URL validation
+  const isValidUrl = string => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+  if (!isOpen) {
+    return null;
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Modal, {
+    title: linkData.id ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Edit Link', 'buddyboss') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Add Link', 'buddyboss'),
+    onRequestClose: onClose,
+    className: "link-modal"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "link-modal-content"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "link-modal-form"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Title', 'buddyboss'),
+    value: title,
+    onChange: setTitle,
+    help: errors.title,
+    className: errors.title ? 'has-error' : ''
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('URL', 'buddyboss'),
+    value: url,
+    onChange: setUrl,
+    help: errors.url,
+    className: errors.url ? 'has-error' : ''
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "link-modal-actions"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    variant: "secondary",
+    onClick: onClose
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Cancel', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
+    variant: "primary",
+    onClick: handleSave
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save', 'buddyboss')))));
+};
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
 /*!*******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
@@ -13112,256 +13362,6 @@ var useCallback = useCallbackOne;
 
 /***/ }),
 
-/***/ "./readylaunch/src/components/Accordion.js":
-/*!*************************************************!*\
-  !*** ./readylaunch/src/components/Accordion.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Accordion: () => (/* binding */ Accordion)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-
-/**
- * Accordion component for collapsible sections.
- * 
- * @param {Object} props - Component props
- * @param {string} props.title - Title of the accordion section
- * @param {boolean} props.isExpanded - Whether the accordion is expanded
- * @param {Function} props.onToggle - Function to call when accordion is toggled
- * @param {React.ReactNode} props.children - Content to display when expanded
- * @returns {JSX.Element} Accordion component
- */
-const Accordion = ({
-  title,
-  isExpanded,
-  onToggle,
-  children
-}) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `settings-accordion ${isExpanded ? 'expanded' : 'collapsed'}`
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "accordion-header",
-    onClick: onToggle
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: `dashicons ${isExpanded ? 'dashicons-arrow-up-alt2' : 'dashicons-arrow-down-alt2'}`
-  })), isExpanded && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "accordion-content"
-  }, children));
-};
-
-/***/ }),
-
-/***/ "./readylaunch/src/components/LinkItem.js":
-/*!************************************************!*\
-  !*** ./readylaunch/src/components/LinkItem.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LinkItem: () => (/* binding */ LinkItem)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-
-/**
- * LinkItem component for displaying and editing custom menu links.
- * 
- * @param {Object} props - Component props
- * @param {Object} props.link - Link object with id, title, url, and isEditing properties
- * @param {Function} props.onEdit - Function to call when editing is requested
- * @param {Function} props.onDelete - Function to call when deleting the link
- * @param {React.Ref} props.innerRef - Ref for the draggable element
- * @param {Object} props.draggableProps - Props for the draggable element
- * @param {Object} props.dragHandleProps - Props for the drag handle
- * @param {boolean} props.isDragging - Whether the item is currently being dragged
- * @returns {JSX.Element} LinkItem component
- */
-const LinkItem = ({
-  link,
-  onEdit,
-  onDelete,
-  innerRef,
-  draggableProps,
-  dragHandleProps,
-  isDragging
-}) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `link-item ${isDragging ? 'is-dragging' : ''}`,
-    ref: innerRef,
-    ...draggableProps,
-    ...dragHandleProps
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "link-item-content"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "link-details"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "link-title"
-  }, link.title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "link-url"
-  }, link.url)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "link-actions"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    className: "edit-link-button",
-    icon: "edit",
-    onClick: onEdit,
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Edit', 'buddyboss'),
-    isSmall: true
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    className: "delete-link-button",
-    icon: "trash",
-    onClick: onDelete,
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Delete', 'buddyboss'),
-    isSmall: true
-  }))));
-};
-
-/***/ }),
-
-/***/ "./readylaunch/src/components/LinkModal.js":
-/*!*************************************************!*\
-  !*** ./readylaunch/src/components/LinkModal.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LinkModal: () => (/* binding */ LinkModal)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-
-/**
- * Modal component for adding/editing links
- * 
- * @param {Object} props Component properties
- * @param {boolean} props.isOpen Whether the modal is open
- * @param {Function} props.onClose Function to call when closing the modal
- * @param {Object} props.linkData Link data (id, title, url) for editing, or empty for adding
- * @param {Function} props.onSave Function to call when saving the link
- * @returns {JSX.Element} LinkModal component
- */
-const LinkModal = ({
-  isOpen,
-  onClose,
-  linkData = {},
-  onSave
-}) => {
-  const [title, setTitle] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
-  const [url, setUrl] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
-  const [errors, setErrors] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({});
-
-  // Reset form when linkData changes
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    if (isOpen) {
-      setTitle(linkData.title || '');
-      setUrl(linkData.url || '');
-      setErrors({});
-    }
-  }, [isOpen, linkData]);
-  const handleSave = () => {
-    // Validate form
-    const newErrors = {};
-    if (!title.trim()) {
-      newErrors.title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Title is required', 'buddyboss');
-    }
-    if (!url.trim()) {
-      newErrors.url = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('URL is required', 'buddyboss');
-    } else if (!isValidUrl(url)) {
-      newErrors.url = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Please enter a valid URL', 'buddyboss');
-    }
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    // Save link
-    onSave({
-      id: linkData.id,
-      title: title.trim(),
-      url: url.trim()
-    });
-
-    // Close modal
-    onClose();
-  };
-
-  // Simple URL validation
-  const isValidUrl = string => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
-  if (!isOpen) {
-    return null;
-  }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Modal, {
-    title: linkData.id ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Edit Link', 'buddyboss') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Add Link', 'buddyboss'),
-    onRequestClose: onClose,
-    className: "link-modal"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "link-modal-content"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "link-modal-form"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Title', 'buddyboss'),
-    value: title,
-    onChange: setTitle,
-    help: errors.title,
-    className: errors.title ? 'has-error' : ''
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('URL', 'buddyboss'),
-    value: url,
-    onChange: setUrl,
-    help: errors.url,
-    className: errors.url ? 'has-error' : ''
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "link-modal-actions"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
-    variant: "secondary",
-    onClick: onClose
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Cancel', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
-    variant: "primary",
-    onClick: handleSave
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save', 'buddyboss')))));
-};
-
-/***/ }),
-
 /***/ "./readylaunch/src/components/ReadyLaunchSettings.js":
 /*!***********************************************************!*\
   !*** ./readylaunch/src/components/ReadyLaunchSettings.js ***!
@@ -13384,9 +13384,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
 /* harmony import */ var _Sidebar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Sidebar */ "./readylaunch/src/components/Sidebar.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./readylaunch/src/utils/api.js");
-/* harmony import */ var _Accordion__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Accordion */ "./readylaunch/src/components/Accordion.js");
-/* harmony import */ var _LinkItem__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./LinkItem */ "./readylaunch/src/components/LinkItem.js");
-/* harmony import */ var _LinkModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./LinkModal */ "./readylaunch/src/components/LinkModal.js");
+/* harmony import */ var _components_Accordion__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../components/Accordion */ "./components/Accordion.js");
+/* harmony import */ var _components_LinkItem__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../components/LinkItem */ "./components/LinkItem.js");
+/* harmony import */ var _components_LinkModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../components/LinkModal */ "./components/LinkModal.js");
 
 
 
@@ -13394,9 +13394,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // Import the new Accordion component
- // Import the LinkItem component for menu links
- // Import the LinkModal component
+ // Fixed import path
+ // Fixed import path
+ // Fixed import path
 
 // Initial structure for side menu items
 const initialSideMenuItems = [{
@@ -13484,8 +13484,6 @@ const ReadyLaunchSettings = () => {
       messages: false,
       notifications: false
     },
-    // Add sideMenuOrder to save the order of menu items
-    sideMenuOrder: ['activityFeed', 'members', 'groups', 'courses', 'messages', 'notifications'],
     // customLinks remains an array, suitable for sorting
     customLinks: [{
       id: 1,
@@ -13529,9 +13527,9 @@ const ReadyLaunchSettings = () => {
       sideMenu: sideMenuItems.reduce((acc, item) => {
         acc[item.id] = item.enabled;
         return acc;
-      }, {}),
-      // Save the side menu order
-      sideMenuOrder: sideMenuItems.map(item => item.id)
+      }, {})
+      // Potentially save side menu order here if backend supports it
+      // sideMenuOrder: sideMenuItems.map(item => item.id) 
     };
     // Remove the array version if not needed in saved data
     delete settingsToSave.sideMenuItems;
@@ -13579,43 +13577,19 @@ const ReadyLaunchSettings = () => {
         ...data
       }));
 
-      // Initialize sideMenuItems based on fetched data and saved order
+      // Initialize sideMenuItems based on fetched data and potentially saved order
+      // For now, just update the 'enabled' status based on fetched sideMenu object
+      // A more robust solution would involve fetching/saving the order itself.
       setSideMenuItems(prevItems => {
-        // Create a new array to hold the ordered and updated items
-        let orderedItems = [...prevItems];
-
-        // If we have a saved order, use it to sort the items
-        if (data.sideMenuOrder && Array.isArray(data.sideMenuOrder)) {
-          // Create a map of items by ID for quick lookup
-          const itemsMap = orderedItems.reduce((map, item) => {
-            map[item.id] = item;
-            return map;
-          }, {});
-
-          // Create a new array based on the saved order
-          orderedItems = data.sideMenuOrder.filter(id => itemsMap[id]) // Ensure the ID exists in our items
-          .map(id => ({
-            ...itemsMap[id],
-            // Update enabled status if available in data.sideMenu
-            enabled: data.sideMenu && data.sideMenu[id] !== undefined ? data.sideMenu[id] : itemsMap[id].enabled
-          }));
-
-          // Add any items that weren't in the saved order at the end
-          const orderedIds = new Set(data.sideMenuOrder);
-          const remainingItems = prevItems.filter(item => !orderedIds.has(item.id)).map(item => ({
-            ...item,
-            enabled: data.sideMenu && data.sideMenu[item.id] !== undefined ? data.sideMenu[item.id] : item.enabled
-          }));
-          orderedItems = [...orderedItems, ...remainingItems];
-        }
-        // If no saved order but we have sideMenu data, just update enabled status
-        else if (data.sideMenu) {
-          orderedItems = prevItems.map(item => ({
+        // If data.sideMenu exists, update enabled status
+        if (data.sideMenu) {
+          return prevItems.map(item => ({
             ...item,
             enabled: data.sideMenu[item.id] !== undefined ? data.sideMenu[item.id] : item.enabled
           }));
         }
-        return orderedItems;
+        // If a saved order exists (e.g., data.sideMenuOrder), sort prevItems accordingly here
+        return prevItems;
       });
     }
     setIsLoading(false);
@@ -13872,16 +13846,7 @@ const ReadyLaunchSettings = () => {
       const items = Array.from(sideMenuItems);
       const [reorderedItem] = items.splice(source.index, 1);
       items.splice(destination.index, 0, reorderedItem);
-
-      // Update the sideMenuItems state with the new order
       setSideMenuItems(items);
-
-      // Also update the sideMenuOrder in settings to keep everything in sync
-      const newOrder = items.map(item => item.id);
-      setSettings(prevSettings => ({
-        ...prevSettings,
-        sideMenuOrder: newOrder
-      }));
     }
 
     // Reorder Custom Links
@@ -14018,7 +13983,7 @@ const ReadyLaunchSettings = () => {
           className: "settings-description"
         }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
-        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
           title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Pages', 'buddyboss'),
           isExpanded: expandedSections.pages,
           onToggle: () => toggleSection('pages')
@@ -14054,7 +14019,7 @@ const ReadyLaunchSettings = () => {
           onChange: handleNestedSettingChange('enabledPages', 'gamification')
         })))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
-        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
           title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Sidebars', 'buddyboss'),
           isExpanded: expandedSections.sidebars,
           onToggle: () => toggleSection('sidebars')
@@ -14176,7 +14141,7 @@ const ReadyLaunchSettings = () => {
           onDragEnd: onDragEnd
         }, " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
-        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
           title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Menus', 'buddyboss'),
           isExpanded: expandedSections.menus,
           onToggle: () => toggleSection('menus')
@@ -14204,8 +14169,8 @@ const ReadyLaunchSettings = () => {
           className: "field-label"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Side', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Description text goes here. Drag to reorder.', 'buddyboss')), " "), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_9__.Droppable, {
           droppableId: "sideMenuItems"
-        }, (provided, snapshot) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          className: `field-toggles ${snapshot.isDraggingOver ? 'is-dragging-over' : ''}`,
+        }, provided => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+          className: "field-toggles",
           ...provided.droppableProps,
           ref: provided.innerRef
         }, sideMenuItems.map((item, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_9__.Draggable, {
@@ -14216,9 +14181,7 @@ const ReadyLaunchSettings = () => {
           ref: providedDraggable.innerRef,
           ...providedDraggable.draggableProps,
           ...providedDraggable.dragHandleProps,
-          className: `side-menu-item-draggable ${snapshot.isDragging ? 'is-dragging' : ''}`
-        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          className: `toggle-item ${snapshot.isDragging ? 'is-dragging' : ''}`
+          className: `side-menu-item-draggable toggle-item ${snapshot.isDragging ? 'is-dragging' : ''}`
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           checked: item.enabled
           // Use the updated handler, passing the item ID
@@ -14227,7 +14190,7 @@ const ReadyLaunchSettings = () => {
           label: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
             className: `menu-icon ${item.icon}`
           }), " ", item.label)
-        }))))), provided.placeholder))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        })))), provided.placeholder))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field custom-links-field"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "field-label"
@@ -14243,7 +14206,7 @@ const ReadyLaunchSettings = () => {
           key: link.id,
           draggableId: link.id.toString(),
           index: index
-        }, (providedDraggable, snapshot) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LinkItem__WEBPACK_IMPORTED_MODULE_7__.LinkItem, {
+        }, (providedDraggable, snapshot) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_LinkItem__WEBPACK_IMPORTED_MODULE_7__.LinkItem, {
           link: link,
           onEdit: () => handleEditLinkClick(link),
           onDelete: () => handleDeleteLink(link.id)
@@ -14258,7 +14221,7 @@ const ReadyLaunchSettings = () => {
           variant: "secondary",
           onClick: handleAddLinkClick,
           icon: "plus"
-        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Add New Link', 'buddyboss')))))))), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LinkModal__WEBPACK_IMPORTED_MODULE_8__.LinkModal, {
+        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Add New Link', 'buddyboss')))))))), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_LinkModal__WEBPACK_IMPORTED_MODULE_8__.LinkModal, {
           isOpen: isLinkModalOpen,
           onClose: () => setIsLinkModalOpen(false),
           onSave: handleSaveLink,
