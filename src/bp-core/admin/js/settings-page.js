@@ -3037,6 +3037,16 @@ window.bp = window.bp || {};
 		var $activityTopicWhoCanPost  = $( 'input[name="activity_topic_who_can_post"]' );
 		var $activityTopicId          = $( '#activity_topic_id' );
 		var $activityTopicAdd         = $( '.bb-add-topic' );
+		var $activityTopicRequired    = $( '.bb_enable_activity_topics_required' );
+
+		$document.on( 'change', '#bb_enable_activity_topics', function () {
+			var checkbox = $( this );
+			if ( checkbox.is( ':checked' ) ) {
+				$activityTopicRequired.removeClass( 'bp-hide' );
+			} else {
+				$activityTopicRequired.addClass( 'bp-hide' );
+			}
+		} );
 
 		// Function to check if we've reached the maximum number of topics.
 		function checkTopicsLimit () {
