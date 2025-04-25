@@ -17,7 +17,36 @@ if ( is_user_logged_in() ) :
 endif;
 
 bp_nouveau_template_notices();
-
+?>
+<div class="activity-topic-selector">
+	<ul>
+		<li>
+			<a href="#">All</a>
+		</li>
+		<li>
+			<a href="#">Product Design</a>
+		</li>
+		<li>
+			<a href="#">Graphics</a>
+		</li>
+		<li>
+			<a href="#">AllContent Writing</a>
+		</li>
+		<li>
+			<a href="#">Motion</a>
+		</li>
+		<li>
+			<a href="#">UX Design</a>
+		</li>
+		<li>
+			<a href="#">Web Development</a>
+		</li>
+		<li>
+			<a href="#">Mobile Development</a>
+		</li>
+	</ul>
+</div>
+<?php
 if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 	echo '<div class="flex activity-head-bar">';
 	bp_get_template_part( 'common/search-and-filters-bar' );
