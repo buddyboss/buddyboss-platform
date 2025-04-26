@@ -3033,9 +3033,9 @@ window.bp = window.bp || {};
 		var $activityTopicList        = $( '.bb-activity-topics-list' );
 		var $activityTopicModal       = $( '#bb-hello-container' );
 		var $activityTopicBackdrop    = $( '#bb-hello-backdrop' );
-		var $activityTopicName        = $( '#activity_topic_name' );
-		var $activityTopicWhoCanPost  = $( 'input[name="activity_topic_who_can_post"]' );
-		var $activityTopicId          = $( '#activity_topic_id' );
+		var $activityTopicName        = $( '#bb_activity_topic_name' );
+		var $activityTopicWhoCanPost  = $( 'input[name="bb_activity_topic_who_can_post"]' );
+		var $activityTopicId          = $( '#bb_activity_topic_id' );
 		var $activityTopicAdd         = $( '.bb-add-topic' );
 		var $activityTopicRequired    = $( '.bb_enable_activity_topics_required' );
 
@@ -3066,7 +3066,7 @@ window.bp = window.bp || {};
 		checkTopicsLimit();
 
 		// Close modal button click
-		$( '.close-modal, #activity_topic_cancel' ).on( 'click', function () {
+		$( '.close-modal, #bb_activity_topic_cancel' ).on( 'click', function () {
 			var closestPanel = $(this).closest('.bb-hello-activity-topic:visible');
 			if ( closestPanel.length ) {
 				$( 'body' ).removeClass( 'bp-disable-scroll' );
@@ -3088,11 +3088,11 @@ window.bp = window.bp || {};
 		} );
 
 		// Submit button click
-		$( '#activity_topic_submit' ).on( 'click', function () {
+		$( '#bb_activity_topic_submit' ).on( 'click', function () {
 			var topicName       = $activityTopicName.val();
-			var topicWhoCanPost = $( 'input[name="activity_topic_who_can_post"]:checked' ).val();
+			var topicWhoCanPost = $( 'input[name="bb_activity_topic_who_can_post"]:checked' ).val();
 			var topicId         = $activityTopicId.val();
-			var nonce           = $( '#activity_topic_nonce' ).val();
+			var nonce           = $( '#bb_activity_topic_nonce' ).val();
 
 			if ( topicName === '' ) {
 				return;
@@ -3121,7 +3121,7 @@ window.bp = window.bp || {};
 		} );
 
 		// Edit topic button click
-		$document.on( 'click', '.edit-activity-topic', function ( e ) {
+		$document.on( 'click', '.bb-edit-activity-topic', function ( e ) {
 			e.preventDefault();
 			var topicId = $( this ).data( 'topic-id' );
 			var nonce   = $( this ).data( 'nonce' );
@@ -3147,7 +3147,7 @@ window.bp = window.bp || {};
 					var topic = response.data.topic;
 					$activityTopicName.val( topic.name );
 					$activityTopicWhoCanPost.prop( 'checked', false );
-					$( 'input[name="activity_topic_who_can_post"][value="' + topic.permission_type + '"]' ).prop( 'checked', true );
+					$( 'input[name="bb_activity_topic_who_can_post"][value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					$activityTopicId.val( topic.id );
 				} else {
 					$( '.bb-hello-content' ).prepend( '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>' + response.data.error + '</div>' );
@@ -3156,7 +3156,7 @@ window.bp = window.bp || {};
 		} );
 
 		// Delete topic button click
-		$document.on( 'click', '.delete-activity-topic', function ( e ) {
+		$document.on( 'click', '.bb-delete-activity-topic', function ( e ) {
 			e.preventDefault();
 			if ( ! confirm( BP_ADMIN.delete_topic_confirm ) ) {
 				return;
@@ -3193,7 +3193,7 @@ window.bp = window.bp || {};
 					var topics = [];
 					$activityTopicList.find( '.bb-activity-topic-item' ).each( function ( index ) {
 						topics.push( {
-							id    : $( this ).find( '.edit-activity-topic' ).data( 'topic-id' ),
+							id    : $( this ).find( '.bb-edit-activity-topic' ).data( 'topic-id' ),
 							order : index
 						} );
 					} );
