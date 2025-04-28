@@ -63,8 +63,8 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	// Install activity topics manager table.
-	if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-		bb_activity_topics_manager_instance()->create_tables();
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		bb_topics_manager_instance()->create_tables();
 	}
 
 	// Notifications.

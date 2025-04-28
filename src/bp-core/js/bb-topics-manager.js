@@ -20,9 +20,12 @@
 			modalSelector           : '#bb-activity-topic-form_modal',
 			modalContentSelector    : '.bb-action-popup-content',
 			backdropSelector        : '#bb-hello-backdrop-activity-topic',
-			topicNameSelector       : '#bb_activity_topic_name',
-			topicWhoCanPostSelector : 'input[name="bb_activity_topic_who_can_post"]',
-			topicIdSelector         : '#bb_activity_topic_id',
+			topicNameSelector       : '#topic_name',
+			topicWhoCanPostSelector : 'input[name="permission_type"]',
+			topicIdSelector         : '#topic_id',
+			itemIdSelector          : '#item_id',
+			itemTypeSelector        : '#item_type',
+			nonceSelector           : '#nonce',
 			addTopicButtonSelector  : '.bb-add-topic',
 			closeModalSelector      : '.bb-model-close-button, #activity_topic_cancel',
 			submitButtonSelector    : '#bb_activity_topic_submit',
@@ -35,9 +38,9 @@
 			modalOpenClass : 'activity-modal-open',
 
 			// AJAX actions.
-			addTopicAction    : 'bb_add_activity_topic',
-			editTopicAction   : 'bb_edit_activity_topic',
-			deleteTopicAction : 'bb_delete_activity_topic',
+			addTopicAction    : 'bb_add_topic',
+			editTopicAction   : 'bb_edit_topic',
+			deleteTopicAction : 'bb_delete_topic',
 
 			// Other settings.
 			topicsLimit : bbTopicsManagerVars.topics_limit,
@@ -81,6 +84,9 @@
 			this.$topicWhoCanPost = $( this.config.topicWhoCanPostSelector );
 			this.$topicId         = $( this.config.topicIdSelector );
 			this.$addTopicButton  = $( this.config.addTopicButtonSelector );
+			this.$nonce           = $( this.config.nonceSelector );
+			this.$itemId          = $( this.config.itemIdSelector );
+			this.$itemType        = $( this.config.itemTypeSelector );
 		},
 
 		/**
@@ -140,9 +146,11 @@
 			event.stopPropagation();
 
 			var topicName       = this.$topicName.val();
-			var topicWhoCanPost = $( 'input[name="bb_activity_topic_who_can_post"]:checked' ).val();
+			var topicWhoCanPost = $( 'input[name="permission_type"]:checked' ).val();
 			var topicId         = this.$topicId.val();
-			var nonce           = $( '#bb_activity_topic_nonce' ).val();
+			var itemId          = this.$itemId.val();
+			var itemType        = this.$itemType.val();
+			var nonce           = this.$nonce.val();
 
 			if ( topicName === '' ) {
 				return;
@@ -158,6 +166,8 @@
 				name            : topicName,
 				permission_type : topicWhoCanPost,
 				topic_id        : topicId,
+				item_id         : itemId,
+				item_type       : itemType,
 				nonce           : nonce
 			};
 
@@ -197,6 +207,7 @@
 		 * @param {Event} event - The click event.
 		 */
 		handleEditTopic : function ( event ) {
+			console.log( 'handleEditTopic' );
 			// Prevent default action and stop event propagation.
 			event.preventDefault();
 			event.stopPropagation();
@@ -220,9 +231,11 @@
 
 			// Prepare data for AJAX request.
 			var data = {
-				action   : this.config.editTopicAction,
-				topic_id : topicId,
-				nonce    : nonce
+				action    : this.config.editTopicAction,
+				topic_id  : topicId,
+				item_id   : itemId,
+				item_type : itemType,
+				nonce     : nonce
 			};
 
 			// Use the configured AJAX URL.

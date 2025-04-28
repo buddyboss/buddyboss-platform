@@ -502,8 +502,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_activity_topics() {
-		$topics               = bb_activity_topics_manager_instance()->bb_get_activity_topics();
-		$topics_limit_reached = bb_activity_topics_manager_instance()->bb_activity_topics_limit_reached();
+		$topics               = bb_topics_manager_instance()->bb_get_topics();
+		$topics_limit_reached = bb_topics_manager_instance()->bb_topics_limit_reached();
 		?>
 		<div class="bb-activity-topics-wrapper">
 			<div class="bb-activity-topics-content">
@@ -523,7 +523,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								<div class="bb-topic-right">
 									<span class="bb-topic-access">
 										<?php
-										$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $topic->permission_type );
+										$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $topic->id );
 										if ( ! empty( $permission_type ) ) {
 											$permission_type_value = current( $permission_type );
 											echo esc_html( $permission_type_value );
@@ -537,11 +537,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 											</a>
 										</span>
 										<div class="bb-topic-more-dropdown">
-											<a href="#" class="button edit bb-edit-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_edit_activity_topic' ) ); ?>">
+											<a href="#" class="button edit bb-edit-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_edit_topic' ) ); ?>">
 												<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 												<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 											</a>
-											<a href="#" class="button delete bb-delete-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_delete_activity_topic' ) ); ?>">
+											<a href="#" class="button delete bb-delete-activity-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_delete_topic' ) ); ?>">
 												<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 												<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 											</a>
@@ -584,15 +584,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				<div class="form-fields">
 					<div class="form-field">
 						<div class="field-label">
-							<label for="bb_activity_topic_name"><?php esc_html_e( 'Topic name', 'buddyboss' ); ?></label>
+							<label for="topic_name"><?php esc_html_e( 'Topic name', 'buddyboss' ); ?></label>
 						</div>
 						<div class="field-input">
-							<input type="text" id="bb_activity_topic_name" name="bb_activity_topic_name" placeholder="<?php esc_html_e( 'Enter topic name', 'buddyboss' ); ?>" />
+							<input type="text" id="topic_name" name="topic_name" placeholder="<?php esc_html_e( 'Enter topic name', 'buddyboss' ); ?>" />
 						</div>
 					</div>
 					<div class="form-field">
 						<div class="field-label">
-							<label for="bb_activity_topic_who_can_post"><?php esc_html_e( 'Who can post?', 'buddyboss' ); ?></label>
+							<label for="permission_type"><?php esc_html_e( 'Who can post?', 'buddyboss' ); ?></label>
 						</div>
 						<div class="field-input">
 							<?php
@@ -601,8 +601,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								foreach ( $permission_type as $key => $value ) {
 									?>
 									<div class="bb-topic-who-can-post-option">
-										<input type="radio" id="bb_activity_topic_who_can_post_<?php echo esc_attr( $key ); ?>" name="bb_activity_topic_who_can_post" value="<?php echo esc_attr( $key ); ?>" <?php checked( $key === 'anyone', true ); ?> />
-										<label for="bb_activity_topic_who_can_post_<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></label>
+										<input type="radio" id="permission_type_<?php echo esc_attr( $key ); ?>" name="permission_type" value="<?php echo esc_attr( $key ); ?>" <?php checked( 'anyone' === $key, true ); ?> />
+										<label for="permission_type_<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></label>
 									</div>
 									<?php
 								}
@@ -615,8 +615,10 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<span id="bb_activity_topic_cancel" class="button" tabindex="0">
 						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
 					</span>
-					<input type="hidden" id="bb_activity_topic_id" name="bb_activity_topic_id" value="">
-					<input type="hidden" id="bb_activity_topic_nonce" name="bb_activity_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_add_activity_topic' ) ); ?>">
+					<input type="hidden" id="topic_id" name="topic_id" value="0">
+					<input type="hidden" id="item_id" name="item_id" value="0">
+					<input type="hidden" id="item_type" name="item_type" value="activity">
+					<input type="hidden" id="nonce" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_add_topic' ) ); ?>">
 					<button type="button" id="bb_activity_topic_submit" class="button button-primary">
 						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
 					</button>
@@ -632,7 +634,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_enable_group_activity_topics() {
-		$val    = function_exists( 'bb_enable_group_activity_topics' ) && bb_enable_group_activity_topics();
+		$val    = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
 		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
 		?>
 		<input id="bb_enable_group_activity_topics" name="<?php echo empty( $notice ) ? 'bb-enable-group-activity-topics' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />

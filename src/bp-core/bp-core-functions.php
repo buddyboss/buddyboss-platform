@@ -9997,6 +9997,23 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 }
 
 /**
+ * Get the singleton instance of BB_Topics_Manager.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
+ */
+function bb_topics_manager_instance() {
+	static $instance = null;
+
+	if ( null === $instance && class_exists( 'BB_Topics_Manager' ) ) {
+		$instance = BB_Topics_Manager::instance();
+	}
+
+	return $instance;
+}
+
+/**
  * Function to return the minimum pro version to show notice for group activity topics.
  *
  * @since BuddyBoss [BBVERSION]
@@ -10006,3 +10023,4 @@ function bb_filter_activity_filter_scope_keys( $filters = array() ) {
 function bb_pro_group_activity_topics_version() {
 	return '2.7.01';
 }
+

@@ -6166,9 +6166,9 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 		}
 	}
 
-	if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
 		// Create a new table.
-		bb_activity_topics_manager_instance()->create_tables();
+		bb_topics_manager_instance()->create_tables();
 	}
 }
 
