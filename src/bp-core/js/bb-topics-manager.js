@@ -207,14 +207,15 @@
 		 * @param {Event} event - The click event.
 		 */
 		handleEditTopic : function ( event ) {
-			console.log( 'handleEditTopic' );
 			// Prevent default action and stop event propagation.
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $button = $( event.currentTarget );
-			var topicId = $button.data( 'topic-id' );
-			var nonce   = $button.data( 'nonce' );
+			var $button  = $( event.currentTarget );
+			var topicId  = $button.data( 'topic-id' );
+			var nonce    = $button.data( 'nonce' );
+			var itemId   = $button.data( 'item-id' );
+			var itemType = $button.data( 'item-type' );
 
 			// Add modal open class.
 			$( 'body' ).addClass( this.config.modalOpenClass );
@@ -266,17 +267,22 @@
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $topicItem = $( event.currentTarget ).closest( '.bb-activity-topic-item' );
-			var topicId    = $( event.currentTarget ).data( 'topic-id' );
-			var nonce      = $( event.currentTarget ).data( 'nonce' );
+			var $button    = $( event.currentTarget );
+			var $topicItem = $button.closest( '.bb-activity-topic-item' );
+			var topicId    = $button.data( 'topic-id' );
+			var nonce      = $button.data( 'nonce' );
+			var itemId     = $button.data( 'item-id' );
+			var itemType   = $button.data( 'item-type' );
 
 			if ( confirm( bbTopicsManagerVars.delete_topic_confirm ) ) {
 
 				// Prepare data for AJAX request.
 				var data = {
-					action   : this.config.deleteTopicAction,
-					topic_id : topicId,
-					nonce    : nonce
+					action    : this.config.deleteTopicAction,
+					topic_id  : topicId,
+					nonce     : nonce,
+					item_id   : itemId,
+					item_type : itemType
 				};
 
 				// Use the configured AJAX URL.
