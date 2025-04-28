@@ -211,11 +211,12 @@
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $button  = $( event.currentTarget );
-			var topicId  = $button.data( 'topic-id' );
-			var nonce    = $button.data( 'nonce' );
-			var itemId   = $button.data( 'item-id' );
-			var itemType = $button.data( 'item-type' );
+			var $button   = $( event.currentTarget );
+			var topicAttr = $button.data( 'topic-attr' );
+			var topicId   = topicAttr.id;
+			var itemId    = topicAttr.item_id;
+			var itemType  = topicAttr.item_type;
+			var nonce     = topicAttr.nonce
 
 			// Add modal open class.
 			$( 'body' ).addClass( this.config.modalOpenClass );
@@ -223,6 +224,7 @@
 			// Show modal.
 			this.$modal.show();
 			this.$backdrop.show();
+			this.$topicWhoCanPost.prop( 'checked', false );
 
 			// Remove any existing error messages.
 			var errorElm = this.$modal.find( this.config.errorContainerSelector );
@@ -247,8 +249,7 @@
 				if ( response.success ) {
 					var topic = response.data.topic;
 					this.$topicName.val( topic.name );
-					this.$topicWhoCanPost.prop( 'checked', false );
-					this.$topicWhoCanPost.find( 'input[name="bb_activity_topic_who_can_post"][value="' + topic.permission_type + '"]' ).prop( 'checked', true );
+					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.id );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
@@ -269,10 +270,11 @@
 
 			var $button    = $( event.currentTarget );
 			var $topicItem = $button.closest( '.bb-activity-topic-item' );
-			var topicId    = $button.data( 'topic-id' );
-			var nonce      = $button.data( 'nonce' );
-			var itemId     = $button.data( 'item-id' );
-			var itemType   = $button.data( 'item-type' );
+			var topicAttr  =  $button.data( 'topic-attr' );
+			var topicId    = topicAttr.id;
+			var nonce      = topicAttr.nonce;
+			var itemId     = topicAttr.item_id;
+			var itemType   = topicAttr.item_type;
 
 			if ( confirm( bbTopicsManagerVars.delete_topic_confirm ) ) {
 

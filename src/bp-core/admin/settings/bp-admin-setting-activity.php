@@ -512,6 +512,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					$topics = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
 					if ( ! empty( $topics ) ) {
 						foreach ( $topics as $topic ) {
+							$topic_attr = array(
+								'id'        => $topic->id,
+								'item_id'   => ! empty( $topic->item_id ) ? $topic->item_id : 0,
+								'item_type' => ! empty( $topic->item_type ) ? $topic->item_type : 'activity',
+							);
 							?>
 							<div class="bb-activity-topic-item">
 								<div class="bb-topic-left">
@@ -537,11 +542,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 											</a>
 										</span>
 										<div class="bb-topic-more-dropdown">
-											<a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_edit_topic' ) ); ?>">
+											<a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-attr="<?php echo esc_attr( wp_json_encode( array_merge( $topic_attr, array( 'nonce' => wp_create_nonce( 'bb_edit_topic' ) ) ) ) ); ?>">
 												<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 												<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 											</a>
-											<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-id="<?php echo esc_attr( $topic->id ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb_delete_topic' ) ); ?>">
+											<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="<?php echo esc_attr( wp_json_encode( array_merge( $topic_attr, array( 'nonce' => wp_create_nonce( 'bb_delete_topic' ) ) ) ) ); ?>">
 												<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 												<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 											</a>

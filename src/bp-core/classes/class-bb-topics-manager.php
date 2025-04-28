@@ -253,7 +253,7 @@ class BB_Topics_Manager {
 			$slug = sanitize_title( $slug );
 		}
 
-		if ( $this->bb_get_topic( 'slug', $slug ) ) {
+		if ( $this->bb_get_topic_by( 'slug', $slug ) ) {
 			wp_send_json_error( array( 'error' => __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ) ) );
 		}
 
@@ -328,7 +328,7 @@ class BB_Topics_Manager {
 		}
 
 		// Check if slug already exists.
-		if ( $this->bb_get_topic( 'slug', $r['slug'] ) ) {
+		if ( $this->bb_get_topic_by( 'slug', $r['slug'] ) ) {
 			if ( 'wp_error' === $r['error_type'] ) {
 				unset( $r );
 
@@ -362,7 +362,6 @@ class BB_Topics_Manager {
 
 		// Use the updated table name property.
 		$inserted = $this->wpdb->insert( $this->topics_table, $data, $format );
-		error_log( print_r( $this->wpdb->last_error, true ) );
 
 		if ( ! $inserted ) {
 			return new WP_Error( 'bb_topic_db_insert_error', $this->wpdb->last_error );
@@ -391,7 +390,7 @@ class BB_Topics_Manager {
 
 		unset( $r, $data, $format, $inserted );
 
-		return $this->bb_get_topic( 'id', $topic_id );
+		return $this->bb_get_topic_by( 'id', $topic_id );
 	}
 
 	/**
@@ -483,7 +482,7 @@ class BB_Topics_Manager {
 	 *
 	 * @return object|null Topic object on success, null on failure.
 	 */
-	public function bb_get_topic( $field, $value ) {
+	public function bb_get_topic_by( $field, $value ) {
 
 		if ( ! in_array( $field, array( 'id', 'slug' ), true ) ) {
 			return null;
@@ -625,11 +624,6 @@ class BB_Topics_Manager {
 			$where_conditions[] = $this->wpdb->prepare( 'tr.permission_type = %s', $r['permission_type'] );
 		}
 
-		// user_id.
-		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions[] = $this->wpdb->prepare( 'tr.user_id = %d', $r['user_id'] );
-		}
-
 		/**
 		 * Filters the MySQL WHERE conditions for the activity topics get sql method.
 		 *
@@ -747,7 +741,7 @@ class BB_Topics_Manager {
 	}
 
 	/**
-	 * Edit an existing topic via AJAX.
+	 * Fetch an existing topic while edit topic modal is open via AJAX.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -818,7 +812,7 @@ class BB_Topics_Manager {
 		}
 
 		$topic_id = absint( $topic_id );
-		$topic    = $this->bb_get_topic( 'id', $topic_id );
+		$topic    = $this->bb_get_topic_by( 'id', $topic_id );
 
 		if ( ! $topic ) {
 			if ( 'wp_error' === $r['error_type'] ) {
@@ -841,7 +835,7 @@ class BB_Topics_Manager {
 			$data['slug'] = sanitize_title( $r['name'] );
 
 			// Check if new slug conflicts with another topic.
-			$existing = $this->bb_get_topic( 'slug', $data['slug'] );
+			$existing = $this->bb_get_topic_by( 'slug', $data['slug'] );
 			if ( $existing && $existing->id !== $topic_id ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					unset( $r );
@@ -920,7 +914,7 @@ class BB_Topics_Manager {
 
 		unset( $r, $data, $format, $updated, $topic );
 
-		return $this->bb_get_topic( 'id', $topic_id );
+		return $this->bb_get_topic_by( 'id', $topic_id );
 	}
 
 	/**
@@ -958,7 +952,7 @@ class BB_Topics_Manager {
 		}
 
 		$topic_id = absint( $topic_id );
-		if ( ! $this->bb_get_topic( 'id', $topic_id ) ) {
+		if ( ! $this->bb_get_topic_by( 'id', $topic_id ) ) {
 			return false;
 		}
 
