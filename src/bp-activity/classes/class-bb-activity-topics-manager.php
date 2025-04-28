@@ -104,6 +104,8 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function setup_hooks() {
+		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_bb_add_activity_topic', array( $this, 'bb_add_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_edit_activity_topic', array( $this, 'bb_edit_activity_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_delete_activity_topic', array( $this, 'bb_delete_activity_topic_ajax' ) );
@@ -112,6 +114,34 @@ class BB_Activity_Topics_Manager {
 		// Add custom column to activity admin list table.
 		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
 		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
+	}
+
+	/**
+	 * Enqueue scripts.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function enqueue_scripts() {
+		$bp  = buddypress();
+		$min = bp_core_get_minified_asset_suffix();
+		wp_enqueue_script(
+			'bb-topics-manager',
+			$bp->plugin_url . '/bp-templates/bp-nouveau/js/bb-topics-manager' . $min . '.js',
+			array(
+				'jquery',
+			),
+			bp_get_version(),
+			true
+		);
+		wp_localize_script(
+			'bb-topics-manager',
+			'bbTopicsManagerVars',
+			array(
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'delete_topic_confirm' => esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' ),
+				'topics_limit'         => $this->bb_activity_topics_limit(),
+			)
+		);
 	}
 
 	/**
@@ -881,9 +911,19 @@ class BB_Activity_Topics_Manager {
 	 * @return array Array of permission types.
 	 */
 	public function bb_activity_topic_permission_type( $existing_permission_type = '' ) {
-		$permission_types = array(
-			'anyone'      => __( 'Anyone', 'buddyboss' ),
-			'mods_admins' => __( 'Admin', 'buddyboss' ),
+		$permission_types = apply_filters(
+			/**
+			 * Filters the permission types for the activity topic.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $permission_types Array of permission types.
+			 */
+			'bb_activity_topic_permission_type',
+			array(
+				'anyone'      => __( 'Anyone', 'buddyboss' ),
+				'mods_admins' => __( 'Admin', 'buddyboss' ),
+			)
 		);
 
 		// If an existing permission type is provided, return only that type.
