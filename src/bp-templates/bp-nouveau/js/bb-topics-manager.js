@@ -24,7 +24,6 @@
 			topicWhoCanPostSelector : 'input[name="bb_activity_topic_who_can_post"]',
 			topicIdSelector         : '#bb_activity_topic_id',
 			addTopicButtonSelector  : '.bb-add-topic',
-			requiredSelector        : '.bb_enable_activity_topics_required',
 			closeModalSelector      : '.bb-model-close-button, #activity_topic_cancel',
 			submitButtonSelector    : '#bb_activity_topic_submit',
 			editTopicSelector       : '.bb-edit-activity-topic',
@@ -82,7 +81,6 @@
 			this.$topicWhoCanPost = $( this.config.topicWhoCanPostSelector );
 			this.$topicId         = $( this.config.topicIdSelector );
 			this.$addTopicButton  = $( this.config.addTopicButtonSelector );
-			this.$required        = $( this.config.requiredSelector );
 		},
 
 		/**
@@ -306,7 +304,7 @@
 			}
 
 			return topicsLimitReached;
-		}
+		},
 	};
 
 	$(

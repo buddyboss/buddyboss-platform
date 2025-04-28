@@ -181,7 +181,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$group_activity_topics_pro_class      = bb_get_pro_fields_class( 'group_activity_topics' );
 		$group_activity_topics_notice         = bb_get_pro_label_notice( 'group_activity_topics' );
 		$group_activity_topics_args           = array();
-		$group_activity_topics_args['class']  = esc_attr( $group_activity_topics_pro_class );
+		$group_activity_topics_args['class']  = esc_attr( $group_activity_topics_pro_class ) . ' bb_enable_activity_topics_required' . ( true === bb_is_enabled_activity_topics() ? '' : ' bp-hide' );
 		$group_activity_topics_args['notice'] = $group_activity_topics_notice;
 		$this->add_field(
 			'bb-enable-group-activity-topics',
@@ -193,6 +193,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'intval',
 			$group_activity_topics_args
 		);
+
+		/**
+		 * Fires to register Activity topic settings fields.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param Object $this BP_Admin_Setting_Activity.
+		 */
+		do_action( 'bb_admin_setting_activity_topic_register_fields', $this );
 
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 

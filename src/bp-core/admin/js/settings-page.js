@@ -3043,26 +3043,29 @@ window.bp = window.bp || {};
 			TopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
 		}
 
-		// Enable/disable activity topics setting change.
-		$( document ).on( 'change', '#bb_enable_activity_topics', handleActivityTopicsCheckboxChange );
-		
-		/**
-		 * Handle activity topics checkbox change.
-		 *
-		 * @param {Event} event - The change event.
-		 */
-		function handleActivityTopicsCheckboxChange( event ) {
+		$( document ).on( 'change', '#bb_enable_activity_topics, #bb_enable_group_activity_topics', function ( e ) {
 			// Prevent default action and stop event propagation.
-			event.preventDefault();
-			event.stopPropagation();
+			e.preventDefault();
+			e.stopPropagation();
 
-			var checkbox = $( event.currentTarget );
-			if ( checkbox.is( ':checked' ) ) {
-				this.$required.removeClass( 'bp-hide' );
+			// Get checkbox states
+			var enableTopicsChecked      = $( '#bb_enable_activity_topics' ).is( ':checked' );
+			var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
+
+			// Show/hide all activity topics dependent fields
+			if ( enableTopicsChecked ) {
+				$( '.bb_enable_activity_topics_required' ).removeClass( 'bp-hide' );
 			} else {
-				this.$required.addClass( 'bp-hide' );
+				$( '.bb_enable_activity_topics_required' ).addClass( 'bp-hide' );
 			}
-		}
+
+			// Show/hide only group topics dependent fields
+			if ( enableGroupTopicsChecked && enableTopicsChecked ) {
+				$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
+			} else {
+				$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
+			}
+		} );
 	}
 
 }());
