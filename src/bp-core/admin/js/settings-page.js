@@ -3035,7 +3035,7 @@ window.bp = window.bp || {};
 			TopicsManager.config.modalContentSelector   = '.bb-hello-content';
 			TopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
 			TopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
-			TopicsManager.config.closeModalSelector     = '.close-modal, #bb_activity_topic_cancel';
+			TopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
 			TopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
 			TopicsManager.config.errorContainerSelector = '.bb-hello-error';
 			TopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
