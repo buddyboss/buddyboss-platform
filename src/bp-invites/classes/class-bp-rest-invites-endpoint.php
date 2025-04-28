@@ -301,7 +301,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				$_POST = array();
 
 				$email          = $value['email'];
-				$name           = $value['name'];
+				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 				$member_type    = $value['member_type'];
 				$query_string[] = $email;
 				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
@@ -311,6 +311,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					if ( empty( $subject ) ) {
 						$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
 					} else {
+						$subject = sanitize_textarea_field( wp_unslash( $subject ) );
+						
 						$_POST['bp_member_invites_custom_subject'] = $subject;
 					}
 				} else {
