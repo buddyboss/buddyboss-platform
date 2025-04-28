@@ -13434,67 +13434,67 @@ const ReadyLaunchSettings = () => {
   const [activeTab, setActiveTab] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('activation');
   const [settings, setSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
     // Activation Settings
-    readyLaunchEnabled: false,
-    communityName: '',
+    bb_rl_enabled: false,
+    blogname: '',
     // Style Settings
-    enableDarkMode: false,
-    lightLogo: null,
-    darkLogo: null,
-    primaryColorLight: '#3E34FF',
-    primaryColorDark: '#9747FF',
-    themeMode: 'light',
+    bb_rl_skin_appearance: false,
+    bb_rl_light_logo: null,
+    bb_rl_dark_logo: null,
+    bb_rl_color_light: '#3E34FF',
+    bb_rl_color_dark: '#9747FF',
+    bb_rl_theme_mode: 'light',
     // Pages & Sidebars Settings
-    enabledPages: {
+    bb_rl_enabled_pages: {
       registration: true,
       courses: true,
       events: true,
       gamification: true
     },
-    activityFeedSidebars: {
-      completeProfile: true,
-      latestUpdates: true,
-      recentBlogPosts: true,
-      activeMembers: true
+    bb_rl_activity_sidebars: {
+      complete_profile: true,
+      latest_updates: true,
+      recent_blog_posts: true,
+      active_members: true
     },
-    memberDirectorySidebars: {
-      completeProfile: true,
+    bb_rl_member_sidebars: {
+      complete_profile: true,
       connections: false,
-      myNetwork: false,
+      my_network: false,
       social: false
     },
-    memberProfileSidebars: {
-      completeProfile: true,
+    bb_rl_member_profile_sidebars: {
+      complete_profile: true,
       connections: false,
-      myNetwork: false,
+      my_network: false,
       social: false
     },
-    groupSidebars: {
-      aboutGroup: true,
-      groupMembers: false
+    bb_rl_groups_sidebars: {
+      about_group: true,
+      group_members: false
     },
     // Menu Settings - Keeping the structure for saving/loading compatibility for now
-    headerMenu: 'default',
+    bb_rl_header_menu: 'default',
     // 'default', 'custom'
-    sideMenu: {
+    bb_rl_side_menu: {
       // This might become partially redundant with sideMenuItems but needed for load/save
-      activityFeed: true,
+      activity_feed: true,
       members: true,
       groups: true,
       courses: true,
       messages: false,
       notifications: false
     },
-    // customLinks remains an array, suitable for sorting
-    customLinks: [{
+    // bb_rl_custom_links remains an array, suitable for sorting
+    bb_rl_custom_links: [{
       id: 1,
       title: 'Brand Materials',
       url: 'https://www.buddyboss.com/brand-materials',
-      isEditing: false
+      is_editing: false
     }, {
       id: 2,
       title: 'Resources',
       url: 'https://www.buddyboss.com/documentations',
-      isEditing: false
+      is_editing: false
     }]
   });
   const [isLoading, setIsLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
@@ -13523,8 +13523,8 @@ const ReadyLaunchSettings = () => {
     // Prepare settings for saving, including converting sideMenuItems back to the expected object format
     const settingsToSave = {
       ...newSettings,
-      // Convert sideMenuItems array back to sideMenu object for saving
-      sideMenu: sideMenuItems.reduce((acc, item) => {
+      // Convert sideMenuItems array back to bb_rl_side_menu object for saving
+      bb_rl_side_menu: sideMenuItems.reduce((acc, item) => {
         acc[item.id] = item.enabled;
         return acc;
       }, {})
@@ -13578,14 +13578,14 @@ const ReadyLaunchSettings = () => {
       }));
 
       // Initialize sideMenuItems based on fetched data and potentially saved order
-      // For now, just update the 'enabled' status based on fetched sideMenu object
+      // For now, just update the 'enabled' status based on fetched bb_rl_side_menu object
       // A more robust solution would involve fetching/saving the order itself.
       setSideMenuItems(prevItems => {
-        // If data.sideMenu exists, update enabled status
-        if (data.sideMenu) {
+        // If data.bb_rl_side_menu exists, update enabled status
+        if (data.bb_rl_side_menu) {
           return prevItems.map(item => ({
             ...item,
-            enabled: data.sideMenu[item.id] !== undefined ? data.sideMenu[item.id] : item.enabled
+            enabled: data.bb_rl_side_menu[item.id] !== undefined ? data.bb_rl_side_menu[item.id] : item.enabled
           }));
         }
         // If a saved order exists (e.g., data.sideMenuOrder), sort prevItems accordingly here
@@ -13611,15 +13611,15 @@ const ReadyLaunchSettings = () => {
     setHasUserMadeChanges(true); // Set flag when user makes a change
 
     // Adjust for the new sideMenuItems array structure
-    if (category === 'sideMenu') {
+    if (category === 'bb_rl_side_menu') {
       setSideMenuItems(prevItems => prevItems.map(item => item.id === name ? {
         ...item,
         enabled: value
       } : item));
-      // Also update the original settings.sideMenu for compatibility if needed immediately
+      // Also update the original settings.bb_rl_side_menu for compatibility if needed immediately
       // setSettings(prevSettings => ({
       // 	...prevSettings,
-      // 	sideMenu: { ...prevSettings.sideMenu, [name]: value }
+      // 	bb_rl_side_menu: { ...prevSettings.bb_rl_side_menu, [name]: value }
       // }));
     } else {
       setSettings(prevSettings => ({
@@ -13656,7 +13656,7 @@ const ReadyLaunchSettings = () => {
       // Update existing link
       setSettings(prevSettings => ({
         ...prevSettings,
-        customLinks: prevSettings.customLinks.map(link => link.id === currentEditingLink.id ? {
+        bb_rl_custom_links: prevSettings.bb_rl_custom_links.map(link => link.id === currentEditingLink.id ? {
           ...link,
           title: linkData.title,
           url: linkData.url
@@ -13669,11 +13669,11 @@ const ReadyLaunchSettings = () => {
         // Simple unique ID
         title: linkData.title,
         url: linkData.url,
-        isEditing: false
+        is_editing: false
       };
       setSettings(prevSettings => ({
         ...prevSettings,
-        customLinks: [...prevSettings.customLinks, newLink]
+        bb_rl_custom_links: [...prevSettings.bb_rl_custom_links, newLink]
       }));
     }
     setIsLinkModalOpen(false);
@@ -13683,8 +13683,8 @@ const ReadyLaunchSettings = () => {
 
     setSettings(prevSettings => ({
       ...prevSettings,
-      // Ensure customLinks exists before filtering
-      customLinks: prevSettings.customLinks ? prevSettings.customLinks.filter(link => link.id !== id) : []
+      // Ensure bb_rl_custom_links exists before filtering
+      bb_rl_custom_links: prevSettings.bb_rl_custom_links ? prevSettings.bb_rl_custom_links.filter(link => link.id !== id) : []
     }));
   };
 
@@ -13850,13 +13850,13 @@ const ReadyLaunchSettings = () => {
     }
 
     // Reorder Custom Links
-    if (source.droppableId === 'customLinks') {
-      const items = Array.from(settings.customLinks);
+    if (source.droppableId === 'bb_rl_custom_links') {
+      const items = Array.from(settings.bb_rl_custom_links);
       const [reorderedItem] = items.splice(source.index, 1);
       items.splice(destination.index, 0, reorderedItem);
       setSettings(prevSettings => ({
         ...prevSettings,
-        customLinks: items
+        bb_rl_custom_links: items
       }));
     }
   };
@@ -13884,8 +13884,8 @@ const ReadyLaunchSettings = () => {
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-content"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "ReadyLaunch Enabled"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Description text goes here explaining RL activation and deactivation logics")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
-          checked: settings.readyLaunchEnabled,
-          onChange: handleSettingChange('readyLaunchEnabled')
+          checked: settings.bb_rl_enabled,
+          onChange: handleSettingChange('bb_rl_enabled')
         }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -13900,8 +13900,8 @@ const ReadyLaunchSettings = () => {
           className: "field-input"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
           placeholder: "Type community name",
-          value: settings.communityName,
-          onChange: handleSettingChange('communityName')
+          value: settings.blogname,
+          onChange: handleSettingChange('blogname')
         }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
           className: "field-description"
         }, "Description texts goes here")))));
@@ -13924,8 +13924,8 @@ const ReadyLaunchSettings = () => {
           className: "field-input"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Enable Dark Mode', 'buddyboss'),
-          checked: settings.enableDarkMode,
-          onChange: handleSettingChange('enableDarkMode')
+          checked: settings.bb_rl_skin_appearance,
+          onChange: handleSettingChange('bb_rl_skin_appearance')
         }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -13934,13 +13934,13 @@ const ReadyLaunchSettings = () => {
           className: "field-input logo-uploaders"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ImageSelector, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Light', 'buddyboss'),
-          value: settings.lightLogo,
-          onChange: handleImageUpload('lightLogo'),
+          value: settings.bb_rl_light_logo,
+          onChange: handleImageUpload('bb_rl_light_logo'),
           description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Recommended size 280px by 80px jpg or png', 'buddyboss')
         }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ImageSelector, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Dark', 'buddyboss'),
-          value: settings.darkLogo,
-          onChange: handleImageUpload('darkLogo'),
+          value: settings.bb_rl_dark_logo,
+          onChange: handleImageUpload('bb_rl_dark_logo'),
           description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Recommended size 280px by 80px jpg or png', 'buddyboss')
         }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field"
@@ -13950,12 +13950,12 @@ const ReadyLaunchSettings = () => {
           className: "field-input color-palettes"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Primary Color (Light Mode)', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPickerButton, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Primary Color (Light Mode)', 'buddyboss'),
-          color: settings.primaryColorLight,
-          onChange: handleSettingChange('primaryColorLight')
+          color: settings.bb_rl_color_light,
+          onChange: handleSettingChange('bb_rl_color_light')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Primary Color (Dark Mode)', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPickerButton, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Primary Color (Dark Mode)', 'buddyboss'),
-          color: settings.primaryColorDark,
-          onChange: handleSettingChange('primaryColorDark')
+          color: settings.bb_rl_color_dark,
+          onChange: handleSettingChange('bb_rl_color_dark')
         })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -13963,7 +13963,7 @@ const ReadyLaunchSettings = () => {
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Theme Mode Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Description text goes here', 'buddyboss'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "field-input"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RadioControl, {
-          selected: settings.themeMode,
+          selected: settings.bb_rl_theme_mode,
           options: [{
             label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Light Mode', 'buddyboss'),
             value: 'light'
@@ -13974,7 +13974,7 @@ const ReadyLaunchSettings = () => {
             label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Customer Choice', 'buddyboss'),
             value: 'choice'
           }],
-          onChange: handleSettingChange('themeMode')
+          onChange: handleSettingChange('bb_rl_theme_mode')
         })))));
       case 'pages':
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -13997,26 +13997,26 @@ const ReadyLaunchSettings = () => {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Registration', 'buddyboss'),
-          checked: settings.enabledPages.registration,
-          onChange: handleNestedSettingChange('enabledPages', 'registration')
+          checked: settings.bb_rl_enabled_pages.registration,
+          onChange: handleNestedSettingChange('bb_rl_enabled_pages', 'registration')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Courses', 'buddyboss'),
-          checked: settings.enabledPages.courses,
-          onChange: handleNestedSettingChange('enabledPages', 'courses')
+          checked: settings.bb_rl_enabled_pages.courses,
+          onChange: handleNestedSettingChange('bb_rl_enabled_pages', 'courses')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Events', 'buddyboss'),
-          checked: settings.enabledPages.events,
-          onChange: handleNestedSettingChange('enabledPages', 'events')
+          checked: settings.bb_rl_enabled_pages.events,
+          onChange: handleNestedSettingChange('bb_rl_enabled_pages', 'events')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Gamification', 'buddyboss'),
-          checked: settings.enabledPages.gamification,
-          onChange: handleNestedSettingChange('enabledPages', 'gamification')
+          checked: settings.bb_rl_enabled_pages.gamification,
+          onChange: handleNestedSettingChange('bb_rl_enabled_pages', 'gamification')
         })))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Accordion__WEBPACK_IMPORTED_MODULE_6__.Accordion, {
@@ -14033,26 +14033,26 @@ const ReadyLaunchSettings = () => {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Complete Profile', 'buddyboss'),
-          checked: settings.activityFeedSidebars.completeProfile,
-          onChange: handleNestedSettingChange('activityFeedSidebars', 'completeProfile')
+          checked: settings.bb_rl_activity_sidebars.complete_profile,
+          onChange: handleNestedSettingChange('bb_rl_activity_sidebars', 'complete_profile')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Latest Updates', 'buddyboss'),
-          checked: settings.activityFeedSidebars.latestUpdates,
-          onChange: handleNestedSettingChange('activityFeedSidebars', 'latestUpdates')
+          checked: settings.bb_rl_activity_sidebars.latest_updates,
+          onChange: handleNestedSettingChange('bb_rl_activity_sidebars', 'latest_updates')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Recent Blog Posts', 'buddyboss'),
-          checked: settings.activityFeedSidebars.recentBlogPosts,
-          onChange: handleNestedSettingChange('activityFeedSidebars', 'recentBlogPosts')
+          checked: settings.bb_rl_activity_sidebars.recent_blog_posts,
+          onChange: handleNestedSettingChange('bb_rl_activity_sidebars', 'recent_blog_posts')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Active Members', 'buddyboss'),
-          checked: settings.activityFeedSidebars.activeMembers,
-          onChange: handleNestedSettingChange('activityFeedSidebars', 'activeMembers')
+          checked: settings.bb_rl_activity_sidebars.active_members,
+          onChange: handleNestedSettingChange('bb_rl_activity_sidebars', 'active_members')
         })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field with-multiple-toggles"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -14063,26 +14063,26 @@ const ReadyLaunchSettings = () => {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Complete Profile', 'buddyboss'),
-          checked: settings.memberDirectorySidebars.completeProfile,
-          onChange: handleNestedSettingChange('memberDirectorySidebars', 'completeProfile')
+          checked: settings.bb_rl_member_sidebars.complete_profile,
+          onChange: handleNestedSettingChange('bb_rl_member_sidebars', 'complete_profile')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Connections', 'buddyboss'),
-          checked: settings.memberDirectorySidebars.connections,
-          onChange: handleNestedSettingChange('memberDirectorySidebars', 'connections')
+          checked: settings.bb_rl_member_sidebars.connections,
+          onChange: handleNestedSettingChange('bb_rl_member_sidebars', 'connections')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('My Network (Follow, Followers)', 'buddyboss'),
-          checked: settings.memberDirectorySidebars.myNetwork,
-          onChange: handleNestedSettingChange('memberDirectorySidebars', 'myNetwork')
+          checked: settings.bb_rl_member_sidebars.my_network,
+          onChange: handleNestedSettingChange('bb_rl_member_sidebars', 'my_network')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Social', 'buddyboss'),
-          checked: settings.memberDirectorySidebars.social,
-          onChange: handleNestedSettingChange('memberDirectorySidebars', 'social')
+          checked: settings.bb_rl_member_sidebars.social,
+          onChange: handleNestedSettingChange('bb_rl_member_sidebars', 'social')
         })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field with-multiple-toggles"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -14093,26 +14093,26 @@ const ReadyLaunchSettings = () => {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Complete Profile', 'buddyboss'),
-          checked: settings.memberProfileSidebars.completeProfile,
-          onChange: handleNestedSettingChange('memberProfileSidebars', 'completeProfile')
+          checked: settings.bb_rl_member_profile_sidebars.complete_profile,
+          onChange: handleNestedSettingChange('bb_rl_member_profile_sidebars', 'complete_profile')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Connections', 'buddyboss'),
-          checked: settings.memberProfileSidebars.connections,
-          onChange: handleNestedSettingChange('memberProfileSidebars', 'connections')
+          checked: settings.bb_rl_member_profile_sidebars.connections,
+          onChange: handleNestedSettingChange('bb_rl_member_profile_sidebars', 'connections')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('My Network (Follow, Followers)', 'buddyboss'),
-          checked: settings.memberProfileSidebars.myNetwork,
-          onChange: handleNestedSettingChange('memberProfileSidebars', 'myNetwork')
+          checked: settings.bb_rl_member_profile_sidebars.my_network,
+          onChange: handleNestedSettingChange('bb_rl_member_profile_sidebars', 'my_network')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Social', 'buddyboss'),
-          checked: settings.memberProfileSidebars.social,
-          onChange: handleNestedSettingChange('memberProfileSidebars', 'social')
+          checked: settings.bb_rl_member_profile_sidebars.social,
+          onChange: handleNestedSettingChange('bb_rl_member_profile_sidebars', 'social')
         })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-form-field with-multiple-toggles"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -14123,14 +14123,14 @@ const ReadyLaunchSettings = () => {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('About Group', 'buddyboss'),
-          checked: settings.groupSidebars.aboutGroup,
-          onChange: handleNestedSettingChange('groupSidebars', 'aboutGroup')
+          checked: settings.bb_rl_groups_sidebars.about_group,
+          onChange: handleNestedSettingChange('bb_rl_groups_sidebars', 'about_group')
         })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "toggle-item"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Group Members', 'buddyboss'),
-          checked: settings.groupSidebars.groupMembers,
-          onChange: handleNestedSettingChange('groupSidebars', 'groupMembers')
+          checked: settings.bb_rl_groups_sidebars.group_members,
+          onChange: handleNestedSettingChange('bb_rl_groups_sidebars', 'group_members')
         })))))));
       case 'menus':
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -14152,7 +14152,7 @@ const ReadyLaunchSettings = () => {
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Header', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Description text goes here', 'buddyboss'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "field-input"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
-          value: settings.headerMenu,
+          value: settings.bb_rl_header_menu,
           options: [{
             label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('ReadyLaunch (Default)', 'buddyboss'),
             value: 'default'
@@ -14160,7 +14160,7 @@ const ReadyLaunchSettings = () => {
             label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Custom', 'buddyboss'),
             value: 'custom'
           }],
-          onChange: handleSettingChange('headerMenu')
+          onChange: handleSettingChange('bb_rl_header_menu')
         }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
           className: "field-note"
         }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('You can update your header menu from the', 'buddyboss'), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Menus"), " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('tab, where you will find a dedicated Ready Launch header menu location.', 'buddyboss')))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -14186,7 +14186,7 @@ const ReadyLaunchSettings = () => {
           checked: item.enabled
           // Use the updated handler, passing the item ID
           ,
-          onChange: value => handleNestedSettingChange('sideMenu', item.id)(value),
+          onChange: value => handleNestedSettingChange('bb_rl_side_menu', item.id)(value),
           label: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
             className: `menu-icon ${item.icon}`
           }), " ", item.label)
@@ -14195,13 +14195,13 @@ const ReadyLaunchSettings = () => {
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "field-label"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Link', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Description text goes here. Drag to reorder.', 'buddyboss')), " "), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_9__.Droppable, {
-          droppableId: "customLinks"
+          droppableId: "bb_rl_custom_links"
         }, provided => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "field-input custom-links-wrapper",
           ...provided.droppableProps,
           ref: provided.innerRef
-        }, settings.customLinks && settings.customLinks.map((link, index) =>
-        // Added check for settings.customLinks
+        }, settings.bb_rl_custom_links && settings.bb_rl_custom_links.map((link, index) =>
+        // Added check for settings.bb_rl_custom_links
         (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_9__.Draggable, {
           key: link.id,
           draggableId: link.id.toString(),
@@ -14330,6 +14330,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
 
 
+// Store the initial settings for comparison
+let initialSettings = null;
+
 /**
  * Fetch ReadyLaunch settings from the WordPress REST API.
  *
@@ -14337,14 +14340,51 @@ __webpack_require__.r(__webpack_exports__);
  */
 const fetchSettings = async () => {
   try {
-    return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    const settings = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
       path: '/buddyboss/v1/settings',
       method: 'GET'
     });
+    // Store initial settings for comparison
+    initialSettings = JSON.parse(JSON.stringify(settings));
+    return settings;
   } catch (error) {
     console.error('Error fetching settings:', error);
     return null;
   }
+};
+
+/**
+ * Get only the changed settings by comparing with initial settings
+ * 
+ * @param {Object} currentSettings - Current settings object
+ * @returns {Object} Object containing only changed settings
+ */
+const getChangedSettings = currentSettings => {
+  if (!initialSettings) {
+    return currentSettings;
+  }
+  const changedSettings = {};
+
+  // Helper function to compare nested objects
+  const compareObjects = (current, initial, path = '') => {
+    for (const key in current) {
+      const currentPath = path ? `${path}.${key}` : key;
+      if (typeof current[key] === 'object' && current[key] !== null && !Array.isArray(current[key])) {
+        compareObjects(current[key], initial[key] || {}, currentPath);
+      } else if (JSON.stringify(current[key]) !== JSON.stringify(initial[key])) {
+        // Set the changed value in the changedSettings object
+        const pathParts = currentPath.split('.');
+        let target = changedSettings;
+        for (let i = 0; i < pathParts.length - 1; i++) {
+          target[pathParts[i]] = target[pathParts[i]] || {};
+          target = target[pathParts[i]];
+        }
+        target[pathParts[pathParts.length - 1]] = current[key];
+      }
+    }
+  };
+  compareObjects(currentSettings, initialSettings);
+  return changedSettings;
 };
 
 /**
@@ -14359,20 +14399,32 @@ const saveSettings = async settings => {
     return null;
   }
   try {
-    // Ensure we're sending a clean object (without any internal state properties)
-    const cleanSettings = {
-      ...settings
-    };
+    // Get only changed settings
+    const changedSettings = getChangedSettings(settings);
 
-    // Remove any unnecessary temp properties (if any exist)
-    if (cleanSettings.hasOwnProperty('_tempIds')) {
-      delete cleanSettings._tempIds;
+    // If no changes, return early
+    if (Object.keys(changedSettings).length === 0) {
+      return settings;
     }
-    return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+
+    // Clean the changed settings object
+    const cleanChangedSettings = {
+      ...changedSettings
+    };
+    if (cleanChangedSettings.hasOwnProperty('_tempIds')) {
+      delete cleanChangedSettings._tempIds;
+    }
+    const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
       path: '/buddyboss/v1/settings',
       method: 'POST',
-      data: cleanSettings
+      data: cleanChangedSettings
     });
+
+    // Update initial settings with the new values
+    if (response) {
+      initialSettings = JSON.parse(JSON.stringify(response));
+    }
+    return response;
   } catch (error) {
     console.error('Error saving settings:', error);
     return null;
