@@ -8338,6 +8338,11 @@ span.dashicons.dashicons-admin-file:before {
   padding-bottom: 16px;
 }
 
+.activity-topic-selector > ul > li {
+  position: relative;
+  padding: 0;
+}
+
 .activity-topic-selector > ul > li > a {
   display: block;
   padding: 4px 15px;
@@ -8347,11 +8352,93 @@ span.dashicons.dashicons-admin-file:before {
   color: #333;
   background-color: #eaeaea;
   border: 1px solid transparent;
+  text-decoration: none;
 }
 
 .activity-topic-selector > ul > li > a:hover, .activity-topic-selector > ul > li > a.selected {
   border-color: #eee;
   background-color: #fff;
+}
+
+.activity-topic-selector > ul > li > a.more-action-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: capitalize;
+}
+
+.activity-topic-selector > ul > li > a.more-action-button > i {
+  font-size: 16px;
+}
+
+.activity-topic-selector > ul > li > a.more-action-button:after {
+  display: none;
+}
+
+#buddypress .activity-topic-selector > ul .bb_nav_more_dropdown {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+  min-width: 190px;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  bottom: inherit;
+  list-style: none;
+  z-index: 99;
+  display: none;
+}
+
+#buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open {
+  display: block;
+}
+
+#buddypress .activity-topic-selector > ul .bb_nav_more_dropdown li a {
+  display: block;
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 10px 16px;
+  border-radius: 6px;
+  position: relative;
+  text-decoration: none;
+}
+
+#buddypress .activity-topic-selector > ul .bb_nav_more_dropdown li a:hover {
+  background-color: #eaeaea;
+}
+
+@media screen and (max-width: 980px) {
+  #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open {
+    position: fixed;
+    top: 50%;
+    padding-top: 48px;
+    right: inherit;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open .bb_more_dropdown__title {
+    margin: 0;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #eaeaea;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border-radius: 8px 8px 0 0;
+  }
+  #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open .bb_more_dropdown__title .bb_more_dropdown__close_button {
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+    opacity: 0.4;
+    position: absolute;
+    right: 15px;
+  }
 }
 
 .activity-topic-selector > ul .more-topics {

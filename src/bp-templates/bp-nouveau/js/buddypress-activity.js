@@ -235,6 +235,9 @@ window.bp = window.bp || {};
 					});
 				}, 1000 );
 			}
+
+			// Wrap Activity Topics
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
 		},
 
 		/**

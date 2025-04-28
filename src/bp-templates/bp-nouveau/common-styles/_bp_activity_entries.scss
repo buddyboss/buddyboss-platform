@@ -4461,23 +4461,116 @@ span.dashicons.dashicons-admin-file:before {
 	margin-top: 20px;
 	border-bottom: 1px solid $bp-border-color;
 	padding-bottom: 16px;
-    
-    > li > a {
-        display: block;
-        padding: 4px 15px;
-        border-radius: $block-radius-inner;
-        font-size: 13px;
-        font-weight: 500;
-        color: $black;
-        background-color: $light-grey;
-        border: 1px solid transparent;
 
-        &:hover,
-        &.selected {
-            border-color: $bp-border-color;
-            background-color: $white;
-        }
-    }
+	> li {
+		position: relative;
+		padding: 0;
+
+		> a {
+			display: block;
+			padding: 4px 15px;
+			border-radius: $block-radius-inner;
+			font-size: 13px;
+			font-weight: 500;
+			color: $black;
+			background-color: $light-grey;
+			border: 1px solid transparent;
+			text-decoration: none;
+
+			&:hover,
+			&.selected {
+				border-color: $bp-border-color;
+				background-color: $white;
+			}
+
+			&.more-action-button {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				text-transform: capitalize;
+
+				> i {
+					font-size: 16px;
+				}
+
+				&:after {
+					display: none;
+				}
+			}
+		}
+	}
+
+	.bb_nav_more_dropdown {
+
+		#buddypress & {
+			padding: 10px;
+			border-radius: 8px;
+			background-color: $white;
+			box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.06), 0 6px 24px 0 rgba(0, 0, 0, 0.12);
+			min-width: 190px;
+			position: absolute;
+			right: 0;
+			top: 40px;
+			bottom: inherit;
+			list-style: none;
+			z-index: 99;
+			display: none;
+
+			&.open {
+				display: block;
+			}
+
+			li a {
+				display: block;
+				color: $black;
+				font-size: 13px;
+				font-weight: 500;
+				line-height: 1.2;
+				padding: 10px 16px;
+				border-radius: 6px;
+				position: relative;
+				text-decoration: none;
+
+				&:hover {
+					background-color: $light-grey;
+				}
+			}
+
+			@media screen and (max-width: 980px) {
+
+				&.open {
+					position: fixed;
+					top: 50%;
+					padding-top: 48px;
+					right: inherit;
+					left: 50%;
+					transform: translate(-50%, -50%);
+
+					.bb_more_dropdown__title {
+						margin: 0;
+						width: 100%;
+						position: absolute;
+						top: 0;
+						left: 0;
+						right: 0;
+						background-color: $light-grey;
+						padding: 8px 12px;
+						box-sizing: border-box;
+						border-radius: 8px 8px 0 0;
+
+						.bb_more_dropdown__close_button {
+							cursor: pointer;
+							font-size: 24px;
+							line-height: 1;
+							opacity: 0.4;
+							position: absolute;
+							right: 15px;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	.more-topics {
 		position: relative;
@@ -4516,7 +4609,7 @@ span.dashicons.dashicons-admin-file:before {
 				font-weight: 500;
 				color: $black;
 				background-color: $white;
-				
+
 				&:hover {
 					background-color: $light-grey;
 				}
