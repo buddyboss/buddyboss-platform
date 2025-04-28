@@ -233,10 +233,12 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * Notify a member one of their activity received a reply.
  *
  * @since BuddyPress 2.6.0
+ * @since BuddyBoss x.x.x Added the `$params` parameter.
  *
  * @param BP_Activity_Activity $activity     The original activity.
  * @param int                  $comment_id   ID for the newly received comment.
  * @param int                  $commenter_id ID of the user who made the comment.
+ * @param array                $params       Arguments used with the original activity comment.
  */
 function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
 	// Stop sending notification to user who has muted notifications.
