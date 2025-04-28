@@ -749,15 +749,55 @@ class BB_Topics_Manager {
 
 		check_ajax_referer( 'bb_edit_topic', 'nonce' );
 
-		$topic_id = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$topic_id  = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
-		$topic = $this->bb_get_topic( 'id', $topic_id );
+		$topic = $this->bb_get_topic(
+			array(
+				'id'        => $topic_id,
+				'item_id'   => $item_id,
+				'item_type' => $item_type,
+			)
+		);
 
 		if ( ! $topic ) {
 			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );
 		}
 
 		wp_send_json_success( array( 'topic' => $topic ) );
+	}
+
+	/**
+	 * Get a single topic by ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments.
+	 *     @type int $id The ID of the topic to get.
+	 * }
+	 *
+	 * @return array The topic data.
+	 */
+	public function bb_get_topic( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'id'       => 0,
+				'per_page' => 1,
+				'paged'    => 1,
+				'user_id'  => bp_loggedin_user_id(),
+			)
+		);
+
+		if ( empty( $r['id'] ) ) {
+			return array();
+		}
+
+		$topic = $this->bb_get_topics( $r );
+
+		return is_array( $topic ) && ! empty( $topic['topics'] ) ? current( $topic['topics'] ) : array();
 	}
 
 	/**
