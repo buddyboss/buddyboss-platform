@@ -1088,70 +1088,70 @@ msgstr ""
 msgid "Friendships"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6889
-#: bp-activity/bp-activity-functions.php:6901
+#: bp-activity/bp-activity-functions.php:6896
+#: bp-activity/bp-activity-functions.php:6908
 msgid "%s turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6891
+#: bp-activity/bp-activity-functions.php:6898
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1772
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1388
 msgid "You turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6895
+#: bp-activity/bp-activity-functions.php:6902
 msgid "An organizer turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6897
+#: bp-activity/bp-activity-functions.php:6904
 msgid "A moderator turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6899
-#: bp-activity/bp-activity-functions.php:6904
+#: bp-activity/bp-activity-functions.php:6906
+#: bp-activity/bp-activity-functions.php:6911
 msgid "An admin turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7177
+#: bp-activity/bp-activity-functions.php:7184
 msgid "Sorry, You cannot add comments on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7183
+#: bp-activity/bp-activity-functions.php:7190
 msgid "Sorry, You cannot perform reactions on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7186
+#: bp-activity/bp-activity-functions.php:7193
 msgid "Sorry, You cannot view on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7197
+#: bp-activity/bp-activity-functions.php:7204
 msgid ""
 "Sorry, please establish a friendship with the author of the activity to add "
 "a comment."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7203
+#: bp-activity/bp-activity-functions.php:7210
 msgid ""
 "Sorry, please establish a friendship with the author of the activity to "
 "perform a reaction."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7206
+#: bp-activity/bp-activity-functions.php:7213
 msgid ""
 "Sorry, please establish a friendship with the author of the activity to "
 "view."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7210
+#: bp-activity/bp-activity-functions.php:7217
 msgid "Sorry, You cannot view on this activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7558
+#: bp-activity/bp-activity-functions.php:7565
 #: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7560
+#: bp-activity/bp-activity-functions.php:7567
 #: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
 msgstr ""
@@ -31712,7 +31712,7 @@ msgid "Your pinned post has been removed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1323
-msgid "Your are not allowed to pinned or unpinned the post"
+msgid "You are not allowed to pin or unpin this post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1353
