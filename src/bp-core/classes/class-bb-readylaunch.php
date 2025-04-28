@@ -178,6 +178,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
 			}
+
+			// Add ReadyLaunch settings to platform settings API
+			add_filter('bp_rest_platform_settings', array($this, 'bb_rest_readylaunch_platform_settings'), 10, 1);
 		}
 
 		/**
@@ -1911,6 +1914,89 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $strings;
+		}
+
+		/**
+		 * Add ReadyLaunch settings to the platform settings API.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $settings Array of platform settings.
+		 * @return array Modified array of platform settings.
+		 */
+		public function bb_rest_readylaunch_platform_settings( $settings ) {
+			$settings['bb_rl_enabled'] = bp_get_option('bb_rl_enabled', false);
+			$settings['blogname'] = get_bloginfo('name');
+
+			// Style Settings
+			$settings['bb_rl_skin_appearance'] = bp_get_option('bb_rl_skin_appearance', false);
+			$settings['bb_rl_light_logo'] = bp_get_option('bb_rl_light_logo', null);
+			$settings['bb_rl_dark_logo'] = bp_get_option('bb_rl_dark_logo', null);
+			$settings['bb_rl_color_light'] = bp_get_option('bb_rl_color_light', '#3E34FF');
+			$settings['bb_rl_color_dark'] = bp_get_option('bb_rl_color_dark', '#9747FF');
+			$settings['bb_rl_theme_mode'] = bp_get_option('bb_rl_theme_mode', 'light');
+
+			// Pages & Sidebars Settings
+			$settings['bb_rl_enabled_pages'] = bp_get_option('bb_rl_enabled_pages', array(
+				'registration' => true,
+				'courses' => true,
+				'events' => true,
+				'gamification' => true
+			));
+
+			$settings['bb_rl_activity_sidebars'] = bp_get_option('bb_rl_activity_sidebars', array(
+				'complete_profile' => true,
+				'latest_updates' => true,
+				'recent_blog_posts' => true,
+				'active_members' => true
+			));
+
+			$settings['bb_rl_member_sidebars'] = bp_get_option('bb_rl_member_sidebars', array(
+				'complete_profile' => true,
+				'connections' => false,
+				'my_network' => false,
+				'social' => false
+			));
+
+			$settings['bb_rl_member_profile_sidebars'] = bp_get_option('bb_rl_member_profile_sidebars', array(
+				'complete_profile' => true,
+				'connections' => false,
+				'my_network' => false,
+				'social' => false
+			));
+
+			$settings['bb_rl_groups_sidebars'] = bp_get_option('bb_rl_groups_sidebars', array(
+				'about_group' => true,
+				'group_members' => false
+			));
+
+			// Menu Settings
+			$settings['bb_rl_header_menu'] = bp_get_option('bb_rl_header_menu', 'default');
+			$settings['bb_rl_side_menu'] = bp_get_option('bb_rl_side_menu', array(
+				'activity_feed' => true,
+				'members' => true,
+				'groups' => true,
+				'courses' => true,
+				'messages' => false,
+				'notifications' => false
+			));
+
+			$settings['bb_rl_custom_links'] = bp_get_option('bb_rl_custom_links', array(
+				array(
+					'id' => 1,
+					'title' => 'Brand Materials',
+					'url' => 'https://www.buddyboss.com/brand-materials',
+					'is_editing' => false
+				),
+				array(
+					'id' => 2,
+					'title' => 'Resources',
+					'url' => 'https://www.buddyboss.com/documentations',
+					'is_editing' => false
+				)
+			));
+
+			return $settings;
 		}
 	}
 }
