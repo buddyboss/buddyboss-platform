@@ -13448,10 +13448,12 @@ const ReadyLaunchSettings = () => {
   const [currentEditingLink, setCurrentEditingLink] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   // State for sortable side menu items
   const [sideMenuItems, setSideMenuItems] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(initialSideMenuItems);
+  const [menus, setMenus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
 
   // Load settings on component mount
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     loadSettings();
+    (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.fetchMenus)().then(setMenus);
   }, []);
   const loadSettings = async () => {
     setIsLoading(true);
@@ -13578,7 +13580,7 @@ const ReadyLaunchSettings = () => {
     if (!initialLoad && !isLoading && hasUserMadeChanges && !isSaving && Object.keys(changedFields).length > 0) {
       debouncedSave(settings);
     }
-  }, [settings, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave, changedFields]);
+  }, [changedFields, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave]);
 
   // Toggle section expansion
   const toggleSection = section => {
@@ -14101,13 +14103,10 @@ const ReadyLaunchSettings = () => {
           className: "field-input"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
           value: settings.bb_rl_header_menu,
-          options: [{
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('ReadyLaunch (Default)', 'buddyboss'),
-            value: 'default'
-          }, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Custom', 'buddyboss'),
-            value: 'custom'
-          }],
+          options: [...menus.map(menu => ({
+            label: menu.name,
+            value: menu.slug
+          }))],
           onChange: handleSettingChange('bb_rl_header_menu')
         }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
           className: "field-note"
@@ -14271,6 +14270,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   debounce: () => (/* binding */ debounce),
+/* harmony export */   fetchMenus: () => (/* binding */ fetchMenus),
 /* harmony export */   fetchSettings: () => (/* binding */ fetchSettings),
 /* harmony export */   saveSettings: () => (/* binding */ saveSettings)
 /* harmony export */ });
@@ -14376,6 +14376,28 @@ const debounce = (func, wait) => {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
+};
+const fetchMenus = async () => {
+  try {
+    // Try the most common endpoint for menus
+    const menus = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+      path: '/wp/v2/menus',
+      method: 'GET'
+    });
+    return menus;
+  } catch (e) {
+    // Try fallback endpoint if needed
+    try {
+      const menus = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+        path: '/menus/v1/menus',
+        method: 'GET'
+      });
+      return menus;
+    } catch (err) {
+      console.error('Error fetching menus:', err);
+      return [];
+    }
+  }
 };
 
 /***/ }),

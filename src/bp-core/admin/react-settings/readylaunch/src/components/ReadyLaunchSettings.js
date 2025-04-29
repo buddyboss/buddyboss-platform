@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Sidebar } from './Sidebar';
-import { fetchSettings, saveSettings, debounce } from '../../../utils/api';
+import { fetchSettings, saveSettings, debounce, fetchMenus } from '../../../utils/api';
 import { Accordion } from '../../../components/Accordion';
 import { LinkItem } from '../../../components/LinkItem';
 import { LinkModal } from '../../../components/LinkModal';
@@ -36,10 +36,12 @@ export const ReadyLaunchSettings = () => {
 	const [ currentEditingLink, setCurrentEditingLink ] = useState(null);
 	// State for sortable side menu items
 	const [ sideMenuItems, setSideMenuItems ] = useState(initialSideMenuItems);
+	const [menus, setMenus] = useState([]);
 
 	// Load settings on component mount
 	useEffect(() => {
 		loadSettings();
+		fetchMenus().then(setMenus);
 	}, []);
 
 	const loadSettings = async () => {
@@ -173,7 +175,7 @@ export const ReadyLaunchSettings = () => {
 		if (!initialLoad && !isLoading && hasUserMadeChanges && !isSaving && Object.keys(changedFields).length > 0) {
 			debouncedSave(settings);
 		}
-	}, [settings, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave, changedFields]);
+	}, [changedFields, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave]);
 
 	// Toggle section expansion
 	const toggleSection = (section) => {
@@ -818,8 +820,10 @@ export const ReadyLaunchSettings = () => {
 											<SelectControl
 												value={settings.bb_rl_header_menu}
 												options={[
-													{ label: __('ReadyLaunch (Default)', 'buddyboss'), value: 'default' },
-													{ label: __('Custom', 'buddyboss'), value: 'custom' }
+													...menus.map(menu => ({
+														label: menu.name,
+														value: menu.slug
+													}))
 												]}
 												onChange={handleSettingChange('bb_rl_header_menu')}
 											/>
