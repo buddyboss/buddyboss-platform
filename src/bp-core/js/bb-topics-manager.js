@@ -146,7 +146,7 @@
 			event.stopPropagation();
 
 			var topicName       = this.$topicName.val();
-			var topicWhoCanPost = $( 'input[name="permission_type"]:checked' ).val();
+			var topicWhoCanPost = this.$topicWhoCanPost.filter( ':checked' ).val();
 			var topicId         = this.$topicId.val();
 			var itemId          = this.$itemId.val();
 			var itemType        = this.$itemType.val();
