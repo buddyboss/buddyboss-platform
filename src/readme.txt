@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.7.2
 Requires PHP: 5.6.20
-Stable tag: 2.8.10
+Stable tag: 2.8.41
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,40 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.8.41 =
+* Bug: Notifications - Fixed an issue where unwanted paragraph tags appeared in notifications
+
+= 2.8.40 =
+* Bug: Activity - Resolved a UI issue with the "Read More" link
+* Bug: Core - Disabled hover popups on mobile and touch devices to improve user experience and prevent unintended interactions
+* Bug: Core - Fixed an issue in the admin where the timestamp in a user's extended profile did not correctly reflect the selected timezone
+* Bug: Core - Fixed invalid HTML tags in templates
+* Bug: Core - Fixed Vulnerability issues
+* Bug: Core - Resolved an issue where duplicated activity form templates were being loaded.
+* Bug: Forum - Resolved an issue where the pagination for sticky and super sticky forum discussions did not work correctly based on the settings
+* Bug: Media - Corrected the filter name for the function {{bp_get_media_parent_activity_id}}
+* Bug: Media - Fixed a UI issue related to Directory Count on the Profile > Photos page
+* Bug: Media - Fixed an issue where photos were partially uploaded
+* Bug: Messages - Resolved console errors on the message screen.
+* Bug: Notifications - Improved message handling by showing messages only to logged-in users and enhancing security
+
+= 2.8.30 =
+* Bug: Activity - Fixed an issue where the checkbox in Report options was not selectable when the feed opened in a popup
+* Bug: Activity - Improved the Activity Filter by hiding the dropdown when only one option is available, displaying it as a label instead
+* Bug: Core - Updated “Select2” and “jQuery Validation” libraries in the latest BuddyBoss Plugin/Theme to ensure compatibility and improved functionality
+* Bug: Media - Fixed an issue where the “Group” column on the “All Documents” tab table did not load after refreshing the page in the Documents directory.
+
+= 2.8.20 =
+* Enhancement: Activity - Added hover pop-ups for improved interaction—hovering over a user's avatar now displays a user pop-up, and hovering over a group link in the feed shows a group pop-up
+* Enhancement: Activity - Enhanced the user experience with improved activity sorting and filtering functionality
+* Enhancement: Members - Introduced a new Followers page, allowing users to view a list of people following them
+* Bug: Core - Fixed an issue where display names showed as nicknames in wp-admin and caused inconsistencies between the member directory on mobile and web
+* Bug: Core - Fixed an issue where moderation component texts appeared during browser print of a LearnDash lesson with non-BuddyBoss themes
+* Bug: Elementor - Resolved an issue where the BuddyBoss Platform was restricting the display of Elementor maintenance mode content
+* Bug: Email - Resolved an issue with the recipient name token in the Activation Email Template
+* Bug: Forums - Resolved an issue where incomplete HTML tags in forum replies were breaking the page layout
+* Bug: Moderation - Resolved incorrect counts for "My Connections" and "Following" when a member is suspended
 
 = 2.8.10 =
 * Enhancement: Added new settings to allow admins to enable or disable member and group counts on the Members and Groups directory pages

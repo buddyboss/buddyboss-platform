@@ -2470,16 +2470,26 @@ window.bp = window.bp || {};
 			// Redirection select box Select2
 			if( typeof $.fn.select2 !== 'undefined' ) {
 				if( $( '#bb-login-redirection' ).length > 0 ) {
-					$( '#bb-login-redirection' ).select2({
-						containerCssClass: 'custom-select2',
-						dropdownCssClass: 'custom-dropdown-select2'
-					});
+					$( '#bb-login-redirection' ).select2();
+
+					// Apply CSS classes after initialization
+					$('#bb-login-redirection').next('.select2-container').find( '.select2-selection' ).addClass('custom-select2');
+        
+					// Add class to dropdown when it opens
+					$( '#bb-login-redirection' ).on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'custom-dropdown-select2' );
+					} );
 				}
 				if( $( '#bb-logout-redirection' ).length > 0 ) {
-					$( '#bb-logout-redirection' ).select2({
-						containerCssClass: 'custom-select2',
-						dropdownCssClass: 'custom-dropdown-select2'
-					});
+					$( '#bb-logout-redirection' ).select2();
+
+					// Apply CSS classes after initialization
+					$( '#bb-logout-redirection' ).next( '.select2-container' ).find( '.select2-selection' ).addClass( 'custom-select2' );
+        
+					// Add class to dropdown when it opens
+					$( '#bb-logout-redirection' ).on( 'select2:open', function() {
+						$( '.select2-dropdown' ).addClass( 'custom-dropdown-select2' );
+					} );
 				}
 			}
 
@@ -2542,6 +2552,38 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+
+			$( '.post-type-forum #post, .post-type-topic #post, .post-type-reply #post' ).on( 'submit', function ( event ) {
+				var content = $( '#content' ).val();
+
+				var decodedContent = $( '<textarea>' ).html( content ).text();
+
+				var escapedHtmlRegex = /&lt;.*?&gt;/;
+
+				// Check for escaped HTML tags
+				if ( escapedHtmlRegex.test( content ) ) {
+					alert( BP_ADMIN.forum_validation.escaped_html_tags );
+					event.preventDefault();
+					return;
+				}
+
+				// Parse decoded content for further validation
+				var contentWrapper = $('<div>').html(decodedContent);
+
+				// Structural validation for <ul> and <li>
+				var isValid = true;
+				contentWrapper.find( 'ul' ).each( function () {
+					if ( $( this ).find( 'li' ).length === 0 ) {
+						isValid = false;
+					}
+				} );
+
+				if ( !isValid ) {
+					alert( BP_ADMIN.forum_validation.malformed_ul_li );
+					event.preventDefault();
+					return;
+				}
+			} );
 		}
 	);
 
@@ -2939,5 +2981,38 @@ window.bp = window.bp || {};
 	});
 
 	/* jshint ignore:end */
+
+	function handleDragDrop( sortableParent,onUpdateFun ){
+		$( sortableParent ).sortable( {
+			update: function ( event, ui ) {
+				onUpdateFun( event, ui );
+			},
+		} );
+	}
+
+	// Handle Activity filter and sortring drag-drop.
+	handleDragDrop( '.bb-activity-sorting-list', handleUpdateActivityFilter );
+	function handleUpdateActivityFilter( event ) {
+		var activityFilter = [];
+		$( event.target ).find( '.bb-activity-sorting-item' ).each( function () {
+			activityFilter.push( $( this ).find( 'input' ).val() );
+		} );
+	}
+
+	// Handle Activity filter option save.
+	if ( $( 'body.buddyboss_page_bp-settings' ).length > 0 ) {
+		$( '.bb-activity-sorting-item input[type="checkbox"]' ).on( 'change', function () {
+			var checkbox = $( this ),
+				hiddenInput = checkbox.siblings( 'input[type="hidden"]' );
+	
+			if ( checkbox.is( ':checked' ) ) {
+				// Disable the hidden input when checkbox is checked.
+				hiddenInput.prop( 'disabled', true );
+			} else {
+				// Enable the hidden input when checkbox is unchecked.
+				hiddenInput.prop( 'disabled', false );
+			}
+		});
+	}
 
 }());
