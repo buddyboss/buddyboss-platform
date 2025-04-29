@@ -562,7 +562,7 @@ class BB_Topics_Manager {
 		);
 
 		// Select conditions.
-		$select_sql = 'SELECT t.id';
+		$select_sql = 'SELECT t.id, tr.id';
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
 
@@ -722,7 +722,13 @@ class BB_Topics_Manager {
 			 * @param string $value     MySQL's statement used to query for total activity topics.
 			 * @param string $where_sql MySQL WHERE statement portion.
 			 */
-			$total_activity_topic_sql = apply_filters( 'bb_total_topic_sql', 'SELECT count(DISTINCT tr.topic_id) FROM ' . $this->topic_rel_table . ' tr ' . $where_sql, $where_sql );
+			$total_activity_topic_sql = apply_filters(
+				'bb_total_topic_count_sql',
+				'SELECT count(DISTINCT t.id) FROM ' . $this->topics_table . ' t
+				 LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id
+				 ' . $where_sql,
+				$where_sql
+			);
 			$cached                   = bp_core_get_incremented_cache( $total_activity_topic_sql, self::$topic_cache_group );
 			if ( false === $cached ) {
 				// phpcs:ignore
