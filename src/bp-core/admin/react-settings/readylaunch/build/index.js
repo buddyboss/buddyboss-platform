@@ -13400,7 +13400,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // Initial structure for side menu items
 const initialSideMenuItems = [{
-  id: 'activityFeed',
+  id: 'activity_feed',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Activity Feed', 'buddyboss'),
   icon: 'activity-icon',
   enabled: true
@@ -13522,17 +13522,8 @@ const ReadyLaunchSettings = () => {
 
     // Prepare settings for saving, including converting sideMenuItems back to the expected object format
     const settingsToSave = {
-      ...newSettings,
-      // Convert sideMenuItems array back to bb_rl_side_menu object for saving
-      bb_rl_side_menu: sideMenuItems.reduce((acc, item) => {
-        acc[item.id] = item.enabled;
-        return acc;
-      }, {})
-      // Potentially save side menu order here if backend supports it
-      // sideMenuOrder: sideMenuItems.map(item => item.id) 
+      ...newSettings
     };
-    // Remove the array version if not needed in saved data
-    delete settingsToSave.sideMenuItems;
     const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.saveSettings)(settingsToSave); // Save the modified structure
     setIsSaving(false);
     if (data) {
@@ -13577,33 +13568,45 @@ const ReadyLaunchSettings = () => {
         ...data.platform
       }));
 
-      // Initialize sideMenuItems based on fetched data and potentially saved order
-      // For now, just update the 'enabled' status based on fetched bb_rl_side_menu object
-      // A more robust solution would involve fetching/saving the order itself.
+      // Initialize sideMenuItems based on fetched data
       setSideMenuItems(prevItems => {
-        // If data.bb_rl_side_menu exists, update enabled status
-        if (data.bb_rl_side_menu) {
+        if (data.platform.bb_rl_side_menu) {
           return prevItems.map(item => ({
             ...item,
-            enabled: data.bb_rl_side_menu[item.id] !== undefined ? data.bb_rl_side_menu[item.id] : item.enabled
+            enabled: data.platform.bb_rl_side_menu[item.id] !== undefined ? data.platform.bb_rl_side_menu[item.id] : item.enabled
           }));
         }
-        // If a saved order exists (e.g., data.sideMenuOrder), sort prevItems accordingly here
         return prevItems;
       });
     }
     setIsLoading(false);
     setInitialLoad(false);
-    setHasUserMadeChanges(false); // Reset user changes flag after loading
+    setHasUserMadeChanges(false);
   };
 
   // Generic handler for simple value changes
   const handleSettingChange = name => value => {
     setHasUserMadeChanges(true); // Set flag when user makes a change
-    setSettings(prevSettings => ({
-      ...prevSettings,
-      [name]: value
-    }));
+    setSettings(prevSettings => {
+      const newSettings = {};
+      const keys = name.split('.');
+      let current = newSettings;
+
+      // Navigate to the nested property
+      for (let i = 0; i < keys.length - 1; i++) {
+        // needs to check keys[i] exists in prevSettings then and then update.
+        if (prevSettings[keys[i]]) {
+          current[keys[i]] = {
+            ...current[keys[i]]
+          };
+          current = current[keys[i]];
+        }
+      }
+
+      // Set the value
+      current[keys[keys.length - 1]] = value;
+      return newSettings;
+    });
   };
 
   // Handler for nested settings (for pages and sidebars)
@@ -13616,11 +13619,6 @@ const ReadyLaunchSettings = () => {
         ...item,
         enabled: value
       } : item));
-      // Also update the original settings.bb_rl_side_menu for compatibility if needed immediately
-      // setSettings(prevSettings => ({
-      // 	...prevSettings,
-      // 	bb_rl_side_menu: { ...prevSettings.bb_rl_side_menu, [name]: value }
-      // }));
     } else {
       setSettings(prevSettings => ({
         ...prevSettings,
@@ -14369,10 +14367,37 @@ const getChangedSettings = currentSettings => {
   const compareObjects = (current, initial, path = '') => {
     for (const key in current) {
       const currentPath = path ? `${path}.${key}` : key;
-      if (typeof current[key] === 'object' && current[key] !== null && !Array.isArray(current[key])) {
-        compareObjects(current[key], initial[key] || {}, currentPath);
-      } else if (JSON.stringify(current[key]) !== JSON.stringify(initial[key])) {
+
+      // Skip if key doesn't exist in initial settings
+      if (!(key in initial)) {
         // Set the changed value in the changedSettings object
+        const pathParts = currentPath.split('.');
+        let target = changedSettings;
+        for (let i = 0; i < pathParts.length - 1; i++) {
+          target[pathParts[i]] = target[pathParts[i]] || {};
+          target = target[pathParts[i]];
+        }
+        target[pathParts[pathParts.length - 1]] = current[key];
+        continue;
+      }
+      if (typeof current[key] === 'object' && current[key] !== null) {
+        if (Array.isArray(current[key])) {
+          // Handle arrays by comparing each element
+          if (JSON.stringify(current[key]) !== JSON.stringify(initial[key])) {
+            const pathParts = currentPath.split('.');
+            let target = changedSettings;
+            for (let i = 0; i < pathParts.length - 1; i++) {
+              target[pathParts[i]] = target[pathParts[i]] || {};
+              target = target[pathParts[i]];
+            }
+            target[pathParts[pathParts.length - 1]] = current[key];
+          }
+        } else {
+          // Handle nested objects
+          compareObjects(current[key], initial[key], currentPath);
+        }
+      } else if (current[key] !== initial[key]) {
+        // Handle primitive values
         const pathParts = currentPath.split('.');
         let target = changedSettings;
         for (let i = 0; i < pathParts.length - 1; i++) {

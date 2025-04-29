@@ -10,7 +10,7 @@ import { LinkModal } from '../../../components/LinkModal';
 
 // Initial structure for side menu items
 const initialSideMenuItems = [
-	{ id: 'activityFeed', label: __('Activity Feed', 'buddyboss'), icon: 'activity-icon', enabled: true },
+	{ id: 'activity_feed', label: __('Activity Feed', 'buddyboss'), icon: 'activity-icon', enabled: true },
 	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'members-icon', enabled: true },
 	{ id: 'groups', label: __('Groups', 'buddyboss'), icon: 'groups-icon', enabled: true },
 	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'courses-icon', enabled: true },
@@ -112,17 +112,8 @@ export const ReadyLaunchSettings = () => {
 		
 		// Prepare settings for saving, including converting sideMenuItems back to the expected object format
 		const settingsToSave = {
-			...newSettings,
-			// Convert sideMenuItems array back to bb_rl_side_menu object for saving
-			bb_rl_side_menu: sideMenuItems.reduce((acc, item) => {
-				acc[item.id] = item.enabled;
-				return acc;
-			}, {}),
-			// Potentially save side menu order here if backend supports it
-			// sideMenuOrder: sideMenuItems.map(item => item.id) 
+			...newSettings
 		};
-		// Remove the array version if not needed in saved data
-		delete settingsToSave.sideMenuItems; 
 
 		const data = await saveSettings(settingsToSave); // Save the modified structure
 		setIsSaving(false);
@@ -165,34 +156,49 @@ export const ReadyLaunchSettings = () => {
 		setIsLoading( true );
 		const data = await fetchSettings();
 		if ( data && data.platform ) {
-
+			
 			// Merge fetched settings with defaults to avoid missing keys
 			setSettings(prevSettings => ({ ...prevSettings, ...data.platform }));
 
-			// Initialize sideMenuItems based on fetched data and potentially saved order
-			// For now, just update the 'enabled' status based on fetched bb_rl_side_menu object
-			// A more robust solution would involve fetching/saving the order itself.
+
+			// Initialize sideMenuItems based on fetched data
 			setSideMenuItems(prevItems => {
-				// If data.bb_rl_side_menu exists, update enabled status
-				if (data.bb_rl_side_menu) {
+				if (data.platform.bb_rl_side_menu) {
 					return prevItems.map(item => ({
 						...item,
-						enabled: data.bb_rl_side_menu[item.id] !== undefined ? data.bb_rl_side_menu[item.id] : item.enabled
+						enabled: data.platform.bb_rl_side_menu[item.id] !== undefined ? data.platform.bb_rl_side_menu[item.id] : item.enabled
 					}));
 				}
-				// If a saved order exists (e.g., data.sideMenuOrder), sort prevItems accordingly here
-				return prevItems; 
+				return prevItems;
 			});
 		}
 		setIsLoading( false );
 		setInitialLoad(false);
-		setHasUserMadeChanges(false); // Reset user changes flag after loading
+		setHasUserMadeChanges(false);
 	};
 
 	// Generic handler for simple value changes
-	const handleSettingChange = ( name ) => ( value ) => {
+	const handleSettingChange = (name) => (value) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
-		setSettings( prevSettings => ({ ...prevSettings, [ name ]: value }) );
+		setSettings(prevSettings => {
+			const newSettings = {};
+			const keys = name.split('.');
+			let current = newSettings;
+			
+			// Navigate to the nested property
+			for (let i = 0; i < keys.length - 1; i++) {
+				// needs to check keys[i] exists in prevSettings then and then update.
+				if (prevSettings[keys[i]]) {
+					current[keys[i]] = { ...current[keys[i]] };
+					current = current[keys[i]];
+				}
+			}
+			
+			// Set the value
+			current[keys[keys.length - 1]] = value;
+			
+			return newSettings;
+		});
 	};
 
 	// Handler for nested settings (for pages and sidebars)
@@ -206,12 +212,6 @@ export const ReadyLaunchSettings = () => {
 					item.id === name ? { ...item, enabled: value } : item
 				)
 			);
-			// Also update the original settings.bb_rl_side_menu for compatibility if needed immediately
-			// setSettings(prevSettings => ({
-			// 	...prevSettings,
-			// 	bb_rl_side_menu: { ...prevSettings.bb_rl_side_menu, [name]: value }
-			// }));
-
 		} else {
 			setSettings(prevSettings => ({
 				...prevSettings,
@@ -513,7 +513,7 @@ export const ReadyLaunchSettings = () => {
 								</div>
 								<ToggleControl
 									checked={settings.bb_rl_enabled}
-									onChange={handleSettingChange( 'bb_rl_enabled' )}
+									onChange={handleSettingChange('bb_rl_enabled')}
 								/>
 							</div>
 						</div>
@@ -533,7 +533,7 @@ export const ReadyLaunchSettings = () => {
 									<TextControl
 										placeholder="Type community name"
 										value={settings.blogname}
-										onChange={handleSettingChange( 'blogname' )}
+										onChange={handleSettingChange('blogname')}
 									/>
 									<p className="field-description">Description texts goes here</p>
 								</div>
