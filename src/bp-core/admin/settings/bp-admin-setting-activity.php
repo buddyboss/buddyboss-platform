@@ -528,7 +528,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								<div class="bb-topic-right">
 									<span class="bb-topic-access">
 										<?php
-										$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $topic->id );
+										$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $topic->permission_type );
 										if ( ! empty( $permission_type ) ) {
 											$permission_type_value = current( $permission_type );
 											echo esc_html( $permission_type_value );

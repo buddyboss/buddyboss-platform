@@ -199,6 +199,11 @@
 
 			this.$modal.hide();
 			this.$backdrop.hide();
+
+			// Reset data.
+			this.$topicName.val( '' );
+			this.$topicWhoCanPost.prop( 'checked', false );
+			this.$topicId.val( '' );
 		},
 
 		/**
