@@ -164,9 +164,10 @@ export const ReadyLaunchSettings = () => {
 	const loadSettings = async () => {
 		setIsLoading( true );
 		const data = await fetchSettings();
-		if ( data ) {
+		if ( data && data.platform ) {
+
 			// Merge fetched settings with defaults to avoid missing keys
-			setSettings(prevSettings => ({ ...prevSettings, ...data }));
+			setSettings(prevSettings => ({ ...prevSettings, ...data.platform }));
 
 			// Initialize sideMenuItems based on fetched data and potentially saved order
 			// For now, just update the 'enabled' status based on fetched bb_rl_side_menu object

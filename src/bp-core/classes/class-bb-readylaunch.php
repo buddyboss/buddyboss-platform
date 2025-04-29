@@ -1925,63 +1925,78 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array Modified array of platform settings.
 		 */
 		public function bb_rest_readylaunch_platform_settings( $settings ) {
-			$settings['bb_rl_enabled'] = bp_get_option('bb_rl_enabled', false);
-			$settings['blogname'] = get_bloginfo('name');
-
+			// Activation Settings - Boolean
+			$settings['bb_rl_enabled'] = (bool) bp_get_option('bb_rl_enabled', false);
+			$settings['blogname'] = (string) get_bloginfo('name');
+			
 			// Style Settings
-			$settings['bb_rl_skin_appearance'] = bp_get_option('bb_rl_skin_appearance', false);
+			$settings['bb_rl_skin_appearance'] = (bool) bp_get_option('bb_rl_skin_appearance', false);
 			$settings['bb_rl_light_logo'] = bp_get_option('bb_rl_light_logo', null);
 			$settings['bb_rl_dark_logo'] = bp_get_option('bb_rl_dark_logo', null);
-			$settings['bb_rl_color_light'] = bp_get_option('bb_rl_color_light', '#3E34FF');
-			$settings['bb_rl_color_dark'] = bp_get_option('bb_rl_color_dark', '#9747FF');
-			$settings['bb_rl_theme_mode'] = bp_get_option('bb_rl_theme_mode', 'light');
-
-			// Pages & Sidebars Settings
-			$settings['bb_rl_enabled_pages'] = bp_get_option('bb_rl_enabled_pages', array(
+			$settings['bb_rl_color_light'] = (string) bp_get_option('bb_rl_color_light', '#3E34FF');
+			$settings['bb_rl_color_dark'] = (string) bp_get_option('bb_rl_color_dark', '#9747FF');
+			$settings['bb_rl_theme_mode'] = (string) bp_get_option('bb_rl_theme_mode', 'light');
+			
+			// Pages & Sidebars Settings - Boolean values in arrays
+			$settings['bb_rl_enabled_pages'] = array_map(function($value) {
+				return (bool) $value;
+			}, bp_get_option('bb_rl_enabled_pages', array(
 				'registration' => true,
 				'courses' => true,
 				'events' => true,
 				'gamification' => true
-			));
-
-			$settings['bb_rl_activity_sidebars'] = bp_get_option('bb_rl_activity_sidebars', array(
+			)));
+			
+			$settings['bb_rl_activity_sidebars'] = array_map(function($value) {
+				return (bool) $value;
+			}, bp_get_option('bb_rl_activity_sidebars', array(
 				'complete_profile' => true,
 				'latest_updates' => true,
 				'recent_blog_posts' => true,
 				'active_members' => true
-			));
-
-			$settings['bb_rl_member_sidebars'] = bp_get_option('bb_rl_member_sidebars', array(
+			)));
+			
+			$settings['bb_rl_member_sidebars'] = array_map(function($value) {
+				return (bool) $value;
+			}, bp_get_option('bb_rl_member_sidebars', array(
 				'complete_profile' => true,
 				'connections' => false,
 				'my_network' => false,
 				'social' => false
-			));
-
-			$settings['bb_rl_member_profile_sidebars'] = bp_get_option('bb_rl_member_profile_sidebars', array(
+			)));
+			
+			$settings['bb_rl_member_profile_sidebars'] = array_map(function($value) {
+				return (bool) $value;
+			}, bp_get_option('bb_rl_member_profile_sidebars', array(
 				'complete_profile' => true,
 				'connections' => false,
 				'my_network' => false,
 				'social' => false
-			));
-
-			$settings['bb_rl_groups_sidebars'] = bp_get_option('bb_rl_groups_sidebars', array(
+			)));
+			
+			$settings['bb_rl_groups_sidebars'] = array_map(function($value) {
+				return (bool) $value;
+			}, bp_get_option('bb_rl_groups_sidebars', array(
 				'about_group' => true,
 				'group_members' => false
-			));
-
+			)));
+			
 			// Menu Settings
-			$settings['bb_rl_header_menu'] = bp_get_option('bb_rl_header_menu', 'default');
-			$settings['bb_rl_side_menu'] = bp_get_option('bb_rl_side_menu', array(
+			$settings['bb_rl_header_menu'] = (string) bp_get_option('bb_rl_header_menu', 'default');
+			
+			$settings['bb_rl_side_menu'] = array_map(function($value) {
+				return (bool) $value;
+			}, bp_get_option('bb_rl_side_menu', array(
 				'activity_feed' => true,
 				'members' => true,
 				'groups' => true,
 				'courses' => true,
 				'messages' => false,
 				'notifications' => false
-			));
-
-			$settings['bb_rl_custom_links'] = bp_get_option('bb_rl_custom_links', array(
+			)));
+			
+			// Custom Links - Array of objects with specific types
+			$custom_links = bp_get_option('bb_rl_custom_links', array(
 				array(
 					'id' => 1,
 					'title' => 'Brand Materials',
@@ -1995,7 +2010,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'is_editing' => false
 				)
 			));
-
+			
+			$settings['bb_rl_custom_links'] = array_map(function($link) {
+				return array(
+					'id' => (int) $link['id'],
+					'title' => (string) $link['title'],
+					'url' => (string) $link['url'],
+					'is_editing' => (bool) $link['is_editing']
+				);
+			}, $custom_links);
+			
 			return $settings;
 		}
 	}

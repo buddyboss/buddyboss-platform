@@ -13570,11 +13570,11 @@ const ReadyLaunchSettings = () => {
   const loadSettings = async () => {
     setIsLoading(true);
     const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.fetchSettings)();
-    if (data) {
+    if (data && data.platform) {
       // Merge fetched settings with defaults to avoid missing keys
       setSettings(prevSettings => ({
         ...prevSettings,
-        ...data
+        ...data.platform
       }));
 
       // Initialize sideMenuItems based on fetched data and potentially saved order
