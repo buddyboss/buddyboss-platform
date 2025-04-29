@@ -5559,11 +5559,11 @@ h1.bb-advance-heading {
   margin-right: 5px;
 }
 
-.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a.edit-activity-topic:before {
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a.bb-edit-topic:before {
   content: "\eeec";
 }
 
-.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a.delete-activity-topic:before {
+.bb-activity-topics-wrapper .bb-topic-actions-wrapper .bb-topic-more-dropdown a.bb-delete-topic:before {
   content: "\ef48";
 }
 

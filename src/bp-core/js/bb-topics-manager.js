@@ -34,6 +34,7 @@
 			deleteTopicSelector     : '.bb-delete-topic',
 			errorContainerSelector  : '.bb-hello-error',
 			errorContainer          : '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>',
+			topicActionsButton 		: '.bb-topic-actions-wrapper .bb-topic-actions_button',
 
 			// Classes.
 			modalOpenClass : 'activity-modal-open',
@@ -109,6 +110,16 @@
 
 			// Delete topic button click - directly bind to the handler.
 			this.$document.on( 'click', this.config.deleteTopicSelector, this.handleDeleteTopic.bind( this ) );
+
+			// Handle actions dropdown.
+			this.$document.on( 'click', this.config.topicActionsButton, this.handleActionsDropdown.bind( this ) );
+
+			// Close context menu dropdown when clicking outside
+			this.$document.on( 'click', function( e ) {
+				if ( !$( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
+					$( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
+				}
+			} );
 		},
 
 		/**
@@ -333,6 +344,25 @@
 			}
 
 			return topicsLimitReached;
+		},
+
+		/**
+		 * Handle actions dropdown.
+		 *
+		 * @param {Event} event - The click event.
+		 */
+		handleActionsDropdown : function ( event ) {
+			// Prevent default action and stop event propagation.
+			event.preventDefault();
+			event.stopPropagation();
+
+			var $currentWrapper = $( event.currentTarget ).closest( '.bb-topic-actions-wrapper' );
+
+			// Close other open dropdowns
+			$( '.bb-topic-actions-wrapper.active' ).not( $currentWrapper ).removeClass( 'active' );
+    
+			// Toggle current dropdown
+			$currentWrapper.toggleClass( 'active' );
 		},
 	};
 

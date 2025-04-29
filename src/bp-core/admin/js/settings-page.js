@@ -2999,17 +2999,6 @@ window.bp = window.bp || {};
 		} );
 	}
 
-	$( document ).on( 'click', '.bb-topic-actions-wrapper .bb-topic-actions_button', function ( e ) {
-		e.preventDefault();
-		$( this ).closest( '.bb-topic-actions-wrapper' ).toggleClass( 'active' );
-	} );
-
-	$( document ).on( 'click', function ( e ) {
-		if ( !$( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
-			$( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
-		}
-	} );
-
 	// Handle Activity filter option save.
 	if ( $( 'body.buddyboss_page_bp-settings' ).length > 0 ) {
 		$( '.bb-activity-sorting-item input[type="checkbox"]' ).on( 'change', function () {

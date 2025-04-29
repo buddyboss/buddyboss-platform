@@ -5559,6 +5559,9 @@ h1.bb-advance-heading {
 		font-size: 14px;
 		font-weight: 400;
 	}
+}
+
+.bb-activity-topics-wrapper {
 
 	.bb-topic-actions-wrapper {
 		position: relative;
@@ -5595,11 +5598,11 @@ h1.bb-advance-heading {
 					margin-right: 5px;
 				}
 
-				&.edit-activity-topic:before {
+				&.bb-edit-topic:before {
 					content: "\eeec";
 				}
 
-				&.delete-activity-topic:before {
+				&.bb-delete-topic:before {
 					content: "\ef48";
 				}
 
