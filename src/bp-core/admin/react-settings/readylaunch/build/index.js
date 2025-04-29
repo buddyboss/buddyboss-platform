@@ -13432,76 +13432,13 @@ const initialSideMenuItems = [{
 }];
 const ReadyLaunchSettings = () => {
   const [activeTab, setActiveTab] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('activation');
-  const [settings, setSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
-    // Activation Settings
-    bb_rl_enabled: false,
-    blogname: '',
-    // Style Settings
-    bb_rl_skin_appearance: false,
-    bb_rl_light_logo: null,
-    bb_rl_dark_logo: null,
-    bb_rl_color_light: '#3E34FF',
-    bb_rl_color_dark: '#9747FF',
-    bb_rl_theme_mode: 'light',
-    // Pages & Sidebars Settings
-    bb_rl_enabled_pages: {
-      registration: true,
-      courses: true,
-      events: true,
-      gamification: true
-    },
-    bb_rl_activity_sidebars: {
-      complete_profile: true,
-      latest_updates: true,
-      recent_blog_posts: true,
-      active_members: true
-    },
-    bb_rl_member_sidebars: {
-      complete_profile: true,
-      connections: false,
-      my_network: false,
-      social: false
-    },
-    bb_rl_member_profile_sidebars: {
-      complete_profile: true,
-      connections: false,
-      my_network: false,
-      social: false
-    },
-    bb_rl_groups_sidebars: {
-      about_group: true,
-      group_members: false
-    },
-    // Menu Settings - Keeping the structure for saving/loading compatibility for now
-    bb_rl_header_menu: 'default',
-    // 'default', 'custom'
-    bb_rl_side_menu: {
-      // This might become partially redundant with sideMenuItems but needed for load/save
-      activity_feed: true,
-      members: true,
-      groups: true,
-      courses: true,
-      messages: false,
-      notifications: false
-    },
-    // bb_rl_custom_links remains an array, suitable for sorting
-    bb_rl_custom_links: [{
-      id: 1,
-      title: 'Brand Materials',
-      url: 'https://www.buddyboss.com/brand-materials',
-      is_editing: false
-    }, {
-      id: 2,
-      title: 'Resources',
-      url: 'https://www.buddyboss.com/documentations',
-      is_editing: false
-    }]
-  });
+  const [settings, setSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({});
   const [isLoading, setIsLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const [isSaving, setIsSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [notification, setNotification] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [initialLoad, setInitialLoad] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(true);
   const [hasUserMadeChanges, setHasUserMadeChanges] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [changedFields, setChangedFields] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({});
   const [expandedSections, setExpandedSections] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)({
     pages: true,
     sidebars: true,
@@ -13512,61 +13449,16 @@ const ReadyLaunchSettings = () => {
   // State for sortable side menu items
   const [sideMenuItems, setSideMenuItems] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(initialSideMenuItems);
 
-  // Debounced save function
-  const debouncedSave = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)((0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.debounce)(async newSettings => {
-    // Don't save if we're still loading or it's the initial load
-    if (isLoading || initialLoad) {
-      return;
-    }
-    setIsSaving(true);
-
-    // Prepare settings for saving, including converting sideMenuItems back to the expected object format
-    const settingsToSave = {
-      ...newSettings
-    };
-    const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.saveSettings)(settingsToSave); // Save the modified structure
-    setIsSaving(false);
-    if (data) {
-      setNotification({
-        status: 'success',
-        message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings saved.', 'buddyboss')
-      });
-      // Reset the user changes flag after successful save
-      setHasUserMadeChanges(false);
-    } else {
-      setNotification({
-        status: 'error',
-        message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Error saving settings.', 'buddyboss')
-      });
-      setHasUserMadeChanges(false);
-    }
-    // Auto-dismiss notification
-    setTimeout(() => setNotification(null), 3000);
-  }, 1000), [sideMenuItems, isLoading, initialLoad]);
+  // Load settings on component mount
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     loadSettings();
   }, []);
-
-  // Auto-save when settings change (except on initial load)
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    // Only save when:
-    // 1. Not the initial load
-    // 2. Not currently loading
-    // 3. User has made changes
-    // 4. Not currently saving
-    if (!initialLoad && !isLoading && hasUserMadeChanges && !isSaving) {
-      debouncedSave(settings);
-    }
-  }, [settings, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave]);
   const loadSettings = async () => {
     setIsLoading(true);
     const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.fetchSettings)();
     if (data && data.platform) {
-      // Merge fetched settings with defaults to avoid missing keys
-      setSettings(prevSettings => ({
-        ...prevSettings,
-        ...data.platform
-      }));
+      // Set initial settings from API
+      setSettings(data.platform);
 
       // Initialize sideMenuItems based on fetched data
       setSideMenuItems(prevItems => {
@@ -13586,39 +13478,44 @@ const ReadyLaunchSettings = () => {
 
   // Generic handler for simple value changes
   const handleSettingChange = name => value => {
-    setHasUserMadeChanges(true); // Set flag when user makes a change
-    setSettings(prevSettings => {
-      const newSettings = {};
-      const keys = name.split('.');
-      let current = newSettings;
-
-      // Navigate to the nested property
-      for (let i = 0; i < keys.length - 1; i++) {
-        // needs to check keys[i] exists in prevSettings then and then update.
-        if (prevSettings[keys[i]]) {
-          current[keys[i]] = {
-            ...current[keys[i]]
-          };
-          current = current[keys[i]];
-        }
-      }
-
-      // Set the value
-      current[keys[keys.length - 1]] = value;
-      return newSettings;
-    });
+    setHasUserMadeChanges(true);
+    setChangedFields(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setSettings(prevSettings => ({
+      ...prevSettings,
+      [name]: value
+    }));
   };
 
   // Handler for nested settings (for pages and sidebars)
   const handleNestedSettingChange = (category, name) => value => {
-    setHasUserMadeChanges(true); // Set flag when user makes a change
-
-    // Adjust for the new sideMenuItems array structure
+    setHasUserMadeChanges(true);
     if (category === 'bb_rl_side_menu') {
       setSideMenuItems(prevItems => prevItems.map(item => item.id === name ? {
         ...item,
         enabled: value
       } : item));
+    } else if (category === 'bb_rl_enabled_pages') {
+      // Update settings first
+      setSettings(prevSettings => {
+        const updated = {
+          ...prevSettings,
+          [category]: {
+            ...prevSettings[category],
+            [name]: value
+          }
+        };
+        // Now set changedFields to the full updated object
+        setChangedFields(prev => ({
+          ...prev,
+          [category]: {
+            ...updated[category]
+          }
+        }));
+        return updated;
+      });
     } else {
       setSettings(prevSettings => ({
         ...prevSettings,
@@ -13627,8 +13524,78 @@ const ReadyLaunchSettings = () => {
           [name]: value
         }
       }));
+      setChangedFields(prev => ({
+        ...prev,
+        [category]: {
+          ...settings[category],
+          [name]: value
+        }
+      }));
     }
   };
+
+  // Debounced save function
+  const debouncedSave = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useCallback)((0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.debounce)(async newSettings => {
+    // Don't save if we're still loading or it's the initial load
+    if (isLoading || initialLoad) {
+      return;
+    }
+    setIsSaving(true);
+    try {
+      // Ensure all keys are included in the payload, even if false
+      const payload = Object.keys(changedFields).reduce((acc, key) => {
+        if (typeof changedFields[key] === 'object' && changedFields[key] !== null) {
+          // For nested objects, include all keys
+          acc[key] = {
+            ...settings[key],
+            ...changedFields[key]
+          };
+        } else {
+          acc[key] = changedFields[key];
+        }
+        return acc;
+      }, {});
+      const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.saveSettings)(payload);
+      setIsSaving(false);
+      if (data) {
+        setNotification({
+          status: 'success',
+          message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings saved.', 'buddyboss')
+        });
+        // Reset the user changes flag and changed fields after successful save
+        setHasUserMadeChanges(false);
+        setChangedFields({});
+      } else {
+        setNotification({
+          status: 'error',
+          message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Error saving settings.', 'buddyboss')
+        });
+        setHasUserMadeChanges(false);
+      }
+      // Auto-dismiss notification
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error) {
+      setIsSaving(false);
+      setNotification({
+        status: 'error',
+        message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Error saving settings.', 'buddyboss')
+      });
+      setTimeout(() => setNotification(null), 3000);
+    }
+  }, 1000), [changedFields, isLoading, initialLoad, settings]);
+
+  // Auto-save when settings change (except on initial load)
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    // Only save when:
+    // 1. Not the initial load
+    // 2. Not currently loading
+    // 3. User has made changes
+    // 4. Not currently saving
+    // 5. There are actual changes to save
+    if (!initialLoad && !isLoading && hasUserMadeChanges && !isSaving && Object.keys(changedFields).length > 0) {
+      debouncedSave(settings);
+    }
+  }, [settings, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave, changedFields]);
 
   // Toggle section expansion
   const toggleSection = section => {
