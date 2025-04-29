@@ -81,45 +81,30 @@ export const ReadyLaunchSettings = () => {
 	// Handler for nested settings (for pages and sidebars)
 	const handleNestedSettingChange = (category, name) => (value) => {
 		setHasUserMadeChanges(true);
-		
+
 		if (category === 'bb_rl_side_menu') {
 			setSideMenuItems(prevItems =>
 				prevItems.map(item =>
 					item.id === name ? { ...item, enabled: value } : item
 				)
 			);
-		} else if (category === 'bb_rl_enabled_pages') {
-			// Update settings first
-			setSettings(prevSettings => {
-				const updated = {
-					...prevSettings,
-					[category]: {
-						...prevSettings[category],
-						[name]: value
-					}
-				};
-				// Now set changedFields to the full updated object
-				setChangedFields(prev => ({
-					...prev,
-					[category]: { ...updated[category] }
-				}));
-				return updated;
-			});
 		} else {
-			setSettings(prevSettings => ({
-				...prevSettings,
-				[category]: {
+			setSettings(prevSettings => {
+				// Build the updated category object
+				const updatedCategory = {
 					...prevSettings[category],
 					[name]: value
-				}
-			}));
-			setChangedFields(prev => ({
-				...prev,
-				[category]: {
-					...settings[category],
-					[name]: value
-				}
-			}));
+				};
+				// Use the updatedCategory for both settings and changedFields
+				setChangedFields(prev => ({
+					...prev,
+					[category]: updatedCategory
+				}));
+				return {
+					...prevSettings,
+					[category]: updatedCategory
+				};
+			});
 		}
 	};
 

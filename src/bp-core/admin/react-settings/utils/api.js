@@ -36,63 +36,7 @@ const getChangedSettings = (currentSettings) => {
 		return currentSettings;
 	}
 
-	const changedSettings = {};
-
-	// Helper function to compare nested objects
-	const compareObjects = (current, initial, path = '') => {
-		for (const key in current) {
-			const currentPath = path ? `${path}.${key}` : key;
-			
-			// Skip if key doesn't exist in initial settings
-			if (!(key in initial)) {
-				// Set the changed value in the changedSettings object
-				const pathParts = currentPath.split('.');
-				let target = changedSettings;
-				
-				for (let i = 0; i < pathParts.length - 1; i++) {
-					target[pathParts[i]] = target[pathParts[i]] || {};
-					target = target[pathParts[i]];
-				}
-				
-				target[pathParts[pathParts.length - 1]] = current[key];
-				continue;
-			}
-
-			if (typeof current[key] === 'object' && current[key] !== null) {
-				if (Array.isArray(current[key])) {
-					// Handle arrays by comparing each element
-					if (JSON.stringify(current[key]) !== JSON.stringify(initial[key])) {
-						const pathParts = currentPath.split('.');
-						let target = changedSettings;
-						
-						for (let i = 0; i < pathParts.length - 1; i++) {
-							target[pathParts[i]] = target[pathParts[i]] || {};
-							target = target[pathParts[i]];
-						}
-						
-						target[pathParts[pathParts.length - 1]] = current[key];
-					}
-				} else {
-					// Handle nested objects
-					compareObjects(current[key], initial[key], currentPath);
-				}
-			} else if (current[key] !== initial[key]) {
-				// Handle primitive values
-				const pathParts = currentPath.split('.');
-				let target = changedSettings;
-				
-				for (let i = 0; i < pathParts.length - 1; i++) {
-					target[pathParts[i]] = target[pathParts[i]] || {};
-					target = target[pathParts[i]];
-				}
-				
-				target[pathParts[pathParts.length - 1]] = current[key];
-			}
-		}
-	};
-
-	compareObjects(currentSettings, initialSettings);
-	return changedSettings;
+	return currentSettings;
 };
 
 /**
