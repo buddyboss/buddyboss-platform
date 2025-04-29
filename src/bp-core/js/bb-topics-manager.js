@@ -25,7 +25,8 @@
 			topicIdSelector         : '#bb_topic_id',
 			itemIdSelector          : '#bb_item_id',
 			itemTypeSelector        : '#bb_item_type',
-			nonceSelector           : '#bb_nonce',
+			nonceSelector			: '#bb_topic_nonce',
+			actionFromSelector		: '#bb_action_from',
 			addTopicButtonSelector  : '.bb-add-topic',
 			closeModalSelector      : '.bb-model-close-button, #bb_topic_cancel',
 			submitButtonSelector    : '#bb_topic_submit',
@@ -87,6 +88,7 @@
 			this.$nonce           = $( this.config.nonceSelector );
 			this.$itemId          = $( this.config.itemIdSelector );
 			this.$itemType        = $( this.config.itemTypeSelector );
+			this.$actionFrom      = $( this.config.actionFromSelector );
 		},
 
 		/**
@@ -151,7 +153,7 @@
 			var itemId          = this.$itemId.val();
 			var itemType        = this.$itemType.val();
 			var nonce           = this.$nonce.val();
-
+			var actionFrom      = this.$actionFrom.val();
 			if ( topicName === '' ) {
 				return;
 			}
@@ -168,7 +170,8 @@
 				topic_id        : topicId,
 				item_id         : itemId,
 				item_type       : itemType,
-				nonce           : nonce
+				nonce           : nonce,
+				action_from     : actionFrom
 			};
 
 			// Use the configured AJAX URL.
