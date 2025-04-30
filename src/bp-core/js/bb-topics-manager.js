@@ -175,6 +175,9 @@
 				return;
 			}
 
+			// Add loading state to modal
+			this.$modal.addClass( 'loading' );
+
 			// Prepare data for AJAX request.
 			var data = {
 				action          : this.config.addTopicAction,
@@ -192,6 +195,9 @@
 
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
+				// Remove loading state
+				this.$modal.removeClass( 'loading' );
+				
 				if ( response.success ) {
 					window.location.reload();
 				} else {

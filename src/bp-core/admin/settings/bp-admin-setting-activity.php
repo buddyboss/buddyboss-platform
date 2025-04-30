@@ -626,7 +626,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					<input type="hidden" id="bb_action_from" name="bb_action_from" value="admin">
 					<input type="hidden" id="bb_topic_nonce" name="bb_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_add_topic' ) ); ?>">
 					<button type="button" id="bb_topic_submit" class="button button-primary">
-						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-spinner animate-spin"></i>
 					</button>
 				</div>
 			</div>
