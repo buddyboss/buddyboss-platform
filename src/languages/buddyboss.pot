@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.8.41\n"
+"Project-Id-Version: BuddyBoss Platform 2.8.50\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-04-30 12:15:37+00:00\n"
+"POT-Creation-Date: 2025-04-30 14:20:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9809,7 +9809,7 @@ msgid "%1$s replied to your comment"
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:333
-#: bp-performance/classes/class-performance.php:452
+#: bp-performance/classes/class-performance.php:460
 msgid "Download the plugin"
 msgstr ""
 
@@ -9825,13 +9825,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:359
-#: bp-performance/classes/class-performance.php:450
-#: bp-performance/classes/class-performance.php:477
+#: bp-performance/classes/class-performance.php:458
+#: bp-performance/classes/class-performance.php:485
 msgid "must-use plugins"
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:362
-#: bp-performance/classes/class-performance.php:453
+#: bp-performance/classes/class-performance.php:461
 msgid ""
 "and then upload it into the \"/wp-content/mu-plugins/\" directory on your "
 "server."
@@ -29428,25 +29428,25 @@ msgstr ""
 msgid "API Caching"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:448
+#: bp-performance/classes/class-performance.php:456
 msgid ""
 "API Caching cannot be automatically installed on your server. To enable "
 "caching, you need to manually install the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:475
+#: bp-performance/classes/class-performance.php:483
 msgid ""
 "API Caching could not be automatically updated on your server. To enable "
 "caching, you need to manually update the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:479
+#: bp-performance/classes/class-performance.php:487
 msgid "Download v1.0.1"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:480
+#: bp-performance/classes/class-performance.php:488
 msgid ""
 "and then upload the plugin manually into the \"/wp-content/mu-plugins/\" "
 "directory on your server."
