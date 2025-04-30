@@ -149,6 +149,9 @@
 			// Show modal
 			this.$modal.show();
 			this.$backdrop.show();
+
+			// Trigger modal opened event.
+			$( document ).trigger( 'bb_modal_opened', [ this.$modal ] );
 		},
 
 		/**
@@ -226,6 +229,9 @@
 			this.$topicName.val( '' );
 			this.$topicWhoCanPost.prop( 'checked', false );
 			this.$topicId.val( '' );
+
+			// Trigger modal closed event.
+			$( document ).trigger( 'bb_modal_closed', [ this.$modal ] );
 		},
 
 		/**
