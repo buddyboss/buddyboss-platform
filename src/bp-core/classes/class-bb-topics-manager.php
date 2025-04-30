@@ -1033,18 +1033,12 @@ class BB_Topics_Manager {
 		do_action( 'bb_topic_relationship_before_delete', $topic_id );
 
 		// 1. Delete activity relationships.
-		$deleted_rels = $this->wpdb->delete( $this->activity_topic_rel_table, array( 'topic_id' => $topic_id ), array( '%d' ) );
+		$deleted_rels = $this->wpdb->delete( $this->topic_rel_table, array( 'topic_id' => $topic_id ), array( '%d' ) );
 		if ( false === $deleted_rels ) {
 			return false;
 		}
 
 		do_action( 'bb_topic_relationship_after_deleted', $topic_id );
-
-		// 3. Delete the topic itself.
-		$deleted_topic = $this->wpdb->delete( $this->topics_table, array( 'id' => $topic_id ), array( '%d' ) );
-		if ( ! $deleted_topic ) { // delete returns number of rows deleted, 0 is possible but false is error.
-			return false;
-		}
 
 		/**
 		 * Fires after a topic has been deleted.
