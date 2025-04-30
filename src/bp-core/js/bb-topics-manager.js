@@ -161,6 +161,9 @@
 			event.preventDefault();
 			event.stopPropagation();
 
+			// Remove any existing error messages.
+			this.$modal.find( this.config.errorContainerSelector ).remove();
+
 			var topicName       = this.$topicName.val();
 			var topicWhoCanPost = this.$topicWhoCanPost.filter( ':checked' ).val();
 			var topicId         = this.$topicId.val();
@@ -171,10 +174,6 @@
 			if ( topicName === '' ) {
 				return;
 			}
-
-			// Remove any existing error messages.
-			var $topicNameField = this.$modal.find( '#bb_activity_topic_name' ).closest( this.config.modalContentSelector );
-			$topicNameField.find( '.bb-hello-error' ).remove();
 
 			// Prepare data for AJAX request.
 			var data = {
