@@ -13403,32 +13403,38 @@ const initialSideMenuItems = [{
   id: 'activity_feed',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Activity Feed', 'buddyboss'),
   icon: 'activity-icon',
-  enabled: true
+  enabled: true,
+  order: 0
 }, {
   id: 'members',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Members', 'buddyboss'),
   icon: 'members-icon',
-  enabled: true
+  enabled: true,
+  order: 1
 }, {
   id: 'groups',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Groups', 'buddyboss'),
   icon: 'groups-icon',
-  enabled: true
+  enabled: true,
+  order: 2
 }, {
   id: 'courses',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Courses', 'buddyboss'),
   icon: 'courses-icon',
-  enabled: true
+  enabled: true,
+  order: 3
 }, {
   id: 'messages',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Messages', 'buddyboss'),
   icon: 'messages-icon',
-  enabled: false
+  enabled: false,
+  order: 4
 }, {
   id: 'notifications',
   label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Notifications', 'buddyboss'),
   icon: 'notifications-icon',
-  enabled: false
+  enabled: false,
+  order: 5
 }];
 const ReadyLaunchSettings = () => {
   const [activeTab, setActiveTab] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('activation');
@@ -13465,10 +13471,14 @@ const ReadyLaunchSettings = () => {
       // Initialize sideMenuItems based on fetched data
       setSideMenuItems(prevItems => {
         if (data.platform.bb_rl_side_menu) {
-          return prevItems.map(item => ({
-            ...item,
-            enabled: data.platform.bb_rl_side_menu[item.id] !== undefined ? data.platform.bb_rl_side_menu[item.id] : item.enabled
-          }));
+          return prevItems.map(item => {
+            const savedItem = data.platform.bb_rl_side_menu[item.id];
+            return {
+              ...item,
+              enabled: savedItem ? savedItem.enabled : item.enabled,
+              order: savedItem ? savedItem.order : item.order
+            };
+          }).sort((a, b) => a.order - b.order);
         }
         return prevItems;
       });
@@ -13495,10 +13505,30 @@ const ReadyLaunchSettings = () => {
   const handleNestedSettingChange = (category, name) => value => {
     setHasUserMadeChanges(true);
     if (category === 'bb_rl_side_menu') {
-      setSideMenuItems(prevItems => prevItems.map(item => item.id === name ? {
-        ...item,
-        enabled: value
-      } : item));
+      setSideMenuItems(prevItems => {
+        const updatedItems = prevItems.map(item => item.id === name ? {
+          ...item,
+          enabled: value
+        } : item);
+
+        // Update settings and changedFields with the new structure
+        const bb_rl_side_menu = {};
+        updatedItems.forEach(item => {
+          bb_rl_side_menu[item.id] = {
+            enabled: item.enabled,
+            order: item.order
+          };
+        });
+        setSettings(prev => ({
+          ...prev,
+          bb_rl_side_menu
+        }));
+        setChangedFields(prev => ({
+          ...prev,
+          bb_rl_side_menu
+        }));
+        return updatedItems;
+      });
     } else {
       setSettings(prevSettings => {
         // Build the updated category object
@@ -13789,14 +13819,37 @@ const ReadyLaunchSettings = () => {
     if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
-    setHasUserMadeChanges(true); // Set flag when user makes a change
+    setHasUserMadeChanges(true);
 
     // Reorder Side Menu Items
     if (source.droppableId === 'sideMenuItems') {
       const items = Array.from(sideMenuItems);
       const [reorderedItem] = items.splice(source.index, 1);
       items.splice(destination.index, 0, reorderedItem);
-      setSideMenuItems(items);
+
+      // Update order property for all items
+      const updatedItems = items.map((item, index) => ({
+        ...item,
+        order: index
+      }));
+      setSideMenuItems(updatedItems);
+
+      // Update settings and changedFields with the new structure
+      const bb_rl_side_menu = {};
+      updatedItems.forEach(item => {
+        bb_rl_side_menu[item.id] = {
+          enabled: item.enabled,
+          order: item.order
+        };
+      });
+      setSettings(prev => ({
+        ...prev,
+        bb_rl_side_menu
+      }));
+      setChangedFields(prev => ({
+        ...prev,
+        bb_rl_side_menu
+      }));
     }
 
     // Reorder Custom Links

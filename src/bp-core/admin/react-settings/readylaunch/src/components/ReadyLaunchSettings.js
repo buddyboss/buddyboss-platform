@@ -10,12 +10,12 @@ import { LinkModal } from '../../../components/LinkModal';
 
 // Initial structure for side menu items
 const initialSideMenuItems = [
-	{ id: 'activity_feed', label: __('Activity Feed', 'buddyboss'), icon: 'activity-icon', enabled: true },
-	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'members-icon', enabled: true },
-	{ id: 'groups', label: __('Groups', 'buddyboss'), icon: 'groups-icon', enabled: true },
-	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'courses-icon', enabled: true },
-	{ id: 'messages', label: __('Messages', 'buddyboss'), icon: 'messages-icon', enabled: false },
-	{ id: 'notifications', label: __('Notifications', 'buddyboss'), icon: 'notifications-icon', enabled: false },
+	{ id: 'activity_feed', label: __('Activity Feed', 'buddyboss'), icon: 'activity-icon', enabled: true, order: 0 },
+	{ id: 'members', label: __('Members', 'buddyboss'), icon: 'members-icon', enabled: true, order: 1 },
+	{ id: 'groups', label: __('Groups', 'buddyboss'), icon: 'groups-icon', enabled: true, order: 2 },
+	{ id: 'courses', label: __('Courses', 'buddyboss'), icon: 'courses-icon', enabled: true, order: 3 },
+	{ id: 'messages', label: __('Messages', 'buddyboss'), icon: 'messages-icon', enabled: false, order: 4 },
+	{ id: 'notifications', label: __('Notifications', 'buddyboss'), icon: 'notifications-icon', enabled: false, order: 5 },
 ];
 
 export const ReadyLaunchSettings = () => {
@@ -54,10 +54,14 @@ export const ReadyLaunchSettings = () => {
 			// Initialize sideMenuItems based on fetched data
 			setSideMenuItems(prevItems => {
 				if (data.platform.bb_rl_side_menu) {
-					return prevItems.map(item => ({
-						...item,
-						enabled: data.platform.bb_rl_side_menu[item.id] !== undefined ? data.platform.bb_rl_side_menu[item.id] : item.enabled
-					}));
+					return prevItems.map(item => {
+						const savedItem = data.platform.bb_rl_side_menu[item.id];
+						return {
+							...item,
+							enabled: savedItem ? savedItem.enabled : item.enabled,
+							order: savedItem ? savedItem.order : item.order
+						};
+					}).sort((a, b) => a.order - b.order);
 				}
 				return prevItems;
 			});
@@ -85,11 +89,31 @@ export const ReadyLaunchSettings = () => {
 		setHasUserMadeChanges(true);
 
 		if (category === 'bb_rl_side_menu') {
-			setSideMenuItems(prevItems =>
-				prevItems.map(item =>
+			setSideMenuItems(prevItems => {
+				const updatedItems = prevItems.map(item =>
 					item.id === name ? { ...item, enabled: value } : item
-				)
-			);
+				);
+				
+				// Update settings and changedFields with the new structure
+				const bb_rl_side_menu = {};
+				updatedItems.forEach(item => {
+					bb_rl_side_menu[item.id] = {
+						enabled: item.enabled,
+						order: item.order
+					};
+				});
+
+				setSettings(prev => ({
+					...prev,
+					bb_rl_side_menu
+				}));
+				setChangedFields(prev => ({
+					...prev,
+					bb_rl_side_menu
+				}));
+
+				return updatedItems;
+			});
 		} else {
 			setSettings(prevSettings => {
 				// Build the updated category object
@@ -401,14 +425,39 @@ export const ReadyLaunchSettings = () => {
 			return;
 		}
 
-		setHasUserMadeChanges(true); // Set flag when user makes a change
+		setHasUserMadeChanges(true);
 		
 		// Reorder Side Menu Items
 		if (source.droppableId === 'sideMenuItems') {
 			const items = Array.from(sideMenuItems);
 			const [reorderedItem] = items.splice(source.index, 1);
 			items.splice(destination.index, 0, reorderedItem);
-			setSideMenuItems(items);
+
+			// Update order property for all items
+			const updatedItems = items.map((item, index) => ({
+				...item,
+				order: index
+			}));
+
+			setSideMenuItems(updatedItems);
+
+			// Update settings and changedFields with the new structure
+			const bb_rl_side_menu = {};
+			updatedItems.forEach(item => {
+				bb_rl_side_menu[item.id] = {
+					enabled: item.enabled,
+					order: item.order
+				};
+			});
+
+			setSettings(prev => ({
+				...prev,
+				bb_rl_side_menu
+			}));
+			setChangedFields(prev => ({
+				...prev,
+				bb_rl_side_menu
+			}));
 		}
 
 		// Reorder Custom Links
