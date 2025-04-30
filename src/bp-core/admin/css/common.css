@@ -5650,3 +5650,175 @@ h1.bb-advance-heading {
   gap: 10px;
   box-sizing: border-box;
 }
+
+#bb-hello-container.bb-modal-panel,
+.admin-bar #bb-hello-container.bb-modal-panel {
+  top: 50%;
+  left: 50%;
+  right: unset;
+  transform: translate(-50%, -50%);
+}
+
+@media screen and (max-width: 768px) {
+  #bb-hello-container.bb-modal-panel,
+  .admin-bar #bb-hello-container.bb-modal-panel {
+    width: 90%;
+  }
+}
+
+.bb-modal-panel .bb-hello-header {
+  background-color: #f6f7f7;
+  border-bottom-color: var(--bb-hello-color-secondary);
+}
+
+.bb-modal-panel .bb-hello-title h2 {
+  color: #1d2327;
+  font-size: 1.5em;
+  margin: 0.5em 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-weight: 600;
+}
+
+.bb-modal-panel .bb-hello-content {
+  height: auto;
+  padding: 0 23px;
+  min-height: 180px;
+  max-height: calc(100vh - 220px);
+  margin-bottom: 56px;
+}
+
+.bb-modal-panel .bb-hello-content .form-fields {
+  margin: 10px 0;
+}
+
+.bb-modal-panel .bb-hello-content .form-field .bb-hello-error:first-of-type {
+  margin-top: -10px;
+}
+
+.bb-modal-panel .bb-hello-content .form-field .bb-hello-error + .field-label {
+  margin-top: 20px;
+}
+
+.bb-modal-panel .bb-hello-content > .bb-hello-error:first-of-type {
+  margin-top: 0;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-error {
+  margin: -1px -23px 0;
+  background-color: #fcf0f1;
+  border-top: 1px solid #d63638;
+  border-bottom: 1px solid #d63638;
+  padding: 10px 23px;
+  display: flex;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-error > i {
+  color: #d63638;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-error > i::before {
+  margin: 0;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-error + .bb-hello-error {
+  border-top: 0;
+}
+
+.bb-modal-panel .bb-hello-content .form-field .bb-hello-success:first-of-type {
+  margin-top: -10px;
+}
+
+.bb-modal-panel .bb-hello-content .form-field .bb-hello-success + .field-label {
+  margin-top: 20px;
+}
+
+.bb-modal-panel .bb-hello-content > .bb-hello-success:first-of-type {
+  margin-top: 0;
+}
+
+.bb-modal-panel .bb-hello-content .form-field .bb-hello-success + .field-label {
+  margin-top: 20px;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-success {
+  margin: -1px -23px 0;
+  background-color: #e6fce5;
+  border-top: 1px solid #66d636;
+  border-bottom: 1px solid #66d636;
+  padding: 10px 23px;
+  display: flex;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-success > i {
+  color: #66d636;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-success > i::before {
+  margin: 0;
+}
+
+.bb-modal-panel .bb-hello-content .bb-hello-success + .bb-hello-success {
+  border-top: 0;
+}
+
+.bb-modal-panel .form-fields .field-label {
+  margin-bottom: 5px;
+}
+
+.bb-modal-panel .form-fields .field-label label {
+  line-height: 22px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bb-modal-panel .form-fields .field-input input[type="text"],
+.bb-modal-panel .form-fields .field-input textarea {
+  width: 100%;
+}
+
+.bb-modal-panel .form-fields .form-field {
+  margin-bottom: 5px;
+}
+
+.bb-modal-panel .bb-popup-buttons {
+  position: absolute;
+  bottom: 0;
+  padding: 12px 15px;
+  width: 100%;
+  margin: 0 -23px;
+  border-top: 1px solid var(--bb-hello-color-secondary);
+  background-color: #f6f7f7;
+}
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+  .bb-modal-panel .bb-hello-content {
+    min-height: 110px;
+  }
+}
+
+.bb-modal-panel .form-field .description {
+  margin: 13px 0 20px 0;
+  line-height: 22px;
+}
+
+#bb-hello-container.bb-modal-panel {
+  top: 50%;
+  bottom: initial;
+  transform: translateY(-50%);
+}
+
+#bb-hello-container.bb-modal-panel .button-primary {
+  color: #fff;
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 480px) {
+  #bb-hello-container.bb-modal-panel .button-primary {
+    margin-right: 0;
+  }
+}

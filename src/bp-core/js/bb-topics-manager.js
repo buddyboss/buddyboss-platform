@@ -114,6 +114,9 @@
 			// Handle actions dropdown.
 			this.$document.on( 'click', this.config.topicActionsButton, this.handleActionsDropdown.bind( this ) );
 
+			// Close actions dropdown
+			this.$document.on( 'click', '.bb-topic-actions-wrapper .bp-secondary-action', this.closeActionsDropdown.bind( this ) );
+
 			// Close context menu dropdown when clicking outside
 			this.$document.on( 'click', function( e ) {
 				if ( !$( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
@@ -158,6 +161,9 @@
 			event.preventDefault();
 			event.stopPropagation();
 
+			// Remove any existing error messages.
+			this.$modal.find( this.config.errorContainerSelector ).remove();
+
 			var topicName       = this.$topicName.val();
 			var topicWhoCanPost = this.$topicWhoCanPost.filter( ':checked' ).val();
 			var topicId         = this.$topicId.val();
@@ -169,9 +175,8 @@
 				return;
 			}
 
-			// Remove any existing error messages.
-			var $topicNameField = this.$modal.find( '#bb_activity_topic_name' ).closest( this.config.modalContentSelector );
-			$topicNameField.find( '.bb-hello-error' ).remove();
+			// Add loading state to modal
+			this.$modal.addClass( 'loading' );
 
 			// Prepare data for AJAX request.
 			var data = {
@@ -190,6 +195,9 @@
 
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
+				// Remove loading state
+				this.$modal.removeClass( 'loading' );
+				
 				if ( response.success ) {
 					window.location.reload();
 				} else {
@@ -363,6 +371,15 @@
     
 			// Toggle current dropdown
 			$currentWrapper.toggleClass( 'active' );
+		},
+
+		/**
+		 * Close actions dropdown.
+		 *
+		 * @param {Event} event - The click event.
+		 */
+		closeActionsDropdown : function ( event ) {
+			$( event.target ).closest( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
 		},
 	};
 
