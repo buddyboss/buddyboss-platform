@@ -492,32 +492,10 @@ export const ReadyLaunchSettings = () => {
 			);
 		}
 
-		const commonHeader = (
-			<>
-				{notification && (
-					<Notice
-						status={notification.status}
-						isDismissible={false}
-						className="settings-notice"
-					>
-						{notification.message}
-					</Notice>
-				)}
-				
-				{isSaving && (
-					<div className="settings-saving-indicator">
-						<Spinner />
-						<span>{__( 'Saving...', 'buddyboss' )}</span>
-					</div>
-				)}
-			</>
-		);
-
 		switch ( activeTab ) {
 			case 'activation':
 				return (
 					<div className="settings-content">
-						{commonHeader}
 						<div className="settings-card">
 							<div className="settings-toggle-container">
 								<div className="toggle-content">
@@ -557,7 +535,6 @@ export const ReadyLaunchSettings = () => {
 			case 'styles':
 				return (
 					<div className="settings-content">
-						{commonHeader}
 						<h1>{__('Style Settings', 'buddyboss')}</h1>
 						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
 						
@@ -659,7 +636,6 @@ export const ReadyLaunchSettings = () => {
 			case 'pages':
 				return (
 					<div className="settings-content">
-						{commonHeader}
 						<h1>{__('Pages and Widgets Settings', 'buddyboss')}</h1>
 						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
 					
@@ -858,7 +834,6 @@ export const ReadyLaunchSettings = () => {
 			case 'menus':
 				return (
 					<div className="settings-content">
-						{commonHeader}
 						<h1>{__('Menu Settings', 'buddyboss')}</h1>
 						<p className="settings-description">{__('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')}</p>
 						
@@ -996,27 +971,30 @@ export const ReadyLaunchSettings = () => {
 	};
 
 	return (
-		<div className="bb-readylaunch-settings-container">
-			<Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
-			<div className="bb-readylaunch-settings-content">
-				{notification && (
-					<Notice
-						status={notification.status}
-						isDismissible={false}
-						className="settings-notice"
-					>
-						{notification.message}
-					</Notice>
-				)}
-				
-				{isSaving && (
-					<div className="settings-saving-indicator">
-						<Spinner />
-						<span>{__( 'Saving...', 'buddyboss' )}</span>
-					</div>
-				)}
-				{renderContent()}
+		<>
+			{notification && (
+				<Notice
+					status={notification.status}
+					isDismissible={false}
+					className="settings-notice"
+				>
+					{notification.message}
+				</Notice>
+			)}
+			
+			{isSaving && (
+				<div className="settings-saving-indicator">
+					<Spinner />
+					<span>{__( 'Saving...', 'buddyboss' )}</span>
+				</div>
+			)}
+
+			<div className="bb-readylaunch-settings-container">
+				<Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
+				<div className="bb-readylaunch-settings-content">
+					{renderContent()}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };

@@ -14237,20 +14237,20 @@ const ReadyLaunchSettings = () => {
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "Select a tab");
     }
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, notification && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Notice, {
+    status: notification.status,
+    isDismissible: false,
+    className: "settings-notice"
+  }, notification.message), isSaving && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "settings-saving-indicator"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Saving...', 'buddyboss'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-readylaunch-settings-container"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sidebar__WEBPACK_IMPORTED_MODULE_4__.Sidebar, {
     activeTab: activeTab,
     setActiveTab: setActiveTab
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-readylaunch-settings-content"
-  }, notification && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Notice, {
-    status: notification.status,
-    isDismissible: false,
-    className: "settings-notice"
-  }, notification.message), isSaving && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "settings-saving-indicator"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Saving...', 'buddyboss'))), renderContent()));
+  }, renderContent())));
 };
 
 /***/ }),
