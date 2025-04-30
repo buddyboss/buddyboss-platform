@@ -114,6 +114,9 @@
 			// Handle actions dropdown.
 			this.$document.on( 'click', this.config.topicActionsButton, this.handleActionsDropdown.bind( this ) );
 
+			// Close actions dropdown
+			this.$document.on( 'click', '.bb-topic-actions-wrapper .bp-secondary-action', this.closeActionsDropdown.bind( this ) );
+
 			// Close context menu dropdown when clicking outside
 			this.$document.on( 'click', function( e ) {
 				if ( !$( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
@@ -363,6 +366,15 @@
     
 			// Toggle current dropdown
 			$currentWrapper.toggleClass( 'active' );
+		},
+
+		/**
+		 * Close actions dropdown.
+		 *
+		 * @param {Event} event - The click event.
+		 */
+		closeActionsDropdown : function ( event ) {
+			$( event.target ).closest( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
 		},
 	};
 
