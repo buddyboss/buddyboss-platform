@@ -13671,8 +13671,14 @@ const ReadyLaunchSettings = () => {
   // Specific handler for image uploads using WordPress media library
   const handleImageUpload = name => imageData => {
     setHasUserMadeChanges(true); // Set flag when user makes a change
+
+    // Update both settings and changedFields
     setSettings(prevSettings => ({
       ...prevSettings,
+      [name]: imageData
+    }));
+    setChangedFields(prev => ({
+      ...prev,
       [name]: imageData
     }));
   };
@@ -13701,6 +13707,7 @@ const ReadyLaunchSettings = () => {
       const attachment = mediaFrame.state().get('selection').first().toJSON();
       const imageData = {
         id: attachment.id,
+        // Save the WordPress attachment ID
         url: attachment.url,
         alt: attachment.alt || '',
         title: attachment.title || ''
@@ -13869,18 +13876,11 @@ const ReadyLaunchSettings = () => {
         className: "settings-loading"
       }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Loading settings...', 'buddyboss')));
     }
-    const commonHeader = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, notification && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Notice, {
-      status: notification.status,
-      isDismissible: false,
-      className: "settings-notice"
-    }, notification.message), isSaving && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "settings-saving-indicator"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Saving...', 'buddyboss'))));
     switch (activeTab) {
       case 'activation':
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-content"
-        }, commonHeader, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
         }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-toggle-container"
@@ -13911,7 +13911,7 @@ const ReadyLaunchSettings = () => {
       case 'styles':
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-content"
-        }, commonHeader, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Style Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Style Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
           className: "settings-description"
         }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
@@ -13982,7 +13982,7 @@ const ReadyLaunchSettings = () => {
       case 'pages':
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-content"
-        }, commonHeader, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Pages and Widgets Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Pages and Widgets Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
           className: "settings-description"
         }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-card"
@@ -14138,7 +14138,7 @@ const ReadyLaunchSettings = () => {
       case 'menus':
         return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
           className: "settings-content"
-        }, commonHeader, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Menu Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+        }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Menu Settings', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
           className: "settings-description"
         }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('ReadyLaunch loads BuddyBoss templates into your community with minimal customization, making deployment easy.', 'buddyboss')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_9__.DragDropContext, {
           onDragEnd: onDragEnd
@@ -14244,7 +14244,13 @@ const ReadyLaunchSettings = () => {
     setActiveTab: setActiveTab
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bb-readylaunch-settings-content"
-  }, renderContent()));
+  }, notification && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Notice, {
+    status: notification.status,
+    isDismissible: false,
+    className: "settings-notice"
+  }, notification.message), isSaving && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "settings-saving-indicator"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Saving...', 'buddyboss'))), renderContent()));
 };
 
 /***/ }),

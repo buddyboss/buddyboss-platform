@@ -264,7 +264,17 @@ export const ReadyLaunchSettings = () => {
 	// Specific handler for image uploads using WordPress media library
 	const handleImageUpload = (name) => (imageData) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
-		setSettings(prevSettings => ({ ...prevSettings, [name]: imageData }));
+		
+		// Update both settings and changedFields
+		setSettings(prevSettings => ({ 
+			...prevSettings, 
+			[name]: imageData 
+		}));
+		
+		setChangedFields(prev => ({
+			...prev,
+			[name]: imageData
+		}));
 	};
 
 	// Helper function to open the WordPress media library
@@ -291,7 +301,7 @@ export const ReadyLaunchSettings = () => {
 		mediaFrame.on('select', function() {
 			const attachment = mediaFrame.state().get('selection').first().toJSON();
 			const imageData = {
-				id: attachment.id,
+				id: attachment.id, // Save the WordPress attachment ID
 				url: attachment.url,
 				alt: attachment.alt || '',
 				title: attachment.title || ''
@@ -989,6 +999,22 @@ export const ReadyLaunchSettings = () => {
 		<div className="bb-readylaunch-settings-container">
 			<Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
 			<div className="bb-readylaunch-settings-content">
+				{notification && (
+					<Notice
+						status={notification.status}
+						isDismissible={false}
+						className="settings-notice"
+					>
+						{notification.message}
+					</Notice>
+				)}
+				
+				{isSaving && (
+					<div className="settings-saving-indicator">
+						<Spinner />
+						<span>{__( 'Saving...', 'buddyboss' )}</span>
+					</div>
+				)}
 				{renderContent()}
 			</div>
 		</div>
