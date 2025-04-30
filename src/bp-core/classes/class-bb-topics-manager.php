@@ -243,9 +243,10 @@ class BB_Topics_Manager {
 		$name              = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
 		$permission_type   = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
-		$existing_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
 		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
 		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
+		$action_from       = isset( $_POST['action_from'] ) ? sanitize_text_field( wp_unslash( $_POST['action_from'] ) ) : 'topics-manager';
 
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
@@ -253,11 +254,12 @@ class BB_Topics_Manager {
 			$slug = sanitize_title( $slug );
 		}
 
-		if ( $this->bb_get_topic_by( 'slug', $slug ) ) {
+		// Verify if the topic slug already exists before adding a only new topic.
+		if ( empty( $previous_topic_id ) && $this->bb_get_topic_by( 'slug', $slug ) ) {
 			wp_send_json_error( array( 'error' => __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ) ) );
 		}
 
-		if ( empty( $existing_topic_id ) ) {
+		if ( empty( $previous_topic_id ) ) {
 			$topic_data = $this->bb_add_topic(
 				array(
 					'name'            => $name,
@@ -268,14 +270,87 @@ class BB_Topics_Manager {
 				)
 			);
 		} else {
-			$topic_data = $this->bb_update_topic(
-				$existing_topic_id,
-				array(
-					'name'            => $name,
-					'slug'            => $slug,
-					'permission_type' => $permission_type,
-				)
-			);
+			// First check if new name exists in bb_topics table.
+			$existing_topic = $this->bb_get_topic_by( 'name', $name );
+			if ( ! $existing_topic ) { // NO.
+				// Case: Name doesn't exist - create new topic.
+				$topic_data = $this->bb_add_topic(
+					array(
+						'topic_id'        => $previous_topic_id,
+						'name'            => $name,
+						'slug'            => sanitize_title( $name ),
+						'permission_type' => $permission_type,
+						'item_id'         => $item_id,
+						'item_type'       => $item_type,
+					)
+				);
+			} else { // YES.
+				// Case: Name already exists.
+				// Fetch topic id from bb_topics table.
+				$new_topic_id = (int) $existing_topic->id;
+				$topic_data   = $this->bb_get_topic_by( 'id', $new_topic_id );
+
+				// Check if topic id is different from current topic id.
+				if ( $previous_topic_id !== $new_topic_id ) { // NO.
+					// Check if relationship already exists.
+					$existing_relationship = $this->bb_get_topic(
+						array(
+							'topic_id'  => $new_topic_id,
+							'item_type' => $item_type,
+							'item_id'   => $item_id,
+						)
+					);
+
+					if ( $existing_relationship ) {
+						// Error: Topic already exists with this relationship.
+						wp_send_json_error(
+							array(
+								'error' => __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ),
+							)
+						);
+					} else {
+						// Update relationships.
+						error_log( 'else ' . $previous_topic_id );
+						error_log( 'else ' . $item_id );
+						error_log( 'else ' . $item_type );
+						error_log( 'else ' . $new_topic_id );
+						$this->bb_update_topic_relationship(
+							array(
+								'topic_id'  => $new_topic_id,
+								'where'     => array(
+									'topic_id'  => $previous_topic_id,
+									'item_id'   => $item_id,
+									'item_type' => $item_type,
+								),
+							)
+						);
+						error_log( 'after update' );
+						error_log( $this->wpdb->last_query );
+
+						$this->wpdb->update(
+							$this->activity_topic_rel_table,
+							array( 'topic_id' => $new_topic_id ),
+							array( 'topic_id' => $previous_topic_id ),
+							array( '%d' ),
+							array( '%d' )
+						);
+					}
+				} else {
+					// If just update permission_type for existing topic.
+					$this->bb_update_topic_relationship(
+						array(
+							'topic_id'        => $new_topic_id,
+							'item_id'         => $item_id,
+							'item_type'       => $item_type,
+							'permission_type' => $permission_type,
+							'where'           => array(
+								'item_id'   => $item_id,
+								'item_type' => $item_type,
+							),
+						)
+					);
+				}
+			}
 		}
 
 		if ( ! $topic_data ) {
@@ -369,7 +444,7 @@ class BB_Topics_Manager {
 
 		$topic_id = $this->wpdb->insert_id;
 
-		if ( $topic_id ) {
+		if ( empty( $r['topic_id'] ) && ! empty( $topic_id ) ) {
 			$this->bb_add_topic_relationship(
 				array(
 					'topic_id'        => $topic_id,
@@ -378,6 +453,19 @@ class BB_Topics_Manager {
 					'item_type'       => $r['item_type'],
 				)
 			);
+		} else {
+			$this->bb_update_topic_relationship(
+				array(
+					'topic_id'        => $topic_id,
+					'permission_type' => $r['permission_type'],
+					'where'           => array(
+						'topic_id'  => $r['topic_id'],
+						'item_id'   => $r['item_id'],
+						'item_type' => $r['item_type'],
+					),
+				)
+			);
+			$topic_id = $r['topic_id'];
 		}
 
 		/**
@@ -419,7 +507,7 @@ class BB_Topics_Manager {
 				'topic_id'        => 0,
 				'permission_type' => 'anyone',
 				'item_id'         => 0,
-				'item_type'       => 'user',
+				'item_type'       => 'activity',
 				'user_id'         => bp_loggedin_user_id(),
 				'permission_data' => null,
 				'menu_order'      => 0,
@@ -467,9 +555,97 @@ class BB_Topics_Manager {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param int   $inserted The number of rows inserted.
+		 * @param array $args     The arguments used to add the topic relationship.
+		 */
+		do_action( 'bb_topic_relationship_added', $inserted, $r );
+	}
+
+	/**
+	 * Update a topic relationship.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments for updating a topic relationship.
+	 *     @type int    $topic_id         The topic ID. (required)
+	 *     @type int    $item_id          The item ID. (optional, for more specific updates)
+	 *     @type string $item_type        The item type. (optional)
+	 *     @type string $permission_type  The new permission type. (optional)
+	 *     @type array  $where            Additional WHERE conditions. (optional)
+	 * }
+	 * @return int|false Number of rows updated, or false on error.
+	 */
+	public function bb_update_topic_relationship( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'topic_id'        => 0,
+				'item_id'         => null,
+				'item_type'       => null,
+				'permission_type' => null,
+				'where'           => array(),
+				'error_type'      => 'bool',
+			)
+		);
+
+		/**
+		 * Fires before a topic relationship has been updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param array $args The arguments used to add the topic relationship.
 		 */
-		do_action( 'bb_topic_relationship_added', $r );
+		do_action( 'bb_topic_relationship_before_updated', $r );
+
+		// Build data to update.
+		$data = array();
+		if ( ! empty( $r['permission_type'] ) ) {
+			$data['permission_type'] = $r['permission_type'];
+		}
+		if ( ! empty( $r['item_id'] ) ) {
+			$data['item_id'] = $r['item_id'];
+		}
+		if ( ! empty( $r['item_type'] ) ) {
+			$data['item_type'] = $r['item_type'];
+		}
+		if ( ! empty( $r['topic_id'] ) ) {
+			$data['topic_id'] = $r['topic_id'];
+		}
+
+		if ( empty( $data ) ) {
+			return false;
+		}
+
+		$where = array();
+		// Build where clause.
+		if ( ! empty( $r['where'] ) && is_array( $r['where'] ) ) {
+			$where = array_merge( $where, $r['where'] );
+		}
+
+		$updated = $this->wpdb->update(
+			$this->topic_rel_table,
+			$data,
+			$where
+		);
+
+		if ( ! $updated ) {
+			if ( 'wp_error' === $r['error_type'] ) {
+				return new WP_Error( 'bb_topic_relationship_db_updated_error', $this->wpdb->last_error );
+			}
+
+			return false;
+		}
+
+		/**
+		 * Fires after a topic relationship has been updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $updated The number of rows updated.
+		 * @param array $args The arguments used to add the topic relationship.
+		 */
+		do_action( 'bb_topic_relationship_after_updated', $updated, $r );
 	}
 
 	/**
@@ -484,22 +660,24 @@ class BB_Topics_Manager {
 	 */
 	public function bb_get_topic_by( $field, $value ) {
 
-		if ( ! in_array( $field, array( 'id', 'slug' ), true ) ) {
+		if ( ! in_array( $field, array( 'id', 'slug', 'name' ), true ) ) {
 			return null;
 		}
 
 		if ( 'id' === $field ) {
-			$value = absint( $value );
-			if ( ! $value ) {
-				return null;
-			}
+			$value     = absint( $value );
 			$cache_key = 'bb_topic_id_' . $value;
-		} else {
-			$value = sanitize_title( $value );
-			if ( empty( $value ) ) {
-				return null;
+			if ( ! $value ) {
+				return false;
 			}
+		} elseif ( 'name' === $field ) {
+			$cache_key = 'bb_topic_name_' . $value;
+		} elseif ( 'slug' === $field ) {
+			$value     = sanitize_title( $value );
 			$cache_key = 'bb_topic_slug_' . $value;
+			if ( empty( $value ) ) {
+				return false;
+			}
 		}
 
 		$topic = wp_cache_get( $cache_key, self::$topic_cache_group );
@@ -544,6 +722,7 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
+				'topic_id'        => 0,
 				'per_page'        => -1, // Retrieve all by default.
 				'paged'           => 1,
 				'orderby'         => 'menu_order',
@@ -562,7 +741,7 @@ class BB_Topics_Manager {
 		);
 
 		// Select conditions.
-		$select_sql = 'SELECT t.id, tr.id';
+		$select_sql = 'SELECT t.id, tr.topic_id';
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
 
@@ -622,6 +801,11 @@ class BB_Topics_Manager {
 		// permission_type.
 		if ( ! empty( $r['permission_type'] ) ) {
 			$where_conditions[] = $this->wpdb->prepare( 'tr.permission_type = %s', $r['permission_type'] );
+		}
+
+		// topic_id.
+		if ( ! empty( $r['topic_id'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id = %d', $r['topic_id'] );
 		}
 
 		/**
@@ -691,9 +875,10 @@ class BB_Topics_Manager {
 
 				// phpcs:ignore
 				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.* FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE t.id IN (' . $uncached_ids_sql . ')', ARRAY_A );
-
 				foreach ( (array) $queried_data as $topic_data ) {
-					wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
+					if ( ! empty( $topic_data['topic_id'] ) ) {
+						wp_cache_set( $topic_data['topic_id'], $topic_data, self::$topic_cache_group );
+					}
 				}
 			}
 
@@ -761,7 +946,7 @@ class BB_Topics_Manager {
 
 		$topic = $this->bb_get_topic(
 			array(
-				'id'        => $topic_id,
+				'topic_id'  => $topic_id,
 				'item_id'   => $item_id,
 				'item_type' => $item_type,
 			)
@@ -790,177 +975,15 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'id'       => 0,
-				'per_page' => 1,
-				'paged'    => 1,
-				'user_id'  => bp_loggedin_user_id(),
+				'topic_id'  => 0,
+				'item_id'   => 0,
+				'item_type' => '',
 			)
 		);
-
-		if ( empty( $r['id'] ) ) {
-			return array();
-		}
 
 		$topic = $this->bb_get_topics( $r );
 
 		return is_array( $topic ) && ! empty( $topic['topics'] ) ? current( $topic['topics'] ) : array();
-	}
-
-	/**
-	 * Update an existing topic.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int   $topic_id The ID of the topic to update.
-	 * @param array $args     Array of arguments to update (same keys as add_topic, omitting creator_id and
-	 *                        topic_scope).
-	 *
-	 * @return bool|WP_Error True on success, WP_Error on failure.
-	 */
-	public function bb_update_topic( $topic_id, $args ) {
-
-		$r = bp_parse_args(
-			$args,
-			array(
-				'id'              => 0,
-				'name'            => '',
-				'slug'            => '',
-				'scope'           => '',
-				'permission_type' => '',
-				'permission_data' => null,
-				'menu_order'      => 0,
-				'error_type'      => 'bool',
-			)
-		);
-
-		if ( empty( $r['id'] ) ) {
-			if ( 'wp_error' === $r['error_type'] ) {
-				unset( $r );
-
-				return new WP_Error( 'bb_topic_id_required', __( 'The topic ID is required to update topic.', 'buddyboss' ) );
-			}
-
-			unset( $r );
-
-			return false;
-		}
-
-		if ( empty( $r['name'] ) ) {
-			if ( 'wp_error' === $r['error_type'] ) {
-				unset( $r );
-
-				return new WP_Error( 'bb_topic_name_required', __( 'The topic name is required to update topic.', 'buddyboss' ) );
-			}
-
-			unset( $r );
-
-			return false;
-		}
-
-		$topic_id = absint( $topic_id );
-		$topic    = $this->bb_get_topic_by( 'id', $topic_id );
-
-		if ( ! $topic ) {
-			if ( 'wp_error' === $r['error_type'] ) {
-				unset( $r );
-
-				return new WP_Error( 'bb_invalid_topic_id', __( 'Invalid topic ID.', 'buddyboss' ) );
-			}
-
-			unset( $r );
-
-			return false;
-		}
-
-		// Prepare data for update.
-		$data   = array();
-		$format = array();
-
-		if ( isset( $r['name'] ) ) {
-			$data['name'] = sanitize_text_field( $r['name'] );
-			$data['slug'] = sanitize_title( $r['name'] );
-
-			// Check if new slug conflicts with another topic.
-			$existing = $this->bb_get_topic_by( 'slug', $data['slug'] );
-			if ( $existing && $existing->id !== $topic_id ) {
-				if ( 'wp_error' === $r['error_type'] ) {
-					unset( $r );
-
-					return new WP_Error( 'bb_topic_duplicate_slug', __( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ) );
-				}
-
-				unset( $r );
-
-				return false;
-			}
-			$format[] = '%s';
-			$format[] = '%s';
-		}
-
-		if ( isset( $r['scope'] ) ) {
-			$data['scope'] = sanitize_key( $r['scope'] );
-			$format[]      = '%s';
-		}
-
-		if ( isset( $r['permission_type'] ) ) {
-			$data['permission_type'] = sanitize_key( $r['permission_type'] );
-			$format[]                = '%s';
-		}
-
-		if ( isset( $r['permission_data'] ) ) { // Use isset to allow setting to null.
-			$data['permission_data'] = is_null( $r['permission_data'] ) ? null : wp_json_encode( $r['permission_data'] );
-			$format[]                = '%s';
-		}
-
-		if ( isset( $r['menu_order'] ) ) {
-			$data['menu_order'] = absint( $r['menu_order'] );
-			$format[]           = '%d';
-		}
-
-		if ( empty( $data ) ) {
-			if ( 'wp_error' === $r['error_type'] ) {
-				unset( $r );
-
-				return new WP_Error( 'bb_topic_no_data_provided', __( 'No data provided to update.', 'buddyboss' ) );
-			}
-
-			unset( $r );
-
-			return false;
-		}
-
-		// Use the updated table name property.
-		$updated = $this->wpdb->update(
-			$this->topics_table,
-			$data,
-			array( 'id' => $topic_id ),
-			$format,
-			array( '%d' )
-		);
-
-		if ( false === $updated ) {
-			if ( 'wp_error' === $r['error_type'] ) {
-				unset( $r );
-
-				return new WP_Error( 'bb_topic_db_update_error', __( 'There is an error while updating the topic.', 'buddyboss' ) );
-			}
-
-			unset( $r );
-
-			return false;
-		}
-
-		/**
-		 * Fires after a topic has been updated.
-		 *
-		 * @param int   $topic_id The ID of the topic updated.
-		 * @param array $r        The arguments used to update the topic.
-		 */
-		do_action( 'bb_topic_updated', $topic_id, $r );
-
-		unset( $r, $data, $format, $updated, $topic );
-
-		return $this->bb_get_topic_by( 'id', $topic_id );
 	}
 
 	/**

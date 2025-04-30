@@ -513,7 +513,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					if ( ! empty( $topics ) ) {
 						foreach ( $topics as $topic ) {
 							$topic_attr = array(
-								'id'        => $topic->id,
+								'topic_id'  => $topic->topic_id,
 								'item_id'   => ! empty( $topic->item_id ) ? $topic->item_id : 0,
 								'item_type' => ! empty( $topic->item_type ) ? $topic->item_type : 'activity',
 							);

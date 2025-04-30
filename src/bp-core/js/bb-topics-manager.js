@@ -232,7 +232,7 @@
 
 			var $button   = $( event.currentTarget );
 			var topicAttr = $button.data( 'topic-attr' );
-			var topicId   = topicAttr.id;
+			var topicId   = topicAttr.topic_id;
 			var itemId    = topicAttr.item_id;
 			var itemType  = topicAttr.item_type;
 			var nonce     = topicAttr.nonce
@@ -269,7 +269,7 @@
 					var topic = response.data.topic;
 					this.$topicName.val( topic.name );
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
-					this.$topicId.val( topic.id );
+					this.$topicId.val( topic.topic_id );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
@@ -290,7 +290,7 @@
 			var $button    = $( event.currentTarget );
 			var $topicItem = $button.closest( '.bb-activity-topic-item' );
 			var topicAttr  =  $button.data( 'topic-attr' );
-			var topicId    = topicAttr.id;
+			var topicId    = topicAttr.topic_id;
 			var nonce      = topicAttr.nonce;
 			var itemId     = topicAttr.item_id;
 			var itemType   = topicAttr.item_type;
