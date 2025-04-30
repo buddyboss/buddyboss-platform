@@ -57,6 +57,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.50 =
+* Bug: Activity - Fixed an issue allowing site admins to pin posts in groups without needing to be a group member
+* Bug: Activity - Fixed an issue that caused problems when saving large videos as drafts
+* Bug: Activity - Fixed an issue where hover-over popups were not closing properly
+* Bug: Forums - Resolved a media display issue in edited forum topics and replies when the Redis cache was active
+* Bug: Learndash - Fixed an issue where admin quiz email notifications were not sent in the latest version of the LearnDash plugin
+* Bug: Members - Fixed an issue where member profiles displayed single and double quotes incorrectly
+* Bug: Notifications - Fixed an issue where double notifications were sent when someone was mentioned in replies
+
 = 2.8.41 =
 * Bug: Notifications - Fixed an issue where unwanted paragraph tags appeared in notifications
 
