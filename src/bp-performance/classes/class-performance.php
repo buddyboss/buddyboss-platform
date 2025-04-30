@@ -296,7 +296,11 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					PRIMARY KEY  (id),
 					KEY cache_name (cache_name(191)),
 					KEY cache_group (cache_group(191)),
-					KEY cache_expire (cache_expire)
+					KEY cache_expire (cache_expire),
+					KEY user_group (user_id, cache_group(191)),
+					KEY blog_id (blog_id),
+					KEY expiry_group (cache_expire, cache_group(191)),
+					KEY user_blog_id (user_id, blog_id)
 				) $charset_collate;";
 			} else {
 				$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
@@ -310,7 +314,11 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 					PRIMARY KEY  (id),
 					KEY cache_name (cache_name),
 					KEY cache_group (cache_group),
-					KEY cache_expire (cache_expire)
+					KEY cache_expire (cache_expire),
+					KEY user_group (user_id, cache_group),
+					KEY blog_id (blog_id),
+					KEY expiry_group (cache_expire, cache_group),
+					KEY user_blog_id (user_id, blog_id)
 				) $charset_collate;";
 			}
 
