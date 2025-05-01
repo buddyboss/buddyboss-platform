@@ -574,12 +574,14 @@ export const ReadyLaunchSettings = () => {
 										onChange={handleImageUpload('bb_rl_light_logo')}
 										description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
 									/>
-									<ImageSelector
-										label={__('Dark', 'buddyboss')}
-										value={settings.bb_rl_dark_logo}
-										onChange={handleImageUpload('bb_rl_dark_logo')}
-										description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
-									/>
+									{settings.bb_rl_skin_appearance && (
+										<ImageSelector
+											label={__('Dark', 'buddyboss')}
+											value={settings.bb_rl_dark_logo}
+											onChange={handleImageUpload('bb_rl_dark_logo')}
+											description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
+										/>
+									)}
 								</div>
 							</div>
 							<hr />
@@ -599,36 +601,43 @@ export const ReadyLaunchSettings = () => {
 											onChange={handleSettingChange('bb_rl_color_light')}
 										/>
 									</div>
-									<div>
-										<label>{__('Primary Color (Dark Mode)', 'buddyboss')}</label>
-										<ColorPickerButton
-											label={__('Primary Color (Dark Mode)', 'buddyboss')}
-											color={settings.bb_rl_color_dark}
-											onChange={handleSettingChange('bb_rl_color_dark')}
-										/>
-									</div>
+									{settings.bb_rl_skin_appearance && (
+										<div>
+											<label>{__('Primary Color (Dark Mode)', 'buddyboss')}</label>
+											<ColorPickerButton
+												label={__('Primary Color (Dark Mode)', 'buddyboss')}
+												color={settings.bb_rl_color_dark}
+												onChange={handleSettingChange('bb_rl_color_dark')}
+											/>
+										</div>
+									)}
 								</div>
 							</div>
-							<hr />
+							
 
 							{/* Theme Mode Setting */}
-							<div className="settings-form-field">
-								<div className="field-label">
-									<label>{__('Theme Mode Settings', 'buddyboss')}</label>
-									<p>{__('Description text goes here', 'buddyboss')}</p>
-								</div>
-								<div className="field-input">
-									<RadioControl
-										selected={settings.bb_rl_theme_mode}
-										options={[
-											{ label: __('Light Mode', 'buddyboss'), value: 'light' },
-											{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
-											{ label: __('Customer Choice', 'buddyboss'), value: 'choice' },
-										]}
-										onChange={handleSettingChange('bb_rl_theme_mode')}
-									/>
-								</div>
-							</div>
+							{settings.bb_rl_skin_appearance && (
+								<>
+									<hr />
+									<div className="settings-form-field">
+										<div className="field-label">
+											<label>{__('Theme Mode Settings', 'buddyboss')}</label>
+										<p>{__('Description text goes here', 'buddyboss')}</p>
+									</div>
+									<div className="field-input">
+										<RadioControl
+											selected={settings.bb_rl_theme_mode}
+											options={[
+												{ label: __('Light Mode', 'buddyboss'), value: 'light' },
+												{ label: __('Dark Mode', 'buddyboss'), value: 'dark' },
+												{ label: __('Customer Choice', 'buddyboss'), value: 'choice' },
+											]}
+											onChange={handleSettingChange('bb_rl_theme_mode')}
+										/>
+									</div>
+									</div>
+								</>
+							)}
 
 						</div>
 					</div>
