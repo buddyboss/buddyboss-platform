@@ -8555,16 +8555,10 @@ span.dashicons.dashicons-admin-file:before {
   display: block;
 }
 
-.bb-action-popup--activity-topic #bb_topic_submit i,
-.bb-modal-panel--activity-topic #bb_topic_submit i {
-  display: none;
-  line-height: 1;
-  margin-right: 5px;
-}
-
-.bb-action-popup--activity-topic.loading #bb_topic_submit i,
-.bb-modal-panel--activity-topic.loading #bb_topic_submit i {
-  display: inline-block;
+.bb-action-popup--activity-topic #bb_topic_submit,
+.bb-modal-panel--activity-topic #bb_topic_submit {
+  display: inline-flex;
+  align-items: center;
 }
 
 .bb-action-popup--activity-topic.loading #bb_topic_submit,
