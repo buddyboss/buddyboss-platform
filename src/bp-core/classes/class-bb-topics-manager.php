@@ -750,7 +750,7 @@ class BB_Topics_Manager {
 				'order'           => 'ASC',
 				'search'          => '',
 				'item_id'         => 0,
-				'item_type'       => '',
+				'item_type'       => 'activity',
 				'permission_type' => '',
 				'user_id'         => 0,
 				'include'         => array(),
@@ -805,10 +805,6 @@ class BB_Topics_Manager {
 		// search.
 		if ( ! empty( $r['search'] ) ) {
 			$where_conditions[] = $this->wpdb->prepare( 't.name LIKE %s', '%' . $this->wpdb->esc_like( $r['search'] ) . '%' );
-		}
-
-		if ( ! empty( $r['item_id'] ) ) {
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id = %d', $r['item_id'] );
 		}
 
 		// item_type.
