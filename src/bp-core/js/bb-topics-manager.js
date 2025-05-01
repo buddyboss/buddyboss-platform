@@ -9,7 +9,7 @@
 	 *
 	 * @type {Object}
 	 */
-	var TopicsManager = {
+	var BBTopicsManager = {
 
 		/**
 		 * Default configuration.
@@ -392,11 +392,11 @@
 
 	$(
 		function () {
-			TopicsManager.start();
+			BBTopicsManager.start();
 		}
 	);
 
 	// Make the manager available globally.
-	window.TopicsManager = TopicsManager;
+	window.BBTopicsManager = BBTopicsManager;
 
 } )( jQuery );

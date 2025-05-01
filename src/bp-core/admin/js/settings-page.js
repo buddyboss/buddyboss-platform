@@ -3018,18 +3018,18 @@ window.bp = window.bp || {};
 	activityTopicHandle();
 
 	function activityTopicHandle() {
-		// Initialize the TopicsManager with admin-specific configuration for activity topics.
-		if ( 'undefined' !== typeof TopicsManager ) {
-			TopicsManager.config.modalSelector          = '#bb-hello-container';
-			TopicsManager.config.modalContentSelector   = '.bb-hello-content';
-			TopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
-			TopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
-			TopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
-			TopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
-			TopicsManager.config.errorContainerSelector = '.bb-hello-error';
-			TopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
-			TopicsManager.config.nonce                  = BP_ADMIN.nonce;
-			TopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
+		// Initialize the BBTopicsManager with admin-specific configuration for activity topics.
+		if ( 'undefined' !== typeof BBTopicsManager ) {
+			BBTopicsManager.config.modalSelector          = '#bb-hello-container';
+			BBTopicsManager.config.modalContentSelector   = '.bb-hello-content';
+			BBTopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
+			BBTopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
+			BBTopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
+			BBTopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
+			BBTopicsManager.config.errorContainerSelector = '.bb-hello-error';
+			BBTopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
+			BBTopicsManager.config.nonce                  = BP_ADMIN.nonce;
+			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
 		}
 
 		$( document ).on( 'change', '#bb_enable_activity_topics, #bb_enable_group_activity_topics', function ( e ) {
