@@ -982,7 +982,27 @@ class BB_Topics_Manager {
 			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );
 		}
 
-		wp_send_json_success( array( 'topic' => $topic ) );
+		// Check if this topic is a global activity topic.
+		$is_global_activity_topic = false;
+		if ( ! empty( $topic->topic_id ) ) {
+			$global_rel = $this->bb_get_topic(
+				array(
+					'topic_id'  => $topic->topic_id,
+					'item_id'   => 0,
+					'item_type' => 'activity',
+				)
+			);
+			if ( ! empty( $global_rel ) ) {
+				$is_global_activity_topic = true;
+			}
+		}
+
+		wp_send_json_success(
+			array(
+				'topic'                    => $topic,
+				'is_global_activity_topic' => $is_global_activity_topic,
+			)
+		);
 	}
 
 	/**

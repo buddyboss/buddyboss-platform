@@ -259,6 +259,8 @@
 			this.$modal.show();
 			this.$backdrop.show();
 			this.$topicWhoCanPost.prop( 'checked', false );
+			
+			$( document ).trigger( 'bb_modal_opened', [ this.$modal ] );
 
 			// Remove any existing error messages.
 			var errorElm = this.$modal.find( this.config.errorContainerSelector );
@@ -281,8 +283,20 @@
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
 				if ( response.success ) {
-					var topic = response.data.topic;
-					this.$topicName.val( topic.name );
+					var topic = response.data.topic, isGlobal = response.data.is_global_activity_topic;
+					if ( this.$topicName.hasClass( 'select2-hidden-accessible' ) ) {
+						// For select2.
+						if ( 0 === this.$topicName.find( 'option[value=\'' + topic.slug + '\']' ).length ) {
+							var newOption = new Option( topic.name, topic.slug, true, true );
+							this.$topicName.append( newOption );
+						}
+						this.$topicName.val( topic.slug ).trigger( 'change' );
+						this.$topicName.prop( 'disabled', !!isGlobal );
+					} else {
+						// For plain input.
+						this.$topicName.val( topic.name );
+						this.$topicName.prop('readonly', !!isGlobal);
+					}
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );
 				} else {
