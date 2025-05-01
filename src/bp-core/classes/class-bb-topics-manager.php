@@ -723,6 +723,8 @@ class BB_Topics_Manager {
 			$args,
 			array(
 				'topic_id'        => 0,
+				'name'            => '',
+				'slug'            => '',
 				'per_page'        => -1, // Retrieve all by default.
 				'paged'           => 1,
 				'orderby'         => 'menu_order',
@@ -766,14 +768,14 @@ class BB_Topics_Manager {
 
 		$where_conditions[] = $this->wpdb->prepare( 'tr.item_id = %d', $r['item_id'] );
 
-		// id.
-		if ( ! empty( $r['id'] ) ) {
-			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id = %d', $r['id'] );
+		// name.
+		if ( ! empty( $r['name'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 't.name = %s', $r['name'] );
 		}
 
-		// user_id.
-		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions[] = $this->wpdb->prepare( 'tr.user_id = %d', $r['user_id'] );
+		// slug.
+		if ( ! empty( $r['slug'] ) ) {
+			$where_conditions[] = $this->wpdb->prepare( 't.slug = %s', $r['slug'] );
 		}
 
 		// search.
