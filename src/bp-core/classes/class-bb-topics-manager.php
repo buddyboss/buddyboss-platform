@@ -762,7 +762,7 @@ class BB_Topics_Manager {
 		);
 
 		// Select conditions.
-		$select_sql = 'SELECT t.id, tr.topic_id';
+		$select_sql = 'SELECT DISTINCT tr.id, tr.menu_order';
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
 
@@ -902,8 +902,8 @@ class BB_Topics_Manager {
 				// phpcs:ignore
 				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.* FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE t.id IN (' . $uncached_ids_sql . ')', ARRAY_A );
 				foreach ( (array) $queried_data as $topic_data ) {
-					if ( ! empty( $topic_data['topic_id'] ) ) {
-						wp_cache_set( $topic_data['topic_id'], $topic_data, self::$topic_cache_group );
+					if ( ! empty( $topic_data['id'] ) ) {
+						wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
 					}
 				}
 			}
@@ -935,8 +935,8 @@ class BB_Topics_Manager {
 			 */
 			$total_activity_topic_sql = apply_filters(
 				'bb_total_topic_count_sql',
-				'SELECT count(DISTINCT t.id) FROM ' . $this->topics_table . ' t
-				 LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id
+				'SELECT count(DISTINCT t.id) FROM ' . $this->topic_rel_table . ' tr
+				 LEFT JOIN ' . $this->topics_table . ' t ON t.id = tr.topic_id
 				 ' . $where_sql,
 				$where_sql
 			);
@@ -984,7 +984,7 @@ class BB_Topics_Manager {
 
 		// Check if this topic is a global activity topic.
 		$is_global_activity_topic = false;
-		if ( ! empty( $topic->topic_id ) ) {
+		if ( 'group' === $item_type && ! empty( $topic->topic_id ) ) {
 			$global_rel = $this->bb_get_topic(
 				array(
 					'topic_id'  => $topic->topic_id,

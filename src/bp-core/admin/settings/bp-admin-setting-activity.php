@@ -502,7 +502,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_admin_setting_callback_activity_topics() {
-		$topics               = bb_topics_manager_instance()->bb_get_topics();
+		$topics               = bb_topics_manager_instance()->bb_get_topics(
+			array(
+				'item_type' => 'activity',
+				'item_id'   => 0,
+			)
+		);
 		$topics_limit_reached = bb_topics_manager_instance()->bb_topics_limit_reached();
 		?>
 		<div class="bb-activity-topics-wrapper">
