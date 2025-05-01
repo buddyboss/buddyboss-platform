@@ -167,7 +167,8 @@
 			// Remove any existing error messages.
 			this.$modal.find( this.config.errorContainerSelector ).remove();
 
-			var topicName       = this.$topicName.val();
+			var selectedData    = this.$topicName.data( 'selected' );
+			var topicName       = selectedData ? selectedData.name : this.$topicName.val();
 			var topicWhoCanPost = this.$topicWhoCanPost.filter( ':checked' ).val();
 			var topicId         = this.$topicId.val();
 			var itemId          = this.$itemId.val();
