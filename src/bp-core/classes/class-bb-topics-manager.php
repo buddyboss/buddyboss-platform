@@ -328,11 +328,11 @@ class BB_Topics_Manager {
 					// If just update permission_type for existing topic.
 					$this->bb_update_topic_relationship(
 						array(
-							'topic_id'        => $new_topic_id,
 							'item_id'         => $item_id,
 							'item_type'       => $item_type,
 							'permission_type' => $permission_type,
 							'where'           => array(
+								'topic_id'  => $new_topic_id,
 								'item_id'   => $item_id,
 								'item_type' => $item_type,
 							),
