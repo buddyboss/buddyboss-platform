@@ -46,26 +46,6 @@ do_action( 'bp_before_directory_members_page' );
 		if ( bb_enable_content_counts() ) {
 			?>
 			<div class="bb-item-count">
-				<?php
-				if ( ! $is_send_ajax_request ) {
-					$count = bp_core_get_all_member_count();
-					printf(
-						wp_kses(
-							/* translators: %d is the member count */
-							_n(
-								'<span class="bb-count">%d</span> Member',
-								'<span class="bb-count">%d</span> Members',
-								$count,
-								'buddyboss'
-							),
-							array( 'span' => array( 'class' => true ) )
-						),
-						(int) $count
-					);
-
-					unset( $count );
-				}
-				?>
 			</div>
 			<?php
 		}
@@ -83,13 +63,9 @@ do_action( 'bp_before_directory_members_page' );
 
 			<div id="members-dir-list" class="members dir-list" data-bp-list="members" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 				<?php
-				if ( $is_send_ajax_request ) {
 					echo '<div id="bp-ajax-loader">';
 					bp_nouveau_user_feedback( 'directory-members-loading' );
 					echo '</div>';
-				} else {
-					bp_get_template_part( 'members/members-loop' );
-				}
 				?>
 			</div><!-- #members-dir-list -->
 

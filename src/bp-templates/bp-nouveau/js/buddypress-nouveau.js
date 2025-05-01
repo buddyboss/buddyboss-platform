@@ -876,7 +876,8 @@ window.bp = window.bp || {};
 						$( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length &&
 						(
 							! _.isUndefined( BP_Nouveau.is_send_ajax_request ) &&
-							'' !== BP_Nouveau.is_send_ajax_request
+							'' !== BP_Nouveau.is_send_ajax_request &&
+							'members' !== object
 						)
 					) {
 						return;
@@ -962,7 +963,7 @@ window.bp = window.bp || {};
 							queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
 						}
 
-						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request ) {
+						if ( ! _.isUndefined( BP_Nouveau.is_send_ajax_request ) && '' === BP_Nouveau.is_send_ajax_request && 'members' !== object ) {
 							queryData.ajaxload = false;
 						}
 
