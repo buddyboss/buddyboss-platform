@@ -958,7 +958,7 @@ export const ReadyLaunchSettings = () => {
 							isOpen={isLinkModalOpen}
 							onClose={() => setIsLinkModalOpen(false)}
 							onSave={handleSaveLink}
-							initialValues={currentEditingLink ? { 
+							linkData={currentEditingLink ? { 
 								title: currentEditingLink.title, 
 								url: currentEditingLink.url 
 							} : { title: '', url: '' }}
