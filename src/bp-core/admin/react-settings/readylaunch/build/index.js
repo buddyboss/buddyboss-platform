@@ -13571,7 +13571,6 @@ const ReadyLaunchSettings = () => {
         return acc;
       }, {});
       const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_5__.saveSettings)(payload);
-      setIsSaving(false);
       if (data) {
         setNotification({
           status: 'success',
@@ -13580,12 +13579,14 @@ const ReadyLaunchSettings = () => {
         // Reset the user changes flag and changed fields after successful save
         setHasUserMadeChanges(false);
         setChangedFields({});
+        setIsSaving(false);
       } else {
         setNotification({
           status: 'error',
           message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Error saving settings.', 'buddyboss')
         });
         setHasUserMadeChanges(false);
+        setIsSaving(false);
       }
       // Auto-dismiss notification
       setTimeout(() => setNotification(null), 3000);

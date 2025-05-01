@@ -159,8 +159,6 @@ export const ReadyLaunchSettings = () => {
 			}, {});
 
 			const data = await saveSettings(payload);
-			setIsSaving(false);
-
 			if (data) {
 				setNotification({
 					status: 'success',
@@ -169,12 +167,14 @@ export const ReadyLaunchSettings = () => {
 				// Reset the user changes flag and changed fields after successful save
 				setHasUserMadeChanges(false);
 				setChangedFields({});
+				setIsSaving(false);
 			} else {
 				setNotification({
 					status: 'error',
 					message: __('Error saving settings.', 'buddyboss'),
 				});
 				setHasUserMadeChanges(false);
+				setIsSaving(false);
 			}
 			// Auto-dismiss notification
 			setTimeout(() => setNotification(null), 3000);
