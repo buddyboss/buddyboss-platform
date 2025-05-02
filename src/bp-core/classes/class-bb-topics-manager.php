@@ -766,11 +766,26 @@ class BB_Topics_Manager {
 				'count_total'        => false,
 				'fields'             => 'all', // Fields to include.
 				'error_type'         => 'bool',
+				'is_global_activity' => false,
 			)
 		);
 
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT tr.id, tr.menu_order';
+
+		// Add is_global_activity field if requested.
+		$global_activity_sql = '';
+		if ( $r['is_global_activity'] ) {
+			$global_activity_sql = ', EXISTS (
+				SELECT 1 
+				FROM ' . $this->topic_rel_table . ' global_tr 
+				WHERE global_tr.topic_id = tr.topic_id 
+				AND global_tr.item_id = 0 
+				AND global_tr.item_type = "activity"
+				AND global_tr.id IS NOT NULL
+			) as is_global_activity';
+			$select_sql .= $global_activity_sql;
+		}
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
 
@@ -915,8 +930,13 @@ class BB_Topics_Manager {
 			if ( ! empty( $uncached_ids ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
-				// phpcs:ignore
-				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.* FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ')', ARRAY_A );
+				$queried_data = $this->wpdb->get_results(
+					'SELECT t.*, tr.*' . $global_activity_sql . ' 
+					FROM ' . $this->topics_table . ' t 
+					LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id 
+					WHERE tr.id IN (' . $uncached_ids_sql . ')',
+					ARRAY_A
+				);
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
 						wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
@@ -928,15 +948,6 @@ class BB_Topics_Manager {
 			foreach ( $topic_ids as $id ) {
 				$topic = wp_cache_get( $id, self::$topic_cache_group );
 				if ( ! empty( $topic ) ) {
-					// After getting the topics, check if they are global activity topics.
-					$global_rel = $this->bb_get_topic(
-						array(
-							'topic_id'  => $id,
-							'item_id'   => 0,
-							'item_type' => 'activity',
-						)
-					);
-					$topic['is_global_activity'] = ! empty( $global_rel );
 					$topic_data[] = (object) $topic;
 				}
 			}
@@ -960,7 +971,7 @@ class BB_Topics_Manager {
 			 */
 			$total_activity_topic_sql = apply_filters(
 				'bb_total_topic_count_sql',
-				'SELECT count(DISTINCT t.id) FROM ' . $this->topic_rel_table . ' tr
+				'SELECT count(DISTINCT t.id)' . $global_activity_sql . ' FROM ' . $this->topic_rel_table . ' tr
 				 LEFT JOIN ' . $this->topics_table . ' t ON t.id = tr.topic_id
 				 ' . $where_sql,
 				$where_sql
@@ -997,9 +1008,10 @@ class BB_Topics_Manager {
 
 		$topic = $this->bb_get_topic(
 			array(
-				'topic_id'  => $topic_id,
-				'item_id'   => $item_id,
-				'item_type' => $item_type,
+				'topic_id'           => $topic_id,
+				'item_id'            => $item_id,
+				'item_type'          => $item_type,
+				'is_global_activity' => true,
 			)
 		);
 
