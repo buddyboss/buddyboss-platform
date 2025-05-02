@@ -7,6 +7,7 @@ $text-color-main: #50575e;
 $text-color-secondary: #757575;
 $border-color: #e5e5e5;
 $border-color-light: #f0f0f1;
+$bb-rl-active-color: #e0623d;
 $bb-rl-black-10: rgba(0, 0, 0, 0.1);
 $bb-rl-black-20: rgba(0, 0, 0, 0.2);
 $bb-rl-black-30: rgba(0, 0, 0, 0.3);
@@ -16,16 +17,17 @@ $bb-rl-black-60: rgba(0, 0, 0, 0.6);
 $bb-rl-black-70: rgba(0, 0, 0, 0.7);
 $bb-rl-black-80: rgba(0, 0, 0, 0.8);
 $bb-rl-black-90: rgba(0, 0, 0, 0.9);
+$bb-rl-black: rgba(0, 0, 0, 1);
 
-$bb-rl-background-white-color: #ffffff;
+$bb-rl-background-white-color: #fff;
 $bb-rl-background-color: #fff;
 $bb-rl-background-secondary-color: #f0f0f0;
 
-$bb-rl-text-primary-color: #000000;
+$bb-rl-text-primary-color: #000;
 $bb-rl-text-secondary-color: #4d4d4d;
 
 // UI Elements
-$card-box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
+$card-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
 
 
 // Dimensions and spaing
@@ -38,7 +40,7 @@ $bb-rl-space-400: 32px;
 $bb-rl-space-500: 40px;
 $bb-rl-space-600: 48px;
 $bb-rl-space-700: 56px;
-$content-max-width: 900px; 
+$content-max-width: 900px;
 
 // Radius
 $bb-rl-radius-xs: 2px;

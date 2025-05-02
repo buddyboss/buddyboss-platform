@@ -1,33 +1,33 @@
 /* Button styles */
 
 .bb-button {
-    display: inline-block;
-    
-    &.primary {
-        background-color: $primary-color;
-        color: $bb-rl-white-color;
-    }
-    
-    &.secondary {
-        background-color: $bb-rl-white-color;
-        color: $text-color-main;
-        border: 1px solid $border-color;
-        
-        &:hover {
-            background-color: $background-color;
-        }
-    }
-    
-    &.danger {
-        background-color: #dc3232;
-        color: $bb-rl-white-color;
-    }
-    
-    &.small {
-        font-size: 12px;
-    }
-    
-    &.large {
-        font-size: 16px;
-    }
-} 
+	display: inline-block;
+
+	&.primary {
+		background-color: $primary-color;
+		color: $bb-rl-white-color;
+	}
+
+	&.secondary {
+		background-color: $bb-rl-white-color;
+		color: $text-color-main;
+		border: 1px solid $border-color;
+
+		&:hover {
+			background-color: $background-color;
+		}
+	}
+
+	&.danger {
+		background-color: #dc3232;
+		color: $bb-rl-white-color;
+	}
+
+	&.small {
+		font-size: 12px;
+	}
+
+	&.large {
+		font-size: 16px;
+	}
+}

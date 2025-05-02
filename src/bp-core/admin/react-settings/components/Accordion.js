@@ -22,7 +22,7 @@ export const Accordion = ({ title, isExpanded, onToggle, children }) => {
                 <span className="bb-rl-help-icon"><i className="bb-icons-rl-info"></i></span>
             </div>
             {isExpanded && (
-                <div className="accordion-content">
+                <div className="bb-rl-accordion-content">
                     {children}
                 </div>
             )}

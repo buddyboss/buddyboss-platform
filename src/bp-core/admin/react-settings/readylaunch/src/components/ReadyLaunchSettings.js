@@ -586,7 +586,6 @@ export const ReadyLaunchSettings = () => {
 									/>
 								</div>
 							</div>
-							<hr />
 
 							{/* Logo Setting */}
 							<div className="settings-form-field">
@@ -611,7 +610,6 @@ export const ReadyLaunchSettings = () => {
 									)}
 								</div>
 							</div>
-							<hr />
 
 							{/* Theme Color Setting */}
 							<div className="settings-form-field">
@@ -645,7 +643,6 @@ export const ReadyLaunchSettings = () => {
 							{/* Theme Mode Setting */}
 							{settings.bb_rl_skin_appearance && (
 								<>
-									<hr />
 									<div className="settings-form-field">
 										<div className="field-label">
 											<label>{__('Theme Mode Settings', 'buddyboss')}</label>

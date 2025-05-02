@@ -1,2 +1,4 @@
 src/bp-templates/bp-nouveau/icons/css
 src/bp-templates/bp-nouveau/readylaunch/css/sass/components/activity/_code_mirror.scss
+node_modules
+src/bp-core/admin/react-settings/node_modules

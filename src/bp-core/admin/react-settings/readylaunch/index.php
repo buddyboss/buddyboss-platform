@@ -22,7 +22,9 @@ function bb_readylaunch_settings_page_html() {
 	?>
 	<div class="wrap" id="bb-readylaunch-settings">
 		<div class="bb-rl-tab-header">
-			Header
+            <div class="advance-brand">
+                <img alt="" class="upgrade-brand" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/credits-buddyboss.png' ); ?>" />
+            </div>
 		</div>
 		<div class="bb-rl-field-wrap" id="bb-rl-field-wrap">
 			<?php

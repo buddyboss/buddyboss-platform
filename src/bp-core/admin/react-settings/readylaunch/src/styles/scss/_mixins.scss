@@ -4,15 +4,23 @@
 	line-height: $line-height;
 }
 
+@mixin bb-rl-heading-bolder {
+
+	@include font-style(18px, 600, 28px);
+}
+
 @mixin bb-rl-heading {
+
 	@include font-style(18px, 500, 26px);
 }
 
 @mixin bb-rl-text {
+
 	@include font-style(13px, 400, 18px);
 }
 
 @mixin bb-rl-text-bolder {
+
 	@include font-style(13px, 500, 18px);
 }
 
@@ -43,13 +51,16 @@
 
 // Responsive mixins
 @mixin responsive($breakpoint) {
+
 	@if $breakpoint == tablet {
+
 		@media (max-width: 782px) {
 			@content;
 		}
 	} @else if $breakpoint == mobile {
+
 		@media (max-width: 600px) {
 			@content;
 		}
 	}
-} 
+}

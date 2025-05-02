@@ -1,6 +1,6 @@
-@import 'variables';
-@import 'mixins';
-@import 'buttons';
+@import "variables";
+@import "mixins";
+@import "buttons";
 
 /* Main container */
 .bb-readylaunch-settings-container {
@@ -10,50 +10,51 @@
 	margin: 0 -20px; /* Adjust based on WordPress admin padding */
 }
 
+/* Header */
+.bb-rl-tab-header {
+	background-color: $bb-rl-background-white-color;
+	margin: 0 -20px;
+	padding: 12px $bb-rl-space-300;
+	border-bottom: 1px solid $bb-rl-black-10;
+}
+
 /* Sidebar */
 .bb-readylaunch-sidebar {
 	width: 250px;
 	background-color: $bb-rl-background-white-color;
 	border-right: 1px solid $bb-rl-black-10;
-    padding: $bb-rl-space-300 $bb-rl-space-200;
-	
+	padding: $bb-rl-space-300 $bb-rl-space-200;
+
 	ul {
 		margin: 0;
 		padding: 0;
 	}
-	
+
 	li {
 
-        @include bb-rl-text-bolder;
+		@include bb-rl-text-bolder;
 		display: flex;
 		align-items: center;
 		padding: 12px $bb-rl-space-200;
 		color: $bb-rl-text-secondary-color;
 		cursor: pointer;
-        border-radius: $bb-rl-radius-base;
-        margin: 0;
-		
+		border-radius: $bb-rl-radius-base;
+		margin: 0;
+
 		&:hover {
 			background-color: $bb-rl-background-secondary-color;
 		}
-		
+
 		&.active {
 			color: $bb-rl-text-primary-color;
 			font-weight: 500;
 			background-color: $bb-rl-background-secondary-color;
 		}
 
-        i {
-            font-size: 20px;
-            margin-right: $bb-rl-space-100;
-        }
-	}
-	
-	.dashicons {
-		margin-right: 12px;
-		font-size: 20px;
-		width: 20px;
-		height: 20px;
+		i {
+			font-size: 20px;
+			margin-right: $bb-rl-space-100;
+		}
 	}
 }
 
@@ -61,38 +62,89 @@
 .bb-readylaunch-settings-content {
 	flex: 1;
 	padding: $bb-rl-space-300 $bb-rl-space-400;
+
+	.components-form-toggle {
+
+		.components-form-toggle__track {
+			background-color: $bb-rl-black-20;
+			border: 1px solid transparent;
+			height: 20px;
+			border-radius: $bb-rl-radius-full;
+		}
+
+		.components-form-toggle__thumb {
+			background-color: $bb-rl-background-white-color;
+			box-shadow: none;
+			width: 14px;
+			height: 14px;
+			top: 3px;
+			left: 3px;
+		}
+
+		&.is-checked {
+
+			.components-form-toggle__track {
+				background-color: $bb-rl-background-white-color;
+				border: 1px solid $bb-rl-active-color;
+			}
+
+			.components-form-toggle__thumb {
+				background-color: $bb-rl-active-color;
+				left: unset;
+				right: 20px;
+			}
+		}
+	}
 }
 
 .settings-content {
 	max-width: $content-max-width;
+
+	> h1 {
+
+		@include bb-rl-heading-bolder;
+		color: #000;
+		margin: 0 0 2px;
+		padding: 0;
+	}
+
+	> .settings-description {
+
+		@include font-style(14px, 400, 18px);
+		padding: 0;
+		margin: 0 0 $bb-rl-space-200;
+		color: $bb-rl-black-60;
+	}
 }
 
 /* Settings cards */
 .settings-card {
+
 	@include card-style;
 	margin-bottom: $bb-rl-space-300;
-	padding: 0 $bb-rl-space-300;
+	padding: 0 $bb-rl-space-300 $bb-rl-space-300;
 
-    &.settings-card--plain {
-        padding: $bb-rl-space-300;
-    }
+	&.settings-card--plain {
+		padding: $bb-rl-space-300;
+	}
 }
 
 /* Toggle settings */
 .settings-toggle-container {
+
 	@include flex-between;
 }
 
 .toggle-content {
 	flex: 1;
-	
+
 	h3 {
 		margin-top: 0;
 		margin-bottom: 5px;
 		font-size: 16px;
 		font-weight: 500;
 	}
-	
+
 	p {
 		margin: 0;
 		color: $text-color-secondary;
@@ -102,44 +154,60 @@
 
 /* Settings header */
 .settings-header {
+
 	@include flex-between;
 	margin-bottom: $bb-rl-space-200;
-    padding: $bb-rl-space-200 0;
-    border-bottom: 1px solid $bb-rl-black-10;
-	
+	padding: $bb-rl-space-200 0;
+	border-bottom: 1px solid $bb-rl-black-10;
+
 	h3 {
 
-        @include bb-rl-heading;
+		@include bb-rl-heading;
 		margin: 0;
 	}
 }
 
 .accordion-header {
-    @include flex-between;
-    margin-bottom: $bb-rl-space-200;
-    padding: $bb-rl-space-200 0;
-    border-bottom: 1px solid $bb-rl-black-10;
+
+	@include flex-between;
+	margin-bottom: $bb-rl-space-200;
+	padding: $bb-rl-space-200 0;
+	border-bottom: 1px solid $bb-rl-black-10;
+}
+
+.bb-rl-accordion-content {
+
+	.toggle-item {
+		padding-bottom: $bb-rl-space-100;
+
+		label {
+
+			@include font-style(14px, 400, 18px);
+		}
+	}
 }
 
 .bb-rl-accordion-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: $bb-rl-space-100;
-    flex-direction: row-reverse;
+	display: inline-flex;
+	align-items: center;
+	gap: $bb-rl-space-100;
+	flex-direction: row-reverse;
 
-    i {
-        font-size: 16px;
-        color: $bb-rl-black-40;
-        font-weight: 500;
-    }
+	i {
+		font-size: 16px;
+		color: $bb-rl-black-40;
+		font-weight: 500;
+	}
 
-    h3 {
-        @include bb-rl-heading;
-        margin: 0;
-    }
+	h3 {
+
+		@include bb-rl-heading;
+		margin: 0;
+	}
 }
 
 .bb-rl-help-icon {
+
 	@include flex-center;
 	width: 20px;
 	height: 20px;
@@ -151,35 +219,63 @@
 /* Form fields */
 .settings-form-field {
 	display: flex;
-	margin-top: 15px;
+	margin-bottom: $bb-rl-space-200;
+	padding-bottom: $bb-rl-space-200;
+	border-bottom: 1px solid $bb-rl-black-10;
+
+	&:last-of-type {
+		border-bottom: none;
+		margin-bottom: 0;
+	}
 }
 
 .field-label {
 	width: 30%;
 	padding-right: 20px;
-	
+
 	label {
+
+		@include font-style(14px, 500, 18px);
 		display: block;
-		font-weight: 500;
-		margin-bottom: 5px;
+		margin-bottom: $bb-rl-space-100;
+		color: $bb-rl-black;
 	}
-	
+
 	p {
+
+		@include bb-rl-text;
 		margin: 0;
-		color: $text-color-secondary;
-		font-size: 13px;
+		color: $bb-rl-black-60;
 	}
 }
 
 .field-input {
 	width: 70%;
-	
+
 	input[type="email"],
 	input[type="number"],
 	input[type="text"],
 	input[type="url"] {
 		width: 100%;
 		max-width: 300px;
+	}
+
+	label {
+
+		@include bb-rl-text-bolder;
+	}
+
+	.components-toggle-control__label {
+
+		@include font-style(14px, 400, 18px);
+	}
+
+	.components-radio-control__input[type="radio"] {
+		border-color: $bb-rl-active-color;
+	}
+
+	.components-radio-control__input[type="radio"]:checked {
+		background: $bb-rl-active-color;
 	}
 }
 
@@ -191,9 +287,8 @@
 
 /* Responsive adjustments */
 @include responsive(tablet) {
+
 	.new-link-inputs {
 		flex-direction: column;
 	}
 }
-
-/* Add more styles as needed */ 
