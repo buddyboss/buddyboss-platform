@@ -1171,6 +1171,7 @@ window.bp = window.bp || {};
 				}
 			} );
 			$( document ).on( 'mouseenter', '#profile-card', function () {
+				hoverAvatar = false;
 				hoverCardPopup = true;
 				hoverProfileCardPopup = true;
 				if ( hideCardTimeout ) {
@@ -1178,6 +1179,7 @@ window.bp = window.bp || {};
 				}
 			} );
 			$( document ).on( 'mouseenter', '#group-card', function () {
+				hoverAvatar = false;
 				hoverCardPopup = true;
 				hoverGroupCardPopup = true;
 				if ( hideCardTimeout ) {
@@ -3629,9 +3631,27 @@ window.bp = window.bp || {};
 								}
 							};
 							var snapImage = function () {
-								var canvas    = document.createElement( 'canvas' );
-								canvas.width  = video.videoWidth;
-								canvas.height = video.videoHeight;
+								var canvas      = document.createElement( 'canvas' );
+								var maxWidth    = 1920;
+								var maxHeight   = 1080;
+								var aspectRatio = video.videoHeight / video.videoWidth;
+								var width       = video.videoWidth;
+								var height      = video.videoHeight;
+
+								// Scale dimensions while maintaining aspect ratio and respecting max limits.
+								if ( width > maxWidth ) {
+									width  = maxWidth;
+									height = Math.floor( width * aspectRatio );
+								}
+								
+								if ( height > maxHeight ) {
+									height = maxHeight;
+									width  = Math.floor( height / aspectRatio );
+								}
+
+								canvas.width  = width;
+								canvas.height = height;
+
 								canvas.getContext( '2d' ).drawImage( video, 0, 0, canvas.width, canvas.height );
 								var image   = canvas.toDataURL();
 								var success = image.length > 50000;

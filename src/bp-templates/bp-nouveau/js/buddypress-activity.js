@@ -2106,7 +2106,7 @@ window.bp = window.bp || {};
 								[
 									'',
 									'<div>' + response.data.feedback + '</div>',
-									'success',
+									response.success ? 'success' : 'error',
 									null,
 									true
 								]
