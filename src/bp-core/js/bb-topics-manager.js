@@ -283,7 +283,7 @@
 			// Send AJAX request.
 			$.post( ajaxUrl, data, function ( response ) {
 				if ( response.success ) {
-					var topic = response.data.topic, isGlobal = response.data.is_global_activity_topic;
+					var topic = response.data.topic;
 					if ( this.$topicName.hasClass( 'select2-hidden-accessible' ) ) {
 						// For select2.
 						if ( 0 === this.$topicName.find( 'option[value=\'' + topic.slug + '\']' ).length ) {
@@ -291,11 +291,11 @@
 							this.$topicName.append( newOption );
 						}
 						this.$topicName.val( topic.slug ).trigger( 'change' );
-						this.$topicName.prop( 'disabled', !!isGlobal );
+						this.$topicName.prop( 'disabled', !!topic.is_global_activity );
 					} else {
 						// For plain input.
 						this.$topicName.val( topic.name );
-						this.$topicName.prop('readonly', !!isGlobal);
+						this.$topicName.prop('readonly', !!topic.is_global_activity);
 					}
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );

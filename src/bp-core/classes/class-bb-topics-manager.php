@@ -749,23 +749,23 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'topic_id'        => 0,
-				'name'            => '',
-				'slug'            => '',
-				'per_page'        => -1, // Retrieve all by default.
-				'paged'           => 1,
-				'orderby'         => 'menu_order',
-				'order'           => 'ASC',
-				'search'          => '',
-				'item_id'         => '',
-				'item_type'       => '',
-				'permission_type' => '',
-				'user_id'         => 0,
-				'include'         => array(),
-				'exclude'         => array(),
-				'count_total'     => false,
-				'fields'          => 'all', // Fields to include.
-				'error_type'      => 'bool',
+				'topic_id'           => 0,
+				'name'               => '',
+				'slug'               => '',
+				'per_page'           => -1, // Retrieve all by default.
+				'paged'              => 1,
+				'orderby'            => 'menu_order',
+				'order'              => 'ASC',
+				'search'             => '',
+				'item_id'            => '',
+				'item_type'          => '',
+				'permission_type'    => '',
+				'user_id'            => 0,
+				'include'            => array(),
+				'exclude'            => array(),
+				'count_total'        => false,
+				'fields'             => 'all', // Fields to include.
+				'error_type'         => 'bool',
 			)
 		);
 
@@ -928,6 +928,15 @@ class BB_Topics_Manager {
 			foreach ( $topic_ids as $id ) {
 				$topic = wp_cache_get( $id, self::$topic_cache_group );
 				if ( ! empty( $topic ) ) {
+					// After getting the topics, check if they are global activity topics.
+					$global_rel = $this->bb_get_topic(
+						array(
+							'topic_id'  => $id,
+							'item_id'   => 0,
+							'item_type' => 'activity',
+						)
+					);
+					$topic['is_global_activity'] = ! empty( $global_rel );
 					$topic_data[] = (object) $topic;
 				}
 			}
@@ -998,25 +1007,9 @@ class BB_Topics_Manager {
 			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );
 		}
 
-		// Check if this topic is a global activity topic.
-		$is_global_activity_topic = false;
-		if ( 'group' === $item_type && ! empty( $topic->topic_id ) ) {
-			$global_rel = $this->bb_get_topic(
-				array(
-					'topic_id'  => $topic->topic_id,
-					'item_id'   => 0,
-					'item_type' => 'activity',
-				)
-			);
-			if ( ! empty( $global_rel ) ) {
-				$is_global_activity_topic = true;
-			}
-		}
-
 		wp_send_json_success(
 			array(
-				'topic'                    => $topic,
-				'is_global_activity_topic' => $is_global_activity_topic,
+				'topic' => $topic,
 			)
 		);
 	}
