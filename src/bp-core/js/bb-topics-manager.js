@@ -291,11 +291,11 @@
 							this.$topicName.append( newOption );
 						}
 						this.$topicName.val( topic.slug ).trigger( 'change' );
-						this.$topicName.prop( 'disabled', !!topic.is_global_activity );
+						this.$topicName.prop( 'disabled', topic.is_global_activity );
 					} else {
 						// For plain input.
 						this.$topicName.val( topic.name );
-						this.$topicName.prop('readonly', !!topic.is_global_activity);
+						this.$topicName.prop('readonly', topic.is_global_activity);
 					}
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );

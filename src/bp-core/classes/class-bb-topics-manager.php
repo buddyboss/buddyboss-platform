@@ -948,6 +948,8 @@ class BB_Topics_Manager {
 			foreach ( $topic_ids as $id ) {
 				$topic = wp_cache_get( $id, self::$topic_cache_group );
 				if ( ! empty( $topic ) ) {
+					$topic['is_global_activity'] = ! empty( $topic['is_global_activity'] ) ? (bool) $topic['is_global_activity'] : false;
+
 					$topic_data[] = (object) $topic;
 				}
 			}
