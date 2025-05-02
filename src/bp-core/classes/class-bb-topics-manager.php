@@ -131,7 +131,7 @@ class BB_Topics_Manager {
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script(
 			'bb-topics-manager',
-			$bp->plugin_url . '/bp-core/js/bb-topics-manager' . $min . '.js',
+			$bp->plugin_url . 'bp-core/js/bb-topics-manager' . $min . '.js',
 			array(
 				'jquery',
 			),
