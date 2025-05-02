@@ -69,6 +69,14 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 		array(),
 		$asset['version']
 	);
+    
+    // Enqueue the BB Icons CSS
+    wp_enqueue_style(
+        'bb-icons-rl-css',
+        plugins_url( 'src/styles/icons/bb-icons-rl.css', __FILE__ ),
+        array(),
+        $asset['version']
+    );
 }
 
 add_action( 'admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );

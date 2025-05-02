@@ -27,10 +27,11 @@
         @include bb-rl-text-bolder;
 		display: flex;
 		align-items: center;
-		padding: $bb-rl-space-100 $bb-rl-space-200;
+		padding: 12px $bb-rl-space-200;
 		color: $bb-rl-text-secondary-color;
 		cursor: pointer;
         border-radius: $bb-rl-radius-base;
+        margin: 0;
 		
 		&:hover {
 			background-color: $bb-rl-background-secondary-color;
@@ -41,6 +42,11 @@
 			font-weight: 500;
 			background-color: $bb-rl-background-secondary-color;
 		}
+
+        i {
+            font-size: 20px;
+            margin-right: $bb-rl-space-100;
+        }
 	}
 	
 	.dashicons {
@@ -54,7 +60,7 @@
 /* Main content */
 .bb-readylaunch-settings-content {
 	flex: 1;
-	padding: 20px;
+	padding: $bb-rl-space-300 $bb-rl-space-400;
 }
 
 .settings-content {
