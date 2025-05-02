@@ -541,7 +541,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>Site Name</h3>
-								<span className="help-icon">?</span>
+								<span className="bb-rl-help-icon"><i className="bb-icons-rl-info"></i></span>
 							</div>
 							<div className="settings-form-field">
 								<div className="field-label">
@@ -569,7 +569,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Branding', 'buddyboss')}</h3>
-								<span className="help-icon">?</span>
+								<span className="bb-rl-help-icon"><i className="bb-icons-rl-info"></i></span>
 							</div>
 
 							{/* Appearance Setting */}

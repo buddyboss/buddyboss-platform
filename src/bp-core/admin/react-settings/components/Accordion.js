@@ -15,8 +15,11 @@ export const Accordion = ({ title, isExpanded, onToggle, children }) => {
     return (
         <div className={`settings-accordion ${isExpanded ? 'expanded' : 'collapsed'}`}>
             <div className="accordion-header" onClick={onToggle}>
-                <h3>{title}</h3>
-                <span className={`dashicons ${isExpanded ? 'dashicons-arrow-up-alt2' : 'dashicons-arrow-down-alt2'}`}></span>
+                <div className="bb-rl-accordion-toggle">
+                    <h3>{title}</h3>
+                    <i className={`bb-icons-rl-${isExpanded ? 'caret-down' : 'caret-up'}`}></i>
+                </div>
+                <span className="bb-rl-help-icon"><i className="bb-icons-rl-info"></i></span>
             </div>
             {isExpanded && (
                 <div className="accordion-content">

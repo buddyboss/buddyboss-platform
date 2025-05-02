@@ -114,14 +114,37 @@
 	}
 }
 
-.help-icon {
+.accordion-header {
+    @include flex-between;
+    margin-bottom: $bb-rl-space-200;
+    padding: $bb-rl-space-200 0;
+    border-bottom: 1px solid $bb-rl-black-10;
+}
+
+.bb-rl-accordion-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: $bb-rl-space-100;
+    flex-direction: row-reverse;
+
+    i {
+        font-size: 16px;
+        color: $bb-rl-black-40;
+        font-weight: 500;
+    }
+
+    h3 {
+        @include bb-rl-heading;
+        margin: 0;
+    }
+}
+
+.bb-rl-help-icon {
 	@include flex-center;
 	width: 20px;
 	height: 20px;
-	border-radius: 50%;
-	background-color: #e0e0e0;
-	color: #555;
-	font-size: 12px;
+	color: $bb-rl-black-60;
+	font-size: 20px;
 	cursor: pointer;
 }
 
