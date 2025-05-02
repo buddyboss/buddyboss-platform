@@ -2602,30 +2602,16 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		return;
 	}
 
-	$type      = 'media';
-	$table     = 'bp_media';
+	$media_table = $wpdb->base_prefix . 'bp_media';
+
+	// Process Media attachments.
 	$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
-	if ( empty( $media_ids ) ) {
-
-		// Check for videos.
-		$media_ids = get_post_meta( $post_id, 'bp_video_ids', true );
-		$type      = 'video';
-		if ( empty( $media_ids ) ) {
-
-			// Check for documents.
-			$media_ids = get_post_meta( $post_id, 'bp_document_ids', true );
-			$table     = 'bp_document';
-			$type      = 'document';
-		}
-	}
-
-	$media_table = $wpdb->base_prefix . $table;
 	if ( ! empty( $media_ids ) ) {
 		$media_ids_array = explode( ',', $media_ids );
 		$media_ids_array = array_map( 'intval', $media_ids_array );
 		
 		if ( ! empty( $media_ids_array ) ) {
-			// Get attachment IDs before deleting media/document records.
+			// Get attachment IDs before deleting media records.
 			$attachment_ids = $wpdb->get_col(
 				$wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -2635,21 +2621,11 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 			);
 
 			if ( bp_is_active( 'media' ) ) {
-				if ( 'media' === $type ) {
-					foreach ( $media_ids_array as $media_id ) {
-						bp_media_delete( array( 'id' => $media_id ) );
-					}
-				} elseif ( 'video' === $type ) {
-					foreach ( $media_ids_array as $video_id ) {
-						bp_video_delete( array( 'id' => $video_id ) );
-					}
-				} elseif ( 'document' === $type ) {
-					foreach ( $media_ids_array as $document_id ) {
-						bp_document_delete( array( 'id' => $document_id ) );
-					}
+				foreach ( $media_ids_array as $media_id ) {
+					bp_media_delete( array( 'id' => $media_id ) );
 				}
 			} else {
-				// Execute delete query on media/document table as fallback and delete related attachments.
+				// Execute delete query on media table as fallback and delete related attachments.
 				$wpdb->query(
 					$wpdb->prepare(
 						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -2662,32 +2638,120 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 				if ( ! empty( $attachment_ids ) ) {
 					foreach ( $attachment_ids as $attachment_id ) {
 						if ( ! empty( $attachment_id ) ) {
-
-							if ( 'video' === $type ) {
-								// Delete poster images.
-								$get_auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
-								if ( ! empty( $get_auto_generated_thumbnails ) ) {
-									foreach ( $get_auto_generated_thumbnails as $key => $attachment ) {
-										if ( is_array( $attachment ) && ! empty( $attachment ) ) {
-											foreach ( $attachment as $thumb_id ) {
-												wp_delete_attachment( $thumb_id, true );
-											}
-										} elseif ( ! empty( $attachment ) ) {
-											wp_delete_attachment( $attachment, true );
-										}
-									}
-								}
-								$preview_thumbnail = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-								if ( ! $preview_thumbnail ) {
-									wp_delete_attachment( $preview_thumbnail, true );
-								}
-							}
-
 							wp_delete_attachment( $attachment_id, true );
 						}
 					}
 				}
 			}
 		}
+
+		unset( $media_ids, $media_ids_array );
+	}
+
+	// Process Video attachments.
+	$video_ids = get_post_meta( $post_id, 'bp_video_ids', true );
+	if ( ! empty( $video_ids ) ) {
+		$video_ids_array = explode( ',', $video_ids );
+		$video_ids_array = array_map( 'intval', $video_ids_array );
+		
+		if ( ! empty( $video_ids_array ) ) {
+			// Get attachment IDs before deleting video records.
+			$attachment_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ") AND attachment_id > 0",
+					$video_ids_array
+				)
+			);
+
+			if ( bp_is_active( 'media' ) ) {
+				foreach ( $video_ids_array as $video_id ) {
+					bp_video_delete( array( 'id' => $video_id ) );
+				}
+			} else {
+				// Execute delete query on media table as fallback and delete related attachments.
+				$wpdb->query(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"DELETE FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ")",
+						$video_ids_array
+					)
+				);
+
+				// Delete attachments.
+				if ( ! empty( $attachment_ids ) ) {
+					foreach ( $attachment_ids as $attachment_id ) {
+						if ( ! empty( $attachment_id ) ) {
+							// Delete poster images.
+							$get_auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+							if ( ! empty( $get_auto_generated_thumbnails ) ) {
+								foreach ( $get_auto_generated_thumbnails as $key => $attachment ) {
+									if ( is_array( $attachment ) && ! empty( $attachment ) ) {
+										foreach ( $attachment as $thumb_id ) {
+											wp_delete_attachment( $thumb_id, true );
+										}
+									} elseif ( ! empty( $attachment ) ) {
+										wp_delete_attachment( $attachment, true );
+									}
+								}
+							}
+							$preview_thumbnail = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
+							if ( ! empty( $preview_thumbnail ) ) {
+								wp_delete_attachment( $preview_thumbnail, true );
+							}
+							
+							wp_delete_attachment( $attachment_id, true );
+						}
+					}
+				}
+			}
+		}
+
+		unset( $video_ids, $video_ids_array, $media_table );
+	}
+
+	// Process Document attachments.
+	$document_ids = get_post_meta( $post_id, 'bp_document_ids', true );
+	if ( ! empty( $document_ids ) ) {
+		$document_table     = $wpdb->base_prefix . 'bp_document';
+		$document_ids_array = explode( ',', $document_ids );
+		$document_ids_array = array_map( 'intval', $document_ids_array );
+		
+		if ( ! empty( $document_ids_array ) ) {
+			// Get attachment IDs before deleting document records.
+			$attachment_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT attachment_id FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ") AND attachment_id > 0",
+					$document_ids_array
+				)
+			);
+
+			if ( bp_is_active( 'media' ) ) {
+				foreach ( $document_ids_array as $document_id ) {
+					bp_document_delete( array( 'id' => $document_id ) );
+				}
+			} else {
+				// Execute delete query on document table as fallback and delete related attachments.
+				$wpdb->query(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"DELETE FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ")",
+						$document_ids_array
+					)
+				);
+
+				// Delete attachments.
+				if ( ! empty( $attachment_ids ) ) {
+					foreach ( $attachment_ids as $attachment_id ) {
+						if ( ! empty( $attachment_id ) ) {
+							wp_delete_attachment( $attachment_id, true );
+						}
+					}
+				}
+			}
+		}
+
+		unset( $document_ids, $document_ids_array, $document_table );
 	}
 }
