@@ -2584,3 +2584,110 @@ function bbp_get_url_scheme() {
 		? 'https://'
 		: 'http://';
 }
+
+/**
+ * Delete media, document and video attachments when a topic or reply is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $post_id Post ID (topic or reply) being deleted.
+ * @param object $post    Post object.
+ *
+ * @return void
+ */
+function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = null ) {
+	global $wpdb;
+
+	if ( empty( $post ) || empty( $post->post_type ) || ! in_array( $post->post_type, array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true ) ) {
+		return;
+	}
+
+	$type      = 'media';
+	$table     = 'bp_media';
+	$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+	if ( empty( $media_ids ) ) {
+
+		// Check for videos.
+		$media_ids = get_post_meta( $post_id, 'bp_video_ids', true );
+		$type      = 'video';
+		if ( empty( $media_ids ) ) {
+
+			// Check for documents.
+			$media_ids = get_post_meta( $post_id, 'bp_document_ids', true );
+			$table     = 'bp_document';
+			$type      = 'document';
+		}
+	}
+
+	$media_table = $wpdb->base_prefix . $table;
+	if ( ! empty( $media_ids ) ) {
+		$media_ids_array = explode( ',', $media_ids );
+		$media_ids_array = array_map( 'intval', $media_ids_array );
+		
+		if ( ! empty( $media_ids_array ) ) {
+			// Get attachment IDs before deleting media/document records.
+			$attachment_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ") AND attachment_id > 0",
+					$media_ids_array
+				)
+			);
+
+			if ( bp_is_active( 'media' ) ) {
+				if ( 'media' === $type ) {
+					foreach ( $media_ids_array as $media_id ) {
+						bp_media_delete( array( 'id' => $media_id ) );
+					}
+				} elseif ( 'video' === $type ) {
+					foreach ( $media_ids_array as $video_id ) {
+						bp_video_delete( array( 'id' => $video_id ) );
+					}
+				} elseif ( 'document' === $type ) {
+					foreach ( $media_ids_array as $document_id ) {
+						bp_document_delete( array( 'id' => $document_id ) );
+					}
+				}
+			} else {
+				// Execute delete query on media/document table as fallback and delete related attachments.
+				$wpdb->query(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"DELETE FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ")",
+						$media_ids_array
+					)
+				);
+
+				// Delete attachments.
+				if ( ! empty( $attachment_ids ) ) {
+					foreach ( $attachment_ids as $attachment_id ) {
+						if ( ! empty( $attachment_id ) ) {
+
+							if ( 'video' === $type ) {
+								// Delete poster images.
+								$get_auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
+								if ( ! empty( $get_auto_generated_thumbnails ) ) {
+									foreach ( $get_auto_generated_thumbnails as $key => $attachment ) {
+										if ( is_array( $attachment ) && ! empty( $attachment ) ) {
+											foreach ( $attachment as $thumb_id ) {
+												wp_delete_attachment( $thumb_id, true );
+											}
+										} elseif ( ! empty( $attachment ) ) {
+											wp_delete_attachment( $attachment, true );
+										}
+									}
+								}
+								$preview_thumbnail = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
+								if ( ! $preview_thumbnail ) {
+									wp_delete_attachment( $preview_thumbnail, true );
+								}
+							}
+
+							wp_delete_attachment( $attachment_id, true );
+						}
+					}
+				}
+			}
+		}
+	}
+}
