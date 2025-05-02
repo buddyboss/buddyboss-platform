@@ -628,57 +628,75 @@ hr {
 .components-modal__frame.link-modal {
     max-width: 500px;
     width: 100%;
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background: #fff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
 }
 
-.components-modal__header {
-    border-bottom: 1px solid #e2e4e7;
+.components-modal__screen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
-.components-modal__header .components-modal__header-heading {
-    font-size: 16px;
+.components-modal__content {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 120px);
+}
+
+.link-modal .components-modal__header {
+    height: auto;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.link-modal .components-modal__header-heading {
+    margin: 0;
+    font-size: 1.2em;
     font-weight: 600;
 }
 
+.link-modal .components-modal__header .components-button {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
 .link-modal-content {
-    padding: 16px;
+    padding: 20px;
 }
 
 .link-modal-field {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
-.link-modal-field label {
-    display: block;
-    font-weight: 500;
+.link-modal-field .components-base-control__field {
     margin-bottom: 8px;
 }
 
-.link-modal-field input {
+.link-modal-field .components-text-control__input {
     width: 100%;
-    padding: 8px;
-}
-
-.link-modal-field .field-description {
-    margin-top: 8px;
-    color: #757575;
-    font-size: 13px;
 }
 
 .link-modal-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
-    margin-top: 24px;
-}
-
-.link-modal-actions .save-button {
-    background-color: #e05d56 !important;
-    color: white !important;
-    border: none !important;
-}
-
-.link-modal-actions .save-button:hover {
-    background-color: #cf534d !important;
+    gap: 10px;
 }
 
 /* Dragging states */
