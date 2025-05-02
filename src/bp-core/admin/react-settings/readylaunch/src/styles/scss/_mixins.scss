@@ -1,3 +1,21 @@
+@mixin font-style($size, $weight: normal, $line-height: normal) {
+	font-size: $size;
+	font-weight: $weight;
+	line-height: $line-height;
+}
+
+@mixin bb-rl-heading {
+	@include font-style(18px, 500, 26px);
+}
+
+@mixin bb-rl-text {
+	@include font-style(13px, 400, 18px);
+}
+
+@mixin bb-rl-text-bolder {
+	@include font-style(13px, 500, 18px);
+}
+
 // Flexbox mixins
 @mixin flex-center {
 	display: flex;
@@ -18,8 +36,8 @@
 
 // Card styling
 @mixin card-style {
-	background-color: $white;
-	border-radius: $card-border-radius;
+	background-color: $bb-rl-background-white-color;
+	border-radius: $bb-rl-radius-lg;
 	box-shadow: $card-box-shadow;
 }
 

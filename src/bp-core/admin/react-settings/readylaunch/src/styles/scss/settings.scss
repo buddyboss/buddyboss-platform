@@ -12,9 +12,10 @@
 
 /* Sidebar */
 .bb-readylaunch-sidebar {
-	width: $sidebar-width;
-	background-color: $white;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	width: 250px;
+	background-color: $bb-rl-background-white-color;
+	border-right: 1px solid $bb-rl-black-10;
+    padding: $bb-rl-space-300 $bb-rl-space-200;
 	
 	ul {
 		margin: 0;
@@ -22,22 +23,23 @@
 	}
 	
 	li {
+
+        @include bb-rl-text-bolder;
 		display: flex;
 		align-items: center;
-		padding: 15px;
-		color: $text-color-main;
+		padding: $bb-rl-space-100 $bb-rl-space-200;
+		color: $bb-rl-text-secondary-color;
 		cursor: pointer;
-		font-size: 14px;
-		border-bottom: 1px solid $border-color-light;
+        border-radius: $bb-rl-radius-base;
 		
 		&:hover {
-			background-color: #f6f7f7;
+			background-color: $bb-rl-background-secondary-color;
 		}
 		
 		&.active {
-			color: $primary-color;
+			color: $bb-rl-text-primary-color;
 			font-weight: 500;
-			background-color: $background-color;
+			background-color: $bb-rl-background-secondary-color;
 		}
 	}
 	
@@ -62,8 +64,12 @@
 /* Settings cards */
 .settings-card {
 	@include card-style;
-	margin-bottom: 20px;
-	padding: 20px;
+	margin-bottom: $bb-rl-space-300;
+	padding: 0 $bb-rl-space-300;
+
+    &.settings-card--plain {
+        padding: $bb-rl-space-300;
+    }
 }
 
 /* Toggle settings */
@@ -91,12 +97,14 @@
 /* Settings header */
 .settings-header {
 	@include flex-between;
-	margin-bottom: 10px;
+	margin-bottom: $bb-rl-space-200;
+    padding: $bb-rl-space-200 0;
+    border-bottom: 1px solid $bb-rl-black-10;
 	
 	h3 {
+
+        @include bb-rl-heading;
 		margin: 0;
-		font-size: 16px;
-		font-weight: 500;
 	}
 }
 

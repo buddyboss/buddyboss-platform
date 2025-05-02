@@ -525,7 +525,7 @@ export const ReadyLaunchSettings = () => {
 			case 'activation':
 				return (
 					<div className="settings-content">
-						<div className="settings-card">
+						<div className="settings-card settings-card--plain">
 							<div className="settings-toggle-container">
 								<div className="toggle-content">
 									<h3>ReadyLaunch Enabled</h3>
@@ -543,7 +543,6 @@ export const ReadyLaunchSettings = () => {
 								<h3>Site Name</h3>
 								<span className="help-icon">?</span>
 							</div>
-							<hr/>
 							<div className="settings-form-field">
 								<div className="field-label">
 									<label>Community Name</label>
@@ -572,7 +571,6 @@ export const ReadyLaunchSettings = () => {
 								<h3>{__('Branding', 'buddyboss')}</h3>
 								<span className="help-icon">?</span>
 							</div>
-							<hr />
 
 							{/* Appearance Setting */}
 							<div className="settings-form-field with-toggle">

@@ -5,11 +5,11 @@
     
     &.primary {
         background-color: $primary-color;
-        color: $white;
+        color: $bb-rl-white-color;
     }
     
     &.secondary {
-        background-color: $white;
+        background-color: $bb-rl-white-color;
         color: $text-color-main;
         border: 1px solid $border-color;
         
@@ -20,7 +20,7 @@
     
     &.danger {
         background-color: #dc3232;
-        color: $white;
+        color: $bb-rl-white-color;
     }
     
     &.small {

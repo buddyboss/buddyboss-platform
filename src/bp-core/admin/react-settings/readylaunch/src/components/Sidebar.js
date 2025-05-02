@@ -5,22 +5,22 @@ export const Sidebar = ( { activeTab, setActiveTab } ) => {
 		{
 			id: 'activation',
 			label: __( 'Activation Settings', 'buddyboss' ),
-			icon: 'dashicons-button',
+			icon: 'toggle-right',
 		},
 		{
 			id: 'styles',
 			label: __( 'Styles', 'buddyboss' ),
-			icon: 'dashicons-admin-appearance',
+			icon: 'palette',
 		},
 		{
 			id: 'pages',
 			label: __( 'Pages & Sidebars', 'buddyboss' ),
-			icon: 'dashicons-admin-page',
+			icon: 'file-text',
 		},
 		{
 			id: 'menus',
 			label: __( 'Menus', 'buddyboss' ),
-			icon: 'dashicons-menu',
+			icon: 'list-dashes',
 		},
 	];
 
@@ -34,7 +34,7 @@ export const Sidebar = ( { activeTab, setActiveTab } ) => {
 							className={activeTab === item.id ? 'active' : ''}
 							onClick={() => setActiveTab( item.id )}
 						>
-							<span className={`dashicons ${item.icon}`}></span>
+							<i className={`bb-icons-rl-${item.icon}`}></i>
 							{item.label}
 						</li>
 					) )}
