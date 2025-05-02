@@ -581,7 +581,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 		$document_ids = array();
 		foreach ( $documents as $document ) {
 
-			$title                = ! empty( $document['name'] ) ? $document['name'] : '';
+			$title                = ! empty( $document['name'] ) ? sanitize_text_field( wp_unslash( $document['name'] ) ) : '';
 			$attachment_id        = ! empty( $document['id'] ) ? $document['id'] : 0;
 			$attached_document_id = ! empty( $document['document_id'] ) ? $document['document_id'] : 0;
 			$folder_id            = ! empty( $document['folder_id'] ) ? $document['folder_id'] : 0;
