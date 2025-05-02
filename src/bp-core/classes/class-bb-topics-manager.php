@@ -784,7 +784,7 @@ class BB_Topics_Manager {
 				AND global_tr.item_type = "activity"
 				AND global_tr.id IS NOT NULL
 			) as is_global_activity';
-			$select_sql .= $global_activity_sql;
+			$select_sql         .= $global_activity_sql;
 		}
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
