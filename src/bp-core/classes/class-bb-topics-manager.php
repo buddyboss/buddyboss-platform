@@ -757,8 +757,8 @@ class BB_Topics_Manager {
 				'orderby'         => 'menu_order',
 				'order'           => 'ASC',
 				'search'          => '',
-				'item_id'         => 0,
-				'item_type'       => 'activity',
+				'item_id'         => '',
+				'item_type'       => '',
 				'permission_type' => '',
 				'user_id'         => 0,
 				'include'         => array(),
@@ -793,7 +793,12 @@ class BB_Topics_Manager {
 
 		$order_by = 'tr.' . $r['orderby'];
 
-		$where_conditions[] = $this->wpdb->prepare( 'tr.item_id = %d', $r['item_id'] );
+		if ( ! empty( $r['item_id'] ) ) {
+			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
+			$item_ids           = array_map( 'absint', $r['item_id'] );
+			$placeholders       = array_fill( 0, count( $item_ids ), '%d' );
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids );
+		}
 
 		// topic_id.
 		if ( ! empty( $r['topic_id'] ) ) {
@@ -817,7 +822,10 @@ class BB_Topics_Manager {
 
 		// item_type.
 		if ( ! empty( $r['item_type'] ) ) {
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type = %s', $r['item_type'] );
+			$r['item_type']     = is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] );
+			$item_types         = array_map( 'sanitize_text_field', $r['item_type'] );
+			$placeholders       = array_fill( 0, count( $item_types ), '%s' );
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types );
 		}
 
 		// permission_type.
@@ -1079,6 +1087,16 @@ class BB_Topics_Manager {
 			return false;
 		}
 
+		$get_all_topic_relationships = $this->bb_get_topics(
+			array(
+				'topic_id'  => $topic_id,
+				'item_type' => array( 'activity', 'group' ),
+				'fields'    => 'id',
+			)
+		);
+
+		$relationships_ids = ! empty( $get_all_topic_relationships['topics'] ) ? $get_all_topic_relationships['topics'] : array();
+
 		/**
 		 * Fires before a topic is deleted.
 		 *
@@ -1089,9 +1107,13 @@ class BB_Topics_Manager {
 		do_action( 'bb_topic_relationship_before_delete', $topic_id );
 
 		// 1. Delete activity relationships.
-		$deleted_rels = $this->wpdb->delete( $this->topic_rel_table, array( 'topic_id' => $topic_id ), array( '%d' ) );
-		if ( false === $deleted_rels ) {
-			return false;
+		if ( ! empty( $relationships_ids ) ) {
+			$placeholders = array_fill( 0, count( $relationships_ids ), '%d' );
+			$sql          = 'DELETE FROM ' . $this->topic_rel_table . ' WHERE id IN (' . implode( ',', $placeholders ) . ')';
+			$deleted_rels = $this->wpdb->query( $this->wpdb->prepare( $sql, $relationships_ids ) ); // phpcs:ignore
+			if ( false === $deleted_rels ) {
+				return false;
+			}
 		}
 
 		/**
@@ -1099,20 +1121,22 @@ class BB_Topics_Manager {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int $topic_id The ID of the topic relationship that was deleted.
+		 * @param array $relationships_ids The IDs of the topic relationships that were deleted.
+		 * @param int   $topic_id          The ID of the topic that was deleted.
 		 */
-		do_action( 'bb_topic_relationship_after_deleted', $topic_id );
+		do_action( 'bb_topic_relationship_after_deleted', $relationships_ids, $topic_id );
 
 		/**
 		 * Fires after a topic has been deleted.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int $topic_id The ID of the topic that was deleted.
+		 * @param array $relationships_ids The IDs of the topic relationships that were deleted.
+		 * @param int   $topic_id          The ID of the topic that was deleted.
 		 */
-		do_action( 'bb_topic_deleted', $topic_id );
+		do_action( 'bb_topic_deleted', $relationships_ids, $topic_id );
 
-		unset( $topic_id, $deleted_rels, $deleted_topic );
+		unset( $topic_id, $deleted_rels, $deleted_topic, $get_all_topic_relationships, $relationships_ids );
 
 		return true;
 	}
