@@ -2003,27 +2003,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}, $raw_settings );
 
 			// Custom Links - Array of objects with specific types
-			$custom_links = bp_get_option('bb_rl_custom_links', array(
-				array(
-					'id' => 1,
-					'title' => 'Brand Materials',
-					'url' => 'https://www.buddyboss.com/brand-materials',
-					'is_editing' => false
-				),
-				array(
-					'id' => 2,
-					'title' => 'Resources',
-					'url' => 'https://www.buddyboss.com/documentations',
-					'is_editing' => false
-				)
-			));
+			$custom_links = bp_get_option('bb_rl_custom_links', array());
 
 			$settings['bb_rl_custom_links'] = array_map(function($link) {
 				return array(
 					'id' => (int) $link['id'],
 					'title' => (string) $link['title'],
 					'url' => (string) $link['url'],
-					'is_editing' => (bool) $link['is_editing']
 				);
 			}, $custom_links);
 

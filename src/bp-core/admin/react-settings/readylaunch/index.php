@@ -38,30 +38,30 @@ function bb_readylaunch_settings_page_html() {
 
 
 function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
-	if ( 'buddyboss_page_bb-readylaunch' !== $admin_page ) {
-		return;
-	}
+    if ( 'buddyboss_page_bb-readylaunch' !== $admin_page ) {
+        return;
+    }
 
-	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+    $asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
-	if ( ! file_exists( $asset_file ) ) {
-		return;
-	}
+    if ( ! file_exists( $asset_file ) ) {
+        return;
+    }
 
-	$asset = include $asset_file;
+    $asset = include $asset_file;
 
 	// Enqueue WordPress media scripts and styles
 	wp_enqueue_media();
 
-	wp_enqueue_script(
-		'bb-readylaunch-admin-script',
-		plugins_url( 'build/index.js', __FILE__ ),
-		$asset['dependencies'],
-		$asset['version'],
-		array(
-			'in_footer' => true,
-		)
-	);
+    wp_enqueue_script(
+        'bb-readylaunch-admin-script',
+        plugins_url( 'build/index.js', __FILE__ ),
+        $asset['dependencies'],
+        $asset['version'],
+        array(
+            'in_footer' => true,
+        )
+    );
 
 	wp_enqueue_style(
 		'bb-readylaunch-admin-style',

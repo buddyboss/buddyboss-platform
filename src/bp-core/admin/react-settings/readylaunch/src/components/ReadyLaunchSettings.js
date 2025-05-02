@@ -225,26 +225,41 @@ export const ReadyLaunchSettings = () => {
 		
 		if (currentEditingLink) {
 			// Update existing link
+			const updatedLinks = settings.bb_rl_custom_links.map(link => 
+				link.id === currentEditingLink.id 
+					? { ...link, title: linkData.title, url: linkData.url } 
+					: link
+			);
+
+			// Update both settings and changedFields
 			setSettings(prevSettings => ({
 				...prevSettings,
-				bb_rl_custom_links: prevSettings.bb_rl_custom_links.map(link => 
-					link.id === currentEditingLink.id 
-						? { ...link, title: linkData.title, url: linkData.url } 
-						: link
-				)
+				bb_rl_custom_links: updatedLinks
+			}));
+
+			setChangedFields(prev => ({
+				...prev,
+				bb_rl_custom_links: updatedLinks
 			}));
 		} else {
 			// Add new link
 			const newLink = {
 				id: Date.now(), // Simple unique ID
 				title: linkData.title,
-				url: linkData.url,
-				is_editing: false
+				url: linkData.url
 			};
 
+			const updatedLinks = [...(settings.bb_rl_custom_links || []), newLink];
+
+			// Update both settings and changedFields
 			setSettings(prevSettings => ({
 				...prevSettings,
-				bb_rl_custom_links: [...prevSettings.bb_rl_custom_links, newLink]
+				bb_rl_custom_links: updatedLinks
+			}));
+
+			setChangedFields(prev => ({
+				...prev,
+				bb_rl_custom_links: updatedLinks
 			}));
 		}
 		
@@ -253,11 +268,18 @@ export const ReadyLaunchSettings = () => {
 
 	const handleDeleteLink = (id) => {
 		setHasUserMadeChanges(true); // Set flag when user makes a change
+
+		const updatedLinks = settings.bb_rl_custom_links ? settings.bb_rl_custom_links.filter(link => link.id !== id) : [];
 		
 		setSettings(prevSettings => ({
 			...prevSettings,
 			// Ensure bb_rl_custom_links exists before filtering
-			bb_rl_custom_links: prevSettings.bb_rl_custom_links ? prevSettings.bb_rl_custom_links.filter(link => link.id !== id) : []
+			bb_rl_custom_links: updatedLinks
+		}));
+
+		setChangedFields(prev => ({
+			...prev,
+			bb_rl_custom_links: updatedLinks
 		}));
 	};
 
@@ -472,11 +494,18 @@ export const ReadyLaunchSettings = () => {
 
 		// Reorder Custom Links
 		if (source.droppableId === 'bb_rl_custom_links') {
-			const items = Array.from(settings.bb_rl_custom_links);
+			const items = Array.from(settings.bb_rl_custom_links || []);
 			const [reorderedItem] = items.splice(source.index, 1);
 			items.splice(destination.index, 0, reorderedItem);
+
+			// Update both settings and changedFields
 			setSettings(prevSettings => ({
 				...prevSettings,
+				bb_rl_custom_links: items
+			}));
+
+			setChangedFields(prev => ({
+				...prev,
 				bb_rl_custom_links: items
 			}));
 		}
