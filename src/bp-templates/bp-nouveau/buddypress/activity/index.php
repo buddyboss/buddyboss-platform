@@ -21,29 +21,22 @@ bp_nouveau_template_notices();
 <div class="activity-topic-selector">
 	<ul>
 		<li>
-			<a href="#">All</a>
+			<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 		</li>
-		<li>
-			<a href="#">Product Design</a>
-		</li>
-		<li>
-			<a href="#">Graphics</a>
-		</li>
-		<li>
-			<a href="#">AllContent Writing</a>
-		</li>
-		<li>
-			<a href="#">Motion</a>
-		</li>
-		<li>
-			<a href="#">UX Design</a>
-		</li>
-		<li>
-			<a href="#">Web Development</a>
-		</li>
-		<li>
-			<a href="#">Mobile Development</a>
-		</li>
+		<?php
+		$topics = bb_topics_manager_instance()->bb_get_topics(
+			array(
+				'item_id'   => 0,
+				'item_type' => 'activity',
+			)
+		);
+
+		if ( ! empty( $topics['topics'] ) ) {
+			foreach ( $topics['topics'] as $topic ) {
+				echo '<li><a href="#" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+			}
+		}
+		?>
 	</ul>
 </div>
 <?php

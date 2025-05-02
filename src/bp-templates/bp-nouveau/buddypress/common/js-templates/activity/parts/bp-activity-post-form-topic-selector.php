@@ -16,40 +16,20 @@
 	</span>
 	<div class="bb-topic-selector-list">
 		<ul>
-			<!-- TODO: Load topics from the server -->
-			<li>
-				<a href="#" data-topic-id="animation">
-					<?php esc_html_e( 'Animation', 'buddyboss' ); ?>
-				</a>
-			</li>
-			<li>
-				<a href="#" data-topic-id="ux-design">
-					<?php esc_html_e( 'UX Design', 'buddyboss' ); ?>
-				</a>
-			</li>
-			<li>
-				<a href="#" data-topic-id="web-design">
-					<?php esc_html_e( 'Web Design', 'buddyboss' ); ?>
-				</a>
-			</li>
-			<li>
-				<a href="#" data-topic-id="graphics-design">
-					<?php esc_html_e( 'Graphics Design', 'buddyboss' ); ?>
-				</a>
-			</li>
-			<li>
-				<a href="#" data-topic-id="motion">
-					<?php esc_html_e( 'Motion', 'buddyboss' ); ?>
-				</a>
-			</li>			
+			<?php
+			$topics = bb_topics_manager_instance()->bb_get_topics( 
+				array(
+					'item_id' => 0,
+					'item_type' => 'activity',
+				) 
+			);
+
+			if ( ! empty( $topics['topics'] ) ) {
+				foreach ( $topics['topics'] as $topic ) {
+					echo '<li><a href="#" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+				}
+			}
+			?>		
 		</ul>
 	</div>
-	<select disabled id="whats-new-topic-selector">
-		<!-- TODO: Load topics from the server -->
-		<option value="animation"><?php esc_html_e( 'Animation', 'buddyboss' ); ?></option>
-		<option value="ux-design"><?php esc_html_e( 'UX Design', 'buddyboss' ); ?></option>
-		<option value="web-design"><?php esc_html_e( 'Web Design', 'buddyboss' ); ?></option>
-		<option value="graphics-design"><?php esc_html_e( 'Graphics Design', 'buddyboss' ); ?></option>
-		<option value="motion"><?php esc_html_e( 'Motion', 'buddyboss' ); ?></option>
-	</select>
 </script>
