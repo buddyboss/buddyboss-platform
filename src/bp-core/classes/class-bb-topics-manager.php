@@ -477,17 +477,25 @@ class BB_Topics_Manager {
 			$topic_id = $r['topic_id'];
 		}
 
+		$get_topic_relationship = $this->bb_get_topic(
+			array(
+				'topic_id'  => $topic_id,
+				'item_id'   => $r['item_id'],
+				'item_type' => $r['item_type'],
+			)
+		);
+
 		/**
 		 * Fires after a topic has been added.
 		 *
-		 * @param int   $topic_id The ID of the topic added.
-		 * @param array $args     The arguments used to add the topic.
+		 * @param object $get_topic_relationship The topic relationship object.
+		 * @param array  $r The arguments used to add the topic.
 		 */
-		do_action( 'bb_topic_added', $topic_id, $r );
+		do_action( 'bb_topic_added', $get_topic_relationship, $r );
 
 		unset( $r, $data, $format, $inserted );
 
-		return $this->bb_get_topic_by( 'id', $topic_id );
+		return $get_topic_relationship;
 	}
 
 	/**
@@ -900,7 +908,7 @@ class BB_Topics_Manager {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 				// phpcs:ignore
-				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.* FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE t.id IN (' . $uncached_ids_sql . ')', ARRAY_A );
+				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.* FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ')', ARRAY_A );
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
 						wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
@@ -1074,6 +1082,8 @@ class BB_Topics_Manager {
 		/**
 		 * Fires before a topic is deleted.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param int $topic_id The ID of the topic being deleted.
 		 */
 		do_action( 'bb_topic_relationship_before_delete', $topic_id );
@@ -1084,10 +1094,19 @@ class BB_Topics_Manager {
 			return false;
 		}
 
+		/**
+		 * Fires after a topic relationship has been deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id The ID of the topic relationship that was deleted.
+		 */
 		do_action( 'bb_topic_relationship_after_deleted', $topic_id );
 
 		/**
 		 * Fires after a topic has been deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $topic_id The ID of the topic that was deleted.
 		 */

@@ -670,13 +670,13 @@ add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion
  * @param int   $topic_id Topic ID.
  * @param array $r Arguments.
  */
-function bb_topic_added_cache_reset( $topic_id, $r ) {
+function bb_topic_added_cache_reset( $topic_relationship, $r ) {
 	bp_core_reset_incrementor( 'bb_topics' );
-	if ( ! empty( $topic_id ) ) {
-		wp_cache_delete( $topic_id, 'bb_topics' );
+	if ( ! empty( $topic_relationship->id ) ) {
+		wp_cache_delete( $topic_relationship->id, 'bb_topics' );
 	}
 	if ( ! empty( $r ) ) {
-		wp_cache_delete( 'bb_topic_id_' . $topic_id, 'bb_topics' );
+		wp_cache_delete( 'bb_topic_id_' . $topic_relationship->id, 'bb_topics' );
 		wp_cache_delete( 'bb_topic_name_' . $r['name'], 'bb_topics' );
 		wp_cache_delete( 'bb_topic_slug_' . $r['slug'], 'bb_topics' );
 	}
