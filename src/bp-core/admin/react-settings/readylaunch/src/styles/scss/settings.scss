@@ -1,0 +1,162 @@
+@import 'variables';
+@import 'mixins';
+@import 'buttons';
+
+/* Main container */
+.bb-readylaunch-settings-container {
+	display: flex;
+	background-color: $background-color;
+	min-height: 90vh;
+	margin: 0 -20px; /* Adjust based on WordPress admin padding */
+}
+
+/* Sidebar */
+.bb-readylaunch-sidebar {
+	width: $sidebar-width;
+	background-color: $white;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+	
+	li {
+		display: flex;
+		align-items: center;
+		padding: 15px;
+		color: $text-color-main;
+		cursor: pointer;
+		font-size: 14px;
+		border-bottom: 1px solid $border-color-light;
+		
+		&:hover {
+			background-color: #f6f7f7;
+		}
+		
+		&.active {
+			color: $primary-color;
+			font-weight: 500;
+			background-color: $background-color;
+		}
+	}
+	
+	.dashicons {
+		margin-right: 12px;
+		font-size: 20px;
+		width: 20px;
+		height: 20px;
+	}
+}
+
+/* Main content */
+.bb-readylaunch-settings-content {
+	flex: 1;
+	padding: 20px;
+}
+
+.settings-content {
+	max-width: $content-max-width;
+}
+
+/* Settings cards */
+.settings-card {
+	@include card-style;
+	margin-bottom: 20px;
+	padding: 20px;
+}
+
+/* Toggle settings */
+.settings-toggle-container {
+	@include flex-between;
+}
+
+.toggle-content {
+	flex: 1;
+	
+	h3 {
+		margin-top: 0;
+		margin-bottom: 5px;
+		font-size: 16px;
+		font-weight: 500;
+	}
+	
+	p {
+		margin: 0;
+		color: $text-color-secondary;
+		font-size: 13px;
+	}
+}
+
+/* Settings header */
+.settings-header {
+	@include flex-between;
+	margin-bottom: 10px;
+	
+	h3 {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 500;
+	}
+}
+
+.help-icon {
+	@include flex-center;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #e0e0e0;
+	color: #555;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+/* Form fields */
+.settings-form-field {
+	display: flex;
+	margin-top: 15px;
+}
+
+.field-label {
+	width: 30%;
+	padding-right: 20px;
+	
+	label {
+		display: block;
+		font-weight: 500;
+		margin-bottom: 5px;
+	}
+	
+	p {
+		margin: 0;
+		color: $text-color-secondary;
+		font-size: 13px;
+	}
+}
+
+.field-input {
+	width: 70%;
+	
+	input[type="email"],
+	input[type="number"],
+	input[type="text"],
+	input[type="url"] {
+		width: 100%;
+		max-width: 300px;
+	}
+}
+
+.field-description {
+	margin-top: 5px;
+	color: $text-color-secondary;
+	font-size: 13px;
+}
+
+/* Responsive adjustments */
+@include responsive(tablet) {
+	.new-link-inputs {
+		flex-direction: column;
+	}
+}
+
+/* Add more styles as needed */ 

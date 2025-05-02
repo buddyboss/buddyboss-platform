@@ -1,0 +1,37 @@
+// Flexbox mixins
+@mixin flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+@mixin flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+// Card styling
+@mixin card-style {
+	background-color: $white;
+	border-radius: $card-border-radius;
+	box-shadow: $card-box-shadow;
+}
+
+// Responsive mixins
+@mixin responsive($breakpoint) {
+	@if $breakpoint == tablet {
+		@media (max-width: 782px) {
+			@content;
+		}
+	} @else if $breakpoint == mobile {
+		@media (max-width: 600px) {
+			@content;
+		}
+	}
+} 

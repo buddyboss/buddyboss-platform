@@ -1,0 +1,33 @@
+/* Button styles */
+
+.bb-button {
+    display: inline-block;
+    
+    &.primary {
+        background-color: $primary-color;
+        color: $white;
+    }
+    
+    &.secondary {
+        background-color: $white;
+        color: $text-color-main;
+        border: 1px solid $border-color;
+        
+        &:hover {
+            background-color: $background-color;
+        }
+    }
+    
+    &.danger {
+        background-color: #dc3232;
+        color: $white;
+    }
+    
+    &.small {
+        font-size: 12px;
+    }
+    
+    &.large {
+        font-size: 16px;
+    }
+} 

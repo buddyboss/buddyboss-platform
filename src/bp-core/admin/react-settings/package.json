@@ -9,11 +9,18 @@
 		"@wordpress/element": "^5.0.0",
 		"@wordpress/i18n": "^4.0.0",
 		"@wordpress/icons": "^9.0.0",
-		"@wordpress/scripts": "^27.0.0"
+		"@wordpress/scripts": "^27.0.0",
+		"css-loader": "^6.11.0",
+		"sass": "^1.87.0",
+		"sass-loader": "^13.3.3",
+		"style-loader": "^3.3.4"
 	},
 	"scripts": {
-		"build": "wp-scripts build",
-		"start": "wp-scripts start",
+		"build": "npm run build:scss && wp-scripts build",
+		"start": "npm run watch",
+		"build:scss": "node readylaunch/src/styles/scss/build.js",
+		"watch": "concurrently \"npm run watch:scss\" \"wp-scripts start\"",
+		"watch:scss": "sass --watch readylaunch/src/styles/scss/settings.scss:readylaunch/src/styles/settings.css",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses",
 		"format": "wp-scripts format",
@@ -23,10 +30,13 @@
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"packages-update": "wp-scripts packages-update",
 		"test:e2e": "wp-scripts test-e2e",
-		"test:unit": "wp-scripts test-unit-js"
+		"test:unit": "wp-scripts test-unit-js",
+		"compile-sass": "sass --style=compressed --no-source-map readylaunch/src/styles/scss:readylaunch/src/styles",
+		"watch-sass": "sass --watch --style=expanded --no-source-map readylaunch/src/styles/scss:readylaunch/src/styles"
 	},
 	"dependencies": {
 		"@wordpress/media-utils": "^5.22.0",
+		"concurrently": "^8.2.2",
 		"react-beautiful-dnd": "^13.1.1"
 	}
 }
