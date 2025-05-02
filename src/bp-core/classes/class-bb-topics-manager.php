@@ -1168,4 +1168,134 @@ class BB_Topics_Manager {
 	public function bb_topics_limit() {
 		return 20;
 	}
+
+	/**
+	 * Add or update an activity-topic relationship.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments for adding/updating an activity-topic relationship.
+	 *
+	 *     @type int    $topic_id    The ID of the topic.
+	 *     @type int    $activity_id The ID of the activity.
+	 *     @type string $component   The component name (e.g., 'activity', 'groups').
+	 *     @type int    $item_id     The ID of the item (e.g., group ID if component is 'groups').
+	 * }
+	 *
+	 * @return int|WP_Error The ID of the relationship or WP_Error on failure.
+	 */
+	public function bb_add_activity_topic_relationship( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'topic_id'    => 0,
+				'activity_id' => 0,
+				'component'   => 'activity',
+				'item_id'     => 0,
+				'error_type'  => 'wp_error',
+			)
+		);
+
+		// Validate required fields.
+		if ( empty( $r['topic_id'] ) || empty( $r['activity_id'] ) ) {
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss' ) );
+		}
+
+		/**
+		 * Fires before an activity-topic relationship is added or updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $r The arguments used to add/update the relationship.
+		 */
+		do_action( 'bb_activity_topic_relationship_before_add', $r );
+
+		// Check if activity already has a topic assigned.
+		$existing = $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				"SELECT id, topic_id FROM {$this->activity_topic_rel_table} WHERE activity_id = %d",
+				$r['activity_id']
+			) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		);
+
+		if ( $existing ) {
+			// If the same topic is already assigned, return the existing relationship ID.
+			if ( $existing->topic_id === $r['topic_id'] ) {
+				return $existing->id;
+			}
+
+			// Update the existing relationship with the new topic.
+			$updated = $this->wpdb->update(
+				$this->activity_topic_rel_table,
+				array(
+					'topic_id'     => $r['topic_id'],
+					'component'    => $r['component'],
+					'item_id'      => $r['item_id'],
+					'date_updated' => current_time( 'mysql' ),
+				),
+				array( 'id' => $existing->id ),
+				array( '%d', '%s', '%d', '%s' ),
+				array( '%d' )
+			);
+
+			if ( false === $updated ) {
+				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss' );
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_activity_topic_relationship_db_update_error', $error_message );
+				}
+
+				wp_send_json_error( array( 'error' => $error_message ) );
+			}
+
+			/**
+			 * Fires after an activity-topic relationship is updated.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int   $existing->id The ID of the updated relationship.
+			 * @param array $r            The arguments used to update the relationship.
+			 */
+			do_action( 'bb_activity_topic_relationship_after_update', $existing->id, $r );
+
+			return $existing->id;
+		}
+
+		// Insert new relationship.
+		$inserted = $this->wpdb->insert(
+			$this->activity_topic_rel_table,
+			array(
+				'topic_id'     => $r['topic_id'],
+				'activity_id'  => $r['activity_id'],
+				'component'    => $r['component'],
+				'item_id'      => $r['item_id'],
+				'date_created' => current_time( 'mysql' ),
+				'date_updated' => current_time( 'mysql' ),
+			),
+			array( '%d', '%d', '%s', '%d', '%s', '%s' )
+		);
+
+		if ( ! $inserted ) {
+			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss' );
+			if ( 'wp_error' === $r['error_type'] ) {
+				return new WP_Error( 'bb_activity_topic_relationship_db_insert_error', $error_message );
+			}
+
+			wp_send_json_error( array( 'error' => $error_message ) );
+		}
+
+		$relationship_id = $this->wpdb->insert_id;
+
+		/**
+		 * Fires after an activity-topic relationship is added.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $relationship_id The ID of the inserted relationship.
+		 * @param array $r               The arguments used to add the relationship.
+		 */
+		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $r );
+
+		return $relationship_id;
+	}
 }

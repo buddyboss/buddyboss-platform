@@ -201,6 +201,8 @@ add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' )
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
 add_action( 'bp_init', 'bb_load_topics_manager' );
 
+add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -3975,4 +3977,32 @@ function bb_load_topics_manager() {
 
 	bb_topics_manager_instance();
 	bb_activity_topics_manager_instance();
+}
+
+/**
+ * Save topic data for activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity The activity object.
+ *
+ * @return void
+ */
+function bb_activity_save_topic_data( $activity ) {
+
+	check_admin_referer( 'post_update', '_wpnonce_post_update' );
+
+	$topic_id = isset( $_POST['topic_id'] ) ? intval( $_POST['topic_id'] ) : 0;
+	$item_id  = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
+	// If topic ID is provided, add the relationship.
+	if ( $topic_id ) {
+		bb_topics_manager_instance()->bb_add_activity_topic_relationship(
+			array(
+				'topic_id'    => $topic_id,
+				'activity_id' => $activity->id,
+				'component'   => 'activity',
+				'item_id'     => $item_id,
+			)
+		);
+	}
 }

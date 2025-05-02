@@ -135,6 +135,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			bp_activity_action();
 			bp_nouveau_activity_is_edited();
 			bp_nouveau_activity_privacy();
+			bb_activity_topic_name();
 			?>
 		</div>
 

@@ -706,3 +706,24 @@ function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
 }
 
 add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
+
+
+/**
+ * Reset cache when a topic relationship is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $relationship_id The ID of the topic relationship.
+ * @param array $r               The arguments.
+ */
+function bb_activity_topic_relationship_after_update_cache_reset( $relationship_id, $r ) {
+	bp_core_reset_incrementor( 'bb_activity_topics' );
+	if ( ! empty( $relationship_id ) ) {
+		wp_cache_delete( $relationship_id, 'bb_activity_topics' );
+	}
+	if ( ! empty( $r ) ) {
+		wp_cache_delete( 'bb_activity_topic_name_' . $r['activity_id'], 'bb_activity_topics' );
+	}
+}
+
+add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_relationship_after_update_cache_reset', 10, 2 );

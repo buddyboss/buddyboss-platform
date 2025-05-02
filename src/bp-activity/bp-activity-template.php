@@ -4594,3 +4594,36 @@ function bb_get_activity_comment_unfavorite_link( $activity_comment_id = 0 ) {
 	 */
 	return apply_filters( 'bb_get_activity_comment_unfavorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/unfavorite/' . $activity_comment_id . '/' ), 'unmark_favorite' ) );
 }
+
+/**
+ * Output the activity topic name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id The ID of the activity.
+ */
+function bb_activity_topic_name( $activity_id = 0 ) {
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	$topic_name = bb_get_activity_topic_name( $activity_id );
+	echo esc_html( $topic_name );
+}
+
+/**
+ * Return the activity topic name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id The ID of the activity.
+ *
+ * @return string The activity topic name.
+ */
+function bb_get_activity_topic_name( $activity_id = 0 ) {
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	return bb_activity_topics_manager_instance()->bb_get_activity_topic_name( $activity_id );
+}
