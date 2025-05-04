@@ -3529,6 +3529,47 @@ input.search-query-input {
   display: none;
 }
 
+/* Topic tooltip */
+.bb-topic-tooltip-wrapper {
+  position: absolute;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  top: 70%;
+  right: -2%;
+}
+
+.bb-topic-tooltip-wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bb-topic-tooltip-wrapper .bb-topic-tooltip {
+  background: #222;
+  color: #fff;
+  padding: 6px 12px 12px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.bb-topic-tooltip-wrapper:after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 7px 7px 0 7px;
+  border-style: solid;
+  border-color: #222 transparent transparent transparent;
+  width: 0;
+  height: 0;
+  display: block;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.2 - Activity Entries

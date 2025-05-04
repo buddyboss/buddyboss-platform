@@ -1,4 +1,8 @@
-/* global bbTopicsManagerVars */
+/* global bp, BP_Nouveau, _, Backbone, bbTopicsManagerVars */
+/* @version 1.0.0 */
+window.wp = window.wp || {};
+window.bp = window.bp || {};
+
 ( function ( $ ) {
 
 	/**
@@ -51,6 +55,7 @@
 
 		start : function () {
 			this.init();
+			this.initTopicsManagerFrontend();
 		},
 
 		/**
@@ -73,6 +78,77 @@
 			// Check topics limit on initialization.
 			this.checkTopicsLimit();
 		},
+
+		initTopicsManagerFrontend: function() {
+			bp.Nouveau = bp.Nouveau || {};
+
+			// Bail if not set.
+			if ( typeof bp.Nouveau.Activity === 'undefined' || typeof BP_Nouveau === 'undefined' ) {
+				return;
+			}
+
+			_.extend( bp, _.pick( wp, 'Backbone', 'ajax', 'template' ) );
+
+			bp.Models      = bp.Models || {};
+			bp.Collections = bp.Collections || {};
+			bp.Views = bp.Views || {};
+
+			bp.Views.TopicSelector = bp.View.extend(
+				{
+					tagName: 'div',
+					className: 'whats-new-topic-selector',
+					template: bp.template( 'activity-post-form-topic-selector' ),
+					events: {
+						'click .bb-topic-selector-button': 'toggleTopicSelectorDropdown',
+						'click .bb-topic-selector-list a': 'selectTopic'
+					},
+		
+					initialize: function () {
+						this.model.on( 'change', this.render, this ); // TODO: Add specific event to update topic selector
+		
+						// Add document-level click handler
+						$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
+					},
+		
+					render: function () {
+						this.$el.html( this.template( this.model.attributes ) );
+					},
+		
+					toggleTopicSelectorDropdown: function () {
+						this.$el.toggleClass( 'is-active' );
+					},
+		
+					selectTopic: function ( event ) {
+						event.preventDefault();
+						
+						var topicId = $( event.currentTarget ).data( 'topic-id' );
+						var topicName = $( event.currentTarget ).text().trim();
+		
+
+						this.model.set( 'topic_id', topicId );
+						this.model.set( 'topic_name', topicName );
+		
+						this.$el.find( '.bb-topic-selector-button' ).text( topicName );
+						this.$el.removeClass('is-active');
+						
+						this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
+						
+						$( document ).trigger( 'bb_topic_selected', [ topicId ] );
+					},
+		
+					closeTopicSelectorDropdown: function ( event ) {
+						// Don't close if clicking inside the topic selector
+						if ( $( event.target ).closest( '.whats-new-topic-selector' ).length ) {
+							return;
+						}
+						
+						this.$el.removeClass( 'is-active' );
+					}
+				}
+			);
+
+			this.addFrontendListeners();
+        },
 
 		/**
 		 * Set up DOM elements
@@ -118,8 +194,8 @@
 			this.$document.on( 'click', '.bb-topic-actions-wrapper .bp-secondary-action', this.closeActionsDropdown.bind( this ) );
 
 			// Close context menu dropdown when clicking outside
-			this.$document.on( 'click', function( e ) {
-				if ( !$( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
+			this.$document.on( 'click', function ( e ) {
+				if ( ! $( e.target ).closest( '.bb-topic-actions-wrapper' ).length ) {
 					$( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
 				}
 			} );
@@ -401,6 +477,70 @@
 		 */
 		closeActionsDropdown : function ( event ) {
 			$( event.target ).closest( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
+		},
+
+		/**
+		 * Add frontend listeners.
+		 */
+		addFrontendListeners : function () {
+			if ( bbTopicsManagerVars.bb_is_activity_topic_required ) {
+				this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
+				this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
+
+				this.addTopicTooltip = false;
+				// Add topic tooltip.
+				$( document ).on( 'bb_display_full_form', function () {
+					if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+						$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + bbTopicsManagerVars.topic_tooltip_error + '</div></div>' );
+					}
+				} );
+
+				$( document ).on( 'postValidate', function ( event, data ) {
+					var $topicName = $( '.whats-new-topic-selector' ).find( '.bb-topic-selector-list li a.selected' );
+					if ( data.contentEmpty && ! $topicName.length ) {
+						this.addTopicTooltip = true;
+						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+					} else if ( ! data.contentEmpty && ! $topicName.length ) {
+						this.addTopicTooltip = false;
+						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+					} else if ( ! data.contentEmpty && $topicName.length ) {
+						this.addTopicTooltip = false;
+						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
+					}
+				} );
+
+
+				$( document ).on( 'bb_topic_selected', function ( event, topicID ) {
+					if ( topicID && ! this.addTopicTooltip ) {
+						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
+					} else {
+						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+					}
+				} );
+			}
+		},
+
+		showTopicTooltip : function ( event ) {
+			var $wrapper   = $( event.currentTarget ),
+			    $postBtn   = $wrapper.closest( '#whats-new-submit' ),
+			    $topicName = $wrapper.closest( '#activity-form-submit-wrapper' ).find( '.bb-topic-selector-list li a.selected' );
+
+			if ( $postBtn.closest( '.focus-in--empty' ).length > 0 ) {
+				if ( ! $topicName.length ) {
+					$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
+					$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+				} else if ( this.addTopicTooltip && $topicName.length ) {
+					$postBtn.find( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
+					$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+				} else if ( ! this.addTopicTooltip && $topicName.length ) {
+					$postBtn.find( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
+				}
+			}
+
+		},
+
+		hideTopicTooltip : function () {
+			$( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
 		},
 	};
 

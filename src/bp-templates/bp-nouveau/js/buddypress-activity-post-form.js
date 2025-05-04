@@ -5146,55 +5146,6 @@ window.bp = window.bp || {};
 		}
 	);
 
-	bp.Views.TopicSelector = bp.View.extend(
-		{
-			tagName: 'div',
-			className: 'whats-new-topic-selector',
-			template: bp.template( 'activity-post-form-topic-selector' ),
-			events: {
-				'click .bb-topic-selector-button': 'toggleTopicSelectorDropdown',
-				'click .bb-topic-selector-list a': 'selectTopic'
-			},
-
-			initialize: function () {
-				this.model.on( 'change', this.render, this ); // TODO: Add specific event to update topic selector
-
-				// Add document-level click handler
-				$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
-			},
-
-			render: function () {
-				this.$el.html( this.template( this.model.attributes ) );
-			},
-
-			toggleTopicSelectorDropdown: function () {
-				this.$el.toggleClass( 'is-active' );
-			},
-
-			selectTopic: function ( event ) {
-				event.preventDefault();
-				
-				var topicId = $( event.currentTarget ).data( 'topic-id' );
-				var topicName = $( event.currentTarget ).text().trim();
-
-				this.model.set( 'topic_id', topicId );
-				this.model.set( 'topic_name', topicName );
-
-				this.$el.find( '.bb-topic-selector-button' ).text( topicName );
-				this.$el.removeClass( 'is-active' );
-			},
-
-			closeTopicSelectorDropdown: function ( event ) {
-				// Don't close if clicking inside the topic selector
-				if ( $( event.target ).closest( '.whats-new-topic-selector' ).length ) {
-					return;
-				}
-				
-				this.$el.removeClass( 'is-active' );
-			}
-		}
-	);
-
 	bp.Views.EditActivityPostIn = bp.View.extend(
 		{
 			template: bp.template( 'activity-edit-postin' ),
@@ -5234,8 +5185,10 @@ window.bp = window.bp || {};
 					}
 				) );
 
-				// TODO: Check if Topic is enabled
-				this.views.add( new bp.Views.TopicSelector( { model: this.model } ) );
+				// TODO: Check if Topic is enabled.
+				if  ( bp.Views && bp.Views.TopicSelector ) {
+					this.views.add(new bp.Views.TopicSelector({ model: this.model }));
+				}
 
 				if( bp.Views.activitySchedulePost !== undefined ) {
 					this.views.add( new bp.Views.activitySchedulePost( { model: this.model } ) );
@@ -5390,11 +5343,16 @@ window.bp = window.bp || {};
 					$whatsNew[0].innerHTML = '';
 				}
 
+				var contentEmpty;
 				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
-					this.$el.removeClass( 'focus-in--empty' );
+					contentEmpty = false;
+					this.$el.removeClass('focus-in--empty');
 				} else {
+					contentEmpty = true;
 					this.$el.addClass( 'focus-in--empty' );
 				}
+
+				$( document ).trigger( 'postValidate', { contentEmpty: contentEmpty } );
 			},
 
 			mediumLink: function () {
@@ -5559,6 +5517,9 @@ window.bp = window.bp || {};
 				}
 
 				$('a.bp-suggestions-mention:empty').remove();
+
+				// Trigger modal opened event.
+				$( document ).trigger( 'bb_display_full_form' );
 			},
 
 			activityHideModalEvent: function () {

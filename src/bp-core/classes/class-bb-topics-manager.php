@@ -142,9 +142,11 @@ class BB_Topics_Manager {
 			'bb-topics-manager',
 			'bbTopicsManagerVars',
 			array(
-				'ajax_url'             => admin_url( 'admin-ajax.php' ),
-				'delete_topic_confirm' => esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' ),
-				'topics_limit'         => $this->bb_topics_limit(),
+				'ajax_url'                      => admin_url( 'admin-ajax.php' ),
+				'delete_topic_confirm'          => esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' ),
+				'topics_limit'                  => $this->bb_topics_limit(),
+				'topic_tooltip_error'           => esc_html__( 'Please select a topic', 'buddyboss' ),
+				'bb_is_activity_topic_required' => bb_is_activity_topic_required(),
 			)
 		);
 	}
