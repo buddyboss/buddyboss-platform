@@ -1136,6 +1136,14 @@ class BB_Topics_Manager {
 			if ( false === $deleted_rels ) {
 				return false;
 			}
+
+			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship(
+					array(
+						'topic_id' => $topic_id,
+					)
+				);
+			}
 		}
 
 		/**
