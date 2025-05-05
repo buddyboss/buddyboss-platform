@@ -45,6 +45,14 @@
 	border-bottom: 1px solid $bb-rl-black-10;
 }
 
+.bb-branding-header {
+	margin-right: auto;
+
+	.bb-branding-logo {
+		max-width: 130px;
+	}
+}
+
 /* Sidebar */
 .bb-readylaunch-sidebar {
 	width: 250px;
