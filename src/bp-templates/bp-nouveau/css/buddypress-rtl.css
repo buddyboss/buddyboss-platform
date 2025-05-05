@@ -2995,6 +2995,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   margin: 10px auto 10px 0;
   display: flex;
   flex-flow: row-reverse;
+  position: relative;
 }
 
 #whats-new-submit input {
@@ -3527,6 +3528,49 @@ input.search-query-input {
 .post-emoji-hide,
 .post-gif-hide {
   display: none;
+}
+
+/* Topic tooltip */
+.bb-topic-tooltip-wrapper {
+  position: absolute;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  bottom: calc(100% + 15px);
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.bb-topic-tooltip-wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bb-topic-tooltip-wrapper .bb-topic-tooltip {
+  background: #1e2132;
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2.45px 3.68px 0 rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.bb-topic-tooltip-wrapper:after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  right: 50%;
+  transform: translateX(50%);
+  border-width: 7px 7px 0 7px;
+  border-style: solid;
+  border-color: #222 transparent transparent transparent;
+  width: 0;
+  height: 0;
+  display: block;
 }
 
 /**

@@ -2995,6 +2995,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   margin: 10px 0 10px auto;
   display: flex;
   flex-flow: row-reverse;
+  position: relative;
 }
 
 #whats-new-submit input {
@@ -3536,8 +3537,9 @@ input.search-query-input {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s;
-  top: 70%;
-  right: -2%;
+  bottom: calc(100% + 15px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .bb-topic-tooltip-wrapper.active {
@@ -3546,13 +3548,14 @@ input.search-query-input {
 }
 
 .bb-topic-tooltip-wrapper .bb-topic-tooltip {
-  background: #222;
+  background: #1e2132;
   color: #fff;
-  padding: 6px 12px 12px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2.45px 3.68px 0 rgba(0, 0, 0, 0.15);
   position: relative;
 }
 

@@ -1486,6 +1486,7 @@
 	margin: $marg-sml 0 $marg-sml auto;
 	display: flex;
 	flex-flow: row-reverse;
+	position: relative;
 
 	input {
 
@@ -2042,12 +2043,13 @@ input.search-query-input {
 /* Topic tooltip */
 .bb-topic-tooltip-wrapper {
 	position: absolute;
-  	z-index: 99999;
-  	pointer-events: none;
-  	opacity: 0;
-  	transition: opacity 0.15s;
-  	top: 70%;
-  	right: -2%;
+	z-index: 99999;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.15s;
+	bottom: calc(100% + 15px);
+	left: 50%;
+	transform: translateX(-50%);
 
 	&.active {
 		opacity: 1;
@@ -2055,13 +2057,14 @@ input.search-query-input {
 	}
 
 	.bb-topic-tooltip {
-		background: #222;
+		background: #1e2132;
 		color: #fff;
-		padding: 6px 12px 12px 12px;
-		border-radius: 6px;
-		font-size: 13px;
+		padding: 4px 14px;
+		border-radius: 4px;
+		font-size: 12px;
+		font-weight: 600;
 		white-space: nowrap;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+		box-shadow: 0 2.45px 3.68px 0 rgba(0, 0, 0, 0.15);
 		position: relative;
 	}
 
