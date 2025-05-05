@@ -744,6 +744,67 @@
 				}
 			}
 		}
+
+		.bb-rl-left-panel-widget {
+
+			.bb-rl-list {
+
+				h2 {
+					display: flex;
+					align-items: center;
+					position: relative;
+					margin-bottom: 0;
+
+					&:after {
+						content: "\e136";
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						font-weight: 400;
+						color: var(--bb-rl-icon-tertiary-color);
+						margin-left: var(--bb-rl-space-100);
+					}
+
+					&:before {
+						content: "\e3d4";
+						font-family: bb-icons-rl;
+						font-size: 16px;
+						font-weight: 700;
+						color: var(--bb-rl-icon-tertiary-color);
+						margin-left: var(--bb-rl-space-100);
+						position: absolute;
+						right: 0;
+						top: 50%;
+						transform: translateY(-50%);
+					}
+				}
+
+				> ul {
+					display: none;
+				}
+			}
+
+			&.is-open {
+
+				> .bb-rl-list {
+
+					ul {
+						display: block;
+					}
+
+					h2 {
+						margin-bottom: var(--bb-rl-space-200);
+
+						&:after {
+							transform: rotate(180deg);
+						}
+
+						&:before {
+							content: "\e32a";
+						}
+					}
+				}
+			}
+		}
 	}
 
 

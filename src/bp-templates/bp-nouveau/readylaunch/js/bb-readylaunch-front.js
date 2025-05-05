@@ -51,6 +51,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '#bb-rl-profile-theme-light, #bb-rl-profile-theme-dark', this.ToggleDarkMode.bind( this ) );
 				$document.on( 'click', '.header-aside div.menu-item-has-children > a', this.showHeaderNotifications.bind( this ) );
 				$document.on( 'click', '.bb-rl-left-panel-mobile, .bb-rl-close-panel-mobile', this.toggleMobileMenu.bind( this ) );
+				$document.on( 'click', '.bb-rl-left-panel-widget .bb-rl-list > h2', this.toggleLeftPanelWidget.bind( this ) );
 				$document.on( 'click', '.action-unread', this.markNotificationRead.bind( this ) );
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
@@ -439,6 +440,14 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( 'body' ).toggleClass( 'bb-mobile-menu-open' );
+			},
+
+			toggleLeftPanelWidget : function ( e ) {
+				e.preventDefault();
+
+				if ( $( window ).width() < 993 ) {
+					$( e.currentTarget ).closest( '.bb-rl-left-panel-widget' ).toggleClass( 'is-open' );
+				}
 			},
 
 			/**
