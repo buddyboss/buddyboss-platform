@@ -81,6 +81,14 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 								</div>
 							<?php } ?>
 						</div>
+					<?php } else { ?>
+						<div class="bb-rl-header-buttons">
+							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss-theme' ); ?></a>
+
+							<?php if ( get_option( 'users_can_register' ) ) : ?>
+								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss-theme' ); ?></a>
+							<?php endif; ?>
+						</div>
 					<?php } ?>
 				</div>
 			</div>

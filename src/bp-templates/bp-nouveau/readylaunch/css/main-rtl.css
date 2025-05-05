@@ -6173,6 +6173,10 @@ body.admin-bar .bb-rl-header {
   white-space: nowrap;
 }
 
+.header-aside .bb-rl-header-buttons .signin-button:hover {
+  border-bottom-color: transparent;
+}
+
 .notification-dropdown .notification-header-tabs {
   margin: 0 var(--bb-rl-space-200);
 }
