@@ -87,6 +87,22 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 
 			<div class="bb-readylaunch-mobile-menu__wrap">
 				<?php
+					if ( bp_is_active( 'search' ) ) {
+						?>
+						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
+							<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+							<div class="bb-rl-network-search-bar">
+								<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss' ); ?>">
+								<input type="hidden" name="bp_search" value="1">
+								<button type="submit" id="search-submit" class="nouveau-search-submit">
+									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
+									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+								</button>
+								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+							</div>
+						</form>
+					<?php } ?>
+					<?php
 					wp_nav_menu(
 						array(
 							'theme_location' => 'bb-readylaunch',
