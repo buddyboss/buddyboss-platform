@@ -86,7 +86,7 @@ class BB_Activity_Topics_Manager {
 
 		// Add custom column to activity admin list table.
 		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
-		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 2 );
+		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
 	}
 
 	/**
@@ -192,10 +192,10 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @return string
 	 */
-	public function bb_activity_admin_topic_column_content( $content, $column_name ) {
+	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
 
-		if ( 'activity_topic' === $column_name ) {
-			return __( 'Topic Name', 'buddyboss' );
+		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
+			return $this->bb_get_activity_topic_name( $item['id'] );
 		}
 
 		return $content;
