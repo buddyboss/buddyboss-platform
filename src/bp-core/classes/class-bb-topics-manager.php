@@ -318,13 +318,14 @@ class BB_Topics_Manager {
 							)
 						);
 
-						$this->wpdb->update(
-							$this->activity_topic_rel_table,
-							array( 'topic_id' => $new_topic_id ),
-							array( 'topic_id' => $previous_topic_id ),
-							array( '%d' ),
-							array( '%d' )
-						);
+						if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
+								array(
+									'topic_id'    => $new_topic_id,
+									'previous_id' => $previous_topic_id,
+								)
+							);
+						}
 					}
 				} else {
 					// If just update permission_type for existing topic.
@@ -476,7 +477,15 @@ class BB_Topics_Manager {
 					),
 				)
 			);
-			$topic_id = $r['topic_id'];
+
+			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+				bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
+					array(
+						'topic_id'    => $topic_id,
+						'previous_id' => $r['topic_id'],
+					)
+				);
+			}
 		}
 
 		$get_topic_relationship = $this->bb_get_topic(
@@ -932,6 +941,7 @@ class BB_Topics_Manager {
 			if ( ! empty( $uncached_ids ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$queried_data = $this->wpdb->get_results(
 					'SELECT t.*, tr.*' . $global_activity_sql . ' 
 					FROM ' . $this->topics_table . ' t 
@@ -1010,14 +1020,17 @@ class BB_Topics_Manager {
 		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
 		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
-		$topic = $this->bb_get_topic(
-			array(
-				'topic_id'           => $topic_id,
-				'item_id'            => $item_id,
-				'item_type'          => $item_type,
-				'is_global_activity' => true,
-			)
+		$args = array(
+			'topic_id'  => $topic_id,
+			'item_id'   => $item_id,
+			'item_type' => $item_type,
 		);
+
+		if ( 'group' === $item_type ) {
+			$args['is_global_activity'] = true;
+		}
+
+		$topic = $this->bb_get_topic( $args );
 
 		if ( ! $topic ) {
 			wp_send_json_error( array( 'error' => __( 'Topic not found.', 'buddyboss' ) ) );

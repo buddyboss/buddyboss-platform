@@ -245,4 +245,34 @@ class BB_Activity_Topics_Manager {
 
 		return $topic_name;
 	}
+
+	/**
+	 * Update the activity topic relationship.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of args. {
+	 *     @type int $previous_id The ID of the previous topic.
+	 *     @type int $topic_id    The ID of the topic.
+	 * }
+	 */
+	public function bb_update_activity_topic_relationship( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'previous_id' => 0,
+				'topic_id'    => 0,
+			)
+		);
+
+		$prefix = bp_core_get_table_prefix();
+
+		$this->wpdb->update(
+			"{$prefix}bb_activity_topic_relationship",
+			array( 'topic_id' => $r['topic_id'] ),
+			array( 'topic_id' => $r['previous_id'] ),
+			array( '%d' ),
+			array( '%d' )
+		);
+	}
 }
