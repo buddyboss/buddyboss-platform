@@ -3567,7 +3567,7 @@ input.search-query-input {
   transform: translateX(-50%);
   border-width: 7px 7px 0 7px;
   border-style: solid;
-  border-color: #222 transparent transparent transparent;
+  border-color: #1e2132 transparent transparent transparent;
   width: 0;
   height: 0;
   display: block;
