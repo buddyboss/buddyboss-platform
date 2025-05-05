@@ -18,7 +18,7 @@
 	"scripts": {
 		"build": "npm run build:scss && wp-scripts build",
 		"start": "npm run watch",
-		"build:scss": "node readylaunch/src/styles/scss/build.js",
+		"build:scss": "sass --style=compressed --no-source-map readylaunch/src/styles/scss/settings.scss:readylaunch/src/styles/settings.css",
 		"watch": "concurrently \"npm run watch:scss\" \"wp-scripts start\"",
 		"watch:scss": "sass --watch readylaunch/src/styles/scss/settings.scss:readylaunch/src/styles/settings.css",
 		"check-engines": "wp-scripts check-engines",
@@ -30,9 +30,7 @@
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"packages-update": "wp-scripts packages-update",
 		"test:e2e": "wp-scripts test-e2e",
-		"test:unit": "wp-scripts test-unit-js",
-		"compile-sass": "sass --style=compressed --no-source-map readylaunch/src/styles/scss:readylaunch/src/styles",
-		"watch-sass": "sass --watch --style=expanded --no-source-map readylaunch/src/styles/scss:readylaunch/src/styles"
+		"test:unit": "wp-scripts test-unit-js"
 	},
 	"dependencies": {
 		"@wordpress/media-utils": "^5.22.0",
