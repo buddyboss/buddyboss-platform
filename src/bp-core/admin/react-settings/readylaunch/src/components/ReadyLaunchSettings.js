@@ -7,6 +7,8 @@ import { fetchSettings, saveSettings, debounce, fetchMenus } from '../../../util
 import { Accordion } from '../../../components/Accordion';
 import { LinkItem } from '../../../components/LinkItem';
 import { LinkModal } from '../../../components/LinkModal';
+import { HelpIcon } from '../../../components/HelpIcon';
+import { HelpSliderModal } from '../../../components/HelpSliderModal';
 
 // Initial structure for side menu items
 const initialSideMenuItems = [
@@ -37,6 +39,7 @@ export const ReadyLaunchSettings = () => {
 	// State for sortable side menu items
 	const [ sideMenuItems, setSideMenuItems ] = useState(initialSideMenuItems);
 	const [menus, setMenus] = useState([]);
+	const [isHelpOpen, setHelpOpen] = useState(false);
 
 	// Load settings on component mount
 	useEffect(() => {
@@ -541,7 +544,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>Site Name</h3>
-								<span className="bb-rl-help-icon"><i className="bb-icons-rl-info"></i></span>
+								<HelpIcon onClick={() => setHelpOpen(true)} />
 							</div>
 							<div className="settings-form-field">
 								<div className="field-label">
@@ -569,7 +572,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Branding', 'buddyboss')}</h3>
-								<span className="bb-rl-help-icon"><i className="bb-icons-rl-info"></i></span>
+								<HelpIcon onClick={() => setHelpOpen(true)} />
 							</div>
 
 							{/* Appearance Setting */}
@@ -677,6 +680,7 @@ export const ReadyLaunchSettings = () => {
 								title={__('Pages', 'buddyboss')}
 								isExpanded={expandedSections.pages}
 								onToggle={() => toggleSection('pages')}
+								onHelpClick={() => setHelpOpen(true)}
 							>
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
@@ -722,6 +726,7 @@ export const ReadyLaunchSettings = () => {
 								title={__('Sidebars', 'buddyboss')}
 								isExpanded={expandedSections.sidebars}
 								onToggle={() => toggleSection('sidebars')}
+								onHelpClick={() => setHelpOpen(true)}
 							>
 								{/* Activity Feed */}
 								<div className="settings-form-field with-multiple-toggles">
@@ -876,6 +881,7 @@ export const ReadyLaunchSettings = () => {
 									title={__('Menus', 'buddyboss')}
 									isExpanded={expandedSections.menus}
 									onToggle={() => toggleSection('menus')}
+									onHelpClick={() => setHelpOpen(true)}
 								>
 									{/* Header Menu */}
 									<div className="settings-form-field menu-header-field">
@@ -1028,6 +1034,27 @@ export const ReadyLaunchSettings = () => {
 					{renderContent()}
 				</div>
 			</div>
+
+			<HelpSliderModal
+				isOpen={isHelpOpen}
+				onClose={() => setHelpOpen(false)}
+				title="ReadyLaunch Sidebars"
+			>
+				<div style={{marginBottom: 16}}>
+					<iframe width="100%" height="315" src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video" frameBorder="0" allowFullScreen></iframe>
+				</div>
+				<h4>Heading</h4>
+				<p>Navigate to <b>BuddyBoss – Settings – Profiles</b> ...</p>
+				<ul>
+					<li>First name</li>
+					<li>First name and last name</li>
+					<li>Nickname</li>
+				</ul>
+				<h4>Heading</h4>
+				<p>This option has three fields ...</p>
+				<img src="YOUR_IMAGE_URL" alt="Profile Names" style={{width: '100%', borderRadius: 8, marginBottom: 16}} />
+				{/* ...more content */}
+			</HelpSliderModal>
 		</>
 	);
 };
