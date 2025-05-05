@@ -19,6 +19,11 @@
 	@include font-style(13px, 400, 18px);
 }
 
+@mixin bb-rl-text-medium {
+
+	@include font-style(14px, 500, 18px);
+}
+
 @mixin bb-rl-text-bolder {
 
 	@include font-style(13px, 500, 18px);
@@ -47,6 +52,65 @@
 	background-color: $bb-rl-background-white-color;
 	border-radius: $bb-rl-radius-lg;
 	box-shadow: $card-box-shadow;
+}
+
+// Button styling
+@mixin bb-rl-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1rem;
+	text-align: center;
+	cursor: pointer;
+	border-radius: $bb-rl-radius-md;
+	padding: $bb-rl-space-100 $bb-rl-space-200;
+	transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+	text-decoration: none;
+	box-shadow: none;
+	outline: none;
+}
+
+@mixin bb-rl-button--small {
+	font-size: 0.8125rem;
+}
+
+@mixin bb-rl-button--primary {
+	background-color: $bb-rl-active-color;
+	color: $bb-rl-white-color;
+	border: 1px solid $bb-rl-active-color;
+
+	&:hover {
+		background-color: $bb-rl-active-color;
+	}
+
+	&:focus-within {
+		outline: 2px solid $bb-rl-active-color;
+	}
+
+	&:disabled {
+		background-color: var(--bb-rl-background-brand-disabled-color);
+		cursor: not-allowed;
+	}
+}
+
+@mixin bb-rl-button-secondary {
+	background-color: var(--bb-rl-background-tertiary-color);
+	color: var(--bb-rl-text-color);
+	border: 1px solid transparent;
+
+	&:hover {
+		background-color: var(--bb-rl-background-tertiary-hover-color);
+	}
+
+	&:focus {
+		outline: 2px solid var(--bb-rl-border-quinery-color);
+	}
+
+	&:disabled {
+		background-color: var(--bb-rl-background-tertiary-color);
+		color: var(--bb-rl-text-disabled-color);
+		cursor: not-allowed;
+	}
 }
 
 // Responsive mixins

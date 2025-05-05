@@ -13,7 +13,7 @@ export const HelpIcon = ({ onClick, contentId }) => {
             onClick={handleClick}
             aria-label="Help"
         >
-            <i className="bb-icons-rl-help"></i>
+            <i className="bb-icons-rl-question"></i>
         </button>
     );
 };

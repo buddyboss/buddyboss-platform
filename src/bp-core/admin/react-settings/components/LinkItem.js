@@ -17,31 +17,34 @@ import { Button } from '@wordpress/components';
 export const LinkItem = ({ link, onEdit, onDelete, innerRef, draggableProps, dragHandleProps, isDragging }) => {
     return (
         <div 
-            className={`link-item ${isDragging ? 'is-dragging' : ''}`}
+            className={`link-item bb-rl-link-item ${isDragging ? 'is-dragging' : ''}`}
             ref={innerRef} 
             {...draggableProps} 
             {...dragHandleProps}
         >
             <div className="link-item-content">
                 <div className="link-details">
-                    <span className="link-title">{link.title}</span>
+                    <span className="link-icon">
+                        <i className="bb-icons-rl-link" />
+                        <span className="link-title">{link.title}</span>
+                        <div className="link-actions">
+                            <Button
+                                className="edit-link-button"
+                                icon={<i className="bb-icons-rl-pencil-simple" />}
+                                onClick={onEdit}
+                                label={__('Edit', 'buddyboss')}
+                                isSmall
+                            />
+                            <Button
+                                className="delete-link-button" 
+                                icon={<i className="bb-icons-rl-trash" />}
+                                onClick={onDelete}
+                                label={__('Delete', 'buddyboss')}
+                                isSmall
+                            />
+                        </div>
+                    </span>
                     <span className="link-url">{link.url}</span>
-                </div>
-                <div className="link-actions">
-                    <Button
-                        className="edit-link-button"
-                        icon="edit"
-                        onClick={onEdit}
-                        label={__('Edit', 'buddyboss')}
-                        isSmall
-                    />
-                    <Button
-                        className="delete-link-button" 
-                        icon="trash"
-                        onClick={onDelete}
-                        label={__('Delete', 'buddyboss')}
-                        isSmall
-                    />
                 </div>
             </div>
         </div>

@@ -358,7 +358,7 @@ export const ReadyLaunchSettings = () => {
 									isDestructive
 									onClick={() => onChange(null)}
 									className="remove-image-button"
-									icon="trash"
+									icon={<i className="bb-icons-rl-trash" />}
 								>
 									{__('Remove', 'buddyboss')}
 								</Button>
@@ -366,7 +366,7 @@ export const ReadyLaunchSettings = () => {
 									isPrimary
 									onClick={() => openMediaLibrary(label, onChange)}
 									className="change-image-button"
-									icon="edit"
+									icon={<i className="bb-icons-rl-pencil-simple" />}
 								>
 									{__('Change', 'buddyboss')}
 								</Button>
@@ -377,7 +377,7 @@ export const ReadyLaunchSettings = () => {
 							variant="secondary"
 							onClick={() => openMediaLibrary(label, onChange)}
 							className="upload-image-button"
-							icon="upload"
+							icon={<i className="bb-icons-rl-upload" />}
 						>
 							{__('Upload Image', 'buddyboss')}
 						</Button>
@@ -1017,10 +1017,10 @@ export const ReadyLaunchSettings = () => {
 													
 													{/* Add New Link Button - Moved inside Droppable but outside mapping */}
 													<Button
-														className="add-link-button"
+														className="add-link-button bb-rl-button bb-rl-button--primary bb-rl-button--small"
 														variant="secondary"
 														onClick={handleAddLinkClick}
-														icon="plus"
+														icon={<i className="bb-icons-rl-plus" />}
 													>
 														{__('Add New Link', 'buddyboss')}
 													</Button>

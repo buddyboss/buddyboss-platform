@@ -31,3 +31,24 @@
 		font-size: 16px;
 	}
 }
+
+.bb-rl-button,
+.bb-rl-button.components-button {
+
+	@include bb-rl-button;
+
+	&.has-icon.has-text {
+		padding: $bb-rl-space-100 $bb-rl-space-200;
+		gap: $bb-rl-space-50;
+	}
+
+	&.bb-rl-button--small {
+
+		@include bb-rl-button--small;
+	}
+
+	&.bb-rl-button--primary {
+
+		@include bb-rl-button--primary;
+	}
+}

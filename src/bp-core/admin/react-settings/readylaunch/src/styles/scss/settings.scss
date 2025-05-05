@@ -2,6 +2,32 @@
 @import "mixins";
 @import "buttons";
 
+/* Full Height BuddyBoss ReadyLaunch Settings Page */
+.buddyboss_page_bb-readylaunch {
+
+	#wpbody-content {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: 0;
+	}
+
+	#bb-readylaunch-settings {
+		flex: 1;
+		display: flex;
+		flex-direction: column; 
+
+		> .bb-rl-field-wrap {
+			flex: 1;
+			display: flex;
+
+			> .bb-readylaunch-settings-container {
+				flex: 1;
+			}
+		}
+	}
+}
+
 /* Main container */
 .bb-readylaunch-settings-container {
 	display: flex;
@@ -192,6 +218,7 @@
 	align-items: center;
 	gap: $bb-rl-space-100;
 	flex-direction: row-reverse;
+	cursor: pointer;
 
 	i {
 		font-size: 16px;
@@ -214,6 +241,8 @@
 	color: $bb-rl-black-60;
 	font-size: 20px;
 	cursor: pointer;
+	background-color: transparent;
+	border: none;
 }
 
 /* Form fields */
@@ -283,6 +312,63 @@
 	margin-top: 5px;
 	color: $text-color-secondary;
 	font-size: 13px;
+}
+
+.bb-rl-link-item {
+	margin-bottom: 12px;
+
+	i {
+		font-size: 20px;
+	}
+
+	.edit-link-button,
+	.delete-link-button {
+		color: $bb-rl-black-60;
+	}
+
+	.link-details > span {
+		display: flex;
+		align-items: center;
+		gap: $bb-rl-space-100;
+
+		i {
+			font-size: 16px;
+			color: $bb-rl-black-80;
+		}
+	}
+
+	.link-title {
+
+		@include bb-rl-text-medium;
+		color: $bb-rl-black;
+	}
+
+	.link-url {
+
+		@include bb-rl-text;
+		color: $bb-rl-link-color;
+		padding: 3px 0;
+	}
+
+	+ .add-link-button {
+		margin-top: $bb-rl-space-200;
+	}
+}
+
+.custom-links-wrapper {
+
+	.bb-rl-link-item:last-of-type {
+		border-bottom: 1px solid $bb-rl-black-10;
+		margin-bottom: 0;
+		padding-bottom: $bb-rl-space-200;
+	}
+}
+
+.add-link-button {
+
+	i {
+		font-size: 16px;
+	}
 }
 
 /* Responsive adjustments */
