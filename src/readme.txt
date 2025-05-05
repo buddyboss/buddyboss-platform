@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.51 =
+* Bug: Core - Fixed Vulnerability issues
+
 = 2.8.50 =
 * Bug: Activity - Fixed an issue allowing site admins to pin posts in groups without needing to be a group member
 * Bug: Activity - Fixed an issue that caused problems when saving large videos as drafts
