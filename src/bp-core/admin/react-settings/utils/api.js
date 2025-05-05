@@ -3,6 +3,26 @@ import apiFetch from '@wordpress/api-fetch';
 // Store the initial settings for comparison
 let initialSettings = null;
 
+// Static cache for help content
+const helpContentCache = new Map();
+
+// Cache duration in milliseconds (e.g., 1 hour)
+const CACHE_DURATION = 60 * 60 * 1000;
+
+/**
+ * Check if cached content is still valid
+ * 
+ * @param {Object} cachedData - The cached data object
+ * @returns {boolean} Whether the cache is still valid
+ */
+const isCacheValid = (cachedData) => {
+    if (!cachedData || !cachedData.timestamp) {
+        return false;
+    }
+    const now = Date.now();
+    return (now - cachedData.timestamp) < CACHE_DURATION;
+};
+
 /**
  * Fetch ReadyLaunch settings from the WordPress REST API.
  *
@@ -122,3 +142,63 @@ export const fetchMenus = async () => {
 	  }
 	}
   };
+
+/**
+ * Fetch help content from the BuddyBoss knowledge base API.
+ * Implements caching to avoid unnecessary API calls.
+ *
+ * @param {string} contentId - The ID of the help content to fetch.
+ * @returns {Promise} Promise that resolves to help content object.
+ */
+export const fetchHelpContent = async (contentId) => {
+    if (!contentId) {
+        throw new Error('Content ID is required');
+    }
+
+    // Check cache first
+    const cachedContent = helpContentCache.get(contentId);
+    if (cachedContent && isCacheValid(cachedContent)) {
+        console.log('Returning cached help content for ID:', contentId);
+        return cachedContent.data;
+    }
+
+    try {
+        const response = await fetch(`https://buddyboss.com/wp-json/wp/v2/ht-kb/${contentId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch help content');
+        }
+        const data = await response.json();
+        
+        // Prepare content object
+        const contentObject = {
+            title: data.title.rendered,
+            content: data.content.rendered,
+            videoId: data.acf?.video_id || null,
+            imageUrl: data.acf?.featured_image || null
+        };
+
+        // Cache the content with timestamp
+        helpContentCache.set(contentId, {
+            data: contentObject,
+            timestamp: Date.now()
+        });
+
+        return contentObject;
+    } catch (error) {
+        console.error('Error fetching help content:', error);
+        throw error;
+    }
+};
+
+/**
+ * Clear the help content cache for a specific ID or all cache if no ID provided
+ * 
+ * @param {string} [contentId] - Optional ID of the content to clear from cache
+ */
+export const clearHelpContentCache = (contentId) => {
+    if (contentId) {
+        helpContentCache.delete(contentId);
+    } else {
+        helpContentCache.clear();
+    }
+};

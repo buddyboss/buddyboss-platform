@@ -1,7 +1,19 @@
 import React from 'react';
 
-export const HelpIcon = ({ onClick }) => (
-  <span className="bb-rl-help-icon" onClick={onClick} title="Help">
-    <i className="bb-icons-rl-info"></i>
-  </span>
-);
+export const HelpIcon = ({ onClick, contentId }) => {
+    const handleClick = () => {
+        if (onClick) {
+            onClick(contentId);
+        }
+    };
+
+    return (
+        <button 
+            className="bb-rl-help-icon" 
+            onClick={handleClick}
+            aria-label="Help"
+        >
+            <i className="bb-icons-rl-help"></i>
+        </button>
+    );
+};

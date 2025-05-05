@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Sidebar } from './Sidebar';
-import { fetchSettings, saveSettings, debounce, fetchMenus } from '../../../utils/api';
+import { fetchSettings, saveSettings, debounce, fetchMenus, fetchHelpContent, clearHelpContentCache } from '../../../utils/api';
 import { Accordion } from '../../../components/Accordion';
 import { LinkItem } from '../../../components/LinkItem';
 import { LinkModal } from '../../../components/LinkModal';
@@ -40,6 +40,9 @@ export const ReadyLaunchSettings = () => {
 	const [ sideMenuItems, setSideMenuItems ] = useState(initialSideMenuItems);
 	const [menus, setMenus] = useState([]);
 	const [isHelpOpen, setHelpOpen] = useState(false);
+	const [helpContent, setHelpContent] = useState(null);
+	const [isHelpLoading, setHelpLoading] = useState(false);
+	const [helpError, setHelpError] = useState(null);
 
 	// Load settings on component mount
 	useEffect(() => {
@@ -514,6 +517,43 @@ export const ReadyLaunchSettings = () => {
 		}
 	};
 
+	// Handler for help icon click
+	const handleHelpClick = async (contentId) => {
+		setHelpOpen(true);
+		setHelpLoading(true);
+		setHelpError(null);
+		
+		try {
+			const content = await fetchHelpContent(contentId);
+			setHelpContent(content);
+		} catch (error) {
+			setHelpError('Failed to load help content. Please try again later.');
+			// Clear cache for this content ID if there was an error
+			clearHelpContentCache(contentId);
+		} finally {
+			setHelpLoading(false);
+		}
+	};
+
+	// Clear help content when modal is closed
+	const handleHelpClose = () => {
+		setHelpOpen(false);
+		setHelpContent(null);
+		setHelpError(null);
+	};
+
+	// Update Accordion usage to include contentId
+	const renderAccordion = (title, isExpanded, section, contentId) => (
+		<Accordion 
+			title={__(title, 'buddyboss')}
+			isExpanded={isExpanded}
+			onToggle={() => toggleSection(section)}
+			onHelpClick={() => handleHelpClick(contentId)}
+		>
+			{/* children */}
+		</Accordion>
+	);
+
 	const renderContent = () => {
 		if ( isLoading ) {
 			return (
@@ -544,7 +584,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>Site Name</h3>
-								<HelpIcon onClick={() => setHelpOpen(true)} />
+								<HelpIcon onClick={() => setHelpOpen('456175')} />
 							</div>
 							<div className="settings-form-field">
 								<div className="field-label">
@@ -572,7 +612,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Branding', 'buddyboss')}</h3>
-								<HelpIcon onClick={() => setHelpOpen(true)} />
+								<HelpIcon onClick={() => setHelpOpen('456175')} />
 							</div>
 
 							{/* Appearance Setting */}
@@ -680,7 +720,7 @@ export const ReadyLaunchSettings = () => {
 								title={__('Pages', 'buddyboss')}
 								isExpanded={expandedSections.pages}
 								onToggle={() => toggleSection('pages')}
-								onHelpClick={() => setHelpOpen(true)}
+								onHelpClick={() => handleHelpClick('456175')}
 							>
 								<div className="settings-form-field with-multiple-toggles">
 									<div className="field-label">
@@ -726,7 +766,7 @@ export const ReadyLaunchSettings = () => {
 								title={__('Sidebars', 'buddyboss')}
 								isExpanded={expandedSections.sidebars}
 								onToggle={() => toggleSection('sidebars')}
-								onHelpClick={() => setHelpOpen(true)}
+								onHelpClick={() => handleHelpClick('456175')}
 							>
 								{/* Activity Feed */}
 								<div className="settings-form-field with-multiple-toggles">
@@ -881,7 +921,7 @@ export const ReadyLaunchSettings = () => {
 									title={__('Menus', 'buddyboss')}
 									isExpanded={expandedSections.menus}
 									onToggle={() => toggleSection('menus')}
-									onHelpClick={() => setHelpOpen(true)}
+									onHelpClick={() => handleHelpClick('456175')}
 								>
 									{/* Header Menu */}
 									<div className="settings-form-field menu-header-field">
@@ -1037,23 +1077,47 @@ export const ReadyLaunchSettings = () => {
 
 			<HelpSliderModal
 				isOpen={isHelpOpen}
-				onClose={() => setHelpOpen(false)}
-				title="ReadyLaunch Sidebars"
+				onClose={handleHelpClose}
+				title={helpContent?.title || "Help"}
 			>
-				<div style={{marginBottom: 16}}>
-					<iframe width="100%" height="315" src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video" frameBorder="0" allowFullScreen></iframe>
-				</div>
-				<h4>Heading</h4>
-				<p>Navigate to <b>BuddyBoss – Settings – Profiles</b> ...</p>
-				<ul>
-					<li>First name</li>
-					<li>First name and last name</li>
-					<li>Nickname</li>
-				</ul>
-				<h4>Heading</h4>
-				<p>This option has three fields ...</p>
-				<img src="YOUR_IMAGE_URL" alt="Profile Names" style={{width: '100%', borderRadius: 8, marginBottom: 16}} />
-				{/* ...more content */}
+				{isHelpLoading ? (
+					<div className="help-content-loading">
+						<Spinner />
+						<p>{__('Loading help content...', 'buddyboss')}</p>
+					</div>
+				) : helpError ? (
+					<div className="help-content-error">
+						<p>{helpError}</p>
+					</div>
+				) : helpContent ? (
+					<>
+						{helpContent.videoId && (
+							<div style={{marginBottom: 16}}>
+								<iframe 
+									width="100%" 
+									height="315" 
+									src={`https://www.youtube.com/embed/${helpContent.videoId}`}
+									title="YouTube video" 
+									frameBorder="0" 
+									allowFullScreen
+								></iframe>
+							</div>
+						)}
+						<div 
+							className="help-content"
+							dangerouslySetInnerHTML={{ __html: helpContent.content }}
+						/>
+						{helpContent.imageUrl && (
+							<img 
+								src={helpContent.imageUrl} 
+								alt="Help content illustration" 
+								style={{width: '100%', borderRadius: 8, marginBottom: 16}}
+							/>
+						)}
+					</>
+				) : (
+					<p>{__('No help content available.', 'buddyboss')}</p>
+				)}
 			</HelpSliderModal>
 		</>
 	);
