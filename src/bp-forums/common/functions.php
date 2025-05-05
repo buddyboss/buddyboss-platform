@@ -2609,13 +2609,13 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 	if ( ! empty( $media_ids ) ) {
 		$media_ids_array = explode( ',', $media_ids );
 		$media_ids_array = array_map( 'intval', $media_ids_array );
-		
+
 		if ( ! empty( $media_ids_array ) ) {
 			// Get attachment IDs before deleting media records.
-			$attachment_ids = $wpdb->get_col(
+			$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ") AND attachment_id > 0",
+					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
 					$media_ids_array
 				)
 			);
@@ -2626,10 +2626,10 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 				}
 			} else {
 				// Execute delete query on media table as fallback and delete related attachments.
-				$wpdb->query(
+				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$wpdb->prepare(
 						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-						"DELETE FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ")",
+						"DELETE FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $media_ids_array ), '%d' ) ) . ')',
 						$media_ids_array
 					)
 				);
@@ -2653,13 +2653,13 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 	if ( ! empty( $video_ids ) ) {
 		$video_ids_array = explode( ',', $video_ids );
 		$video_ids_array = array_map( 'intval', $video_ids_array );
-		
+
 		if ( ! empty( $video_ids_array ) ) {
 			// Get attachment IDs before deleting video records.
-			$attachment_ids = $wpdb->get_col(
+			$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ") AND attachment_id > 0",
+					"SELECT attachment_id FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
 					$video_ids_array
 				)
 			);
@@ -2670,10 +2670,10 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 				}
 			} else {
 				// Execute delete query on media table as fallback and delete related attachments.
-				$wpdb->query(
+				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$wpdb->prepare(
 						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-						"DELETE FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ")",
+						"DELETE FROM {$media_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $video_ids_array ), '%d' ) ) . ')',
 						$video_ids_array
 					)
 				);
@@ -2699,7 +2699,7 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 							if ( ! empty( $preview_thumbnail ) ) {
 								wp_delete_attachment( $preview_thumbnail, true );
 							}
-							
+
 							wp_delete_attachment( $attachment_id, true );
 						}
 					}
@@ -2716,13 +2716,13 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$document_table     = $wpdb->base_prefix . 'bp_document';
 		$document_ids_array = explode( ',', $document_ids );
 		$document_ids_array = array_map( 'intval', $document_ids_array );
-		
+
 		if ( ! empty( $document_ids_array ) ) {
 			// Get attachment IDs before deleting document records.
-			$attachment_ids = $wpdb->get_col(
+			$attachment_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prepare(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					"SELECT attachment_id FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ") AND attachment_id > 0",
+					"SELECT attachment_id FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ') AND attachment_id > 0',
 					$document_ids_array
 				)
 			);
@@ -2733,10 +2733,10 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 				}
 			} else {
 				// Execute delete query on document table as fallback and delete related attachments.
-				$wpdb->query(
+				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$wpdb->prepare(
 						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-						"DELETE FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ")",
+						"DELETE FROM {$document_table} WHERE id IN (" . implode( ',', array_fill( 0, count( $document_ids_array ), '%d' ) ) . ')',
 						$document_ids_array
 					)
 				);
