@@ -74,7 +74,7 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
     <Modal
       title={linkData.id ? __('Edit Link', 'buddyboss') : __('Add Link', 'buddyboss')}
       onRequestClose={onClose}
-      className="link-modal"
+      className="link-modal bb-rl-modal"
     >
       <div className="link-modal-content">
         <div className="link-modal-form">
@@ -83,7 +83,8 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
             value={title}
             onChange={setTitle}
             help={errors.title}
-            className={errors.title ? 'has-error' : ''}
+            placeholder={__('Type a title', 'buddyboss')}
+            className={`bb-rl-input-field ${errors.title ? 'has-error' : ''}`}
           />
           
           <TextControl
@@ -91,22 +92,25 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
             value={url}
             onChange={setUrl}
             help={errors.url}
-            className={errors.url ? 'has-error' : ''}
+            placeholder={__('Paste link', 'buddyboss')}
+            className={`bb-rl-input-field ${errors.url ? 'has-error' : ''}`}
           />
         </div>
         
         <div className="link-modal-actions">
           <Button
-            variant="secondary"
-            onClick={onClose}
-          >
-            {__('Cancel', 'buddyboss')}
-          </Button>
-          <Button
             variant="primary"
             onClick={handleSave}
+            className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
           >
             {__('Save', 'buddyboss')}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            className="bb-rl-button bb-rl-button--secondary bb-rl-button--small"
+          >
+            {__('Cancel', 'buddyboss')}
           </Button>
         </div>
       </div>

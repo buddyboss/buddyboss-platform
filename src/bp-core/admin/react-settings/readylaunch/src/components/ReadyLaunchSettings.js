@@ -939,6 +939,7 @@ export const ReadyLaunchSettings = () => {
 													}))
 												]}
 												onChange={handleSettingChange('bb_rl_header_menu')}
+												className="bb-rl-input-field"
 											/>
 											<p className="field-note">
 												{__('You can update your header menu from the', 'buddyboss')} <strong>Menus</strong> {__('tab, where you will find a dedicated Ready Launch header menu location.', 'buddyboss')}
@@ -1018,7 +1019,7 @@ export const ReadyLaunchSettings = () => {
 													{/* Add New Link Button - Moved inside Droppable but outside mapping */}
 													<Button
 														className="add-link-button bb-rl-button bb-rl-button--primary bb-rl-button--small"
-														variant="secondary"
+														variant="primary"
 														onClick={handleAddLinkClick}
 														icon={<i className="bb-icons-rl-plus" />}
 													>

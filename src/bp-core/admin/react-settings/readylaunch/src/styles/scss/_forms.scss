@@ -1,0 +1,78 @@
+.bb-rl-settings,
+.bb-rl-input-field {
+
+    label {
+		@include bb-rl-text-medium;
+        text-transform: none;
+        color: $bb-rl-black;
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="password"],
+	input[type="tel"],
+	input[type="url"],
+	input[type="search"],
+	input[type="number"],
+	input[type="date"],
+	input[type="datetime-local"],
+	input[type="month"],
+	input[type="week"],
+	input[type="time"],
+	textarea {
+
+		@include bb-rl-text-bolder;
+		background-color: $bb-rl-input-field-bg;
+		border: 1px solid $bb-rl-input-field-border;
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: $bb-rl-radius-md;
+		padding: 7px $bb-rl-space-100;
+		color: $bb-rl-black-80;
+
+		&[type="submit"] {
+
+			@include bb-rl-button;
+			border-radius: $bb-rl-radius-md;
+		}
+	}
+
+	select,
+    .components-input-control__container select.components-select-control__input {
+
+		appearance: none;
+		/* stylelint-disable function-url-quotes */
+		background-image: url('data:image/svg+xml,<svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.3535 1.35378L6.35354 6.35378C6.3071 6.40027 6.25196 6.43715 6.19126 6.46231C6.13056 6.48748 6.0655 6.50043 5.99979 6.50043C5.93408 6.50043 5.86902 6.48748 5.80832 6.46231C5.74762 6.43715 5.69248 6.40027 5.64604 6.35378L0.64604 1.35378C0.552219 1.25996 0.499512 1.13272 0.499512 1.00003C0.499512 0.867352 0.552219 0.740104 0.64604 0.646284C0.73986 0.552463 0.867108 0.499756 0.99979 0.499756C1.13247 0.499756 1.25972 0.552463 1.35354 0.646284L5.99979 5.29316L10.646 0.646284C10.6925 0.599829 10.7476 0.562978 10.8083 0.537837C10.869 0.512696 10.9341 0.499756 10.9998 0.499756C11.0655 0.499756 11.1305 0.512696 11.1912 0.537837C11.2519 0.562978 11.3071 0.599829 11.3535 0.646284C11.4 0.692739 11.4368 0.747889 11.462 0.808586C11.4871 0.869282 11.5001 0.934336 11.5001 1.00003C11.5001 1.06573 11.4871 1.13079 11.462 1.19148C11.4368 1.25218 11.4 1.30733 11.3535 1.35378Z" fill="%236D6D6E"/></svg>');
+		/* stylelint-enable */
+        background-size: 11px 6px;
+		background-repeat: no-repeat;
+		background-position: right 0.8rem center;
+		background-color: $bb-rl-input-field-bg;
+		padding: 7px $bb-rl-space-300 7px $bb-rl-space-100;
+		border: 1px solid $bb-rl-input-field-border;
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: $bb-rl-radius-md;
+		color: $bb-rl-black-80;
+
+		@include bb-rl-text-bolder;
+	}
+
+    .bb-rl-input-field .components-input-control__container {
+
+        .components-input-control__backdrop {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .components-input-control__suffix {
+            display: none;
+        }
+    }
+}

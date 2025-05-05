@@ -88,27 +88,27 @@
 	}
 
 	&:disabled {
-		background-color: var(--bb-rl-background-brand-disabled-color);
+		background-color: $bb-rl-active-color;
 		cursor: not-allowed;
 	}
 }
 
-@mixin bb-rl-button-secondary {
-	background-color: var(--bb-rl-background-tertiary-color);
-	color: var(--bb-rl-text-color);
+@mixin bb-rl-button--secondary {
+	background-color: $bb-rl-black-10;
+	color: $bb-rl-black;
 	border: 1px solid transparent;
 
 	&:hover {
-		background-color: var(--bb-rl-background-tertiary-hover-color);
+		background-color: $bb-rl-black-10;
 	}
 
 	&:focus {
-		outline: 2px solid var(--bb-rl-border-quinery-color);
+		outline: 2px solid $bb-rl-black-10;
 	}
 
 	&:disabled {
-		background-color: var(--bb-rl-background-tertiary-color);
-		color: var(--bb-rl-text-disabled-color);
+		background-color: $bb-rl-black-10;
+		color: $bb-rl-black;
 		cursor: not-allowed;
 	}
 }

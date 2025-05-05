@@ -1,7 +1,8 @@
 @import "variables";
 @import "mixins";
 @import "buttons";
-
+@import "forms";
+@import "modal";
 /* Full Height BuddyBoss ReadyLaunch Settings Page */
 .buddyboss_page_bb-readylaunch {
 
@@ -31,7 +32,7 @@
 /* Main container */
 .bb-readylaunch-settings-container {
 	display: flex;
-	background-color: $background-color;
+	background-color: $bb-rl-background-primary-color;
 	min-height: 90vh;
 	margin: 0 -20px; /* Adjust based on WordPress admin padding */
 }

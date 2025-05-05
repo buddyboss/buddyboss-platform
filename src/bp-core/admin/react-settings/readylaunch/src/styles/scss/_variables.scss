@@ -1,12 +1,7 @@
 // Colors
-$background-color: #f0f0f1;
 $bb-rl-white-color: #fff;
-$primary-color: #2271b1;
-$buddyboss-blue: #3e34ff;
-$text-color-main: #50575e;
 $text-color-secondary: #757575;
-$border-color: #e5e5e5;
-$border-color-light: #f0f0f1;
+$bb-rl-border-color-secondary: #d9d9d9;
 $bb-rl-active-color: #e0623d;
 $bb-rl-link-color: #0888FF;
 $bb-rl-black-10: rgba(0, 0, 0, 0.1);
@@ -20,8 +15,12 @@ $bb-rl-black-80: rgba(0, 0, 0, 0.8);
 $bb-rl-black-90: rgba(0, 0, 0, 0.9);
 $bb-rl-black: rgba(0, 0, 0, 1);
 
+$bb-rl-input-field-bg: #f6f6f6;
+$bb-rl-input-field-border: $bb-rl-black-20;
+
 $bb-rl-background-white-color: #fff;
 $bb-rl-background-color: #fff;
+$bb-rl-background-primary-color: #f6f6f6;
 $bb-rl-background-secondary-color: #f0f0f0;
 
 $bb-rl-text-primary-color: #000;

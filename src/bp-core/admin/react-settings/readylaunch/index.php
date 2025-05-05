@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bb_readylaunch_settings_page_html() {
 	?>
-	<div class="wrap" id="bb-readylaunch-settings">
+	<div class="wrap bb-rl-settings" id="bb-readylaunch-settings">
 		<div class="bb-rl-tab-header">
             <div class="advance-brand">
                 <img alt="" class="upgrade-brand" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/credits-buddyboss.png' ); ?>" />
