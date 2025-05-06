@@ -1327,7 +1327,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		/** Discussion Title */
 		if ( ! empty( $topic_new->bbp_topic_title ) ) {
-			$topic_title = esc_attr( wp_strip_all_tags( $topic_new->bbp_topic_title ) );
+			$topic_title = sanitize_text_field( wp_unslash( $topic_new->bbp_topic_title ) );
 		}
 
 		// Filter and sanitize.
@@ -2790,7 +2790,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$topic->bbp_group_id = $request['group'];
 		}
 		if ( isset( $request['title'] ) ) {
-			$topic->bbp_topic_title = $request['title'];
+			$topic->bbp_topic_title = sanitize_text_field( wp_unslash( $request['title'] ) );
 		}
 		if ( isset( $request['status'] ) ) {
 			$topic->bbp_topic_status = $request['status'];
