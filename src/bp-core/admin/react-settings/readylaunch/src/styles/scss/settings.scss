@@ -517,6 +517,13 @@
 			@include bb-rl-text;
 			color: $bb-rl-text-tertiary-color;
 		}
+
+		&.dark-logo-mode {
+
+			.image-preview {
+				background-color: $bb-rl-black;
+			}
+		}
 	}
 
 	.bb-rl-upload-image-button {

@@ -341,9 +341,9 @@ export const ReadyLaunchSettings = () => {
 	};
 
 	// Component for image selection and preview
-	const ImageSelector = ({ label, value, onChange, description }) => {
+	const ImageSelector = ({ label, value, onChange, description, customClass }) => {
 		return (
-			<div className="image-selector-component">
+			<div className={`image-selector-component ${customClass || ''}`}>
 				<label>{label}</label>
 				<div className="image-selector-control">
 					{value && value.url ? (
@@ -638,6 +638,7 @@ export const ReadyLaunchSettings = () => {
 										value={settings.bb_rl_light_logo}
 										onChange={handleImageUpload('bb_rl_light_logo')}
 										description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
+										customClass="light-logo-mode"
 									/>
 									{settings.bb_rl_skin_appearance && (
 										<ImageSelector
@@ -645,6 +646,7 @@ export const ReadyLaunchSettings = () => {
 											value={settings.bb_rl_dark_logo}
 											onChange={handleImageUpload('bb_rl_dark_logo')}
 											description={__('Recommended size 280px by 80px jpg or png', 'buddyboss')}
+											customClass="dark-logo-mode"
 										/>
 									)}
 								</div>

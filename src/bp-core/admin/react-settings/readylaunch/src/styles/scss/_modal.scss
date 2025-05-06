@@ -146,6 +146,18 @@ body.bb-rl-help-modal-open {
             }
         }
 	}
+
+	.help-content-loading {
+		text-align: center;
+		
+		p {
+			color: $bb-rl-text-tertiary-color;
+		}
+
+		svg path {
+			stroke: $bb-rl-active-color;
+		}
+	}
 }
 
 
