@@ -5575,31 +5575,31 @@ h1.bb-advance-heading {
   display: block;
 }
 
-.bb-modal-panel--activity-topic {
+.bb-modal-panel--activity-topic.bb-modal-panel {
   width: 100%;
   max-width: 700px;
 }
 
-.bb-modal-panel--activity-topic .bb-hello-header {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-header {
   position: relative;
   padding: 15px;
   background-color: #f6f7f7;
   border-color: #dcdcde;
 }
 
-.bb-modal-panel--activity-topic #bb-hello-title {
+.bb-modal-panel--activity-topic.bb-modal-panel #bb-hello-title {
   margin: 0;
   padding: 0;
   border: 0;
   font-weight: 500;
 }
 
-.bb-modal-panel--activity-topic .bb-hello-close {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close {
   top: 50%;
   transform: translateY(-50%);
 }
 
-.bb-modal-panel--activity-topic .bb-hello-close button {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close button {
   border: 0;
   padding: 0;
   background: transparent;
@@ -5609,38 +5609,38 @@ h1.bb-advance-heading {
   min-height: auto;
 }
 
-.bb-modal-panel--activity-topic .bb-hello-close button i:before {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-close button i:before {
   margin: 0;
 }
 
-.bb-modal-panel--activity-topic .bb-hello-content {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content {
   padding: 15px 20px;
 }
 
-.bb-modal-panel--activity-topic .bb-hello-content .form-fields {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-hello-content .form-fields {
   margin: 0;
 }
 
-.bb-modal-panel--activity-topic .form-fields .form-field {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .form-field {
   margin-bottom: 15px;
 }
 
-.bb-modal-panel--activity-topic .form-fields .field-label {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .field-label {
   margin-bottom: 12px;
 }
 
-.bb-modal-panel--activity-topic .form-fields .field-label label {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .field-label label {
   font-size: 14px;
   font-weight: 500;
   color: #1d2327;
   margin-bottom: 10px;
 }
 
-.bb-modal-panel--activity-topic .form-fields .bb-topic-who-can-post-option {
+.bb-modal-panel--activity-topic.bb-modal-panel .form-fields .bb-topic-who-can-post-option {
   margin-bottom: 10px;
 }
 
-.bb-modal-panel--activity-topic .bb-popup-buttons {
+.bb-modal-panel--activity-topic.bb-modal-panel .bb-popup-buttons {
   background-color: #f6f7f7;
   border-color: #dcdcde;
   margin: 0 -20px;
