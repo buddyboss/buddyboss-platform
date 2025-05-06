@@ -584,7 +584,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>Site Name</h3>
-								<HelpIcon onClick={() => setHelpOpen('456175')} />
+								<HelpIcon onClick={() => handleHelpClick('456175')} />
 							</div>
 							<div className="settings-form-field">
 								<div className="field-label">
@@ -612,7 +612,7 @@ export const ReadyLaunchSettings = () => {
 						<div className="settings-card">
 							<div className="settings-header">
 								<h3>{__('Branding', 'buddyboss')}</h3>
-								<HelpIcon onClick={() => setHelpOpen('456175')} />
+								<HelpIcon onClick={() => handleHelpClick('456175')} />
 							</div>
 
 							{/* Appearance Setting */}
