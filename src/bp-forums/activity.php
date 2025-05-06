@@ -646,6 +646,22 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $topic_id, '_bbp_activity_id', $activity_id );
 				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
+
+				// Check if the medias are there in the topic then add them to the activity when status changes from trash to public. 
+				if ( empty( $existing_activity_id ) && doing_action( 'edit_post' ) ) {
+					$old_bp_media_ids = get_post_meta( $topic_id, 'bp_media_ids', true );
+					if ( ! empty( $old_bp_media_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_media_ids', $old_bp_media_ids );
+					}
+					$old_bp_video_ids = get_post_meta( $topic_id, 'bp_video_ids', true );
+					if ( ! empty( $old_bp_video_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_video_ids', $old_bp_video_ids );
+					}
+					$old_bp_document_ids = get_post_meta( $topic_id, 'bp_document_ids', true );
+					if ( ! empty( $old_bp_document_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_document_ids', $old_bp_document_ids );
+					}
+				}
 			}
 		}
 
@@ -809,6 +825,22 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $activity_id ) ) {
 				update_post_meta( $reply_id, '_bbp_activity_id', $activity_id );
 				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
+
+				// Check if the medias are there in the reply then add them to the activity when status changes from trash to public. 
+				if ( empty( $existing_activity_id ) && doing_action( 'edit_post' ) ) {
+					$old_bp_media_ids = get_post_meta( $reply_id, 'bp_media_ids', true );
+					if ( ! empty( $old_bp_media_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_media_ids', $old_bp_media_ids );
+					}
+					$old_bp_video_ids = get_post_meta( $reply_id, 'bp_video_ids', true );
+					if ( ! empty( $old_bp_video_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_video_ids', $old_bp_video_ids );
+					}
+					$old_bp_document_ids = get_post_meta( $reply_id, 'bp_document_ids', true );
+					if ( ! empty( $old_bp_document_ids ) ) {
+						bp_activity_update_meta( $activity_id, 'bp_document_ids', $old_bp_document_ids );
+					}
+				}
 			}
 		}
 
@@ -859,6 +891,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				return;
 			}
 
+			error_log('reply_update ' . $reply_id);
+			error_log(print_r($post->post_status, true));
+			error_log( bbp_get_public_status_id() );
+			error_log( bbp_get_spam_status_id() );
 			// Action based on new status
 			if ( bbp_get_public_status_id() === $post->post_status ) {
 
@@ -887,6 +923,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				}
 				return false;
 			} else {
+				
 				$this->reply_delete( $reply_id );
 			}
 		}
