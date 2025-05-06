@@ -400,7 +400,8 @@ export const ReadyLaunchSettings = () => {
 		const colorValue = color || '#3E34FF'; // Default to blue if no color is set
 
 		return (
-			<div className="color-picker-button-component">
+			<div className="color-picker-button-component bb-rl-color-picker-button-component">
+				{label && <span className="color-picker-label">{label}</span>}
 				<div className="color-picker-button-wrapper">
 					<Button
 						className="color-picker-button"
@@ -441,7 +442,6 @@ export const ReadyLaunchSettings = () => {
 						</Popover>
 					)}
 				</div>
-				{label && <span className="color-picker-label">{label}</span>}
 			</div>
 		);
 	};
@@ -660,9 +660,8 @@ export const ReadyLaunchSettings = () => {
 									<label>{__('Theme Color', 'buddyboss')}</label>
 									<p>{__('Description text goes here', 'buddyboss')}</p>
 								</div>
-								<div className="field-input color-palettes">
-									<div>
-										<label>{__('Primary Color (Light Mode)', 'buddyboss')}</label>
+								<div className="field-input color-palettes bb-rl-color-palettes">
+									<div className="color-palette-item">
 										<ColorPickerButton
 											label={__('Primary Color (Light Mode)', 'buddyboss')}
 											color={settings.bb_rl_color_light}
@@ -670,8 +669,7 @@ export const ReadyLaunchSettings = () => {
 										/>
 									</div>
 									{settings.bb_rl_skin_appearance && (
-										<div>
-											<label>{__('Primary Color (Dark Mode)', 'buddyboss')}</label>
+										<div className="color-palette-item">
 											<ColorPickerButton
 												label={__('Primary Color (Dark Mode)', 'buddyboss')}
 												color={settings.bb_rl_color_dark}
