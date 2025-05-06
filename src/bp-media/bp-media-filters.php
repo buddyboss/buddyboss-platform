@@ -563,7 +563,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		$media_ids = array();
 		foreach ( $medias as $media ) {
 
-			$title             = ! empty( $media['name'] ) ? $media['name'] : '';
+			$title             = ! empty( $media['name'] ) ? sanitize_text_field( wp_unslash( $media['name'] ) ) : '';
 			$attachment_id     = ! empty( $media['id'] ) ? $media['id'] : 0;
 			$attached_media_id = ! empty( $media['media_id'] ) ? $media['media_id'] : 0;
 			$album_id          = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;

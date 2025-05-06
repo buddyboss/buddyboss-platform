@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.8.50\n"
+"Project-Id-Version: BuddyBoss Platform 2.8.51\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-05-01 05:19:24+00:00\n"
+"POT-Creation-Date: 2025-05-06 05:36:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -742,7 +742,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-notification-export.php:68
 #: bp-core/gdpr/class-bp-settings-export.php:72
 #: bp-core/profile-search/templates/members/bps-form-default.php:33
-#: bp-forums/core/actions.php:359 bp-friends/bp-friends-filters.php:405
+#: bp-forums/core/actions.php:362 bp-friends/bp-friends-filters.php:405
 #: bp-groups/bp-groups-notifications.php:1338
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:284
 #: bp-messages/bp-messages-filters.php:918
@@ -775,7 +775,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-notification-export.php:66
 #: bp-core/gdpr/class-bp-settings-export.php:77
 #: bp-core/profile-search/templates/members/bps-form-default.php:34
-#: bp-forums/core/actions.php:360 bp-friends/bp-friends-filters.php:406
+#: bp-forums/core/actions.php:363 bp-friends/bp-friends-filters.php:406
 #: bp-groups/bp-groups-notifications.php:1339
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:291
 #: bp-messages/bp-messages-filters.php:919
@@ -810,8 +810,8 @@ msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:3428
-#: bp-activity/bp-activity-filters.php:3448 bp-forums/core/actions.php:370
-#: bp-forums/core/actions.php:386 bp-friends/bp-friends-filters.php:417
+#: bp-activity/bp-activity-filters.php:3448 bp-forums/core/actions.php:373
+#: bp-forums/core/actions.php:389 bp-friends/bp-friends-filters.php:417
 #: bp-friends/bp-friends-filters.php:433
 #: bp-groups/bp-groups-notifications.php:1350
 #: bp-groups/bp-groups-notifications.php:1366
@@ -824,8 +824,8 @@ msgid "Yes, send email"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:3435
-#: bp-activity/bp-activity-filters.php:3455 bp-forums/core/actions.php:376
-#: bp-forums/core/actions.php:392 bp-friends/bp-friends-filters.php:423
+#: bp-activity/bp-activity-filters.php:3455 bp-forums/core/actions.php:379
+#: bp-forums/core/actions.php:395 bp-friends/bp-friends-filters.php:423
 #: bp-friends/bp-friends-filters.php:439
 #: bp-groups/bp-groups-notifications.php:1356
 #: bp-groups/bp-groups-notifications.php:1372
@@ -1590,7 +1590,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:272
 #: bp-forums/classes/class-bp-forums-component.php:315
 #: bp-forums/classes/class-bp-forums-notification.php:189
-#: bp-forums/common/widgets.php:777 bp-forums/core/actions.php:358
+#: bp-forums/common/widgets.php:777 bp-forums/core/actions.php:361
 #: bp-forums/forums/template.php:49 bp-media/bp-media-filters.php:1417
 #: bp-media/bp-media-settings.php:239 bp-media/bp-media-settings.php:246
 #: bp-media/bp-media-settings.php:253 bp-media/bp-media-settings.php:260
@@ -11809,12 +11809,12 @@ msgstr ""
 msgid "Message from Group Send Message"
 msgstr ""
 
-#: bp-core/gdpr/class-bp-settings-export.php:176 bp-forums/core/actions.php:366
+#: bp-core/gdpr/class-bp-settings-export.php:176 bp-forums/core/actions.php:369
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:955
 msgid "A member replies to a discussion you are subscribed to"
 msgstr ""
 
-#: bp-core/gdpr/class-bp-settings-export.php:177 bp-forums/core/actions.php:382
+#: bp-core/gdpr/class-bp-settings-export.php:177 bp-forums/core/actions.php:385
 msgid "A member creates a discussion in a forum you are subscribed to"
 msgstr ""
 
@@ -17091,7 +17091,7 @@ msgstr ""
 msgid "Recent Replies"
 msgstr ""
 
-#: bp-forums/core/actions.php:591
+#: bp-forums/core/actions.php:594
 msgid "Forum Description"
 msgstr ""
 
