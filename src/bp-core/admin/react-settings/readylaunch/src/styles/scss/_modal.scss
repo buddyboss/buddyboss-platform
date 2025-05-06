@@ -33,7 +33,11 @@
 	}
 }
 
-// Side navigation popup
+// Helper modal popup
+body.bb-rl-help-modal-open {
+    overflow: hidden;
+}
+
 .bb-rl-help-modal-overlay {
 	position: fixed;
 	z-index: 9999;
