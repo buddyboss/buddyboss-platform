@@ -8631,6 +8631,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-topic-container .bb-topic-actions-wrapper .bb-topic-actions_button,
 #buddypress .bb-activity-topic-container .bb-topic-actions-wrapper .bb-topic-actions_button {
   padding: 4px;
+  font-weight: 300;
 }
 
 .bb-activity-topic-container .bb-topic-actions-wrapper.active .bb-topic-more-dropdown,
