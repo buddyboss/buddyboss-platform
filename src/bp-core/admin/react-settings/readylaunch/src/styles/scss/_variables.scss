@@ -3,7 +3,8 @@ $bb-rl-white-color: #fff;
 $text-color-secondary: #757575;
 $bb-rl-border-color-secondary: #d9d9d9;
 $bb-rl-active-color: #e0623d;
-$bb-rl-link-color: #0888FF;
+$bb-rl-red-color: #f00;
+$bb-rl-link-color: #0888ff;
 $bb-rl-black-10: rgba(0, 0, 0, 0.1);
 $bb-rl-black-20: rgba(0, 0, 0, 0.2);
 $bb-rl-black-30: rgba(0, 0, 0, 0.3);
@@ -26,6 +27,8 @@ $bb-rl-background-secondary-color: #f0f0f0;
 $bb-rl-text-primary-color: #000;
 $bb-rl-text-secondary-color: #4d4d4d;
 
+$bb-rl-icon-primary-color: #4d4d4d;
+
 // UI Elements
 $card-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
 
@@ -47,5 +50,6 @@ $bb-rl-radius-xs: 2px;
 $bb-rl-radius-sm: 4px;
 $bb-rl-radius-md: 6px;
 $bb-rl-radius-base: 8px;
-$bb-rl-radius-lg: 16px;
+$bb-rl-radius-lg: 12px;
+$bb-rl-radius-xl: 16px;
 $bb-rl-radius-full: 99px;

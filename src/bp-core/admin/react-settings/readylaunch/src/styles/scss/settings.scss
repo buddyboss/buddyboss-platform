@@ -1,8 +1,10 @@
+@import "normalize";
 @import "variables";
 @import "mixins";
 @import "buttons";
 @import "forms";
 @import "modal";
+
 /* Full Height BuddyBoss ReadyLaunch Settings Page */
 .buddyboss_page_bb-readylaunch {
 
@@ -16,11 +18,12 @@
 	#bb-readylaunch-settings {
 		flex: 1;
 		display: flex;
-		flex-direction: column; 
+		flex-direction: column;
 
 		> .bb-rl-field-wrap {
 			flex: 1;
 			display: flex;
+			flex-direction: column;
 
 			> .bb-readylaunch-settings-container {
 				flex: 1;
@@ -43,6 +46,9 @@
 	margin: 0 -20px;
 	padding: 12px $bb-rl-space-300;
 	border-bottom: 1px solid $bb-rl-black-10;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .bb-branding-header {
@@ -52,6 +58,36 @@
 		max-width: 130px;
 	}
 }
+
+.bb-rl-header-actions {
+	display: flex;
+	align-items: center;
+	gap: $bb-rl-space-100;
+}
+
+.bb-rl-header-actions-button {
+	background-color: transparent;
+	border: none;
+	color: $bb-rl-icon-primary-color;
+	font-size: 24px;
+	cursor: pointer;
+	position: relative;
+
+	.bb-rl-header-button-count {
+
+		@include font-style(9px, 400, 9px);
+		position: absolute;
+		top: -3px;
+		right: -2px;
+		background-color: $bb-rl-red-color;
+		color: $bb-rl-white-color;
+		padding: 2px 4px;
+		border-radius: $bb-rl-radius-full;		
+	}
+
+}
+
+
 
 /* Sidebar */
 .bb-readylaunch-sidebar {
@@ -386,54 +422,4 @@
 	.new-link-inputs {
 		flex-direction: column;
 	}
-}
-
-.bb-rl-help-modal-overlay {
-	position: fixed;
-	z-index: 9999;
-	inset: 0;
-	background: rgba(0,0,0,0.45);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-
-	.bb-rl-help-modal {
-		background: $bb-rl-background-white-color;
-		border-radius: $bb-rl-radius-lg;
-		max-width: 600px;
-		position: absolute;
-		width: 85vw;
-		height: 100%;
-		right: 0;
-		top: 0;
-		overflow-y: auto;
-		box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-		animation: slideInRight 0.3s cubic-bezier(.4,0,.2,1);
-	}
-
-	.bb-rl-help-modal-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: $bb-rl-space-300 $bb-rl-space-400 0 $bb-rl-space-400;
-	}
-
-	.bb-rl-help-modal-close {
-		background: none;
-		border: none;
-		font-size: 2rem;
-		cursor: pointer;
-		color: $bb-rl-black-40;
-	}
-
-	.bb-rl-help-modal-content {
-		padding: 0 $bb-rl-space-400;
-	}
-}
-
-
-@keyframes slideInRight {
-	from { transform: translateX(100%); opacity: 0; right: -100%; }
-	to   { transform: translateX(0); opacity: 1; right: 0; }
 }
