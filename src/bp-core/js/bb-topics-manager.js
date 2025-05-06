@@ -75,6 +75,9 @@ window.bp = window.bp || {};
 			// Add event listeners.
 			this.addListeners();
 
+			// Make the topics sortable.
+			this.makeTopicsSortable();
+
 			// Check topics limit on initialization.
 			this.checkTopicsLimit();
 		},
@@ -199,6 +202,13 @@ window.bp = window.bp || {};
 					$( '.bb-topic-actions-wrapper' ).removeClass( 'active' );
 				}
 			} );
+		},
+
+		/**
+		 * Make the topics sortable.
+		 */
+		makeTopicsSortable : function () {
+			this.$topicList.sortable();
 		},
 
 		/**
