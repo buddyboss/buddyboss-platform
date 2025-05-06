@@ -2099,7 +2099,7 @@ a.layout-grid-view {
   border-top: 1px solid #eee;
 }
 
-@media screen and (max-width: 580px) {
+@media screen and (max-width: 768px) {
   .bp-nouveau-activity-form-placeholder- .whats-new-form-footer,
   .activity-update-form .whats-new-form-footer {
     flex-direction: column;
@@ -3519,6 +3519,33 @@ input.search-query-input {
 @media screen and (max-width: 560px) {
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .whats-new-topic-selector {
+    order: -1;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .whats-new-topic-selector .bb-topic-selector-button {
+    width: 100%;
+    max-width: 220px;
+    justify-content: center;
+    margin: 15px auto 5px;
+  }
+  .whats-new-topic-selector .bb-topic-selector-list {
+    top: 60px;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 9;
+  }
+  .activity-update-form .activity-form.focus-in #activity-form-submit-wrapper:has(.whats-new-topic-selector) {
+    justify-content: center;
+  }
+  .activity-update-form .activity-form.focus-in #activity-form-submit-wrapper:has(.whats-new-topic-selector) #whats-new-submit {
+    margin-right: 0;
   }
 }
 
@@ -8462,6 +8489,13 @@ span.dashicons.dashicons-admin-file:before {
     left: inherit;
     right: 50%;
     transform: translate(50%, -50%);
+    z-index: 999;
+  }
+  #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open + .bb_more_dropdown_overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 998;
+    background-color: rgba(0, 0, 0, 0.5);
   }
   #buddypress .activity-topic-selector > ul .bb_nav_more_dropdown.open .bb_more_dropdown__title {
     margin: 0;

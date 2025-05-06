@@ -4545,6 +4545,14 @@ span.dashicons.dashicons-admin-file:before {
 					right: inherit;
 					left: 50%;
 					transform: translate(-50%, -50%);
+					z-index: 999;
+
+					+ .bb_more_dropdown_overlay {
+						position: fixed;
+						inset: 0;
+						z-index: 998;
+						background-color: rgba(0, 0, 0, 0.5);
+					}
 
 					.bb_more_dropdown__title {
 						margin: 0;

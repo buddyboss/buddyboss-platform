@@ -618,7 +618,7 @@
 		border-top: 1px solid $bp-border-color;
 	}
 
-	@media screen and (max-width: 580px) {
+	@media screen and (max-width: 768px) {
 
 		.whats-new-form-footer {
 			flex-direction: column;
@@ -2028,6 +2028,38 @@ input.search-query-input {
 
 		.medium-editor-toolbar-actions button {
 			padding: 10px 0;
+		}
+	}
+}
+
+@media screen and (max-width: 580px) {
+
+	.whats-new-topic-selector {
+		order: -1;
+		display: block;
+		width: 100%;
+		text-align: center;
+
+		.bb-topic-selector-button {
+			width: 100%;
+			max-width: 220px;
+			justify-content: center;
+			margin: 15px auto 5px;
+		}
+
+		.bb-topic-selector-list {
+			top: 60px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 9;
+		}
+	}
+
+	.activity-update-form .activity-form.focus-in #activity-form-submit-wrapper:has(.whats-new-topic-selector) {
+		justify-content: center;
+
+		#whats-new-submit {
+			margin-left: 0;
 		}
 	}
 }
