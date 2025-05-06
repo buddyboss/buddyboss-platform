@@ -171,10 +171,24 @@
 			}
 		}
 	}
+
+	> .settings-loading {
+		text-align: center;
+		
+		p {
+			color: $bb-rl-text-tertiary-color;
+		}
+
+		svg path {
+			stroke: $bb-rl-active-color;
+		}
+	}
 }
 
 .settings-content {
 	max-width: $content-max-width;
+	margin-left: auto;
+	margin-right: auto;
 
 	> h1 {
 
