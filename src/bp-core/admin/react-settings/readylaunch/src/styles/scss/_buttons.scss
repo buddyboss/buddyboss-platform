@@ -23,4 +23,9 @@
 
 		@include bb-rl-button--secondary;
 	}
+
+	&.bb-rl-button--outline {
+
+		@include bb-rl-button--outline;
+	}
 }

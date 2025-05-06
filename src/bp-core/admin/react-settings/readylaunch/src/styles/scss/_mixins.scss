@@ -113,6 +113,12 @@
 	}
 }
 
+@mixin bb-rl-button--outline {
+	background-color: transparent;
+	color: $bb-rl-black;
+	border: 1px solid $bb-rl-border-color-tertiary;
+}
+
 // Responsive mixins
 @mixin responsive($breakpoint) {
 

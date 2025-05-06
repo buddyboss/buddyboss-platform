@@ -139,6 +139,7 @@
 	padding: $bb-rl-space-300 $bb-rl-space-400;
 
 	.components-form-toggle {
+		height: 20px;
 
 		.components-form-toggle__track {
 			background-color: $bb-rl-black-20;
@@ -222,7 +223,7 @@
 
 	p {
 		margin: 0;
-		color: $text-color-secondary;
+		color: $bb-rl-text-secondary-color;
 		font-size: 13px;
 	}
 }
@@ -359,7 +360,7 @@
 
 .field-description {
 	margin-top: 5px;
-	color: $text-color-secondary;
+	color: $bb-rl-text-secondary-color;
 	font-size: 13px;
 }
 
@@ -490,6 +491,86 @@
 			@include bb-rl-button;
 			@include bb-rl-button--primary;
 			@include bb-rl-button--small;
+		}
+	}
+}
+
+.bb-rl-settings {
+
+	.image-selector-component {
+		margin-bottom: $bb-rl-space-200;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+
+		> label {
+
+			@include bb-rl-text-bolder;
+			color: $bb-rl-text-secondary-color;
+			margin-bottom: $bb-rl-space-100;
+			display: block;
+		}
+
+		.field-description {
+
+			@include bb-rl-text;
+			color: $bb-rl-text-tertiary-color;
+		}
+	}
+
+	.bb-rl-upload-image-button {
+		margin-bottom: $bb-rl-space-100;
+	}
+}
+
+.bb-rl-upload-image-button,
+.bb-rl-settings .bb-rl-upload-image-button,
+.bb-rl-upload-image-button.components-button.has-icon {
+	background-color: $bb-rl-background-primary-color;
+	border: 1px dashed $bb-rl-border-color-secondary;
+	border-radius: $bb-rl-radius-md;
+	text-align: center;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 184px;
+	line-height: 56px;
+	height: 56px;
+	padding: 0;
+	font-size: 24px;
+	color: $bb-rl-icon-secondary-color;
+
+	&:hover {
+		background-color: $bb-rl-background-primary-color-hover;
+		border-color: $bb-rl-border-color-tertiary;
+	}
+}
+
+.bb-rl-image-preview-wrapper {
+	display: flex;
+	align-items: center;
+	gap: $bb-rl-space-200;
+	margin-bottom: $bb-rl-space-100;
+
+	.image-preview {
+		max-width: 184px;
+		padding: $bb-rl-space-100;
+		border-radius: $bb-rl-radius-md;
+		border: 1px solid $bb-rl-border-color-tertiary;
+	}
+
+	.image-actions {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: $bb-rl-space-100;
+		flex-direction: column;
+
+		.bb-rl-button,
+		.bb-rl-button.has-icon.has-text {
+			padding: $bb-rl-space-50 $bb-rl-space-100;
+			height: auto;
 		}
 	}
 }

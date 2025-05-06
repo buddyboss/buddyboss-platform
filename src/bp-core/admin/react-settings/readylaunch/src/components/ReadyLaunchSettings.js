@@ -347,40 +347,36 @@ export const ReadyLaunchSettings = () => {
 				<label>{label}</label>
 				<div className="image-selector-control">
 					{value && value.url ? (
-						<div className="image-preview-wrapper">
+						<div className="bb-rl-image-preview-wrapper">
 							<img 
 								src={value.url} 
 								alt={value.alt || ''}
 								className="image-preview"
 							/>
 							<div className="image-actions">
-								<Button 
-									isDestructive
-									onClick={() => onChange(null)}
-									className="remove-image-button"
-									icon={<i className="bb-icons-rl-trash" />}
-								>
-									{__('Remove', 'buddyboss')}
-								</Button>
 								<Button
 									isPrimary
 									onClick={() => openMediaLibrary(label, onChange)}
-									className="change-image-button"
-									icon={<i className="bb-icons-rl-pencil-simple" />}
+									className="change-image-button bb-rl-button bb-rl-button--secondary bb-rl-button--small"
+									icon={<i className="bb-icons-rl-upload-simple" />}
 								>
-									{__('Change', 'buddyboss')}
+									{__('Replace', 'buddyboss')}
+								</Button>
+								<Button 
+									onClick={() => onChange(null)}
+									className="remove-image-button bb-rl-button bb-rl-button--outline bb-rl-button--small"
+									icon={<i className="bb-icons-rl-x" />}
+								>
+									{__('Remove', 'buddyboss')}
 								</Button>
 							</div>
 						</div>
 					) : (
 						<Button 
-							variant="secondary"
 							onClick={() => openMediaLibrary(label, onChange)}
-							className="upload-image-button"
-							icon={<i className="bb-icons-rl-upload" />}
-						>
-							{__('Upload Image', 'buddyboss')}
-						</Button>
+							className="bb-rl-upload-image-button"
+							icon={<i className="bb-icons-rl-plus" />}
+						/>
 					)}
 					{description && (
 						<p className="field-description">{description}</p>
