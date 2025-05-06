@@ -6875,22 +6875,22 @@ body.admin-bar .bb-rl-left-panel {
   border-radius: var(--bb-rl-radius-md);
 }
 
-.bb-rl-left-panel .bb-readylaunchpanel-menu li > a:before {
-  content: "\e000";
-  font-weight: 400;
+.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i {
+  display: flex;
   font-family: bb-icons-rl;
-  font-size: 1.2rem;
+  font-size: 24px;
+  line-height: 1;
   color: var(--bb-rl-icon-color);
   margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-left-panel .bb-readylaunchpanel-menu li > a > i:before {
+  margin: 0;
 }
 
 .bb-rl-left-panel .bb-readylaunchpanel-menu li > a:focus, .bb-rl-left-panel .bb-readylaunchpanel-menu li > a:hover {
   outline: none;
   background-color: var(--bb-rl-background-secondary-hover-color);
-}
-
-.bb-rl-left-panel .bb-readylaunchpanel-menu li:nth-child(2) > a:before {
-  content: "\e4d6";
 }
 
 .bb-rl-left-panel .bb-readylaunchpanel-menu .current-menu-item > a {
@@ -6936,6 +6936,20 @@ body.admin-bar .bb-rl-left-panel {
 
 .bb-rl-left-panel .bb-readylaunchpanel-menu .open-parent > a .submenu-toggle {
   transform: rotate(-180deg);
+}
+
+.bb-rl-left-panel .bb-bottom-readylaunchpanel-menu li > a > i {
+  display: none;
+}
+
+.bb-rl-left-panel .bb-bottom-readylaunchpanel-menu li > a:before {
+  display: flex;
+  content: "\e2e2";
+  color: var(--bb-rl-text-tertiary-color);
+  font-size: 20px;
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  margin-right: var(--bb-rl-space-100);
 }
 
 .bb-rl-left-panel .bb-rl-list h2 {
