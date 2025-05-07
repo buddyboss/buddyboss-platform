@@ -156,7 +156,7 @@ class BB_Activity_Topics_Manager {
 				if ( ! empty( $topics['topics'] ) ) {
 					foreach ( $topics['topics'] as $topic ) {
 						?>
-						<option value="<?php echo esc_attr( $topic->id ); ?>" <?php selected( $current_topic_id, $topic->id ); ?>>
+						<option value="<?php echo esc_attr( $topic->id ); ?>" <?php selected( $current_topic_id, $topic->topic_id ); ?>>
 							<?php echo esc_html( $topic->name ); ?>
 						</option>
 						<?php
