@@ -1,0 +1,44 @@
+@import "./base/base";
+
+.bb-rl-login-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: var(--bb-rl-background-color);
+	padding: var(--bb-rl-space-200) var(--bb-rl-space-400);
+	border-bottom: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-login-header-logo img {
+	width: 130px;
+	height: 32px;
+	object-fit: contain;
+}
+
+
+.bb-rl-button {
+
+	@include bb-rl-button;
+}
+
+.bb-rl-button--small {
+
+	@include bb-rl-button--small;
+}
+
+.bb-rl-button--secondary-fill {
+
+	@include bb-rl-button-secondary-fill;
+}
+
+.bb-rl-login-header-actions {
+	display: flex;
+	align-items: center;
+	gap: var(--bb-rl-space-200);
+}
+
+.bb-rl-login-header-actions-text {
+	font-size: 14px;
+	font-weight: 400;
+	color: var(--bb-rl-text-color);
+}

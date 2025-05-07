@@ -178,6 +178,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
 			}
+
+			// Login page.
+			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
+			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
 		}
 
 		/**
@@ -1911,6 +1915,33 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			return $strings;
+		}
+
+		/**
+		 * Enqueue the login scripts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_enqueue_scripts() {
+			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css' );
+			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css' );
+		}
+
+		/**
+		 * Modify the login header.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_header() {
+			echo '<header class="bb-rl-login-header">
+				<div class="bb-rl-login-header-logo">';
+					echo '<img src="' . esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/logo.png' ) . '" alt="' . esc_attr__( 'ReadyLaunch Logo', 'buddyboss' ) . '">';
+				echo '</div>
+				<div class="bb-rl-login-header-actions">
+					<span class="bb-rl-login-header-actions-text">' . esc_html__( 'Don\'t have an account?', 'buddyboss' ) . '</span>
+					<a href="' . esc_url( wp_registration_url() ) . '" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small">' . esc_html__( 'Sign Up', 'buddyboss' ) . '</a>
+				</div>
+			</header>';
 		}
 	}
 }
