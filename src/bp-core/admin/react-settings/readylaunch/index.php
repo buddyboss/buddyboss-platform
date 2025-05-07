@@ -88,6 +88,9 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
         array(),
         $asset['version']
     );
+    
+    // Enqueue WordPress components styles for Gutenberg blocks
+    wp_enqueue_style( 'wp-components' );
 }
 
 add_action( 'admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );
