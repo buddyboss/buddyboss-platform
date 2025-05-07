@@ -64,6 +64,9 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 	// Enqueue WordPress media scripts and styles
 	wp_enqueue_media();
 
+	// Enqueue WordPress components styles for Gutenberg blocks
+	wp_enqueue_style( 'wp-components' );
+
     wp_enqueue_script(
         'bb-readylaunch-admin-script',
         plugins_url( 'build/index.js', __FILE__ ),
@@ -80,7 +83,7 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 		array(),
 		$asset['version']
 	);
-    
+
     // Enqueue the BB Icons CSS
     wp_enqueue_style(
         'bb-icons-rl-css',
@@ -88,9 +91,6 @@ function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
         array(),
         $asset['version']
     );
-    
-    // Enqueue WordPress components styles for Gutenberg blocks
-    wp_enqueue_style( 'wp-components' );
 }
 
 add_action( 'admin_enqueue_scripts', 'bb_readylaunch_settings_page_enqueue_style_script' );
