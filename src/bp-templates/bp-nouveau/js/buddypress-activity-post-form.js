@@ -517,7 +517,7 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'poll_id', activity_data.poll.id );
 			}
 
-			var topicId = String( activity_data.activity_topic_id );
+			var topicId = activity_data.topic_id;
 			if ( topicId ) {
 				self.postForm.model.set( 'topic_id', topicId );
 
@@ -963,6 +963,7 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'focus-in--empty loading' );
 			}
 
+			$( document ).trigger( 'bb_draft_activity_loaded', activity_data );
 		},
 
 		getCurrentDraftActivity: function () {
@@ -1229,6 +1230,7 @@ window.bp = window.bp || {};
 					'link_scrapping',
 					'link_loading',
 					'posting',
+					'topic_name',
 				]
 			);
 
@@ -1266,6 +1268,10 @@ window.bp = window.bp || {};
 						'link_url',
 					]
 				);
+			}
+
+			if ( undefined !== bp.draft_activity.data && undefined !== bp.draft_activity.data.topic_id ) {
+				self.postForm.model.set( 'topic_id', bp.draft_activity.data.topic_id );
 			}
 
 			// Set Draft activity data.

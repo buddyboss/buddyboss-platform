@@ -404,7 +404,7 @@ window.bp = window.bp || {};
 
 			var $button    = $( event.currentTarget );
 			var $topicItem = $button.closest( '.bb-activity-topic-item' );
-			var topicAttr  =  $button.data( 'topic-attr' );
+			var topicAttr  = $button.data( 'topic-attr' );
 			var topicId    = topicAttr.topic_id;
 			var nonce      = topicAttr.nonce;
 			var itemId     = topicAttr.item_id;
@@ -519,9 +519,16 @@ window.bp = window.bp || {};
 					}
 				} );
 
-
 				$( document ).on( 'bb_topic_selected', function ( event, topicID ) {
 					if ( topicID && ! this.addTopicTooltip ) {
+						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
+					} else {
+						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+					}
+				});
+
+				$( document ).on( 'bb_draft_activity_loaded', function ( event, activity_data ) {
+					if ( activity_data.topic_id ) {
 						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
 					} else {
 						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
