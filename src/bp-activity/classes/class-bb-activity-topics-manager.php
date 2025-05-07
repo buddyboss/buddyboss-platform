@@ -87,6 +87,8 @@ class BB_Activity_Topics_Manager {
 		// Add custom column to activity admin list table.
 		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
 		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
+
+		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 	}
 
 	/**
@@ -324,5 +326,26 @@ class BB_Activity_Topics_Manager {
 		do_action( 'bb_after_delete_activity_topic_relationship', $args );
 
 		return $deleted;
+	}
+
+	/**
+	 * Get the activity topic data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of args.
+	 *
+	 * @return array Array of args with topic id.
+	 */
+	public function bb_activity_get_edit_topic_data( $args ) {
+		if ( ! isset( $args['id'] ) ) {
+			return $args;
+		}
+
+		$topic_id = bb_topics_manager_instance()->bb_get_activity_topic( (int) $args['id'], 'id' );
+
+		$args['activity_topic_id'] = $topic_id;
+
+		return $args;
 	}
 }
