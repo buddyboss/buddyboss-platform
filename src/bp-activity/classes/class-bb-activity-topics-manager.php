@@ -136,12 +136,18 @@ class BB_Activity_Topics_Manager {
 	 * Display the activity topics metabox in activity admin page.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $item The activity item.
 	 */
-	public function bb_activity_admin_edit_metabox_topic_content() {
-		// Get all activity topics.
-		$topics = bb_topics_manager_instance()->bb_get_topics();
+	public function bb_activity_admin_edit_metabox_topic_content( $item ) {
 
-		$current_topic_id = '';
+		if ( ! isset( $item->id ) || ! function_exists( 'bb_topics_manager_instance' ) ) {
+			return;
+		}
+
+		$item->id         = (int) $item->id;
+		$topics           = bb_topics_manager_instance()->bb_get_topics();
+		$current_topic_id = (int) bb_topics_manager_instance()->bb_get_activity_topic( $item->id, 'id' );
 		?>
 		<div class="bb-activity-topic-container">
 			<select name="activity_topic" id="activity_topic">
@@ -189,61 +195,20 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * @param string $content     The column content.
 	 * @param string $column_name Column name.
+	 * @param array  $item        The activity item.
 	 *
 	 * @return string
 	 */
 	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
 
 		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
-			return $this->bb_get_activity_topic_name( $item['id'] );
+			$topic_name = bb_topics_manager_instance()->bb_get_activity_topic( $item['id'], 'name' );
+			if ( ! empty( $topic_name ) ) {
+				return $topic_name;
+			}
 		}
 
 		return $content;
-	}
-
-	/**
-	 * Get the activity topic name.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int $activity_id The ID of the activity.
-	 *
-	 * @return string The topic name or empty string if not found.
-	 */
-	public function bb_get_activity_topic_name( $activity_id ) {
-		// Validate activity ID.
-		$activity_id = absint( $activity_id );
-		if ( empty( $activity_id ) ) {
-			return '';
-		}
-
-		$cache_key  = 'bb_activity_topic_name_' . $activity_id;
-		$topic_name = wp_cache_get( $cache_key, self::$topic_cache_group );
-
-		if ( false !== $topic_name ) {
-			return $topic_name;
-		}
-
-		$bp_prefix = bp_core_get_table_prefix();
-
-		$topic = $this->wpdb->get_row(
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$this->wpdb->prepare(
-				"SELECT t.name 
-				FROM {$bp_prefix}bb_activity_topic_relationship atr
-				INNER JOIN {$bp_prefix}bb_topics t ON t.id = atr.topic_id
-				WHERE atr.activity_id = %d
-				LIMIT 1",
-				$activity_id
-			)
-		);
-
-		$topic_name = $topic ? $topic->name : '';
-
-		// Cache the result.
-		wp_cache_set( $cache_key, $topic_name, self::$topic_cache_group );
-
-		return $topic_name;
 	}
 
 	/**

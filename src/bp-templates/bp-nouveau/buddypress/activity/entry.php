@@ -135,7 +135,9 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			bp_activity_action();
 			bp_nouveau_activity_is_edited();
 			bp_nouveau_activity_privacy();
-			bb_activity_topic_name();
+			if ( function_exists( 'bb_topics_manager_instance' ) && method_exists( bb_topics_manager_instance(), 'bb_get_activity_topic' ) ) {
+				echo esc_html( bb_topics_manager_instance()->bb_get_activity_topic( bp_get_activity_id(), 'name' ) );
+			}
 			?>
 		</div>
 

@@ -1242,12 +1242,7 @@ class BB_Topics_Manager {
 		do_action( 'bb_activity_topic_relationship_before_add', $r );
 
 		// Check if activity already has a topic assigned.
-		$existing = $this->wpdb->get_row(
-			$this->wpdb->prepare(
-				"SELECT id, topic_id FROM {$this->activity_topic_rel_table} WHERE activity_id = %d",
-				$r['activity_id']
-			) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		);
+		$existing = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id, topic_id FROM {$this->activity_topic_rel_table} WHERE activity_id = %d", $r['activity_id'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( $existing ) {
 			// If the same topic is already assigned, return the existing relationship ID.
@@ -1327,5 +1322,45 @@ class BB_Topics_Manager {
 		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $r );
 
 		return $relationship_id;
+	}
+
+	/**
+	 * Get the activity topic information.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $activity_id The ID of the activity.
+	 * @param string $return_type The type of data to return ('name' or 'id').
+	 *
+	 * @return string|int Topic name, ID, or empty string/0 if not found.
+	 */
+	public function bb_get_activity_topic( $activity_id, $return_type = 'id' ) {
+		// Validate activity ID.
+		$activity_id = absint( $activity_id );
+		if ( empty( $activity_id ) ) {
+			return 'name' === $return_type ? '' : 0;
+		}
+
+		$cache_key    = "bb_activity_topic_{$return_type}_{$activity_id}";
+		$cached_value = wp_cache_get( $cache_key, self::$topic_cache_group );
+
+		if ( false !== $cached_value ) {
+			return $cached_value;
+		}
+
+		$bp_prefix     = bp_core_get_table_prefix();
+		$column        = 'name' === $return_type ? 't.name' : 't.id';
+		$default_value = 'name' === $return_type ? '' : 0;
+
+		$result = $this->wpdb->get_var(
+			$this->wpdb->prepare( "SELECT {$column} FROM {$bp_prefix}bb_activity_topic_relationship atr INNER JOIN {$bp_prefix}bb_topics t ON t.id = atr.topic_id WHERE atr.activity_id = %d LIMIT 1", $activity_id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		);
+
+		$return_value = null !== $result ? $result : $default_value;
+
+		// Cache the result.
+		wp_cache_set( $cache_key, $return_value, self::$topic_cache_group );
+
+		return $return_value;
 	}
 }
