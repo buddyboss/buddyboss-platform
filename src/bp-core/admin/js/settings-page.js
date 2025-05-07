@@ -1,4 +1,4 @@
-/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp */
+/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp, BBTopicsManager */
 
 window.bp = window.bp || {};
 

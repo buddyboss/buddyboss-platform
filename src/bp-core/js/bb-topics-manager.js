@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, bbTopicsManagerVars */
+/* global bp, BP_Nouveau, _, bbTopicsManagerVars */
 /* @version 1.0.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
@@ -336,7 +336,7 @@ window.bp = window.bp || {};
 			var topicId   = topicAttr.topic_id;
 			var itemId    = topicAttr.item_id;
 			var itemType  = topicAttr.item_type;
-			var nonce     = topicAttr.nonce
+			var nonce 	  = topicAttr.nonce;
 
 			// Add modal open class.
 			$( 'body' ).addClass( this.config.modalOpenClass );

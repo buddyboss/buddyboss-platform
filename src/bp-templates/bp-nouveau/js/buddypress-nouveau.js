@@ -5400,7 +5400,7 @@ window.bp = window.bp || {};
 	
 					if ( self.find( '.hideshow .bb_nav_more_dropdown .bb_more_dropdown__title' ).length < 1 && $( window ).width() < 981 ) {
 						$( self ).find( '.hideshow .bb_nav_more_dropdown' ).append( '<li class="bb_more_dropdown__title">' +
-						  '<span class="bb_more_dropdown__title__text">' + "Menu Items" + '</span>' +
+						  '<span class="bb_more_dropdown__title__text">' + 'Menu Items' + '</span>' +
 						  '<span class="bb_more_dropdown__close_button" role="button">' +
 						  '<i class="bb-icon-l bb-icon-times"></i></span></li>' );
 					}
