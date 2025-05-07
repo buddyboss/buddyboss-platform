@@ -859,7 +859,7 @@ class BB_Topics_Manager {
 			$r['item_type']     = is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] );
 			$item_types         = array_map( 'sanitize_text_field', $r['item_type'] );
 			$placeholders       = array_fill( 0, count( $item_types ), '%s' );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types );
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_type IN (' . implode( ',', $placeholders ) . ')', $item_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
 		// permission_type.
@@ -950,13 +950,7 @@ class BB_Topics_Manager {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$queried_data = $this->wpdb->get_results(
-					'SELECT t.*, tr.*' . $global_activity_sql . ' 
-					FROM ' . $this->topics_table . ' t 
-					LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id 
-					WHERE tr.id IN (' . $uncached_ids_sql . ')',
-					ARRAY_A
-				);
+				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.*' . $global_activity_sql . ' FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ')', ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
 						wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
