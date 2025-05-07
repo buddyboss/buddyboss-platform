@@ -12,8 +12,9 @@
 $course_id         = get_the_ID();
 $total             = bp_search_get_total_lessons_count( $course_id );
 $meta              = get_post_meta( $course_id, '_sfwd-courses', true );
-$course_price_type = @$meta['sfwd-courses_course_price_type'];
-$course_price      = @$meta['sfwd-courses_course_price'];
+
+$course_price_type = isset( $meta['sfwd-courses_course_price_type'] ) ? $meta['sfwd-courses_course_price_type'] : '';
+$course_price      = isset( $meta['sfwd-courses_course_price'] ) ? $meta['sfwd-courses_course_price'] : '';
 ?>
 <li class="bp-search-item bp-search-item_sfwd-courses">
 	<div class="list-wrap">

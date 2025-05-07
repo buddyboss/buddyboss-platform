@@ -72,6 +72,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Fix incorrect search results for Global Search for translated/non-translated posts.
 			add_filter( 'Bp_Search_Posts_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
+			add_filter( 'BP_Search_CPT_sql', array( $this, 'bb_wpml_search_posts_sql' ), 10, 2 );
 
 			add_action( 'bb_get_the_profile_field_options_select_html', array( $this, 'bb_wpml_profile_field_options_order' ), 10, 2 );
 

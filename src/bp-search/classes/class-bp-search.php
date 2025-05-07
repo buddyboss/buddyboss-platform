@@ -383,7 +383,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				);
 			}
 
-			die( json_encode( $search_results ) );
+			wp_send_json( $search_results );
 		}
 
 		/**
