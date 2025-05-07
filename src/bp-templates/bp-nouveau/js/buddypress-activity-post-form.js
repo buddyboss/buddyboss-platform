@@ -517,6 +517,24 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'poll_id', activity_data.poll.id );
 			}
 
+			var topicId = String( activity_data.activity_topic_id );
+			if ( topicId ) {
+				self.postForm.model.set( 'topic_id', topicId );
+
+				// Set a timeout to ensure the DOM is fully loaded.
+				setTimeout( function () {
+					// Try a direct selector first.
+					var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + topicId + '"]' );
+
+					if ( $topicElement.length > 0 ) {
+						$topicElement.addClass( 'selected' );
+
+						var topicName = $topicElement.text().trim();
+						$( '.bb-topic-selector-button' ).text( topicName );
+					}
+				}, 300 );
+			}
+			
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
 			if ( ! _.isUndefined( self.activityToolbar ) ) {
