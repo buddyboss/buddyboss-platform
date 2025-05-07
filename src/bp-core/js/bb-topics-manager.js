@@ -593,6 +593,8 @@ window.bp = window.bp || {};
 				} );
 				
 				$( document ).on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
+
+				$( document ).ready( this.handleUrlHashTopic.bind( this ) );
 			}
 		},
 
@@ -648,9 +650,23 @@ window.bp = window.bp || {};
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
 			}
 			
-			// Use existing BuddyBoss activity filter system.
+			// Use an existing BuddyBoss activity filter system.
 			bp.Nouveau.Activity.filterActivity( event );
-		}
+		},
+
+		handleUrlHashTopic : function () {
+			if ( window.location.hash && window.location.hash.startsWith( '#topic-' ) ) {
+				var topicSlug = window.location.hash.substring( 1 ); // Remove the # symbol.
+
+				// Find the topic link with matching href.
+				var $topicLink = $( '.activity-topic-selector li a[href="#' + topicSlug + '"]' );
+
+				if ( $topicLink.length ) {
+					// If we found a matching topic, trigger the filter.
+					$topicLink.trigger( 'click' );
+				}
+			}
+		},
 	};
 
 	$(
