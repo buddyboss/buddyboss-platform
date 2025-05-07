@@ -23,6 +23,7 @@ export const LinkItem = ({ link, onEdit, onDelete, innerRef, draggableProps, dra
             {...dragHandleProps}
         >
             <div className="link-item-content">
+                <i className="bb-icons-rl-list" />
                 <div className="link-details">
                     <span className="link-icon">
                         <i className="bb-icons-rl-link" />

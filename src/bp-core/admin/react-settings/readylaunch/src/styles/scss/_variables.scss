@@ -1,8 +1,48 @@
 // Colors
-$bb-rl-white-color: #fff;
-$bb-rl-active-color: #e0623d;
-$bb-rl-red-color: #f00;
-$bb-rl-link-color: #0888ff;
+$bb-rl-background-brand-primary-color: #ef5d33;
+$bb-rl-background-brand-primary-hover-color: #d7542e;
+$bb-rl-background-brand-secondary-color: #f0f0f0;
+$bb-rl-background-brand-secondary-hover-color: #d9d9d9;
+$bb-rl-background-brand-tertiary-color: #fdefeb;
+$bb-rl-background-brand-disabled-color: #767eff;
+$bb-rl-background-base-color: #fff;
+$bb-rl-background-primary-color: #f6f6f6;
+$bb-rl-background-primary-color-hover: #e5e5e5;
+$bb-rl-background-secondary-color: #f0f0f0;
+$bb-rl-background-secondary-color-hover: #d9d9d9;
+$bb-rl-background-danger-primary-color: #fee9e7;
+$bb-rl-background-danger-primary-color-hover: #fcb3ad;
+$bb-rl-background-danger-secondary-color: #ec221f;
+$bb-rl-background-danger-secondary-color-hover: #c00f0c;
+$bb-rl-background-warning-primary-color: #fffbeb;
+$bb-rl-background-positive-primary-color: #ebffee;
+
+$bb-rl-border-brand-primary-color: #ef5d33;
+$bb-rl-border-brand-secondary-color: #4946fe;
+$bb-rl-border-color-primary: #e5e5e5;
+$bb-rl-border-color-secondary: #d9d9d9;
+$bb-rl-border-color-tertiary: #ccc;
+$bb-rl-border-color-quaternary: #808080;
+$bb-rl-border-color-quinary: #2f2f2f;
+$bb-rl-border-danger-primary-color: #ec221f;
+$bb-rl-border-danger-secondary-color: #c00f0c;
+$bb-rl-border-warning-primary-color: #e8b931;
+$bb-rl-border-positive-secondary-color: #009951;
+
+$bb-rl-text-primary-color: #000;
+$bb-rl-text-secondary-color: #2f2f2f;
+$bb-rl-text-tertiary-color: #666;
+$bb-rl-text-brand-primary-color: #4946fe;
+$bb-rl-text-disabled-color: #b2b2b2;
+$bb-rl-text-inverse-color: #fff;
+
+$bb-rl-icon-primary-color: #4d4d4d;
+$bb-rl-icon-secondary-color: #808080;
+$bb-rl-icon-disabled-color: #b2b2b2;
+$bb-rl-icon-warning-secondary-color: #e5a000;
+$bb-rl-icon-positive-primary-color: #009951;
+$bb-rl-icon-danger-secondary-color: #ec221f;
+
 $bb-rl-black-10: rgba(0, 0, 0, 0.1);
 $bb-rl-black-20: rgba(0, 0, 0, 0.2);
 $bb-rl-black-30: rgba(0, 0, 0, 0.3);
@@ -14,29 +54,8 @@ $bb-rl-black-80: rgba(0, 0, 0, 0.8);
 $bb-rl-black-90: rgba(0, 0, 0, 0.9);
 $bb-rl-black: rgba(0, 0, 0, 1);
 
-$bb-rl-input-field-bg: #f6f6f6;
-$bb-rl-input-field-border: $bb-rl-black-20;
-
-$bb-rl-background-white-color: #fff;
-$bb-rl-background-color: #fff;
-$bb-rl-background-primary-color: #f6f6f6;
-$bb-rl-background-primary-color-hover: #e5e5e5;
-$bb-rl-background-secondary-color: #f0f0f0;
-
-$bb-rl-text-primary-color: #000;
-$bb-rl-text-secondary-color: #2f2f2f;
-$bb-rl-text-tertiary-color: #666;
-
-$bb-rl-border-color-primary: #e5e5e5;
-$bb-rl-border-color-secondary: #d9d9d9;
-$bb-rl-border-color-tertiary: #ccc;
-
-$bb-rl-icon-primary-color: #4d4d4d;
-$bb-rl-icon-secondary-color: #808080;
-
 // UI Elements
 $card-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
-
 
 // Dimensions and spaing
 $bb-rl-space-0: 0;

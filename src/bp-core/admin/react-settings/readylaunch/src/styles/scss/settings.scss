@@ -4,6 +4,7 @@
 @import "buttons";
 @import "forms";
 @import "modal";
+@import "components/link-item";
 
 /* Full Height BuddyBoss ReadyLaunch Settings Page */
 .buddyboss_page_bb-readylaunch {
@@ -36,6 +37,11 @@
 	}
 }
 
+/* Just a minimal test to see if the basic file compiles */
+.test {
+	color: $bb-rl-text-primary-color;
+}
+
 /* Main container */
 .bb-readylaunch-settings-container {
 	display: flex;
@@ -46,7 +52,7 @@
 
 /* Header */
 .bb-rl-tab-header {
-	background-color: $bb-rl-background-white-color;
+	background-color: $bb-rl-background-base-color;
 	margin: 0 -20px;
 	padding: 12px $bb-rl-space-300;
 	border-bottom: 1px solid $bb-rl-black-10;
@@ -83,20 +89,18 @@
 		position: absolute;
 		top: -3px;
 		right: -2px;
-		background-color: $bb-rl-red-color;
-		color: $bb-rl-white-color;
+		background-color: $bb-rl-background-danger-secondary-color;
+		color: $bb-rl-text-inverse-color;
 		padding: 2px 4px;
-		border-radius: $bb-rl-radius-full;		
+		border-radius: $bb-rl-radius-full;
 	}
 
 }
 
-
-
 /* Sidebar */
 .bb-readylaunch-sidebar {
 	width: 250px;
-	background-color: $bb-rl-background-white-color;
+	background-color: $bb-rl-background-base-color;
 	border-right: 1px solid $bb-rl-black-10;
 	padding: $bb-rl-space-300 $bb-rl-space-200;
 
@@ -149,7 +153,7 @@
 		}
 
 		.components-form-toggle__thumb {
-			background-color: $bb-rl-background-white-color;
+			background-color: $bb-rl-background-base-color;
 			box-shadow: none;
 			width: 14px;
 			height: 14px;
@@ -160,12 +164,12 @@
 		&.is-checked {
 
 			.components-form-toggle__track {
-				background-color: $bb-rl-background-white-color;
-				border: 1px solid $bb-rl-active-color;
+				background-color: $bb-rl-background-base-color;
+				border: 1px solid $bb-rl-border-brand-primary-color;
 			}
 
 			.components-form-toggle__thumb {
-				background-color: $bb-rl-active-color;
+				background-color: $bb-rl-border-brand-primary-color;
 				left: unset;
 				right: 20px;
 			}
@@ -174,13 +178,13 @@
 
 	> .settings-loading {
 		text-align: center;
-		
+
 		p {
 			color: $bb-rl-text-tertiary-color;
 		}
 
 		svg path {
-			stroke: $bb-rl-active-color;
+			stroke: $bb-rl-background-brand-primary-color;
 		}
 	}
 }
@@ -269,6 +273,19 @@
 
 	.toggle-item {
 		padding-bottom: $bb-rl-space-100;
+		display: flex;
+		align-items: center;
+		gap: $bb-rl-space-200;
+		margin-bottom: 12px;
+
+		.components-toggle-control {
+			margin-bottom: 0;
+		}
+
+		> i {
+			font-size: 20px;
+			color: $bb-rl-black-60;
+		}
 
 		label {
 
@@ -364,11 +381,11 @@
 	}
 
 	.components-radio-control__input[type="radio"] {
-		border-color: $bb-rl-active-color;
+		border-color: $bb-rl-background-brand-primary-color;
 	}
 
 	.components-radio-control__input[type="radio"]:checked {
-		background: $bb-rl-active-color;
+		background: $bb-rl-background-brand-primary-color;
 	}
 }
 
@@ -376,63 +393,6 @@
 	margin-top: 5px;
 	color: $bb-rl-text-secondary-color;
 	font-size: 13px;
-}
-
-.bb-rl-link-item {
-	margin-bottom: 12px;
-
-	i {
-		font-size: 20px;
-	}
-
-	.edit-link-button,
-	.delete-link-button {
-		color: $bb-rl-black-60;
-	}
-
-	.link-details > span {
-		display: flex;
-		align-items: center;
-		gap: $bb-rl-space-100;
-
-		i {
-			font-size: 16px;
-			color: $bb-rl-black-80;
-		}
-	}
-
-	.link-title {
-
-		@include bb-rl-text-medium;
-		color: $bb-rl-black;
-	}
-
-	.link-url {
-
-		@include bb-rl-text;
-		color: $bb-rl-link-color;
-		padding: 3px 0;
-	}
-
-	+ .add-link-button {
-		margin-top: $bb-rl-space-200;
-	}
-}
-
-.custom-links-wrapper {
-
-	.bb-rl-link-item:last-of-type {
-		border-bottom: 1px solid $bb-rl-black-10;
-		margin-bottom: 0;
-		padding-bottom: $bb-rl-space-200;
-	}
-}
-
-.add-link-button {
-
-	i {
-		font-size: 16px;
-	}
 }
 
 .bb-rl-color-palettes {
@@ -501,7 +461,7 @@
 		justify-content: flex-end;
 
 		> button {
-			
+
 			@include bb-rl-button;
 			@include bb-rl-button--primary;
 			@include bb-rl-button--small;
@@ -601,5 +561,66 @@
 
 	.new-link-inputs {
 		flex-direction: column;
+	}
+}
+
+/* LinkItem styles temporarily moved back from _linkitem.scss due to build issues */
+.bb-rl-link-item {
+	margin-bottom: 12px;
+
+	.link-item-content {
+		display: flex;
+		gap: $bb-rl-space-200;
+	}
+
+	i {
+		font-size: 20px;
+		color: $bb-rl-black-60;
+	}
+
+	.edit-link-button,
+	.delete-link-button {
+		color: $bb-rl-black-60;
+	}
+
+	.link-details > span {
+		display: flex;
+		align-items: center;
+		gap: $bb-rl-space-100;
+
+		i {
+			font-size: 16px;
+			color: $bb-rl-icon-primary-color;
+		}
+	}
+
+	.link-title {
+		@include bb-rl-text-medium;
+		color: $bb-rl-black;
+	}
+
+	.link-url {
+		@include bb-rl-text;
+		color: $bb-rl-text-brand-primary-color;
+		padding: 3px 0;
+	}
+
+	+ .add-link-button {
+		margin-top: $bb-rl-space-200;
+	}
+}
+
+/* Related wrapper styles */
+.custom-links-wrapper {
+	.bb-rl-link-item:last-of-type {
+		border-bottom: 1px solid $bb-rl-black-10;
+		margin-bottom: 0;
+		padding-bottom: $bb-rl-space-200;
+	}
+}
+
+.add-link-button {
+	i {
+		font-size: 16px;
 	}
 }

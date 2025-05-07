@@ -35,7 +35,7 @@
 
 // Helper modal popup
 body.bb-rl-help-modal-open {
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .bb-rl-help-modal-overlay {
@@ -50,8 +50,8 @@ body.bb-rl-help-modal-open {
 
 	.bb-rl-help-modal {
 
-        @include font-style(14px, 400, 20px);
-		background: $bb-rl-background-white-color;
+		@include font-style(14px, 400, 20px);
+		background: $bb-rl-background-base-color;
 		border-top-left-radius: $bb-rl-radius-xl;
 		border-bottom-left-radius: $bb-rl-radius-xl;
 		max-width: 720px;
@@ -63,7 +63,7 @@ body.bb-rl-help-modal-open {
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 		animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 		padding-top: 60px;
-		height: calc(100vh - 40px); // Calculated height to fit the modal content
+		height: calc(100vh - 32px); // Calculated height to fit the modal content
 	}
 
 	.bb-rl-help-modal-header {
@@ -98,64 +98,64 @@ body.bb-rl-help-modal-open {
 		padding: $bb-rl-space-300 $bb-rl-space-400;
 		overflow-y: auto;
 		height: 100%;
-        color: $bb-rl-black;
+		color: $bb-rl-black;
 
-        p {
+		p {
 
-            @include font-style(14px, 400, 20px);
-            margin: 0 0 $bb-rl-space-200;
-        }
+			@include font-style(14px, 400, 20px);
+			margin: 0 0 $bb-rl-space-200;
+		}
 
-        ul {
-            margin: $bb-rl-space-100 0 $bb-rl-space-300;
-            list-style-type: disc;
-            padding-left: 1.5em;
-            color: $bb-rl-black-70;
-        }
+		ul {
+			margin: $bb-rl-space-100 0 $bb-rl-space-300;
+			list-style-type: disc;
+			padding-left: 1.5em;
+			color: $bb-rl-black-70;
+		}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: $bb-rl-space-100 0 $bb-rl-space-300;
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: $bb-rl-space-100 0 $bb-rl-space-300;
 
-            td {
-                padding: $bb-rl-space-50;
-            }
-        }
+			td {
+				padding: $bb-rl-space-50;
+			}
+		}
 
-        .wp-block-heading {
+		.wp-block-heading {
 
-            @include font-style(16px, 600, 22px);
-            margin: 0 0 $bb-rl-space-200;
-        }
+			@include font-style(16px, 600, 22px);
+			margin: 0 0 $bb-rl-space-200;
+		}
 
-        .wp-block-embed {
-            margin: $bb-rl-space-200 0;
+		.wp-block-embed {
+			margin: $bb-rl-space-200 0;
 
-            iframe {
-                width: 100%;
-                border-radius: $bb-rl-radius-lg;
-            }
-        }
+			iframe {
+				width: 100%;
+				border-radius: $bb-rl-radius-lg;
+			}
+		}
 
-        .wp-block-image {
-            margin: $bb-rl-space-200 0;
+		.wp-block-image {
+			margin: $bb-rl-space-200 0;
 
-            img {
-                border-radius: $bb-rl-radius-lg;
-            }
-        }
+			img {
+				border-radius: $bb-rl-radius-lg;
+			}
+		}
 	}
 
 	.help-content-loading {
 		text-align: center;
-		
+
 		p {
 			color: $bb-rl-text-tertiary-color;
 		}
 
 		svg path {
-			stroke: $bb-rl-active-color;
+			stroke: $bb-rl-border-brand-primary-color;
 		}
 	}
 }

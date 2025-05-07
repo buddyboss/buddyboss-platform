@@ -355,7 +355,6 @@ export const ReadyLaunchSettings = () => {
 							/>
 							<div className="image-actions">
 								<Button
-									isPrimary
 									onClick={() => openMediaLibrary(label, onChange)}
 									className="change-image-button bb-rl-button bb-rl-button--secondary bb-rl-button--small"
 									icon={<i className="bb-icons-rl-upload-simple" />}
@@ -428,7 +427,6 @@ export const ReadyLaunchSettings = () => {
 								/>
 								<div className="color-picker-popover-footer">
 									<Button
-										variant="primary"
 										onClick={closePicker}
 									>
 										{__('Apply', 'buddyboss')}
@@ -965,6 +963,7 @@ export const ReadyLaunchSettings = () => {
 																	{...providedDraggable.dragHandleProps}
 																	className={`side-menu-item-draggable toggle-item ${snapshot.isDragging ? 'is-dragging' : ''}`}
 																>
+																	<i className="bb-icons-rl-list" />
 																	<ToggleControl
 																		checked={item.enabled}
 																		// Use the updated handler, passing the item ID
@@ -1015,7 +1014,6 @@ export const ReadyLaunchSettings = () => {
 													{/* Add New Link Button - Moved inside Droppable but outside mapping */}
 													<Button
 														className="add-link-button bb-rl-button bb-rl-button--primary bb-rl-button--small"
-														variant="primary"
 														onClick={handleAddLinkClick}
 														icon={<i className="bb-icons-rl-plus" />}
 													>

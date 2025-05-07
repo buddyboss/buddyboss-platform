@@ -49,7 +49,7 @@
 
 // Card styling
 @mixin card-style {
-	background-color: $bb-rl-background-white-color;
+	background-color: $bb-rl-background-base-color;
 	border-radius: $bb-rl-radius-xl;
 	box-shadow: $card-box-shadow;
 }
@@ -75,48 +75,69 @@
 }
 
 @mixin bb-rl-button--primary {
-	background-color: $bb-rl-active-color;
-	color: $bb-rl-white-color;
-	border: 1px solid $bb-rl-active-color;
+	background-color: $bb-rl-background-brand-primary-color;
+	color: $bb-rl-text-inverse-color;
+	border: 1px solid $bb-rl-border-brand-primary-color;
 
 	&:hover {
-		background-color: $bb-rl-active-color;
+		background-color: $bb-rl-background-brand-primary-hover-color;
+		color: $bb-rl-text-inverse-color;
 	}
 
 	&:focus-within {
-		outline: 2px solid $bb-rl-active-color;
+		background-color: $bb-rl-background-brand-primary-color;
+		outline: 2px solid $bb-rl-border-color-quinary;
 	}
 
 	&:disabled {
-		background-color: $bb-rl-active-color;
+		background-color: $bb-rl-background-brand-secondary-color;
 		cursor: not-allowed;
 	}
 }
 
 @mixin bb-rl-button--secondary {
-	background-color: $bb-rl-black-10;
-	color: $bb-rl-black;
+	background-color: $bb-rl-background-secondary-color;
+	color: $bb-rl-text-primary-color;
 	border: 1px solid transparent;
 
 	&:hover {
-		background-color: $bb-rl-black-10;
+		background-color: $bb-rl-background-secondary-color-hover;
+		color: $bb-rl-text-primary-color;
 	}
 
 	&:focus {
-		outline: 2px solid $bb-rl-black-10;
+		outline: 2px solid $bb-rl-border-color-quinary;
+		background-color: $bb-rl-background-secondary-color-hover;
 	}
 
 	&:disabled {
-		background-color: $bb-rl-black-10;
-		color: $bb-rl-black;
+		background-color: $bb-rl-background-secondary-color;
+		color: $bb-rl-text-disabled-color;
 		cursor: not-allowed;
 	}
 }
 
 @mixin bb-rl-button--outline {
 	background-color: transparent;
-	color: $bb-rl-black;
+	color: $bb-rl-text-primary-color;
 	border: 1px solid $bb-rl-border-color-tertiary;
+
+	&:hover {
+		background-color: $bb-rl-background-primary-color;
+		color: $bb-rl-text-primary-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-rl-border-color-quinary;
+		background-color: $bb-rl-background-primary-color;
+	}
+
+	&:disabled {
+		border: 1px solid $bb-rl-border-color-tertiary;
+		background-color: transparent;
+		color: $bb-rl-text-disabled-color;
+		cursor: not-allowed;
+	}
 }
 
 // Responsive mixins

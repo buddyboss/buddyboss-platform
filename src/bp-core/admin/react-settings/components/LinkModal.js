@@ -99,14 +99,12 @@ export const LinkModal = ({ isOpen, onClose, linkData = {}, onSave }) => {
         
         <div className="link-modal-actions">
           <Button
-            variant="primary"
             onClick={handleSave}
             className="bb-rl-button bb-rl-button--primary bb-rl-button--small"
           >
             {__('Save', 'buddyboss')}
           </Button>
           <Button
-            variant="secondary"
             onClick={onClose}
             className="bb-rl-button bb-rl-button--secondary bb-rl-button--small"
           >
