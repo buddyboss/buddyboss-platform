@@ -4401,6 +4401,10 @@ window.bp = window.bp || {};
 				queryData.user_timeline = true;
 			}
 
+			if ( objectData.topic_id ) {
+				queryData.topic_id = objectData.topic_id;
+			}
+
 			bp.Nouveau.objectRequest( queryData );
 
 		}

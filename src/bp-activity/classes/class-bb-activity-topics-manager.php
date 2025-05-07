@@ -89,6 +89,10 @@ class BB_Activity_Topics_Manager {
 		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
+
+		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_add_topic_id_to_query_string' ), 20, 1 );
+		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
+		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 	}
 
 	/**
@@ -344,8 +348,74 @@ class BB_Activity_Topics_Manager {
 
 		$topic_id = bb_topics_manager_instance()->bb_get_activity_topic( (int) $args['id'], 'id' );
 
-		$args['activity_topic_id'] = $topic_id;
+		$args['topic_id'] = $topic_id;
 
 		return $args;
+	}
+
+	/**
+	 * Add join SQL for activity topic filtering.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $join_sql Join SQL statement.
+	 * @param array  $args     Query arguments.
+	 *
+	 * @return string Modified join SQL statement.
+	 */
+	public function bb_activity_topic_get_join_sql( $join_sql, $args = array() ) {
+
+		if ( empty( $args['topic_id'] ) ) {
+			return $join_sql;
+		}
+
+		$bp_prefix = bp_core_get_table_prefix();
+		$join_sql .= " INNER JOIN {$bp_prefix}bb_activity_topic_relationship AS atr ON a.id = atr.activity_id";
+
+		return $join_sql;
+	}
+
+	/**
+	 * Get the where conditions for the activity topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $where_conditions Array of where conditions.
+	 * @param array $args             Query arguments.
+	 *
+	 * @return array Modified array of where conditions.
+	 */
+	public function bb_activity_topic_get_where_conditions( $where_conditions, $args ) {
+
+		if ( empty( $args['topic_id'] ) ) {
+			return $where_conditions;
+		}
+
+		$topic_id                     = (int) $args['topic_id'];
+		$where_conditions['topic_id'] = "atr.topic_id = {$topic_id}";
+
+		return $where_conditions;
+	}
+
+	/**
+	 * Process activity topic ID parameter for activity queries.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $qs The activity query string.
+	 *
+	 * @return string Modified query string.
+	 */
+	public function bb_activity_add_topic_id_to_query_string( $qs ) {
+		if ( empty( $_POST['topic_id'] ) ) {
+			return $qs;
+		}
+
+		$topic_id = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
+		if ( $topic_id ) {
+			$qs .= '&topic_id=' . $topic_id;
+		}
+
+		return $qs;
 	}
 }

@@ -591,6 +591,8 @@ window.bp = window.bp || {};
 						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
 					}
 				} );
+				
+				$( document ).on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 			}
 		},
 
@@ -616,6 +618,39 @@ window.bp = window.bp || {};
 		hideTopicTooltip : function () {
 			$( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
 		},
+
+		topicActivityFilter : function ( event ) {
+			event.preventDefault();
+			event.stopPropagation();
+
+			var $topicItem = $( event.currentTarget );
+			var topicId    = $topicItem.data( 'topic-id' );
+			var topicHash  = $topicItem.attr( 'href' );
+			
+			// Update the URL to include the topic slug (or remove it for "All").
+			if ( history.pushState ) {
+				var newUrl;
+				if ( ! topicId || $topicItem.hasClass('all') || topicHash.toLowerCase() === 'all') {
+					newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+				} else {
+					newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + topicHash
+				}
+				window.history.pushState({ path: newUrl }, '', newUrl);
+			}
+
+			$('.activity-topic-selector li a').removeClass('selected active');
+			$topicItem.addClass('selected active');
+
+			// Store the topic ID in BP's storage.
+			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
+				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
+			} else {
+				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
+			}
+			
+			// Use existing BuddyBoss activity filter system.
+			bp.Nouveau.Activity.filterActivity( event );
+		}
 	};
 
 	$(

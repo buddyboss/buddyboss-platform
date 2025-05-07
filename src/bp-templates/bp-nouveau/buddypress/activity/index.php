@@ -33,7 +33,7 @@ bp_nouveau_template_notices();
 
 		if ( ! empty( $topics['topics'] ) ) {
 			foreach ( $topics['topics'] as $topic ) {
-				echo '<li><a href="#" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+				echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
 			}
 		}
 		?>

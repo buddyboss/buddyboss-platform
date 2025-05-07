@@ -1969,6 +1969,7 @@ function bp_activity_get( $args = '' ) {
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
 			'status'            => $r['status'],
+			'topic_id'          => $r['topic_id'],
 		)
 	);
 
