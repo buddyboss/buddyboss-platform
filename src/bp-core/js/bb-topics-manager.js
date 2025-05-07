@@ -633,9 +633,9 @@ window.bp = window.bp || {};
 			if ( history.pushState ) {
 				var newUrl;
 				if ( ! topicId || $topicItem.hasClass('all') || topicHash.toLowerCase() === 'all') {
-					newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
 				} else {
-					newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + topicHash
+					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + topicHash;
 				}
 				window.history.pushState({ path: newUrl }, '', newUrl);
 			}
