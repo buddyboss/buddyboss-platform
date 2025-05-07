@@ -208,13 +208,58 @@ window.bp = window.bp || {};
 		 * Make the topics sortable.
 		 */
 		makeTopicsSortable : function () {
+			var self = this;
 			this.$topicList.sortable( {
-				update: function ( event, ui ) {
-					console.log( event, ui );
-					$( event.target ).addClass( 'is-loading' );
+				update : function ( event ) {
+					var $container = $( event.target );
+					$container.addClass( 'is-loading' );
 
-					// Make the AJAX call to update the topics order.
-				},
+					// Get the sorted topic IDs.
+					var topicIds = [];
+					$container.find( '.bb-activity-topic-item' ).find( '.bb-edit-topic' ).each( function () {
+						var $topicData = $( this ).data( 'topic-attr' );
+						var topicId    = $topicData.topic_id;
+						if ( topicId ) {
+							topicIds.push( topicId );
+						}
+					} );
+
+					// Prepare data for AJAX request.
+					var data = {
+						action    : 'bb_update_topics_order',
+						topic_ids : topicIds,
+						nonce     : bbTopicsManagerVars.bb_update_topics_order_nonce
+					};
+
+					// Make the AJAX call to update topics order.
+					$.post( self.config.ajaxUrl, data, function ( response ) {
+						$container.removeClass( 'is-loading' );
+
+						if ( response.success ) {
+							// Show success notification if needed.
+							if ( response.data && response.data.message ) {
+								// Display success message.
+								$container.after( '<div class="bb-topics-sort-success">' + response.data.message + '</div>' );
+								setTimeout( function () {
+									$( '.bb-topics-sort-success' ).fadeOut( 300, function () {
+										$( this ).remove();
+									} );
+								}, 3000 );
+							}
+						} else {
+							// Show error and revert if needed.
+							if ( response.data && response.data.error ) {
+								alert( response.data.error );
+							}
+							// Optionally revert the sort.
+							$container.sortable( 'cancel' );
+						}
+					}.bind( this ) ).fail( function () {
+						$container.removeClass( 'is-loading' );
+						alert( bbTopicsManagerVars.generic_error );
+						$container.sortable( 'cancel' );
+					} );
+				}
 			} );
 		},
 

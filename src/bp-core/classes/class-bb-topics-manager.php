@@ -119,6 +119,7 @@ class BB_Topics_Manager {
 		add_action( 'wp_ajax_bb_add_topic', array( $this, 'bb_add_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_edit_topic', array( $this, 'bb_edit_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_delete_topic', array( $this, 'bb_delete_topic_ajax' ) );
+		add_action( 'wp_ajax_bb_update_topics_order', array( $this, 'bb_update_topics_order_ajax' ) );
 	}
 
 	/**
@@ -147,6 +148,8 @@ class BB_Topics_Manager {
 				'topics_limit'                  => $this->bb_topics_limit(),
 				'topic_tooltip_error'           => esc_html__( 'Please select a topic', 'buddyboss' ),
 				'bb_is_activity_topic_required' => bb_is_activity_topic_required(),
+				'bb_update_topics_order_nonce'  => wp_create_nonce( 'bb_update_topics_order' ),
+				'generic_error'                 => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
 			)
 		);
 	}
@@ -553,6 +556,9 @@ class BB_Topics_Manager {
 			)
 		);
 
+		$menu_order      = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT MAX(menu_order) FROM {$this->topic_rel_table} WHERE item_type = %s AND item_id = %d", $r['item_type'], $r['item_id'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$r['menu_order'] = $menu_order + 1;
+
 		/**
 		 * Fires before a topic relationship has been added.
 		 *
@@ -831,7 +837,7 @@ class BB_Topics_Manager {
 			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
 			$item_ids           = array_map( 'absint', $r['item_id'] );
 			$placeholders       = array_fill( 0, count( $item_ids ), '%d' );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids );
+			$where_conditions[] = $this->wpdb->prepare( 'tr.item_id IN (' . implode( ',', $placeholders ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
 		// topic_id.
@@ -1364,5 +1370,46 @@ class BB_Topics_Manager {
 		wp_cache_set( $cache_key, $return_value, self::$topic_cache_group );
 
 		return $return_value;
+	}
+
+	/**
+	 * Update the order of topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_update_topics_order_ajax() {
+
+		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
+
+		// Get the topic IDs array from the request.
+		if ( ! isset( $_POST['topic_ids'] ) || ! is_array( $_POST['topic_ids'] ) ) {
+			wp_send_json_error( array( 'error' => __( 'No topic order provided.', 'buddyboss' ) ) );
+		}
+
+		$topic_ids = array_map( 'absint', $_POST['topic_ids'] );
+
+		$success = true;
+
+		// Update each topic with its new order in the relationships table.
+		foreach ( $topic_ids as $position => $topic_id ) {
+			$result = $this->wpdb->update(
+				$this->topic_rel_table,
+				array( 'menu_order' => $position + 1 ),
+				array( 'topic_id' => $topic_id ),
+				array( '%d' ),
+				array( '%d' )
+			);
+
+			if ( false === $result ) {
+				$success = false;
+				break;
+			}
+		}
+
+		if ( $success ) {
+			wp_send_json_success( array( 'message' => __( 'Topic order updated successfully.', 'buddyboss' ) ) );
+		} else {
+			wp_send_json_error( array( 'error' => __( 'Failed to update topic order.', 'buddyboss' ) ) );
+		}
 	}
 }
