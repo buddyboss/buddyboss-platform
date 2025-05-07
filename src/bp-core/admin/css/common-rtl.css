@@ -5491,6 +5491,30 @@ h1.bb-advance-heading {
   visibility: visible !important;
 }
 
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list.is-loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list.is-loading > * {
+  opacity: 0.5;
+}
+
+.bb-activity-topics-wrapper .bb-activity-topics-content .bb-activity-topics-list.is-loading:after {
+  content: "";
+  display: inline-block;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(155, 156, 159, 0.2);
+  border-top-color: #9b9c9f;
+  animation: spin 2s infinite linear;
+  position: absolute;
+  right: 50%;
+  top: 50%;
+}
+
 .bb-activity-topics-wrapper .bb-activity-topics-content .bb-add-topic {
   display: inline-flex;
   align-items: center;

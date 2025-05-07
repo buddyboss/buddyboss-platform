@@ -208,7 +208,14 @@ window.bp = window.bp || {};
 		 * Make the topics sortable.
 		 */
 		makeTopicsSortable : function () {
-			this.$topicList.sortable();
+			this.$topicList.sortable( {
+				update: function ( event, ui ) {
+					console.log( event, ui );
+					$( event.target ).addClass( 'is-loading' );
+
+					// Make the AJAX call to update the topics order.
+				},
+			} );
 		},
 
 		/**
