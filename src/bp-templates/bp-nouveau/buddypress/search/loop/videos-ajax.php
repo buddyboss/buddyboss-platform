@@ -31,21 +31,20 @@ $video_visibility = bp_get_video_visibility();
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_video search-video-list">
-	<a href="">
-		<div class="item">
-			<div class="media-album_items ac-album-list">
-				<div class="media-album_thumb">
-					<a href="<?php echo esc_url( $video_link ); ?>">
-						<img src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php echo esc_html( $video_title ); ?>" />
-					</a>
-				</div>
+	<a href="<?php echo esc_url( $video_link ); ?>">
+		<div class="item-avatar">
+			<img src="<?php bp_video_attachment_image_thumbnail(); ?>" alt="<?php echo esc_html( $video_title ); ?>" />
+		</div>
+	</a>
+	<div class="item">
+		<div class="media-album_items ac-album-list">
+			<div class="media-album_details">
+				<a class="media-album_name " href="<?php echo esc_url( $video_link ); ?>">
+					<span><?php echo esc_html( $video_title ); ?></span>
+				</a>
+			</div>
 
-				<div class="media-album_details">
-					<a class="media-album_name " href="<?php echo esc_url( $video_link ); ?>">
-						<span><?php echo esc_html( $video_title ); ?></span>
-					</a>
-				</div>
-
+			<div class="entry-meta">
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
 						<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
@@ -91,5 +90,5 @@ $video_visibility = bp_get_video_visibility();
 				</div>
 			</div>
 		</div>
-	</a>
+	</div>
 </div>
