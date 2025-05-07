@@ -3844,6 +3844,13 @@ input.search-query-input {
   vertical-align: middle;
 }
 
+.activity-list .activity-item .activity-header .activity-topic {
+  display: inline-block;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .activity-list .activity-item .activity-content .activity-header,
 .activity-list .activity-item .activity-content .comment-header {
   color: #767676;
