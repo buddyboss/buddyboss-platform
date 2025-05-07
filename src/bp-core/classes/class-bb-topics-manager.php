@@ -242,14 +242,15 @@ class BB_Topics_Manager {
 	public function bb_add_topic_ajax() {
 		check_ajax_referer( 'bb_add_topic', 'nonce' );
 
-		$name              = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$permission_type   = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
-		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
-		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
-		$action_from       = isset( $_POST['action_from'] ) ? sanitize_text_field( wp_unslash( $_POST['action_from'] ) ) : 'topics-manager';
-
+		$name               = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$slug               = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
+		$permission_type    = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
+		$previous_topic_id  = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$item_id            = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+		$item_type          = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
+		$action_from        = isset( $_POST['action_from'] ) ? sanitize_text_field( wp_unslash( $_POST['action_from'] ) ) : 'admin';
+		$is_global_activity = isset( $_POST['is_global_activity'] ) ? (bool) sanitize_text_field( wp_unslash( $_POST['is_global_activity'] ) ) : false;
+		
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
 		} else {
@@ -270,6 +271,13 @@ class BB_Topics_Manager {
 			// First check if new name exists in bb_topics table.
 			$existing_topic = $this->bb_get_topic_by( 'name', $name );
 			if ( ! $existing_topic ) { // NO.
+				if ( $is_global_activity && 'group' === $item_type ) {
+					wp_send_json_error(
+						array(
+							'error' => esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' ),
+						)
+					);
+				}
 				// Case: Name doesn't exist - create new topic.
 				$topic_data = $this->bb_add_topic(
 					array(

@@ -260,14 +260,15 @@ window.bp = window.bp || {};
 			// Remove any existing error messages.
 			this.$modal.find( this.config.errorContainerSelector ).remove();
 
-			var selectedData    = this.$topicName.data( 'selected' );
-			var topicName       = selectedData ? selectedData.name : this.$topicName.val();
-			var topicWhoCanPost = this.$topicWhoCanPost.filter( ':checked' ).val();
-			var topicId         = this.$topicId.val();
-			var itemId          = this.$itemId.val();
-			var itemType        = this.$itemType.val();
-			var nonce           = this.$nonce.val();
-			var actionFrom      = this.$actionFrom.val();
+			var selectedData     = this.$topicName.data( 'selected' );
+			var topicName        = selectedData ? selectedData.name : this.$topicName.val();
+			var topicWhoCanPost  = this.$topicWhoCanPost.filter( ':checked' ).val();
+			var topicId          = this.$topicId.val();
+			var itemId           = this.$itemId.val();
+			var itemType         = this.$itemType.val();
+			var nonce            = this.$nonce.val();
+			var actionFrom       = this.$actionFrom.val();
+			var isGlobalActivity = $( '#bb_is_global_activity' ).val();
 			if ( topicName === '' ) {
 				return;
 			}
@@ -277,14 +278,15 @@ window.bp = window.bp || {};
 
 			// Prepare data for AJAX request.
 			var data = {
-				action          : this.config.addTopicAction,
-				name            : topicName,
-				permission_type : topicWhoCanPost,
-				topic_id        : topicId,
-				item_id         : itemId,
-				item_type       : itemType,
-				nonce           : nonce,
-				action_from     : actionFrom
+				action             : this.config.addTopicAction,
+				name               : topicName,
+				permission_type    : topicWhoCanPost,
+				topic_id           : topicId,
+				item_id            : itemId,
+				item_type          : itemType,
+				nonce              : nonce,
+				action_from        : actionFrom,
+				is_global_activity : isGlobalActivity
 			};
 
 			// Use the configured AJAX URL.
@@ -323,7 +325,7 @@ window.bp = window.bp || {};
 			this.$topicName.val( '' );
 			this.$topicWhoCanPost.prop( 'checked', false );
 			this.$topicId.val( '' );
-
+			$( '#bb_is_global_activity').val( '' );
 			// Trigger modal closed event.
 			$( document ).trigger( 'bb_modal_closed', [ this.$modal ] );
 		},
@@ -338,12 +340,13 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $button   = $( event.currentTarget );
-			var topicAttr = $button.data( 'topic-attr' );
-			var topicId   = topicAttr.topic_id;
-			var itemId    = topicAttr.item_id;
-			var itemType  = topicAttr.item_type;
-			var nonce 	  = topicAttr.nonce;
+			var $button          = $( event.currentTarget );
+			var topicAttr        = $button.data( 'topic-attr' );
+			var topicId          = topicAttr.topic_id;
+			var itemId           = topicAttr.item_id;
+			var itemType         = topicAttr.item_type;
+			var nonce            = topicAttr.nonce;
+			var isGlobalActivity = topicAttr.bb_is_global_activity;
 
 			// Add modal open class.
 			$( 'body' ).addClass( this.config.modalOpenClass );
@@ -363,11 +366,12 @@ window.bp = window.bp || {};
 
 			// Prepare data for AJAX request.
 			var data = {
-				action    : this.config.editTopicAction,
-				topic_id  : topicId,
-				item_id   : itemId,
-				item_type : itemType,
-				nonce     : nonce
+				action             : this.config.editTopicAction,
+				topic_id           : topicId,
+				item_id            : itemId,
+				item_type          : itemType,
+				nonce              : nonce,
+				is_global_activity : isGlobalActivity
 			};
 
 			// Use the configured AJAX URL.
@@ -392,6 +396,7 @@ window.bp = window.bp || {};
 					}
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );
+					$( '#bb_is_global_activity').val( topic.is_global_activity );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
