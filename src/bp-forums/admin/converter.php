@@ -2269,6 +2269,10 @@ abstract class BBP_Converter_Base {
 function bbp_new_converter( $platform = '' ) {
 	$found = false;
 
+	if ( ! file_exists( bbpress()->admin->admin_dir . 'converters/' ) ) {
+		return null;
+	}
+
 	if ( $curdir = opendir( bbpress()->admin->admin_dir . 'converters/' ) ) {
 		while ( $file = readdir( $curdir ) ) {
 			if ( stristr( $file, '.php' ) && stristr( $file, 'index' ) === false ) {

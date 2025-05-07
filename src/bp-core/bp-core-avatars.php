@@ -535,10 +535,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 					}
 				}
 			}
+			// Close the avatar directory.
+			closedir( $av_dir );
 		}
-
-		// Close the avatar directory.
-		closedir( $av_dir );
 
 		/**
 		 * Filters a locally uploaded avatar URL.
@@ -925,8 +924,8 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 				@unlink( $avatar_folder_dir . '/' . $avatar_file );
 			}
 		}
+		closedir( $av_dir );
 	}
-	closedir( $av_dir );
 
 	@rmdir( $avatar_folder_dir );
 
