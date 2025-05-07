@@ -388,8 +388,19 @@ export const ReadyLaunchSettings = () => {
 	// Component for color picker with popover
 	const ColorPickerButton = ({ label, color, onChange }) => {
 		const [isPickerOpen, setIsPickerOpen] = useState(false);
-		const togglePicker = () => setIsPickerOpen(!isPickerOpen);
+		const [tempColor, setTempColor] = useState(color);
+		
+		const togglePicker = () => {
+			setIsPickerOpen(!isPickerOpen);
+			setTempColor(color); // Reset temp color when opening
+		};
+		
 		const closePicker = () => setIsPickerOpen(false);
+		
+		const applyColor = () => {
+			onChange(tempColor);
+			closePicker();
+		};
 		
 		// Ensure we have a valid color value
 		const colorValue = color || '#3E34FF'; // Default to blue if no color is set
@@ -417,17 +428,18 @@ export const ReadyLaunchSettings = () => {
 						>
 							<div className="color-picker-popover-content">
 								<ColorPicker
-									color={colorValue}
+									color={tempColor || colorValue}
 									onChange={(newColor) => {
-										onChange(newColor);
-										// Don't close the popover so the user can continue adjusting
+										setTempColor(newColor);
+										// Don't call onChange here to keep the popover open
 									}}
 									enableAlpha={false}
 									copyFormat="hex"
 								/>
 								<div className="color-picker-popover-footer">
 									<Button
-										onClick={closePicker}
+										onClick={applyColor}
+										className="apply-color-button"
 									>
 										{__('Apply', 'buddyboss')}
 									</Button>
