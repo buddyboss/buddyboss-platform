@@ -430,12 +430,18 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
-		$topic_lists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics(
-			array(
-				'item_id'   => 0,
-				'item_type' => 'activity',
-			)
-		) : array();
+		$args = array(
+			'item_id'   => 0,
+			'item_type' => 'activity',
+		);
+
+		if ( bp_current_user_can( 'administrator' ) ) {
+			$args['permission_type'] = array( 'mods_admins', 'anyone' );
+		} else {
+			$args['permission_type'] = 'anyone';
+		}
+
+		$topic_lists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics( $args ) : array();
 		$strings['activity']['params']['topics']['bb_is_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                   = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
 		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
