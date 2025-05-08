@@ -1,15 +1,15 @@
 <?php
 /**
- * The template for displaying activity edit postin
+ * The template for displaying topic selector in activity post form.
  *
- * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bp-activity-post-form-topic-selector.php.
+ * This template can be overridden by copying it to yourtheme/buddypress/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php.
  *
  * @since   1.0.0
  * @version 1.0.0
  */
 
 ?>
-<script type="text/html" id="tmpl-activity-post-form-topic-selector">
+<script type="text/html" id="tmpl-bb-activity-post-form-topic-selector">
 
 	<span class="bb-topic-selector-button">
 		<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>

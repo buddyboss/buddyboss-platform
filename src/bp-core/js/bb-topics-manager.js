@@ -100,7 +100,7 @@ window.bp = window.bp || {};
 				{
 					tagName: 'div',
 					className: 'whats-new-topic-selector',
-					template: bp.template( 'activity-post-form-topic-selector' ),
+					template: bp.template( 'bb-activity-post-form-topic-selector' ),
 					events: {
 						'click .bb-topic-selector-button': 'toggleTopicSelectorDropdown',
 						'click .bb-topic-selector-list a': 'selectTopic'
