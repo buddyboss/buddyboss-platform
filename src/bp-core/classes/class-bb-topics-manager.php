@@ -1452,4 +1452,23 @@ class BB_Topics_Manager {
 			wp_send_json_error( array( 'error' => __( 'Failed to update topic order.', 'buddyboss' ) ) );
 		}
 	}
+
+	/**
+	 * Get the permission type for a topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $topic_id The ID of the topic.
+	 *
+	 * @return string The permission type for the topic.
+	 */
+	public function bb_get_topic_permission_type( $topic_id ) {
+		$topic_permission_type = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT permission_type FROM {$this->topic_rel_table} WHERE topic_id = %d", $topic_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		if ( ! $topic_permission_type ) {
+			return 'anyone';
+		}
+
+		return $topic_permission_type;
+	}
 }

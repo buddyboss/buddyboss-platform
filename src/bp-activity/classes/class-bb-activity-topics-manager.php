@@ -447,4 +447,22 @@ class BB_Activity_Topics_Manager {
 		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
 		return $strings;
 	}
+
+	/**
+	 * Check if a user can post to a activity topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $topic_id The topic ID.
+	 *
+	 * @return bool True if the user can post to the topic, false otherwise.
+	 */
+	public function bb_can_user_post_to_activity_topic( $topic_id ) {
+		$get_permission_type = bb_topics_manager_instance()->bb_get_topic_permission_type( $topic_id );
+
+		if ( 'mods_admins' === $get_permission_type && ! bp_current_user_can( 'administrator' ) ) {
+			return false;
+		}
+		return true;
+	}
 }
