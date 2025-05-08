@@ -139,18 +139,21 @@ class BB_Topics_Manager {
 			bp_get_version(),
 			true
 		);
+
+		$bb_topics_js_strings = apply_filters(
+			'bb_topics_js_strings',
+			array(
+				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+				/* translators: %s: Topic name */
+				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
+				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
+				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
+			)
+		);
 		wp_localize_script(
 			'bb-topics-manager',
 			'bbTopicsManagerVars',
-			array(
-				'ajax_url'                      => admin_url( 'admin-ajax.php' ),
-				/* translators: %s: Topic name */
-				'delete_topic_confirm'          => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
-				'topic_tooltip_error'           => esc_html__( 'Please select a topic', 'buddyboss' ),
-				'bb_is_activity_topic_required' => bb_is_activity_topic_required(),
-				'bb_update_topics_order_nonce'  => wp_create_nonce( 'bb_update_topics_order' ),
-				'generic_error'                 => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
-			)
+			$bb_topics_js_strings
 		);
 	}
 
@@ -801,7 +804,8 @@ class BB_Topics_Manager {
 				'fields'             => 'all', // Fields to include.
 				'error_type'         => 'bool',
 				'is_global_activity' => false,
-			)
+			),
+			'bb_get_topics'
 		);
 
 		// Select conditions.

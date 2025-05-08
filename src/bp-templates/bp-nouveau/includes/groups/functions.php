@@ -506,6 +506,17 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		}
 	}
 
+	if ( bb_is_enabled_group_activity_topics() ) {
+		$topics = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics(
+			array(
+				'item_id'   => $item->id,
+				'item_type' => 'group',
+			)
+		) : array();
+
+		$args['topic_lists'] = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
+	}
+
 	return $args;
 }
 

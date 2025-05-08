@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, bbTopicsManagerVars */
+/* global bp, BP_Nouveau, _, Backbone, bbTopicsManagerVars */
 /* @version 1.0.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
@@ -29,8 +29,8 @@ window.bp = window.bp || {};
 			topicIdSelector         : '#bb_topic_id',
 			itemIdSelector          : '#bb_item_id',
 			itemTypeSelector        : '#bb_item_type',
-			nonceSelector			: '#bb_topic_nonce',
-			actionFromSelector		: '#bb_action_from',
+			nonceSelector           : '#bb_topic_nonce',
+			actionFromSelector      : '#bb_action_from',
 			addTopicButtonSelector  : '.bb-add-topic',
 			closeModalSelector      : '.bb-model-close-button, #bb_topic_cancel',
 			submitButtonSelector    : '#bb_topic_submit',
@@ -38,7 +38,7 @@ window.bp = window.bp || {};
 			deleteTopicSelector     : '.bb-delete-topic',
 			errorContainerSelector  : '.bb-hello-error',
 			errorContainer          : '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i>',
-			topicActionsButton 		: '.bb-topic-actions-wrapper .bb-topic-actions_button',
+			topicActionsButton      : '.bb-topic-actions-wrapper .bb-topic-actions_button',
 
 			// Classes.
 			modalOpenClass : 'activity-modal-open',
@@ -82,7 +82,7 @@ window.bp = window.bp || {};
 			this.checkTopicsLimit();
 		},
 
-		initTopicsManagerFrontend: function() {
+		initTopicsManagerFrontend : function () {
 			bp.Nouveau = bp.Nouveau || {};
 
 			// Bail if not set.
@@ -94,64 +94,84 @@ window.bp = window.bp || {};
 
 			bp.Models      = bp.Models || {};
 			bp.Collections = bp.Collections || {};
-			bp.Views = bp.Views || {};
+			bp.Views       = bp.Views || {};
+
+			this.topicsLocalize    = ! _.isUndefined( BP_Nouveau.activity.params.topics ) ? BP_Nouveau.activity.params.topics : false;
+			this.topicTooltipError = this.topicsLocalize ? ! _.isUndefined( BP_Nouveau.activity.params.topics.topic_tooltip_error ) ? BP_Nouveau.activity.params.topics.topic_tooltip_error : false : false;
+			this.topicLists        = this.topicsLocalize ? ! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists ) ? BP_Nouveau.activity.params.topics.topic_lists : [] : [];
 
 			bp.Views.TopicSelector = bp.View.extend(
 				{
-					tagName: 'div',
-					className: 'whats-new-topic-selector',
-					template: bp.template( 'bb-activity-post-form-topic-selector' ),
-					events: {
-						'click .bb-topic-selector-button': 'toggleTopicSelectorDropdown',
-						'click .bb-topic-selector-list a': 'selectTopic'
+					tagName   : 'div',
+					className : 'whats-new-topic-selector',
+					template  : bp.template( 'bb-activity-post-form-topic-selector' ),
+					events    : {
+						'click .bb-topic-selector-button' : 'toggleTopicSelectorDropdown',
+						'click .bb-topic-selector-list a' : 'selectTopic'
 					},
-		
-					initialize: function () {
-						this.model.on( 'change', this.render, this ); // TODO: Add specific event to update topic selector
-		
+
+					initialize : function () {
+						this.model.set( 'topic_lists', BBTopicsManager.topicLists );
+
+						this.listenTo( Backbone, 'topic:update', this.updateTopics );
+
 						// Add document-level click handler
 						$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
+
 					},
-		
-					render: function () {
+
+					updateTopics : function ( topics ) {
+						if ( ! topics ) {
+							return;
+						}
+
+						// Update the model with the new topics
+						this.model.set( 'topic_lists', topics );
+						this.model.set( 'topic_id', this.model.get( 'topic_id' ) );
+						this.model.set( 'topic_name', this.model.get( 'topic_name' ) );
+
+						this.render();
+					},
+
+					render : function () {
 						this.$el.html( this.template( this.model.attributes ) );
 					},
-		
-					toggleTopicSelectorDropdown: function () {
+
+					toggleTopicSelectorDropdown : function () {
 						this.$el.toggleClass( 'is-active' );
 					},
-		
-					selectTopic: function ( event ) {
+
+					selectTopic : function ( event ) {
 						event.preventDefault();
-						
-						var topicId = $( event.currentTarget ).data( 'topic-id' );
+
+						var topicId   = $( event.currentTarget ).data( 'topic-id' );
 						var topicName = $( event.currentTarget ).text().trim();
-		
+
 
 						this.model.set( 'topic_id', topicId );
 						this.model.set( 'topic_name', topicName );
-		
+
 						this.$el.find( '.bb-topic-selector-button' ).text( topicName );
-						this.$el.removeClass('is-active');
-						
+						this.$el.removeClass( 'is-active' );
+
 						this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
-						
-						$( document ).trigger( 'bb_topic_selected', [ topicId ] );
+
+						$( document ).trigger( 'bb_topic_selected', [topicId] );
 					},
-		
-					closeTopicSelectorDropdown: function ( event ) {
+
+					closeTopicSelectorDropdown : function ( event ) {
 						// Don't close if clicking inside the topic selector
 						if ( $( event.target ).closest( '.whats-new-topic-selector' ).length ) {
 							return;
 						}
-						
+
 						this.$el.removeClass( 'is-active' );
 					}
 				}
 			);
 
 			this.addFrontendListeners();
-        },
+		},
 
 		/**
 		 * Set up DOM elements
@@ -289,7 +309,7 @@ window.bp = window.bp || {};
 			this.$backdrop.show();
 
 			// Trigger modal opened event.
-			$( document ).trigger( 'bb_modal_opened', [ this.$modal ] );
+			$( document ).trigger( 'bb_modal_opened', [this.$modal] );
 		},
 
 		/**
@@ -341,7 +361,7 @@ window.bp = window.bp || {};
 			$.post( ajaxUrl, data, function ( response ) {
 				// Remove loading state
 				this.$modal.removeClass( 'loading' );
-				
+
 				if ( response.success ) {
 					window.location.reload();
 				} else {
@@ -370,9 +390,9 @@ window.bp = window.bp || {};
 			this.$topicName.val( '' );
 			this.$topicWhoCanPost.prop( 'checked', false );
 			this.$topicId.val( '' );
-			$( '#bb_is_global_activity').val( '' );
+			$( '#bb_is_global_activity' ).val( '' );
 			// Trigger modal closed event.
-			$( document ).trigger( 'bb_modal_closed', [ this.$modal ] );
+			$( document ).trigger( 'bb_modal_closed', [this.$modal] );
 		},
 
 		/**
@@ -400,8 +420,8 @@ window.bp = window.bp || {};
 			this.$modal.show();
 			this.$backdrop.show();
 			this.$topicWhoCanPost.prop( 'checked', false );
-			
-			$( document ).trigger( 'bb_modal_opened', [ this.$modal ] );
+
+			$( document ).trigger( 'bb_modal_opened', [this.$modal] );
 
 			// Remove any existing error messages.
 			var errorElm = this.$modal.find( this.config.errorContainerSelector );
@@ -437,11 +457,11 @@ window.bp = window.bp || {};
 					} else {
 						// For plain input.
 						this.$topicName.val( topic.name );
-						this.$topicName.prop('readonly', topic.is_global_activity);
+						this.$topicName.prop( 'readonly', topic.is_global_activity );
 					}
 					this.$topicWhoCanPost.filter( '[value="' + topic.permission_type + '"]' ).prop( 'checked', true );
 					this.$topicId.val( topic.topic_id );
-					$( '#bb_is_global_activity').val( topic.is_global_activity );
+					$( '#bb_is_global_activity' ).val( topic.is_global_activity );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
@@ -467,7 +487,7 @@ window.bp = window.bp || {};
 			var itemId         = topicAttr.item_id;
 			var itemType       = topicAttr.item_type;
 			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
-			var confirmMessage = bbTopicsManagerVars.delete_topic_confirm.replace( '%s', topicName);
+			var confirmMessage = bbTopicsManagerVars.delete_topic_confirm.replace( '%s', topicName );
 
 			if ( confirm( confirmMessage ) ) {
 
@@ -534,7 +554,7 @@ window.bp = window.bp || {};
 
 			// Close other open dropdowns
 			$( '.bb-topic-actions-wrapper.active' ).not( $currentWrapper ).removeClass( 'active' );
-    
+
 			// Toggle current dropdown
 			$currentWrapper.toggleClass( 'active' );
 		},
@@ -552,19 +572,19 @@ window.bp = window.bp || {};
 		 * Add frontend listeners.
 		 */
 		addFrontendListeners : function () {
-			if ( bbTopicsManagerVars.bb_is_activity_topic_required ) {
+			if ( BBTopicsManager.topicsLocalize ) {
 				this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
 				this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
 
 				this.addTopicTooltip = false;
 				// Add topic tooltip.
-				$( document ).on( 'bb_display_full_form', function () {
+				this.$document.on( 'bb_display_full_form', function () {
 					if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
-						$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + bbTopicsManagerVars.topic_tooltip_error + '</div></div>' );
+						$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 					}
 				} );
 
-				$( document ).on( 'postValidate', function ( event, data ) {
+				this.$document.on( 'postValidate', function ( event, data ) {
 					var $topicName = $( '.whats-new-topic-selector' ).find( '.bb-topic-selector-list li a.selected' );
 					if ( data.contentEmpty && ! $topicName.length ) {
 						this.addTopicTooltip = true;
@@ -578,25 +598,60 @@ window.bp = window.bp || {};
 					}
 				} );
 
-				$( document ).on( 'bb_topic_selected', function ( event, topicID ) {
+				this.$document.on( 'bb_topic_selected', function ( event, topicID ) {
 					if ( topicID && ! this.addTopicTooltip ) {
 						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
 					} else {
 						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
 					}
-				});
+				} );
 
 				$( document ).on( 'bb_draft_activity_loaded', function ( event, activity_data ) {
-					if ( activity_data.topic_id ) {
+					if ( activity_data && activity_data.topic_id ) {
 						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
+						var topicId = activity_data.topic_id;
+						if ( activity_data.topic_lists ) {
+							bp.Nouveau.Activity.postForm.model.set( 'topic_lists', activity_data.topic_lists );
+							Backbone.trigger( 'topic:update', activity_data.topic_lists );
+
+							bp.Nouveau.Activity.postForm.model.set( 'topic_id', topicId );
+							bp.draft_activity.data.topic_id = topicId;
+
+							setTimeout( function () {
+								var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + topicId + '"]' );
+								if ( $topicElement.length > 0 ) {
+									$topicElement.addClass( 'selected' );
+									var topicName = $topicElement.text().trim();
+									$( '.bb-topic-selector-button' ).text( topicName );
+									bp.Nouveau.Activity.postForm.model.set( 'topic_name', topicName );
+									bp.draft_activity.data.topic_name = topicName;
+								}
+							}, 50 ); // Short timeout to ensure the selector is updated
+						} else {
+							bp.Nouveau.Activity.postForm.model.set( 'topic_id', topicId );
+							bp.draft_activity.data.topic_id = topicId;
+
+							var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + topicId + '"]' );
+							if ( $topicElement.length > 0 ) {
+								$topicElement.addClass( 'selected' );
+								var topicName = $topicElement.text().trim();
+								bp.Nouveau.Activity.postForm.model.set( 'topic_name', topicName );
+								bp.draft_activity.data.topic_name = topicName;
+							}
+						}
 					} else {
 						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+						bp.Nouveau.Activity.postForm.model.set( 'topic_id', 0 );
+						bp.draft_activity.data.topic_id = 0;
+
+						bp.Nouveau.Activity.postForm.model.set( 'topic_name', '' );
+						bp.draft_activity.data.topic_name = '';
 					}
 				} );
-				
-				$( document ).on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
-				$( document ).ready( this.handleUrlHashTopic.bind( this ) );
+				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
+
+				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
 			}
 		},
 

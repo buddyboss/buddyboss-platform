@@ -93,6 +93,7 @@ class BB_Activity_Topics_Manager {
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_add_topic_id_to_query_string' ), 20, 1 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
+		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
 	}
 
 	/**
@@ -417,5 +418,27 @@ class BB_Activity_Topics_Manager {
 		}
 
 		return $qs;
+	}
+
+	/**
+	 * Get the JS strings for the activity topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $strings Array of strings.
+	 *
+	 * @return array Modified array of strings.
+	 */
+	public function bb_activity_topic_get_js_strings( $strings ) {
+		$topic_lists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics(
+			array(
+				'item_id'   => 0,
+				'item_type' => 'activity',
+			)
+		) : array();
+		$strings['activity']['params']['topics']['bb_is_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
+		$strings['activity']['params']['topics']['topic_lists']                   = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
+		return $strings;
 	}
 }

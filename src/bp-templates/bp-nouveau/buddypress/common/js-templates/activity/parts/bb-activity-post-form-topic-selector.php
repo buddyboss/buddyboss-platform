@@ -12,24 +12,26 @@
 <script type="text/html" id="tmpl-bb-activity-post-form-topic-selector">
 
 	<span class="bb-topic-selector-button">
-		<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
+		<# 
+		if ( data.topic_name ) { #>
+			{{ data.topic_name }}
+		<# } else { #>
+			<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
+		<# } #>
 	</span>
 	<div class="bb-topic-selector-list">
 		<ul>
-			<?php
-			$topics = bb_topics_manager_instance()->bb_get_topics(
-				array(
-					'item_id'   => 0,
-					'item_type' => 'activity',
-				)
-			);
-
-			if ( ! empty( $topics['topics'] ) ) {
-				foreach ( $topics['topics'] as $topic ) {
-					echo '<li><a href="#" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
-				}
-			}
-			?>		
+			<# _.each( data.topic_lists, function( topic ) { #>
+				<li>
+					<a href="#" 
+					   data-topic-id="{{ topic.topic_id }}" 
+					   data-topic-rel-id="{{ topic.id }}"
+					   <# if (data.topic_id && data.topic_id == topic.topic_id) { #>class="selected"<# } #>
+					>
+						{{ topic.name }}
+					</a>
+				</li>
+			<# }); #>
 		</ul>
 	</div>
 </script>

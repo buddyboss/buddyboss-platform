@@ -516,24 +516,6 @@ window.bp = window.bp || {};
 				self.postForm.model.set( 'poll', pollObject );
 				self.postForm.model.set( 'poll_id', activity_data.poll.id );
 			}
-
-			var topicId = activity_data.topic_id;
-			if ( topicId ) {
-				self.postForm.model.set( 'topic_id', topicId );
-
-				// Set a timeout to ensure the DOM is fully loaded.
-				setTimeout( function () {
-					// Try a direct selector first.
-					var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + topicId + '"]' );
-
-					if ( $topicElement.length > 0 ) {
-						$topicElement.addClass( 'selected' );
-
-						var topicName = $topicElement.text().trim();
-						$( '.bb-topic-selector-button' ).text( topicName );
-					}
-				}, 300 );
-			}
 			
 			var tool_box = $( '.activity-form.focus-in #whats-new-toolbar' );
 
@@ -1230,7 +1212,6 @@ window.bp = window.bp || {};
 					'link_scrapping',
 					'link_loading',
 					'posting',
-					'topic_name',
 				]
 			);
 
@@ -1270,8 +1251,17 @@ window.bp = window.bp || {};
 				);
 			}
 
-			if ( undefined !== bp.draft_activity.data && undefined !== bp.draft_activity.data.topic_id ) {
-				self.postForm.model.set( 'topic_id', bp.draft_activity.data.topic_id );
+			// Add this code to save topic data in draft data.
+			if ( ! _.isUndefined( bp.draft_activity.data ) ) {
+				if ( ! _.isUndefined( bp.draft_activity.data.topic_id ) ) {
+					self.postForm.model.set( 'topic_id', parseInt( bp.draft_activity.data.topic_id ) );
+				}
+				if ( ! _.isUndefined( bp.draft_activity.data.topic_name ) ) {
+					self.postForm.model.set( 'topic_name', bp.draft_activity.data.topic_name );
+				}
+				if ( ! _.isUndefined( bp.draft_activity.data.topic_lists ) ) {
+					bp.draft_activity.data.topic_lists = self.postForm.model.get( 'topic_lists' );
+				}
 			}
 
 			// Set Draft activity data.
@@ -4209,6 +4199,22 @@ window.bp = window.bp || {};
 						whats_new_form.find( '.bb-post-poll-button' ).addClass( 'bp-hide' );
 					}
 
+					// Render topic selector for the group activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+					) {
+						this.model.set( 'topic_name', '' );
+						this.model.set( 'topic_id', 0 );
+						this.model.set( 'topic_lists', this.model.get( 'topic_lists' ) );
+
+						bp.draft_activity.data.topic_id    = 0;
+						bp.draft_activity.data.topic_name  = '';
+						bp.draft_activity.data.topic_lists = this.model.get( 'topic_lists' );
+
+						Backbone.trigger( 'topic:update', this.model.get( 'topic_lists' ) );
+					}
 				} else {
 
 					// Clear schedule post data when change privacy.
@@ -4259,6 +4265,24 @@ window.bp = window.bp || {};
 					this.model.set( 'group_name', '' );
 					this.model.set( 'group_image', '' );
 					this.model.set( 'group-privacy', '' );
+
+					// Set topic lists for the global activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
+					) {
+						this.model.set( 'topic_lists', BP_Nouveau.activity.params.topics.topic_lists );
+						this.model.set( 'topic_id', 0 );
+						this.model.set( 'topic_name', '' );
+
+						bp.draft_activity.data.topic_id    = 0;
+						bp.draft_activity.data.topic_name  = '';
+						bp.draft_activity.data.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+
+						Backbone.trigger( 'topic:update', this.model.get( 'topic_lists' ) );
+					}
 
 					bp.draft_activity.data.item_id            = 0;
 					bp.draft_activity.data.group_name         = '';
@@ -4489,8 +4513,45 @@ window.bp = window.bp || {};
 					this.model.set( 'item_name', model.get( 'name' ) );
 					this.model.set( 'group_image', model.get( 'avatar_url' ) );
 					this.model.set( 'group_url', model.get( 'group_url' ) );
+
+					// Set topic lists for the group activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+					) {
+						var topic_lists = model.get( 'topic_lists' );
+						topic_lists     = ! _.isUndefined( topic_lists ) ? topic_lists : [];
+
+						this.model.set( 'topic_lists', topic_lists );
+						bp.draft_activity.data.topic_lists = topic_lists;
+
+						Backbone.trigger( 'topic:update', topic_lists );
+
+						if ( topic_lists.length > 0 ) {
+							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.whats-new-topic-selector' ).addClass( 'bp-hide' );
+						}
+					}
 				} else {
 					this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
+
+					// Set topic lists for the global activity.
+					if (
+						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
+					) {
+						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+						topic_lists     = ! _.isUndefined( topic_lists ) ? topic_lists : [];
+
+						this.model.set( 'topic_lists', topic_lists );
+						bp.draft_activity.data.topic_lists = topic_lists;
+
+						Backbone.trigger( 'topic:update', topic_lists );
+					}
 				}
 			},
 
@@ -5209,9 +5270,18 @@ window.bp = window.bp || {};
 					}
 				) );
 
-				// TODO: Check if Topic is enabled.
-				if  ( bp.Views && bp.Views.TopicSelector ) {
-					this.views.add(new bp.Views.TopicSelector({ model: this.model }));
+				// Render topic selector for the global activity.
+				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+					! _.isUndefined( bp.Views.TopicSelector ) &&
+					! this.model.get( 'has_topic_selector' )
+				) {
+					if ( 0 === $( '.whats-new-topic-selector' ).length ) {
+						this.views.add( new bp.Views.TopicSelector( { model : this.model } ) );
+						this.model.set( 'has_topic_selector', true );
+					}
 				}
 
 				if( bp.Views.activitySchedulePost !== undefined ) {
