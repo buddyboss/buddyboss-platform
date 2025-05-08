@@ -628,20 +628,30 @@ window.bp = window.bp || {};
 			var $topicItem = $( event.currentTarget );
 			var topicId    = $topicItem.data( 'topic-id' );
 			var topicHash  = $topicItem.attr( 'href' );
-			
+
+			// If the clicked topic is already selected, don't do anything.
+			if ( $topicItem.hasClass( 'selected active' ) ) {
+				return;
+			}
+
 			// Update the URL to include the topic slug (or remove it for "All").
 			if ( history.pushState ) {
 				var newUrl;
-				if ( ! topicId || $topicItem.hasClass('all') || topicHash.toLowerCase() === 'all') {
+				if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
 					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
 				} else {
 					newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + topicHash;
 				}
-				window.history.pushState({ path: newUrl }, '', newUrl);
+				window.history.pushState( { path : newUrl }, '', newUrl );
 			}
 
-			$('.activity-topic-selector li a').removeClass('selected active');
-			$topicItem.addClass('selected active');
+			this.moveTopicPosition( {
+				$topicItem : $topicItem,
+				topicId    : topicId
+			} );
+
+			$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+			$topicItem.addClass( 'selected active' );
 
 			// Store the topic ID in BP's storage.
 			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
@@ -649,7 +659,7 @@ window.bp = window.bp || {};
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
 			}
-			
+
 			// Use an existing BuddyBoss activity filter system.
 			bp.Nouveau.Activity.filterActivity( event );
 		},
@@ -667,6 +677,70 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+
+		moveTopicPosition : function ( args ) {
+			var $topicItem = args.$topicItem;
+			var topicId    = args.topicId;
+
+			// Get topic container and elements.
+			var $topicSelector = $( '.activity-topic-selector' );
+			var $topicList     = $topicSelector.find( '> ul' );
+			var $moreButton    = $topicList.find( 'li:has(a.more-action-button)' ); // Find the "More" button
+
+			// If this is a click on a dropdown item.
+			var isDropdownItem = $topicItem.closest( '.bb_nav_more_dropdown' ).length > 0;
+
+			// If not "All", and it's a dropdown item, perform reordering.
+			if ( topicId && ! $topicItem.hasClass( 'all' ) && isDropdownItem ) {
+				// Get the last visible topic (last one before More button, which will be moved to dropdown).
+				var $lastVisibleItem = $moreButton.prev( 'li' );
+
+				// For the clicked item in the dropdown, clone it with all data and events
+				var $clickedListItem   = $topicItem.closest( 'li' );
+				var $clonedClickedItem = $clickedListItem.clone( true );
+
+				// Insert the cloned dropdown item after "All".
+				$topicList.find( 'li:first-child' ).after( $clonedClickedItem );
+
+				// For the last visible item, clone it with all data and events.
+				var $clonedLastItem = $lastVisibleItem.clone( true );
+
+				// Find the dropdown and add the cloned last item to it.
+				// Get the dropdown directly instead of relying on a class.
+				var $dropdown = $( '.more-action-button' ).closest( 'li' ).find( 'ul' );
+				if ( ! $dropdown.length ) {
+					// If not found, try another approach to find the dropdown.
+					$dropdown = $( 'ul.bb_nav_more_dropdown' );
+				}
+
+				if ( $dropdown.length ) {
+					$dropdown.prepend( $clonedLastItem );
+
+					// Remove the clicked item from dropdown - more reliable approach.
+					// Find all items in dropdown with the same topic ID.
+					$dropdown.find( 'li a' ).each( function () {
+						var $a = $( this );
+						if ( $a.data( 'topic-id' ) === topicId ) {
+							$a.closest( 'li' ).remove();
+						}
+					} );
+
+					// Remove the last visible item.
+					$lastVisibleItem.remove();
+
+					// Add a delay to ensure the DOM has been updated.
+					setTimeout( function () {
+						// Double-check and remove any duplicate items with this topic ID from dropdown.
+						$dropdown.find( 'li a' ).each( function () {
+							var $a = $( this );
+							if ( $a.data( 'topic-id' ) === topicId ) {
+								$a.closest( 'li' ).remove();
+							}
+						} );
+					}, 100 );
+				}
+			}
+		}
 	};
 
 	$(
