@@ -17,29 +17,31 @@ if ( is_user_logged_in() ) :
 endif;
 
 bp_nouveau_template_notices();
-?>
-<div class="activity-topic-selector">
-	<ul>
-		<li>
-			<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
-		</li>
-		<?php
-		$topics = bb_topics_manager_instance()->bb_get_topics(
-			array(
-				'item_id'   => 0,
-				'item_type' => 'activity',
-			)
-		);
 
-		if ( ! empty( $topics['topics'] ) ) {
-			foreach ( $topics['topics'] as $topic ) {
-				echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+$topics = bb_topics_manager_instance()->bb_get_topics(
+	array(
+		'item_id'   => 0,
+		'item_type' => 'activity',
+	)
+);
+if ( ! empty( $topics['topics'] ) ) {
+	?>
+	<div class="activity-topic-selector">
+		<ul>
+			<li>
+				<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+			</li>
+			<?php
+			if ( ! empty( $topics['topics'] ) ) {
+				foreach ( $topics['topics'] as $topic ) {
+					echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+				}
 			}
-		}
-		?>
-	</ul>
-</div>
-<?php
+			?>
+		</ul>
+	</div>
+	<?php
+}
 if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 	echo '<div class="flex activity-head-bar">';
 	bp_get_template_part( 'common/search-and-filters-bar' );

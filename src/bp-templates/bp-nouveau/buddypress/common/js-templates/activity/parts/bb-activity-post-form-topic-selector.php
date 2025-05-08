@@ -11,27 +11,29 @@
 ?>
 <script type="text/html" id="tmpl-bb-activity-post-form-topic-selector">
 
-	<span class="bb-topic-selector-button">
-		<# 
-		if ( data.topic_name ) { #>
-			{{ data.topic_name }}
-		<# } else { #>
-			<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
-		<# } #>
-	</span>
-	<div class="bb-topic-selector-list">
-		<ul>
-			<# _.each( data.topic_lists, function( topic ) { #>
-				<li>
-					<a href="#" 
-					   data-topic-id="{{ topic.topic_id }}" 
-					   data-topic-rel-id="{{ topic.id }}"
-					   <# if (data.topic_id && data.topic_id == topic.topic_id) { #>class="selected"<# } #>
-					>
-						{{ topic.name }}
-					</a>
-				</li>
-			<# }); #>
-		</ul>
-	</div>
+	<# if ( data.topic_lists.length > 0 ) { #>
+		<span class="bb-topic-selector-button">
+			<# 
+			if ( data.topic_name ) { #>
+				{{ data.topic_name }}
+			<# } else { #>
+				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
+			<# } #>
+		</span>
+		<div class="bb-topic-selector-list">
+			<ul>
+				<# _.each( data.topic_lists, function( topic ) { #>
+					<li>
+						<a href="#" 
+						data-topic-id="{{ topic.topic_id }}" 
+						data-topic-rel-id="{{ topic.id }}"
+						<# if (data.topic_id && data.topic_id == topic.topic_id) { #>class="selected"<# } #>
+						>
+							{{ topic.name }}
+						</a>
+					</li>
+				<# }); #>
+			</ul>
+		</div>
+	<# } #>
 </script>

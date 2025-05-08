@@ -572,7 +572,7 @@ window.bp = window.bp || {};
 		 * Add frontend listeners.
 		 */
 		addFrontendListeners : function () {
-			if ( BBTopicsManager.topicsLocalize ) {
+			if ( BBTopicsManager.topicsLocalize && BP_Nouveau.activity.params.topics.topic_lists.length > 0 ) {
 				this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
 				this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
 
