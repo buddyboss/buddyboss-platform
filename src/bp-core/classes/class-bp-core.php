@@ -426,4 +426,17 @@ class BP_Core extends BP_Component {
 
 		parent::register_post_types();
 	}
+
+	/**
+	 * Register the BP Core Blocks.
+	 *
+	 * @since 9.0.0
+	 * @since 12.0.0 Use the WP Blocks API v2.
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for
+	 *                      description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
 }

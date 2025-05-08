@@ -578,6 +578,18 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			parent::setup_cache_groups();
 		}
+
+		/**
+		 * Register the BP Forums Blocks.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param array $blocks Optional. See BP_Component::blocks_init() for
+		 * description.
+		 */
+		public function blocks_init( $blocks = array() ) {
+			parent::blocks_init( array() );
+		}
 	}
 endif;
 

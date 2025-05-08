@@ -315,4 +315,17 @@ class BP_Notifications_Component extends BP_Component {
 	public function rest_api_init( $controllers = array() ) {
 		parent::rest_api_init( array( 'BP_REST_Notifications_Endpoint' ) );
 	}
+
+	/**
+	 * Register the BP Notifications Blocks.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for
+	 * description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
+
 }

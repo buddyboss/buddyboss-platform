@@ -442,4 +442,16 @@ class BP_Messages_Component extends BP_Component {
 			)
 		);
 	}
+
+	/**
+	 * Register the BP Messages Blocks.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for
+	 * description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
+	}
 }

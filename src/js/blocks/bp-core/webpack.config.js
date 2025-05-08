@@ -13,14 +13,14 @@ module.exports = {
             "block-data/index": {
 				import: './src/js/blocks/bp-core/block-assets/block-data.js',
 				library: {
-					name: [ 'bp', 'blockData' ],
+					name: [ 'buddyboss', 'blockData' ],
 					type: 'window',
 				},
 			},
 			"block-components/index": {
 				import: './src/js/blocks/bp-core/block-components/block-components.js',
 				library: {
-					name: [ 'bp', 'blockComponents' ],
+					name: [ 'buddyboss', 'blockComponents' ],
 					type: 'window',
 				},
 			},
@@ -39,9 +39,9 @@ module.exports = {
 		new DependencyExtractionWebpackPlugin( {
 			requestToExternal( request ) {
 				if ( request === '@buddypress/block-components' ) {
-					return [ 'bp', 'blockComponents' ];
+					return [ 'buddyboss', 'blockComponents' ];
 				} else if ( request === '@buddypress/block-data' ) {
-					return [ 'bp', 'blockData' ];
+					return [ 'buddyboss', 'blockData' ];
 				}
 			},
 			requestToHandle( request ) {
