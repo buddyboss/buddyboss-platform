@@ -1,6 +1,10 @@
 {
 	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
+		"@wordpress/babel-preset-default": "^7.32.0",
+		"@wordpress/browserslist-config": "^5.31.0",
+		"@wordpress/scripts": "^26.19.0",
+		"@wordpress/env": "^10.8.0",
 		"@wordpress/stylelint-config": "^19.1.0",
 		"apidoc": "^0.22.0",
 		"grunt": "^1.4.1",
@@ -38,6 +42,12 @@
 	},
 	"engines": {
 		"node": ">=14.15.0"
+	},
+	"scripts": {
+		"build:blocks": "npm run build:block:core",
+		"build:block:core": "wp-scripts build --webpack-src-dir=src/js/blocks/bp-core --config src/js/blocks/bp-core/webpack.config.js",
+		"build:admin": "wp-scripts build --webpack-src-dir=src/js/admin --config src/js/admin/webpack.config.js && grunt move:admin:js",
+		"wp-env": "wp-env"
 	},
 	"license": "GPL-2.0-or-later",
 	"version": "3.1.0",
