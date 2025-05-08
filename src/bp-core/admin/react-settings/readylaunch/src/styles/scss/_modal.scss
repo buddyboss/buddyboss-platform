@@ -64,6 +64,10 @@ body.bb-rl-help-modal-open {
 		animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 		padding-top: 60px;
 		height: calc(100vh - 32px); // Calculated height to fit the modal content
+
+		@media screen and (max-width: 782px) {
+			height: calc(100vh - 46px);
+		}
 	}
 
 	.bb-rl-help-modal-header {

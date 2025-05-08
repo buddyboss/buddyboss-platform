@@ -34,7 +34,7 @@
 	}
 
 	#wpfooter {
-		padding-left: 12px;
+		display: none;
 	}
 }
 
@@ -368,6 +368,11 @@
 		border-bottom: none;
 		margin-bottom: 0;
 	}
+
+	@media screen and (max-width: $lg) {
+		flex-direction: column;
+		gap: $bb-rl-space-200;
+	}
 }
 
 .field-label {
@@ -388,10 +393,18 @@
 		margin: 0;
 		color: $bb-rl-black-60;
 	}
+
+	@media screen and (max-width: $lg) {
+		width: 100%;
+	}
 }
 
 .field-input {
 	width: 70%;
+
+	@media screen and (max-width: $lg) {
+		width: 100%;
+	}
 
 	input[type="email"],
 	input[type="number"],
