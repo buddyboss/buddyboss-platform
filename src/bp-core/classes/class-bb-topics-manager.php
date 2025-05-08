@@ -883,7 +883,10 @@ class BB_Topics_Manager {
 
 		// permission_type.
 		if ( ! empty( $r['permission_type'] ) ) {
-			$where_conditions[] = $this->wpdb->prepare( 'tr.permission_type = %s', $r['permission_type'] );
+			$r['permission_type'] = is_array( $r['permission_type'] ) ? $r['permission_type'] : array( $r['permission_type'] );
+			$permission_types     = array_map( 'sanitize_text_field', $r['permission_type'] );
+			$placeholders         = array_fill( 0, count( $permission_types ), '%s' );
+			$where_conditions[]   = $this->wpdb->prepare( 'tr.permission_type IN (' . implode( ',', $placeholders ) . ')', $permission_types ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 
 		// user_id.
