@@ -17,11 +17,11 @@
 	<div class="bb-topic-selector-list">
 		<ul>
 			<?php
-			$topics = bb_topics_manager_instance()->bb_get_topics( 
+			$topics = bb_topics_manager_instance()->bb_get_topics(
 				array(
-					'item_id' => 0,
+					'item_id'   => 0,
 					'item_type' => 'activity',
-				) 
+				)
 			);
 
 			if ( ! empty( $topics['topics'] ) ) {
