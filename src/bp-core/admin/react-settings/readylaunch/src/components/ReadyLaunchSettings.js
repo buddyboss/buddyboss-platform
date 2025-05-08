@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { ToggleControl, TextControl, Spinner, Notice, ColorPicker, RadioControl, Button, SelectControl, ColorIndicator, Popover } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -44,6 +44,10 @@ export const ReadyLaunchSettings = () => {
 	const [isHelpLoading, setHelpLoading] = useState(false);
 	const [helpError, setHelpError] = useState(null);
 
+	// Create debounced functions using useRef to maintain references
+	const debouncedSaveRef = useRef();
+	const debouncedTextChangeRef = useRef();
+
 	// Load settings on component mount
 	useEffect(() => {
 		loadSettings();
@@ -77,17 +81,89 @@ export const ReadyLaunchSettings = () => {
 		setHasUserMadeChanges(false);
 	};
 
+	// Initialize the debounced save function
+	useEffect(() => {
+		debouncedSaveRef.current = debounce((newSettings) => {
+			if (initialLoad || Object.keys(changedFields).length === 0) {
+				return;
+			}
+
+			setIsSaving(true);
+			saveSettings(changedFields)
+				.then((data) => {
+					if (data) {
+						setNotification({
+							status: 'success',
+							message: __('Settings saved.', 'buddyboss'),
+						});
+						setChangedFields({});
+					} else {
+						setNotification({
+							status: 'error',
+							message: __('Error saving settings.', 'buddyboss'),
+						});
+					}
+				})
+				.catch(() => {
+					setNotification({
+						status: 'error',
+						message: __('Error saving settings.', 'buddyboss'),
+					});
+				})
+				.finally(() => {
+					setIsSaving(false);
+					setTimeout(() => setNotification(null), 3000);
+				});
+		}, 1000);
+
+		// Initialize the debounced text change function
+		debouncedTextChangeRef.current = debounce((name, value, currentSettings) => {
+			if (currentSettings[name] === value) {
+				return;
+			}
+			setChangedFields(prev => ({
+				...prev,
+				[name]: value
+			}));
+			setHasUserMadeChanges(true);
+		}, 1000);
+
+		// Cleanup function
+		return () => {
+			if (debouncedSaveRef.current?.cancel) {
+				debouncedSaveRef.current.cancel();
+			}
+			if (debouncedTextChangeRef.current?.cancel) {
+				debouncedTextChangeRef.current.cancel();
+			}
+		};
+	}, [initialLoad, changedFields]); // Dependencies for debouncedSave
+
 	// Generic handler for simple value changes
 	const handleSettingChange = (name) => (value) => {
-		setHasUserMadeChanges(true);
-		setChangedFields(prev => ({
-			...prev,
-			[name]: value
-		}));
 		setSettings(prevSettings => ({
 			...prevSettings,
 			[name]: value
 		}));
+		setChangedFields(prev => ({
+			...prev,
+			[name]: value
+		}));
+		setHasUserMadeChanges(true);
+	};
+
+	// Specific handler for text input changes
+	const handleTextChange = (name) => (value) => {
+		// Update visual state immediately
+		setSettings(prevSettings => ({
+			...prevSettings,
+			[name]: value
+		}));
+
+		// Use the debounced function from ref
+		if (debouncedTextChangeRef.current) {
+			debouncedTextChangeRef.current(name, value, settings);
+		}
 	};
 
 	// Handler for nested settings (for pages and sidebars)
@@ -140,72 +216,12 @@ export const ReadyLaunchSettings = () => {
 		}
 	};
 
-	// Debounced save function
-	const debouncedSave = useCallback(debounce(async (newSettings) => {
-		// Don't save if we're still loading or it's the initial load
-		if (isLoading || initialLoad) {
-			return;
-		}
-		
-		setIsSaving(true);
-		
-		try {
-			// Ensure all keys are included in the payload, even if false
-			const payload = Object.keys(changedFields).reduce((acc, key) => {
-				if (typeof changedFields[key] === 'object' && changedFields[key] !== null) {
-					// For nested objects, include all keys
-					acc[key] = {
-						...settings[key],
-						...changedFields[key]
-					};
-				} else {
-					acc[key] = changedFields[key];
-				}
-				return acc;
-			}, {});
-
-			const data = await saveSettings(payload);
-			if (data) {
-				setNotification({
-					status: 'success',
-					message: __('Settings saved.', 'buddyboss'),
-				});
-				// Reset the user changes flag and changed fields after successful save
-				setHasUserMadeChanges(false);
-				setChangedFields({});
-				setIsSaving(false);
-			} else {
-				setNotification({
-					status: 'error',
-					message: __('Error saving settings.', 'buddyboss'),
-				});
-				setHasUserMadeChanges(false);
-				setIsSaving(false);
-			}
-			// Auto-dismiss notification
-			setTimeout(() => setNotification(null), 3000);
-		} catch (error) {
-			setIsSaving(false);
-			setNotification({
-				status: 'error',
-				message: __('Error saving settings.', 'buddyboss'),
-			});
-			setTimeout(() => setNotification(null), 3000);
-		}
-	}, 1000), [changedFields, isLoading, initialLoad, settings]);
-
-	// Auto-save when settings change (except on initial load)
+	// Effect to trigger save when changedFields updates
 	useEffect(() => {
-		// Only save when:
-		// 1. Not the initial load
-		// 2. Not currently loading
-		// 3. User has made changes
-		// 4. Not currently saving
-		// 5. There are actual changes to save
-		if (!initialLoad && !isLoading && hasUserMadeChanges && !isSaving && Object.keys(changedFields).length > 0) {
-			debouncedSave(settings);
+		if (!initialLoad && Object.keys(changedFields).length > 0 && debouncedSaveRef.current) {
+			debouncedSaveRef.current(settings);
 		}
-	}, [changedFields, initialLoad, isLoading, hasUserMadeChanges, isSaving, debouncedSave]);
+	}, [changedFields, initialLoad, settings]);
 
 	// Toggle section expansion
 	const toggleSection = (section) => {
@@ -601,7 +617,7 @@ export const ReadyLaunchSettings = () => {
 									<TextControl
 										placeholder="Type community name"
 										value={settings.blogname}
-										onChange={handleSettingChange('blogname')}
+										onChange={handleTextChange('blogname')}
 									/>
 									<p className="field-description">Description texts goes here</p>
 								</div>
