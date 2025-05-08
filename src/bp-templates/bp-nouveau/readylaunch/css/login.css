@@ -2470,6 +2470,7 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   background-color: var(--bb-rl-background-color);
   padding: var(--bb-rl-space-200) var(--bb-rl-space-400);
   border-bottom: 1px solid var(--bb-rl-border-tertiary-color);
+  margin-bottom: var(--bb-rl-space-500);
 }
 
 .bb-rl-login-header-logo img {
@@ -2526,4 +2527,137 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
   font-size: 14px;
   font-weight: 400;
   color: var(--bb-rl-text-color);
+}
+
+h1.wp-login-logo a {
+  width: 100px;
+  height: 25px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(../images/logo.png);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.login-heading h2 {
+  color: var(--bb-rl-text-color);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#login {
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+  border-radius: var(--bb-rl-radius-lg);
+  width: 432px;
+}
+
+#login form {
+  border: 0;
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+  overflow: initial;
+}
+
+.login label {
+  color: var(--bb-rl-text-secondary-color);
+  font-weight: 500;
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.login form p {
+  float: none;
+}
+
+.login form .input,
+.login input[type="text"] {
+  color: var(--bb-rl-text-color);
+  font-size: 14px;
+  border-color: var(--bb-rl-border-quaternary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: 3px 8px;
+}
+
+.login form .input:focus,
+.login input[type="text"]:focus {
+  border-color: var(--bb-rl-border-quaternary-color);
+  outline: 1px solid var(--bb-rl-primary-color);
+  box-shadow: none;
+}
+
+.login input.password-input {
+  font-family: inherit;
+}
+
+.login .button-primary {
+  width: 100%;
+  border-radius: var(--bb-rl-radius-base);
+  background-color: var(--bb-rl-primary-color);
+  color: var(--bb-rl-text-white-color);
+  font-size: 14px;
+  font-weight: 500;
+  border: 0;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  margin-top: var(--bb-rl-space-200);
+  float: none;
+}
+
+.login .privacy-policy-page-link {
+  margin: var(--bb-rl-space-200) 0 0;
+}
+
+.login .privacy-policy-page-link a {
+  color: var(--bb-rl-text-color);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.login .wp-hide-pw .dashicons:before {
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 22px;
+}
+
+.login .dashicons-visibility:before {
+  content: "\e220";
+}
+
+.login .dashicons-hidden:before {
+  content: "\e224";
+}
+
+.login #nav,
+.login:not(.login-action-resetpass) #backtoblog {
+  display: none;
+}
+
+.login .forgetmenot {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+}
+
+.login .forgetmenot label {
+  color: var(--bb-rl-text-color);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.login .lostmenot {
+  float: right;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.login .lostmenot a {
+  color: var(--bb-rl-text-color);
+}
+
+.login .button.wp-hide-pw {
+  padding: 5px 12px;
+  width: auto;
 }

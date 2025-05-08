@@ -181,7 +181,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Login page.
 			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
-			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
+			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );		
+			add_filter( 'login_message', array( $this, 'signin_login_message' ) );
+			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 		}
 
 		/**
@@ -1925,6 +1927,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_enqueue_scripts() {
 			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css' );
 			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css' );
+			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css' );
 		}
 
 		/**
@@ -1942,6 +1945,47 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					<a href="' . esc_url( wp_registration_url() ) . '" class="bb-rl-button bb-rl-button--secondary-fill bb-rl-button--small">' . esc_html__( 'Sign Up', 'buddyboss' ) . '</a>
 				</div>
 			</header>';
+		}
+
+		/**
+		 * Modify the login message.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $message The login message.
+		 *
+		 * @return string $message The modified login message.
+		 */
+		public function signin_login_message( $message ) {
+			$home_url                 = get_bloginfo( 'url' );
+			$confirm_admin_email_page = false;
+			if ( $GLOBALS['pagenow'] === 'wp-login.php' && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'confirm_admin_email' ) {
+				$confirm_admin_email_page = true;
+			}
+	
+			if ( $confirm_admin_email_page === false ) {
+				if ( empty( $message ) ) {
+					return sprintf(
+						'<div class="login-heading"><h2>%s</h2></div>',
+						__( 'Sign in to your account', 'buddyboss' )
+					);
+				} else {
+					return $message;
+				}
+			} else {
+				return $message;
+			}
+		}
+
+		/**
+		 * Modify the login form to add a forgot password link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_rl_login_custom_form() {
+			?>
+			<p class="lostmenot"><a href="<?php echo wp_lostpassword_url(); ?>"><?php esc_html_e('Forgot Password?', 'buddyboss'); ?></a></p>
+			<?php
 		}
 	}
 }
