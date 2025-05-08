@@ -3482,6 +3482,9 @@ input.search-query-input {
   padding: 8px;
   background-color: #fff;
   border-radius: 10px;
+  max-height: 260px;
+  overflow: auto;
+  margin-bottom: 30px;
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 }
 
