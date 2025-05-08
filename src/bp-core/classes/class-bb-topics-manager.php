@@ -243,9 +243,18 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_add_topic_ajax() {
+		if ( ! isset( $_POST['name'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Topic name is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
 		check_ajax_referer( 'bb_add_topic', 'nonce' );
 
-		$name               = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$name               = sanitize_text_field( wp_unslash( $_POST['name'] ) );
 		$slug               = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
 		$permission_type    = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
 		$previous_topic_id  = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
@@ -253,7 +262,7 @@ class BB_Topics_Manager {
 		$item_type          = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
 		$action_from        = isset( $_POST['action_from'] ) ? sanitize_text_field( wp_unslash( $_POST['action_from'] ) ) : 'admin';
 		$is_global_activity = isset( $_POST['is_global_activity'] ) ? (bool) sanitize_text_field( wp_unslash( $_POST['is_global_activity'] ) ) : false;
-		
+
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
 		} else {
@@ -1021,10 +1030,18 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_edit_topic_ajax() {
+		if ( ! isset( $_POST['topic_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Topic ID is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
 
 		check_ajax_referer( 'bb_edit_topic', 'nonce' );
 
-		$topic_id  = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
 		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
 		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
@@ -1084,9 +1101,18 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_delete_topic_ajax() {
+		if ( ! isset( $_POST['topic_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'Topic ID is required.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
 		check_ajax_referer( 'bb_delete_topic', 'nonce' );
 
-		$topic_id = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$topic_id = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
 
 		$deleted = $this->bb_delete_topic( $topic_id );
 
@@ -1378,13 +1404,16 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_update_topics_order_ajax() {
+		if ( ! isset( $_POST['topic_ids'] ) || ! is_array( $_POST['topic_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'No topic order provided.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
 
 		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
-
-		// Get the topic IDs array from the request.
-		if ( ! isset( $_POST['topic_ids'] ) || ! is_array( $_POST['topic_ids'] ) ) {
-			wp_send_json_error( array( 'error' => __( 'No topic order provided.', 'buddyboss' ) ) );
-		}
 
 		$topic_ids = array_map( 'absint', $_POST['topic_ids'] );
 

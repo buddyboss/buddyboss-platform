@@ -3990,9 +3990,13 @@ function bb_load_topics_manager() {
  */
 function bb_activity_save_topic_data( $activity ) {
 
+	if ( ! isset( $_POST['topic_id'] ) ) {
+		return;
+	}
+
 	check_admin_referer( 'post_update', '_wpnonce_post_update' );
 
-	$topic_id = isset( $_POST['topic_id'] ) ? intval( $_POST['topic_id'] ) : 0;
+	$topic_id = intval( $_POST['topic_id'] );
 	$item_id  = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
 	// If topic ID is provided, add the relationship.
 	if ( $topic_id ) {
