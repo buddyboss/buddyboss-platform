@@ -459,15 +459,17 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $button    = $( event.currentTarget );
-			var $topicItem = $button.closest( '.bb-activity-topic-item' );
-			var topicAttr  = $button.data( 'topic-attr' );
-			var topicId    = topicAttr.topic_id;
-			var nonce      = topicAttr.nonce;
-			var itemId     = topicAttr.item_id;
-			var itemType   = topicAttr.item_type;
+			var $button        = $( event.currentTarget );
+			var $topicItem     = $button.closest( '.bb-activity-topic-item' );
+			var topicAttr      = $button.data( 'topic-attr' );
+			var topicId        = topicAttr.topic_id;
+			var nonce          = topicAttr.nonce;
+			var itemId         = topicAttr.item_id;
+			var itemType       = topicAttr.item_type;
+			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
+			var confirmMessage = bbTopicsManagerVars.delete_topic_confirm.replace( '%s', topicName);
 
-			if ( confirm( bbTopicsManagerVars.delete_topic_confirm ) ) {
+			if ( confirm( confirmMessage ) ) {
 
 				// Prepare data for AJAX request.
 				var data = {

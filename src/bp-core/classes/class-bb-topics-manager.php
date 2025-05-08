@@ -144,8 +144,8 @@ class BB_Topics_Manager {
 			'bbTopicsManagerVars',
 			array(
 				'ajax_url'                      => admin_url( 'admin-ajax.php' ),
-				'delete_topic_confirm'          => esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' ),
-				'topics_limit'                  => $this->bb_topics_limit(),
+				/* translators: %s: Topic name */
+				'delete_topic_confirm'          => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'topic_tooltip_error'           => esc_html__( 'Please select a topic', 'buddyboss' ),
 				'bb_is_activity_topic_required' => bb_is_activity_topic_required(),
 				'bb_update_topics_order_nonce'  => wp_create_nonce( 'bb_update_topics_order' ),
