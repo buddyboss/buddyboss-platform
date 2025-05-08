@@ -508,7 +508,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				'item_id'   => 0,
 			)
 		);
-		$topics_limit_reached = bb_topics_manager_instance()->bb_topics_limit_reached();
+		$topics_limit_reached = bb_topics_manager_instance()->bb_topics_limit_reached(
+			array(
+				'item_type' => 'activity',
+				'item_id'   => 0,
+			)
+		);
 		?>
 		<div class="bb-activity-topics-wrapper">
 			<div class="bb-activity-topics-content">

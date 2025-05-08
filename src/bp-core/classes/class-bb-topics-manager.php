@@ -435,7 +435,7 @@ class BB_Topics_Manager {
 		}
 
 		// Check if we've reached the maximum number of topics (20).
-		if ( $this->bb_topics_limit_reached() ) {
+		if ( $this->bb_topics_limit_reached( $r ) ) {
 			$error_message = esc_html__( 'Maximum number of topics (20) has been reached.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
 				unset( $r );
@@ -1210,12 +1210,16 @@ class BB_Topics_Manager {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
+	 * @param array $r Array of arguments.
+	 *
 	 * @return bool True if the maximum number of topics has been reached, false otherwise.
 	 */
-	public function bb_topics_limit_reached() {
+	public function bb_topics_limit_reached( $r ) {
 		$topics_count = $this->bb_get_topics(
 			array(
 				'per_page'    => 1,
+				'item_type'   => $r['item_type'],
+				'item_id'     => $r['item_id'],
 				'count_total' => true,
 			)
 		);
