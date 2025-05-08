@@ -142,6 +142,36 @@
 	flex: 1;
 	padding: $bb-rl-space-300 $bb-rl-space-400;
 
+	.settings-saving-indicator {
+		max-width: 900px;
+		margin: 0 auto $bb-rl-space-200;
+		display: flex;
+		align-items: center;
+		gap: $bb-rl-space-100;
+
+		span {
+			color: $bb-rl-text-tertiary-color;
+		}
+
+		svg {
+			margin: 0;
+
+			path {
+				stroke: $bb-rl-background-brand-primary-color;
+			}
+		}
+	}
+
+	.settings-notice.components-notice {
+		max-width: 900px;
+		margin: 0 auto $bb-rl-space-200;
+
+		&.is-success {
+			border-left-color: $bb-rl-border-positive-secondary-color;
+			background-color: $bb-rl-background-positive-primary-color;
+		}
+	}
+
 	.components-form-toggle {
 		height: 20px;
 

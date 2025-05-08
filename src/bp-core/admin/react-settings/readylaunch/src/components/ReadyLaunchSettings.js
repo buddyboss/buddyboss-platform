@@ -1074,26 +1074,25 @@ export const ReadyLaunchSettings = () => {
 
 	return (
 		<>
-			{notification && (
-				<Notice
-					status={notification.status}
-					isDismissible={false}
-					className="settings-notice"
-				>
-					{notification.message}
-				</Notice>
-			)}
-			
-			{isSaving && (
-				<div className="settings-saving-indicator">
-					<Spinner />
-					<span>{__( 'Saving...', 'buddyboss' )}</span>
-				</div>
-			)}
-
 			<div className="bb-readylaunch-settings-container">
 				<Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
 				<div className="bb-readylaunch-settings-content">
+					{notification && (
+						<Notice
+							status={notification.status}
+							isDismissible={false}
+							className="settings-notice"
+						>
+							{notification.message}
+						</Notice>
+					)}
+					
+					{isSaving && (
+						<div className="settings-saving-indicator">
+							<Spinner />
+							<span>{__( 'Saving...', 'buddyboss' )}</span>
+						</div>
+					)}
 					{renderContent()}
 				</div>
 			</div>
