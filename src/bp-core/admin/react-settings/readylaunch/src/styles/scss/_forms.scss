@@ -5,7 +5,7 @@
 
 		@include bb-rl-text-medium;
 		text-transform: none;
-		color: $bb-rl-black;
+		color: $bb-rl-text-primary-color;
 	}
 
 	input[type="text"],
@@ -24,7 +24,7 @@
 
 		@include bb-rl-text-bolder;
 		background-color: $bb-rl-background-primary-color;
-		border: 1px solid $bb-rl-border-color-secondary;
+		border: 1px solid $bb-rl-border-secondary-color;
 		display: inline-block;
 		font-family: inherit;
 		font-style: inherit;
@@ -32,7 +32,7 @@
 		vertical-align: middle;
 		border-radius: $bb-rl-radius-md;
 		padding: 7px $bb-rl-space-100;
-		color: $bb-rl-black-80;
+		color: $bb-rl-text-tertiary-color;
 
 		&[type="submit"] {
 
@@ -53,14 +53,14 @@
 		background-position: right 0.8rem center;
 		background-color: $bb-rl-background-primary-color;
 		padding: 7px $bb-rl-space-300 7px $bb-rl-space-100;
-		border: 1px solid $bb-rl-border-color-secondary;
+		border: 1px solid $bb-rl-border-secondary-color;
 		display: inline-block;
 		font-family: inherit;
 		font-style: inherit;
 		outline: none;
 		vertical-align: middle;
 		border-radius: $bb-rl-radius-md;
-		color: $bb-rl-black-80;
+		color: $bb-rl-text-tertiary-color;
 
 		@include bb-rl-text-bolder;
 	}

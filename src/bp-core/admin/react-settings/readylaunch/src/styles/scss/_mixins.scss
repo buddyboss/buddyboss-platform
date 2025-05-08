@@ -86,7 +86,7 @@
 
 	&:focus-within {
 		background-color: $bb-rl-background-brand-primary-color;
-		outline: 2px solid $bb-rl-border-color-quinary;
+		outline: 2px solid $bb-rl-border-quinary-color;
 	}
 
 	&:disabled {
@@ -106,7 +106,7 @@
 	}
 
 	&:focus {
-		outline: 2px solid $bb-rl-border-color-quinary;
+		outline: 2px solid $bb-rl-border-quinary-color;
 		background-color: $bb-rl-background-secondary-color-hover;
 	}
 
@@ -117,10 +117,34 @@
 	}
 }
 
+@mixin bb-rl-button--brand-outline {
+	background-color: transparent;
+	color: $bb-rl-text-primary-color;
+	border: 1px solid $bb-rl-border-brand-primary-color;
+
+	&:hover {
+		background-color: transparent;
+		color: $bb-rl-text-primary-color;
+		border-color: $bb-rl-border-brand-primary-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-rl-border-brand-primary-color;
+		background-color: transparent;
+	}
+
+	&:disabled {
+		border: 1px solid $bb-rl-border-brand-tertiary-color;
+		background-color: transparent;
+		color: $bb-rl-text-disabled-color;
+		cursor: not-allowed;
+	}
+}
+
 @mixin bb-rl-button--outline {
 	background-color: transparent;
 	color: $bb-rl-text-primary-color;
-	border: 1px solid $bb-rl-border-color-tertiary;
+	border: 1px solid $bb-rl-border-tertiary-color;
 
 	&:hover {
 		background-color: $bb-rl-background-primary-color;
@@ -128,12 +152,12 @@
 	}
 
 	&:focus {
-		outline: 2px solid $bb-rl-border-color-quinary;
+		outline: 2px solid $bb-rl-border-quinary-color;
 		background-color: $bb-rl-background-primary-color;
 	}
 
 	&:disabled {
-		border: 1px solid $bb-rl-border-color-tertiary;
+		border: 1px solid $bb-rl-border-tertiary-color;
 		background-color: transparent;
 		color: $bb-rl-text-disabled-color;
 		cursor: not-allowed;

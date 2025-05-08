@@ -6,12 +6,12 @@
 		padding: $bb-rl-space-200 0;
 		margin: 0 $bb-rl-space-300;
 		width: calc(100% - ($bb-rl-space-300 * 2));
-		border-bottom: 1px solid $bb-rl-border-color-secondary;
+		border-bottom: 1px solid $bb-rl-border-secondary-color;
 
 		.components-modal__header-heading {
 
 			@include bb-rl-heading;
-			color: $bb-rl-black;
+			color: $bb-rl-text-primary-color;
 		}
 	}
 
@@ -19,9 +19,10 @@
 		padding: 0;
 
 		.link-modal-actions {
-			border-top: 1px solid $bb-rl-black-10;
+			border-top: 1px solid $bb-rl-border-secondary-color;
 			display: flex;
 			align-items: center;
+			justify-content: flex-end;
 			gap: $bb-rl-space-100;
 			margin: $bb-rl-space-200 -24px 0;
 			padding: $bb-rl-space-200 $bb-rl-space-300 $bb-rl-space-300;
@@ -42,7 +43,7 @@ body.bb-rl-help-modal-open {
 	position: fixed;
 	z-index: 9999;
 	inset: 0;
-	background: $bb-rl-black-60;
+	background: rgba(0, 0, 0, 0.6);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -76,7 +77,7 @@ body.bb-rl-help-modal-open {
 		justify-content: space-between;
 		padding: $bb-rl-space-200 $bb-rl-space-300;
 		margin: 0;
-		border-bottom: 1px solid $bb-rl-black-10;
+		border-bottom: 1px solid $bb-rl-border-secondary-color;
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -94,7 +95,7 @@ body.bb-rl-help-modal-open {
 		border: none;
 		font-size: 20px;
 		cursor: pointer;
-		color: $bb-rl-black-70;
+		color: $bb-rl-icon-primary-color;
 		line-height: 1;
 	}
 
@@ -102,7 +103,7 @@ body.bb-rl-help-modal-open {
 		padding: $bb-rl-space-300 $bb-rl-space-400;
 		overflow-y: auto;
 		height: 100%;
-		color: $bb-rl-black;
+		color: $bb-rl-text-secondary-color;
 
 		p {
 
@@ -114,7 +115,7 @@ body.bb-rl-help-modal-open {
 			margin: $bb-rl-space-100 0 $bb-rl-space-300;
 			list-style-type: disc;
 			padding-left: 1.5em;
-			color: $bb-rl-black-70;
+			color: $bb-rl-text-secondary-color;
 		}
 
 		table {

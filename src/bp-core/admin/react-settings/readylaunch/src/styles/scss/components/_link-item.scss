@@ -1,5 +1,4 @@
 // LinkItem Component Styles
-// This file should not import any other SCSS files to avoid circular dependencies
 .bb-rl-link-item {
 	margin-bottom: 12px;
 
@@ -10,12 +9,12 @@
 
 	i {
 		font-size: 20px;
-		color: $bb-rl-black-60;
+		color: $bb-rl-icon-primary-color;
 	}
 
 	.edit-link-button,
 	.delete-link-button {
-		color: $bb-rl-black-60;
+		color: $bb-rl-icon-primary-color;
 	}
 
 	.link-details > span {
@@ -32,13 +31,13 @@
 	.link-title {
 
 		@include bb-rl-text-medium;
-		color: $bb-rl-black;
+		color: $bb-rl-text-primary-color;
 	}
 
 	.link-url {
 
 		@include bb-rl-text;
-		color: $bb-rl-text-brand-primary-color;
+		color: $bb-rl-link-color;
 		padding: 3px 0;
 	}
 
@@ -51,7 +50,7 @@
 .custom-links-wrapper {
 
 	.bb-rl-link-item:last-of-type {
-		border-bottom: 1px solid $bb-rl-black-10;
+		border-bottom: 1px solid $bb-rl-border-secondary-color;
 		margin-bottom: 0;
 		padding-bottom: $bb-rl-space-200;
 	}

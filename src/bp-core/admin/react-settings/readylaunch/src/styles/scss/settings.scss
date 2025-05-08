@@ -56,7 +56,7 @@
 	background-color: $bb-rl-background-base-color;
 	margin: 0 -20px;
 	padding: 12px $bb-rl-space-300;
-	border-bottom: 1px solid $bb-rl-black-10;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -101,8 +101,8 @@
 /* Sidebar */
 .bb-readylaunch-sidebar {
 	width: 250px;
-	background-color: $bb-rl-background-base-color;
-	border-right: 1px solid $bb-rl-black-10;
+	background-color: $bb-rl-background-secondary-color;
+	border-right: 1px solid $bb-rl-background-primary-color-hover;
 	padding: $bb-rl-space-300 $bb-rl-space-200;
 
 	ul {
@@ -116,19 +116,19 @@
 		display: flex;
 		align-items: center;
 		padding: 12px $bb-rl-space-200;
-		color: $bb-rl-black-70;
+		color: $bb-rl-text-secondary-color;
 		cursor: pointer;
 		border-radius: $bb-rl-radius-base;
 		margin: 0;
 
 		&:hover {
-			background-color: $bb-rl-background-secondary-color;
+			background-color: $bb-rl-background-base-color;
 		}
 
 		&.active {
 			color: $bb-rl-text-primary-color;
 			font-weight: 500;
-			background-color: $bb-rl-background-secondary-color;
+			background-color: $bb-rl-background-base-color;
 		}
 
 		i {
@@ -177,7 +177,7 @@
 		height: 20px;
 
 		.components-form-toggle__track {
-			background-color: $bb-rl-black-20;
+			background-color: $bb-rl-background-tertiary-color;
 			border: 1px solid transparent;
 			height: 20px;
 			border-radius: $bb-rl-radius-full;
@@ -238,7 +238,7 @@
 		@include font-style(14px, 400, 18px);
 		padding: 0;
 		margin: 0 0 $bb-rl-space-200;
-		color: $bb-rl-black-60;
+		color: $bb-rl-text-tertiary-color;
 	}
 }
 
@@ -283,7 +283,7 @@
 	@include flex-between;
 	margin-bottom: $bb-rl-space-200;
 	padding: $bb-rl-space-200 0;
-	border-bottom: 1px solid $bb-rl-black-10;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
 
 	h3 {
 
@@ -297,7 +297,7 @@
 	@include flex-between;
 	margin-bottom: $bb-rl-space-200;
 	padding: $bb-rl-space-200 0;
-	border-bottom: 1px solid $bb-rl-black-10;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
 }
 
 .bb-rl-accordion-content {
@@ -315,7 +315,7 @@
 
 		> i {
 			font-size: 20px;
-			color: $bb-rl-black-60;
+			color: $bb-rl-icon-secondary-color;
 		}
 
 		label {
@@ -334,7 +334,7 @@
 
 	i {
 		font-size: 16px;
-		color: $bb-rl-black-40;
+		color: $bb-rl-icon-secondary-color;
 		font-weight: 500;
 	}
 
@@ -350,7 +350,7 @@
 	@include flex-center;
 	width: 20px;
 	height: 20px;
-	color: $bb-rl-black-60;
+	color: $bb-rl-icon-secondary-color;
 	font-size: 20px;
 	cursor: pointer;
 	background-color: transparent;
@@ -362,7 +362,7 @@
 	display: flex;
 	margin-bottom: $bb-rl-space-200;
 	padding-bottom: $bb-rl-space-200;
-	border-bottom: 1px solid $bb-rl-black-10;
+	border-bottom: 1px solid $bb-rl-border-secondary-color;
 
 	&:last-of-type {
 		border-bottom: none;
@@ -384,14 +384,14 @@
 		@include font-style(14px, 500, 18px);
 		display: block;
 		margin-bottom: $bb-rl-space-100;
-		color: $bb-rl-black;
+		color: $bb-rl-text-primary-color;
 	}
 
 	p {
 
 		@include bb-rl-text;
 		margin: 0;
-		color: $bb-rl-black-60;
+		color: $bb-rl-text-tertiary-color;
 	}
 
 	@media screen and (max-width: $lg) {
@@ -450,7 +450,7 @@
 		@include bb-rl-text-bolder;
 		display: block;
 		margin-bottom: $bb-rl-space-100;
-		color: $bb-rl-black;
+		color: $bb-rl-text-secondary-color;
 		padding: 3px 0;
 	}
 }
@@ -463,7 +463,7 @@
 
 	.color-picker-button {
 		display: inline-flex;
-		border: 1px solid $bb-rl-border-color-secondary;
+		border: 1px solid $bb-rl-border-secondary-color;
 		box-shadow: none;
 		border-radius: $bb-rl-radius-base;
 		height: 40px;
@@ -539,7 +539,7 @@
 		&.dark-logo-mode {
 
 			.image-preview {
-				background-color: $bb-rl-black;
+				background-color: $bb-rl-background-inverse-color;
 			}
 		}
 	}
@@ -553,7 +553,7 @@
 .bb-rl-settings .bb-rl-upload-image-button,
 .bb-rl-upload-image-button.components-button.has-icon {
 	background-color: $bb-rl-background-primary-color;
-	border: 1px dashed $bb-rl-border-color-secondary;
+	border: 1px dashed $bb-rl-border-secondary-color;
 	border-radius: $bb-rl-radius-md;
 	text-align: center;
 	display: inline-flex;
@@ -568,7 +568,7 @@
 
 	&:hover {
 		background-color: $bb-rl-background-primary-color-hover;
-		border-color: $bb-rl-border-color-tertiary;
+		border-color: $bb-rl-border-tertiary-color;
 	}
 }
 
@@ -582,7 +582,7 @@
 		max-width: 184px;
 		padding: $bb-rl-space-100;
 		border-radius: $bb-rl-radius-md;
-		border: 1px solid $bb-rl-border-color-tertiary;
+		border: 1px solid $bb-rl-border-tertiary-color;
 	}
 
 	.image-actions {
@@ -605,66 +605,5 @@
 
 	.new-link-inputs {
 		flex-direction: column;
-	}
-}
-
-/* LinkItem styles temporarily moved back from _linkitem.scss due to build issues */
-.bb-rl-link-item {
-	margin-bottom: 12px;
-
-	.link-item-content {
-		display: flex;
-		gap: $bb-rl-space-200;
-	}
-
-	i {
-		font-size: 20px;
-		color: $bb-rl-black-60;
-	}
-
-	.edit-link-button,
-	.delete-link-button {
-		color: $bb-rl-black-60;
-	}
-
-	.link-details > span {
-		display: flex;
-		align-items: center;
-		gap: $bb-rl-space-100;
-
-		i {
-			font-size: 16px;
-			color: $bb-rl-icon-primary-color;
-		}
-	}
-
-	.link-title {
-		@include bb-rl-text-medium;
-		color: $bb-rl-black;
-	}
-
-	.link-url {
-		@include bb-rl-text;
-		color: $bb-rl-text-brand-primary-color;
-		padding: 3px 0;
-	}
-
-	+ .add-link-button {
-		margin-top: $bb-rl-space-200;
-	}
-}
-
-/* Related wrapper styles */
-.custom-links-wrapper {
-	.bb-rl-link-item:last-of-type {
-		border-bottom: 1px solid $bb-rl-black-10;
-		margin-bottom: 0;
-		padding-bottom: $bb-rl-space-200;
-	}
-}
-
-.add-link-button {
-	i {
-		font-size: 16px;
 	}
 }
