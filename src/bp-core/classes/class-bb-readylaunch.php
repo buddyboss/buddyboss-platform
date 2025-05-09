@@ -182,7 +182,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Login page.
 			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
 			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );		
-			add_filter( 'login_message', array( $this, 'signin_login_message' ) );
+			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 		}
 
@@ -1956,7 +1956,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * @return string $message The modified login message.
 		 */
-		public function signin_login_message( $message ) {
+		public function bb_rl_signin_login_message( $message ) {
 			$home_url                 = get_bloginfo( 'url' );
 			$confirm_admin_email_page = false;
 			if ( $GLOBALS['pagenow'] === 'wp-login.php' && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'confirm_admin_email' ) {
