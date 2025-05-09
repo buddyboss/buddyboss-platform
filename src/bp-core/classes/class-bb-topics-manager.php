@@ -497,8 +497,28 @@ class BB_Topics_Manager {
 		$name               = $r['name'];
 		$item_type          = $r['item_type'];
 		$item_id            = $r['item_id'];
-		$is_global_activity = $r['is_global_activity'];
+		$is_global_activity = isset( $r['is_global_activity'] ) ? $r['is_global_activity'] : false;
 		$permission_type    = $r['permission_type'];
+
+		// Check if the topic is global activity.
+		$previous_topic = $this->bb_get_topic(
+			array(
+				'topic_id'           => $previous_topic_id,
+				'is_global_activity' => true,
+			)
+		);
+		if ( $previous_topic ) {
+			$is_global_activity = $previous_topic->is_global_activity;
+		}
+
+		/**
+		 * Fires before a topic has been updated.
+		 *
+		 * @param array  $r The arguments used to update the topic.
+		 * @param int    $previous_topic_id The ID of the previous topic.
+		 * @param object $previous_topic The previous topic object.
+		 */
+		do_action( 'bb_topic_before_updated', $r, $previous_topic_id, $previous_topic );
 
 		// First check if new name exists in bb_topics table.
 		$existing_topic = $this->bb_get_topic_by( 'name', $name );
@@ -583,6 +603,16 @@ class BB_Topics_Manager {
 				);
 			}
 		}
+
+		/**
+		 * Fires after a topic has been updated.
+		 *
+		 * @param object $topic_data The topic data.
+		 * @param array  $r The arguments used to update the topic.
+		 * @param int    $previous_topic_id The ID of the previous topic.
+		 * @param object $previous_topic The previous topic object.
+		 */
+		do_action( 'bb_topic_after_updated', $topic_data, $r, $previous_topic_id, $previous_topic );
 
 		return $topic_data;
 	}
