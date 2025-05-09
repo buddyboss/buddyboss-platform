@@ -2559,6 +2559,15 @@ h1.wp-login-logo a {
   box-shadow: none;
   padding: 0;
   overflow: initial;
+  margin-bottom: 0;
+}
+
+#login:has(.privacy-policy-page-link:not(:empty)) {
+  margin-bottom: 85px;
+}
+
+#login:has(.privacy-policy-page-link:not(:empty)) form {
+  margin-bottom: 55px;
 }
 
 .login label {
@@ -2606,6 +2615,10 @@ h1.wp-login-logo a {
 
 .login .privacy-policy-page-link {
   margin: var(--bb-rl-space-200) 0 0;
+}
+
+.login .privacy-policy-page-link:not(:empty) {
+  margin-bottom: -85px;
 }
 
 .login .privacy-policy-page-link a {
@@ -2719,4 +2732,90 @@ h1.wp-login-logo a {
 .login div.bb-sso-container svg {
   height: 16px;
   width: 16px;
+}
+
+.registration .mfp-content #terms-modal,
+body.login .mfp-content #terms-modal,
+.registration .mfp-content #privacy-modal,
+body.login .mfp-content #privacy-modal {
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.registration .mfp-content #terms-modal .mfp-close,
+body.login .mfp-content #terms-modal .mfp-close,
+.registration .mfp-content #privacy-modal .mfp-close,
+body.login .mfp-content #privacy-modal .mfp-close {
+  font-size: 0;
+  left: 10px;
+  top: 10px;
+}
+
+.registration .mfp-content #terms-modal .mfp-close:before,
+body.login .mfp-content #terms-modal .mfp-close:before,
+.registration .mfp-content #privacy-modal .mfp-close:before,
+body.login .mfp-content #privacy-modal .mfp-close:before {
+  content: "\e4f6";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-color);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.registration .mfp-content #terms-modal h1,
+body.login .mfp-content #terms-modal h1,
+.registration .mfp-content #privacy-modal h1,
+body.login .mfp-content #privacy-modal h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-400);
+}
+
+.registration .mfp-content #terms-modal h2,
+body.login .mfp-content #terms-modal h2,
+.registration .mfp-content #privacy-modal h2,
+body.login .mfp-content #privacy-modal h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.registration .mfp-content #terms-modal p,
+body.login .mfp-content #terms-modal p,
+.registration .mfp-content #privacy-modal p,
+body.login .mfp-content #privacy-modal p {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.registration .mfp-content #terms-modal ul,
+.registration .mfp-content #terms-modal ol,
+body.login .mfp-content #terms-modal ul,
+body.login .mfp-content #terms-modal ol,
+.registration .mfp-content #privacy-modal ul,
+.registration .mfp-content #privacy-modal ol,
+body.login .mfp-content #privacy-modal ul,
+body.login .mfp-content #privacy-modal ol {
+  margin-bottom: var(--bb-rl-space-200);
+  list-style-position: inside;
+}
+
+.registration .mfp-content #terms-modal ul li,
+.registration .mfp-content #terms-modal ol li,
+body.login .mfp-content #terms-modal ul li,
+body.login .mfp-content #terms-modal ol li,
+.registration .mfp-content #privacy-modal ul li,
+.registration .mfp-content #privacy-modal ol li,
+body.login .mfp-content #privacy-modal ul li,
+body.login .mfp-content #privacy-modal ol li {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-100);
 }

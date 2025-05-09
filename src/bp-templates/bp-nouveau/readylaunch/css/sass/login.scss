@@ -76,6 +76,15 @@ h1.wp-login-logo {
 		box-shadow: none;
 		padding: 0;
 		overflow: initial;
+		margin-bottom: 0;
+	}
+
+	&:has(.privacy-policy-page-link:not(:empty)) {
+		margin-bottom: 85px;
+
+		form {
+			margin-bottom: 55px;
+		}
 	}
 }
 
@@ -125,6 +134,10 @@ h1.wp-login-logo {
 
 	.privacy-policy-page-link {
 		margin: var(--bb-rl-space-200) 0 0;
+
+		&:not(:empty) {
+			margin-bottom: -85px;
+		}
 
 		a {
 			color: var(--bb-rl-text-color);
@@ -243,6 +256,64 @@ h1.wp-login-logo {
 		svg {
 			height: 16px;
 			width: 16px;
+		}
+	}
+}
+
+.registration .mfp-content #terms-modal,
+body.login .mfp-content #terms-modal,
+.registration .mfp-content #privacy-modal,
+body.login .mfp-content #privacy-modal {
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+	border-radius: var(--bb-rl-radius-lg);
+
+	.mfp-close {
+		font-size: 0;
+		right: 10px;
+		top: 10px;
+
+		&:before {
+			content: "\e4f6";
+			font-family: bb-icons-rl;
+			color: var(--bb-rl-icon-color);
+			font-size: 20px;
+			font-weight: 700;
+		}
+	}
+
+	h1 {
+		font-size: 22px;
+		font-weight: 600;
+		color: var(--bb-rl-text-color);
+		margin-bottom: var(--bb-rl-space-400);
+	}
+
+	h2 {
+		font-size: 16px;
+		font-weight: 600;
+		color: var(--bb-rl-text-color);
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	p {
+		font-size: 14px;
+		font-weight: 400;
+		color: var(--bb-rl-text-color);
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	ul,
+	ol {
+		margin-bottom: var(--bb-rl-space-200);
+		list-style-position: inside;
+
+		li {
+			font-size: 14px;
+			font-weight: 400;
+			color: var(--bb-rl-text-color);
+			margin-bottom: var(--bb-rl-space-100);
 		}
 	}
 }
