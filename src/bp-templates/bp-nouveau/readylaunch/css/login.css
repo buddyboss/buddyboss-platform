@@ -2734,6 +2734,10 @@ h1.wp-login-logo a {
   width: 16px;
 }
 
+.login.login-action-checkemail .notice {
+  margin-bottom: 55px;
+}
+
 .registration .mfp-content #terms-modal,
 body.login .mfp-content #terms-modal,
 .registration .mfp-content #privacy-modal,

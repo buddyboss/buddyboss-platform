@@ -258,6 +258,13 @@ h1.wp-login-logo {
 			width: 16px;
 		}
 	}
+
+	&.login-action-checkemail {
+
+		.notice {
+			margin-bottom: 55px;
+		}
+	}
 }
 
 .registration .mfp-content #terms-modal,
