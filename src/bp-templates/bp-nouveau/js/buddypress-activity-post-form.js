@@ -939,12 +939,6 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
 			}
 
-			if ( 0 < parseInt( activity_data.id ) ) {
-				Backbone.trigger( 'editactivity' );
-			} else {
-				self.postForm.$el.removeClass( 'focus-in--empty loading' );
-			}
-
 			if ( _.isUndefined( activity_data.topics ) ) {
 				activity_data.topics = {
 					topic_id    : activity_data.topic_id,
@@ -965,6 +959,32 @@ window.bp = window.bp || {};
 					}
 				} else {
 					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+				}
+			}
+
+			if ( 0 < parseInt( activity_data.id ) ) {
+				Backbone.trigger( 'editactivity' );
+			} else {
+				var isEmpty = bp.Nouveau.Activity.postForm.validateContent();
+				if (
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+					undefined !== activity_data.topics &&
+					undefined !== activity_data.topics.topic_id
+				) {
+					// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
+					if ( isEmpty && 0 !== parseInt( activity_data.topics.topic_id ) ) {
+						self.postForm.$el.removeClass('focus-in--empty loading');
+						$('#whats-new-submit').find('.bb-topic-tooltip-wrapper').remove();
+					} else if ( ! isEmpty && 0 !== parseInt(activity_data.topics.topic_id ) ) {
+						// If the post is empty and the topic is selected, add the empty class and the tooltip.
+						self.postForm.$el.addClass( 'focus-in--empty loading' );
+						$('.bb-topic-tooltip-wrapper').remove();
+					} else {
+						// If the post is empty and the topic is not selected, add the empty class and the tooltip.
+						self.postForm.$el.addClass( 'focus-in--empty loading' );
+						$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
+					}
 				}
 			}
 
@@ -1195,12 +1215,30 @@ window.bp = window.bp || {};
 			}
 
 			// validation for content editor.
-			if ( '' === filtered_content && (
-				( ( ! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length ) || _.isUndefined( self.postForm.model.get( 'video' ) ) ) &&
-				( ( ! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length ) || _.isUndefined( self.postForm.model.get( 'document' ) ) ) &&
-				( ( ! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) ) &&
-				( ( ! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length ) || _.isUndefined( self.postForm.model.get( 'media' ) ) )
-			) &&
+			if (
+				'' === filtered_content &&
+				(
+					(
+						(
+							! _.isUndefined( self.postForm.model.get( 'video' ) ) && ! self.postForm.model.get( 'video' ).length
+						) || _.isUndefined( self.postForm.model.get( 'video' ) )
+					) &&
+					(
+						(
+							! _.isUndefined( self.postForm.model.get( 'document' ) ) && ! self.postForm.model.get( 'document' ).length
+						) || _.isUndefined( self.postForm.model.get( 'document' ) )
+					) &&
+					(
+						(
+							! _.isUndefined( self.postForm.model.get( 'media' ) ) && ! self.postForm.model.get( 'media' ).length
+						) || _.isUndefined( self.postForm.model.get( 'media' ) )
+					) &&
+					(
+						(
+							! _.isUndefined( self.postForm.model.get( 'gif_data' ) ) && ! Object.keys( self.postForm.model.get( 'gif_data' ) ).length
+						) || _.isUndefined( self.postForm.model.get( 'media' ) )
+					)
+				) &&
 				(
 					(
 						! _.isUndefined( self.postForm.model.get( 'poll' ) ) &&
@@ -1208,6 +1246,14 @@ window.bp = window.bp || {};
 						! Object.keys( self.postForm.model.get( 'poll' ) ).length
 					) ||
 					_.isUndefined( self.postForm.model.get( 'poll' ) )
+				) &&
+				(
+					(
+						! _.isUndefined( self.postForm.model.get( 'topics' ) ) &&
+						! $.isEmptyObject( self.postForm.model.get( 'topics' ) ) &&
+						! Object.keys( self.postForm.model.get( 'topics' ) ).length
+					) ||
+					_.isUndefined( self.postForm.model.get( 'topics' ) )
 				)
 			) {
 				if ( bp.draft_content_changed ) {
@@ -1557,7 +1603,23 @@ window.bp = window.bp || {};
 			} catch ( e ) {
 				console.error( 'Error checking draft data size', e );
 			}
-		}
+		},
+
+		validateContent: function() {
+			var $whatsNew = $( '#whats-new-form' ).find( '#whats-new' );
+			var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+			content     = content.replace( /&nbsp;/g, ' ' );
+
+			if ( content.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
+				$whatsNew[0].innerHTML = '';
+			}
+			
+			if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
+				return true;
+			}
+			
+			return false;
+		},
 
 	};
 
@@ -4220,7 +4282,14 @@ window.bp = window.bp || {};
 							this.model.get( 'topics' ) &&
 							this.model.get( 'topics' ).topic_lists
 						) {
-							Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
+							if (
+								!_.isUndefined(BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics) &&
+								BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics
+							) {
+								Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
+							} else {
+								Backbone.trigger( 'topic:update', {} );
+							}
 						}
 					}
 				} else {
@@ -4281,9 +4350,15 @@ window.bp = window.bp || {};
 						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
 					) {
+						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
 						this.model.set( 'topics', {
-							topic_lists : BP_Nouveau.activity.params.topics.topic_lists
+							topic_lists : topic_lists
 						} );
+						if ( topic_lists.length > 0 ) {
+							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
+						} else {
+							$( '.whats-new-topic-selector' ).addClass( 'bp-hide' );
+						}
 						Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
 					}
 
@@ -4521,7 +4596,9 @@ window.bp = window.bp || {};
 					if (
 						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
-						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_group_activity_topics
 					) {
 						var group_topic_lists = model.get( 'topics' );
 
@@ -4558,8 +4635,12 @@ window.bp = window.bp || {};
 						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
 						topic_lists     = ! _.isUndefined( topic_lists ) ? topic_lists : [];
 
-						this.model.set( 'topic_lists', topic_lists );
-						bp.draft_activity.data.topic_lists = topic_lists;
+						this.model.set( 'topics', {
+							topic_lists : topic_lists
+						} );
+						bp.draft_activity.data.topics = {
+							topic_lists : topic_lists
+						};
 
 						Backbone.trigger( 'topic:update', topic_lists );
 					}
@@ -5448,14 +5529,32 @@ window.bp = window.bp || {};
 					$whatsNew[0].innerHTML = '';
 				}
 
-				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
-					this.$el.removeClass('focus-in--empty');
+				var isEmpty = bp.Nouveau.Activity.postForm.validateContent();
+				if ( isEmpty ) {
+					this.$el.removeClass('focus-in--empty loading');
 				} else {
-					this.$el.addClass( 'focus-in--empty' );
+					this.$el.addClass( 'focus-in--empty loading' );
 				}
 
-				// Trigger postValidate event.
-				$( document ).trigger( 'postValidate' );
+				if (
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+					undefined !== this.model.get( 'topics' )
+				) {
+					// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
+					if ( isEmpty && ! _.isUndefined( this.model.get( 'topics' ).topic_id ) && 0 !== parseInt( this.model.get( 'topics' ).topic_id ) ) {
+						this.$el.removeClass( 'focus-in--empty' );
+						$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
+					} else if ( ! isEmpty && ! _.isUndefined( this.model.get( 'topics' ).topic_id ) && 0 !== parseInt( this.model.get( 'topics' ).topic_id ) ) {
+						// If the post is empty and the topic is selected, add the empty class and the tooltip.
+						this.$el.addClass( 'focus-in--empty' );
+						$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
+					} else {
+						// If the post is empty and the topic is not selected, add the empty class and the tooltip.
+						this.$el.addClass( 'focus-in--empty' );
+						$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
+					}
+				}
 			},
 
 			mediumLink: function () {

@@ -100,8 +100,9 @@ window.bp = window.bp || {};
 			this.topicsLocalize          = ! _.isUndefined( activityParams.topics ) ? activityParams.topics : false;
 			this.isEnabledActivityTopic  = ! _.isUndefined( activityParams.topics.bb_is_enabled_activity_topics ) ? activityParams.topics.bb_is_enabled_activity_topics : false;
 			this.isActivityTopicRequired = ! _.isUndefined( activityParams.topics.bb_is_activity_topic_required ) ? activityParams.topics.bb_is_activity_topic_required : false;
+			this.isActivityTopicRequired = ! _.isUndefined( activityParams.topics.bb_is_activity_topic_required ) ? activityParams.topics.bb_is_activity_topic_required : false;
 			this.topicTooltipError       = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_tooltip_error ) ? activityParams.topics.topic_tooltip_error : false : false;
-			this.topicLists        = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_lists ) ? activityParams.topics.topic_lists : [] : [];
+			this.topicLists              = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_lists ) ? activityParams.topics.topic_lists : [] : [];
 
 			bp.Views.TopicSelector = bp.View.extend(
 				{
@@ -148,10 +149,7 @@ window.bp = window.bp || {};
 
 					},
 
-					updateTopics : function ( topics ) {
-						if ( ! topics ) {
-							return;
-						}
+					updateTopics : function ( topics ) {					
 
 						// Fix to handle various formats of incoming topics data
 						var topicsArray;
@@ -173,14 +171,12 @@ window.bp = window.bp || {};
 
 						// Remove the topic tooltip if there are no topics.
 						if ( _.isEmpty( topicsArray ) ) {
-							$( '#whats-new-submit .bb-topic-tooltip-wrapper' ).remove();
+							// Try multiple selectors to ensure we catch all instances
+							$( '.bb-topic-tooltip-wrapper' ).remove();
 						} else {
 							// Add topic tooltip while group topics are loaded.
 							$( document ).trigger( 'bb_display_full_form' );
 						}
-
-						// this.model.set( 'topic_id', this.model.get( 'topic_id' ) );
-						// this.model.set( 'topic_name', this.model.get( 'topic_name' ) );
 
 						this.render();
 					},
@@ -199,7 +195,6 @@ window.bp = window.bp || {};
 						var topicId   = $( event.currentTarget ).data( 'topic-id' );
 						var topicName = $( event.currentTarget ).text().trim();
 
-
 						this.model.set( 'topics', {
 							topic_id    : topicId,
 							topic_name  : topicName,
@@ -211,7 +206,13 @@ window.bp = window.bp || {};
 
 						this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
 
-						$( document ).trigger( 'bb_topic_selected', [topicId] );
+						// Trigger input event on #whats-new to trigger postValidate.
+						if (
+							typeof bp.Nouveau.Activity !== 'undefined' &&
+							bp.Nouveau.Activity.postForm
+						) {
+							$( '#whats-new' ).trigger( 'input' );
+						}
 					},
 
 					closeTopicSelectorDropdown : function ( event ) {
@@ -643,36 +644,10 @@ window.bp = window.bp || {};
 					} );
 				}
 
-				this.$document.on( 'postValidate', function () {
-					$( document ).trigger( 'bb_display_full_form' );
-
-					if ( BBTopicsManager.isActivityTopicRequired ) {
-						var topicSelectorExists = $( '#activity-form-submit-wrapper .whats-new-topic-selector:visible' ).length > 0;
-						var $topicName          = $( '.whats-new-topic-selector:visible' ).find( '.bb-topic-selector-list li a.selected' );
-						if ( $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
-							this.addTopicTooltip = true;
-							$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-						} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
-							this.addTopicTooltip = false;
-							$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-						} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && $topicName.length ) {
-							this.addTopicTooltip = false;
-							$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
-						}
-					}
-				} );
-
-				this.$document.on( 'bb_topic_selected', function () {
-					if ( BBTopicsManager.isActivityTopicRequired ) {
-						$( document ).trigger( 'postValidate' );
-					}
-				} );
-
 				$( document ).on( 'bb_draft_activity_loaded', function ( event, activity_data ) {
 					if ( activity_data && activity_data.topics ) {
 						bp.Nouveau.Activity.postForm.model.set( 'topics', activity_data.topics );
 						bp.draft_activity.data.topics = activity_data.topics;
-						Backbone.trigger( 'topic:update', activity_data.topics );
 
 						var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
 						if ( $topicElement.length > 0 ) {
@@ -693,20 +668,11 @@ window.bp = window.bp || {};
 		},
 
 		showTopicTooltip : function ( event ) {
-			var $wrapper   = $( event.currentTarget ),
-			    $postBtn   = $wrapper.closest( '#whats-new-submit' ),
-			    $topicName = $wrapper.closest( '#activity-form-submit-wrapper' ).find( '.bb-topic-selector-list li a.selected' );
+			var $wrapper = $( event.currentTarget ),
+			    $postBtn = $wrapper.closest( '#whats-new-submit' );
 
 			if ( $postBtn.closest( '.focus-in--empty' ).length > 0 ) {
-				if ( ! $topicName.length ) {
-					$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
-					$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-				} else if ( this.addTopicTooltip && $topicName.length ) {
-					$postBtn.find( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
-					$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-				} else if ( ! this.addTopicTooltip && $topicName.length ) {
-					$postBtn.find( '.bb-topic-tooltip-wrapper' ).removeClass( 'active' ).hide();
-				}
+				$postBtn.find( '.bb-topic-tooltip-wrapper' ).addClass( 'active' ).show();
 			}
 
 		},
