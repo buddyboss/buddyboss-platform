@@ -495,11 +495,10 @@ class BB_Topics_Manager {
 
 		$previous_topic_id  = $r['id'];
 		$name               = $r['name'];
-		$slug               = $r['slug'];
 		$item_type          = $r['item_type'];
 		$item_id            = $r['item_id'];
-		$existing_topic     = $r['existing_topic'];
 		$is_global_activity = $r['is_global_activity'];
+		$permission_type    = $r['permission_type'];
 
 		// First check if new name exists in bb_topics table.
 		$existing_topic = $this->bb_get_topic_by( 'name', $name );
