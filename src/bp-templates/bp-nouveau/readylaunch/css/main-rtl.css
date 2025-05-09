@@ -4968,7 +4968,7 @@ button[data-balloon] {
 
 .bb-readylaunch-template .modal-mask {
   position: fixed;
-  z-index: 999991;
+  z-index: 9998;
   top: 0;
   right: 0;
   width: 100vw;
