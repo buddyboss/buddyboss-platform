@@ -945,6 +945,29 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'focus-in--empty loading' );
 			}
 
+			if ( _.isUndefined( activity_data.topics ) ) {
+				activity_data.topics = {
+					topic_id    : activity_data.topic_id,
+					topic_name  : '',
+					topic_lists : []
+				};
+				if (
+					activity_data.item_id &&
+					! _.isUndefined( BP_Nouveau.activity.params.objects ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.objects.group_list )
+				) {
+					var matchingGroup = BP_Nouveau.activity.params.objects.group_list.find( function ( group ) {
+						return parseInt( group.id ) === parseInt( activity_data.item_id );
+					} );
+
+					if ( matchingGroup && matchingGroup.topics && matchingGroup.topics.topic_lists ) {
+						activity_data.topics.topic_lists = matchingGroup.topics.topic_lists;
+					}
+				} else {
+					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
+				}
+			}
+
 			$( document ).trigger( 'bb_draft_activity_loaded', activity_data );
 		},
 

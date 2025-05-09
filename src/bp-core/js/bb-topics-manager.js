@@ -666,7 +666,11 @@ window.bp = window.bp || {};
 						var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
 						if ( $topicElement.length > 0 ) {
 							$topicElement.addClass( 'selected' );
-							$( '.bb-topic-selector-button' ).text( activity_data.topics.topic_name );
+							var topicName = activity_data.topics.topic_name;
+							if ( ! topicName ) {
+								topicName = $topicElement.text();
+							}
+							$( '.bb-topic-selector-button' ).text( topicName );
 						}
 					}
 				} );
