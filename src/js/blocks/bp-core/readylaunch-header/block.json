@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "buddyboss/readylaunch-header",
+    "title": "ReadyLaunch Header",
+    "category": "buddyboss",
+    "icon": "menu",
+    "description": "Add a customizable header for ReadyLaunch theme.",
+    "keywords": [ "BuddyBoss", "header", "navigation", "menu", "readylaunch" ],
+    "textdomain": "buddyboss",
+    "attributes": {
+        "layout": {
+            "type": "string",
+            "default": "default"
+        },
+        "showSearch": {
+            "type": "boolean",
+            "default": true
+        },
+        "showNotifications": {
+            "type": "boolean",
+            "default": true
+        },
+        "showMessages": {
+            "type": "boolean",
+            "default": true
+        }
+    },
+    "supports": {
+        "align": ["wide", "full"],
+        "html": false,
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        },
+        "color": {
+            "background": true,
+            "text": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true
+        }
+    },
+    "editorScript": "file:index.js",
+    "style": "file:style.css",
+    "editorStyle": "file:editor.css"
+} 
