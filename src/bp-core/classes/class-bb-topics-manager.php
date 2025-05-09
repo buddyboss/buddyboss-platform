@@ -1141,7 +1141,7 @@ class BB_Topics_Manager {
 	 *     @type int $id The ID of the topic to get.
 	 * }
 	 *
-	 * @return array The topic data.
+	 * @return object The topic data.
 	 */
 	public function bb_get_topic( $args ) {
 		$r = bp_parse_args(
@@ -1155,7 +1155,7 @@ class BB_Topics_Manager {
 
 		$topic = $this->bb_get_topics( $r );
 
-		return is_array( $topic ) && ! empty( $topic['topics'] ) ? current( $topic['topics'] ) : array();
+		return is_array( $topic ) && ! empty( $topic['topics'] ) ? current( $topic['topics'] ) : null;
 	}
 
 	/**
