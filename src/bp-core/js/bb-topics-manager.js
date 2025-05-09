@@ -111,7 +111,32 @@ window.bp = window.bp || {};
 					},
 
 					initialize : function () {
-						this.model.set( 'topic_lists', BBTopicsManager.topicLists );
+						var topicId = 0;
+						if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
+							topicId = ! _.isUndefined( this.model.get( 'topics' ).topic_id ) ? this.model.get( 'topics' ).topic_id : 0;
+						} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
+							topicId = ! _.isUndefined( bp.draft_activity.data.topics.topic_id ) ? bp.draft_activity.data.topics.topic_id : 0;
+						}
+
+						var topicName = '';
+						if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
+							topicName = ! _.isUndefined( this.model.get( 'topics' ).topic_name ) ? this.model.get( 'topics' ).topic_name : '';
+						} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
+							topicName = ! _.isUndefined( bp.draft_activity.data.topics.topic_name ) ? bp.draft_activity.data.topics.topic_name : '';
+						}
+
+						var topicLists = BBTopicsManager.topicLists;
+						if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
+							topicLists = ! _.isUndefined( this.model.get( 'topics' ).topic_lists ) ? this.model.get( 'topics' ).topic_lists : [];
+						} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
+							topicLists = ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ? bp.draft_activity.data.topics.topic_lists : [];
+						}
+
+						this.model.set( 'topics', {
+							topic_id    : topicId,
+							topic_name  : topicName,
+							topic_lists : topicLists
+						} );
 
 						this.listenTo( Backbone, 'topic:update', this.updateTopics );
 
@@ -125,10 +150,34 @@ window.bp = window.bp || {};
 							return;
 						}
 
+						// Fix to handle various formats of incoming topics data
+						var topicsArray;
+
+						// Check if topics is an object with topic_lists property
+						if ( _.isObject( topics ) && ! _.isUndefined( topics.topic_lists ) ) {
+							topicsArray = topics.topic_lists;
+						}
+
+						var topicId   = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_id : 0;
+						var topicName = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_name : '';
+
 						// Update the model with the new topics
-						this.model.set( 'topic_lists', topics );
-						this.model.set( 'topic_id', this.model.get( 'topic_id' ) );
-						this.model.set( 'topic_name', this.model.get( 'topic_name' ) );
+						this.model.set( 'topics', {
+							topic_lists : topicsArray,
+							topic_id    : topicId,
+							topic_name  : topicName
+						} );
+
+						// Remove the topic tooltip if there are no topics.
+						if ( _.isEmpty( topicsArray ) ) {
+							$( '#whats-new-submit .bb-topic-tooltip-wrapper' ).remove();
+						} else {
+							// Add topic tooltip while group topics are loaded.
+							$( document ).trigger( 'bb_display_full_form' );
+						}
+
+						// this.model.set( 'topic_id', this.model.get( 'topic_id' ) );
+						// this.model.set( 'topic_name', this.model.get( 'topic_name' ) );
 
 						this.render();
 					},
@@ -148,8 +197,11 @@ window.bp = window.bp || {};
 						var topicName = $( event.currentTarget ).text().trim();
 
 
-						this.model.set( 'topic_id', topicId );
-						this.model.set( 'topic_name', topicName );
+						this.model.set( 'topics', {
+							topic_id    : topicId,
+							topic_name  : topicName,
+							topic_lists : this.model.get( 'topics' ).topic_lists
+						} );
 
 						this.$el.find( '.bb-topic-selector-button' ).text( topicName );
 						this.$el.removeClass( 'is-active' );
@@ -579,73 +631,43 @@ window.bp = window.bp || {};
 				this.addTopicTooltip = false;
 				// Add topic tooltip.
 				this.$document.on( 'bb_display_full_form', function () {
-					if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+					if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper').length === 0 ) {
 						$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
 					}
 				} );
 
-				this.$document.on( 'postValidate', function ( event, data ) {
-					var $topicName = $( '.whats-new-topic-selector' ).find( '.bb-topic-selector-list li a.selected' );
-					if ( data.contentEmpty && ! $topicName.length ) {
+				this.$document.on( 'postValidate', function ( event ) {
+					$( document ).trigger( 'bb_display_full_form' );
+
+					var topicSelectorExists = $( '#activity-form-submit-wrapper .whats-new-topic-selector:visible' ).length > 0;
+					var $topicName          = $( '.whats-new-topic-selector:visible' ).find( '.bb-topic-selector-list li a.selected' );
+					if ( $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
 						this.addTopicTooltip = true;
 						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-					} else if ( ! data.contentEmpty && ! $topicName.length ) {
+					} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
 						this.addTopicTooltip = false;
 						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-					} else if ( ! data.contentEmpty && $topicName.length ) {
+					} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && $topicName.length ) {
 						this.addTopicTooltip = false;
 						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
 					}
 				} );
 
 				this.$document.on( 'bb_topic_selected', function ( event, topicID ) {
-					if ( topicID && ! this.addTopicTooltip ) {
-						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
-					} else {
-						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-					}
+					$( document ).trigger( 'postValidate' );
 				} );
 
 				$( document ).on( 'bb_draft_activity_loaded', function ( event, activity_data ) {
-					if ( activity_data && activity_data.topic_id ) {
-						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
-						var topicId = activity_data.topic_id;
-						if ( activity_data.topic_lists ) {
-							bp.Nouveau.Activity.postForm.model.set( 'topic_lists', activity_data.topic_lists );
-							Backbone.trigger( 'topic:update', activity_data.topic_lists );
+					if ( activity_data && activity_data.topics ) {
+						bp.Nouveau.Activity.postForm.model.set( 'topics', activity_data.topics );
+						bp.draft_activity.data.topics = activity_data.topics;
+						Backbone.trigger( 'topic:update', activity_data.topics );
 
-							bp.Nouveau.Activity.postForm.model.set( 'topic_id', topicId );
-							bp.draft_activity.data.topic_id = topicId;
-
-							setTimeout( function () {
-								var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + topicId + '"]' );
-								if ( $topicElement.length > 0 ) {
-									$topicElement.addClass( 'selected' );
-									var topicName = $topicElement.text().trim();
-									$( '.bb-topic-selector-button' ).text( topicName );
-									bp.Nouveau.Activity.postForm.model.set( 'topic_name', topicName );
-									bp.draft_activity.data.topic_name = topicName;
-								}
-							}, 50 ); // Short timeout to ensure the selector is updated
-						} else {
-							bp.Nouveau.Activity.postForm.model.set( 'topic_id', topicId );
-							bp.draft_activity.data.topic_id = topicId;
-
-							var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + topicId + '"]' );
-							if ( $topicElement.length > 0 ) {
-								$topicElement.addClass( 'selected' );
-								var topicName = $topicElement.text().trim();
-								bp.Nouveau.Activity.postForm.model.set( 'topic_name', topicName );
-								bp.draft_activity.data.topic_name = topicName;
-							}
+						var $topicElement = $( '.bb-topic-selector-list a[data-topic-id="' + activity_data.topics.topic_id + '"]' );
+						if ( $topicElement.length > 0 ) {
+							$topicElement.addClass( 'selected' );
+							$( '.bb-topic-selector-button' ).text( activity_data.topics.topic_name );
 						}
-					} else {
-						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-						bp.Nouveau.Activity.postForm.model.set( 'topic_id', 0 );
-						bp.draft_activity.data.topic_id = 0;
-
-						bp.Nouveau.Activity.postForm.model.set( 'topic_name', '' );
-						bp.draft_activity.data.topic_name = '';
 					}
 				} );
 

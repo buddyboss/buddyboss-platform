@@ -11,10 +11,11 @@
 ?>
 <script type="text/html" id="tmpl-bb-activity-post-form-topic-selector">
 
-	<# if ( data.topic_lists.length > 0 ) { #>
+	<# 
+	if ( data.topics.topic_lists.length > 0 ) { #>
 		<span class="bb-topic-selector-button">
 			<# 
-			if ( data.topic_name ) { #>
+			if ( data.topics.topic_name ) { #>
 				{{ data.topic_name }}
 			<# } else { #>
 				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
@@ -22,7 +23,7 @@
 		</span>
 		<div class="bb-topic-selector-list">
 			<ul>
-				<# _.each( data.topic_lists, function( topic ) { #>
+				<# _.each( data.topics.topic_lists, function( topic ) { #>
 					<li>
 						<a href="#" 
 						data-topic-id="{{ topic.topic_id }}" 

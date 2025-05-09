@@ -1251,19 +1251,6 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Add this code to save topic data in draft data.
-			if ( ! _.isUndefined( bp.draft_activity.data ) ) {
-				if ( ! _.isUndefined( bp.draft_activity.data.topic_id ) ) {
-					self.postForm.model.set( 'topic_id', parseInt( bp.draft_activity.data.topic_id ) );
-				}
-				if ( ! _.isUndefined( bp.draft_activity.data.topic_name ) ) {
-					self.postForm.model.set( 'topic_name', bp.draft_activity.data.topic_name );
-				}
-				if ( ! _.isUndefined( bp.draft_activity.data.topic_lists ) ) {
-					bp.draft_activity.data.topic_lists = self.postForm.model.get( 'topic_lists' );
-				}
-			}
-
 			// Set Draft activity data.
 			self.checkedActivityDataChanged( bp.old_draft_data, data );
 
@@ -1311,6 +1298,7 @@ window.bp = window.bp || {};
 				'poll',
 				'poll_id',
 				'polls_allowed',
+				'topics',
 			];
 
 			_.each(
@@ -4205,15 +4193,12 @@ window.bp = window.bp || {};
 						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
 					) {
-						this.model.set( 'topic_name', '' );
-						this.model.set( 'topic_id', 0 );
-						this.model.set( 'topic_lists', this.model.get( 'topic_lists' ) );
-
-						bp.draft_activity.data.topic_id    = 0;
-						bp.draft_activity.data.topic_name  = '';
-						bp.draft_activity.data.topic_lists = this.model.get( 'topic_lists' );
-
-						Backbone.trigger( 'topic:update', this.model.get( 'topic_lists' ) );
+						if (
+							this.model.get( 'topics' ) &&
+							this.model.get( 'topics' ).topic_lists
+						) {
+							Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
+						}
 					}
 				} else {
 
@@ -4273,15 +4258,10 @@ window.bp = window.bp || {};
 						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
 						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
 					) {
-						this.model.set( 'topic_lists', BP_Nouveau.activity.params.topics.topic_lists );
-						this.model.set( 'topic_id', 0 );
-						this.model.set( 'topic_name', '' );
-
-						bp.draft_activity.data.topic_id    = 0;
-						bp.draft_activity.data.topic_name  = '';
-						bp.draft_activity.data.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
-
-						Backbone.trigger( 'topic:update', this.model.get( 'topic_lists' ) );
+						this.model.set( 'topics', {
+							topic_lists : BP_Nouveau.activity.params.topics.topic_lists
+						} );
+						Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
 					}
 
 					bp.draft_activity.data.item_id            = 0;
@@ -4520,13 +4500,21 @@ window.bp = window.bp || {};
 						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
 					) {
-						var topic_lists = model.get( 'topic_lists' );
-						topic_lists     = ! _.isUndefined( topic_lists ) ? topic_lists : [];
+						var topic_lists = model.get( 'topics' );
 
-						this.model.set( 'topic_lists', topic_lists );
-						bp.draft_activity.data.topic_lists = topic_lists;
+						if ( topic_lists && topic_lists.topic_lists ) {
+							topic_lists = topic_lists.topic_lists;
+						} else {
+							topic_lists = model.get( 'topic_lists' );
+						}
 
-						Backbone.trigger( 'topic:update', topic_lists );
+						topic_lists = ! _.isUndefined( topic_lists ) ? topic_lists : [];
+
+						this.model.set( 'topics', {
+							topic_lists : topic_lists
+						} );
+
+						Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
 
 						if ( topic_lists.length > 0 ) {
 							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
@@ -5437,16 +5425,14 @@ window.bp = window.bp || {};
 					$whatsNew[0].innerHTML = '';
 				}
 
-				var contentEmpty;
 				if ( $( $.parseHTML( content ) ).text().trim() !== '' || content.includes( 'class="emoji"' ) || ( ! _.isUndefined( this.model.get( 'link_success' ) ) && true === this.model.get( 'link_success' ) ) || ( ! _.isUndefined( this.model.get( 'video' ) ) && 0 !== this.model.get('video').length ) || ( ! _.isUndefined( this.model.get( 'document' ) ) && 0 !== this.model.get('document').length ) || ( ! _.isUndefined( this.model.get( 'media' ) ) && 0 !== this.model.get('media').length ) || ( ! _.isUndefined( this.model.get( 'gif_data' ) ) && ! _.isEmpty( this.model.get( 'gif_data' ) ) ) || ( ! _.isUndefined( this.model.get( 'poll' ) ) && ! _.isEmpty( this.model.get( 'poll' ) ) ) ) {
-					contentEmpty = false;
 					this.$el.removeClass('focus-in--empty');
 				} else {
-					contentEmpty = true;
 					this.$el.addClass( 'focus-in--empty' );
 				}
 
-				$( document ).trigger( 'postValidate', { contentEmpty: contentEmpty } );
+				// Trigger postValidate event.
+				$( document ).trigger( 'postValidate' );
 			},
 
 			mediumLink: function () {
@@ -5913,10 +5899,13 @@ window.bp = window.bp || {};
 						'can_create_poll_activity',
 						'bb-poll-question-option',
 						'poll',
-						'topic_lists',
-						'topic_name'
+						'topics'
 					]
 				);
+
+				if ( this.model.get( 'topics' ) && this.model.get( 'topics' ).topic_id ) {
+					data.topic_id = this.model.get( 'topics' ).topic_id;
+				}
 
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
@@ -6400,6 +6389,11 @@ window.bp = window.bp || {};
 					}
 				}
 
+				// Remove topic data from draft activity data.
+				if ( bp.draft_activity.data.topics ) {
+					delete bp.draft_activity.data.topics;
+				}
+
 				// Reset the model.
 				this.model.clear();
 				this.model.set( this.resetModel.attributes );
@@ -6457,6 +6451,11 @@ window.bp = window.bp || {};
 							$( '.atwho-container #atwho-ground-whats-new .atwho-view:visible' ).hide();
 						}
 					);
+				}
+
+				// Topic validates while discard draft activity.
+				if ( $( '.whats-new-topic-selector:visible' ).length ) {
+					this.postValidate();
 				}
 
 				this.updateMultiMediaOptions();
