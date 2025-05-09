@@ -12,7 +12,7 @@
 <script type="text/html" id="tmpl-bb-activity-post-form-topic-selector">
 
 	<# 
-	if ( data.topics.topic_lists.length > 0 ) { #>
+	if ( data.topics && data.topics.topic_lists && data.topics.topic_lists.length > 0 ) { #>
 		<span class="bb-topic-selector-button">
 			<# 
 			if ( data.topics.topic_name ) { #>

@@ -430,21 +430,23 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
+		$topic_lists = $this->bb_get_activity_topics();
+
+		// If group activity topics is not enabled, then don't show the topic lists.
 		if (
 			bp_is_active( 'groups' ) &&
-			bb_is_enabled_group_activity_topics() &&
 			bp_is_group() &&
+			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
-			$topic_lists = bb_get_group_activity_topics();
-		} else {
-			$topic_lists = $this->bb_get_activity_topics();
+			$topic_lists = bb_is_enabled_group_activity_topics() ? bb_get_group_activity_topics() : array();
 		}
 
-		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics'] = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
-		$strings['activity']['params']['topics']['bb_is_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
-		$strings['activity']['params']['topics']['topic_lists']                   = ! empty( $topic_lists ) ? $topic_lists : array();
-		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
+		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = bb_is_enabled_group_activity_topics();
+		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
+		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
+		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
+		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss' );
 		return $strings;
 	}
 
