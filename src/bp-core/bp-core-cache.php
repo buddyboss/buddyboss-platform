@@ -661,3 +661,69 @@ function bb_reaction_clear_reactions_cache_on_delete_emotion( $postid, $post ) {
 }
 
 add_action( 'deleted_post', 'bb_reaction_clear_reactions_cache_on_delete_emotion', 10, 2 );
+
+/**
+ * Reset cache when a topic is added/updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $topic_relationship Topic relationship.
+ * @param array $r                  Arguments.
+ */
+function bb_topic_added_cache_reset( $topic_relationship, $r ) {
+	bp_core_reset_incrementor( 'bb_topics' );
+	if ( ! empty( $topic_relationship->id ) ) {
+		wp_cache_delete( $topic_relationship->id, 'bb_topics' );
+	}
+	if ( ! empty( $r ) ) {
+		wp_cache_delete( 'bb_topic_id_' . $topic_relationship->id, 'bb_topics' );
+		wp_cache_delete( 'bb_topic_name_' . $r['name'], 'bb_topics' );
+		wp_cache_delete( 'bb_topic_slug_' . $r['slug'], 'bb_topics' );
+	}
+}
+
+add_action( 'bb_topic_added', 'bb_topic_added_cache_reset', 10, 2 );
+add_action( 'bb_topic_updated', 'bb_topic_added_cache_reset', 10, 2 );
+
+/**
+ * Reset cache when a topic is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $relationships_ids The IDs of the topic relationships that were deleted.
+ * @param int   $topic_id          The ID of the topic that was deleted.
+ */
+function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
+	bp_core_reset_incrementor( 'bb_topics' );
+	if ( ! empty( $relationships_ids ) ) {
+		foreach ( $relationships_ids as $id ) {
+			wp_cache_delete( $id, 'bb_topics' );
+		}
+	}
+	if ( ! empty( $topic_id ) ) {
+		wp_cache_delete( 'bb_topic_id_' . $topic_id, 'bb_topics' );
+	}
+}
+
+add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
+
+
+/**
+ * Reset cache when a topic relationship is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $relationship_id The ID of the topic relationship.
+ * @param array $r               The arguments.
+ */
+function bb_activity_topic_relationship_after_update_cache_reset( $relationship_id, $r ) {
+	bp_core_reset_incrementor( 'bb_activity_topics' );
+	if ( ! empty( $relationship_id ) ) {
+		wp_cache_delete( $relationship_id, 'bb_activity_topics' );
+	}
+	if ( ! empty( $r ) ) {
+		wp_cache_delete( 'bb_activity_topic_name_' . $r['activity_id'], 'bb_activity_topics' );
+	}
+}
+
+add_action( 'bb_activity_topic_relationship_after_update', 'bb_activity_topic_relationship_after_update_cache_reset', 10, 2 );

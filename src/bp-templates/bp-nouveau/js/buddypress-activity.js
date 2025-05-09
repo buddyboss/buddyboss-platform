@@ -235,6 +235,9 @@ window.bp = window.bp || {};
 					});
 				}, 1000 );
 			}
+
+			// Wrap Activity Topics
+			bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120 );
 		},
 
 		/**
@@ -4396,6 +4399,10 @@ window.bp = window.bp || {};
 
 			if( user_timeline ) {
 				queryData.user_timeline = true;
+			}
+
+			if ( objectData.topic_id ) {
+				queryData.topic_id = objectData.topic_id;
 			}
 
 			bp.Nouveau.objectRequest( queryData );
