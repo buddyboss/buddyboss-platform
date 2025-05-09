@@ -283,89 +283,17 @@ class BB_Topics_Manager {
 				)
 			);
 		} else {
-			// First check if new name exists in bb_topics table.
-			$existing_topic = $this->bb_get_topic_by( 'name', $name );
-			if ( ! $existing_topic ) { // NO.
-				if ( $is_global_activity && 'group' === $item_type ) {
-					wp_send_json_error(
-						array(
-							'error' => esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' ),
-						)
-					);
-				}
-				// Case: Name doesn't exist - create new topic.
-				$topic_data = $this->bb_add_topic(
-					array(
-						'topic_id'        => $previous_topic_id,
-						'name'            => $name,
-						'slug'            => sanitize_title( $name ),
-						'permission_type' => $permission_type,
-						'item_id'         => $item_id,
-						'item_type'       => $item_type,
-					)
-				);
-			} else { // YES.
-				// Case: Name already exists.
-				// Fetch topic id from bb_topics table.
-				$new_topic_id = (int) $existing_topic->id;
-				$topic_data   = $this->bb_get_topic_by( 'id', $new_topic_id );
-
-				// Check if topic id is different from current topic id.
-				if ( $previous_topic_id !== $new_topic_id ) { // NO.
-					// Check if relationship already exists.
-					$existing_relationship = $this->bb_get_topic(
-						array(
-							'topic_id'  => $new_topic_id,
-							'item_type' => $item_type,
-							'item_id'   => $item_id,
-						)
-					);
-
-					if ( $existing_relationship ) {
-						// Error: Topic already exists with this relationship.
-						wp_send_json_error(
-							array(
-								'error' => esc_html__( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ),
-							)
-						);
-					} else {
-						// Update relationships.
-						$this->bb_update_topic_relationship(
-							array(
-								'topic_id' => $new_topic_id,
-								'where'    => array(
-									'topic_id'  => $previous_topic_id,
-									'item_id'   => $item_id,
-									'item_type' => $item_type,
-								),
-							)
-						);
-
-						if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-							bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
-								array(
-									'topic_id'    => $new_topic_id,
-									'previous_id' => $previous_topic_id,
-								)
-							);
-						}
-					}
-				} else {
-					// If just update permission_type for existing topic.
-					$this->bb_update_topic_relationship(
-						array(
-							'item_id'         => $item_id,
-							'item_type'       => $item_type,
-							'permission_type' => $permission_type,
-							'where'           => array(
-								'topic_id'  => $new_topic_id,
-								'item_id'   => $item_id,
-								'item_type' => $item_type,
-							),
-						)
-					);
-				}
-			}
+			$topic_data = $this->bb_update_topic(
+				array(
+					'id'                 => $previous_topic_id,
+					'name'               => $name,
+					'slug'               => $slug,
+					'permission_type'    => $permission_type,
+					'item_type'          => $item_type,
+					'item_id'            => $item_id,
+					'is_global_activity' => $is_global_activity,
+				)
+			);
 		}
 
 		if ( ! $topic_data ) {
@@ -532,6 +460,132 @@ class BB_Topics_Manager {
 		unset( $r, $data, $format, $inserted );
 
 		return $get_topic_relationship;
+	}
+
+	/**
+	 * Update an existing topic.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments for updating a topic.
+	 *
+	 *     @type int    $previous_topic_id The ID of the topic to update.
+	 *     @type string $name             The new name for the topic.
+	 *     @type string $slug             The new slug for the topic.
+	 *     @type string $permission_type  The permission type for the topic.
+	 *     @type int    $item_id          The ID of the item.
+	 *     @type string $item_type        The type of item.
+	 * }
+	 *
+	 * @return object|WP_Error Topic object on success, WP_Error on failure.
+	 */
+	public function bb_update_topic( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'id'         => 0,
+				'name'       => '',
+				'slug'       => '',
+				'item_type'  => 'activity',
+				'item_id'    => 0,
+				'error_type' => 'bool',
+			)
+		);
+
+		$previous_topic_id  = $r['id'];
+		$name               = $r['name'];
+		$slug               = $r['slug'];
+		$item_type          = $r['item_type'];
+		$item_id            = $r['item_id'];
+		$existing_topic     = $r['existing_topic'];
+		$is_global_activity = $r['is_global_activity'];
+
+		// First check if new name exists in bb_topics table.
+		$existing_topic = $this->bb_get_topic_by( 'name', $name );
+		if ( ! $existing_topic ) { // NO.
+			if ( $is_global_activity && 'group' === $item_type ) {
+				wp_send_json_error(
+					array(
+						'error' => esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' ),
+					)
+				);
+			}
+			// Case: Name doesn't exist - create new topic.
+			$topic_data = $this->bb_add_topic(
+				array(
+					'topic_id'        => $previous_topic_id,
+					'name'            => $name,
+					'slug'            => sanitize_title( $name ),
+					'permission_type' => $permission_type,
+					'item_id'         => $item_id,
+					'item_type'       => $item_type,
+				)
+			);
+		} else { // YES.
+			// Case: Name already exists.
+			// Fetch topic id from bb_topics table.
+			$new_topic_id = (int) $existing_topic->id;
+			$topic_data   = $this->bb_get_topic_by( 'id', $new_topic_id );
+
+			// Check if topic id is different from current topic id.
+			if ( $previous_topic_id !== $new_topic_id ) { // NO.
+				// Check if relationship already exists.
+				$existing_relationship = $this->bb_get_topic(
+					array(
+						'topic_id'  => $new_topic_id,
+						'item_type' => $item_type,
+						'item_id'   => $item_id,
+					)
+				);
+
+				if ( $existing_relationship ) {
+					// Error: Topic already exists with this relationship.
+					wp_send_json_error(
+						array(
+							'error' => esc_html__( 'This topic name is already in use. Please enter a unique topic name.', 'buddyboss' ),
+						)
+					);
+				} else {
+					// Update relationships.
+					$this->bb_update_topic_relationship(
+						array(
+							'topic_id' => $new_topic_id,
+							'where'    => array(
+								'topic_id'  => $previous_topic_id,
+								'item_id'   => $item_id,
+								'item_type' => $item_type,
+							),
+						)
+					);
+
+					if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+						bb_activity_topics_manager_instance()->bb_update_activity_topic_relationship(
+							array(
+								'topic_id'    => $new_topic_id,
+								'previous_id' => $previous_topic_id,
+							)
+						);
+					}
+				}
+			} else {
+				// If just update permission_type for existing topic.
+				$this->bb_update_topic_relationship(
+					array(
+						'item_id'         => $item_id,
+						'item_type'       => $item_type,
+						'permission_type' => $permission_type,
+						'where'           => array(
+							'topic_id'  => $new_topic_id,
+							'item_id'   => $item_id,
+							'item_type' => $item_type,
+						),
+					)
+				);
+			}
+		}
+
+		return $topic_data;
 	}
 
 	/**
