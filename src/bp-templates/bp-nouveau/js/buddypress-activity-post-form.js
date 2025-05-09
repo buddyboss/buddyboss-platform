@@ -4213,8 +4213,8 @@ window.bp = window.bp || {};
 					// Render topic selector for the group activity.
 					if (
 						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
-						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
 					) {
 						if (
 							this.model.get( 'topics' ) &&
@@ -4277,8 +4277,8 @@ window.bp = window.bp || {};
 					// Set topic lists for the global activity.
 					if (
 						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
-						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
 					) {
 						this.model.set( 'topics', {
@@ -4520,8 +4520,8 @@ window.bp = window.bp || {};
 					// Set topic lists for the group activity.
 					if (
 						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
-						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics
 					) {
 						var group_topic_lists = model.get( 'topics' );
 
@@ -4551,8 +4551,8 @@ window.bp = window.bp || {};
 					// Set topic lists for the global activity.
 					if (
 						! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
-						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+						BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 						! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists )
 					) {
 						var topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
@@ -5284,8 +5284,8 @@ window.bp = window.bp || {};
 				// Render topic selector for the global activity.
 				if (
 					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
-					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
-					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 					! _.isUndefined( bp.Views.TopicSelector ) &&
 					! this.model.get( 'has_topic_selector' )
 				) {

@@ -96,9 +96,12 @@ window.bp = window.bp || {};
 			bp.Collections = bp.Collections || {};
 			bp.Views       = bp.Views || {};
 
-			this.topicsLocalize    = ! _.isUndefined( BP_Nouveau.activity.params.topics ) ? BP_Nouveau.activity.params.topics : false;
-			this.topicTooltipError = this.topicsLocalize ? ! _.isUndefined( BP_Nouveau.activity.params.topics.topic_tooltip_error ) ? BP_Nouveau.activity.params.topics.topic_tooltip_error : false : false;
-			this.topicLists        = this.topicsLocalize ? ! _.isUndefined( BP_Nouveau.activity.params.topics.topic_lists ) ? BP_Nouveau.activity.params.topics.topic_lists : [] : [];
+			var activityParams           = BP_Nouveau.activity.params;
+			this.topicsLocalize          = ! _.isUndefined( activityParams.topics ) ? activityParams.topics : false;
+			this.isEnabledActivityTopic  = ! _.isUndefined( activityParams.topics.bb_is_enabled_activity_topics ) ? activityParams.topics.bb_is_enabled_activity_topics : false;
+			this.isActivityTopicRequired = ! _.isUndefined( activityParams.topics.bb_is_activity_topic_required ) ? activityParams.topics.bb_is_activity_topic_required : false;
+			this.topicTooltipError       = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_tooltip_error ) ? activityParams.topics.topic_tooltip_error : false : false;
+			this.topicLists        = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_lists ) ? activityParams.topics.topic_lists : [] : [];
 
 			bp.Views.TopicSelector = bp.View.extend(
 				{
@@ -624,37 +627,45 @@ window.bp = window.bp || {};
 		 * Add frontend listeners.
 		 */
 		addFrontendListeners : function () {
-			if ( BBTopicsManager.topicsLocalize && BP_Nouveau.activity.params.topics.topic_lists.length > 0 ) {
-				this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
-				this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
+			if ( BBTopicsManager.isEnabledActivityTopic && BP_Nouveau.activity.params.topics.topic_lists.length > 0 ) {
+				if ( this.isActivityTopicRequired ) {
+					this.$document.on( 'mouseenter focus', '#whats-new-submit', this.showTopicTooltip.bind( this ) );
+					this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
+				}
 
 				this.addTopicTooltip = false;
-				// Add topic tooltip.
-				this.$document.on( 'bb_display_full_form', function () {
-					if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper').length === 0 ) {
-						$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
-					}
-				} );
+				if ( BBTopicsManager.isActivityTopicRequired ) {
+					// Add topic tooltip.
+					this.$document.on( 'bb_display_full_form', function () {
+						if ( $( '.activity-update-form #whats-new-submit .bb-topic-tooltip-wrapper' ).length === 0 ) {
+							$( '.activity-update-form.modal-popup #whats-new-submit' ).prepend( '<div class="bb-topic-tooltip-wrapper"><div class="bb-topic-tooltip">' + BBTopicsManager.topicTooltipError + '</div></div>' );
+						}
+					} );
+				}
 
 				this.$document.on( 'postValidate', function () {
 					$( document ).trigger( 'bb_display_full_form' );
 
-					var topicSelectorExists = $( '#activity-form-submit-wrapper .whats-new-topic-selector:visible' ).length > 0;
-					var $topicName          = $( '.whats-new-topic-selector:visible' ).find( '.bb-topic-selector-list li a.selected' );
-					if ( $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
-						this.addTopicTooltip = true;
-						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-					} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
-						this.addTopicTooltip = false;
-						$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
-					} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && $topicName.length ) {
-						this.addTopicTooltip = false;
-						$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
+					if ( BBTopicsManager.isActivityTopicRequired ) {
+						var topicSelectorExists = $( '#activity-form-submit-wrapper .whats-new-topic-selector:visible' ).length > 0;
+						var $topicName          = $( '.whats-new-topic-selector:visible' ).find( '.bb-topic-selector-list li a.selected' );
+						if ( $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
+							this.addTopicTooltip = true;
+							$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+						} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && ! $topicName.length ) {
+							this.addTopicTooltip = false;
+							$( '.activity-update-form.modal-popup #whats-new-form' ).addClass( 'focus-in--empty' );
+						} else if ( ! $( '.activity-update-form.modal-popup #whats-new-form' ).hasClass( 'focus-in--empty' ) && topicSelectorExists && $topicName.length ) {
+							this.addTopicTooltip = false;
+							$( '.activity-update-form.modal-popup #whats-new-form' ).removeClass( 'focus-in--empty' );
+						}
 					}
 				} );
 
 				this.$document.on( 'bb_topic_selected', function () {
-					$( document ).trigger( 'postValidate' );
+					if ( BBTopicsManager.isActivityTopicRequired ) {
+						$( document ).trigger( 'postValidate' );
+					}
 				} );
 
 				$( document ).on( 'bb_draft_activity_loaded', function ( event, activity_data ) {

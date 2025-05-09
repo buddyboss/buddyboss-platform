@@ -441,6 +441,7 @@ class BB_Activity_Topics_Manager {
 			$topic_lists = $this->bb_get_activity_topics();
 		}
 
+		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics'] = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
 		$strings['activity']['params']['topics']['bb_is_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                   = ! empty( $topic_lists ) ? $topic_lists : array();
 		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
