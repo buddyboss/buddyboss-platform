@@ -168,6 +168,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bp_nouveau_get_media_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_nouveau_get_video_description_html', array( $this, 'bb_rl_modify_document_description_html' ), 10 );
 				add_filter( 'bp_core_get_js_strings', array( $this, 'bb_rl_modify_js_strings' ), 10, 1 );
+
+				remove_all_actions( 'login_head' );
+				remove_all_actions( 'login_form' );
+				remove_all_actions( 'login_enqueue_scripts' );
+				remove_all_actions( 'login_message' );
+
+				// Login page.
+				add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
+				add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
+				add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
+				add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 			}
 
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'bb_rl_admin_enqueue_scripts' ), 1 );
@@ -178,12 +189,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				add_filter( 'bb_document_icon_class', array( $this, 'bb_readylaunch_document_icon_class' ) );
 			}
-
-			// Login page.
-			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
-			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );		
-			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
-			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 		}
 
 		/**
@@ -258,7 +263,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_current_component( 'media' ) ||
 					is_admin() ||
 					wp_doing_ajax() ||
-					self::bb_is_network_search()
+					self::bb_is_network_search() ||
+					is_login() ||
+					bp_is_register_page()
 				)
 			) {
 				return true;
@@ -507,6 +514,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string ReadyLaunch layout template.
 		 */
 		public function override_page_templates() {
+
+			if ( bp_is_register_page()  ) {
+				return bp_locate_template( 'register.php' );
+			}
 
 			return bp_locate_template( 'layout.php' );
 		}
@@ -1962,7 +1973,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( $GLOBALS['pagenow'] === 'wp-login.php' && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'confirm_admin_email' ) {
 				$confirm_admin_email_page = true;
 			}
-	
+
 			if ( $confirm_admin_email_page === false ) {
 				if ( empty( $message ) ) {
 					return sprintf(
