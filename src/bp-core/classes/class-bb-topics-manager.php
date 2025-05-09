@@ -395,6 +395,8 @@ class BB_Topics_Manager {
 			array(
 				'name'       => '',
 				'slug'       => '',
+				'item_type'  => 'activity',
+				'item_id'    => 0,
 				'error_type' => 'bool',
 			)
 		);
@@ -410,6 +412,8 @@ class BB_Topics_Manager {
 
 			return false;
 		}
+
+		$r['slug'] = ! empty( $r['slug'] ) ? $r['slug'] : sanitize_title( $r['name'] );
 
 		// Check if relationship already exists.
 		$existing_relationship = $this->bb_get_topic(
@@ -454,8 +458,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$r['slug'] = sanitize_title( $r['name'] );
 
 		$existing_slug = $this->bb_get_topic_by( 'slug', $r['slug'] );
 
@@ -794,8 +796,8 @@ class BB_Topics_Manager {
 				'orderby'            => 'menu_order',
 				'order'              => 'ASC',
 				'search'             => '',
-				'item_id'            => '',
-				'item_type'          => '',
+				'item_id'            => 0,
+				'item_type'          => 'activity',
 				'permission_type'    => '',
 				'user_id'            => 0,
 				'include'            => array(),
