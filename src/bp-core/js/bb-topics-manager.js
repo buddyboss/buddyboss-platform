@@ -636,7 +636,7 @@ window.bp = window.bp || {};
 					}
 				} );
 
-				this.$document.on( 'postValidate', function ( event ) {
+				this.$document.on( 'postValidate', function () {
 					$( document ).trigger( 'bb_display_full_form' );
 
 					var topicSelectorExists = $( '#activity-form-submit-wrapper .whats-new-topic-selector:visible' ).length > 0;
@@ -653,7 +653,7 @@ window.bp = window.bp || {};
 					}
 				} );
 
-				this.$document.on( 'bb_topic_selected', function ( event, topicID ) {
+				this.$document.on( 'bb_topic_selected', function () {
 					$( document ).trigger( 'postValidate' );
 				} );
 

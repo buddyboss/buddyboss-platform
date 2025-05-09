@@ -4500,23 +4500,23 @@ window.bp = window.bp || {};
 						! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 						BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
 					) {
-						var topic_lists = model.get( 'topics' );
+						var group_topic_lists = model.get( 'topics' );
 
-						if ( topic_lists && topic_lists.topic_lists ) {
-							topic_lists = topic_lists.topic_lists;
+						if ( group_topic_lists && group_topic_lists.topic_lists ) {
+							group_topic_lists = group_topic_lists.topic_lists;
 						} else {
-							topic_lists = model.get( 'topic_lists' );
+							group_topic_lists = model.get( 'topic_lists' );
 						}
 
-						topic_lists = ! _.isUndefined( topic_lists ) ? topic_lists : [];
+						group_topic_lists = ! _.isUndefined( group_topic_lists ) ? group_topic_lists : [];
 
 						this.model.set( 'topics', {
-							topic_lists : topic_lists
+							topic_lists : group_topic_lists
 						} );
 
 						Backbone.trigger( 'topic:update', this.model.get( 'topics' ) );
 
-						if ( topic_lists.length > 0 ) {
+						if ( group_topic_lists.length > 0 ) {
 							$( '.whats-new-topic-selector' ).removeClass( 'bp-hide' );
 						} else {
 							$( '.whats-new-topic-selector' ).addClass( 'bp-hide' );
