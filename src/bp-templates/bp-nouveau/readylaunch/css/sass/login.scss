@@ -181,4 +181,34 @@ h1.wp-login-logo {
 		padding: 5px 12px;
 		width: auto;
 	}
+
+	.message,
+	.success,
+	.notice {
+		margin-top: var(--bb-rl-space-200);
+		padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+		box-shadow: none;
+
+		p {
+			color: var(--bb-rl-text-color);
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.8;
+		}
+	}
+
+	.message {
+		background-color: var(--bb-rl-background-brand-secondary-color);
+		border-color: var(--bb-rl-border-brand-secondary-color);
+	}
+
+	.success {
+		background-color: var(--bb-rl-background-positive-secondary-color);
+		border-color: var(--bb-rl-border-positive-secondary-color);
+	}
+
+	.notice-error {
+		background-color: var(--bb-rl-background-danger-secondary-color);
+		border-color: var(--bb-rl-border-danger-secondary-color);
+	}
 }

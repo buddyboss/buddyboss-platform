@@ -2661,3 +2661,35 @@ h1.wp-login-logo a {
   padding: 5px 12px;
   width: auto;
 }
+
+.login .message,
+.login .success,
+.login .notice {
+  margin-top: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  box-shadow: none;
+}
+
+.login .message p,
+.login .success p,
+.login .notice p {
+  color: var(--bb-rl-text-color);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.login .message {
+  background-color: var(--bb-rl-background-brand-secondary-color);
+  border-color: var(--bb-rl-border-brand-secondary-color);
+}
+
+.login .success {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  border-color: var(--bb-rl-border-positive-secondary-color);
+}
+
+.login .notice-error {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
