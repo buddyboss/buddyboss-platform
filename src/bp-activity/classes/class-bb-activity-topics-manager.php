@@ -430,22 +430,50 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
-		$args = array(
-			'item_id'   => 0,
-			'item_type' => 'activity',
+		if (
+			bp_is_active( 'groups' ) &&
+			bb_is_enabled_group_activity_topics() &&
+			bp_is_group() &&
+			function_exists( 'bb_get_group_activity_topics' )
+		) {
+			$topic_lists = bb_get_group_activity_topics();
+		} else {
+			$topic_lists = $this->bb_get_activity_topics();
+		}
+
+		$strings['activity']['params']['topics']['bb_is_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
+		$strings['activity']['params']['topics']['topic_lists']                   = ! empty( $topic_lists ) ? $topic_lists : array();
+		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
+		return $strings;
+	}
+
+	/**
+	 * Function to get the activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments array.
+	 *
+	 * @return array Array of activity topics.
+	 */
+	public function bb_get_activity_topics( $args = array() ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'item_id'   => 0,
+				'item_type' => 'activity',
+			)
 		);
 
 		if ( bp_current_user_can( 'administrator' ) ) {
-			$args['permission_type'] = array( 'mods_admins', 'anyone' );
+			$r['permission_type'] = array( 'mods_admins', 'anyone' );
 		} else {
-			$args['permission_type'] = 'anyone';
+			$r['permission_type'] = 'anyone';
 		}
 
-		$topic_lists = function_exists( 'bb_topics_manager_instance' ) ? bb_topics_manager_instance()->bb_get_topics( $args ) : array();
-		$strings['activity']['params']['topics']['bb_is_activity_topic_required'] = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
-		$strings['activity']['params']['topics']['topic_lists']                   = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
-		$strings['activity']['params']['topics']['topic_tooltip_error']           = esc_html__( 'Please select a topic', 'buddyboss' );
-		return $strings;
+		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
+
+		return ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
 	}
 
 	/**
