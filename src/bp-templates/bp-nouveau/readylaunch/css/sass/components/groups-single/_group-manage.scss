@@ -181,6 +181,23 @@
 		background-position: 12px 50%;
 		background-size: 16px;
 		padding-left: 36px;
+
+		&.loading {
+			background-image: none;
+			padding-left: var(--bb-rl-space-200);
+
+			&::before {
+				content: "";
+				display: inline-block;
+				height: 18px;
+				width: 18px;
+				border: 2px solid var(--bb-rl-border-quaternary-color);
+				border-top-color: var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-full);
+				margin-right: var(--bb-rl-space-100);
+				animation: spin 3s infinite linear;
+			}
+		}
 	}
 
 	.bp-avatar-nav {
