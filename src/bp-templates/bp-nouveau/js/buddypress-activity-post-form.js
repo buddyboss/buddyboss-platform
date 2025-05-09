@@ -5912,7 +5912,9 @@ window.bp = window.bp || {};
 						'can_schedule_in_feed',
 						'can_create_poll_activity',
 						'bb-poll-question-option',
-						'poll'
+						'poll',
+						'topic_lists',
+						'topic_name'
 					]
 				);
 
