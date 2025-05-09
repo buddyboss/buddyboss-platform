@@ -97,7 +97,6 @@ window.bp = window.bp || {};
 			bp.Views       = bp.Views || {};
 
 			var activityParams           = BP_Nouveau.activity.params;
-			this.topicsLocalize          = ! _.isUndefined( activityParams.topics ) ? activityParams.topics : false;
 			this.isEnabledActivityTopic  = ! _.isUndefined( activityParams.topics.bb_is_enabled_activity_topics ) ? activityParams.topics.bb_is_enabled_activity_topics : false;
 			this.isActivityTopicRequired = ! _.isUndefined( activityParams.topics.bb_is_activity_topic_required ) ? activityParams.topics.bb_is_activity_topic_required : false;
 			this.isActivityTopicRequired = ! _.isUndefined( activityParams.topics.bb_is_activity_topic_required ) ? activityParams.topics.bb_is_activity_topic_required : false;
@@ -634,7 +633,6 @@ window.bp = window.bp || {};
 					this.$document.on( 'mouseleave blur', '#whats-new-submit', this.hideTopicTooltip.bind( this ) );
 				}
 
-				this.addTopicTooltip = false;
 				if ( BBTopicsManager.isActivityTopicRequired ) {
 					// Add topic tooltip.
 					this.$document.on( 'bb_display_full_form', function () {
