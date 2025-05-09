@@ -1252,6 +1252,10 @@ div.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current, div.xdsoft_datetim
   box-shadow: none !important;
 }
 
+div.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today {
+  color: var(--bb-rl-primary-color);
+}
+
 div.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select {
   background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
@@ -1312,6 +1316,7 @@ div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time {
 div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time.xdsoft_current, div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time:hover {
   color: var(--bb-rl-text-color) !important;
   background-color: var(--bb-rl-background-secondary-hover-color) !important;
+  box-shadow: none;
 }
 
 .bb-readylaunch-template .bb-schedule-post_dropdown_section .bb-time-meridian {
