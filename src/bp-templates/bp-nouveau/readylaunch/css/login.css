@@ -2591,7 +2591,7 @@ h1.wp-login-logo a {
   font-family: inherit;
 }
 
-.login .button-primary {
+.login .submit .button-primary {
   width: 100%;
   border-radius: var(--bb-rl-radius-base);
   background-color: var(--bb-rl-primary-color);
@@ -2692,4 +2692,31 @@ h1.wp-login-logo a {
 .login .notice-error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.login #bb-sso-custom-login-form-1 .bb-sso-separator {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.login #bb-sso-custom-login-form-1 .bb-sso-separator:before, .login #bb-sso-custom-login-form-1 .bb-sso-separator:after {
+  background-color: var(--bb-rl-background-tertiary-color);
+}
+
+.login div.bb-sso-container .bb-sso-button-default {
+  border-color: var(--bb-rl-border-tertiary-color);
+  padding: 5px 9px;
+}
+
+.login div.bb-sso-container .bb-sso-button-default div.bb-sso-button-label-container {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+  margin-left: 5px;
+}
+
+.login div.bb-sso-container svg {
+  height: 16px;
+  width: 16px;
 }
