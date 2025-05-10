@@ -1040,10 +1040,14 @@ class BB_Topics_Manager {
 		 */
 		$topic_sql = apply_filters( 'bb_get_topics_sql', $topic_sql, $r );
 
-		$cached = bp_core_get_incremented_cache( $topic_sql, self::$topic_cache_group );
+		// Create a unique cache key based on the query parameters.
+		$cache_key = 'bb_topics_query_' . md5( maybe_serialize( $r ) );
+
+		// Get cached results.
+		$cached = bp_core_get_incremented_cache( $cache_key, self::$topic_cache_group );
 		if ( false === $cached ) {
 			$topic_ids = $this->wpdb->get_col( $topic_sql ); // phpcs:ignore
-			bp_core_set_incremented_cache( $topic_sql, self::$topic_cache_group, $topic_ids );
+			bp_core_set_incremented_cache( $cache_key, self::$topic_cache_group, $topic_ids );
 		} else {
 			$topic_ids = $cached;
 		}
@@ -1056,22 +1060,27 @@ class BB_Topics_Manager {
 			if ( ! empty( $uncached_ids ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
-				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.*' . $global_activity_sql . ' FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ')', ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
-						wp_cache_set( $topic_data['id'], $topic_data, self::$topic_cache_group );
+						// Create a unique cache key for each topic relationship.
+						$relationship_cache_key = 'bb_topic_relationship_' . $topic_data['id'] . '_' . $topic_data['item_id'] . '_' . $topic_data['item_type'];
+						wp_cache_set( $relationship_cache_key, $topic_data, self::$topic_cache_group );
 					}
 				}
 			}
 
 			$topic_data = array();
 			foreach ( $topic_ids as $id ) {
-				$topic = wp_cache_get( $id, self::$topic_cache_group );
+				// Get the cached topic relationship using the unique key.
+				$item_id                = is_array( $r['item_id'] ) ? implode( '_', $r['item_id'] ) : $r['item_id'];
+				$item_type              = is_array( $r['item_type'] ) ? implode( '_', $r['item_type'] ) : $r['item_type'];
+				$relationship_cache_key = 'bb_topic_relationship_' . $id . '_' . $item_id . '_' . $item_type;
+				$topic                  = wp_cache_get( $relationship_cache_key, self::$topic_cache_group );
+
 				if ( ! empty( $topic ) ) {
 					$topic['is_global_activity'] = ! empty( $topic['is_global_activity'] ) ? (bool) $topic['is_global_activity'] : false;
-
-					$topic_data[] = (object) $topic;
+					$topic_data[]                = (object) $topic;
 				}
 			}
 
@@ -1099,11 +1108,12 @@ class BB_Topics_Manager {
 				 ' . $where_sql,
 				$where_sql
 			);
-			$cached                   = bp_core_get_incremented_cache( $total_activity_topic_sql, self::$topic_cache_group );
+
+			$total_cache_key = 'bb_topics_count_' . md5( maybe_serialize( $r ) );
+			$cached          = bp_core_get_incremented_cache( $total_cache_key, self::$topic_cache_group );
 			if ( false === $cached ) {
-				// phpcs:ignore
-				$total_activity_topics = $this->wpdb->get_var( $total_activity_topic_sql );
-				bp_core_set_incremented_cache( $total_activity_topic_sql, self::$topic_cache_group, $total_activity_topics );
+				$total_activity_topics = $this->wpdb->get_var( $total_activity_topic_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				bp_core_set_incremented_cache( $total_cache_key, self::$topic_cache_group, $total_activity_topics );
 			} else {
 				$total_activity_topics = $cached;
 			}
