@@ -264,7 +264,15 @@ class BB_Topics_Manager {
 		$item_id            = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
 		$item_type          = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
 		$action_from        = isset( $_POST['action_from'] ) ? sanitize_text_field( wp_unslash( $_POST['action_from'] ) ) : 'admin';
-		$is_global_activity = isset( $_POST['is_global_activity'] ) ? (bool) sanitize_text_field( wp_unslash( $_POST['is_global_activity'] ) ) : false;
+		$is_global_activity = false;
+		if ( isset( $_POST['is_global_activity'] ) ) {
+			$val = sanitize_text_field( wp_unslash( $_POST['is_global_activity'] ) );
+			if ( '1' === $val || 'true' === $val ) {
+				$is_global_activity = true;
+			} else {
+				$is_global_activity = false;
+			}
+		}
 
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
@@ -495,9 +503,10 @@ class BB_Topics_Manager {
 
 		$previous_topic_id  = $r['id'];
 		$name               = $r['name'];
+		$slug               = $r['slug'];
 		$item_type          = $r['item_type'];
 		$item_id            = $r['item_id'];
-		$is_global_activity = isset( $r['is_global_activity'] ) ? $r['is_global_activity'] : false;
+		$is_global_activity = $r['is_global_activity'];
 		$permission_type    = $r['permission_type'];
 
 		// Check if the topic is global activity.
@@ -521,7 +530,7 @@ class BB_Topics_Manager {
 		do_action( 'bb_topic_before_updated', $r, $previous_topic_id, $previous_topic );
 
 		// First check if new name exists in bb_topics table.
-		$existing_topic = $this->bb_get_topic_by( 'name', $name );
+		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
 		if ( ! $existing_topic ) { // NO.
 			if ( $is_global_activity && 'group' === $item_type ) {
 				wp_send_json_error(
