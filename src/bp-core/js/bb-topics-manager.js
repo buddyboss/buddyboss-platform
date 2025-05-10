@@ -175,14 +175,14 @@ window.bp = window.bp || {};
 						} else {
 							// Add topic tooltip while group topics are loaded.
 							$( document ).trigger( 'bb_display_full_form' );
+						}
 
-							// Trigger input event on #whats-new to trigger postValidate.
-							if (
-								'undefined' !== typeof bp.Nouveau.Activity &&
-								bp.Nouveau.Activity.postForm
-							) {
-								$( '#whats-new' ).trigger( 'input' );
-							}
+						// Trigger input event on #whats-new to trigger postValidate.
+						if (
+							'undefined' !== typeof bp.Nouveau.Activity &&
+							bp.Nouveau.Activity.postForm
+						) {
+							$( '#whats-new' ).trigger( 'input' );
 						}
 
 						this.render();
@@ -816,7 +816,8 @@ window.bp = window.bp || {};
 
 			if (
 				! _.isUndefined( data.topics ) &&
-				! _.isUndefined( data.topics.topic_lists )
+				! _.isUndefined( data.topics.topic_lists ) &&
+				data.topics.topic_lists.length > 0
 			) {
 				// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
 				if (
