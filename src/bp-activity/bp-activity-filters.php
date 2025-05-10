@@ -4004,7 +4004,7 @@ function bb_activity_save_topic_data( $activity ) {
 			array(
 				'topic_id'    => $topic_id,
 				'activity_id' => $activity->id,
-				'component'   => 'activity',
+				'component'   => $activity->component,
 				'item_id'     => $item_id,
 			)
 		);
