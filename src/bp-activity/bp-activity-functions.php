@@ -1941,6 +1941,7 @@ function bp_activity_get( $args = '' ) {
 			'filter'            => array(),
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
+			'topic_id'          => false,
 		),
 		'activity_get'
 	);

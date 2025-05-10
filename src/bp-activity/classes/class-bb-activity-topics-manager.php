@@ -32,13 +32,13 @@ class BB_Activity_Topics_Manager {
 	private static $instance = null;
 
 	/**
-	 * Cache group for activity topics.
+	 * Table name for Activity Topic Relationships.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var string
 	 */
-	public static $topic_cache_group = 'bb_activity_topics';
+	public $activity_topic_rel_table;
 
 	/**
 	 * WordPress Database instance.
@@ -72,6 +72,9 @@ class BB_Activity_Topics_Manager {
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
+		$prefix     = bp_core_get_table_prefix();
+
+		$this->activity_topic_rel_table = bb_topics_manager_instance()->activity_topic_rel_table;
 
 		$this->setup_hooks();
 	}
@@ -153,9 +156,14 @@ class BB_Activity_Topics_Manager {
 			return;
 		}
 
+		$args = array();
+		if ( 'groups' === $item->component ) {
+			$args['item_id']   = $item->item_id;
+			$args['item_type'] = 'group';
+		}
 		$item->id         = (int) $item->id;
-		$topics           = bb_topics_manager_instance()->bb_get_topics();
-		$current_topic_id = (int) bb_topics_manager_instance()->bb_get_activity_topic( $item->id, 'id' );
+		$topics           = bb_topics_manager_instance()->bb_get_topics( $args );
+		$current_topic_id = (int) $this->bb_get_activity_topic( $item->id, 'id' );
 		?>
 		<div class="bb-activity-topic-container">
 			<?php wp_nonce_field( 'save_activity_topic', 'activity_topic_nonce' ); ?>
@@ -164,7 +172,7 @@ class BB_Activity_Topics_Manager {
 				if ( ! empty( $topics['topics'] ) ) {
 					foreach ( $topics['topics'] as $topic ) {
 						?>
-						<option value="<?php echo esc_attr( $topic->id ); ?>" <?php selected( $current_topic_id, $topic->topic_id ); ?>>
+						<option value="<?php echo esc_attr( $topic->topic_id ); ?>" <?php selected( $current_topic_id, $topic->topic_id ); ?>>
 							<?php echo esc_html( $topic->name ); ?>
 						</option>
 						<?php
@@ -208,7 +216,7 @@ class BB_Activity_Topics_Manager {
 			if ( 'groups' === $activity->component ) {
 				$args['item_id'] = $activity->item_id;
 			}
-			bb_topics_manager_instance()->bb_add_activity_topic_relationship( $args );
+			$this->bb_add_activity_topic_relationship( $args );
 		}
 	}
 
@@ -246,13 +254,138 @@ class BB_Activity_Topics_Manager {
 	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
 
 		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
-			$topic_name = bb_topics_manager_instance()->bb_get_activity_topic( $item['id'], 'name' );
+			$topic_name = $this->bb_get_activity_topic( $item['id'], 'name' );
 			if ( ! empty( $topic_name ) ) {
 				return $topic_name;
 			}
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Add or update an activity-topic relationship.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args {
+	 *     Array of arguments for adding/updating an activity-topic relationship.
+	 *
+	 *     @type int    $topic_id    The ID of the topic.
+	 *     @type int    $activity_id The ID of the activity.
+	 *     @type string $component   The component name (e.g., 'activity', 'groups').
+	 *     @type int    $item_id     The ID of the item (e.g., group ID if component is 'groups').
+	 * }
+	 *
+	 * @return int|WP_Error The ID of the relationship or WP_Error on failure.
+	 */
+	public function bb_add_activity_topic_relationship( $args ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'topic_id'    => 0,
+				'activity_id' => 0,
+				'component'   => 'activity',
+				'item_id'     => 0,
+				'error_type'  => 'wp_error',
+			)
+		);
+
+		// Validate required fields.
+		if ( empty( $r['topic_id'] ) || empty( $r['activity_id'] ) ) {
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss' ) );
+		}
+
+		/**
+		 * Fires before an activity-topic relationship is added or updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $r The arguments used to add/update the relationship.
+		 */
+		do_action( 'bb_activity_topic_relationship_before_add', $r );
+
+		// Check if activity already has a topic assigned.
+		$existing = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id, topic_id FROM {$this->activity_topic_rel_table} WHERE activity_id = %d", $r['activity_id'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		if ( $existing ) {
+			// If the same topic is already assigned, return the existing relationship ID.
+			if ( $existing->topic_id === $r['topic_id'] ) {
+				return $existing->id;
+			}
+
+			// Update the existing relationship with the new topic.
+			$updated = $this->wpdb->update(
+				$this->activity_topic_rel_table,
+				array(
+					'topic_id'     => $r['topic_id'],
+					'component'    => $r['component'],
+					'item_id'      => $r['item_id'],
+					'date_updated' => current_time( 'mysql' ),
+				),
+				array( 'id' => $existing->id ),
+				array( '%d', '%s', '%d', '%s' ),
+				array( '%d' )
+			);
+
+			if ( false === $updated ) {
+				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss' );
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'bb_activity_topic_relationship_db_update_error', $error_message );
+				}
+
+				wp_send_json_error( array( 'error' => $error_message ) );
+			}
+
+			/**
+			 * Fires after an activity-topic relationship is updated.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int   $existing->id The ID of the updated relationship.
+			 * @param array $r            The arguments used to update the relationship.
+			 */
+			do_action( 'bb_activity_topic_relationship_after_update', $existing->id, $r );
+
+			return $existing->id;
+		}
+
+		// Insert new relationship.
+		$inserted = $this->wpdb->insert(
+			$this->activity_topic_rel_table,
+			array(
+				'topic_id'     => $r['topic_id'],
+				'activity_id'  => $r['activity_id'],
+				'component'    => $r['component'],
+				'item_id'      => $r['item_id'],
+				'date_created' => current_time( 'mysql' ),
+				'date_updated' => current_time( 'mysql' ),
+			),
+			array( '%d', '%d', '%s', '%d', '%s', '%s' )
+		);
+
+		if ( ! $inserted ) {
+			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss' );
+			if ( 'wp_error' === $r['error_type'] ) {
+				return new WP_Error( 'bb_activity_topic_relationship_db_insert_error', $error_message );
+			}
+
+			wp_send_json_error( array( 'error' => $error_message ) );
+		}
+
+		$relationship_id = $this->wpdb->insert_id;
+
+		/**
+		 * Fires after an activity-topic relationship is added.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $relationship_id The ID of the inserted relationship.
+		 * @param array $r               The arguments used to add the relationship.
+		 */
+		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $r );
+
+		return $relationship_id;
 	}
 
 	/**
@@ -273,9 +406,6 @@ class BB_Activity_Topics_Manager {
 			)
 		);
 
-		$prefix = bp_core_get_table_prefix();
-		$table  = "{$prefix}bb_activity_topic_relationship";
-
 		/**
 		 * Fires before updating the activity topic relationship.
 		 *
@@ -289,7 +419,7 @@ class BB_Activity_Topics_Manager {
 		do_action( 'bb_before_update_activity_topic_relationship', $args );
 
 		$updated = $this->wpdb->update(
-			$table,
+			$this->activity_topic_rel_table,
 			array( 'topic_id' => $r['topic_id'] ),
 			array( 'topic_id' => $r['previous_id'] ),
 			array( '%d' ),
@@ -332,9 +462,6 @@ class BB_Activity_Topics_Manager {
 			)
 		);
 
-		$prefix = bp_core_get_table_prefix();
-		$table  = "{$prefix}bb_activity_topic_relationship";
-
 		/**
 		 * Fires before deleting the activity topic relationship.
 		 *
@@ -347,7 +474,7 @@ class BB_Activity_Topics_Manager {
 		do_action( 'bb_before_delete_activity_topic_relationship', $args );
 
 		$deleted = $this->wpdb->delete(
-			$table,
+			$this->activity_topic_rel_table,
 			array( 'topic_id' => $r['topic_id'] ),
 			array( '%d' )
 		);
@@ -384,7 +511,7 @@ class BB_Activity_Topics_Manager {
 			return $args;
 		}
 
-		$topic_id = bb_topics_manager_instance()->bb_get_activity_topic( (int) $args['id'], 'id' );
+		$topic_id = $this->bb_get_activity_topic( (int) $args['id'], 'id' );
 
 		$args['topic_id'] = $topic_id;
 
@@ -532,5 +659,33 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Get the activity topic information.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $activity_id The ID of the activity.
+	 * @param string $return_type The type of data to return ('name' or 'id').
+	 *
+	 * @return string|int Topic name, ID, or empty string/0 if not found.
+	 */
+	public function bb_get_activity_topic( $activity_id, $return_type = 'id' ) {
+		// Validate activity ID.
+		$activity_id = absint( $activity_id );
+		if ( empty( $activity_id ) ) {
+			return 'name' === $return_type ? '' : 0;
+		}
+
+		$bp_prefix     = bp_core_get_table_prefix();
+		$column        = 'name' === $return_type ? 't.name' : 't.id';
+		$default_value = 'name' === $return_type ? '' : 0;
+
+		$result = $this->wpdb->get_var(
+			$this->wpdb->prepare( "SELECT {$column} FROM {$this->activity_topic_rel_table} atr INNER JOIN {$bp_prefix}bb_topics t ON t.id = atr.topic_id WHERE atr.activity_id = %d LIMIT 1", $activity_id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		);
+
+		return null !== $result ? $result : $default_value;
 	}
 }

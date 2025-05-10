@@ -127,10 +127,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 						<p class="activity-topic 3">
 							<?php
 							if (
-								function_exists( 'bb_topics_manager_instance' ) &&
-								method_exists( bb_topics_manager_instance(), 'bb_get_activity_topic' )
+								function_exists( 'bb_activity_topics_manager_instance' ) &&
+								method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic' )
 							) {
-								echo esc_html( bb_topics_manager_instance()->bb_get_activity_topic( bp_get_activity_id(), 'name' ) );
+								echo esc_html( bb_activity_topics_manager_instance()->bb_get_activity_topic( bp_get_activity_id(), 'name' ) );
 							}
 							?>
 						</p>
@@ -168,10 +168,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 				<p class="activity-topic 4">
 					<?php
 					if (
-						function_exists( 'bb_topics_manager_instance' ) &&
-						method_exists( bb_topics_manager_instance(), 'bb_get_activity_topic' )
+						function_exists( 'bb_activity_topics_manager_instance' ) &&
+						method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic' )
 					) {
-						echo esc_html( bb_topics_manager_instance()->bb_get_activity_topic( bp_get_activity_id(), 'name' ) );
+						echo esc_html( bb_activity_topics_manager_instance()->bb_get_activity_topic( bp_get_activity_id(), 'name' ) );
 					}
 					?>
 				</p>
