@@ -338,16 +338,30 @@ class BB_Topics_Manager {
 		);
 
 		if ( empty( $r['name'] ) ) {
+			$error_message = __( 'Topic name is required.', 'buddyboss' );
 			if ( 'wp_error' === $r['error_type'] ) {
 				unset( $r );
 
-				return new WP_Error( 'bb_topic_name_required', __( 'Topic name is required.', 'buddyboss' ) );
+				return new WP_Error( 'bb_topic_name_required', $error_message );
 			}
 
 			unset( $r );
 
-			return false;
+			wp_send_json_error(
+				array(
+					'error' => $error_message,
+				)
+			);
 		}
+
+		/**
+		 * Fires before a topic has been added.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $r The arguments used to add the topic.
+		 */
+		do_action( 'bb_topic_before_added', $r );
 
 		$r['slug'] = ! empty( $r['slug'] ) ? $r['slug'] : sanitize_title( $r['name'] );
 
@@ -463,7 +477,7 @@ class BB_Topics_Manager {
 		 * @param object $get_topic_relationship The topic relationship object.
 		 * @param array  $r The arguments used to add the topic.
 		 */
-		do_action( 'bb_topic_added', $get_topic_relationship, $r );
+		do_action( 'bb_topic_after_added', $get_topic_relationship, $r );
 
 		unset( $r, $data, $format, $inserted );
 

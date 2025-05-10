@@ -695,8 +695,8 @@ function bb_topic_added_cache_reset( $topic_relationship, $r ) {
 	}
 }
 
-add_action( 'bb_topic_added', 'bb_topic_added_cache_reset', 10, 2 );
-add_action( 'bb_topic_updated', 'bb_topic_added_cache_reset', 10, 2 );
+add_action( 'bb_topic_after_added', 'bb_topic_added_cache_reset', 10, 2 );
+add_action( 'bb_topic_after_updated', 'bb_topic_added_cache_reset', 10, 2 );
 
 /**
  * Reset cache when a topic is deleted.
