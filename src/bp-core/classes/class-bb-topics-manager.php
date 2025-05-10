@@ -1195,9 +1195,7 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'topic_id'  => 0,
-				'item_id'   => 0,
-				'item_type' => '',
+				'topic_id' => 0
 			)
 		);
 
