@@ -87,6 +87,7 @@ class BB_Activity_Topics_Manager {
 		// Add custom column to activity admin list table.
 		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
 		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
+		add_action( 'bp_activity_admin_edit_after', array( $this, 'bb_save_activity_topic_metabox' ), 10, 1 );
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
@@ -157,8 +158,8 @@ class BB_Activity_Topics_Manager {
 		$current_topic_id = (int) bb_topics_manager_instance()->bb_get_activity_topic( $item->id, 'id' );
 		?>
 		<div class="bb-activity-topic-container">
+			<?php wp_nonce_field( 'save_activity_topic', 'activity_topic_nonce' ); ?>
 			<select name="activity_topic" id="activity_topic">
-				<option value=""><?php esc_html_e( '-- Select Topic --', 'buddyboss' ); ?></option>
 				<?php
 				if ( ! empty( $topics['topics'] ) ) {
 					foreach ( $topics['topics'] as $topic ) {
@@ -173,6 +174,42 @@ class BB_Activity_Topics_Manager {
 			</select>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Save the activity topic metabox.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $activity The activity object.
+	 */
+	public function bb_save_activity_topic_metabox( $activity ) {
+		if ( ! isset( $activity->id ) || ! isset( $_POST['activity_topic'] ) ) {
+			return;
+		}
+
+		// Check nonce for security.
+		if ( ! isset( $_POST['activity_topic_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['activity_topic_nonce'] ) ), 'save_activity_topic' ) ) {
+			return;
+		}
+
+		// Get the topic ID from the form.
+		$topic_id    = isset( $_POST['activity_topic'] ) ? absint( $_POST['activity_topic'] ) : 0;
+		$activity_id = isset( $activity->id ) ? absint( $activity->id ) : 0;
+
+		if ( $activity_id && $topic_id && function_exists( 'bb_topics_manager_instance' ) ) {
+			// Save or update the activity-topic relationship.
+			$args = array(
+				'topic_id'    => $topic_id,
+				'activity_id' => $activity_id,
+				'component'   => $activity->component,
+				'item_id'     => 0,
+			);
+			if ( 'groups' === $activity->component ) {
+				$args['item_id'] = $activity->item_id;
+			}
+			bb_topics_manager_instance()->bb_add_activity_topic_relationship( $args );
+		}
 	}
 
 	/**
