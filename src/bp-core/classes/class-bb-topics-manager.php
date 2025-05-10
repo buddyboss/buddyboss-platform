@@ -520,7 +520,7 @@ class BB_Topics_Manager {
 		$slug               = $r['slug'];
 		$item_type          = $r['item_type'];
 		$item_id            = $r['item_id'];
-		$is_global_activity = $r['is_global_activity'];
+		$is_global_activity = isset( $r['is_global_activity'] ) ? $r['is_global_activity'] : false;
 		$permission_type    = $r['permission_type'];
 
 		// Check if the topic is global activity.
