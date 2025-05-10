@@ -175,6 +175,14 @@ window.bp = window.bp || {};
 						} else {
 							// Add topic tooltip while group topics are loaded.
 							$( document ).trigger( 'bb_display_full_form' );
+
+							// Trigger input event on #whats-new to trigger postValidate.
+							if (
+								'undefined' !== typeof bp.Nouveau.Activity &&
+								bp.Nouveau.Activity.postForm
+							) {
+								$( '#whats-new' ).trigger( 'input' );
+							}
 						}
 
 						this.render();
@@ -796,6 +804,57 @@ window.bp = window.bp || {};
 							}
 						} );
 					}, 100 );
+				}
+			}
+		},
+
+		bbTopicValidateContent : function ( args ) {
+			var $selector     = args.selector,
+			    $validContent = args.validContent,
+			    $class        = args.class,
+			    data          = args.data;
+
+			if (
+				! _.isUndefined( data.topics ) &&
+				! _.isUndefined( data.topics.topic_lists )
+			) {
+				// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
+				if (
+					$validContent &&
+					! _.isUndefined( data.topics.topic_id ) &&
+					0 !== parseInt( data.topics.topic_id )
+				) {
+					$selector.removeClass( $class );
+					$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
+				} else if (
+					$validContent &&
+					(
+						_.isUndefined( data.topics.topic_id ) ||
+						0 === parseInt( data.topics.topic_id )
+					)
+				) {
+					$selector.addClass( $class );
+					$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
+				} else if (
+					! $validContent &&
+					! _.isUndefined( data.topics.topic_id ) &&
+					0 !== parseInt( data.topics.topic_id )
+				) {
+					// If the post is empty and the topic is selected, add the empty class and the tooltip.
+					$selector.addClass( $class );
+					$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
+				} else if (
+					! $validContent &&
+					(
+						_.isUndefined( data.topics.topic_id ) ||
+						0 === parseInt( data.topics.topic_id )
+					)
+				) {
+					// If the post is empty and the topic is not selected, add the empty class and the tooltip.
+					$selector.addClass( $class );
+					$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
+				} else {
+					$selector.removeClass( $class );
 				}
 			}
 		}

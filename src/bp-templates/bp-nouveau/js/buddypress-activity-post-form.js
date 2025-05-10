@@ -939,7 +939,12 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'bp-activity-edit--privacy-idle' );
 			}
 
-			if ( _.isUndefined( activity_data.topics ) ) {
+			if (
+				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+				! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
+				BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+				_.isUndefined( activity_data.topics )
+			) {
 				activity_data.topics = {
 					topic_id    : activity_data.topic_id,
 					topic_name  : '',
@@ -965,26 +970,23 @@ window.bp = window.bp || {};
 			if ( 0 < parseInt( activity_data.id ) ) {
 				Backbone.trigger( 'editactivity' );
 			} else {
-				var isEmpty = bp.Nouveau.Activity.postForm.validateContent();
 				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
-					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
-					undefined !== activity_data.topics &&
-					undefined !== activity_data.topics.topic_id
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
+					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required
 				) {
-					// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
-					if ( isEmpty && 0 !== parseInt( activity_data.topics.topic_id ) ) {
-						self.postForm.$el.removeClass('focus-in--empty loading');
-						$('#whats-new-submit').find('.bb-topic-tooltip-wrapper').remove();
-					} else if ( ! isEmpty && 0 !== parseInt(activity_data.topics.topic_id ) ) {
-						// If the post is empty and the topic is selected, add the empty class and the tooltip.
-						self.postForm.$el.addClass( 'focus-in--empty loading' );
-						$('.bb-topic-tooltip-wrapper').remove();
-					} else {
-						// If the post is empty and the topic is not selected, add the empty class and the tooltip.
-						self.postForm.$el.addClass( 'focus-in--empty loading' );
-						$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
-					}
+					BBTopicsManager.bbTopicValidateContent( {
+						self         : self,
+						selector     : self.postForm.$el,
+						validContent : bp.Nouveau.Activity.postForm.validateContent(),
+						class        : 'focus-in--empty loading',
+						data         : activity_data,
+						action       : 'draft_activity_loaded'
+					} );
+				} else {
+					self.postForm.$el.removeClass( 'focus-in--empty loading' );
 				}
 			}
 
@@ -5529,31 +5531,30 @@ window.bp = window.bp || {};
 					$whatsNew[0].innerHTML = '';
 				}
 
-				var isEmpty = bp.Nouveau.Activity.postForm.validateContent();
-				if ( isEmpty ) {
-					this.$el.removeClass('focus-in--empty loading');
+				var validContent = bp.Nouveau.Activity.postForm.validateContent();
+				if ( validContent ) {
+					this.$el.removeClass( 'focus-in--empty loading' );
 				} else {
 					this.$el.addClass( 'focus-in--empty loading' );
 				}
 
+				// Validate topic content.
 				if (
+					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
+					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
-					undefined !== this.model.get( 'topics' )
+					! _.isUndefined( BBTopicsManager )
 				) {
-					// If the post is not empty and the topic is selected, remove the empty class and the tooltip.
-					if ( isEmpty && ! _.isUndefined( this.model.get( 'topics' ).topic_id ) && 0 !== parseInt( this.model.get( 'topics' ).topic_id ) ) {
-						this.$el.removeClass( 'focus-in--empty' );
-						$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
-					} else if ( ! isEmpty && ! _.isUndefined( this.model.get( 'topics' ).topic_id ) && 0 !== parseInt( this.model.get( 'topics' ).topic_id ) ) {
-						// If the post is empty and the topic is selected, add the empty class and the tooltip.
-						this.$el.addClass( 'focus-in--empty' );
-						$( '#whats-new-submit' ).find( '.bb-topic-tooltip-wrapper' ).remove();
-					} else {
-						// If the post is empty and the topic is not selected, add the empty class and the tooltip.
-						this.$el.addClass( 'focus-in--empty' );
-						$( document ).trigger( 'bb_display_full_form' ); // Trigger the display full form event to show the tooltip.
-					}
+					BBTopicsManager.bbTopicValidateContent( {
+						self         : this,
+						selector     : this.$el,
+						validContent : validContent,
+						class        : 'focus-in--empty',
+						data         : this.model.attributes,
+						action       : 'postValidate'
+					} );
 				}
 			},
 
