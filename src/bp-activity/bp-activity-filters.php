@@ -942,6 +942,11 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 		$activity_latest_args['search_terms'] = addslashes( $data['bp_activity_last_recorded_search_terms'] );
 	}
 
+	// Add topic id to fetch activity by topic.
+	if ( ! empty( $data['bp_heartbeat']['topic_id'] ) && empty( $activity_latest_args['topic_id'] ) ) {
+		$activity_latest_args['topic_id'] = $data['bp_heartbeat']['topic_id'];
+	}
+
 	$newest_activities      = array();
 	$last_activity_recorded = 0;
 

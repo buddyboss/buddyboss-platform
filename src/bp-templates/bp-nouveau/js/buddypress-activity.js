@@ -370,8 +370,10 @@ window.bp = window.bp || {};
 			
 			// If we have a topic filter active, only show activities matching that topic.
 			if ( topicId ) {
-				newest_activities       = newest_activities.filter( function ( activity ) {
-					return activity.topic_id === topicId;
+				newest_activities       = newest_activities.filter( function () {
+					var bpActivity      = this.dataset.bpActivity ? JSON.parse( this.dataset.bpActivity ) : null;
+					var activityTopicId = bpActivity && typeof bpActivity.topic_id !== 'undefined' ? bpActivity.topic_id : null;
+					return activityTopicId && parseInt( activityTopicId ) === parseInt( topicId );
 				} );
 				newest_activities_count = newest_activities.length;
 			}
