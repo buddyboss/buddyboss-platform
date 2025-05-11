@@ -254,10 +254,13 @@ class BB_Activity_Topics_Manager {
 	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
 
 		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
-			$topic_name = $this->bb_get_activity_topic( $item['id'], 'name' );
-			if ( ! empty( $topic_name ) ) {
-				return $topic_name;
-			}
+			return $this->bb_get_activity_topic_url(
+				array(
+					'activity_id' => $item['id'],
+					'html'        => true,
+					'target'      => true,
+				)
+			);
 		}
 
 		return $content;
@@ -667,25 +670,174 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int    $activity_id The ID of the activity.
-	 * @param string $return_type The type of data to return ('name' or 'id').
+	 * @param string $return_type The type of data to return ('id', 'name', 'slug', 'all').
 	 *
-	 * @return string|int Topic name, ID, or empty string/0 if not found.
+	 * @return mixed Topic data based on return type.
 	 */
 	public function bb_get_activity_topic( $activity_id, $return_type = 'id' ) {
 		// Validate activity ID.
 		$activity_id = absint( $activity_id );
 		if ( empty( $activity_id ) ) {
-			return 'name' === $return_type ? '' : 0;
+			return 'all' === $return_type ? null : ( 'name' === $return_type ? '' : 0 );
 		}
 
-		$bp_prefix     = bp_core_get_table_prefix();
-		$column        = 'name' === $return_type ? 't.name' : 't.id';
-		$default_value = 'name' === $return_type ? '' : 0;
-
-		$result = $this->wpdb->get_var(
-			$this->wpdb->prepare( "SELECT {$column} FROM {$this->activity_topic_rel_table} atr INNER JOIN {$bp_prefix}bb_topics t ON t.id = atr.topic_id WHERE atr.activity_id = %d LIMIT 1", $activity_id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// Define allowed return types and their default values.
+		$allowed_types = array(
+			'id'   => 0,
+			'name' => '',
+			'slug' => '',
+			'all'  => null,
 		);
 
+		// Validate return type.
+		if ( ! array_key_exists( $return_type, $allowed_types ) ) {
+			$return_type = 'id';
+		}
+
+		// Get the default value for the return type.
+		$default_value = $allowed_types[ $return_type ];
+
+		// Prepare the query based on return type.
+		if ( 'all' === $return_type ) {
+			$select = 't.name, t.slug, atr.*';
+			$method = 'get_row';
+		} else {
+			$select = 't.' . sanitize_sql_orderby( $return_type );
+			$method = 'get_var';
+		}
+
+		// Build and execute the query.
+		$query = $this->wpdb->prepare(
+			"SELECT {$select} 
+			FROM {$this->activity_topic_rel_table} atr 
+			INNER JOIN {$this->wpdb->prefix}bb_topics t ON t.id = atr.topic_id 
+			WHERE atr.activity_id = %d 
+			LIMIT 1",
+			$activity_id
+		);
+
+		$result = $this->wpdb->$method( $query );
+
+		/**
+		 * Filters the activity topic data before returning.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed  $result      The topic data.
+		 * @param int    $activity_id The activity ID.
+		 * @param string $return_type The requested return type.
+		 */
+		$result = apply_filters( 'bb_get_activity_topic_data', $result, $activity_id, $return_type );
+
 		return null !== $result ? $result : $default_value;
+	}
+
+	/**
+	 * Get the activity topic URL.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Array of args. {
+	 *     @type int    $activity_id The ID of the activity.
+	 *     @type bool   $html        Whether to return the URL as HTML link.
+	 *     @type bool   $target      Whether to add target="_blank".
+	 *     @type string $class       CSS class for the link.
+	 *     @type string $link_text   The link text (defaults to topic name).
+	 * }
+	 *
+	 * @return string The activity topic URL or HTML link.
+	 */
+	public function bb_get_activity_topic_url( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'activity_id' => 0,
+				'html'        => false,
+				'target'      => false,
+				'link_text'   => '',
+				'class'       => '',
+			)
+		);
+
+		$activity_id   = (int) $args['activity_id'];
+		$html          = (bool) $args['html'];
+		$target        = (bool) $args['target'];
+		$default_class = 'bb-topic-url';
+		if ( empty( $args['class'] ) ) {
+			$class = 'bb-topic-url';
+		} else {
+			$classes = array_filter( array_map( 'sanitize_html_class', array_merge( array( $default_class ), explode( ' ', $args['class'] ) ) ) );
+			$class   = implode( ' ', array_unique( $classes ) );
+		}
+		$link_text = $args['link_text'];
+
+		$topic = $this->bb_get_activity_topic( $activity_id, 'all' );
+		if ( ! $topic || ! is_object( $topic ) ) {
+			return '';
+		}
+
+		// Get the appropriate directory permalink based on component.
+		$directory_permalink = '';
+		if (
+			bp_is_active( 'groups' ) &&
+			isset( $topic->component ) &&
+			'groups' === $topic->component &&
+			! empty( $topic->item_id )
+		) {
+			$group               = groups_get_group( $topic->item_id );
+			$directory_permalink = bp_get_group_permalink( $group ) . bp_get_activity_slug();
+		} else {
+			$directory_permalink = bp_get_activity_directory_permalink();
+		}
+
+		if ( empty( $directory_permalink ) ) {
+			return '';
+		}
+
+		// Use hash fragment for topic.
+		$url = trailingslashit( $directory_permalink ) . '#topic-' . rawurlencode( $topic->slug );
+
+		/**
+		 * Filters the activity topic URL before returning.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $url         The topic URL.
+		 * @param object $topic       The topic object.
+		 * @param int    $activity_id The activity ID.
+		 * @param bool   $html        Whether to return HTML.
+		 */
+		$url = apply_filters( 'bb_activity_topic_url', $url, $topic, $activity_id, $html );
+
+		$output = '';
+
+		if ( $html ) {
+			$link_text   = $link_text ? $link_text : $topic->name;
+			$html_output = sprintf(
+				'<a href="%s" class="%s"%s>%s</a>',
+				esc_url( $url ),
+				esc_attr( $class ),
+				$target ? ' target="_blank"' : '',
+				esc_html( $link_text )
+			);
+
+			/**
+			 * Filter the HTML output for the activity topic URL.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $html_output The HTML output.
+			 * @param string $url         The topic URL.
+			 * @param object $topic       The topic object.
+			 * @param int    $activity_id The activity ID.
+			 * @param bool   $html        Whether HTML output is requested.
+			 * @param array  $args        The original arguments array.
+			 */
+			$output = apply_filters( 'bb_activity_topic_url_html', $html_output, $url, $topic, $activity_id, $html, $args );
+		} else {
+			$output = esc_url( $url );
+		}
+
+		return $output;
 	}
 }
