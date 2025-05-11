@@ -1087,7 +1087,9 @@ class BB_Topics_Manager {
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
 						// Create a unique cache key for each topic relationship.
-						$relationship_cache_key = 'bb_topic_relationship_' . $topic_data['id'] . '_' . $topic_data['item_id'] . '_' . $topic_data['item_type'];
+						$item_id                = is_array( $r['item_id'] ) ? implode( '_', $r['item_id'] ) : $r['item_id'];
+						$item_type              = is_array( $r['item_type'] ) ? implode( '_', $r['item_type'] ) : $r['item_type'];
+						$relationship_cache_key = 'bb_topic_relationship_' . $topic_data['id'] . '_' . $item_id . '_' . $item_type;
 						wp_cache_set( $relationship_cache_key, $topic_data, self::$topic_cache_group );
 					}
 				}
