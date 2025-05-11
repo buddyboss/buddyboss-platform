@@ -814,10 +814,11 @@ class BB_Activity_Topics_Manager {
 		if ( $html ) {
 			$link_text   = $link_text ? $link_text : $topic->name;
 			$html_output = sprintf(
-				'<a href="%s" class="%s"%s>%s</a>',
+				'<a href="%s" class="%s"%s data-topic-id="%s">%s</a>',
 				esc_url( $url ),
 				esc_attr( $class ),
 				$target ? ' target="_blank"' : '',
+				esc_attr( $topic->topic_id ),
 				esc_html( $link_text )
 			);
 
