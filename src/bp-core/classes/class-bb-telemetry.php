@@ -440,7 +440,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bb_activity_sorting_options',
 					'bb_enable_activity_search',
 					'bb_enable_activity_topics',
-					'bb_activity_topic_required'
+					'bb_activity_topic_required',
 				)
 			);
 
