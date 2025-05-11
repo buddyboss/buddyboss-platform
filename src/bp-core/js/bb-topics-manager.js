@@ -670,6 +670,8 @@ window.bp = window.bp || {};
 				this.$document.on( 'click', '.activity-topic-selector li a', this.topicActivityFilter.bind( this ) );
 
 				this.$document.ready( this.handleUrlHashTopic.bind( this ) );
+
+				this.$document.on( 'click', '.bb-topic-url', this.topicActivityFilter.bind( this ) );
 			}
 		},
 
@@ -693,7 +695,17 @@ window.bp = window.bp || {};
 
 			var $topicItem = $( event.currentTarget );
 			var topicId    = $topicItem.data( 'topic-id' );
-			var topicHash  = $topicItem.attr( 'href' );
+			var topicUrl   = $topicItem.attr( 'href' );
+
+			if ( $topicItem.closest( 'li' ).hasClass( 'menu-item-has-children' ) ) {
+				return;
+			}
+
+			// Extract hash from full URL if present.	
+			var topicHash = '';
+			if ( -1 !== topicUrl.indexOf( '#' ) ) {
+				topicHash = topicUrl.substring( topicUrl.indexOf( '#' ) );
+			}
 
 			// If the clicked topic is already selected, don't do anything.
 			if ( $topicItem.hasClass( 'selected active' ) ) {
@@ -711,13 +723,28 @@ window.bp = window.bp || {};
 				window.history.pushState( { path : newUrl }, '', newUrl );
 			}
 
-			this.moveTopicPosition( {
-				$topicItem : $topicItem,
-				topicId    : topicId
-			} );
-
-			$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
-			$topicItem.addClass( 'selected active' );
+			if ( $topicItem.hasClass( 'bb-topic-url' ) ) {
+				// Find the corresponding topic filter button in the bar.
+				var $filterButton = $( '.activity-topic-selector li a[href="' + topicHash + '"]' );
+				if ( $filterButton.length ) {
+					// Move the topic position in the filter bar.
+					this.moveTopicPosition( {
+						$topicItem : $filterButton,
+						topicId    : $filterButton.data( 'topic-id' )
+					} );
+					// Set selected/active classes.
+					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+					$filterButton.addClass( 'selected active' );
+				}
+			} else {
+				// Normal filter bar click.
+				this.moveTopicPosition( {
+					$topicItem : $topicItem,
+					topicId    : topicId
+				} );
+				$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+				$topicItem.addClass( 'selected active' );
+			}
 
 			// Store the topic ID in BP's storage.
 			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
@@ -740,21 +767,34 @@ window.bp = window.bp || {};
 				if ( $topicLink.length ) {
 					// If we found a matching topic, trigger the filter.
 					$topicLink.trigger( 'click' );
+
+					// Move the topic position after "All" its for reload.
+					BBTopicsManager.moveTopicPosition( {
+						$topicItem : $topicLink,
+						topicId    : $topicLink.data( 'topic-id' )
+					} );
+
+					// Set selected/active classes
+					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+					$topicLink.addClass( 'selected active' );
 				}
+			} else {
+				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
 			}
 		},
 
 		moveTopicPosition : function ( args ) {
-			var $topicItem = args.$topicItem;
-			var topicId    = args.topicId;
+			var $topicItem = args.$topicItem,
+			    topicId    = args.topicId;
 
 			// Get topic container and elements.
-			var $topicSelector = $( '.activity-topic-selector' );
-			var $topicList     = $topicSelector.find( '> ul' );
-			var $moreButton    = $topicList.find( 'li:has(a.more-action-button)' ); // Find the "More" button
+			var $topicSelector = $( '.activity-topic-selector' ),
+			    $topicList     = $topicSelector.find( '> ul' ),
+			    $moreButton    = $topicList.find( 'li:has(a.more-action-button)' ); // Find the "More" button
 
 			// If this is a click on a dropdown item.
-			var isDropdownItem = $topicItem.closest( '.bb_nav_more_dropdown' ).length > 0;
+			var isDropdownItem = $topicItem.closest( '.bb_nav_more_dropdown' ).length > 0,
+			    $clickedListItem;
 
 			// If not "All", and it's a dropdown item, perform reordering.
 			if ( topicId && ! $topicItem.hasClass( 'all' ) && isDropdownItem ) {
@@ -762,7 +802,7 @@ window.bp = window.bp || {};
 				var $lastVisibleItem = $moreButton.prev( 'li' );
 
 				// For the clicked item in the dropdown, clone it with all data and events
-				var $clickedListItem   = $topicItem.closest( 'li' );
+				$clickedListItem       = $topicItem.closest( 'li' );
 				var $clonedClickedItem = $clickedListItem.clone( true );
 
 				// Insert the cloned dropdown item after "All".
@@ -804,6 +844,16 @@ window.bp = window.bp || {};
 							}
 						} );
 					}, 100 );
+				}
+			}
+
+			// Fallback: If not dropdown and not "All", ensure the topic is after "All"
+			if ( topicId && ! $topicItem.hasClass( 'all' ) && ! isDropdownItem ) {
+				$clickedListItem = $topicItem.closest( 'li' );
+				var $allItem     = $topicList.find( 'li:first-child' );
+				// Only move if not already after "All"
+				if ( ! $clickedListItem.is( $allItem.next() ) ) {
+					$clickedListItem.insertAfter( $allItem );
 				}
 			}
 		},
@@ -858,7 +908,7 @@ window.bp = window.bp || {};
 					$selector.removeClass( $class );
 				}
 			}
-		}
+		},
 	};
 
 	$(
