@@ -448,6 +448,24 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
 
+			if (
+				function_exists( 'bb_topics_manager_instance' ) &&
+				function_exists( 'bb_is_enabled_activity_topics' ) &&
+				bb_is_enabled_activity_topics()
+			) {
+				$global_activity_topics_count = bb_topics_manager_instance()->bb_get_topics(
+					array(
+						'item_type'   => 'activity',
+						'item_id'     => 0,
+						'count_total' => true,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $global_activity_topics_count['total'] ) ) {
+					$bb_telemetry_data['bb_topic_count'] = $global_activity_topics_count['total'];
+				}
+			}
+
 			// Pass active or inactive components.
 			$components          = bp_core_get_components();
 			$active_components   = bp_get_option( 'bp-active-components' );
