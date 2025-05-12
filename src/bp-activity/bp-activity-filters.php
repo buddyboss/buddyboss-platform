@@ -199,6 +199,9 @@ add_action( 'bp_activity_after_save', 'bb_clear_activity_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
+add_action( 'bp_init', 'bb_load_topics_manager' );
+
+add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
 
 /** Functions *****************************************************************/
 
@@ -937,6 +940,11 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 
 	if ( ! empty( $data['bp_activity_last_recorded_search_terms'] ) && empty( $activity_latest_args['search_terms'] ) ) {
 		$activity_latest_args['search_terms'] = addslashes( $data['bp_activity_last_recorded_search_terms'] );
+	}
+
+	// Add topic id to fetch activity by topic.
+	if ( ! empty( $data['bp_heartbeat']['topic_id'] ) && empty( $activity_latest_args['topic_id'] ) ) {
+		$activity_latest_args['topic_id'] = $data['bp_heartbeat']['topic_id'];
 	}
 
 	$newest_activities      = array();
@@ -3955,5 +3963,55 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 				}
 			}
 		}
+	}
+}
+
+/**
+ * Initialize the Topics Manager.
+ * This ensures we only load the manager when needed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void True if the topics manager is loaded, false otherwise.
+ */
+function bb_load_topics_manager() {
+	// Only load if activity topics are enabled.
+	if ( ! bb_is_enabled_activity_topics() ) {
+		return;
+	}
+
+	bb_topics_manager_instance();
+	bb_activity_topics_manager_instance();
+}
+
+/**
+ * Save topic data for activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity The activity object.
+ *
+ * @return void
+ */
+function bb_activity_save_topic_data( $activity ) {
+
+	if ( ! isset( $_POST['topic_id'] ) ) {
+		return;
+	}
+
+	check_admin_referer( 'post_update', '_wpnonce_post_update' );
+
+	$topic_id = intval( $_POST['topic_id'] );
+	$item_id  = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
+	// If topic ID is provided, add the relationship.
+	if ( $topic_id ) {
+		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+			array(
+				'topic_id'    => $topic_id,
+				'activity_id' => $activity->id,
+				'component'   => $activity->component,
+				'item_id'     => $item_id,
+			)
+		);
 	}
 }

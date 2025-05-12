@@ -152,6 +152,59 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'class' => 'hidden',
 		) );
 
+		// Activity Topics.
+		$this->add_section( 'bb_activity_topics', __( 'Activity Topics', 'buddyboss' ) );
+
+		$this->add_field( 'bb_enable_activity_topics', __( 'Enable Topics', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_topics' ), 'intval' );
+
+		$this->add_field(
+			'bb_activity_topic_required',
+			__( 'Topic Required', 'buddyboss' ),
+			array( $this, 'bb_admin_setting_callback_activity_topic_required' ),
+			'intval',
+			array(
+				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
+			)
+		);
+
+		$this->add_field(
+			'bb_activity_topics',
+			__( 'Activity Topic', 'buddyboss' ),
+			array( $this, 'bb_admin_setting_callback_activity_topics' ),
+			'intval',
+			array(
+				'class' => 'bb_enable_activity_topics_required ' . ( true === bb_is_enabled_activity_topics() ? '' : 'bp-hide' ),
+			)
+		);
+
+		if ( bp_is_active( 'groups' ) ) {
+			// Group Activity Topics.
+			$group_activity_topics_pro_class      = bb_get_pro_fields_class( 'group_activity_topics' );
+			$group_activity_topics_notice         = bb_get_pro_label_notice( 'group_activity_topics' );
+			$group_activity_topics_args           = array();
+			$group_activity_topics_args['class']  = esc_attr( $group_activity_topics_pro_class ) . ' bb_enable_activity_topics_required' . ( true === bb_is_enabled_activity_topics() ? '' : ' bp-hide' );
+			$group_activity_topics_args['notice'] = $group_activity_topics_notice;
+			$this->add_field(
+				'bb-enable-group-activity-topics',
+				__( 'Group Topics', 'buddyboss' ) . $group_activity_topics_notice,
+				array(
+					$this,
+					'bb_admin_setting_callback_enable_group_activity_topics',
+				),
+				'intval',
+				$group_activity_topics_args
+			);
+		}
+
+		/**
+		 * Fires to register Activity topic settings fields.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param Object $this BP_Admin_Setting_Activity.
+		 */
+		do_action( 'bb_admin_setting_activity_topic_register_fields', $this );
+
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
 		// create field for default Platform activity feed.
@@ -408,6 +461,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	/**
 	 * Allow activity poll.
 	 *
+	 * @param array $args Arguments.
+	 *
 	 * @since BuddyBoss 2.6.90
 	 */
 	public function bb_admin_setting_callback_enable_activity_post_polls( $args ) {
@@ -416,6 +471,193 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		?>
 		<input id="bb_enable_activity_post_polls" name="<?php echo empty( $notice ) ? '_bb_enable_activity_post_polls' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
 		<label for="bb_enable_activity_post_polls"><?php esc_html_e( 'Allow group owners and moderators to post polls', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_activity_topics() {
+		?>
+		<input id="bb_enable_activity_topics" name="bb_enable_activity_topics" type="checkbox" value="1" <?php checked( bb_is_enabled_activity_topics() ); ?> />
+		<label for="bb_enable_activity_topics"><?php esc_html_e( 'Enable topics in activity feed', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable activity topic required.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_activity_topic_required() {
+		?>
+		<input id="bb_activity_topic_required" name="bb_activity_topic_required" type="checkbox" value="1" <?php checked( bb_is_activity_topic_required() ); ?> />
+		<label for="bb_activity_topic_required"><?php esc_html_e( 'Require users to select a topic before posting in activity feed.', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_activity_topics() {
+		$topics               = bb_topics_manager_instance()->bb_get_topics(
+			array(
+				'item_type' => 'activity',
+				'item_id'   => 0,
+			)
+		);
+		$topics_limit_reached = bb_topics_manager_instance()->bb_topics_limit_reached(
+			array(
+				'item_type' => 'activity',
+				'item_id'   => 0,
+			)
+		);
+		?>
+		<div class="bb-activity-topics-wrapper">
+			<div class="bb-activity-topics-content">
+				<div class="bb-activity-topics-list">
+					<?php
+					$topics = ! empty( $topics['topics'] ) ? $topics['topics'] : array();
+					if ( ! empty( $topics ) ) {
+						foreach ( $topics as $topic ) {
+							$topic_attr = array(
+								'topic_id'  => $topic->topic_id,
+								'item_id'   => ! empty( $topic->item_id ) ? $topic->item_id : 0,
+								'item_type' => ! empty( $topic->item_type ) ? $topic->item_type : 'activity',
+							);
+							?>
+							<div class="bb-activity-topic-item">
+								<div class="bb-topic-left">
+									<span class="bb-topic-drag">
+										<i class="bb-icon-grip-v"></i>
+									</span>
+									<span class="bb-topic-title"><?php echo esc_html( $topic->name ); ?></span>
+								</div>
+								<div class="bb-topic-right">
+									<span class="bb-topic-access">
+										<?php
+										$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $topic->permission_type );
+										if ( ! empty( $permission_type ) ) {
+											$permission_type_value = current( $permission_type );
+											echo esc_html( $permission_type_value );
+										}
+										?>
+									</span>
+									<div class="bb-topic-actions-wrapper">
+										<span class="bb-topic-actions">
+											<a href="#" class="bb-topic-actions_button">
+												<i class="bb-icon-ellipsis-h"></i>
+											</a>
+										</span>
+										<div class="bb-topic-more-dropdown">
+											<a href="#" class="button edit bb-edit-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Edit', 'buddyboss' ); ?>" data-topic-attr="<?php echo esc_attr( wp_json_encode( array_merge( $topic_attr, array( 'nonce' => wp_create_nonce( 'bb_edit_topic' ) ) ) ) ); ?>">
+												<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+												<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+											</a>
+											<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="<?php echo esc_attr( wp_json_encode( array_merge( $topic_attr, array( 'nonce' => wp_create_nonce( 'bb_delete_topic' ) ) ) ) ); ?>">
+												<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+												<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+											</a>
+										</div>
+									</div>
+								</div>
+								<input disabled="" id="bb_activity_topics" name="bb_activity_topic_options[<?php echo esc_attr( $topic->slug ); ?>]" type="hidden" value="bb_activity_topic_options[<?php echo esc_attr( $topic->slug ); ?>]">
+							</div>
+							<?php
+						}
+					}
+					?>
+				</div>
+				<?php
+				$button_class = $topics_limit_reached ? 'bp-hide' : '';
+				?>
+				<button type="button" class="button button-primary bb-add-topic <?php echo esc_attr( $button_class ); ?>">
+					<i class="bb-icon-plus"></i>
+					<?php esc_html_e( 'Add new topic', 'buddyboss' ); ?>
+				</button>
+			</div>
+
+			<p class="description"><?php esc_html_e( 'You can add up to a maximum of 20 topics', 'buddyboss' ); ?></p>
+		</div>
+		<div id="bb-hello-backdrop" class="bb-hello-backdrop-activity-topic bb-modal-backdrop" style="display: none;"></div>
+		<div id="bb-hello-container" class="bb-hello-activity-topic bb-modal-panel bb-modal-panel--activity-topic" role="dialog" aria-labelledby="bb-hello-activity-topic" style="display: none;">
+			<div class="bb-hello-header">
+				<div class="bb-hello-title">
+					<h2 id="bb-hello-title" tabindex="-1">
+						<?php esc_html_e( 'Create topic', 'buddyboss' ); ?>
+					</h2>
+				</div>
+				<div class="bb-hello-close">
+					<button type="button" class="close-modal button">
+						<i class="bb-icon-f bb-icon-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="bb-hello-content">
+				<div class="form-fields">
+					<div class="form-field">
+						<div class="field-label">
+							<label for="bb_topic_name"><?php esc_html_e( 'Topic name', 'buddyboss' ); ?></label>
+						</div>
+						<div class="field-input">
+							<input type="text" id="bb_topic_name" name="bb_topic_name" placeholder="<?php esc_html_e( 'Enter topic name', 'buddyboss' ); ?>" />
+						</div>
+					</div>
+					<div class="form-field">
+						<div class="field-label">
+							<label for="bb_permission_type"><?php esc_html_e( 'Who can post?', 'buddyboss' ); ?></label>
+						</div>
+						<div class="field-input">
+							<?php
+							$permission_type = bb_activity_topics_manager_instance()->bb_activity_topic_permission_type();
+							if ( ! empty( $permission_type ) ) {
+								foreach ( $permission_type as $key => $value ) {
+									?>
+									<div class="bb-topic-who-can-post-option">
+										<input type="radio" id="bb_permission_type_<?php echo esc_attr( $key ); ?>" name="bb_permission_type" value="<?php echo esc_attr( $key ); ?>" <?php checked( 'anyone' === $key, true ); ?> />
+										<label for="bb_permission_type_<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></label>
+									</div>
+									<?php
+								}
+							}
+							?>
+						</div>
+					</div>
+				</div>
+				<div class="bb-popup-buttons">
+					<span id="bb_topic_cancel" class="button" tabindex="0">
+						<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>
+					</span>
+					<input type="hidden" id="bb_topic_id" name="bb_topic_id" value="0">
+					<input type="hidden" id="bb_item_id" name="bb_item_id" value="0">
+					<input type="hidden" id="bb_item_type" name="bb_item_type" value="activity">
+					<input type="hidden" id="bb_action_from" name="bb_action_from" value="admin">
+					<input type="hidden" id="bb_topic_nonce" name="bb_topic_nonce" value="<?php echo esc_attr( wp_create_nonce( 'bb_add_topic' ) ); ?>">
+					<button type="button" id="bb_topic_submit" class="button button-primary">
+						<?php esc_html_e( 'Confirm', 'buddyboss' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Enable group activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_setting_callback_enable_group_activity_topics() {
+		$val    = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
+		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
+		?>
+		<input id="bb_enable_group_activity_topics" name="<?php echo empty( $notice ) ? 'bb-enable-group-activity-topics' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
+		<label for="bb_enable_group_activity_topics"><?php esc_html_e( 'Enable topics for groups.', 'buddyboss' ); ?></label>
+		<p class="description"><?php esc_html_e( 'Allow group organizers to set categories for members to use in group posts.', 'buddyboss' ); ?></p>
 		<?php
 	}
 }

@@ -1941,6 +1941,7 @@ function bp_activity_get( $args = '' ) {
 			'filter'            => array(),
 			'pin_type'          => '',
 			'status'            => bb_get_activity_published_status(),
+			'topic_id'          => false,
 		),
 		'activity_get'
 	);
@@ -1969,6 +1970,7 @@ function bp_activity_get( $args = '' ) {
 			'fields'            => $r['fields'],
 			'pin_type'          => $r['pin_type'],
 			'status'            => $r['status'],
+			'topic_id'          => $r['topic_id'],
 		)
 	);
 
@@ -6165,6 +6167,11 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 			}
 		}
 	}
+
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		// Create a new table.
+		bb_topics_manager_instance()->create_tables();
+	}
 }
 
 /**
@@ -7662,4 +7669,63 @@ function bb_activity_update_date_updated_and_clear_cache( $activity, $date_updat
 			bp_activity_clear_cache_for_activity( $parent_comment_activity_object );
 		}
 	}
+}
+
+/**
+ * Check if the activity topics are enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topics are enabled.
+ */
+function bb_is_enabled_activity_topics( $retval = false ) {
+
+	/**
+	 * Filters the activity topics status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $enable_activity_topics Whether the activity topics are enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_enabled_activity_topics', bp_get_option( 'bb_enable_activity_topics', $retval ) );
+}
+
+/**
+ * Check if the activity topic is required.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $retval Default value.
+ *
+ * @return bool Whether the activity topic is required.
+ */
+function bb_is_activity_topic_required( $retval = false ) {
+
+	/**
+	 * Filters the activity topic required status.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $enable_activity_topic_required Whether the activity topic is required.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_topic_required', bp_get_option( 'bb_activity_topic_required', $retval ) );
+}
+
+/**
+ * Get the singleton instance of BB_Activity_Topics_Manager.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Activity_Topics_Manager|null Instance of the topics manager or null if class doesn't exist.
+ */
+function bb_activity_topics_manager_instance() {
+	static $instance = null;
+
+	if ( null === $instance && class_exists( 'BB_Activity_Topics_Manager' ) ) {
+		$instance = BB_Activity_Topics_Manager::instance();
+	}
+
+	return $instance;
 }

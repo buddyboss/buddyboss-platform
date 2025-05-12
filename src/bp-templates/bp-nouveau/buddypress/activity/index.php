@@ -18,6 +18,25 @@ endif;
 
 bp_nouveau_template_notices();
 
+if ( bb_is_enabled_activity_topics() ) {
+	$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics() : array();
+	if ( ! empty( $topics ) ) {
+		?>
+		<div class="activity-topic-selector">
+			<ul>
+				<li>
+					<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+				</li>
+				<?php
+				foreach ( $topics as $topic ) {
+					echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
+				}
+				?>
+			</ul>
+		</div>
+		<?php
+	}
+}
 if ( ! bp_nouveau_is_object_nav_in_sidebar() ) {
 	echo '<div class="flex activity-head-bar">';
 	bp_get_template_part( 'common/search-and-filters-bar' );

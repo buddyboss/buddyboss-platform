@@ -79,20 +79,29 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 						<?php
 						echo bp_core_fetch_avatar(
 							array(
-								'item_id' => $group->id,
+								'item_id'    => $group->id,
 								'avatar_dir' => 'group-avatars',
-								'type' => 'thumb',
-								'object' => 'group',
-								'width' => 100,
-								'height' => 100,
-								'class' => 'avatar bb-hp-group-avatar'
+								'type'       => 'thumb',
+								'object'     => 'group',
+								'width'      => 100,
+								'height'     => 100,
+								'class'      => 'avatar bb-hp-group-avatar',
 							)
 						);
 						?>
 					</a>
 				</div>
 				<div class="author-avatar">
-					<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php bp_activity_avatar( array( 'type' => 'thumb', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
+					<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
+										<?php
+										bp_activity_avatar(
+											array(
+												'type'  => 'thumb',
+												'class' => 'avatar bb-hp-profile-avatar',
+											)
+										);
+										?>
+								</a>
 				</div>
 			</div>
 
@@ -119,6 +128,30 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 					if ( function_exists( 'bp_nouveau_activity_privacy' ) ) {
 						bp_nouveau_activity_privacy();
 					}
+					if (
+						function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+						bb_is_enabled_group_activity_topics()
+					) {
+						?>
+						<p class="activity-topic 3">
+							<?php
+							if (
+								function_exists( 'bb_activity_topics_manager_instance' ) &&
+								method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic_url' )
+							) {
+								echo wp_kses_post(
+									bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
+										array(
+											'activity_id' => bp_get_activity_id(),
+											'html'        => true,
+										)
+									)
+								);
+							}
+							?>
+						</p>
+						<?php
+					}
 					?>
 				</div>
 			</div>
@@ -127,7 +160,16 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 	<?php else : ?>
 
 		<div class="activity-avatar item-avatar">
-			<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>"><?php bp_activity_avatar( array( 'type' => 'full', 'class' => 'avatar bb-hp-profile-avatar' ) ); ?></a>
+			<a href="<?php echo $user_link; ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_activity_user_id() ); ?>">
+								<?php
+								bp_activity_avatar(
+									array(
+										'type'  => 'full',
+										'class' => 'avatar bb-hp-profile-avatar',
+									)
+								);
+								?>
+						</a>
 		</div>
 
 		<div class="activity-header">
@@ -135,10 +177,43 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			bp_activity_action();
 			bp_nouveau_activity_is_edited();
 			bp_nouveau_activity_privacy();
+			if (
+				(
+					'groups' === $activities_template->activity->component &&
+					function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+					bb_is_enabled_group_activity_topics()
+				) ||
+				(
+					'groups' !== $activities_template->activity->component &&
+					function_exists( 'bb_is_enabled_activity_topics' ) &&
+					bb_is_enabled_activity_topics()
+				)
+			) {
+				?>
+				<p class="activity-topic 4">
+					<?php
+					if (
+						function_exists( 'bb_activity_topics_manager_instance' ) &&
+						method_exists( bb_activity_topics_manager_instance(), 'bb_get_activity_topic_url' )
+					) {
+						echo wp_kses_post(
+							bb_activity_topics_manager_instance()->bb_get_activity_topic_url(
+								array(
+									'activity_id' => bp_get_activity_id(),
+									'html'        => true,
+								)
+							)
+						);
+					}
+					?>
+				</p>
+				<?php
+			}
 			?>
 		</div>
 
-	<?php endif;
+		<?php
+	endif;
 	?>
 
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
@@ -149,7 +224,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 		if ( bp_nouveau_activity_has_content() ) :
 			?>
 			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
-		<?php
+			<?php
 		endif;
 
 		bp_nouveau_activity_hook( 'after', 'activity_content' );
@@ -178,7 +253,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s Post', 'buddyboss' ), bp_cor
 			$class .= bb_is_activity_comment_threading_enabled() ? ' threaded-comments threaded-level-' . bb_get_activity_comment_threading_depth() : '';
 		}
 		?>
-		<div class="<?php echo $class ?>">
+		<div class="<?php echo $class; ?>">
 			<?php
 			if ( bp_activity_get_comment_count() ) {
 				bp_activity_comments();
