@@ -864,6 +864,16 @@ window.bp = window.bp || {};
 			    $class        = args.class,
 			    data          = args.data;
 
+
+			// Need to check if the poll is enabled and the poll_id is set. 
+			// It will mainly use when we change the topic from the topic selector.
+			if (
+				! _.isUndefined( data.poll ) &&
+				! _.isUndefined( data.poll_id ) &&
+				'' !== data.poll_id
+			) {
+				$validContent = true;
+			}
 			if (
 				! _.isUndefined( data.topics ) &&
 				! _.isUndefined( data.topics.topic_lists ) &&
