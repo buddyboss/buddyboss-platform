@@ -177,22 +177,24 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			)
 		);
 
-		// Group Activity Topics.
-		$group_activity_topics_pro_class      = bb_get_pro_fields_class( 'group_activity_topics' );
-		$group_activity_topics_notice         = bb_get_pro_label_notice( 'group_activity_topics' );
-		$group_activity_topics_args           = array();
-		$group_activity_topics_args['class']  = esc_attr( $group_activity_topics_pro_class ) . ' bb_enable_activity_topics_required' . ( true === bb_is_enabled_activity_topics() ? '' : ' bp-hide' );
-		$group_activity_topics_args['notice'] = $group_activity_topics_notice;
-		$this->add_field(
-			'bb-enable-group-activity-topics',
-			__( 'Group Topics', 'buddyboss' ) . $group_activity_topics_notice,
-			array(
-				$this,
-				'bb_admin_setting_callback_enable_group_activity_topics',
-			),
-			'intval',
-			$group_activity_topics_args
-		);
+		if ( bp_is_active( 'groups' ) ) {
+			// Group Activity Topics.
+			$group_activity_topics_pro_class      = bb_get_pro_fields_class( 'group_activity_topics' );
+			$group_activity_topics_notice         = bb_get_pro_label_notice( 'group_activity_topics' );
+			$group_activity_topics_args           = array();
+			$group_activity_topics_args['class']  = esc_attr( $group_activity_topics_pro_class ) . ' bb_enable_activity_topics_required' . ( true === bb_is_enabled_activity_topics() ? '' : ' bp-hide' );
+			$group_activity_topics_args['notice'] = $group_activity_topics_notice;
+			$this->add_field(
+				'bb-enable-group-activity-topics',
+				__( 'Group Topics', 'buddyboss' ) . $group_activity_topics_notice,
+				array(
+					$this,
+					'bb_admin_setting_callback_enable_group_activity_topics',
+				),
+				'intval',
+				$group_activity_topics_args
+			);
+		}
 
 		/**
 		 * Fires to register Activity topic settings fields.
