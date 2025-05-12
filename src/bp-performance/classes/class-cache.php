@@ -358,6 +358,30 @@ class Cache {
 		}
 	}
 
+	/**
+	 * Purge cache by user ids
+	 *
+	 * @param array $user_ids Cache user ids.
+	 * @param array $group_names Cache group names.
+	 */
+	public function purge_by_user_ids( $user_ids, $group_names = array() ) {
+		global $wpdb;
+
+		if ( empty( $user_ids ) ) {
+			return;
+		}
+
+		$uid_in   = implode( ',', $user_ids );
+
+		if ( ! empty( $group_names ) ) {
+			$gname_in = "'" . implode( "', '", $group_names ) . "'";
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in}) AND cache_group IN ({$gname_in})" );
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in})" );
+		}
+	}
 
 	/**
 	 * Purge cache by endpoint
