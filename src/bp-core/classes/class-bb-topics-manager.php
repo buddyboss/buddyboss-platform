@@ -935,7 +935,7 @@ class BB_Topics_Manager {
 
 		$from_sql = ' FROM ' . $this->topic_rel_table . ' tr';
 
-		$from_sql .= ' LEFT JOIN ' . $this->topics_table . ' t ON t.id = tr.topic_id';
+		$join_sql = ' LEFT JOIN ' . $this->topics_table . ' t ON t.id = tr.topic_id';
 
 		// Where conditions.
 		$where_conditions = array();
@@ -1045,8 +1045,21 @@ class BB_Topics_Manager {
 			$pagination = $this->wpdb->prepare( 'LIMIT %d, %d', $start_val, intval( $per_page ) );
 		}
 
+		/**
+		 * Filter the MySQL JOIN clause for the topic query.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $join_sql   JOIN clause.
+		 * @param array  $r          Method parameters.
+		 * @param string $select_sql Current SELECT MySQL statement.
+		 * @param string $from_sql   Current FROM MySQL statement.
+		 * @param string $where_sql  Current WHERE MySQL statement.
+		 */
+		$join_sql = apply_filters( 'bb_get_topics_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
+
 		// Query first for poll vote IDs.
-		$topic_sql = "{$select_sql} {$from_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
+		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
 
 		$retval = array(
 			'topics' => null,

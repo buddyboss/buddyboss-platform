@@ -19,13 +19,8 @@ endif;
 bp_nouveau_template_notices();
 
 if ( bb_is_enabled_activity_topics() ) {
-	$topics = bb_topics_manager_instance()->bb_get_topics(
-		array(
-			'item_id'   => 0,
-			'item_type' => 'activity',
-		)
-	);
-	if ( ! empty( $topics['topics'] ) ) {
+	$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics() : array();
+	if ( ! empty( $topics ) ) {
 		?>
 		<div class="activity-topic-selector">
 			<ul>
@@ -33,10 +28,8 @@ if ( bb_is_enabled_activity_topics() ) {
 					<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
 				</li>
 				<?php
-				if ( ! empty( $topics['topics'] ) ) {
-					foreach ( $topics['topics'] as $topic ) {
-						echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
-					}
+				foreach ( $topics as $topic ) {
+					echo '<li><a href="#topic-' . esc_attr( $topic->slug ) . '" data-topic-id="' . esc_attr( $topic->topic_id ) . '" data-topic-rel-id="' . esc_attr( $topic->id ) . '">' . esc_html( $topic->name ) . '</a></li>';
 				}
 				?>
 			</ul>
