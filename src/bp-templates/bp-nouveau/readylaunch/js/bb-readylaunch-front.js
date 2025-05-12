@@ -128,6 +128,10 @@ window.bp = window.bp || {};
 							customClass += ' bb-rl-rounded-border ';
 						}
 
+						if ( $this.data( 'dropdown-align' ) ) {
+							customClass += ' bb-rl-align-adaptive ';
+						}
+
 						$this.select2(
 							{
 								theme: 'rl',
@@ -142,7 +146,17 @@ window.bp = window.bp || {};
 						$this.on(
 							'select2:open',
 							function () {
+								var $this   = $( this ),
+								customDropDownClass = '';
+
+								if ( $this.data( 'dropdown-align' ) ) {
+									customDropDownClass += ' bb-rl-dropdown-align-adaptive ';
+								}
+
 								$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+								// Ensure dropdown alignment adapts when there's insufficient space on the right side of the screen.
+								// The '.bb-rl-dropdown-align-adaptive' class enables responsive positioning of Select2 dropdowns.
+								$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
 							}
 						);
 					}

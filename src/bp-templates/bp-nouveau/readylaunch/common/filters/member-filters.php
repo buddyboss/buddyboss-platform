@@ -69,7 +69,7 @@ if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) { ?>
 				<span><?php esc_html_e( 'Filter', 'buddyboss' ); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="bb-rl-members-scope-options" data-bp-members-scope-filter="members">
+				<select id="bb-rl-members-scope-options" data-bp-members-scope-filter="members" data-dropdown-align="true">
 					<?php
 					while ( bp_nouveau_nav_items() ) :
 						bp_nouveau_nav_item();

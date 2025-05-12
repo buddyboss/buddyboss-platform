@@ -4094,6 +4094,25 @@ button[data-balloon] {
   border-radius: var(--bb-rl-radius-base);
 }
 
+/*
+ * Adaptive dropdown alignment for Select2
+ * Ensures proper positioning when there's limited space on the right side
+ * Applied via JavaScript when 'data-dropdown-align' attribute is present
+ */
+body:not(.logged-in) .bb-rl-filter .select-wrap:has(.bb-rl-align-adaptive) {
+  position: relative;
+}
+
+body:not(.logged-in) .bb-rl-dropdown-align-adaptive {
+  right: unset;
+  left: -8px;
+  top: 10px;
+}
+
+body:not(.logged-in) .select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
+  width: 100% !important;
+}
+
 .select2-container--bb-rl-select2 .bb-rl-select2-container {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
