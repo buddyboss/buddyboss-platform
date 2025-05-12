@@ -844,6 +844,9 @@ window.bp = window.bp || {};
 							}
 						} );
 					}, 100 );
+
+					// recalculate available width for the dropdown.
+					bp.Nouveau.wrapNavigation( '.activity-topic-selector ul', 120, true );
 				}
 			}
 

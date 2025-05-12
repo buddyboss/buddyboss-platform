@@ -5360,7 +5360,11 @@ window.bp = window.bp || {};
 			popupCardLoaded = false;
 		},
 
-		wrapNavigation: function ( selector, reduceWidth ) {
+		wrapNavigation: function ( selector, reduceWidth, recalculateWidth ) {
+			if( 'undefined' === typeof recalculateWidth ) {
+				recalculateWidth = false;
+			}
+
 			$( selector ).each( function () {
 				//alignMenu( this );
 				var elem = this,
@@ -5368,6 +5372,10 @@ window.bp = window.bp || {};
 	
 				window.addEventListener( 'resize', run_alignMenu );
 				window.addEventListener( 'load', run_alignMenu );
+
+				if ( recalculateWidth ) {
+					run_alignMenu();
+				}
 	
 				function run_alignMenu() {
 					$elem.find( 'li.bb_more_dropdown__title' ).remove();
