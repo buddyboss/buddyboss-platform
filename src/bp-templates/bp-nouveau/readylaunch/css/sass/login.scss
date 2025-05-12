@@ -324,3 +324,116 @@ body.login .mfp-content #privacy-modal {
 		}
 	}
 }
+
+// Signup Page
+
+body.bb-rl-register {
+	background-color: var(--bb-rl-background-secondary-color);
+}
+
+.register-page-main {
+	background-color: var(--bb-rl-background-color);
+	border: 1px solid var(--bb-rl-border-secondary-color);
+	padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+	border-radius: var(--bb-rl-radius-lg);
+	width: 432px;
+	margin: 0 auto var(--bb-rl-space-500);
+
+	h1 {
+		font-size: 20px;
+		font-weight: 700;
+		color: var(--bb-rl-text-color);
+		margin-bottom: var(--bb-rl-space-300);
+	}
+
+	.register-page-logo {
+		display: block;
+		margin-bottom: var(--bb-rl-space-200);
+
+		img {
+			width: 100px;
+			height: 25px;
+			object-fit: contain;
+		}
+	}
+
+	.checkbox-options {
+
+		label {
+			font-size: 14px;
+			font-weight: 500;
+			color: var(--bb-rl-text-color);
+
+			a {
+				color: var(--bb-rl-text-color);
+				text-decoration: underline;
+			}
+		}
+
+		&:has(#legal_agreement) {
+			margin-bottom: var(--bb-rl-space-300);
+		}
+	}
+
+	.bs-styled-checkbox + label:before {
+		margin-right: var(--bb-rl-space-100);
+	}
+
+	.bp-checkbox-wrap input.bs-styled-checkbox {
+		visibility: hidden;
+	}
+
+	.submit input {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		font-weight: 500;
+		width: 100%;
+	}
+}
+
+.register-section {
+
+	.bb-signup-field {
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	legend,
+	label {
+		display: block;
+		margin-bottom: var(--bb-rl-space-100);
+
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--bb-rl-text-secondary-color);
+	}
+
+	input {
+		color: var(--bb-rl-text-color);
+		font-size: 14px;
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		border-radius: var(--bb-rl-radius-base);
+		padding: var(--bb-rl-space-100);
+		width: 100%;
+	}
+
+	fieldset {
+		border: 0;
+		padding: 0;
+		margin-bottom: var(--bb-rl-space-200);
+	}
+
+	select {
+		background-color: var(--bb-rl-background-secondary-color);
+		border: 1px solid var(--bb-rl-border-quaternary-color);
+		border-radius: var(--bb-rl-radius-base);
+		padding: var(--bb-rl-space-100);
+		width: 100%;
+	}
+
+	.description {
+		font-size: var(--bb-rl-font-size-sm);
+		color: var(--bb-rl-text-secondary-color);
+		margin-bottom: var(--bb-rl-space-200);
+	}
+}

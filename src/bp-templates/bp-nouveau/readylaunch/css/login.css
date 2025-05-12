@@ -2828,3 +2828,130 @@ body.login .mfp-content #privacy-modal ol li {
   color: var(--bb-rl-text-color);
   margin-bottom: var(--bb-rl-space-100);
 }
+
+body.bb-rl-register {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.register-page-main {
+  background-color: var(--bb-rl-background-color);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  padding: var(--bb-rl-space-400) var(--bb-rl-space-300);
+  border-radius: var(--bb-rl-radius-lg);
+  width: 432px;
+  margin: 0 auto var(--bb-rl-space-500);
+}
+
+.register-page-main h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--bb-rl-text-color);
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.register-page-main .register-page-logo {
+  display: block;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.register-page-main .register-page-logo img {
+  width: 100px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.register-page-main .checkbox-options label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+}
+
+.register-page-main .checkbox-options label a {
+  color: var(--bb-rl-text-color);
+  text-decoration: underline;
+}
+
+.register-page-main .checkbox-options:has(#legal_agreement) {
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.register-page-main .bs-styled-checkbox + label:before {
+  margin-right: var(--bb-rl-space-100);
+}
+
+.register-page-main .bp-checkbox-wrap input.bs-styled-checkbox {
+  visibility: hidden;
+}
+
+.register-page-main .submit input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  font-weight: 500;
+  width: 100%;
+}
+
+.register-page-main .submit input:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.register-page-main .submit input:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.register-page-main .submit input:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.register-section .bb-signup-field {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.register-section legend,
+.register-section label {
+  display: block;
+  margin-bottom: var(--bb-rl-space-100);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.register-section input {
+  color: var(--bb-rl-text-color);
+  font-size: 14px;
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: var(--bb-rl-space-100);
+  width: 100%;
+}
+
+.register-section fieldset {
+  border: 0;
+  padding: 0;
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.register-section select {
+  background-color: var(--bb-rl-background-secondary-color);
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+  border-radius: var(--bb-rl-radius-base);
+  padding: var(--bb-rl-space-100);
+  width: 100%;
+}
+
+.register-section .description {
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-secondary-color);
+  margin-bottom: var(--bb-rl-space-200);
+}

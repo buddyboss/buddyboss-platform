@@ -21,18 +21,23 @@ wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-temp
 </head>
 <body <?php body_class( 'bb-rl-register' ); ?>>
 
-	<?php
-	bp_get_template_part( 'common/header-register' );
+	<?php bp_get_template_part( 'common/header-register' ); ?>
+	<div class="register-page-main">
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="register-page-logo">
+			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/logo.png' ); ?>" alt="<?php esc_attr__( 'ReadyLaunch Logo', 'buddyboss' ); ?>">
+		</a>
+		<h1><?php echo get_the_title(); ?></h1>
+		<?php
+			if ( have_posts() ) :
+				/* Start the Loop */
+				while ( have_posts() ) :
+					the_post();
 
-	if ( have_posts() ) :
-		/* Start the Loop */
-		while ( have_posts() ) :
-			the_post();
-
-			the_content();
-		endwhile;
-	endif;
-	?>
+					the_content();
+				endwhile;
+			endif;
+		?>
+	</div>
 </body>
 </html>
 
