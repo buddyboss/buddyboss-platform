@@ -1629,8 +1629,8 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			$add_video_args = array(
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
-				'title'         => $title,
-				'description'   => wp_filter_nohtml_kses( $content ),
+				'title'         => sanitize_text_field( wp_unslash( $title ) ),
+				'description'   => sanitize_textarea_field( wp_unslash( $content ) ),
 				'activity_id'   => $video_activity_id,
 				'message_id'    => $message_id,
 				'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
@@ -2321,7 +2321,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				$video_id = bp_video_add(
 					array(
 						'attachment_id' => $attachment_id,
-						'title'         => $title,
+						'title'         => sanitize_text_field( wp_unslash( $title ) ),
 						'group_id'      => $group_id,
 						'privacy'       => 'forums',
 						'error_type'    => 'wp_error',

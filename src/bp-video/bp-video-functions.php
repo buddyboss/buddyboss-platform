@@ -733,7 +733,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 							'blog_id'       => $bp_video->blog_id,
 							'attachment_id' => $bp_video->attachment_id,
 							'user_id'       => $bp_video->user_id,
-							'title'         => $bp_video->title,
+							'title'         => sanitize_text_field( wp_unslash( $bp_video->title ) ),
 							'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 							'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 							'activity_id'   => $bp_video->activity_id,
@@ -755,7 +755,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 				$video_id = bp_video_add(
 					array(
 						'attachment_id' => $video['id'],
-						'title'         => $video['name'],
+						'title'         => sanitize_text_field( wp_unslash( $video['name'] ) ),
 						'album_id'      => ! empty( $video['album_id'] ) ? $video['album_id'] : $album_id,
 						'group_id'      => ! empty( $video['group_id'] ) ? $video['group_id'] : $group_id,
 						'message_id'    => ! empty( $video['message_id'] ) ? $video['message_id'] : 0,

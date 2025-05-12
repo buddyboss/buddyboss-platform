@@ -252,14 +252,14 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					}
 					$duplicate_email_inputs[] = strtolower( trim( $field['email_id'] ) );
 
-					if ( email_exists( (string) $field['email_id'] ) ) {
-						$invite_exists_array[] = $field['email_id'];
-					} elseif ( function_exists( 'bb_is_email_address_already_invited' ) && bb_is_email_address_already_invited( $field['email_id'], bp_loggedin_user_id() ) ) {
-						$invite_duplicate_array[] = $field['email_id'];
+					if ( email_exists( (string) sanitize_email( wp_unslash( $field['email_id'] ) ) ) ) {
+						$invite_exists_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
+					} elseif ( function_exists( 'bb_is_email_address_already_invited' ) && bb_is_email_address_already_invited( sanitize_email( wp_unslash( $field['email_id'] ) ), bp_loggedin_user_id() ) ) {
+						$invite_duplicate_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
 					} elseif ( ! function_exists( 'bb_is_allowed_register_email_address' ) ) {
 						$invite_correct_array[] = array(
-							'name'        => $field['name'],
-							'email'       => $field['email_id'],
+							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
+							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
 							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
 						);
 					} elseif (
@@ -267,8 +267,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 						bb_is_allowed_register_email_address( $field['email_id'] )
 					) {
 						$invite_correct_array[] = array(
-							'name'        => $field['name'],
-							'email'       => $field['email_id'],
+							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
+							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
 							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
 						);
 					} else {
@@ -276,8 +276,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					}
 				} else {
 					$invite_wrong_array[] = array(
-						'name'        => ( isset( $field['name'] ) ? $field['name'] : '' ),
-						'email'       => ( isset( $field['email_id'] ) ? $field['email_id'] : '' ),
+						'name'        => ( isset( $field['name'] ) ? sanitize_text_field( wp_unslash( $field['name'] ) ) : '' ),
+						'email'       => ( isset( $field['email_id'] ) ? sanitize_email( wp_unslash( $field['email_id'] ) ) : '' ),
 						'member_type' => ( isset( $field['profile_type'] ) ? $field['profile_type'] : '' ),
 					);
 				}
@@ -300,8 +300,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				$_POST = array();
 
-				$email          = $value['email'];
-				$name           = $value['name'];
+				$email          = sanitize_email( wp_unslash( $value['email'] ) );
+				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 				$member_type    = $value['member_type'];
 				$query_string[] = $email;
 				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
@@ -311,6 +311,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					if ( empty( $subject ) ) {
 						$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
 					} else {
+						$subject = sanitize_textarea_field( wp_unslash( $subject ) );
+						
 						$_POST['bp_member_invites_custom_subject'] = $subject;
 					}
 				} else {
