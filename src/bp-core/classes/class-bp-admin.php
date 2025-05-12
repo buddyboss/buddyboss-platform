@@ -397,8 +397,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$hooks = array();
 			if ( is_multisite() && bp_is_network_activated() && ! bp_is_multiblog_mode() ) {
 				$hooks[] = add_menu_page(
-					__( 'BuddyBoss', 'buddyboss' ),
-					__( 'BuddyBoss', 'buddyboss' ),
+					'BuddyBoss',
+					'BuddyBoss',
 					$this->capability,
 					$this->settings_page,
 					'bp_core_admin_backpat_menu',
@@ -435,8 +435,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Changed in BP 1.6 . See bp_core_admin_backpat_menu().
 			$hooks[] = add_menu_page(
-				__( 'BuddyBoss', 'buddyboss' ),
-				__( 'BuddyBoss', 'buddyboss' ),
+				'BuddyBoss',
+				'BuddyBoss',
 				$this->capability,
 				$this->settings_page,
 				'bp_core_admin_backpat_menu',

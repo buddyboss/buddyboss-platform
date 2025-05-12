@@ -729,7 +729,7 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
 function bp_setup_nav_menu_item( $menu_item ) {
 
 	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
-		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+		$menu_item->type_label = 'BuddyBoss';
 		$menu_item->menu_type  = 'buddyboss';
 	}
 
@@ -970,7 +970,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => __( 'BuddyBoss', 'buddyboss' ),
+			'type_label' => 'BuddyBoss',
 			'object'     => $object,
 			'object_id'  => -1,
 		);
