@@ -546,7 +546,7 @@ class BB_Topics_Manager {
 		// First check if new name exists in bb_topics table.
 		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
 		if ( ! $existing_topic ) { // NO.
-			if ( $is_global_activity && 'group' === $item_type ) {
+			if ( $is_global_activity && 'groups' === $item_type ) {
 				wp_send_json_error(
 					array(
 						'error' => esc_html__( 'You cannot assign or update a global topic under a group.', 'buddyboss' ),
@@ -1191,7 +1191,7 @@ class BB_Topics_Manager {
 			'item_type' => $item_type,
 		);
 
-		if ( 'group' === $item_type ) {
+		if ( 'groups' === $item_type ) {
 			$args['is_global_activity'] = true;
 		}
 
@@ -1284,7 +1284,7 @@ class BB_Topics_Manager {
 		$get_all_topic_relationships = $this->bb_get_topics(
 			array(
 				'topic_id'  => $topic_id,
-				'item_type' => array( 'activity', 'group' ),
+				'item_type' => array( 'activity', 'groups' ),
 				'fields'    => 'id',
 			)
 		);
