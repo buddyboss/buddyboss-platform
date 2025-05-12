@@ -1727,7 +1727,7 @@ function bb_delete_group_activity_topic( $group_id ) {
 		$table_prefix . 'bb_topic_relationships',
 		array(
 			'item_id'   => $group_id,
-			'item_type' => 'group',
+			'item_type' => 'groups',
 		),
 		array( '%d', '%s' )
 	);

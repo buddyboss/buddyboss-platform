@@ -159,7 +159,7 @@ class BB_Activity_Topics_Manager {
 		$args = array();
 		if ( 'groups' === $item->component ) {
 			$args['item_id']   = $item->item_id;
-			$args['item_type'] = 'group';
+			$args['item_type'] = 'groups';
 		}
 		$item->id         = (int) $item->id;
 		$topics           = bb_topics_manager_instance()->bb_get_topics( $args );
