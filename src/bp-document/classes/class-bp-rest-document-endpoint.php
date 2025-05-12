@@ -2003,7 +2003,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$add_document_args = array(
 				'id'            => $id,
 				'attachment_id' => $wp_attachment_id,
-				'title'         => $title,
+				'title'         => sanitize_text_field( wp_unslash( $title ) ),
 				'description'   => sanitize_textarea_field( wp_unslash( $content ) ),
 				'activity_id'   => $document_activity_id,
 				'message_id'    => $message_id,
@@ -3034,7 +3034,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				$document_id = bp_document_add(
 					array(
 						'attachment_id' => $attachment_id,
-						'title'         => $title,
+						'title'         => sanitize_text_field( wp_unslash( $title ) ),
 						'folder_id'     => 0,
 						'group_id'      => $group_id,
 						'privacy'       => 'forums',
