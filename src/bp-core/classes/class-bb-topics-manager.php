@@ -952,7 +952,11 @@ class BB_Topics_Manager {
 			$r['orderby'] = 'menu_order';
 		}
 
-		$order_by = 'tr.' . $r['orderby'];
+		if ( 'name' === $r['orderby'] ) {
+			$order_by = 't.name';
+		} else {
+			$order_by = 'tr.' . $r['orderby'];
+		}
 
 		if ( ! empty( $r['item_id'] ) ) {
 			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
