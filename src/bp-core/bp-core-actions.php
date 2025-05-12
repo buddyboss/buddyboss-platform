@@ -1176,13 +1176,13 @@ function bb_bg_process_log_load() {
 add_action( 'bp_init', 'bb_bg_process_log_load' );
 
 /**
- * Remove notices from the buddyboss upgrade screens.
+ * Remove notices from the buddyboss upgrade and ReadyLaunch screens.
  *
  * @since BuddyBoss 2.6.30
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
-	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id || 'buddyboss_page_bb-readylaunch' === $screen->id ) {
 		remove_all_actions( 'admin_notices' );
 
 		// Additional check for the common WordPress error/warning hooks.
