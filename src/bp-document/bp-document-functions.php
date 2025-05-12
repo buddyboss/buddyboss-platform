@@ -3825,7 +3825,11 @@ function bp_document_delete_document_previews() {
 	if ( ! is_dir( $inner_directory_name ) ) {
 		return;
 	}
-	$dir          = opendir( $inner_directory_name );
+
+	$dir = opendir( $inner_directory_name );
+	if ( false === $dir ) {
+		return;
+	}
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
 		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
