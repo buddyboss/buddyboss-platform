@@ -3420,6 +3420,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-activity-footer-actions .comments-count {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
+  text-transform: lowercase;
 }
 
 .bb-rl-activity-footer-actions .activity-state-reactions {
