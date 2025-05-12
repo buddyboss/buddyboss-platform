@@ -5354,14 +5354,16 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 /**
  * Check given directory is empty or not.
  *
- * @param string $dir The directory path.
- * @return bool True OR False whether directory is empty or not.
- *
  * @since BuddyBoss 1.7.0
+ *
+ * @param string $dir The directory path.
+ *
+ * @return bool|null True if empty, false if not empty, null if directory does not exist.
  */
 function bp_core_is_empty_directory( $dir ) {
-	if ( ! file_exists( $dir ) ) {
-		return true;
+	if ( ! is_dir( $dir ) ) {
+		// Directory does not exist.
+		return null;
 	}
 	$handle = opendir( $dir );
 	if ( false === $handle ) {
