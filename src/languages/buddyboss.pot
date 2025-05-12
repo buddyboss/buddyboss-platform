@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.8.41\n"
+"Project-Id-Version: BuddyBoss Platform 2.8.51\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2025-04-17 06:38:51+00:00\n"
+"POT-Creation-Date: 2025-05-05 12:34:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1088,70 +1088,70 @@ msgstr ""
 msgid "Friendships"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6889
-#: bp-activity/bp-activity-functions.php:6901
+#: bp-activity/bp-activity-functions.php:6896
+#: bp-activity/bp-activity-functions.php:6908
 msgid "%s turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6891
+#: bp-activity/bp-activity-functions.php:6898
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1772
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1388
 msgid "You turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6895
+#: bp-activity/bp-activity-functions.php:6902
 msgid "An organizer turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6897
+#: bp-activity/bp-activity-functions.php:6904
 msgid "A moderator turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6899
-#: bp-activity/bp-activity-functions.php:6904
+#: bp-activity/bp-activity-functions.php:6906
+#: bp-activity/bp-activity-functions.php:6911
 msgid "An admin turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7177
+#: bp-activity/bp-activity-functions.php:7184
 msgid "Sorry, You cannot add comments on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7183
+#: bp-activity/bp-activity-functions.php:7190
 msgid "Sorry, You cannot perform reactions on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7186
+#: bp-activity/bp-activity-functions.php:7193
 msgid "Sorry, You cannot view on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7197
+#: bp-activity/bp-activity-functions.php:7204
 msgid ""
 "Sorry, please establish a friendship with the author of the activity to add "
 "a comment."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7203
+#: bp-activity/bp-activity-functions.php:7210
 msgid ""
 "Sorry, please establish a friendship with the author of the activity to "
 "perform a reaction."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7206
+#: bp-activity/bp-activity-functions.php:7213
 msgid ""
 "Sorry, please establish a friendship with the author of the activity to "
 "view."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7210
+#: bp-activity/bp-activity-functions.php:7217
 msgid "Sorry, You cannot view on this activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7558
+#: bp-activity/bp-activity-functions.php:7565
 #: bp-blogs/bp-blogs-activity.php:287 bp-blogs/bp-blogs-activity.php:1715
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7560
+#: bp-activity/bp-activity-functions.php:7567
 #: bp-blogs/bp-blogs-activity.php:289 bp-blogs/bp-blogs-activity.php:1717
 msgid "%1$s posted a new post."
 msgstr ""
@@ -7961,7 +7961,7 @@ msgstr ""
 msgid "Customize the appearance of emails sent by BuddyBoss."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:28 bp-core/bp-core-filters.php:1342
+#: bp-core/bp-core-customizer-email.php:28 bp-core/bp-core-filters.php:1346
 #: bp-templates/bp-nouveau/includes/customizer.php:54
 msgid "BuddyBoss Emails"
 msgstr ""
@@ -8075,86 +8075,86 @@ msgstr ""
 msgid "BuddyBoss (logged-out)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1601
+#: bp-core/bp-core-filters.php:1605
 msgid ""
 "Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with "
 "BuddyBoss Platform. Some icons in your theme will look wrong until you "
 "update."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1714
+#: bp-core/bp-core-filters.php:1718
 msgid "Every minute"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1718
+#: bp-core/bp-core-filters.php:1722
 msgid "Once in 5 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1722
+#: bp-core/bp-core-filters.php:1726
 msgid "Once in 10 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1726
+#: bp-core/bp-core-filters.php:1730
 msgid "Once in 15 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1730
+#: bp-core/bp-core-filters.php:1734
 msgid "Once in 30 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1734
+#: bp-core/bp-core-filters.php:1738
 msgid "Once Hourly"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1738
+#: bp-core/bp-core-filters.php:1742
 msgid "Once in 3 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1742
+#: bp-core/bp-core-filters.php:1746
 msgid "Once in 12 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1746
+#: bp-core/bp-core-filters.php:1750
 msgid "Once in 24 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1750
+#: bp-core/bp-core-filters.php:1754
 msgid "Every 15 days"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1754
+#: bp-core/bp-core-filters.php:1758
 msgid "Every 30 days"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1828
+#: bp-core/bp-core-filters.php:1832
 msgid "There was a problem cropping custom profile avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1829
+#: bp-core/bp-core-filters.php:1833
 msgid "The custom profile avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1830
+#: bp-core/bp-core-filters.php:1834
 msgid "There was a problem deleting custom profile avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1831
+#: bp-core/bp-core-filters.php:1835
 msgid "The custom profile avatar was deleted successfully!"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1849
+#: bp-core/bp-core-filters.php:1853
 msgid "There was a problem cropping custom group avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1850
+#: bp-core/bp-core-filters.php:1854
 msgid "The custom group avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1851
+#: bp-core/bp-core-filters.php:1855
 msgid "There was a problem deleting custom group avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1852
+#: bp-core/bp-core-filters.php:1856
 msgid "The custom group avatar was deleted successfully!"
 msgstr ""
 
@@ -9809,7 +9809,7 @@ msgid "%1$s replied to your comment"
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:333
-#: bp-performance/classes/class-performance.php:452
+#: bp-performance/classes/class-performance.php:460
 msgid "Download the plugin"
 msgstr ""
 
@@ -9825,13 +9825,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:359
-#: bp-performance/classes/class-performance.php:450
-#: bp-performance/classes/class-performance.php:477
+#: bp-performance/classes/class-performance.php:458
+#: bp-performance/classes/class-performance.php:485
 msgid "must-use plugins"
 msgstr ""
 
 #: bp-core/classes/class-bb-presence.php:362
-#: bp-performance/classes/class-performance.php:453
+#: bp-performance/classes/class-performance.php:461
 msgid ""
 "and then upload it into the \"/wp-content/mu-plugins/\" directory on your "
 "server."
@@ -25599,7 +25599,7 @@ msgid ""
 msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:537
-#: bp-xprofile/screens/edit.php:236
+#: bp-xprofile/screens/edit.php:243
 msgid ""
 "There was a problem updating some of your profile information. Please try "
 "again."
@@ -29428,25 +29428,25 @@ msgstr ""
 msgid "API Caching"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:448
+#: bp-performance/classes/class-performance.php:456
 msgid ""
 "API Caching cannot be automatically installed on your server. To enable "
 "caching, you need to manually install the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:475
+#: bp-performance/classes/class-performance.php:483
 msgid ""
 "API Caching could not be automatically updated on your server. To enable "
 "caching, you need to manually update the \"BuddyBoss API Caching\" plugin "
 "in your"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:479
+#: bp-performance/classes/class-performance.php:487
 msgid "Download v1.0.1"
 msgstr ""
 
-#: bp-performance/classes/class-performance.php:480
+#: bp-performance/classes/class-performance.php:488
 msgid ""
 "and then upload the plugin manually into the \"/wp-content/mu-plugins/\" "
 "directory on your server."
@@ -31712,7 +31712,7 @@ msgid "Your pinned post has been removed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1323
-msgid "Your are not allowed to pinned or unpinned the post"
+msgid "You are not allowed to pin or unpin this post"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1353
@@ -34320,7 +34320,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-filters.php:1170
 #: bp-xprofile/bp-xprofile-filters.php:1208
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:554
-#: bp-xprofile/screens/edit.php:77 bp-xprofile/screens/edit.php:220
+#: bp-xprofile/screens/edit.php:77 bp-xprofile/screens/edit.php:227
 #. translators: Field name.
 #. translators: Field name
 msgid "%s is required and not allowed to be empty."
@@ -34984,14 +34984,14 @@ msgid ""
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:516
-#: bp-xprofile/screens/edit.php:103
+#: bp-xprofile/screens/edit.php:110
 msgid ""
 "Changing this profile type would remove your Administrator role and lock "
 "you out of the WordPress admin."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:530
-#: bp-xprofile/screens/edit.php:121
+#: bp-xprofile/screens/edit.php:128
 msgid ""
 "Changing this profile type would remove your Editor role and lock you out "
 "of the WordPress admin."
@@ -35391,11 +35391,15 @@ msgid ""
 "member has been disabled."
 msgstr ""
 
-#: bp-xprofile/screens/edit.php:218
+#: bp-xprofile/screens/edit.php:86
+msgid "Invalid option selected. Please try again"
+msgstr ""
+
+#: bp-xprofile/screens/edit.php:225
 msgid "Please fill in all required fields, and save your changes again."
 msgstr ""
 
-#: bp-xprofile/screens/edit.php:238
+#: bp-xprofile/screens/edit.php:245
 msgid "Changes saved."
 msgstr ""
 
