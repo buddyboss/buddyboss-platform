@@ -693,23 +693,20 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			event.stopPropagation();
 
-			var $topicItem = $( event.currentTarget );
-			var topicId    = $topicItem.data( 'topic-id' );
-			var topicUrl   = $topicItem.attr( 'href' );
+			var $topicItem     = $( event.currentTarget );
+			var topicId        = $topicItem.data( 'topic-id' );
+			var topicUrl       = $topicItem.attr( 'href' );
+			var $filterBarLink = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' );
+			var $newMainBarItem;
 
 			if ( $topicItem.closest( 'li' ).hasClass( 'menu-item-has-children' ) ) {
 				return;
 			}
 
-			// Extract hash from full URL if present.	
+			// Extract hash from full URL if present.
 			var topicHash = '';
 			if ( -1 !== topicUrl.indexOf( '#' ) ) {
 				topicHash = topicUrl.substring( topicUrl.indexOf( '#' ) );
-			}
-
-			// If the clicked topic is already selected, don't do anything.
-			if ( $topicItem.hasClass( 'selected active' ) ) {
-				return;
 			}
 
 			// Update the URL to include the topic slug (or remove it for "All").
@@ -723,31 +720,30 @@ window.bp = window.bp || {};
 				window.history.pushState( { path : newUrl }, '', newUrl );
 			}
 
-			if ( $topicItem.hasClass( 'bb-topic-url' ) ) {
-				// Find the corresponding topic filter button in the bar.
-				var $filterButton = $( '.activity-topic-selector li a[href="' + topicHash + '"]' );
-				if ( $filterButton.length ) {
-					// Move the topic position in the filter bar.
+			// Remove all selected/active classes.
+			$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
+
+			if ( $filterBarLink.length ) {
+				var $clickedListItem = $filterBarLink.closest( 'li' );
+				var isDropdownItem   = $clickedListItem.closest( '.bb_nav_more_dropdown' ).length > 0;
+
+				if ( isDropdownItem ) {
+					// Move from dropdown to main bar
 					this.moveTopicPosition( {
-						$topicItem : $filterButton,
-						topicId    : $filterButton.data( 'topic-id' )
+						$topicItem : $filterBarLink,
+						topicId    : topicId
 					} );
-					// Set selected/active classes.
-					$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
-					$filterButton.addClass( 'selected active' );
+					// After move, select the new main bar item
+					$newMainBarItem = $( '.activity-topic-selector li a[data-topic-id="' + topicId + '"]' ).first();
+					$newMainBarItem.addClass( 'selected active' );
+				} else {
+					// Just add classes, do not move
+					$filterBarLink.addClass( 'selected active' );
 				}
-			} else {
-				// Normal filter bar click.
-				this.moveTopicPosition( {
-					$topicItem : $topicItem,
-					topicId    : topicId
-				} );
-				$( '.activity-topic-selector li a' ).removeClass( 'selected active' );
-				$topicItem.addClass( 'selected active' );
 			}
 
 			// Store the topic ID in BP's storage.
-			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicHash.toLowerCase() ) {
+			if ( ! topicId || $topicItem.hasClass( 'all' ) || 'all' === topicUrl.toLowerCase() ) {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', '' );
 			} else {
 				bp.Nouveau.setStorage( 'bp-activity', 'topic_id', topicId );
