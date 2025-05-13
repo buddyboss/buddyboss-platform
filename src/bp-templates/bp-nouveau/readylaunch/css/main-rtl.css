@@ -1253,6 +1253,10 @@ div.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current, div.xdsoft_datetim
   box-shadow: none !important;
 }
 
+div.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today {
+  color: var(--bb-rl-primary-color);
+}
+
 div.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select {
   background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
@@ -1313,6 +1317,7 @@ div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time {
 div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time.xdsoft_current, div.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box .xdsoft_time:hover {
   color: var(--bb-rl-text-color) !important;
   background-color: var(--bb-rl-background-secondary-hover-color) !important;
+  box-shadow: none;
 }
 
 .bb-readylaunch-template .bb-schedule-post_dropdown_section .bb-time-meridian {
@@ -4089,6 +4094,25 @@ button[data-balloon] {
   border-radius: var(--bb-rl-radius-base);
 }
 
+/*
+ * Adaptive dropdown alignment for Select2
+ * Ensures proper positioning when there's limited space on the right side
+ * Applied via JavaScript when 'data-dropdown-align' attribute is present
+ */
+body:not(.logged-in) .bb-rl-filter .select-wrap:has(.bb-rl-align-adaptive) {
+  position: relative;
+}
+
+body:not(.logged-in) .bb-rl-dropdown-align-adaptive {
+  right: unset;
+  left: -8px;
+  top: 10px;
+}
+
+body:not(.logged-in) .select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
+  width: 100% !important;
+}
+
 .select2-container--bb-rl-select2 .bb-rl-select2-container {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
@@ -4859,7 +4883,7 @@ button[data-balloon] {
 .modal-mask,
 .bb-rl-modal-mask {
   position: fixed;
-  z-index: 999991;
+  z-index: 9998;
   top: 0;
   right: 0;
   width: 100vw;
@@ -4968,7 +4992,7 @@ button[data-balloon] {
 
 .bb-readylaunch-template .modal-mask {
   position: fixed;
-  z-index: 999991;
+  z-index: 9998;
   top: 0;
   right: 0;
   width: 100vw;
@@ -14357,6 +14381,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 .bb-rl-activity-footer-actions .comments-count {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 14px;
+  text-transform: lowercase;
 }
 
 .bb-rl-activity-footer-actions .activity-state-reactions {

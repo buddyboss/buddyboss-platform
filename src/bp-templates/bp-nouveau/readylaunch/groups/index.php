@@ -30,7 +30,7 @@ bp_nouveau_template_notices();
 
 			bp_get_template_part( 'common/search-and-filters-bar' );
 
-			if ( bp_user_can_create_groups() ) {
+			if ( is_user_logged_in() && bp_user_can_create_groups() ) {
 				?>
 				<div class="bb-rl-action-button">
 					<a href="<?php echo esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>

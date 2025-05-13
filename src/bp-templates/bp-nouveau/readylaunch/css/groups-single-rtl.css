@@ -1050,6 +1050,25 @@
   padding-right: 36px;
 }
 
+.bb-rl-group-manage-form input#save.loading,
+.bb-rl-group-manage-form .bp-zoom-group-button-wrap .bb-save-settings.loading {
+  background-image: none;
+  padding-right: var(--bb-rl-space-200);
+}
+
+.bb-rl-group-manage-form input#save.loading::before,
+.bb-rl-group-manage-form .bp-zoom-group-button-wrap .bb-save-settings.loading::before {
+  content: "";
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  border: 2px solid var(--bb-rl-border-quaternary-color);
+  border-top-color: var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-full);
+  margin-left: var(--bb-rl-space-100);
+  animation: spin 3s infinite linear;
+}
+
 .bb-rl-group-manage-form .bp-avatar-nav ul {
   border-color: var(--bb-rl-border-secondary-color);
   padding-bottom: var(--bb-rl-space-100);
