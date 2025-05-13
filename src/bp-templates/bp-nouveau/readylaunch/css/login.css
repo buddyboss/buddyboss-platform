@@ -2875,12 +2875,43 @@ body.bb-rl-register {
   margin-bottom: var(--bb-rl-space-300);
 }
 
-.register-page-main .bs-styled-checkbox + label:before {
-  margin-right: var(--bb-rl-space-100);
-}
-
 .register-page-main .bp-checkbox-wrap input.bs-styled-checkbox {
   visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+.register-page-main .bb-password-wrap {
+  position: relative;
+}
+
+.register-page-main .bb-password-wrap input {
+  padding-right: var(--bb-rl-space-400);
+}
+
+.register-page-main .bb-toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  padding: 0 var(--bb-rl-space-100);
+  transform: translateY(-50%);
+}
+
+.register-page-main .bb-toggle-password .bb-icon-eye {
+  display: flex;
+}
+
+.register-page-main .bb-toggle-password .bb-icon-eye:before {
+  content: "\e220";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 20px;
+  line-height: 1;
+  font-style: normal;
+}
+
+.register-page-main .bb-toggle-password.bb-show-pass .bb-icon-eye:before {
+  content: "\e224";
 }
 
 .register-page-main .submit input {
@@ -2912,6 +2943,120 @@ body.bb-rl-register {
 .register-page-main .submit input:disabled {
   background-color: var(--bb-rl-background-brand-disabled-color);
   cursor: not-allowed;
+}
+
+.register-page-main .bs-styled-checkbox {
+  position: absolute;
+  opacity: 0;
+}
+
+.register-page-main .bs-styled-checkbox + label {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding: 0;
+  line-height: 1;
+}
+
+.register-page-main .bs-styled-checkbox + label:before {
+  content: "";
+  margin-right: var(--bb-rl-space-100);
+  display: inline-block;
+  vertical-align: text-top;
+  width: 16px;
+  height: 16px;
+  background: var(--bb-rl-background-color);
+  border-radius: var(--bb-rl-radius-sm);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.register-page-main .bs-styled-checkbox:focus + label:before {
+  border-color: var(--bb-rl-primary-color);
+}
+
+.register-page-main .bs-styled-checkbox:checked + label:before {
+  background: var(--bb-rl-primary-color);
+  border-color: var(--bb-rl-primary-color);
+}
+
+.register-page-main .bs-styled-checkbox:disabled + label {
+  color: var(--bb-rl-border-disabled-color);
+  cursor: auto;
+}
+
+.register-page-main .bs-styled-checkbox:disabled + label:before {
+  box-shadow: none;
+  background: var(--bb-rl-border-disabled-color);
+}
+
+.register-page-main .bs-styled-checkbox:checked + label:after {
+  content: "\e182";
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  font-family: bb-icons-rl;
+  font-weight: 700;
+  color: var(--bb-rl-text-white-color);
+  font-size: 13px;
+  display: block;
+}
+
+.register-page-main .bs-styled-radio {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.register-page-main .bs-styled-radio + label {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.register-page-main .bs-styled-radio + label:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 16px;
+  height: 16px;
+  line-height: 1;
+  background-color: var(--bb-rl-background-color);
+  border: 2px solid var(--bb-rl-border-tertiary-color);
+  border-radius: 100%;
+  margin-right: var(--bb-rl-space-100);
+}
+
+.register-page-main .bs-styled-radio:disabled + label {
+  color: var(--bb-rl-border-disabled-color);
+  cursor: auto;
+}
+
+.register-page-main .bs-styled-radio:disabled + label:before {
+  box-shadow: none;
+  background: var(--bb-rl-border-disabled-color);
+}
+
+.register-page-main .bs-styled-radio:checked + label:before {
+  background-color: var(--bb-rl-primary-color);
+  border-color: var(--bb-rl-primary-color);
+}
+
+.register-page-main .bs-styled-radio:checked + label:after {
+  content: "";
+  background-color: var(--bb-rl-background-color);
+  margin: auto;
+  width: 8px;
+  position: absolute;
+  height: 8px;
+  text-align: center;
+  left: 4px;
+  top: 8px;
+  border-radius: var(--bb-rl-radius-full);
 }
 
 .register-section .bb-signup-field {
