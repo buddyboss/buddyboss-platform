@@ -855,8 +855,9 @@ class BB_Activity_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'item_type'    => array( 'activity', 'groups' ),
+				'item_type' => array( 'activity', 'groups' ),
 				'filter_query' => true,
+				'debug' => true,
 			)
 		);
 
@@ -868,18 +869,28 @@ class BB_Activity_Topics_Manager {
 
 		$group_topics_enabled = bp_is_active( 'groups' ) && bb_is_enabled_group_activity_topics();
 		if ( $group_topics_enabled ) {
-			unset( $r['permission_type'] ); // Will add permission type in bb_get_topics_where_conditions.
 			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
 		}
+
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
-		error_log( 'topic_lists' );
-		error_log( print_r( $topic_lists, true ) );
+
+		$mapped = array_map( function ( $item ) {
+			return [
+				'name'     => $item->name,
+				'slug'     => $item->slug,
+				'topic_id' => $item->topic_id,
+			];
+		},  $topic_lists['topics'] );
+
+		//Serialise each item to compare as strings.
+		$topic_lists = array_map( 'unserialize', array_unique( array_map( 'serialize', $mapped ) ) );
+
 		if ( $group_topics_enabled ) {
 			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
 		}
 
-		return ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		return ! empty( $topic_lists ) ? $topic_lists : array();
 	}
 }
