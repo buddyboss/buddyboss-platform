@@ -476,7 +476,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 	ob_start();
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class ); ?>">
-		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
+		<div class="bb-rl-container bb-rl-header-container">
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
@@ -490,8 +490,8 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 				)
 			);
 			?>
-			<div id="header-aside" class="header-aside">
-				<div class="header-aside-inner flex items-center">
+			<div id="bb-rl-header-aside" class="bb-rl-header-aside">
+				<div class="bb-rl-header-aside-inner">
 					<?php
 					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
 						bp_get_template_part( 'common/search/search-model' );
@@ -513,7 +513,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
 							?>
 
-							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">
+							<a class="bb-rl-user-link" href="<?php echo esc_url( $user_link ); ?>">
 								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 							</a>
 							<div class="bb-rl-profile-dropdown">

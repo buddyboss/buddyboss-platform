@@ -227,6 +227,7 @@ body.admin-bar .bb-rl-header {
 			color: var(--bb-rl-text-color);
 			border: none;
 			white-space: nowrap;
+			text-decoration: none;
 	
 			&:focus {
 				outline: 2px solid var(--bb-rl-border-quinery-color);
@@ -337,9 +338,17 @@ body.admin-bar .bb-rl-header {
 
 .bb-rl-header-block {
 
-	.header-aside {
+	.bb-rl-header-container  {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
 
-		.header-aside-inner {
+	.bb-rl-header-aside {
+
+		.bb-rl-header-aside-inner {
+			display: flex;
+			align-items: center;
 			gap: var(--bb-rl-space-100);
 		}
 
@@ -1044,12 +1053,12 @@ body.admin-bar .bb-rl-header {
 			font-weight: 500;
 		}
 
-		.header-aside .bb-rl-header-search {
+		.bb-rl-header-aside .bb-rl-header-search {
 			display: none;
 		}
 
-		.header-aside .notification-wrap,
-		.header-aside .bb-message-dropdown-notification {
+		.bb-rl-header-aside .notification-wrap,
+		.bb-rl-header-aside .bb-message-dropdown-notification {
 			display: none;
 		}
 
@@ -1126,11 +1135,11 @@ body.admin-bar .bb-rl-header {
 
 	.bb-rl-header-block {
 
-		.header-aside .notification-wrap.messages-wrap .notification-dropdown {
+		.bb-rl-header-aside .notification-wrap.messages-wrap .notification-dropdown {
 			right: -30px;
 		}
 
-		.header-aside .notification-wrap .notification-dropdown {
+		.bb-rl-header-aside .notification-wrap .notification-dropdown {
 			right: -10px;
 			min-width: 280px;
 			max-width: 280px;
