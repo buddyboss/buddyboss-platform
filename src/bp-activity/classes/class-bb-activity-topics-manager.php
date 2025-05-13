@@ -875,15 +875,18 @@ class BB_Activity_Topics_Manager {
 
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
 
-		$mapped = array_map( function ( $item ) {
-			return [
-				'name'     => $item->name,
-				'slug'     => $item->slug,
-				'topic_id' => $item->topic_id,
-			];
-		},  $topic_lists['topics'] );
+		$mapped = array_map(
+			function ( $item ) {
+				return array(
+					'name'     => $item->name,
+					'slug'     => $item->slug,
+					'topic_id' => $item->topic_id,
+				);
+			},
+			$topic_lists['topics']
+		);
 
-		//Serialise each item to compare as strings.
+		// Serialise each item to compare as strings.
 		$topic_lists = array_map( 'unserialize', array_unique( array_map( 'serialize', $mapped ) ) );
 
 		if ( $group_topics_enabled ) {
