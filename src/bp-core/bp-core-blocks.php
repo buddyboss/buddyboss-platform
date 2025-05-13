@@ -473,6 +473,8 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 	// Get dark mode class
 	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
+	wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+
 	ob_start();
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class ); ?>">
