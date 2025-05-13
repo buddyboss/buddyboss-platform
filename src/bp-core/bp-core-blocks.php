@@ -453,7 +453,7 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 /**
  * Callback function to render the Ready Launch Header block.
  *
- * @since buddyboss [BBVERSION]
+ * @since 2.8.30
  *
  * @param array $attributes The block attributes.
  * @return string          HTML output.
@@ -462,18 +462,152 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 	$block_args = bp_parse_args(
 		$attributes,
 		array(
-			'headerText' => '',
+			'showSearch'         => true,
+			'showMessages'       => true,
+			'showNotifications'  => true,
+			'showProfileMenu'    => true,
+			'darkMode'          => false,
 		)
 	);
 
-	$classnames         = 'bb-readylaunch-header';
-	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $classnames ) );
+	// Get dark mode class
+	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
-	$header_text = $block_args['headerText'];
-	
-	return sprintf(
-		'<div %1$s><h2>%2$s</h2></div>',
-		$wrapper_attributes,
-		esc_html( $header_text )
-	);
+	ob_start();
+	?>
+	<header id="masthead" class="bb-rl-header <?php echo esc_attr( $dark_mode_class ); ?>">
+		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
+			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
+			<?php
+			bp_get_template_part( 'header/site-logo' );
+			wp_nav_menu(
+				array(
+					'theme_location' => 'bb-readylaunch',
+					'menu_id'        => '',
+					'container'      => false,
+					'fallback_cb'    => false,
+					'menu_class'     => 'bb-readylaunch-menu',
+				)
+			);
+			?>
+			<div id="header-aside" class="header-aside">
+				<div class="header-aside-inner flex items-center">
+					<?php
+					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
+						bp_get_template_part( 'common/search/search-model' );
+					}
+
+					if ( is_user_logged_in() ) {
+						if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) {
+							bp_get_template_part( 'header/messages-dropdown' );
+						}
+						if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) {
+							bp_get_template_part( 'header/notification-dropdown' );
+						}
+						if ( $block_args['showProfileMenu'] ) {
+						?>
+						<div class="user-wrap user-wrap-container">
+							<?php
+							$current_user = wp_get_current_user();
+							$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
+							$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
+							?>
+
+							<a class="user-link" href="<?php echo esc_url( $user_link ); ?>">
+								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
+							</a>
+							<div class="bb-rl-profile-dropdown">
+								<?php bp_get_template_part( 'header/profile-dropdown' ); ?>
+							</div>
+						</div>
+						<?php
+						}
+					} else {
+						?>
+						<div class="bb-rl-header-buttons">
+							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss' ); ?></a>
+
+							<?php if ( get_option( 'users_can_register' ) ) : ?>
+								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss' ); ?></a>
+							<?php endif; ?>
+						</div>
+					<?php } ?>
+				</div>
+			</div>
+
+			<?php if ( $block_args['showSearch'] || is_user_logged_in() ) : ?>
+			<div class="bb-readylaunch-mobile-menu__wrap">
+				<?php
+				if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
+					?>
+					<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="search-form">
+						<label for="search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+						<div class="bb-rl-network-search-bar">
+							<input id="search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss' ); ?>">
+							<input type="hidden" name="bp_search" value="1">
+							<button type="submit" id="search-submit" class="nouveau-search-submit">
+								<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
+								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+							</button>
+							<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+						</div>
+					</form>
+				<?php } ?>
+
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'bb-readylaunch',
+						'menu_id'        => '',
+						'container'      => false,
+						'fallback_cb'    => false,
+						'menu_class'     => 'bb-readylaunch-mobile-menu',
+					)
+				);
+
+				if ( is_user_logged_in() && ( 
+					($block_args['showMessages'] && bp_is_active( 'messages' )) || 
+					($block_args['showNotifications'] && bp_is_active( 'notifications' ))
+				) ) {
+					?>
+					<div class="bb-readylaunch-mobile-menu_items">
+						<ul>
+							<?php if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) { ?>
+								<li>
+									<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+										<i class="bb-icons-rl-chat-teardrop-text"></i>
+										<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
+										<?php
+										$unread_message_count = messages_get_unread_count();
+										if ( $unread_message_count > 0 ) :
+											?>
+											<span class="count"><?php echo esc_html( $unread_message_count ); ?>+</span>
+										<?php endif; ?>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) { ?>
+								<li>
+									<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+										<i class="bb-icons-rl-bell-simple"></i>
+										<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
+										<?php
+										$notifications = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
+										if ( $unread_notification_count > 0 ) :
+											?>
+											<span class="count"><?php echo esc_html( $unread_notification_count ); ?>+</span>
+										<?php endif; ?>
+									</a>
+								</li>
+							<?php } ?>
+						</ul>
+					</div>
+				<?php } ?>
+			</div>
+			<?php endif; ?>
+		</div>
+	</header>
+	<?php
+	return ob_get_clean();
 }

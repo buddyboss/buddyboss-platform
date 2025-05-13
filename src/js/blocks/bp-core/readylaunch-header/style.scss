@@ -8,4 +8,192 @@
         line-height: 1.4;
         color: #122B46;
     }
+}
+
+.bb-rl-header {
+    background: var(--bb-content-background-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    top: 0;
+    left: 0;
+
+    .bb-rl-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .bb-rl-header-container {
+        min-height: 76px;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .items-center {
+        align-items: center;
+    }
+
+    .justify-between {
+        justify-content: space-between;
+    }
+
+    // Mobile menu button
+    .bb-rl-left-panel-mobile {
+        display: none;
+        @media (max-width: 800px) {
+            display: block;
+        }
+    }
+
+    // Navigation menu
+    .bb-readylaunch-menu {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        @media (max-width: 800px) {
+            display: none;
+        }
+
+        li {
+            margin: 0 15px;
+            
+            a {
+                color: var(--bb-headings-color);
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+
+                &:hover {
+                    color: var(--bb-primary-color);
+                }
+            }
+        }
+    }
+
+    // Header aside (right side)
+    .header-aside {
+        .header-aside-inner {
+            gap: 20px;
+        }
+    }
+
+    // User profile section
+    .user-wrap-container {
+        position: relative;
+
+        .user-link {
+            display: block;
+            
+            img {
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        .bb-rl-profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bb-content-background-color);
+            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            min-width: 200px;
+            margin-top: 10px;
+        }
+
+        &:hover .bb-rl-profile-dropdown {
+            display: block;
+        }
+    }
+
+    // Buttons
+    .bb-rl-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 20px;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+
+        &--small {
+            padding: 6px 16px;
+            font-size: 13px;
+        }
+
+        &--tertiaryLink {
+            color: var(--bb-primary-color);
+            
+            &:hover {
+                color: var(--bb-primary-color-hover);
+            }
+        }
+
+        &--secondaryFill {
+            background: var(--bb-primary-color);
+            color: #ffffff;
+            
+            &:hover {
+                background: var(--bb-primary-color-hover);
+            }
+        }
+    }
+
+    // Mobile menu
+    .bb-readylaunch-mobile-menu__wrap {
+        display: none;
+        position: fixed;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 76px);
+        background: var(--bb-content-background-color);
+        padding: 20px;
+        overflow-y: auto;
+
+        @media (max-width: 800px) {
+            &.is-active {
+                display: block;
+            }
+        }
+
+        .bb-readylaunch-mobile-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                margin: 10px 0;
+                
+                a {
+                    color: var(--bb-headings-color);
+                    text-decoration: none;
+                    font-size: 16px;
+                    font-weight: 500;
+
+                    &:hover {
+                        color: var(--bb-primary-color);
+                    }
+                }
+            }
+        }
+    }
+
+    // Dark mode styles
+    &.bb-rl-dark-mode {
+        --bb-content-background-color: #1B1B1B;
+        --bb-headings-color: #ffffff;
+        --bb-primary-color: #385DFF;
+        --bb-primary-color-hover: #1F46FF;
+    }
 } 
