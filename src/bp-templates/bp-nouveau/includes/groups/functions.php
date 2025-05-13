@@ -510,7 +510,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		$topics = function_exists( 'bb_get_group_activity_topics' ) ? bb_get_group_activity_topics(
 			array(
 				'item_id'   => $item->id,
-				'item_type' => 'group',
+				'item_type' => 'groups',
 			)
 		) : array();
 
