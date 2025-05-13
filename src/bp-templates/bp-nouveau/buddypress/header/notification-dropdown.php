@@ -14,8 +14,8 @@ $menu_link                 = trailingslashit( bp_loggedin_user_domain() . bp_get
 $notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 ?>
-<div id="header-notifications-dropdown-elem" class="notification-wrap menu-item-has-children">
-	<a href="javascript:void(0);" ref="notification_bell" class="notification-link" aria-label="<?php esc_html_e( 'Notifications', 'buddyboss' ); ?>">
+<div id="bb-rl-header-notifications-dropdown-elem" class="bb-rl-notification-wrap menu-item-has-children">
+	<a href="javascript:void(0);" ref="notification_bell" class="bb-rl-notification-link" aria-label="<?php esc_html_e( 'Notifications', 'buddyboss' ); ?>">
         <span data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Notifications', 'buddyboss' ); ?>">
             <i class="bb-icons-rl-bell-simple"></i>
             <?php if ( $unread_notification_count > 0 ) : ?>
