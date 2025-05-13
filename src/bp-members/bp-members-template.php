@@ -2688,7 +2688,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	if ( ! $user_id ) {
 		return false;
 	}
-    
+
 	// If user is pending then view as button should not show to admin.
 	if ( ! bp_is_user_active( $user_id ) ) {
 		return false;
@@ -3070,4 +3070,47 @@ function bb_get_member_last_activity_time( $args = array() ) {
 	 * @param array  $r             Array of parsed arguments for query.
 	 */
 	return apply_filters( 'bb_get_member_last_activity_time', $last_activity, $r );
+}
+
+/**
+ * Builds the logged-in user's profile URL.
+ *
+ * @since 12.0.0
+ *
+ * @param array $path_chunks {
+ *     An array of arguments. Optional.
+ *
+ *     @type string $single_item_component        The component slug the action is relative to.
+ *     @type string $single_item_action           The slug of the action to perform.
+ *     @type array  $single_item_action_variables An array of additional informations about the action to perform.
+ * }
+ * @return string The logged-in user's profile URL.
+ */
+function bp_loggedin_user_url( $path_chunks = array() ) {
+	$bp  = buddypress();
+	$url = '';
+
+	if ( isset( $bp->loggedin_user->domain ) ) {
+		$url = $bp->loggedin_user->domain;
+	}
+
+	if ( $path_chunks ) {
+		$url = bp_members_get_user_url( bp_loggedin_user_id(), $path_chunks );
+	}
+
+	/**
+	 * Filter here to edit the logged-in user's profile URL.
+	 *
+	 * @since 12.0.0
+	 *
+	 * @param string $url         The logged-in user's profile URL.
+	 * @param array  $path_chunks {
+	 *     An array of arguments. Optional.
+	 *
+	 *     @type string $single_item_component        The component slug the action is relative to.
+	 *     @type string $single_item_action           The slug of the action to perform.
+	 *     @type array  $single_item_action_variables An array of additional informations about the action to perform.
+	 * }
+	 */
+	return apply_filters( 'bp_loggedin_user_url', $url, $path_chunks );
 }

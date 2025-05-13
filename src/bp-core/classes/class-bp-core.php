@@ -437,6 +437,13 @@ class BP_Core extends BP_Component {
 	 *                      description.
 	 */
 	public function blocks_init( $blocks = array() ) {
-		parent::blocks_init( array() );
+		parent::blocks_init(
+			array(
+				'buddyboss/login-form' => array(
+					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/login-form',
+					'render_callback' => 'bp_block_render_login_form_block',
+				),
+			)
+		);
 	}
 }
