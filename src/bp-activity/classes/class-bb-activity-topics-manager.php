@@ -613,7 +613,7 @@ class BB_Activity_Topics_Manager {
 
 		$topic_lists = $this->bb_get_activity_topics( $args );
 
-		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = bb_is_enabled_group_activity_topics();
+		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
 		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
 		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
@@ -647,7 +647,7 @@ class BB_Activity_Topics_Manager {
 			}
 		}
 
-		$group_topics_enabled = isset( $args['filter_query'] ) && $args['filter_query'] && bp_is_active( 'groups' ) && bb_is_enabled_group_activity_topics();
+		$group_topics_enabled = isset( $args['filter_query'] ) && $args['filter_query'] && bp_is_active( 'groups' ) && function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
 		if ( $group_topics_enabled ) {
 			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
