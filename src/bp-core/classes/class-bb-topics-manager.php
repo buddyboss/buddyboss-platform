@@ -958,6 +958,10 @@ class BB_Topics_Manager {
 			$order_by = 'tr.' . $r['orderby'];
 		}
 
+		if ( ! empty( $order_by ) && ! empty( $sort ) ) {
+			$order_by = "ORDER BY {$order_by} {$sort}";
+		}
+
 		if ( ! empty( $r['item_id'] ) ) {
 			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
 			$item_ids           = array_map( 'absint', $r['item_id'] );
@@ -1018,6 +1022,11 @@ class BB_Topics_Manager {
 			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id NOT IN ( %s )', $exclude_ids );
 		}
 
+		if ( ! empty( $r['filter_query'] ) ) {
+			$select_sql = 'SELECT DISTINCT t.id';
+			$order_by   = '';
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the activity topics get sql method.
 		 *
@@ -1062,8 +1071,10 @@ class BB_Topics_Manager {
 		 */
 		$join_sql = apply_filters( 'bb_get_topics_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
+		$group_by = '';
+
 		// Query first for poll vote IDs.
-		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
+		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$group_by} {$order_by} {$pagination}";
 
 		$retval = array(
 			'topics' => null,

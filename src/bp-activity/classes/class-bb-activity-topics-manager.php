@@ -841,4 +841,45 @@ class BB_Activity_Topics_Manager {
 
 		return $output;
 	}
+
+	/**
+	 * Function to get the activity topics for filters.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments array.
+	 *
+	 * @return array Array of activity topics.
+	 */
+	public function bb_get_activity_topics_for_filters( $args = array() ) {
+		$r = bp_parse_args(
+			$args,
+			array(
+				'item_type'    => array( 'activity', 'groups' ),
+				'filter_query' => true,
+			)
+		);
+
+		if ( bp_current_user_can( 'administrator' ) ) {
+			$r['permission_type'] = array( 'mods_admins', 'anyone' );
+		} else {
+			$r['permission_type'] = 'anyone';
+		}
+
+		$group_topics_enabled = bp_is_active( 'groups' ) && bb_is_enabled_group_activity_topics();
+		if ( $group_topics_enabled ) {
+			unset( $r['permission_type'] ); // Will add permission type in bb_get_topics_where_conditions.
+			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
+			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
+		}
+		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
+		error_log( 'topic_lists' );
+		error_log( print_r( $topic_lists, true ) );
+		if ( $group_topics_enabled ) {
+			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
+			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
+		}
+
+		return ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+	}
 }
