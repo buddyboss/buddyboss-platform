@@ -27,7 +27,6 @@
 					<li>
 						<a href="#" 
 						data-topic-id="{{ topic.topic_id }}" 
-						data-topic-rel-id="{{ topic.id }}"
 						<# if (data.topic_id && data.topic_id == topic.topic_id) { #>class="selected"<# } #>
 						>
 							{{ topic.name }}
