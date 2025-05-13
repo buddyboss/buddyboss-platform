@@ -530,7 +530,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 								'item_type' => ! empty( $topic->item_type ) ? $topic->item_type : 'activity',
 							);
 							?>
-							<div class="bb-activity-topic-item">
+							<div class="bb-activity-topic-item" data-topic-id="<?php echo esc_attr( $topic->topic_id ); ?>">
 								<div class="bb-topic-left">
 									<span class="bb-topic-drag">
 										<i class="bb-icon-grip-v"></i>

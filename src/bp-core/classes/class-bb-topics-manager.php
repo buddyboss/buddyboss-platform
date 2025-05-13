@@ -155,6 +155,9 @@ class BB_Topics_Manager {
 			'bbTopicsManagerVars',
 			$bb_topics_js_strings
 		);
+
+		// Add the JS templates for topics.
+		bp_get_template_part( 'common/js-templates/bb-topic-lists' );
 	}
 
 	/**
@@ -308,7 +311,26 @@ class BB_Topics_Manager {
 			wp_send_json_error( array( 'error' => __( 'Failed to add topic.', 'buddyboss' ) ) );
 		}
 
-		wp_send_json_success( array( 'topic_id' => $topic_data->id ) );
+		if ( 'activity' === $item_type ) {
+			// Remove is_global_activity from the topic data when it's an activity topic.
+			unset( $topic_data->is_global_activity );
+			$permission_type = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $permission_type ) : array();
+		} else {
+			$permission_type = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type( $permission_type ) : array();
+		}
+		if ( ! empty( $permission_type ) ) {
+			$permission_type_value       = current( $permission_type );
+			$topic_data->permission_type = $permission_type_value;
+		}
+
+		wp_send_json_success(
+			array(
+				'content' => array(
+					'topic' => $topic_data,
+					'nonce' => wp_create_nonce( 'bb_edit_topic' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -465,9 +487,10 @@ class BB_Topics_Manager {
 
 		$get_topic_relationship = $this->bb_get_topic(
 			array(
-				'topic_id'  => $topic_id,
-				'item_id'   => $r['item_id'],
-				'item_type' => $r['item_type'],
+				'topic_id'           => $topic_id,
+				'item_id'            => $r['item_id'],
+				'item_type'          => $r['item_type'],
+				'is_global_activity' => true,
 			)
 		);
 
@@ -568,16 +591,24 @@ class BB_Topics_Manager {
 			// Case: Name already exists.
 			// Fetch topic id from bb_topics table.
 			$new_topic_id = (int) $existing_topic->id;
-			$topic_data   = $this->bb_get_topic_by( 'id', $new_topic_id );
+			$topic_data   = $this->bb_get_topic(
+				array(
+					'topic_id'           => $new_topic_id,
+					'item_id'            => $item_id,
+					'item_type'          => $item_type,
+					'is_global_activity' => true,
+				)
+			);
 
 			// Check if topic id is different from current topic id.
 			if ( $previous_topic_id !== $new_topic_id ) { // NO.
 				// Check if relationship already exists.
 				$existing_relationship = $this->bb_get_topic(
 					array(
-						'topic_id'  => $new_topic_id,
-						'item_type' => $item_type,
-						'item_id'   => $item_id,
+						'topic_id'           => $new_topic_id,
+						'item_type'          => $item_type,
+						'item_id'            => $item_id,
+						'is_global_activity' => true,
 					)
 				);
 
