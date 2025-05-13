@@ -657,11 +657,15 @@ class BB_Activity_Topics_Manager {
 
 		$mapped = array_map(
 			function ( $item ) {
-				return array(
+				$array_data = array(
 					'name'     => $item->name,
 					'slug'     => $item->slug,
 					'topic_id' => $item->topic_id,
 				);
+				if ( isset( $item->is_global_activity ) ) {
+					$array_data['is_global_activity'] = $item->is_global_activity;
+				}
+				return $array_data;
 			},
 			$topic_lists['topics']
 		);
