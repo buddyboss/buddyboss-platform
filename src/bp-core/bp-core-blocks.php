@@ -475,7 +475,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 
 	ob_start();
 	?>
-	<header id="masthead" class="bb-rl-header <?php echo esc_attr( $dark_mode_class ); ?>">
+	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class ); ?>">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
 			<?php
