@@ -597,8 +597,7 @@ class BB_Activity_Topics_Manager {
 	 * @return array Modified array of strings.
 	 */
 	public function bb_activity_topic_get_js_strings( $strings ) {
-		$topic_lists = $this->bb_get_activity_topics();
-
+		$args = array();
 		// If group activity topics is not enabled, then don't show the topic lists.
 		if (
 			bp_is_active( 'groups' ) &&
@@ -606,8 +605,13 @@ class BB_Activity_Topics_Manager {
 			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
 			function_exists( 'bb_get_group_activity_topics' )
 		) {
-			$topic_lists = bb_is_enabled_group_activity_topics() ? bb_get_group_activity_topics() : array();
+			$args = array(
+				'item_id'   => bp_get_current_group_id(),
+				'item_type' => 'groups',
+			);
 		}
+
+		$topic_lists = $this->bb_get_activity_topics( $args );
 
 		$strings['activity']['params']['topics']['bb_is_enabled_group_activity_topics'] = bb_is_enabled_group_activity_topics();
 		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
@@ -631,19 +635,46 @@ class BB_Activity_Topics_Manager {
 			$args,
 			array(
 				'item_id'   => 0,
-				'item_type' => 'activity',
+				'item_type' => array( 'activity', 'groups' ),
 			)
 		);
 
-		if ( bp_current_user_can( 'administrator' ) ) {
-			$r['permission_type'] = array( 'mods_admins', 'anyone' );
-		} else {
-			$r['permission_type'] = 'anyone';
+		if ( empty( $r['item_id'] ) ) {
+			if ( bp_current_user_can( 'administrator' ) ) {
+				$r['permission_type'] = array( 'mods_admins', 'anyone' );
+			} else {
+				$r['permission_type'] = 'anyone';
+			}
+		}
+
+		$group_topics_enabled = isset( $args['filter_query'] ) && $args['filter_query'] && bp_is_active( 'groups' ) && bb_is_enabled_group_activity_topics();
+		if ( $group_topics_enabled ) {
+			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
+			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
 		}
 
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
 
-		return ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		$mapped = array_map(
+			function ( $item ) {
+				return array(
+					'name'     => $item->name,
+					'slug'     => $item->slug,
+					'topic_id' => $item->topic_id,
+				);
+			},
+			$topic_lists['topics']
+		);
+
+		// Serialise each item to compare as strings.
+		$topic_lists = array_map( 'unserialize', array_unique( array_map( 'serialize', $mapped ) ) );
+
+		if ( $group_topics_enabled ) {
+			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
+			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
+		}
+
+		return ! empty( $topic_lists ) ? $topic_lists : array();
 	}
 
 	/**
@@ -840,60 +871,5 @@ class BB_Activity_Topics_Manager {
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Function to get the activity topics for filters.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $args The arguments array.
-	 *
-	 * @return array Array of activity topics.
-	 */
-	public function bb_get_activity_topics_for_filters( $args = array() ) {
-		$r = bp_parse_args(
-			$args,
-			array(
-				'item_type' => array( 'activity', 'groups' ),
-				'filter_query' => true,
-				'debug' => true,
-			)
-		);
-
-		if ( bp_current_user_can( 'administrator' ) ) {
-			$r['permission_type'] = array( 'mods_admins', 'anyone' );
-		} else {
-			$r['permission_type'] = 'anyone';
-		}
-
-		$group_topics_enabled = bp_is_active( 'groups' ) && bb_is_enabled_group_activity_topics();
-		if ( $group_topics_enabled ) {
-			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
-			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
-		}
-
-		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
-
-		$mapped = array_map(
-			function ( $item ) {
-				return array(
-					'name'     => $item->name,
-					'slug'     => $item->slug,
-					'topic_id' => $item->topic_id,
-				);
-			},
-			$topic_lists['topics']
-		);
-
-		// Serialise each item to compare as strings.
-		$topic_lists = array_map( 'unserialize', array_unique( array_map( 'serialize', $mapped ) ) );
-
-		if ( $group_topics_enabled ) {
-			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
-			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
-		}
-
-		return ! empty( $topic_lists ) ? $topic_lists : array();
 	}
 }
