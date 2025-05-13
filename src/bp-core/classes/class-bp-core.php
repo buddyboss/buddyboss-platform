@@ -443,6 +443,10 @@ class BP_Core extends BP_Component {
 					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/login-form',
 					'render_callback' => 'bp_block_render_login_form_block',
 				),
+				'buddyboss/readylaunch-header' => array(
+					'metadata'        => trailingslashit( buddypress()->plugin_dir ) . 'bp-core/blocks/readylaunch-header',
+					'render_callback' => 'bp_block_render_readylaunch_header_block',
+				),
 			)
 		);
 	}

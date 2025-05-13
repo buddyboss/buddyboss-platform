@@ -449,3 +449,31 @@ function bp_block_render_login_form_block( $attributes = array() ) {
 
 	return $widget_content;
 }
+
+/**
+ * Callback function to render the Ready Launch Header block.
+ *
+ * @since buddyboss [BBVERSION]
+ *
+ * @param array $attributes The block attributes.
+ * @return string          HTML output.
+ */
+function bp_block_render_readylaunch_header_block( $attributes = array() ) {
+	$block_args = bp_parse_args(
+		$attributes,
+		array(
+			'headerText' => '',
+		)
+	);
+
+	$classnames         = 'bb-readylaunch-header';
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $classnames ) );
+
+	$header_text = $block_args['headerText'];
+	
+	return sprintf(
+		'<div %1$s><h2>%2$s</h2></div>',
+		$wrapper_attributes,
+		esc_html( $header_text )
+	);
+}
