@@ -10,7 +10,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_nouveau_before_activity_directory_content();
 ?>
-<div class="bp-wrap">
+<div class="bb-rl-activity-wrap">
 	<div class="bb-rl-content-wrapper">
 		<div class="bb-rl-inner-container bb-rl-activity-page">
 			<?php
