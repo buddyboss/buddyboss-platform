@@ -1821,6 +1821,35 @@ define({ "api": [
     "groupTitle": "Document"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/document/upload",
+    "title": "Delete Uploaded Document Attachment.",
+    "name": "DeleteBBUploadedDocumentAttachment",
+    "group": "Document",
+    "description": "<p>Delete Uploaded Document Attachment.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the document attachment.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/document/:id",
     "title": "Get Document",
@@ -5861,6 +5890,35 @@ define({ "api": [
             "optional": false,
             "field": "media_ids",
             "description": "<p>A unique numeric IDs for the media photo/video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/media/upload",
+    "title": "Delete Uploaded Media Attachment.",
+    "name": "DeleteBBUploadedMediaAttachment",
+    "group": "Media",
+    "description": "<p>Delete Uploaded Media Attachment.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the media attachment.</p>"
           }
         ]
       }
@@ -10110,6 +10168,35 @@ define({ "api": [
             "field": "privacy",
             "defaultValue": "public",
             "description": "<p>Privacy of the video.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-video/classes/class-bp-rest-video-endpoint.php",
+    "groupTitle": "Video"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/video/upload",
+    "title": "Delete Uploaded Video Attachment.",
+    "name": "DeleteBBUploadedVideoAttachment",
+    "group": "Video",
+    "description": "<p>Delete Uploaded Video Attachment.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the video attachment.</p>"
           }
         ]
       }
