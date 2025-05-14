@@ -925,7 +925,7 @@ class BB_Activity_Topics_Manager {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_user_activity_topics_after_post_form() {
-		$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'filter_query' => true ) ) : array();
+		$topics = $this->bb_get_activity_topics( array( 'filter_query' => true ) );
 		if ( ! empty( $topics ) ) {
 			?>
 			<div class="activity-topic-selector">
