@@ -103,7 +103,7 @@ class BB_Activity_Topics_Manager {
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
-		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_add_topic_id_to_query_string' ), 20, 1 );
+		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ), 10, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
@@ -548,6 +548,27 @@ class BB_Activity_Topics_Manager {
 		$args['topic_id'] = $topic_id;
 
 		return $args;
+	}
+
+	/**
+	 * Validate the activity topic before it is added.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments array.
+	 */
+	public function bb_validate_activity_topic_before_added( $args ) {
+		if (
+			'activity' === $args['item_type'] &&
+			! bp_current_user_can( 'administrator' )
+		) {
+			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss' );
+			if ( 'wp_error' === $args['error_type'] ) {
+				return new WP_Error( 'bb_topic_not_allowed', $error_message );
+			}
+
+			wp_send_json_error( array( 'error' => $error_message ) );
+		}
 	}
 
 	/**
