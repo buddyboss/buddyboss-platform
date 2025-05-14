@@ -593,7 +593,7 @@
 			gap: var(--bb-rl-space-100);
 		}
 
-		.bb-rl-notification-wrap {
+		.notification-wrap {
 			position: relative;
 
 			.notification-dropdown {
@@ -627,7 +627,7 @@
 					display: block;
 				}
 
-				.bb-rl-notification-link {
+				.notification-link {
 					background-color: var(--bb-rl-background-secondary-hover-color);
 
 					> span:before,
@@ -683,7 +683,7 @@
 			}
 		}
 
-		.bb-rl-notification-link {
+		.notification-link {
 			display: inline-block;
 			padding: 4px;
 			border-radius: var(--bb-rl-radius-md);
@@ -1512,7 +1512,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			display: none;
 		}
 
-		.bb-rl-header-aside .bb-rl-notification-wrap,
+		.bb-rl-header-aside .notification-wrap,
 		.bb-rl-header-aside .bb-message-dropdown-notification {
 			display: none;
 		}
@@ -1590,11 +1590,11 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 
 	.bb-rl-header-block {
 
-		.bb-rl-header-aside .bb-rl-notification-wrap.messages-wrap .notification-dropdown {
+		.bb-rl-header-aside .notification-wrap.messages-wrap .notification-dropdown {
 			right: -30px;
 		}
 
-		.bb-rl-header-aside .bb-rl-notification-wrap .notification-dropdown {
+		.bb-rl-header-aside .notification-wrap .notification-dropdown {
 			right: -10px;
 			min-width: 280px;
 			max-width: 280px;

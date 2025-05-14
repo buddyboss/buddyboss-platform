@@ -493,7 +493,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 		<div class="bb-rl-container bb-rl-header-container">
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
 			<?php
-			bp_get_template_part( 'header/site-logo' );
+			bp_get_template_part( 'readylaunch/header/site-logo' );
 			wp_nav_menu(
 				array(
 					'theme_location' => 'bb-readylaunch',
@@ -508,15 +508,15 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 				<div class="bb-rl-header-aside-inner">
 					<?php
 					if ( $block_args['showSearch'] && bp_is_active( 'search' ) ) {
-						bp_get_template_part( 'common/search/search-model' );
+						bp_get_template_part( 'readylaunch/common/search/search-model' );
 					}
 
 					if ( is_user_logged_in() ) {
 						if ( $block_args['showMessages'] && bp_is_active( 'messages' ) ) {
-							bp_get_template_part( 'header/messages-dropdown' );
+							bp_get_template_part( 'readylaunch/header/messages-dropdown' );
 						}
 						if ( $block_args['showNotifications'] && bp_is_active( 'notifications' ) ) {
-							bp_get_template_part( 'header/notification-dropdown' );
+							bp_get_template_part( 'readylaunch/header/notification-dropdown' );
 						}
 						if ( $block_args['showProfileMenu'] ) {
 						?>
@@ -531,7 +531,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 								<?php echo get_avatar( get_current_user_id(), 100 ); ?>
 							</a>
 							<div class="bb-rl-profile-dropdown">
-								<?php bp_get_template_part( 'header/profile-dropdown' ); ?>
+								<?php bp_get_template_part( 'readylaunch/header/profile-dropdown' ); ?>
 							</div>
 						</div>
 						<?php
