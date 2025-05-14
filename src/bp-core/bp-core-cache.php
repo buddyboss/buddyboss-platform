@@ -693,6 +693,9 @@ function bb_topic_added_cache_reset( $topic_relationship, $r ) {
 			wp_cache_delete( 'bb_topic_slug_' . $r['slug'], 'bb_topics' );
 		}
 	}
+
+	// Clear activity topics cache for list of topics.
+	wp_cache_flush_group( 'bb_activity_topics' );
 }
 
 add_action( 'bb_topic_after_added', 'bb_topic_added_cache_reset', 10, 2 );
@@ -725,6 +728,9 @@ function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
 
 	// Clear topic caches.
 	wp_cache_delete( 'bb_topic_id_' . $topic_id, 'bb_topics' );
+
+	// Clear activity topics cache for list of topics.
+	wp_cache_flush_group( 'bb_activity_topics' );
 }
 
 add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );

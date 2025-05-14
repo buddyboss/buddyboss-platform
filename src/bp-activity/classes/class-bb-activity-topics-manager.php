@@ -41,6 +41,15 @@ class BB_Activity_Topics_Manager {
 	public $activity_topic_rel_table;
 
 	/**
+	 * Cache key for activity topics.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	public $activity_topics_cache_key = 'bb_activity_topics';
+
+	/**
 	 * WordPress Database instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -201,6 +210,15 @@ class BB_Activity_Topics_Manager {
 			return;
 		}
 
+		/**
+		 * Fires before saving the activity topic metabox.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object $activity The activity object.
+		 */
+		do_action( 'bb_before_save_activity_topic_metabox', $activity );
+
 		// Get the topic ID from the form.
 		$topic_id    = isset( $_POST['activity_topic'] ) ? absint( $_POST['activity_topic'] ) : 0;
 		$activity_id = isset( $activity->id ) ? absint( $activity->id ) : 0;
@@ -218,6 +236,16 @@ class BB_Activity_Topics_Manager {
 			}
 			$this->bb_add_activity_topic_relationship( $args );
 		}
+
+		/**
+		 * Fires after saving the activity topic metabox.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $activity_id The ID of the activity.
+		 * @param int $topic_id    The ID of the topic.
+		 */
+		do_action( 'bb_after_save_activity_topic_metabox', $activity_id, $topic_id );
 	}
 
 	/**
@@ -639,12 +667,19 @@ class BB_Activity_Topics_Manager {
 			)
 		);
 
-		if ( empty( $r['item_id'] ) ) {
+		$r['item_type'] = ! empty( $r['item_type'] ) ? ( is_array( $r['item_type'] ) ? $r['item_type'] : array( $r['item_type'] ) ) : array( 'activity' );
+		if ( in_array( 'activity', $r['item_type'], true ) ) {
 			if ( bp_current_user_can( 'administrator' ) ) {
 				$r['permission_type'] = array( 'mods_admins', 'anyone' );
 			} else {
 				$r['permission_type'] = 'anyone';
 			}
+		}
+
+		$cache_key   = 'bb_activity_topics_' . md5( maybe_serialize( $r ) );
+		$topic_cache = wp_cache_get( $cache_key, $this->activity_topics_cache_key );
+		if ( false !== $topic_cache ) {
+			return $topic_cache;
 		}
 
 		$group_topics_enabled = isset( $args['filter_query'] ) && $args['filter_query'] && bp_is_active( 'groups' ) && function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics();
@@ -654,8 +689,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
-
-		$mapped = array_map(
+		$mapped      = array_map(
 			function ( $item ) {
 				$array_data = array(
 					'name'     => $item->name,
@@ -665,18 +699,25 @@ class BB_Activity_Topics_Manager {
 				if ( isset( $item->is_global_activity ) ) {
 					$array_data['is_global_activity'] = $item->is_global_activity;
 				}
+				if ( isset( $item->item_id ) ) {
+					$array_data['item_id'] = $item->item_id;
+				}
 				return $array_data;
 			},
 			$topic_lists['topics']
 		);
 
-		// Serialise each item to compare as strings.
-		$topic_lists = array_map( 'unserialize', array_unique( array_map( 'serialize', $mapped ) ) );
-
+		if ( ! empty( $mapped ) ) {
+			$topic_ids     = array_column( $mapped, 'topic_id' );
+			$unique_topics = array_combine( $topic_ids, $mapped );
+			$topic_lists   = array_values( $unique_topics );
+		}
 		if ( $group_topics_enabled ) {
 			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
 		}
+
+		wp_cache_set( $cache_key, $topic_lists, $this->activity_topics_cache_key );
 
 		return ! empty( $topic_lists ) ? $topic_lists : array();
 	}
