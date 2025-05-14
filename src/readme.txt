@@ -57,6 +57,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 2.8.60 =
+* Bug: Activity - Fixed an issue where the Activity “Load More” button wrapper was being triggered even when clicking outside the button
+* Bug: Core - Added a check to ensure opendir() succeeds before calling closedir() to prevent potential errors, following PHP best practices for high-security environments like WordPress VIP
+* Bug: Moderation - Fixed an issue where activating the Moderation component incorrectly created a component page
+* Bug: Moderation API - Fixed an issue where admins or organizers couldn’t delete suspended members’ posts in groups on the app, while it worked on the web
+* Bug: Reactions - Fixed an issue in the WP Admin where a backslash was being added after an apostrophe in the Reactions button text each time it was saved
+* Bug: WPML - Fixed an issue where search results were incorrect for the Jobs post type from WP Job Manager when WPML Multilingual CMS was activated
+
 = 2.8.51 =
 * Bug: Core - Fixed Vulnerability issues
 
