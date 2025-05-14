@@ -1053,11 +1053,6 @@ class BB_Topics_Manager {
 			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id NOT IN ( %s )', $exclude_ids );
 		}
 
-//		if ( ! empty( $r['filter_query'] ) ) {
-//			$select_sql = 'SELECT DISTINCT t.id';
-//			$order_by   = '';
-//		}
-
 		/**
 		 * Filters the MySQL WHERE conditions for the activity topics get sql method.
 		 *
@@ -1121,12 +1116,6 @@ class BB_Topics_Manager {
 		 * @param array  $r              Array of arguments passed into method.
 		 */
 		$topic_sql = apply_filters( 'bb_get_topics_sql', $topic_sql, $r );
-
-
-		if ( ! empty( $r['debug'] ) ) {
-			error_log( print_r( '----- bb_get_topics_sql ------', 1 ) );
-			error_log( print_r( $topic_sql, 1 ) );
-		}
 
 		// Create a unique cache key based on the query parameters.
 		$cache_key = 'bb_topics_query_' . md5( maybe_serialize( $r ) );
