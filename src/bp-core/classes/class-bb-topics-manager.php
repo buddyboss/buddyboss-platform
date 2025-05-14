@@ -155,6 +155,9 @@ class BB_Topics_Manager {
 			'bbTopicsManagerVars',
 			$bb_topics_js_strings
 		);
+
+		// Add the JS templates for topics.
+		bp_get_template_part( 'common/js-templates/bb-topic-lists' );
 	}
 
 	/**
@@ -308,7 +311,26 @@ class BB_Topics_Manager {
 			wp_send_json_error( array( 'error' => __( 'Failed to add topic.', 'buddyboss' ) ) );
 		}
 
-		wp_send_json_success( array( 'topic_id' => $topic_data->id ) );
+		if ( 'activity' === $item_type ) {
+			// Remove is_global_activity from the topic data when it's an activity topic.
+			unset( $topic_data->is_global_activity );
+			$permission_type = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type( $permission_type ) : array();
+		} else {
+			$permission_type = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type( $permission_type ) : array();
+		}
+		if ( ! empty( $permission_type ) ) {
+			$permission_type_value       = current( $permission_type );
+			$topic_data->permission_type = $permission_type_value;
+		}
+
+		wp_send_json_success(
+			array(
+				'content' => array(
+					'topic' => $topic_data,
+					'nonce' => wp_create_nonce( 'bb_edit_topic' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -465,9 +487,10 @@ class BB_Topics_Manager {
 
 		$get_topic_relationship = $this->bb_get_topic(
 			array(
-				'topic_id'  => $topic_id,
-				'item_id'   => $r['item_id'],
-				'item_type' => $r['item_type'],
+				'topic_id'           => $topic_id,
+				'item_id'            => $r['item_id'],
+				'item_type'          => $r['item_type'],
+				'is_global_activity' => true,
 			)
 		);
 
@@ -568,16 +591,24 @@ class BB_Topics_Manager {
 			// Case: Name already exists.
 			// Fetch topic id from bb_topics table.
 			$new_topic_id = (int) $existing_topic->id;
-			$topic_data   = $this->bb_get_topic_by( 'id', $new_topic_id );
+			$topic_data   = $this->bb_get_topic(
+				array(
+					'topic_id'           => $new_topic_id,
+					'item_id'            => $item_id,
+					'item_type'          => $item_type,
+					'is_global_activity' => true,
+				)
+			);
 
 			// Check if topic id is different from current topic id.
 			if ( $previous_topic_id !== $new_topic_id ) { // NO.
 				// Check if relationship already exists.
 				$existing_relationship = $this->bb_get_topic(
 					array(
-						'topic_id'  => $new_topic_id,
-						'item_type' => $item_type,
-						'item_id'   => $item_id,
+						'topic_id'           => $new_topic_id,
+						'item_type'          => $item_type,
+						'item_id'            => $item_id,
+						'is_global_activity' => true,
 					)
 				);
 
@@ -952,7 +983,15 @@ class BB_Topics_Manager {
 			$r['orderby'] = 'menu_order';
 		}
 
-		$order_by = 'tr.' . $r['orderby'];
+		if ( 'name' === $r['orderby'] ) {
+			$order_by = 't.name';
+		} else {
+			$order_by = 'tr.' . $r['orderby'];
+		}
+
+		if ( ! empty( $order_by ) && ! empty( $sort ) ) {
+			$order_by = "ORDER BY {$order_by} {$sort}";
+		}
 
 		if ( ! empty( $r['item_id'] ) ) {
 			$r['item_id']       = is_array( $r['item_id'] ) ? $r['item_id'] : array( $r['item_id'] );
@@ -1014,6 +1053,11 @@ class BB_Topics_Manager {
 			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id NOT IN ( %s )', $exclude_ids );
 		}
 
+//		if ( ! empty( $r['filter_query'] ) ) {
+//			$select_sql = 'SELECT DISTINCT t.id';
+//			$order_by   = '';
+//		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the activity topics get sql method.
 		 *
@@ -1058,8 +1102,10 @@ class BB_Topics_Manager {
 		 */
 		$join_sql = apply_filters( 'bb_get_topics_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
+		$group_by = '';
+
 		// Query first for poll vote IDs.
-		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort} {$pagination}";
+		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$group_by} {$order_by} {$pagination}";
 
 		$retval = array(
 			'topics' => null,
@@ -1075,6 +1121,12 @@ class BB_Topics_Manager {
 		 * @param array  $r              Array of arguments passed into method.
 		 */
 		$topic_sql = apply_filters( 'bb_get_topics_sql', $topic_sql, $r );
+
+
+		if ( ! empty( $r['debug'] ) ) {
+			error_log( print_r( '----- bb_get_topics_sql ------', 1 ) );
+			error_log( print_r( $topic_sql, 1 ) );
+		}
 
 		// Create a unique cache key based on the query parameters.
 		$cache_key = 'bb_topics_query_' . md5( maybe_serialize( $r ) );

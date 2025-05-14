@@ -366,6 +366,7 @@ window.bp = window.bp || {};
 			// Clear form fields.
 			this.$topicName.val( '' );
 			this.$topicId.val( '' );
+			this.$topicWhoCanPost.first().prop( 'checked', true );
 
 			// Show modal
 			this.$modal.show();
@@ -424,9 +425,44 @@ window.bp = window.bp || {};
 			$.post( ajaxUrl, data, function ( response ) {
 				// Remove loading state
 				this.$modal.removeClass( 'loading' );
+				if ( response.success && response.data.content ) {
+					var content                = response.data.content;
+					var topicData              = content.topic;
+					var currentTopicId         = topicData.topic_id;
+					var currentTopicName       = topicData.name;
+					var currentTopicWhoCanPost = topicData.permission_type;
+					var currentItemId          = topicData.item_id;
+					var currentItemType        = topicData.item_type;
+					var currentTopicNonce      = content.nonce;
+					var isGlobalActivity       = ! _.isUndefined( topicData.is_global_activity ) ? topicData.is_global_activity : false;
+					var topicListsTemplate     = wp.template( 'bb-topic-lists' );
 
-				if ( response.success ) {
-					window.location.reload();
+					var collectedTopicData = {
+						topic_id           : currentTopicId,
+						topic_name         : currentTopicName,
+						topic_who_can_post : currentTopicWhoCanPost,
+						item_id            : currentItemId,
+						item_type          : currentItemType,
+						nonce              : currentTopicNonce
+					};
+
+					if ( isGlobalActivity ) {
+						collectedTopicData.is_global_activity = isGlobalActivity;
+					}
+
+					var renderedTopicLists  = topicListsTemplate( {
+						topics : collectedTopicData
+					} );
+					var $renderedTopicLists = $( renderedTopicLists );
+
+					// Find existing topic item if it exists
+					var $existingTopic = this.$topicList.find( '.bb-activity-topic-item[data-topic-id="' + topicId + '"]' );
+					if ( $existingTopic.length ) {
+						$existingTopic.replaceWith( $renderedTopicLists );
+					} else {
+						this.$topicList.append( $renderedTopicLists );
+					}
+					this.handleCloseModal( event );
 				} else {
 					this.$modal.find( this.config.modalContentSelector ).prepend( this.config.errorContainer );
 					this.$modal.find( this.config.errorContainerSelector ).append( response.data.error );
