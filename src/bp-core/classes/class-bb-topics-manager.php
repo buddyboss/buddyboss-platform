@@ -140,6 +140,13 @@ class BB_Topics_Manager {
 			return;
 		}
 
+		if (
+			! is_admin() &&
+			$this->bb_load_topics_scripts()
+		) {
+			return;
+		}
+
 		$bp  = buddypress();
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script(
@@ -1489,5 +1496,36 @@ class BB_Topics_Manager {
 		}
 
 		return $topic_permission_type;
+	}
+
+	/**
+	 * Allow to load scripts only when needed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_load_topics_scripts() {
+		$is_enabled_activity = bp_is_active( 'activity' );
+		$is_enabled_groups   = bp_is_active( 'groups' );
+		return (
+			! $is_enabled_activity || // Activity component is not active.
+			(
+				$is_enabled_activity && // Activity is active.
+				(
+					// If groups is active.
+					(
+						$is_enabled_groups &&
+						! bp_is_activity_directory() &&
+						! bp_is_group_admin_page() &&
+						! bp_is_group_create() &&
+						! bp_is_group_activity()
+					) ||
+					// If groups is not active.
+					(
+						! $is_enabled_groups &&
+						! bp_is_activity_directory()
+					)
+				)
+			)
+		);
 	}
 }
