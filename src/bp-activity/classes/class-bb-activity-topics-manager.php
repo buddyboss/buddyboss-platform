@@ -369,15 +369,18 @@ class BB_Activity_Topics_Manager {
 				wp_send_json_error( array( 'error' => $error_message ) );
 			}
 
+			$get_activity_relationship = $this->bb_get_activity_topic_relationship( $existing->id );
+
 			/**
 			 * Fires after an activity-topic relationship is updated.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param int   $existing->id The ID of the updated relationship.
-			 * @param array $r            The arguments used to update the relationship.
+			 * @param int   $existing_id               The ID of the updated relationship.
+			 * @param array $get_activity_relationship The activity topic relationship.
+			 * @param array $r                         The arguments used to update the relationship.
 			 */
-			do_action( 'bb_activity_topic_relationship_after_update', $existing->id, $r );
+			do_action( 'bb_activity_topic_relationship_after_update', $existing->id, $get_activity_relationship, $r );
 
 			return $existing->id;
 		}
@@ -407,15 +410,18 @@ class BB_Activity_Topics_Manager {
 
 		$relationship_id = $this->wpdb->insert_id;
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $relationship_id );
+
 		/**
 		 * Fires after an activity-topic relationship is added.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int   $relationship_id The ID of the inserted relationship.
-		 * @param array $r               The arguments used to add the relationship.
+		 * @param int   $relationship_id           The ID of the inserted relationship.
+		 * @param array $get_activity_relationship The activity topic relationship.
+		 * @param array $r                         The arguments used to add the relationship.
 		 */
-		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $r );
+		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $get_activity_relationship, $r );
 
 		return $relationship_id;
 	}
@@ -462,17 +468,21 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $updated );
+
 		/**
 		 * Fires after updating the activity topic relationship.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $args Array of args. {
-		 *     @type int $previous_id The ID of the previous topic.
-		 *     @type int $topic_id    The ID of the topic.
+		 * @param int   $updated                   The ID of the updated relationship.
+		 * @param array $get_activity_relationship The activity topic relationship.
+		 * @param array $args                      Array of args. {
+		 *      @type int $previous_id The ID of the previous topic.
+		 *      @type int $topic_id    The ID of the topic.
 		 * }
 		 */
-		do_action( 'bb_after_update_activity_topic_relationship', $args );
+		do_action( 'bb_after_update_activity_topic_relationship', $updated, $get_activity_relationship, $args );
 
 		return $updated;
 	}
@@ -515,18 +525,35 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $deleted );
+
 		/**
 		 * Fires after deleting the activity topic relationship.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param int $deleted The ID of the deleted relationship.
+		 * @param array $get_activity_relationship The activity topic relationship.
 		 * @param array $args Array of args. {
 		 *     @type int $topic_id The ID of the topic.
 		 * }
 		 */
-		do_action( 'bb_after_delete_activity_topic_relationship', $args );
+		do_action( 'bb_after_delete_activity_topic_relationship', $deleted, $get_activity_relationship, $args );
 
 		return $deleted;
+	}
+
+	/**
+	 * Function to get activity topic relationship.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $id The ID of the activity topic relationship.
+	 *
+	 * @return array Array of activity topic relationship.
+	 */
+	public function bb_get_activity_topic_relationship( $id ) {
+		return $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->activity_topic_rel_table} WHERE id = %d", $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
