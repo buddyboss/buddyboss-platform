@@ -474,18 +474,6 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
 	wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
-	wp_enqueue_script( 'bb-readylaunch-front', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-front{$min}.js", array( 'jquery', 'bp-nouveau' ), bp_get_version(), true );
-
-	wp_localize_script(
-		'bb-readylaunch-front',
-		'bbReadyLaunchFront',
-		array(
-			'ajax_url' 	=> admin_url( 'admin-ajax.php' ),
-			'nonce'    	=> wp_create_nonce( 'bb-readylaunch' ),
-			'more_nav' 	=> esc_html__( 'More', 'buddyboss' ),
-			'filter_all'=> esc_html__( 'All', 'buddyboss' ),
-		)
-	);
 
 	ob_start();
 	?>
