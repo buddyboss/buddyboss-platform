@@ -6657,14 +6657,14 @@ body.admin-bar .bb-rl-header {
     padding: var(--bb-rl-space-100) var(--bb-rl-space-500) var(--bb-rl-space-100) var(--bb-rl-space-200);
     position: relative;
   }
-  .bb-readylaunch-mobile-menu__wrap .bb-rl-network-search-bar input#search {
+  .bb-readylaunch-mobile-menu__wrap .bb-rl-network-search-bar input#mobile-search {
     color: var(--bb-rl-text-color);
     font-size: 14px;
     font-weight: 400;
     padding: 0;
     border-radius: 0;
   }
-  .bb-readylaunch-mobile-menu__wrap .bb-rl-network-search-bar input#search:-webkit-input-placeholder {
+  .bb-readylaunch-mobile-menu__wrap .bb-rl-network-search-bar input#mobile-search:-webkit-input-placeholder {
     color: var(--bb-rl-text-tertiary-color);
   }
   .bb-rl-mobile-user-name {
@@ -9974,7 +9974,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .widget_bp_profile_completion_widget .single_section_wrap.completed .section_ico i {
   display: block;
   position: absolute;
-  font-size: 10px;
   right: -3px;
   margin-top: 1px;
   top: 50%;
@@ -10103,6 +10102,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-widget-sidebar .buddypress.widget .item-options a:hover, .bb-rl-widget-sidebar .buddypress.widget .item-options a.selected {
   color: var(--bb-rl-text-color);
   background-color: var(--bb-rl-background-secondary-color);
+  text-shadow: 0 0 0.5px currentColor;
 }
 
 .bb-rl-widget-sidebar .widget_bp_core_friends_widget .bb-friends-list-widget {
