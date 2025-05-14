@@ -1123,7 +1123,10 @@
 			align-items: center;
 			gap: var(--bb-rl-space-100);
 			padding: 10px var(--bb-rl-space-200);
+			margin: 0;
 			color: var(--bb-rl-text-secondary-color);
+			box-sizing: border-box;
+			text-decoration: none;
 
 			&:hover {
 				background-color: var(--bb-rl-background-secondary-hover-color);
@@ -1296,6 +1299,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			color: var(--bb-rl-icon-secondary-color);
 			font-size: 28px;
 			margin-right: var(--bb-rl-space-200);
+			text-decoration: none;
 		}
 
 		.bb-mobile-menu-open .bb-rl-left-panel-mobile [class*="bb-icons-rl"]:before {
@@ -1325,12 +1329,18 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			transition: all 0.35s ease-in-out;
 		}
 
-		body.admin-bar .bb-readylaunch-mobile-menu__wrap {
-			top: 98px;
+		body.admin-bar & {
+
+			.bb-readylaunch-mobile-menu__wrap {
+				top: 98px;
+			}
 		}
 
-		body.bb-mobile-menu-open .bb-readylaunch-mobile-menu__wrap {
-			left: 0;
+		body.bb-mobile-menu-open & {
+
+			.bb-readylaunch-mobile-menu__wrap {
+				left: 0;
+			}
 		}
 
 		.bb-readylaunch-mobile-menu__wrap {
@@ -1451,8 +1461,6 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			.bp-dir-search-form {
 				display: block;
 				margin: var(--bb-rl-space-200) var(--bb-rl-space-400) 0;
-				border-radius: var(--bb-rl-radius-base);
-				border: none;
 				border-radius: var(--bb-rl-radius-lg);
 				width: 100%;
 				position: relative;
