@@ -9974,16 +9974,18 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .widget_bp_profile_completion_widget .single_section_wrap.completed .section_ico i {
   display: block;
   position: absolute;
-  left: 1px;
-  margin-top: 0;
+  font-size: 10px;
+  left: -3px;
+  margin-top: 1px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 300;
   color: var(--bb-rl-background-brand-primary-color);
 }
 
 .widget_bp_profile_completion_widget .single_section_wrap.completed .section_ico .bb-icon-check {
-  color: var(--bb-content-background-color);
+  color: var(--bb-rl-background-color);
 }
 
 .widget_bp_profile_completion_widget .single_section_wrap.completed .section_name a {
@@ -10049,6 +10051,35 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   width: 100%;
   height: auto;
   border-radius: 50%;
+}
+
+.bp-latest-activities .update-item {
+  display: flex;
+  align-items: center;
+  gap: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  margin: 0 calc(var(--bb-rl-space-200) * -1) var(--bb-rl-space-100);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.bp-latest-activities .update-item:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bp-latest-activities .update-item .avatar {
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bp-latest-activities .update-item .bp-activity-info a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  color: var(--bb-rl-text-color);
+}
+
+.bp-latest-activities .update-item .bp-activity-info .activity-time-since {
+  display: block;
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-tertiary-color);
 }
 
 .bb-rl-members .bp-list.grid .item-entry .list-wrap {
