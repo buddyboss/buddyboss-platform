@@ -107,6 +107,7 @@ class BB_Activity_Topics_Manager {
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
+		add_action( 'bp_after_member_activity_post_form', array( $this, 'bb_user_activity_topics_after_post_form' ), 10, 1 );
 	}
 
 	/**
@@ -916,5 +917,30 @@ class BB_Activity_Topics_Manager {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Add the activity topic selector after the post form in user activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_user_activity_topics_after_post_form() {
+		$topics = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'filter_query' => true ) ) : array();
+		if ( ! empty( $topics ) ) {
+			?>
+			<div class="activity-topic-selector">
+				<ul>
+					<li>
+						<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+					</li>
+					<?php
+					foreach ( $topics as $topic ) {
+						echo '<li><a href="#topic-' . esc_attr( $topic['slug'] ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
+					}
+					?>
+				</ul>
+			</div>
+			<?php
+		}
 	}
 }

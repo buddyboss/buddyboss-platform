@@ -1517,7 +1517,8 @@ class BB_Topics_Manager {
 						! bp_is_activity_directory() &&
 						! bp_is_group_admin_page() &&
 						! bp_is_group_create() &&
-						! bp_is_group_activity()
+						! bp_is_group_activity() &&
+						! bp_is_user_activity()
 					) ||
 					// If groups is not active.
 					(
