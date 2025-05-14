@@ -992,6 +992,15 @@ window.bp = window.bp || {};
 							queryData.ajaxload = false;
 						}
 
+						// Topic selector.
+						if ( $( '.activity-topic-selector li a' ).length ) {
+							var topicId = $( '.activity-topic-selector li a.selected' ).data( 'topic-id' );
+							if ( topicId ) {
+								queryData.topic_id = topicId;
+							} else {
+								queryData.topic_id = '';
+							}
+						}
 						// Populate the object list.
 						self.objectRequest( queryData );
 					}
