@@ -707,9 +707,11 @@ class BB_Activity_Topics_Manager {
 			$topic_lists['topics']
 		);
 
-		// Serialise each item to compare as strings.
-		$topic_lists = array_map( 'unserialize', array_unique( array_map( 'serialize', $mapped ) ) );
-
+		if ( ! empty( $mapped ) ) {
+			$topic_ids     = array_column( $mapped, 'topic_id' );
+			$unique_topics = array_combine( $topic_ids, $mapped );
+			$topic_lists   = array_values( $unique_topics );
+		}
 		if ( $group_topics_enabled ) {
 			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
