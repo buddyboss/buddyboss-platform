@@ -365,6 +365,7 @@
 				&.selected {
 					color: var(--bb-rl-text-color);
 					background-color: var(--bb-rl-background-secondary-color);
+					text-shadow: 0 0 0.5px currentColor;
 				}
 			}
 		}

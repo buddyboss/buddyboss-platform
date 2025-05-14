@@ -9974,7 +9974,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .widget_bp_profile_completion_widget .single_section_wrap.completed .section_ico i {
   display: block;
   position: absolute;
-  font-size: 10px;
   left: -3px;
   margin-top: 1px;
   top: 50%;
@@ -10103,6 +10102,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-widget-sidebar .buddypress.widget .item-options a:hover, .bb-rl-widget-sidebar .buddypress.widget .item-options a.selected {
   color: var(--bb-rl-text-color);
   background-color: var(--bb-rl-background-secondary-color);
+  text-shadow: 0 0 0.5px currentColor;
 }
 
 .bb-rl-widget-sidebar .widget_bp_core_friends_widget .bb-friends-list-widget {
