@@ -332,7 +332,6 @@
 		background-color: var(--bb-rl-background-color);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		padding: var(--bb-rl-space-200) var(--bb-rl-space-400);
-		z-index: var(--bb-rl-z-index-fixed);
 	
 		body.admin-bar & {
 			top: 32px;
@@ -1302,8 +1301,11 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			text-decoration: none;
 		}
 
-		.bb-mobile-menu-open .bb-rl-left-panel-mobile [class*="bb-icons-rl"]:before {
-			content: "\e4f6";
+		.bb-mobile-menu-open & {
+
+			.bb-rl-left-panel-mobile [class*="bb-icons-rl"]:before {
+				content: "\e4f6";
+			}
 		}
 
 		.bb-rl-left-panel,
@@ -1327,6 +1329,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			width: 100%;
 			overflow: auto;
 			transition: all 0.35s ease-in-out;
+			z-index: var(--bb-rl-z-index-fixed);
 		}
 
 		body.admin-bar & {
@@ -1369,6 +1372,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 						gap: var(--bb-rl-space-100);
 						padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 						border-radius: var(--bb-rl-radius-md);
+						text-decoration: none;
 
 						&:hover {
 							background-color: var(--bb-rl-background-secondary-hover-color);
@@ -1462,20 +1466,22 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 				display: block;
 				margin: var(--bb-rl-space-200) var(--bb-rl-space-400) 0;
 				border-radius: var(--bb-rl-radius-lg);
-				width: 100%;
-				position: relative;
 				background-color: var(--bb-rl-background-color);
-				display: inline-flex;
-				align-items: center;
-				flex-wrap: wrap;
+				border: 1px solid var(--bb-rl-border-tertiary-color);
+				position: relative;
 
 				&:before {
-					font-size: 20px;
+					content: "\e30c";
+					font-weight: 400;
+					font-family: bb-icons-rl;
+					font-style: normal;
+					margin-right: var(--bb-rl-space-100);
 					color: var(--bb-rl-icon-secondary-color);
 					position: absolute;
 					left: 12px;
 					top: 50%;
 					transform: translateY(-50%);
+					font-size: 20px;
 				}
 
 				button[type="submit"] {
@@ -1489,8 +1495,10 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 			.bb-rl-network-search-bar {
 				padding: var(--bb-rl-space-100) var(--bb-rl-space-200) var(--bb-rl-space-100) var(--bb-rl-space-500);
 				position: relative;
+				box-sizing: border-box;
 
 				input#search {
+					font-family: inherit;
 					color: var(--bb-rl-text-color);
 					font-size: 14px;
 					font-weight: 400;
@@ -1538,6 +1546,7 @@ body.bb-rl-dark-mode #bb-rl-profile-theme-dark a {
 				display: block;
 				padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
 				border-radius: var(--bb-rl-radius-sm);
+				text-decoration: none;
 
 				&:hover {
 					background-color: var(--bb-rl-background-secondary-hover-color);
