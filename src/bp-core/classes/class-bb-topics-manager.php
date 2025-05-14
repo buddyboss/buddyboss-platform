@@ -126,8 +126,20 @@ class BB_Topics_Manager {
 	 * Enqueue scripts.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $hook_suffix The current admin page.
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts( $hook_suffix ) {
+		if (
+			is_admin() &&
+			(
+				false === strpos( $hook_suffix, 'bp-groups' ) &&
+				false === strpos( $hook_suffix, 'bp-settings' )
+			)
+		) {
+			return;
+		}
+
 		$bp  = buddypress();
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script(
