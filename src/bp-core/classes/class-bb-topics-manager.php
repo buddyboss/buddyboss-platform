@@ -126,8 +126,27 @@ class BB_Topics_Manager {
 	 * Enqueue scripts.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $hook_suffix The current admin page.
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts( $hook_suffix ) {
+		if (
+			is_admin() &&
+			(
+				false === strpos( $hook_suffix, 'bp-groups' ) &&
+				false === strpos( $hook_suffix, 'bp-settings' )
+			)
+		) {
+			return;
+		}
+
+		if (
+			! is_admin() &&
+			$this->bb_load_topics_scripts()
+		) {
+			return;
+		}
+
 		$bp  = buddypress();
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script(
@@ -717,7 +736,7 @@ class BB_Topics_Manager {
 		 *
 		 * @param array $args The arguments used to add the topic relationship.
 		 */
-		do_action( 'bb_topic_relationship_added', $r );
+		do_action( 'bb_topic_relationship_before_added', $r );
 
 		$inserted = $this->wpdb->insert(
 			$this->topic_rel_table,
@@ -756,7 +775,7 @@ class BB_Topics_Manager {
 		 * @param int   $inserted The number of rows inserted.
 		 * @param array $args     The arguments used to add the topic relationship.
 		 */
-		do_action( 'bb_topic_relationship_added', $inserted, $r );
+		do_action( 'bb_topic_relationship_after_added', $inserted, $r );
 	}
 
 	/**
@@ -1350,6 +1369,16 @@ class BB_Topics_Manager {
 				return false;
 			}
 
+			/**
+			 * Fires after a topic relationship has been deleted.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $relationships_ids The IDs of the topic relationships that were deleted.
+			 * @param int   $topic_id          The ID of the topic that was deleted.
+			 */
+			do_action( 'bb_topic_relationship_after_deleted', $relationships_ids, $topic_id );
+
 			if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
 				bb_activity_topics_manager_instance()->bb_delete_activity_topic_relationship(
 					array(
@@ -1358,16 +1387,6 @@ class BB_Topics_Manager {
 				);
 			}
 		}
-
-		/**
-		 * Fires after a topic relationship has been deleted.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $relationships_ids The IDs of the topic relationships that were deleted.
-		 * @param int   $topic_id          The ID of the topic that was deleted.
-		 */
-		do_action( 'bb_topic_relationship_after_deleted', $relationships_ids, $topic_id );
 
 		/**
 		 * Fires after a topic has been deleted.
@@ -1477,5 +1496,37 @@ class BB_Topics_Manager {
 		}
 
 		return $topic_permission_type;
+	}
+
+	/**
+	 * Allow to load scripts only when needed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_load_topics_scripts() {
+		$is_enabled_activity = bp_is_active( 'activity' );
+		$is_enabled_groups   = bp_is_active( 'groups' );
+		return (
+			! $is_enabled_activity || // Activity component is not active.
+			(
+				$is_enabled_activity && // Activity is active.
+				(
+					// If groups is active.
+					(
+						$is_enabled_groups &&
+						! bp_is_activity_directory() &&
+						! bp_is_group_admin_page() &&
+						! bp_is_group_create() &&
+						! bp_is_group_activity() &&
+						! bp_is_user_activity()
+					) ||
+					// If groups is not active.
+					(
+						! $is_enabled_groups &&
+						! bp_is_activity_directory()
+					)
+				)
+			)
+		);
 	}
 }

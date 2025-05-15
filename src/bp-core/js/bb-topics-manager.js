@@ -103,135 +103,137 @@ window.bp = window.bp || {};
 			this.topicTooltipError       = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_tooltip_error ) ? activityParams.topics.topic_tooltip_error : false : false;
 			this.topicLists              = this.isEnabledActivityTopic ? ! _.isUndefined( activityParams.topics.topic_lists ) ? activityParams.topics.topic_lists : [] : [];
 
-			bp.Views.TopicSelector = bp.View.extend(
-				{
-					tagName   : 'div',
-					className : 'whats-new-topic-selector',
-					template  : bp.template( 'bb-activity-post-form-topic-selector' ),
-					events    : {
-						'click .bb-topic-selector-button' : 'toggleTopicSelectorDropdown',
-						'click .bb-topic-selector-list a' : 'selectTopic'
-					},
+			if ( typeof bp.View !== 'undefined' ) {
+				bp.Views.TopicSelector = bp.View.extend(
+					{
+						tagName   : 'div',
+						className : 'whats-new-topic-selector',
+						template  : bp.template( 'bb-activity-post-form-topic-selector' ),
+						events    : {
+							'click .bb-topic-selector-button' : 'toggleTopicSelectorDropdown',
+							'click .bb-topic-selector-list a' : 'selectTopic'
+						},
 
-					initialize : function () {
-						var topicId = 0;
-						if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
-							topicId = ! _.isUndefined( this.model.get( 'topics' ).topic_id ) ? this.model.get( 'topics' ).topic_id : 0;
-						} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
-							topicId = ! _.isUndefined( bp.draft_activity.data.topics.topic_id ) ? bp.draft_activity.data.topics.topic_id : 0;
+						initialize : function () {
+							var topicId = 0;
+							if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
+								topicId = ! _.isUndefined( this.model.get( 'topics' ).topic_id ) ? this.model.get( 'topics' ).topic_id : 0;
+							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
+								topicId = ! _.isUndefined( bp.draft_activity.data.topics.topic_id ) ? bp.draft_activity.data.topics.topic_id : 0;
+							}
+
+							var topicName = '';
+							if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
+								topicName = ! _.isUndefined( this.model.get( 'topics' ).topic_name ) ? this.model.get( 'topics' ).topic_name : '';
+							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
+								topicName = ! _.isUndefined( bp.draft_activity.data.topics.topic_name ) ? bp.draft_activity.data.topics.topic_name : '';
+							}
+
+							var topicLists = BBTopicsManager.topicLists;
+							if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
+								topicLists = ! _.isUndefined( this.model.get( 'topics' ).topic_lists ) ? this.model.get( 'topics' ).topic_lists : [];
+							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
+								topicLists = ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ? bp.draft_activity.data.topics.topic_lists : [];
+							}
+
+							this.model.set( 'topics', {
+								topic_id    : topicId,
+								topic_name  : topicName,
+								topic_lists : topicLists
+							} );
+
+							this.listenTo( Backbone, 'topic:update', this.updateTopics );
+
+							// Add document-level click handler
+							$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
+
+						},
+
+						updateTopics : function ( topics ) {
+
+							// Fix to handle various formats of incoming topics data
+							var topicsArray;
+
+							// Check if topics is an object with topic_lists property
+							if ( _.isObject( topics ) && ! _.isUndefined( topics.topic_lists ) ) {
+								topicsArray = topics.topic_lists;
+							}
+
+							var topicId   = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_id : 0;
+							var topicName = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_name : '';
+
+							// Update the model with the new topics
+							this.model.set( 'topics', {
+								topic_lists : topicsArray,
+								topic_id    : topicId,
+								topic_name  : topicName
+							} );
+
+							// Remove the topic tooltip if there are no topics.
+							if ( _.isEmpty( topicsArray ) ) {
+								// Try multiple selectors to ensure we catch all instances
+								$( '.bb-topic-tooltip-wrapper' ).remove();
+							} else {
+								// Add topic tooltip while group topics are loaded.
+								$( document ).trigger( 'bb_display_full_form' );
+							}
+
+							// Trigger input event on #whats-new to trigger postValidate.
+							if (
+								'undefined' !== typeof bp.Nouveau.Activity &&
+								bp.Nouveau.Activity.postForm
+							) {
+								$( '#whats-new' ).trigger( 'input' );
+							}
+
+							this.render();
+						},
+
+						render : function () {
+							this.$el.html( this.template( this.model.attributes ) );
+						},
+
+						toggleTopicSelectorDropdown : function () {
+							this.$el.toggleClass( 'is-active' );
+						},
+
+						selectTopic : function ( event ) {
+							event.preventDefault();
+
+							var topicId   = $( event.currentTarget ).data( 'topic-id' );
+							var topicName = $( event.currentTarget ).text().trim();
+
+							this.model.set( 'topics', {
+								topic_id    : topicId,
+								topic_name  : topicName,
+								topic_lists : this.model.get( 'topics' ).topic_lists
+							} );
+
+							this.$el.find( '.bb-topic-selector-button' ).text( topicName );
+							this.$el.removeClass( 'is-active' );
+
+							this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
+
+							// Trigger input event on #whats-new to trigger postValidate.
+							if (
+								typeof bp.Nouveau.Activity !== 'undefined' &&
+								bp.Nouveau.Activity.postForm
+							) {
+								$( '#whats-new' ).trigger( 'input' );
+							}
+						},
+
+						closeTopicSelectorDropdown : function ( event ) {
+							// Don't close if clicking inside the topic selector
+							if ( $( event.target ).closest( '.whats-new-topic-selector' ).length ) {
+								return;
+							}
+
+							this.$el.removeClass( 'is-active' );
 						}
-
-						var topicName = '';
-						if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
-							topicName = ! _.isUndefined( this.model.get( 'topics' ).topic_name ) ? this.model.get( 'topics' ).topic_name : '';
-						} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
-							topicName = ! _.isUndefined( bp.draft_activity.data.topics.topic_name ) ? bp.draft_activity.data.topics.topic_name : '';
-						}
-
-						var topicLists = BBTopicsManager.topicLists;
-						if ( ! _.isUndefined( this.model.get( 'topics' ) ) ) {
-							topicLists = ! _.isUndefined( this.model.get( 'topics' ).topic_lists ) ? this.model.get( 'topics' ).topic_lists : [];
-						} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) ) {
-							topicLists = ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ? bp.draft_activity.data.topics.topic_lists : [];
-						}
-
-						this.model.set( 'topics', {
-							topic_id    : topicId,
-							topic_name  : topicName,
-							topic_lists : topicLists
-						} );
-
-						this.listenTo( Backbone, 'topic:update', this.updateTopics );
-
-						// Add document-level click handler
-						$( document ).on( 'click.topicSelector', $.proxy( this.closeTopicSelectorDropdown, this ) );
-
-					},
-
-					updateTopics : function ( topics ) {					
-
-						// Fix to handle various formats of incoming topics data
-						var topicsArray;
-
-						// Check if topics is an object with topic_lists property
-						if ( _.isObject( topics ) && ! _.isUndefined( topics.topic_lists ) ) {
-							topicsArray = topics.topic_lists;
-						}
-
-						var topicId   = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_id : 0;
-						var topicName = ! _.isUndefined( this.model.get( 'topics' ) ) ? this.model.get( 'topics' ).topic_name : '';
-
-						// Update the model with the new topics
-						this.model.set( 'topics', {
-							topic_lists : topicsArray,
-							topic_id    : topicId,
-							topic_name  : topicName
-						} );
-
-						// Remove the topic tooltip if there are no topics.
-						if ( _.isEmpty( topicsArray ) ) {
-							// Try multiple selectors to ensure we catch all instances
-							$( '.bb-topic-tooltip-wrapper' ).remove();
-						} else {
-							// Add topic tooltip while group topics are loaded.
-							$( document ).trigger( 'bb_display_full_form' );
-						}
-
-						// Trigger input event on #whats-new to trigger postValidate.
-						if (
-							'undefined' !== typeof bp.Nouveau.Activity &&
-							bp.Nouveau.Activity.postForm
-						) {
-							$( '#whats-new' ).trigger( 'input' );
-						}
-
-						this.render();
-					},
-
-					render : function () {
-						this.$el.html( this.template( this.model.attributes ) );
-					},
-
-					toggleTopicSelectorDropdown : function () {
-						this.$el.toggleClass( 'is-active' );
-					},
-
-					selectTopic : function ( event ) {
-						event.preventDefault();
-
-						var topicId   = $( event.currentTarget ).data( 'topic-id' );
-						var topicName = $( event.currentTarget ).text().trim();
-
-						this.model.set( 'topics', {
-							topic_id    : topicId,
-							topic_name  : topicName,
-							topic_lists : this.model.get( 'topics' ).topic_lists
-						} );
-
-						this.$el.find( '.bb-topic-selector-button' ).text( topicName );
-						this.$el.removeClass( 'is-active' );
-
-						this.$el.find( '.bb-topic-selector-list li a[data-topic-id="' + topicId + '"]' ).addClass( 'selected' );
-
-						// Trigger input event on #whats-new to trigger postValidate.
-						if (
-							typeof bp.Nouveau.Activity !== 'undefined' &&
-							bp.Nouveau.Activity.postForm
-						) {
-							$( '#whats-new' ).trigger( 'input' );
-						}
-					},
-
-					closeTopicSelectorDropdown : function ( event ) {
-						// Don't close if clicking inside the topic selector
-						if ( $( event.target ).closest( '.whats-new-topic-selector' ).length ) {
-							return;
-						}
-
-						this.$el.removeClass( 'is-active' );
 					}
-				}
-			);
+				);
+			}
 
 			this.addFrontendListeners();
 		},

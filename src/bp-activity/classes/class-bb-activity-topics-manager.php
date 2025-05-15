@@ -103,10 +103,12 @@ class BB_Activity_Topics_Manager {
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
-		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_add_topic_id_to_query_string' ), 20, 1 );
+		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
+		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
+		add_action( 'bp_after_member_activity_post_form', array( $this, 'bb_user_activity_topics_after_post_form' ), 10, 1 );
 	}
 
 	/**
@@ -368,15 +370,18 @@ class BB_Activity_Topics_Manager {
 				wp_send_json_error( array( 'error' => $error_message ) );
 			}
 
+			$get_activity_relationship = $this->bb_get_activity_topic_relationship( $existing->id );
+
 			/**
 			 * Fires after an activity-topic relationship is updated.
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param int   $existing->id The ID of the updated relationship.
-			 * @param array $r            The arguments used to update the relationship.
+			 * @param int   $existing_id               The ID of the updated relationship.
+			 * @param array $get_activity_relationship The activity topic relationship.
+			 * @param array $r                         The arguments used to update the relationship.
 			 */
-			do_action( 'bb_activity_topic_relationship_after_update', $existing->id, $r );
+			do_action( 'bb_activity_topic_relationship_after_update', $existing->id, $get_activity_relationship, $r );
 
 			return $existing->id;
 		}
@@ -406,15 +411,18 @@ class BB_Activity_Topics_Manager {
 
 		$relationship_id = $this->wpdb->insert_id;
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $relationship_id );
+
 		/**
 		 * Fires after an activity-topic relationship is added.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param int   $relationship_id The ID of the inserted relationship.
-		 * @param array $r               The arguments used to add the relationship.
+		 * @param int   $relationship_id           The ID of the inserted relationship.
+		 * @param array $get_activity_relationship The activity topic relationship.
+		 * @param array $r                         The arguments used to add the relationship.
 		 */
-		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $r );
+		do_action( 'bb_activity_topic_relationship_after_add', $relationship_id, $get_activity_relationship, $r );
 
 		return $relationship_id;
 	}
@@ -461,17 +469,21 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $updated );
+
 		/**
 		 * Fires after updating the activity topic relationship.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $args Array of args. {
-		 *     @type int $previous_id The ID of the previous topic.
-		 *     @type int $topic_id    The ID of the topic.
+		 * @param int   $updated                   The ID of the updated relationship.
+		 * @param array $get_activity_relationship The activity topic relationship.
+		 * @param array $args                      Array of args. {
+		 *      @type int $previous_id The ID of the previous topic.
+		 *      @type int $topic_id    The ID of the topic.
 		 * }
 		 */
-		do_action( 'bb_after_update_activity_topic_relationship', $args );
+		do_action( 'bb_after_update_activity_topic_relationship', $updated, $get_activity_relationship, $args );
 
 		return $updated;
 	}
@@ -514,18 +526,35 @@ class BB_Activity_Topics_Manager {
 			return false;
 		}
 
+		$get_activity_relationship = $this->bb_get_activity_topic_relationship( $deleted );
+
 		/**
 		 * Fires after deleting the activity topic relationship.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * @param int $deleted The ID of the deleted relationship.
+		 * @param array $get_activity_relationship The activity topic relationship.
 		 * @param array $args Array of args. {
 		 *     @type int $topic_id The ID of the topic.
 		 * }
 		 */
-		do_action( 'bb_after_delete_activity_topic_relationship', $args );
+		do_action( 'bb_after_delete_activity_topic_relationship', $deleted, $get_activity_relationship, $args );
 
 		return $deleted;
+	}
+
+	/**
+	 * Function to get activity topic relationship.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $id The ID of the activity topic relationship.
+	 *
+	 * @return array Array of activity topic relationship.
+	 */
+	public function bb_get_activity_topic_relationship( $id ) {
+		return $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->activity_topic_rel_table} WHERE id = %d", $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -547,6 +576,53 @@ class BB_Activity_Topics_Manager {
 		$args['topic_id'] = $topic_id;
 
 		return $args;
+	}
+
+	/**
+	 * Set the topic id in the querystring.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $querystring The querystring.
+	 * @param string $object_type The object type.
+	 *
+	 * @return string Modified querystring.
+	 */
+	public function bb_activity_directory_set_topic_id( $querystring, $object_type ) {
+		if ( 'activity' !== $object_type || bp_is_single_activity() ) {
+			return $querystring;
+		}
+
+		if ( ! isset( $_POST['topic_id'] ) ) {
+			return $querystring;
+		}
+
+		// Add topic id to querystring if it exists.
+		$querystring             = bp_parse_args( $querystring );
+		$querystring['topic_id'] = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
+
+		return http_build_query( $querystring );
+	}
+
+	/**
+	 * Validate the activity topic before it is added.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args The arguments array.
+	 */
+	public function bb_validate_activity_topic_before_added( $args ) {
+		if (
+			'activity' === $args['item_type'] &&
+			! bp_current_user_can( 'administrator' )
+		) {
+			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss' );
+			if ( 'wp_error' === $args['error_type'] ) {
+				return new WP_Error( 'bb_topic_not_allowed', $error_message );
+			}
+
+			wp_send_json_error( array( 'error' => $error_message ) );
+		}
 	}
 
 	/**
@@ -916,5 +992,30 @@ class BB_Activity_Topics_Manager {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Add the activity topic selector after the post form in user activity.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_user_activity_topics_after_post_form() {
+		$topics = $this->bb_get_activity_topics( array( 'filter_query' => true ) );
+		if ( ! empty( $topics ) ) {
+			?>
+			<div class="activity-topic-selector">
+				<ul>
+					<li>
+						<a href="#"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+					</li>
+					<?php
+					foreach ( $topics as $topic ) {
+						echo '<li><a href="#topic-' . esc_attr( $topic['slug'] ) . '" data-topic-id="' . esc_attr( $topic['topic_id'] ) . '">' . esc_html( $topic['name'] ) . '</a></li>';
+					}
+					?>
+				</ul>
+			</div>
+			<?php
+		}
 	}
 }
