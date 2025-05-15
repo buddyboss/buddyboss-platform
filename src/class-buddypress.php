@@ -657,6 +657,7 @@ class BuddyPress {
 			'BP_Attachment_Cover_Image'                    => 'core',
 			'BP_Attachment'                                => 'core',
 			'BP_Button'                                    => 'core',
+			'BP_Block'                                     => 'core',
 			'BP_Component'                                 => 'core',
 			'BP_Integration'                               => 'core',
 			'BP_Customizer_Control_Range'                  => 'core',

@@ -462,10 +462,10 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 	$block_args = bp_parse_args(
 		$attributes,
 		array(
-			'showSearch'         => true,
-			'showMessages'       => true,
-			'showNotifications'  => true,
-			'showProfileMenu'    => true,
+			'showSearch'        => true,
+			'showMessages'      => true,
+			'showNotifications' => true,
+			'showProfileMenu'   => true,
 			'darkMode'          => false,
 		)
 	);
@@ -475,7 +475,9 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 		$align_class = 'align' . $attributes['align'];
 	}
 
-	// Get dark mode class
+	$min = bp_core_get_minified_asset_suffix();
+
+	// Get dark mode class.
 	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
 	wp_enqueue_style( 'bb-readylaunch-icons', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
@@ -572,8 +574,8 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 					)
 				);
 
-				if ( is_user_logged_in() && ( 
-					($block_args['showMessages'] && bp_is_active( 'messages' )) || 
+				if ( is_user_logged_in() && (
+					($block_args['showMessages'] && bp_is_active( 'messages' )) ||
 					($block_args['showNotifications'] && bp_is_active( 'notifications' ))
 				) ) {
 					?>
