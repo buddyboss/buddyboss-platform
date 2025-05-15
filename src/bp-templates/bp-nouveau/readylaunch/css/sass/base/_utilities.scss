@@ -90,6 +90,19 @@
 	.bb-rl-entry-heading {
 		align-items: center;
 	}
+
+	.bb-rl-groups-single-wrapper & {
+		border-bottom: 0;
+	}
+
+	.bb-rl-primary-container & {
+		border: 1px solid var(--bb-rl-border-secondary-color);
+		border-radius: var(--bb-rl-radius-lg);
+
+		#object-nav {
+			padding: 12px var(--bb-rl-space-200);
+		}
+	}
 }
 
 .bb-rl-entry-heading {

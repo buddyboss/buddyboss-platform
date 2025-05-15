@@ -87,11 +87,6 @@ if ( bp_has_groups() ) {
 					?>
 
 				</div>
-				<?php
-				if ( ! BB_Readylaunch::bb_is_group_admin() ) {
-					bp_get_template_part( 'groups/single/parts/item-nav' );
-				}
-				?>
 			</div>
 
 			<div class="bb-rl-group-section">
@@ -104,6 +99,11 @@ if ( bp_has_groups() ) {
 					<div class="bb-rl-content-wrapper">
 
 						<div class="bb-rl-primary-container">
+							<?php if ( ! BB_Readylaunch::bb_is_group_admin() ) { ?>
+								<div class="bb-rl-secondary-header flex flex-column">
+									<?php bp_get_template_part( 'groups/single/parts/item-nav' ); ?>
+								</div>
+							<?php } ?>
 							<div id="item-body" class="item-body">
 								<?php
 								if ( bp_is_group_subgroups() ) {

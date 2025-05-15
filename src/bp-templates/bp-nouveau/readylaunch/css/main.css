@@ -769,6 +769,19 @@ h6 {
   align-items: center;
 }
 
+.bb-rl-groups-single-wrapper .bb-rl-secondary-header {
+  border-bottom: 0;
+}
+
+.bb-rl-primary-container .bb-rl-secondary-header {
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+}
+
+.bb-rl-primary-container .bb-rl-secondary-header #object-nav {
+  padding: 12px var(--bb-rl-space-200);
+}
+
 .bb-rl-entry-heading h2 {
   font-size: var(--bb-rl-font-size-base);
   font-weight: 500;
