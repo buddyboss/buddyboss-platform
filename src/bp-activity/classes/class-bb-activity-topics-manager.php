@@ -103,6 +103,8 @@ class BB_Activity_Topics_Manager {
 
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
+		add_filter( 'bb_get_topics_select_sql', array( $this, 'bb_get_activity_topics_select_sql' ), 10, 2 );
+		add_filter( 'bb_get_topics_group_by', array( $this, 'bb_get_activity_topics_group_by' ), 10, 2 );
 		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
@@ -579,6 +581,40 @@ class BB_Activity_Topics_Manager {
 	}
 
 	/**
+	 * Filter the MySQL SELECT clause for the topic query.
+	 * Required to pass MIN(tr.id) as id to avoid duplicates.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $select_sql Current SELECT MySQL statement.
+	 * @param array  $r          Method parameters.
+	 */
+	public function bb_get_activity_topics_select_sql( $select_sql, $r ) {
+		if ( ! empty( $r['filter_query'] ) ) {
+			$select_sql = 'SELECT DISTINCT MIN(tr.id) as id, tr.menu_order';
+		}
+
+		return $select_sql;
+	}
+
+	/**
+	 * Filter the MySQL GROUP BY clause for the topic query.
+	 * Required to pass GROUP BY tr.topic_id, tr.menu_order to avoid duplicates.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $group_by Current GROUP BY MySQL statement.
+	 * @param array  $r        Method parameters.
+	 */
+	public function bb_get_activity_topics_group_by( $group_by, $r ) {
+		if ( ! empty( $r['filter_query'] ) ) {
+			$group_by = 'GROUP BY tr.topic_id, tr.menu_order';
+		}
+
+		return $group_by;
+	}
+
+	/**
 	 * Set the topic id in the querystring.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -738,8 +774,10 @@ class BB_Activity_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'item_id'   => 0,
-				'item_type' => array( 'activity', 'groups' ),
+				'item_id'            => 0,
+				'item_type'          => array( 'activity', 'groups' ),
+				'is_global_activity' => true,
+				'fields'             => 'name,slug,topic_id,is_global_activity',
 			)
 		);
 
@@ -765,29 +803,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
-		$mapped      = array_map(
-			function ( $item ) {
-				$array_data = array(
-					'name'     => $item->name,
-					'slug'     => $item->slug,
-					'topic_id' => $item->topic_id,
-				);
-				if ( isset( $item->is_global_activity ) ) {
-					$array_data['is_global_activity'] = $item->is_global_activity;
-				}
-				if ( isset( $item->item_id ) ) {
-					$array_data['item_id'] = $item->item_id;
-				}
-				return $array_data;
-			},
-			$topic_lists['topics']
-		);
 
-		if ( ! empty( $mapped ) ) {
-			$topic_ids     = array_column( $mapped, 'topic_id' );
-			$unique_topics = array_combine( $topic_ids, $mapped );
-			$topic_lists   = array_values( $unique_topics );
-		}
 		if ( $group_topics_enabled ) {
 			remove_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
@@ -795,7 +811,7 @@ class BB_Activity_Topics_Manager {
 
 		wp_cache_set( $cache_key, $topic_lists, $this->activity_topics_cache_key );
 
-		return ! empty( $topic_lists ) ? $topic_lists : array();
+		return ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
 	}
 
 	/**
