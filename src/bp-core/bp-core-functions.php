@@ -798,11 +798,9 @@ function bp_core_get_directory_page_default_titles() {
 		'video'           => __( 'Videos', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
-		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
-		'moderation'      => __( 'Moderation', 'buddyboss' ),
 	);
 
 	/**
