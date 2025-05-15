@@ -470,6 +470,11 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 		)
 	);
 
+	$align_class = '';
+	if ( isset( $attributes['align'] ) ) {
+		$align_class = 'align' . $attributes['align'];
+	}
+
 	// Get dark mode class
 	$dark_mode_class = $block_args['darkMode'] ? 'bb-rl-dark-mode' : '';
 
@@ -477,7 +482,7 @@ function bp_block_render_readylaunch_header_block( $attributes = array() ) {
 
 	ob_start();
 	?>
-	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class ); ?>">
+	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class . ' ' . $align_class ); ?>">
 		<div class="bb-rl-container bb-rl-header-container">
 			<a href="#" class="bb-rl-left-panel-mobile"><i class="bb-icons-rl-list"></i></a>
 			<?php
