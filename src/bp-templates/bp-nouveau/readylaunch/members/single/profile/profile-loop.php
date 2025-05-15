@@ -9,13 +9,7 @@
 
 $edit_profile_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' );
 $bp                = buddypress();
-$social_field_id   = bb_rl_get_user_social_networks_field_id();
 $args              = array();
-if ( ! empty( $social_field_id ) ) {
-	$args = array(
-		'exclude_fields' => $social_field_id,
-	);
-}
 
 if ( bp_has_profile( $args ) ) {
 
@@ -61,7 +55,23 @@ if ( bp_has_profile( $args ) ) {
 								?>
 									<div class="bb-rl-profile-widget-field">
 										<div class="bb-rl-profile-widget-label"><?php bp_the_profile_field_name(); ?></div>
-										<div class="bb-rl-profile-widget-data"><?php bp_the_profile_field_value(); ?></div>
+										<?php
+										if ( bb_rl_get_user_social_networks_field_id() == bp_get_the_profile_field_id() ) {
+											add_filter( 'bb_rl_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+											$user_social_networks_urls = bb_rl_get_user_social_networks_urls();
+											remove_filter( 'bb_rl_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
+
+											if ( ! empty( $user_social_networks_urls ) ) {
+												?>
+												<div class="flex align-items-center bb-rl-member-social-links">
+													<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
+												</div>
+												<?php
+											}
+										} else {
+											?>
+											<div class="bb-rl-profile-widget-data"><?php bp_the_profile_field_value(); ?></div>
+										<?php } ?>
 									</div>
 								<?php
 							}
@@ -80,26 +90,6 @@ if ( bp_has_profile( $args ) ) {
 		}
 
 	endwhile;
-
-	// Social Links.
-	$user_social_networks_urls = '';
-	if ( bb_enabled_profile_header_layout_element( 'social-networks' ) && function_exists( 'bb_enabled_member_social_networks' ) && bb_enabled_member_social_networks() ) {
-
-		add_filter( 'bb_rl_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
-		$user_social_networks_urls = bb_rl_get_user_social_networks_urls();
-		remove_filter( 'bb_rl_get_user_social_networks_urls', 'bb_get_user_social_networks_urls_with_visibility', 10, 3 );
-
-		if ( ! empty( $user_social_networks_urls ) ) {
-			?>
-			<div class="widget bb-rl-profile-widget">
-				<h2 class="bb-rl-profile-widget-header widget-title"><?php esc_html_e( 'Social', 'buddyboss' ); ?></h2>
-				<div class="flex align-items-center bb-rl-member-social-links">
-					<?php echo wp_kses( $user_social_networks_urls, bb_members_allow_html_tags() ); ?>
-				</div>
-			</div>	
-			<?php
-		}
-	}
 
 	unset( $user_social_networks_urls, $edit_profile_link );
 }
