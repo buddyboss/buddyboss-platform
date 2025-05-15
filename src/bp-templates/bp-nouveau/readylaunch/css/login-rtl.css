@@ -3113,3 +3113,72 @@ body.bb-rl-register {
   color: var(--bb-rl-text-secondary-color);
   margin-bottom: var(--bb-rl-space-200);
 }
+
+.login-action-confirm_admin_email .admin-email__heading {
+  color: var(--bb-rl-text-color);
+  font-size: 20px;
+  font-weight: 700;
+  border: 0;
+  padding: 0;
+}
+
+.login-action-confirm_admin_email .admin-email__details {
+  font-size: 14px;
+  color: var(--bb-rl-text-color);
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-200);
+  font-size: 0.875rem;
+  background-color: transparent;
+  color: var(--bb-rl-text-brand-primary-color);
+  border: 1px solid var(--bb-rl-text-brand-primary-color);
+  line-height: normal;
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button:hover {
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button:focus {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button:disabled {
+  border-color: var(--bb-rl-background-brand-disabled-color);
+  color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button.button-primary {
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button.button-primary:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button.button-primary:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.login-action-confirm_admin_email .admin-email__actions .button.button-primary:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.login-action-confirm_admin_email .admin-email__actions .admin-email__actions-secondary {
+  font-size: 15px;
+}

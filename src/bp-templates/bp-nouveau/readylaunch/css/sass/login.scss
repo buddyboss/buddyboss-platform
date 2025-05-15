@@ -591,3 +591,38 @@ body.bb-rl-register {
 		margin-bottom: var(--bb-rl-space-200);
 	}
 }
+
+// Confirm Email screen
+.login-action-confirm_admin_email {
+
+	.admin-email__heading {
+		color: var(--bb-rl-text-color);
+		font-size: 20px;
+		font-weight: 700;
+		border: 0;
+		padding: 0;
+	}
+
+	.admin-email__details {
+		font-size: 14px;
+		color: var(--bb-rl-text-color);
+	}
+
+	.admin-email__actions {
+
+		.button {
+			@include bb-rl-button;
+			@include bb-rl-button--small;
+			@include bb-rl-button--brand-outline;
+			line-height: normal;
+
+			&.button-primary {
+				@include bb-rl-button--brand-fill;
+			}
+		}
+
+		.admin-email__actions-secondary {
+			font-size: 15px;
+		}
+	}
+}
