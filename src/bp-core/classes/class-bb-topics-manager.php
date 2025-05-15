@@ -969,6 +969,16 @@ class BB_Topics_Manager {
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT tr.id, tr.menu_order';
 
+		/**
+		 * Filters the MySQL SELECT clause for the topic query.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $select_sql Current SELECT MySQL statement.
+		 * @param array  $r          Method parameters.
+		 */
+		$select_sql = apply_filters( 'bb_get_topics_select_sql', $select_sql, $r );
+
 		// Add is_global_activity field if requested.
 		$global_activity_sql = '';
 		if ( $r['is_global_activity'] ) {
@@ -1007,6 +1017,16 @@ class BB_Topics_Manager {
 		} else {
 			$order_by = 'tr.' . $r['orderby'];
 		}
+
+		/**
+		 * Filters the MySQL ORDER BY clause for the topic query.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $order_by Current ORDER BY MySQL statement.
+		 * @param array  $r        Method parameters.
+		 */
+		$order_by = apply_filters( 'bb_get_topics_order_by', $order_by, $r );
 
 		if ( ! empty( $order_by ) && ! empty( $sort ) ) {
 			$order_by = "ORDER BY {$order_by} {$sort}";
@@ -1116,7 +1136,18 @@ class BB_Topics_Manager {
 		 */
 		$join_sql = apply_filters( 'bb_get_topics_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
-		$group_by = '';
+		/**
+		 * Filters the MySQL GROUP BY clause for the topic query.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $group_by   Current GROUP BY MySQL statement.
+		 * @param array  $r          Method parameters.
+		 * @param string $select_sql Current SELECT MySQL statement.
+		 * @param string $from_sql   Current FROM MySQL statement.
+		 * @param string $where_sql  Current WHERE MySQL statement.
+		 */
+		$group_by = apply_filters( 'bb_get_topics_group_by', '', $r, $select_sql, $from_sql, $where_sql );
 
 		// Query first for poll vote IDs.
 		$topic_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$group_by} {$order_by} {$pagination}";
@@ -1183,7 +1214,24 @@ class BB_Topics_Manager {
 			}
 
 			if ( 'all' !== $r['fields'] ) {
-				$topic_data = array_unique( array_column( $topic_data, $r['fields'] ) );
+				if ( false !== strpos( $r['fields'], ',' ) ) {
+					$fields = explode( ',', $r['fields'] );
+					$fields = array_map( 'trim', $fields );
+
+					$filtered_data = array();
+					foreach ( $topic_data as $topic ) {
+						$filtered_topic = array();
+						foreach ( $fields as $field ) {
+							if ( isset( $topic->$field ) ) {
+								$filtered_topic[ $field ] = $topic->$field;
+							}
+						}
+						$filtered_data[] = $filtered_topic;
+					}
+					$topic_data = $filtered_data;
+				} else {
+					$topic_data = array_unique( array_column( $topic_data, $r['fields'] ) );
+				}
 			}
 		}
 
