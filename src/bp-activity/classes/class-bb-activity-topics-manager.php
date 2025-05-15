@@ -694,7 +694,7 @@ class BB_Activity_Topics_Manager {
 		}
 
 		$bp_prefix = bp_core_get_table_prefix();
-		$join_sql .= " INNER JOIN {$bp_prefix}bb_activity_topic_relationship AS atr ON a.id = atr.activity_id";
+		$join_sql .= " LEFT JOIN {$bp_prefix}bb_activity_topic_relationship AS atr ON a.id = atr.activity_id";
 
 		return $join_sql;
 	}
@@ -715,8 +715,14 @@ class BB_Activity_Topics_Manager {
 			return $where_conditions;
 		}
 
-		$topic_id                     = (int) $args['topic_id'];
-		$where_conditions['topic_id'] = "atr.topic_id = {$topic_id}";
+		$topic_id  = (int) $args['topic_id'];
+		$pinned_id = (int) $args['pinned_id'];
+
+		if ( ! empty( $pinned_id ) ) {
+			$where_conditions['topic_filter'] = "( atr.topic_id = {$topic_id} OR a.id = {$pinned_id})";
+		} else {
+			$where_conditions['topic_filter'] = "atr.topic_id = {$topic_id}";
+		}
 
 		return $where_conditions;
 	}
