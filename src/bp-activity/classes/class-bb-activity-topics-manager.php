@@ -104,6 +104,7 @@ class BB_Activity_Topics_Manager {
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
 		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
+		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'bb_activity_topic_get_where_conditions' ), 10, 2 );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
@@ -575,6 +576,32 @@ class BB_Activity_Topics_Manager {
 		$args['topic_id'] = $topic_id;
 
 		return $args;
+	}
+
+	/**
+	 * Set the topic id in the querystring.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $querystring The querystring.
+	 * @param string $object_type The object type.
+	 *
+	 * @return string Modified querystring.
+	 */
+	public function bb_activity_directory_set_topic_id( $querystring, $object_type ) {
+		if ( 'activity' !== $object_type || bp_is_single_activity() ) {
+			return $querystring;
+		}
+
+		if ( ! isset( $_POST['topic_id'] ) ) {
+			return $querystring;
+		}
+
+		// Add topic id to querystring if it exists.
+		$querystring             = bp_parse_args( $querystring );
+		$querystring['topic_id'] = (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) );
+
+		return http_build_query( $querystring );
 	}
 
 	/**
