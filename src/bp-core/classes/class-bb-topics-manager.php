@@ -227,7 +227,8 @@ class BB_Topics_Manager {
 				KEY user_id (user_id),
 				KEY permission_type (permission_type),
 				KEY date_created (date_created),
-				KEY date_updated (date_updated)
+				KEY date_updated (date_updated),
+				KEY idx_relationship_type_perm_item ( item_type, permission_type, item_id, topic_id )
 			) $charset_collate;";
 		}
 
