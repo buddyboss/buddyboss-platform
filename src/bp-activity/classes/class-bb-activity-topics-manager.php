@@ -809,9 +809,11 @@ class BB_Activity_Topics_Manager {
 			remove_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10 );
 		}
 
+		$topic_lists = ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+
 		wp_cache_set( $cache_key, $topic_lists, $this->activity_topics_cache_key );
 
-		return ! empty( $topic_lists['topics'] ) ? $topic_lists['topics'] : array();
+		return $topic_lists;
 	}
 
 	/**
