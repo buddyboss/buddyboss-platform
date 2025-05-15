@@ -623,12 +623,21 @@
 		.bb-rl-secondary-container {
 			max-width: 100%;
 			flex: 0 0 100%;
+
+			.bb-rl-widget-sidebar {
+				width: 100%;
+			}
 		}
 	}
 
 	@media screen and (max-width: $lg) {
 		padding-left: 0;
 		padding-right: 0;
+
+		.bb-readylaunch-template.bp-user & {
+			padding-left: var(--bb-rl-space-200);
+			padding-right: var(--bb-rl-space-200);
+		}
 	}
 }
 

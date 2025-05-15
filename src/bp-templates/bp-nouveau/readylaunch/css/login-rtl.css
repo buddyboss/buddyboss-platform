@@ -662,6 +662,10 @@ h6 {
     flex-direction: column;
     gap: var(--bb-rl-space-100);
   }
+  .bb-rl-primary-container .bb-rl-secondary-header {
+    margin-right: 0;
+    margin-left: 0;
+  }
 }
 
 .bb-rl-secondary-header .bb-rl-actions-buttons {
@@ -2277,6 +2281,19 @@ div.vjs-menu li.vjs-selected .vjs-menu-item-text, div.vjs-menu li:hover .vjs-men
 .bb-rl-secondary-header #object-nav ul li a:hover {
   color: var(--bb-rl-text-color);
   background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-secondary-header #object-nav ul.bb-rl-sub-menu {
+  padding: var(--bb-rl-space-100) 0;
+}
+
+.bb-rl-secondary-header #object-nav ul.bb-rl-sub-menu li {
+  margin: 0;
+}
+
+.bb-rl-secondary-header #object-nav ul.bb-rl-sub-menu li a {
+  border-radius: 0;
+  padding: 10px var(--bb-rl-space-200);
 }
 
 /* At who list */

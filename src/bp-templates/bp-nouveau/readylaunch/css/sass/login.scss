@@ -611,12 +611,14 @@ body.bb-rl-register {
 	.admin-email__actions {
 
 		.button {
+
 			@include bb-rl-button;
 			@include bb-rl-button--small;
 			@include bb-rl-button--brand-outline;
 			line-height: normal;
 
 			&.button-primary {
+
 				@include bb-rl-button--brand-fill;
 			}
 		}

@@ -30,6 +30,11 @@
 		margin-right: -15px;
 		flex-direction: column;
 		gap: var(--bb-rl-space-100);
+
+		.bb-rl-primary-container & {
+			margin-left: 0;
+			margin-right: 0;
+		}
 	}
 
 	.bb-rl-actions-buttons {
@@ -1711,6 +1716,19 @@ div.vjs-menu {
 			a:hover {
 				color: var(--bb-rl-text-color);
 				background-color: var(--bb-rl-background-secondary-color);
+			}
+		}
+
+		&.bb-rl-sub-menu {
+			padding: var(--bb-rl-space-100) 0;
+
+			li {
+				margin: 0;
+
+				a {
+					border-radius: 0;
+					padding: 10px var(--bb-rl-space-200);
+				}
 			}
 		}
 	}
