@@ -1739,3 +1739,39 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	 */
 	return apply_filters( 'bp_blogs_format_activity_action_new_custom_post_type_feed', $action, $activity );
 }
+
+/**
+ * Filter the activity get filter sql.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $filter_sql   The filter sql.
+ * @param array  $filter_array The filter array.
+ *
+ * @return string The filter sql.
+ */
+function bb_filter_activity_get_filter_sql( $filter_sql, $filter_array ) {
+	global $wpdb, $bp;
+
+	// Handle the blog activity comment compatibility.
+	if ( ! empty( $filter_array['action'] ) ) {
+		$action_array = explode( ',', $filter_array['action'] );
+		if ( in_array( 'new_blog_comment', $action_array, true ) && ! bp_disable_blogforum_comments() && count( $action_array ) > 1 ) {
+
+			// Get the associated post type.
+			$post_type = bp_activity_post_type_get_tracking_arg( 'new_blog_comment', 'post_type' );
+			if ( ! empty( $post_type ) && ! bp_activity_post_type_get_tracking_arg( 'new_blog_comment', 'comment_action_id' ) ) {
+				$activity_ids = $wpdb->get_col( $wpdb->prepare( "SELECT activity_id FROM {$bp->activity->table_name_meta} WHERE meta_key = %s", "bp_blogs_{$post_type}_comment_id" ) ); // phpcs:ignore WordPress.DB
+
+				if ( ! empty( $activity_ids ) ) {
+					$filter_blog_comment = 'a.id IN (' . implode( ',', $activity_ids ) . ')';
+					if ( ! empty( $filter_blog_comment ) ) {
+						return '( ' . $filter_blog_comment . ' OR ' . $filter_sql . ' )';
+					}
+				}
+			}
+		}
+	}
+
+	return $filter_sql;
+}
