@@ -40,6 +40,7 @@ function bp_is_update() {
 
 	// Pro plugin version history.
 	bp_version_bump();
+	bb_plugin_activation_time();
 	$bb_plugin_version_history = (array) bp_get_option( 'bb_plugin_version_history', array() );
 	$initial_version_data      = ! empty( $bb_plugin_version_history ) ? end( $bb_plugin_version_history ) : array();
 	$bb_version_exists         = ! empty( $initial_version_data ) && ! empty( $initial_version_data['version'] ) && (string) BP_PLATFORM_VERSION === (string) $initial_version_data['version'];
@@ -158,6 +159,20 @@ function bp_is_deactivation( $basename = '' ) {
  */
 function bp_version_bump() {
 	bp_update_option( '_bp_db_version', bp_get_db_version() );
+}
+
+/**
+ * Plugin activation time.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_plugin_activation_time() {
+	$activation_time = bp_get_option( 'bb_activation_time' );
+	if ( empty( $activation_time ) ) {
+		bp_update_option( 'bb_activation_time', time() );
+	}
 }
 
 /**
