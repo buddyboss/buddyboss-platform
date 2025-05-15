@@ -105,6 +105,7 @@ class BB_Activity_Topics_Manager {
 
 		add_filter( 'bb_get_topics_select_sql', array( $this, 'bb_get_activity_topics_select_sql' ), 10, 2 );
 		add_filter( 'bb_get_topics_group_by', array( $this, 'bb_get_activity_topics_group_by' ), 10, 2 );
+		add_filter( 'bb_get_topics_order_by', array( $this, 'bb_get_activity_topics_order_by' ), 10, 2 );
 		add_action( 'bb_topic_before_added', array( $this, 'bb_validate_activity_topic_before_added' ) );
 		add_filter( 'bp_ajax_querystring', array( $this, 'bb_activity_directory_set_topic_id' ), 20, 2 );
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'bb_activity_topic_get_join_sql' ), 10, 2 );
@@ -591,7 +592,7 @@ class BB_Activity_Topics_Manager {
 	 */
 	public function bb_get_activity_topics_select_sql( $select_sql, $r ) {
 		if ( ! empty( $r['filter_query'] ) ) {
-			$select_sql = 'SELECT DISTINCT MIN(tr.id) as id, tr.menu_order';
+			$select_sql = 'SELECT MIN(tr.id) AS id, MIN(tr.menu_order) AS menu_order, t.name';
 		}
 
 		return $select_sql;
@@ -608,10 +609,25 @@ class BB_Activity_Topics_Manager {
 	 */
 	public function bb_get_activity_topics_group_by( $group_by, $r ) {
 		if ( ! empty( $r['filter_query'] ) ) {
-			$group_by = 'GROUP BY tr.topic_id, tr.menu_order';
+			$group_by = 'GROUP BY tr.topic_id, tr.menu_order, t.name';
 		}
 
 		return $group_by;
+	}
+
+	/**
+	 * Filter the MySQL ORDER BY clause for the topic query.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $order_by Current ORDER BY MySQL statement.
+	 * @param array  $r        Method parameters.
+	 */
+	public function bb_get_activity_topics_order_by( $order_by, $r ) {
+		if ( ! empty( $r['filter_query'] ) ) {
+			$order_by = 'tr.menu_order, t.name';
+		}
+		return $order_by;
 	}
 
 	/**
@@ -801,7 +817,10 @@ class BB_Activity_Topics_Manager {
 			add_filter( 'bb_get_topics_join_sql', 'bb_topics_join_sql_filter', 10 );
 			add_filter( 'bb_get_topics_where_conditions', 'bb_topics_where_conditions_filter', 10, 2 );
 		}
-
+		if ( ! empty( $r['filter_query'] ) ) {
+			error_log( 'filter_query' );
+			$r['debug'] = true;
+		}
 		$topic_lists = bb_topics_manager_instance()->bb_get_topics( $r );
 
 		if ( $group_topics_enabled ) {

@@ -1187,7 +1187,7 @@ class BB_Topics_Manager {
 			if ( ! empty( $uncached_ids ) ) {
 				$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
-				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.*' . $global_activity_sql . ' FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ')', ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$queried_data = $this->wpdb->get_results( 'SELECT t.*, tr.*' . $global_activity_sql . ' FROM ' . $this->topics_table . ' t LEFT JOIN ' . $this->topic_rel_table . ' tr ON t.id = tr.topic_id WHERE tr.id IN (' . $uncached_ids_sql . ') ' . $order_by, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				foreach ( (array) $queried_data as $topic_data ) {
 					if ( ! empty( $topic_data['id'] ) ) {
 						// Create a unique cache key for each topic relationship.
