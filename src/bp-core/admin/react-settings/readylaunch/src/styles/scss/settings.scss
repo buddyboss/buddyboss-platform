@@ -4,7 +4,9 @@
 @import "buttons";
 @import "forms";
 @import "modal";
+@import "components/accordion";
 @import "components/link-item";
+@import "components/help-modal";
 
 /* Full Height BuddyBoss ReadyLaunch Settings Page */
 .buddyboss_page_bb-readylaunch {
@@ -21,6 +23,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		margin-top: 0;
 
 		> .bb-rl-field-wrap {
 			flex: 1;
@@ -284,59 +287,6 @@
 	margin-bottom: $bb-rl-space-200;
 	padding: $bb-rl-space-200 0;
 	border-bottom: 1px solid $bb-rl-border-secondary-color;
-
-	h3 {
-
-		@include bb-rl-heading;
-		margin: 0;
-	}
-}
-
-.accordion-header {
-
-	@include flex-between;
-	margin-bottom: $bb-rl-space-200;
-	padding: $bb-rl-space-200 0;
-	border-bottom: 1px solid $bb-rl-border-secondary-color;
-}
-
-.bb-rl-accordion-content {
-
-	.toggle-item {
-		padding-bottom: $bb-rl-space-100;
-		display: flex;
-		align-items: center;
-		gap: $bb-rl-space-200;
-		margin-bottom: 12px;
-
-		.components-toggle-control {
-			margin-bottom: 0;
-		}
-
-		> i {
-			font-size: 20px;
-			color: $bb-rl-icon-secondary-color;
-		}
-
-		label {
-
-			@include font-style(14px, 400, 18px);
-		}
-	}
-}
-
-.bb-rl-accordion-toggle {
-	display: inline-flex;
-	align-items: center;
-	gap: $bb-rl-space-100;
-	flex-direction: row-reverse;
-	cursor: pointer;
-
-	i {
-		font-size: 16px;
-		color: $bb-rl-icon-secondary-color;
-		font-weight: 500;
-	}
 
 	h3 {
 
